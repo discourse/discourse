@@ -152,7 +152,6 @@ sk:
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
     share:
-      post: "príspevok #%{postNumber}"
       close: "zatvoriť"
     action_codes:
       public_topic: "téma je verejná%{when}"
@@ -344,8 +343,8 @@ sk:
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
     banner:
-      close: "Zamietnuť tento banner."
-      edit: "Upraviť tento banner >>"
+      close: "Zamietnuť tento banner"
+      edit: "Upraviť"
     choose_topic:
       none_found: "Nenašli sa žiadne témy."
     choose_message:
@@ -416,7 +415,9 @@ sk:
     time_shortcut:
       tomorrow: "Zajtra"
       this_weekend: "Tento víkend"
+      next_week: "Budúci týždeň"
       next_month: "Budúci mesiac"
+      forever: "Vždy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vy</a> ste založili <a href='%{topicUrl}'>tému</a>"
@@ -1106,6 +1107,8 @@ sk:
         sent_by: "Odoslané používateľom"
         private_message: "správa"
         the_topic: "téma"
+    user_status:
+      save: "Uložiť"
     loading: "Prebieha načítavanie..."
     errors:
       prev_page: "pri pokuse o načítanie"
@@ -1221,16 +1224,8 @@ sk:
       not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
       google_oauth2:
         name: "Google"
-        title: "pomocou Google"
       twitter:
         name: "Twitter"
-        title: "pomocou Twitter účtu"
-      instagram:
-        title: "so službou Instagram"
-      facebook:
-        title: "pomocou stránky Facebook"
-      github:
-        title: "pomocou GitHub"
       discord:
         name: "Discord"
     invites:
@@ -1240,7 +1235,6 @@ sk:
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
       password_label: "Heslo"
-      optional_description: "(nepovinné)"
     password_reset:
       continue: "Pokračujte na %{site_name}"
     emoji_set:
@@ -1330,8 +1324,6 @@ sk:
       composer_actions:
         reply: Odpoveď
         edit: Upraviť
-        reply_as_private_message:
-          label: Nová správa
         reply_to_topic:
           label: Odpovedať na tému
         create_topic:
@@ -1531,13 +1523,6 @@ sk:
       topic_status_update:
         num_of_hours: "Počet hodín:"
         when: "Kedy:"
-      auto_update_input:
-        tomorrow: "Zajtra"
-        this_weekend: "Tento víkend"
-        next_week: "Budúci týždeň"
-        next_month: "Budúci mesiac"
-        forever: "Vždy"
-        pick_date_and_time: "Vyberte dátum a čas"
       temp_close:
         title: "Dočasne zatvoriť"
       auto_close:
@@ -1611,8 +1596,6 @@ sk:
         unpin: "Odopni tému...."
         unarchive: "Zruš archiváciu témy"
         archive: "Archívuj tému"
-        invisible: "Skyť"
-        visible: "Zobraziť"
         reset_read: "Zrušiť načítané údaje"
       feature:
         pin: "Pripni tému"
@@ -1866,6 +1849,8 @@ sk:
       tags: "Štítky"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"
+      required_tag_group:
+        delete: "Odstrániť"
       delete: "Odstrániť kategóriu"
       create: "Nová kategória"
       create_long: "Vytvoriť novú kategóriu"
@@ -2178,7 +2163,6 @@ sk:
         edit: "%{shortcut} Upraviť príspevok"
         delete: "%{shortcut} Zmazať príspevok"
         mark_muted: "%{shortcut} Umlčať tému"
-        mark_regular: "%{shortcut} Obyčajná (preddefinovaná) téma"
         mark_tracking: "%{shortcut} Pozorovať tému"
         mark_watching: "%{shortcut} Pozorovať tému"
     badges:
@@ -2282,6 +2266,32 @@ sk:
         leader: "vodca"
     user_activity:
       no_activity_others: "Žiadna aktivita"
+    sidebar:
+      unread_count: "%{count} neprečítaná"
+      new_count: "%{count} nová"
+      sections:
+        messages:
+          header_link_text: "Správy"
+          links:
+            inbox: "Prijaté správy"
+            sent: "Odoslané"
+            new: "Nové"
+            unread: "Neprečítané"
+            archive: "Archív"
+        tags:
+          header_link_title: "všetky štítky"
+          header_link_text: "Štítky"
+        categories:
+          header_link_title: "všetky kategórie"
+          header_link_text: "Kategórie"
+        topics:
+          header_link_title: "domov"
+          header_link_text: "Témy"
+          links:
+            tracked:
+              content: "Pozorované"
+            my_posts:
+              content: "Moje príspevky"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -2505,7 +2515,6 @@ sk:
         delete: "Odstrániť"
         color: "Farba"
         opacity: "Nepriesvitnosť"
-        copy: "Kopírovať"
         copied_to_clipboard: "Skopírované do schránky"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         email_templates:

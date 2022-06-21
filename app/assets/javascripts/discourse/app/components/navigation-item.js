@@ -9,6 +9,7 @@ export default Component.extend(FilterModeMixin, {
     "content.hasIcon:has-icon",
     "content.classNames",
     "isHidden:hidden",
+    "content.name",
   ],
   attributeBindings: ["content.title:title"],
   hidden: false,
@@ -55,10 +56,12 @@ export default Component.extend(FilterModeMixin, {
     // If no query param is present, add an empty one to ensure a ? is
     // appended to the URL.
     if (content.currentRouteQueryParams) {
-      if (content.currentRouteQueryParams.filter) {
-        if (queryParams.length === 0) {
-          queryParams.push("");
-        }
+      if (content.currentRouteQueryParams.filter && queryParams.length === 0) {
+        queryParams.push("");
+      }
+
+      if (content.currentRouteQueryParams.f) {
+        queryParams.push(`f=${content.currentRouteQueryParams.f}`);
       }
     }
 

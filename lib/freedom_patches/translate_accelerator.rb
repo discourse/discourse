@@ -23,6 +23,7 @@ module I18n
 
     def init_accelerator!(overrides_enabled: true)
       @overrides_enabled = overrides_enabled
+      reserve_key(:overrides)
       execute_reload
     end
 

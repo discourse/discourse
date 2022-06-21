@@ -8,10 +8,12 @@ describe TagGroup do
     fab!(:moderator) { Fabricate(:moderator) }
 
     fab!(:group) { Fabricate(:group) }
+    fab!(:beta_group) { Fabricate(:group) }
 
     fab!(:everyone_tag_group) { Fabricate(:tag_group, name: 'Visible & usable by everyone', tag_names: ['foo-bar']) }
     fab!(:visible_tag_group) { Fabricate(:tag_group, name: 'Visible by everyone, usable by staff', tag_names: ['foo']) }
     fab!(:staff_only_tag_group) { Fabricate(:tag_group, name: 'Staff only', tag_names: ['bar']) }
+    fab!(:beta_only_tag_group) { Fabricate(:tag_group, name: 'Beta only', tag_names: ['beta']) }
 
     fab!(:public_tag_group) { Fabricate(:tag_group, name: 'Public', tag_names: ['public1']) }
     fab!(:private_tag_group) { Fabricate(:tag_group, name: 'Private', tag_names: ['privatetag1']) }
@@ -32,6 +34,9 @@ describe TagGroup do
       group.add(user2)
       group.save!
 
+      beta_group.add(user1)
+      beta_group.save!
+
       staff_category.set_permissions(admins: :full)
       staff_category.save!
 
@@ -50,6 +55,9 @@ describe TagGroup do
 
       staff_only_tag_group.permissions = [[staff, full]]
       staff_only_tag_group.save!
+
+      beta_only_tag_group.permissions = [[beta_group, full]]
+      beta_only_tag_group.save!
     end
 
     shared_examples "correct visible tag groups" do
@@ -63,8 +71,8 @@ describe TagGroup do
         ])
 
         expect(TagGroup.visible(Guardian.new(user1)).pluck(:name)).to match_array([
-          public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
-          visible_tag_group.name,
+          public_tag_group.name, unrestricted_tag_group.name, beta_only_tag_group.name,
+          everyone_tag_group.name, visible_tag_group.name,
         ])
 
         expect(TagGroup.visible(Guardian.new(nil)).pluck(:name)).to match_array([

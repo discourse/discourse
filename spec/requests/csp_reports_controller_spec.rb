@@ -32,6 +32,18 @@ describe CspReportsController do
       }.to_json, headers: { "Content-Type": "application/csp-report" }
     end
 
+    it 'returns an error for invalid reports' do
+      SiteSetting.content_security_policy_collect_reports = true
+
+      post '/csp_reports', params: "[ not-json", headers: { "Content-Type": "application/csp-report" }
+
+      expect(response.status).to eq(422)
+
+      post '/csp_reports', params: ["yes json"].to_json, headers: { "Content-Type": "application/csp-report" }
+
+      expect(response.status).to eq(422)
+    end
+
     it 'is enabled by SiteSetting' do
       SiteSetting.content_security_policy = false
       SiteSetting.content_security_policy_report_only = false
@@ -50,7 +62,7 @@ describe CspReportsController do
 
     it 'logs the violation report' do
       send_report
-      expect(Rails.logger.warnings).to include("CSP Violation: 'http://suspicio.us/assets.js' \n\nconsole.log('unsafe')")
+      expect(@fake_logger.warnings).to include("CSP Violation: 'http://suspicio.us/assets.js' \n\nconsole.log('unsafe')")
     end
   end
 end

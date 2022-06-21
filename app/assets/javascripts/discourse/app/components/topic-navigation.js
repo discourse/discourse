@@ -45,6 +45,11 @@ export default Component.extend(PanEvents, {
 
     let info = this.info;
 
+    // Safari's window.innerWidth doesn't match CSS media queries
+    let windowWidth = this.capabilities.isSafari
+      ? document.documentElement.clientWidth
+      : window.innerWidth;
+
     if (info.get("topicProgressExpanded")) {
       info.set("renderTimeline", true);
     } else {
@@ -55,7 +60,7 @@ export default Component.extend(PanEvents, {
 
         if (composer) {
           renderTimeline =
-            window.innerWidth > MIN_WIDTH_TIMELINE &&
+            windowWidth > MIN_WIDTH_TIMELINE &&
             window.innerHeight - composer.offsetHeight - headerOffset() >
               MIN_HEIGHT_TIMELINE;
         }
@@ -163,14 +168,18 @@ export default Component.extend(PanEvents, {
   },
 
   panStart(e) {
-    if (e.originalEvent.target.classList.contains("docked")) {
+    const target = e.originalEvent.target;
+
+    if (
+      target.classList.contains("docked") ||
+      !target.closest(".timeline-container")
+    ) {
       return;
     }
 
     e.originalEvent.preventDefault();
-    const center = e.center;
-    const $centeredElement = $(document.elementFromPoint(center.x, center.y));
-    if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
+    const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
+    if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
       this.isPanning = false;
     } else if (e.direction === "up" || e.direction === "down") {
       this.isPanning = true;

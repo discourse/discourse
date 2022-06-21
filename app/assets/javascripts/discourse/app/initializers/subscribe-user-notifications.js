@@ -108,8 +108,17 @@ export default {
         user.notification_channel_position
       );
 
+      bus.subscribe(`/user-drafts/${user.id}`, (data) => {
+        user.updateDraftProperties(data);
+      });
+
       bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
         user.updateDoNotDisturbStatus(data.ends_at);
+      });
+
+      bus.subscribe(`/user-status/${user.id}`, (data) => {
+        user.set("status", data);
+        appEvents.trigger("user-status:changed");
       });
 
       const site = container.lookup("site:main");

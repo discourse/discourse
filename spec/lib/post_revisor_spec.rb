@@ -1123,7 +1123,7 @@ describe PostRevisor do
             fab!(:tag2) { Fabricate(:tag) }
             fab!(:tag3) { Fabricate(:tag) }
             fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
-            fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+            fab!(:category) { Fabricate(:category, name: "beta", category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
             before do
               post.topic.update(category: category)
@@ -1189,7 +1189,7 @@ describe PostRevisor do
 
       it "updates linked post uploads" do
         post.link_post_uploads
-        expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
+        expect(post.upload_references.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
 
         subject.revise!(user, raw: <<~RAW)
             This is a post with multiple uploads
@@ -1198,7 +1198,7 @@ describe PostRevisor do
             ![image4](#{image4.short_url})
         RAW
 
-        expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
+        expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
 
       context "secure media uploads" do

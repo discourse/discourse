@@ -74,6 +74,7 @@ const DiscourseRoute = Route.extend({
     }
   },
 
+  // deprecated, use isCurrentUser() instead
   isAnotherUsersPage(user) {
     if (!this.currentUser) {
       return true;
@@ -82,8 +83,19 @@ const DiscourseRoute = Route.extend({
     return user.username !== this.currentUser.username;
   },
 
+  isCurrentUser(user) {
+    if (!this.currentUser) {
+      return false; // the current user is anonymous
+    }
+
+    return user.id === this.currentUser.id;
+  },
+
   isPoppedState(transition) {
-    return !transition._discourse_intercepted && !!transition.intent.url;
+    return (
+      !transition._discourse_intercepted &&
+      (!!transition.intent.url || !!transition.queryParamsOnly)
+    );
   },
 });
 

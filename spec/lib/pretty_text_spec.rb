@@ -1310,6 +1310,10 @@ describe PrettyText do
     it "correctly strips VARIATION SELECTOR-16 character (ufe0f) from some emojis" do
       expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
     end
+
+    it "replaces Emoji from Unicode 14.0" do
+      expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    end
   end
 
   describe "custom emoji" do
@@ -1365,6 +1369,37 @@ describe PrettyText do
     cooked = cook("[Steam URL Scheme](steam://store/452530)")
     expected = '<p><a>Steam URL Scheme</a></p>'
     expect(cooked).to eq(n expected)
+  end
+
+  it "applies scheme restrictions to img[src] attributes" do
+    SiteSetting.allowed_href_schemes = "steam"
+    cooked = cook "![Steam URL Image](steam://store/452530) ![Other scheme image](itunes://store/452530)"
+    expected = '<p><img src="steam://store/452530" alt="Steam URL Image"> <img src="" alt="Other scheme image"></p>'
+    expect(cooked).to eq(n expected)
+  end
+
+  it "applies scheme restrictions to track[src] and source[src]" do
+    SiteSetting.allowed_href_schemes = "steam"
+    cooked = cook <<~MD
+      <video>
+        <source src="steam://store/452530"><source src="itunes://store/452530"><track src="steam://store/452530"><track src="itunes://store/452530">
+      </video>
+    MD
+    expect(cooked).to include <<~HTML
+      <source src="steam://store/452530"><source src=""><track src="steam://store/452530"><track src="">
+    HTML
+  end
+
+  it "applies scheme restrictions to source[srcset]" do
+    SiteSetting.allowed_href_schemes = "steam"
+    cooked = cook <<~MD
+      <video>
+        <source srcset="steam://store/452530 1x,itunes://store/123 2x"><source srcset="steam://store/452530"><source srcset="itunes://store/452530">
+      </video>
+    MD
+    expect(cooked).to include <<~HTML
+      <source srcset="steam://store/452530 1x,"><source srcset="steam://store/452530"><source srcset="">
+    HTML
   end
 
   it 'allows only tel URL scheme to start with a plus character' do
@@ -1877,6 +1912,12 @@ HTML
 
       ![upload](#{upload.short_url.gsub(".png", "")})
 
+      Inline img <img src="#{upload.short_url}">
+
+      <div>
+        Block img <img src="#{upload.short_url}">
+      </div>
+
       [some attachment](#{upload.short_url})
 
       [some attachment|attachment](#{upload.short_url})
@@ -1901,6 +1942,10 @@ HTML
         </li>
         </ul>
         <p><img src="#{cdn_url}" alt="upload" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <p>Inline img <img src="#{cdn_url}" data-base62-sha1="#{upload.base62_sha1}"></p>
+        <div>
+          Block img <img src="#{cdn_url}" data-base62-sha1="#{upload.base62_sha1}">
+        </div>
         <p><a href="#{upload.short_path}">some attachment</a></p>
         <p><a class="attachment" href="#{upload.short_path}">some attachment</a></p>
         <p><a href="#{upload.short_path}">some attachment|random</a></p>
@@ -2134,7 +2179,7 @@ HTML
   end
 
   context "enabling/disabling features" do
-    it "allows features to be overriden" do
+    it "allows features to be overridden" do
       cooked = PrettyText.cook(':grin: @mention', features_override: [])
 
       expect(cooked).to eq("<p>:grin: @mention</p>")

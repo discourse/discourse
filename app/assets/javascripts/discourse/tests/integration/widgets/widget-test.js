@@ -475,7 +475,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     test(assert) {
       assert.ok(
         exists("section.override"),
-        "renders container with overrided tagName"
+        "renders container with overridden tagName"
       );
     },
   });

@@ -23,7 +23,7 @@ $avatar_width: 120px;
       flex-wrap: wrap;
       margin: 1em calc(var(--usercard-control-margin) * -1) 0;
       li {
-        flex: 1 0 auto;
+        flex: 1 0 calc(50% - (var(--usercard-control-margin) * 2));
         min-width: 0;
         margin: 0 var(--usercard-control-margin);
         &:empty {
@@ -31,6 +31,7 @@ $avatar_width: 120px;
         }
         button {
           @include ellipsis;
+          margin-bottom: calc(var(--usercard-control-margin) * 2);
         }
       }
     }

@@ -2,17 +2,12 @@
 
 require 'cache'
 require 'open3'
-require_dependency 'plugin/instance'
-require_dependency 'version'
+require 'plugin/instance'
+require 'version'
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
   REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
-
-  require 'sidekiq/exception_handler'
-  class SidekiqExceptionHandler
-    extend Sidekiq::ExceptionHandler
-  end
 
   class Utils
     URI_REGEXP ||= URI.regexp(%w{http https})
@@ -168,7 +163,7 @@ module Discourse
     return if ex.class == Jobs::HandledExceptionWrapper
 
     context ||= {}
-    parent_logger ||= SidekiqExceptionHandler
+    parent_logger ||= Sidekiq
 
     cm = RailsMultisite::ConnectionManagement
     parent_logger.handle_exception(ex, {
@@ -504,6 +499,9 @@ module Discourse
   USER_READONLY_MODE_KEY     ||= 'readonly_mode:user'
   PG_FORCE_READONLY_MODE_KEY ||= 'readonly_mode:postgres_force'
 
+  # Psuedo readonly mode, where staff can still write
+  STAFF_WRITES_ONLY_MODE_KEY ||= 'readonly_mode:staff_writes_only'
+
   READONLY_KEYS ||= [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
@@ -516,7 +514,7 @@ module Discourse
       Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
-    if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+    if [USER_READONLY_MODE_KEY, PG_FORCE_READONLY_MODE_KEY, STAFF_WRITES_ONLY_MODE_KEY].include?(key)
       Discourse.redis.set(key, 1)
     else
       ttl =
@@ -592,6 +590,10 @@ module Discourse
 
   def self.readonly_mode?(keys = READONLY_KEYS)
     recently_readonly? || Discourse.redis.exists?(*keys)
+  end
+
+  def self.staff_writes_only_mode?
+    Discourse.redis.get(STAFF_WRITES_ONLY_MODE_KEY).present?
   end
 
   def self.pg_readonly_mode?
@@ -990,6 +992,9 @@ module Discourse
       },
       Thread.new {
         SvgSprite.core_svgs
+      },
+      Thread.new {
+        EmberCli.script_chunks
       }
     ].each(&:join)
   ensure

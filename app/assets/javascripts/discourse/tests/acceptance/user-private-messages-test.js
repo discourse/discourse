@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import {
@@ -435,7 +435,7 @@ acceptance(
 
       publishNewToMessageBus({ topicId: 1, userId: 5 });
 
-      await visit("/t/13"); // await re-render
+      await settled();
       await visit("/u/charlie/messages");
 
       assert.ok(
@@ -613,7 +613,7 @@ acceptance(
 
       publishNewToMessageBus({ userId: 5, topicId: 1 });
 
-      await visit("/t/12"); // await re-render
+      await settled();
 
       assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
@@ -623,7 +623,7 @@ acceptance(
 
       publishUnreadToMessageBus({ userId: 5, topicId: 2 });
 
-      await visit("/t/12"); // await re-render
+      await settled();
 
       assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
@@ -633,7 +633,7 @@ acceptance(
 
       publishReadToMessageBus({ userId: 5, topicId: 2 });
 
-      await visit("/t/12"); // await re-render
+      await settled();
 
       assert.strictEqual(
         query(".suggested-topics-message").innerText.trim(),
@@ -660,7 +660,7 @@ acceptance(
 
       publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
 
-      await visit("/t/13"); // await re-render
+      await settled();
 
       assert.ok(
         query(".suggested-topics-message")
@@ -673,7 +673,7 @@ acceptance(
 
       publishGroupUnreadToMessageBus({ groupIds: [14], topicId: 2 });
 
-      await visit("/t/13"); // await re-render
+      await settled();
 
       assert.ok(
         query(".suggested-topics-message")

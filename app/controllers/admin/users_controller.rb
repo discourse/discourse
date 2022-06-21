@@ -150,7 +150,8 @@ class Admin::UsersController < Admin::AdminController
         suspend_reason: params[:reason],
         full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
-        suspended_at: @user.suspended_at
+        suspended_at: @user.suspended_at,
+        suspended_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
   end
@@ -455,6 +456,7 @@ class Admin::UsersController < Admin::AdminController
 
     begin
       user = sso.lookup_or_create_user
+      DiscourseEvent.trigger(:sync_sso, user)
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
       render json: failed_json.merge(message: ex.message), status: 403

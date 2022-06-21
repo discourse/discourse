@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'guardian'
-
 describe Guardian do
 
   fab!(:user) { Fabricate(:user) }
@@ -336,14 +334,13 @@ describe Guardian do
     it "respects the group's messageable_level" do
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        output = level == :everyone ? true : false
+        user_output = level == :everyone ? true : false
+        admin_output = level != :nobody
+        mod_output = [:nobody, :only_admins].exclude?(level)
 
-        expect(Guardian.new(user).can_send_private_message?(group)).to eq(output)
-      end
-
-      Group::ALIAS_LEVELS.each do |level, _|
-        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
-        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(true)
+        expect(Guardian.new(user).can_send_private_message?(group)).to eq(user_output)
+        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(admin_output)
+        expect(Guardian.new(moderator).can_send_private_message?(group)).to eq(mod_output)
       end
     end
 
@@ -434,7 +431,6 @@ describe Guardian do
       guardian = Guardian.new(user)
       expect(guardian.can_see_post_actors?(nil, PostActionType.types[:like])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:like])).to be_truthy
-      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
@@ -2014,21 +2010,6 @@ describe Guardian do
 
     end
 
-  end
-
-  context "can_delete_post_action?" do
-    fab!(:post) { Fabricate(:post) }
-
-    it "allows us to remove a bookmark" do
-      pa = PostActionCreator.bookmark(user, post).post_action
-      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
-    end
-
-    it "allows us to remove a very old bookmark" do
-      pa = PostActionCreator.bookmark(user, post).post_action
-      pa.update(created_at: 2.years.ago)
-      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
-    end
   end
 
   context 'can_delete?' do

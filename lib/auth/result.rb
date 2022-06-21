@@ -75,7 +75,7 @@ class Auth::Result
 
   def self.from_session_data(data, user:)
     result = new
-    data = data.symbolize_keys
+    data = data.with_indifferent_access
     SESSION_ATTRIBUTES.each { |att| result.public_send("#{att}=", data[att]) }
     result.user = user
     result
@@ -83,8 +83,8 @@ class Auth::Result
 
   def apply_user_attributes!
     change_made = false
-    if (SiteSetting.auth_overrides_username? || overrides_username) && username.present?
-      change_made = UsernameChanger.override(user, username)
+    if (SiteSetting.auth_overrides_username? || overrides_username) && (resolved_username = resolve_username).present?
+      change_made = UsernameChanger.override(user, resolved_username)
     end
 
     if (SiteSetting.auth_overrides_email || overrides_email || user&.email&.ends_with?(".invalid")) &&
@@ -196,7 +196,8 @@ class Auth::Result
   end
 
   def username_suggester_attributes
-    attributes = [username, name]
+    attributes = [username]
+    attributes << name if SiteSetting.use_name_for_username_suggestions
     attributes << email if SiteSetting.use_email_for_username_and_name_suggestions
     attributes
   end
@@ -212,6 +213,6 @@ class Auth::Result
       end
     end
 
-    UserNameSuggester.suggest(*username_suggester_attributes)
+    UserNameSuggester.suggest(*username_suggester_attributes, current_username: user&.username)
   end
 end

@@ -144,6 +144,14 @@ sub sub {
         grid-template-columns: 1fr 1fr;
       }
 
+      ul {
+        display: contents;
+      }
+
+      .d-button-label {
+        @include ellipsis;
+      }
+
       .popup-menu-btn {
         @include ellipsis;
       }
@@ -154,4 +162,10 @@ sub sub {
       }
     }
   }
+}
+
+.container.posts .topic-navigation {
+  // better positioning for the docked progress bar on large screens using mobile view
+  grid-area: posts;
+  grid-row: 2;
 }

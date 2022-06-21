@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Pokreni tutorial za sve nove korisnike"
+        welcome_message: "Pošalji poruku dobrodošlice sa uputama svim novim korisnicima."

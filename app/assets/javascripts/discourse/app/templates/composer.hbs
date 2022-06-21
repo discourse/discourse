@@ -118,8 +118,8 @@
                       {{category-chooser
                         value=model.categoryId
                         onChange=(action (mut model.categoryId))
-                        isDisabled=disableCategoryChooser
                         options=(hash
+                          disabled=disableCategoryChooser
                           scopedCategoryId=scopedCategoryId
                           prioritizedCategoryId=prioritizedCategoryId
                         )
@@ -131,9 +131,9 @@
                   {{#if canEditTags}}
                     {{mini-tag-chooser
                       value=model.tags
-                      isDisabled=disableTagsChooser
                       onChange=(action (mut model.tags))
                       options=(hash
+                        disabled=disableTagsChooser
                         categoryId=model.categoryId
                         minimum=model.minimumRequiredTags
                       )

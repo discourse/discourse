@@ -2,9 +2,9 @@
 
 require "uri"
 require "mini_mime"
-require_dependency "file_store/base_store"
-require_dependency "s3_helper"
-require_dependency "file_helper"
+require "file_store/base_store"
+require "s3_helper"
+require "file_helper"
 
 module FileStore
 
@@ -224,7 +224,7 @@ module FileStore
       url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
     end
 
-    def signed_url_for_path(path, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS, force_download: false)
+    def signed_url_for_path(path, expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds, force_download: false)
       key = path.sub(absolute_base_url + "/", "")
       presigned_get_url(key, expires_in: expires_in, force_download: force_download)
     end
@@ -279,13 +279,24 @@ module FileStore
       end
     end
 
-    def update_upload_ACL(upload)
+    def update_upload_ACL(upload, optimized_images_preloaded: false)
       key = get_upload_key(upload)
       update_ACL(key, upload.secure?)
 
-      upload.optimized_images.find_each do |optimized_image|
-        optimized_image_key = get_path_for_optimized_image(optimized_image)
-        update_ACL(optimized_image_key, upload.secure?)
+      # if we do find_each when the images have already been preloaded with
+      # includes(:optimized_images), then the optimized_images are fetched
+      # from the database again, negating the preloading if this operation
+      # is done on a large amount of uploads at once (see Jobs::SyncAclsForUploads)
+      if optimized_images_preloaded
+        upload.optimized_images.each do |optimized_image|
+          optimized_image_key = get_path_for_optimized_image(optimized_image)
+          update_ACL(optimized_image_key, upload.secure?)
+        end
+      else
+        upload.optimized_images.find_each do |optimized_image|
+          optimized_image_key = get_path_for_optimized_image(optimized_image)
+          update_ACL(optimized_image_key, upload.secure?)
+        end
       end
 
       true
@@ -332,7 +343,7 @@ module FileStore
       url,
       force_download: false,
       filename: false,
-      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds
     )
       opts = { expires_in: expires_in }
 

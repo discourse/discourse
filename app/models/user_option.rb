@@ -11,6 +11,8 @@ class UserOption < ActiveRecord::Base
 
   after_save :update_tracked_topics
 
+  scope :human_users, -> { where('user_id > 0') }
+
   enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
 
   def self.ensure_consistency!
@@ -261,6 +263,7 @@ end
 #  default_calendar                 :integer          default("none_selected"), not null
 #  oldest_search_log_date           :datetime
 #  bookmark_auto_delete_preference  :integer          default(3), not null
+#  enable_experimental_sidebar      :boolean          default(FALSE)
 #
 # Indexes
 #

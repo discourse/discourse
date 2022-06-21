@@ -109,7 +109,6 @@ sq:
       previous_month: "Muaji i kaluar"
       next_month: "Muaji i ardhshëm"
     share:
-      post: "postim #%{postNumber}"
       close: "mbylle"
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"
@@ -246,8 +245,8 @@ sq:
     switch_to_anon: "Filloni sesionin anonim"
     switch_from_anon: "Shkëputu nga sesioni anonim"
     banner:
-      close: "Hiq këtë banderolë."
-      edit: "Modifiko këtë banderolë >>"
+      close: "Hiq këtë banderolë"
+      edit: "Redakto"
     choose_topic:
       none_found: "Asnjë temë nuk u gjet."
     review:
@@ -862,6 +861,8 @@ sq:
         sent_by: "Dërguar nga"
         private_message: "mesazhi"
         the_topic: "tema"
+    user_status:
+      save: "Ruaj"
     loading: "Duke ngarkuar..."
     errors:
       prev_page: "duke u munduar të ngarkohet"
@@ -969,16 +970,8 @@ sq:
       not_approved: "Llogaria juaj nuk është aprovuar ende. Do t'ju dërgojmë një email kur të aprovohet. "
       google_oauth2:
         name: "Google"
-        title: "me Google"
       twitter:
         name: "Twitter"
-        title: "me Twitter"
-      instagram:
-        title: "me Instagram"
-      facebook:
-        title: "me Facebook"
-      github:
-        title: "me GitHub"
     invites:
       accept_title: "Ftesë"
       welcome_to: "Mirë se vini tek %{site_name}!"
@@ -1313,8 +1306,6 @@ sq:
         unpin: "Çngjite temën..."
         unarchive: "Çarkivoje temën"
         archive: "Arkivoje temën"
-        invisible: "Hiqeni nga Listat"
-        visible: "Listojeni"
         reset_read: "Reset Read Data"
       feature:
         pin: "Ngjite temën"
@@ -1541,6 +1532,8 @@ sq:
       tags: "Etiketat"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
+      required_tag_group:
+        delete: "Fshij"
       delete: "Fshini kategorinë"
       create: "Krijo kategorinë e re"
       create_long: "Krijo një kategori të re"
@@ -1828,7 +1821,6 @@ sq:
         edit: "%{shortcut} Redakto postimin"
         delete: "%{shortcut} Fshi postimin"
         mark_muted: "%{shortcut} Bëje temë të heshtur"
-        mark_regular: "%{shortcut} Shënoje temën si të zakonshme"
         mark_tracking: "%{shortcut} Ndiqe temën"
         mark_watching: "%{shortcut} Vëzhgoje temën"
         print: "%{shortcut} Printo temën"
@@ -1934,6 +1926,32 @@ sq:
         member: "anëtarë"
         regular: "i zakonshëm"
         leader: "udhëheqës"
+    sidebar:
+      unread_count: "%{count} e palexuar"
+      new_count: "%{count} e re"
+      sections:
+        messages:
+          header_link_text: "Mesazhet"
+          links:
+            inbox: "Inbox"
+            sent: "Të dërguara"
+            new: "Të reja"
+            unread: "Të palexuara"
+            archive: "Arkivi"
+        tags:
+          header_link_title: "të gjitha etiketat"
+          header_link_text: "Etiketat"
+        categories:
+          header_link_title: "kategoritë"
+          header_link_text: "Categories"
+        topics:
+          header_link_title: "kryefaqja"
+          header_link_text: "Tema"
+          links:
+            tracked:
+              content: "Gjurmuar"
+            my_posts:
+              content: "Postimet e mia"
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:
@@ -2138,7 +2156,6 @@ sq:
         delete: "Fshij"
         color: "Ngjyra"
         opacity: "Opaciteti"
-        copy: "Kopjo"
         email_templates:
           title: "Email"
           subject: "Subjekti"

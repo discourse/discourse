@@ -175,6 +175,11 @@
       max-height: 300px;
       overflow-y: auto;
     }
+
+    &[data-popper-reference-hidden] {
+      visibility: hidden;
+      pointer-events: none;
+    }
   }
 
   .select-kit-row {

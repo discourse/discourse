@@ -10,7 +10,7 @@ module RailsMultisite
           break if !defined?(RailsFailover::ActiveRecord)
           break if db == RailsMultisite::ConnectionManagement::DEFAULT
 
-          reading_role = :"#{db}_#{ActiveRecord::Base.reading_role}"
+          reading_role = :"#{db}_#{ActiveRecord.reading_role}"
           spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
 
           ActiveRecord::Base.connection_handlers[reading_role] ||= begin

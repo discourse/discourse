@@ -119,6 +119,12 @@ acceptance("Invite accept", function (needs) {
     );
 
     await fillIn("#new-account-email", "john.doe@example.com");
+    assert.ok(
+      exists(".invites-show .btn-primary:disabled"),
+      "submit is disabled because password is not filled"
+    );
+
+    await fillIn("#new-account-password", "top$ecret");
     assert.notOk(
       exists(".invites-show .btn-primary:disabled"),
       "submit is enabled"

@@ -22,9 +22,22 @@ export default UserTopicListRoute.extend({
       });
   },
 
+  afterModel(model, transition) {
+    if (!this.isPoppedState(transition)) {
+      this.session.set("topicListScrollPosition", null);
+    }
+  },
+
   emptyState() {
+    const user = this.modelFor("user");
+    const title = this.isCurrentUser(user)
+      ? I18n.t("user_activity.no_topics_title")
+      : I18n.t("user_activity.no_topics_title_others", {
+          username: user.username,
+        });
+
     return {
-      title: I18n.t("user_activity.no_topics_title"),
+      title,
       body: "",
     };
   },

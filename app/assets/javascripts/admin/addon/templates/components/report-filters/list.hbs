@@ -1,8 +1,10 @@
 {{combo-box
   content=filter.choices
-  filterable=true
-  allowAny=filter.allow_any
   value=filter.default
-  none="admin.dashboard.report_filter_any"
   onChange=(action "onChange")
+  options=(hash
+    allowAny=filter.allow_any
+    filterable=true
+    none="admin.dashboard.report_filter_any"
+  )
 }}

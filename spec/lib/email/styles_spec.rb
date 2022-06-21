@@ -156,6 +156,19 @@ describe Email::Styles do
 
   end
 
+  context "dark mode emails" do
+    it "adds dark_mode_styles when site setting active" do
+      frag = html_fragment('<div class="body">test</div>')
+      styler = Email::Styles.new(frag)
+      styler.format_basic
+      styler.format_html
+      @frag = Nokogiri::HTML5.fragment(styler.to_s)
+
+      # dark mode attribute
+      expect(@frag.css('[dm="body"]')).to be_present
+    end
+  end
+
   context "strip_avatars_and_emojis" do
     it "works for lonesome emoji with no title" do
       emoji = "<img src='/images/emoji/twitter/crying_cat_face.png'>"

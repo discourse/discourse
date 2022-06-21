@@ -142,15 +142,19 @@ describe PostCreator do
 
         admin = Fabricate(:user)
         admin.grant_admin!
+        other_admin = Fabricate(:user)
+        other_admin.grant_admin!
 
         cat = Fabricate(:category)
         cat.set_permissions(admins: :full)
         cat.save
 
         created_post = nil
+        other_user_tracking_topic = nil
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
+          Fabricate(:topic_user_tracking, topic: created_post.topic, user: other_admin)
           _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id, advance_draft: true).create
         end
 
@@ -170,14 +174,14 @@ describe PostCreator do
             "/latest",
             "/topic/#{created_post.topic_id}",
             "/topic/#{created_post.topic_id}",
-            "/user",
-            "/user",
-            "/user"
+            "/user-drafts/#{admin.id}",
+            "/user-drafts/#{admin.id}",
+            "/user-drafts/#{admin.id}",
           ].sort
         )
 
         admin_ids = [Group[:admins].id]
-        expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
+        expect(messages.any? { |m| m.group_ids != admin_ids && (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id)) }).to eq(false)
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -201,7 +205,7 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        draft_count = messages.find { |m| m.channel == "/user" }
+        draft_count = messages.find { |m| m.channel == "/user-drafts/#{p.user_id}" }
         expect(draft_count).not_to eq(nil)
 
         expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
@@ -803,13 +807,13 @@ describe PostCreator do
 
     context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         TopicUser.create!(topic: topic, user: user, bookmarked: true)
       end
 
       it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
-        Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user)
+        Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
         Fabricate(:bookmark, user: user)
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)

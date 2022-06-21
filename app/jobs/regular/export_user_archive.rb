@@ -31,7 +31,7 @@ module Jobs
       auth_tokens: ['id', 'auth_token_hash', 'prev_auth_token_hash', 'auth_token_seen', 'client_ip', 'user_agent', 'seen_at', 'rotated_at', 'created_at', 'updated_at'],
       auth_token_logs: ['id', 'action', 'user_auth_token_id', 'client_ip', 'auth_token_hash', 'created_at', 'path', 'user_agent'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
-      bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
+      bookmarks: ['bookmarkable_id', 'bookmarkable_type', 'link', 'name', 'created_at', 'updated_at', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
       flags: ['id', 'post_id', 'flag_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id', 'targets_topic', 'was_take_action'],
       likes: ['id', 'post_id', 'topic_id', 'post_number', 'created_at', 'updated_at', 'deleted_at', 'deleted_by'],
@@ -48,7 +48,8 @@ module Jobs
       components = []
 
       COMPONENTS.each do |name|
-        h = { name: name, method: :"#{name}_export" }
+        export_method = "#{name}_export"
+        h = { name: name, method: :"#{export_method}" }
         h[:filetype] = :csv
         filetype_method = :"#{name}_filetype"
         if respond_to? filetype_method
@@ -231,27 +232,27 @@ module Jobs
     def bookmarks_export
       return enum_for(:bookmarks_export) unless block_given?
 
-      Bookmark
-        .where(user_id: @current_user.id)
-        .joins(:post)
-        .order(:id)
-        .each do |bkmk|
+      @current_user.bookmarks.where.not(bookmarkable_type: nil).order(:id).each do |bookmark|
         link = ''
-        if guardian.can_see_post?(bkmk.post)
-          link = bkmk.post.full_url
+        if guardian.can_see_bookmarkable?(bookmark)
+          if bookmark.bookmarkable.respond_to?(:full_url)
+            link = bookmark.bookmarkable.full_url
+          else
+            link = bookmark.bookmarkable.url
+          end
         end
+
         yield [
-          bkmk.post_id,
-          bkmk.topic_id,
-          bkmk.post&.post_number,
+          bookmark.bookmarkable_id,
+          bookmark.bookmarkable_type,
           link,
-          bkmk.name,
-          bkmk.created_at,
-          bkmk.updated_at,
-          bkmk.reminder_at,
-          bkmk.reminder_last_sent_at,
-          bkmk.reminder_set_at,
-          Bookmark.auto_delete_preferences[bkmk.auto_delete_preference],
+          bookmark.name,
+          bookmark.created_at,
+          bookmark.updated_at,
+          bookmark.reminder_at,
+          bookmark.reminder_last_sent_at,
+          bookmark.reminder_set_at,
+          Bookmark.auto_delete_preferences[bookmark.auto_delete_preference],
         ]
       end
     end
@@ -261,15 +262,16 @@ module Jobs
 
       CategoryUser
         .where(user_id: @current_user.id)
-        .select(:category_id, :notification_level, :last_seen_at)
+        .includes(:category)
+        .merge(Category.secured(guardian))
         .each do |cu|
-        yield [
-          cu.category_id,
-          piped_category_name(cu.category_id),
-          NotificationLevels.all[cu.notification_level],
-          cu.last_seen_at
-        ]
-      end
+          yield [
+            cu.category_id,
+            piped_category_name(cu.category_id, cu.category),
+            NotificationLevels.all[cu.notification_level],
+            cu.last_seen_at
+          ]
+        end
     end
 
     def flags_export
@@ -323,7 +325,7 @@ module Jobs
       # Most forums should not have post_action records other than flags and likes, but they are possible in historical oddities.
       PostAction
         .where(user_id: @current_user.id)
-        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like]])
         .exists?
     end
 
@@ -332,7 +334,7 @@ module Jobs
       PostAction
         .with_deleted
         .where(user_id: @current_user.id)
-        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like]])
         .order(:created_at)
         .each do |pa|
         yield [
@@ -408,10 +410,9 @@ module Jobs
       @guardian ||= Guardian.new(@current_user)
     end
 
-    def piped_category_name(category_id)
-      return "-" unless category_id
-      category = Category.find_by(id: category_id)
-      return "#{category_id}" unless category
+    def piped_category_name(category_id, category)
+      return "#{category_id}" if category_id && !category
+      return "-" if !guardian.can_see_category?(category)
       categories = [category.name]
       while category.parent_category_id && category = category.parent_category
         categories << category.name
@@ -433,10 +434,10 @@ module Jobs
       user_archive_array = []
       topic_data = user_archive.topic
       user_archive = user_archive.as_json
-      topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
+      topic_data = Topic.with_deleted.includes(:category).find_by(id: user_archive['topic_id']) if topic_data.nil?
       return user_archive_array if topic_data.nil?
 
-      categories = piped_category_name(topic_data.category_id)
+      categories = piped_category_name(topic_data.category_id, topic_data.category)
       is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
       url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 

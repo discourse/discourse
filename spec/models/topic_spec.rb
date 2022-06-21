@@ -270,6 +270,37 @@ describe Topic do
         end
       end
     end
+
+    context 'slug computed hooks' do
+      before do
+        invert_slug = ->(topic, slug, title) { slug.reverse }
+        Topic.slug_computed_callbacks << invert_slug
+      end
+
+      let!(:title) { "hello test topic" }
+      let!(:slug) { "hello-test-topic".reverse }
+      let!(:other_title) { "other title" }
+      let!(:other_slug) { "other-title".reverse }
+      let!(:topic) { Fabricate.build(:topic, title: title) }
+
+      it "returns a reversed slug for a title" do
+        expect(topic.title).to eq(title)
+        expect(topic.slug).to eq(slug)
+      end
+
+      it "returns a reversed slug after the title is changed" do
+        expect(topic.title).to eq(title)
+        expect(topic.slug).to eq(slug)
+
+        topic.title = other_title
+        expect(topic.title).to eq(other_title)
+        expect(topic.slug).to eq(other_slug)
+      end
+
+      after do
+        Topic.slug_computed_callbacks.clear
+      end
+    end
   end
 
   context "updating a title to be shorter" do
@@ -578,6 +609,11 @@ describe Topic do
       it "excludes the category definition topic from similar_to" do
         expect(Topic.similar_to('category definition for', "no body")).to eq([])
       end
+    end
+
+    it 'does not result in a syntax error when removing accents' do
+      SiteSetting.search_ignore_accents = true
+      expect(Topic.similar_to('something', "it's")).to eq([])
     end
 
     it 'does not result in a syntax error when raw is blank after cooking' do

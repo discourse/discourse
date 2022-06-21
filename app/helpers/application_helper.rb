@@ -20,7 +20,7 @@ module ApplicationHelper
       modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
-      locationType: "auto",
+      locationType: "history",
       historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {},
@@ -135,31 +135,23 @@ module ApplicationHelper
     path
   end
 
-  def preload_vendor_scripts
-    scripts = ["vendor"]
+  def preload_script(script)
+    scripts = [script]
 
-    if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
-      @@vendor_chunks ||= begin
-        all_assets = ActionController::Base.helpers.assets_manifest.assets
-        all_assets.keys.filter_map { |name| name[/\A(chunk\..*)\.js\z/, 1] }
-      end
-      scripts.push(*@@vendor_chunks)
+    if chunks = EmberCli.script_chunks[script]
+      scripts.push(*chunks)
     end
 
     scripts.map do |name|
-      preload_script(name)
+      path = script_asset_path(name)
+      preload_script_url(path)
     end.join("\n").html_safe
-  end
-
-  def preload_script(script)
-    path = script_asset_path(script)
-    preload_script_url(path)
   end
 
   def preload_script_url(url)
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
+      <script defer src="#{url}"></script>
     HTML
   end
 
@@ -187,7 +179,7 @@ module ApplicationHelper
     result = ApplicationHelper.extra_body_classes.to_a
 
     if @category && @category.url.present?
-      result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+      result << "category-#{@category.slug_path.join('-')}"
     end
 
     if current_user.present? &&
@@ -295,15 +287,7 @@ module ApplicationHelper
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, property: 'og:type', content: 'website')
 
-    if opts[:twitter_summary_large_image].present?
-      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
-      result << tag(:meta, name: "twitter:image", content: opts[:twitter_summary_large_image])
-    elsif opts[:image].present?
-      result << tag(:meta, name: 'twitter:card', content: "summary")
-      result << tag(:meta, name: "twitter:image", content: opts[:image])
-    else
-      result << tag(:meta, name: 'twitter:card', content: "summary")
-    end
+    result = generate_twitter_card_metadata(opts, result)
     result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
 
     [:url, :title, :description].each do |property|
@@ -330,6 +314,29 @@ module ApplicationHelper
     end
 
     result.join("\n")
+  end
+
+  def generate_twitter_card_metadata(opts, result)
+    img_url = opts[:twitter_summary_large_image].present? ? \
+      opts[:twitter_summary_large_image] :
+      opts[:image]
+
+    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+    if img_url.ends_with?(".svg")
+      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
+    end
+
+    if opts[:twitter_summary_large_image].present? && img_url.present?
+      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    elsif opts[:image].present? && img_url.present?
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    else
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+    end
+
+    result
   end
 
   def render_sitelinks_search_tag
@@ -393,7 +400,11 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    crawler_layout? || !mobile_view?
+    crawler_layout? || !mobile_view? || !modern_mobile_device?
+  end
+
+  def modern_mobile_device?
+    MobileDetection.modern_mobile_device?(request.user_agent)
   end
 
   def mobile_device?
@@ -451,17 +462,15 @@ module ApplicationHelper
     @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
   end
 
-  def server_plugin_outlet(name)
-
-    # Don't evaluate plugins in test
-    return "" if Rails.env.test?
+  def server_plugin_outlet(name, locals: {})
+    return "" if !GlobalSetting.load_plugins?
 
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb)) }
+    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
     result.html_safe
   end
 
@@ -654,13 +663,7 @@ module ApplicationHelper
   end
 
   def rss_creator(user)
-    if user
-      if SiteSetting.prioritize_username_in_ux
-        "#{user.username}"
-      else
-        "#{user.name.presence || user.username }"
-      end
-    end
+    user&.display_name
   end
 
   def authentication_data

@@ -29,6 +29,7 @@ describe Middleware::AnonymousCache do
       it "is true if it has an invalid auth cookie" do
         cookie = create_auth_cookie(token: SecureRandom.hex, issued_at: 5.minutes.ago)
         cookie = swap_2_different_characters(cookie)
+        cookie.prepend("%a0%a1") # an invalid byte sequence
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{cookie}; jill=2").cacheable?).to eq(true)
       end
 
@@ -76,6 +77,20 @@ describe Middleware::AnonymousCache do
         expect(french1).to eq(french2)
         expect(french1).not_to eq(none)
       end
+    end
+
+    it "handles old browsers" do
+      SiteSetting.browser_update_user_agents = "my_old_browser"
+
+      key1 = new_helper("HTTP_USER_AGENT" => "my_old_browser").cache_key
+      key2 = new_helper("HTTP_USER_AGENT" => "my_new_browser").cache_key
+      expect(key1).not_to eq(key2)
+    end
+
+    it "handles modern mobile browsers" do
+      key1 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 7)").cache_key
+      key2 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 15)").cache_key
+      expect(key1).not_to eq(key2)
     end
 
     context "cached" do
@@ -362,5 +377,4 @@ describe Middleware::AnonymousCache do
       expect(@status).to eq(403)
     end
   end
-
 end

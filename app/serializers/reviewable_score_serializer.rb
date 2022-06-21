@@ -40,12 +40,6 @@ class ReviewableScoreSerializer < ApplicationSerializer
       text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: nil)
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: nil)
-
-      # TODO(roman): Remove after the 2.8 release.
-      # The discourse-antivirus and akismet plugins still use the backtick format for settings.
-      # It'll be hard to migrate them to the new format without breaking backwards compatibility, so I'm keeping the old behavior for now.
-      # Will remove after the 2.8 release.
-      linkify_backticks(object.reason, text) if text
     end
 
     text
@@ -85,16 +79,5 @@ class ReviewableScoreSerializer < ApplicationSerializer
     return text.gsub('_', ' ') unless scope.is_staff?
 
     "<a href=\"#{url_for(reason, text)}\">#{text.gsub('_', ' ')}</a>"
-  end
-
-  def linkify_backticks(reason, text)
-    text.gsub!(/`[a-z_]+`/) do |m|
-      if scope.is_staff?
-        setting = m[1..-2]
-        "<a href=\"#{url_for(reason, setting)}\">#{setting.gsub('_', ' ')}</a>"
-      else
-        m.gsub('_', ' ')
-      end
-    end
   end
 end

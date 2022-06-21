@@ -1,5 +1,6 @@
 {{#d-section pageClass="user-summary" tagName=""}}
   <div class="user-content">
+    {{plugin-outlet name="above-user-summary-stats" args=(hash model=model user=user)}}
     {{#if model.can_see_summary_stats}}
       <div class="top-section stats-section">
         <h3 class="stats-title">{{i18n "user.summary.stats"}}</h3>
@@ -8,11 +9,11 @@
             {{user-stat value=model.days_visited label="user.summary.days_visited"}}
           </li>
           <li class="stats-time-read">
-            {{user-stat value=timeRead label="user.summary.time_read" type="string"}}
+            {{user-stat value=timeRead label="user.summary.time_read" rawTitle=(i18n "user.summary.time_read_title" duration=timeReadMedium) type="string"}}
           </li>
           {{#if showRecentTimeRead}}
             <li class="stats-recent-read">
-              {{user-stat value=recentTimeRead label="user.summary.recent_time_read" type="string"}}
+              {{user-stat value=recentTimeRead label="user.summary.recent_time_read" rawTitle=(i18n "user.summary.recent_time_read_title" duration=recentTimeReadMedium) type="string"}}
             </li>
           {{/if}}
           <li class="stats-topics-entered">
@@ -46,7 +47,7 @@
               {{user-stat value=model.post_count label="user.summary.post_count"}}
             {{/link-to}}
           </li>
-          {{plugin-outlet name="user-summary-stat" connectorTagName="li" args=(hash model=model)}}
+          {{plugin-outlet name="user-summary-stat" connectorTagName="li" args=(hash model=model user=user)}}
         </ul>
       </div>
     {{/if}}
@@ -157,6 +158,7 @@
             {{#each model.badges as |badge|}}
               {{badge-card badge=badge count=badge.count username=user.username_lower}}
             {{/each}}
+            {{plugin-outlet name="after-user-summary-badges" args=(hash model=model user=user)}}
           </div>
         {{else}}
           <p>{{i18n "user.summary.no_badges"}}</p>

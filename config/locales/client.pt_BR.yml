@@ -83,9 +83,18 @@ pt_BR:
         x_hours:
           one: "%{count} hora"
           other: "%{count} horas"
+        about_x_hours:
+          one: "cerca de %{count} hora"
+          other: "cerca de %{count} horas"
         x_days:
           one: "%{count} dia"
           other: "%{count} dias"
+        x_months:
+          one: "%{count} mês"
+          other: "%{count} meses"
+        about_x_years:
+          one: "cerca de %{count} ano"
+          other: "cerca de %{count} anos"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -120,7 +129,6 @@ pt_BR:
       to_placeholder: "até agora"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
-      post: "postagem #%{postNumber}"
       close: "fechar"
       twitter: "Compartilhar no Twitter"
       facebook: "Compartilhar no Facebook"
@@ -282,6 +290,8 @@ pt_BR:
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
       created: "Você marcou esta postagem como favorita. %{name}"
+      create: "Criar favorito"
+      edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
@@ -355,8 +365,8 @@ pt_BR:
     switch_to_anon: "Entrar no Modo anônimo"
     switch_from_anon: "Sair do Modo anônimo"
     banner:
-      close: "Descarte este banner."
-      edit: "Editar este banner >>"
+      close: "Descarte este banner"
+      edit: "Editar"
     pwa:
       install_banner: "Você quer <a href>instalar %{title} no seu dispositivo?</a>"
     choose_topic:
@@ -551,6 +561,7 @@ pt_BR:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoje mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
@@ -559,13 +570,20 @@ pt_BR:
       this_weekend: "Neste fim de semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima segunda-feira"
+      next_week: "Próxima semana"
       two_weeks: "Duas semanas"
       next_month: "Próximo mês"
+      two_months: "Dois meses"
+      three_months: "Três meses"
+      four_months: "Quatro meses"
       six_months: "Seis meses"
-      custom: "Data e hora personalizadas"
+      one_year: "Um ano"
+      forever: "Para sempre"
       relative: "Tempo relativo"
       none: "Nenhum necessário"
       last_custom: "Última data personalizada"
+      custom: "Data e hora personalizadas"
+      select_timeframe: "Selecione um intervalo de tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'>Você</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -1470,8 +1488,6 @@ pt_BR:
           title: "Link de convite"
           success: "Link do convite gerado com sucesso!"
           error: "Ocorreu um erro ao gerar o link de convite"
-          max_redemptions_allowed_label: "Quantas pessoas têm permissão para se cadastrar usando este link?"
-          expires_at: "Quando este link de convite irá expirar?"
         invite:
           new_title: "Criar convite"
           edit_title: "Editar convite"
@@ -1587,6 +1603,8 @@ pt_BR:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+    user_status:
+      save: "Salvar"
     loading: "Carregando..."
     errors:
       prev_page: "ao tentar carregar"
@@ -1766,28 +1784,16 @@ pt_BR:
       not_approved: "Sua conta ainda não foi aprovada. Você será notificado(a) por e-mail quando tudo estiver pronto para entrar."
       google_oauth2:
         name: "Google"
-        title: "com o Google"
-        sr_title: "Entrar com o Google"
       twitter:
         name: "Twitter"
-        title: "com o Twitter"
-        sr_title: "Entrar com o Twitter"
       instagram:
         name: "Instagram"
-        title: "com o Instagram"
-        sr_title: "Entrar com o Instagram"
       facebook:
         name: "Facebook"
-        title: "com o Facebook"
-        sr_title: "Entrar com o Facebook"
       github:
         name: "GitHub"
-        title: "com o GitHub"
-        sr_title: "Entrar com o GitHub"
       discord:
         name: "Discord"
-        title: "com o Discord"
-        sr_title: "Entrar com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo autenticador"
         backup_code: "Use um código de backup"
@@ -1802,7 +1808,6 @@ pt_BR:
       success: "Sua conta foi criada e você já entrou."
       name_label: "Nome"
       password_label: "Senha"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -2021,9 +2026,6 @@ pt_BR:
         reply_as_new_group_message:
           label: Responder como nova mensagem de grupo
           desc: Crie uma nova mensagem começando com os mesmos destinatários
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Criar uma nova mensagem pessoal
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma postagem específica
@@ -2442,24 +2444,6 @@ pt_BR:
         min_duration: "A duração deve ser maior do que 0"
         max_duration: "A duração deve ser menor do que 20 anos"
         duration: "Duração"
-      auto_update_input:
-        none: "Selecione um intervalo de tempo"
-        now: "Agora"
-        later_today: "Hoje mais tarde"
-        tomorrow: "Amanhã"
-        later_this_week: "Mais tarde nesta semana"
-        this_weekend: "Neste fim de semana"
-        next_week: "Próxima semana"
-        two_weeks: "Duas semanas"
-        next_month: "Próximo mês"
-        two_months: "Dois meses"
-        three_months: "Três meses"
-        four_months: "Quatro meses"
-        six_months: "Seis meses"
-        one_year: "Um ano"
-        forever: "Para sempre"
-        pick_date_and_time: "Escolher data e hora"
-        set_based_on_last_post: "Fechar com base na última postagem"
       publish_to_category:
         title: "Agendar publicação"
       temp_open:
@@ -2571,8 +2555,6 @@ pt_BR:
         unpin: "Desafixar tópico..."
         unarchive: "Desarquivar tópico"
         archive: "Arquivar tópico"
-        invisible: "Remover da lista"
-        visible: "Adicionar à lista"
         reset_read: "Redefinir data de leitura"
         make_public: "Tornar tópico público..."
         make_private: "Crie uma mensagem pessoal"
@@ -2999,10 +2981,8 @@ pt_BR:
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gerenciar grupos de etiquetas"
       allow_global_tags_label: "Permitir também outras etiquetas"
-      tag_group_selector_placeholder: "(Opcional) grupo de etiquetas"
-      required_tag_group_description: "Exigir que novos tópicos tenham etiquetas de um grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de etiquetas:"
-      required_tag_group_label: "Grupo de etiquetas:"
+      required_tag_group:
+        delete: "Excluir"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
       create: "Nova categoria"
@@ -3408,7 +3388,6 @@ pt_BR:
         edit: "%{shortcut} Editar postagem"
         delete: "%{shortcut} Excluir postagem"
         mark_muted: "%{shortcut} Silenciar tópico"
-        mark_regular: "%{shortcut} Tópico regular (padrão)"
         mark_tracking: "%{shortcut} Monitorar tópico"
         mark_watching: "%{shortcut} Acompanhar tópico"
         print: "%{shortcut} Imprimir tópico"
@@ -3624,7 +3603,6 @@ pt_BR:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
     user_activity:
       no_activity_title: "Nenhuma atividade ainda."
-      no_activity_body: "Boas-vindas à nossa comunidade! É a sua primeira vez aqui, e você ainda não contribuiu para nenhuma discussão. Para começar, acesse <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a> e comece a ler! Selecione %{heartIcon} nas postagens de que você gosta ou quer saber mais. Se ainda não tiver feito isso, ajude os(as) outros(as) a conhecê-lo(a) ao adicionar uma imagem e biografia nas suas <a href='%{preferencesUrl}'>preferências de usuário(a)</a>."
       no_activity_others: "Nenhuma atividade."
       no_replies_title: "Você ainda não respondeu a nenhum tópico."
       no_replies_others: "Sem respostas."
@@ -3639,6 +3617,32 @@ pt_BR:
     no_group_messages_title: "Nenhuma mensagem de grupo encontrada"
     fullscreen_table:
       expand_btn: "Expandir tabela"
+    sidebar:
+      unread_count: "%{count} não lido"
+      new_count: "%{count} nova"
+      sections:
+        messages:
+          header_link_text: "Mensagens"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            unread: "Não lidos(as)"
+            archive: "Arquivo"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
+        categories:
+          header_link_title: "todas as categorias"
+          header_link_text: "Categorias"
+        topics:
+          header_link_title: "início"
+          header_link_text: "Tópicos"
+          links:
+            tracked:
+              content: "Monitorados(as)"
+            my_posts:
+              content: "Minhas postagens"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -3864,7 +3868,6 @@ pt_BR:
               read: Leia um tópico ou uma postagem específica nele. RSS também é compatível.
               write: Crie um novo tópico ou poste em algum que já existe.
               read_lists: Leia listas de tópico como melhores, novidades, mais recentes. RSS também é compatível.
-              wordpress: Necessário para que o plug-in wp-discourse do WordPress funcione.
             posts:
               edit: Edite qualquer postagem ou especifique uma.
             uploads:
@@ -4085,7 +4088,6 @@ pt_BR:
         delete_confirm: 'Você tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar para área de transferência"
         copied_to_clipboard: "Copiou para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"

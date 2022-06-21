@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'global_path'
 require 'csv'
 require 'json_schemer'
 
@@ -155,7 +154,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 55
+  BASE_COMPILER_VERSION = 56
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -392,7 +391,7 @@ class Theme < ActiveRecord::Base
       end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
-      return caches.map { |c| "<script src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
+      return caches.map { |c| "<script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
     end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
@@ -539,12 +538,19 @@ class Theme < ActiveRecord::Base
     end
 
     theme_uploads = {}
+    theme_uploads_local = {}
+
     upload_fields.each do |field|
       if field.upload&.url
         theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
       end
+      if field.javascript_cache
+        theme_uploads_local[field.name] = field.javascript_cache.local_url
+      end
     end
+
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+    hash['theme_uploads_local'] = theme_uploads_local if theme_uploads_local.present?
 
     hash
   end
@@ -652,7 +658,7 @@ class Theme < ActiveRecord::Base
     end
 
     settings_hash&.each do |name, value|
-      next if name == "theme_uploads"
+      next if name == "theme_uploads" || name == "theme_uploads_local"
       contents << to_scss_variable(name, value)
     end
 
@@ -700,6 +706,7 @@ class Theme < ActiveRecord::Base
   def baked_js_tests_with_digest
     content = theme_fields
       .where(target_id: Theme.targets[:tests_js])
+      .order(name: :asc)
       .each(&:ensure_baked!)
       .map(&:value_baked)
       .join("\n")

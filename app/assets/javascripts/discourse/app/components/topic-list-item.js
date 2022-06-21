@@ -1,4 +1,7 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -9,6 +12,7 @@ import { on } from "@ember/object/evented";
 import { schedule } from "@ember/runloop";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { htmlSafe } from "@ember/template";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -52,11 +56,18 @@ export default Component.extend({
     if (template) {
       this.set(
         "topicListItemContents",
-        template(this, RUNTIME_OPTIONS).htmlSafe()
+        htmlSafe(template(this, RUNTIME_OPTIONS))
       );
       schedule("afterRender", () => {
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
+        }
+        if (this._shouldFocusLastVisited()) {
+          const title = this._titleElement();
+          if (title) {
+            title.addEventListener("focus", this._onTitleFocus);
+            title.addEventListener("blur", this._onTitleBlur);
+          }
         }
       });
     }
@@ -97,6 +108,13 @@ export default Component.extend({
 
     if (this.includeUnreadIndicator) {
       this.messageBus.unsubscribe(this.unreadIndicatorChannel);
+    }
+    if (this._shouldFocusLastVisited()) {
+      const title = this._titleElement();
+      if (title) {
+        title.removeEventListener("focus", this._onTitleFocus);
+        title.removeEventListener("blur", this._onTitleBlur);
+      }
     }
   },
 
@@ -241,6 +259,19 @@ export default Component.extend({
       return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
+    // make full row click target on mobile, due to size constraints
+    if (
+      this.site.mobileView &&
+      (e.target.classList.contains("right") ||
+        e.target.classList.contains("topic-item-stats") ||
+        e.target.classList.contains("main-link"))
+    ) {
+      if (wantsNewWindow(e)) {
+        return true;
+      }
+      return this.navigateToTopic(topic, topic.lastUnreadUrl);
+    }
+
     if (e.target.closest("a.topic-status")) {
       this.topic.togglePinnedForUser();
       return false;
@@ -259,12 +290,17 @@ export default Component.extend({
         return;
       }
 
-      const $topic = $(this.element);
-      $topic
-        .addClass("highlighted")
-        .attr("data-islastviewedtopic", opts.isLastViewedTopic);
-
-      $topic.on("animationend", () => $topic.removeClass("highlighted"));
+      this.element.classList.add("highlighted");
+      this.element.setAttribute(
+        "data-islastviewedtopic",
+        opts.isLastViewedTopic
+      );
+      this.element.addEventListener("animationend", () => {
+        this.element.classList.remove("highlighted");
+      });
+      if (opts.isLastViewedTopic && this._shouldFocusLastVisited()) {
+        this._titleElement()?.focus();
+      }
     });
   },
 
@@ -279,4 +315,30 @@ export default Component.extend({
       this.highlight();
     }
   }),
+
+  @bind
+  _onTitleFocus() {
+    if (this.element && !this.isDestroying && !this.isDestroyed) {
+      this._mainLinkElement().classList.add("focused");
+    }
+  },
+
+  @bind
+  _onTitleBlur() {
+    if (this.element && !this.isDestroying && !this.isDestroyed) {
+      this._mainLinkElement().classList.remove("focused");
+    }
+  },
+
+  _shouldFocusLastVisited() {
+    return !this.site.mobileView && this.focusLastVisitedTopic;
+  },
+
+  _mainLinkElement() {
+    return this.element.querySelector(".main-link");
+  },
+
+  _titleElement() {
+    return this.element.querySelector(".main-link .title");
+  },
 });

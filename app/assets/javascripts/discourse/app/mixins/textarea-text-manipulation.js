@@ -34,6 +34,13 @@ export function getHead(head, prev) {
 export default Mixin.create({
   init() {
     this._super(...arguments);
+
+    // fallback in the off chance someone has implemented a custom composer
+    // which does not define this
+    if (!this.composerEventPrefix) {
+      this.composerEventPrefix = "composer";
+    }
+
     generateLinkifyFunction(this.markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
       this._cachedLinkify = linkify;
@@ -41,14 +48,7 @@ export default Mixin.create({
   },
 
   // ensures textarea scroll position is correct
-  //
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   focusTextArea() {
-    this._focusTextArea();
-  },
-
-  _focusTextArea() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
     }
@@ -61,33 +61,15 @@ export default Mixin.create({
     this._textarea.focus();
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   insertBlock(text) {
-    this._insertBlock(text);
-  },
-
-  _insertBlock(text) {
     this._addBlock(this.getSelected(), text);
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   insertText(text, options) {
-    this._insertText(text, options);
+    this.addText(this.getSelected(), text, options);
   },
 
-  _insertText(text, options) {
-    this._addText(this.getSelected(), text, options);
-  },
-
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   getSelected(trimLeading, opts) {
-    return this._getSelected(trimLeading, opts);
-  },
-
-  _getSelected(trimLeading, opts) {
     if (!this.ready || !this.element) {
       return;
     }
@@ -114,7 +96,7 @@ export default Mixin.create({
 
     if (opts && opts.lineVal) {
       const lineVal = value.split("\n")[
-        value.substr(0, this._textarea.selectionStart).split("\n").length - 1
+        value.slice(0, this._textarea.selectionStart).split("\n").length - 1
       ];
       return { start, end, value: selVal, pre, post, lineVal };
     } else {
@@ -122,13 +104,7 @@ export default Mixin.create({
     }
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   selectText(from, length, opts = { scroll: true }) {
-    this._selectText(from, length, opts);
-  },
-
-  _selectText(from, length, opts = { scroll: true }) {
     next(() => {
       if (!this.element) {
         return;
@@ -136,24 +112,17 @@ export default Mixin.create({
 
       this._textarea.selectionStart = from;
       this._textarea.selectionEnd = from + length;
-      this._$textarea.trigger("change");
       if (opts.scroll) {
-        const oldScrollPos = this._$textarea.scrollTop();
+        const oldScrollPos = this._textarea.scrollTop;
         if (!this.capabilities.isIOS) {
-          this._$textarea.focus();
+          this._textarea.focus();
         }
-        this._$textarea.scrollTop(oldScrollPos);
+        this._textarea.scrollTop = oldScrollPos;
       }
     });
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   replaceText(oldVal, newVal, opts = {}) {
-    this._replaceText(oldVal, newVal, opts);
-  },
-
-  _replaceText(oldVal, newVal, opts = {}) {
     const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
@@ -196,13 +165,7 @@ export default Mixin.create({
     }
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   applySurround(sel, head, tail, exampleKey, opts) {
-    this._applySurround(sel, head, tail, exampleKey, opts);
-  },
-
-  _applySurround(sel, head, tail, exampleKey, opts) {
     const pre = sel.pre;
     const post = sel.post;
 
@@ -214,7 +177,7 @@ export default Mixin.create({
 
       const [hval, hlen] = getHead(head);
       const example = I18n.t(`composer.${exampleKey}`);
-      this.set("value", `${pre}${hval}${example}${tail}${post}`);
+      this._insertAt(sel.start, sel.end, `${hval}${example}${tail}`);
       this.selectText(pre.length + hlen, example.length);
     } else if (opts && !opts.multiline) {
       let [hval, hlen] = getHead(head);
@@ -226,13 +189,11 @@ export default Mixin.create({
       }
 
       if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
-        );
+        // Already wrapped in the surround. Remove it.
+        this._insertAt(sel.start - hlen, sel.end + tail.length, sel.value);
         this.selectText(sel.start - hlen, sel.value.length);
       } else {
-        this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
+        this._insertAt(sel.start, sel.end, `${hval}${sel.value}${tail}`);
         this.selectText(sel.start + hlen, sel.value.length);
       }
     } else {
@@ -244,10 +205,8 @@ export default Mixin.create({
         pre.slice(-tlen) === tail &&
         post.slice(0, hlen) === hval
       ) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
-        );
+        // Already wrapped in the surround. Remove it.
+        this._insertAt(sel.start - hlen, sel.end + tlen, sel.value);
         this.selectText(sel.start - hlen, sel.value.length);
       } else {
         const contents = this._getMultilineContents(
@@ -260,7 +219,7 @@ export default Mixin.create({
           opts
         );
 
-        this.set("value", `${pre}${contents}${post}`);
+        this._insertAt(sel.start, sel.end, contents);
         if (lines.length === 1 && tlen > 0) {
           this.selectText(sel.start + hlen, sel.value.length);
         } else {
@@ -316,37 +275,35 @@ export default Mixin.create({
       return;
     }
 
-    let pre = sel.pre;
-    let post = sel.value + sel.post;
+    let start = sel.start;
+    let end = sel.end;
 
-    if (pre.length > 0) {
-      pre = pre.replace(/\n*$/, "\n\n");
+    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
+    if (newLinesBeforeSelection) {
+      start -= newLinesBeforeSelection;
     }
 
-    if (post.length > 0) {
-      post = post.replace(/^\n*/, "\n\n");
+    if (sel.pre.length > 0) {
+      text = `\n\n${text}`;
+    }
+
+    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
+    if (newLinesAfterSelection) {
+      end += newLinesAfterSelection;
+    }
+
+    if (sel.post.length > 0) {
+      text = `${text}\n\n`;
     } else {
-      post = "\n";
+      text = `${text}\n`;
     }
 
-    const value = pre + text + post;
-
-    this.set("value", value);
-
-    this._$textarea.val(value);
-    this._$textarea.prop("selectionStart", (pre + text).length + 2);
-    this._$textarea.prop("selectionEnd", (pre + text).length + 2);
-
-    schedule("afterRender", this, this._focusTextArea);
+    this._insertAt(start, end, text);
+    this._textarea.setSelectionRange(start + text.length, start + text.length);
+    schedule("afterRender", this, this.focusTextArea);
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   addText(sel, text, options) {
-    this._addText(sel, text, options);
-  },
-
-  _addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
         if (!sel.pre.match(/\s$/)) {
@@ -360,23 +317,17 @@ export default Mixin.create({
       }
     }
 
-    const insert = `${sel.pre}${text}`;
-    const value = `${insert}${sel.post}`;
-    this.set("value", value);
-    this._$textarea.val(value);
-    this._$textarea.prop("selectionStart", insert.length);
-    this._$textarea.prop("selectionEnd", insert.length);
-    next(() => this._$textarea.trigger("change"));
-    this._focusTextArea();
+    this._insertAt(sel.start, sel.end, text);
+    this.focusTextArea();
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
+  _insertAt(start, end, text) {
+    this._textarea.setSelectionRange(start, end);
+    this._textarea.focus();
+    document.execCommand("insertText", false, text);
+  },
+
   extractTable(text) {
-    return this._extractTable(text);
-  },
-
-  _extractTable(text) {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
     }
@@ -413,24 +364,20 @@ export default Mixin.create({
     return null;
   },
 
-  // TODO (martin) clean up this indirection, functions used outside this
-  // file should not be prefixed with lowercase
   isInside(text, regex) {
-    return this._isInside(text, regex);
-  },
-
-  _isInside(text, regex) {
     const matches = text.match(regex);
     return matches && matches.length % 2;
   },
 
   @bind
   paste(e) {
-    if (!this._$textarea.is(":focus") && !isTesting()) {
+    const isComposer =
+      document.querySelector(this.composerFocusSelector) === e.target;
+
+    if (!isComposer && !isTesting()) {
       return;
     }
 
-    const isComposer = $(this.composerFocusSelector).is(":focus");
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
       siteSettings: this.siteSettings,
       canUpload: isComposer,
@@ -443,7 +390,7 @@ export default Mixin.create({
     const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = this._isInside(pre, /(^|\n)```/g);
+    const isCodeBlock = this.isInside(pre, /(^|\n)```/g);
 
     if (
       plainText &&
@@ -452,9 +399,12 @@ export default Mixin.create({
       !isCodeBlock
     ) {
       plainText = plainText.replace(/\r/g, "");
-      const table = this._extractTable(plainText);
+      const table = this.extractTable(plainText);
       if (table) {
-        this.appEvents.trigger("composer:insert-text", table);
+        this.appEvents.trigger(
+          `${this.composerEventPrefix}:insert-text`,
+          table
+        );
         handled = true;
       }
     }
@@ -463,7 +413,7 @@ export default Mixin.create({
       if (isInlinePasting) {
         canPasteHtml = !(
           lineVal.match(/^```/) ||
-          this._isInside(pre, /`/g) ||
+          this.isInside(pre, /`/g) ||
           lineVal.match(/^    /)
         );
       } else {
@@ -490,7 +440,7 @@ export default Mixin.create({
         ) {
           // When specified, linkify supports fuzzy links and emails. Prefer providing the protocol.
           // eg: pasting "example@discourse.org" may apply a link format of "mailto:example@discourse.org"
-          this._addText(selected, `[${selectedValue}](${match.url})`);
+          this.addText(selected, `[${selectedValue}](${match.url})`);
           handled = true;
         }
       }
@@ -506,7 +456,10 @@ export default Mixin.create({
         }
 
         if (isComposer) {
-          this.appEvents.trigger("composer:insert-text", markdown);
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:insert-text`,
+            markdown
+          );
           handled = true;
         }
       }
@@ -612,19 +565,17 @@ export default Mixin.create({
 
     if (isEmpty(captures)) {
       if (selected.pre.match(/\S$/)) {
-        this._addText(selected, ` :${code}:`);
+        this.addText(selected, ` :${code}:`);
       } else {
-        this._addText(selected, `:${code}:`);
+        this.addText(selected, `:${code}:`);
       }
     } else {
-      let numOfRemovedChars = selected.pre.length - captures[1].length;
-      selected.pre = selected.pre.slice(
-        0,
-        selected.pre.length - captures[1].length
+      let numOfRemovedChars = captures[1].length;
+      this._insertAt(
+        selected.start - numOfRemovedChars,
+        selected.end,
+        `${code}:`
       );
-      selected.start -= numOfRemovedChars;
-      selected.end -= numOfRemovedChars;
-      this._addText(selected, `${code}:`);
     }
   },
 });

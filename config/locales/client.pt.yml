@@ -120,7 +120,6 @@ pt:
       to_placeholder: "ir para data"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
-      post: "publicação #%{postNumber}"
       close: "fechar"
       twitter: "Partilhar no Twitter"
       facebook: "Partilhar no Facebook"
@@ -283,6 +282,8 @@ pt:
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
+      create: "Criar favorito"
+      edit: "Editar favorito"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
       remove_reminder_keep_bookmark: "Remover lembrete e manter marcador"
       created_with_reminder: "Você marcou este post com um lembrete %{date}. %{name}"
@@ -355,8 +356,8 @@ pt:
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
-      close: "Marcar esta faixa como vista."
-      edit: "Editar esta faixa >>"
+      close: "Marcar esta faixa como vista"
+      edit: "Editar"
     pwa:
       install_banner: "Você deseja <a href>instalar o %{title} neste dispositivo?</a>"
     choose_topic:
@@ -549,6 +550,7 @@ pt:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoje, mais tarde"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
@@ -557,13 +559,20 @@ pt:
       this_weekend: "Este fim de semana"
       start_of_next_business_week: "Segunda-feira"
       start_of_next_business_week_alt: "Próxima Segunda-feira"
+      next_week: "Próxima semana"
       two_weeks: "Duas semanas"
       next_month: "Próximo mês"
+      two_months: "Dois meses"
+      three_months: "Três meses"
+      four_months: "Quatro meses"
       six_months: "Seis meses"
-      custom: "Data e hora personalizadas"
+      one_year: "Um ano"
+      forever: "Para Sempre"
       relative: "Tempo relativo"
       none: "Não é necessário"
       last_custom: "Data e hora do último personalizado"
+      custom: "Data e hora personalizadas"
+      select_timeframe: "Selecione um intervalo de tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'></a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -1456,8 +1465,6 @@ pt:
           title: "Link de Convite"
           success: "Hiperligação do convite gerada com sucesso!"
           error: "Ocorreu um erro ao gerar o Link de Convite"
-          max_redemptions_allowed_label: "Quantas pessoas têm permissão para se registar usando este link?"
-          expires_at: "Quando irá este link de convite expirar?"
         invite:
           new_title: "Criar Convite"
           edit_title: "Editar Convite"
@@ -1565,6 +1572,8 @@ pt:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+    user_status:
+      save: "Guardar"
     loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
@@ -1727,28 +1736,16 @@ pt:
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"
-        title: "com Google"
-        sr_title: "Iniciar sessão com o GitHub"
       twitter:
         name: "Twitter"
-        title: "com Twitter"
-        sr_title: "Iniciar sessão com o Twitter"
       instagram:
         name: "Instagram"
-        title: "com Instagram"
-        sr_title: "Iniciar sessão com Instagram"
       facebook:
         name: "Facebook"
-        title: "com Facebook"
-        sr_title: "Iniciar sessão com o Facebook"
       github:
         name: "GitHub"
-        title: "com GitHub"
-        sr_title: "Iniciar sessão com o GitHub"
       discord:
         name: "Discord"
-        title: "com Discord"
-        sr_title: "Iniciar sessão com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo de autenticação"
         backup_code: "Use um código de backup"
@@ -1763,7 +1760,6 @@ pt:
       success: "A sua conta foi criada e está agora com a sessão iniciada."
       name_label: "Nome"
       password_label: "Palavra-passe"
-      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -1959,9 +1955,6 @@ pt:
           confirm: Você tem um novo rascunho de tópico guardado que será substituído se criar um tópico ligado.
         reply_as_new_group_message:
           label: Responder como uma nova mensagem de grupo
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Crie uma nova mensagem privada
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma publicação especifica
@@ -2363,24 +2356,6 @@ pt:
         min_duration: "A duração tem de ser maior que 0"
         max_duration: "A duração tem de ser inferior a 20 anos"
         duration: "Duração"
-      auto_update_input:
-        none: "Selecione um intervalo de tempo"
-        now: "Agora"
-        later_today: "Hoje, mais tarde"
-        tomorrow: "Amanhã"
-        later_this_week: "No final desta semana"
-        this_weekend: "Este fim de semana"
-        next_week: "Próxima semana"
-        two_weeks: "Duas semanas"
-        next_month: "Próximo mês"
-        two_months: "Dois meses"
-        three_months: "Três meses"
-        four_months: "Quatro meses"
-        six_months: "Seis meses"
-        one_year: "Um ano"
-        forever: "Para Sempre"
-        pick_date_and_time: "Escolha uma data e hora"
-        set_based_on_last_post: "Fechar baseado na última publicação"
       publish_to_category:
         title: "Agendar Publicação"
       temp_open:
@@ -2489,8 +2464,6 @@ pt:
         unpin: "Desafixar Tópico..."
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
-        invisible: "Tornar Não Listado"
-        visible: "Tornar Listado"
         reset_read: "Repor Data de Leitura"
         make_private: "Tornar Mensagem Pessoal"
         reset_bump_date: "Reset à Data do Bump"
@@ -2886,10 +2859,8 @@ pt:
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
       manage_tag_groups_link: "Gerenciar grupos de tags"
       allow_global_tags_label: "Permita também outras tags"
-      tag_group_selector_placeholder: "(Opcional) Grupo de tags"
-      required_tag_group_description: "Exigir que novos tópicos tenham tags de um grupo de tags:"
-      min_tags_from_required_group_label: "Número de Tags:"
-      required_tag_group_label: "Grupo de tags:"
+      required_tag_group:
+        delete: "Eliminar"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Eliminar Categoria"
       create: "Nova Categoria"
@@ -3261,7 +3232,6 @@ pt:
         edit: "%{shortcut} Editar publicação"
         delete: "%{shortcut} Eliminar publicação"
         mark_muted: "%{shortcut} Silenciar tópico"
-        mark_regular: "%{shortcut} Tópico Habitual (por defeito)"
         mark_tracking: "%{shortcut} Seguir tópico"
         mark_watching: "%{shortcut} Vigiar tópico"
         print: "%{shortcut} Imprimir tópico"
@@ -3373,7 +3343,7 @@ pt:
         tracking:
           title: "A Seguir"
         regular:
-          title: "Regular"
+          title: "Habitual"
           description: "Será notificado se alguém mencionar o seu @nome ou responder à sua publicação."
         muted:
           title: "Silenciado"
@@ -3447,6 +3417,32 @@ pt:
       detailed_name: "%{level}: %{name}"
     user_activity:
       no_likes_others: "Sem publicações gostadas."
+    sidebar:
+      unread_count: "%{count} não lido"
+      new_count: "%{count} novo"
+      sections:
+        messages:
+          header_link_text: "Mensagens"
+          links:
+            inbox: "Caixa de Entrada"
+            sent: "Enviado"
+            new: "Novo"
+            unread: "Não Lido"
+            archive: "Arquivo"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
+        categories:
+          header_link_title: "todas as categorias"
+          header_link_text: "Categorias"
+        topics:
+          header_link_title: "início"
+          header_link_text: "Tópicos"
+          links:
+            tracked:
+              content: "Seguido"
+            my_posts:
+              content: "As Minhas publicações"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -3824,7 +3820,6 @@ pt:
         delete_confirm: 'Tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
-        copy: "Copiar"
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"

@@ -1,4 +1,8 @@
 import I18n from "I18n";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import showModal from "discourse/lib/show-modal";
 
@@ -73,9 +77,9 @@ export default {
       id: "bookmark",
       icon() {
         if (this.topic.bookmarks.some((bookmark) => bookmark.reminder_at)) {
-          return "discourse-bookmark-clock";
+          return WITH_REMINDER_ICON;
         }
-        return "bookmark";
+        return NO_REMINDER_ICON;
       },
       priority: BOOKMARK_PRIORITY,
       classNames() {
@@ -98,9 +102,11 @@ export default {
         if (this.topic.bookmarkCount === 0) {
           return I18n.t("bookmarked.help.bookmark");
         } else if (this.topic.bookmarkCount === 1) {
-          if (
-            this.topic.bookmarks.filter((bookmark) => bookmark.for_topic).length
-          ) {
+          const anyTopicBookmarks = this.topic.bookmarks.some(
+            (bookmark) => bookmark.bookmarkable_type === "Topic"
+          );
+
+          if (anyTopicBookmarks) {
             return I18n.t("bookmarked.help.edit_bookmark_for_topic");
           } else {
             return I18n.t("bookmarked.help.edit_bookmark");

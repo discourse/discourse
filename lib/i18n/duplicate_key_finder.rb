@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "locale_file_walker"
+require "locale_file_walker"
 
 class DuplicateKeyFinder < LocaleFileWalker
 

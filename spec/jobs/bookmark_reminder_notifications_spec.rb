@@ -3,10 +3,11 @@
 RSpec.describe Jobs::BookmarkReminderNotifications do
   subject { described_class.new }
 
+  fab!(:user) { Fabricate(:user) }
   let(:five_minutes_ago) { Time.zone.now - 5.minutes }
-  let(:bookmark1) { Fabricate(:bookmark) }
-  let(:bookmark2) { Fabricate(:bookmark) }
-  let(:bookmark3) { Fabricate(:bookmark) }
+  let(:bookmark1) { Fabricate(:bookmark, user: user) }
+  let(:bookmark2) { Fabricate(:bookmark, user: user) }
+  let(:bookmark3) { Fabricate(:bookmark, user: user) }
   let!(:bookmarks) do
     [
       bookmark1,
@@ -34,13 +35,14 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   end
 
   it "will not send a reminder for a bookmark in the future" do
+    freeze_time
     bookmark4 = Fabricate(:bookmark, reminder_at: Time.zone.now + 1.day)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark1)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark2)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark3)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark4).never
-    subject.execute
+    expect { subject.execute }.to change { Notification.where(user: user).count }.by(3)
+    expect(bookmark1.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
+    expect(bookmark2.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
+    expect(bookmark3.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
     expect(bookmark4.reload.reminder_at).not_to eq(nil)
+    expect(bookmark4.reload.reminder_last_sent_at).to eq(nil)
   end
 
   context "when a user is over the bookmark limit" do
@@ -65,9 +67,9 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   end
 
   it 'will not send notification when topic is not available' do
-    bookmark1.topic.destroy
-    bookmark2.topic.destroy
-    bookmark3.topic.destroy
+    bookmark1.bookmarkable.topic.destroy
+    bookmark2.bookmarkable.topic.destroy
+    bookmark3.bookmarkable.topic.destroy
     expect { subject.execute }.not_to change { Notification.where(notification_type: Notification.types[:bookmark_reminder]).count }
   end
 end

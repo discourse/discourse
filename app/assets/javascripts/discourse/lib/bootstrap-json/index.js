@@ -64,6 +64,42 @@ function head(buffer, bootstrap, headers, baseURL) {
   });
   buffer.push(`<meta id="data-discourse-setup"${setupData} />`);
 
+  if (bootstrap.preloaded.currentUser) {
+    const user = JSON.parse(bootstrap.preloaded.currentUser);
+    let { admin, staff } = user;
+
+    if (staff) {
+      buffer.push(`<script defer src="${baseURL}assets/admin.js"></script>`);
+    }
+
+    if (admin) {
+      buffer.push(`<script defer src="${baseURL}assets/wizard.js"></script>`);
+    }
+  }
+
+  bootstrap.plugin_js.forEach((src) =>
+    buffer.push(`<script defer src="${src}"></script>`)
+  );
+
+  buffer.push(bootstrap.theme_html.translations);
+  buffer.push(bootstrap.theme_html.js);
+  buffer.push(bootstrap.theme_html.head_tag);
+  buffer.push(bootstrap.html.before_head_close);
+}
+
+function localeScript(buffer, bootstrap) {
+  buffer.push(`<script defer src="${bootstrap.locale_script}"></script>`);
+}
+
+function beforeScriptLoad(buffer, bootstrap) {
+  buffer.push(bootstrap.html.before_script_load);
+  localeScript(buffer, bootstrap);
+  (bootstrap.extra_locales || []).forEach((l) =>
+    buffer.push(`<script defer src="${l}"></script>`)
+  );
+}
+
+function discourseStylesheets(buffer, bootstrap) {
   (bootstrap.stylesheets || []).forEach((s) => {
     let attrs = [];
     if (s.media) {
@@ -83,34 +119,6 @@ function head(buffer, bootstrap, headers, baseURL) {
     }" ${attrs.join(" ")}>`;
     buffer.push(link);
   });
-
-  if (bootstrap.preloaded.currentUser) {
-    let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
-    if (staff) {
-      buffer.push(`<script src="${baseURL}assets/admin.js"></script>`);
-    }
-  }
-
-  bootstrap.plugin_js.forEach((src) =>
-    buffer.push(`<script src="${src}"></script>`)
-  );
-
-  buffer.push(bootstrap.theme_html.translations);
-  buffer.push(bootstrap.theme_html.js);
-  buffer.push(bootstrap.theme_html.head_tag);
-  buffer.push(bootstrap.html.before_head_close);
-}
-
-function localeScript(buffer, bootstrap) {
-  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
-}
-
-function beforeScriptLoad(buffer, bootstrap) {
-  buffer.push(bootstrap.html.before_script_load);
-  localeScript(buffer, bootstrap);
-  (bootstrap.extra_locales || []).forEach((l) =>
-    buffer.push(`<script src="${l}"></script>`)
-  );
 }
 
 function body(buffer, bootstrap) {
@@ -156,6 +164,7 @@ const BUILDERS = {
   "before-script-load": beforeScriptLoad,
   head,
   body,
+  "discourse-stylesheets": discourseStylesheets,
   "hidden-login-form": hiddenLoginForm,
   preloaded,
   "body-footer": bodyFooter,
@@ -212,7 +221,7 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
 }
 
 async function handleRequest(proxy, baseURL, req, res) {
-  const originalHost = req.headers.host;
+  const originalHost = req.headers["x-forwarded-host"] || req.headers.host;
   req.headers.host = new URL(proxy).host;
 
   if (req.headers["Origin"]) {
@@ -230,7 +239,7 @@ async function handleRequest(proxy, baseURL, req, res) {
   let url = `${proxy}${req.path}`;
   const queryLoc = req.url.indexOf("?");
   if (queryLoc !== -1) {
-    url += req.url.substr(queryLoc);
+    url += req.url.slice(queryLoc);
   }
 
   if (req.method === "GET") {
@@ -301,7 +310,10 @@ module.exports = {
 
   contentFor: function (type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
-      return `<script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>`;
+      return `
+        <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
+        <script src="${config.rootURL}assets/admin-plugins.js"></script>
+      `;
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
       return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
     }

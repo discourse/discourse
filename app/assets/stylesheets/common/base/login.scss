@@ -45,8 +45,8 @@
     border-bottom: none;
     padding: 0;
     position: absolute;
-    top: 1em;
-    right: 1em;
+    top: 0.75em;
+    right: 0.75em;
     z-index: z("max");
   }
   #modal-alert {
@@ -83,7 +83,7 @@
     .waving-hand {
       width: 35px;
       height: 35px;
-      margin-left: 1em;
+      margin-left: 0.5em;
       align-self: center;
     }
   }
@@ -388,6 +388,9 @@ button#new-account-link {
     display: inline-block;
     padding: 1em 0.5em 1em 0;
     color: var(--tertiary);
+  }
+  button {
+    margin-right: 1em;
   }
 }
 

@@ -238,6 +238,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("dom:clean", this, "_cleanDom");
 
+      this.appEvents.on("user-status:changed", () => this.queueRerender());
+
       if (
         this.currentUser &&
         !this.get("currentUser.read_first_notification")
@@ -444,6 +446,5 @@ export default SiteHeaderComponent.extend({
 
 export function headerTop() {
   const header = document.querySelector("header.d-header");
-  const headerOffsetTop = header.offsetTop ? header.offsetTop : 0;
-  return headerOffsetTop - document.body.scrollTop;
+  return header.offsetTop ? header.offsetTop : 0;
 }

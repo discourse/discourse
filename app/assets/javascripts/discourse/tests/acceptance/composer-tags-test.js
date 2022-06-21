@@ -74,8 +74,7 @@ acceptance("Composer - Tags", function (needs) {
     await fillIn(".d-editor-input", "this is the *content* of a post");
 
     Category.findById(2).setProperties({
-      required_tag_groups: ["support tags"],
-      min_tags_from_required_group: 1,
+      required_tag_groups: [{ name: "support tags", min_count: 1 }],
     });
 
     const categoryChooser = selectKit(".category-chooser");

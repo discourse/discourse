@@ -112,7 +112,7 @@ class UserAvatarsController < ApplicationController
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
       avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), upload_id, closest)
-      return redirect_to cdn_path(avatar_url)
+      return redirect_to cdn_path(avatar_url), allow_other_host: true
     end
 
     upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
@@ -120,7 +120,7 @@ class UserAvatarsController < ApplicationController
 
     if user.uploaded_avatar && !upload
       avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), user.uploaded_avatar_id, size)
-      return redirect_to cdn_path(avatar_url)
+      return redirect_to cdn_path(avatar_url), allow_other_host: true
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
@@ -142,6 +142,11 @@ class UserAvatarsController < ApplicationController
     render_blank
   end
 
+  # Allow plugins to overwrite max file size value
+  def max_file_size
+    1.megabyte
+  end
+
   PROXY_PATH = Rails.root + "tmp/avatar_proxy"
   def proxy_avatar(url, last_modified)
 
@@ -157,7 +162,7 @@ class UserAvatarsController < ApplicationController
       FileUtils.mkdir_p PROXY_PATH
       tmp = FileHelper.download(
         url,
-        max_file_size: 1.megabyte,
+        max_file_size: max_file_size,
         tmp_file_name: filename,
         follow_redirect: true,
         read_timeout: 10

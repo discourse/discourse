@@ -2,10 +2,10 @@
 
 Fabricator(:bookmark) do
   user
-  post { Fabricate(:post) }
   name "This looked interesting"
   reminder_at { 1.day.from_now.iso8601 }
   reminder_set_at { Time.zone.now }
+  bookmarkable { Fabricate(:post) }
 end
 
 Fabricator(:bookmark_next_business_day_reminder, from: :bookmark) do

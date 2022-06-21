@@ -18,6 +18,9 @@ module PrettyText
   ].freeze
   DANGEROUS_BIDI_REGEXP = Regexp.new(DANGEROUS_BIDI_CHARACTERS.join("|")).freeze
 
+  BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
+  BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
+
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -100,7 +103,7 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/mini-loader.js")
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
@@ -318,6 +321,7 @@ module PrettyText
     add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
     add_rel_attributes_to_user_content(doc, add_nofollow)
     strip_hidden_unicode_bidirectional_characters(doc)
+    sanitize_hotlinked_media(doc)
 
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
@@ -344,6 +348,25 @@ module PrettyText
           bidi,
           "<span class=\"bidi-warning\" title=\"#{I18n.t("post.hidden_bidi_character")}\">#{formatted}</span>"
         )
+      end
+    end
+  end
+
+  def self.sanitize_hotlinked_media(doc)
+    return if !SiteSetting.block_hotlinked_media
+
+    allowed_pattern = allowed_src_pattern
+
+    doc.css("img[src], source[src], source[srcset], track[src]").each do |el|
+      if el["src"] && !el["src"].match?(allowed_pattern)
+        el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] = el.delete("src")
+      end
+
+      if el["srcset"]
+        srcs = el["srcset"].split(',').map { |e| e.split(' ', 2)[0].presence }
+        if srcs.any? { |src| !src.match?(allowed_pattern) }
+          el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR] = el.delete("srcset")
+        end
       end
     end
   end
@@ -673,4 +696,25 @@ module PrettyText
     mentions
   end
 
+  def self.allowed_src_pattern
+    allowed_src_prefixes = [
+      Discourse.base_path,
+      Discourse.base_url,
+      GlobalSetting.s3_cdn_url,
+      GlobalSetting.cdn_url,
+      SiteSetting.external_emoji_url.presence,
+      *SiteSetting.block_hotlinked_media_exceptions.split("|")
+    ]
+
+    patterns = allowed_src_prefixes.compact.map do |url|
+      pattern = Regexp.escape(url)
+
+      # If 'https://example.com' is allowed, ensure 'https://example.com.blah.com' is not
+      pattern += '(?:/|\z)' if !pattern.ends_with?("\/")
+
+      pattern
+    end
+
+    /\A(data:|#{patterns.join("|")})/
+  end
 end

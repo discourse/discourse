@@ -15,7 +15,7 @@ export default Component.extend({
   displayHasMore: gt("theme.childThemes.length", MAX_COMPONENTS),
 
   click(e) {
-    if (!$(e.target).hasClass("others-count")) {
+    if (!e.target.classList.contains("others-count")) {
       this.navigateToTheme();
     }
   },

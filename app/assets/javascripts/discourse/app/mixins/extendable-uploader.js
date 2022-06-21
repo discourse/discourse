@@ -92,7 +92,7 @@ export default Mixin.create(UploadDebugging, {
     });
   },
 
-  _onPreProcessComplete(callback, allCompleteCallback) {
+  _onPreProcessComplete(callback, allCompleteCallback = null) {
     this._uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
       this._consoleDebug(
         `[${pluginId}] ${skipped ? "skipped" : "completed"} processing file ${
@@ -105,7 +105,9 @@ export default Mixin.create(UploadDebugging, {
       this._completePreProcessing(pluginId, (allComplete) => {
         if (allComplete) {
           this._consoleDebug("[uppy] All upload preprocessors complete!");
-          allCompleteCallback();
+          if (allCompleteCallback) {
+            allCompleteCallback();
+          }
         }
       });
     });

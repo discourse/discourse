@@ -546,10 +546,12 @@ export default Component.extend(TextareaTextManipulation, {
 
           // note this will only work for emojis starting with :
           // eg: :-)
+          const emojiTranslation =
+            this.get("site.custom_emoji_translation") || {};
           const allTranslations = Object.assign(
             {},
             translations,
-            this.getWithDefault("site.custom_emoji_translation", {})
+            emojiTranslation
           );
           if (allTranslations[full]) {
             return resolve([allTranslations[full]]);
@@ -576,11 +578,15 @@ export default Component.extend(TextareaTextManipulation, {
 
           return resolve(options);
         })
-          .then((list) =>
-            list.map((code) => {
+          .then((list) => {
+            if (list === SKIP) {
+              return [];
+            }
+
+            return list.map((code) => {
               return { code, src: emojiUrlFor(code) };
-            })
-          )
+            });
+          })
           .then((list) => {
             if (list.length) {
               list.push({ label: I18n.t("composer.more_emoji"), term });
@@ -664,6 +670,13 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     return true;
+  },
+
+  @action
+  onEmojiPickerClose() {
+    if (!(this.isDestroyed || this.isDestroying)) {
+      this.set("emojiPickerIsActive", false);
+    }
   },
 
   actions: {

@@ -649,7 +649,7 @@ describe 'topics' do
         let(:external_id) { topic.external_id }
 
         run_test! do |response|
-          expect(response).to redirect_to(topic.relative_url + ".json?page=")
+          expect(response).to redirect_to(topic.relative_url + ".json")
         end
       end
     end

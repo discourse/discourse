@@ -35,7 +35,7 @@ module Onebox
         result['title'] = lines.first
         result['body'], result['excerpt'] = compute_body(lines[1..lines.length].join("\n"))
 
-        committed_at = Time.parse(result['commit']['author']['date'])
+        committed_at = Time.parse(result['commit']['committer']['date'])
         result['committed_at'] = committed_at.strftime("%I:%M%p - %d %b %y %Z")
         result['committed_at_date'] = committed_at.strftime("%F")
         result['committed_at_time'] = committed_at.strftime("%T")

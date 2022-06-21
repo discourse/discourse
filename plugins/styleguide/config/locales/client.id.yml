@@ -37,13 +37,23 @@ id:
           title: "Kategori"
         navigation:
           title: "Navigasi"
+        navigation_bar:
+          title: "Bilah Navigasi"
         categories_list:
           title: "Daftar Kategori"
         topic_link:
           title: "Tautan Topik"
+        topic_list_item:
+          title: "Item Daftar Topik"
+        topic_statuses:
+          title: "Status Topik"
         topic_list:
           title: "Daftar Topik"
         post:
           title: "Postingan"
+        topic_map:
+          title: "Peta Topik"
         suggested_topics:
           title: "Topik Yang Disarankan"
+        header_icons:
+          title: "Ikon Header"

@@ -38,9 +38,9 @@
 
     {{#if userHasTimezoneSet}}
       {{time-shortcut-picker
+        timeShortcuts=timeOptions
         prefilledDatetime=prefilledDatetime
         onTimeSelected=(action "onTimeSelected")
-        customOptions=customTimeShortcutOptions
         hiddenOptions=hiddenTimeShortcutOptions
         customLabels=customTimeShortcutLabels
         _itsatrap=_itsatrap

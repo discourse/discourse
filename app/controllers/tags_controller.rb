@@ -246,9 +246,10 @@ class TagsController < ::ApplicationController
       filter_params[:order_popularity] = true
     end
 
-    tags_with_counts = DiscourseTagging.filter_allowed_tags(
+    tags_with_counts, filter_result_context = DiscourseTagging.filter_allowed_tags(
       guardian,
-      filter_params
+      **filter_params,
+      with_context: true
     )
 
     tags = self.class.tag_counts_json(tags_with_counts, show_pm_tags: guardian.can_tag_pms?)
@@ -281,6 +282,10 @@ class TagsController < ::ApplicationController
       end
     end
 
+    if required_tag_group = filter_result_context[:required_tag_group]
+      json_response[:required_tag_group] = required_tag_group
+    end
+
     render json: json_response
   end
 
@@ -296,7 +301,7 @@ class TagsController < ::ApplicationController
     raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
-    render json: { notification_level: level, tag_id: tag.id }
+    render_serialized(current_user, UserTagNotificationsSerializer, root: false)
   end
 
   def personal_messages
@@ -375,14 +380,15 @@ class TagsController < ::ApplicationController
       @filter_on_category = Category.query_category(slug_or_id, nil)
     end
 
-    guardian.ensure_can_see!(@filter_on_category)
-
     if !@filter_on_category
       permalink = Permalink.find_by_url("c/#{params[:category_slug_path_with_id]}")
       if permalink.present? && permalink.category_id
         return redirect_to "#{Discourse::base_path}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
       end
+    end
 
+    if !(@filter_on_category && guardian.can_see?(@filter_on_category))
+      # 404 on 'access denied' to avoid leaking existence of category
       raise Discourse::NotFound
     end
   end

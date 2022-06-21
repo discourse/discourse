@@ -120,7 +120,6 @@ bg:
       to_placeholder: "до дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "публикации #%{postNumber}"
       close: "затвори"
       twitter: "Споделете в Twitter"
       facebook: "Споделете във Facebook"
@@ -275,6 +274,7 @@ bg:
         unbookmark_with_reminder: "Щракнете, за да премахнете всички отметки и напомняния в тази тема."
     bookmarks:
       created: "Отбелязахте тази публикация. %{name}"
+      edit: "Редактиране на отметката"
       not_bookmarked: "добавете тази публикация в Отметки"
       remove_reminder_keep_bookmark: "Премахнете напомнянето и запазете отметката"
       created_with_reminder: "Отбелязахте тази публикация с напомняне %{date}. %{name}"
@@ -348,8 +348,7 @@ bg:
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
     banner:
-      close: "Премахнете банера"
-      edit: "Редактирай този банер >>"
+      edit: "Редактирай"
     pwa:
       install_banner: "Искате ли <a href>да инсталирате %{title} на това устройство?</a>"
     choose_topic:
@@ -534,6 +533,7 @@ bg:
         other: "дни "
       relative: "Относителна"
     time_shortcut:
+      now: "Сега"
       later_today: "По-късно днес"
       next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
@@ -542,13 +542,20 @@ bg:
       this_weekend: "Този уикенд"
       start_of_next_business_week: "Понеделник"
       start_of_next_business_week_alt: "Следващия понеделник"
+      next_week: "Следваща седмица"
       two_weeks: "Две седмици"
       next_month: "Следващия месец"
+      two_months: "Два месеца"
+      three_months: "Три месеца"
+      four_months: "Четири месеца"
       six_months: "Шест месеца"
-      custom: "Друга дата и час"
+      one_year: "Една година"
+      forever: "Завинаги"
       relative: "Относително време"
       none: "Няма нужда"
       last_custom: "Последна персонализирана дата и час"
+      custom: "Друга дата и час"
+      select_timeframe: "Избери времева рамка"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> публикува <a href='%{topicUrl}'>тази тема</a>"
       you_posted_topic: "<a href='%{userUrl}'>Вие</a> публикувахте <a href='%{topicUrl}'>тази тема</a>"
@@ -1066,7 +1073,7 @@ bg:
       muted_categories: "Заглушен"
       muted_categories_instructions: "Няма да получавате известия за нови теми в тези категории и те няма да се показват в категориите или най-новите страници."
       muted_categories_instructions_dont_hide: "Няма да получавате известия за нови теми в тези категории."
-      regular_categories: "Редовен"
+      regular_categories: "Нормален"
       regular_categories_instructions: "Ще видите тези категории в списъците с теми „Последни“ и „Топ“."
       no_category_access: "Като модератор имате ограничен достъп до категориите, запазването е изключено."
       delete_account: "Изтрий моя профил"
@@ -1516,6 +1523,8 @@ bg:
         sent_by: "Изпратено от"
         private_message: "Съобщение"
         the_topic: "темата"
+    user_status:
+      save: "Запази"
     loading: "Зарежда се..."
     errors:
       prev_page: "докато се зареждаше"
@@ -1683,28 +1692,16 @@ bg:
       not_approved: "Вашият профил все още не е одобрен. Ще бъдете уведомени с имейл, когато е възможно влизането Ви. "
       google_oauth2:
         name: "Google"
-        title: "с Google"
-        sr_title: "Влезте с Google"
       twitter:
         name: "Twitter"
-        title: "с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
-        title: "чрез Instagram"
-        sr_title: "Влезте с Instagram"
       facebook:
         name: "Facebook"
-        title: "със Facebook"
-        sr_title: "Влезте с Facebook"
       github:
         name: "GitHub"
-        title: " с Github"
-        sr_title: "Влезте с GitHub"
       discord:
         name: "Discord"
-        title: "с Discord"
-        sr_title: "Влезте с Discord"
       second_factor_toggle:
         totp: "Вместо това използвайте приложение за удостоверяване"
         backup_code: "Вместо това използвайте резервен код"
@@ -1719,7 +1716,6 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
-      optional_description: "(по избор)"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -1914,9 +1910,6 @@ bg:
         reply_as_new_group_message:
           label: Отговорете като ново групово съобщение
           desc: Създайте ново съобщение, започващо със същите получатели
-        reply_as_private_message:
-          label: Ново съобщение
-          desc: Създайте ново лично съобщение
         reply_to_topic:
           label: Отговорете на тема
           desc: Отговорете на темата, а не на конкретен пост
@@ -2196,24 +2189,6 @@ bg:
         min_duration: "Продължителността трябва да е по-голяма от 0"
         max_duration: "Продължителността трябва да бъде по-малка от 20 години"
         duration: "Продължителност"
-      auto_update_input:
-        none: "Избери времева рамка"
-        now: "Сега"
-        later_today: "По-късно днес"
-        tomorrow: "Утре"
-        later_this_week: "По-късно тази седмица"
-        this_weekend: "Този уикенд"
-        next_week: "Следваща седмица"
-        two_weeks: "Две седмици"
-        next_month: "Следващия месец"
-        two_months: "Два месеца"
-        three_months: "Три месеца"
-        four_months: "Четири месеца"
-        six_months: "Шест месеца"
-        one_year: "Една година"
-        forever: "Завинаги"
-        pick_date_and_time: "Изберете дата и час"
-        set_based_on_last_post: "Затваряне въз основа на последната публикация"
       publish_to_category:
         title: "График за публикуване"
       temp_open:
@@ -2298,8 +2273,6 @@ bg:
         unpin: "Откови темата..."
         unarchive: "Разархивирай темата"
         archive: "Архивирай темата"
-        invisible: "Премахни от списъците"
-        visible: "Включи в списъците"
         reset_read: "Изчисти прочетените данни "
       feature:
         pin: "Закови темата"
@@ -2623,6 +2596,8 @@ bg:
       topic_template: "Шаблон на темата"
       tags: "Етикети"
       tags_placeholder: "(По желание) списък на позволените етикети"
+      required_tag_group:
+        delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
       delete: "Изтрий категорията"
       create: "Нова категория"
@@ -2919,7 +2894,6 @@ bg:
         edit: "%{shortcut} Редакция"
         delete: "%{shortcut} Изтриване"
         mark_muted: "%{shortcut} Заглушете темата"
-        mark_regular: "%{shortcut} Номална (стандартна) тема"
         mark_tracking: "%{shortcut} Следете темата"
         mark_watching: "%{shortcut} Наблюдаване на темата"
     badges:
@@ -2971,7 +2945,7 @@ bg:
           title: "Следене"
           description: "Автоматично ще следите всички теми с този етикет. Броя на непрочетените и новите публикации ще се появява до темата."
         regular:
-          title: "Редовен"
+          title: "Нормален"
           description: "Ще бъдете уведомен, ако някой спомене вашето @име или отговори на Ваша публикация."
         muted:
           title: "Заглушен"
@@ -3009,6 +2983,32 @@ bg:
         member: "потребител"
         regular: "редовен"
         leader: "лидер"
+    sidebar:
+      unread_count: "%{count} непрочетен"
+      new_count: "%{count} нов"
+      sections:
+        messages:
+          header_link_text: "Съобщения"
+          links:
+            inbox: "Кутия"
+            sent: "Изпратени"
+            new: "Нов"
+            unread: "Непрочетени"
+            archive: "Архив"
+        tags:
+          header_link_title: "всички тагове"
+          header_link_text: "Тагове"
+        categories:
+          header_link_title: "всички категории"
+          header_link_text: "Категории"
+        topics:
+          header_link_title: "начало"
+          header_link_text: "Теми"
+          links:
+            tracked:
+              content: "Следени"
+            my_posts:
+              content: "Моите публикации"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:
@@ -3215,7 +3215,6 @@ bg:
         delete: "Изтрий"
         color: "Цвят"
         opacity: "Прозрачност"
-        copy: "Копирай"
         email_templates:
           title: "Имейл"
           subject: "Тема"

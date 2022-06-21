@@ -11,23 +11,26 @@ class DiscourseConnectBase
     avatar_url
     bio
     card_background_url
+    confirmed_2fa
     email
     external_id
     groups
     locale
     locale_force_update
+    location
     logout
     name
+    no_2fa_methods
     nonce
     profile_background_url
     remove_groups
+    require_2fa
     require_activation
     return_sso_url
     suppress_welcome_message
     title
     username
     website
-    location
   }
 
   FIXNUMS = []
@@ -35,9 +38,12 @@ class DiscourseConnectBase
   BOOLS = %i{
     admin
     avatar_force_update
+    confirmed_2fa
     locale_force_update
     logout
     moderator
+    no_2fa_methods
+    require_2fa
     require_activation
     suppress_welcome_message
   }
@@ -116,9 +122,13 @@ class DiscourseConnectBase
     @custom_fields ||= {}
   end
 
+  def self.sign(payload, secret)
+    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
+  end
+
   def sign(payload, secret = nil)
     secret = secret || sso_secret
-    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
+    self.class.sign(payload, secret)
   end
 
   def to_json

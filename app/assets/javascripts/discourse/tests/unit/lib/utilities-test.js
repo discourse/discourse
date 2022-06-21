@@ -1,7 +1,9 @@
+import { Promise } from "rsvp";
 import {
   avatarImg,
   avatarUrl,
   caretRowCol,
+  clipboardCopyAsync,
   defaultHomepage,
   emailValid,
   escapeExpression,
@@ -15,9 +17,13 @@ import {
   slugify,
   toAsciiPrintable,
 } from "discourse/lib/utilities";
+import sinon from "sinon";
 import { test } from "qunit";
 import Handlebars from "handlebars";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import {
+  chromeTest,
+  discourseModule,
+} from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("Unit | Utilities", function () {
   test("escapeExpression", function (assert) {
@@ -282,4 +288,52 @@ discourseModule("Unit | Utilities", function () {
       }
     });
   });
+});
+
+discourseModule("Unit | Utilities | clipboard", function (hooks) {
+  let mockClipboard;
+  hooks.beforeEach(function () {
+    mockClipboard = {
+      writeText: sinon.stub().resolves(true),
+      write: sinon.stub().resolves(true),
+    };
+    sinon.stub(window.navigator, "clipboard").get(() => mockClipboard);
+  });
+
+  function getPromiseFunction() {
+    return () =>
+      new Promise((resolve) => {
+        resolve(
+          new Blob(["some text to copy"], {
+            type: "text/plain",
+          })
+        );
+      });
+  }
+
+  test("clipboardCopyAsync - browser does not support window.ClipboardItem", async function (assert) {
+    // without this check the stubbing will fail on Firefox
+    if (window.ClipboardItem) {
+      sinon.stub(window, "ClipboardItem").value(null);
+    }
+
+    await clipboardCopyAsync(getPromiseFunction());
+    assert.strictEqual(
+      mockClipboard.writeText.calledWith("some text to copy"),
+      true,
+      "it writes to the clipboard using writeText instead of write"
+    );
+  });
+
+  chromeTest(
+    "clipboardCopyAsync - browser does support window.ClipboardItem",
+    async function (assert) {
+      await clipboardCopyAsync(getPromiseFunction());
+      assert.strictEqual(
+        mockClipboard.write.called,
+        true,
+        "it writes to the clipboard using write"
+      );
+    }
+  );
 });

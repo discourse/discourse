@@ -29,14 +29,9 @@ export function handleLogoff(xhr) {
   }
 }
 
-function handleRedirect(data) {
-  if (
-    data &&
-    data.getResponseHeader &&
-    data.getResponseHeader("Discourse-Xhr-Redirect")
-  ) {
-    window.location.replace(data.responseText);
-    window.location.reload();
+function handleRedirect(xhr) {
+  if (xhr && xhr.getResponseHeader("Discourse-Xhr-Redirect")) {
+    window.location = xhr.responseText;
   }
 }
 
@@ -99,7 +94,7 @@ export function ajax() {
     }
 
     args.success = (data, textStatus, xhr) => {
-      handleRedirect(data);
+      handleRedirect(xhr);
       handleLogoff(xhr);
 
       run(() => {

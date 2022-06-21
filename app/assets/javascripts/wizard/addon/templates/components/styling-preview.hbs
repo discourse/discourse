@@ -1,0 +1,21 @@
+<div class="previews {{if draggingActive "dragging"}}">
+  <div class="preview-area topic-preview">
+    <canvas width={{elementWidth}} height={{elementHeight}} style={{canvasStyle}}>
+    </canvas>
+  </div>
+  <div class="preview-area homepage-preview">
+    {{homepage-preview
+      wizard=wizard
+      step=step
+    }}
+  </div>
+</div>
+
+<div class="preview-nav">
+  <a href class="preview-nav-button {{if previewTopic "active"}}" {{action "setPreviewTopic"}}>
+    {{i18n "wizard.previews.topic_preview"}}
+  </a>
+  <a href class="preview-nav-button {{unless previewTopic "active"}}" {{action "setPreviewHomepage"}}>
+    {{i18n "wizard.previews.homepage_preview"}}
+  </a>
+</div>

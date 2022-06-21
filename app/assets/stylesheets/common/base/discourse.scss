@@ -401,7 +401,7 @@ table {
 
 .d-header .header-dropdown-toggle .do-not-disturb-background {
   position: absolute;
-  left: 2px;
+  left: 0;
   bottom: -1px;
   z-index: 1002;
 }
@@ -421,6 +421,29 @@ table {
     line-height: unset;
     font-size: 0.875em;
     margin: 0 !important;
+  }
+}
+
+.d-header .header-dropdown-toggle .user-status-background {
+  position: absolute;
+  right: -3px;
+  bottom: -1px;
+  z-index: 1002;
+}
+
+.user-status-background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  background-color: var(--tertiary-low);
+  border-radius: 50%;
+
+  .emoji {
+    width: 14px;
+    height: 14px;
+    display: block;
   }
 }
 

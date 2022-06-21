@@ -6,6 +6,7 @@
 # Environment Variables (specific to this rake task)
 # => SKIP_LINT                 set to 1 to skip linting (eslint and rubocop)
 # => SKIP_TESTS                set to 1 to skip all tests
+# => SKIP_WIZARD_TESTS         set to 1 to skip wizard tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
@@ -100,8 +101,10 @@ task 'docker:test' do
       puts "Starting background redis"
       @redis_pid = Process.spawn('redis-server --dir tmp/test_data/redis')
 
-      puts "Initializing postgres"
-      system("script/start_test_db.rb --skip-run", exception: true)
+      unless ENV['SKIP_DB_CREATE']
+        puts "Initializing postgres"
+        system("script/start_test_db.rb --skip-run", exception: true)
+      end
 
       puts "Starting postgres"
       @pg_pid = Process.spawn("script/start_test_db.rb --skip-setup --exec")
@@ -111,7 +114,9 @@ task 'docker:test' do
       # for js tests
       ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
 
-      @good &&= run_or_fail("bundle exec rake db:create")
+      unless ENV['SKIP_DB_CREATE']
+        @good &&= run_or_fail("bundle exec rake db:create")
+      end
 
       if ENV['USE_TURBO']
         @good &&= run_or_fail("bundle exec rake parallel:create")
@@ -205,14 +210,13 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
-          @good &&= run_or_fail("QUNIT_EMBER_CLI=0 bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
         end
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
-            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
           else
-            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
           end
         end
       end

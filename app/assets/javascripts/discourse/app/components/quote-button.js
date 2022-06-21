@@ -22,6 +22,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -41,10 +42,6 @@ function fixQuotes(str) {
   // u+201c “
   // u+201d ”
   return str.replace(/[\u201C\u201D]/g, '"');
-}
-
-function regexSafeStr(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 export default Component.extend(KeyEnterEscape, {
@@ -198,7 +195,7 @@ export default Component.extend(KeyEnterEscape, {
       );
 
       if (this._canEditPost) {
-        const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
+        const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
         const matches = cooked.innerHTML.match(regexp);
 
         if (

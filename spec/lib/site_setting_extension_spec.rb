@@ -254,14 +254,23 @@ describe SiteSettingExtension do
   end
 
   describe "remove_override" do
+    fab!(:upload) { Fabricate(:upload) }
+
     before do
       settings.setting(:test_override, "test")
+      settings.setting(:image_list_test, "", type: :uploaded_image_list)
       settings.refresh!
     end
     it "correctly nukes overrides" do
       settings.test_override = "bla"
       settings.remove_override!(:test_override)
       expect(settings.test_override).to eq("test")
+    end
+
+    it "correctly nukes overrides for image list type setting" do
+      settings.image_list_test = "#{upload.id}"
+      settings.remove_override!(:image_list_test)
+      expect(settings.image_list_test).to be_empty
     end
   end
 

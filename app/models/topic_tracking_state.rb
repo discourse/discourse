@@ -142,9 +142,12 @@ class TopicTrackingState
       tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose
     end
 
+    # We don't need to publish unread to the person who just made the post,
+    # this is why they are excluded from the initial scope.
     scope = TopicUser
       .tracking(post.topic_id)
       .includes(user: :user_stat)
+      .where.not(user_id: post.user_id)
 
     group_ids =
       if post.post_type == Post.types[:whisper]
@@ -275,7 +278,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && @include_tags_in_report
+    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.enable_experimental_sidebar)
   end
 
   def self.include_tags_in_report=(v)

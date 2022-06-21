@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
-  include ReadOnlyHeader
+  include ReadOnlyMixin
   include VaryHeader
 
   attr_reader :theme_id
@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
   def use_crawler_layout?
     @use_crawler_layout ||=
       request.user_agent &&
-      (request.content_type.blank? || request.content_type.include?('html')) &&
+      (request.media_type.blank? || request.media_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
       (has_escaped_fragment? || params.key?("print") || show_browser_update? ||
       CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ember_cli_required?
-    Rails.env.development? && ENV['NO_EMBER_CLI'] != '1' && request.headers['X-Discourse-Ember-CLI'] != 'true'
+    Rails.env.development? && ENV["ALLOW_EMBER_CLI_PROXY_BYPASS"] != "1" && request.headers['X-Discourse-Ember-CLI'] != 'true'
   end
 
   def application_layout
@@ -192,7 +192,7 @@ class ApplicationController < ActionController::Base
         e.description,
         type: :rate_limit,
         status: 429,
-        extras: { wait_seconds: retry_time_in_seconds },
+        extras: { wait_seconds: retry_time_in_seconds, time_left: e&.time_left },
         headers: response_headers
       )
     end
@@ -246,21 +246,32 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::ReadOnly do
     unless response_body
-      render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+        end
+        format.html do
+          render status: 503, layout: 'no_ember', template: 'exceptions/read_only'
+        end
+      end
     end
   end
 
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
-    render json: {
-      second_factor_challenge_nonce: e.nonce
-    }, status: 403
+    if request.xhr?
+      render json: {
+        second_factor_challenge_nonce: e.nonce
+      }, status: 403
+    else
+      redirect_to session_2fa_path(nonce: e.nonce)
+    end
   end
 
   rescue_from SecondFactor::BadChallenge do |e|
     render json: { error: I18n.t(e.error_translation_key) }, status: e.status_code
   end
 
-  def redirect_with_client_support(url, options)
+  def redirect_with_client_support(url, options = {})
     if request.xhr?
       response.headers['Discourse-Xhr-Redirect'] = 'true'
       render plain: url
@@ -283,7 +294,7 @@ class ApplicationController < ActionController::Base
       # cause category / topic was deleted
       if permalink.present? && permalink.target_url
         # permalink present, redirect to that URL
-        redirect_with_client_support permalink.target_url, status: :moved_permanently
+        redirect_with_client_support permalink.target_url, status: :moved_permanently, allow_other_host: true
         return
       end
     end
@@ -310,7 +321,11 @@ class ApplicationController < ActionController::Base
       with_resolved_locale(check_current_user: false) do
         # Include error in HTML format for topics#show.
         if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
-          opts[:extras] = { html: build_not_found_page(error_page_opts), group: error_page_opts[:group] }
+          opts[:extras] = {
+            title: I18n.t('page_not_found.page_title'),
+            html: build_not_found_page(error_page_opts),
+            group: error_page_opts[:group]
+          }
         end
       end
 
@@ -482,6 +497,11 @@ class ApplicationController < ActionController::Base
   end
 
   def guardian
+    # sometimes we log on a user in the middle of a request so we should throw
+    # away the cached guardian instance when we do that
+    if (@guardian&.user).blank? && current_user.present?
+      @guardian = Guardian.new(current_user, request)
+    end
     @guardian ||= Guardian.new(current_user, request)
   end
 
@@ -611,6 +631,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
     store_preloaded("isReadOnly", @readonly_mode.to_s)
+    store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
     store_preloaded("activatedThemes", activated_themes_json)
   end
 
@@ -655,6 +676,7 @@ class ApplicationController < ActionController::Base
 
   def banner_json
     json = ApplicationController.banner_json_cache["json"]
+    return "{}" if !current_user && SiteSetting.login_required?
 
     unless json
       topic = Topic.where(archetype: Archetype.banner).first
@@ -825,7 +847,7 @@ class ApplicationController < ActionController::Base
       end
 
       if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
-        redirect_to("#{params[:auth_redirect]}?otp=true")
+        redirect_to("#{params[:auth_redirect]}?otp=true", allow_other_host: true)
         return
       end
     end
@@ -856,11 +878,6 @@ class ApplicationController < ActionController::Base
     !disqualified_from_2fa_enforcement && enforcing_2fa && !current_user.has_any_second_factor_methods_enabled?
   end
 
-  def block_if_readonly_mode
-    return if request.fullpath.start_with?(path "/admin/backups")
-    raise Discourse::ReadOnly.new if !(request.get? || request.head?) && @readonly_mode
-  end
-
   def build_not_found_page(opts = {})
     if SiteSetting.bootstrap_error_pages?
       preload_json
@@ -880,6 +897,7 @@ class ApplicationController < ActionController::Base
     end
 
     @container_class = "wrap not-found-container"
+    @page_title = I18n.t("page_not_found.page_title")
     @title = opts[:title] || I18n.t("page_not_found.title")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
@@ -978,13 +996,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def run_second_factor!(action_class)
-    action = action_class.new(guardian)
+  def run_second_factor!(action_class, action_data = nil)
+    action = action_class.new(guardian, request, action_data)
     manager = SecondFactor::AuthManager.new(guardian, action)
     yield(manager) if block_given?
     result = manager.run!(request, params, secure_session)
 
-    if !result.no_second_factors_enabled? && !result.second_factor_auth_completed?
+    if !result.no_second_factors_enabled? &&
+      !result.second_factor_auth_completed? &&
+      !result.second_factor_auth_skipped?
       # should never happen, but I want to know if somehow it does! (osama)
       raise "2fa process ended up in a bad state!"
     end

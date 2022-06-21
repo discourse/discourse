@@ -159,10 +159,12 @@
         <div class="setting-value">
           {{color-palettes
             content=colorSchemes
-            filterable=true
-            forceEscape=true
             value=colorSchemeId
-            icon="paint-brush"}}
+            icon="paint-brush"
+            options=(hash
+              filterable=true
+            )
+          }}
 
           <div class="desc">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
         </div>

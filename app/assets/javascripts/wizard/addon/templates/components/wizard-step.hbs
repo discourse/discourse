@@ -1,0 +1,82 @@
+<div class="wizard-step-contents">
+  {{#if step.title}}
+    <h1 class="wizard-step-title">{{step.title}}</h1>
+  {{/if}}
+
+  <div class={{bannerAndDescriptionClass}}>
+    {{#if bannerImage}}
+      <img src={{bannerImage}} class="wizard-step-banner">
+    {{/if}}
+
+    {{#if step.description}}
+      <p class="wizard-step-description">{{html-safe step.description}}</p>
+    {{/if}}
+  </div>
+
+  {{#wizard-step-form step=step}}
+    {{#if includeSidebar}}
+      <div class="wizard-fields-sidebar">
+        {{#each step.fields as |field|}}
+          {{#if field.show_in_sidebar}}
+            {{wizard-field
+              field=field
+              step=step
+              wizard=wizard
+            }}
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+    <div class="wizard-fields-main">
+      {{#each step.fields as |field|}}
+        {{#unless field.show_in_sidebar}}
+          {{wizard-field
+            field=field
+            step=step
+            wizard=wizard
+          }}
+        {{/unless}}
+      {{/each}}
+    </div>
+  {{/wizard-step-form}}
+</div>
+
+<div class="wizard-step-footer">
+
+  <div class="wizard-progress">
+    <div class="white"></div>
+    <div style={{barStyle}} class="black"></div>
+    <div class="screen"></div>
+    <span>{{bound-i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</span>
+  </div>
+
+  <div class="wizard-buttons">
+    {{#if showQuitButton}}
+      <a href {{action "quit"}} tabindex="11" class="action-link quit">{{i18n "wizard.quit"}}</a>
+    {{/if}}
+
+    {{#if showFinishButton}}
+      <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn finish">
+        {{i18n "wizard.finish"}}
+      </button>
+    {{/if}}
+
+    {{#if showBackButton}}
+      <a href {{action "backStep"}} tabindex="11" class="action-link back">{{i18n "wizard.back"}}</a>
+    {{/if}}
+
+    {{#if showNextButton}}
+      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn next primary">
+        {{i18n "wizard.next"}}
+        {{d-icon "chevron-right"}}
+      </button>
+    {{/if}}
+
+    {{#if showDoneButton}}
+      <button {{action "quit"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn done">
+        {{i18n "wizard.done"}}
+      </button>
+    {{/if}}
+  </div>
+
+</div>

@@ -8,7 +8,6 @@ const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const funnel = require("broccoli-funnel");
-const AssetRev = require("broccoli-asset-rev");
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
@@ -23,17 +22,17 @@ module.exports = function (defaults) {
       insertContentForTestBody: false,
     },
     sourcemaps: {
-      // There seems to be a bug with brocolli-concat when sourcemaps are disabled
+      // There seems to be a bug with broccoli-concat when sourcemaps are disabled
       // that causes the `app.import` statements below to fail in production mode.
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
     },
     autoImport: {
       forbidEval: true,
+      insertScriptsAt: "ember-auto-import-scripts",
     },
     fingerprint: {
-      // Disabled here, but handled manually below when in production mode.
-      // This is so we can apply a single AssetRev operation over the application and our additional trees
+      // Handled by Rails asset pipeline
       enabled: false,
     },
     SRI: {
@@ -119,7 +118,7 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
-  const mergedTree = mergeTrees([
+  return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -130,6 +129,9 @@ module.exports = function (defaults) {
     concat(mergeTrees([app.options.adminTree]), {
       outputFile: `assets/admin.js`,
     }),
+    concat(mergeTrees([app.options.wizardTree]), {
+      outputFile: `assets/wizard.js`,
+    }),
     prettyTextEngine(vendorJs, "discourse-markdown"),
     concat("public/assets/scripts", {
       outputFile: `assets/start-discourse.js`,
@@ -137,17 +139,4 @@ module.exports = function (defaults) {
       inputFiles: [`discourse-boot.js`],
     }),
   ]);
-
-  if (isProduction) {
-    return new AssetRev(mergedTree, {
-      exclude: [
-        "javascripts/**/*",
-        "assets/test-i18n*",
-        "assets/highlightjs",
-        "assets/testem.css",
-      ],
-    });
-  } else {
-    return mergedTree;
-  }
 };

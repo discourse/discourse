@@ -30,7 +30,7 @@ describe TagsController do
       end
     end
 
-    context "with allow_staff_to_tag_pms" do
+    context "with pm_tags_allowed_for_groups" do
       fab!(:admin) { Fabricate(:admin) }
       fab!(:topic) { Fabricate(:topic, tags: [topic_tag]) }
       fab!(:pm) do
@@ -45,7 +45,7 @@ describe TagsController do
 
       context "enabled" do
         before do
-          SiteSetting.allow_staff_to_tag_pms = true
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
           sign_in(admin)
         end
 
@@ -66,7 +66,7 @@ describe TagsController do
 
       context "disabled" do
         before do
-          SiteSetting.allow_staff_to_tag_pms = false
+          SiteSetting.pm_tags_allowed_for_groups = ""
           sign_in(admin)
         end
 
@@ -239,7 +239,7 @@ describe TagsController do
     end
 
     it "handles special tag 'none'" do
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
       sign_in(admin)
 
@@ -284,6 +284,19 @@ describe TagsController do
 
         expect(response.parsed_body['topic_list']['more_topics_url'])
           .to start_with("/tags/c/#{category.slug_path.join('/')}/#{category.id}/#{tag.name}")
+      end
+
+      it "should 404 for invalid category path" do
+        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/somerandomstring/#{tag.name}.json?per_page=1"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "should 404 for secure categories" do
+        c = Fabricate(:private_category, group: Fabricate(:group))
+        get "/tags/c/#{c.slug_path.join("/")}/#{c.id}/#{tag.name}.json"
+
+        expect(response.status).to eq(404)
       end
     end
 
@@ -464,7 +477,7 @@ describe TagsController do
     fab!(:tag) { Fabricate(:tag, topics: [personal_message], name: 'test') }
 
     before do
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
     end
 
     context "as a regular user" do
@@ -864,6 +877,28 @@ describe TagsController do
         expect(response.status).to eq(400)
         expect(response.parsed_body['errors'].first).to eq(I18n.t('invalid_params', message: 'limit'))
       end
+
+      it 'includes required tag group information' do
+        tag1 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+
+        tag_group = Fabricate(:tag_group, tags: [tag1, tag2])
+        crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
+        category = Fabricate(:category, category_required_tag_groups: [ crtg ])
+
+        get "/tags/filter/search.json", params: { q: '', categoryId: category.id, filterForInput: true }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag1.name, tag2.name)
+        expect(response.parsed_body["required_tag_group"]).to eq({
+          "name" => tag_group.name,
+          "min_count" => crtg.min_count
+        })
+
+        get "/tags/filter/search.json", params: { q: '', categoryId: category.id, filterForInput: true, selected_tags: [tag1.name] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
+        expect(response.parsed_body["required_tag_group"]).to eq(nil)
+      end
     end
   end
 
@@ -1058,6 +1093,61 @@ describe TagsController do
         expect(response.status).to eq(404)
         expect_same_tag_names(tag.reload.synonyms, [synonym])
       end
+    end
+  end
+
+  describe '#update_notifications' do
+    fab!(:tag) { Fabricate(:tag) }
+
+    before do
+      sign_in(user)
+    end
+
+    it 'returns 404 when tag is not found' do
+      put "/tag/someinvalidtagname/notifications.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'updates the notification level of a tag for a user' do
+      tag_user = TagUser.change(user.id, tag.id, NotificationLevels.all[:muted])
+
+      put "/tag/#{tag.name}/notifications.json", params: {
+        tag_notification: {
+          notification_level: NotificationLevels.all[:tracking]
+        }
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["watched_tags"]).to eq([])
+      expect(response.parsed_body["watching_first_post_tags"]).to eq([])
+      expect(response.parsed_body["tracked_tags"]).to eq([tag.name])
+      expect(response.parsed_body["muted_tags"]).to eq([])
+      expect(response.parsed_body["regular_tags"]).to eq([])
+
+      expect(tag_user.reload.notification_level).to eq(NotificationLevels.all[:tracking])
+    end
+
+    it 'sets the notification level of a tag for a user' do
+      expect do
+        put "/tag/#{tag.name}/notifications.json", params: {
+          tag_notification: {
+            notification_level: NotificationLevels.all[:muted]
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["watched_tags"]).to eq([])
+        expect(response.parsed_body["watching_first_post_tags"]).to eq([])
+        expect(response.parsed_body["tracked_tags"]).to eq([])
+        expect(response.parsed_body["muted_tags"]).to eq([tag.name])
+        expect(response.parsed_body["regular_tags"]).to eq([])
+      end.to change { user.tag_users.count }.by(1)
+
+      tag_user = user.tag_users.last
+
+      expect(tag_user.notification_level).to eq(NotificationLevels.all[:muted])
     end
   end
 end

@@ -6,7 +6,7 @@
         <th>{{i18n "admin.email.incoming_emails.from_address"}}</th>
         <th>{{i18n "admin.email.incoming_emails.to_addresses"}}</th>
         <th>{{i18n "admin.email.incoming_emails.subject"}}</th>
-        <th>{{i18n "admin.email.incoming_emails.error"}}</th>
+        <th colspan="2">{{i18n "admin.email.incoming_emails.error"}}</th>
       </tr>
     </thead>
 
@@ -16,7 +16,7 @@
         <td>{{text-field value=filter.from placeholderKey="admin.email.incoming_emails.filters.from_placeholder"}}</td>
         <td>{{text-field value=filter.to placeholderKey="admin.email.incoming_emails.filters.to_placeholder"}}</td>
         <td>{{text-field value=filter.subject placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"}}</td>
-        <td>{{text-field value=filter.error placeholderKey="admin.email.incoming_emails.filters.error_placeholder"}}</td>
+        <td colspan="2">{{text-field value=filter.error placeholderKey="admin.email.incoming_emails.filters.error_placeholder"}}</td>
       </tr>
 
       {{#each model as |email|}}
@@ -50,9 +50,14 @@
           <td class="error">
             <a href {{action "showIncomingEmail" email.id}}>{{email.error}}</a>
           </td>
+          <td class="email-details">
+            <a href {{action "showIncomingEmail" email.id}} title={{i18n "admin.email.details_title"}}>
+              {{d-icon "info-circle"}}
+            </a>
+          </td>
         </tr>
       {{else}}
-        <tr><td colspan="5">{{i18n "admin.email.incoming_emails.none"}}</td></tr>
+        <tr><td colspan="6">{{i18n "admin.email.incoming_emails.none"}}</td></tr>
       {{/each}}
     </tbody>
   </table>

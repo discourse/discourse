@@ -16,13 +16,17 @@ export default DiscourseRoute.extend(ViewingActionType, {
 
     return {
       stream,
-      isAnotherUsersPage: this.isAnotherUsersPage(user),
+      isAnotherUsersPage: !this.isCurrentUser(user),
       emptyState: this.emptyState(),
       emptyStateOthers: this.emptyStateOthers,
     };
   },
 
   afterModel(model, transition) {
+    if (!this.isPoppedState(transition)) {
+      this.session.set("userStreamScrollPosition", null);
+    }
+
     return model.stream.filterBy({
       filter: this.userActionType,
       actingUsername: transition.to.queryParams.acting_username,

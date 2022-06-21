@@ -702,6 +702,19 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
+    deletePostWithConfirmation(post, opts) {
+      bootbox.confirm(
+        I18n.t("post.confirm_delete"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (confirmed) => {
+          if (confirmed) {
+            this.send("deletePost", post, opts);
+          }
+        }
+      );
+    },
+
     permanentlyDeletePost(post) {
       return bootbox.confirm(
         I18n.t("post.controls.permanently_delete_confirmation"),
@@ -759,14 +772,15 @@ export default Controller.extend(bufferedProperty("model"), {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
         const bookmarkForPost = this.model.bookmarks.find(
-          (bookmark) => bookmark.post_id === post.id && !bookmark.for_topic
+          (bookmark) =>
+            bookmark.bookmarkable_id === post.id &&
+            bookmark.bookmarkable_type === "Post"
         );
         return this._modifyPostBookmark(
           bookmarkForPost ||
             Bookmark.create({
-              post_id: post.id,
-              topic_id: post.topic_id,
-              for_topic: false,
+              bookmarkable_id: post.id,
+              bookmarkable_type: "Post",
               auto_delete_preference: this.currentUser
                 .bookmark_auto_delete_preference,
             }),
@@ -876,7 +890,8 @@ export default Controller.extend(bufferedProperty("model"), {
     selectReplies(post) {
       ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
         const replyIds = replies.map((r) => r.id);
-        this.selectedPostIds.pushObjects([post.id, ...replyIds]);
+        const postIds = [...this.selectedPostIds, post.id, ...replyIds];
+        this.set("selectedPostIds", [...new Set(postIds)]);
         this._forceRefreshPostStream();
       });
     },
@@ -1249,9 +1264,6 @@ export default Controller.extend(bufferedProperty("model"), {
           savedData,
           bookmark.attachedTo()
         );
-
-        // TODO (martin) (2022-02-01) Remove these old bookmark events, replaced by bookmarks:changed.
-        this.appEvents.trigger("topic:bookmark-toggled");
       },
       onAfterDelete: (topicBookmarked, bookmarkId) => {
         this.model.removeBookmark(bookmarkId);
@@ -1263,7 +1275,7 @@ export default Controller.extend(bufferedProperty("model"), {
     return openBookmarkModal(bookmark, {
       onCloseWithoutSaving: () => {
         post.appEvents.trigger("post-stream:refresh", {
-          id: bookmark.post_id,
+          id: bookmark.bookmarkable_id,
         });
       },
       onAfterSave: (savedData) => {
@@ -1305,23 +1317,24 @@ export default Controller.extend(bufferedProperty("model"), {
     }
 
     if (this.model.bookmarkCount === 1) {
-      const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
-      if (forTopicBookmark) {
-        return this._modifyTopicBookmark(forTopicBookmark);
+      const topicBookmark = this.model.bookmarks.findBy(
+        "bookmarkable_type",
+        "Topic"
+      );
+      if (topicBookmark) {
+        return this._modifyTopicBookmark(topicBookmark);
       } else {
         const bookmark = this.model.bookmarks[0];
-        const post = await this.model.postById(bookmark.post_id);
+        const post = await this.model.postById(bookmark.bookmarkable_id);
         return this._modifyPostBookmark(bookmark, post);
       }
     }
 
     if (this.model.bookmarkCount === 0) {
-      const firstPost = await this.model.firstPost();
       return this._modifyTopicBookmark(
         Bookmark.create({
-          post_id: firstPost.id,
-          topic_id: this.model.id,
-          for_topic: true,
+          bookmarkable_id: this.model.id,
+          bookmarkable_type: "Topic",
           auto_delete_preference: this.currentUser
             .bookmark_auto_delete_preference,
         })
@@ -1619,9 +1632,15 @@ export default Controller.extend(bufferedProperty("model"), {
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }
-          case "liked": {
+          case "liked":
+          case "unliked": {
             postStream
-              .triggerLikedPost(data.id, data.likes_count)
+              .triggerLikedPost(
+                data.id,
+                data.likes_count,
+                data.user_id,
+                data.type
+              )
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
           }

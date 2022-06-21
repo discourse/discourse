@@ -1,0 +1,24 @@
+{{#d-modal-body}}
+  {{#conditional-loading-spinner condition=loading}}
+    <div class="control-group user-status-description-wrap">
+      {{input
+        class="user-status-description"
+        placeholder=(i18n "user_status.what_are_you_doing")
+        value=description}}
+    </div>
+    <div class="modal-footer control-group">
+      {{d-button
+        label="user_status.save"
+        class="btn-primary"
+        disabled=(not statusIsSet)
+        action=(action "saveAndClose")}}
+      {{d-modal-cancel close=(action "closeModal")}}
+      {{#if showDeleteButton}}
+        {{d-button
+          icon="trash-alt"
+          class="delete-status btn-danger"
+          action=(action "delete")}}
+      {{/if}}
+    </div>
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}

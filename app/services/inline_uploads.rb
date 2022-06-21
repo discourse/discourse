@@ -204,20 +204,48 @@ class InlineUploads
 
       if src && (external_src || matched_uploads(src).present?)
         upload = uploads&.[](src)
-
-        text = upload&.original_filename || node.attributes["alt"]&.value
-        width = (node.attributes["width"]&.value || upload&.width).to_i
-        height = (node.attributes["height"]&.value || upload&.height).to_i
-        title = node.attributes["title"]&.value
-        text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
-        url = upload&.short_url || PLACEHOLDER
+        node["src"] = upload&.short_url || PLACEHOLDER
 
         spaces_before = match[1].present? ? match[1][/ +$/].size : 0
-        replacement = +"#{" " * spaces_before}![#{text}](#{url}#{title.present? ? " \"#{title}\"" : ""})"
+        replacement = +"#{" " * spaces_before}#{node.to_s}"
 
         yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
       end
     end
+  end
+
+  def self.replace_hotlinked_image_urls(raw:, &blk)
+    replace = Proc.new do |match, match_src, replacement, _index|
+      upload = blk.call(match_src)
+      next if !upload
+
+      replacement =
+        if replacement.include?(InlineUploads::PLACEHOLDER)
+          replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+        elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
+          replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
+        end
+
+      raw = raw.gsub(
+        match,
+        replacement
+      )
+    end
+
+    # there are 6 ways to insert an image in a post
+    # HTML tag - <img src="http://...">
+    InlineUploads.match_img(raw, external_src: true, &replace)
+
+    # BBCode tag - [img]http://...[/img]
+    InlineUploads.match_bbcode_img(raw, external_src: true, &replace)
+
+    # Markdown linked image - [![alt](http://...)](http://...)
+    # Markdown inline - ![alt](http://...)
+    # Markdown inline - ![](http://... "image title")
+    # Markdown inline - ![alt](http://... "image title")
+    InlineUploads.match_md_inline_img(raw, external_src: true, &replace)
+
+    raw
   end
 
   def self.matched_uploads(node)

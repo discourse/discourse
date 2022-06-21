@@ -120,7 +120,6 @@ nb_NO:
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
-      post: "innlegg #%{postNumber}"
       close: "lukk"
       twitter: "Del på Twitter"
       facebook: "Del på Facebook"
@@ -275,6 +274,8 @@ nb_NO:
         unbookmark_with_reminder: "Klikk for å fjerne alle bokmerkene og påminnelsene i dette emnet."
     bookmarks:
       created: "Du har bokmerket dette innlegget. %{name}"
+      create: "Opprett bokmerke"
+      edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
       remove: "Fjern bokmerke"
@@ -347,8 +348,8 @@ nb_NO:
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
-      close: "Fjern dette banneret."
-      edit: "Endre dette banneret >>"
+      close: "Fjern dette banneret"
+      edit: "Rediger"
     pwa:
       install_banner: "Ønsker du å <a href>installere %{title} på denne enheten</a>?"
     choose_topic:
@@ -542,6 +543,7 @@ nb_NO:
         other: "det siste året"
       relative: "Relativ"
     time_shortcut:
+      now: "Nå"
       later_today: "Senere i dag"
       next_business_day: "Neste virkedag"
       tomorrow: "I morgen"
@@ -550,13 +552,20 @@ nb_NO:
       this_weekend: "Denne uken"
       start_of_next_business_week: "Mandag"
       start_of_next_business_week_alt: "Neste mandag"
+      next_week: "Neste uke"
       two_weeks: "To uker"
       next_month: "Neste måned"
+      two_months: "To måneder"
+      three_months: "Tre måneder"
+      four_months: "Fire måneder"
       six_months: "Seks måneder"
-      custom: "Egendefinert dato og tid"
+      one_year: "Ett år"
+      forever: "For alltid"
       relative: "Relativ tid"
       none: "Ingen behov"
       last_custom: "Siste egendefinerte datotid"
+      custom: "Egendefinert dato og tid"
+      select_timeframe: "Velg et tidsrom"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> opprettet <a href='%{topicUrl}'>emnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> opprettet <a href='%{topicUrl}'>emnet</a>"
@@ -1055,7 +1064,7 @@ nb_NO:
       muted_categories: "Ignorert"
       muted_categories_instructions: "Brukerne vil ikke bli varslet om nye emner i disse kategoriene, og de vil ikke dukke opp på kategorier eller nyeste temasider."
       muted_categories_instructions_dont_hide: "Du vil ikke bli varslet om nye emner i disse kategoriene."
-      regular_categories: "Aktivt medlem"
+      regular_categories: "Normal"
       regular_categories_instructions: "Du vil se disse kategoriene i temaene “Latest” og “Top”."
       no_category_access: "Som moderator har du begrenset kategoritilgang, lagring er avskrudd."
       delete_account: "Slett kontoen min"
@@ -1430,8 +1439,6 @@ nb_NO:
           title: "Invitasjons link"
           success: "Invitasjonslenke har blitt generert!"
           error: "Det oppstod en feil under generering av invitasjonslenke"
-          max_redemptions_allowed_label: "Hvor mange personer har lov til å registrere seg ved hjelp av denne lenken?"
-          expires_at: "Når vil denne invitasjonslenken utløp?"
         invite:
           new_title: "Opprett invitasjon"
           edit_title: "Rediger invitasjon"
@@ -1541,6 +1548,8 @@ nb_NO:
         sent_by: "Sendt av"
         private_message: "melding"
         the_topic: "emnet"
+    user_status:
+      save: "Lagre"
     loading: "Laster…"
     errors:
       prev_page: "ved lasting"
@@ -1713,22 +1722,16 @@ nb_NO:
       not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
       google_oauth2:
         name: "Google"
-        title: "med Google"
       twitter:
         name: "Twitter"
-        title: "med Twitter"
       instagram:
         name: "Instagram"
-        title: "med Instagram"
       facebook:
         name: "Facebook"
-        title: "med Facebook"
       github:
         name: "GitHub"
-        title: "med GitHub"
       discord:
         name: "Discord"
-        title: "med Discord"
       second_factor_toggle:
         totp: "Bruk en autentiseringsapp i stedet"
         backup_code: "Bruk en sikkerhetskode i stedet"
@@ -1743,7 +1746,6 @@ nb_NO:
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
       password_label: "Passord"
-      optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
     emoji_set:
@@ -1935,9 +1937,6 @@ nb_NO:
         reply_as_new_group_message:
           label: Svar som ny gruppemelding
           desc: Opprett ny melding som starter med samme mottakere
-        reply_as_private_message:
-          label: Ny melding
-          desc: Opprett en ny personlig melding
         reply_to_topic:
           label: Svar på emnet
           desc: Svar på emnet, ikke et spesifikt innlegg
@@ -2301,24 +2300,6 @@ nb_NO:
         min_duration: "Varigheten må være større enn 0"
         max_duration: "Varigheten må være under 20 år"
         duration: "Varighet"
-      auto_update_input:
-        none: "Velg et tidsrom"
-        now: "Nå"
-        later_today: "Senere i dag"
-        tomorrow: "I morgen"
-        later_this_week: "Senere denne uken"
-        this_weekend: "Denne uken"
-        next_week: "Neste uke"
-        two_weeks: "To uker"
-        next_month: "Neste måned"
-        two_months: "To måneder"
-        three_months: "Tre måneder"
-        four_months: "Fire måneder"
-        six_months: "Seks måneder"
-        one_year: "Ett år"
-        forever: "For alltid"
-        pick_date_and_time: "Velg dato og tid"
-        set_based_on_last_post: "Lukk basert på siste post"
       publish_to_category:
         title: "Planlegg publisering"
       temp_open:
@@ -2426,8 +2407,6 @@ nb_NO:
         unpin: "Løsne emne…"
         unarchive: "Opphev arkivering av emne"
         archive: "Arkiver emne"
-        invisible: "Skjul"
-        visible: "Gjør synlig"
         reset_read: "Tilbakestill lesedata"
         make_private: "Gjør om til personlig melding"
         reset_bump_date: "Tilbakestille dato emnet ble flyttet øverst"
@@ -2836,10 +2815,8 @@ nb_NO:
       tag_groups_placeholder: "(Valgfritt) liste over tillatte stikkordgrupper"
       manage_tag_groups_link: "Administrere tagg-grupper"
       allow_global_tags_label: "Tillat også andre stikkord"
-      tag_group_selector_placeholder: "(Valgfritt) stikkord gruppe"
-      required_tag_group_description: "Krev nye emner for å ha tagger fra en stikkord-gruppe:"
-      min_tags_from_required_group_label: "Antall stikkord:"
-      required_tag_group_label: "Stikkordgrupper:"
+      required_tag_group:
+        delete: "Slett"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
       delete: "Slett kategori"
       create: "Ny Kategori"
@@ -3239,7 +3216,6 @@ nb_NO:
         edit: "%{shortcut} Rediger innlegg"
         delete: "%{shortcut} Slett innlegg"
         mark_muted: "%{shortcut} Ignorer emne"
-        mark_regular: "%{shortcut} Vanlig (forvalgt) emne"
         mark_tracking: "%{shortcut} Overvåk emne"
         mark_watching: "%{shortcut} Følg emne"
         print: "%{shortcut} Skriv ut emne"
@@ -3357,7 +3333,7 @@ nb_NO:
           title: "Overvåkning"
           description: "Du vil automatisk overvåke alle emner med dette stikkordet. Antallet uleste og nye innlegg vil vises ved siden av emnet."
         regular:
-          title: "Aktivt medlem"
+          title: "Normal"
           description: "Du vil bli varslet hvis noen nevner @navnet ditt eller svarer på innlegget ditt."
         muted:
           title: "Ignorert"
@@ -3439,6 +3415,32 @@ nb_NO:
       no_likes_others: "Ingen likte innlegg. "
     fullscreen_table:
       expand_btn: "Utvid tabell"
+    sidebar:
+      unread_count: "%{count} ulest"
+      new_count: "%{count} ny"
+      sections:
+        messages:
+          header_link_text: "Meldinger"
+          links:
+            inbox: "Innboks"
+            sent: "Sendt"
+            new: "Nye"
+            unread: "Uleste"
+            archive: "Arkiver"
+        tags:
+          header_link_title: "alle stikkord"
+          header_link_text: "Stikkord"
+        categories:
+          header_link_title: "alle kategorier"
+          header_link_text: "Kategorier"
+        topics:
+          header_link_title: "hjem"
+          header_link_text: "Emner"
+          links:
+            tracked:
+              content: "Overvåkes"
+            my_posts:
+              content: "Mine innlegg"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3806,7 +3808,6 @@ nb_NO:
         delete_confirm: 'Er du sikker på at du vil slette "%{theme_name}?'
         color: "Farge"
         opacity: "Opacity"
-        copy: "Kopier"
         copy_to_clipboard: "Kopier til utklippstavle"
         copied_to_clipboard: "Kopiert til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"

@@ -49,7 +49,6 @@ describe Email::Processor do
   end
 
   describe "rate limits" do
-
     let(:mail) { "From: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
     let(:limit_exceeded) { RateLimiter::LimitExceeded.new(10) }
 
@@ -68,11 +67,9 @@ describe Email::Processor do
         expect { Email::Processor.process!(mail, retry_on_rate_limit: false) }.to raise_error(limit_exceeded)
       end
     end
-
   end
 
   context "known error" do
-
     let(:mail) { "From: #{from}\nTo: bar@foo.com" }
     let(:mail2) { "From: #{from}\nTo: foo@foo.com" }
     let(:mail3) { "From: #{from}\nTo: foobar@foo.com" }
@@ -101,7 +98,6 @@ describe Email::Processor do
   end
 
   context "unrecognized error" do
-
     let(:mail) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
     let(:mail2) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: foo@foo.com\nSubject: BAR BAR\n\nBar bar bar bar?" }
 
@@ -115,7 +111,7 @@ describe Email::Processor do
 
         Email::Processor.process!(mail)
 
-        errors = Rails.logger.errors
+        errors = @fake_logger.errors
         expect(errors.size).to eq(1)
         expect(errors.first).to include("boom")
 
@@ -142,11 +138,9 @@ describe Email::Processor do
         Email::Processor.process!(mail2)
       }.to change { EmailLog.count }.by(1)
     end
-
   end
 
   context "from reply to email address" do
-
     let(:mail) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
 
     it "ignores the email" do
@@ -156,7 +150,6 @@ describe Email::Processor do
         Email::Processor.process!(mail)
       }.to change { EmailLog.count }.by(0)
     end
-
   end
 
   context "mailinglist mirror" do

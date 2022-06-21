@@ -7,6 +7,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
+import { htmlSafe } from "@ember/template";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);
@@ -22,7 +23,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
   }
-  return I18n.t(`action_codes.${actionCode}`, { who, when, path }).htmlSafe();
+  return htmlSafe(I18n.t(`action_codes.${actionCode}`, { who, when, path }));
 }
 
 export function actionDescription(actionCode, createdAt, username) {

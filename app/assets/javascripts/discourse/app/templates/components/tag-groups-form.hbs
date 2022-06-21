@@ -8,10 +8,10 @@
   {{tag-chooser
     tags=buffered.tag_names
     everyTag=true
-    allowCreate=true
     unlimitedTagCount=true
     excludeSynonyms=true
     options=(hash
+      allowAny=true
       filterPlaceholder="tagging.groups.tags_placeholder"
     )
   }}
@@ -23,11 +23,11 @@
     {{tag-chooser
       tags=buffered.parent_tag_name
       everyTag=true
-      maximum=1
-      allowCreate=true
       excludeSynonyms=true
       options=(hash
+        allowAny=true
         filterPlaceholder="tagging.groups.parent_tag_placeholder"
+        maximum=1
       )
     }}
   </div>

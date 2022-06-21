@@ -15,7 +15,7 @@ describe Jobs::ExportUserArchive do
   let(:component) { raise 'component not set' }
 
   fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category_with_definition) }
+  fab!(:category) { Fabricate(:category_with_definition, name: "User Archive Category") }
   fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   let(:post) { Fabricate(:post, user: user, topic: topic) }
@@ -168,6 +168,17 @@ describe Jobs::ExportUserArchive do
       _, csv_out = make_component_csv
       expect(csv_out).to match cat2_id.to_s
     end
+
+    it "can export a post from a secure category, obscuring the category name" do
+      cat2 = Fabricate(:private_category, group: Fabricate(:group), name: "Secret Cat")
+      topic2 = Fabricate(:topic, category: cat2, user: user, title: "This is a test secure topic")
+      _post2 = Fabricate(:post, topic: topic2, user: user)
+      data, csv_out = make_component_csv
+      expect(csv_out).not_to match "Secret Cat"
+      expect(data.length).to eq(1)
+      expect(data[0][:topic_title]).to eq("This is a test secure topic")
+      expect(data[0][:categories]).to eq("-")
+    end
   end
 
   context 'preferences' do
@@ -265,35 +276,34 @@ describe Jobs::ExportUserArchive do
     let(:post1) { Fabricate(:post, topic: topic1, post_number: 5) }
     let(:post2) { Fabricate(:post) }
     let(:post3) { Fabricate(:post) }
-    let(:message) { Fabricate(:private_message_topic) }
-    let(:post4) { Fabricate(:post, topic: message) }
+    let(:private_message_topic) { Fabricate(:private_message_topic) }
+    let(:post4) { Fabricate(:post, topic: private_message_topic) }
     let(:reminder_at) { 1.day.from_now }
 
-    it 'properly includes bookmark records' do
+    it "properly includes bookmark records" do
       now = freeze_time '2017-03-01 12:00'
 
-      bkmk1 = manager.create(post_id: post1.id, name: name)
+      bookmark1 = manager.create_for(bookmarkable_id: post1.id, bookmarkable_type: "Post", name: name)
       update1_at = now + 1.hours
-      bkmk1.update(name: 'great food recipe', updated_at: update1_at)
+      bookmark1.update(name: 'great food recipe', updated_at: update1_at)
 
-      manager.create(post_id: post2.id, name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+      manager.create_for(bookmarkable_id: post2.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
       twelve_hr_ago = freeze_time now - 12.hours
-      pending_reminder = manager.create(post_id: post3.id, name: name, reminder_at: now - 8.hours)
+      pending_reminder = manager.create_for(bookmarkable_id: post3.id, bookmarkable_type: "Post", name: name, reminder_at: now - 8.hours)
       freeze_time now
 
-      tau_record = message.topic_allowed_users.create!(user_id: user.id)
-      manager.create(post_id: post4.id, name: name)
+      tau_record = private_message_topic.topic_allowed_users.create!(user_id: user.id)
+      manager.create_for(bookmarkable_id: post4.id, bookmarkable_type: "Post", name: name)
       tau_record.destroy!
 
-      BookmarkReminderNotificationHandler.send_notification(pending_reminder)
+      BookmarkReminderNotificationHandler.new(pending_reminder).send_notification
 
       data, _csv_out = make_component_csv
 
       expect(data.length).to eq(4)
 
-      expect(data[0]['post_id']).to eq(post1.id.to_s)
-      expect(data[0]['topic_id']).to eq(topic1.id.to_s)
-      expect(data[0]['post_number']).to eq('5')
+      expect(data[0]['bookmarkable_id']).to eq(post1.id.to_s)
+      expect(data[0]['bookmarkable_type']).to eq("Post")
       expect(data[0]['link']).to eq(post1.full_url)
       expect(DateTime.parse(data[0]['updated_at'])).to eq(DateTime.parse(update1_at.to_s))
 
@@ -305,18 +315,20 @@ describe Jobs::ExportUserArchive do
       expect(DateTime.parse(data[2]['reminder_last_sent_at'])).to eq(DateTime.parse(now.to_s))
       expect(data[2]['reminder_set_at']).to eq('')
 
-      expect(data[3]['topic_id']).to eq(message.id.to_s)
+      expect(data[3]['bookmarkable_id']).to eq(post4.id.to_s)
+      expect(data[3]['bookmarkable_type']).to eq("Post")
       expect(data[3]['link']).to eq('')
     end
-
   end
 
   context 'category_preferences' do
     let(:component) { 'category_preferences' }
 
-    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
-    let(:announcements) { Fabricate(:category_with_definition) }
-    let(:deleted_category) { Fabricate(:category) }
+    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id, name: "User Archive Subcategory") }
+    let(:announcements) { Fabricate(:category_with_definition, name: "Announcements") }
+    let(:deleted_category) { Fabricate(:category, name: "Deleted Category") }
+    let(:secure_category_group) { Fabricate(:group) }
+    let(:secure_category) { Fabricate(:private_category, group: secure_category_group, name: "Super Secret Category") }
 
     let(:reset_at) { DateTime.parse('2017-03-01 12:00') }
 
@@ -341,11 +353,12 @@ describe Jobs::ExportUserArchive do
       deleted_category.destroy!
     end
 
-    it 'correctly exports the CategoryUser table' do
+    it 'correctly exports the CategoryUser table, excluding deleted categories' do
       data, _csv_out = make_component_csv
 
-      expect(data.find { |r| r['category_id'] == category.id }).to be_nil
-      expect(data.length).to eq(4)
+      expect(data.find { |r| r['category_id'] == category.id.to_s }).to be_nil
+      expect(data.find { |r| r['category_id'] == deleted_category.id.to_s }).to be_nil
+      expect(data.length).to eq(3)
       data.sort! { |a, b| a['category_id'].to_i <=> b['category_id'].to_i }
 
       expect(data[0][:category_id]).to eq(subcategory.id.to_s)
@@ -361,8 +374,23 @@ describe Jobs::ExportUserArchive do
       expect(data[2][:category_names]).to eq(announcements.name)
       expect(data[2][:notification_level]).to eq('watching_first_post')
       expect(data[2][:dismiss_new_timestamp]).to eq('')
+    end
 
-      expect(data[3][:category_names]).to eq(data[3][:category_id])
+    it "does not include any secure categories the user does not have access to, even if the user has a CategoryUser record" do
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:muted], secure_category.id)
+      data, _csv_out = make_component_csv
+
+      expect(data.any? { |r| r['category_id'] == secure_category.id.to_s }).to eq(false)
+      expect(data.length).to eq(3)
+    end
+
+    it "does include secure categories that the user has access to" do
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:muted], secure_category.id)
+      GroupUser.create!(user: user, group: secure_category_group)
+      data, _csv_out = make_component_csv
+
+      expect(data.any? { |r| r['category_id'] == secure_category.id.to_s }).to eq(true)
+      expect(data.length).to eq(4)
     end
   end
 

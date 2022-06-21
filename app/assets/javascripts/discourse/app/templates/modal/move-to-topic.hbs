@@ -24,7 +24,7 @@
 
           {{#if canTagMessages}}
             <label>{{i18n "tagging.tags"}}</label>
-            {{tag-chooser tags=tags filterable=true}}
+            {{tag-chooser tags=tags}}
           {{/if}}
         </form>
       {{/if}}
@@ -89,7 +89,7 @@
           }}
           {{#if canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>
-            {{tag-chooser tags=tags filterable=true categoryId=categoryId}}
+            {{tag-chooser tags=tags categoryId=categoryId}}
           {{/if}}
         </form>
       {{/if}}
@@ -104,7 +104,7 @@
 
           {{#if canTagMessages}}
             <label>{{i18n "tagging.tags"}}</label>
-            {{tag-chooser tags=tags filterable=true}}
+            {{tag-chooser tags=tags}}
           {{/if}}
         </form>
       {{/if}}

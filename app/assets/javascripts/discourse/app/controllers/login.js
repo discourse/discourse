@@ -256,6 +256,12 @@ export default Controller.extend(ModalFunctionality, {
           // Failed to login
           if (e.jqXHR && e.jqXHR.status === 429) {
             this.flash(I18n.t("login.rate_limit"), "error");
+          } else if (
+            e.jqXHR &&
+            e.jqXHR.status === 503 &&
+            e.jqXHR.responseJSON.error_type === "read_only"
+          ) {
+            this.flash(I18n.t("read_only_mode.login_disabled"), "error");
           } else if (!areCookiesEnabled()) {
             this.flash(I18n.t("login.cookies_error"), "error");
           } else {

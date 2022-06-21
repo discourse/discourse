@@ -2,7 +2,7 @@ import CleansUp from "discourse/mixins/cleans-up";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 
 function entranceDate(dt, showTime) {
@@ -31,9 +31,11 @@ function entranceDate(dt, showTime) {
 export default Component.extend(CleansUp, {
   elementId: "topic-entrance",
   classNameBindings: ["visible::hidden"],
-  _position: null,
   topic: null,
   visible: null,
+  _position: null,
+  _originalActiveElement: null,
+  _activeButton: null,
 
   @discourseComputed("topic.created_at")
   createdDate: (createdAt) => new Date(createdAt),
@@ -74,12 +76,64 @@ export default Component.extend(CleansUp, {
     $self.css(pos);
   },
 
+  @bind
+  _escListener(e) {
+    if (e.key === "Escape") {
+      this.cleanUp();
+    } else if (e.key === "Tab") {
+      if (this._activeButton === "top") {
+        this._jumpBottomButton().focus();
+        this._activeButton = "bottom";
+        e.preventDefault();
+      } else if (this._activeButton === "bottom") {
+        this._jumpTopButton().focus();
+        this._activeButton = "top";
+        e.preventDefault();
+      }
+    }
+  },
+
+  _jumpTopButton() {
+    return this.element.querySelector(".jump-top");
+  },
+
+  _jumpBottomButton() {
+    return this.element.querySelector(".jump-bottom");
+  },
+
+  _setupEscListener() {
+    document.body.addEventListener("keydown", this._escListener);
+  },
+
+  _removeEscListener() {
+    document.body.removeEventListener("keydown", this._escListener);
+  },
+
+  _trapFocus() {
+    this._originalActiveElement = document.activeElement;
+    this._jumpTopButton().focus();
+    this._activeButton = "top";
+  },
+
+  _releaseFocus() {
+    if (this._originalActiveElement) {
+      this._originalActiveElement.focus();
+      this._originalActiveElement = null;
+    }
+  },
+
+  _applyDomChanges() {
+    this._setCSS();
+    this._setupEscListener();
+    this._trapFocus();
+  },
+
   _show(data) {
     this._position = data.position;
 
     this.setProperties({ topic: data.topic, visible: true });
 
-    scheduleOnce("afterRender", this, this._setCSS);
+    scheduleOnce("afterRender", this, this._applyDomChanges);
 
     $("html")
       .off("mousedown.topic-entrance")
@@ -98,6 +152,8 @@ export default Component.extend(CleansUp, {
   cleanUp() {
     this.setProperties({ topic: null, visible: false });
     $("html").off("mousedown.topic-entrance");
+    this._removeEscListener();
+    this._releaseFocus();
   },
 
   willDestroyElement() {

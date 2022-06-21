@@ -31,9 +31,9 @@ RSpec.describe InlineUploads, type: :multisite do
         #{Discourse.base_url}#{upload2.short_path} #{Discourse.base_url}#{upload2.short_path}
         #{Discourse.base_url}#{upload2.short_path}
 
-        ![some image](#{upload.short_url})
-        ![some image](#{upload2.short_url})
-        ![](#{upload3.short_url})
+        <img src="#{upload.short_url}" alt="some image">
+        <img src="#{upload2.short_url}" alt="some image">
+        <img src="#{upload3.short_url}">
         MD
       end
     end

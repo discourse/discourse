@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class WizardFieldSerializer < ApplicationSerializer
-
   attributes :id, :type, :required, :value, :label, :placeholder, :description, :extra_description, :show_in_sidebar
   has_many :choices, serializer: WizardFieldChoiceSerializer, embed: :objects
 
@@ -76,4 +75,7 @@ class WizardFieldSerializer < ApplicationSerializer
     object.show_in_sidebar.present?
   end
 
+  def include_choices?
+    object.type == "dropdown" || object.type == "radio"
+  end
 end

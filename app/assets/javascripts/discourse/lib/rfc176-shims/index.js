@@ -40,7 +40,11 @@ module.exports = {
         m = modules[entry.module] = [];
       }
 
-      m.push(entry);
+      if (entry.module === "@ember/test") {
+        m.push({ ...entry, global: `(Ember.Test && ${entry.global})` });
+      } else {
+        m.push(entry);
+      }
     }
 
     let output = "";

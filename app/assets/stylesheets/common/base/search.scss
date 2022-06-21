@@ -134,7 +134,7 @@
   .user-items {
     display: grid;
     gap: 2em 1em;
-    grid: auto-flow / repeat(4, 1fr);
+    grid: auto-flow / repeat(4, minmax(0, 1fr));
 
     @include breakpoint(medium) {
       grid: auto-flow / repeat(3, 1fr);
@@ -372,11 +372,13 @@
     .avatar {
       margin-right: 0.5em;
       min-width: 25px;
+      flex: 0 0 auto;
     }
     .user-titles {
       display: flex;
       flex-direction: column;
       max-width: 300px;
+      overflow: hidden;
       .name {
         color: var(--primary-high-or-secondary-low);
         font-size: var(--font-0);

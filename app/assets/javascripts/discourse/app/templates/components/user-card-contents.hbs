@@ -1,4 +1,5 @@
 {{#if this.visible}}
+  {{plugin-outlet name="before-user-card-content" args=(hash user=this.user)}}
   <div class="card-content">
     {{#if this.loading}}
       <div class="card-row first-row">
@@ -36,12 +37,12 @@
           <h1 class="{{this.staff}} {{this.newUser}} {{if this.nameFirst "full-name" "username"}}">
             {{#if this.user.profile_hidden}}
               <span class="name-username-wrapper">
-                {{if this.nameFirst this.user.name (format-username this.username)}}
+                {{if this.nameFirst this.user.name (format-username this.user.username)}}
               </span>
             {{else}}
               <a href={{this.user.path}} {{action "showUser" this.user}} class="user-profile-link">
                 <span class="name-username-wrapper">
-                  {{if this.nameFirst this.user.name (format-username this.username)}}
+                  {{if this.nameFirst this.user.name (format-username this.user.username)}}
                 </span>
                 {{user-status this.user currentUser=this.currentUser}}
               </a>
@@ -49,7 +50,7 @@
           </h1>
           {{plugin-outlet name="user-card-after-username" connectorTagName="div" args=(hash user=this.user showUser=(action "showUser" this.user))}}
           {{#if this.nameFirst}}
-            <h2 class="username">{{this.username}}</h2>
+            <h2 class="username">{{this.user.username}}</h2>
           {{else}}
             {{#if this.user.name}}
               <h2 class="full-name">{{this.user.name}}</h2>
@@ -60,6 +61,9 @@
           {{/if}}
           {{#if this.user.staged}}
             <h2 class="staged">{{i18n "user.staged"}}</h2>
+          {{/if}}
+          {{#if this.hasStatus}}
+            <h3 class="user-status">{{html-safe this.userStatusEmoji}} {{this.user.status.description}}</h3>
           {{/if}}
           {{plugin-outlet name="user-card-post-names" connectorTagName="div" args=(hash user=this.user) tagName="div"}}
         </div>
@@ -73,6 +77,10 @@
               label="user.private_message"}}
             </li>
           {{/if}}
+          {{plugin-outlet
+          name="user-card-below-message-button" connectorTagName="li"
+          args=(hash user=this.user close=(action "close"))
+          tagName=""}}
           {{#if this.showFilter}}
             <li>
               {{d-button

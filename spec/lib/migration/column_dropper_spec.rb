@@ -94,8 +94,8 @@ RSpec.describe Migration::ColumnDropper do
       SQL
 
       expect(
-        ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name};").values
-      ).to include([2, "something@email.com"])
+        DB.query("SELECT * FROM #{table_name};").first.values
+      ).to include 2, "something@email.com"
     end
 
     it 'should prevent insertions to the readonly column' do

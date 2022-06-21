@@ -1,4 +1,5 @@
 import Site from "discourse/models/site";
+import { capitalize } from "@ember/string";
 
 export default function () {
   // Error page
@@ -29,7 +30,7 @@ export default function () {
   this.route("discovery", { path: "/", resetNamespace: true }, function () {
     // top by periods - legacy route
     Site.currentProp("periods").forEach((period) => {
-      const top = "top" + period.capitalize();
+      const top = "top" + capitalize(period);
 
       this.route(top, { path: "/top/" + period });
       this.route(top + "CategoryNone", {
@@ -215,7 +216,7 @@ export default function () {
     this.route("show", { path: "/:tag_id" });
 
     Site.currentProp("filters").forEach((filter) => {
-      this.route("show" + filter.capitalize(), {
+      this.route("show" + capitalize(filter), {
         path: "/:tag_id/l/" + filter,
       });
     });
@@ -225,15 +226,21 @@ export default function () {
     this.route("showCategory", {
       path: "/c/*category_slug_path_with_id/:tag_id",
     });
+    this.route("showCategoryAll", {
+      path: "/c/*category_slug_path_with_id/all/:tag_id",
+    });
     this.route("showCategoryNone", {
       path: "/c/*category_slug_path_with_id/none/:tag_id",
     });
 
     Site.currentProp("filters").forEach((filter) => {
-      this.route("showCategory" + filter.capitalize(), {
+      this.route("showCategory" + capitalize(filter), {
         path: "/c/*category_slug_path_with_id/:tag_id/l/" + filter,
       });
-      this.route("showCategoryNone" + filter.capitalize(), {
+      this.route("showCategoryAll" + capitalize(filter), {
+        path: "/c/*category_slug_path_with_id/all/:tag_id/l/" + filter,
+      });
+      this.route("showCategoryNone" + capitalize(filter), {
         path: "/c/*category_slug_path_with_id/none/:tag_id/l/" + filter,
       });
     });

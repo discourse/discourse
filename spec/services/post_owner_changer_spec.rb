@@ -85,6 +85,11 @@ describe PostOwnerChanger do
       expect(p4.reload.user).to eq(user_a)
     end
 
+    it "sets 'posted' for TopicUser to true" do
+      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      expect(TopicUser.find_by(topic_id: topic.id, user_id: user_a.id).posted).to eq(true)
+    end
+
     context "sets topic notification level for the new owner" do
       let(:p4) { create_post(post_number: 2, topic: topic) }
 

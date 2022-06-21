@@ -1,9 +1,11 @@
 import DiscourseURL from "discourse/lib/url";
 import { isDevelopment } from "discourse-common/config/environment";
+import { later } from "@ember/runloop";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
   name: "live-development",
+
   initialize(container) {
     const messageBus = container.lookup("message-bus:main");
     const session = container.lookup("session:main");
@@ -29,17 +31,6 @@ export default {
         };
       });
     }
-
-    // Custom header changes
-    $("header.custom").each(function () {
-      const header = $(this);
-      return messageBus.subscribe(
-        "/header-change/" + $(this).data("id"),
-        function (data) {
-          return header.html(data);
-        }
-      );
-    });
 
     // Useful to export this for debugging purposes
     if (isDevelopment()) {
@@ -79,14 +70,9 @@ export default {
   },
 
   refreshCSS(node, newHref) {
-    let reloaded = node.cloneNode(true);
+    const reloaded = node.cloneNode(true);
     reloaded.href = newHref;
     node.insertAdjacentElement("afterend", reloaded);
-
-    setTimeout(() => {
-      if (node && node.parentNode) {
-        node.parentNode.removeChild(node);
-      }
-    }, 500);
+    later(() => node?.parentNode?.removeChild(node), 500);
   },
 };

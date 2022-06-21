@@ -26,6 +26,13 @@ Discourse::Application.routes.draw do
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
+    scope path: nil, format: true, constraints: { format: :xml } do
+      resources :sitemap, only: [:index]
+      get "/sitemap_:page" => "sitemap#page", page: /[1-9][0-9]*/
+      get "/sitemap_recent" => "sitemap#recent"
+      get "/news" => "sitemap#news"
+    end
+
     scope path: nil, constraints: { format: /.*/ } do
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"
@@ -376,6 +383,7 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
 
     resources :static
@@ -722,6 +730,7 @@ Discourse::Application.routes.draw do
     get "categories_and_top" => "categories#categories_and_top"
 
     get "c/:id/show" => "categories#show"
+    get "c/:id/visible_groups" => "categories#visible_groups"
 
     get "c/*category_slug/find_by_slug" => "categories#find_by_slug"
     get "c/*category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
@@ -815,7 +824,7 @@ Discourse::Application.routes.draw do
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
     get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
-    get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: true, constraints: { topic_id: /\d+/ }
+    get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: 'true', constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: { topic_id: /\d+/ }
@@ -952,9 +961,11 @@ Discourse::Application.routes.draw do
         scope path: '/c/*category_slug_path_with_id' do
           Discourse.filters.each do |filter|
             get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_none_show_#{filter}", defaults: { no_subcategories: true }
+            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_all_show_#{filter}", defaults: { no_subcategories: false }
           end
 
           get '/none/:tag_id' => 'tags#show', as: 'tag_category_none_show', defaults: { no_subcategories: true }
+          get '/all/:tag_id' => 'tags#show', as: 'tag_category_all_show', defaults: { no_subcategories: false }
 
           Discourse.filters.each do |filter|
             get "/:tag_id/l/#{filter}" => "tags#show_#{filter}", as: "tag_category_show_#{filter}"
@@ -990,10 +1001,6 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-    unless Rails.env.production?
-      get "/qunit" => "qunit#index"
-      get "/wizard/qunit" => "wizard#qunit"
-    end
     get "/theme-qunit" => "qunit#theme"
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
@@ -1008,6 +1015,9 @@ Discourse::Application.routes.draw do
 
     post "/presence/update" => "presence#update"
     get "/presence/get" => "presence#get"
+
+    put "user-status" => "user_status#set"
+    delete "user-status" => "user_status#clear"
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

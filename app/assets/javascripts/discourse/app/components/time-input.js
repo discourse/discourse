@@ -1,6 +1,7 @@
 import { action, computed } from "@ember/object";
 import Component from "@ember/component";
 import { isPresent } from "@ember/utils";
+import { htmlSafe } from "@ember/template";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -117,9 +118,9 @@ export default Component.extend({
 
       if (this.minimumTime) {
         const diff = option - this.minimumTime;
-        label = `${name} <small>(${convertMinutesToDurationString(
-          diff
-        )})</small>`.htmlSafe();
+        label = htmlSafe(
+          `${name} <small>(${convertMinutesToDurationString(diff)})</small>`
+        );
       }
 
       return {

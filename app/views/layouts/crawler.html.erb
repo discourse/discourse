@@ -5,14 +5,7 @@
     <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <%= render partial: "layouts/head" %>
-    <%- if rtl? %>
-      <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
-    <%- else %>
-      <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
-    <%- end %>
-    <%- if theme_id.present? %>
-      <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
-    <%- end %>
+    <%= render partial: "common/discourse_stylesheet" %>
     <%= theme_lookup("head_tag") %>
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
@@ -23,50 +16,11 @@
   </head>
   <body class="crawler">
     <%= theme_lookup("header") %>
-    <header>
-      <a href="<%= path "/" %>">
-        <%- if SiteSetting.site_logo_url.present? %>
-          <img src="<%=SiteSetting.site_logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 150px;">
-        <%- else %>
-          <h1><%=SiteSetting.title%></h1>
-        <% end %>
-      </a>
-    </header>
-    <div id="main-outlet" class="wrap">
+    <%= render partial: "layouts/noscript_header" %>
+    <div id="main-outlet" class="wrap" role="main">
       <%= yield %>
     </div>
-    <footer class="container wrap">
-      <nav class='crawler-nav'>
-        <ul>
-        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-          <span itemprop='name'>
-            <a href='<%= path "/" %>' itemprop="url"><%= t 'home_title' %> </a>
-          </span>
-        </li>
-        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-          <span itemprop='name'>
-            <a href='<%= path "/categories" %>' itemprop="url"><%= t 'js.filters.categories.title' %> </a>
-          </span>
-        </li>
-        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-          <span itemprop='name'>
-            <a href='<%= path "/guidelines" %>' itemprop="url"><%= t 'guidelines_topic.title' %> </a>
-          </span>
-        </li>
-        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-          <span itemprop='name'>
-            <a href='<%= path "/tos" %>' itemprop="url"><%= t 'tos_topic.title' %> </a>
-          </span>
-        </li>
-        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-          <span itemprop='name'>
-            <a href='<%= path "/privacy" %>' itemprop="url"><%= t 'privacy_topic.title' %> </a>
-          </span>
-        </li>
-        </ul>
-      </nav>
-      <p class='powered-by-link'><%= t 'powered_by_html' %></p>
-    </footer>
+    <%= render partial: "layouts/noscript_footer" %>
     <%= theme_lookup("footer") %>
     <%= theme_lookup("body_tag") %>
     <% if show_browser_update? %>

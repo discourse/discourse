@@ -85,3 +85,5 @@ zh_CN:
           title: "标头图标"
         spinners:
           title: "旋转的图标"
+        empty_state:
+          title: "空状态"

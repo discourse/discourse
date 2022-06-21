@@ -11,12 +11,12 @@ export default {
         blurb:
           "The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It’s important! Edit this into a brief description of your community: Who is it for? What can they find here? Why should they come here? Where can they read more (links, resources, ...",
         post_number: 1,
-        topic_id: 7,
+        topic_id: 130,
       },
     ],
     topics: [
       {
-        id: 7,
+        id: 130,
         title: "Welcome to Discourse",
         fancy_title: "Welcome to Discourse",
         slug: "welcome-to-discourse",

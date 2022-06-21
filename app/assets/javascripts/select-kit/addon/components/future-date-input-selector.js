@@ -1,17 +1,14 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DatetimeMixin from "select-kit/components/future-date-input-selector/mixin";
-import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import buildTimeframes from "discourse/lib/timeframes-builder";
-import I18n from "I18n";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
-export default ComboBoxComponent.extend(DatetimeMixin, {
+export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
-  isCustom: equal("value", "pick_date_and_time"),
+  isCustom: equal("value", "custom"),
+  userTimezone: null,
 
   selectKitOptions: {
     autoInsertNoneItem: false,
@@ -19,37 +16,20 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       "future-date-input-selector/future-date-input-selector-header",
   },
 
+  init() {
+    this._super(...arguments);
+    this.userTimezone = this.currentUser.timezone;
+  },
+
   modifyComponentForRow() {
     return "future-date-input-selector/future-date-input-selector-row";
   },
 
-  content: computed("statusType", function () {
-    const now = moment();
-    const opts = {
-      now,
-      day: now.day(),
-      includeWeekend: this.includeWeekend,
-      includeFarFuture: this.includeFarFuture,
-      includeDateTime: this.includeDateTime,
-      canScheduleNow: this.includeNow || false,
-      canScheduleToday: 24 - now.hour() > 6,
-    };
-
-    return buildTimeframes(opts).map((tf) => {
-      return {
-        id: tf.id,
-        name: I18n.t(`topic.auto_update_input.${tf.id}`),
-        datetime: this._computeDatetimeForValue(tf.id),
-        icons: this._computeIconsForValue(tf.id),
-      };
-    });
-  }),
-
   actions: {
     onChange(value) {
-      if (value !== "pick_date_and_time") {
-        const { time } = this._updateAt(value);
-        if (time && !isEmpty(value)) {
+      if (value !== "custom" && !isEmpty(value)) {
+        const { time } = this.content.find((x) => x.id === value);
+        if (time) {
           this.attrs.onChangeInput &&
             this.attrs.onChangeInput(time.locale("en").format(FORMAT));
         }

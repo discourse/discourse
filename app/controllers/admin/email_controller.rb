@@ -209,6 +209,14 @@ class Admin::EmailController < Admin::AdminController
         incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
       end
 
+      # Temporary fix until all old format of emails has been purged via lib/email/cleaner.rb
+      if incoming_email.nil?
+        email_local_part, email_domain = SiteSetting.reply_by_email_address.split('@')
+        subdomain, root_domain, extension = email_domain&.split('.')
+        bounced_to_address = "#{subdomain}+verp-#{email_log.bounce_key}@#{root_domain}.#{extension}"
+        incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
+      end
+
       raise Discourse::NotFound if incoming_email.nil?
 
       serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)

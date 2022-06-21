@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'jobs/regular/send_system_message'
-
 describe Jobs::SendSystemMessage do
-
   it "raises an error without a user_id" do
     expect { Jobs::SendSystemMessage.new.execute(message_type: 'welcome_invite') }.to raise_error(Discourse::InvalidParameters)
   end
@@ -13,7 +10,6 @@ describe Jobs::SendSystemMessage do
   end
 
   context 'with valid parameters' do
-
     fab!(:user) { Fabricate(:user) }
 
     it "should call SystemMessage.create" do
@@ -26,7 +22,5 @@ describe Jobs::SendSystemMessage do
       SystemMessage.any_instance.expects(:create).with('post_hidden', options)
       Jobs::SendSystemMessage.new.execute(user_id: user.id, message_type: 'post_hidden', message_options: options)
     end
-
   end
-
 end

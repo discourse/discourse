@@ -6,7 +6,7 @@ task "smoke:test" do
 
   begin
     ChromeInstalledChecker.run
-  rescue ChromeNotInstalled, ChromeVersionTooLow => err
+  rescue ChromeInstalledChecker::ChromeError => err
     abort err.message
   end
 
@@ -82,7 +82,7 @@ task "smoke:test" do
 
   next if api_key.blank? && api_username.blank? && theme_url.blank?
 
-  puts "Running QUnit tests for theme #{theme_url.inspect} using API key #{api_key[0..3]}… and username #{api_username.inspect}"
+  puts "Running QUnit tests for theme #{theme_url.inspect} using API key #{api_key[0..3]}... and username #{api_username.inspect}"
 
   query_params = {
     seed: Random.new.seed,

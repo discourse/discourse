@@ -39,6 +39,11 @@ RSpec.describe Admin::UsersController do
         end.to change { UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: admin.id).count }.by(1)
         expect(response.status).to eq(200)
       end
+
+      it "can be ordered by emails" do
+        get "/admin/users/list.json", params: { show_emails: "true", order: "email" }
+        expect(response.status).to eq(200)
+      end
     end
   end
 
@@ -157,6 +162,7 @@ RSpec.describe Admin::UsersController do
       expect(user).to be_suspended
       expect(user.suspended_at).to be_present
       expect(user.suspended_till).to be_present
+      expect(user.suspend_record).to be_present
 
       log = UserHistory.where(target_user_id: user.id).order('id desc').first
       expect(log.details).to match(/because I said so/)
@@ -303,7 +309,8 @@ RSpec.describe Admin::UsersController do
     it "also prevents use of any api keys" do
       api_key = Fabricate(:api_key, user: user)
       post "/bookmarks.json", params: {
-        post_id: Fabricate(:post).id
+        bookmarkable_id: Fabricate(:post).id,
+        bookmarkable_type: "Post"
       }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 
@@ -384,7 +391,7 @@ RSpec.describe Admin::UsersController do
     it 'asks the acting admin for second factor if it is enabled' do
       Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
 
       expect(response.parsed_body["second_factor_challenge_nonce"]).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -393,7 +400,7 @@ RSpec.describe Admin::UsersController do
     it 'grants admin if second factor is correct' do
       user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -408,7 +415,7 @@ RSpec.describe Admin::UsersController do
       expect(res["ok"]).to eq(true)
       expect(res["callback_method"]).to eq("PUT")
       expect(res["callback_path"]).to eq("/admin/users/#{another_user.id}/grant_admin.json")
-      expect(res["redirect_path"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
+      expect(res["redirect_url"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
       expect(another_user.reload.admin).to eq(false)
 
       put res["callback_path"], params: {
@@ -421,7 +428,7 @@ RSpec.describe Admin::UsersController do
     it 'does not grant admin if second factor auth is not successful' do
       user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -446,7 +453,7 @@ RSpec.describe Admin::UsersController do
     it 'does not grant admin if the acting admin loses permission in the middle of the process' do
       user_second_factor = Fabricate(:user_second_factor_totp, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -461,7 +468,7 @@ RSpec.describe Admin::UsersController do
       expect(res["ok"]).to eq(true)
       expect(res["callback_method"]).to eq("PUT")
       expect(res["callback_path"]).to eq("/admin/users/#{another_user.id}/grant_admin.json")
-      expect(res["redirect_path"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
+      expect(res["redirect_url"]).to eq("/admin/users/#{another_user.id}/#{another_user.username}")
       expect(another_user.reload.admin).to eq(false)
 
       admin.update!(admin: false)
@@ -476,7 +483,7 @@ RSpec.describe Admin::UsersController do
       Fabricate(:user_second_factor_totp, user: admin)
       Fabricate(:user_second_factor_backup, user: admin)
 
-      put "/admin/users/#{another_user.id}/grant_admin.json"
+      put "/admin/users/#{another_user.id}/grant_admin.json", xhr: true
       nonce = response.parsed_body["second_factor_challenge_nonce"]
       expect(nonce).to be_present
       expect(another_user.reload.admin).to eq(false)
@@ -890,6 +897,7 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       reg_user.reload
       expect(reg_user).to be_silenced
+      expect(reg_user.silenced_record).to be_present
     end
 
     it "can have an associated post" do
@@ -1073,6 +1081,24 @@ RSpec.describe Admin::UsersController do
       user = User.find_by_email('dr@claw.com')
       expect(user).to be_present
       expect(user.ip_address).to be_blank
+    end
+
+    it "triggers :sync_sso DiscourseEvent" do
+      sso.name = "Bob The Bob"
+      sso.username = "bob"
+      sso.email = "bob@bob.com"
+      sso.external_id = "1"
+
+      user = DiscourseConnect.parse(sso.payload, secure_session: read_secure_session).lookup_or_create_user
+
+      sso.name = "Bill"
+      sso.username = "Hokli$$!!"
+      sso.email = "bob2@bob.com"
+
+      events = DiscourseEvent.track_events do
+        post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+      end
+      expect(events).to include(event_name: :sync_sso, params: [user])
     end
 
     it 'should return the right message if the record is invalid' do

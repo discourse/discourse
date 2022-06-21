@@ -25,7 +25,7 @@ export function tinyDateYear(date) {
 // TODO: locale support ?
 export function toTitleCase(str) {
   return str.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
   });
 }
 
@@ -122,7 +122,7 @@ function wrapOn(dateStr) {
   return I18n.t("dates.wrap_on", { date: dateStr });
 }
 
-export function durationTiny(distance, ageOpts) {
+export function duration(distance, ageOpts) {
   if (typeof distance !== "number") {
     return "&mdash;";
   }
@@ -131,7 +131,8 @@ export function durationTiny(distance, ageOpts) {
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 
   const t = function (key, opts) {
-    const result = I18n.t("dates.tiny." + key, opts);
+    const format = (ageOpts && ageOpts.format) || "tiny";
+    const result = I18n.t("dates." + format + "." + key, opts);
     return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
   };
 
@@ -180,6 +181,10 @@ export function durationTiny(distance, ageOpts) {
   }
 
   return formatted;
+}
+
+export function durationTiny(distance, ageOpts) {
+  return duration(distance, Object.assign({ format: "tiny" }, ageOpts));
 }
 
 function relativeAgeTiny(date, ageOpts) {

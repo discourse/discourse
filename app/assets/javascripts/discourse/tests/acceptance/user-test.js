@@ -2,14 +2,18 @@ import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("User Routes", function (needs) {
   needs.user();
@@ -53,6 +57,20 @@ acceptance("User Routes", function (needs) {
         "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
       )
     );
+
+    updateCurrentUser({ moderator: true, admin: false });
+    await visit("/u/charlie/summary");
+    assert.notOk(
+      exists(".user-nav > .user-notifications"),
+      "does not have the notifications tab"
+    );
+
+    updateCurrentUser({ moderator: false, admin: true });
+    await visit("/u/charlie/summary");
+    assert.ok(
+      exists(".user-nav > .user-notifications"),
+      "has the notifications tab"
+    );
   });
 
   test("Root URL - Viewing Self", async function (assert) {
@@ -94,6 +112,66 @@ acceptance("User Routes", function (needs) {
     assert.ok(
       exists(".d-editor-input"),
       "composer is visible after resuming a draft"
+    );
+  });
+});
+
+acceptance("User Summary - Stats", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/u/eviltrout/summary.json", () => {
+      return helper.response(200, {
+        user_summary: {
+          likes_given: 1,
+          likes_received: 2,
+          topics_entered: 3,
+          posts_read_count: 4,
+          days_visited: 5,
+          topic_count: 6,
+          post_count: 7,
+          time_read: 100000,
+          recent_time_read: 1000,
+          bookmark_count: 0,
+          can_see_summary_stats: true,
+          topic_ids: [1234],
+          replies: [{ topic_id: 1234 }],
+          links: [{ topic_id: 1234, url: "https://eviltrout.com" }],
+          most_replied_to_users: [{ id: 333 }],
+          most_liked_by_users: [{ id: 333 }],
+          most_liked_users: [{ id: 333 }],
+          badges: [{ badge_id: 444 }],
+          top_categories: [
+            {
+              id: 1,
+              name: "bug",
+              color: "e9dd00",
+              text_color: "000000",
+              slug: "bug",
+              read_restricted: false,
+              parent_category_id: null,
+              topic_count: 1,
+              post_count: 1,
+            },
+          ],
+        },
+        badges: [{ id: 444, count: 1 }],
+        topics: [{ id: 1234, title: "cool title", slug: "cool-title" }],
+      });
+    });
+  });
+
+  test("Summary Read Times", async function (assert) {
+    await visit("/u/eviltrout/summary");
+
+    assert.equal(query(".stats-time-read span").textContent.trim(), "1d");
+    assert.equal(
+      query(".stats-time-read span").title,
+      I18n.t("user.summary.time_read_title", { duration: "1 day" })
+    );
+
+    assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
+    assert.equal(
+      query(".stats-recent-read span").title,
+      I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
     );
   });
 });
@@ -177,3 +255,118 @@ acceptance("User - Saving user options", function (needs) {
     );
   });
 });
+
+acceptance("User - Notification level dropdown visibility", function (needs) {
+  needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+
+  needs.pretender((server, helper) => {
+    server.get("/u/charlie.json", () => {
+      const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+      cloned.user.can_ignore_user = false;
+      cloned.user.can_mute_user = false;
+      return helper.response(200, cloned);
+    });
+  });
+
+  test("Notification level button is not rendered for user who cannot mute or ignore another user", async function (assert) {
+    await visit("/u/charlie");
+    assert.notOk(exists(".user-notifications-dropdown"));
+  });
+});
+
+acceptance(
+  "User - Muting other user with notification level dropdown",
+  function (needs) {
+    needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+
+    needs.pretender((server, helper) => {
+      server.get("/u/charlie.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+        cloned.user.can_mute_user = true;
+        return helper.response(200, cloned);
+      });
+
+      server.put("/u/charlie/notification_level.json", (request) => {
+        let requestParams = new URLSearchParams(request.requestBody);
+        // Ensure the correct `notification_level` param is sent to the server
+        if (requestParams.get("notification_level") === "mute") {
+          return helper.response(200, {});
+        } else {
+          return helper.response(422, {});
+        }
+      });
+    });
+
+    test("Notification level is set to normal and can be changed to muted", async function (assert) {
+      await visit("/u/charlie");
+      assert.ok(
+        exists(".user-notifications-dropdown"),
+        "Notification level dropdown is present"
+      );
+
+      const dropdown = selectKit(".user-notifications-dropdown");
+      await dropdown.expand();
+      assert.strictEqual(dropdown.selectedRow().value(), "changeToNormal");
+
+      await dropdown.selectRowByValue("changeToMuted");
+      await dropdown.expand();
+      assert.strictEqual(dropdown.selectedRow().value(), "changeToMuted");
+    });
+  }
+);
+
+acceptance(
+  "User - Ignoring other user with notification level dropdown",
+  function (needs) {
+    needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+
+    needs.pretender((server, helper) => {
+      server.get("/u/charlie.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+        cloned.user.can_ignore_user = true;
+        return helper.response(200, cloned);
+      });
+
+      server.put("/u/charlie/notification_level.json", (request) => {
+        let requestParams = new URLSearchParams(request.requestBody);
+        // Ensure the correct `notification_level` param is sent to the server
+        if (requestParams.get("notification_level") === "ignore") {
+          return helper.response(200, {});
+        } else {
+          return helper.response(422, {});
+        }
+      });
+    });
+    test("Notification level can be changed to ignored", async function (assert) {
+      await visit("/u/charlie");
+      assert.ok(
+        exists(".user-notifications-dropdown"),
+        "Notification level dropdown is present"
+      );
+
+      const notificationLevelDropdown = selectKit(
+        ".user-notifications-dropdown"
+      );
+      await notificationLevelDropdown.expand();
+      assert.strictEqual(
+        notificationLevelDropdown.selectedRow().value(),
+        "changeToNormal"
+      );
+
+      await notificationLevelDropdown.selectRowByValue("changeToIgnored");
+      assert.ok(exists(".ignore-duration-modal"));
+
+      const durationDropdown = selectKit(
+        ".ignore-duration-modal .future-date-input-selector"
+      );
+      await durationDropdown.expand();
+      await durationDropdown.selectRowByIndex(0);
+      await click(".modal-footer .ignore-duration-save");
+      await notificationLevelDropdown.expand();
+      assert.strictEqual(
+        notificationLevelDropdown.selectedRow().value(),
+        "changeToIgnored"
+      );
+    });
+  }
+);

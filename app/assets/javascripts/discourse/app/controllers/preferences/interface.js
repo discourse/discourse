@@ -58,6 +58,7 @@ export default Controller.extend({
       "skip_new_user_tips",
       "color_scheme_id",
       "dark_scheme_id",
+      "enable_experimental_sidebar",
     ];
 
     if (makeThemeDefault) {

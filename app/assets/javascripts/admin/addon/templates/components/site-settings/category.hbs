@@ -1,8 +1,8 @@
 {{category-chooser
   value=value
-  allowUncategorized=true
   onChange=(action (mut value))
   options=(hash
+    allowUncategorized=true
     none=(eq setting.default "")
   )
 }}

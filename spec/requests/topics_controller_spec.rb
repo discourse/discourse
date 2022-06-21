@@ -417,7 +417,7 @@ RSpec.describe TopicsController do
         before { sign_in(admin) }
 
         it "returns success" do
-          SiteSetting.allow_staff_to_tag_pms = true
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
           expect do
             post "/t/#{message.id}/move-posts.json", params: {
@@ -1818,12 +1818,40 @@ RSpec.describe TopicsController do
     it 'returns 301 when found' do
       get "/t/external_id/asdf.json"
       expect(response.status).to eq(301)
-      expect(response).to redirect_to(topic.relative_url + ".json?page=")
+      expect(response).to redirect_to(topic.relative_url + ".json")
     end
 
     it 'returns right response when not found' do
       get "/t/external_id/fdsa.json"
       expect(response.status).to eq(404)
+    end
+
+    it 'preserves only select query params' do
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?filter_top_level_replies=true")
+
+      get "/t/external_id/asdf.json", params: {
+        not_valid: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json")
+
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true,
+        post_number: 9999
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + "/9999.json?filter_top_level_replies=true")
+
+      get "/t/external_id/asdf.json", params: {
+        filter_top_level_replies: true,
+        print: true
+      }
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(topic.relative_url + ".json?print=true&filter_top_level_replies=true")
     end
 
     describe 'when user does not have access to the topic' do
@@ -1972,6 +2000,13 @@ RSpec.describe TopicsController do
       get "/t/made-up-topic-slug/5014217323220164041.json"
 
       expect(response.status).to eq(404)
+    end
+
+    it "doesn't use print mode when print equals false" do
+      SiteSetting.max_prints_per_hour_per_user = 0
+
+      get "/t/#{topic.slug}/#{topic.id}.json?print=false"
+      expect(response.status).to eq(200)
     end
 
     context 'a topic with nil slug exists' do
@@ -2327,7 +2362,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, src: '/assets/application.js')
+        expect(body).to have_tag(:script, src: "/assets/discourse.js")
         expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
     end
@@ -2603,7 +2638,7 @@ RSpec.describe TopicsController do
           body = response.body
 
           expect(response.status).to eq(200)
-          expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+          expect(body).to have_tag(:script, with: { src: "/assets/discourse.js" })
           expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
         end
       end
@@ -2618,7 +2653,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
-          expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+          expect(body).to have_tag(:script, with: { src: "/assets/discourse.js" })
           expect(body).to have_tag(:meta, with: { name: 'fragment' })
         end
 
@@ -3238,8 +3273,8 @@ RSpec.describe TopicsController do
 
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
-      Fabricate(:bookmark, user: user, post: post)
-      Fabricate(:bookmark, user: user, post: post2)
+      Fabricate(:bookmark, user: user, bookmarkable: post)
+      Fabricate(:bookmark, user: user, bookmarkable: post2)
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
       expect(Bookmark.where(user: user).count).to eq(0)
@@ -3257,7 +3292,7 @@ RSpec.describe TopicsController do
       it "deletes all the bookmarks for the user in the topic" do
         sign_in(user)
         post = create_post
-        Fabricate(:bookmark, post: post, user: user)
+        Fabricate(:bookmark, bookmarkable: post, user: user)
         put "/t/#{post.topic_id}/remove_bookmarks.json"
         expect(Bookmark.for_user_in_topic(user.id, post.topic_id).count).to eq(0)
       end
@@ -3269,41 +3304,20 @@ RSpec.describe TopicsController do
       sign_in(user)
     end
 
-    it "should create a new bookmark on the first post of the topic" do
+    it "should create a new bookmark for the topic" do
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
-      expect(Bookmark.find_by(user_id: user.id).post_id).to eq(post.id)
+      expect(Bookmark.find_by(user_id: user.id).bookmarkable_id).to eq(post.topic_id)
     end
 
     it "errors if the topic is already bookmarked for the user" do
       post = create_post
-      Bookmark.create(post: post, user: user)
+      Bookmark.create(bookmarkable: post.topic, user: user)
 
       put "/t/#{post.topic_id}/bookmark.json"
       expect(response.status).to eq(400)
-    end
-
-    context "bookmarks with reminders" do
-      it "should create a new bookmark on the first post of the topic" do
-        post = create_post
-        post2 = create_post(topic_id: post.topic_id)
-        put "/t/#{post.topic_id}/bookmark.json"
-        expect(response.status).to eq(200)
-
-        bookmarks_for_topic = Bookmark.for_user_in_topic(user.id, post.topic_id)
-        expect(bookmarks_for_topic.count).to eq(1)
-        expect(bookmarks_for_topic.first.post_id).to eq(post.id)
-      end
-
-      it "errors if the topic is already bookmarked for the user" do
-        post = create_post
-        Bookmark.create(post: post, user: user)
-
-        put "/t/#{post.topic_id}/bookmark.json"
-        expect(response.status).to eq(400)
-      end
     end
   end
 
@@ -4292,7 +4306,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+        expect(body).to have_tag(:script, with: { src: "/assets/discourse.js" })
         expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
     end

@@ -140,7 +140,6 @@ bs_BA:
       to_placeholder: "do datuma"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      post: "dijeli post #%{postNumber}"
       close: "zatvori"
       twitter: "Podijeli na Twitter"
       facebook: "Podijeli na Facebooku"
@@ -286,6 +285,8 @@ bs_BA:
         unbookmark: "Klikni za uklanjanje svih zabilješki sa ove teme"
     bookmarks:
       created: "Zabilježili ste ovu objavu. %{name}"
+      create: "Stvaranje zabilješke"
+      edit: "Izmijeni zabilješku"
       not_bookmarked: "zabilježi objavu"
       remove: "Ukloni zabilješku"
       delete: "Izbriši zabilješku"
@@ -354,8 +355,8 @@ bs_BA:
     switch_to_anon: "Uđi u privatni način rada"
     switch_from_anon: "Izađi iz privatnog načina rada"
     banner:
-      close: "Odkaži ovu zastavicu."
-      edit: "Uredite ovu zastavicu >>"
+      close: "Odkaži ovu zastavicu"
+      edit: "Izmijeni"
     pwa:
       install_banner: "Da li želite <a href>instalirati %{title} na ovaj uređaj?</a>"
     choose_topic:
@@ -544,8 +545,11 @@ bs_BA:
       this_weekend: "Ovog vikenda"
       start_of_next_business_week: "Ponedjeljak"
       start_of_next_business_week_alt: "Sljedeći ponedjeljak"
+      next_week: "Sljedeće sedmice"
       next_month: "Sljedeći mjesec"
+      forever: "Zauvijek"
       custom: "Precizirano vrijeme i datum"
+      select_timeframe: "Označi vremenski period"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio/la <a href='%{topicUrl}'>temu</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vi</a> ste objavili <a href='%{topicUrl}'>temu</a>"
@@ -979,7 +983,7 @@ bs_BA:
       muted_categories: "Utišan"
       muted_categories_instructions: "Nećete biti obavešteni ni o čemu o novim temama u ovim kategorijama, i neće se pojaviti u kategorijama ili najnovijim stranicama."
       muted_categories_instructions_dont_hide: "Nećete biti obaviješteni o novim temama u ovim kategorijama."
-      regular_categories: "Redovne"
+      regular_categories: "Normalno"
       no_category_access: "Kao moderator imate ograničen pristup kategoriji, sačuvati je isključeno."
       delete_account: "Izbriši moj račun"
       delete_account_confirm: "Da li ste sigurni da želite zauvijek izbrisati vas račun? Ova radnja je kasnije nepovratna!"
@@ -1318,8 +1322,6 @@ bs_BA:
           title: "Link pozivnice"
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
-          max_redemptions_allowed_label: "Koliko se ljudi smije registrirati putem ovog linka?"
-          expires_at: "Kada će ovaj link za pozivnicu isteći?"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1409,6 +1411,8 @@ bs_BA:
         sent_by: "Poslato od"
         private_message: "poruka"
         the_topic: "tema"
+    user_status:
+      save: "Sačuvaj"
     loading: "Učitava se..."
     errors:
       prev_page: "dok pokušava da učita"
@@ -1560,22 +1564,16 @@ bs_BA:
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
-        title: "koristeći Google"
       twitter:
         name: "Twitter"
-        title: "koristeći Twitter"
       instagram:
         name: "Instagram"
-        title: "koristeći Instagram"
       facebook:
         name: "Facebook"
-        title: "koristeći Facebook"
       github:
         name: "GitHub"
-        title: "koristeći GitHub"
       discord:
         name: "Discord"
-        title: "koristeći Discord"
       second_factor_toggle:
         totp: "Umjesto toga koristite aplikaciju za provjeru autentičnosti"
         backup_code: "Umjesto toga koristite sigurnosni kod"
@@ -1589,7 +1587,6 @@ bs_BA:
       success: "Vaš račun je napravljen i sada ste prijavljeni."
       name_label: "Ime"
       password_label: "Lozinka"
-      optional_description: "(opciono)"
     password_reset:
       continue: "Nastavi ka %{site_name}"
     emoji_set:
@@ -1751,9 +1748,6 @@ bs_BA:
         reply_as_new_topic:
           label: Odgovori kao linkana tema
           desc: Kreiraj novu temu linkanu na ovu temu
-        reply_as_private_message:
-          label: Nova poruka
-          desc: Kreiraj novu personalnu poruku
         reply_to_topic:
           label: Odgovori na temu
           desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
@@ -2062,17 +2056,6 @@ bs_BA:
         when: "Kada:"
         time_frame_required: "Odaberite vremenski okvir"
         duration: "Trajanje"
-      auto_update_input:
-        none: "Označi vremenski period"
-        later_today: "Na kraju dana"
-        tomorrow: "Sutra"
-        later_this_week: "Kasnije ove sedmice"
-        this_weekend: "Ovog vikenda"
-        next_week: "Sljedeće sedmice"
-        next_month: "Sljedeći mjesec"
-        forever: "Zauvijek"
-        pick_date_and_time: "Odaberi datum i vrijeme"
-        set_based_on_last_post: "Zatvori koristeći za bazu zadnju objavu"
       publish_to_category:
         title: "Vremenski organizuj objavljivanje"
       temp_open:
@@ -2167,8 +2150,6 @@ bs_BA:
         unpin: "Otkvači temu"
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
-        invisible: "Ukloni temu s popisa"
-        visible: "Make Listed"
         reset_read: "Reset Read Data"
         make_private: "Pretvori u privatnu poruku"
         reset_bump_date: "Resetuj datum bumpa"
@@ -2525,6 +2506,8 @@ bs_BA:
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opcionalno) lista dozvoljenih grupa oznaka"
       allow_global_tags_label: "Takođe dozvolite druge oznake"
+      required_tag_group:
+        delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       delete: "Delete Category"
       create: "Nova kategorija"
@@ -2900,7 +2883,6 @@ bs_BA:
         edit: "%{shortcut} Izmjeni post"
         delete: "%{shortcut} Obriši post"
         mark_muted: "%{shortcut} Mutiraj temu"
-        mark_regular: "%{shortcut} Regularna tema"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Motri temu"
         print: "%{shortcut} Odštampaj temu"
@@ -3079,6 +3061,32 @@ bs_BA:
         leader: "vođa"
     user_activity:
       no_replies_others: "Nema odgovora."
+    sidebar:
+      unread_count: "%{count} nepročitana"
+      new_count: "%{count} novi"
+      sections:
+        messages:
+          header_link_text: "Poruke"
+          links:
+            inbox: "Inbox"
+            sent: "Poslano"
+            new: "Novo"
+            unread: "Nepročitano"
+            archive: "Arhiva"
+        tags:
+          header_link_title: "sve oznake"
+          header_link_text: "Oznake"
+        categories:
+          header_link_title: "Sve kategorije"
+          header_link_text: "Kategorije"
+        topics:
+          header_link_title: "naslovnica"
+          header_link_text: "Tema"
+          links:
+            tracked:
+              content: "Praćeno"
+            my_posts:
+              content: "Moje objave"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -3451,7 +3459,6 @@ bs_BA:
         delete_confirm: 'Jeste li sigurni da želite izbrisati "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
-        copy: "Duplicate"
         copy_to_clipboard: "Kopirati u clipboard"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"

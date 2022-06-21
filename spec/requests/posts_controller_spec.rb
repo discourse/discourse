@@ -649,7 +649,7 @@ describe PostsController do
 
   describe "#destroy_bookmark" do
     fab!(:post) { Fabricate(:post) }
-    fab!(:bookmark) { Fabricate(:bookmark, user: user, post: post) }
+    fab!(:bookmark) { Fabricate(:bookmark, user: user, bookmarkable: post) }
 
     before do
       sign_in(user)
@@ -663,7 +663,7 @@ describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: post.topic))
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: post.topic))
       end
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
@@ -793,11 +793,10 @@ describe PostsController do
 
       it "will invalidate broken images cache" do
         sign_in(moderator)
-        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"]
-        post.save_custom_fields
+        PostHotlinkedMedia.create!(url: "https://example.com/image.jpg", post: post, status: 'download_failed')
         put "/posts/#{post.id}/rebake.json"
         post.reload
-        expect(post.custom_fields[Post::BROKEN_IMAGES]).to be_nil
+        expect(post.post_hotlinked_media).to eq([])
       end
     end
   end

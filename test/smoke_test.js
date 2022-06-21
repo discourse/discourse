@@ -1,4 +1,4 @@
-/*eslint no-console: "off"*/
+/* eslint no-console: "off" */
 
 const args = process.argv.slice(2);
 
@@ -26,12 +26,13 @@ const path = require("path");
 
   await page.setViewport({
     width: 1366,
-    height: 768
+    height: 768,
   });
 
-  const takeFailureScreenshot = function() {
-    const screenshotPath = `${process.env.SMOKE_TEST_SCREENSHOT_PATH ||
-      "tmp/smoke-test-screenshots"}/smoke-test-${Date.now()}.png`;
+  const takeFailureScreenshot = function () {
+    const screenshotPath = `${
+      process.env.SMOKE_TEST_SCREENSHOT_PATH || "tmp/smoke-test-screenshots"
+    }/smoke-test-${Date.now()}.png`;
     console.log(`Screenshot of failure taken at ${screenshotPath}`);
     return page.screenshot({ path: screenshotPath, fullPage: true });
   };
@@ -41,7 +42,7 @@ const path = require("path");
 
     return fn
       .call()
-      .then(async output => {
+      .then(async (output) => {
         if (assertion) {
           if (assertion.call(this, output)) {
             console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
@@ -55,7 +56,7 @@ const path = require("path");
           console.log(`PASSED: ${description} - ${+new Date() - start}ms`);
         }
       })
-      .catch(async error => {
+      .catch(async (error) => {
         console.log(
           `ERROR (${description}): ${error.message} - ${+new Date() - start}ms`
         );
@@ -69,9 +70,9 @@ const path = require("path");
     return exec(description, fn, assertion);
   };
 
-  page.on("console", msg => console.log(`PAGE LOG: ${msg.text()}`));
+  page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
 
-  page.on("response", resp => {
+  page.on("response", (resp) => {
     if (resp.status() !== 200 && resp.status() !== 302) {
       console.log(
         "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
@@ -91,12 +92,12 @@ const path = require("path");
     await exec("basic authentication", () => {
       return page.authenticate({
         username: process.env.AUTH_USER,
-        password: process.env.AUTH_PASSWORD
+        password: process.env.AUTH_PASSWORD,
       });
     });
   }
 
-  const login = async function() {
+  const login = async function () {
     await exec("open login modal", () => {
       return page.click(".login-button");
     });
@@ -181,7 +182,7 @@ const path = require("path");
 
     await exec("go home", () => {
       let promise = page.waitForSelector("#site-logo, #site-text-logo", {
-        visible: true
+        visible: true,
       });
 
       promise = promise.then(() => {
@@ -245,7 +246,7 @@ const path = require("path");
 
     await exec("composer is open", () => {
       return page.waitForSelector("#reply-control .d-editor-input", {
-        visible: true
+        visible: true,
       });
     });
 
@@ -262,7 +263,7 @@ const path = require("path");
     });
 
     await exec("wait a little bit", () => {
-      return page.waitFor(5000);
+      return page.waitForTimeout(5000);
     });
 
     await exec("submit the reply", () => {
@@ -270,7 +271,7 @@ const path = require("path");
 
       promise = promise.then(() => {
         return page.waitForSelector("#reply-control.closed", {
-          visible: false
+          visible: false,
         });
       });
 
@@ -281,7 +282,7 @@ const path = require("path");
       let promise = page.waitForSelector(
         ".topic-post:not(.staged) #post_2 .cooked",
         {
-          visible: true
+          visible: true,
         }
       );
 
@@ -295,7 +296,7 @@ const path = require("path");
     });
 
     await exec("wait a little bit", () => {
-      return page.waitFor(5000);
+      return page.waitForTimeout(5000);
     });
 
     await exec("open composer to edit first post", () => {
@@ -309,7 +310,7 @@ const path = require("path");
 
       promise = promise.then(() => {
         return page.waitForSelector("#reply-control .d-editor-input", {
-          visible: true
+          visible: true,
         });
       });
 
@@ -317,7 +318,7 @@ const path = require("path");
     });
 
     await exec("update post raw in composer", () => {
-      let promise = page.waitFor(5000);
+      let promise = page.waitForTimeout(5000);
 
       promise = promise.then(() => {
         return page.type(
@@ -334,7 +335,7 @@ const path = require("path");
 
       promise = promise.then(() => {
         return page.waitForSelector("#reply-control.closed", {
-          visible: false
+          visible: false,
         });
       });
 
@@ -345,7 +346,7 @@ const path = require("path");
       let promise = page.waitForSelector(
         ".topic-post:not(.staged) #post_1 .cooked",
         {
-          visible: true
+          visible: true,
         }
       );
 

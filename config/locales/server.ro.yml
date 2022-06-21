@@ -819,7 +819,6 @@ ro:
     title: "Titlul scurt al site-ului, folosit în tag-ul title."
     site_description: "Descrie acest site într-o singură frază, așa cum se folosește în tagul meta-descriere."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
-    download_remote_images_to_local: "Transformă imaginile la distanță în imagini locale descărcându-le; asta previne imaginile stricate."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
@@ -840,9 +839,7 @@ ro:
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
-    enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
     long_polling_base_url: "URL de bază folosit pentru long polling (atunci când un CDN servește conținut dinamic, asigură-te că setezi asta pe origin pull) ex: http://origin.site.com"
-    long_polling_interval: "Durata cât serverul va trebui să aștepte înainte de a răspunde clienților atunci când nu există date de trimis (exclusiv utilizatori autentificați)"
     polling_interval: "Atunci când nu se face long polling, cât de des ar trebui clienții autentificați să facă interogări, în milisecunde."
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"
@@ -1618,6 +1615,7 @@ ro:
     signup_after_approval:
       subject_template: "Contul tă pe site-ul %{site_name} a fost aprobat!"
   page_not_found:
+    page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
     popular_topics: "Populare"
     recent_topics: "Recente"

@@ -21,10 +21,20 @@ import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
+import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 
 acceptance("Topic", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
+    server.get("/c/2/visible_groups.json", () =>
+      helper.response(200, {
+        groups: [],
+      })
+    );
+
+    server.get("/c/feature/find_by_slug.json", () => {
+      return helper.response(200, CategoryFixtures["/c/1/show.json"]);
+    });
     server.put("/posts/398/wiki", () => {
       return helper.response({});
     });
@@ -236,6 +246,15 @@ acceptance("Topic", function (needs) {
     assert.ok(exists(".category-moderator"), "it has a class applied");
     assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
   });
+
+  test("Suspended user posts", async function (assert) {
+    await visit("/t/topic-from-suspended-user/54077");
+
+    assert.ok(
+      exists(".topic-post.user-suspended > #post_1"),
+      "it has a class applied"
+    );
+  });
 });
 
 acceptance("Topic featured links", function (needs) {
@@ -244,6 +263,8 @@ acceptance("Topic featured links", function (needs) {
     topic_featured_link_enabled: true,
     max_topic_title_length: 80,
     exclude_rel_nofollow_domains: "example.com",
+    display_name_on_posts: false,
+    prioritize_username_in_ux: true,
   });
 
   test("remove nofollow attribute", async function (assert) {

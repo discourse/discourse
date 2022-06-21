@@ -18,8 +18,8 @@ describe TopicUploadSecurityManager do
     let!(:upload3) { Fabricate(:secure_upload) }
 
     before do
-      PostUpload.create(upload: upload, post: post2)
-      PostUpload.create(upload: upload2, post: post3)
+      UploadReference.create(upload: upload, target: post2)
+      UploadReference.create(upload: upload2, target: post3)
       upload.update(access_control_post: post2)
       upload2.update(access_control_post: post3)
     end
@@ -132,7 +132,7 @@ describe TopicUploadSecurityManager do
 
       context "when this is the first post the upload has appeared in" do
         before do
-          PostUpload.create(upload: upload3, post: post4)
+          UploadReference.create(upload: upload3, target: post4)
         end
 
         it "changes the upload secure status to true and changes the ACL and rebakes the post and sets the access control post" do
@@ -157,8 +157,8 @@ describe TopicUploadSecurityManager do
 
       context "when this is not the first post the upload has appeared in" do
         before do
-          PostUpload.create(upload: upload3, post: Fabricate(:post))
-          PostUpload.create(upload: upload3, post: post4)
+          UploadReference.create(upload: upload3, target: Fabricate(:post))
+          UploadReference.create(upload: upload3, target: post4)
         end
 
         it "does not change the upload secure status and does not set the access control post" do

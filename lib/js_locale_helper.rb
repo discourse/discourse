@@ -202,15 +202,26 @@ module JsLocaleHelper
 
   def self.output_extra_locales(bundle, locale)
     translations = translations_for(locale)
+    locales = translations.keys
 
-    translations.keys.each do |l|
+    locales.each do |l|
       translations[l].keys.each do |k|
         bundle_translations = translations[l].delete(k)
         translations[l].deep_merge!(bundle_translations) if k == bundle
       end
     end
 
-    translations.present? ? "I18n.extras = #{translations.to_json};" : ""
+    return "" if translations.blank?
+
+    output = +"if (!I18n.extras) { I18n.extras = {}; }"
+    locales.each do |l|
+      output << <<~JS
+        if (!I18n.extras["#{l}"]) { I18n.extras["#{l}"] = {}; }
+        Object.assign(I18n.extras["#{l}"], #{translations[l].to_json});
+      JS
+    end
+
+    output
   end
 
   MOMENT_LOCALE_MAPPING ||= {

@@ -36,7 +36,7 @@ const Invite = EmberObject.extend({
 
   @discourseComputed("invite_key")
   shortKey(key) {
-    return key.substr(0, 4) + "...";
+    return key.slice(0, 4) + "...";
   },
 
   @discourseComputed("groups")

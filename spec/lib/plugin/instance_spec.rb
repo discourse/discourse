@@ -720,4 +720,26 @@ describe Plugin::Instance do
       )
     end
   end
+
+  describe '#register_email_unsubscriber' do
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry.reset_register!(:email_unsubscribers)
+    end
+
+    it "doesn't let you override core unsubscribers" do
+      expect { plugin.register_email_unsubscriber(UnsubscribeKey::ALL_TYPE, Object) }.to raise_error(ArgumentError)
+    end
+
+    it "finds the plugin's custom unsubscriber" do
+      new_unsubscriber_type = 'new_type'
+      key = UnsubscribeKey.new(unsubscribe_key_type: new_unsubscriber_type)
+      CustomUnsubscriber = Class.new(EmailControllerHelper::BaseEmailUnsubscriber)
+
+      plugin.register_email_unsubscriber(new_unsubscriber_type, CustomUnsubscriber)
+
+      expect(UnsubscribeKey.get_unsubscribe_strategy_for(key).class).to eq(CustomUnsubscriber)
+    end
+  end
 end

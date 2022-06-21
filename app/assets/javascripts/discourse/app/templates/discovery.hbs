@@ -23,11 +23,13 @@
     <div class="full-width">
       <div id="header-list-area">
         {{outlet "header-list-container"}}
+        {{plugin-outlet name="header-list-container-bottom" args=(hash category=category)}}
       </div>
     </div>
   </div>
   <div class="row">
     <div class="full-width">
+      {{plugin-outlet name="before-list-area"}}
       <div id="list-area">
         {{plugin-outlet name="discovery-list-container-top" tagName="" connectorTagName="span"
                         args=(hash category=category listLoading=loading)}}

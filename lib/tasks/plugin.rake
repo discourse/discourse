@@ -241,8 +241,9 @@ task 'plugin:versions' do |t, args|
         [plugin, "plugins/#{plugin}", "plugins/#{plugin}/.git"]
       }
       .select { |plugin, plugin_dir, plugin_git_dir|
-        File.directory?(plugin_dir) && File.directory?(plugin_git_dir)
+        File.directory?(plugin_dir) && File.exist?(plugin_git_dir)
       }
+      .sort_by { |plugin, _, _| plugin }
       .map { |plugin, _, plugin_git_dir|
         version = `git --git-dir \"#{plugin_git_dir}\" rev-parse HEAD`
         abort("unable to get #{plugin} version") unless version

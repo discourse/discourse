@@ -614,7 +614,7 @@ describe Email::Receiver do
       expect(post.raw).to eq(<<~MD.chomp)
       **Before**
 
-      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+      <img src="#{upload.short_url}" alt="内嵌图片 1">
 
       *After*
       MD
@@ -648,7 +648,7 @@ describe Email::Receiver do
       <details class='elided'>
       <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
 
-      ![logo.png|300x200](upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png)
+      <img src="upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png" width="300" height="200">
 
       </details>
       MD
@@ -673,7 +673,7 @@ describe Email::Receiver do
       expect(post.raw).to eq(<<~MD.chomp)
       Picture below.
 
-      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+      <img apple-inline="yes" id="06C04C58-783E-4753-9B6B-D57403903060" src="#{upload.short_url}" class="">
 
       Picture above.
       MD

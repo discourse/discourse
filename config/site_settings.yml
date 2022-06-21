@@ -357,6 +357,14 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+  enable_sitemap:
+    default: true
+  sitemap_page_size:
+    default: 10000
+  enable_user_status:
+    hidden: true
+    client: true
+    default: false
 
 login:
   invite_only:
@@ -687,6 +695,8 @@ users:
     hidden: true
   use_email_for_username_and_name_suggestions:
     default: false
+  use_name_for_username_suggestions:
+    default: true
 
 groups:
   enable_group_directory:
@@ -840,6 +850,7 @@ posting:
     type: list
     default: "com|net|org|io|onion|co|tv|ru|cn|us|uk|me|de|fr|fi|gov"
     list_type: compact
+    validator: "MarkdownLinkifyTldsValidator"
   markdown_typographer_quotation_marks:
     client: true
     type: list
@@ -982,6 +993,7 @@ posting:
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
+    type: float
     default: 24
   auto_close_messages_post_count:
     default: 500
@@ -1255,6 +1267,9 @@ email:
     client: true
     default: true
     hidden: true
+  max_participant_names:
+    default: 10
+    hidden: true
 
 files:
   max_image_size_kb:
@@ -1274,7 +1289,7 @@ files:
     default: 50000
     max: 1024000
   theme_authorized_extensions:
-    default: "jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
+    default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|js"
     type: list
     list_type: compact
   authorized_extensions:
@@ -1311,6 +1326,12 @@ files:
     type: list
     list_type: simple
     default: ""
+  block_hotlinked_media:
+    default: false
+  block_hotlinked_media_exceptions:
+    default: ""
+    type: list
+    regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours: 48
@@ -1365,6 +1386,11 @@ files:
   s3_configure_inventory_policy:
     default: true
     hidden: true
+  s3_presigned_get_url_expires_after_seconds:
+    default: 300
+    hidden: true
+    min: 60
+    max: 604800
   allow_profile_backgrounds:
     client: true
     default: true
@@ -1678,6 +1704,7 @@ security:
     default: false
   content_security_policy_collect_reports:
     default: false
+    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -1731,6 +1758,8 @@ onebox:
   facebook_app_access_token:
     default: ""
     secret: true
+  block_onebox_on_redirect:
+    default: false
   cache_onebox_response_body:
     default: false
     hidden: true
@@ -1875,6 +1904,9 @@ rate_limits:
   max_allowed_secondary_emails:
     default: 10
     hidden: true
+  max_batch_presign_multipart_per_minute:
+    default: 20
+    hidden: true
 
 developer:
   force_hostname:
@@ -1883,18 +1915,10 @@ developer:
   port:
     hidden: true
     default: ""
-  enable_long_polling:
-    hidden: true
-    client: true
-    default: true
   enable_chunked_encoding:
     hidden: true
     client: true
     default: true
-  long_polling_interval:
-    hidden: true
-    default: 25000
-    max: 25000
   long_polling_base_url:
     hidden: true
     client: true
@@ -1957,6 +1981,10 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_experimental_sidebar:
+    default: false
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:
@@ -2036,6 +2064,9 @@ search:
     default: false
     hidden: true
     client: true
+  search_max_indexed_word_length:
+    default: 100
+    hidden: true
   search_ranking_normalization:
     default: "0"
     hidden: true
@@ -2125,6 +2156,7 @@ uncategorized:
     default: ""
     type: list
     list_type: simple
+    validator: "RegexpListValidator"
 
   max_similar_results: 5
   minimum_topics_similar: 50
@@ -2227,7 +2259,9 @@ uncategorized:
     default: -1
     hidden: true
 
-  notify_about_flags_after: 48
+  notify_about_flags_after:
+    type: float
+    default: 48
 
   show_create_topics_notice:
     client: true
@@ -2385,6 +2419,15 @@ uncategorized:
 
   allow_changing_staged_user_tracking: false
 
+  use_polymorphic_bookmarks:
+    client: true
+    default: true
+    hidden: true
+
+  suggest_weekends_in_date_pickers:
+    client: true
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -2414,7 +2457,7 @@ user_preferences:
     default: 2880
   default_other_auto_track_topics_after_msecs:
     enum: "AutoTrackDurationSiteSetting"
-    default: 240000
+    default: 300000
   default_other_notification_level_when_replying:
     enum: "NotificationLevelWhenReplyingSiteSetting"
     default: 2
@@ -2443,7 +2486,7 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
-  default_categories_regular:
+  default_categories_normal:
     type: category_list
     default: ""
   mute_all_categories_by_default:
@@ -2556,8 +2599,13 @@ tags:
   tags_listed_by_group:
     client: true
     default: false
-  allow_staff_to_tag_pms:
-    default: false
+  pm_tags_allowed_for_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   suppress_overlapping_tags_in_list:
     default: false
     client: true

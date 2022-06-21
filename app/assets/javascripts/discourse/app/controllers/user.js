@@ -12,6 +12,7 @@ import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
@@ -116,9 +117,9 @@ export default Controller.extend(CanCheckEmails, {
     );
   },
 
-  @discourseComputed("viewingSelf", "currentUser.staff")
-  showNotificationsTab(viewingSelf, staff) {
-    return viewingSelf || staff;
+  @discourseComputed("viewingSelf", "currentUser.admin")
+  showNotificationsTab(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin;
   },
 
   @discourseComputed("model.name")
@@ -147,7 +148,7 @@ export default Controller.extend(CanCheckEmails, {
         .filterBy("show_on_profile", true)
         .sortBy("position")
         .map((field) => {
-          set(field, "dasherized_name", field.get("name").dasherize());
+          set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;
@@ -168,14 +169,19 @@ export default Controller.extend(CanCheckEmails, {
     "currentUser.ignored_ids",
     "model.ignored",
     "model.muted",
-    function () {
-      if (this.get("model.ignored")) {
-        return "changeToIgnored";
-      } else if (this.get("model.muted")) {
-        return "changeToMuted";
-      } else {
-        return "changeToNormal";
-      }
+    {
+      get() {
+        if (this.get("model.ignored")) {
+          return "changeToIgnored";
+        } else if (this.get("model.muted")) {
+          return "changeToMuted";
+        } else {
+          return "changeToNormal";
+        }
+      },
+      set(key, value) {
+        return value;
+      },
     }
   ),
 
@@ -249,8 +255,8 @@ export default Controller.extend(CanCheckEmails, {
       bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
     },
 
-    updateNotificationLevel(level) {
-      return this.model.updateNotificationLevel({ level });
+    updateNotificationLevel(params) {
+      return this.model.updateNotificationLevel(params);
     },
   },
 });

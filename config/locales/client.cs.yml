@@ -157,7 +157,6 @@ cs:
       to_placeholder: "do data"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
-      post: "příspěvek #%{postNumber}"
       close: "zavřít"
       twitter: "Sdílet na Twitteru"
       facebook: "Sdílet na Facebooku"
@@ -388,8 +387,8 @@ cs:
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
-      close: "Odmítnout tento banner."
-      edit: "Editujte tento banner >>"
+      close: "Odmítnout tento banner"
+      edit: "Upravit"
     pwa:
       install_banner: "Chcete <a href>nainstalovat %{title} na toto zařízení?</a>"
     choose_topic:
@@ -511,8 +510,11 @@ cs:
       this_weekend: "Tento týden"
       start_of_next_business_week: "Pondělí"
       start_of_next_business_week_alt: "Příští pondělí"
+      next_week: "Další týden"
       next_month: "Další měsíc"
+      forever: "Navždy"
       custom: "Vlastní datum a čas"
+      select_timeframe: "Vyberte časové období"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> zaslal <a href='%{topicUrl}'>téma</a>"
       you_posted_topic: "Zaslal jste <a href='%{topicUrl}'>téma</a>"
@@ -905,7 +907,7 @@ cs:
       watched_first_post_tags_instructions: "Budete informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
       muted_categories: "Ztišené"
       muted_categories_instructions: "Nebudete upozorněni na nic o nových tématech v těchto kategoriích ty se neobjeví v přehledu kategorií či v aktuálních,"
-      regular_categories: "Běžný"
+      regular_categories: "Normální"
       no_category_access: "Jako moderátor máte omezený přístup ke kategorii bez možnosti ukládat změny."
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
@@ -1311,6 +1313,8 @@ cs:
         sent_by: "Odeslal"
         private_message: "zpráva"
         the_topic: "téma"
+    user_status:
+      save: "Uložit"
     loading: "Načítám..."
     errors:
       prev_page: "při nahrávání stránky"
@@ -1441,19 +1445,14 @@ cs:
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"
-        title: "přes Google"
       twitter:
         name: "Twitter"
-        title: "přes Twitter"
       instagram:
         name: "Instagram"
-        title: "s Instagramem"
       facebook:
         name: "Facebook"
-        title: "přes Facebook"
       github:
         name: "GitHub"
-        title: "přes GitHub"
       discord:
         name: "Discord"
     invites:
@@ -1466,7 +1465,6 @@ cs:
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
       password_label: "Heslo"
-      optional_description: "(volitelné)"
     password_reset:
       continue: "Pokračovat na %{site_name}"
     emoji_set:
@@ -1615,9 +1613,6 @@ cs:
         reply_as_new_topic:
           label: Odpovědět v propojeném tématu
           desc: Vytvořit nové téma propojené s tímto tématem
-        reply_as_private_message:
-          label: Nová zpráva
-          desc: Vytvořit novou osobní zprávu
         reply_to_topic:
           label: Odpovědět na téma
           desc: Odpovědět na téma, ale ne na konkrétní příspěvek
@@ -1908,17 +1903,6 @@ cs:
         when: "Když:"
         time_frame_required: "Vyberte prosím časové období"
         duration: "Doba trvání"
-      auto_update_input:
-        none: "Vyberte časové období"
-        later_today: "Později během dnešního dne"
-        tomorrow: "Zítra"
-        later_this_week: "Později během tohoto týdne"
-        this_weekend: "Tento týden"
-        next_week: "Další týden"
-        next_month: "Další měsíc"
-        forever: "Navždy"
-        pick_date_and_time: "Vyberte datum a čas"
-        set_based_on_last_post: "Zavřít na základě posledního příspěvku"
       publish_to_category:
         title: "Naplánovat publikování"
       temp_open:
@@ -2011,8 +1995,6 @@ cs:
         unpin: "Odstranit připevnění"
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
-        invisible: "Zneviditelnit"
-        visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
         make_private: "Vytvořit soukromou zprávu "
         reset_bump_date: "Resetovat datum zvýraznění"
@@ -2334,6 +2316,8 @@ cs:
       tags: "Štítky"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
       tag_groups_placeholder: "(Volitelné) seznam dovolených skupin štítků"
+      required_tag_group:
+        delete: "Smazat"
       topic_featured_link_allowed: "Povolit zobrazené odkazy v této kategorii"
       delete: "Smazat kategorii"
       create: "Nová kategorie"
@@ -2690,7 +2674,6 @@ cs:
         edit: "%{shortcut} Upravit příspěvek"
         delete: "%{shortcut} Smazat příspěvek"
         mark_muted: "%{shortcut} Ztišit téma"
-        mark_regular: "%{shortcut}Obvyklé (výchozí) téma"
         mark_tracking: "%{shortcut} Sledovat téma"
         mark_watching: "%{shortcut} Hlídat téma"
         print: "%{shortcut} Vytiskni téma"
@@ -2777,7 +2760,7 @@ cs:
           title: "Sledování"
           description: "Budete automaticky sledovat všechna témata s tímto tagem. Počet nepřečtených a nových příspěvků bude vidět vedle tématu."
         regular:
-          title: "Běžný"
+          title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišené"
@@ -2828,6 +2811,32 @@ cs:
         leader: "vůdce"
     user_activity:
       no_replies_others: "Žádné odpovědi."
+    sidebar:
+      unread_count: "%{count} nepřečtené"
+      new_count: "%{count} nové"
+      sections:
+        messages:
+          header_link_text: "Zprávy"
+          links:
+            inbox: "Přijaté zprávy"
+            sent: "Odeslané"
+            new: "Nová"
+            unread: "Nepřečtená"
+            archive: "Archív"
+        tags:
+          header_link_title: "všechny štítky"
+          header_link_text: "Tagy"
+        categories:
+          header_link_title: "všechny kategorie"
+          header_link_text: "Kategorie"
+        topics:
+          header_link_title: "domů"
+          header_link_text: "Témata"
+          links:
+            tracked:
+              content: "Sledované"
+            my_posts:
+              content: "Mé příspěvky"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -3118,7 +3127,6 @@ cs:
         delete: "Smazat"
         color: "Barva"
         opacity: "Neprůhlednost"
-        copy: "Kopírovat"
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"

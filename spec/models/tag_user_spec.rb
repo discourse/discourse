@@ -183,6 +183,11 @@ describe TagUser do
 
       it "sets notification levels correctly" do
 
+        # define a wide open tag group to ensure it also works
+        group = TagGroup.new(name: 'Visible & usable by everyone', tag_names: [watched_tag.name])
+        group.permissions = [[Group::AUTO_GROUPS[:everyone], TagGroupPermission.permission_types[:full]]]
+        group.save!
+
         expect(Notification.where(user_id: user.id, topic_id: watched_post.topic_id).count).to eq 1
         expect(Notification.where(user_id: user.id, topic_id: tracked_post.topic_id).count).to eq 0
 

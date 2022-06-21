@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <% @sitemaps.each do |sitemap| %>
+      <sitemap>
+         <loc><%= Discourse.base_url %>/sitemap_<%= sitemap.name %>.xml</loc>
+         <lastmod><%= sitemap.last_posted_at.xmlschema %></lastmod>
+      </sitemap>
+   <% end %>
+</sitemapindex>

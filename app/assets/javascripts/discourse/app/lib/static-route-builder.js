@@ -25,7 +25,7 @@ export default function (page) {
 
     activate() {
       this._super(...arguments);
-      jumpToElement(document.location.hash.substr(1));
+      jumpToElement(document.location.hash.slice(1));
     },
 
     model() {

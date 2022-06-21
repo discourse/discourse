@@ -45,6 +45,14 @@ export const ButtonClass = {
       attributes["role"] = attrs.role;
     }
 
+    if (attrs.translatedAriaLabel) {
+      attributes["aria-label"] = attrs.translatedAriaLabel;
+    }
+
+    if (attrs.ariaPressed) {
+      attributes["aria-pressed"] = attrs.ariaPressed;
+    }
+
     if (attrs.tabAttrs) {
       const tab = attrs.tabAttrs;
       attributes["aria-selected"] = tab["aria-selected"];
@@ -78,8 +86,12 @@ export const ButtonClass = {
   html(attrs) {
     const contents = [];
     const left = !attrs.iconRight;
+
     if (attrs.icon && left) {
       contents.push(this._buildIcon(attrs));
+    }
+    if (attrs.emoji && left) {
+      contents.push(this.attach("emoji", { name: attrs.emoji }));
     }
     if (attrs.label) {
       contents.push(
@@ -97,6 +109,9 @@ export const ButtonClass = {
     }
     if (attrs.contents) {
       contents.push(attrs.contents);
+    }
+    if (attrs.emoji && !left) {
+      contents.push(this.attach("emoji", { name: attrs.emoji }));
     }
     if (attrs.icon && !left) {
       contents.push(this._buildIcon(attrs));

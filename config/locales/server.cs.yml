@@ -130,7 +130,6 @@ cs:
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
   invite:
-    user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
     disabled_errors:
       invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   bulk_invite:
@@ -834,7 +833,6 @@ cs:
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
-    enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
@@ -994,6 +992,7 @@ cs:
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
   page_not_found:
+    page_title: "Stránka nenalezena"
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"

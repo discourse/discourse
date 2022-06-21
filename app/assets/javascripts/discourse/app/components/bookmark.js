@@ -5,11 +5,14 @@ import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
+import {
+  TIME_SHORTCUT_TYPES,
+  defaultTimeShortcuts,
+} from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -39,8 +42,9 @@ export default Component.extend({
   model: null,
   afterSave: null,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.setProperties({
       errorMessage: null,
       selectedReminderType: TIME_SHORTCUT_TYPES.NONE,
@@ -52,7 +56,7 @@ export default Component.extend({
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
       prefilledDatetime: null,
-      userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
+      userTimezone: this.currentUser.timezone,
       showOptions: false,
       _itsatrap: new ItsATrap(),
       autoDeletePreference: this.model.autoDeletePreference || 0,
@@ -68,8 +72,9 @@ export default Component.extend({
     this._loadPostLocalDates();
   },
 
-  @on("didInsertElement")
-  _prepareUI() {
+  didInsertElement() {
+    this._super(...arguments);
+
     later(() => {
       if (this.site.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
@@ -80,6 +85,8 @@ export default Component.extend({
     // knows they have set these options previously.
     if (this.model.id) {
       this.set("showOptions", true);
+    } else {
+      document.getElementById("tap_tile_none").classList.add("active");
     }
   },
 
@@ -110,8 +117,12 @@ export default Component.extend({
   },
 
   _loadPostLocalDates() {
+    if (this.model.bookmarkableType !== "Post") {
+      return;
+    }
+
     let postEl = document.querySelector(
-      `[data-post-id="${this.model.postId}"]`
+      `[data-post-id="${this.model.bookmarkableId}"]`
     );
     let localDateEl;
     if (postEl) {
@@ -149,11 +160,12 @@ export default Component.extend({
     const data = {
       reminder_at: reminderAtISO,
       name: this.model.name,
-      post_id: this.model.postId,
       id: this.model.id,
       auto_delete_preference: this.autoDeletePreference,
-      for_topic: this.model.forTopic,
     };
+
+    data.bookmarkable_id = this.model.bookmarkableId;
+    data.bookmarkable_type = this.model.bookmarkableType;
 
     if (this.editingExistingBookmark) {
       return ajax(`/bookmarks/${this.model.id}`, {
@@ -173,15 +185,18 @@ export default Component.extend({
     if (!this.afterSave) {
       return;
     }
-    this.afterSave({
+
+    const data = {
       reminder_at: reminderAtISO,
-      for_topic: this.model.forTopic,
       auto_delete_preference: this.autoDeletePreference,
-      post_id: this.model.postId,
       id: this.model.id || response.id,
       name: this.model.name,
-      topic_id: this.model.topicId,
-    });
+    };
+
+    data.bookmarkable_id = this.model.bookmarkableId;
+    data.bookmarkable_type = this.model.bookmarkableType;
+
+    this.afterSave(data);
   },
 
   _deleteBookmark() {
@@ -274,12 +289,12 @@ export default Component.extend({
     });
   },
 
-  @discourseComputed()
-  customTimeShortcutOptions() {
-    let customOptions = [];
+  @discourseComputed("userTimezone")
+  timeOptions(userTimezone) {
+    const options = defaultTimeShortcuts(userTimezone);
 
     if (this.showPostLocalDate) {
-      customOptions.push({
+      options.push({
         icon: "globe-americas",
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
         label: "time_shortcut.post_local_date",
@@ -289,7 +304,7 @@ export default Component.extend({
       });
     }
 
-    return customOptions;
+    return options;
   },
 
   @discourseComputed("existingBookmarkHasReminder")

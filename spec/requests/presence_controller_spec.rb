@@ -113,6 +113,25 @@ describe PresenceController do
       expect(allowed_user_channel.user_ids).to eq([user.id])
       expect(allowed_group_channel.user_ids).to eq([user.id])
     end
+
+    it "doesn't overwrite the session" do
+      sign_in(user)
+
+      session_cookie_name = "_forum_session"
+      get "/session/csrf.json"
+      expect(response.status).to eq(200)
+      expect(response.cookies.keys).to include(session_cookie_name)
+
+      client_id = SecureRandom.hex
+      post "/presence/update.json", params: {
+        client_id: client_id,
+        present_channels: [
+          ch1.name,
+        ]
+      }
+      expect(response.status).to eq(200)
+      expect(response.cookies.keys).not_to include(session_cookie_name)
+    end
   end
 
   describe "#get" do

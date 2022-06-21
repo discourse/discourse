@@ -33,17 +33,28 @@ class CategorySerializer < SiteCategorySerializer
 
   def group_permissions
     @group_permissions ||= begin
-      perms = object.category_groups.joins(:group).includes(:group).order("groups.name").map do |cg|
-        {
-          permission_type: cg.permission_type,
-          group_name: cg.group.name
-        }
-      end
+      perms = object
+        .category_groups
+        .joins(:group)
+        .includes(:group)
+        .merge(Group.visible_groups(scope&.user, "groups.name ASC", include_everyone: true))
+        .map do |cg|
+          {
+            permission_type: cg.permission_type,
+            group_name: cg.group.name
+          }
+        end
+
       if perms.length == 0 && !object.read_restricted
         perms << { permission_type: CategoryGroup.permission_types[:full], group_name: Group[:everyone]&.name.presence || :everyone }
       end
+
       perms
     end
+  end
+
+  def include_group_permissions?
+    scope&.can_edit?(object)
   end
 
   def include_available_groups?

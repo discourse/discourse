@@ -5,6 +5,11 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
+import I18n from "I18n";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -64,10 +69,14 @@ export function buildButton(name, widget) {
   }
 }
 
-registerButton("read-count", (attrs) => {
+registerButton("read-count", (attrs, state) => {
   if (attrs.showReadIndicator) {
     const count = attrs.readCount;
     if (count > 0) {
+      let ariaPressed = "false";
+      if (state?.readers && state.readers.length > 0) {
+        ariaPressed = "true";
+      }
       return {
         action: "toggleWhoRead",
         title: "post.controls.read_indicator",
@@ -75,6 +84,10 @@ registerButton("read-count", (attrs) => {
         contents: count,
         iconRight: true,
         addContainer: false,
+        translatedAriaLabel: I18n.t("post.sr_post_read_count_button", {
+          count,
+        }),
+        ariaPressed,
       };
     }
   }
@@ -93,7 +106,7 @@ registerButton("read", (attrs) => {
   }
 });
 
-function likeCount(attrs) {
+function likeCount(attrs, state) {
   const count = attrs.likeCount;
 
   if (count > 0) {
@@ -111,6 +124,10 @@ function likeCount(attrs) {
       addContainer = true;
     }
 
+    let ariaPressed = "false";
+    if (state?.likedUsers && state.likedUsers.length > 0) {
+      ariaPressed = "true";
+    }
     return {
       action: "toggleWhoLiked",
       title,
@@ -120,6 +137,8 @@ function likeCount(attrs) {
       iconRight: true,
       addContainer,
       titleOptions: { count: attrs.liked ? count - 1 : count },
+      translatedAriaLabel: I18n.t("post.sr_post_like_count_button", { count }),
+      ariaPressed,
     };
   }
 }
@@ -255,6 +274,10 @@ registerButton("replies", (attrs, state, siteSettings) => {
     return;
   }
 
+  let ariaPressed;
+  if (!siteSettings.enable_filtered_replies_view) {
+    ariaPressed = state.repliesShown ? "true" : "false";
+  }
   return {
     action,
     icon,
@@ -268,6 +291,11 @@ registerButton("replies", (attrs, state, siteSettings) => {
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
+    disabled: !!attrs.deleted,
+    translatedAriaLabel: I18n.t("post.sr_expand_replies", {
+      count: replyCount,
+    }),
+    ariaPressed,
   };
 });
 
@@ -301,7 +329,7 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
 
 registerButton(
   "bookmark",
-  (attrs, _state, _siteSettings, _settings, currentUser) => {
+  (attrs, _state, siteSettings, _settings, currentUser) => {
     if (!attrs.canBookmark) {
       return;
     }
@@ -316,7 +344,7 @@ registerButton(
       if (attrs.bookmarkReminderAt) {
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
-          currentUser.resolvedTimezone(currentUser)
+          currentUser.timezone
         );
         title = "bookmarks.created_with_reminder";
         titleOptions.date = formattedReminder;
@@ -335,7 +363,7 @@ registerButton(
       title,
       titleOptions,
       className: classNames.join(" "),
-      icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark",
+      icon: attrs.bookmarkReminderAt ? WITH_REMINDER_ICON : NO_REMINDER_ICON,
     };
   }
 );
@@ -627,6 +655,9 @@ export default createWidget("post-menu", {
           listClassName: "who-read",
           description,
           count,
+          ariaLabel: I18n.t(
+            "post.actions.people.sr_post_readers_list_description"
+          ),
         })
       );
     }
@@ -646,6 +677,9 @@ export default createWidget("post-menu", {
           listClassName: "who-liked",
           description,
           count,
+          ariaLabel: I18n.t(
+            "post.actions.people.sr_post_likers_list_description"
+          ),
         })
       );
     }

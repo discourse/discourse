@@ -9,7 +9,8 @@ class TopicTrackingStateSerializer < ApplicationSerializer
              :notification_level,
              :created_in_new_period,
              :unread_not_too_old,
-             :treat_as_new_topic_start_date
+             :treat_as_new_topic_start_date,
+             :tags
 
   def created_in_new_period
     return true if !scope
@@ -19,5 +20,9 @@ class TopicTrackingStateSerializer < ApplicationSerializer
   def unread_not_too_old
     return true if object.first_unread_at.blank?
     object.updated_at >= object.first_unread_at
+  end
+
+  def include_tags?
+    object.respond_to?(:tags)
   end
 end

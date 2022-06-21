@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -37,26 +36,7 @@ export default Component.extend({
 
       return group
         .save(opts)
-        .then((data) => {
-          if (data.user_count) {
-            const controller = showModal("group-default-notifications", {
-              model: {
-                count: data.user_count,
-              },
-            });
-
-            controller.set("onClose", () => {
-              this.updateExistingUsers = controller.updateExistingUsers;
-              this.send("save");
-            });
-
-            return;
-          }
-
-          if (data.route_to) {
-            DiscourseURL.routeTo(data.route_to);
-          }
-
+        .then(() => {
           this.setProperties({
             saved: true,
             updateExistingUsers: null,
@@ -66,7 +46,21 @@ export default Component.extend({
             this.afterSave();
           }
         })
-        .catch(popupAjaxError)
+        .catch((error) => {
+          const json = error.jqXHR.responseJSON;
+          if (error.jqXHR.status === 422 && json.user_count) {
+            const controller = showModal("group-default-notifications", {
+              model: { count: json.user_count },
+            });
+
+            controller.set("onClose", () => {
+              this.updateExistingUsers = controller.updateExistingUsers;
+              this.send("save");
+            });
+          } else {
+            popupAjaxError(error);
+          }
+        })
         .finally(() => this.set("saving", false));
     },
   },

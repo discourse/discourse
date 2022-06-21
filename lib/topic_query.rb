@@ -345,17 +345,26 @@ class TopicQuery
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
+  # Any changes here will need to be reflected in `lib/topic-list-tracked-filter.js` for the `isTrackedTopic` function on
+  # the client side. The `f=tracked` query param is not heavily used so we do not want to be querying for a topic's
+  # tracked status by default. Instead, the client will handle the filtering when the `f=tracked` query params is present.
   def self.tracked_filter(list, user_id)
+    tracked_category_ids_sql = <<~SQL
+    SELECT cd.category_id FROM category_users cd
+    WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
+    SQL
+
+    has_sub_sub_categories = SiteSetting.max_category_nesting == 3
+
     sql = +<<~SQL
       topics.category_id IN (
-        SELECT cu.category_id FROM category_users cu
-        WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
-      )
-      OR topics.category_id IN (
-        SELECT c.id FROM categories c WHERE c.parent_category_id IN (
-          SELECT cd.category_id FROM category_users cd
-          WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
-        )
+        SELECT
+          c.id
+        FROM categories c
+        #{has_sub_sub_categories ? "LEFT JOIN categories parent_categories ON parent_categories.id = c.parent_category_id" : ""}
+        WHERE (c.id IN (#{tracked_category_ids_sql}))
+        OR c.parent_category_id IN (#{tracked_category_ids_sql})
+        #{has_sub_sub_categories ? "OR (parent_categories.id IS NOT NULL AND parent_categories.parent_category_id IN (#{tracked_category_ids_sql}))" : ""}
       )
     SQL
 
@@ -793,9 +802,7 @@ class TopicQuery
 
     if (filter = (options[:filter] || options[:f])) && @user
       action =
-        if filter == "bookmarked"
-          PostActionType.types[:bookmark]
-        elsif filter == "liked"
+        if filter == "liked"
           PostActionType.types[:like]
         end
       if action
@@ -859,7 +866,7 @@ class TopicQuery
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
         SiteSetting.default_categories_watching_first_post.split("|"),
-        SiteSetting.default_categories_regular.split("|")
+        SiteSetting.default_categories_normal.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 

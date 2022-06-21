@@ -37,4 +37,5 @@ export const NOTIFICATION_TYPES = {
   chat_group_mention: 32,
   chat_quoted: 33,
   assigned: 34,
+  question_answer_user_commented: 35,
 };

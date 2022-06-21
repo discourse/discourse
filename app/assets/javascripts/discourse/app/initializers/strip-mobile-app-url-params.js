@@ -6,7 +6,7 @@ export default {
 
     if (queryStrings.indexOf("user_api_public_key") !== -1) {
       let params = queryStrings.startsWith("?")
-        ? queryStrings.substr(1).split("&")
+        ? queryStrings.slice(1).split("&")
         : [];
 
       params = params.filter((param) => {

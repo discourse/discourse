@@ -85,3 +85,5 @@ da:
           title: "Sidehoved ikoner"
         spinners:
           title: "Spinnere"
+        empty_state:
+          title: "Tom Tilstand"

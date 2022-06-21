@@ -1,4 +1,7 @@
-{{#d-modal-body rawTitle=(if post (i18n "post.share.title" post_number=post.post_number) (i18n "topic.share.title"))}}
+{{#d-modal-body
+  rawTitle=(if post (i18n "post.share.title" post_number=post.post_number) (i18n "topic.share.title"))
+  rawSubtitle=(if post displayDate)
+}}
   <form>
     <div class="input-group invite-link">
       <label for="invite-link">
@@ -52,10 +55,6 @@
           {{/if}}
         {{/if}}
       </div>
-
-      {{#if post}}
-        <div class="date">{{displayDate}}</div>
-      {{/if}}
     </div>
   </form>
 {{/d-modal-body}}

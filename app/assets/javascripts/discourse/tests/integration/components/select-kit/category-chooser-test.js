@@ -107,7 +107,7 @@ discourseModule(
 
         assert.strictEqual(
           this.subject.rows().length,
-          22,
+          25,
           "all categories are visible"
         );
 
@@ -141,7 +141,7 @@ discourseModule(
       },
     });
 
-    componentTest("with allowUncategorized=null rootNone=true", {
+    componentTest("with allowUncategorized=null none=true", {
       template: hbs`
         {{category-chooser
           value=value

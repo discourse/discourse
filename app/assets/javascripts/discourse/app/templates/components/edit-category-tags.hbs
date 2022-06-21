@@ -18,6 +18,7 @@
   {{tag-group-chooser
     id="category-allowed-tag-groups"
     tagGroups=category.allowed_tag_groups
+    onChange=(action (mut category.allowed_tag_groups))
   }}
   {{#link-to "tagGroups" class="manage-tag-groups"}}{{i18n "category.manage_tag_groups_link"}}{{/link-to}}
 </section>
@@ -34,23 +35,33 @@
 </section>
 
 <section class="field required-tag-group-description">
-  {{i18n "category.required_tag_group_description"}}
+  {{i18n "category.required_tag_group.description"}}
 </section>
 
 <section class="field with-items">
-  <section class="field-item min-tags-from-required-group">
-    <label for="category-min-tags-from-group">{{i18n "category.min_tags_from_required_group_label"}}</label>
-    {{text-field value=category.min_tags_from_required_group id="category-min-tags-from-group" type="number" min="1"}}
-  </section>
-  <section class="field-item required-tag-group">
-    <label>{{i18n "category.required_tag_group_label"}}</label>
-    {{tag-group-chooser
-      id="category-required-tag-group"
-      tagGroups=category.required_tag_groups
-      options=(hash
-        maximum=1
-        filterPlaceholder="category.tag_group_selector_placeholder"
-      )
-    }}
+  <section class="field-item required-tag-groups">
+    {{#each category.required_tag_groups as |rtg|}}
+      <div class="required-tag-group-row">
+        {{text-field value=rtg.min_count type="number" min="1"}}
+        {{tag-group-chooser
+          tagGroups=(if rtg.name (array rtg.name) (array))
+          onChange=(action "onTagGroupChange" rtg)
+          options=(hash
+            maximum=1
+            filterPlaceholder="category.required_tag_group.placeholder"
+          )
+        }}
+        {{d-button
+          label="category.required_tag_group.delete"
+          action=(action "deleteRequiredTagGroup" rtg)
+          icon="trash-alt"
+          class="delete-required-tag-group"}}
+      </div>
+    {{/each}}
+    {{d-button
+      label="category.required_tag_group.add"
+      action=(action "addRequiredTagGroup")
+      icon="plus"
+      class="add-required-tag-group"}}
   </section>
 </section>

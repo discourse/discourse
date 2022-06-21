@@ -24,4 +24,30 @@ describe TopicViewDetailsSerializer do
       expect(allowed_users).to contain_exactly(participant.id)
     end
   end
+
+  describe "#can_permanently_delete" do
+    let(:post) do
+      Fabricate(:post).tap do |post|
+        PostDestroyer.new(Discourse.system_user, post).destroy
+      end
+    end
+
+    before do
+      SiteSetting.can_permanently_delete = true
+    end
+
+    it "is true for admins" do
+      admin = Fabricate(:admin)
+
+      serializer = described_class.new(TopicView.new(post.topic, admin), scope: Guardian.new(admin))
+      expect(serializer.as_json.dig(:topic_view_details, :can_permanently_delete)).to eq(true)
+    end
+
+    it "is not present for moderators" do
+      moderator = Fabricate(:moderator)
+
+      serializer = described_class.new(TopicView.new(post.topic, moderator), scope: Guardian.new(moderator))
+      expect(serializer.as_json.dig(:topic_view_details, :can_permanently_delete)).to eq(nil)
+    end
+  end
 end

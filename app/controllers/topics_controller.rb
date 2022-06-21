@@ -66,7 +66,7 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id, :filter_top_level_replies)
     username_filters = opts[:username_filters]
 
-    opts[:print] = true if params[:print].present?
+    opts[:print] = true if params[:print] == 'true'
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
     # Special case: a slug with a number in front should look by slug first before looking
@@ -608,10 +608,9 @@ class TopicsController < ApplicationController
 
   def bookmark
     topic = Topic.find(params[:topic_id].to_i)
-    first_post = topic.ordered_posts.first
 
     bookmark_manager = BookmarkManager.new(current_user)
-    bookmark_manager.create(post_id: first_post.id)
+    bookmark_manager.create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
 
     if bookmark_manager.errors.any?
       return render_json_error(bookmark_manager, status: 400)
@@ -1118,12 +1117,17 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
+    opts = params.slice(:page, :print, :filter_top_level_replies)
+    opts.delete(:page) if params[:page] == 0
+
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
-    page = params[:page]
-    url << "?page=#{page}" if page != 0
+    opts.each do |k, v|
+      s = url.include?('?') ? '&' : '?'
+      url << "#{s}#{k}=#{v}"
+    end
 
     redirect_to url, status: 301
   end

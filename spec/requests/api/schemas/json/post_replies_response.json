@@ -129,6 +129,9 @@
           "username": {
             "type": "string"
           },
+          "name": {
+            "type": "string"
+          },
           "avatar_template": {
             "type": "string"
           }
@@ -143,7 +146,7 @@
       },
       "actions_summary": {
         "type": "array",
-        "items": [
+        "items": 
           {
             "type": "object",
             "additionalProperties": false,
@@ -160,7 +163,6 @@
               "can_act"
             ]
           }
-        ]
       },
       "moderator": {
         "type": "boolean"

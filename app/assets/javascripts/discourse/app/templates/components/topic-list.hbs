@@ -29,7 +29,7 @@
  }}
 
 <tbody class="topic-list-body">
-  {{#each filteredTopics as |topic|}}
+  {{#each filteredTopics as |topic index|}}
     {{topic-list-item topic=topic
                       bulkSelectEnabled=bulkSelectEnabled
                       showTopicPostBadges=showTopicPostBadges
@@ -42,8 +42,15 @@
                       lastVisitedTopic=lastVisitedTopic
                       selected=selected
                       lastChecked=lastChecked
-                      tagsForUser=tagsForUser}}
+                      tagsForUser=tagsForUser
+                      focusLastVisitedTopic=focusLastVisitedTopic
+                      index=index}}
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
+    {{plugin-outlet
+      name="after-topic-list-item"
+      args=(hash topic=topic index=index)
+      connectorTagName="tr"
+    }}
   {{/each}}
 </tbody>
 

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require "cgi"
-require "onebox/open_graph"
+require 'cgi'
+require 'onebox/normalizer'
+require 'onebox/open_graph'
 require 'onebox/oembed'
+require 'onebox/json_ld'
 
 module Onebox
   module Engine
@@ -38,32 +40,14 @@ module Onebox
       def raw
         return @raw if defined?(@raw)
 
-        og = get_opengraph
-        twitter = get_twitter
-        oembed = get_oembed
-
         @raw = {}
 
-        og.data.each do |k, v|
-          next if k == "title_attr"
-          v = og.send(k)
-          @raw[k] ||= v unless v.nil?
-        end
-
-        twitter.each { |k, v| @raw[k] ||= v unless Onebox::Helpers::blank?(v) }
-
-        oembed.data.each do |k, v|
-          v = oembed.send(k)
-          @raw[k] ||= v unless v.nil?
-        end
-
-        favicon = get_favicon
-        @raw[:favicon] = favicon unless Onebox::Helpers::blank?(favicon)
-
-        unless @raw[:description]
-          description = get_description
-          @raw[:description] = description unless Onebox::Helpers::blank?(description)
-        end
+        set_opengraph_data_on_raw
+        set_twitter_data_on_raw
+        set_oembed_data_on_raw
+        set_json_ld_data_on_raw
+        set_favicon_data_on_raw
+        set_description_on_raw
 
         @raw
       end
@@ -153,6 +137,50 @@ module Onebox
         end
 
         oembed_url
+      end
+
+      def get_json_ld
+        @json_ld ||= Onebox::JsonLd.new(html_doc)
+      end
+
+      def set_from_normalizer_data(normalizer)
+        normalizer.data.each do |k, v|
+          v = normalizer.send(k)
+          @raw[k] ||= v unless v.nil?
+        end
+      end
+
+      def set_opengraph_data_on_raw
+        og = get_opengraph
+        set_from_normalizer_data(og)
+        @raw.except!(:title_attr)
+      end
+
+      def set_twitter_data_on_raw
+        twitter = get_twitter
+        twitter.each { |k, v| @raw[k] ||= v unless Onebox::Helpers::blank?(v) }
+      end
+
+      def set_oembed_data_on_raw
+        oembed = get_oembed
+        set_from_normalizer_data(oembed)
+      end
+
+      def set_json_ld_data_on_raw
+        json_ld = get_json_ld
+        set_from_normalizer_data(json_ld)
+      end
+
+      def set_favicon_data_on_raw
+        favicon = get_favicon
+        @raw[:favicon] = favicon unless Onebox::Helpers::blank?(favicon)
+      end
+
+      def set_description_on_raw
+        unless @raw[:description]
+          description = get_description
+          @raw[:description] = description unless Onebox::Helpers::blank?(description)
+        end
       end
     end
   end

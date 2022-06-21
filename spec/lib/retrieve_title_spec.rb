@@ -136,6 +136,24 @@ describe RetrieveTitle do
 
       expect(RetrieveTitle.crawl("https://cat.com/meow/no-onebox")).to be_blank
     end
+
+    it "doesn't return a title if response is unsuccessful" do
+      stub_request(:get, "https://example.com").to_return(status: 404, body: "")
+
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
+    end
+
+    it "it raises errors other than Net::ReadTimeout, e.g. NoMethodError" do
+      stub_request(:get, "https://example.com").to_raise(NoMethodError)
+
+      expect { RetrieveTitle.crawl("https://example.com") }.to raise_error(NoMethodError)
+    end
+
+    it "it ignores Net::ReadTimeout errors" do
+      stub_request(:get, "https://example.com").to_raise(Net::ReadTimeout)
+
+      expect { RetrieveTitle.crawl("https://example.com") }.not_to raise_error
+    end
   end
 
   context 'fetch_title' do

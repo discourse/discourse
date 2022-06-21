@@ -1,5 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import { initializeDefaultHomepage } from "discourse/lib/utilities";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 export default {
   name: "url-redirects",
@@ -9,7 +10,7 @@ export default {
     const currentUser = container.lookup("current-user:main");
     if (currentUser) {
       const username = currentUser.get("username");
-      const escapedUsername = username.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const escapedUsername = escapeRegExp(username);
       DiscourseURL.rewrite(
         new RegExp(`^/u/${escapedUsername}/?$`, "i"),
         `/u/${username}/activity`

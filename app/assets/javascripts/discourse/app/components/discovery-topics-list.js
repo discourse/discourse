@@ -1,5 +1,5 @@
 import { observes, on } from "discourse-common/utils/decorators";
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { next, schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
@@ -13,9 +13,13 @@ export default Component.extend(UrlRefresh, LoadMore, {
   @on("didInsertElement")
   @observes("model")
   _readjustScrollPosition() {
-    const scrollTo = this.session.get("topicListScrollPosition");
-    if (scrollTo && scrollTo >= 0) {
-      schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
+    const scrollTo = this.session.topicListScrollPosition;
+    if (scrollTo >= 0) {
+      schedule("afterRender", () => {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          next(() => window.scrollTo(0, scrollTo + 1));
+        }
+      });
     } else {
       scheduleOnce("afterRender", this, this.loadMoreUnlessFull);
     }

@@ -212,7 +212,6 @@ nl:
       <p>Als u uw wachtwoord nog weet, kunt u zich <a href="%{base_url}/login">Aanmelden</a>.</p>
 
       <p>Zo niet, kunt u uw <a href="%{base_url}/password-reset">Wachtwoord herinitialiseren</a>.</p>
-    user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='%{base_path}/u/%{username}/summary'>heeft al een account!</a>"
     invalid_email: "%{email} is geen geldig e-mailadres."
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
@@ -359,7 +358,6 @@ nl:
       already_bookmarked_post: "U kunt geen twee bladwijzers voor hetzelfde bericht maken."
       cannot_set_past_reminder: "U kunt geen bladwijzerherinnering in het verleden instellen."
       cannot_set_reminder_in_distant_future: "U kunt geen bladwijzerherinnering later dan over 10 jaar instellen."
-      time_must_be_provided: "tijd moet voor alle herinneringen worden opgegeven"
     reminders:
       at_desktop: "De volgende keer vanaf mijn computer"
       later_today: "Later vandaag"
@@ -1301,7 +1299,6 @@ nl:
     site_description: "Beschrijf deze website in één zin, zoals gebruikt in de meta-omschrijvingstag."
     short_site_description: "Korte beschrijving, zoals gebruikt in de titeltag op de startpagina."
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
-    download_remote_images_to_local: "Externe afbeeldingen naar lokale afbeeldingen converteren door ze te downloaden; dit voorkomt beschadigde afbeeldingen."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
     disabled_image_download_domains: "Externe afbeeldingen zullen nooit vanaf deze domeinen worden gedownload. Pipe-gescheiden lijst."
     editing_grace_period: "De eerste (n) seconden na plaatsing van een bericht leidt bewerking ervan niet tot een nieuwe versie in de berichtgeschiedenis."
@@ -1338,7 +1335,6 @@ nl:
     favicon: "Een favicon voor uw website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
     apple_touch_icon: "Pictogram dat voor Apple touch-apparaten wordt gebruikt. Wordt automatisch verkleind naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
-    twitter_summary_large_image: "'summary large image' van Twitter-card (dient minstens 280 in breedte, en minstens 150 in hoogte te zijn). Bij leeg laten worden reguliere kaartmetagegevens gegenereerd via de opengraph_image."
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een door een pipe (|) gescheiden lijst van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1350,10 +1346,8 @@ nl:
     summary_percent_filter: "Wanneer een gebruiker op 'Dit topic samenvatten' klikt, de top % van berichten tonen"
     summary_max_results: "Maximale aantal weergegeven berichten door 'Dit topic samenvatten'"
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
-    enable_long_polling: "Gebruikte 'message bus' voor melding kan 'long polling' gebruiken"
     enable_chunked_encoding: "Gesegmenteerde coderingsantwoorden van de server inschakelen. Deze functie werkt in de meeste configuraties, hoewel sommige proxy's kunnen bufferen, waardoor reacties worden vertraagd"
     long_polling_base_url: "Basis-URL voor 'long polling' (als een CDN dynamische inhoud aanbiedt, zorg er dan voor dat dit op 'origin pull' is ingesteld), zoals http://origin.site.com"
-    long_polling_interval: "De hoeveelheid tijd die de server hoort te wachten voordat op clients wordt gereageerd als er geen gegevens te verzenden zijn (alleen aangemelde gebruikers)"
     polling_interval: "Als geen 'long polling' wordt toegepast, hoe vaak aangemelde clients moeten pollen in milliseconden"
     anon_polling_interval: "Hoe vaak anonieme clients moeten pollen in milliseconden"
     background_polling_interval: "Hoe vaak clients moeten pollen in milliseconden (als het venster in de achtergrond staat)"
@@ -1406,7 +1400,6 @@ nl:
     send_tl2_promotion_message: "Nieuwe gebruikers met vertrouwensniveau 2 een bericht over promotie sturen."
     suppress_reply_directly_below: "Het uitvouwbare aantal antwoorden bij een bericht niet tonen als er maar één antwoord direct onder dit bericht staat."
     suppress_reply_directly_above: "Het uitvouwbare 'in antwoord op' bij een bericht niet tonen als er maar één antwoord direct boven dit bericht staat."
-    remove_full_quote: "Volledige citaten bij directe antwoorden automatisch verwijderen."
     suppress_reply_when_quoting: "Het uitvouwbare 'in antwoord op' bij een bericht niet tonen als het bericht een antwoord citeert."
     max_reply_history: "Maximale aantal uit te vouwen antwoorden bij uitvouwen van 'in antwoord op'"
     topics_per_period_in_top_summary: "Aantal getoonde toptopics in het standaard toptopics-overzicht."
@@ -1829,7 +1822,7 @@ nl:
     default_categories_tracking: "Lijst van categorieën die standaard worden gevolgd."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
     default_categories_watching_first_post: "Lijst van categorieën waarin het eerste bericht in elk nieuw topic standaard in de gaten wordt gehouden."
-    default_categories_regular: "Lijst van categorieën die niet standaard worden gedempt. Handig wanneer de website-instelling 'mute_all_categories_by_default' is ingeschakeld."
+    default_categories_normal: "Lijst van categorieën die niet standaard worden gedempt. Handig wanneer de website-instelling 'mute_all_categories_by_default' is ingeschakeld."
     mute_all_categories_by_default: "Het standaard meldingsniveau van alle categorieën instellen op gedempt. Gebruikers moeten zich bij categorieën aanmelden om deze in de pagina's 'nieuwste' en 'categorieën' te laten verschijnen. Als u de standaardwaarden voor anonieme gebruikers wilt wijzigen, stel dan de instellingen voor 'default_categories_' in."
     default_tags_watching: "Lijst van tags die standaard in de gaten worden gehouden."
     default_tags_tracking: "Lijst van tags die standaard worden gevolgd."
@@ -1855,7 +1848,6 @@ nl:
     tags_sort_alphabetically: "Tags in alfabetische volgorde tonen. Standaard is de volgorde van populariteit."
     tags_listed_by_group: "Tags vermelden op tag-groep op de <a href='%{base_path}/tags' target='_blank'>pagina Tags</a>."
     tag_style: "Visuele stijl voor tagbadges."
-    allow_staff_to_tag_pms: "Stafleden mogen persoonlijke berichten taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet tonen"
     remove_muted_tags_from_latest: "Topics met alleen gedempt-tags niet in de lijst met nieuwste topics tonen."
@@ -2593,6 +2585,7 @@ nl:
   page_forbidden:
     title: "Oeps! Die pagina is privé."
   page_not_found:
+    page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
     popular_topics: "Populair"
     recent_topics: "Recent"
@@ -2722,6 +2715,8 @@ nl:
     good_topic:
       name: Goed topic
       description: Heeft 25 likes op een topic ontvangen
+      long_description: |
+        Deze badge wordt toegekend wanneer je topic 25 likes krijgt. Je startte een levendig gesprek waar de gemeenschap zich omheen verzamelde.
     great_topic:
       name: Geweldig topic
       description: Heeft 50 likes op een topic ontvangen
@@ -2956,10 +2951,6 @@ nl:
                 label: "Categorieën en nieuwste topics"
               categories_and_top_topics:
                 label: "Categorieën en toptopics"
-              categories_boxes:
-                label: "Categorievakken"
-              categories_boxes_with_topics:
-                label: "Categorievakken met topics"
       logos:
         title: "Logo's"
         fields:

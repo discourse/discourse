@@ -23,17 +23,34 @@ const rule = {
       let i;
       for (i = 1; i < split.length; i++) {
         if (split[i].indexOf("post:") === 0) {
-          postNumber = parseInt(split[i].substr(5), 10);
+          postNumber = parseInt(split[i].slice(5), 10);
           continue;
         }
 
         if (split[i].indexOf("topic:") === 0) {
-          topicId = parseInt(split[i].substr(6), 10);
+          topicId = parseInt(split[i].slice(6), 10);
           continue;
         }
 
         if (/full:\s*true/.test(split[i])) {
           full = true;
+          continue;
+        }
+
+        // if we have the additional attribute of username: because we are prioritizing full name
+        // then assign the name to be the displayName
+        if (split[i].indexOf("username:") === 0) {
+          // return users name by selecting all values from the first index to the post
+          // this protects us from when a user has a `,` in their name
+          displayName = split.slice(0, split.indexOf(`post:${postNumber}`));
+
+          // preserve `,` in a users name if they exist
+          if (displayName.length > 1) {
+            displayName = displayName.join(", ");
+          }
+
+          // strip key of 'username:' and return username
+          username = split[i].slice(9);
           continue;
         }
       }
@@ -59,9 +76,9 @@ const rule = {
     }
 
     if (options.formatUsername) {
-      displayName = options.formatUsername(username);
+      displayName = displayName || options.formatUsername(username);
     } else {
-      displayName = username;
+      displayName = displayName || username;
     }
 
     let token = state.push("bbcode_open", "aside", 1);

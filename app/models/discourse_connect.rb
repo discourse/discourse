@@ -238,6 +238,7 @@ class DiscourseConnect < DiscourseConnectBase
     # the same email payload
     DistributedMutex.synchronize("discourse_single_sign_on_#{email}") do
       user = User.find_by_email(email) if !require_activation
+
       if !user
         user_params = {
           primary_email: UserEmail.new(email: email, primary: true),
@@ -250,7 +251,13 @@ class DiscourseConnect < DiscourseConnectBase
           user_params[:locale] = locale
         end
 
-        user = User.create!(user_params)
+        user = User.new(user_params)
+
+        if SiteSetting.must_approve_users && EmailValidator.can_auto_approve_user?(email)
+          ReviewableUser.set_approved_fields!(user, Discourse.system_user)
+        end
+
+        user.save!
 
         if SiteSetting.verbose_discourse_connect_logging
           Rails.logger.warn("Verbose SSO log: New User (user_id: #{user.id}) Params: #{user_params} User Params: #{user.attributes} User Errors: #{user.errors.full_messages} Email: #{user.primary_email.attributes} Email Error: #{user.primary_email.errors.full_messages}")
@@ -373,7 +380,8 @@ class DiscourseConnect < DiscourseConnectBase
   end
 
   def resolve_username
-    suggester_input = [username, name]
+    suggester_input = [username]
+    suggester_input << name if SiteSetting.use_name_for_username_suggestions
     suggester_input << email if SiteSetting.use_email_for_username_and_name_suggestions
     UserNameSuggester.suggest(*suggester_input)
   end

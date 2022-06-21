@@ -71,7 +71,7 @@ def update_themes
       raise RemoteTheme::ImportError.new(remote_theme.last_error_text) if remote_theme.last_error_text.present?
     rescue => e
       STDERR.puts "Failed to update '#{theme.name}': #{e}"
-      raise if ENV["RAISE_THEME_ERRORS"] != "0" && (ENV["RAISE_THEME_ERRORS"] == "1" || RailsMultisite::ConnectionManagement.current_db == "default")
+      raise if ENV["RAISE_THEME_ERRORS"] == "1"
     end
   end
 

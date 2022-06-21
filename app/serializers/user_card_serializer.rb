@@ -66,7 +66,8 @@ class UserCardSerializer < BasicUserSerializer
              :flair_color,
              :featured_topic,
              :timezone,
-             :pending_posts_count
+             :pending_posts_count,
+             :status
 
   untrusted_attributes :bio_excerpt,
                        :website,
@@ -220,6 +221,14 @@ class UserCardSerializer < BasicUserSerializer
 
   def card_background_upload_url
     object.card_background_upload&.url
+  end
+
+  def include_status?
+    SiteSetting.enable_user_status
+  end
+
+  def status
+    UserStatusSerializer.new(user.user_status, root: false)
   end
 
   private

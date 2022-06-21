@@ -5,7 +5,7 @@
   <div class="image-upload-controls">
     <label class="btn btn-default pad-left no-text {{if uploadingOrProcessing "disabled"}}">
       {{d-icon "far-image"}}
-      <input class="hidden-upload-field" disabled={{uploadingOrProcessing}} type="file" accept="image/*">
+      {{pick-files-button fileInputDisabled=uploadingOrProcessing fileInputClass="hidden-upload-field" acceptedFormatsOverride="image/*" }}
     </label>
 
     {{#if imageUrl}}

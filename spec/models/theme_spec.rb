@@ -252,7 +252,7 @@ HTML
       expect(javascript_cache.content).to include("var x = 1;")
     end
 
-    it "wraps constants calls in a readOnlyError function" do
+    it "replaces const writes with _readOnlyError function call" do
       html = <<HTML
         <script type='text/discourse-plugin' version='0.1'>
           const x = 1;
@@ -263,7 +263,7 @@ HTML
       baked, javascript_cache = transpile(html)
       expect(baked).to include(javascript_cache.url)
       expect(javascript_cache.content).to include('var x = 1;')
-      expect(javascript_cache.content).to include('x = (_readOnlyError("x"), 2);')
+      expect(javascript_cache.content).to include('2, _readOnlyError("x");')
     end
   end
 
@@ -614,7 +614,7 @@ HTML
     it 'warns when the theme has modified the setting type but data cannot be converted' do
       begin
         @orig_logger = Rails.logger
-        Rails.logger = FakeLogger.new
+        Rails.logger = @fake_logger = FakeLogger.new
 
         theme.set_field(target: :settings, name: :yaml, value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"list\"")
         theme.save!
@@ -628,7 +628,7 @@ HTML
 
         theme.convert_settings
         expect(setting.value).to eq("red,globe")
-        expect(Rails.logger.warnings[0]).to include("Theme setting type has changed but cannot be converted.")
+        expect(@fake_logger.warnings[0]).to include("Theme setting type has changed but cannot be converted.")
       ensure
         Rails.logger = @orig_logger
       end

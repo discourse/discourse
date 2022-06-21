@@ -222,11 +222,6 @@ export default Controller.extend(CanCheckEmails, {
         .then((result) => {
           if (result.email_confirmation_required) {
             bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
-          } else {
-            const controller = showModal("grant-admin-second-factor", {
-              model: this.model,
-            });
-            controller.setResult(result);
           }
         })
         .catch((error) => {

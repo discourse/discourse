@@ -357,7 +357,7 @@ describe 'posts' do
       parameter name: :post_body, in: :body, schema: {
         type: :object,
         properties: {
-          locked: { type: :boolean }
+          locked: { type: :string }
         }, required: [ 'locked' ]
       }
 

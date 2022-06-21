@@ -33,7 +33,7 @@ AttributeHook.prototype.unhook = function (node, prop, next) {
   }
 
   let colonPosition = prop.indexOf(":");
-  let localName = colonPosition > -1 ? prop.substr(colonPosition + 1) : prop;
+  let localName = colonPosition > -1 ? prop.slice(colonPosition + 1) : prop;
   node.removeAttributeNS(this.namespace, localName);
 };
 

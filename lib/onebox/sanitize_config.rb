@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-class Sanitize
-  module Config
-
+module Onebox
+  module SanitizeConfig
     HTTP_PROTOCOLS ||= ['http', 'https', :relative].freeze
 
-    ONEBOX ||= freeze_config merge(RELAXED,
-      elements: RELAXED[:elements] + %w[audio details embed iframe source video svg path],
+    ONEBOX ||= Sanitize::Config.freeze_config(Sanitize::Config.merge(Sanitize::Config::RELAXED,
+      elements: Sanitize::Config::RELAXED[:elements] + %w[audio details embed iframe source video svg path],
 
       attributes: {
-        'a' => RELAXED[:attributes]['a'] + %w(target),
+        'a' => Sanitize::Config::RELAXED[:attributes]['a'] + %w(target),
         'audio' => %w[controls controlslist],
         'embed' => %w[height src type width],
         'iframe' => %w[allowfullscreen frameborder height scrolling src width data-original-href data-unsanitized-src],
@@ -29,7 +28,7 @@ class Sanitize
         }
       },
 
-      transformers: (RELAXED[:transformers] || []) + [
+      transformers: (Sanitize::Config::RELAXED[:transformers] || []) + [
         lambda do |env|
           next unless env[:node_name] == 'a'
           a_tag = env[:node]
@@ -65,8 +64,19 @@ class Sanitize
       },
 
       css: {
-        properties: RELAXED[:css][:properties] + %w[--aspect-ratio]
+        properties: Sanitize::Config::RELAXED[:css][:properties] + %w[--aspect-ratio]
       }
-    )
+    ))
+
+    DISCOURSE_ONEBOX ||=
+      Sanitize::Config.freeze_config(
+        Sanitize::Config.merge(
+          ONEBOX,
+          attributes: Sanitize::Config.merge(
+            ONEBOX[:attributes],
+            'aside' => [:data]
+          )
+        )
+      )
   end
 end

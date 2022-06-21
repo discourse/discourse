@@ -348,7 +348,7 @@ describe PostAlerter do
     fab!(:topic) { Fabricate(:topic, category: category) }
 
     it 'does not notify for muted users' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      post = Fabricate(:post, raw: '[quote="Eviltrout, post:1"]whatup[/quote]', topic: topic)
       MutedUser.create!(user_id: evil_trout.id, muted_user_id: post.user_id)
 
       expect {
@@ -366,7 +366,7 @@ describe PostAlerter do
     end
 
     it 'does not notify for users with new reply notification' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      post = Fabricate(:post, raw: '[quote="eviltRout, post:1"]whatup[/quote]', topic: topic)
       notification = Notification.create!(topic: post.topic,
                                           post_number: post.post_number,
                                           read: false,
@@ -388,7 +388,7 @@ describe PostAlerter do
       expect {
         2.times do
           create_post_with_alerts(
-            raw: '[quote="EvilTrout, post:1"]whatup[/quote]',
+            raw: '[quote="eviltrout, post:1"]whatup[/quote]',
             topic: topic
           )
         end
@@ -410,11 +410,76 @@ describe PostAlerter do
     end
 
     it "triggers :before_create_notifications_for_users" do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      post = Fabricate(:post, raw: '[quote="eviltrout, post:1"]whatup[/quote]')
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(post)
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], post])
+    end
+
+    context "notifications when prioritizing full names" do
+      before do
+        SiteSetting.prioritize_username_in_ux = false
+        SiteSetting.display_name_on_posts = true
+      end
+
+      it 'sends to correct user' do
+        quote = <<~MD
+          [quote="#{evil_trout.name}, post:1, username:#{evil_trout.username}"]whatup[/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(evil_trout.notifications, :count).by(1)
+      end
+
+      it 'sends to correct users when nested quotes with multiple users' do
+        quote = <<~MD
+          [quote="#{evil_trout.name}, post:1, username:#{evil_trout.username}"]this [quote="#{walterwhite.name}, post:2, username:#{walterwhite.username}"]whatup[/quote][/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(evil_trout.notifications, :count).by(1)
+          .and change(walterwhite.notifications, :count).by(1)
+      end
+
+      it 'sends to correct users when multiple quotes' do
+        user = Fabricate(:user)
+        quote = <<~MD
+          [quote="#{evil_trout.name}, post:1, username:#{evil_trout.username}"]"username:#{user.username}" [/quote]/n [quote="#{walterwhite.name}, post:2, username:#{walterwhite.username}"]whatup[/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(evil_trout.notifications, :count).by(1)
+          .and change(walterwhite.notifications, :count).by(1)
+          .and change(user.notifications, :count).by(0)
+      end
+
+      it "sends to correct user when user has a full name that matches another user's username" do
+        user_with_matching_full_name = Fabricate(:user, name: evil_trout.username)
+        quote = <<~MD
+          [quote="#{user_with_matching_full_name.name}, post:1, username:#{user_with_matching_full_name.username}"]this [/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(user_with_matching_full_name.notifications, :count).by(1)
+          .and change(evil_trout.notifications, :count).by(0)
+      end
     end
   end
 
@@ -1372,8 +1437,10 @@ describe PostAlerter do
         tag = Fabricate(:tag)
         topic = Fabricate(:topic, tags: [tag])
         post = Fabricate(:post, topic: topic)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        tag_group = TagGroup.new(name: 'Only visible to group', tag_names: [tag.name])
+        tag_group.permissions = [[group.id, TagGroupPermission.permission_types[:full]]]
+        tag_group.save!
 
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
 
@@ -1436,7 +1503,7 @@ describe PostAlerter do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.allow_staff_to_tag_pms = true
+        SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
         Jobs.run_immediately!
         TopicUser.change(user.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
         TopicUser.change(staged.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
@@ -1708,6 +1775,16 @@ describe PostAlerter do
         },
         at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds
       )
+    end
+
+    it "does not send a group smtp email for anyone if the reply post originates from an incoming email that is auto generated" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic)
+      Fabricate(:incoming_email, post: post, topic: topic, is_auto_generated: true)
+      expect_not_enqueued_with(job: :group_smtp_email) do
+        expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+      end
     end
 
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,

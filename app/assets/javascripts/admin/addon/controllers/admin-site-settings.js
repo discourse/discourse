@@ -30,7 +30,7 @@ export default Controller.extend({
           }
 
           if (word.startsWith("plugin:")) {
-            pluginFilter = word.substr("plugin:".length).trim();
+            pluginFilter = word.slice("plugin:".length).trim();
             return false;
           }
 

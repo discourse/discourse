@@ -2,6 +2,7 @@ import Helper from "@ember/component/helper";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { dasherize } from "@ember/string";
 
 export function makeArray(obj) {
   if (obj === null || obj === undefined) {
@@ -36,7 +37,7 @@ export function registerHelper(name, fn) {
 }
 
 export function findHelper(name) {
-  return _helpers[name] || _helpers[name.dasherize()];
+  return _helpers[name] || _helpers[dasherize(name)];
 }
 
 export function registerHelpers(registry) {

@@ -31,6 +31,7 @@ fr:
           format_title: Format de la date
           timezone: Fuseau horaire
           until: Jusqu'à…
+          current_timezone: "Fuseau horaire actuel :"
           recurring:
             every_day: "Tous les jours"
             every_week: "Toutes les semaines"
@@ -40,3 +41,4 @@ fr:
             every_three_months: "Tous les trois mois"
             every_six_months: "Tous les six mois"
             every_year: "Tous les ans"
+      default_title: "Événement de %{site_name}"

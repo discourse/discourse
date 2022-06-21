@@ -5,7 +5,7 @@
         <th>{{i18n "admin.email.time"}}</th>
         <th>{{i18n "admin.email.user"}}</th>
         <th>{{i18n "admin.email.to_address"}}</th>
-        <th>{{i18n "admin.email.email_type"}}</th>
+        <th colspan="2">{{i18n "admin.email.email_type"}}</th>
       </tr>
     </thead>
     <tbody>
@@ -13,7 +13,7 @@
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
         <td>{{text-field value=filter.user placeholderKey="admin.email.logs.filters.user_placeholder"}}</td>
         <td>{{text-field value=filter.address placeholderKey="admin.email.logs.filters.address_placeholder"}}</td>
-        <td>{{text-field value=filter.type placeholderKey="admin.email.logs.filters.type_placeholder"}}</td>
+        <td colspan="2">{{text-field value=filter.type placeholderKey="admin.email.logs.filters.type_placeholder"}}</td>
       </tr>
 
       {{#each model as |l|}}
@@ -28,15 +28,26 @@
             {{/if}}
           </td>
           <td class="email-address"><a href="mailto:{{l.to_address}}">{{l.to_address}}</a></td>
-          {{#if l.has_bounce_key}}
-            <td><a href {{action "showIncomingEmail" l.id}}>{{l.email_type}}</a></td>
-          {{else}}
-            <td>{{l.email_type}}</td>
-          {{/if}}
+          <td>
+            {{#if l.has_bounce_key}}
+              <a href {{action "showIncomingEmail" l.id}}>
+                {{l.email_type}}
+              </a>
+            {{else}}
+              {{l.email_type}}
+            {{/if}}
+          </td>
+          <td class="email-details">
+            {{#if l.has_bounce_key}}
+              <a href {{action "showIncomingEmail" l.id}} title={{i18n "admin.email.details_title"}}>
+                {{d-icon "info-circle"}}
+              </a>
+            {{/if}}
+          </td>
         </tr>
       {{else}}
         {{#unless loading}}
-          <tr><td colspan="4">{{i18n "admin.email.logs.none"}}</td></tr>
+          <tr><td colspan="5">{{i18n "admin.email.logs.none"}}</td></tr>
         {{/unless}}
       {{/each}}
     </tbody>

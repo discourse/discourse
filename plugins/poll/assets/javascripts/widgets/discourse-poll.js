@@ -14,17 +14,15 @@ import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
 import bootbox from "bootbox";
+import { applyLocalDates } from "discourse/lib/local-dates";
 
 const FETCH_VOTERS_COUNT = 25;
 
-function optionHtml(option) {
-  const $node = $(`<span>${option.html}</span>`);
-
-  $node.find(".discourse-local-date").each((_index, elem) => {
-    $(elem).applyLocalDates();
-  });
-
-  return new RawHtml({ html: `<span>${$node.html()}</span>` });
+function optionHtml(option, siteSettings = {}) {
+  const el = document.createElement("span");
+  el.innerHTML = option.html;
+  applyLocalDates(el.querySelectorAll(".discourse-local-date"), siteSettings);
+  return new RawHtml({ html: `<span>${el.innerHTML}</span>` });
 }
 
 function infoTextHtml(text) {
@@ -66,7 +64,7 @@ createWidget("discourse-poll-option", {
     }
 
     contents.push(" ");
-    contents.push(optionHtml(option));
+    contents.push(optionHtml(option, this.siteSettings));
 
     return contents;
   },
@@ -178,7 +176,10 @@ createWidget("discourse-poll-standard-results", {
         contents.push(
           h(
             "div.option",
-            h("p", [h("span.percentage", `${per}%`), optionHtml(option)])
+            h("p", [
+              h("span.percentage", `${per}%`),
+              optionHtml(option, this.siteSettings),
+            ])
           )
         );
 

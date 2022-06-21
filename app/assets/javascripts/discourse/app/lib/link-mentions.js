@@ -81,7 +81,7 @@ export function linkSeenMentions(elem, siteSettings) {
     ...elem.querySelectorAll("span.mention:not(.mention-tested)"),
   ];
   if (mentions.length) {
-    const usernames = mentions.map((m) => m.innerText.substr(1));
+    const usernames = mentions.map((m) => m.innerText.slice(1));
     updateFound(mentions, usernames);
     return usernames
       .uniq()

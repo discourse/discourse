@@ -4,6 +4,13 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
+  has_one :upload_reference, as: :target, dependent: :destroy
+
+  after_save do
+    if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
+      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+    end
+  end
 
   scope :find_by_theme_ids, ->(theme_ids) {
     return none unless theme_ids.present?
@@ -142,7 +149,7 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
 
-    doc.add_child("<script src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
+    doc.add_child("<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
     [doc.to_s, errors&.join("\n")]
   end
 
@@ -184,7 +191,7 @@ class ThemeField < ActiveRecord::Base
 
     begin
       content = File.read(path)
-      svg_file = Nokogiri::XML(content) do |config|
+      Nokogiri::XML(content) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
     rescue => e
@@ -258,7 +265,7 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.content = js_compiler.content
     javascript_cache.save!
     doc = ""
-    doc = "<script src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
+    doc = "<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
     [doc, errors&.join("\n")]
   end
 
@@ -568,16 +575,16 @@ class ThemeField < ActiveRecord::Base
     if (will_save_change_to_value? || will_save_change_to_upload_id?) && !will_save_change_to_value_baked?
       self.value_baked = nil
     end
+    if upload && upload.extension == "js"
+      if will_save_change_to_upload_id? || !javascript_cache
+        javascript_cache ||= build_javascript_cache
+        javascript_cache.content = upload.content
+      end
+    end
   end
 
   after_save do
     dependent_fields.each(&:invalidate_baked!)
-  end
-
-  after_commit do
-    # TODO message for mobile vs desktop
-    MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
-    MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
   end
 
   after_destroy do

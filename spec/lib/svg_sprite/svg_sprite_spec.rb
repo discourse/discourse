@@ -213,7 +213,7 @@ describe SvgSprite do
   end
 
   it "includes Font Awesome icon from groups" do
-    group = Fabricate(:group, flair_icon: "far-building")
+    _group = Fabricate(:group, flair_icon: "far-building")
     expect(SvgSprite.bundle).to match(/far-building/)
   end
 

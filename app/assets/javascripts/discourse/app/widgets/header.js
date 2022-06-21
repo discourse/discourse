@@ -10,6 +10,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { logSearchLinkClick } from "discourse/lib/search";
 
 const _extraHeaderIcons = [];
 
@@ -66,6 +67,14 @@ createWidget("header-notifications", {
         )
       ),
     ];
+
+    if (this.currentUser.status) {
+      contents.push(
+        this.attach("user-status-bubble", {
+          emoji: this.currentUser.status.emoji,
+        })
+      );
+    }
 
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
@@ -399,7 +408,12 @@ export default createWidget("header", {
       return panels;
     };
 
-    let contentsAttrs = { contents, minimized: !!attrs.topic };
+    const contentsAttrs = {
+      contents,
+      minimized: !!attrs.topic,
+      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
+    };
+
     return h(
       "div.wrap",
       this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
@@ -426,14 +440,7 @@ export default createWidget("header", {
 
       const { searchLogId, searchResultId, searchResultType } = attrs;
       if (searchLogId && searchResultId && searchResultType) {
-        ajax("/search/click", {
-          type: "POST",
-          data: {
-            search_log_id: searchLogId,
-            search_result_id: searchResultId,
-            search_result_type: searchResultType,
-          },
-        });
+        logSearchLinkClick({ searchLogId, searchResultId, searchResultType });
       }
     }
 

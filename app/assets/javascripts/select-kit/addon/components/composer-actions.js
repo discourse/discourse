@@ -130,7 +130,9 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.action !== CREATE_TOPIC &&
       this.action !== CREATE_SHARED_DRAFT &&
-      !(this.action === REPLY && this.topic && this.topic.isPrivateMessage) &&
+      this.action === REPLY &&
+      this.topic &&
+      !this.topic.isPrivateMessage &&
       !this.isEditing &&
       _topicSnapshot
     ) {
@@ -161,23 +163,6 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     if (
-      this.siteSettings.enable_personal_messages &&
-      this.action !== PRIVATE_MESSAGE &&
-      !this.isEditing
-    ) {
-      items.push({
-        name: I18n.t(
-          "composer.composer_actions.reply_as_private_message.label"
-        ),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_private_message.desc"
-        ),
-        icon: "envelope",
-        id: "reply_as_private_message",
-      });
-    }
-
-    if (
       !this.isEditing &&
       ((this.action !== REPLY && _topicSnapshot) ||
         (this.action === REPLY &&
@@ -197,7 +182,8 @@ export default DropdownSelectBoxComponent.extend({
     // if answered post is a whisper, we can only answer with a whisper so no need for toggle
     if (
       this.canWhisper &&
-      (!_postSnapshot ||
+      (!this.replyOptions.postLink ||
+        !_postSnapshot ||
         _postSnapshot.post_type !== this.site.post_types.whisper)
     ) {
       items.push({
