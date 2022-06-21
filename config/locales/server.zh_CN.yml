@@ -2012,7 +2012,7 @@ zh_CN:
     default_categories_tracking: "默认跟踪的类别列表。"
     default_categories_muted: "默认被设为免打扰的类别列表。"
     default_categories_watching_first_post: "默认将关注每个新话题中的第一个帖子的类别列表。"
-    default_categories_regular: "默认未被设为免打扰的类别列表。启用 `mute_all_categories_by_default` 站点设置时很有用。"
+    default_categories_normal: "默认未被设为免打扰的类别列表。启用 `mute_all_categories_by_default` 站点设置时很有用。"
     mute_all_categories_by_default: "将所有类别的默认通知级别设置为免打扰。要求用户选择加入类别，以便他们出现在“最新”和“类别”页面中。如果您希望修改匿名用户的默认设置，请设置 'default_categories_' 设置。"
     default_tags_watching: "默认关注的标签列表。"
     default_tags_tracking: "默认跟踪的标签列表。"
@@ -3547,17 +3547,17 @@ zh_CN:
       title: "新登录提醒"
       subject_template: "[%{site_name}] 来自%{location}的新登录"
       text_body_template: |
-        您好，
+        你好，
 
-        我们注意到从您不常用的设备或位置登录。这是您吗？
+        我们注意到从你从不常用的设备或位置登录。这是你吗？
 
          - 位置：%{location} (%{client_ip})
          - 浏览器：%{browser}
          - 设备：%{device} – %{os}
 
-        如果这是您，太好了！您无需执行任何操作。
+        如果这是你，太好了！你无需执行任何操作。
 
-        如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改您的密码。
+        如果不是你，请[审核你的已登录会话](%{base_url}/my/preferences/account)并考虑更改密码。
     post_approved:
       title: "您的帖子已被批准"
       subject_template: "[%{site_name}] 您的帖子已被批准"

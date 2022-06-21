@@ -983,7 +983,7 @@ bs_BA:
       muted_categories: "Utišan"
       muted_categories_instructions: "Nećete biti obavešteni ni o čemu o novim temama u ovim kategorijama, i neće se pojaviti u kategorijama ili najnovijim stranicama."
       muted_categories_instructions_dont_hide: "Nećete biti obaviješteni o novim temama u ovim kategorijama."
-      regular_categories: "Redovne"
+      regular_categories: "Normalno"
       no_category_access: "Kao moderator imate ograničen pristup kategoriji, sačuvati je isključeno."
       delete_account: "Izbriši moj račun"
       delete_account_confirm: "Da li ste sigurni da želite zauvijek izbrisati vas račun? Ova radnja je kasnije nepovratna!"
@@ -2883,7 +2883,6 @@ bs_BA:
         edit: "%{shortcut} Izmjeni post"
         delete: "%{shortcut} Obriši post"
         mark_muted: "%{shortcut} Mutiraj temu"
-        mark_regular: "%{shortcut} Regularna tema"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Motri temu"
         print: "%{shortcut} Odštampaj temu"
@@ -3068,6 +3067,12 @@ bs_BA:
       sections:
         messages:
           header_link_text: "Poruke"
+          links:
+            inbox: "Inbox"
+            sent: "Poslano"
+            new: "Novo"
+            unread: "Nepročitano"
+            archive: "Arhiva"
         tags:
           header_link_title: "sve oznake"
           header_link_text: "Oznake"

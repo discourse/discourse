@@ -1013,7 +1013,7 @@ lv:
       muted_categories: "Klusināts"
       muted_categories_instructions: "Jūs netiksiet informēts par jaunām tēmām šajās kategorijās, un tās netiks rādītas kategorijās vai jaunākajās lapās."
       muted_categories_instructions_dont_hide: "Jūs netiksit informēts par jaunām tēmām šajās kategorijās."
-      regular_categories: "Regulārs"
+      regular_categories: "Normāls"
       regular_categories_instructions: "Šīs kategorijas redzēsit tēmu sarakstos “Jaunākie” un “Populārākie”."
       no_category_access: "Kā moderatoram jums ir ierobežota kategoriju piekļuve, saglabāšana ir atspējota."
       delete_account: "Izdzēst manu profilu"
@@ -2691,7 +2691,6 @@ lv:
         edit: "%{shortcut} Rediģēt ierakstu"
         delete: "%{shortcut} Dzēst ierakstu"
         mark_muted: "%{shortcut} Klusināt ierakstu"
-        mark_regular: "%{shortcut} Parasta tēma"
         mark_tracking: "%{shortcut} Sekot tēmai"
         mark_watching: "%{shortcut} Novērot tēmu"
         print: "%{shortcut} Drukāt tēmu"
@@ -2760,7 +2759,7 @@ lv:
         tracking:
           title: "Sekošana"
         regular:
-          title: "Regulārs"
+          title: "Normāls"
           description: "Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs uz jūsu ierakstu."
         muted:
           title: "Klusināts"
@@ -2807,6 +2806,12 @@ lv:
       sections:
         messages:
           header_link_text: "Ziņas"
+          links:
+            inbox: "Iesūtne"
+            sent: "Nosūtne"
+            new: "Jaunie"
+            unread: "Nelasīts"
+            archive: "Arhīvs"
         tags:
           header_link_title: "visi tagi"
           header_link_text: "Birkas"

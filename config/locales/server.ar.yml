@@ -2238,7 +2238,7 @@ ar:
     default_categories_tracking: "قائمة الفئات التي يتم تتبُّعها بشكلٍ افتراضي"
     default_categories_muted: "قائمة الفئات التي يتم كتم صوتها بشكلٍ افتراضي"
     default_categories_watching_first_post: "قائمة الفئات التي سيتم فيها مراقبة أول منشور في كل موضوع جديد بشكلٍ افتراضي."
-    default_categories_regular: "قائمة الفئات التي لا يتم كتمها بشكلٍ افتراضي. يكون هذا الإعداد مفيدًا عند تفعيل إعداد الموقع `mute_all_categories_by_default`."
+    default_categories_normal: "قائمة الفئات التي لا يتم كتمها بشكلٍ افتراضي. يكون هذا الإعداد مفيدًا عند تفعيل إعداد الموقع `mute_all_categories_by_default`."
     mute_all_categories_by_default: "ضبط مستوى الإشعارات الافتراضي لجميع الفئات على الكتم. يتطلب من المستخدمين الاشتراك في الفئات لتظهر في صفحات \"الأحدث\" و\"الفئات\". إذا كنت ترغب في تعديل الإعدادات الافتراضية للمستخدمين المجهولين، فاضبط إعدادات `default_categories_`."
     default_tags_watching: "قائمة الوسوم التي تتم مراقبتها بشكلٍ افتراضي"
     default_tags_tracking: "قائمة الوسوم التي يتم تتبُّعها بشكلٍ افتراضي"
@@ -3750,7 +3750,6 @@ ar:
     suspicious_login:
       title: "تنبيه بعملية تسجيل دخول جديدة"
       subject_template: "[%{site_name}] عملية تسجيل دخول جديدة من %{location}"
-      text_body_template: "مرحبًا،\n\nلاحظنا عملية تسجيل دخول من جهاز أو موقع لا تستخدمه عادةً. هل كان هذا أنت؟\n\n - الموقع: %{location} (%{client_ip}) \n - المتصفح: %{browser}\n - الجهاز: %{device} - %{os}\n\nإذا كان هذا أنت، رائع! لا يوجد شيء آخر عليك القيام به.\n\nإذا لم يكن هذا أنت، يُرجى [مراجعة جلساتك الحالية](%{base_url}/my/preferences/account) والنظر في تغيير كلمة مرورك.\n"
     post_approved:
       title: "تمت الموافقة على منشورك"
       subject_template: "[%{site_name}] تمت الموافقة على منشورك"

@@ -1090,7 +1090,7 @@ lt:
       muted_categories: "Nutildytos"
       muted_categories_instructions: "Jums nebus pranešta nieko apie naujas šių kategorijų temas ir jos nebus rodomos kategorijose ar naujausiuose puslapiuose."
       muted_categories_instructions_dont_hide: "Jums nieko nebus pranešta apie naujas temas šiose kategorijose."
-      regular_categories: "Nuolatinės"
+      regular_categories: "Įprastas"
       regular_categories_instructions: "Šias kategorijas matysite temų sąrašuose „Naujausios“ ir „Populiariausios“."
       no_category_access: "Kaip moderatorius turite ribotą prieigą prie kategorijos, išsaugojimas išjungtas."
       delete_account: "Ištrinti mano vartotoją"
@@ -3273,7 +3273,6 @@ lt:
         edit: "%{shortcut} Redaguoti pranešimą"
         delete: "%{shortcut} Ištrinti pranešimą"
         mark_muted: "%{shortcut} Nutildyti pranešimą"
-        mark_regular: "%{shortcut} Nuolatinės (default) temos"
         mark_tracking: "%{shortcut} Sekti temą"
         mark_watching: "%{shortcut} Stebėti temą"
         print: "%{shortcut} Spausdinti temą"
@@ -3384,7 +3383,7 @@ lt:
           title: "Seku"
           description: "Su šia žyma automatiškai stebėsite visas temas. Šalia temos bus rodomas neskaitytų ir naujų įrašų skaičius."
         regular:
-          title: "Nuolatinės"
+          title: "Įprastas"
           description: "Būsite informuoti, jei kas nors paminės jūsų @vardą ar atsakys į jūsų įrašą."
         muted:
           title: "Nutildyta"
@@ -3486,6 +3485,12 @@ lt:
       sections:
         messages:
           header_link_text: "Žinutės"
+          links:
+            inbox: "Pranešimų dežutė"
+            sent: "Išsiųsti"
+            new: "Naujos"
+            unread: "Neperskaitytos"
+            archive: "Archyvuoti"
         tags:
           header_link_title: "visos žymos"
           header_link_text: "Žymos"

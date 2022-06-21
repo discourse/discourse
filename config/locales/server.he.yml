@@ -1521,6 +1521,8 @@ he:
     download_remote_images_to_local: "המרת תמונות מרוחקות (בקישור חם) למקומיות על ידי הורדתן. פעולה זו משמרת את התוכן אפילו אם התמונות נמחקות מהאתר המרוחק בעתיד."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
     disabled_image_download_domains: "תמונות מרחוק לעולם לא יורדו ממתחמים (domains) אלו. "
+    block_hotlinked_media: "למנוע ממשתמשים לקשר למדיה בפוסטים שלהם. מדיה מאתר חיצוני שלא נמשכה דרך ‚download_remote_images_to_local’ (הורדת תמונות חיצוניות לאחסון מקומי) תוחלף בקישור ממלא מקום."
+    block_hotlinked_media_exceptions: "רשימת כתובות בסיס שמוחרגות מהגדרת block_hotlinked_media (חסימת קישור חם למדיה). כולל הפרוטוקול (למשל: https://example.com)."
     editing_grace_period: "למשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסה חדשה בהיסטוריית הפוסט."
     editing_grace_period_max_diff: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 0 ו־1)"
     editing_grace_period_max_diff_high_trust: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 2 ומעלה)"
@@ -1562,6 +1564,7 @@ he:
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
     apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
+    twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2143,7 +2146,7 @@ he:
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
-    default_categories_regular: "רשימת הקטגוריות שאינן מושתקות כבררת מחדל. שימושי כאשר הגדרת האתר `mute_all_categories_by_default` (השתקת כל הקטגוריות כבררת מחדל) מופעלת."
+    default_categories_normal: "רשימת הקטגוריות שאינן מושתקות כבררת מחדל. שימושי כאשר הגדרת האתר `mute_all_categories_by_default` (השתקת כל הקטגוריות כבררת מחדל) מופעלת."
     mute_all_categories_by_default: "הגדרת כל רמות ההתראות כבררת מחדל בכל הקטגוריות למושתק. לדרוש ממשתמשים לבחור באופן יזום קטגוריות שיופיעו תחת ‚אחרונים’ ו־‚קטגוריות’. אם ברצונך להוסיף את בררות המחדל למשתמשים אלמוניים עליך להגדיר את ‚default_categories_‎’."
     default_tags_watching: "רשימת תגיות שבצפייה כבררת מחדל."
     default_tags_tracking: "רשימת תגיות שבמעקב כבררת מחדל"
@@ -3744,18 +3747,6 @@ he:
     suspicious_login:
       title: "התראת כניסה חדשה"
       subject_template: "[%{site_name}] כניסה חדשה מ%{location}"
-      text_body_template: |
-        שלום,
-
-        שמנו לב שנכנסת ממכשיר או ממיקום שאינו אופייני לך. זאת הייתה פעילות שלך?
-
-         - מיקום: %{location} (%{client_ip})
-         - דפדפן: %{browser}
-         - מכשיר: %{device} – %{os}
-
-        אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
-
-        אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הסיסמה שלך.
     post_approved:
       title: "הפוסט שלך אושר"
       subject_template: "[%{site_name}] הפוסט שלך אושר"

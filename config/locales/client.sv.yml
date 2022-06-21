@@ -1128,7 +1128,7 @@ sv:
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att aviseras om någonting gällande nya ämnen i dessa kategorier, och de kommer inte dyka upp på kategorier eller senaste sidorna."
       muted_categories_instructions_dont_hide: "Du kommer inte att aviseras om någonting gällande nya ämnen i dessa kategorier."
-      regular_categories: "Regelbundna"
+      regular_categories: "Normal"
       regular_categories_instructions: "Du kommer att se dessa kategorier i ämneslistorna “Senaste” och “Topp”."
       no_category_access: "Som moderator har du begränsat tillträde till kategorier, spara är avstängt."
       delete_account: "Radera mitt konto"
@@ -3474,7 +3474,6 @@ sv:
         edit: "%{shortcut} Redigera inlägg"
         delete: "%{shortcut} Radera inlägg"
         mark_muted: "%{shortcut} Tysta ämne"
-        mark_regular: "%{shortcut} Vanligt (standard) ämne"
         mark_tracking: "%{shortcut} Följ ämne"
         mark_watching: "%{shortcut} Bevaka ämne"
         print: "%{shortcut} Skriv ut ämne"
@@ -3614,7 +3613,7 @@ sv:
           title: "Följer"
           description: "Du kommer automatiskt följa alla ämnen med den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnet."
         regular:
-          title: "Vanlig"
+          title: "Normal"
           description: "Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
@@ -3720,7 +3719,15 @@ sv:
       new_count: "%{count} ny"
       sections:
         messages:
+          header_link_title: "personliga meddelanden"
           header_link_text: "Meddelanden"
+          header_action_title: "skapa ett personligt meddelande"
+          links:
+            inbox: "Inkorg"
+            sent: "Skickat"
+            new: "Nya"
+            unread: "Olästa"
+            archive: "Arkiv"
         tags:
           no_tracked_tags: "Du följer inga taggar."
           header_link_title: "alla taggar"

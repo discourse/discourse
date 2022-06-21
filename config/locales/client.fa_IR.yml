@@ -1054,7 +1054,7 @@ fa_IR:
       muted_categories: "خاموش"
       muted_categories_instructions: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید و آن ها در دسته بندی ها و یا صفحه تازه ها نمایش داده نخواهند شد."
       muted_categories_instructions_dont_hide: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید."
-      regular_categories: "عادی"
+      regular_categories: "معمولی"
       no_category_access: "به عنوان یک مدیر دسترسی محدودی به این دسته بندی دارید، ذخیره سازی غیر فعال است."
       delete_account: "حساب‌کاربری من را پاک کن"
       delete_account_confirm: "آیا مطمئنید که می‌خواهید شناسه‌تان را برای همیشه پاک کنید؟ برگشتی در کار نیست!"
@@ -3033,7 +3033,6 @@ fa_IR:
         edit: "%{shortcut} ویرایش نوشته"
         delete: "%{shortcut} حذف نوشته"
         mark_muted: "%{shortcut} بی‌صدا کردن موضوع"
-        mark_regular: "%{shortcut} موضوع معمولی (پیشفرض)"
         mark_tracking: "%{shortcut} پیگیری موضوع"
         mark_watching: "%{shortcut} نمایش موضوع"
         print: "%{shortcut} چاپ موضوع"
@@ -3125,7 +3124,7 @@ fa_IR:
         tracking:
           title: "پیگیری"
         regular:
-          title: "عادی"
+          title: "معمولی"
           description: "اگر کسی به صورت @نام به شما اشاره کند، به شما اطلاع داده خواهد شد."
         muted:
           title: "خاموش"
@@ -3191,6 +3190,12 @@ fa_IR:
           header_link_title: "پیام‌های شخصی"
           header_link_text: "پیام‌ها"
           header_action_title: "ایجاد پیام شخصی"
+          links:
+            inbox: "صندوق دریافت"
+            sent: "ارسال شد"
+            new: "جدید"
+            unread: "خوانده‌ نشده‌"
+            archive: "بایگانی"
         tags:
           no_tracked_tags: "شما هیچ برچسبی را ردیابی نمی‌کنید."
           header_link_title: "تمام برچسب‌ها"

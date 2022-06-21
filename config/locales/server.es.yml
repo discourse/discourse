@@ -2062,7 +2062,7 @@ es:
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Lista de categorías en las que la primera publicación de cada tema nuevo se vigilará por defecto."
-    default_categories_regular: "Lista de categorías que no están silenciadas por defecto. Útil cuando el ajuste «mute_all_categories_by_default» está activado."
+    default_categories_normal: "Lista de categorías que no están silenciadas por defecto. Útil cuando el ajuste «mute_all_categories_by_default» está activado."
     mute_all_categories_by_default: "Establezca el nivel de notificación predeterminado de todas las categorías en silenciado. Solicite a los usuarios que opten por las categorías para que aparezcan en las páginas de 'latest' y 'categories'. Si desea modificar los valores predeterminados para usuarios anónimos, establezca la configuración en 'default_categories_'."
     default_tags_watching: "Lista de etiquetas vigiladas por defecto."
     default_tags_tracking: "Lista de etiquetas seguidas por defecto."
@@ -3626,18 +3626,6 @@ es:
     suspicious_login:
       title: "Alerta de nuevo inicio de sesión"
       subject_template: "[%{site_name}] Alerta de nuevo inicio de sesión desde %{location}"
-      text_body_template: |
-        Hola:
-
-        Hemos detectado un inicio de sesión de un dispositivo o ubicación que normalmente no usas. ¿Has sido tú?
-
-        - Ubicación: %{location} (%{client_ip})
-        - Navegador: %{browser}
-        - Dispositivo: %{device}– %{os}
-
-        Si has sido tú, ¡genial! No tienes que hacer más nada.
-
-        Si no has sido tú, [revisa tus sesiones activas](%{base_url}/my/preferences/account) y considera cambiar tu contraseña.
     post_approved:
       title: "Tu publicación ha sido aprobada"
       subject_template: "[%{site_name}] Tu publicación ha sido aprobada"

@@ -907,7 +907,7 @@ cs:
       watched_first_post_tags_instructions: "Budete informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
       muted_categories: "Ztišené"
       muted_categories_instructions: "Nebudete upozorněni na nic o nových tématech v těchto kategoriích ty se neobjeví v přehledu kategorií či v aktuálních,"
-      regular_categories: "Běžný"
+      regular_categories: "Normální"
       no_category_access: "Jako moderátor máte omezený přístup ke kategorii bez možnosti ukládat změny."
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
@@ -2674,7 +2674,6 @@ cs:
         edit: "%{shortcut} Upravit příspěvek"
         delete: "%{shortcut} Smazat příspěvek"
         mark_muted: "%{shortcut} Ztišit téma"
-        mark_regular: "%{shortcut}Obvyklé (výchozí) téma"
         mark_tracking: "%{shortcut} Sledovat téma"
         mark_watching: "%{shortcut} Hlídat téma"
         print: "%{shortcut} Vytiskni téma"
@@ -2761,7 +2760,7 @@ cs:
           title: "Sledování"
           description: "Budete automaticky sledovat všechna témata s tímto tagem. Počet nepřečtených a nových příspěvků bude vidět vedle tématu."
         regular:
-          title: "Běžný"
+          title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišené"
@@ -2818,6 +2817,12 @@ cs:
       sections:
         messages:
           header_link_text: "Zprávy"
+          links:
+            inbox: "Přijaté zprávy"
+            sent: "Odeslané"
+            new: "Nová"
+            unread: "Nepřečtená"
+            archive: "Archív"
         tags:
           header_link_title: "všechny štítky"
           header_link_text: "Tagy"

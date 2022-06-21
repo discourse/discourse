@@ -1917,7 +1917,7 @@ gl:
     default_categories_tracking: "Listase de categorías que se seguen por defecto."
     default_categories_muted: "Listaxe de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Listaxe de categorías en que se verá por defecto a primeira publicación de cada novo tema."
-    default_categories_regular: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
+    default_categories_normal: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
     mute_all_categories_by_default: "Estableza o nivel de notificación predeterminado de todas as categorías como silenciado. Requírelles aos usuarios que opten por categorías para que aparezan nas páxinas «últimas» e «categorías». Se desexa modificar os valores predeterminados para usuarios anónimos, configure os axustes «default_categories_»."
     default_tags_watching: "Listaxe de etiquetas que se vixían por defecto."
     default_tags_tracking: "Listaxe de etiquetas seguidas por defecto."
@@ -3334,18 +3334,6 @@ gl:
     suspicious_login:
       title: "Alerta de novo inicio de sesión"
       subject_template: "[%{site_name}] Novo inicio de sesión desde %{location}"
-      text_body_template: |
-        Ola,
-
-        Detectamos un inicio de sesión desde un dispositivo ou localización que non adoita utilizar. Foi vostede?
-
-         - Localización: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} – %{os}
-
-        Se foi vostede, perfecto! Non ten que facer máis nada.
-
-        Se non o foi, [revise a súa sesión actual](%{base_url}/my/preferences/account) e valore cambiar o de contrasinal.
     post_approved:
       title: "A súa publicación foi aprobada"
   page_forbidden:

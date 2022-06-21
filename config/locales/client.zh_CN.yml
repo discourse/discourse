@@ -3317,7 +3317,7 @@ zh_CN:
         edit: "%{shortcut} 编辑帖子"
         delete: "%{shortcut} 删除帖子"
         mark_muted: "%{shortcut} 将话题设为免打扰"
-        mark_regular: "%{shortcut} 常规（默认）话题"
+        mark_regular: "%{shortcut} 常规(默认)话题"
         mark_tracking: "%{shortcut} 跟踪话题"
         mark_watching: "%{shortcut} 关注话题"
         print: "%{shortcut} 打印话题"
@@ -3553,6 +3553,12 @@ zh_CN:
           header_link_title: "个人消息"
           header_link_text: "消息"
           header_action_title: "创建个人消息"
+          links:
+            inbox: "收件箱"
+            sent: "已发送"
+            new: "新"
+            unread: "未读"
+            archive: "归档"
         tags:
           no_tracked_tags: "你没有跟踪任何标签。"
           header_link_title: "所有标签"

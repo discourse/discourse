@@ -792,7 +792,7 @@ th:
       watched_first_post_categories: "กำลังดูโพสต์แรก"
       watched_first_post_tags: "กำลังดูโพสต์แรก"
       muted_categories: "ปิดเสียง"
-      regular_categories: "ทั่วไป"
+      regular_categories: "ปกติ"
       delete_account: "ลบบัญชีของฉัน"
       delete_account_confirm: "คุณแน่ใจไหมที่จะลบบัญชีอย่างถาวร การดำเนินการนี้ไม่สามารถยกเลิกได้"
       deleted_yourself: "บัญชีของคุณถูกลบเรียบร้อยแล้ว"
@@ -2323,7 +2323,6 @@ th:
         edit: "%{shortcut} แก้ไขโพสต์"
         delete: "%{shortcut} ลบโพสต์"
         mark_muted: "%{shortcut} ปิดการแจ้งเตือนกระทู้"
-        mark_regular: "%{shortcut} หัวข้อ ทั่วไป (มาตราฐาน)"
         mark_tracking: "%{shortcut} ติดตามกระทู้"
         mark_watching: "%{shortcut} ดูกระทู้"
         print: "%{shortcut}พิมพ์กระทู้"
@@ -2392,7 +2391,7 @@ th:
         tracking:
           title: "กำลังติดตาม"
         regular:
-          title: "ทั่วไป"
+          title: "ปกติ"
         muted:
           title: "ปิด"
       groups:
@@ -2430,6 +2429,12 @@ th:
       sections:
         messages:
           header_link_text: "ข้อความ"
+          links:
+            inbox: "กล่องข้อความ"
+            sent: "ส่ง"
+            new: "ใหม่"
+            unread: "ยังไม่อ่าน"
+            archive: "คลัง"
         tags:
           header_link_title: "แท็กทั้งหมด"
           header_link_text: "ป้าย"

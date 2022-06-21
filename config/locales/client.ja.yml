@@ -1047,7 +1047,7 @@ ja:
       muted_categories: "ミュート"
       muted_categories_instructions: "これらのカテゴリの新しいトピックに関する通知はユーザーに送信されません。また、カテゴリや最新のページにも表示されません。"
       muted_categories_instructions_dont_hide: "これらのカテゴリの新しいトピックに関する通知は送信されません。"
-      regular_categories: "レギュラー"
+      regular_categories: "通常"
       regular_categories_instructions: "これらのカテゴリは「最新」と「人気」のトピックリストに表示されます。"
       no_category_access: "カテゴリへのアクセスはモデレーターとして制限されているため、保存できません。"
       delete_account: "アカウントを削除"
@@ -3192,7 +3192,6 @@ ja:
         edit: "%{shortcut} 投稿を編集"
         delete: "%{shortcut} 投稿を削除"
         mark_muted: "%{shortcut} トピックをミュート"
-        mark_regular: "%{shortcut} レギュラー (デフォルト) トピック"
         mark_tracking: "%{shortcut} トピックを追跡"
         mark_watching: "%{shortcut} トピックをウォッチ"
         print: "%{shortcut} トピックを印刷"
@@ -3399,6 +3398,12 @@ ja:
       sections:
         messages:
           header_link_text: "メッセージ"
+          links:
+            inbox: "受信トレイ"
+            sent: "送信済み"
+            new: "新規"
+            unread: "未読"
+            archive: "アーカイブ"
         tags:
           header_link_title: "すべてのタグ"
           header_link_text: "タグ"

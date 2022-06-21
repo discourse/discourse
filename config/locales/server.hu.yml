@@ -1704,19 +1704,6 @@ hu:
         %{base_url}/u/activate-account/%{email_token}
 
         Ha a fenti link valamiért nem működne, másold ki és illeszd be a böngésződ címsorába!
-    suspicious_login:
-      text_body_template: |
-        Szia!
-
-        Észrevettünk egy bejelentkezést egy olyan eszközről vagy helyről, amelyet általában te nem használsz. Te voltál az?
-
-         - Hely: %{location} (%{client_ip})
-         - Böngésző: %{browser}
-         - Eszköz: %{device} - %{os}
-
-        Ha te voltál, nagyszerű! Nincsen további teendőd.
-
-        Ha nem te voltál, kérlek [nézd át a meglévő munkameneteidet](%{base_url}/my/preferences/account), és változtasd meg a jelszavad!
     post_approved:
       title: "A bejegyzésedet jóváhagytuk"
   page_forbidden:

@@ -1110,7 +1110,7 @@ tr_TR:
       muted_categories: "Sessiz"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız ve son soyfalarda görmeyeceksiniz."
       muted_categories_instructions_dont_hide: "Bu kategorilerdeki yeni konular hakkında hiçbir şey size bildirilmeyecek."
-      regular_categories: "Düzenli"
+      regular_categories: "Normal"
       regular_categories_instructions: "Bu kategorileri \"En son\" ve \"Popüler\" konu listelerinde göreceksiniz."
       no_category_access: "Bir moderatör olarak kategori erişimin sınırlı ve kaydetme devre dışıdır."
       delete_account: "Hesabımı Sil"
@@ -3429,7 +3429,7 @@ tr_TR:
         edit: "%{shortcut} Gönderiyi düzenle"
         delete: "%{shortcut} Gönderiyi sil"
         mark_muted: "%{shortcut} Konuyu sessize al"
-        mark_regular: "%{shortcut} Öntanımlı (varsayılan) konu"
+        mark_regular: "%{shortcut} Normal (varsayılan) konu"
         mark_tracking: "%{shortcut} Konuyu takip et"
         mark_watching: "%{shortcut} Konuyu izle"
         print: "%{shortcut} Konuyu yazdır"
@@ -3562,7 +3562,7 @@ tr_TR:
           title: "Takip ediliyor"
           description: "Bu etiketi içeren tüm konuları otomatik olarak takip edeceksiniz. Konunun yanında okunmamış ve yeni yayınların sayısı görünecek."
         regular:
-          title: "Düzenli"
+          title: "Normal"
           description: "Birisi @adınızdan bahsederse veya gönderinizi yanıtlarsa bildirim alacaksınız."
         muted:
           title: "Sessiz"
@@ -3663,7 +3663,15 @@ tr_TR:
       new_count: "%{count} yeni"
       sections:
         messages:
+          header_link_title: "kişisel mesajlar"
           header_link_text: "İletiler"
+          header_action_title: "kişisel bir mesaj oluştur"
+          links:
+            inbox: "Gelen Kutusu"
+            sent: "Gönderilen"
+            new: "Yeni"
+            unread: "Okunmamış"
+            archive: "Arşiv"
         tags:
           no_tracked_tags: "Herhangi bir etiketi takip etmiyorsunuz."
           header_link_title: "tüm etiketler"

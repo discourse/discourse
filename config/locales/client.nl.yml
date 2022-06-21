@@ -3282,7 +3282,6 @@ nl:
         edit: "%{shortcut} Bericht bewerken"
         delete: "%{shortcut} Bericht verwijderen"
         mark_muted: "%{shortcut} Topic negeren"
-        mark_regular: "%{shortcut} Normaal (standaard) topic"
         mark_tracking: "%{shortcut} Topic volgen"
         mark_watching: "%{shortcut} Topic in de gaten houden"
         print: "%{shortcut} Topic afdrukken"
@@ -3492,6 +3491,12 @@ nl:
       sections:
         messages:
           header_link_text: "Berichten"
+          links:
+            inbox: "Inbox"
+            sent: "Verzonden"
+            new: "Nieuw"
+            unread: "Ongelezen"
+            archive: "Archief"
         tags:
           header_link_title: "alle tags"
           header_link_text: "Tags"

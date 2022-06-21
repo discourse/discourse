@@ -1182,7 +1182,7 @@ vi:
     default_categories_watching: "Hiển thị danh sách chuyên mục đang xem theo mặc định."
     default_categories_tracking: "Hiển thị danh sách chuyên mục đang theo dõi theo mặc định."
     default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
-    default_categories_regular: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
+    default_categories_normal: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
@@ -1748,6 +1748,7 @@ vi:
       subject_template: "[%{site_name}] Đăng nhập mới từ %{location}"
     post_approved:
       title: "Bài đăng của bạn đã được phê duyệt"
+      subject_template: "[%{site_name}] Bài đăng của bạn đã được phê duyệt"
   page_not_found:
     page_title: "Không Tìm Thấy Trang"
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
@@ -2047,6 +2048,7 @@ vi:
       high: "Cao"
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
     reasons:
+      post_count: "Một vài bài viết đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
       agree_and_keep:
@@ -2084,8 +2086,12 @@ vi:
           description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
       reject:
         title: "Từ chối"
+      reject_and_delete:
+        title: "Từ chối và xóa bài đăng"
       reject_and_keep_deleted:
         title: "Giữ bài đăng bị xóa"
+      approve_and_restore:
+        title: "Phê duyệt và khôi phục bài đăng"
   old_keys_reminder:
     body: |
       Xin chào! Đây là lời nhắc bảo mật hàng năm thường xuyên từ phiên bản Discourse của bạn.

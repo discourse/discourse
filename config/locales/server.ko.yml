@@ -1960,7 +1960,7 @@ ko:
     default_categories_tracking: "기본적으로 추적되는 카테고리 목록."
     default_categories_muted: "기본적으로 음소거 된 카테고리 목록."
     default_categories_watching_first_post: "각 새 주제의 첫 번째 게시물이 기본적으로 감시되는 카테고리 목록입니다."
-    default_categories_regular: "기본적으로 뮤트 되지 않은 카테고리 목록입니다. 'mute_all_categories_by_default' 사이트 설정이 활성화된 경우 유용합니다."
+    default_categories_normal: "기본적으로 뮤트 되지 않은 카테고리 목록입니다. 'mute_all_categories_by_default' 사이트 설정이 활성화된 경우 유용합니다."
     mute_all_categories_by_default: "모든 카테고리의 기본 알림 레벨을 음소거로 설정하십시오. 사용자가 &#39;최신&#39;및 &#39;카테고리&#39;페이지에 표시되도록 카테고리를 선택해야합니다. 익명 사용자의 기본값을 수정하려면 &#39;default_categories_&#39;설정을 설정하십시오."
     default_tags_watching: "기본적으로 볼 수있는 태그 목록입니다."
     default_tags_tracking: "기본적으로 추적되는 태그 목록입니다."
@@ -3429,18 +3429,6 @@ ko:
     suspicious_login:
       title: "새로운 로그인 알림"
       subject_template: "[%{site_name}] %{location}에서 새 로그인"
-      text_body_template: |
-        안녕하세요,
-
-        사용자님이 평소에 사용하지 않는 장치 또는 위치에서 로그인 한 것을 감지했습니다.
-
-         - 위치: %{location} (%{client_ip})
-         - 브라우저: %{browser}
-         - 기기: %{device} – %{os}
-
-        이것이 사용자님이 로그인 한 것이라면 다른 조치를 취하실 필요가 없습니다.
-
-        만약 사용자님이 아니라면 [기존 세션을 검토](%{base_url}/my/preferences/account)하고 비밀번호 변경을 고려하십시오.
     post_approved:
       title: "사용자님의 게시물이 승인되었습니다."
       subject_template: "[%{site_name}] 사용자님의 게시물이 승인되었습니다."

@@ -1090,7 +1090,7 @@ da:
       muted_categories: "Stille!"
       muted_categories_instructions: "Du vil ikke blive underrettet om noget vedr. nye emner i disse kategorier, og de vises ikke på siderne \"kategori\" eller \"seneste\"."
       muted_categories_instructions_dont_hide: "Du vil ikke blive underrettet om noget vedr. nye emner i disse kategorier."
-      regular_categories: "Almindelig"
+      regular_categories: "Normal"
       regular_categories_instructions: "Du vil se disse kategorier i “seneste” og “Top” emnelister."
       no_category_access: "Som moderator har du begrænset kategori-adgang, at gemme er slået fra. "
       delete_account: "Slet min konto"
@@ -3329,7 +3329,6 @@ da:
         edit: "%{shortcut} Redigér indlæg"
         delete: "%{shortcut} Slet indlæg"
         mark_muted: "%{shortcut} Gøre emne Stille!"
-        mark_regular: "%{shortcut} Almindeligt (standard) emne"
         mark_tracking: "%{shortcut} Følg emne"
         mark_watching: "%{shortcut} Hold øje med emne"
         print: "%{shortcut} Print emne"
@@ -3456,7 +3455,7 @@ da:
           title: "Følger"
           description: "Du sporer automatisk alle emner med dette mærke. Et antal for ulæste og nye indlæg vises ved siden af emnet."
         regular:
-          title: "Almindeligt"
+          title: "Normal"
           description: "Du får besked, hvis nogen nævner dit @navn eller svarer på dit indlæg."
         muted:
           title: "Lydløs"
@@ -3558,6 +3557,12 @@ da:
       sections:
         messages:
           header_link_text: "Beskeder"
+          links:
+            inbox: "Indbakke"
+            sent: "Sendt"
+            new: "Nye"
+            unread: "Ulæste"
+            archive: "Arkiv"
         tags:
           header_link_title: "alle mærker"
           header_link_text: "Tags"

@@ -2050,7 +2050,7 @@ it:
     default_categories_tracking: "Elenco di categorie seguite di default."
     default_categories_muted: "Elenco di categorie silenziate per default."
     default_categories_watching_first_post: "Elenco di categorie in cui il primo messaggio di ogni nuovo argomento verrà osservato per impostazione predefinita."
-    default_categories_regular: "Elenco di categorie non silenziate per impostazione predefinita. Utile quando l'impostazione del sito `mute_all_categories_by_default` è abilitata."
+    default_categories_normal: "Elenco di categorie non silenziate per impostazione predefinita. Utile quando l'impostazione del sito `mute_all_categories_by_default` è abilitata."
     mute_all_categories_by_default: "Per impostazione predefinita, il livello di notifica di tutte le categorie è disattivato. Richiede che gli utenti attivino le categorie per farle apparire nelle pagine \"Recenti\" e \"Categorie\". Per modificare le impostazioni predefinite per gli utenti anonimi, occorre definire le impostazioni 'default_categories_'."
     default_tags_watching: "Elenco di etichette osservate per impostazione predefinita."
     default_tags_tracking: "Elenco di etichette seguite per impostazione predefinita."
@@ -3444,7 +3444,6 @@ it:
     suspicious_login:
       title: "Nuovo avviso di accesso"
       subject_template: "[%{site_name}] Nuovo accesso da %{location}"
-      text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. \n\nSe non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti](%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
     post_approved:
       title: "Il tuo messaggio è stato approvato"
       subject_template: "[%{site_name}] Il tuo messaggio è stato approvato"
