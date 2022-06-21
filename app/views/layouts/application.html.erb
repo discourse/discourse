@@ -11,11 +11,7 @@
 
     <%- if include_splash_screen? %>
       <link rel="preload" as="image" href="/images/preloader.svg">
-    <%- else %>
-      <%= render partial: "common/discourse_stylesheet" %>
     <%- end %>
-
-    <%= render partial: "common/discourse_stylesheet" %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
