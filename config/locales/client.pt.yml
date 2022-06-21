@@ -3232,7 +3232,6 @@ pt:
         edit: "%{shortcut} Editar publicação"
         delete: "%{shortcut} Eliminar publicação"
         mark_muted: "%{shortcut} Silenciar tópico"
-        mark_regular: "%{shortcut} Tópico Habitual (por defeito)"
         mark_tracking: "%{shortcut} Seguir tópico"
         mark_watching: "%{shortcut} Vigiar tópico"
         print: "%{shortcut} Imprimir tópico"
@@ -3344,7 +3343,7 @@ pt:
         tracking:
           title: "A Seguir"
         regular:
-          title: "Regular"
+          title: "Habitual"
           description: "Será notificado se alguém mencionar o seu @nome ou responder à sua publicação."
         muted:
           title: "Silenciado"
@@ -3424,6 +3423,12 @@ pt:
       sections:
         messages:
           header_link_text: "Mensagens"
+          links:
+            inbox: "Caixa de Entrada"
+            sent: "Enviado"
+            new: "Novo"
+            unread: "Não Lido"
+            archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"

@@ -1705,18 +1705,6 @@ sl:
     suspicious_login:
       title: "Opozorilo nove prijave"
       subject_template: "[%{site_name}] Opozorilo nove prijave iz %{location}"
-      text_body_template: |
-        Pozdravljeni,
-
-        Zaznali smo prijavo iz naprave ali lokacije, ki jo ponavadi ne uporabljate. Ste bili to vi?
-
-         - Lokacija: %{location} (%{client_ip})
-         - Brskalnik: %{browser}
-         - Naprava: %{device} – %{os}
-
-        Če ste bili to vi, ni problema! Ne potrebujete storiti ničesar.
-
-        Če to niste bili vi, potem [preverite nedavno uporabljene naprave](%{base_url}/my/preferences/account) in razmislite o zamenjavi gesla.
     post_approved:
       title: "Vaš prispevek je bil odobren"
   page_not_found:

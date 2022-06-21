@@ -2711,7 +2711,6 @@ hy:
         edit: "%{shortcut} Խմբագրել գրառումը"
         delete: "%{shortcut} Ջնջել գրառումը"
         mark_muted: "%{shortcut} Խլացնել թեման"
-        mark_regular: "%{shortcut} Սովորական (լռելյայն) թեմա"
         mark_tracking: "%{shortcut} Հետևել թեմային"
         mark_watching: "%{shortcut} Դիտել թեման"
         print: "%{shortcut} Տպել թեման"
@@ -2874,6 +2873,12 @@ hy:
       sections:
         messages:
           header_link_text: "Հաղորդագրություններ"
+          links:
+            inbox: "Մուտքի արկղ"
+            sent: "Ուղարկված"
+            new: "Նոր"
+            unread: "Չկարդացած"
+            archive: "Արխիվ"
         tags:
           header_link_title: "բոլոր թեգերը"
           header_link_text: "Թեգեր"

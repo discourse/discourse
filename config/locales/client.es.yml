@@ -1129,7 +1129,7 @@ es:
       muted_categories: "Silenciado"
       muted_categories_instructions: "No se te notificará acerca de ningún tema en estas categorías y no aparecerán en la página de categorías o mensajes recientes."
       muted_categories_instructions_dont_hide: "No se te notificará nada acerca de temas nuevos en estas categorías."
-      regular_categories: "Habitual"
+      regular_categories: "Normal"
       regular_categories_instructions: "Verás estas categorías en las listas de temas «Recientes» y «Destacados»."
       no_category_access: "Como moderador, tienes acceso limitado a categorías. Guardar está desactivado."
       delete_account: "Eliminar mi cuenta"
@@ -3474,7 +3474,6 @@ es:
         edit: "%{shortcut} Editar publicación"
         delete: "%{shortcut} Eliminar publicación"
         mark_muted: "%{shortcut} Silenciar tema"
-        mark_regular: "%{shortcut} Seguimiento normal del tema normal (por defecto)"
         mark_tracking: "%{shortcut} Seguir tema"
         mark_watching: "%{shortcut} Vigilar tema"
         print: "%{shortcut} Imprimir tema"
@@ -3614,7 +3613,7 @@ es:
           title: "Seguir"
           description: "Seguirás automáticamente todos los temas con esta etiqueta. Aparecerá un contador de publicaciones nuevas y sin leer al lado del tema."
         regular:
-          title: "Habitual"
+          title: "Normal"
           description: "Se te notificará si alguien menciona tu @nombre o responde a alguna de tus publicaciones."
         muted:
           title: "Silenciado"
@@ -3721,6 +3720,12 @@ es:
       sections:
         messages:
           header_link_text: "Mensajes"
+          links:
+            inbox: "Bandeja de entrada"
+            sent: "Enviados"
+            new: "Nuevo"
+            unread: "Sin leer"
+            archive: "Archivo"
         tags:
           header_link_title: "todas las etiquetas"
           header_link_text: "Etiquetas"

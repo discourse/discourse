@@ -1066,7 +1066,7 @@ vi:
       muted_categories: "Im lặng"
       muted_categories_instructions: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới trong các danh mục này và chúng sẽ không xuất hiện trên các danh mục hoặc các trang mới nhất."
       muted_categories_instructions_dont_hide: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới trong các danh mục này."
-      regular_categories: "Đều đặn"
+      regular_categories: "Bình thường"
       regular_categories_instructions: "Bạn sẽ thấy các danh mục này trong danh sách chủ đề \"Mới nhất\" và \"Hàng đầu\"."
       no_category_access: "Với tư cách là người kiểm duyệt, bạn có quyền truy cập danh mục hạn chế, tính năng lưu bị tắt."
       delete_account: "Xoá Tài khoản của tôi"
@@ -3246,7 +3246,6 @@ vi:
         edit: "%{shortcut} Sửa bài viết"
         delete: "%{shortcut} Xóa bài viết"
         mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Chủ đề thông thường (mặc định)"
         mark_tracking: "%{shortcut} Theo dõi chủ đề"
         mark_watching: "%{shortcut} theo dõi chủ đề"
         print: "%{shortcut} In chủ đề"
@@ -3370,7 +3369,7 @@ vi:
           title: "Đang theo dõi"
           description: "Bạn sẽ tự động theo dõi tất cả các chủ đề với thẻ này. Một số bài viết chưa đọc và bài viết mới sẽ xuất hiện bên cạnh chủ đề."
         regular:
-          title: "Thường xuyên"
+          title: "Bình thường"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @name của bạn hoặc trả lời bài đăng của bạn."
         muted:
           title: "Im lặng"
@@ -3459,6 +3458,12 @@ vi:
       sections:
         messages:
           header_link_text: "Tin nhắn"
+          links:
+            inbox: "Hộp thư"
+            sent: "Đã gửi"
+            new: "Mới"
+            unread: "Chưa đọc"
+            archive: "Lưu Trữ"
         tags:
           header_link_title: "tất cả thẻ"
           header_link_text: "Thẻ"

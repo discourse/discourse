@@ -2305,18 +2305,6 @@ lt:
     suspicious_login:
       title: "Įspėjimas apie naują prisijungimą"
       subject_template: "[%{site_name}] Naujas prisijungimas iš %{location}"
-      text_body_template: |
-        Sveiki,
-
-        Pastebėjome prisijungimą iš įrenginio ar vietos, kurios paprastai nenaudojate. Ar tai buvai tu?
-
-         - Vieta: %{location} (%{client_ip})
-         - Naršyklė: %{browser}
-         - Įrenginys: %{device} - %{os}
-
-        Jei tai buvote jūs, puiku! Daugiau nieko nereikia daryti.
-
-        Jei tai ne jūs, prašome [peržiūrėti esamas sesijas] (%{base_url}/my/preferences/account) ir apsvarstyti galimybę pakeisti slaptažodį.
     post_approved:
       title: "Jūsų įrašas buvo patvirtintas"
       subject_template: "[%{site_name}] Jūsų įrašas buvo patvirtintas"

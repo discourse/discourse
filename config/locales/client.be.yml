@@ -466,7 +466,6 @@ be:
       muted_tags: "ігнаруемай"
       muted_tags_instructions: "Вы ня будзеце атрымоўваць паведамленні аб новых тэмах па гэтых цэтліках і яны не адлюструюцца ў спісе апошніх тэмаў."
       muted_categories: "ігнаруемай"
-      regular_categories: "звычайны"
       unread_message_count: "Паведамленні"
       admin_delete: "Выдаліць"
       users: "Карыстальнікі"
@@ -1308,8 +1307,6 @@ be:
           title: "Сачыць"
         tracking:
           title: "Сачыць"
-        regular:
-          title: "звычайны"
         muted:
           title: "ігнараваць"
       groups:
@@ -1343,6 +1340,12 @@ be:
       sections:
         messages:
           header_link_text: "Паведамленні"
+          links:
+            inbox: "ўваходныя"
+            sent: "адпраўлена"
+            new: "Новая"
+            unread: "Непрачытаныя"
+            archive: "архіў"
         tags:
           header_link_text: "тэгі"
         categories:

@@ -2005,18 +2005,6 @@ be:
     suspicious_login:
       title: "Новы Лагін абвесткі"
       subject_template: "[%{site_name}] New Login from %{location}"
-      text_body_template: |
-        Hello,
-
-        We noticed a login from a device or location you don’t usually use. Was this you?
-
-         - Location: %{location} (%{client_ip})
-         - Browser: %{browser}
-         - Device: %{device} – %{os}
-
-        If this was you, great! There’s nothing else you need to do.
-
-        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
   page_not_found:
     title: "На жаль! Гэтая старонка не існуе або з'яўляецца прыватнай уласнасцю."
     popular_topics: "папулярны"

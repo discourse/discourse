@@ -1243,7 +1243,7 @@ he:
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר שנוגע לנושאים בקטגוריות האלו."
-      regular_categories: "רגילות"
+      regular_categories: "רגיל"
       regular_categories_instructions: "הקטגוריות האלו תופענה תחת רשימות הנושאים „אחרונים” ו־„מובילים”."
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מושבתת."
       delete_account: "מחיקת החשבון שלי"
@@ -3783,7 +3783,7 @@ he:
         edit: "%{shortcut} עריכת פוסט"
         delete: "%{shortcut} מחיקת פוסט"
         mark_muted: "%{shortcut} השתקת נושא"
-        mark_regular: "%{shortcut} נושא רגיל"
+        mark_regular: "%{shortcut} נושא רגיל (ברירת מחדל)"
         mark_tracking: "%{shortcut} עקבו אחר נושא"
         mark_watching: "%{shortcut} הצגת הנושא"
         print: "%{shortcut} הדפסת נושא"
@@ -4055,12 +4055,21 @@ he:
       new_count: "חדש (%{count})"
       sections:
         messages:
+          header_link_title: "הודעות פרטיות"
           header_link_text: "הודעות"
+          header_action_title: "יצירת הודעה פרטית"
+          links:
+            inbox: "דואר נכנס"
+            sent: "נשלח"
+            new: "חדש"
+            unread: "לא-נקראו"
+            archive: "ארכיון"
         tags:
           no_tracked_tags: "אין לך אף תגית במעקב."
           header_link_title: "כל התגיות"
           header_link_text: "תגיות"
         categories:
+          no_tracked_categories: "אין לך אף קטגוריה במעקב."
           header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
         topics:

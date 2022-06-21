@@ -1126,7 +1126,7 @@ hu:
       muted_categories: "Némított"
       muted_categories_instructions: "Semmilyen értesítést nem fog kapni a kategória témaköreiről, és a kategóriák vagy a legújabbak között sem fog megjelenni."
       muted_categories_instructions_dont_hide: "Nem fog értesítést kapni az új témákról ezekben a kategóriákban."
-      regular_categories: "Átlagos"
+      regular_categories: "Normál"
       regular_categories_instructions: "Ezek a kategóriák a „Legújabb” és a „Legnépszerűbb” témák között lesznek láthatóak."
       no_category_access: "Moderátorként korlátozott kategória-hozzáférése van, a mentés tiltott."
       delete_account: "Saját fiók törlése"
@@ -3240,7 +3240,7 @@ hu:
         tracking:
           title: "Követés"
         regular:
-          title: "Átlagos"
+          title: "Normál"
           description: "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol a bejegyzésedre."
         muted:
           title: "Némított"
@@ -3301,6 +3301,12 @@ hu:
       sections:
         messages:
           header_link_text: "Üzenetek"
+          links:
+            inbox: "Beérkezett üzenetek"
+            sent: "Elküldött"
+            new: "Új"
+            unread: "Olvasatlan"
+            archive: "Archívum"
         tags:
           header_link_title: "összes címke"
           header_link_text: "Címkék"

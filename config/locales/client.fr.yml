@@ -3472,7 +3472,6 @@ fr:
         edit: "%{shortcut} Modifier le message"
         delete: "%{shortcut} Supprimer le message"
         mark_muted: "%{shortcut} Mettre le sujet en sourdine"
-        mark_regular: "%{shortcut} Notifications par défaut pour le sujet"
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
@@ -3719,6 +3718,12 @@ fr:
       sections:
         messages:
           header_link_text: "Messages"
+          links:
+            inbox: "Boîte de réception"
+            sent: "Envoyés"
+            new: "Nouveau"
+            unread: "Non lues"
+            archive: "Archivés"
         tags:
           header_link_title: "toutes les étiquettes"
           header_link_text: "Étiquettes"

@@ -2589,7 +2589,6 @@ ca:
     suspicious_login:
       title: "Notificació d'inici de sessió nou"
       subject_template: "[%{site_name}] Inici de sessió nou des de %{location}"
-      text_body_template: "Bon dia, \n\nHem notat un inici de sessió des d'un dispositiu o una ubicació que normalment no utilitzeu. Heu estat vós? \n\n- Ubicació: %{location} (%{client_ip}) \n- Navegador: %{browser} \n- Dispositiu: %{device} - %{os} \n\nSi heu estat vós, perfecte! No cal fer res més. \n\nSi no heu estat vós, [reviseu les vostres sessions existents](%{base_url}/my/preferences/account) i considereu canviar la contrasenya.\n"
     post_approved:
       title: "La vostra publicació ha estat aprovada"
   page_not_found:

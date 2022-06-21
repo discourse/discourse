@@ -124,6 +124,11 @@ pl_PL:
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
+        x_months:
+          one: "%{count} miesiąc"
+          few: "%{count} miesiące"
+          many: "%{count} miesięcy"
+          other: "%{count} miesięcy"
         about_x_years:
           one: "około %{count} rok"
           few: "około %{count} lata"
@@ -134,6 +139,11 @@ pl_PL:
           few: "ponad %{count} lata"
           many: "ponad %{count} lat"
           other: "ponad %{count} lat"
+        almost_x_years:
+          one: "prawie %{count} rok"
+          few: "prawie %{count} lata"
+          many: "prawie %{count} lat"
+          other: "prawie %{count} lat"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -1231,7 +1241,7 @@ pl_PL:
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       muted_categories_instructions_dont_hide: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. "
-      regular_categories: "Stały bywalec"
+      regular_categories: "Normalny"
       regular_categories_instructions: "Te kategorie będą widoczne na listach tematów „Najnowsze” i „Najpopularniejsze”."
       no_category_access: "Jako moderator masz limitowany dostęp do kategorii, możliwość zapisu jest wyłączona."
       delete_account: "Usuń moje konto"
@@ -3572,6 +3582,7 @@ pl_PL:
     sr_activity: "Sortuj według aktywności"
     likes: "Polubienia"
     sr_likes: "Sortuj według polubień"
+    sr_op_likes: "Sortuj według polubień oryginalnego postu"
     likes_lowercase:
       one: "polubienie"
       few: "polubienia"
@@ -3765,7 +3776,6 @@ pl_PL:
         edit: "%{shortcut} Edytuj wpis"
         delete: "%{shortcut} Usuń wpis"
         mark_muted: "%{shortcut} Wycisz temat"
-        mark_regular: "%{shortcut} Zwykły (domyślny) temat"
         mark_tracking: "%{shortcut} śledź temat"
         mark_watching: "%{shortcut} Obserwuj temat"
         print: "%{shortcut} Drukuj temat"
@@ -3844,6 +3854,11 @@ pl_PL:
         few: "wybierz co najmniej %{count} tagi..."
         many: "wybierz co najmniej %{count} tagów..."
         other: "wybierz co najmniej %{count} tagów..."
+      choose_for_topic_required_group:
+        one: "wybierz %{count} tag z '%{name}'..."
+        few: "wybierz %{count} tagi z '%{name}'..."
+        many: "wybierz %{count} tagów z '%{name}'..."
+        other: "wybierz %{count} tagów z '%{name}'..."
       info: "Informacje"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
@@ -4006,6 +4021,7 @@ pl_PL:
       unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
     user_activity:
       no_activity_title: "Brak aktywności"
+      no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy(-a) i nie uczestniczyłeś(-aś) jeszcze w żadnych dyskusjach. Jako pierwszy krok, odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i po prostu zacznij czytać! Kliknij w %{heartIcon} przy postach, które lubisz lub chcesz dowiedzieć się więcej. Gdy bierzesz udział w dyskusji, Twoja aktywność zostanie wymieniona tutaj."
       no_activity_others: "Brak aktywności"
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
       no_replies_others: "Brak odpowiedzi."
@@ -4032,10 +4048,18 @@ pl_PL:
       sections:
         messages:
           header_link_text: "Wiadomości"
+          links:
+            inbox: "Skrzynka odbiorcza"
+            sent: "Wysłane"
+            new: "Nowe"
+            unread: "Nieprzeczytane"
+            archive: "Archiwum"
         tags:
+          no_tracked_tags: "Nie śledzisz żadnych tagów."
           header_link_title: "wszystkie tagi"
           header_link_text: "Etykiety"
         categories:
+          no_tracked_categories: "Nie śledzisz żadnych kategorii."
           header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"
         topics:
@@ -4053,6 +4077,12 @@ pl_PL:
               title: "Wszystkie tematy dodane do zakładek"
             my_posts:
               content: "Wysłane"
+              title: "Moje posty"
+              draft_count:
+                one: "%{count} szkic"
+                few: "%{count} szkice"
+                many: "%{count} szkice"
+                other: "%{count} szkice"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:

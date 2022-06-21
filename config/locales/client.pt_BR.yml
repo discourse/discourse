@@ -3388,7 +3388,6 @@ pt_BR:
         edit: "%{shortcut} Editar postagem"
         delete: "%{shortcut} Excluir postagem"
         mark_muted: "%{shortcut} Silenciar tópico"
-        mark_regular: "%{shortcut} Tópico regular (padrão)"
         mark_tracking: "%{shortcut} Monitorar tópico"
         mark_watching: "%{shortcut} Acompanhar tópico"
         print: "%{shortcut} Imprimir tópico"
@@ -3624,6 +3623,12 @@ pt_BR:
       sections:
         messages:
           header_link_text: "Mensagens"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            unread: "Não lidos(as)"
+            archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"

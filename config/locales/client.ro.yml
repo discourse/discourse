@@ -1006,7 +1006,7 @@ ro:
       watched_first_post_tags: "Urmărire activă prima postare"
       watched_first_post_tags_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect cu aceste etichete."
       muted_categories: "Setat pe silențios"
-      regular_categories: "Utilizator frecvent"
+      regular_categories: "Normal"
       no_category_access: "În calitate de moderator ai acces limitat la categorii, salvarea este dezactivată."
       delete_account: "Șterge-mi contul"
       delete_account_confirm: "Ești sigur că vrei să ștergi contul? Această acțiune este ireversibilă!"
@@ -2654,7 +2654,6 @@ ro:
         edit: "%{shortcut} Editează postare"
         delete: "%{shortcut} Șterge postare"
         mark_muted: "%{shortcut} Setează subiect pe silențios"
-        mark_regular: "%{shortcut} Subiect obișnuit (implicit)"
         mark_tracking: "%{shortcut} Urmărește subiect"
         mark_watching: "%{shortcut} Urmărește activ subiect"
         print: "%{shortcut} Tipărire subiect"
@@ -2731,7 +2730,7 @@ ro:
           title: "Urmărind"
           description: "Vei urmări automat toate discuțiile cu această etichetă. Un contor cu postările necitite și cu cele noi va apărea lângă discuție."
         regular:
-          title: "Utilizator frecvent"
+          title: "Normal"
           description: "Vei fi notificat dacă cineva îți menționează @numele sau răspunde la postare."
         muted:
           title: "Silențios"
@@ -2785,6 +2784,12 @@ ro:
       sections:
         messages:
           header_link_text: "Mesaje"
+          links:
+            inbox: "Primite"
+            sent: "Trimise"
+            new: "Noi"
+            unread: "Necitite"
+            archive: "Arhivă"
         tags:
           header_link_title: "toate etichetele"
           header_link_text: "Etichete"

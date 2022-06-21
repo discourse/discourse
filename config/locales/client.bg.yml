@@ -1073,7 +1073,7 @@ bg:
       muted_categories: "Заглушен"
       muted_categories_instructions: "Няма да получавате известия за нови теми в тези категории и те няма да се показват в категориите или най-новите страници."
       muted_categories_instructions_dont_hide: "Няма да получавате известия за нови теми в тези категории."
-      regular_categories: "Редовен"
+      regular_categories: "Нормален"
       regular_categories_instructions: "Ще видите тези категории в списъците с теми „Последни“ и „Топ“."
       no_category_access: "Като модератор имате ограничен достъп до категориите, запазването е изключено."
       delete_account: "Изтрий моя профил"
@@ -2894,7 +2894,6 @@ bg:
         edit: "%{shortcut} Редакция"
         delete: "%{shortcut} Изтриване"
         mark_muted: "%{shortcut} Заглушете темата"
-        mark_regular: "%{shortcut} Номална (стандартна) тема"
         mark_tracking: "%{shortcut} Следете темата"
         mark_watching: "%{shortcut} Наблюдаване на темата"
     badges:
@@ -2946,7 +2945,7 @@ bg:
           title: "Следене"
           description: "Автоматично ще следите всички теми с този етикет. Броя на непрочетените и новите публикации ще се появява до темата."
         regular:
-          title: "Редовен"
+          title: "Нормален"
           description: "Ще бъдете уведомен, ако някой спомене вашето @име или отговори на Ваша публикация."
         muted:
           title: "Заглушен"
@@ -2990,6 +2989,12 @@ bg:
       sections:
         messages:
           header_link_text: "Съобщения"
+          links:
+            inbox: "Кутия"
+            sent: "Изпратени"
+            new: "Нов"
+            unread: "Непрочетени"
+            archive: "Архив"
         tags:
           header_link_title: "всички тагове"
           header_link_text: "Тагове"

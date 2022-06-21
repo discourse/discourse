@@ -1821,7 +1821,6 @@ sq:
         edit: "%{shortcut} Redakto postimin"
         delete: "%{shortcut} Fshi postimin"
         mark_muted: "%{shortcut} Bëje temë të heshtur"
-        mark_regular: "%{shortcut} Shënoje temën si të zakonshme"
         mark_tracking: "%{shortcut} Ndiqe temën"
         mark_watching: "%{shortcut} Vëzhgoje temën"
         print: "%{shortcut} Printo temën"
@@ -1933,6 +1932,12 @@ sq:
       sections:
         messages:
           header_link_text: "Mesazhet"
+          links:
+            inbox: "Inbox"
+            sent: "Të dërguara"
+            new: "Të reja"
+            unread: "Të palexuara"
+            archive: "Arkivi"
         tags:
           header_link_title: "të gjitha etiketat"
           header_link_text: "Etiketat"
