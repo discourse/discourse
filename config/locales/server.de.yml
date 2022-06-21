@@ -1435,10 +1435,10 @@ de:
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anfragen angezeigt."
     contact_url: "Kontakt-URL für diese Website. Wird auf der Seite <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anliegen angezeigt."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
-    download_remote_images_to_local: "Konvertiere entfernte (mit Hotlinks versehene) Bilder in lokale Bilder, indem du sie herunterlädst; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der entfernten Seite entfernt werden."
+    download_remote_images_to_local: "Konvertiere externe (mit Hotlinks versehene) Bilder in lokale Bilder, indem du sie herunterlädst; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der verlinkten Seite entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
     disabled_image_download_domains: "Durch senkrechte Striche („|“) getrennte Liste von Domains, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
-    block_hotlinked_media: "Verhindert, dass Benutzer entfernte (Hotlinked) Medien in ihren Beiträgen einführen. Entfernte Medien, die nicht über 'download_remote_images_to_local' heruntergeladen werden, werden durch einen Platzhalter-Link ersetzt."
+    block_hotlinked_media: "Verhindert, dass Benutzer extrene (Hotlinked) Medien in ihren Beiträgen einfügen. Externe Medien, die nicht über 'download_remote_images_to_local' heruntergeladen werden, werden durch einen Platzhalter-Link ersetzt."
     block_hotlinked_media_exceptions: "Eine Liste von Basis-URLs, die von der Einstellung block_hotlinked_media ausgenommen sind. Füge das Protokoll hinzu (z.B. https://example.com)."
     editing_grace_period: "Für (n) Sekunden nach dem Schreiben wird durch die Bearbeitung keine neue Version im Beitragsverlauf erstellt."
     editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
@@ -2064,7 +2064,7 @@ de:
     default_categories_tracking: "Liste der standardmäßig verfolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste der Kategorien, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
-    default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
+    default_categories_normal: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
     mute_all_categories_by_default: "Setze die Standard-Benachrichtigungsstufe für alle Kategorien auf stumm. Erfordere die Aktivierung der Kategorien durch die Benutzer, damit sie auf den Seiten „Aktuell“ und „Kategorien“ erscheinen. Wenn du die Standardeinstellungen für anonyme Benutzer ändern möchtest, bearbeite die „default_categories_“-Einstellungen."
     default_tags_watching: "Liste der Schlagwörter, die standardmäßig beobachtet werden."
     default_tags_tracking: "Liste der Schlagwörter, die standardmäßig verfolgt werden."
@@ -3628,18 +3628,6 @@ de:
     suspicious_login:
       title: "Warnung über neue Anmeldung"
       subject_template: "[%{site_name}] Neue Anmeldung von %{location}"
-      text_body_template: |
-        Hallo,
-
-        wir haben festgestellt, dass du dich von einem anderen Gerät oder Ort als üblich angemeldet hast. Warst du das?
-
-         - Ort: %{location} (%{client_ip})
-         - Browser: %{browser}
-         - Gerät: %{device} – %{os}
-
-        Wenn du das warst – hervorragend! Du musst nichts weiter tun.
-
-        Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/account) und erwäge, dein Passwort zu ändern.
     post_approved:
       title: "Dein Beitrag wurde genehmigt"
       subject_template: "[%{site_name}] Dein Beitrag wurde genehmigt"

@@ -962,6 +962,7 @@ id:
       muted_categories: "Diredam"
       muted_categories_instructions: "Anda tidak akan diberitahu tentang topik baru dalam kategori ini, dan tidak akan muncul di kategori atau halaman terbaru."
       muted_categories_instructions_dont_hide: "Anda tidak akan diberitahu tentang topik baru dalam kategori ini."
+      regular_categories: "normal"
       no_category_access: "Sebagai moderator Anda memiliki akses kategori terbatas, simpan dinonaktifkan."
       delete_account: "Hapus Akun Saya"
       delete_account_confirm: "Apakah Anda yakin untuk menghapus akun ini secara permanen? Perintah ini tidak dapat dibatalkan!"
@@ -1764,6 +1765,8 @@ id:
           title: "Sedang Melihat Pos Pertama"
         tracking:
           title: "melacak"
+        regular:
+          title: "normal"
         muted:
           title: "Bisukan"
       groups:
@@ -1787,6 +1790,12 @@ id:
       sections:
         messages:
           header_link_text: "Pesan-pesan"
+          links:
+            inbox: "Kotak masuk"
+            sent: "Mengirim"
+            new: "Baru"
+            unread: "Belum dibaca"
+            archive: "Arsip"
         tags:
           header_link_text: "Label"
         categories:

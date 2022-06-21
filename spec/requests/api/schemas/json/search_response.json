@@ -3,33 +3,33 @@
   "properties": {
     "posts": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "users": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "categories": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "tags": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "groups": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "grouped_search_result": {
       "type": "object",
@@ -76,33 +76,33 @@
         },
         "post_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "user_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "category_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "tag_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "group_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         }
       },
       "required": [

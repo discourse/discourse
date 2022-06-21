@@ -165,11 +165,8 @@ class Invite < ActiveRecord::Base
   def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
     return if !redeemable?
 
-    if is_invite_link? && UserEmail.exists?(email: email)
-      raise UserExists.new I18n.t("invite_link.email_taken")
-    end
-
     email = self.email if email.blank? && !is_invite_link?
+
     InviteRedeemer.new(
       invite: self,
       email: email,

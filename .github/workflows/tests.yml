@@ -153,9 +153,9 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: bin/rake plugin:spec
 
-      - name: Plugin QUnit (Ember CLI)
+      - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && (matrix.target == 'plugins' || matrix.target == 'core-plugins')
-        run: QUNIT_EMBER_CLI=1 bin/rake plugin:qunit['*','1200000']
+        run: bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Check Annotations

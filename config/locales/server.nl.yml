@@ -1822,7 +1822,7 @@ nl:
     default_categories_tracking: "Lijst van categorieën die standaard worden gevolgd."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
     default_categories_watching_first_post: "Lijst van categorieën waarin het eerste bericht in elk nieuw topic standaard in de gaten wordt gehouden."
-    default_categories_regular: "Lijst van categorieën die niet standaard worden gedempt. Handig wanneer de website-instelling 'mute_all_categories_by_default' is ingeschakeld."
+    default_categories_normal: "Lijst van categorieën die niet standaard worden gedempt. Handig wanneer de website-instelling 'mute_all_categories_by_default' is ingeschakeld."
     mute_all_categories_by_default: "Het standaard meldingsniveau van alle categorieën instellen op gedempt. Gebruikers moeten zich bij categorieën aanmelden om deze in de pagina's 'nieuwste' en 'categorieën' te laten verschijnen. Als u de standaardwaarden voor anonieme gebruikers wilt wijzigen, stel dan de instellingen voor 'default_categories_' in."
     default_tags_watching: "Lijst van tags die standaard in de gaten worden gehouden."
     default_tags_tracking: "Lijst van tags die standaard worden gevolgd."

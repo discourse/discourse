@@ -25,7 +25,10 @@ zh_TW:
         millions: "%{number} 百萬"
     dates:
       time: "h:mm a"
+      time_with_zone: "hh:mm a (z)"
+      time_short_day: "ddd, h:mm a"
       timeline_date: "YYYY年 M月"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "M月 D日"
       full_no_year_no_time: "M月 D日"
       long_with_year: "YYYY年M月D日 h:mm a"
@@ -37,6 +40,7 @@ zh_TW:
       long_date_without_year_with_linebreak: "M月 D日 <br/>LT"
       long_date_with_year_with_linebreak: "YYYY年 M月 D日<br/>LT"
       wrap_ago: "%{date}前"
+      wrap_on: "在 %{date}"
       tiny:
         half_a_minute: "< 1 分鐘"
         less_than_x_seconds:
@@ -175,6 +179,7 @@ zh_TW:
         cn_northwest_1: "中國 (寧夏)"
         eu_central_1: "歐洲 (法蘭克福)"
         eu_north_1: "歐洲 (斯德哥爾摩)"
+        eu_south_1: "歐盟 (米蘭)"
         eu_west_1: "歐洲 (愛爾蘭)"
         eu_west_2: "歐洲 (倫敦)"
         eu_west_3: "歐洲 (巴黎)"
@@ -482,6 +487,8 @@ zh_TW:
           title: "忽略"
         deleted:
           title: "刪除"
+        all:
+          title: "(所有)"
       types:
         reviewable_flagged_post:
           title: "標記的貼文"
@@ -625,6 +632,8 @@ zh_TW:
           last_updated: "上次更新："
           last_updated_by: "由"
           settings_required: "所有設定皆為必填，請輸入所有欄位再進行驗證。"
+          smtp_settings_valid: "SMTP 設定有效。"
+          smtp_title: "SMTP"
           imap_additional_settings: "其他設定"
           prefill:
             gmail: "Gmail"
@@ -979,7 +988,7 @@ zh_TW:
       watched_first_post_tags_instructions: "你將會收到這些標籤中新話題的第一則貼文的通知。"
       muted_categories: "靜音"
       muted_categories_instructions: "你將不會在收到任何與這些分類中的新話題有關的通知。它們亦不會再出現於分類或最新頁面中。"
-      regular_categories: "普通"
+      regular_categories: "一般"
       no_category_access: "板主權限不足，無法使用儲存功能"
       delete_account: "刪除我的帳號"
       delete_account_confirm: "你真的要刪除帳號嗎？刪除後將無法還原。"
@@ -2653,7 +2662,7 @@ zh_TW:
         edit: "%{shortcut} 編輯貼文"
         delete: "%{shortcut} 刪除貼文"
         mark_muted: "%{shortcut} 忽略話題"
-        mark_regular: "%{shortcut} 常規 (預設) 話題"
+        mark_regular: "%{shortcut} 正常 (預設) 主題"
         mark_tracking: "%{shortcut} 追蹤話題"
         mark_watching: "%{shortcut} 看話題"
         print: "%{shortcut} 列印討論話題"
@@ -2733,7 +2742,7 @@ zh_TW:
           title: "跟蹤"
           description: "您將會自動追蹤任何含有這些標籤的話題。新貼文數量將顯示在每個話題後。"
         regular:
-          title: "普通"
+          title: "一般"
           description: "如果有人@你或回覆你的貼文，將通知你。"
         muted:
           title: "靜音"
@@ -2796,6 +2805,12 @@ zh_TW:
       sections:
         messages:
           header_link_text: "訊息"
+          links:
+            inbox: "收件匣"
+            sent: "送出"
+            new: "新的"
+            unread: "未讀"
+            archive: "封存"
         tags:
           header_link_title: "所有標籤"
           header_link_text: "標籤"

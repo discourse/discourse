@@ -3167,7 +3167,6 @@ gl:
         edit: "%{shortcut} Editar a publicación"
         delete: "%{shortcut} Eliminar a publicación"
         mark_muted: "%{shortcut} Silenciar o tema"
-        mark_regular: "%{shortcut} Tema normal (predeterminado)"
         mark_tracking: "%{shortcut} Seguir o tema"
         mark_watching: "%{shortcut} Ver o tema"
         print: "%{shortcut} Imprimir o tema"
@@ -3355,6 +3354,12 @@ gl:
       sections:
         messages:
           header_link_text: "Mensaxes"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            unread: "Sen ler"
+            archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"

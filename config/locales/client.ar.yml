@@ -1301,7 +1301,7 @@ ar:
       muted_categories: "المكتومة"
       muted_categories_instructions: "لن تتلقى أي إشعارات أبدًا بخصوص الموضوعات الجديدة في هذه الفئات، ولن تظهر في الفئات أو صفحات أحدث الموضوعات."
       muted_categories_instructions_dont_hide: "لن تتلقى أي إشعارات أبدًا بشأن الموضوعات الجديدة في هذه الفئات."
-      regular_categories: "منتظم"
+      regular_categories: "عادية"
       regular_categories_instructions: "سترى هذه الفئات في قوائم الموضوعات \"الحديثة\" و\"الأكثر نشاطًا\"."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للفئات، فالحفظ متوقف."
       delete_account: "حذف حسابي"
@@ -3988,7 +3988,6 @@ ar:
         edit: "%{shortcut} تعديل المنشور"
         delete: "%{shortcut} حذف المنشور"
         mark_muted: "%{shortcut} كتم الموضوع"
-        mark_regular: "%{shortcut} موضوع عادي (افتراضي)"
         mark_tracking: "%{shortcut} تتبُّع الموضوع"
         mark_watching: "%{shortcut} مراقبة الموضوع"
         print: "%{shortcut} طباعة الموضوع"
@@ -4173,7 +4172,7 @@ ar:
           title: "التتبُّع"
           description: "ستتتبَّع تلقائيًا جميع الموضوعات التي تحمل هذا الوسم. وسيظهر أيضًا عدد المنشورات غير المقروءة والجديدة بجانب الموضوع."
         regular:
-          title: "منتظمة"
+          title: "عادية"
           description: "سنُرسل إليك إشعارًا إذا أشار أحد إلى اسمك باستخدام الرمز @ أو ردَّ على منشورك."
         muted:
           title: "الكتم"
@@ -4277,6 +4276,12 @@ ar:
       sections:
         messages:
           header_link_text: "الرسائل"
+          links:
+            inbox: "صندوق الوارد"
+            sent: "المُرسَلة"
+            new: "الجديدة"
+            unread: "غير المقروءة"
+            archive: "الأرشيف"
         tags:
           header_link_title: "كل الوسوم"
           header_link_text: "الوسوم"

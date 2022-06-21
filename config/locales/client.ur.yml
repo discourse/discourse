@@ -1105,7 +1105,7 @@ ur:
       muted_categories: "خاموش کِیا ہوا"
       muted_categories_instructions: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ زمرہ جات یا تازہ ترین صفحات پر نظر نہیں آئیں گے۔"
       muted_categories_instructions_dont_hide: "آپ کو اِن زمرہ جات میں نئے ٹاپک کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا۔"
-      regular_categories: "معمولی"
+      regular_categories: "عمومی"
       regular_categories_instructions: "آپ ان اقسام کو “تازہ ترین” اور “سرفہرست” موضوع کی فہرست میں دیکھیں گے."
       no_category_access: "ایک ماڈریٹر کے طور پر آپ کو زمرہ پر محدود رسائی حاصل ہے، محفوظ کرنا غیر فعال ہے۔"
       delete_account: "میرا اکاؤنٹ مٹائیں"
@@ -3396,7 +3396,6 @@ ur:
         edit: "%{shortcut} پوسٹ ترمیم کریں"
         delete: "%{shortcut} پوسٹ مٹائیں"
         mark_muted: "%{shortcut} ٹاپک خاموش کریں"
-        mark_regular: "%{shortcut} معمول کا (ڈیفالٹ) ٹاپک"
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
         mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
         print: "%{shortcut} ٹاپک پرِنٹ کریں"
@@ -3533,7 +3532,7 @@ ur:
           title: "ٹریک کیا جا رہا"
           description: "آپ خود کار طریقے سے اِس ٹیگ کے ساتھ موجود تمام ٹاپکس کو ٹریک کریں گے۔ بغیر پڑھی اور نئی پوسٹس کی گنتی ٹاپک کے ساتھ دکھائی جائے گی۔"
         regular:
-          title: "معمولی"
+          title: "عمومی"
           description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا آپ کی پوسٹ پر جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
           title: "خاموش کِیا ہوا"
@@ -3638,6 +3637,12 @@ ur:
       sections:
         messages:
           header_link_text: "پیغامات"
+          links:
+            inbox: "اِن باکس"
+            sent: "بھیجا جا چکا"
+            new: "نیا"
+            unread: "بغیر پڑھے"
+            archive: "آر کائیو"
         tags:
           header_link_title: "تمام ٹیگز"
           header_link_text: "ٹیگز"

@@ -1072,7 +1072,7 @@ fi:
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa ilmoituksia näille alueille luoduista uusista ketjuista. Ketjut eivät näy alueissa eivätkä tuoreimmissa."
       muted_categories_instructions_dont_hide: "Et saa ilmoituksia mistään tämän alueen uusiin ketjuihin liittyvästä."
-      regular_categories: "Normaali"
+      regular_categories: "Tavallinen"
       regular_categories_instructions: "Näet nämä alueet Tuoreimmat- ja Suosituimmat-ketjuluetteloissa."
       no_category_access: "Valvojana sinulla on rajoitetut oikeudet alueisiin, et voi tallentaa."
       delete_account: "Poista tilini"
@@ -3261,7 +3261,6 @@ fi:
         edit: "%{shortcut} Muokkaa viestiä"
         delete: "%{shortcut} Poista viesti"
         mark_muted: "%{shortcut} Vaimenna ketju"
-        mark_regular: "%{shortcut} Tavallinen (oletus) ketju"
         mark_tracking: "%{shortcut} Seuraa ketjua"
         mark_watching: "%{shortcut} Tarkkaile ketjua"
         print: "%{shortcut} Tulosta ketju"
@@ -3464,6 +3463,12 @@ fi:
       sections:
         messages:
           header_link_text: "Viestit"
+          links:
+            inbox: "Postilaatikko"
+            sent: "Lähetetyt"
+            new: "Uudet"
+            unread: "Lukemattomat"
+            archive: "Arkisto"
         tags:
           header_link_title: "kaikki tunnisteet"
           header_link_text: "Tunnisteet"

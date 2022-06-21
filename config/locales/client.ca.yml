@@ -952,7 +952,7 @@ ca:
       muted_categories: "Silenciat"
       muted_categories_instructions: "No us notificarem res sobre temes nous en aquestes categories, i no apareixeran en les pàgines de categories o de més recents."
       muted_categories_instructions_dont_hide: "No sereu notificat de res sobre temes nous en aquestes categories."
-      regular_categories: "Habitual"
+      regular_categories: "Normal"
       regular_categories_instructions: "Veureu aquestes categories en les llistes de temes \"Darrers\" i \"Principals\"."
       no_category_access: "Com a moderador teniu accés limitat a la categoria. Desar està inhabilitat."
       delete_account: "Suprimeix el meu compte"
@@ -2738,7 +2738,6 @@ ca:
         edit: "%{shortcut} Edita la publicació"
         delete: "%{shortcut} Suprimeix la publicació"
         mark_muted: "%{shortcut} Silencia el tema"
-        mark_regular: "%{shortcut} Tema normal (per defecte)"
         mark_tracking: "%{shortcut} Segueix el tema"
         mark_watching: "%{shortcut} Vigila el tema"
         print: "%{shortcut} Imprimeix el tema"
@@ -2826,7 +2825,7 @@ ca:
           title: "Seguint"
           description: "Seguireu automàticament tots els temes amb aquesta etiqueta. A la vora del tema apareixerà un recompte de publicacions no llegides i noves."
         regular:
-          title: "Habitual"
+          title: "Normal"
           description: "Rebreu alertes si una persona menciona el vostre @nom o respon a la vostra publicació."
         muted:
           title: "Silenciat"
@@ -2885,6 +2884,12 @@ ca:
       sections:
         messages:
           header_link_text: "Missatges"
+          links:
+            inbox: "Safata d'entrada"
+            sent: "Enviat"
+            new: "Nous"
+            unread: "No llegits"
+            archive: "Arxiva"
         tags:
           header_link_title: "totes les etiquetes"
           header_link_text: "Etiquetes"

@@ -2028,7 +2028,7 @@ pt_BR:
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
     default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
-    default_categories_regular: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
+    default_categories_normal: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
     mute_all_categories_by_default: "Defina o nível de notificação padrão de todas as categorias para silenciado(a). É preciso que os(as) usuários(as) aceitem que suas categorias sejam exibidas nas páginas \"mais recentes\" e \"categorias\". Se quiser modificar os padrões para usuários(as) anônimos(as), defina as configurações \"default_categories_\"."
     default_tags_watching: "Lista de etiquetas que são acompanhadas por padrão."
     default_tags_tracking: "Lista de etiquetas que são monitoradas por padrão."
@@ -3545,17 +3545,6 @@ pt_BR:
     suspicious_login:
       title: "Alerta de nova entrada com conta"
       subject_template: "[%{site_name}] Nova entrada com conta em %{location}"
-      text_body_template: |
-        Olá,
-
-        Notamos que a sua conta foi usada para entrar em um dispositivo ou local que você não costuma usar. Foi você?
-
-         - Localização: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} -- %{os}
-
-        Se tiver sido você, ótimo! Não há mais nada que precise ser feito.
-        Caso contrário, [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
     post_approved:
       title: "Sua postagem foi aprovada"
       subject_template: "[%{site_name}] Sua postagem foi aprovada"

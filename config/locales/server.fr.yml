@@ -2056,7 +2056,7 @@ fr:
     default_categories_tracking: "Liste des catégories suivies par défaut."
     default_categories_muted: "Liste des catégories mises en sourdine par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
-    default_categories_regular: "Liste des catégories qui ne sont pas mises en sourdine par défaut. Utile lorsque le paramètre « mute_all_categories_by_default » est activé."
+    default_categories_normal: "Liste des catégories qui ne sont pas mises en sourdine par défaut. Utile lorsque le paramètre « mute_all_categories_by_default » est activé."
     mute_all_categories_by_default: "Définir le niveau des notifications de toutes les catégories à « Muet ». Cela demande aux utilisateurs de sélectionner explicitement les catégories qui peuvent apparaître sur leurs pages « Récents » et « Catégories ». Si vous souhaitez revoir les valeurs par défaut pour les utilisateurs anonymes, veuillez renseigner les paramètres « default_categories_ »."
     default_tags_watching: "Liste des étiquettes qui sont surveillées par défaut."
     default_tags_tracking: "Liste des étiquettes qui sont suivies par défaut."
@@ -3628,18 +3628,6 @@ fr:
     suspicious_login:
       title: "Notification de nouvelle connexion"
       subject_template: "[%{site_name}] Nouvelle connexion depuis %{location}"
-      text_body_template: |
-        Bonjour,
-
-        Nous avons remarqué une connexion provenant d'un lieu ou d'un appareil que vous n'utilisez pas d'habitude. Était-ce bien vous ?
-
-         - Lieu : %{location} (%{client_ip})
-         - Navigateur : %{browser}
-         - Appareil : %{device} – %{os}
-
-        Si c'était bien vous, tant mieux ! Rien à signaler.
-
-        Si ce n'est pas vous, nous vous prions d'[examiner les connexions établies récemment](%{base_url}/my/preferences/account) et d'envisager un changement de votre mot de passe.
     post_approved:
       title: "La publication de votre message a été autorisée"
       subject_template: "[%{site_name}] La publication de votre message a été autorisée"

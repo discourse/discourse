@@ -1064,7 +1064,7 @@ nb_NO:
       muted_categories: "Ignorert"
       muted_categories_instructions: "Brukerne vil ikke bli varslet om nye emner i disse kategoriene, og de vil ikke dukke opp på kategorier eller nyeste temasider."
       muted_categories_instructions_dont_hide: "Du vil ikke bli varslet om nye emner i disse kategoriene."
-      regular_categories: "Aktivt medlem"
+      regular_categories: "Normal"
       regular_categories_instructions: "Du vil se disse kategoriene i temaene “Latest” og “Top”."
       no_category_access: "Som moderator har du begrenset kategoritilgang, lagring er avskrudd."
       delete_account: "Slett kontoen min"
@@ -3216,7 +3216,6 @@ nb_NO:
         edit: "%{shortcut} Rediger innlegg"
         delete: "%{shortcut} Slett innlegg"
         mark_muted: "%{shortcut} Ignorer emne"
-        mark_regular: "%{shortcut} Vanlig (forvalgt) emne"
         mark_tracking: "%{shortcut} Overvåk emne"
         mark_watching: "%{shortcut} Følg emne"
         print: "%{shortcut} Skriv ut emne"
@@ -3334,7 +3333,7 @@ nb_NO:
           title: "Overvåkning"
           description: "Du vil automatisk overvåke alle emner med dette stikkordet. Antallet uleste og nye innlegg vil vises ved siden av emnet."
         regular:
-          title: "Aktivt medlem"
+          title: "Normal"
           description: "Du vil bli varslet hvis noen nevner @navnet ditt eller svarer på innlegget ditt."
         muted:
           title: "Ignorert"
@@ -3422,6 +3421,12 @@ nb_NO:
       sections:
         messages:
           header_link_text: "Meldinger"
+          links:
+            inbox: "Innboks"
+            sent: "Sendt"
+            new: "Nye"
+            unread: "Uleste"
+            archive: "Arkiver"
         tags:
           header_link_title: "alle stikkord"
           header_link_text: "Stikkord"

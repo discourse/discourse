@@ -321,8 +321,9 @@ describe Discourse do
 
   context "#handle_exception" do
 
-    class TempSidekiqLogger < Sidekiq::ExceptionHandler::Logger
+    class TempSidekiqLogger
       attr_accessor :exception, :context
+
       def call(ex, ctx)
         self.exception = ex
         self.context = ctx
@@ -332,8 +333,11 @@ describe Discourse do
     let!(:logger) { TempSidekiqLogger.new }
 
     before do
-      Sidekiq.error_handlers.clear
       Sidekiq.error_handlers << logger
+    end
+
+    after do
+      Sidekiq.error_handlers.delete(logger)
     end
 
     it "should not fail when called" do

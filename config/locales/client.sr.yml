@@ -705,7 +705,7 @@ sr:
       watched_categories: "Pregledano"
       tracked_categories: "Praćeno"
       muted_categories: "Utišano"
-      regular_categories: "Stalni član"
+      regular_categories: "Normalno"
       delete_account: "Obriši moj Nalog"
       delete_account_confirm: "Jeste li sigurni da želite trajno obrisati svoj nalog? Ova se akcija ne može poništiti!"
       deleted_yourself: "Vaš nalog je uspešno obrisan."
@@ -1733,7 +1733,6 @@ sr:
         edit: "%{shortcut} Izmeni poruku"
         delete: "%{shortcut} Obriši poruku"
         mark_muted: "%{shortcut} Utišaj poruku"
-        mark_regular: "%{shortcut} Standardna (Normalna) tema"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Posmatraj temu"
     badges:
@@ -1770,7 +1769,7 @@ sr:
         tracking:
           title: "Praćeno"
         regular:
-          title: "Stalni član"
+          title: "Normalno"
           description: "Biće te obavešteni ako vas neko spomene @imenom ili odgovori na vašu poruku."
         muted:
           title: "Utišano"
@@ -1803,6 +1802,12 @@ sr:
       sections:
         messages:
           header_link_text: "Poruke"
+          links:
+            inbox: "Primljeno"
+            sent: "Poslato"
+            new: "Novo"
+            unread: "Nepročitano"
+            archive: "Arhiviraj"
         categories:
           header_link_title: "sve kategorije"
           header_link_text: "Kategorije"

@@ -1056,7 +1056,7 @@ sl:
       muted_categories: "Utišano"
       muted_categories_instructions: "Nikoli ne boste obveščeni o novih temah v tej kategoriji in ne bodo se prikazovale med najnovejšimi."
       muted_categories_instructions_dont_hide: "Ne boste obveščeni o ničemer o novimi temami v teh kategorijah"
-      regular_categories: "Običajne"
+      regular_categories: "Običajno"
       regular_categories_instructions: "Te kategorije boste videli na seznamih tem \"Najnovejše\" in \"Najboljše\"."
       no_category_access: "Kot moderator imaš omejen dostop do kategorije, shranjevanje je onemogočeno"
       delete_account: "Izbriši moj račun"
@@ -3172,7 +3172,6 @@ sl:
         edit: "%{shortcut} Uredi prispevek"
         delete: "%{shortcut} Zbriši prispevek"
         mark_muted: "%{shortcut} Utišaj temo"
-        mark_regular: "%{shortcut} Običajna (privzeta) tema"
         mark_tracking: "%{shortcut} Sledi temi"
         mark_watching: "%{shortcut} Spremljaj temo"
         print: "%{shortcut} Natisni temo"
@@ -3376,6 +3375,12 @@ sl:
       sections:
         messages:
           header_link_text: "Sporočila"
+          links:
+            inbox: "Prejeto"
+            sent: "Poslano"
+            new: "Nove"
+            unread: "Neprebrane"
+            archive: "Arhiv"
         tags:
           header_link_title: "vse oznake"
           header_link_text: "Oznake"

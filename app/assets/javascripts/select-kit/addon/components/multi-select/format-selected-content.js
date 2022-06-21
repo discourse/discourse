@@ -10,7 +10,7 @@ export default Component.extend(UtilsMixin, {
   content: null,
   selectKit: null,
 
-  formatedContent: computed("content", function () {
+  formattedContent: computed("content", function () {
     if (this.content) {
       return makeArray(this.content)
         .map((c) => this.getName(c))

@@ -1129,7 +1129,7 @@ de:
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien."
-      regular_categories: "Stammgast"
+      regular_categories: "Normal"
       regular_categories_instructions: "Diese Kategorien werden in den Themenlisten „Neueste“ und „Top“ angezeigt."
       no_category_access: "Moderatoren haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
@@ -3474,7 +3474,7 @@ de:
         edit: "%{shortcut} Beitrag bearbeiten"
         delete: "%{shortcut} Beitrag löschen"
         mark_muted: "%{shortcut} Thema stummschalten"
-        mark_regular: "%{shortcut} Thema auf „Normal“ setzen"
+        mark_regular: "%{shortcut} Normales (Standard) Thema"
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
@@ -3614,7 +3614,7 @@ de:
           title: "Verfolgen"
           description: "Du wirst automatisch alle Themen mit diesem Schlagwort verfolgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
-          title: "Allgemein"
+          title: "Normal"
           description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
@@ -3720,7 +3720,15 @@ de:
       new_count: "%{count} neues"
       sections:
         messages:
+          header_link_title: "persönliche Nachrichten"
           header_link_text: "Nachrichten"
+          header_action_title: "eine persönliche Nachricht erstellen"
+          links:
+            inbox: "Posteingang"
+            sent: "Gesendet"
+            new: "Neu"
+            unread: "Ungelesen"
+            archive: "Archiv"
         tags:
           no_tracked_tags: "Du verfolgst keine Schlagwörter (tags)."
           header_link_title: "alle Schlagwörter"

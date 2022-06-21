@@ -9,11 +9,6 @@ module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
   REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
 
-  require 'sidekiq/exception_handler'
-  class SidekiqExceptionHandler
-    extend Sidekiq::ExceptionHandler
-  end
-
   class Utils
     URI_REGEXP ||= URI.regexp(%w{http https})
 
@@ -168,7 +163,7 @@ module Discourse
     return if ex.class == Jobs::HandledExceptionWrapper
 
     context ||= {}
-    parent_logger ||= SidekiqExceptionHandler
+    parent_logger ||= Sidekiq
 
     cm = RailsMultisite::ConnectionManagement
     parent_logger.handle_exception(ex, {
