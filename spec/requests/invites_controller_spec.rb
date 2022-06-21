@@ -71,67 +71,71 @@ describe InvitesController do
       end
     end
 
-    it 'adds logged in users to invite groups' do
-      group = Fabricate(:group)
-      group.add_owner(invite.invited_by)
-      InvitedGroup.create!(group: group, invite: invite)
+    describe 'logged in user viewing an invite' do
+      fab!(:group) { Fabricate(:group) }
 
-      sign_in(user)
+      before do
+        sign_in(user)
+      end
 
-      get "/invites/#{invite.invite_key}"
-      expect(response).to redirect_to("/")
-      expect(user.reload.groups).to include(group)
-    end
+      it "redeems the invite when user's email matches invite's email before redirecting to secured topic url" do
+        invite.update_columns(email: user.email)
+        group.add_owner(invite.invited_by)
 
-    it 'redirects logged in users to invite topic if they can see it' do
-      topic = Fabricate(:topic)
-      TopicInvite.create!(topic: topic, invite: invite)
+        secured_category = Fabricate(:category)
+        secured_category.permissions = { group.name => :full }
+        secured_category.save!
 
-      sign_in(user)
+        topic = Fabricate(:topic, category: secured_category)
+        TopicInvite.create!(invite: invite, topic: topic)
+        InvitedGroup.create!(invite: invite, group: group)
 
-      get "/invites/#{invite.invite_key}"
-      expect(response).to redirect_to(topic.url)
-      expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-    end
+        expect do
+          get "/invites/#{invite.invite_key}"
+        end.to change { InvitedUser.exists?(invite: invite, user: user) }.to(true)
 
-    it 'adds logged in user to group and redirects them to invite topic' do
-      group = Fabricate(:group)
-      group.add_owner(invite.invited_by)
-      secured_category = Fabricate(:category)
-      secured_category.permissions = { group.name => :full }
-      secured_category.save!
-      topic = Fabricate(:topic, category: secured_category)
-      TopicInvite.create!(invite: invite, topic: topic)
-      InvitedGroup.create!(invite: invite, group: group)
+        expect(response).to redirect_to(topic.url)
+        expect(user.reload.groups).to include(group)
 
-      sign_in(user)
+        expect(Notification.exists?(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic))
+          .to eq(true)
 
-      get "/invites/#{invite.invite_key}"
-      expect(user.reload.groups).to include(group)
-      expect(response).to redirect_to(topic.url)
-      expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-    end
+        expect(Notification.exists?(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]))
+          .to eq(true)
+      end
 
-    it 'creates a notification to inviter' do
-      topic = Fabricate(:topic)
-      TopicInvite.create!(topic: topic, invite: invite)
+      it "redeems the invite when user's email domain matches the domain an invite link is restricted to" do
+        invite.update!(email: nil, domain: 'discourse.org')
+        user.update!(email: "someguy@discourse.org")
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+        group.add_owner(invite.invited_by)
+        InvitedGroup.create!(invite: invite, group: group)
 
-      sign_in(user)
+        expect do
+          get "/invites/#{invite.invite_key}"
+        end.to change { InvitedUser.exists?(invite: invite, user: user) }.to(true)
 
-      get "/invites/#{invite.invite_key}"
-      expect(response).to redirect_to(topic.url)
-      expect(Notification.where(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-      expect(Notification.where(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]).count).to eq(1)
-    end
+        expect(response).to redirect_to(topic.url)
+        expect(user.reload.groups).to include(group)
+      end
 
-    it 'creates an invited user record' do
-      sign_in(invite.invited_by)
-      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
-      expect(response.status).to eq(302)
+      it "redirects to root if a logged in user tries to view an invite link restricted to a certain domain but user's email domain does not match" do
+        user.update!(email: "someguy@discourse.com")
+        invite.update!(email: nil, domain: 'discourse.org')
 
-      sign_in(user)
-      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(1)
-      expect(response.status).to eq(302)
+        expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "redirects to root if a tries to view an invite meant for a specific email that is not the user's" do
+        invite.update_columns(email: "notuseremail@discourse.org")
+
+        expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+
+        expect(response).to redirect_to("/")
+      end
     end
 
     it 'fails if invite does not exist' do
