@@ -2369,6 +2369,8 @@ en:
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
+    splash_screen: "Displays a temporary loading screen while site assets load"
+
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
@@ -2422,7 +2424,7 @@ en:
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
-      discourse_connect_cannot_be_enabled_if_second_factor_enforced:  "You cannot enable DiscourseConnect if 2FA is enforced."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
 
     placeholder:
       discourse_connect_provider_secrets:

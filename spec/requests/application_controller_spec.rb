@@ -529,6 +529,28 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "splash_screen" do
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      admin
+    end
+
+    it 'adds a preloader splash screen when enabled' do
+      get '/'
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("d-splash")
+
+      SiteSetting.splash_screen = true
+
+      get '/'
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("d-splash")
+    end
+  end
+
   describe 'Delegated auth' do
     let :public_key do
       <<~TXT

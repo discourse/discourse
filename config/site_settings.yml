@@ -2424,6 +2424,10 @@ uncategorized:
     default: true
     hidden: true
 
+  splash_screen:
+    default: false
+    hidden: true
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true

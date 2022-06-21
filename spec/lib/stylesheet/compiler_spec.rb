@@ -11,7 +11,7 @@ describe Stylesheet::Compiler do
 
       it "can compile '#{path}' css" do
         css, _map = Stylesheet::Compiler.compile_asset(path)
-        expect(css.length).to be > 1000
+        expect(css.length).to be > 500
       end
     end
   end

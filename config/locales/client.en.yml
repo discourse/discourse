@@ -3691,6 +3691,8 @@ en:
       create_post: "Reply / See"
       readonly: "See"
 
+    preloader_text: "Loading"
+
     lightbox:
       download: "download"
       open: "original image"
