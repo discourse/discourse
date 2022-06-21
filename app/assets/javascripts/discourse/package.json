@@ -51,7 +51,6 @@
     "ember-exam": "^7.0.1",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
-    "ember-maybe-import-regenerator": "^0.1.6",
     "ember-qunit": "^5.1.2",
     "ember-rfc176-data": "^0.3.17",
     "ember-source": "~3.15.0",
