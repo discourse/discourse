@@ -41,7 +41,7 @@
       <%- else %>
         <h3>Select a theme/component: </h3>
         <%- @suggested_themes.each do |(id, name)| %>
-          <h4><%= link_to name, theme_qunit_url(id: id) %></h4>
+          <h4><%= link_to name, theme_qunit_path(id: id) %></h4>
         <%- end %>
       <%- end %>
     <%- end %>
