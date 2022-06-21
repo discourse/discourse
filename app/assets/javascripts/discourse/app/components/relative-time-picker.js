@@ -182,7 +182,8 @@ export default Component.extend({
   },
 
   @action
-  onChangeDuration() {
+  onChangeDuration(event) {
+    this.set("duration", event.target.value);
     if (this.onChange) {
       this.onChange(this.calculatedMinutes);
     }
