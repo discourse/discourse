@@ -429,6 +429,11 @@ module ApplicationHelper
       ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
   end
 
+  def include_splash_screen?
+    # A bit basic for now but will be expanded later
+    SiteSetting.splash_screen
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end

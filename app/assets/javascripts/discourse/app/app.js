@@ -52,6 +52,9 @@ const Discourse = Application.extend({
   start() {
     document.querySelector("noscript")?.remove();
 
+    // The app booted. Remove the splash screen
+    document.querySelector("#d-splash")?.remove();
+
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`
       Error.stackTraceLimit = Infinity;

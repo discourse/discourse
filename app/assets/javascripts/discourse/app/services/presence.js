@@ -12,7 +12,6 @@ import {
 } from "@ember/runloop";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
-import { isLegacyEmber, isTesting } from "discourse-common/config/environment";
 import User from "discourse/models/user";
 import userPresent, {
   onPresenceChange,
@@ -20,6 +19,7 @@ import userPresent, {
 } from "discourse/lib/user-presence";
 import { bind } from "discourse-common/utils/decorators";
 import Evented from "@ember/object/evented";
+import { isTesting } from "discourse-common/config/environment";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -549,13 +549,6 @@ export default class PresenceService extends Service {
         }
       });
     } catch (e) {
-      if (e.jqXHR?.status === 403 && isTesting() && isLegacyEmber()) {
-        // Legacy testing environment will remove the User.current() value before disposing of controllers/components.
-        // Presence often involves making HTTP calls during disposal of components, so this can cause issues.
-        // Modern Ember-CLI environment does not require this hack
-        return;
-      }
-
       // Put the failed events back in the queue for next time
       this._queuedEvents.unshift(...queue);
       if (e.jqXHR?.status === 429) {

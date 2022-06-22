@@ -1,0 +1,59 @@
+html {
+  background: var(--secondary);
+  // needed because this sheet loads early and we want no scroll bars until
+  // the splash is removed.
+  overflow: hidden !important;
+}
+
+#d-splash {
+  display: grid;
+  place-items: center;
+  position: relative;
+  backface-visibility: hidden;
+
+  .preloader-image {
+    max-width: 100%;
+    height: 100vh;
+    object-fit: none;
+  }
+
+  .preloader-text {
+    padding-top: 5em;
+    position: absolute;
+    display: grid;
+    grid-auto-flow: column;
+    place-items: center;
+
+    &:after {
+      animation: loading-text 3s infinite;
+      content: "";
+      position: absolute;
+      top: 5em;
+      margin: 0 0.1em;
+      left: 100%;
+      // TODO: this needs R2 RTL magic
+      .rtl & {
+        left: 0;
+        right: 100%;
+      }
+    }
+  }
+}
+
+@keyframes loading-text {
+  0% {
+    content: "";
+  }
+
+  25% {
+    content: ".";
+  }
+
+  50% {
+    content: "..";
+  }
+
+  75% {
+    content: "...";
+  }
+}

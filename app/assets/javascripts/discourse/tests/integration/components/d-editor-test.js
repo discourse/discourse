@@ -19,7 +19,6 @@ import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import hbs from "htmlbars-inline-precompile";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { isLegacyEmber } from "discourse-common/config/environment";
 
 discourseModule("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -734,21 +733,19 @@ third line`
         "it works when there is no partial emoji"
       );
 
-      if (!isLegacyEmber()) {
-        await click("textarea.d-editor-input");
-        await fillIn(".d-editor-input", "starting to type an emoji like :gri");
-        jumpEnd(query("textarea.d-editor-input"));
-        await click("button.emoji");
+      await click("textarea.d-editor-input");
+      await fillIn(".d-editor-input", "starting to type an emoji like :gri");
+      jumpEnd(query("textarea.d-editor-input"));
+      await click("button.emoji");
 
-        await click(
-          '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-        );
-        assert.strictEqual(
-          this.value,
-          "starting to type an emoji like :grinning:",
-          "it works when there is a partial emoji"
-        );
-      }
+      await click(
+        '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
+      );
+      assert.strictEqual(
+        this.value,
+        "starting to type an emoji like :grinning:",
+        "it works when there is a partial emoji"
+      );
     },
   });
 

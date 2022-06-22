@@ -1,0 +1,85 @@
+<svg
+  version="1.1"
+  height="2000"
+  width="2000"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <style>
+    :root {
+      /* these need to be injected dynamicly to match theme colors */
+      --primary: #222222;
+      --secondary: #ffffff;
+      --tertiary: #f15c21;
+      --highlight: #f0ea88;
+      --quaternary: #65ccff;
+      --success: #009900;
+    }
+
+    /* these styles need to live here because the SVG has a different scope */
+    .dots {
+      animation-name: loader;
+      animation-timing-function: ease-in-out;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      stroke: #fff;
+      stroke-width: 0.5px;
+    }
+
+    .dots:first-child {
+      fill: var(--tertiary);
+      animation-delay: 1.4s;
+    }
+
+    .dots:nth-child(2) {
+      fill: var(--tertiary);
+      animation-delay: 1.3s;
+      opacity: 0.6;
+    }
+
+    .dots:nth-child(3) {
+      fill: var(--highlight);
+      animation-delay: 1.2s;
+    }
+
+    .dots:nth-child(4) {
+      fill: var(--quaternary);
+      animation-delay: 1.1s;
+    }
+
+    .dots:nth-child(5) {
+      fill: var(--quaternary);
+      animation-delay: 1s;
+    }
+
+    .container {
+      transform: translateX(-125px);
+    }
+
+    @keyframes loader {
+      15% {
+        transform: translateX(0);
+      }
+
+      45% {
+        transform: translatex(calc(250px));
+      }
+
+      65% {
+        transform: translatex(calc(250px));
+      }
+
+      95% {
+        transform: translateX(0);
+      }
+    }
+  </style>
+
+  <g class="container">
+    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
+    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
+    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
+    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
+    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
+  </g>
+</svg>

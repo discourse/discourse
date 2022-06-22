@@ -1,13 +1,17 @@
 import { test } from "qunit";
+import I18n from "I18n";
 
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 
 import {
   acceptance,
   exists,
+  publishToMessageBus,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
   "Sidebar - Messages Section - enable_personal_messages disabled",
@@ -353,6 +357,193 @@ acceptance(
           .length,
         1,
         "foo_group messages inbox filter links are not shown"
+      );
+    });
+
+    test("new and unread counts for group messages", async function (assert) {
+      updateCurrentUser({
+        groups: [
+          {
+            id: 1,
+            name: "group1",
+            has_messages: true,
+          },
+        ],
+      });
+
+      await visit("/");
+
+      const pmTopicTrackingState = this.container.lookup(
+        "pm-topic-tracking-state:main"
+      );
+
+      publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
+        topic_id: 1,
+        message_type: "unread",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 2,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [1],
+        },
+      });
+
+      publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
+        topic_id: 2,
+        message_type: "new_topic",
+        payload: {
+          last_read_post_number: null,
+          highest_post_number: 1,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [1],
+        },
+      });
+
+      await click(
+        ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
+      );
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-group-messages-unread.group1"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.unread_with_count", {
+          count: 1,
+        }),
+        "displays 1 count for group1 unread inbox filter link"
+      );
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-group-messages-new.group1"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.new_with_count", {
+          count: 1,
+        }),
+        "displays 1 count for group1 new inbox filter link"
+      );
+
+      publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 1,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [1],
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-group-messages-new.group1"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.new"),
+        "removes count for group1 new inbox filter link"
+      );
+    });
+
+    test("new and unread counts for personal messages", async function (assert) {
+      await visit("/");
+
+      const pmTopicTrackingState = this.container.lookup(
+        "pm-topic-tracking-state:main"
+      );
+
+      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+        topic_id: 1,
+        message_type: "unread",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 2,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [],
+        },
+      });
+
+      await settled();
+
+      await click(
+        ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
+      );
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-personal-messages-unread"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.unread_with_count", {
+          count: 1,
+        }),
+        "displays 1 count for the unread inbox filter link"
+      );
+
+      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+        topic_id: 2,
+        message_type: "unread",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 2,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [],
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-personal-messages-unread"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.unread_with_count", {
+          count: 2,
+        }),
+        "displays 2 count for the unread inbox filter link"
+      );
+
+      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+        topic_id: 3,
+        message_type: "new_topic",
+        payload: {
+          last_read_post_number: null,
+          highest_post_number: 1,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [],
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-personal-messages-new"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.new_with_count", {
+          count: 1,
+        }),
+        "displays 1 count for the new inbox filter link"
+      );
+
+      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+        topic_id: 3,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 1,
+          highest_post_number: 1,
+          notification_level: NotificationLevels.TRACKING,
+          group_ids: [],
+        },
+      });
+
+      await settled();
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-messages .sidebar-section-link-personal-messages-new"
+        ).textContent.trim(),
+        I18n.t("sidebar.sections.messages.links.new"),
+        "removes the count from the new inbox filter link"
       );
     });
   }
