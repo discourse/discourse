@@ -84,13 +84,11 @@
 
   .sidebar-section-link-wrapper {
     margin-left: 1.5em;
-    display: flex;
-    align-items: center;
   }
 
   .sidebar-section-link {
-    flex: 1 1 0;
     display: flex;
+    align-items: center;
     padding: 0.25em 0.5em;
     color: var(--primary-high);
     font-size: var(--font-down-1);
@@ -104,8 +102,24 @@
       font-weight: bold;
     }
 
-    .badge-wrapper {
-      font-size: 100%;
+    .sidebar-section-link-content-badge {
+      width: 30%;
+      text-align: right;
+    }
+
+    .sidebar-section-link-content-text {
+      width: 70%;
+
+      .badge-wrapper {
+        font-size: 100%;
+        width: 100%;
+
+        .category-name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 
