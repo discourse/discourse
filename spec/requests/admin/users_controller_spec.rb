@@ -822,7 +822,7 @@ RSpec.describe Admin::UsersController do
       expect(ScreenedEmail.exists?(email: user_emails)).to eq(true)
     end
 
-    it "don't block the e-mails if block_email param is is false" do
+    it "does not block the e-mails if block_email param is is false" do
       user_emails = delete_me.user_emails.pluck(:email)
 
       delete "/admin/users/#{delete_me.id}.json", params: { block_email: false }
@@ -830,7 +830,7 @@ RSpec.describe Admin::UsersController do
       expect(ScreenedEmail.exists?(email: user_emails)).to eq(false)
     end
 
-    it "don't block the e-mails by default" do
+    it "does not block the e-mails by default" do
       user_emails = delete_me.user_emails.pluck(:email)
 
       delete "/admin/users/#{delete_me.id}.json"
@@ -846,7 +846,7 @@ RSpec.describe Admin::UsersController do
       expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(true)
     end
 
-    it "don't block the ip address if block_ip param is false" do
+    it "does not block the ip address if block_ip param is false" do
       ip_address = delete_me.ip_address
 
       delete "/admin/users/#{delete_me.id}.json", params: { block_ip: false }
@@ -854,7 +854,7 @@ RSpec.describe Admin::UsersController do
       expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(false)
     end
 
-    it "don't block the ip address by default" do
+    it "does not block the ip address by default" do
       ip_address = delete_me.ip_address
 
       delete "/admin/users/#{delete_me.id}.json"
@@ -878,13 +878,13 @@ RSpec.describe Admin::UsersController do
         expect(ScreenedUrl.exists?(url: @urls)).to eq(true)
       end
 
-      it "don't block the urls if block_url param is false" do
+      it "does not block the urls if block_url param is false" do
         delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: false }
         expect(response.status).to eq(200)
         expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
       end
 
-      it "don't block the urls by default" do
+      it "does not block the urls by default" do
         delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: false }
         expect(response.status).to eq(200)
         expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
