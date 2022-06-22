@@ -814,13 +814,16 @@ RSpec.describe Admin::UsersController do
       end
     end
 
-    it "blocks the e-mail if block_email == true" do
+    it "blocks the e-mail if block_email param is true" do
       user_emails = delete_me.user_emails.pluck(:email)
 
       delete "/admin/users/#{delete_me.id}.json", params: { block_email: true }
       expect(response.status).to eq(200)
 
-      expect(user_emails.size).to be >= 1
+      expect do 
+        delete "/admin/users/#{delete_me.id}.json", params: { block_email: true }
+        expect(response.status).to eq(200)
+      end.to change { ScreenedEmailed.where(email: delete_me.user_emails.pluck(:email)).count }.from(0).to(1)
       expect(ScreenedEmail.where(email: user_emails).count).to eq(user_emails.size)
     end
 
@@ -850,7 +853,7 @@ RSpec.describe Admin::UsersController do
       delete "/admin/users/#{delete_me.id}.json", params: { block_ip: true }
       expect(response.status).to eq(200)
 
-      expect(ScreenedIpAddress.where(ip_address: ip_address).count).to eq(1)
+      expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(true)
     end
 
     it "don't block the ip address if block_ip == false" do
@@ -859,7 +862,7 @@ RSpec.describe Admin::UsersController do
       delete "/admin/users/#{delete_me.id}.json", params: { block_ip: false }
       expect(response.status).to eq(200)
 
-      expect(ScreenedIpAddress.where(ip_address: ip_address).count).to eq(0)
+      expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(false)
     end
 
     it "don't block the ip address by default" do
