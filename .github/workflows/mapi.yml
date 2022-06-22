@@ -1,0 +1,91 @@
+name: mapi
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - beta
+      - stable
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+
+    env:
+      PGUSER: discourse
+      PGPASSWORD: discourse
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
+
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+
+      - name: Bundler cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
+
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
+      - name: Create and migrate database
+        run: |
+          bin/rake db:create
+          bin/rake db:migrate
+
+      - name: Create an api key for the system user
+        run: |
+          psql postgresql://$PGUSER:$PGPASSWORD@/discourse_test --command="insert into api_keys (user_id, created_at, updated_at, key_hash, truncated_key) values (-1, NOW(), NOW(), '307ed56bb7f9b4644c077099d5dcddbe0423e367fac0ef2a8637cc6480ec504f', '61db');"
+
+      - name: Generate openapi.yaml
+        run: |
+          bin/rake rswag:specs:swaggerize
+
+      - name: Start rails server
+        run: |
+          bundle exec rails server &
+          sleep 10
+
+      - name: Run Mayhem for API
+        uses: ForAllSecure/mapi-action@v1
+        continue-on-error: true
+        with:
+          mapi-token: ${{ secrets.MAPI_TOKEN }}
+          api-url: http://localhost:3000
+          api-spec: openapi/openapi.yaml
+          target: mayhemheroes/discourse
+          duration: auto
+          sarif-report: mapi.sarif
+          run-args: |
+            --ignore-rule
+            InvalidResponseSpec
+            --header-auth
+            Api-Username: system
+            --header-auth
+            Api-Key: 61db231b22a68ffb773dce2cfc0087375287f16e4cf96132fb76cdc2cfcc35af
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: mapi.sarif
