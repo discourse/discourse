@@ -814,6 +814,96 @@ RSpec.describe Admin::UsersController do
       end
     end
 
+    it "blocks the e-mail if block_email == true" do
+      user_emails = delete_me.user_emails.pluck(:email)
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_email: true }
+      expect(response.status).to eq(200)
+
+      expect(user_emails.size).to be >= 1
+      expect(ScreenedEmail.where(email: user_emails).count).to eq(user_emails.size)
+    end
+
+    it "don't block the e-mails if block_email == false" do
+      user_emails = delete_me.user_emails.pluck(:email)
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_email: false }
+      expect(response.status).to eq(200)
+
+      expect(user_emails.size).to be >= 1
+      expect(ScreenedEmail.where(email: user_emails).count).to eq(0)
+    end
+
+    it "don't block the e-mails by default" do
+      user_emails = delete_me.user_emails.pluck(:email)
+
+      delete "/admin/users/#{delete_me.id}.json"
+      expect(response.status).to eq(200)
+
+      expect(user_emails.size).to be >= 1
+      expect(ScreenedEmail.where(email: user_emails).count).to eq(0)
+    end
+
+    it "blocks the ip address if block_ip == true" do
+      ip_address = delete_me.ip_address
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_ip: true }
+      expect(response.status).to eq(200)
+
+      expect(ScreenedIpAddress.where(ip_address: ip_address).count).to eq(1)
+    end
+
+    it "don't block the ip address if block_ip == false" do
+      ip_address = delete_me.ip_address
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_ip: false }
+      expect(response.status).to eq(200)
+
+      expect(ScreenedIpAddress.where(ip_address: ip_address).count).to eq(0)
+    end
+
+    it "don't block the ip address by default" do
+      ip_address = delete_me.ip_address
+
+      delete "/admin/users/#{delete_me.id}.json"
+      expect(response.status).to eq(200)
+
+      expect(ScreenedIpAddress.where(ip_address: ip_address).count).to eq(0)
+    end
+
+    context "block_email, block_ip and block_url" do
+      before do
+        @post = Fabricate(:post_with_external_links, user: delete_me)
+        TopicLink.extract_from(@post)
+
+        @urls = TopicLink.where(user: delete_me, internal: false).pluck(:url).map { |url| ScreenedUrl.normalize_url(url) }
+      end
+
+      it "blocks the urls if block_url == true" do
+        delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: true }
+        expect(response.status).to eq(200)
+
+        expect(@urls.size).to be >= 1
+        expect(ScreenedUrl.where(url: @urls).count).to be >= 1
+      end
+
+      it "don't block the urls if block_url == false" do
+        delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: false }
+        expect(response.status).to eq(200)
+
+        expect(@urls.size).to be >= 1
+        expect(ScreenedUrl.where(url: @urls).count).to eq(0)
+      end
+
+      it "don't block the urls by default" do
+        delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: false }
+        expect(response.status).to eq(200)
+
+        expect(@urls.size).to be >= 1
+        expect(ScreenedUrl.where(url: @urls).count).to eq(0)
+      end
+    end
+
     it "deletes the user record" do
       delete "/admin/users/#{delete_me.id}.json"
       expect(response.status).to eq(200)
