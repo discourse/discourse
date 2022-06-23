@@ -21,6 +21,7 @@ class WordWatcher
     words = WatchedWord
       .where(action: WatchedWord.actions[action.to_sym])
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
+      .order(:id)
 
     if WatchedWord.has_replacement?(action.to_sym)
       words.pluck(:word, :replacement).to_h

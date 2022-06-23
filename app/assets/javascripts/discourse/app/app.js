@@ -52,9 +52,6 @@ const Discourse = Application.extend({
   start() {
     document.querySelector("noscript")?.remove();
 
-    // The app booted. Remove the splash screen
-    document.querySelector("#d-splash")?.remove();
-
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`
       Error.stackTraceLimit = Infinity;
@@ -84,6 +81,9 @@ const Discourse = Application.extend({
         initialize: () => withPluginApi(cb.version, cb.code),
       });
     });
+
+    // The app booted. Remove the splash screen
+    document.querySelector("#d-splash")?.remove();
   },
 
   _registerPluginCode(version, code) {

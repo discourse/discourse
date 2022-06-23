@@ -1,9 +1,8 @@
 <svg
-  version="1.1"
-  height="2000"
-  width="2000"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
+  version="1.1"
+  data-ember-extension="1"
 >
   <style>
     :root {
@@ -22,19 +21,23 @@
       animation-timing-function: ease-in-out;
       animation-duration: 3s;
       animation-iteration-count: infinite;
+      animation-delay: 1.5s;
       stroke: #fff;
       stroke-width: 0.5px;
+      transform-origin: center;
+      opacity: 0;
+      r: max(1vw, 11px);
+      cy: 50%;
     }
 
     .dots:first-child {
       fill: var(--tertiary);
-      animation-delay: 1.4s;
+      animation-delay: 1s;
     }
 
     .dots:nth-child(2) {
       fill: var(--tertiary);
-      animation-delay: 1.3s;
-      opacity: 0.6;
+      animation-delay: 1.1s;
     }
 
     .dots:nth-child(3) {
@@ -44,42 +47,42 @@
 
     .dots:nth-child(4) {
       fill: var(--quaternary);
-      animation-delay: 1.1s;
+      animation-delay: 1.3s;
     }
 
     .dots:nth-child(5) {
       fill: var(--quaternary);
-      animation-delay: 1s;
-    }
-
-    .container {
-      transform: translateX(-125px);
+      animation-delay: 1.4s;
     }
 
     @keyframes loader {
       15% {
-        transform: translateX(0);
+        opacity: 0;
+        transform: scale(1);
       }
 
       45% {
-        transform: translatex(calc(250px));
+        opacity: 1;
+        transform: scale(0.7);
       }
 
       65% {
-        transform: translatex(calc(250px));
+        opacity: 1;
+        transform: scale(0.7);
       }
 
       95% {
-        transform: translateX(0);
+        opacity: 0;
+        transform: scale(1);
       }
     }
   </style>
 
   <g class="container">
-    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
-    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
-    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
-    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
-    <circle class="dots" cy="50%" r="10" cx="50vw"></circle>
+    <circle class="dots" cx="30vw" />
+    <circle class="dots" cx="40vw" />
+    <circle class="dots" cx="50vw" />
+    <circle class="dots" cx="60vw" />
+    <circle class="dots" cx="70vw" />
   </g>
 </svg>

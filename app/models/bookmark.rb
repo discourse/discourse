@@ -177,26 +177,11 @@ class Bookmark < ActiveRecord::Base
   end
 
   ##
-  # Deletes bookmarks that are attached to posts/topics that were deleted
-  # more than X days ago. We don't delete bookmarks instantly when a post/topic
-  # is deleted so that there is a grace period to un-delete.
+  # Deletes bookmarks that are attached to the bookmarkable records that were deleted
+  # more than X days ago. We don't delete bookmarks instantly when trashable bookmarkables
+  # are deleted so that there is a grace period to un-delete.
   def self.cleanup!
-    grace_time = 3.days.ago
-    topics_deleted = DB.query(<<~SQL, grace_time: grace_time)
-      DELETE FROM bookmarks b
-      USING topics t, posts p
-      WHERE (t.id = p.topic_id AND (
-          (b.bookmarkable_id = p.id AND b.bookmarkable_type = 'Post') OR
-          (b.bookmarkable_id = p.id AND b.bookmarkable_type = 'Topic')
-        ))
-        AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
-       RETURNING t.id AS topic_id
-    SQL
-
-    topics_deleted_ids = topics_deleted.map(&:topic_id).uniq
-    topics_deleted_ids.each do |topic_id|
-      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic_id)
-    end
+    Bookmark.registered_bookmarkables.each(&:cleanup_deleted)
   end
 end
 
