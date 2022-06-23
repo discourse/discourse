@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 describe Search do
-  fab!(:whisperers_group) { Fabricate(:group) }
-  fab!(:admin) { Fabricate(:admin, groups: [whisperers_group]) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:topic) { Fabricate(:topic) }
 
   before do
     SearchIndexer.enable
     Jobs.run_immediately!
-    SiteSetting.enable_whispers = "#{whisperers_group.id}"
+    SiteSetting.enable_whispers = true
   end
 
   context "#ts_config" do

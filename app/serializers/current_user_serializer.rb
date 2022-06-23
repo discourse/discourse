@@ -12,6 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :notification_channel_position,
              :moderator?,
              :staff?,
+             :whisperer?,
              :title,
              :any_posts,
              :enable_quoting,

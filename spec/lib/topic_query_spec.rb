@@ -18,11 +18,10 @@ describe TopicQuery do
   let(:topic_query) { TopicQuery.new(user) }
 
   fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:whisperers_group) { Fabricate(:group) }
-  fab!(:admin) { Fabricate(:admin, groups: [whisperers_group]) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
-    SiteSetting.enable_whispers = "#{whisperers_group.id}"
+    SiteSetting.enable_whispers = true
   end
 
   context 'secure category' do
@@ -840,7 +839,7 @@ describe TopicQuery do
 
     context 'with whispers' do
 
-      it 'correctly shows up in unread for whisperers' do
+      it 'correctly shows up in unread for staff' do
 
         first = create_post(raw: 'this is the first post', title: 'super amazing title')
 

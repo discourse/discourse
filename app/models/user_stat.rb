@@ -41,9 +41,9 @@ class UserStat < ActiveRecord::Base
         WHERE t.deleted_at IS NULL
         AND t.archetype = :archetype
         AND tu.last_read_post_number < CASE
-                                       WHEN gu.id IS NULL
-                                       THEN t.highest_post_number
-                                       ELSE t.highest_staff_post_number
+                                       WHEN u.admin OR u.moderator OR gu.id IS NOT NULL
+                                       THEN t.highest_staff_post_number
+                                       ELSE t.highest_post_number
                                        END
         AND (COALESCE(tu.notification_level, 1) >= 2)
         AND tau.user_id IN (

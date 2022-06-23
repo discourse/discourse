@@ -19,7 +19,11 @@ module Roleable
   end
 
   def whisperer?
-    SiteSetting.enable_whispers.present? && groups&.exists?(id: SiteSetting.enable_whispers.split("|"))
+    return @whisperer if defined?(@whisperer)
+    return @whisperer = false if !SiteSetting.enable_whispers?
+    return @whisperer = true if staff?
+    return @whisperer = false if SiteSetting.whispers_allowed_groups.blank?
+    @whisperer = group_users&.exists?(group_id: SiteSetting.Whispers.allowed_group_ids)
   end
 
   def grant_moderation!

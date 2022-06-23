@@ -1640,7 +1640,7 @@ describe Post do
     end
 
     it "will update topic updated_at for all topic related events" do
-      SiteSetting.enable_whispers = "4"
+      SiteSetting.enable_whispers = true
 
       post = updates_topic_updated_at do
         create_post(topic_id: topic.id, post_type: Post.types[:whisper])

@@ -1001,9 +1001,8 @@ describe PostCreator do
     end
 
     it 'does not add whisperers to allowed users of the topic' do
-      whisperer_group = Fabricate(:group)
-      unrelated_user.update!(admin: true, groups: [whisperer_group])
-      SiteSetting.enable_whispers = "#{whisperer_group.id}"
+      SiteSetting.enable_whispers = true
+      unrelated_user.update!(admin: true)
 
       PostCreator.create!(
         unrelated_user,

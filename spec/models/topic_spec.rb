@@ -5,9 +5,9 @@ describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:whisperer_group) { Fabricate(:group) }
-  fab!(:moderator) { Fabricate(:moderator, groups: [whisperer_group]) }
+  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:admin) { Fabricate(:admin) }
@@ -15,7 +15,8 @@ describe Topic do
   fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
   before do
-    SiteSetting.enable_whispers = "#{whisperer_group.id}"
+    SiteSetting.enable_whispers = true
+    SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
   end
 
   context 'validations' do
@@ -190,8 +191,17 @@ describe Topic do
       expect(post_types).to_not include(types[:whisper])
     end
 
-    it "returns the appropriate types for whisperer users" do
+    it "returns the appropriate types for staff users" do
       post_types = Topic.visible_post_types(moderator)
+
+      expect(post_types).to include(types[:regular])
+      expect(post_types).to include(types[:moderator_action])
+      expect(post_types).to include(types[:small_action])
+      expect(post_types).to include(types[:whisper])
+    end
+
+    it "returns the appropriate types for whisperer users" do
+      post_types = Topic.visible_post_types(user2)
 
       expect(post_types).to include(types[:regular])
       expect(post_types).to include(types[:moderator_action])

@@ -4,9 +4,8 @@ require 'topic_view'
 
 RSpec.describe TopicView do
   fab!(:user) { Fabricate(:user) }
-  fab!(:whisperers_group) { Fabricate(:group) }
-  fab!(:moderator) { Fabricate(:moderator, groups: [whisperers_group]) }
-  fab!(:admin) { Fabricate(:admin, groups: [whisperers_group]) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:first_poster) { topic.user }
@@ -15,7 +14,7 @@ RSpec.describe TopicView do
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
   before do
-    SiteSetting.enable_whispers = "#{whisperers_group.id}"
+    SiteSetting.enable_whispers = true
   end
 
   context "preload" do

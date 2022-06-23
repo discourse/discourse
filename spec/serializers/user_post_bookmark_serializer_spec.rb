@@ -8,7 +8,8 @@ RSpec.describe UserPostBookmarkSerializer do
   let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: post) }
 
   before do
-    SiteSetting.enable_whispers = "#{whisperers_group.id}"
+    SiteSetting.enable_whispers = true
+    SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
   end
 
   it "uses the correct highest_post_number column based on whether the user is whisperer" do
@@ -21,6 +22,7 @@ RSpec.describe UserPostBookmarkSerializer do
 
     expect(serializer.highest_post_number).to eq(3)
 
+    user.remove_instance_variable(:@whisperer)
     user.groups << whisperers_group
 
     expect(serializer.highest_post_number).to eq(4)

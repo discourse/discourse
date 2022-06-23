@@ -429,7 +429,7 @@ describe PostAction do
     end
 
     it 'should not increase topic like count when liking a whisper' do
-      SiteSetting.enable_whispers = "4"
+      SiteSetting.set(:enable_whispers, true)
       post.revise(admin, post_type: Post.types[:whisper])
 
       PostActionCreator.like(admin, post)

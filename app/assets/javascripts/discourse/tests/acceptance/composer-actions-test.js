@@ -22,12 +22,12 @@ acceptance("Composer Actions", function (needs) {
   needs.user({
     id: 5,
     username: "kris",
-    groups: [{ id: 14, name: "awesome_group" }],
+    whisperer: true,
   });
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_post: false,
-    enable_whispers: "14",
+    enable_whispers: true,
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
@@ -82,7 +82,8 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - toggle_whisper", async function (assert) {
+  test("replying to post - toggle_whisper for whisperers", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -113,6 +114,22 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(
       !exists(".composer-actions svg.d-icon-share"),
       "reply icon is not visible"
+    );
+  });
+
+  test("replying to post - toggle_whisper for admins", async function (assert) {
+    updateCurrentUser({ admin: true, moderator: false, groups: [] });
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_3 button.reply");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("toggle_whisper");
+
+    assert.strictEqual(
+      count(".composer-actions svg.d-icon-far-eye-slash"),
+      1,
+      "whisper icon is visible"
     );
   });
 
@@ -354,6 +371,7 @@ acceptance("Composer Actions", function (needs) {
       moderator: false,
       admin: false,
       trust_level: 3,
+      whisperer: false,
       groups: [{ id: 13, name: "tl3_group" }],
     });
     await visit("/t/internationalization-localization/280");
@@ -377,6 +395,7 @@ acceptance("Composer Actions", function (needs) {
       moderator: false,
       admin: false,
       trust_level: 4,
+      whisperer: false,
       groups: [{ id: 13, name: "tl4_group" }],
     });
     await visit("/t/internationalization-localization/280");
@@ -414,13 +433,9 @@ function stubDraftResponse() {
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {
-  needs.user({
-    id: 5,
-    username: "kris",
-    groups: [{ id: 14, name: "awesome_group" }],
-  });
+  needs.user();
   needs.settings({
-    enable_whispers: "14",
+    enable_whispers: true,
   });
   needs.site({
     can_tag_topics: true,
