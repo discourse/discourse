@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -5,7 +6,6 @@ import {
   createFile,
   discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { click, waitFor } from "@ember/test-helpers";
 

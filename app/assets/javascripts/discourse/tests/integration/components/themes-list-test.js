@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
 import I18n from "I18n";
 import componentTest, {
@@ -10,7 +11,6 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { click, fillIn } from "@ember/test-helpers";
 
 function createThemes(itemsCount, customAttributesCallback) {

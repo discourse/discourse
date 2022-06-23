@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -8,7 +9,6 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
-import hbs from "htmlbars-inline-precompile";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";

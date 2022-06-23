@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -8,7 +9,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { fillIn } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import sinon from "sinon";
 
 discourseModule("Integration | Component | text-field", function (hooks) {

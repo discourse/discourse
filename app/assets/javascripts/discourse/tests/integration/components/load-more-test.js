@@ -1,9 +1,9 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { configureEyeline } from "discourse/lib/eyeline";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);

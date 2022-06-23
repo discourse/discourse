@@ -1,5 +1,5 @@
+import { hbs } from "ember-cli-htmlbars";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 

@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { formattedReminderTime } from "discourse/lib/bookmark";
@@ -5,7 +6,6 @@ import { tomorrow } from "discourse/lib/time-utils";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
 import {
   discourseModule,
   exists,

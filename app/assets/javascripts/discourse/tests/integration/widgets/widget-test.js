@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -12,7 +13,6 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import { click } from "@ember/test-helpers";
 import { createWidget } from "discourse/widgets/widget";
-import hbs from "htmlbars-inline-precompile";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";

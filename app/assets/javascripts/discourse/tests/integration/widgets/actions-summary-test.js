@@ -1,8 +1,8 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { count, discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | actions-summary",

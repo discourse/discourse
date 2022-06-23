@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import { click, fillIn, triggerKeyEvent } from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
@@ -8,7 +9,6 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);

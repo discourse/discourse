@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -8,7 +9,6 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
-import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { settled } from "@ember/test-helpers";
 
