@@ -10,6 +10,7 @@ html {
   place-items: center;
   position: relative;
   backface-visibility: hidden;
+  will-change: transform;
 
   .preloader-image {
     max-width: 100%;
