@@ -1522,14 +1522,18 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description)
+  def set_status!(description, emoji)
     now = Time.zone.now
     if user_status
-      user_status.update!(description: description, set_at: now)
+      user_status.update!(
+        description: description,
+        emoji: emoji,
+        set_at: now)
     else
       self.user_status = UserStatus.create!(
         user_id: id,
         description: description,
+        emoji: emoji,
         set_at: now
       )
     end

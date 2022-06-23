@@ -4,7 +4,6 @@ export default createWidget("user-status-bubble", {
   tagName: "div.user-status-background",
 
   html(attrs) {
-    const emoji = attrs.emoji ?? "mega";
-    return this.attach("emoji", { name: emoji });
+    return this.attach("emoji", { name: attrs.emoji });
   },
 });

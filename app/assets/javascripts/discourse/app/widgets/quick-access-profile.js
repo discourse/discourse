@@ -30,10 +30,9 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
     const action = "hideMenuAndSetStatus";
     const userStatus = this.currentUser.status;
     if (userStatus) {
-      const emoji = userStatus.emoji ?? "mega";
       return this.attach("flat-button", {
         action,
-        emoji,
+        emoji: userStatus.emoji,
         translatedLabel: userStatus.description,
       });
     } else {
