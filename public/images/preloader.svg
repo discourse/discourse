@@ -55,9 +55,6 @@
       animation-delay: 1.4s;
     }
 
-    .container {
-    }
-
     @keyframes loader {
       15% {
         opacity: 0;
