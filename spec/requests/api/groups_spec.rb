@@ -41,7 +41,6 @@ describe 'groups' do
                 messageable_level: { type: :integer },
                 visibility_level: { type: :integer },
                 automatic_membership_email_domains: { type: [:string, :null] },
-                automatic_membership_retroactive: { type: :boolean },
                 primary_group: { type: :boolean },
                 title: { type: [:string, :null] },
                 grant_trust_level: { type: [:string, :null] },
