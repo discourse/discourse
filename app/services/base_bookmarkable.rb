@@ -155,4 +155,17 @@ class BaseBookmarkable
   def self.after_destroy(guardian, bookmark, opts)
     # noop
   end
+
+  ##
+  # Some bookmarkable records are Trashable, and as such we don't delete the
+  # bookmark with dependent_destroy. This should be used to delete those records
+  # after a grace period, defined by the bookmarkable. For example, post bookmarks
+  # may be deleted 3 days after the post or topic is deleted.
+  #
+  # In the case of bookmarkable records that are not trashable, and where
+  # dependent_destroy is not used, this shouldjust delete the bookmarks pointing
+  # to the record which no longer exists in the database.
+  def self.cleanup_deleted
+    # noop
+  end
 end
