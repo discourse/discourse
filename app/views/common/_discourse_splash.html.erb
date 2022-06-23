@@ -1,17 +1,83 @@
 <%- unless customization_disabled? %>
-  <section id="d-splash">
-    <%= discourse_stylesheet_link_tag 'd_splash', theme_id: nil %>
+<section id="d-splash">
+  <style>
+    html {
+      background: var(--secondary);
+      overflow: hidden !important;
+    }
 
-    <img
-      class="preloader-image"
-      src="/images/preloader.svg"
-      alt="<%=SiteSetting.title%>"
-    >
+    #d-splash {
+      display: grid;
+      place-items: center;
+      position: relative;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
 
-    <div class="preloader-text">
-      <span>
-        <%= I18n.t("js.preloader_text") %>
-      </span>
-    </div>
-  </section>
+    #d-splash .preloader-image {
+      max-width: 100%;
+      height: 100vh;
+    }
+
+    #d-splash .preloader-text {
+      padding-top: 4em;
+      position: absolute;
+      display: grid;
+      grid-auto-flow: column;
+      place-items: center;
+      opacity: 0;
+      animation: fade-in 0.5s ease-in-out;
+      animation-delay: 2.5s;
+      animation-fill-mode: forwards;
+    }
+
+    #d-splash .preloader-text:after {
+      animation: loading-text 3s infinite;
+      content: "";
+      position: absolute;
+      top: 4em;
+      margin: 0 0.1em;
+      left: 100%;
+    }
+
+    .rtl #d-splash .preloader-text:after {
+      left: 0;
+      right: 100%;
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes loading-text {
+      0% {
+        content: "";
+      }
+      25% {
+        content: ".";
+      }
+      50% {
+        content: "..";
+      }
+      75% {
+        content: "...";
+      }
+    }
+  </style>
+
+  <img
+    class="preloader-image"
+    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' data-ember-extension='1'%0A%3E%3Cstyle%3E :root %7B /* these need to be injected dynamicly to match theme colors */ --primary: %23222222; --secondary: %23ffffff; --tertiary: %23f15c21; --highlight: %23f0ea88; --quaternary: %2365ccff; --success: %23009900; %7D /* these styles need to live here because the SVG has a different scope */ .dots %7B animation-name: loader; animation-timing-function: ease-in-out; animation-duration: 3s; animation-iteration-count: infinite; animation-delay: 1.5s; stroke: %23fff; stroke-width: 0.5px; transform-origin: center; opacity: 0; r: max(1vw, 11px); cy: 50%25; %7D .dots:first-child %7B fill: var(--tertiary); animation-delay: 1s; %7D .dots:nth-child(2) %7B fill: var(--tertiary); animation-delay: 1.1s; %7D .dots:nth-child(3) %7B fill: var(--highlight); animation-delay: 1.2s; %7D .dots:nth-child(4) %7B fill: var(--quaternary); animation-delay: 1.3s; %7D .dots:nth-child(5) %7B fill: var(--quaternary); animation-delay: 1.4s; %7D @keyframes loader %7B 15%25 %7B opacity: 0; transform: scale(1); %7D 45%25 %7B opacity: 1; transform: scale(0.7); %7D 65%25 %7B opacity: 1; transform: scale(0.7); %7D 95%25 %7B opacity: 0; transform: scale(1); %7D %7D %3C/style%3E%3Cg class='container'%3E%3Ccircle class='dots' cx='30vw' /%3E%3Ccircle class='dots' cx='40vw' /%3E%3Ccircle class='dots' cx='50vw' /%3E%3Ccircle class='dots' cx='60vw' /%3E%3Ccircle class='dots' cx='70vw' /%3E%3C/g%3E%3C/svg%3E%0A"
+    alt="<%=SiteSetting.title%>"
+  />
+
+  <div class="preloader-text">
+    <span> <%= I18n.t("js.preloader_text") %> </span>
+  </div>
+</section>
 <%- end %>

@@ -9,10 +9,6 @@
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
-    <%- if include_splash_screen? %>
-      <link rel="preload" as="image" href="/images/preloader.svg">
-    <%- end %>
-
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
     <%- end %>
