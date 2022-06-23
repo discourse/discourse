@@ -181,9 +181,7 @@ class Bookmark < ActiveRecord::Base
   # more than X days ago. We don't delete bookmarks instantly when trashable bookmarkables
   # are deleted so that there is a grace period to un-delete.
   def self.cleanup!
-    Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
-      registered_bookmarkable.cleanup_deleted
-    end
+    Bookmark.registered_bookmarkables.each(&:cleanup_deleted)
   end
 end
 
