@@ -60,7 +60,7 @@ describe Bookmark do
       expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post2.topic_id })
     end
 
-    it "deletes bookmarks attached to a deleted topic which has been deleted for > 3 days" do
+    it "deletes bookmarks attached via a post to a deleted topic which has been deleted for > 3 days" do
       bookmark = Fabricate(:bookmark, bookmarkable: post)
       bookmark2 = Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: post.topic))
       bookmark3 = Fabricate(:bookmark)
@@ -70,6 +70,21 @@ describe Bookmark do
       expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
       expect(Bookmark.find_by(id: bookmark2.id)).to eq(nil)
       expect(Bookmark.find_by(id: bookmark3.id)).to eq(bookmark3)
+      expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: post.topic_id })
+    end
+
+    it "deletes bookmarks attached via the topic to a deleted topic which has been deleted for > 3 days" do
+      topic = Fabricate(:topic)
+      bookmark = Fabricate(:bookmark, bookmarkable: topic)
+      bookmark2 = Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic))
+      bookmark3 = Fabricate(:bookmark)
+      topic.trash!
+      topic.update(deleted_at: 4.days.ago)
+      Bookmark.cleanup!
+      expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
+      expect(Bookmark.find_by(id: bookmark2.id)).to eq(nil)
+      expect(Bookmark.find_by(id: bookmark3.id)).to eq(bookmark3)
+      expect_job_enqueued(job: :sync_topic_user_bookmarked, args: { topic_id: topic.id })
     end
 
     it "does not delete bookmarks attached to posts that are not deleted or that have not met the 3 day grace period" do

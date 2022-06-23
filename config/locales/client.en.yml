@@ -4051,7 +4051,9 @@ en:
             inbox: "Inbox"
             sent: "Sent"
             new: "New"
+            new_with_count: "New (%{count})"
             unread: "Unread"
+            unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
           no_tracked_tags: "You are not tracking any tags."

@@ -2,13 +2,14 @@ import { cached } from "@glimmer/tracking";
 
 import { getOwner } from "discourse-common/lib/get-owner";
 import GlimmerComponent from "discourse/components/glimmer";
+import { bind } from "discourse-common/utils/decorators";
 import GroupMessageSectionLink from "discourse/lib/sidebar/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/messages-section/personal-message-section-link";
 
 export const INBOX = "inbox";
-const UNREAD = "unread";
+export const UNREAD = "unread";
 const SENT = "sent";
-const NEW = "new";
+export const NEW = "new";
 const ARCHIVE = "archive";
 
 export const PERSONAL_MESSAGES_INBOX_FILTERS = [
@@ -30,6 +31,24 @@ export default class SidebarMessagesSection extends GlimmerComponent {
       this,
       this._refreshSectionLinksDisplayState
     );
+
+    this.pmTopicTrackingState
+      .startTracking()
+      .then(this._refreshSectionLinkCounts);
+
+    this._pmTopicTrackingStateKey = "messages-section";
+
+    this.pmTopicTrackingState.onStateChange(
+      this._pmTopicTrackingStateKey,
+      this._refreshSectionLinkCounts
+    );
+  }
+
+  @bind
+  _refreshSectionLinkCounts() {
+    for (const sectionLink of this.allSectionLinks) {
+      sectionLink.refreshCount();
+    }
   }
 
   willDestroy() {
@@ -37,6 +56,11 @@ export default class SidebarMessagesSection extends GlimmerComponent {
       "page:changed",
       this,
       this._refreshSectionLinksDisplayState
+    );
+
+    this.pmTopicTrackingState.offStateChange(
+      this._pmTopicTrackingStateKey,
+      this._refreshSectionLinkCounts
     );
   }
 
@@ -81,6 +105,7 @@ export default class SidebarMessagesSection extends GlimmerComponent {
         new PersonalMessageSectionLink({
           currentUser: this.currentUser,
           type,
+          pmTopicTrackingState: this.pmTopicTrackingState,
         })
       );
     });
@@ -99,6 +124,7 @@ export default class SidebarMessagesSection extends GlimmerComponent {
             group,
             type: groupMessageLink,
             currentUser: this.currentUser,
+            pmTopicTrackingState: this.pmTopicTrackingState,
           })
         );
       });
