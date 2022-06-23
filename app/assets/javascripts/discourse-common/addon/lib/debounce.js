@@ -1,4 +1,4 @@
-import { debounce, next } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
 
 /**
@@ -9,9 +9,11 @@ import { isTesting } from "discourse-common/config/environment";
 
 export default function () {
   if (isTesting()) {
-    // Don't include the time argument (in ms)
+    // Replace the time argument with 10ms
     let args = [].slice.call(arguments, 0, -1);
-    return next.apply(void 0, args);
+    args.push(10);
+
+    return debounce.apply(undefined, args);
   } else {
     return debounce(...arguments);
   }

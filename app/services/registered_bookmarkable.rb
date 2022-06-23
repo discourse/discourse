@@ -96,4 +96,8 @@ class RegisteredBookmarkable
   def after_destroy(guardian, bookmark, opts = {})
     bookmarkable_klass.after_destroy(guardian, bookmark, opts)
   end
+
+  def cleanup_deleted
+    bookmarkable_klass.cleanup_deleted
+  end
 end

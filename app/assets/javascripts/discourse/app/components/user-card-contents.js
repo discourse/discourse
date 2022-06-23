@@ -14,6 +14,7 @@ import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -55,10 +56,9 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     return this.siteSettings.enable_user_status && this.user.status;
   },
 
-  @discourseComputed("user.status")
-  userStatusEmoji() {
-    const emoji = this.user.status.emoji ?? "mega";
-    return emojiUnescape(`:${emoji}:`);
+  @discourseComputed("user.status.emoji")
+  userStatusEmoji(emoji) {
+    return emojiUnescape(escapeExpression(`:${emoji}:`));
   },
 
   isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),

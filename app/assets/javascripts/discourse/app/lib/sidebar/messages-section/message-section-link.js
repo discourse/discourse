@@ -1,18 +1,42 @@
 import { tracked } from "@glimmer/tracking";
 
-import { INBOX } from "discourse/components/sidebar/messages-section";
+import {
+  INBOX,
+  NEW,
+  UNREAD,
+} from "discourse/components/sidebar/messages-section";
 
 export default class MessageSectionLink {
   @tracked shouldDisplay = this._isInbox;
+  @tracked count = 0;
 
-  constructor({ group, currentUser, type }) {
+  constructor({ group, currentUser, type, pmTopicTrackingState }) {
     this.group = group;
     this.currentUser = currentUser;
     this.type = type;
+    this.pmTopicTrackingState = pmTopicTrackingState;
+  }
+
+  refreshCount() {
+    this._refreshCount();
+  }
+
+  _refreshCount() {
+    if (this.shouldDisplay && this._shouldTrack) {
+      this.count = this.pmTopicTrackingState.lookupCount(this.type, {
+        inboxFilter: this.group ? "group" : "user",
+        groupName: this.group?.name,
+      });
+    }
   }
 
   set setDisplayState(value) {
+    const changed = this.shouldDisplay !== value;
     this.shouldDisplay = value;
+
+    if (changed) {
+      this._refreshCount();
+    }
   }
 
   get inboxFilter() {
@@ -42,5 +66,9 @@ export default class MessageSectionLink {
 
   get _isInbox() {
     return this.type === INBOX;
+  }
+
+  get _shouldTrack() {
+    return this.type === NEW || this.type === UNREAD;
   }
 }
