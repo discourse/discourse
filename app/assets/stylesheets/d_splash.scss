@@ -14,21 +14,24 @@ html {
   .preloader-image {
     max-width: 100%;
     height: 100vh;
-    object-fit: none;
   }
 
   .preloader-text {
-    padding-top: 5em;
+    padding-top: 4em;
     position: absolute;
     display: grid;
     grid-auto-flow: column;
     place-items: center;
+    opacity: 0;
+    animation: fade-in 0.5s ease-in-out;
+    animation-delay: 2.5s;
+    animation-fill-mode: forwards;
 
     &:after {
       animation: loading-text 3s infinite;
       content: "";
       position: absolute;
-      top: 5em;
+      top: 4em;
       margin: 0 0.1em;
       left: 100%;
       // TODO: this needs R2 RTL magic
@@ -37,6 +40,16 @@ html {
         right: 100%;
       }
     }
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
 
