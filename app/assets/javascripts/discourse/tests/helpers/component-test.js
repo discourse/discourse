@@ -4,7 +4,7 @@ import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
-import { test } from "qunit";
+import QUnit, { test } from "qunit";
 
 export { setupRenderingTest } from "ember-qunit";
 
@@ -15,10 +15,20 @@ export default function (name, opts) {
     return;
   }
 
+  if (typeof opts.template === "string") {
+    let testName = QUnit.config.currentModule.name + " " + name;
+    // eslint-disable-next-line
+    console.warn(
+      `${testName} skipped; template must be compiled and not a string`
+    );
+    return;
+  }
+
   test(name, async function (assert) {
     this.site = Site.current();
     this.session = Session.current();
     this.container = this.owner;
+    const store = this.owner.lookup("service:store");
 
     autoLoadModules(this.owner, this.registry);
 
@@ -52,7 +62,6 @@ export default function (name, opts) {
     }
 
     if (opts.beforeEach) {
-      let store = this.owner.lookup("service:store");
       await opts.beforeEach.call(this, store);
     }
 
