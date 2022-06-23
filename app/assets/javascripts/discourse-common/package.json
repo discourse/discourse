@@ -22,7 +22,7 @@
     "@uppy/utils": "^4.0.5",
     "@uppy/xhr-upload": "^2.0.7",
     "ember-auto-import": "^2.4.2",
-    "ember-cli-babel": "^7.13.0",
+    "ember-cli-babel": "^7.23.1",
     "ember-cli-htmlbars": "^6.0.1",
     "handlebars": "^4.7.0",
     "truth-helpers": "^1.0.0",
@@ -31,24 +31,17 @@
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
     "@glimmer/component": "^1.1.2",
-    "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.25.3",
     "ember-cli-dependency-checker": "^3.3.1",
-    "ember-cli-eslint": "^5.1.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
-    "ember-cli-template-lint": "^1.0.0-beta.3",
-    "ember-cli-uglify": "^3.0.0",
+    "ember-cli-terser": "^4.0.1",
     "ember-disable-prototype-extensions": "^1.1.3",
-    "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
     "ember-resolver": "^7.0.0",
     "ember-source": "~3.15.0",
     "ember-source-channel-url": "^3.0.0",
-    "ember-try": "^2.0.0",
-    "eslint-plugin-ember": "^7.7.1",
-    "eslint-plugin-node": "^10.0.0",
     "loader.js": "^4.7.0"
   },
   "engines": {
@@ -57,6 +50,6 @@
     "yarn": ">= 1.21.1"
   },
   "ember": {
-    "edition": "octane"
+    "edition": "default"
   }
 }

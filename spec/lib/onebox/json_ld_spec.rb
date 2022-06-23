@@ -47,6 +47,27 @@ describe Onebox::JsonLd do
     expect(json_ld.data).to eq(expected_movie_hash)
   end
 
+  it 'returns first supported type when JSON-LD is an array' do
+    array_json = '<script type="application/ld+json">[{"@type": "Something Else"}, {"@context":"https://schema.org","@type":"Movie","url":"/title/tt2358891/","name":"La grande bellezza","alternateName":"The Great Beauty"}]</script>'
+    doc = Nokogiri::HTML(array_json)
+    json_ld = described_class.new(doc)
+    expect(json_ld.data).to eq({
+      description: nil,
+      duration: nil,
+      genres: nil,
+      image: nil,
+      name: "La grande bellezza",
+      rating: nil
+    })
+  end
+
+  it 'does not fail when JSON-LD returns an array with no supported types' do
+    array_json = '<script type="application/ld+json">[{"@type": "Something Else"}, {"@context":"https://schema.org","@type":"Nothing"},{"@context":"https://schema.org"}]</script>'
+    doc = Nokogiri::HTML(array_json)
+    json_ld = described_class.new(doc)
+    expect(json_ld.data).to eq({})
+  end
+
   private
 
   def expected_movie_hash
