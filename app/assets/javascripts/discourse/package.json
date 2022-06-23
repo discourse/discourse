@@ -21,7 +21,7 @@
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^2.0.0",
     "@ember/test-helpers": "^2.2.0",
-    "@glimmer/component": "^1.0.4",
+    "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.0.4",
     "@popperjs/core": "2.10.2",
     "@uppy/aws-s3": "^2.0.8",
