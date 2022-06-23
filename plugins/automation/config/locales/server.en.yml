@@ -39,6 +39,9 @@ en:
       topic:
         title: Topic
         description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
+      after_post_cook:
+        title: After post cook
+        description: When a post content is cooked the automation will be triggered
     scriptables:
       flag_post_on_words:
         title: Flag post on words
@@ -85,3 +88,7 @@ en:
       close_topic:
         title: Close Topic
         description: Closes a topic with an optional closing message
+      append_last_edited_by:
+        title: Append last edited by
+        description: Adds the last edited by details of the post to cooked content's bottom.
+        text: "> Last edited by %{username} %{date_time}"

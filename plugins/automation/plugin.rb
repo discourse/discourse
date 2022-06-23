@@ -38,6 +38,33 @@ def handle_post_created_edited(post, action)
     end
 end
 
+def handle_after_post_cook(post, cooked)
+  return cooked if post.post_type != Post.types[:regular] || post.user_id < 0 || post.post_number > 1
+
+  name = DiscourseAutomation::Triggerable::AFTER_POST_COOK
+
+  DiscourseAutomation::Automation
+    .where(trigger: name, enabled: true)
+    .find_each do |automation|
+      valid_trust_levels = automation.trigger_field('valid_trust_levels')
+      if valid_trust_levels['value']
+        next unless valid_trust_levels['value'].include?(post.user.trust_level)
+      end
+
+      restricted_category = automation.trigger_field('restricted_category')
+      if restricted_category['value']
+        category_id = post.topic&.category&.parent_category&.id || post.topic&.category&.id
+        next if restricted_category['value'] != category_id
+      end
+
+      if new_cooked = automation.trigger!('kind' => name, 'post' => post, 'cooked' => cooked)
+        cooked = new_cooked
+      end
+    end
+
+  cooked
+end
+
 def handle_user_promoted(user_id, new_trust_level, old_trust_level)
   trigger = DiscourseAutomation::Triggerable::USER_PROMOTED
   user = User.find_by(id: user_id)
@@ -81,6 +108,7 @@ after_initialize do
   [
     '../app/queries/stalled_topic_finder',
     '../app/services/discourse_automation/user_badge_granted_handler',
+    '../app/lib/discourse_automation/triggers/after_post_cook',
     '../app/lib/discourse_automation/triggers/stalled_wiki',
     '../app/lib/discourse_automation/triggers/stalled_topic',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
@@ -111,6 +139,7 @@ after_initialize do
     '../app/jobs/scheduled/stalled_topic_tracker',
     '../app/lib/discourse_automation/triggers/recurring',
     '../app/lib/discourse_automation/triggers/user_promoted',
+    '../app/lib/discourse_automation/scripts/append_last_edited_by',
     '../app/lib/discourse_automation/scripts/auto_responder',
     '../app/lib/discourse_automation/scripts/banner_topic',
     '../app/lib/discourse_automation/scripts/suspend_user_by_email',
@@ -215,6 +244,10 @@ after_initialize do
 
   on(:post_edited) do |post|
     handle_post_created_edited(post, :edit)
+  end
+
+  Plugin::Filter.register(:after_post_cook) do |post, cooked|
+    handle_after_post_cook(post, cooked)
   end
 
   register_topic_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])

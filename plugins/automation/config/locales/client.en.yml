@@ -137,6 +137,14 @@ en:
             restricted_category:
               label: Category
               description: Optional, allows to limit trigger execution to this category
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Valid trust levels
+              description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+            restricted_category:
+              label: Category
+              description: Optional, allows to limit trigger execution to this category
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
