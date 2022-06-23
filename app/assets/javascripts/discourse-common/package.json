@@ -43,7 +43,6 @@
     "ember-disable-prototype-extensions": "^1.1.3",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
-    "ember-maybe-import-regenerator": "^0.1.6",
     "ember-resolver": "^7.0.0",
     "ember-source": "~3.15.0",
     "ember-source-channel-url": "^3.0.0",
