@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -8,7 +9,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
-import hbs from "htmlbars-inline-precompile";
 
 function postStreamTest(name, attrs) {
   componentTest(name, {

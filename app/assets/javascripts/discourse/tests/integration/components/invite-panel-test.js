@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import { set } from "@ember/object";
 import { click } from "@ember/test-helpers";
 import User from "discourse/models/user";
@@ -11,7 +12,6 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | invite-panel", function (hooks) {
   setupRenderingTest(hooks);

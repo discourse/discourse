@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import {
   count,
   discourseModule,
@@ -6,7 +7,6 @@ import {
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | group-membership-button",

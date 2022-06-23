@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -6,7 +7,6 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import Topic from "discourse/models/topic";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | topic-list-item", function (hooks) {
   setupRenderingTest(hooks);

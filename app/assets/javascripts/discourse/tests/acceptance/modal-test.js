@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import {
   acceptance,
   controllerFor,
@@ -8,7 +9,6 @@ import {
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
 import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", function (needs) {

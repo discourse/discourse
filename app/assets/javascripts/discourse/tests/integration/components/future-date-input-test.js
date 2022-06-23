@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest, {
   setupRenderingTest,
@@ -8,7 +9,6 @@ import {
   fakeTime,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
 import { fillIn } from "@ember/test-helpers";
 

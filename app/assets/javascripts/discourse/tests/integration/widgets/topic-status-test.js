@@ -1,10 +1,10 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | topic-status",

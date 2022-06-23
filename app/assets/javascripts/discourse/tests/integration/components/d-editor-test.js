@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import { click, fillIn, settled } from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
@@ -16,7 +17,6 @@ import {
 import I18n from "I18n";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import hbs from "htmlbars-inline-precompile";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 

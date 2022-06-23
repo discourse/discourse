@@ -1,9 +1,9 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | flat-button", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import Component from "@ember/component";
 import { clearRender } from "@ember/test-helpers";
 import discourseComputed, {
@@ -7,7 +8,6 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 const fooComponent = Component.extend({
   classNames: ["foo-component"],

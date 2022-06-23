@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import I18n from "I18n";
 import Theme from "admin/models/theme";
 import componentTest, {
@@ -8,7 +9,6 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | themes-list-item", function (hooks) {
   setupRenderingTest(hooks);

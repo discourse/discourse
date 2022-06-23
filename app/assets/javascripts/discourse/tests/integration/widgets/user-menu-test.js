@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -10,7 +11,6 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { click } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import sinon from "sinon";
 
 discourseModule(

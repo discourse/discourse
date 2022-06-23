@@ -1,10 +1,10 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import hbs from "htmlbars-inline-precompile";
 
 const createArgs = (topic) => {
   return {

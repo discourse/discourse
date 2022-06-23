@@ -1,7 +1,7 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
 import {
   discourseModule,
   exists,

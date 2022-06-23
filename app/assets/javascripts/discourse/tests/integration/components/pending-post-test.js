@@ -1,8 +1,8 @@
+import { hbs } from "ember-cli-htmlbars";
 import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
 import createStore from "discourse/tests/helpers/create-store";
 
 discourseModule("Integration | Component | pending-post", function (hooks) {

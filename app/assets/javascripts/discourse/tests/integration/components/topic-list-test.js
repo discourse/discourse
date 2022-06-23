@@ -1,10 +1,10 @@
+import { hbs } from "ember-cli-htmlbars";
 import { click } from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import Topic from "discourse/models/topic";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | topic-list", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import {
   count,
   discourseModule,
@@ -7,7 +8,6 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { click, fillIn } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Wizard | invite-list",

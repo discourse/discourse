@@ -1,9 +1,9 @@
+import { hbs } from "ember-cli-htmlbars";
 import { click } from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);

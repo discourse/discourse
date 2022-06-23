@@ -1,9 +1,9 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | Widget | header", function (hooks) {
   setupRenderingTest(hooks);

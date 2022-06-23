@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
@@ -9,7 +10,6 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { set } from "@ember/object";
 import sinon from "sinon";

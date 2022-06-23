@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -5,7 +6,6 @@ import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | select-kit/notifications-button",

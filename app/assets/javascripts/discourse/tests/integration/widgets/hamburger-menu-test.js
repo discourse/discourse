@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -8,7 +9,6 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import hbs from "htmlbars-inline-precompile";
 
 const topCategoryIds = [2, 3, 1];
 let mutedCategoryIds = [];

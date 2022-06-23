@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -10,7 +11,6 @@ import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
-import hbs from "htmlbars-inline-precompile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | select-kit:api", function (hooks) {

@@ -1,11 +1,11 @@
+import { hbs } from "ember-cli-htmlbars";
 import EmberObject from "@ember/object";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | group-list site-setting",

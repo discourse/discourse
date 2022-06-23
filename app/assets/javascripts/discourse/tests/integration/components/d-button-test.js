@@ -1,3 +1,4 @@
+import { hbs } from "ember-cli-htmlbars";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -9,7 +10,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { triggerKeyEvent } from "@ember/test-helpers";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
