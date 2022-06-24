@@ -90,7 +90,7 @@ class TopicTrackingState
 
     group_ids =
       if whisper
-        [Group::AUTO_GROUPS[:staff], *SiteSetting.Whispers.allowed_group_ids]
+        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_group_ids]
       else
         topic.category && topic.category.secure_group_ids
       end
@@ -151,7 +151,7 @@ class TopicTrackingState
 
     group_ids =
       if post.post_type == Post.types[:whisper]
-        [Group::AUTO_GROUPS[:staff], *SiteSetting.Whispers.allowed_group_ids]
+        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_group_ids]
       else
         post.topic.category && post.topic.category.secure_group_ids
       end

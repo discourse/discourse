@@ -191,13 +191,12 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting::Upload
   end
 
-  class Whispers
-    def self.allowed_group_ids
-      SiteSetting.whispers_allowed_groups.present? ? SiteSetting.whispers_allowed_groups.split("|").map(&:to_i) : []
+  def self.whispers_allowed_group_ids
+    if SiteSetting.enable_whispers && SiteSetting.whispers_allowed_groups.present?
+      SiteSetting.whispers_allowed_groups.split("|").map(&:to_i)
+    else
+      []
     end
-  end
-  def self.Whispers
-    SiteSetting::Whispers
   end
 
   def self.require_invite_code

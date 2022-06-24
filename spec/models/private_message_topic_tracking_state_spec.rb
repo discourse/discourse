@@ -83,7 +83,6 @@ describe PrivateMessageTopicTrackingState do
       expect(described_class.report(user_2).map(&:topic_id))
         .to contain_exactly(group_message.id)
 
-      user_2.remove_instance_variable(:@whisperer)
       user_2.grant_admin!
 
       tracking_state = described_class.report(user_2)

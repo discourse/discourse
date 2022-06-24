@@ -22,7 +22,6 @@ RSpec.describe UserPostBookmarkSerializer do
 
     expect(serializer.highest_post_number).to eq(3)
 
-    user.remove_instance_variable(:@whisperer)
     user.groups << whisperers_group
 
     expect(serializer.highest_post_number).to eq(4)

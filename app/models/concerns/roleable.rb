@@ -23,7 +23,8 @@ module Roleable
       return false if !SiteSetting.enable_whispers?
       return true if staff?
       return false if SiteSetting.whispers_allowed_groups.blank?
-      group_users&.exists?(group_id: SiteSetting.Whispers.allowed_group_ids)
+      return true if SiteSetting.whispers_allowed_group_ids.include?(primary_group_id)
+      group_users&.exists?(group_id: SiteSetting.whispers_allowed_group_ids)
     end
   end
 
@@ -68,6 +69,11 @@ module Roleable
     if group_name == :admins || group_name == :moderators
       Group.set_category_and_tag_default_notification_levels!(self, :staff)
     end
+  end
+
+  def reload(options = nil)
+    @whisperer = nil
+    super(options)
   end
 
   private

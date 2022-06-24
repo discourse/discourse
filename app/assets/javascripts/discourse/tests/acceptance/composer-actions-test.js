@@ -117,22 +117,6 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - toggle_whisper for admins", async function (assert) {
-    updateCurrentUser({ admin: true, moderator: false, groups: [] });
-    const composerActions = selectKit(".composer-actions");
-
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
-    await composerActions.expand();
-    await composerActions.selectRowByValue("toggle_whisper");
-
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "whisper icon is visible"
-    );
-  });
-
   test("replying to post - reply_as_new_topic", async function (assert) {
     sinon
       .stub(Draft, "get")

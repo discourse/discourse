@@ -7,7 +7,6 @@ describe Search do
   before do
     SearchIndexer.enable
     Jobs.run_immediately!
-    SiteSetting.enable_whispers = true
   end
 
   context "#ts_config" do
@@ -912,6 +911,7 @@ describe Search do
     end
 
     it 'allows staff to search for whispers' do
+      SiteSetting.enable_whispers = true
       post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
 
       results = Search.execute('tiger')

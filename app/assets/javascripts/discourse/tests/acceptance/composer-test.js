@@ -463,6 +463,7 @@ acceptance("Composer", function (needs) {
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
     const menu = selectKit(".toolbar-popup-menu-options");
+
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:nth-of-type(1) button.reply");
 
@@ -473,6 +474,26 @@ acceptance("Composer", function (needs) {
       count(".composer-actions svg.d-icon-far-eye-slash"),
       1,
       "it sets the post type to whisper"
+    );
+
+    await menu.expand();
+    await menu.selectRowByValue("toggleWhisper");
+
+    assert.ok(
+      !exists(".composer-actions svg.d-icon-far-eye-slash"),
+      "it removes the whisper mode"
+    );
+
+    await menu.expand();
+    await menu.selectRowByValue("toggleWhisper");
+
+    await click(".toggle-fullscreen");
+
+    await menu.expand();
+
+    assert.ok(
+      menu.rowByValue("toggleWhisper").exists(),
+      "whisper toggling is still present when going fullscreen"
     );
   });
 
