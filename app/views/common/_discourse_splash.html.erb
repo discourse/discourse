@@ -3,7 +3,6 @@
   <style>
     html {
       background: var(--secondary);
-      overflow: hidden !important;
     }
 
     #d-splash {
@@ -29,6 +28,7 @@
       animation: fade-in 0.5s ease-in-out;
       animation-delay: 2.5s;
       animation-fill-mode: forwards;
+      color: var(--primary);
     }
 
     #d-splash .preloader-text:after {
@@ -79,5 +79,17 @@
   <div class="preloader-text">
     <span> <%= I18n.t("js.preloader_text") %> </span>
   </div>
+
+  <noscript>
+    <style>
+      html {
+        background: revert;
+      }
+
+      #d-splash {
+        display: none;
+      }
+    </style>
+  </noscript>
 </section>
 <%- end %>
