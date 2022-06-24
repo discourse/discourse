@@ -5,7 +5,7 @@
 
   <div class="section-body {{columnCountClass}}">
     {{#each newFeatures as |feature|}}
-      {{dashboard-new-feature-item item=feature tagName=""}}
+      <DashboardNewFeatureItem @item={{feature}} @tagName="" />
     {{/each}}
   </div>
   <div class="section-footer">

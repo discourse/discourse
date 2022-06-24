@@ -6,20 +6,17 @@
     {{/if}}
 
     {{#if user.canSuspend}}
-      {{admin-penalty-history user=user}}
+      <AdminPenaltyHistory @user={{user}} />
 
       <div class="until-controls">
         <label>
           <FutureDateInput @class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{suspendUntil}} @onChangeInput={{action (mut suspendUntil)}} />
         </label>
       </div>
-      {{suspension-details reason=reason message=message}}
+      <SuspensionDetails @reason={{reason}} @message={{message}} />
 
       {{#if postId}}
-        {{penalty-post-action
-          postId=postId
-          postAction=postAction
-          postEdit=postEdit}}
+        <PenaltyPostAction @postId={{postId}} @postAction={{postAction}} @postEdit={{postEdit}} />
       {{/if}}
 
     {{else}}

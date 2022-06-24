@@ -27,7 +27,7 @@
         {{/if}}
         <ul>
           {{#each model as |webHookEvent|}}
-            {{admin-web-hook-event model=webHookEvent}}
+            <AdminWebHookEvent @model={{webHookEvent}} />
           {{/each}}
         </ul>
       </div>

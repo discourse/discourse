@@ -6,7 +6,7 @@
     <DButton @class="btn-default" @action={{action "exportScreenedIpList"}} @icon="download" @title="admin.export_csv.button_title.screened_ip" @label="admin.export_csv.button_text" />
   </div>
 
-  {{screened-ip-address-form action=(action "recordAdded")}}
+  <ScreenedIpAddressForm @action={{action "recordAdded"}} />
 </div>
 
 <ConditionalLoadingSpinner @condition={{loading}}>

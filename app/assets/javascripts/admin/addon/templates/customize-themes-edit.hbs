@@ -11,16 +11,7 @@
       </span>
     </div>
 
-    {{admin-theme-editor
-      theme=model
-      editRouteName=editRouteName
-      currentTargetName=currentTargetName
-      fieldName=fieldName
-      fieldAdded=(action "fieldAdded")
-      maximized=maximized
-      onlyOverriddenChanged=(action "onlyOverriddenChanged")
-      save=(action "save")
-    }}
+    <AdminThemeEditor @theme={{model}} @editRouteName={{editRouteName}} @currentTargetName={{currentTargetName}} @fieldName={{fieldName}} @fieldAdded={{action "fieldAdded"}} @maximized={{maximized}} @onlyOverriddenChanged={{action "onlyOverriddenChanged"}} @save={{action "save"}} />
 
     <div class="admin-footer">
       <div class="status-actions">

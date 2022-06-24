@@ -3,7 +3,7 @@
 <div class="permalink-description">
   <span>{{i18n "admin.permalink.description"}}</span>
 </div>
-{{permalink-form action=(action "recordAdded")}}
+<PermalinkForm @action={{action "recordAdded"}} />
 
 <ConditionalLoadingSpinner @condition={{loading}}>
   {{#if model.length}}

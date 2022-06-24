@@ -133,11 +133,11 @@
   {{#if showCheckboxes}}
     <div class="control-unit">
       {{#unless model.component}}
-        {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default modelId=model.id}}
-        {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable modelId=model.id}}
+        <InlineEditCheckbox @action={{action "applyDefault"}} @labelKey="admin.customize.theme.is_default" @checked={{model.default}} @modelId={{model.id}} />
+        <InlineEditCheckbox @action={{action "applyUserSelectable"}} @labelKey="admin.customize.theme.user_selectable" @checked={{model.user_selectable}} @modelId={{model.id}} />
       {{/unless}}
       {{#if model.remote_theme}}
-        {{inline-edit-checkbox action=(action "applyAutoUpdateable") labelKey="admin.customize.theme.auto_update" checked=model.auto_update modelId=model.id}}
+        <InlineEditCheckbox @action={{action "applyAutoUpdateable"}} @labelKey="admin.customize.theme.auto_update" @checked={{model.auto_update}} @modelId={{model.id}} />
       {{/if}}
     </div>
   {{/if}}
@@ -179,13 +179,13 @@
   {{#if model.component}}
     <DSection @class="form-horizontal theme settings control-unit">
       <div class="row setting">
-        {{theme-setting-relatives-selector setting=relativesSelectorSettingsForComponent model=model class="theme-setting"}}
+        <ThemeSettingRelativesSelector @setting={{relativesSelectorSettingsForComponent}} @model={{model}} @class="theme-setting" />
       </div>
     </DSection>
   {{else}}
     <DSection @class="form-horizontal theme settings control-unit">
       <div class="row setting">
-        {{theme-setting-relatives-selector setting=relativesSelectorSettingsForTheme model=model class="theme-setting"}}
+        <ThemeSettingRelativesSelector @setting={{relativesSelectorSettingsForTheme}} @model={{model}} @class="theme-setting" />
       </div>
     </DSection>
   {{/if}}
@@ -254,7 +254,7 @@
       <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
       <DSection @class="form-horizontal theme settings control-unit">
         {{#each settings as |setting|}}
-          {{theme-setting-editor setting=setting model=model class="theme-setting control-unit"}}
+          <ThemeSettingEditor @setting={{setting}} @model={{model}} @class="theme-setting control-unit" />
         {{/each}}
       </DSection>
     </div>
@@ -265,7 +265,7 @@
       <div class="mini-title">{{i18n "admin.customize.theme.theme_translations"}}</div>
       <DSection @class="form-horizontal theme settings translations control-unit">
         {{#each translations as |translation|}}
-          {{theme-translation translation=translation model=model class="theme-translation"}}
+          <ThemeTranslation @translation={{translation}} @model={{model}} @class="theme-translation" />
         {{/each}}
       </DSection>
     </div>

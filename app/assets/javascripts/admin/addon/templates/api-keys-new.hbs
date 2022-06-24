@@ -5,34 +5,34 @@
 
 <div class="api-key api-key-new">
   {{#if model.id}}
-    {{#admin-form-row label="admin.api.key"}}
+    <AdminFormRow @label="admin.api.key">
       <div>{{model.key}}</div>
-    {{/admin-form-row}}
-    {{#admin-form-row}}
+    </AdminFormRow>
+    <AdminFormRow>
       {{i18n "admin.api.not_shown_again"}}
-    {{/admin-form-row}}
-    {{#admin-form-row}}
+    </AdminFormRow>
+    <AdminFormRow>
       <DButton @icon="angle-right" @label="admin.api.continue" @action={{action "continue"}} @class="btn-primary" />
-    {{/admin-form-row}}
+    </AdminFormRow>
   {{else}}
-    {{#admin-form-row label="admin.api.description"}}
+    <AdminFormRow @label="admin.api.description">
       <Input @value={{model.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
-    {{/admin-form-row}}
+    </AdminFormRow>
 
-    {{#admin-form-row label="admin.api.user_mode"}}
+    <AdminFormRow @label="admin.api.user_mode">
       <ComboBox @content={{userModes}} @value={{userMode}} @onChange={{action "changeUserMode"}} />
-    {{/admin-form-row}}
+    </AdminFormRow>
 
     {{#if showUserSelector}}
-      {{#admin-form-row label="admin.api.user"}}
+      <AdminFormRow @label="admin.api.user">
         <EmailGroupUserChooser @value={{model.username}} @onChange={{action "updateUsername"}} @options={{hash
             maximum=1
             filterPlaceholder="admin.api.user_placeholder"
           }} />
-      {{/admin-form-row}}
+      </AdminFormRow>
     {{/if}}
 
-    {{#admin-form-row label="admin.api.scope_mode"}}
+    <AdminFormRow @label="admin.api.scope_mode">
       <ComboBox @content={{scopeModes}} @value={{scopeMode}} @onChange={{action "changeScopeMode"}} />
 
       {{#if (eq scopeMode "read_only")}}
@@ -40,7 +40,7 @@
       {{else if (eq scopeMode "global")}}
         <p>{{i18n "admin.api.scopes.global_description"}}</p>
       {{/if}}
-    {{/admin-form-row}}
+    </AdminFormRow>
 
     {{#if (eq scopeMode "granular")}}
       <h2 class="scopes-title">{{i18n "admin.api.scopes.title"}}</h2>

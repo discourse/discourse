@@ -86,7 +86,7 @@
                 {{component modeComponent model=model options=options}}
 
                 {{#if model.relatedReport}}
-                  {{admin-report showFilteringUI=false dataSourceName=model.relatedReport.type}}
+                  <AdminReport @showFilteringUI={{false}} @dataSourceName={{model.relatedReport.type}} />
                 {{/if}}
               {{/if}}
             {{else}}

@@ -13,28 +13,17 @@
       </div>
 
       <div class="section-body">
-        {{admin-report
-          filters=filters
-          showHeader=false
-          dataSourceName="moderators_activity"}}
+        <AdminReport @filters={{filters}} @showHeader={{false}} @dataSourceName="moderators_activity" />
       </div>
     </div>
   {{/if}}
 
   <div class="main-section">
-    {{admin-report
-      dataSourceName="flags_status"
-      reportOptions=flagsStatusOptions
-      filters=lastWeekfilters}}
+    <AdminReport @dataSourceName="flags_status" @reportOptions={{flagsStatusOptions}} @filters={{lastWeekfilters}} />
 
-    {{admin-report
-      dataSourceName="post_edits"
-      filters=lastWeekfilters}}
+    <AdminReport @dataSourceName="post_edits" @filters={{lastWeekfilters}} />
 
-    {{admin-report
-      dataSourceName="user_flagging_ratio"
-      filters=lastWeekfilters
-      reportOptions=userFlaggingRatioOptions}}
+    <AdminReport @dataSourceName="user_flagging_ratio" @filters={{lastWeekfilters}} @reportOptions={{userFlaggingRatioOptions}} />
 
     <PluginOutlet @name="admin-dashboard-moderation-bottom" @tagName="span" @connectorTagName="div" />
   </div>

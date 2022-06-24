@@ -33,7 +33,7 @@
       {{#unless model.wildcard_web_hook}}
         <div class="event-selector">
           {{#each eventTypes as |type|}}
-            {{admin-web-hook-event-chooser type=type model=model.web_hook_event_types}}
+            <AdminWebHookEventChooser @type={{type}} @model={{model.web_hook_event_types}} />
           {{/each}}
         </div>
       {{/unless}}

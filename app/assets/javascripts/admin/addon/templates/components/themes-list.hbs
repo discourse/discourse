@@ -13,7 +13,7 @@
   {{#if hasThemes}}
     {{#if hasActiveThemes}}
       {{#each activeThemes as |theme|}}
-        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+        <ThemesListItem @theme={{theme}} @navigateToTheme={{action "navigateToTheme" theme}} />
       {{/each}}
 
       {{#if hasInactiveThemes}}
@@ -31,7 +31,7 @@
 
     {{#if hasInactiveThemes}}
       {{#each inactiveThemes as |theme|}}
-        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+        <ThemesListItem @theme={{theme}} @navigateToTheme={{action "navigateToTheme" theme}} />
       {{/each}}
     {{/if}}
   {{else}}

@@ -1,4 +1,4 @@
-{{#admin-nav}}
+<AdminNav>
   {{#if currentUser.admin}}
     <NavItem @route="adminCustomizeThemes" @label="admin.customize.theme.title" @class="admin-customize-themes" />
     <NavItem @route="adminCustomize.colors" @label="admin.customize.colors.title" @class="admin-customize-colors" />
@@ -11,7 +11,7 @@
     <NavItem @route="adminEmbedding" @label="admin.embedding.title" @class="admin-customize-embedding" />
   {{/if}}
   <NavItem @route="adminWatchedWords" @label="admin.watched_words.title" @class="admin-customize-watched-words" />
-{{/admin-nav}}
+</AdminNav>
 
 <div class="admin-container">
   {{outlet}}

@@ -19,17 +19,11 @@
   </div>
 
   <div class="display-row username">
-    {{admin-editable-field name="user.username.title"
-                           value=model.username
-                           action=(action "saveUsername")
-                           editing=editingUsername}}
+    <AdminEditableField @name="user.username.title" @value={{model.username}} @action={{action "saveUsername"}} @editing={{editingUsername}} />
   </div>
 
   <div class="display-row name">
-    {{admin-editable-field name="user.name.title"
-                           value=model.name
-                           action=(action "saveName")
-                           editing=editingName}}
+    <AdminEditableField @name="user.name.title" @value={{model.name}} @action={{action "saveName"}} @editing={{editingName}} />
   </div>
 
   <PluginOutlet @name="admin-user-below-names" @args={{hash user=model}} />
@@ -120,10 +114,7 @@
   </div>
 
   <div class="display-row">
-    {{admin-editable-field name="user.title.title"
-                           value=model.title
-                           action=(action "saveTitle")
-                           editing=editingTitle}}
+    <AdminEditableField @name="user.title.title" @value={{model.title}} @action={{action "saveTitle"}} @editing={{editingTitle}} />
   </div>
 
   <div class="display-row last-ip">

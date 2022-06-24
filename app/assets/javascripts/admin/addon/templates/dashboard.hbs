@@ -3,19 +3,12 @@
 {{#if showVersionChecks}}
   <div class="section-top">
     <div class="version-checks">
-      {{version-checks versionCheck=versionCheck tagName=""}}
+      <VersionChecks @versionCheck={{versionCheck}} @tagName="" />
     </div>
   </div>
 {{/if}}
 
-{{dashboard-problems
-  loadingProblems=loadingProblems
-  foundProblems=foundProblems
-  lowPriorityProblems=lowPriorityProblems
-  highPriorityProblems=highPriorityProblems
-  problemsTimestamp=problemsTimestamp
-  refreshProblems=(action "refreshProblems")
-}}
+<DashboardProblems @loadingProblems={{loadingProblems}} @foundProblems={{foundProblems}} @lowPriorityProblems={{lowPriorityProblems}} @highPriorityProblems={{highPriorityProblems}} @problemsTimestamp={{problemsTimestamp}} @refreshProblems={{action "refreshProblems"}} />
 
 <ul class="navigation">
   <li class="navigation-item general">
@@ -51,6 +44,6 @@
 
 {{outlet}}
 
-{{dashboard-new-features tagName="div"}}
+<DashboardNewFeatures @tagName="div" />
 
 <PluginOutlet @name="admin-dashboard-bottom" @tagName="span" @connectorTagName="div" />

@@ -4,12 +4,12 @@
 </LinkTo>
 
 <div class="api-key api-key-show">
-  {{#admin-form-row label="admin.api.key"}}
+  <AdminFormRow @label="admin.api.key">
     {{#if model.revoked_at}}{{d-icon "times-circle"}}{{/if}}
     {{model.truncatedKey}}
-  {{/admin-form-row}}
+  </AdminFormRow>
 
-  {{#admin-form-row label="admin.api.description"}}
+  <AdminFormRow @label="admin.api.description">
     {{#if editingDescription}}
       <Input @value={{buffered.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
     {{else}}
@@ -26,9 +26,9 @@
         <DButton @class="btn-default" @action={{action "editDescription"}} @icon="pencil-alt" />
       {{/if}}
     </div>
-  {{/admin-form-row}}
+  </AdminFormRow>
 
-  {{#admin-form-row label="admin.api.user"}}
+  <AdminFormRow @label="admin.api.user">
     {{#if model.user}}
       <LinkTo @route="adminUser" @model={{model.user}}>
         {{avatar model.user imageSize="small"}} {{model.user.username}}
@@ -36,25 +36,25 @@
     {{else}}
       {{i18n "admin.api.all_users"}}
     {{/if}}
-  {{/admin-form-row}}
+  </AdminFormRow>
 
-  {{#admin-form-row label="admin.api.created"}}
+  <AdminFormRow @label="admin.api.created">
     {{format-date model.created_at leaveAgo="true"}}
-  {{/admin-form-row}}
+  </AdminFormRow>
 
-  {{#admin-form-row label="admin.api.updated"}}
+  <AdminFormRow @label="admin.api.updated">
     {{format-date model.updated_at leaveAgo="true"}}
-  {{/admin-form-row}}
+  </AdminFormRow>
 
-  {{#admin-form-row label="admin.api.last_used"}}
+  <AdminFormRow @label="admin.api.last_used">
     {{#if model.last_used_at}}
       {{format-date model.last_used_at leaveAgo="true"}}
     {{else}}
       {{i18n "admin.api.never_used"}}
     {{/if}}
-  {{/admin-form-row}}
+  </AdminFormRow>
 
-  {{#admin-form-row label="admin.api.revoked"}}
+  <AdminFormRow @label="admin.api.revoked">
     {{#if model.revoked_at}}
       {{format-date model.revoked_at leaveAgo="true"}}
     {{else}}
@@ -68,7 +68,7 @@
         <DButton @class="btn-danger" @action={{action "revokeKey"}} @actionParam={{model}} @icon="times" @label="admin.api.revoke" />
       {{/if}}
     </div>
-  {{/admin-form-row}}
+  </AdminFormRow>
 
   {{#if model.api_key_scopes.length}}
     <h2 class="scopes-title">{{i18n "admin.api.scopes.title"}}</h2>

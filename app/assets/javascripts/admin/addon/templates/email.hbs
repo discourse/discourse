@@ -1,4 +1,4 @@
-{{#admin-nav}}
+<AdminNav>
   <NavItem @route="adminEmail.index" @label="admin.email.settings" />
   <NavItem @route="adminEmail.previewDigest" @label="admin.email.preview_digest" />
   <NavItem @route="adminEmail.advancedTest" @label="admin.email.advanced_test.title" />
@@ -8,7 +8,7 @@
   <NavItem @route="adminEmail.bounced" @label="admin.email.bounced" />
   <NavItem @route="adminEmail.received" @label="admin.email.received" />
   <NavItem @route="adminEmail.rejected" @label="admin.email.rejected" />
-{{/admin-nav}}
+</AdminNav>
 
 <div class="admin-container">
   {{outlet}}

@@ -19,7 +19,7 @@
         <tbody>
           {{#each model as |webHook|}}
             <tr>
-              <td class="delivery-status"><LinkTo @route="adminWebHooks.showEvents" @model={{webHook.id}}>{{admin-web-hook-status deliveryStatuses=deliveryStatuses model=webHook}}</LinkTo></td>
+              <td class="delivery-status"><LinkTo @route="adminWebHooks.showEvents" @model={{webHook.id}}><AdminWebHookStatus @deliveryStatuses={{deliveryStatuses}} @model={{webHook}} /></LinkTo></td>
               <td class="payload-url"><LinkTo @route="adminWebHooks.show" @model={{webHook}}>{{webHook.payload_url}}</LinkTo></td>
               <td class="description">{{webHook.description}}</td>
               <td class="controls">

@@ -5,11 +5,7 @@
 <div class="watched-word-controls">
   <DButton @class="btn-default download-link" @href={{downloadLink}} @icon="download" @label="admin.watched_words.download" />
 
-  {{watched-word-uploader
-    id="watched-word-uploader"
-    uploading=uploading
-    actionKey=actionNameKey
-    done=(action "uploadComplete")}}
+  <WatchedWordUploader @id="watched-word-uploader" @uploading={{uploading}} @actionKey={{actionNameKey}} @done={{action "uploadComplete"}} />
 
   <DButton @class="watched-word-test" @label="admin.watched_words.test.button_label" @icon="far-eye" @action={{action "test"}} />
 
@@ -22,11 +18,7 @@
   <p>{{html-safe (i18n "admin.watched_words.regex_warning" basePath=(base-path))}}</p>
 {{/if}}
 
-{{watched-word-form
-  actionKey=actionNameKey
-  action=(action "recordAdded")
-  filteredContent=currentAction.words
-}}
+<WatchedWordForm @actionKey={{actionNameKey}} @action={{action "recordAdded"}} @filteredContent={{currentAction.words}} />
 
 {{#if currentAction.words}}
   <label class="show-words-checkbox">

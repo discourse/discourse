@@ -84,7 +84,7 @@
     {{#if siteSettings.enable_badge_sql}}
       <div class="control-group">
         <label for="query">{{i18n "admin.badges.query"}}</label>
-        {{ace-editor content=buffered.query mode="sql" disabled=readOnly}}
+        <AceEditor @content={{buffered.query}} @mode="sql" @disabled={{readOnly}} />
       </div>
 
       {{#if hasQuery}}

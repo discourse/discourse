@@ -41,7 +41,7 @@
 
 <div class="clearfix"></div>
 
-{{#staff-actions}}
+<StaffActions>
   <LoadMore @selector=".staff-logs tr" @action={{action "loadMore"}}>
     {{#if model.content}}
       <table class="table staff-logs grid">
@@ -107,4 +107,4 @@
       {{i18n "search.no_results"}}
     {{/if}}
   </LoadMore>
-{{/staff-actions}}
+</StaffActions>
