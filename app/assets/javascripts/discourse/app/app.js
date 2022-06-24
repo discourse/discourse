@@ -84,7 +84,7 @@ const Discourse = Application.extend({
 
     window.addEventListener(
       "load",
-      (event) => {
+      () => {
         // The app booted. Remove the splash screen
         document.querySelector("#d-splash")?.remove();
       },
