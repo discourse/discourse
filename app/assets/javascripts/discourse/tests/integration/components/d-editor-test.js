@@ -98,9 +98,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       beforeEach() {
         this.set("value", "hello world.");
       },
-      test(assert) {
+      async test(assert) {
         const textarea = jumpEnd(query("textarea.d-editor-input"));
-        testFunc.call(this, assert, textarea);
+        await testFunc.call(this, assert, textarea);
       },
       skip: !navigator.userAgent.includes("Chrome"),
     });
@@ -113,9 +113,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
         this.set("value", "hello world.");
       },
 
-      test(assert) {
+      async test(assert) {
         const textarea = jumpEnd(query("textarea.d-editor-input"));
-        testFunc.call(this, assert, textarea);
+        await testFunc.call(this, assert, textarea);
       },
     });
   }
