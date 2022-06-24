@@ -3,12 +3,23 @@
     <Sidebar::TopicsSection />
     <Sidebar::CategoriesSection />
 
-    {{#if this.siteSettings.tagging_enabled}}
-      <Sidebar::TagsSection />
-    {{/if}}
-
-    {{#if this.siteSettings.enable_personal_messages}}
-      <Sidebar::MessagesSection />
-    {{/if}}
+    {{#each computedCustomSections as |customSection|}}
+      <Sidebar::Section
+        @sectionName="topics"
+        @headerRoute={{customSection.header.route}}
+        @headerLinkText={{customSection.header.text}}
+        @headerLinkTitle={{customSection.header.title}}
+        @headerActionIcon={{customSection.header.actionIcon}}
+        @headerAction={{customSection.header.action}}
+        @headerActionTitle={{customSection.header.actionTitle}}>
+        {{#each customSection.links as |link|}}
+          <Sidebar::SectionLink
+          @linkName={{link.name}}
+          @route={{link.route}}
+          @title={{link.title}}
+          @content={{link.text}} />
+        {{/each}}
+      </Sidebar::Section>
+    {{/each}}
   </div>
 {{/d-section}}

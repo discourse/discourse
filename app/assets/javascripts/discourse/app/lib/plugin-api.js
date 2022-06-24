@@ -95,6 +95,7 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
+import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1679,6 +1680,10 @@ class PluginApi {
    */
   addTopicsSectionLink(arg) {
     addSectionLink(arg);
+  }
+
+  addSidebarSection(arg) {
+    addSidebarSection(arg);
   }
 }
 
