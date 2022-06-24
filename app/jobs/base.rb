@@ -97,14 +97,19 @@ module Jobs
           f.sync = true
           Logger.new f
         end
+
         @@log_queue ||= Queue.new
-        @@log_thread ||= Thread.new do
-          begin
-            loop { @@logger << @@log_queue.pop }
-          rescue Exception => e
-            Discourse.warn_exception(e, message: "Sidekiq logging thread terminated unexpectedly")
+
+        if !@@log_thread || !@@log_thead.alive?
+          @@log_thread = Thread.new do
+            loop do
+              @@logger << @@log_queue.pop
+            rescue Exception => e
+              Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
+            end
           end
         end
+
         @@log_queue.push(message)
       end
 
