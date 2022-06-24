@@ -4,15 +4,19 @@
       {{d-icon this.headerCaretIcon}}
     </button>
 
-    <LinkTo
-      @route={{@headerRoute}}
-      @query={{@headerQuery}}
-      @models={{if @headerModel (array @headerModel) (if @headerModels @headerModels (array))}}
-      class="sidebar-section-header-link"
-      title={{@headerLinkTitle}}>
+    {{#if @headerRoute}}
+      <LinkTo
+        @route={{@headerRoute}}
+        @query={{@headerQuery}}
+        @models={{if @headerModel (array @headerModel) (if @headerModels @headerModels (array))}}
+        @class="sidebar-section-header-link"
+        title={{@headerLinkTitle}}>
 
-      {{@headerLinkText}}
-    </LinkTo>
+        {{@headerLinkText}}
+      </LinkTo>
+    {{else}}
+      <span title={{@headerLinkTitle}} class="sidebar-section-header-link">{{@headerLinkText}}</span>
+    {{/if}}
 
     {{#if @headerAction}}
       <button type="button" class="sidebar-section-header-button" {{on "click" @headerAction}} title={{@headerActionTitle}}>

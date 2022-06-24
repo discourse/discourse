@@ -11,6 +11,25 @@
       <Sidebar::MessagesSection />
     {{/if}}
 
+    {{#each this.computedCustomSections as |customSection|}}
+      <Sidebar::Section
+        @sectionName="topics"
+        @headerRoute={{customSection.header.route}}
+        @headerLinkText={{customSection.header.text}}
+        @headerLinkTitle={{customSection.header.title}}
+        @headerActionIcon={{customSection.header.actionIcon}}
+        @headerAction={{customSection.header.action}}
+        @headerActionTitle={{customSection.header.actionTitle}}>
+        {{#each customSection.links as |link|}}
+          <Sidebar::SectionLink
+          @linkName={{link.name}}
+          @route={{link.route}}
+          @title={{link.title}}
+          @content={{link.text}} />
+        {{/each}}
+      </Sidebar::Section>
+    {{/each}}
+
     {{!-- DO NOT USE, this outlet is temporary and will be removed. --}}
     {{!-- Outlet will be replaced with sidebar API. --}}
     <PluginOutlet @name="after-sidebar" />
