@@ -826,13 +826,15 @@ aside.onebox.mixcloud-preview {
   padding: 0;
   border: 0;
   height: 120px;
-  background-color: #1C1F21;
+  background-color: #1c1f21;
   article.onebox-body img {
     padding: 0;
     max-height: 120px;
   }
   .onebox-body {
-    a[href], a[href]:visited, a[href]:hover {
+    a[href],
+    a[href]:visited,
+    a[href]:hover {
       color: #d1d1d1;
     }
     .video-icon {
@@ -854,7 +856,7 @@ aside.onebox.mixcloud-preview {
       }
       h4 {
         font-size: 12px;
-        font-weight: 200;  
+        font-weight: 200;
       }
       color: gray;
     }
@@ -967,4 +969,3 @@ aside.onebox.preview-error .site-icon {
   height: 16px;
   margin-right: 0.5em;
 }
-
