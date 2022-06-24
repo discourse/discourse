@@ -71,7 +71,12 @@ import {
 } from "discourse/lib/to-markdown";
 
 export function currentUser() {
-  return User.create(sessionFixtures["/session/current.json"].current_user);
+  const user = User.create(
+    sessionFixtures["/session/current.json"].current_user
+  );
+  user.appEvents = getOwner(this).lookup("service:appEvents");
+  user.trackStatus();
+  return user;
 }
 
 let _initialized = new Set();
