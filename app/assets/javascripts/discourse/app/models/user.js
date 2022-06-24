@@ -23,7 +23,7 @@ import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
@@ -1140,28 +1140,24 @@ User.reopenClass(Singleton, {
 // user status tracking
 User.reopen({
   _clearStatusTimerId: null,
-  _trackStatus: false,
 
+  // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    this.set("_trackStatus", true);
+    this.addObserver("status", this, "_statusChanged");
     if (this.status && this.status.ends_at) {
       this._scheduleStatusClearing(this.status.ends_at);
     }
   },
 
   stopTrackingStatus() {
-    this.set("_trackStatus", false);
+    this.removeObserver("status", this, "_statusChanged");
     this._unscheduleStatusClearing();
   },
 
-  @observes("status")
-  statusChanged() {
-    if (!this._trackStatus) {
-      return;
-    }
-
-    if (this.status && this.status.ends_at) {
-      this._scheduleStatusClearing(this.status.ends_at);
+  _statusChanged(sender, key) {
+    const status = this.get(key);
+    if (status && status.ends_at) {
+      this._scheduleStatusClearing(status.ends_at);
     } else {
       this._unscheduleStatusClearing();
     }
