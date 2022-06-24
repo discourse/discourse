@@ -265,13 +265,11 @@ module ApplicationHelper
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
-
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
-
-    url = opts[:url]
 
     # if slug generation method is encoded, non encoded urls can sneak in
     # via bots
+    url = opts[:url]
     if url.encoding.name != "UTF-8" || !url.valid_encoding?
       opts[:url] = url.dup.force_encoding("UTF-8").scrub!
     end
