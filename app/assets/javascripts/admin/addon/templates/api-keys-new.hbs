@@ -1,7 +1,7 @@
-{{#link-to "adminApiKeys.index" class="go-back"}}
+<LinkTo @route="adminApiKeys.index" class="go-back">
   {{d-icon "arrow-left"}}
   <span>{{i18n "admin.api.all_api_keys"}}</span>
-{{/link-to}}
+</LinkTo>
 
 <div class="api-key api-key-new">
   {{#if model.id}}
@@ -12,32 +12,28 @@
       {{i18n "admin.api.not_shown_again"}}
     {{/admin-form-row}}
     {{#admin-form-row}}
-      {{d-button icon="angle-right" label="admin.api.continue" action=(action "continue") class="btn-primary"}}
+      <DButton @icon="angle-right" @label="admin.api.continue" @action={{action "continue"}} @class="btn-primary" />
     {{/admin-form-row}}
   {{else}}
     {{#admin-form-row label="admin.api.description"}}
-      {{input value=model.description maxlength="255" placeholder=(i18n "admin.api.description_placeholder")}}
+      <Input @value={{model.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
     {{/admin-form-row}}
 
     {{#admin-form-row label="admin.api.user_mode"}}
-      {{combo-box content=userModes value=userMode onChange=(action "changeUserMode")}}
+      <ComboBox @content={{userModes}} @value={{userMode}} @onChange={{action "changeUserMode"}} />
     {{/admin-form-row}}
 
     {{#if showUserSelector}}
       {{#admin-form-row label="admin.api.user"}}
-        {{email-group-user-chooser
-          value=model.username
-          onChange=(action "updateUsername")
-          options=(hash
+        <EmailGroupUserChooser @value={{model.username}} @onChange={{action "updateUsername"}} @options={{hash
             maximum=1
             filterPlaceholder="admin.api.user_placeholder"
-          )
-        }}
+          }} />
       {{/admin-form-row}}
     {{/if}}
 
     {{#admin-form-row label="admin.api.scope_mode"}}
-      {{combo-box content=scopeModes value=scopeMode onChange=(action "changeScopeMode")}}
+      <ComboBox @content={{scopeModes}} @value={{scopeMode}} @onChange={{action "changeScopeMode"}} />
 
       {{#if (eq scopeMode "read_only")}}
         <p>{{i18n "admin.api.scopes.descriptions.global.read"}}</p>
@@ -68,7 +64,7 @@
             </tr>
             {{#each actions as |act|}}
               <tr>
-                <td>{{input type="checkbox" checked=act.selected}}</td>
+                <td><Input @type="checkbox" @checked={{act.selected}} /></td>
                 <td>
                   <div class="scope-name">{{act.name}}</div>
                   <span class="scope-tooltip" data-tooltip={{i18n (concat "admin.api.scopes.descriptions." resource "." act.key)}}>
@@ -76,11 +72,11 @@
                   </span>
                 </td>
                 <td>
-                  {{d-button icon="link" action=(action "showURLs" act.urls) class="btn-info"}}
+                  <DButton @icon="link" @action={{action "showURLs" act.urls}} @class="btn-info" />
                 </td>
                 <td>
                   {{#each act.params as |p|}}
-                    {{input maxlength="255" value=(get act p) placeholder=p}}
+                    <Input @maxlength="255" @value={{get act p}} placeholder={{p}} />
                   {{/each}}
                 </td>
               </tr>
@@ -90,6 +86,6 @@
       </table>
     {{/if}}
 
-    {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
+    <DButton @icon="check" @label="admin.api.save" @action={{action "save"}} @class="btn-primary" @disabled={{saveDisabled}} />
   {{/if}}
 </div>

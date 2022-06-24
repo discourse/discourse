@@ -1,5 +1,5 @@
-{{#conditional-loading-spinner condition=isLoading}}
-  {{plugin-outlet name="admin-dashboard-general-top" tagName="span" connectorTagName="div"}}
+<ConditionalLoadingSpinner @condition={{isLoading}}>
+  <PluginOutlet @name="admin-dashboard-general-top" @tagName="span" @connectorTagName="div" />
 
   {{#if isCommunityHealthVisible}}
     <div class="community-health section">
@@ -10,11 +10,7 @@
               {{i18n "admin.dashboard.community_health"}}
             </a>
           </h2>
-          {{period-chooser
-            period=period
-            action=(action "changePeriod")
-            content=availablePeriods
-            fullDay=false}}
+          <PeriodChooser @period={{period}} @action={{action "changePeriod"}} @content={{availablePeriods}} @fullDay={{false}} />
         </div>
 
         <div class="section-body">
@@ -73,9 +69,9 @@
             <div class="header">
               <ul class="breadcrumb">
                 <li class="item report">
-                  {{#link-to "adminReports" class="report-url"}}
+                  <LinkTo @route="adminReports" class="report-url">
                     {{i18n "admin.dashboard.activity_metrics"}}
-                  {{/link-to}}
+                  </LinkTo>
                 </li>
               </ul>
             </div>
@@ -103,7 +99,7 @@
       {{/if}}
 
       <div class="user-metrics">
-        {{#conditional-loading-section isLoading=isLoading}}
+        <ConditionalLoadingSection @isLoading={{isLoading}}>
           {{admin-report
             forcedModes="inline-table"
             dataSourceName="users_by_type"}}
@@ -111,7 +107,7 @@
           {{admin-report
             forcedModes="inline-table"
             dataSourceName="users_by_trust_level"}}
-        {{/conditional-loading-section}}
+        </ConditionalLoadingSection>
       </div>
 
       <div class="misc">
@@ -156,5 +152,5 @@
     {{/if}}
   </div>
 
-  {{plugin-outlet name="admin-dashboard-general-bottom" tagName="span" connectorTagName="div"}}
-{{/conditional-loading-spinner}}
+  <PluginOutlet @name="admin-dashboard-general-bottom" @tagName="span" @connectorTagName="div" />
+</ConditionalLoadingSpinner>

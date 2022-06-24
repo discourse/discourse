@@ -1,15 +1,10 @@
 <p>
   {{i18n "admin.logs.screened_urls.description"}}
 </p>
-  {{d-button
-    class="btn-default"
-    action=(action "exportScreenedUrlList")
-    title="admin.export_csv.button_title.screened_url"
-    icon="download"
-    label="admin.export_csv.button_text"}}
+  <DButton @class="btn-default" @action={{action "exportScreenedUrlList"}} @title="admin.export_csv.button_title.screened_url" @icon="download" @label="admin.export_csv.button_text" />
 <br>
 
-{{#conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{loading}}>
   {{#if model.length}}
     <table class="screened-urls grid">
       <thead>
@@ -36,4 +31,4 @@
   {{else}}
     {{i18n "search.no_results"}}
   {{/if}}
-{{/conditional-loading-spinner}}
+</ConditionalLoadingSpinner>

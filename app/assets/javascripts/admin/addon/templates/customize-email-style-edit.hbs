@@ -2,6 +2,6 @@
 
 <div class="admin-footer">
   <div class="buttons">
-    {{d-button action=(action "save") disabled=saveDisabled class="btn-primary" translatedLabel=saveButtonText}}
+    <DButton @action={{action "save"}} @disabled={{saveDisabled}} @class="btn-primary" @translatedLabel={{saveButtonText}} />
   </div>
 </div>

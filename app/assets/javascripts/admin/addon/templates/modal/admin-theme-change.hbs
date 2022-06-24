@@ -1,11 +1,8 @@
 <div>
-  {{#d-modal-body title="admin.logs.staff_actions.modal_title"}}
+  <DModalBody @title="admin.logs.staff_actions.modal_title">
     {{html-safe diff}}
-  {{/d-modal-body}}
+  </DModalBody>
   <div class="modal-footer">
-    {{d-button
-      class="btn-primary"
-      action=(route-action "closeModal")
-      label="close"}}
+    <DButton @class="btn-primary" @action={{route-action "closeModal"}} @label="close" />
   </div>
 </div>

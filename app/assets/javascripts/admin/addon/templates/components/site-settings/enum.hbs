@@ -1,14 +1,7 @@
-{{combo-box
-  content=setting.validValues
-  value=value
-  onChange=(action (mut value))
-  valueProperty=setting.computedValueProperty
-  nameProperty=setting.computedNameProperty
-  options=(hash
+<ComboBox @content={{setting.validValues}} @value={{value}} @onChange={{action (mut value)}} @valueProperty={{setting.computedValueProperty}} @nameProperty={{setting.computedNameProperty}} @options={{hash
     castInteger=true
     allowAny=setting.allowsNone
-  )
-}}
+  }} />
 
 {{preview}}
 

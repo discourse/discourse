@@ -5,9 +5,9 @@
 <div class="col timestamp">{{createdAt}}</div>
 <div class="col completion">{{completion}}</div>
 <div class="col actions">
-  {{d-button icon=expandRequestIcon action=(action "toggleRequest") label="admin.web_hooks.events.request"}}
-  {{d-button icon=expandResponseIcon action=(action "toggleResponse") label="admin.web_hooks.events.response"}}
-  {{d-button icon="sync" action=(action "redeliver") label="admin.web_hooks.events.redeliver"}}
+  <DButton @icon={{expandRequestIcon}} @action={{action "toggleRequest"}} @label="admin.web_hooks.events.request" />
+  <DButton @icon={{expandResponseIcon}} @action={{action "toggleResponse"}} @label="admin.web_hooks.events.response" />
+  <DButton @icon="sync" @action={{action "redeliver"}} @label="admin.web_hooks.events.redeliver" />
 </div>
 {{#if expandDetails}}
   <div class="details">

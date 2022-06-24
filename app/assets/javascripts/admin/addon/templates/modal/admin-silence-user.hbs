@@ -1,5 +1,5 @@
-{{#d-modal-body title="admin.user.silence_modal_title"}}
-  {{#conditional-loading-spinner condition=loadingUser}}
+<DModalBody @title="admin.user.silence_modal_title">
+  <ConditionalLoadingSpinner @condition={{loadingUser}}>
 
     {{#if errorMessage}}
       <div class="alert alert-error">{{errorMessage}}</div>
@@ -9,13 +9,7 @@
 
     <div class="until-controls">
       <label>
-        {{future-date-input
-          class="silence-until"
-          label="admin.user.silence_duration"
-          clearable=false
-          input=silenceUntil
-          onChangeInput=(action (mut silenceUntil))
-        }}
+        <FutureDateInput @class="silence-until" @label="admin.user.silence_duration" @clearable={{false}} @input={{silenceUntil}} @onChangeInput={{action (mut silenceUntil)}} />
       </label>
     </div>
 
@@ -27,17 +21,12 @@
         postEdit=postEdit}}
     {{/if}}
 
-  {{/conditional-loading-spinner}}
+  </ConditionalLoadingSpinner>
 
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-danger perform-silence"
-    action=(action "silence")
-    disabled=submitDisabled
-    icon="microphone-slash"
-    label="admin.user.silence"}}
-  {{d-modal-cancel close=(route-action "closeModal")}}
-  {{conditional-loading-spinner condition=loading size="small"}}
+  <DButton @class="btn-danger perform-silence" @action={{action "silence"}} @disabled={{submitDisabled}} @icon="microphone-slash" @label="admin.user.silence" />
+  <DModalCancel @close={{route-action "closeModal"}} />
+  <ConditionalLoadingSpinner @condition={{loading}} @size="small" />
 </div>

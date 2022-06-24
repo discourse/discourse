@@ -18,7 +18,7 @@
     <p>{{i18n "admin.embedding.get_started"}}</p>
   {{/if}}
 
-  {{d-button label="admin.embedding.add_host" action=(action "addHost") icon="plus" class="btn-primary add-host"}}
+  <DButton @label="admin.embedding.add_host" @action={{action "addHost"}} @icon="plus" @class="btn-primary add-host" />
 </div>
 
 {{#if showSecondary}}
@@ -59,10 +59,7 @@
   </div>
 
   <div class="embedding-secondary">
-    {{d-button label="admin.embedding.save"
-               action=(action "saveChanges")
-               class="btn-primary embed-save"
-               disabled=embedding.isSaving}}
+    <DButton @label="admin.embedding.save" @action={{action "saveChanges"}} @class="btn-primary embed-save" @disabled={{embedding.isSaving}} />
 
     {{#if saved}}{{i18n "saved"}}{{/if}}
   </div>

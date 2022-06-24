@@ -1,12 +1,12 @@
 <div class="flag-user">
-  {{#link-to "adminUser" user.id user.username class="flag-user-avatar"}}
+  <LinkTo @route="adminUser" @models={{array user.id user.username}} class="flag-user-avatar">
     {{avatar user imageSize="small"}}
-  {{/link-to}}
+  </LinkTo>
   <div class="flag-user-details">
     <div class="flag-user-who">
-      {{#link-to "adminUser" user.id user.username class="flag-user-username"}}
+      <LinkTo @route="adminUser" @models={{array user.id user.username}} class="flag-user-username">
         {{user.username}}
-      {{/link-to}}
+      </LinkTo>
       <div title={{raw-date date}} class="flag-user-date">
         {{format-age date}}
       </div>

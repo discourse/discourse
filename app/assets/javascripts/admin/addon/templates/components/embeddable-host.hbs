@@ -1,27 +1,23 @@
 {{#if editing}}
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.host"}}</div>
-    {{input value=buffered.host placeholder="example.com" enter=(action "save") class="host-name" autofocus=true}}
+    <Input @value={{buffered.host}} placeholder="example.com" @enter={{action "save"}} class="host-name" @autofocus={{true}} />
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.class_name"}}</div>
-    {{input value=buffered.class_name placeholder="class" enter=(action "save") class="class-name"}}
+    <Input @value={{buffered.class_name}} placeholder="class" @enter={{action "save"}} class="class-name" />
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>
-    {{input value=buffered.allowed_paths placeholder="/blog/.*" enter=(action "save") class="path-allowlist"}}
+    <Input @value={{buffered.allowed_paths}} placeholder="/blog/.*" @enter={{action "save"}} class="path-allowlist" />
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
-    {{category-chooser
-      value=categoryId
-      class="small"
-      onChange=(action (mut categoryId))
-    }}
+    <CategoryChooser @value={{categoryId}} @class="small" @onChange={{action (mut categoryId)}} />
   </td>
   <td class="editing-controls">
-    {{d-button icon="check" action=(action "save") class="btn-primary" disabled=cantSave}}
-    {{d-button icon="times" action=(action "cancel") class="btn-danger" disabled=host.isSaving}}
+    <DButton @icon="check" @action={{action "save"}} @class="btn-primary" @disabled={{cantSave}} />
+    <DButton @icon="times" @action={{action "cancel"}} @class="btn-danger" @disabled={{host.isSaving}} />
   </td>
 {{else}}
   <td><div class="label">{{i18n "admin.embedding.host"}}</div>{{host.host}}</td>
@@ -29,7 +25,7 @@
   <td><div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>{{host.allowed_paths}}</td>
   <td><div class="label">{{i18n "admin.embedding.category"}}</div>{{category-badge host.category allowUncategorized=true}}</td>
   <td class="controls">
-    {{d-button icon="pencil-alt" action=(action "edit")}}
-    {{d-button icon="far-trash-alt" action=(action "delete") class="btn-danger"}}
+    <DButton @icon="pencil-alt" @action={{action "edit"}} />
+    <DButton @icon="far-trash-alt" @action={{action "delete"}} @class="btn-danger" />
   </td>
 {{/if}}

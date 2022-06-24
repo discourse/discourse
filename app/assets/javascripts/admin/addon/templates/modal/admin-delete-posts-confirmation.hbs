@@ -1,20 +1,11 @@
 <div>
-  {{#d-modal-body rawTitle=(i18n "admin.user.delete_posts.confirmation.title" username=username)}}
+  <DModalBody @rawTitle={{i18n "admin.user.delete_posts.confirmation.title" username=username}}>
     <p>{{html-safe (i18n "admin.user.delete_posts.confirmation.description" username=username post_count=postCount text=text)}}</p>
-    {{input type="text" value=value}}
-  {{/d-modal-body}}
+    <Input @type="text" @value={{value}} />
+  </DModalBody>
 
   <div class="modal-footer">
-    {{d-button
-      class="btn-danger"
-      action=(action "confirm")
-      icon="trash-alt"
-      disabled=deleteDisabled
-      translatedLabel=deleteButtonText
-    }}
-    {{d-button
-      action=(action "close")
-      label="admin.user.delete_posts.confirmation.cancel"
-    }}
+    <DButton @class="btn-danger" @action={{action "confirm"}} @icon="trash-alt" @disabled={{deleteDisabled}} @translatedLabel={{deleteButtonText}} />
+    <DButton @action={{action "close"}} @label="admin.user.delete_posts.confirmation.cancel" />
   </div>
 </div>

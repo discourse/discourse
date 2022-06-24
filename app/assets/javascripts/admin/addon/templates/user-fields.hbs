@@ -15,10 +15,6 @@
     {{/each}}
   {{/if}}
 
-  {{d-button disabled=createDisabled
-             class="btn-primary"
-             action=(action "createField")
-             label="admin.user_fields.create"
-             icon="plus"}}
+  <DButton @disabled={{createDisabled}} @class="btn-primary" @action={{action "createField"}} @label="admin.user_fields.create" @icon="plus" />
 
 </div>

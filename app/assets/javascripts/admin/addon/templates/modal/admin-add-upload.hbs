@@ -1,4 +1,4 @@
-{{#d-modal-body class="add-upload-modal" title="admin.customize.theme.add_upload"}}
+<DModalBody @class="add-upload-modal" @title="admin.customize.theme.add_upload">
   <div class="inputs">
     <section class="field">
       <input onchange={{action "updateName"}} type="file" id="file-input" accept="*">
@@ -6,7 +6,7 @@
     </section>
     <section class="field">
       <label for="theme-variable-name">{{i18n "admin.customize.theme.variable_name"}}</label>
-      {{input id="theme-variable-name" value=name}}
+      <Input @id="theme-variable-name" @value={{name}} />
     </section>
     {{#if fileSelected}}
       {{#if errorMessage}}
@@ -14,9 +14,9 @@
       {{/if}}
     {{/if}}
   </div>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button action=(action "upload") disabled=disabled class="btn btn-primary" icon="upload" label="admin.customize.theme.upload"}}
-  {{d-modal-cancel close=(route-action "closeModal")}}
+  <DButton @action={{action "upload"}} @disabled={{disabled}} @class="btn btn-primary" @icon="upload" @label="admin.customize.theme.upload" />
+  <DModalCancel @close={{route-action "closeModal"}} />
 </div>
