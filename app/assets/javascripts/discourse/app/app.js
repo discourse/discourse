@@ -82,8 +82,14 @@ const Discourse = Application.extend({
       });
     });
 
-    // The app booted. Remove the splash screen
-    document.querySelector("#d-splash")?.remove();
+    window.addEventListener(
+      "load",
+      () => {
+        // The app booted. Remove the splash screen
+        document.querySelector("#d-splash")?.remove();
+      },
+      { once: true }
+    );
   },
 
   _registerPluginCode(version, code) {
