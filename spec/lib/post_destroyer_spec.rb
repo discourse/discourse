@@ -1105,14 +1105,16 @@ describe PostDestroyer do
   end
 
   describe "publishes messages to subscribers" do
-    fab!(:first_post) { Fabricate(:post) }
+    # timestamps are rounded because postgres truncates the timestamp. that would cause the comparison if we compared
+    # these timestamps with the one read from the database
+    fab!(:first_post) { Fabricate(:post, created_at: 10.days.ago.round) }
+    fab!(:walter_white) { Fabricate(:walter_white) }
     let!(:topic) { first_post.topic }
-    let!(:replies) { Fabricate.times(5, :post, topic: topic) }
+    let!(:reply) { Fabricate(:post, topic: topic, created_at: 5.days.ago.round, user: coding_horror) }
+    let!(:expendable_reply) { Fabricate(:post, topic: topic, created_at: 2.days.ago.round, user: walter_white) }
 
     it 'when a post is destroyed publishes updated topic stats' do
-      expect(topic.reload.posts_count).to eq(6)
-
-      expendable_reply = replies.last
+      expect(topic.reload.posts_count).to eq(3)
 
       MessageBus.expects(:publish).at_least_once
 
@@ -1120,7 +1122,9 @@ describe PostDestroyer do
       MessageBus.expects(:publish).once.with do |channel, message, _|
         channel == "/topic/#{topic.id}" &&
           message[:type] == :stats &&
-          message[:posts_count] == 5
+          message[:posts_count] == 2 &&
+          message[:last_posted_at] == reply.created_at &&
+          message[:last_poster] == BasicUserSerializer.new(reply.user, root: false).as_json
       end
 
       PostDestroyer.new(moderator, expendable_reply, force_destroy: true).destroy
@@ -1128,9 +1132,7 @@ describe PostDestroyer do
     end
 
     it 'when a post is deleted publishes updated topic stats' do
-      expect(topic.reload.posts_count).to eq(6)
-
-      expendable_reply = replies.last
+      expect(topic.reload.posts_count).to eq(3)
 
       MessageBus.expects(:publish).at_least_once
 
@@ -1138,19 +1140,20 @@ describe PostDestroyer do
       MessageBus.expects(:publish).once.with do |channel, message, _|
         channel == "/topic/#{topic.id}" &&
           message[:type] == :stats &&
-          message[:posts_count] == 5
+          message[:posts_count] == 2 &&
+          message[:last_posted_at] == reply.created_at &&
+          message[:last_poster] == BasicUserSerializer.new(reply.user, root: false).as_json
       end
 
       PostDestroyer.new(moderator, expendable_reply).destroy
       expect(expendable_reply.reload.deleted_at).not_to eq(nil)
     end
 
-    it 'Recovers the post correctly' do
-      expect(topic.reload.posts_count).to eq(6)
+    it 'when a post is recovered publishes update topic stats' do
+      expect(topic.reload.posts_count).to eq(3)
 
-      expendable_reply = replies.last
       PostDestroyer.new(moderator, expendable_reply).destroy
-      expect(topic.reload.posts_count).to eq(5)
+      expect(topic.reload.posts_count).to eq(2)
 
       expendable_reply.reload
 
@@ -1160,7 +1163,9 @@ describe PostDestroyer do
       MessageBus.expects(:publish).once.with do |channel, message, _|
         channel == "/topic/#{topic.id}" &&
           message[:type] == :stats &&
-          message[:posts_count] == 6
+          message[:posts_count] == 3 &&
+          message[:last_posted_at] == expendable_reply.created_at &&
+          message[:last_poster] == BasicUserSerializer.new(expendable_reply.user, root: false).as_json
       end
 
       PostDestroyer.new(admin, expendable_reply).recover
