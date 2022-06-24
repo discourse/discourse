@@ -783,7 +783,7 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
-  # If a post is deleted we have to update our highest post counters
+  # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
     archetype = Topic.where(id: topic_id).pluck_first(:archetype)
 
@@ -818,7 +818,16 @@ class Topic < ActiveRecord::Base
                 deleted_at IS NULL AND
                 post_type <> 4
                 #{post_type}
-        )
+        ),
+        last_post_user_id = COALESCE((
+          SELECT user_id FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
+                post_type <> 4
+                #{post_type}
+          ORDER BY created_at desc
+          LIMIT 1
+        ), last_post_user_id)
       WHERE id = :topic_id
       RETURNING highest_post_number
     SQL
