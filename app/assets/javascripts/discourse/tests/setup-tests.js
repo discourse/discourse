@@ -10,10 +10,7 @@ import pretender, {
   pretenderHelpers,
   resetPretender,
 } from "discourse/tests/helpers/create-pretender";
-import {
-  currentSettings,
-  resetSettings,
-} from "discourse/tests/helpers/site-settings";
+import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
@@ -392,20 +389,6 @@ function setupTestsCommon(application, container, config) {
   setApplication(application);
   setDefaultOwner(application.__container__);
   resetSite();
-}
-
-export function setupTestsLegacy(application) {
-  app = application;
-  setResolver(buildResolver("discourse").create({ namespace: app }));
-  setupTestsCommon(application, app.__container__);
-
-  app.instanceInitializer({
-    name: "test-helper",
-    initialize: testsInitialized,
-    teardown: testsTornDown,
-  });
-  app.SiteSettings = currentSettings();
-  app.start();
 }
 
 export default function setupTests(config) {

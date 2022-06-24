@@ -70,8 +70,6 @@ import {
   clearTextDecorateCallbacks,
 } from "discourse/lib/to-markdown";
 
-const LEGACY_ENV = !setupApplicationTest;
-
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
 }
@@ -188,9 +186,7 @@ function testCleanup(container, app) {
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);
-  if (!LEGACY_ENV) {
-    clearPresenceCallbacks();
-  }
+  clearPresenceCallbacks();
   restoreBaseUri();
   resetTopicsSectionLinks();
   clearTagDecorateCallbacks();
@@ -217,9 +213,7 @@ export function discourseModule(name, options) {
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
-        if (!LEGACY_ENV) {
-          controller.application = {};
-        }
+        controller.application = {};
         controller.siteSettings = this.siteSettings;
         if (properties) {
           controller.setProperties(properties);
@@ -304,16 +298,7 @@ export function acceptance(name, optionsOrCallback) {
 
       resetSite(currentSettings(), siteChanges);
 
-      if (LEGACY_ENV) {
-        getApplication().__registeredObjects__ = false;
-        getApplication().reset();
-      }
       this.container = getOwner(this);
-      if (LEGACY_ENV && loggedIn) {
-        updateCurrentUser({
-          appEvents: this.container.lookup("service:app-events"),
-        });
-      }
 
       if (!this.owner) {
         this.owner = this.container;
@@ -329,11 +314,6 @@ export function acceptance(name, optionsOrCallback) {
       let app = getApplication();
       options?.afterEach?.call(this);
       testCleanup(this.container, app);
-
-      if (LEGACY_ENV) {
-        app.__registeredObjects__ = false;
-        app.reset();
-      }
 
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
@@ -380,18 +360,16 @@ export function acceptance(name, optionsOrCallback) {
       hooks.afterEach(setup.afterEach);
       callback(needs);
 
-      if (!LEGACY_ENV && getContext) {
-        setupApplicationTest(hooks);
+      setupApplicationTest(hooks);
 
-        hooks.beforeEach(function () {
-          // This hack seems necessary to allow `DiscourseURL` to use the testing router
-          let ctx = getContext();
-          this.container.registry.unregister("router:main");
-          this.container.registry.register("router:main", ctx.owner.router, {
-            instantiate: false,
-          });
+      hooks.beforeEach(function () {
+        // This hack seems necessary to allow `DiscourseURL` to use the testing router
+        let ctx = getContext();
+        this.container.registry.unregister("router:main");
+        this.container.registry.register("router:main", ctx.owner.router, {
+          instantiate: false,
         });
-      }
+      });
     });
   } else {
     // Old way
@@ -523,25 +501,7 @@ export async function selectText(selector, endOffset = null) {
     selection.addRange(range);
   };
 
-  if (LEGACY_ENV) {
-    // In the Ember CLI environment, the settled() helper seems to take care of waiting
-    // for this event to fire. In legacy, we need to do it manually.
-    let callback;
-    const selectEventFiredPromise = new Promise((resolve) => {
-      callback = resolve;
-      document.addEventListener("selectionchange", callback);
-    });
-
-    performSelection();
-
-    try {
-      await selectEventFiredPromise;
-    } finally {
-      document.removeEventListener("selectionchange", callback);
-    }
-  } else {
-    performSelection();
-  }
+  performSelection();
 
   await settled();
 }
