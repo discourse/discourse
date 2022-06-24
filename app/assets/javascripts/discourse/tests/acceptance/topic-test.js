@@ -689,7 +689,7 @@ acceptance("Topic stats update automatically", function () {
     id: 280,
     type: "stats",
     posts_count: 999,
-    last_posted_at: "2022-06-24 19:32:19 UTC",
+    last_posted_at: "2022-06-20T21:01:45.844Z",
     last_poster: {
       id: 1,
       username: "test",

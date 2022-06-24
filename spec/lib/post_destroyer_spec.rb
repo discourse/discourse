@@ -1123,7 +1123,7 @@ describe PostDestroyer do
         channel == "/topic/#{topic.id}" &&
           message[:type] == :stats &&
           message[:posts_count] == 2 &&
-          message[:last_posted_at] == reply.created_at &&
+          message[:last_posted_at] == reply.created_at.as_json &&
           message[:last_poster] == BasicUserSerializer.new(reply.user, root: false).as_json
       end
 
@@ -1141,7 +1141,7 @@ describe PostDestroyer do
         channel == "/topic/#{topic.id}" &&
           message[:type] == :stats &&
           message[:posts_count] == 2 &&
-          message[:last_posted_at] == reply.created_at &&
+          message[:last_posted_at] == reply.created_at.as_json &&
           message[:last_poster] == BasicUserSerializer.new(reply.user, root: false).as_json
       end
 
@@ -1164,7 +1164,7 @@ describe PostDestroyer do
         channel == "/topic/#{topic.id}" &&
           message[:type] == :stats &&
           message[:posts_count] == 3 &&
-          message[:last_posted_at] == expendable_reply.created_at &&
+          message[:last_posted_at] == expendable_reply.created_at.as_json &&
           message[:last_poster] == BasicUserSerializer.new(expendable_reply.user, root: false).as_json
       end
 

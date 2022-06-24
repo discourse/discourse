@@ -1837,7 +1837,7 @@ class Topic < ActiveRecord::Base
       stats = { like_count: topic.like_count }
     when :created, :destroyed, :deleted, :recovered
       stats = { posts_count: topic.posts_count,
-                last_posted_at: topic.last_posted_at,
+                last_posted_at: topic.last_posted_at.as_json,
                 last_poster: BasicUserSerializer.new(topic.last_poster, root: false).as_json }
     else
       stats = nil

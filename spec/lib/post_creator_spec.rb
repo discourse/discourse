@@ -861,7 +861,7 @@ describe PostCreator do
           channel == "/topic/#{topic.id}" &&
             message[:type] == :stats &&
             message[:posts_count] == 2 &&
-            message[:last_posted_at] == reply_timestamp &&
+            message[:last_posted_at] == reply_timestamp.as_json &&
             message[:last_poster] == BasicUserSerializer.new(evil_trout, root: false).as_json
         end
 
