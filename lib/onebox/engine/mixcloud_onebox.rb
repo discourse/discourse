@@ -19,10 +19,9 @@ module Onebox
               <img src="#{oembed.image}">
               <div class="video-icon"></div>
               <div class="mixcloud-text">
-                
                 <h3><a href="#{oembed.url}" target="_blank" rel="nofollow ugc noopener">#{oembed.title}</a></h3>
                 <h4>#{oembed.author_name}</h4>
-              </div>   
+              </div>
             </article>
           </aside>
         HTML
