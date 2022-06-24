@@ -421,7 +421,7 @@ describe ApplicationHelper do
 
     it 'Supports ASCII URLs with odd chars' do
       result = helper.crawlable_meta_data(
-        url: -((+"http://localhost/ión").force_encoding("ASCII-8BIT"))
+        url: (+"http://localhost/ión").force_encoding("ASCII-8BIT").freeze
      )
 
       expect(result).to include("ión")
