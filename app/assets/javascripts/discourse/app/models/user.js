@@ -31,6 +31,7 @@ import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import Evented from "@ember/object/evented";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -1053,6 +1054,7 @@ User.reopenClass(Singleton, {
 
       const store = getOwner(this).lookup("service:store");
       const currentUser = store.createRecord("user", userJson);
+      currentUser.appEvents = getOwner(this).lookup("service:appEvents");
       currentUser.trackStatus();
       return currentUser;
     }
@@ -1138,12 +1140,19 @@ User.reopenClass(Singleton, {
 });
 
 // user status tracking
-User.reopen({
+User.reopen(Evented, {
   _clearStatusTimerId: null,
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
     this.addObserver("status", this, "_statusChanged");
+
+    if (this.isCurrent) {
+      this.appEvents.on("current-user-status:changed", (status) => {
+        this.set("status", status);
+      });
+    }
+
     if (this.status && this.status.ends_at) {
       this._scheduleStatusClearing(this.status.ends_at);
     }
@@ -1151,10 +1160,15 @@ User.reopen({
 
   stopTrackingStatus() {
     this.removeObserver("status", this, "_statusChanged");
+    if (this.isCurrent) {
+      this.appEvents.off("current-user-status:changed");
+    }
     this._unscheduleStatusClearing();
   },
 
   _statusChanged(sender, key) {
+    this.trigger("status-changed");
+
     const status = this.get(key);
     if (status && status.ends_at) {
       this._scheduleStatusClearing(status.ends_at);
@@ -1184,10 +1198,6 @@ User.reopen({
 
   _autoClearStatus() {
     this.set("status", null);
-    if (this.isCurrent) {
-      this.appEvents.trigger("current-user-status:changed");
-    }
-    this._clearStatusTimerId = null;
   },
 });
 
