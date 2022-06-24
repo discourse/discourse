@@ -3,16 +3,12 @@
 </summary>
 <div class="search-advanced-filters">
   <div class="search-advanced-options">
-    {{plugin-outlet name="advanced-search-options-above" connectorTagName="div" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField)}}
+    <PluginOutlet @name="advanced-search-options-above" @connectorTagName="div" @args={{hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField}} />
 
     <div class="control-group advanced-search-category">
       <label class="control-label">{{i18n "search.advanced.in_category.label"}}</label>
       <div class="controls">
-        {{search-advanced-category-chooser
-          id="search-in-category"
-          value=searchedTerms.category.id
-          onChange=(action "onChangeSearchTermForCategory")
-        }}
+        <SearchAdvancedCategoryChooser @id="search-in-category" @value={{searchedTerms.category.id}} @onChange={{action "onChangeSearchTermForCategory"}} />
       </div>
     </div>
 
@@ -20,26 +16,14 @@
       <div class="control-group advanced-search-tags">
         <label class="control-label">{{i18n "search.advanced.with_tags.label"}}</label>
         <div class="controls">
-          {{tag-chooser
-            id="search-with-tags"
-            tags=searchedTerms.tags
-            everyTag=true
-            unlimitedTagCount=true
-            onChange=(action "onChangeSearchTermForTags")
-            options=(hash
+          <TagChooser @id="search-with-tags" @tags={{searchedTerms.tags}} @everyTag={{true}} @unlimitedTagCount={{true}} @onChange={{action "onChangeSearchTermForTags"}} @options={{hash
               allowAny=false
               headerAriaLabel=(i18n "search.advanced.with_tags.aria_label")
-            )
-          }}
+            }} />
           {{#if showAllTagsCheckbox}}
             <section class="field">
               <label>
-                {{input
-                  type="checkbox"
-                  class="all-tags"
-                  checked=searchedTerms.special.all_tags
-                  click=(action "onChangeSearchTermForAllTags" value="target.checked")
-                }}
+                <Input @type="checkbox" class="all-tags" @checked={{searchedTerms.special.all_tags}} @click={{action "onChangeSearchTermForAllTags" value="target.checked"}} />
                 {{i18n "search.advanced.filters.all_tags"}}
               </label>
             </section>
@@ -55,63 +39,32 @@
 
           {{#if currentUser}}
             <div class="grouped-control-field">
-              {{input
-                id="matching-title-only"
-                type="checkbox"
-                class="in-title"
-                checked=searchedTerms.special.in.title
-                click=(action "onChangeSearchTermForSpecialInTitle" value="target.checked")
-              }}
+              <Input @id="matching-title-only" @type="checkbox" class="in-title" @checked={{searchedTerms.special.in.title}} @click={{action "onChangeSearchTermForSpecialInTitle" value="target.checked"}} />
               <label for="matching-title-only">
                 {{i18n "search.advanced.filters.title"}}
               </label>
             </div>
 
             <div class="grouped-control-field">
-              {{input
-                id="matching-liked"
-                type="checkbox"
-                class="in-likes"
-                checked=searchedTerms.special.in.likes
-                click=(action "onChangeSearchTermForSpecialInLikes" value="target.checked")
-              }}
+              <Input @id="matching-liked" @type="checkbox" class="in-likes" @checked={{searchedTerms.special.in.likes}} @click={{action "onChangeSearchTermForSpecialInLikes" value="target.checked"}} />
               <label for="matching-liked">{{i18n "search.advanced.filters.likes"}}</label>
             </div>
 
             <div class="grouped-control-field">
-              {{input
-                id="matching-in-messages"
-                type="checkbox"
-                class="in-private"
-                checked=searchedTerms.special.in.messages
-                click=(action "onChangeSearchTermForSpecialInMessages" value="target.checked")
-              }}
+              <Input @id="matching-in-messages" @type="checkbox" class="in-private" @checked={{searchedTerms.special.in.messages}} @click={{action "onChangeSearchTermForSpecialInMessages" value="target.checked"}} />
               <label for="matching-in-messages">{{i18n "search.advanced.filters.private"}}</label>
             </div>
 
             <div class="grouped-control-field">
-              {{input
-                id="matching-seen"
-                type="checkbox"
-                class="in-seen"
-                checked=searchedTerms.special.in.seen
-                click=(action "onChangeSearchTermForSpecialInSeen" value="target.checked")
-              }}
+              <Input @id="matching-seen" @type="checkbox" class="in-seen" @checked={{searchedTerms.special.in.seen}} @click={{action "onChangeSearchTermForSpecialInSeen" value="target.checked"}} />
               <label for="matching-seen">{{i18n "search.advanced.filters.seen"}}</label>
             </div>
           {{/if}}
 
-          {{combo-box
-            id="in"
-            valueProperty="value"
-            content=inOptions
-            value=searchedTerms.in
-            onChange=(action "onChangeSearchTermForIn")
-            options=(hash
+          <ComboBox @id="in" @valueProperty="value" @content={{inOptions}} @value={{searchedTerms.in}} @onChange={{action "onChangeSearchTermForIn"}} @options={{hash
               none="user.locale.any"
               clearable=true
-            )
-          }}
+            }} />
         </fieldset>
       </div>
     </div>
@@ -119,18 +72,11 @@
     <div class="control-group advanced-search-topic-status">
       <label class="control-label">{{i18n "search.advanced.statuses.label"}}</label>
       <div class="controls">
-        {{combo-box
-          id="search-status-options"
-          valueProperty="value"
-          content=statusOptions
-          value=searchedTerms.status
-          onChange=(action "onChangeSearchTermForStatus")
-          options=(hash
+        <ComboBox @id="search-status-options" @valueProperty="value" @content={{statusOptions}} @value={{searchedTerms.status}} @onChange={{action "onChangeSearchTermForStatus"}} @options={{hash
             none="user.locale.any"
             headerAriaLabel=(i18n "search.advanced.statuses.label")
             clearable=true
-          )
-        }}
+          }} />
       </div>
     </div>
 
@@ -139,41 +85,25 @@
         {{i18n "search.advanced.posted_by.label"}}
       </label>
       <div class="controls">
-        {{user-chooser
-          id="search-posted-by"
-          value=searchedTerms.username
-          onChange=(action "onChangeSearchTermForUsername")
-          options=(hash
+        <UserChooser @id="search-posted-by" @value={{searchedTerms.username}} @onChange={{action "onChangeSearchTermForUsername"}} @options={{hash
             headerAriaLabel=(i18n "search.advanced.posted_by.aria_label")
             maximum=1
             excludeCurrentUser=false
-          )
-        }}
+          }} />
       </div>
     </div>
 
     <div class="control-group advanced-search-posted-date">
       <label class="control-label">{{i18n "search.advanced.post.time.label"}}</label>
       <div class="controls inline-form full-width">
-        {{combo-box
-          id="postTime"
-          valueProperty="value"
-          content=postTimeOptions
-          value=searchedTerms.time.when
-          onChange=(action "onChangeWhenTime")
-          options=(hash
+        <ComboBox @id="postTime" @valueProperty="value" @content={{postTimeOptions}} @value={{searchedTerms.time.when}} @onChange={{action "onChangeWhenTime"}} @options={{hash
             headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
-          )
-        }}
-        {{date-input
-          date=searchedTerms.time.days
-          onChange=(action "onChangeWhenDate")
-          inputId="search-post-date"
-        }}
+          }} />
+        <DateInput @date={{searchedTerms.time.days}} @onChange={{action "onChangeWhenDate"}} @inputId="search-post-date" />
       </div>
     </div>
 
-    {{plugin-outlet name="advanced-search-options-below" connectorTagName="div" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField)}}
+    <PluginOutlet @name="advanced-search-options-below" @connectorTagName="div" @args={{hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField}} />
   </div>
 
   <details class="search-advanced-additional-options">
@@ -184,25 +114,9 @@
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
       <span class="control-label">{{i18n "search.advanced.post.count.label"}}</span>
       <div class="controls">
-        {{input
-          type="number"
-          value=(readonly searchedTerms.min_posts)
-          class="input-small"
-          id="search-min-post-count"
-          input=(action "onChangeSearchTermMinPostCount" value="target.value")
-          placeholder=(i18n "search.advanced.post.min.placeholder")
-          aria-label=(i18n "search.advanced.post.min.aria_label")
-        }}
+        <Input @type="number" @value={{readonly searchedTerms.min_posts}} class="input-small" @id="search-min-post-count" @input={{action "onChangeSearchTermMinPostCount" value="target.value"}} placeholder={{i18n "search.advanced.post.min.placeholder"}} @aria-label={{i18n "search.advanced.post.min.aria_label"}} />
         {{d-icon "arrows-alt-h"}}
-        {{input
-          type="number"
-          value=(readonly searchedTerms.max_posts)
-          class="input-small"
-          id="search-max-post-count"
-          input=(action "onChangeSearchTermMaxPostCount" value="target.value")
-          placeholder=(i18n "search.advanced.post.max.placeholder")
-          aria-label=(i18n "search.advanced.post.max.aria_label")
-        }}
+        <Input @type="number" @value={{readonly searchedTerms.max_posts}} class="input-small" @id="search-max-post-count" @input={{action "onChangeSearchTermMaxPostCount" value="target.value"}} placeholder={{i18n "search.advanced.post.max.placeholder"}} @aria-label={{i18n "search.advanced.post.max.aria_label"}} />
       </div>
     </div>
 
@@ -210,39 +124,16 @@
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
       <span class="control-label">{{i18n "search.advanced.views.label"}}</span>
       <div class="controls">
-        {{input
-          type="number"
-          value=(readonly searchedTerms.min_views)
-          class="input-small"
-          id="search-min-views"
-          input=(action "onChangeSearchTermMinViews" value="target.value")
-          placeholder=(i18n "search.advanced.min_views.placeholder")
-          aria-label=(i18n "search.advanced.min_views.aria_label")
-        }}
+        <Input @type="number" @value={{readonly searchedTerms.min_views}} class="input-small" @id="search-min-views" @input={{action "onChangeSearchTermMinViews" value="target.value"}} placeholder={{i18n "search.advanced.min_views.placeholder"}} @aria-label={{i18n "search.advanced.min_views.aria_label"}} />
         {{d-icon "arrows-alt-h"}}
-        {{input
-          type="number"
-          value=(readonly searchedTerms.max_views)
-          class="input-small"
-          id="search-max-views"
-          input=(action "onChangeSearchTermMaxViews" value="target.value")
-          placeholder=(i18n "search.advanced.max_views.placeholder")
-          aria-label=(i18n "search.advanced.max_views.aria_label")
-        }}
+        <Input @type="number" @value={{readonly searchedTerms.max_views}} class="input-small" @id="search-max-views" @input={{action "onChangeSearchTermMaxViews" value="target.value"}} placeholder={{i18n "search.advanced.max_views.placeholder"}} @aria-label={{i18n "search.advanced.max_views.aria_label"}} />
       </div>
     </div>
   </details>
 
   {{#if site.mobileView}}
     <div class="second-search-button">
-      {{d-button
-        action=search
-        icon="search"
-        label="search.search_button"
-        class="btn-primary search-cta"
-        ariaLabel="search.search_button"
-        disabled=searchButtonDisabled
-      }}
+      <DButton @action={{search}} @icon="search" @label="search.search_button" @class="btn-primary search-cta" @ariaLabel="search.search_button" @disabled={{searchButtonDisabled}} />
     </div>
   {{/if}}
 </div>

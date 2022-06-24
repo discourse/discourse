@@ -6,11 +6,7 @@
     {{#if canSee}}
       <a class="show-tracking" href={{model.watchingTopicsPath}}>{{i18n "user.tracked_topics_link"}}</a>
     {{/if}}
-    {{category-selector
-      categories=model.watchedCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.watchedCategories))
-    }}
+    <CategorySelector @categories={{model.watchedCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.watchedCategories)}} />
   </div>
   <div class="instructions">{{i18n "user.watched_categories_instructions"}}</div>
 
@@ -19,32 +15,20 @@
     {{#if canSee}}
       <a class="show-tracking" href={{model.trackingTopicsPath}}>{{i18n "user.tracked_topics_link"}}</a>
     {{/if}}
-    {{category-selector
-      categories=model.trackedCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.trackedCategories))
-    }}
+    <CategorySelector @categories={{model.trackedCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.trackedCategories)}} />
   </div>
   <div class="instructions">{{i18n "user.tracked_categories_instructions"}}</div>
 
   <div class="controls tracking-controls">
     <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_categories"}}</label>
-    {{category-selector
-      categories=model.watchedFirstPostCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.watchedFirstPostCategories))
-    }}
+    <CategorySelector @categories={{model.watchedFirstPostCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.watchedFirstPostCategories)}} />
   </div>
   <div class="instructions">{{i18n "user.watched_first_post_categories_instructions"}}</div>
 
   {{#if siteSettings.mute_all_categories_by_default}}
     <div class="controls tracking-controls">
       <label>{{d-icon "d-regular"}} {{i18n "user.regular_categories"}}</label>
-      {{category-selector
-        categories=model.regularCategories
-        blockedCategories=selectedCategories
-        onChange=(action (mut model.regularCategories))
-      }}
+      <CategorySelector @categories={{model.regularCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.regularCategories)}} />
     </div>
     <div class="instructions">{{i18n "user.regular_categories_instructions"}}</div>
   {{else}}
@@ -53,24 +37,20 @@
       {{#if canSee}}
         <a class="show-tracking" href={{model.mutedTopicsPath}}>{{i18n "user.tracked_topics_link"}}</a>
       {{/if}}
-      {{category-selector
-        categories=model.mutedCategories
-        blockedCategories=selectedCategories
-        onChange=(action (mut model.mutedCategories))
-      }}
+      <CategorySelector @categories={{model.mutedCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.mutedCategories)}} />
     </div>
     <div class="instructions">{{i18n (if hideMutedTags "user.muted_categories_instructions" "user.muted_categories_instructions_dont_hide")}}</div>
   {{/if}}
 </div>
 
-{{plugin-outlet name="user-preferences-categories" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
+<PluginOutlet @name="user-preferences-categories" @tagName="span" @connectorTagName="div" @args={{hash model=model save=(action "save")}} />
 
 <br>
 
-{{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
 {{#if canSave}}
-  {{save-controls model=model action=(action "save") saved=saved}}
+  <SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}} />
 {{else}}
   {{i18n "user.no_category_access"}}
 {{/if}}

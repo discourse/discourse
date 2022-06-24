@@ -3,12 +3,7 @@
     <div class="modal-inner-container">
       <div class="modal-header {{headerClass}}">
         {{#if dismissable}}
-          {{d-button
-            icon="times"
-            action=(route-action "closeModal" "initiatedByCloseButton")
-            class="btn-flat modal-close close"
-            title="modal.close"
-          }}
+          <DButton @icon="times" @action={{route-action "closeModal" "initiatedByCloseButton"}} @class="btn-flat modal-close close" @title="modal.close" />
         {{/if}}
 
         {{#if title}}
@@ -24,12 +19,7 @@
         {{#if panels}}
           <ul class="modal-tabs">
             {{#each panels as |panel|}}
-              {{modal-tab
-                panel=panel
-                panelsLength=panels.length
-                selectedPanel=selectedPanel
-                onSelectPanel=onSelectPanel
-              }}
+              <ModalTab @panel={{panel}} @panelsLength={{panels.length}} @selectedPanel={{selectedPanel}} @onSelectPanel={{onSelectPanel}} />
             {{/each}}
           </ul>
         {{/if}}

@@ -7,7 +7,7 @@
 <div class="fps-topic">
   <div class="topic">
     {{#if bulkSelectEnabled}}
-      {{track-selected selectedList=selected selectedId=post.topic class="bulk-select"}}
+      <TrackSelected @selectedList={{selected}} @selectedId={{post.topic}} @class="bulk-select" />
     {{/if}}
 
     <a href={{post.url}} {{action "logClick" post.topic_id}} class="search-link{{if post.topic.visited " visited"}}" role="heading" aria-level="2">
@@ -16,9 +16,9 @@
         {{#if post.useTopicTitleHeadline}}
           {{html-safe post.topicTitleHeadline}}
         {{else}}
-          {{#highlight-search highlight=highlightQuery}}
+          <HighlightSearch @highlight={{highlightQuery}}>
             {{html-safe post.topic.fancyTitle}}
-          {{/highlight-search}}
+          </HighlightSearch>
         {{/if}}
       </span>
     </a>
@@ -31,7 +31,7 @@
       {{#if post.topic}}
         {{discourse-tags post.topic}}
       {{/if}}
-      {{plugin-outlet name="full-page-search-category" tagName="span" connectorTagName="div" args=(hash post=post)}}
+      <PluginOutlet @name="full-page-search-category" @tagName="span" @connectorTagName="div" @args={{hash post=post}} />
     </div>
   </div>
 
@@ -47,9 +47,9 @@
       {{#if siteSettings.use_pg_headlines_for_excerpt}}
         {{html-safe post.blurb}}
       {{else}}
-        {{#highlight-search highlight=highlightQuery}}
+        <HighlightSearch @highlight={{highlightQuery}}>
           {{html-safe post.blurb}}
-        {{/highlight-search}}
+        </HighlightSearch>
       {{/if}}
     {{/if}}
   </div>

@@ -9,28 +9,12 @@
   <p>{{secondFactorDescription}}</p>
   {{#if showSecurityKeyForm}}
     <div id="security-key">
-      {{d-button
-        action=(action "authenticateSecurityKey")
-        icon="key"
-        id="security-key-authenticate-button"
-        label="login.security_key_authenticate"
-        type="button"
-        class="btn btn-large btn-primary"
-      }}
+      <DButton @action={{action "authenticateSecurityKey"}} @icon="key" @id="security-key-authenticate-button" @label="login.security_key_authenticate" @type="button" @class="btn btn-large btn-primary" />
     </div>
   {{else if (or showTotpForm showBackupCodesForm)}}
     <form class={{inputFormClass}}>
-      {{second-factor-input
-        value=secondFactorToken
-        secondFactorMethod=shownSecondFactorMethod
-        onTokenInput=(action "onTokenInput")
-      }}
-      {{d-button
-        action=(action "authenticateToken")
-        class="btn-primary"
-        label="submit"
-        type="submit"
-      }}
+      <SecondFactorInput @value={{secondFactorToken}} @secondFactorMethod={{shownSecondFactorMethod}} @onTokenInput={{action "onTokenInput"}} />
+      <DButton @action={{action "authenticateToken"}} @class="btn-primary" @label="submit" @type="submit" />
     </form>
   {{/if}}
 

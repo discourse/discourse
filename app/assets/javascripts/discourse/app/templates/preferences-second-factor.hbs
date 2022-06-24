@@ -1,6 +1,6 @@
-{{#d-section pageClass="user-preferences" tagName=""}}
+<DSection @pageClass="user-preferences" @tagName="">
   <section class="user-preferences solo-preference second-factor">
-    {{#conditional-loading-spinner condition=loading}}
+    <ConditionalLoadingSpinner @condition={{loading}}>
       <form class="form-horizontal">
         {{#if showEnforcedNotice}}
           <div class="control-group">
@@ -30,11 +30,7 @@
           <div class="control-group totp">
             <div class="controls">
               <h2>{{i18n "user.second_factor.totp.title"}}</h2>
-              {{d-button action=(action "createTotp")
-                class="btn-primary new-totp"
-                icon="plus"
-                disabled=loading
-                label="user.second_factor.totp.add"}}
+              <DButton @action={{action "createTotp"}} @class="btn-primary new-totp" @icon="plus" @disabled={{loading}} @label="user.second_factor.totp.add" />
               {{#each totps as |totp|}}
                 <div class="second-factor-item">
                   {{#if totp.name}}
@@ -44,13 +40,7 @@
                   {{/if}}
 
                   {{#if isCurrentUser}}
-                    {{d-button action=(action "editSecondFactor" totp)
-                      class="btn-default btn-small btn-icon pad-left no-text edit"
-                      disabled=loading
-                      icon="pencil-alt"
-                      aria-label="user.second_factor.edit"
-                      title="user.second_factor.edit"
-                    }}
+                    <DButton @action={{action "editSecondFactor" totp}} @class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
                   {{/if}}
                 </div>
               {{/each}}
@@ -60,11 +50,7 @@
           <div class="control-group security-key">
             <div class="controls">
               <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
-              {{d-button action=(action "createSecurityKey")
-                class="btn-primary new-security-key"
-                icon="plus"
-                disabled=loading
-                label="user.second_factor.security_key.add"}}
+              <DButton @action={{action "createSecurityKey"}} @class="btn-primary new-security-key" @icon="plus" @disabled={{loading}} @label="user.second_factor.security_key.add" />
               {{#each security_keys as |security_key|}}
                 <div class="second-factor-item">
                   {{#if security_key.name}}
@@ -74,13 +60,7 @@
                   {{/if}}
 
                   {{#if isCurrentUser}}
-                    {{d-button action=(action "editSecurityKey" security_key)
-                      class="btn-default btn-small btn-icon pad-left no-text edit"
-                      disabled=loading
-                      icon="pencil-alt"
-                      aria-label="user.second_factor.edit"
-                      title="user.second_factor.edit"
-                    }}
+                    <DButton @action={{action "editSecurityKey" security_key}} @class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
                   {{/if}}
                 </div>
               {{/each}}
@@ -98,13 +78,7 @@
                 {{/if}}
 
                 {{#if isCurrentUser}}
-                  {{d-button action=(action "editSecondFactorBackup")
-                    class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup"
-                    disabled=loading
-                    icon="pencil-alt"
-                    aria-label="user.second_factor.edit"
-                    title="user.second_factor.edit"
-                  }}
+                  <DButton @action={{action "editSecondFactorBackup"}} @class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup" @disabled={{loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
                 {{/if}}
               {{else}}
                 {{i18n "user.second_factor_backup.enable_prerequisites"}}
@@ -116,12 +90,7 @@
             {{#unless showEnforcedNotice}}
               <div class="control-group">
                 <div class="controls">
-                  {{d-button
-                    class="btn-danger"
-                    icon="ban"
-                    action=(action "disableAllSecondFactors")
-                    disabled=loading
-                    label="user.second_factor.disable_all"}}
+                  <DButton @class="btn-danger" @icon="ban" @action={{action "disableAllSecondFactors"}} @disabled={{loading}} @label="user.second_factor.disable_all" />
                 </div>
               </div>
             {{/unless}}
@@ -132,11 +101,7 @@
 
             <div class="controls">
               <div>
-                {{text-field value=password
-                  id="password"
-                  type="password"
-                  classNames="input-large"
-                  autofocus="autofocus"}}
+                <TextField @value={{password}} @id="password" @type="password" @classNames="input-large" @autofocus="autofocus" />
               </div>
               <div class="instructions">
                 {{i18n "user.second_factor.confirm_password_description"}}
@@ -146,15 +111,10 @@
 
           <div class="control-group">
             <div class="controls">
-              {{d-button
-                class="btn-primary"
-                type="submit"
-                action=(action "confirmPassword")
-                disabled=loading
-                label="continue"}}
+              <DButton @class="btn-primary" @type="submit" @action={{action "confirmPassword"}} @disabled={{loading}} @label="continue" />
 
               {{#unless showEnforcedNotice}}
-                {{cancel-link route="preferences.account" args=model.username}}
+                <CancelLink @route="preferences.account" @args={{model.username}} />
               {{/unless}}
             </div>
             <div class="controls" style="margin-top: 5px">
@@ -166,6 +126,6 @@
           </div>
         {{/if}}
       </form>
-    {{/conditional-loading-spinner}}
+    </ConditionalLoadingSpinner>
   </section>
-{{/d-section}}
+</DSection>

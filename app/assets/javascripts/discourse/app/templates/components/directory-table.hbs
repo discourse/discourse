@@ -5,17 +5,9 @@
 <div class="directory-table-container">
   <table class="directory-table">
     <thead>
-      {{table-header-toggle field="username" order=order asc=asc}}
+      <TableHeaderToggle @field="username" @order={{order}} @asc={{asc}} />
       {{#each columns as |column|}}
-        {{table-header-toggle
-          field=column.name
-          icon=column.icon
-          order=order
-          asc=asc
-          automatic=(directory-column-is-automatic column=column)
-          translated=column.user_field_id
-          onActiveRender=setActiveHeader
-        }}
+        <TableHeaderToggle @field={{column.name}} @icon={{column.icon}} @order={{order}} @asc={{asc}} @automatic={{directory-column-is-automatic column=column}} @translated={{column.user_field_id}} @onActiveRender={{setActiveHeader}} />
       {{/each}}
 
       {{#if showTimeRead}}
@@ -24,7 +16,7 @@
     </thead>
     <tbody>
       {{#each items as |item|}}
-        {{directory-item item=item columns=columns showTimeRead=showTimeRead}}
+        <DirectoryItem @item={{item}} @columns={{columns}} @showTimeRead={{showTimeRead}} />
       {{/each}}
     </tbody>
   </table>

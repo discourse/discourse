@@ -5,25 +5,13 @@
   <div class="image-upload-controls">
     <label class="btn btn-default pad-left no-text {{if uploadingOrProcessing "disabled"}}">
       {{d-icon "far-image"}}
-      {{pick-files-button fileInputDisabled=uploadingOrProcessing fileInputClass="hidden-upload-field" acceptedFormatsOverride="image/*" }}
+      <PickFilesButton @fileInputDisabled={{uploadingOrProcessing}} @fileInputClass="hidden-upload-field" @acceptedFormatsOverride="image/*" />
     </label>
 
     {{#if imageUrl}}
-      {{d-button
-        action=(action "trash")
-        class="btn-danger pad-left no-text"
-        icon="far-trash-alt"
-        type="button"
-      }}
+      <DButton @action={{action "trash"}} @class="btn-danger pad-left no-text" @icon="far-trash-alt" @type="button" />
 
-      {{d-button
-        icon="discourse-expand"
-        title="expand"
-        type="button"
-        class="image-uploader-lightbox-btn no-text"
-        action=(action "toggleLightbox")
-        disabled=loadingLightbox
-      }}
+      <DButton @icon="discourse-expand" @title="expand" @type="button" @class="image-uploader-lightbox-btn no-text" @action={{action "toggleLightbox"}} @disabled={{loadingLightbox}} />
     {{/if}}
 
     <span class="btn {{unless uploading "hidden"}}">{{i18n "upload_selector.uploading"}} {{uploadProgress}}%</span>

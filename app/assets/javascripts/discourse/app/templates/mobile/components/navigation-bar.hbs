@@ -7,8 +7,8 @@
 {{#if expanded}}
   <ul class="drop">
     {{#each navItems as |navItem|}}
-      {{navigation-item content=navItem filterMode=filterMode category=category class=(concat "nav-item_" navItem.name)}}
+      <NavigationItem @content={{navItem}} @filterMode={{filterMode}} @category={{category}} @class={{concat "nav-item_" navItem.name}} />
     {{/each}}
-    {{plugin-outlet name="extra-nav-item" connectorTagName="li" args=(hash category=category filterMode=filterMode)}}
+    <PluginOutlet @name="extra-nav-item" @connectorTagName="li" @args={{hash category=category filterMode=filterMode}} />
   </ul>
 {{/if}}

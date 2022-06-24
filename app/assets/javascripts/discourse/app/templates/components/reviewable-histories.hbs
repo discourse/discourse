@@ -13,10 +13,10 @@
               {{reviewable-history-description rh}}
             </td>
             <td>
-              {{#user-link user=rs.user}}
+              <UserLink @user={{rs.user}}>
                 {{avatar rh.created_by imageSize="tiny"}}
                 {{rh.created_by.username}}
-              {{/user-link}}
+              </UserLink>
             </td>
             <td>{{format-date rh.created_at format="medium"}}</td>
           </tr>

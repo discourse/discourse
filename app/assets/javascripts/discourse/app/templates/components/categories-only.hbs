@@ -12,7 +12,7 @@
       </thead>
       <tbody aria-labelledby="categories-only-category">
         {{#each categories as |category|}}
-          {{parent-category-row category=category showTopics=showTopics}}
+          <ParentCategoryRow @category={{category}} @showTopics={{showTopics}} />
         {{/each}}
       </tbody>
     </table>
@@ -38,7 +38,7 @@
         </thead>
         <tbody aria-labelledby="categories-only-category-muted">
           {{#each categories as |category|}}
-            {{parent-category-row category=category showTopics=showTopics listType="muted"}}
+            <ParentCategoryRow @category={{category}} @showTopics={{showTopics}} @listType="muted" />
           {{/each}}
         </tbody>
       </table>
@@ -46,4 +46,4 @@
   {{/if}}
 {{/if}}
 
-{{plugin-outlet name="below-categories-only" connectorTagName="div" args=(hash categories=categories showTopics=showTopics)}}
+<PluginOutlet @name="below-categories-only" @connectorTagName="div" @args={{hash categories=categories showTopics=showTopics}} />

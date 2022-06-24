@@ -1,6 +1,6 @@
-{{#login-modal loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
-  {{plugin-outlet name="login-before-modal-body" connectorTagName="div"}}
-  {{#d-modal-body class=modalBodyClasses}}
+<LoginModal @loginName={{loginName}} @loginPassword={{loginPassword}} @secondFactorToken={{secondFactorToken}} @action={{action "login"}}>
+  <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+  <DModalBody @class={{modalBodyClasses}}>
 
     {{#if canLoginLocal}}
       <div class="login-left-side">
@@ -11,7 +11,7 @@
         <form id="login-form" method="post">
           <div id="credentials" class={{credentialsClass}}>
             <div class="input-group">
-              {{input value=loginName type="email" id="login-account-name" class=(value-entered loginName) autocomplete="username" autocorrect="off" autocapitalize="off" disabled=showSecondFactor autofocus="autofocus" tabindex="1"}}
+              <Input @value={{loginName}} @type="email" @id="login-account-name" class={{value-entered loginName}} @autocomplete="username" @autocorrect="off" @autocapitalize="off" @disabled={{showSecondFactor}} @autofocus="autofocus" @tabindex="1" />
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
               {{#if showLoginWithEmailLink}}
                 <a href class={{if loginName "" "no-login-filled"}} tabindex="3"  id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
@@ -20,57 +20,32 @@
               {{/if}}
             </div>
             <div class="input-group">
-              {{input value=loginPassword type="password" class=(value-entered loginPassword) id="login-account-password" autocomplete="current-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields tabindex="1"}}
+              <Input @value={{loginPassword}} @type="password" class={{value-entered loginPassword}} @id="login-account-password" @autocomplete="current-password" @maxlength="200" @capsLockOn={{capsLockOn}} @disabled={{disableLoginFields}} @tabindex="1" />
               <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
               <a href id="forgot-password-link" tabindex="3" {{action "forgotPassword"}}>{{i18n "forgot_password.action"}}</a>
               <div class="caps-lock-warning {{unless capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>
             </div>
           </div>
-          {{#second-factor-form
-            secondFactorMethod=secondFactorMethod
-            secondFactorToken=secondFactorToken
-            class=secondFactorClass
-            backupEnabled=backupEnabled
-            isLogin=true}}
+          <SecondFactorForm @secondFactorMethod={{secondFactorMethod}} @secondFactorToken={{secondFactorToken}} @class={{secondFactorClass}} @backupEnabled={{backupEnabled}} @isLogin={{true}}>
             {{#if showSecurityKey}}
-              {{#security-key-form
-                allowedCredentialIds=securityKeyAllowedCredentialIds
-                challenge=securityKeyChallenge
-                showSecurityKey=showSecurityKey
-                showSecondFactor=showSecondFactor
-                secondFactorMethod=secondFactorMethod
-                otherMethodAllowed=otherMethodAllowed
-                action=(action "authenticateSecurityKey")}}
-              {{/security-key-form}}
+              <SecurityKeyForm @allowedCredentialIds={{securityKeyAllowedCredentialIds}} @challenge={{securityKeyChallenge}} @showSecurityKey={{showSecurityKey}} @showSecondFactor={{showSecondFactor}} @secondFactorMethod={{secondFactorMethod}} @otherMethodAllowed={{otherMethodAllowed}} @action={{action "authenticateSecurityKey"}}>
+              </SecurityKeyForm>
             {{else}}
-              {{second-factor-input value=secondFactorToken inputId="login-second-factor" secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+              <SecondFactorInput @value={{secondFactorToken}} @inputId="login-second-factor" @secondFactorMethod={{secondFactorMethod}} @backupEnabled={{backupEnabled}} />
             {{/if}}
-          {{/second-factor-form}}
+          </SecondFactorForm>
         </form>
         <div class="modal-footer">
           {{#if canLoginLocal}}
             {{#unless showSecurityKey }}
-              {{d-button
-                action=(action "login")
-                id="login-button"
-                form="login-form"
-                icon="unlock"
-                label=loginButtonLabel
-                disabled=loginDisabled
-                class="btn btn-large btn-primary"
-                tabindex="2"}}
+              <DButton @action={{action "login"}} @id="login-button" @form="login-form" @icon="unlock" @label={{loginButtonLabel}} @disabled={{loginDisabled}} @class="btn btn-large btn-primary" @tabindex="2" />
             {{/unless}}
 
             {{#if showSignupLink}}
-              {{d-button
-                class="btn-large"
-                id="new-account-link"
-                action=(action "createAccount")
-                label="create_account.title"
-                tabindex="3"}}
+              <DButton @class="btn-large" @id="new-account-link" @action={{action "createAccount"}} @label="create_account.title" @tabindex="3" />
             {{/if}}
           {{/if}}
-          {{conditional-loading-spinner condition=showSpinner size="small"}}
+          <ConditionalLoadingSpinner @condition={{showSpinner}} @size="small" />
         </div>
       </div>
     {{/if}}
@@ -85,12 +60,12 @@
       {{/if}}
 
       <div class="login-right-side">
-        {{login-buttons externalLogin=(action "externalLogin")}}
+        <LoginButtons @externalLogin={{action "externalLogin"}} />
       </div>
     {{/if}}
-  {{/d-modal-body}}
+  </DModalBody>
 
-  {{plugin-outlet name="login-after-modal-footer" connectorTagName="div"}}
+  <PluginOutlet @name="login-after-modal-footer" @connectorTagName="div" />
 
   <div class={{alertClass}} id="login-alert">{{alert}}</div>
-{{/login-modal}}
+</LoginModal>

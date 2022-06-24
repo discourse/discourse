@@ -1,14 +1,9 @@
-{{#d-modal-body}}
+<DModalBody>
   <p>
-    {{preference-checkbox labelKey="topics.bulk.also_dismiss_topics" checked=dismissTopics}}
+    <PreferenceCheckbox @labelKey="topics.bulk.also_dismiss_topics" @checked={{dismissTopics}} />
   </p>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-primary"
-    action=(route-action "dismissReadTopics" dismissTopics)
-    icon="check"
-    id="dismiss-read-confirm"
-    label="topics.bulk.dismiss"}}
+  <DButton @class="btn-primary" @action={{route-action "dismissReadTopics" dismissTopics}} @icon="check" @id="dismiss-read-confirm" @label="topics.bulk.dismiss" />
 </div>

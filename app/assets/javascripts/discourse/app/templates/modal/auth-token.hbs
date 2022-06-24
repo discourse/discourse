@@ -1,4 +1,4 @@
-{{#d-modal-body title="user.auth_tokens.was_this_you"}}
+<DModalBody @title="user.auth_tokens.was_this_you">
   <div>
     <p>{{i18n "user.auth_tokens.was_this_you_description"}}</p>
     <p>{{html-safe (i18n "user.second_factor.extended_description")}}</p>
@@ -27,13 +27,9 @@
       {{/if}}
     </div>
   {{/if}}
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-primary"
-    action=(action "highlightSecure")
-    icon="lock"
-    label="user.auth_tokens.secure_account"}}
-  {{d-modal-cancel close=(route-action "closeModal")}}
+  <DButton @class="btn-primary" @action={{action "highlightSecure"}} @icon="lock" @label="user.auth_tokens.secure_account" />
+  <DModalCancel @close={{route-action "closeModal"}} />
 </div>

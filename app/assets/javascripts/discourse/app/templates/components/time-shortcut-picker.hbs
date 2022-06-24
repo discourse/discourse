@@ -1,10 +1,10 @@
-{{#tap-tile-grid activeTile=selectedShortcut as |grid|}}
+<TapTileGrid @activeTile={{selectedShortcut}} as |grid|>
   {{#each options as |option|}}
     {{#unless option.hidden}}
-      {{#tap-tile icon=option.icon tileId=option.id activeTile=grid.activeTile onChange=(action "selectShortcut")}}
+      <TapTile @icon={{option.icon}} @tileId={{option.id}} @activeTile={{grid.activeTile}} @onChange={{action "selectShortcut"}}>
         <div class="tap-tile-title">{{i18n option.label}}</div>
         <div class="tap-tile-date">{{option.timeFormatted}}</div>
-      {{/tap-tile}}
+      </TapTile>
     {{/unless}}
 
     {{#if option.isCustomTimeShortcut}}
@@ -12,22 +12,18 @@
         <div class="control-group custom-date-time-wrap custom-input-wrap">
           <div class="tap-tile-date-input">
             {{d-icon "calendar-alt"}}
-            {{date-picker-future
-            value=customDate
-            onSelect=(action (mut customDate))
-            id="custom-date"
-            }}
+            <DatePickerFuture @value={{customDate}} @onSelect={{action (mut customDate)}} @id="custom-date" />
           </div>
           <div class="tap-tile-time-input">
             {{d-icon "far-clock"}}
-            {{input placeholder="--:--" id="custom-time" type="time" class="time-input" value=customTime}}
+            <Input placeholder="--:--" @id="custom-time" @type="time" class="time-input" @value={{customTime}} />
           </div>
         </div>
         <div class="control-group custom-date-time-wrap custom-relative-wrap">
           <label class="control-label">{{i18n "relative_time_picker.relative"}}</label>
-          {{relative-time-picker onChange=(action "relativeTimeChanged")}}
+          <RelativeTimePicker @onChange={{action "relativeTimeChanged"}} />
         </div>
       {{/if}}
     {{/if}}
   {{/each}}
-{{/tap-tile-grid}}
+</TapTileGrid>

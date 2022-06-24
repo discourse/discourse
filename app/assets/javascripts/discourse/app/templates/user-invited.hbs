@@ -1,11 +1,11 @@
 {{#if can_see_invite_details}}
-  {{#d-section class="user-secondary-navigation" pageClass="user-invites"}}
-    {{#mobile-nav class="invites-nav" desktopClass="nav-stacked action-list"}}
-      {{nav-item route="userInvited.show" routeParam="pending" i18nLabel=pendingLabel}}
-      {{nav-item route="userInvited.show" routeParam="expired" i18nLabel=expiredLabel}}
-      {{nav-item route="userInvited.show" routeParam="redeemed" i18nLabel=redeemedLabel}}
-    {{/mobile-nav}}
-  {{/d-section}}
+  <DSection @class="user-secondary-navigation" @pageClass="user-invites">
+    <MobileNav @class="invites-nav" @desktopClass="nav-stacked action-list">
+      <NavItem @route="userInvited.show" @routeParam="pending" @i18nLabel={{pendingLabel}} />
+      <NavItem @route="userInvited.show" @routeParam="expired" @i18nLabel={{expiredLabel}} />
+      <NavItem @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{redeemedLabel}} />
+    </MobileNav>
+  </DSection>
 {{/if}}
 
 {{outlet}}

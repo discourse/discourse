@@ -1,4 +1,4 @@
-{{user-info user=item.user}}
+<UserInfo @user={{item.user}} />
 
 {{#each columns as |column|}}
   {{#if (directory-column-is-user-field column=column)}}
@@ -29,5 +29,5 @@
 {{/each}}
 
 {{#if showTimeRead}}
-  {{user-stat value=item.time_read label="directory.time_read" type="duration"}}
+  <UserStat @value={{item.time_read}} @label="directory.time_read" @type="duration" />
 {{/if}}

@@ -1,22 +1,19 @@
-{{#d-modal-body title="do_not_disturb.title"}}
-  {{#tap-tile-grid activeTile=duration as |grid|}}
-    {{#tap-tile class="do-not-disturb-tile" tileId="30" activeTile=grid.activeTile onChange=(action "setDuration")}}
+<DModalBody @title="do_not_disturb.title">
+  <TapTileGrid @activeTile={{duration}} as |grid|>
+    <TapTile @class="do-not-disturb-tile" @tileId="30" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
       {{i18n "do_not_disturb.options.half_hour"}}
-    {{/tap-tile}}
-    {{#tap-tile class="do-not-disturb-tile" tileId="60" activeTile=grid.activeTile onChange=(action "setDuration")}}
+    </TapTile>
+    <TapTile @class="do-not-disturb-tile" @tileId="60" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
       {{i18n "do_not_disturb.options.one_hour"}}
-    {{/tap-tile}}
-    {{#tap-tile class="do-not-disturb-tile" tileId="120" activeTile=grid.activeTile onChange=(action "setDuration")}}
+    </TapTile>
+    <TapTile @class="do-not-disturb-tile" @tileId="120" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
       {{i18n "do_not_disturb.options.two_hours"}}
-    {{/tap-tile}}
-    {{#tap-tile class="do-not-disturb-tile" tileId="tomorrow" activeTile=grid.activeTile onChange=(action "setDuration")}}
+    </TapTile>
+    <TapTile @class="do-not-disturb-tile" @tileId="tomorrow" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
       {{i18n "do_not_disturb.options.tomorrow"}}
-    {{/tap-tile}}
-  {{/tap-tile-grid}}
+    </TapTile>
+  </TapTileGrid>
 
-  {{d-button
-    action=(action "navigateToNotificationSchedule")
-    label="do_not_disturb.set_schedule"
-  }}
+  <DButton @action={{action "navigateToNotificationSchedule"}} @label="do_not_disturb.set_schedule" />
 
-{{/d-modal-body}}
+</DModalBody>

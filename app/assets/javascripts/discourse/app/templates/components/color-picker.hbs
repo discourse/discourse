@@ -1,5 +1,5 @@
 {{#each colors as |c|}}
-  {{#color-picker-choice color=c usedColors=usedColors selectColor=(action "selectColor")}}
+  <ColorPickerChoice @color={{c}} @usedColors={{usedColors}} @selectColor={{action "selectColor"}}>
     {{d-icon "check"}}
-  {{/color-picker-choice}}
+  </ColorPickerChoice>
 {{/each}}

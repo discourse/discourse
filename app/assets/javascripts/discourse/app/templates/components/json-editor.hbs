@@ -1,11 +1,7 @@
-{{#d-modal-body rawTitle=(i18n "admin.site_settings.json_schema.modal_title" name=settingName)}}
+<DModalBody @rawTitle={{i18n "admin.site_settings.json_schema.modal_title" name=settingName}}>
   <div id="json-editor-holder"></div>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-primary"
-    action=(action "saveChanges")
-    label="save"
-  }}
+  <DButton @class="btn-primary" @action={{action "saveChanges"}} @label="save" />
 </div>

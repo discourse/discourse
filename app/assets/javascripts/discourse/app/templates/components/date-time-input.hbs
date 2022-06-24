@@ -1,35 +1,15 @@
 {{#unless timeFirst}}
-  {{date-input
-    date=date
-    placeholder=placeholder
-    relativeDate=relativeDate
-    onChange=(action "onChangeDate")
-    useGlobalPickerContainer=useGlobalPickerContainer
-  }}
+  <DateInput @date={{date}} @placeholder={{placeholder}} @relativeDate={{relativeDate}} @onChange={{action "onChangeDate"}} @useGlobalPickerContainer={{useGlobalPickerContainer}} />
 {{/unless}}
 
 {{#if showTime}}
-  {{time-input
-    date=date
-    relativeDate=relativeDate
-    onChange=(action "onChangeTime")
-  }}
+  <TimeInput @date={{date}} @relativeDate={{relativeDate}} @onChange={{action "onChangeTime"}} />
 {{/if}}
 
 {{#if timeFirst}}
-  {{date-input
-    date=date
-    placeholder=placeholder
-    relativeDate=relativeDate
-    onChange=(action "onChangeDate")
-    useGlobalPickerContainer=useGlobalPickerContainer
-  }}
+  <DateInput @date={{date}} @placeholder={{placeholder}} @relativeDate={{relativeDate}} @onChange={{action "onChangeDate"}} @useGlobalPickerContainer={{useGlobalPickerContainer}} />
 {{/if}}
 
 {{#if clearable}}
-  {{d-button
-    class="btn-default clear-date-time"
-    icon="times"
-    action=(action "onClear")
-  }}
+  <DButton @class="btn-default clear-date-time" @icon="times" @action={{action "onClear"}} />
 {{/if}}

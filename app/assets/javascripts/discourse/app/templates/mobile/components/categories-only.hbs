@@ -2,7 +2,7 @@
   {{#if filteredCategories}}
     <div class="category-list {{if showTopics "with-topics"}}">
       {{#each filteredCategories as |c|}}
-        {{parent-category-row category=c showTopics=showTopics}}
+        <ParentCategoryRow @category={{c}} @showTopics={{showTopics}} />
       {{/each}}
     </div>
   {{/if}}
@@ -17,7 +17,7 @@
       </a>
       <div class="category-list {{if showTopics "with-topics"}} {{unless showMutedCategories "hidden"}}">
         {{#each mutedCategories as |c|}}
-          {{parent-category-row category=c showTopics=showTopics listType="muted"}}
+          <ParentCategoryRow @category={{c}} @showTopics={{showTopics}} @listType="muted" />
         {{/each}}
       </div>
     </div>

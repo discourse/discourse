@@ -3,11 +3,11 @@
     <div>
       <div class="control-group">
         <label for="imap_server">{{i18n "groups.manage.email.credentials.imap_server"}}</label>
-        {{input type="text" name="imap_server" value=form.imap_server tabindex="8" onChange=(action "resetSettingsValid")}}
+        <Input @type="text" @name="imap_server" @value={{form.imap_server}} @tabindex="8" @onChange={{action "resetSettingsValid"}} />
       </div>
 
       <label for="enable_ssl_imap">
-        {{input type="checkbox" checked=form.imap_ssl id="enable_ssl_imap" tabindex="11" onChange=(action "resetSettingsValid")}}
+        <Input @type="checkbox" @checked={{form.imap_ssl}} @id="enable_ssl_imap" @tabindex="11" @onChange={{action "resetSettingsValid"}} />
         {{i18n "groups.manage.email.credentials.imap_ssl"}}
       </label>
     </div>
@@ -15,7 +15,7 @@
     <div>
       <div class="control-group">
         <label for="imap_port">{{i18n "groups.manage.email.credentials.imap_port"}}</label>
-        {{input type="text" name="imap_port" value=form.imap_port tabindex="9" onChange=(action "resetSettingsValid" form.imap_port)}}
+        <Input @type="text" @name="imap_port" @value={{form.imap_port}} @tabindex="9" @onChange={{action "resetSettingsValid" form.imap_port}} />
       </div>
     </div>
 
@@ -23,17 +23,9 @@
       <div class="control-group group-imap-mailboxes">
         {{#if mailboxes}}
           <label for="imap_mailbox_name">{{i18n "groups.manage.email.mailboxes.synchronized"}}</label>
-          {{combo-box name="imap_mailbox_name"
-            id="imap_mailbox"
-            value=group.imap_mailbox_name
-            valueProperty="value"
-            content=mailboxes
-            tabindex="10"
-            onChange=(action (mut group.imap_mailbox_name))
-            options=(hash
+          <ComboBox @name="imap_mailbox_name" @id="imap_mailbox" @value={{group.imap_mailbox_name}} @valueProperty="value" @content={{mailboxes}} @tabindex="10" @onChange={{action (mut group.imap_mailbox_name)}} @options={{hash
               none="groups.manage.email.mailboxes.disabled"
-            )
-          }}
+            }} />
         {{/if}}
       </div>
 
@@ -53,17 +45,9 @@
   {{/unless}}
 
   <div class="control-group buttons">
-    {{d-button
-      disabled=(or missingSettings testingSettings)
-      class="btn-primary test-imap-settings"
-      action=(action "testImapSettings")
-      icon="cog"
-      label="groups.manage.email.test_settings"
-      tabindex="12"
-      title="groups.manage.email.settings_required"
-    }}
+    <DButton @disabled={{or missingSettings testingSettings}} @class="btn-primary test-imap-settings" @action={{action "testImapSettings"}} @icon="cog" @label="groups.manage.email.test_settings" @tabindex="12" @title="groups.manage.email.settings_required" />
 
-    {{conditional-loading-spinner size="small" condition=testingSettings}}
+    <ConditionalLoadingSpinner @size="small" @condition={{testingSettings}} />
 
     {{#if imapSettingsValid}}
       <span class="imap-settings-ok">
@@ -76,7 +60,7 @@
     <div class="group-email-last-updated-details for-imap">
       <small>
         {{i18n "groups.manage.email.last_updated"}} <strong>{{format-date group.imap_updated_at leaveAgo="true"}}</strong>
-        {{i18n "groups.manage.email.last_updated_by"}} {{#link-to "user" group.imap_updated_by.username}}{{group.imap_updated_by.username}}{{/link-to}}
+        {{i18n "groups.manage.email.last_updated_by"}} <LinkTo @route="user" @model={{group.imap_updated_by.username}}>{{group.imap_updated_by.username}}</LinkTo>
       </small>
     </div>
   {{/if}}
