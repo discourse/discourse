@@ -100,7 +100,7 @@ module Jobs
 
         @@log_queue ||= Queue.new
 
-        if !@@log_thread || !@@log_thead.alive?
+        if !@@log_thread || !@@log_thread.alive?
           @@log_thread = Thread.new do
             loop do
               @@logger << @@log_queue.pop
