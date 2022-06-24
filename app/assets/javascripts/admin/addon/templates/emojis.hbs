@@ -3,23 +3,23 @@
 
   <p class="desc">{{i18n "admin.emoji.help"}}</p>
 
-  <EmojiUploader @emojiGroups={{emojiGroups}} @done={{action "emojiUploaded"}} @id="emoji-uploader" />
+  <EmojiUploader @emojiGroups={{this.emojiGroups}} @done={{action "emojiUploaded"}} @id="emoji-uploader" />
 
   <hr>
 
-  {{#if sortedEmojis}}
+  {{#if this.sortedEmojis}}
     <table id="custom_emoji">
       <thead>
         <tr>
           <th>{{i18n "admin.emoji.image"}}</th>
           <th>{{i18n "admin.emoji.name"}}</th>
           <th colspan="2">
-            <ComboBox @value={{filter}} @content={{sortingGroups}} @nameProperty={{null}} @valueProperty={{null}} @onChange={{action "filterGroups"}} />
+            <ComboBox @value={{this.filter}} @content={{this.sortingGroups}} @nameProperty={{null}} @valueProperty={{null}} @onChange={{action "filterGroups"}} />
           </th>
         </tr>
       </thead>
       <tbody>
-        {{#each sortedEmojis as |e|}}
+        {{#each this.sortedEmojis as |e|}}
           <tr>
             <td><img class="emoji emoji-custom" src={{e.url}} title={{e.name}} alt={{i18n "admin.emoji.alt"}}></td>
             <td>:{{e.name}}:</td>

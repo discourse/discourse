@@ -3,7 +3,7 @@
     <div class="controls">
       <div class="inline-form">
         <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
-        <TextField @value={{filter}} @placeholderKey="admin.watched_words.search" @class="no-blur" />
+        <TextField @value={{this.filter}} @placeholderKey="admin.watched_words.search" @class="no-blur" />
         <DButton @action={{action "clearFilter"}} @label="admin.watched_words.clear_filter" />
       </div>
     </div>
@@ -11,7 +11,7 @@
 
   <div class="admin-nav pull-left">
     <ul class="nav nav-stacked">
-      {{#each model as |action|}}
+      {{#each this.model as |action|}}
         <li class={{action.nameKey}}>
           <LinkTo @route="adminWatchedWords.action" @model={{action.nameKey}}>
             {{action.name}}

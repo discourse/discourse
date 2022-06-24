@@ -1,7 +1,7 @@
-{{#each field.choices as |choice|}}
-  <div class="radio-field-choice {{fieldClass}}">
+{{#each this.field.choices as |choice|}}
+  <div class="radio-field-choice {{this.fieldClass}}">
     <div class="radio-area">
-      <RadioButton @selection={{field.value}} @value={{choice.id}} @name={{choice.label}} @onChange={{action "changed"}} />
+      <RadioButton @selection={{this.field.value}} @value={{choice.id}} @name={{choice.label}} @onChange={{action "changed"}} />
 
       <span class="radio-label">
         {{#if choice.icon}}

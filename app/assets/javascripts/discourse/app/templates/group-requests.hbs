@@ -1,25 +1,25 @@
 <section class="user-content">
 
   <div class="group-members-actions">
-    <TextField @value={{filterInput}} @placeholderKey={{filterPlaceholder}} @class="group-username-filter no-blur" />
+    <TextField @value={{this.filterInput}} @placeholderKey={{this.filterPlaceholder}} @class="group-username-filter no-blur" />
   </div>
 
-  {{#if hasRequesters}}
+  {{#if this.hasRequesters}}
     <LoadMore @selector=".group-members tr" @action={{action "loadMore"}}>
       <table class="group-members">
         <thead>
-          <TableHeaderToggle @order={{order}} @asc={{asc}} @field="username_lower" @labelKey="username" @automatic={{true}} />
-          <TableHeaderToggle @order={{order}} @asc={{asc}} @field="requested_at" @labelKey="groups.member_requested" @automatic={{true}} />
+          <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="username_lower" @labelKey="username" @automatic={{true}} />
+          <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="requested_at" @labelKey="groups.member_requested" @automatic={{true}} />
           <th>{{i18n "groups.requests.reason"}}</th>
           <th></th>
           <th></th>
         </thead>
 
         <tbody>
-          {{#each model.requesters as |m|}}
+          {{#each this.model.requesters as |m|}}
             <tr>
               <td class="avatar">
-                <UserInfo @user={{m}} @skipName={{skipName}} />
+                <UserInfo @user={{m}} @skipName={{this.skipName}} />
               </td>
               <td>
                 <span class="text">{{bound-date m.requested_at}}</span>
@@ -45,7 +45,7 @@
       </table>
     </LoadMore>
 
-    <ConditionalLoadingSpinner @condition={{loading}} />
+    <ConditionalLoadingSpinner @condition={{this.loading}} />
   {{else}}
     <div>{{i18n "groups.empty.requests"}}</div>
   {{/if}}

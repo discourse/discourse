@@ -5,21 +5,21 @@
 
 <div class="api-key api-key-show">
   <AdminFormRow @label="admin.api.key">
-    {{#if model.revoked_at}}{{d-icon "times-circle"}}{{/if}}
-    {{model.truncatedKey}}
+    {{#if this.model.revoked_at}}{{d-icon "times-circle"}}{{/if}}
+    {{this.model.truncatedKey}}
   </AdminFormRow>
 
   <AdminFormRow @label="admin.api.description">
-    {{#if editingDescription}}
-      <Input @value={{buffered.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
+    {{#if this.editingDescription}}
+      <Input @value={{this.buffered.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
     {{else}}
       <span>
-        {{if model.description model.description (i18n "admin.api.no_description")}}
+        {{if this.model.description this.model.description (i18n "admin.api.no_description")}}
       </span>
     {{/if}}
 
     <div class="controls">
-      {{#if editingDescription}}
+      {{#if this.editingDescription}}
         <DButton @class="ok" @action={{action "saveDescription"}} @icon="check" />
         <DButton @class="cancel" @action={{action "editDescription"}} @icon="times" />
       {{else}}
@@ -29,9 +29,9 @@
   </AdminFormRow>
 
   <AdminFormRow @label="admin.api.user">
-    {{#if model.user}}
-      <LinkTo @route="adminUser" @model={{model.user}}>
-        {{avatar model.user imageSize="small"}} {{model.user.username}}
+    {{#if this.model.user}}
+      <LinkTo @route="adminUser" @model={{this.model.user}}>
+        {{avatar this.model.user imageSize="small"}} {{this.model.user.username}}
       </LinkTo>
     {{else}}
       {{i18n "admin.api.all_users"}}
@@ -39,38 +39,38 @@
   </AdminFormRow>
 
   <AdminFormRow @label="admin.api.created">
-    {{format-date model.created_at leaveAgo="true"}}
+    {{format-date this.model.created_at leaveAgo="true"}}
   </AdminFormRow>
 
   <AdminFormRow @label="admin.api.updated">
-    {{format-date model.updated_at leaveAgo="true"}}
+    {{format-date this.model.updated_at leaveAgo="true"}}
   </AdminFormRow>
 
   <AdminFormRow @label="admin.api.last_used">
-    {{#if model.last_used_at}}
-      {{format-date model.last_used_at leaveAgo="true"}}
+    {{#if this.model.last_used_at}}
+      {{format-date this.model.last_used_at leaveAgo="true"}}
     {{else}}
       {{i18n "admin.api.never_used"}}
     {{/if}}
   </AdminFormRow>
 
   <AdminFormRow @label="admin.api.revoked">
-    {{#if model.revoked_at}}
-      {{format-date model.revoked_at leaveAgo="true"}}
+    {{#if this.model.revoked_at}}
+      {{format-date this.model.revoked_at leaveAgo="true"}}
     {{else}}
       <span>{{i18n "no_value"}}</span>
     {{/if}}
     <div class="controls">
-      {{#if model.revoked_at}}
-        <DButton @action={{action "undoRevokeKey"}} @actionParam={{model}} @icon="undo" @label="admin.api.undo_revoke" />
-        <DButton @action={{action "deleteKey"}} @actionParam={{model}} @icon="trash-alt" @label="admin.api.delete" @class="btn-danger" />
+      {{#if this.model.revoked_at}}
+        <DButton @action={{action "undoRevokeKey"}} @actionParam={{this.model}} @icon="undo" @label="admin.api.undo_revoke" />
+        <DButton @action={{action "deleteKey"}} @actionParam={{this.model}} @icon="trash-alt" @label="admin.api.delete" @class="btn-danger" />
       {{else}}
-        <DButton @class="btn-danger" @action={{action "revokeKey"}} @actionParam={{model}} @icon="times" @label="admin.api.revoke" />
+        <DButton @class="btn-danger" @action={{action "revokeKey"}} @actionParam={{this.model}} @icon="times" @label="admin.api.revoke" />
       {{/if}}
     </div>
   </AdminFormRow>
 
-  {{#if model.api_key_scopes.length}}
+  {{#if this.model.api_key_scopes.length}}
     <h2 class="scopes-title">{{i18n "admin.api.scopes.title"}}</h2>
 
     <table class="scopes-table grid">
@@ -83,7 +83,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each model.api_key_scopes as |scope|}}
+        {{#each this.model.api_key_scopes as |scope|}}
           <tr>
             <td>{{scope.resource}}</td>
             <td>

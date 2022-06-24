@@ -3,11 +3,11 @@
     <div>
       <div class="control-group">
         <label for="imap_server">{{i18n "groups.manage.email.credentials.imap_server"}}</label>
-        <Input @type="text" @name="imap_server" @value={{form.imap_server}} @tabindex="8" @onChange={{action "resetSettingsValid"}} />
+        <Input @type="text" @name="imap_server" @value={{this.form.imap_server}} @tabindex="8" @onChange={{action "resetSettingsValid"}} />
       </div>
 
       <label for="enable_ssl_imap">
-        <Input @type="checkbox" @checked={{form.imap_ssl}} @id="enable_ssl_imap" @tabindex="11" @onChange={{action "resetSettingsValid"}} />
+        <Input @type="checkbox" @checked={{this.form.imap_ssl}} @id="enable_ssl_imap" @tabindex="11" @onChange={{action "resetSettingsValid"}} />
         {{i18n "groups.manage.email.credentials.imap_ssl"}}
       </label>
     </div>
@@ -15,15 +15,15 @@
     <div>
       <div class="control-group">
         <label for="imap_port">{{i18n "groups.manage.email.credentials.imap_port"}}</label>
-        <Input @type="text" @name="imap_port" @value={{form.imap_port}} @tabindex="9" @onChange={{action "resetSettingsValid" form.imap_port}} />
+        <Input @type="text" @name="imap_port" @value={{this.form.imap_port}} @tabindex="9" @onChange={{action "resetSettingsValid" this.form.imap_port}} />
       </div>
     </div>
 
     <div>
       <div class="control-group group-imap-mailboxes">
-        {{#if mailboxes}}
+        {{#if this.mailboxes}}
           <label for="imap_mailbox_name">{{i18n "groups.manage.email.mailboxes.synchronized"}}</label>
-          <ComboBox @name="imap_mailbox_name" @id="imap_mailbox" @value={{group.imap_mailbox_name}} @valueProperty="value" @content={{mailboxes}} @tabindex="10" @onChange={{action (mut group.imap_mailbox_name)}} @options={{hash
+          <ComboBox @name="imap_mailbox_name" @id="imap_mailbox" @value={{this.group.imap_mailbox_name}} @valueProperty="value" @content={{this.mailboxes}} @tabindex="10" @onChange={{action (mut this.group.imap_mailbox_name)}} @options={{hash
               none="groups.manage.email.mailboxes.disabled"
             }} />
         {{/if}}
@@ -38,29 +38,29 @@
     </div>
   </div>
 
-  {{#unless mailboxSelected}}
+  {{#unless this.mailboxSelected}}
     <div class="alert alert-error imap-no-mailbox-selected">
       {{i18n "groups.manage.email.imap_mailbox_not_selected"}}
     </div>
   {{/unless}}
 
   <div class="control-group buttons">
-    <DButton @disabled={{or missingSettings testingSettings}} @class="btn-primary test-imap-settings" @action={{action "testImapSettings"}} @icon="cog" @label="groups.manage.email.test_settings" @tabindex="12" @title="groups.manage.email.settings_required" />
+    <DButton @disabled={{or this.missingSettings this.testingSettings}} @class="btn-primary test-imap-settings" @action={{action "testImapSettings"}} @icon="cog" @label="groups.manage.email.test_settings" @tabindex="12" @title="groups.manage.email.settings_required" />
 
-    <ConditionalLoadingSpinner @size="small" @condition={{testingSettings}} />
+    <ConditionalLoadingSpinner @size="small" @condition={{this.testingSettings}} />
 
-    {{#if imapSettingsValid}}
+    {{#if this.imapSettingsValid}}
       <span class="imap-settings-ok">
         {{d-icon "check-circle"}} {{i18n "groups.manage.email.imap_settings_valid"}}
       </span>
     {{/if}}
   </div>
 
-  {{#if group.imap_updated_at}}
+  {{#if this.group.imap_updated_at}}
     <div class="group-email-last-updated-details for-imap">
       <small>
-        {{i18n "groups.manage.email.last_updated"}} <strong>{{format-date group.imap_updated_at leaveAgo="true"}}</strong>
-        {{i18n "groups.manage.email.last_updated_by"}} <LinkTo @route="user" @model={{group.imap_updated_by.username}}>{{group.imap_updated_by.username}}</LinkTo>
+        {{i18n "groups.manage.email.last_updated"}} <strong>{{format-date this.group.imap_updated_at leaveAgo="true"}}</strong>
+        {{i18n "groups.manage.email.last_updated_by"}} <LinkTo @route="user" @model={{this.group.imap_updated_by.username}}>{{this.group.imap_updated_by.username}}</LinkTo>
       </small>
     </div>
   {{/if}}

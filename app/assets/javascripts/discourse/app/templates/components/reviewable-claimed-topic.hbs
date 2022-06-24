@@ -1,11 +1,11 @@
-{{#if enabled}}
+{{#if this.enabled}}
   <div class="reviewable-claimed-topic">
-    {{#if claimedBy}}
+    {{#if this.claimedBy}}
       <div class="claimed-by">
-        {{avatar claimedBy imageSize="small"}}
-        <span class="claimed-username">{{claimedBy.username}}</span>
+        {{avatar this.claimedBy imageSize="small"}}
+        <span class="claimed-username">{{this.claimedBy.username}}</span>
       </div>
-      <DButton @icon="times" @class="btn-small unclaim" @action={{action "unclaim"}} @disabled={{unassigning}} @title="review.unclaim.help" />
+      <DButton @icon="times" @class="btn-small unclaim" @action={{action "unclaim"}} @disabled={{this.unassigning}} @title="review.unclaim.help" />
     {{else}}
       <DButton @icon="user-plus" @class="btn-small claim" @title="review.claim.title" @action={{action "claim"}} />
     {{/if}}

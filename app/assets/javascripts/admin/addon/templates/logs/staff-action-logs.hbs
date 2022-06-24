@@ -1,37 +1,37 @@
 <div class="staff-action-logs-controls">
-  {{#if filtersExists}}
+  {{#if this.filtersExists}}
     <div class="staff-action-logs-filters">
       <a href {{action "clearAllFilters"}} class="clear-filters filter btn">
         <span class="label">{{i18n "admin.logs.staff_actions.clear_filters"}}</span>
       </a>
-      {{#if actionFilter}}
+      {{#if this.actionFilter}}
         <a href {{action "clearFilter" "actionFilter"}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.action"}}</span>: {{actionFilter}}
+          <span class="label">{{i18n "admin.logs.action"}}</span>: {{this.actionFilter}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
-      {{#if filters.acting_user}}
+      {{#if this.filters.acting_user}}
         <a href {{action "clearFilter" "acting_user"}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.staff_actions.staff_user"}}</span>: {{filters.acting_user}}
+          <span class="label">{{i18n "admin.logs.staff_actions.staff_user"}}</span>: {{this.filters.acting_user}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
-      {{#if filters.target_user}}
+      {{#if this.filters.target_user}}
         <a href {{action "clearFilter" "target_user"}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.staff_actions.target_user"}}</span>: {{filters.target_user}}
+          <span class="label">{{i18n "admin.logs.staff_actions.target_user"}}</span>: {{this.filters.target_user}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
-      {{#if filters.subject}}
+      {{#if this.filters.subject}}
         <a href {{action "clearFilter" "subject"}} class="filter btn">
-          <span class="label">{{i18n "admin.logs.staff_actions.subject"}}</span>: {{filters.subject}}
+          <span class="label">{{i18n "admin.logs.staff_actions.subject"}}</span>: {{this.filters.subject}}
           {{d-icon "times-circle"}}
         </a>
       {{/if}}
     </div>
   {{else}}
     {{i18n "admin.logs.staff_actions.filter"}}
-    <ComboBox @content={{userHistoryActions}} @value={{filterActionId}} @onChange={{action "filterActionIdChanged"}} @options={{hash
+    <ComboBox @content={{this.userHistoryActions}} @value={{this.filterActionId}} @onChange={{action "filterActionIdChanged"}} @options={{hash
         none="admin.logs.staff_actions.all"
       }} />
   {{/if}}
@@ -43,7 +43,7 @@
 
 <StaffActions>
   <LoadMore @selector=".staff-logs tr" @action={{action "loadMore"}}>
-    {{#if model.content}}
+    {{#if this.model.content}}
       <table class="table staff-logs grid">
         <thead>
           <th>{{i18n "admin.logs.staff_actions.staff_user"}}</th>
@@ -54,7 +54,7 @@
           <th>{{i18n "admin.logs.staff_actions.context"}}</th>
         </thead>
         <tbody>
-          {{#each model.content as |item|}}
+          {{#each this.model.content as |item|}}
             <tr class="admin-list-item">
               <td class="staff-users">
                 <div class="staff-user">
@@ -101,8 +101,8 @@
           {{/each}}
         </tbody>
       </table>
-    {{else if model.loadingMore}}
-      <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+    {{else if this.model.loadingMore}}
+      <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}

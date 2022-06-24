@@ -1,12 +1,12 @@
-{{#if collection}}
+{{#if this.collection}}
   <div class="values">
-    {{#each collection as |value index|}}
+    {{#each this.collection as |value index|}}
       <div data-index={{index}} class="value">
         <DButton @action={{action "removeValue"}} @actionParam={{value}} @icon="times" @class="remove-value-btn btn-small" />
 
         <Input @title={{value}} @value={{value}} class="value-input" @focus-out={{action "changeValue" index}} />
 
-        {{#if showUpDownButtons}}
+        {{#if this.showUpDownButtons}}
           <DButton @action={{action "shift" -1 index}} @icon="arrow-up" @class="shift-up-value-btn btn-small" />
           <DButton @action={{action "shift" 1 index}} @icon="arrow-down" @class="shift-down-value-btn btn-small" />
         {{/if}}
@@ -15,7 +15,7 @@
   </div>
 {{/if}}
 
-<ComboBox @valueProperty={{null}} @nameProperty={{null}} @value={{newValue}} @content={{filteredChoices}} @onChange={{action "selectChoice"}} @options={{hash
+<ComboBox @valueProperty={{null}} @nameProperty={{null}} @value={{this.newValue}} @content={{this.filteredChoices}} @onChange={{action "selectChoice"}} @options={{hash
     allowAny=true
-    none=noneKey
+    none=this.noneKey
   }} />

@@ -3,7 +3,7 @@
     {{i18n "admin.flags.flagged_by"}}
   </div>
   <div class="flag-users">
-    {{#each flaggedPost.post_actions as |postAction|}}
+    {{#each this.flaggedPost.post_actions as |postAction|}}
       <FlagUser @user={{postAction.user}} @date={{postAction.created_at}}>
         <div class="flagger-flag-type">
           {{post-action-title postAction.post_action_type_id postAction.name_key}}
@@ -14,13 +14,13 @@
   </div>
 </div>
 
-{{#if showResolvedBy}}
+{{#if this.showResolvedBy}}
   <div class="flagged-post-resolved-by">
     <div class="user-list-title">
       {{i18n "admin.flags.resolved_by"}}
     </div>
     <div class="flag-users">
-      {{#each flaggedPost.post_actions as |postAction|}}
+      {{#each this.flaggedPost.post_actions as |postAction|}}
         <FlagUser @user={{postAction.disposed_by}} @date={{postAction.disposed_at}}>
           {{disposition-icon postAction.disposition}}
           {{#if postAction.staff_took_action}}

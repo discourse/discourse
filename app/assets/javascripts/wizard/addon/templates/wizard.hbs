@@ -1,5 +1,5 @@
 <div id="wizard-main">
-  {{#if showCanvas}}
+  {{#if this.showCanvas}}
     <WizardCanvas />
   {{/if}}
 
@@ -9,7 +9,7 @@
 
       {{!-- Load all font styles --}}
       <div class="preloaded-font-styles">
-        {{#each fontClasses as |fontClass|}}
+        {{#each this.fontClasses as |fontClass|}}
           <span class={{fontClass}}>&nbsp;</span>
           <strong class={{fontClass}}>&nbsp;</strong>
         {{/each}}

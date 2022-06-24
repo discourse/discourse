@@ -1,34 +1,34 @@
 <LoadMore @selector=".directory .user" @action={{action "loadMore"}}>
   <div class="container">
     <div class="users-directory directory">
-      <PluginOutlet @name="users-top" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+      <PluginOutlet @name="users-top" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
       <div class="directory-controls">
-        <PeriodChooser @period={{period}} @onChange={{action (mut period)}} @fullDay={{false}} />
-        {{#if lastUpdatedAt}}
+        <PeriodChooser @period={{this.period}} @onChange={{action (mut this.period)}} @fullDay={{false}} />
+        {{#if this.lastUpdatedAt}}
           <div class="directory-last-updated">
             {{i18n "directory.last_updated"}}
-            {{lastUpdatedAt}}
+            {{this.lastUpdatedAt}}
           </div>
         {{/if}}
         <div class="inline-form full-width">
-          <Input @value={{readonly nameInput}} @input={{action "onUsernameFilterChanged" value="target.value"}} @placeholderKey="directory.filter_name" class="filter-name no-blur" />
-          <ComboBox @class="directory-group-selector" @value={{group}} @content={{groupOptions}} @onChange={{action groupChanged}} @options={{hash none="directory.group.all"}} />
-          {{#if currentUser.staff}}
+          <Input @value={{readonly this.nameInput}} @input={{action "onUsernameFilterChanged" value="target.value"}} @placeholderKey="directory.filter_name" class="filter-name no-blur" />
+          <ComboBox @class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash none="directory.group.all"}} />
+          {{#if this.currentUser.staff}}
             <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} @class="btn-default open-edit-columns-btn" />
           {{/if}}
         </div>
-        <PluginOutlet @name="users-directory-controls" @args={{hash model=model}} />
+        <PluginOutlet @name="users-directory-controls" @args={{hash model=this.model}} />
       </div>
 
-      <ConditionalLoadingSpinner @condition={{isLoading}}>
-        {{#if model.length}}
-          <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
-          {{#each model as |item|}}
-            <DirectoryItem @tagName="div" @class="user" @item={{item}} @columns={{columns}} @showTimeRead={{showTimeRead}} />
+      <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+        {{#if this.model.length}}
+          <div class="total-rows">{{i18n "directory.total_rows" count=this.model.totalRows}}</div>
+          {{#each this.model as |item|}}
+            <DirectoryItem @tagName="div" @class="user" @item={{item}} @columns={{this.columns}} @showTimeRead={{this.showTimeRead}} />
           {{/each}}
 
-          <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+          <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
         {{else}}
           <div class="clearfix"></div>
           <p>{{i18n "directory.no_results"}}</p>

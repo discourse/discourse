@@ -1,6 +1,6 @@
 <label>{{i18n "admin.logs.screened_ips.form.label"}}</label>
-<TextField @value={{ip_address}} @disabled={{formSubmitted}} @class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.ip_address" @autocorrect="off" @autocapitalize="off" />
+<TextField @value={{this.ip_address}} @disabled={{this.formSubmitted}} @class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.ip_address" @autocorrect="off" @autocapitalize="off" />
 
-<ComboBox @content={{actionNames}} @value={{actionName}} @onChange={{action (mut actionName)}} />
+<ComboBox @content={{this.actionNames}} @value={{this.actionName}} @onChange={{action (mut this.actionName)}} />
 
-<DButton @class="btn-default" @action={{action "submit"}} @disabled={{formSubmitted}} @label="admin.logs.screened_ips.form.add" />
+<DButton @class="btn-default" @action={{action "submit"}} @disabled={{this.formSubmitted}} @label="admin.logs.screened_ips.form.add" />

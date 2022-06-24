@@ -1,32 +1,32 @@
 <div class="container email-login clearfix">
   <div class="pull-left col-image">
-    <img src={{lockImageUrl}} class="password-reset-img" alt={{i18n "email_login.emoji"}}>
+    <img src={{this.lockImageUrl}} class="password-reset-img" alt={{i18n "email_login.emoji"}}>
   </div>
 
   <div class="pull-left col-form">
     <form>
-      {{#if model.error}}
+      {{#if this.model.error}}
         <div class="alert alert-error">
-          {{model.error}}
+          {{this.model.error}}
         </div>
       {{/if}}
 
-      {{#if model.can_login}}
-        {{#if secondFactorRequired }}
-          {{#if model.security_key_required }}
-            <SecurityKeyForm @allowedCredentialIds={{model.allowed_credential_ids}} @challenge={{model.security_key_challenge}} @showSecurityKey={{model.security_key_required}} @showSecondFactor={{false}} @secondFactorMethod={{secondFactorMethod}} @otherMethodAllowed={{secondFactorRequired}} @action={{action "authenticateSecurityKey"}}>
+      {{#if this.model.can_login}}
+        {{#if this.secondFactorRequired }}
+          {{#if this.model.security_key_required }}
+            <SecurityKeyForm @allowedCredentialIds={{this.model.allowed_credential_ids}} @challenge={{this.model.security_key_challenge}} @showSecurityKey={{this.model.security_key_required}} @showSecondFactor={{false}} @secondFactorMethod={{this.secondFactorMethod}} @otherMethodAllowed={{this.secondFactorRequired}} @action={{action "authenticateSecurityKey"}}>
             </SecurityKeyForm>
           {{else}}
-            <SecondFactorForm @secondFactorMethod={{secondFactorMethod}} @secondFactorToken={{secondFactorToken}} @backupEnabled={{model.backup_codes_enabled}} @isLogin={{true}}>
-              <SecondFactorInput @value={{secondFactorToken}} @secondFactorMethod={{secondFactorMethod}} @backupEnabled={{backupEnabled}} />
+            <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @backupEnabled={{this.model.backup_codes_enabled}} @isLogin={{true}}>
+              <SecondFactorInput @value={{this.secondFactorToken}} @secondFactorMethod={{this.secondFactorMethod}} @backupEnabled={{this.backupEnabled}} />
             </SecondFactorForm>
           {{/if}}
         {{else}}
-          <h2>{{i18n "email_login.confirm_title" site_name=siteSettings.title}}</h2>
-          <p>{{i18n "email_login.logging_in_as" email=model.token_email}}</p>
+          <h2>{{i18n "email_login.confirm_title" site_name=this.siteSettings.title}}</h2>
+          <p>{{i18n "email_login.logging_in_as" email=this.model.token_email}}</p>
         {{/if}}
 
-        {{#unless model.security_key_required }}
+        {{#unless this.model.security_key_required }}
           <DButton @label="email_login.confirm_button" @action={{action "finishLogin"}} @type="submit" @class="btn-primary" />
         {{/unless}}
       {{/if}}

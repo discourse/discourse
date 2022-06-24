@@ -1,6 +1,6 @@
 <div class="ac-message">
-  {{html-safe accountCreated.message}}
+  {{html-safe this.accountCreated.message}}
 </div>
-{{#if accountCreated.show_controls}}
+{{#if this.accountCreated.show_controls}}
   <ActivationControls @sendActivationEmail={{action "sendActivationEmail"}} @editActivationEmail={{action "editActivationEmail"}} />
 {{/if}}

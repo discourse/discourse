@@ -1,13 +1,13 @@
 <div class="names">
   <span class="username">
-    {{#if user}}
-      <UserLink @user={{user}}>{{user.username}}</UserLink>
-      {{#if user.silenced}}
+    {{#if this.user}}
+      <UserLink @user={{this.user}}>{{this.user.username}}</UserLink>
+      {{#if this.user.silenced}}
         {{d-icon "ban" title="user.silenced_tooltip"}}
       {{/if}}
     {{else}}
       {{i18n "review.deleted_user"}}
     {{/if}}
   </span>
-  <PluginOutlet @name="after-reviewable-post-user" @connectorTagName="div" @args={{hash user=user}} />
+  <PluginOutlet @name="after-reviewable-post-user" @connectorTagName="div" @args={{hash user=this.user}} />
 </div>

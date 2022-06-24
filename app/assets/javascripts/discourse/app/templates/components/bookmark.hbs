@@ -1,28 +1,28 @@
-<ConditionalLoadingSpinner @condition={{loading}}>
-  {{#if errorMessage}}
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  {{#if this.errorMessage}}
     <div class="control-group">
       <div class="controls">
-        <div class="alert alert-error">{{errorMessage}}</div>
+        <div class="alert alert-error">{{this.errorMessage}}</div>
       </div>
     </div>
   {{/if}}
 
   <div class="control-group bookmark-name-wrap">
-    <Input @id="bookmark-name" @value={{model.name}} @name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} @maxlength="100" />
+    <Input @id="bookmark-name" @value={{this.model.name}} @name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} @maxlength="100" />
     <DButton @icon="cog" @action={{action "toggleShowOptions"}} @class="bookmark-options-button" @ariaLabel="post.bookmarks.options" />
   </div>
 
-  {{#if showOptions}}
+  {{#if this.showOptions}}
     <div class="bookmark-options-panel">
       <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-      <ComboBox @content={{autoDeletePreferences}} @value={{autoDeletePreference}} @class="bookmark-option-selector" @onChange={{action (mut autoDeletePreference)}} />
+      <ComboBox @content={{this.autoDeletePreferences}} @value={{this.autoDeletePreference}} @class="bookmark-option-selector" @onChange={{action (mut this.autoDeletePreference)}} />
     </div>
   {{/if}}
 
-  {{#if showExistingReminderAt }}
+  {{#if this.showExistingReminderAt }}
     <div class="alert alert-info existing-reminder-at-alert">
       {{d-icon "far-clock"}}
-      <span>{{i18n "bookmarks.reminders.existing_reminder" at_date_time=existingReminderAtFormatted}}</span>
+      <span>{{i18n "bookmarks.reminders.existing_reminder" at_date_time=this.existingReminderAtFormatted}}</span>
     </div>
   {{/if}}
 
@@ -31,8 +31,8 @@
       {{i18n "post.bookmarks.set_reminder"}}
     </label>
 
-    {{#if userHasTimezoneSet}}
-      <TimeShortcutPicker @timeShortcuts={{timeOptions}} @prefilledDatetime={{prefilledDatetime}} @onTimeSelected={{action "onTimeSelected"}} @hiddenOptions={{hiddenTimeShortcutOptions}} @customLabels={{customTimeShortcutLabels}} @_itsatrap={{_itsatrap}} />
+    {{#if this.userHasTimezoneSet}}
+      <TimeShortcutPicker @timeShortcuts={{this.timeOptions}} @prefilledDatetime={{this.prefilledDatetime}} @onTimeSelected={{action "onTimeSelected"}} @hiddenOptions={{this.hiddenTimeShortcutOptions}} @customLabels={{this.customTimeShortcutLabels}} @_itsatrap={{this._itsatrap}} />
     {{else}}
       <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-path))}}</div>
     {{/if}}
@@ -41,7 +41,7 @@
   <div class="modal-footer control-group">
     <DButton @id="save-bookmark" @label="bookmarks.save" @class="btn-primary" @action={{action "saveAndClose"}} />
     <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
-    {{#if showDelete}}
+    {{#if this.showDelete}}
       <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} />
     {{/if}}
   </div>

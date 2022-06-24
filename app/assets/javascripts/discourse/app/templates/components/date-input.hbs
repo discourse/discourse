@@ -1,5 +1,5 @@
-<Input @type={{inputType}} class="date-picker" placeholder={{placeholder}} @value={{readonly value}} @input={{action "onChangeDate"}} @id={{inputId}} />
+<Input @type={{this.inputType}} class="date-picker" placeholder={{this.placeholder}} @value={{readonly this.value}} @input={{action "onChangeDate"}} @id={{this.inputId}} />
 
-{{#unless useGlobalPickerContainer}}
+{{#unless this.useGlobalPickerContainer}}
   <div class="picker-container"></div>
 {{/unless}}

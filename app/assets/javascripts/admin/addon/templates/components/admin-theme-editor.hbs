@@ -1,9 +1,9 @@
 <div class="edit-main-nav admin-controls">
   <nav>
     <ul class="nav nav-pills target">
-      {{#each visibleTargets as |target|}}
+      {{#each this.visibleTargets as |target|}}
         <li>
-          <LinkTo @route={{editRouteName}} @models={{array theme.id target.name fieldName}} @replace={{true}} @title={{field.title}} class={{if target.edited "edited" "blank"}}>
+          <LinkTo @route={{this.editRouteName}} @models={{array this.theme.id target.name this.fieldName}} @replace={{true}} @title={{this.field.title}} class={{if target.edited "edited" "blank"}}>
             {{#if target.error}}{{d-icon "exclamation-triangle"}}{{/if}}
             {{#if target.icon}}{{d-icon target.icon}}{{/if}}
             {{i18n (concat "admin.customize.theme." target.name)}}
@@ -11,20 +11,20 @@
         </li>
       {{/each}}
 
-      {{#if allowAdvanced}}
+      {{#if this.allowAdvanced}}
         <li>
           <a {{action "toggleShowAdvanced"}}
             href
-            title={{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}
+            title={{i18n (concat "admin.customize.theme." (if this.showAdvanced "hide_advanced" "show_advanced"))}}
             class="no-text">
-            {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}
+            {{d-icon (if this.showAdvanced "angle-double-left" "angle-double-right")}}
           </a>
         </li>
       {{/if}}
       <li class="spacer"></li>
       <li>
         <label>
-          <Input @type="checkbox" @checked={{onlyOverridden}} @click={{action "onlyOverriddenChanged" value="target.checked"}} />
+          <Input @type="checkbox" @checked={{this.onlyOverridden}} @click={{action "onlyOverriddenChanged" value="target.checked"}} />
           {{i18n "admin.customize.theme.hide_unused_fields"}}
         </label>
       </li>
@@ -35,9 +35,9 @@
 <div class="admin-controls">
   <nav>
     <ul class="nav nav-pills fields">
-      {{#each visibleFields as |field|}}
+      {{#each this.visibleFields as |field|}}
         <li>
-          <LinkTo @route={{editRouteName}} @models={{array theme.id currentTargetName field.name}} @replace={{true}} @title={{field.title}} class={{if field.edited "edited" "blank"}}>
+          <LinkTo @route={{this.editRouteName}} @models={{array this.theme.id this.currentTargetName field.name}} @replace={{true}} @title={{field.title}} class={{if field.edited "edited" "blank"}}>
             {{#if field.error}}{{d-icon "exclamation-triangle"}}{{/if}}
             {{#if field.icon}}{{d-icon field.icon}}{{/if}}
             {{field.translatedName}}
@@ -45,14 +45,14 @@
         </li>
       {{/each}}
 
-      {{#if showAddField}}
+      {{#if this.showAddField}}
         <li>
-          {{#if addingField}}
-            <Input @type={{text}} @value={{newFieldName}} @enter={{action "addField"}} @escape-press={{action "cancelAddField"}} />
-            <DButton @class="ok" @action={{action "addField" newFieldName}} @icon="check" />
+          {{#if this.addingField}}
+            <Input @type={{this.text}} @value={{this.newFieldName}} @enter={{action "addField"}} @escape-press={{action "cancelAddField"}} />
+            <DButton @class="ok" @action={{action "addField" this.newFieldName}} @icon="check" />
             <DButton @class="cancel" @action={{action "cancelAddField"}} @icon="times" />
           {{else}}
-            <a href {{action "toggleAddField" currentTargetName}} class="no-text">
+            <a href {{action "toggleAddField" this.currentTargetName}} class="no-text">
               {{d-icon "plus"}}
             </a>
           {{/if}}
@@ -62,19 +62,19 @@
       <li class="spacer"></li>
       <li>
         <a href {{action "toggleMaximize"}} class="no-text">
-          {{d-icon maximizeIcon}}
+          {{d-icon this.maximizeIcon}}
         </a>
       </li>
     </ul>
   </nav>
 </div>
 
-{{#if error}}
-  <pre class="field-error">{{error}}</pre>
+{{#if this.error}}
+  <pre class="field-error">{{this.error}}</pre>
 {{/if}}
 
-{{#if warning}}
-  <pre class="field-warning">{{html-safe warning}}</pre>
+{{#if this.warning}}
+  <pre class="field-warning">{{html-safe this.warning}}</pre>
 {{/if}}
 
-<AceEditor @content={{activeSection}} @editorId={{editorId}} @mode={{activeSectionMode}} @autofocus="true" @placeholder={{placeholder}} @htmlPlaceholder={{true}} @save={{action "save"}} @setWarning={{action "setWarning"}} />
+<AceEditor @content={{this.activeSection}} @editorId={{this.editorId}} @mode={{this.activeSectionMode}} @autofocus="true" @placeholder={{this.placeholder}} @htmlPlaceholder={{true}} @save={{action "save"}} @setWarning={{action "setWarning"}} />

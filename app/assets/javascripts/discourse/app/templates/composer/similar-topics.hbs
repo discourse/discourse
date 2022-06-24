@@ -1,6 +1,6 @@
-<a href {{action closeMessage message}} class="close">{{d-icon "times"}}</a>
+<a href {{action this.closeMessage this.message}} class="close">{{d-icon "times"}}</a>
 <h3>{{i18n "composer.similar_topics"}}</h3>
 
 <ul class="topics">
-  <MountWidget @widget="search-result-topic" @args={{hash results=message.similarTopics}} />
+  <MountWidget @widget="search-result-topic" @args={{hash results=this.message.similarTopics}} />
 </ul>

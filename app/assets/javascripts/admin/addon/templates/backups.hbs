@@ -6,10 +6,10 @@
         <NavItem @route="admin.backups.logs" @label="admin.backups.menu.logs" />
         <PluginOutlet @name="downloader" @connectorTagName="div" />
         <div class="admin-actions">
-          {{#if model.canRollback}}
-            <DButton @action={{route-action "rollback"}} @class="btn-default btn-rollback" @label="admin.backups.operations.rollback.label" @title="admin.backups.operations.rollback.title" @icon="ambulance" @disabled={{rollbackDisabled}} />
+          {{#if this.model.canRollback}}
+            <DButton @action={{route-action "rollback"}} @class="btn-default btn-rollback" @label="admin.backups.operations.rollback.label" @title="admin.backups.operations.rollback.title" @icon="ambulance" @disabled={{this.rollbackDisabled}} />
           {{/if}}
-          {{#if model.isOperationRunning}}
+          {{#if this.model.isOperationRunning}}
             <DButton @action={{route-action "cancelOperation"}} @class="btn-danger" @title="admin.backups.operations.cancel.title" @label="admin.backups.operations.cancel.label" @icon="times" />
           {{else}}
             <DButton @action={{route-action "showStartBackupModal"}} @class="btn-primary" @title="admin.backups.operations.backup.title" @label="admin.backups.operations.backup.label" @icon="rocket" />

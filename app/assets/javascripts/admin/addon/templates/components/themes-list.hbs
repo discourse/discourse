@@ -1,25 +1,25 @@
 <div class="themes-list-header">
-  <DButton @action={{action "changeView"}} @actionParam={{THEMES}} @class={{concat "themes-tab " "tab " (if themesTabActive "btn-danger active" "")}} @label="admin.customize.theme.title" />
-  <DButton @action={{action "changeView"}} @actionParam={{COMPONENTS}} @class={{concat "components-tab " "tab " (if componentsTabActive "btn-danger active" "")}} @label="admin.customize.theme.components" @icon="puzzle-piece" />
+  <DButton @action={{action "changeView"}} @actionParam={{this.THEMES}} @class={{concat "themes-tab " "tab " (if this.themesTabActive "btn-danger active" "")}} @label="admin.customize.theme.title" />
+  <DButton @action={{action "changeView"}} @actionParam={{this.COMPONENTS}} @class={{concat "components-tab " "tab " (if this.componentsTabActive "btn-danger active" "")}} @label="admin.customize.theme.components" @icon="puzzle-piece" />
 </div>
 
 <div class="themes-list-container">
-  {{#if showFilter}}
+  {{#if this.showFilter}}
     <div class="themes-list-filter themes-list-item">
-      <Input class="filter-input" placeholder={{i18n "admin.customize.theme.filter_placeholder"}} @autocomplete="off" @type="search" @value={{mut filterTerm}} />
+      <Input class="filter-input" placeholder={{i18n "admin.customize.theme.filter_placeholder"}} @autocomplete="off" @type="search" @value={{mut this.filterTerm}} />
       {{d-icon "search"}}
     </div>
   {{/if}}
-  {{#if hasThemes}}
-    {{#if hasActiveThemes}}
-      {{#each activeThemes as |theme|}}
+  {{#if this.hasThemes}}
+    {{#if this.hasActiveThemes}}
+      {{#each this.activeThemes as |theme|}}
         <ThemesListItem @theme={{theme}} @navigateToTheme={{action "navigateToTheme" theme}} />
       {{/each}}
 
-      {{#if hasInactiveThemes}}
+      {{#if this.hasInactiveThemes}}
         <div class="themes-list-item inactive-indicator">
           <span class="empty">
-            {{#if themesTabActive}}
+            {{#if this.themesTabActive}}
               {{i18n "admin.customize.theme.inactive_themes"}}
             {{else}}
               {{i18n "admin.customize.theme.inactive_components"}}
@@ -29,8 +29,8 @@
       {{/if}}
     {{/if}}
 
-    {{#if hasInactiveThemes}}
-      {{#each inactiveThemes as |theme|}}
+    {{#if this.hasInactiveThemes}}
+      {{#each this.inactiveThemes as |theme|}}
         <ThemesListItem @theme={{theme}} @navigateToTheme={{action "navigateToTheme" theme}} />
       {{/each}}
     {{/if}}
@@ -42,5 +42,5 @@
 </div>
 
 <div class="create-actions">
-  <DButton @action={{installModal}} @icon="upload" @label="admin.customize.install" @class="btn-primary" />
+  <DButton @action={{this.installModal}} @icon="upload" @label="admin.customize.install" @class="btn-primary" />
 </div>

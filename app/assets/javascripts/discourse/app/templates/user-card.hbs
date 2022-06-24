@@ -1,7 +1,7 @@
-{{#if site.mobileView}}
+{{#if this.site.mobileView}}
   <div class="card-cloak hidden"></div>
 {{/if}}
 
-<UserCardContents @topic={{topic.model}} @showUser={{action "showUser"}} @filterPosts={{action "filterPosts"}} @composePrivateMessage={{route-action "composePrivateMessage"}} @createNewMessageViaParams={{route-action "createNewMessageViaParams"}} />
+<UserCardContents @topic={{this.topic.model}} @showUser={{action "showUser"}} @filterPosts={{action "filterPosts"}} @composePrivateMessage={{route-action "composePrivateMessage"}} @createNewMessageViaParams={{route-action "createNewMessageViaParams"}} />
 
-<GroupCardContents @topic={{topic.model}} @showUser={{action "showUser"}} @showGroup={{action "showGroup"}} @createNewMessageViaParams={{route-action "createNewMessageViaParams"}} />
+<GroupCardContents @topic={{this.topic.model}} @showUser={{action "showUser"}} @showGroup={{action "showGroup"}} @createNewMessageViaParams={{route-action "createNewMessageViaParams"}} />

@@ -1,13 +1,13 @@
 <DModalBody @title="composer.link_dialog_title" @class="insert-link">
   <form id="insert-hyperlink-form" {{action "ok" on="submit"}}>
     <div class="inputs">
-      <TextField @value={{linkUrl}} @placeholderKey="composer.link_url_placeholder" @class="link-url" @key-up={{action "search"}} @autofocus="autofocus" />
-      {{#if searchLoading}}
+      <TextField @value={{this.linkUrl}} @placeholderKey="composer.link_url_placeholder" @class="link-url" @key-up={{action "search"}} @autofocus="autofocus" />
+      {{#if this.searchLoading}}
         {{loading-spinner}}
       {{/if}}
-      {{#if searchResults}}
+      {{#if this.searchResults}}
         <div class="internal-link-results">
-          {{#each searchResults as |result|}}
+          {{#each this.searchResults as |result|}}
             <a
               class="search-link"
               href={{result.url}}
@@ -29,7 +29,7 @@
       {{/if}}
     </div>
     <div class="inputs">
-      <TextField @value={{linkText}} @placeholderKey="composer.link_optional_text" @class="link-text" />
+      <TextField @value={{this.linkText}} @placeholderKey="composer.link_optional_text" @class="link-text" />
     </div>
   </form>
 </DModalBody>

@@ -1,16 +1,16 @@
 <DModalBody @class="install-theme" @title="admin.customize.theme.install">
-  {{#unless directRepoInstall}}
+  {{#unless this.directRepoInstall}}
     <div class="install-theme-items">
-      <InstallThemeItem @value="popular" @selection={{selection}} @label="admin.customize.theme.install_popular" />
-      <InstallThemeItem @value="local" @selection={{selection}} @label="admin.customize.theme.install_upload" />
-      <InstallThemeItem @value="remote" @selection={{selection}} @label="admin.customize.theme.install_git_repo" />
-      <InstallThemeItem @value="create" @selection={{selection}} @label="admin.customize.theme.install_create" @showIcon={{true}} />
+      <InstallThemeItem @value="popular" @selection={{this.selection}} @label="admin.customize.theme.install_popular" />
+      <InstallThemeItem @value="local" @selection={{this.selection}} @label="admin.customize.theme.install_upload" />
+      <InstallThemeItem @value="remote" @selection={{this.selection}} @label="admin.customize.theme.install_git_repo" />
+      <InstallThemeItem @value="create" @selection={{this.selection}} @label="admin.customize.theme.install_create" @showIcon={{true}} />
     </div>
   {{/unless}}
   <div class="install-theme-content">
-    {{#if popular}}
+    {{#if this.popular}}
       <div class="popular-theme-items">
-        {{#each themes as |theme|}}
+        {{#each this.themes as |theme|}}
           <div class="popular-theme-item" data-name={{theme.name}}>
             <div class="popular-theme-name">
               <a href={{theme.meta_url}} rel="noopener noreferrer" target="_blank">
@@ -28,7 +28,7 @@
               {{#if theme.installed}}
                 <span>{{i18n "admin.customize.theme.installed"}}</span>
               {{else}}
-                <DButton @class="btn-small" @label="admin.customize.theme.install" @disabled={{installDisabled}} @icon="upload" @action={{action "installThemeFromList" theme.value}} />
+                <DButton @class="btn-small" @label="admin.customize.theme.install" @disabled={{this.installDisabled}} @icon="upload" @action={{action "installThemeFromList" theme.value}} />
 
                 {{#if theme.preview}}
                   <a href={{theme.preview}} rel="noopener noreferrer" target="_blank">{{d-icon "desktop"}} {{i18n "admin.customize.theme.preview"}}</a>
@@ -40,44 +40,43 @@
       </div>
     {{/if}}
 
-    {{#if local}}
+    {{#if this.local}}
       <div class="inputs">
         <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept=".dcstyle.json,application/json,.tar.gz,application/x-gzip,.zip,application/zip"><br>
         <span class="description">{{i18n "admin.customize.theme.import_file_tip"}}</span>
       </div>
     {{/if}}
 
-    {{#if remote}}
+    {{#if this.remote}}
       <div class="inputs">
         <div class="repo">
           <div class="label">{{i18n "admin.customize.theme.import_web_tip"}}</div>
-          <Input @value={{uploadUrl}} placeholder={{urlPlaceholder}} />
+          <Input @value={{this.uploadUrl}} placeholder={{this.urlPlaceholder}} />
         </div>
 
         <DButton @class="btn-small advanced-repo" @action={{action "toggleAdvanced"}} @label="admin.customize.theme.import_web_advanced" />
 
-        {{#if advancedVisible}}
+        {{#if this.advancedVisible}}
           <div class="branch">
             <div class="label">{{i18n "admin.customize.theme.remote_branch"}}</div>
-            <Input @value={{branch}} placeholder="main" />
+            <Input @value={{this.branch}} placeholder="main" />
           </div>
 
           <div class="check-private">
             <label>
-              <Input @type="checkbox" @checked={{privateChecked}} />
+              <Input @type="checkbox" @checked={{this.privateChecked}} />
               {{i18n "admin.customize.theme.is_private"}}
             </label>
           </div>
-          {{#if showPublicKey}}
+          {{#if this.showPublicKey}}
             <div class="public-key">
               <div class="label">{{i18n "admin.customize.theme.public_key"}}</div>
               <div class="public-key-text-wrapper">
-                <Textarea class="public-key-value" @readonly={{true}} @value={{publicKey}} />
-                <CopyButton @selector="textarea.public-key-value" />
+                <Textarea class="public-key-value" @readonly={{true}} @value={{this.publicKey}} />                <CopyButton @selector="textarea.public-key-value" />
               </div>
             </div>
           {{else}}
-            {{#if privateChecked}}
+            {{#if this.privateChecked}}
               <div class="public-key-note">{{i18n "admin.customize.theme.public_key_note"}}</div>
             {{/if}}
           {{/if}}
@@ -85,34 +84,34 @@
       </div>
     {{/if}}
 
-    {{#if create}}
+    {{#if this.create}}
       <div class="inputs">
         <div class="label">{{i18n "admin.customize.theme.create_name"}}</div>
-        <Input @value={{name}} placeholder={{placeholder}} />
+        <Input @value={{this.name}} placeholder={{this.placeholder}} />
 
         <div class="label">{{i18n "admin.customize.theme.create_type"}}</div>
-        <ComboBox @valueProperty="value" @content={{createTypes}} @value={{selectedType}} @onChange={{action (mut selectedType)}} />
+        <ComboBox @valueProperty="value" @content={{this.createTypes}} @value={{this.selectedType}} @onChange={{action (mut this.selectedType)}} />
       </div>
     {{/if}}
 
-    {{#if directRepoInstall}}
+    {{#if this.directRepoInstall}}
       <div class="repo">
-        <div class="label">{{html-safe (i18n "admin.customize.theme.direct_install_tip" name=uploadName)}}</div>
-        <pre><code>{{uploadUrl}}</code></pre>
+        <div class="label">{{html-safe (i18n "admin.customize.theme.direct_install_tip" name=this.uploadName)}}</div>
+        <pre><code>{{this.uploadUrl}}</code></pre>
       </div>
     {{/if}}
   </div>
 
 </DModalBody>
 
-{{#unless popular}}
+{{#unless this.popular}}
   <div class="modal-footer">
-    {{#if duplicateRemoteThemeWarning}}
+    {{#if this.duplicateRemoteThemeWarning}}
       <div class="install-theme-warning">
-        ⚠️ {{duplicateRemoteThemeWarning}}
+        ⚠️ {{this.duplicateRemoteThemeWarning}}
       </div>
     {{/if}}
-    <DButton @action={{action "installTheme"}} @disabled={{installDisabled}} @class="btn btn-primary" @label={{submitLabel}} />
+    <DButton @action={{action "installTheme"}} @disabled={{this.installDisabled}} @class="btn btn-primary" @label={{this.submitLabel}} />
     <DModalCancel @close={{route-action "closeModal"}} />
   </div>
 {{/unless}}

@@ -1,24 +1,24 @@
-{{#if displayCount}}
-  <a href={{url}} title={{i18n "badges.granted" count=displayCount}} class="grant-count">{{displayCount}}</a>
+{{#if this.displayCount}}
+  <a href={{this.url}} title={{i18n "badges.granted" count=this.displayCount}} class="grant-count">{{this.displayCount}}</a>
 {{/if}}
-{{#if badge.has_badge}}
-  <a href={{url}} class="check-display status-checked">{{d-icon "check"}}</a>
+{{#if this.badge.has_badge}}
+  <a href={{this.url}} class="check-display status-checked">{{d-icon "check"}}</a>
 {{/if}}
 
-{{#if canFavorite}}
-  {{#if isFavorite}}
-    <DButton @icon="star" @class="favorite-btn" @action={{onFavoriteClick}} />
+{{#if this.canFavorite}}
+  {{#if this.isFavorite}}
+    <DButton @icon="star" @class="favorite-btn" @action={{this.onFavoriteClick}} />
   {{else}}
-    <DButton @icon="far-star" @class="favorite-btn" @action={{onFavoriteClick}} @title={{if canFavoriteMoreBadges "badges.favorite_max_not_reached" "badges.favorite_max_reached"}} @disabled={{not canFavoriteMoreBadges}} />
+    <DButton @icon="far-star" @class="favorite-btn" @action={{this.onFavoriteClick}} @title={{if this.canFavoriteMoreBadges "badges.favorite_max_not_reached" "badges.favorite_max_reached"}} @disabled={{not this.canFavoriteMoreBadges}} />
   {{/if}}
 {{/if}}
 
 <div class="badge-contents">
-  <a href={{url}} class="badge-icon {{badge.badgeTypeClassName}}">{{icon-or-image badge}}</a>
+  <a href={{this.url}} class="badge-icon {{this.badge.badgeTypeClassName}}">{{icon-or-image this.badge}}</a>
   <div class="badge-info">
     <div class="badge-info-item">
-      <h3><a href={{url}} class="badge-link">{{badge.name}}</a></h3>
-      <div class="badge-summary">{{html-safe summary}}</div>
+      <h3><a href={{this.url}} class="badge-link">{{this.badge.name}}</a></h3>
+      <div class="badge-summary">{{html-safe this.summary}}</div>
     </div>
   </div>
 </div>

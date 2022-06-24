@@ -1,8 +1,8 @@
 <label class="checkbox-label">
-  <Input @type="checkbox" @disabled={{disabled}} @checked={{buffer}} />
-  {{i18n labelKey}}
+  <Input @type="checkbox" @disabled={{this.disabled}} @checked={{this.buffer}} />
+  {{i18n this.labelKey}}
 </label>
-{{#if changed}}
+{{#if this.changed}}
   <DButton @action={{action "apply"}} @class="btn-primary btn-small submit-edit" @icon="check" />
   <DButton @action={{action "cancel"}} @class="btn-small cancel-edit" @icon="times" />
 {{/if}}

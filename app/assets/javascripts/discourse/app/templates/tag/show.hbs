@@ -1,6 +1,6 @@
-<DSection @tagName="" @pageClass="tags" @bodyClass={{concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) "" (if additionalTags " tags-intersection")}}>
+<DSection @tagName="" @pageClass="tags" @bodyClass={{concat "tag-" this.tag.id (if this.category.slug (concat " category-" this.category.slug)) "" (if this.additionalTags " tags-intersection")}}>
   <div class="container">
-    <DiscourseBanner @user={{currentUser}} @banner={{site.banner}} />
+    <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
   </div>
 
   <PluginOutlet @name="discovery-list-controls-above" @tagName="span" @connectorTagName="div" />
@@ -9,20 +9,20 @@
     <PluginOutlet @name="discovery-navigation-bar-above" @connectorTagName="div" />
     <div class="container">
       <section class="navigation-container tag-navigation">
-        <DNavigation @filterMode={{filterMode}} @canCreateTopic={{canCreateTopic}} @hasDraft={{currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} @category={{category}} @tag={{tag}} @noSubcategories={{noSubcategories}} @tagNotification={{tagNotification}} @additionalTags={{additionalTags}} @showInfo={{showInfo}} @canCreateTopicOnTag={{canCreateTopicOnTag}} @changeTagNotificationLevel={{action "changeTagNotificationLevel"}} @toggleInfo={{action "toggleInfo"}} />
+        <DNavigation @filterMode={{this.filterMode}} @canCreateTopic={{this.canCreateTopic}} @hasDraft={{this.currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} @category={{this.category}} @tag={{this.tag}} @noSubcategories={{this.noSubcategories}} @tagNotification={{this.tagNotification}} @additionalTags={{this.additionalTags}} @showInfo={{this.showInfo}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} @changeTagNotificationLevel={{action "changeTagNotificationLevel"}} @toggleInfo={{action "toggleInfo"}} />
 
-        <PluginOutlet @name="tag-navigation" @connectorTagName="div" @args={{hash category=category tag=tag}} />
+        <PluginOutlet @name="tag-navigation" @connectorTagName="div" @args={{hash category=this.category tag=this.tag}} />
       </section>
     </div>
   </div>
 
-  {{#if showInfo}}
-    <TagInfo @tag={{tag}} @list={{list}} @deleteAction={{action "deleteTag"}} />
+  {{#if this.showInfo}}
+    <TagInfo @tag={{this.tag}} @list={{this.list}} @deleteAction={{action "deleteTag"}} />
   {{/if}}
 
-  <PluginOutlet @name="discovery-list-container-top" @tagName="span" @connectorTagName="div" @args={{hash category=category}} />
+  <PluginOutlet @name="discovery-list-container-top" @tagName="span" @connectorTagName="div" @args={{hash category=this.category}} />
 
-  <TopicDismissButtons @position="top" @selectedTopics={{selected}} @model={{model}} @showResetNew={{showResetNew}} @showDismissRead={{showDismissRead}} @resetNew={{action "resetNew"}} />
+  <TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
 
   <PluginOutlet @name="discovery-above" @tagName="span" @connectorTagName="div" />
 
@@ -31,39 +31,39 @@
       <div class="full-width">
         <PluginOutlet @name="before-list-area" />
         <div id="list-area">
-          {{#unless loading}}
-            <DiscoveryTopicsList @model={{list}} @refresh={{action "refresh"}} @autoAddTopicsToBulkSelect={{autoAddTopicsToBulkSelect}} @bulkSelectEnabled={{bulkSelectEnabled}} @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}} as |discoveryTopicList|>
-              {{#if top}}
+          {{#unless this.loading}}
+            <DiscoveryTopicsList @model={{this.list}} @refresh={{action "refresh"}} @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}} as |discoveryTopicList|>
+              {{#if this.top}}
                 <div class="top-lists">
-                  <PeriodChooser @period={{period}} @action={{action "changePeriod"}} @fullDay={{false}} />
+                  <PeriodChooser @period={{this.period}} @action={{action "changePeriod"}} @fullDay={{false}} />
                 </div>
               {{else}}
-                {{#if topicTrackingState.hasIncoming}}
-                  <div class="show-more {{if hasTopics "has-topics"}}">
+                {{#if this.topicTrackingState.hasIncoming}}
+                  <div class="show-more {{if this.hasTopics "has-topics"}}">
                     <a tabindex="0" href {{action "showInserted"}} class="alert alert-info clickable">
-                      <CountI18n @key="topic_count_" @suffix={{topicTrackingState.filter}} @count={{topicTrackingState.incomingCount}} />
+                      <CountI18n @key="topic_count_" @suffix={{this.topicTrackingState.filter}} @count={{this.topicTrackingState.incomingCount}} />
                     </a>
                   </div>
                 {{/if}}
               {{/if}}
 
-              {{#if list.topics}}
-                <TopicList @topics={{list.topics}} @canBulkSelect={{canBulkSelect}} @toggleBulkSelect={{action "toggleBulkSelect"}} @bulkSelectEnabled={{bulkSelectEnabled}} @bulkSelectAction={{action "refresh"}} @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}} @selected={{selected}} @category={{category}} @showPosters={{true}} @order={{order}} @ascending={{ascending}} @changeSort={{action "changeSort"}} @onScroll={{discoveryTopicList.saveScrollPosition}} @scrollOnLoad={{true}} @focusLastVisitedTopic={{true}} />
+              {{#if this.list.topics}}
+                <TopicList @topics={{this.list.topics}} @canBulkSelect={{this.canBulkSelect}} @toggleBulkSelect={{action "toggleBulkSelect"}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @bulkSelectAction={{action "refresh"}} @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}} @selected={{this.selected}} @category={{this.category}} @showPosters={{true}} @order={{this.order}} @ascending={{this.ascending}} @changeSort={{action "changeSort"}} @onScroll={{discoveryTopicList.saveScrollPosition}} @scrollOnLoad={{true}} @focusLastVisitedTopic={{true}} />
               {{/if}}
             </DiscoveryTopicsList>
 
             <footer class="topic-list-bottom">
-              <TopicDismissButtons @position="bottom" @selectedTopics={{selected}} @model={{model}} @showResetNew={{showResetNew}} @showDismissRead={{showDismissRead}} @resetNew={{action "resetNew"}} />
+              <TopicDismissButtons @position="bottom" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
 
-              {{#unless list.canLoadMore}}
-                <FooterMessage @education={{footerEducation}} @message={{footerMessage}}>
+              {{#unless this.list.canLoadMore}}
+                <FooterMessage @education={{this.footerEducation}} @message={{this.footerMessage}}>
                   <LinkTo @route="tags"> {{i18n "topic.browse_all_tags"}}</LinkTo> {{i18n "or"}} <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo>.
                 </FooterMessage>
               {{/unless}}
             </footer>
           {{/unless}}
 
-          <ConditionalLoadingSpinner @condition={{list.loadingMore}} />
+          <ConditionalLoadingSpinner @condition={{this.list.loadingMore}} />
         </div>
       </div>
     </div>

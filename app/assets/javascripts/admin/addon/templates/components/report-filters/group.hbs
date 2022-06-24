@@ -1,5 +1,5 @@
-<ComboBox @valueProperty="value" @content={{groupOptions}} @value={{groupId}} @onChange={{action "onChange"}} @options={{hash
-    allowAny=filter.allow_any
+<ComboBox @valueProperty="value" @content={{this.groupOptions}} @value={{this.groupId}} @onChange={{action "onChange"}} @options={{hash
+    allowAny=this.filter.allow_any
     filterable=true
     none="admin.dashboard.reports.groups"
   }} />
