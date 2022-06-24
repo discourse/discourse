@@ -31,16 +31,16 @@ function findUploadsInHtml(uploads, blockToken) {
   // image src attributes, and replace them with a placeholder.
   // Note that we can't use browser DOM APIs because this needs
   // to run in mini-racer.
-  const fakeAllowList = {};
-
   let foundImage = false;
-  const newContent = xss(blockToken.content, {
-    allowList: fakeAllowList,
+  let allowList;
+
+  const filter = new xss.FilterXSS({
+    allowList: [],
     allowCommentTag: true,
-    onTag(tag, html, options) {
+    onTag(tag, html, info) {
       // We're not using this for sanitizing, so allow all tags through
-      options.isWhite = true;
-      fakeAllowList[tag] = [];
+      info.isWhite = true;
+      allowList[tag] = [];
     },
     onTagAttr(tag, name, value) {
       if (tag === "img" && name === "src" && value.startsWith("upload://")) {
@@ -51,6 +51,10 @@ function findUploadsInHtml(uploads, blockToken) {
       return attr(name, value);
     },
   });
+
+  allowList = filter.options.whiteList;
+  const newContent = filter.process(blockToken.content);
+
   if (foundImage) {
     blockToken.content = newContent;
   }
