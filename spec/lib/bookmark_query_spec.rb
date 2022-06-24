@@ -121,7 +121,7 @@ RSpec.describe BookmarkQuery do
         post_bookmark.bookmarkable.update(post_type: Post.types[:whisper])
         SiteSetting.enable_whispers = true
       end
-      let(:whisperers_group) { Fabricate(:group) }
+      fab!(:whisperers_group) { Fabricate(:group) }
 
       context "when the user is moderator" do
         it "does return the whispered post" do
