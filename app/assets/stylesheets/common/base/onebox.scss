@@ -836,12 +836,14 @@ aside.onebox.mixcloud-preview {
       color: #d1d1d1;
     }
     .video-icon {
-      top: 32px;
-      right: unset;
-      height: 24px;
+      position: relative;
+      top: 17px;
+      height: 100%;
+      float: left;
+      padding-left: 6px;
     }
     .mixcloud-text {
-      padding-left: 180px;
+      padding-left: 170px;
       font-family: sans-serif;
       h3 {
         font-size: 13px;

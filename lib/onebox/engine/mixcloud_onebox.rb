@@ -17,8 +17,9 @@ module Onebox
           <aside class="onebox mixcloud-preview">
             <article class="onebox-body">
               <img src="#{oembed.image}">
-              <span class="video-icon"></span>
+              <div class="video-icon"></div>
               <div class="mixcloud-text">
+                
                 <h3><a href="#{oembed.url}" target="_blank" rel="nofollow ugc noopener">#{oembed.title}</a></h3>
                 <h4>#{oembed.author_name}</h4>
               </div>   
