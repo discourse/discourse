@@ -292,7 +292,6 @@ module ApplicationHelper
       get_absolute_image_url(opts[:twitter_summary_large_image]) if opts[:twitter_summary_large_image].present?
 
     result = []
-    result << (+"i-think-it’s-time-to-drop-the-expertise-system/")
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, property: 'og:type', content: 'website')
 
