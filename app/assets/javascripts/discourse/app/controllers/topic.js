@@ -1701,11 +1701,27 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "stats": {
-            topic.setProperties({ like_count: data.like_count });
+            let updateStream = false;
+            ["last_posted_at", "like_count", "posts_count"].forEach(
+              (property) => {
+                const value = data[property];
+                if (typeof value !== "undefined") {
+                  topic.set(property, value);
+                  updateStream = true;
+                }
+              }
+            );
 
-            postStream
-              .triggerChangedTopicStats()
-              .then((firstPostId) => refresh({ id: firstPostId }));
+            if (data["last_poster"]) {
+              topic.details.set("last_poster", data["last_poster"]);
+              updateStream = true;
+            }
+
+            if (updateStream) {
+              postStream
+                .triggerChangedTopicStats()
+                .then((firstPostId) => refresh({ id: firstPostId }));
+            }
             break;
           }
           default: {

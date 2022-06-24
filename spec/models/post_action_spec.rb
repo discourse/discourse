@@ -131,30 +131,6 @@ describe PostAction do
       tu = TopicUser.get(post.topic, codinghorror)
       expect(tu.liked).to be true
     end
-
-    it "publishes updated topic counters as stats" do
-      freeze_time Date.today
-
-      topic = post.topic
-
-      TopicUser.change(codinghorror, topic, posted: true)
-
-      MessageBus.expects(:publish).at_least_once
-      (1..2).each do |value|
-        MessageBus.expects(:publish).once.with("/topic/#{topic.id}", is_a(Hash), anything) do |_, message, _|
-          message[:type] == :stats && message[:like_count] == value
-        end
-      end
-
-      old_like_count = topic.like_count
-
-      PostActionCreator.like(moderator, post)
-      PostActionCreator.like(codinghorror, second_post)
-
-      topic.reload
-
-      expect(topic.like_count).to eq(old_like_count + 2)
-    end
   end
 
   describe "undo/redo repeatedly" do

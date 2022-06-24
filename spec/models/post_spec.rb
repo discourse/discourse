@@ -1826,10 +1826,36 @@ describe Post do
         version: post.version
       }
 
-      MessageBus.expects(:publish).once.with("/topic/#{topic.id}", message, is_a(Hash)) do |_, _, options|
-        options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
+      MessageBus.expects(:publish).once.with do |channel, published_message, options|
+        channel == "/topic/#{topic.id}" &&
+          published_message == message &&
+          options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
       end
+
+      # it also sends message updating the stats
+      MessageBus.expects(:publish).once.with do |channel, published_message, options|
+        channel == "/topic/#{topic.id}" &&
+          published_message[:type] == :stats &&
+          options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
+      end
+
       post.publish_change_to_clients!(:created)
+    end
+
+    it 'also publishes topic stats' do
+      Topic.expects(:publish_stats_to_clients!).with(topic.id, :anything)
+      post.publish_change_to_clients!(:anything)
+    end
+
+    it 'skips publishing topic stats when requested' do
+      # ensure that :skip_topic_stats did not get merged with the message
+      MessageBus.expects(:publish).once.with do |channel, message, _|
+        channel == "/topic/#{topic.id}" && !message.key?(:skip_topic_stats)
+      end
+
+      Topic.expects(:publish_stats_to_clients!).never
+
+      post.publish_change_to_clients!(:anything, { skip_topic_stats: true })
     end
   end
 

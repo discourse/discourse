@@ -25,10 +25,30 @@ describe PostActionDestroyer do
             PostActionDestroyer.destroy(user, post, :like)
           end
 
-          message = messages.last.data
+          message = messages.find { |msg| msg.data[:type] === :unliked }.data
+          expect(message).to be_present
           expect(message[:type]).to eq(:unliked)
           expect(message[:likes_count]).to eq(0)
           expect(message[:user_id]).to eq(user.id)
+        end
+
+        it 'notifies updated topic stats to subscribers' do
+          topic = Fabricate(:topic)
+          post = Fabricate(:post, topic: topic)
+          PostActionCreator.new(user, post, PostActionType.types[:like]).perform
+
+          expect(post.reload.like_count).to eq(1)
+
+          MessageBus.expects(:publish).at_least_once
+
+          # tests if messages of type :stats are published and the like_count is fetched from the topic
+          MessageBus.expects(:publish).once.with do |channel, message, _|
+            channel == "/topic/#{topic.id}" &&
+              message[:type] == :stats &&
+              message[:like_count] == 0
+          end
+
+          PostActionDestroyer.destroy(user, post, :like)
         end
       end
 

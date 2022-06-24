@@ -198,6 +198,9 @@ class Post < ActiveRecord::Base
     # but message is safe to skip
     return unless topic
 
+    skip_topic_stats = opts[:skip_topic_stats]
+    opts.except!(:skip_topic_stats)
+
     message = {
       id: id,
       post_number: post_number,
@@ -209,6 +212,7 @@ class Post < ActiveRecord::Base
     }.merge(opts)
 
     publish_message!("/topic/#{topic_id}", message)
+    Topic.publish_stats_to_clients!(topic.id, type) unless skip_topic_stats
   end
 
   def publish_message!(channel, message, opts = {})

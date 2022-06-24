@@ -1103,4 +1103,67 @@ describe PostDestroyer do
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe "publishes messages to subscribers" do
+    fab!(:first_post) { Fabricate(:post) }
+    let!(:topic) { first_post.topic }
+    let!(:replies) { Fabricate.times(5, :post, topic: topic) }
+
+    it 'when a post is destroyed publishes updated topic stats' do
+      expect(topic.reload.posts_count).to eq(6)
+
+      expendable_reply = replies.last
+
+      MessageBus.expects(:publish).at_least_once
+
+      # tests if messages of type :stats are published and the relevant data is fetched from the topic
+      MessageBus.expects(:publish).once.with do |channel, message, _|
+        channel == "/topic/#{topic.id}" &&
+          message[:type] == :stats &&
+          message[:posts_count] == 5
+      end
+
+      PostDestroyer.new(moderator, expendable_reply, force_destroy: true).destroy
+      expect { expendable_reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'when a post is deleted publishes updated topic stats' do
+      expect(topic.reload.posts_count).to eq(6)
+
+      expendable_reply = replies.last
+
+      MessageBus.expects(:publish).at_least_once
+
+      # tests if messages of type :stats are published and the relevant data is fetched from the topic
+      MessageBus.expects(:publish).once.with do |channel, message, _|
+        channel == "/topic/#{topic.id}" &&
+          message[:type] == :stats &&
+          message[:posts_count] == 5
+      end
+
+      PostDestroyer.new(moderator, expendable_reply).destroy
+      expect(expendable_reply.reload.deleted_at).not_to eq(nil)
+    end
+
+    it 'Recovers the post correctly' do
+      expect(topic.reload.posts_count).to eq(6)
+
+      expendable_reply = replies.last
+      PostDestroyer.new(moderator, expendable_reply).destroy
+      expect(topic.reload.posts_count).to eq(5)
+
+      expendable_reply.reload
+
+      MessageBus.expects(:publish).at_least_once
+
+      # tests if messages of type :stats are published and the relevant data is fetched from the topic
+      MessageBus.expects(:publish).once.with do |channel, message, _|
+        channel == "/topic/#{topic.id}" &&
+          message[:type] == :stats &&
+          message[:posts_count] == 6
+      end
+
+      PostDestroyer.new(admin, expendable_reply).recover
+    end
+  end
 end

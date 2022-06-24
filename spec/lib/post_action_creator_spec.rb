@@ -67,10 +67,29 @@ describe PostActionCreator do
         PostActionCreator.new(user, post, like_type_id).perform
       end
 
-      message = messages.last.data
+      message = messages.find { |msg| msg.data[:type] === :liked }.data
+      expect(message).to be_present
       expect(message[:type]).to eq(:liked)
       expect(message[:likes_count]).to eq(1)
       expect(message[:user_id]).to eq(user.id)
+    end
+
+    it 'notifies updated topic stats to subscribers' do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic)
+
+      expect(post.reload.like_count).to eq(0)
+
+      MessageBus.expects(:publish).at_least_once
+
+      # tests if messages of type :stats are published and the like_count is fetched from the topic
+      MessageBus.expects(:publish).once.with do |channel, message, _|
+        channel == "/topic/#{topic.id}" &&
+          message[:type] == :stats &&
+          message[:like_count] == 1
+      end
+
+      PostActionCreator.new(user, post, like_type_id).perform
     end
 
     it 'does not create an invalid post action' do

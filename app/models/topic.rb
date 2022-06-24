@@ -1820,16 +1820,32 @@ class Topic < ActiveRecord::Base
     target_audience
   end
 
-  def publish_stats_change_to_clients!(stats, opts = {})
-    secure_audience = secure_audience_publish_messages
+  def self.publish_stats_to_clients!(topic_id, type, opts = {})
+    topic = Topic.find_by(id: topic_id)
+    return unless topic.present?
 
-    if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
-      message = stats.merge({
-                              id: id,
-                              updated_at: Time.now,
-                              type: :stats,
-                            })
-      MessageBus.publish("/topic/#{id}", message, opts.merge(secure_audience))
+    case type
+    when :liked, :unliked
+      stats = { like_count: topic.like_count }
+    when :created, :destroyed, :deleted, :recovered
+      stats = { posts_count: topic.posts_count,
+                last_posted_at: topic.last_posted_at,
+                last_poster: BasicUserSerializer.new(topic.last_poster, root: false).as_json }
+    else
+      stats = nil
+    end
+
+    if stats
+      secure_audience = topic.secure_audience_publish_messages
+
+      if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+        message = stats.merge({
+                                id: topic_id,
+                                updated_at: Time.now,
+                                type: :stats,
+                              })
+        MessageBus.publish("/topic/#{topic_id}", message, opts.merge(secure_audience))
+      end
     end
   end
 

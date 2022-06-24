@@ -3051,4 +3051,66 @@ describe Topic do
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
   end
+
+  describe "#publish_stats_to_clients!" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: user1) }
+    fab!(:post1) { Fabricate(:post, topic: topic, user: user1) }
+    fab!(:post2) { Fabricate(:post, topic: topic, user: user2) }
+    fab!(:like1) { Fabricate(:like, post: post1, user: user2) }
+
+    it "it is triggered when a post publishes a message of type :liked or :unliked" do
+      freeze_time Date.today
+
+      [:liked, :unliked].each do |action|
+        MessageBus.expects(:publish).at_least_once
+
+        # tests if messages of type :stats are published and the like_count is fetched from the topic
+        MessageBus.expects(:publish).once.with do |channel, message, _|
+          channel == "/topic/#{topic.id}" &&
+            message[:type] == :stats &&
+            message[:like_count] == topic.like_count
+        end
+
+        post1.publish_change_to_clients!(action)
+      end
+    end
+
+    it "it is triggered when a post publishes a message of type :created, :destroyed, :deleted, :recovered" do
+      freeze_time Date.today
+
+      [:created, :destroyed, :deleted, :recovered].each do |action|
+        MessageBus.expects(:publish).at_least_once
+
+        # tests if messages of type :stats are published and the relevant data is fetched from the topic
+        MessageBus.expects(:publish).once.with do |channel, message, _|
+          channel == "/topic/#{topic.id}" &&
+            message[:type] == :stats &&
+            message[:posts_count] == topic.posts_count &&
+            message[:last_posted_at] == topic.last_posted_at &&
+            message[:last_poster] == BasicUserSerializer.new(topic.last_poster, root: false).as_json
+        end
+
+        post1.publish_change_to_clients!(action)
+      end
+    end
+
+    it "it is not triggered when a post publishes an unhandled kind of message" do
+      freeze_time Date.today
+
+      [:unhandled, :unknown, :dont_care].each do |action|
+        MessageBus.expects(:publish).at_least_once
+
+        # ensure that stats message are not sent
+        MessageBus.expects(:publish).never.with do |channel, message, _|
+          channel == "/topic/#{topic.id}" &&
+            message[:type] == :stats
+        end
+
+        post1.publish_change_to_clients!(action)
+      end
+    end
+  end
+
 end
