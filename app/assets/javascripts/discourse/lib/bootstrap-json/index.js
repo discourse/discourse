@@ -8,6 +8,7 @@ const path = require("path");
 const { promises: fs } = require("fs");
 const { JSDOM } = require("jsdom");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
+const { Buffer } = require("node:buffer");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -221,19 +222,22 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
 }
 
 async function handleRequest(proxy, baseURL, req, res) {
+  // x-forwarded-host is used in e.g. GitHub CodeSpaces
   const originalHost = req.headers["x-forwarded-host"] || req.headers.host;
-  req.headers.host = new URL(proxy).host;
+  req.headers.host = originalHost;
 
   if (req.headers["Origin"]) {
-    req.headers["Origin"] = req.headers["Origin"]
-      .replace(req.headers.host, originalHost)
-      .replace(/^https/, "http");
+    req.headers["Origin"] = req.headers["Origin"].replace(
+      req.headers.host,
+      originalHost
+    );
   }
 
   if (req.headers["Referer"]) {
-    req.headers["Referer"] = req.headers["Referer"]
-      .replace(req.headers.host, originalHost)
-      .replace(/^https/, "http");
+    req.headers["Referer"] = req.headers["Referer"].replace(
+      req.headers.host,
+      originalHost
+    );
   }
 
   let url = `${proxy}${req.path}`;
@@ -258,12 +262,6 @@ async function handleRequest(proxy, baseURL, req, res) {
   });
   res.set("content-encoding", null);
 
-  const location = response.headers.get("location");
-  if (location) {
-    const newLocation = location.replace(proxy, `http://${originalHost}`);
-    res.set("location", newLocation);
-  }
-
   const csp = response.headers.get("content-security-policy");
   if (csp) {
     const emberCliAdditions = [
@@ -271,33 +269,37 @@ async function handleRequest(proxy, baseURL, req, res) {
       `http://${originalHost}/ember-cli-live-reload.js`,
       `http://${originalHost}/_lr/`,
     ];
-    const newCSP = csp
-      .replace(new RegExp(proxy, "g"), `http://${originalHost}`)
-      .replace(
-        new RegExp("script-src ", "g"),
-        `script-src ${emberCliAdditions.join(" ")} `
-      );
+    const newCSP = csp.replace(
+      new RegExp("script-src ", "g"),
+      `script-src ${emberCliAdditions.join(" ")} `
+    );
     res.set("content-security-policy", newCSP);
   }
 
   const contentType = response.headers.get("content-type");
-  const isHTML = contentType && contentType.startsWith("text/html");
-  const responseText = await response.text();
-  const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
+  const isHTML = contentType?.startsWith("text/html");
 
-  if (preloadJson) {
-    const html = await buildFromBootstrap(
-      proxy,
-      baseURL,
-      req,
-      response,
-      extractPreloadJson(responseText)
-    );
-    res.set("content-type", "text/html");
-    res.send(html);
+  res.status(response.status);
+
+  if (isHTML) {
+    const responseText = await response.text();
+    const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
+
+    if (preloadJson) {
+      const html = await buildFromBootstrap(
+        proxy,
+        baseURL,
+        req,
+        response,
+        extractPreloadJson(responseText)
+      );
+      res.set("content-type", "text/html");
+      res.send(html);
+    } else {
+      res.send(responseText);
+    }
   } else {
-    res.status(response.status);
-    res.send(responseText);
+    res.send(Buffer.from(await response.arrayBuffer()));
   }
 }
 
@@ -308,7 +310,7 @@ module.exports = {
     return true;
   },
 
-  contentFor: function (type, config) {
+  contentFor(type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       return `
         <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
@@ -339,7 +341,7 @@ to serve API requests. For example:
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {
-        if (this.shouldHandleRequest(req)) {
+        if (this.shouldForwardRequest(req)) {
           await handleRequest(proxy, baseURL, req, res);
         }
       } catch (error) {
@@ -357,28 +359,11 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(request) {
-    if (request.path === "/tests/index.html") {
-      return false;
-    }
-
-    if (request.get("Accept") && request.get("Accept").includes("text/html")) {
-      return true;
-    }
-
-    const contentType = request.get("Content-Type");
-    if (!contentType) {
-      return false;
-    }
-
-    if (
-      contentType.includes("application/x-www-form-urlencoded") ||
-      contentType.includes("multipart/form-data") ||
-      contentType.includes("application/json")
-    ) {
-      return true;
-    }
-
-    return false;
+  shouldForwardRequest(request) {
+    return ![
+      "/tests/index.html",
+      "/ember-cli-live-reload.js",
+      "/testem.js",
+    ].includes(request.path);
   },
 };
