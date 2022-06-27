@@ -3,9 +3,6 @@
 require 'csv'
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
-  Fabricate(:tag, name: 'tag1')
-  Fabricate(:tag, name: 'tag2')
-  Fabricate(:tag, name: 'tag3')
 
   describe '#destroy' do
     fab!(:watched_word) { Fabricate(:watched_word) }
@@ -33,6 +30,9 @@ RSpec.describe Admin::WatchedWordsController do
     context 'logged in as admin' do
       before do
         sign_in(admin)
+        Fabricate(:tag, name: 'tag1')
+        Fabricate(:tag, name: 'tag2')
+        Fabricate(:tag, name: 'tag3')
       end
 
       it 'creates the words from the file' do
@@ -83,6 +83,9 @@ RSpec.describe Admin::WatchedWordsController do
     context 'logged in as admin' do
       before do
         sign_in(admin)
+        Fabricate(:tag, name: 'tag1')
+        Fabricate(:tag, name: 'tag2')
+        Fabricate(:tag, name: 'tag3')
       end
 
       it "words of different actions are downloaded separately" do
