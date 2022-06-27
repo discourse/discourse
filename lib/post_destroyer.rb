@@ -98,6 +98,7 @@ class PostDestroyer
     topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !topic.user_id
     topic.recover!(@user) if @post.is_first_post?
     topic.update_statistics
+    Topic.publish_stats_to_clients!(topic.id, :recovered)
 
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
@@ -135,7 +136,8 @@ class PostDestroyer
       end
     end
 
-    @post.publish_change_to_clients! :recovered
+    # skip also publishing topic stats because they weren't updated yet
+    @post.publish_change_to_clients! :recovered, { skip_topic_stats: true }
     TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.is_first_post?
   end
 

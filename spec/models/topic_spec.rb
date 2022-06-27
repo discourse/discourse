@@ -3051,4 +3051,53 @@ describe Topic do
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
   end
+
+  describe "#publish_stats_to_clients!" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: user1) }
+    fab!(:post1) { Fabricate(:post, topic: topic, user: user1) }
+    fab!(:post2) { Fabricate(:post, topic: topic, user: user2) }
+    fab!(:like1) { Fabricate(:like, post: post1, user: user2) }
+
+    it "it is triggered when a post publishes a message of type :liked or :unliked" do
+      [:liked, :unliked].each do |action|
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:like_count]).to eq(topic.like_count)
+      end
+    end
+
+    it "it is triggered when a post publishes a message of type :created, :destroyed, :deleted, :recovered" do
+      freeze_time Date.today
+
+      [:created, :destroyed, :deleted, :recovered].each do |action|
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:posts_count]).to eq(topic.posts_count)
+        expect(stats_message.data[:last_posted_at]).to eq(topic.last_posted_at.as_json)
+        expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(topic.last_poster, root: false).as_json)
+      end
+    end
+
+    it "it is not triggered when a post publishes an unhandled kind of message" do
+      [:unhandled, :unknown, :dont_care].each do |action|
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_blank
+      end
+    end
+  end
+
 end
