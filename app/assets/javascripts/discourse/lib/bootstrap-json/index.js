@@ -224,10 +224,22 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
 
 async function handleRequest(proxy, baseURL, req, res) {
   // x-forwarded-host is used in e.g. GitHub CodeSpaces
-  const originalHost = req.headers["x-forwarded-host"] || req.headers.host;
+  let originalHost = req.headers["x-forwarded-host"] || req.headers.host;
 
-  req.headers.host =
-    env["FORWARD_HOST"] === "true" ? originalHost : new URL(proxy).host;
+  if (env["FORWARD_HOST"] === "true") {
+    if (/^localhost(\:|$)/.test(originalHost)) {
+      // Can't access default site in multisite via "localhost", redirect to 127.0.0.1
+      res.redirect(
+        307,
+        `http://${originalHost.replace("localhost", "127.0.0.1")}${req.path}`
+      );
+      return;
+    } else {
+      req.headers.host = originalHost;
+    }
+  } else {
+    req.headers.host = new URL(proxy).host;
+  }
 
   if (req.headers["Origin"]) {
     req.headers["Origin"] = req.headers["Origin"]
@@ -275,13 +287,12 @@ async function handleRequest(proxy, baseURL, req, res) {
       `http://${originalHost}/assets/`,
       `http://${originalHost}/ember-cli-live-reload.js`,
       `http://${originalHost}/_lr/`,
-    ];
+    ].join(" ");
+
     const newCSP = csp
-      .replace(new RegExp(proxy, "g"), `http://${originalHost}`)
-      .replace(
-        new RegExp("script-src ", "g"),
-        `script-src ${emberCliAdditions.join(" ")} `
-      );
+      .replaceAll(proxy, `http://${originalHost}`)
+      .replaceAll("script-src ", `script-src ${emberCliAdditions}`);
+
     res.set("content-security-policy", newCSP);
   }
 
