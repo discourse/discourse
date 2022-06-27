@@ -3,6 +3,9 @@
 require 'csv'
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
+  Fabricate(:tag, name: 'tag1')
+  Fabricate(:tag, name: 'tag2')
+  Fabricate(:tag, name: 'tag3')
 
   describe '#destroy' do
     fab!(:watched_word) { Fabricate(:watched_word) }

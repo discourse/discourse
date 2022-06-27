@@ -529,11 +529,15 @@ describe PostCreator do
             before do
               SiteSetting.min_trust_to_create_tag = 0
               SiteSetting.min_trust_level_to_tag_topics = 0
+              Fabricate(:tag, name: 'greetings')
+              Fabricate(:tag, name: 'hey')
+              Fabricate(:tag, name: 'about-art')
+              Fabricate(:tag, name: 'about-artists')
             end
 
             context "without regular expressions" do
               it "works with many tags" do
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings,hey")
 
                 @post = creator.create
                 expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
@@ -548,7 +552,7 @@ describe PostCreator do
               end
 
               it "does not treat as regular expressions" do
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings,hey")
 
                 @post = creator_with_tags.create
                 expect(@post.topic.tags.map(&:name)).to match_array(tag_names)
@@ -558,7 +562,7 @@ describe PostCreator do
             context "with regular expressions" do
               it "works" do
                 SiteSetting.watched_words_regular_expressions = true
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings,hey")
 
                 @post = creator_with_tags.create
                 expect(@post.topic.tags.map(&:name)).to match_array(tag_names + ['greetings', 'hey'])
