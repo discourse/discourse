@@ -1826,36 +1826,41 @@ describe Post do
         version: post.version
       }
 
-      MessageBus.expects(:publish).once.with do |channel, published_message, options|
-        channel == "/topic/#{topic.id}" &&
-          published_message == message &&
-          options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        post.publish_change_to_clients!(:created)
       end
 
-      # it also sends message updating the stats
-      MessageBus.expects(:publish).once.with do |channel, published_message, options|
-        channel == "/topic/#{topic.id}" &&
-          published_message[:type] == :stats &&
-          options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
-      end
+      created_message = messages.select { |msg| msg.data[:type] == :created }.first
+      expect(created_message).to be_present
+      expect(created_message.data).to eq(message)
+      expect(created_message.user_ids.sort).to eq([user1.id, user2.id, user3.id].sort)
 
-      post.publish_change_to_clients!(:created)
+      stats_message = messages.select { |msg| msg.data[:type] == :created }.first
+      expect(stats_message).to be_present
+      expect(stats_message.user_ids.sort).to eq([user1.id, user2.id, user3.id].sort)
     end
 
     it 'also publishes topic stats' do
-      Topic.expects(:publish_stats_to_clients!).with(topic.id, :anything)
-      post.publish_change_to_clients!(:anything)
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        post.publish_change_to_clients!(:created)
+      end
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
     end
 
     it 'skips publishing topic stats when requested' do
-      # ensure that :skip_topic_stats did not get merged with the message
-      MessageBus.expects(:publish).once.with do |channel, message, _|
-        channel == "/topic/#{topic.id}" && !message.key?(:skip_topic_stats)
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        post.publish_change_to_clients!(:anything, { skip_topic_stats: true })
       end
 
-      Topic.expects(:publish_stats_to_clients!).never
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_blank
 
-      post.publish_change_to_clients!(:anything, { skip_topic_stats: true })
+      # ensure that :skip_topic_stats did not get merged with the message
+      other_message = messages.select { |msg| msg.data[:type] == :anything }.first
+      expect(other_message).to be_present
+      expect(other_message.data.key?(:skip_topic_stats)).to be_falsey
     end
   end
 

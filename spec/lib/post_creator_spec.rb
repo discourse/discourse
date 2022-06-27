@@ -852,25 +852,23 @@ describe PostCreator do
       end
 
       it "publishes updates to topic stats" do
-        MessageBus.expects(:publish).at_least_once
-
         reply_timestamp = 1.day.from_now.round
 
         # tests if messages of type :stats are published and the relevant data is fetched from the topic
-        MessageBus.expects(:publish).once.with do |channel, message, _|
-          channel == "/topic/#{topic.id}" &&
-            message[:type] == :stats &&
-            message[:posts_count] == 2 &&
-            message[:last_posted_at] == reply_timestamp.as_json &&
-            message[:last_poster] == BasicUserSerializer.new(evil_trout, root: false).as_json
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          PostCreator.new(
+            evil_trout,
+            raw: 'other post in topic',
+            topic_id: topic.id,
+            created_at: reply_timestamp
+          ).create
         end
 
-        PostCreator.new(
-          evil_trout,
-          raw: 'other post in topic',
-          topic_id: topic.id,
-          created_at: reply_timestamp
-        ).create
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:posts_count]).to eq(2)
+        expect(stats_message.data[:last_posted_at]).to eq(reply_timestamp.as_json)
+        expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(evil_trout, root: false).as_json)
       end
 
       it "updates topic stats even when topic fails validation" do

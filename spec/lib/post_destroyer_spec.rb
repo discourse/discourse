@@ -1116,37 +1116,33 @@ describe PostDestroyer do
     it 'when a post is destroyed publishes updated topic stats' do
       expect(topic.reload.posts_count).to eq(3)
 
-      MessageBus.expects(:publish).at_least_once
-
-      # tests if messages of type :stats are published and the relevant data is fetched from the topic
-      MessageBus.expects(:publish).once.with do |channel, message, _|
-        channel == "/topic/#{topic.id}" &&
-          message[:type] == :stats &&
-          message[:posts_count] == 2 &&
-          message[:last_posted_at] == reply.created_at.as_json &&
-          message[:last_poster] == BasicUserSerializer.new(reply.user, root: false).as_json
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostDestroyer.new(moderator, expendable_reply, force_destroy: true).destroy
       end
 
-      PostDestroyer.new(moderator, expendable_reply, force_destroy: true).destroy
       expect { expendable_reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:posts_count]).to eq(2)
+      expect(stats_message.data[:last_posted_at]).to eq(reply.created_at.as_json)
+      expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(reply.user, root: false).as_json)
     end
 
     it 'when a post is deleted publishes updated topic stats' do
       expect(topic.reload.posts_count).to eq(3)
 
-      MessageBus.expects(:publish).at_least_once
-
-      # tests if messages of type :stats are published and the relevant data is fetched from the topic
-      MessageBus.expects(:publish).once.with do |channel, message, _|
-        channel == "/topic/#{topic.id}" &&
-          message[:type] == :stats &&
-          message[:posts_count] == 2 &&
-          message[:last_posted_at] == reply.created_at.as_json &&
-          message[:last_poster] == BasicUserSerializer.new(reply.user, root: false).as_json
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostDestroyer.new(moderator, expendable_reply).destroy
       end
 
-      PostDestroyer.new(moderator, expendable_reply).destroy
       expect(expendable_reply.reload.deleted_at).not_to eq(nil)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:posts_count]).to eq(2)
+      expect(stats_message.data[:last_posted_at]).to eq(reply.created_at.as_json)
+      expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(reply.user, root: false).as_json)
     end
 
     it 'when a post is recovered publishes update topic stats' do
@@ -1157,18 +1153,17 @@ describe PostDestroyer do
 
       expendable_reply.reload
 
-      MessageBus.expects(:publish).at_least_once
-
-      # tests if messages of type :stats are published and the relevant data is fetched from the topic
-      MessageBus.expects(:publish).once.with do |channel, message, _|
-        channel == "/topic/#{topic.id}" &&
-          message[:type] == :stats &&
-          message[:posts_count] == 3 &&
-          message[:last_posted_at] == expendable_reply.created_at.as_json &&
-          message[:last_poster] == BasicUserSerializer.new(expendable_reply.user, root: false).as_json
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostDestroyer.new(admin, expendable_reply).recover
       end
 
-      PostDestroyer.new(admin, expendable_reply).recover
+      expect(topic.reload.posts_count).to eq(3)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:posts_count]).to eq(3)
+      expect(stats_message.data[:last_posted_at]).to eq(expendable_reply.created_at.as_json)
+      expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(expendable_reply.user, root: false).as_json)
     end
   end
 end

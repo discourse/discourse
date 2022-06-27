@@ -80,16 +80,13 @@ describe PostActionCreator do
 
       expect(post.reload.like_count).to eq(0)
 
-      MessageBus.expects(:publish).at_least_once
-
-      # tests if messages of type :stats are published and the like_count is fetched from the topic
-      MessageBus.expects(:publish).once.with do |channel, message, _|
-        channel == "/topic/#{topic.id}" &&
-          message[:type] == :stats &&
-          message[:like_count] == 1
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostActionCreator.new(user, post, like_type_id).perform
       end
 
-      PostActionCreator.new(user, post, like_type_id).perform
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:like_count]).to eq(1)
     end
 
     it 'does not create an invalid post action' do

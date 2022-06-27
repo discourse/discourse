@@ -3061,19 +3061,14 @@ describe Topic do
     fab!(:like1) { Fabricate(:like, post: post1, user: user2) }
 
     it "it is triggered when a post publishes a message of type :liked or :unliked" do
-      freeze_time Date.today
-
       [:liked, :unliked].each do |action|
-        MessageBus.expects(:publish).at_least_once
-
-        # tests if messages of type :stats are published and the like_count is fetched from the topic
-        MessageBus.expects(:publish).once.with do |channel, message, _|
-          channel == "/topic/#{topic.id}" &&
-            message[:type] == :stats &&
-            message[:like_count] == topic.like_count
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
         end
 
-        post1.publish_change_to_clients!(action)
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:like_count]).to eq(topic.like_count)
       end
     end
 
@@ -3081,34 +3076,26 @@ describe Topic do
       freeze_time Date.today
 
       [:created, :destroyed, :deleted, :recovered].each do |action|
-        MessageBus.expects(:publish).at_least_once
-
-        # tests if messages of type :stats are published and the relevant data is fetched from the topic
-        MessageBus.expects(:publish).once.with do |channel, message, _|
-          channel == "/topic/#{topic.id}" &&
-            message[:type] == :stats &&
-            message[:posts_count] == topic.posts_count &&
-            message[:last_posted_at] == topic.last_posted_at &&
-            message[:last_poster] == BasicUserSerializer.new(topic.last_poster, root: false).as_json
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
         end
 
-        post1.publish_change_to_clients!(action)
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:posts_count]).to eq(topic.posts_count)
+        expect(stats_message.data[:last_posted_at]).to eq(topic.last_posted_at.as_json)
+        expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(topic.last_poster, root: false).as_json)
       end
     end
 
     it "it is not triggered when a post publishes an unhandled kind of message" do
-      freeze_time Date.today
-
       [:unhandled, :unknown, :dont_care].each do |action|
-        MessageBus.expects(:publish).at_least_once
-
-        # ensure that stats message are not sent
-        MessageBus.expects(:publish).never.with do |channel, message, _|
-          channel == "/topic/#{topic.id}" &&
-            message[:type] == :stats
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
         end
 
-        post1.publish_change_to_clients!(action)
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_blank
       end
     end
   end
