@@ -41,7 +41,7 @@
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-cli": "~3.25.3",
-    "ember-cli-app-version": "^4.0.0",
+    "ember-cli-app-version": "^5.0.0",
     "ember-cli-babel": "^7.23.1",
     "ember-cli-dependency-checker": "^3.3.1",
     "ember-cli-htmlbars": "^6.0.1",
