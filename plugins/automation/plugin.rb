@@ -39,7 +39,7 @@ def handle_post_created_edited(post, action)
 end
 
 def handle_after_post_cook(post, cooked)
-  return cooked if post.post_type != Post.types[:regular] || post.user_id < 0 || post.post_number > 1
+  return cooked if post.post_type != Post.types[:regular] || post.post_number > 1
 
   name = DiscourseAutomation::Triggerable::AFTER_POST_COOK
 
