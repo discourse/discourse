@@ -56,7 +56,7 @@
     "ember-source": "~3.15.0",
     "ember-test-selectors": "^6.0.0",
     "eslint": "^7.27.0",
-    "html-entities": "^2.1.0",
+    "html-entities": "^2.3.3",
     "js-yaml": "^4.1.0",
     "jsdom": "^18.1.1",
     "loader.js": "^4.7.0",
