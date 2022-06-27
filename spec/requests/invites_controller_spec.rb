@@ -1026,12 +1026,15 @@ describe InvitesController do
   end
 
   context '#resend_all_invites' do
-    it 'resends all non-redeemed invites by a user' do
-      SiteSetting.invite_expiry_days = 30
+    let(:admin) { Fabricate(:admin) }
 
+    before do
+      SiteSetting.invite_expiry_days = 30
+    end
+
+    it 'resends all non-redeemed invites by a user' do
       freeze_time
 
-      admin = Fabricate(:admin)
       new_invite = Fabricate(:invite, invited_by: admin)
       expired_invite = Fabricate(:invite, invited_by: admin)
       expired_invite.update!(expires_at: 2.days.ago)
@@ -1046,6 +1049,17 @@ describe InvitesController do
       expect(new_invite.reload.expires_at).to eq_time(30.days.from_now)
       expect(expired_invite.reload.expires_at).to eq_time(2.days.ago)
       expect(redeemed_invite.reload.expires_at).to eq_time(5.days.ago)
+    end
+
+    it 'errors if admins try to exceed limit of one bulk invite per day' do
+      RateLimiter.enable
+      sign_in(admin)
+
+      post '/invites/reinvite-all'
+      expect(response.status).to eq(200)
+
+      post '/invites/reinvite-all'
+      expect(response.parsed_body['errors'][0]).to eq(I18n.t("rate_limiter.slow_down"))
     end
   end
 
@@ -1074,15 +1088,6 @@ describe InvitesController do
         sign_in(admin)
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
         expect(response.status).to eq(200)
-        expect(Jobs::BulkInvite.jobs.size).to eq(1)
-      end
-
-      it 'limits admins when bulk inviting' do
-        sign_in(admin)
-        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
-        expect(response.status).to eq(200)
-        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
-        expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
 
