@@ -9,6 +9,7 @@ const { promises: fs } = require("fs");
 const { JSDOM } = require("jsdom");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 const { Buffer } = require("node:buffer");
+const { cwd, env } = require("node:process");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -203,7 +204,7 @@ async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
 async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
   try {
     const template = await fs.readFile(
-      path.join(process.cwd(), "dist", "index.html"),
+      path.join(cwd(), "dist", "index.html"),
       "utf8"
     );
 
@@ -224,20 +225,20 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
 async function handleRequest(proxy, baseURL, req, res) {
   // x-forwarded-host is used in e.g. GitHub CodeSpaces
   const originalHost = req.headers["x-forwarded-host"] || req.headers.host;
-  req.headers.host = originalHost;
+
+  req.headers.host =
+    env["FORWARD_HOST"] === "true" ? originalHost : new URL(proxy).host;
 
   if (req.headers["Origin"]) {
-    req.headers["Origin"] = req.headers["Origin"].replace(
-      req.headers.host,
-      originalHost
-    );
+    req.headers["Origin"] = req.headers["Origin"]
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
   }
 
   if (req.headers["Referer"]) {
-    req.headers["Referer"] = req.headers["Referer"].replace(
-      req.headers.host,
-      originalHost
-    );
+    req.headers["Referer"] = req.headers["Referer"]
+      .replace(req.headers.host, originalHost)
+      .replace(/^https/, "http");
   }
 
   let url = `${proxy}${req.path}`;
@@ -262,6 +263,12 @@ async function handleRequest(proxy, baseURL, req, res) {
   });
   res.set("content-encoding", null);
 
+  const location = response.headers.get("location");
+  if (location) {
+    const newLocation = location.replace(proxy, `http://${originalHost}`);
+    res.set("location", newLocation);
+  }
+
   const csp = response.headers.get("content-security-policy");
   if (csp) {
     const emberCliAdditions = [
@@ -269,10 +276,12 @@ async function handleRequest(proxy, baseURL, req, res) {
       `http://${originalHost}/ember-cli-live-reload.js`,
       `http://${originalHost}/_lr/`,
     ];
-    const newCSP = csp.replace(
-      new RegExp("script-src ", "g"),
-      `script-src ${emberCliAdditions.join(" ")} `
-    );
+    const newCSP = csp
+      .replace(new RegExp(proxy, "g"), `http://${originalHost}`)
+      .replace(
+        new RegExp("script-src ", "g"),
+        `script-src ${emberCliAdditions.join(" ")} `
+      );
     res.set("content-security-policy", newCSP);
   }
 
@@ -343,6 +352,9 @@ to serve API requests. For example:
       try {
         if (this.shouldForwardRequest(req)) {
           await handleRequest(proxy, baseURL, req, res);
+        } else {
+          // Fixes issues when using e.g. "localhost" instead of loopback IP address
+          req.headers.host = "127.0.0.1";
         }
       } catch (error) {
         res.send(`
@@ -360,10 +372,22 @@ to serve API requests. For example:
   },
 
   shouldForwardRequest(request) {
-    return ![
-      "/tests/index.html",
-      "/ember-cli-live-reload.js",
-      "/testem.js",
-    ].includes(request.path);
+    if (
+      ["/tests/index.html", "/ember-cli-live-reload.js", "/testem.js"].includes(
+        request.path
+      )
+    ) {
+      return false;
+    }
+
+    if (request.path.startsWith("/assets/")) {
+      return false;
+    }
+
+    if (request.path.startsWith("/_lr/")) {
+      return false;
+    }
+
+    return true;
   },
 };
