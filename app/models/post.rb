@@ -198,8 +198,7 @@ class Post < ActiveRecord::Base
     # but message is safe to skip
     return unless topic
 
-    skip_topic_stats = opts[:skip_topic_stats]
-    opts.except!(:skip_topic_stats)
+    skip_topic_stats = opts.delete(:skip_topic_stats)
 
     message = {
       id: id,
