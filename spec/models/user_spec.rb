@@ -2672,7 +2672,7 @@ RSpec.describe User do
       expect(whisperer.whisperer?).to eq(false)
       expect(user.whisperer?).to eq(false)
 
-      whisperer.groups << group
+      group.add(whisperer)
 
       expect(whisperer.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
