@@ -391,10 +391,6 @@ to serve API requests. For example:
       return false;
     }
 
-    if (request.path.startsWith("/assets/")) {
-      return false;
-    }
-
     if (request.path.startsWith("/_lr/")) {
       return false;
     }
