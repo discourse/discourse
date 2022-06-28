@@ -1983,7 +1983,7 @@ it:
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
       title: "Oppure premi %{modifier}Invio"
-      users_placeholder: "Aggiunti un utente"
+      users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "perché stai scrivendo?"
@@ -3357,6 +3357,7 @@ it:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
       readonly: "Visualizza"
+    preloader_text: "Caricamento"
     lightbox:
       download: "scarica"
       open: "immagine originale"
@@ -3687,7 +3688,9 @@ it:
             inbox: "Posta in arrivo"
             sent: "Inviati"
             new: "Nuovi"
+            new_with_count: "Nuovo (%{count})"
             unread: "Non letti"
+            unread_with_count: "Non letto (%{count})"
             archive: "Archiviati"
         tags:
           no_tracked_tags: "Non stai seguendo alcuna etichetteta."

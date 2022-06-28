@@ -2100,6 +2100,7 @@ sv:
     use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
+    splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -3434,6 +3435,7 @@ sv:
     suspicious_login:
       title: "Ny inloggningsvarning"
       subject_template: "[%{site_name}] Ny inloggning från %{location}"
+      text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n- Plats: %{location} (%{client_ip})\n- Webbläsare: %{browser}\n- Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/security) samt överväga att ändra ditt lösenord.\n"
     post_approved:
       title: "Ditt inlägg godkändes"
       subject_template: "[%{site_name}] Ditt inlägg godkändes"

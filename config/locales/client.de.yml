@@ -2003,7 +2003,7 @@ de:
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
       title: "Oder drücke %{modifier} Eingabetaste"
-      users_placeholder: "Benutzer hinzufügen"
+      users_placeholder: "Benutzer oder Gruppen hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
@@ -3390,6 +3390,7 @@ de:
       full: "Erstellen/Antworten/Ansehen"
       create_post: "Antworten/Ansehen"
       readonly: "Ansehen"
+    preloader_text: "Wird geladen"
     lightbox:
       download: "herunterladen"
       open: "Originalbild"
@@ -3727,7 +3728,9 @@ de:
             inbox: "Posteingang"
             sent: "Gesendet"
             new: "Neu"
+            new_with_count: "Neu (%{count})"
             unread: "Ungelesen"
+            unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
           no_tracked_tags: "Du verfolgst keine Schlagwörter (tags)."

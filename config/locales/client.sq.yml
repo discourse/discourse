@@ -1032,7 +1032,6 @@ sq:
       cancel: "Anulo"
       create_topic: "Krijo temën"
       create_pm: "Mesazh"
-      users_placeholder: "Shto një anëtar"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
@@ -1772,6 +1771,7 @@ sq:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
       readonly: "Shiko"
+    preloader_text: "Loading"
     lightbox:
       download: "shkarko"
       counter: "%curr% nga %total%"
@@ -1936,7 +1936,9 @@ sq:
             inbox: "Inbox"
             sent: "Të dërguara"
             new: "Të reja"
+            new_with_count: "Të reja (%{count})"
             unread: "Të palexuara"
+            unread_with_count: "Të palexuara (%{count})"
             archive: "Arkivi"
         tags:
           header_link_title: "të gjitha etiketat"

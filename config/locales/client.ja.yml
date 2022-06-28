@@ -1875,7 +1875,6 @@ ja:
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
       title: "または %{modifier}Enter キーを押します"
-      users_placeholder: "ユーザーを追加"
       title_placeholder: "トピックのタイトルを入力してください"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
       edit_reason_placeholder: "編集する理由は？"
@@ -3109,6 +3108,7 @@ ja:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
       readonly: "閲覧"
+    preloader_text: "読み込み中"
     lightbox:
       download: "ダウンロード"
       previous: "前へ (左矢印キー)"
@@ -3402,7 +3402,9 @@ ja:
             inbox: "受信トレイ"
             sent: "送信済み"
             new: "新規"
+            new_with_count: "新規 (%{count})"
             unread: "未読"
+            unread_with_count: "未読 (%{count})"
             archive: "アーカイブ"
         tags:
           header_link_title: "すべてのタグ"

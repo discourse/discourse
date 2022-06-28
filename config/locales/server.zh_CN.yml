@@ -564,6 +564,7 @@ zh_CN:
               too_many: "该操作的关注词过多"
             base:
               invalid_url: "替换 URL 无效"
+              invalid_tag_list: "替换标签名单无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -2068,6 +2069,7 @@ zh_CN:
     use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名字的建议。请注意，这使得公众更容易猜到完整的用户电子邮件地址(因为很大一部分人共享共同的服务，如`gmail.com')。"
     use_name_for_username_suggestions: "在建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末(周六和周日) (如果你仅在工作日，周一至周五使用 Discourse，请禁用此选项)。"
+    splash_screen: "在加载站点资产时显示临时负载屏幕"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"

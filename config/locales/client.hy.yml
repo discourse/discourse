@@ -1535,7 +1535,6 @@ hy:
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
-      users_placeholder: "Ավելացնել օգտատեր"
       title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
@@ -2632,6 +2631,7 @@ hy:
       full: "Ստեղծել/Պատասխանել/Դիտել"
       create_post: "Պատասխանել/Դիտել"
       readonly: "Դիտել"
+    preloader_text: "Բեռնում"
     lightbox:
       download: "ներբեռնել"
       previous: "Նախորդ (սլաքի Ձախ ստեղնը)"
@@ -2877,7 +2877,9 @@ hy:
             inbox: "Մուտքի արկղ"
             sent: "Ուղարկված"
             new: "Նոր"
+            new_with_count: "Նոր (%{count})"
             unread: "Չկարդացած"
+            unread_with_count: "Չկարդացած (%{count})"
             archive: "Արխիվ"
         tags:
           header_link_title: "բոլոր թեգերը"

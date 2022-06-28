@@ -1896,7 +1896,6 @@ fi:
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
-      users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
@@ -3178,6 +3177,7 @@ fi:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
       readonly: "Nähdä"
+    preloader_text: "Ladataan"
     lightbox:
       download: "lataa"
       previous: "Edellinen (vasen nuolinäppäin)"
@@ -3467,7 +3467,9 @@ fi:
             inbox: "Postilaatikko"
             sent: "Lähetetyt"
             new: "Uudet"
+            new_with_count: "Uudet (%{count})"
             unread: "Lukemattomat"
+            unread_with_count: "Lukematta (%{count})"
             archive: "Arkisto"
         tags:
           header_link_title: "kaikki tunnisteet"

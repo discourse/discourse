@@ -1980,7 +1980,6 @@ hu:
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
       title: "Vagy nyomjon %{modifier}Entert"
-      users_placeholder: "Felhasználó hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
       edit_reason_placeholder: "miért szerkeszt?"
@@ -3106,6 +3105,7 @@ hu:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
       readonly: "Megtekintés"
+    preloader_text: "Betöltés"
     lightbox:
       download: "letöltés"
       counter: "%curr% / %total%"
@@ -3305,7 +3305,9 @@ hu:
             inbox: "Beérkezett üzenetek"
             sent: "Elküldött"
             new: "Új"
+            new_with_count: "Új (%{count})"
             unread: "Olvasatlan"
+            unread_with_count: "Olvasatlan (%{count})"
             archive: "Archívum"
         tags:
           header_link_title: "összes címke"

@@ -1867,7 +1867,6 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
-      users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "hvorfor endrer du?"
@@ -3133,6 +3132,7 @@ nb_NO:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
       readonly: "Se"
+    preloader_text: "Laster"
     lightbox:
       download: "last ned"
       previous: "Forrige (Venstre pil-nøkkel)"
@@ -3425,7 +3425,9 @@ nb_NO:
             inbox: "Innboks"
             sent: "Sendt"
             new: "Nye"
+            new_with_count: "Nye (%{count})"
             unread: "Uleste"
+            unread_with_count: "Ulest (%{count})"
             archive: "Arkiver"
         tags:
           header_link_title: "alle stikkord"

@@ -1891,7 +1891,6 @@ vi:
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
       title: "Hoặc nhấn %{modifier}Enter"
-      users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
@@ -3163,6 +3162,7 @@ vi:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
       readonly: "Xem"
+    preloader_text: "Đang tải"
     lightbox:
       download: "tải về"
       open: "ảnh gốc"
@@ -3462,7 +3462,9 @@ vi:
             inbox: "Hộp thư"
             sent: "Đã gửi"
             new: "Mới"
+            new_with_count: "Mới (%{count})"
             unread: "Chưa đọc"
+            unread_with_count: "Chưa đọc (%{count})"
             archive: "Lưu Trữ"
         tags:
           header_link_title: "tất cả thẻ"

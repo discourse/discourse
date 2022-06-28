@@ -48,6 +48,14 @@ elsif Rails.configuration.multisite
   if defined?(RailsFailover::ActiveRecord) && Rails.configuration.active_record_rails_failover
     Rails.configuration.middleware.insert_after(RailsMultisite::Middleware, RailsFailover::ActiveRecord::Middleware)
   end
+
+  if Rails.env.development?
+    # Automatically allow development multisite hosts
+    RailsMultisite::ConnectionManagement.instance.db_spec_cache.each do |db, specification|
+      next if db == "default"
+      Rails.configuration.hosts.concat(specification.spec.configuration_hash[:host_names])
+    end
+  end
 elsif defined?(RailsFailover::ActiveRecord) && Rails.configuration.active_record_rails_failover
   Rails.configuration.middleware.insert_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
 end

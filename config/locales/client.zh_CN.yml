@@ -1915,7 +1915,6 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
-      users_placeholder: "添加用户"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "编辑原因"
@@ -3233,6 +3232,7 @@ zh_CN:
       full: "创建/回复/查看"
       create_post: "回复/查看"
       readonly: "查看"
+    preloader_text: "正在加载"
     lightbox:
       download: "下载"
       open: "原始图像"
@@ -3557,7 +3557,9 @@ zh_CN:
             inbox: "收件箱"
             sent: "已发送"
             new: "新"
+            new_with_count: "新消息 (%{count})"
             unread: "未读"
+            unread_with_count: "未读 (%{count})"
             archive: "归档"
         tags:
           no_tracked_tags: "你没有跟踪任何标签。"

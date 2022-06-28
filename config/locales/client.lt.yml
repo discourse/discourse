@@ -1876,7 +1876,6 @@ lt:
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
       title: "Arba paspauskite %{modifier}Enter"
-      users_placeholder: "Pridėti vartotoją"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "kodėl jūs redaguojate?"
@@ -3193,6 +3192,7 @@ lt:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
       readonly: "Peržiūrėti"
+    preloader_text: "Kraunama"
     lightbox:
       download: "atsisiųsti"
       open: "originalus vaizdas"
@@ -3489,7 +3489,9 @@ lt:
             inbox: "Pranešimų dežutė"
             sent: "Išsiųsti"
             new: "Naujos"
+            new_with_count: "Naujas (%{count})"
             unread: "Neperskaitytos"
+            unread_with_count: "Neperskaitytas (%{count})"
             archive: "Archyvuoti"
         tags:
           header_link_title: "visos žymos"

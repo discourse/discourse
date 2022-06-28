@@ -331,7 +331,7 @@ tr_TR:
       new_private_message: "Yeni kişisel ileti taslağı"
       topic_reply: "Yanıt taslağı"
       abandon:
-        confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
+        confirm: "Bu konu için süren bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "At"
         no_value: "Düzenlemeyi sürdür"
     topic_count_categories:
@@ -1966,7 +1966,6 @@ tr_TR:
       create_shared_draft: "Paylaşılmış taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
       title: "Veya %{modifier}Enter tuşuna basın"
-      users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya bir konu gir veya bir bağlantı paylaş"
       edit_reason_placeholder: "neden düzenleme yapıyorsun?"
@@ -3345,6 +3344,7 @@ tr_TR:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
       readonly: "Bak"
+    preloader_text: "Yükleniyor"
     lightbox:
       download: "indir"
       open: "orijinal imaj"
@@ -3670,7 +3670,9 @@ tr_TR:
             inbox: "Gelen Kutusu"
             sent: "Gönderilen"
             new: "Yeni"
+            new_with_count: "Yeni (%{count})"
             unread: "Okunmamış"
+            unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
           no_tracked_tags: "Herhangi bir etiketi takip etmiyorsunuz."
@@ -5236,7 +5238,7 @@ tr_TR:
         roles:
           admin: "Yönetici"
           moderator: "Moderatör"
-          regular: "Devamlı Kullanıcı"
+          regular: "Sürekli Kullanıcı"
       previews:
         topic_title: "Bir tartışma konusu başlığı"
         share_button: "Paylaş"

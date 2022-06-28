@@ -2175,7 +2175,7 @@ pl_PL:
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
       title: "Lub naciśnij %{modifier}Enter"
-      users_placeholder: "Dodaj osobę"
+      users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Wprowadź tytuł, lub wklej tutaj link"
       edit_reason_placeholder: "powód edycji?"
@@ -3692,6 +3692,7 @@ pl_PL:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
       readonly: "przeglądać"
+    preloader_text: "Ładowanie"
     lightbox:
       download: "pobierz"
       open: "oryginalny obraz"
@@ -4047,12 +4048,16 @@ pl_PL:
       new_count: "%{count} nowy"
       sections:
         messages:
+          header_link_title: "osobiste wiadomości"
           header_link_text: "Wiadomości"
+          header_action_title: "utwórz osobistą wiadomość"
           links:
             inbox: "Skrzynka odbiorcza"
             sent: "Wysłane"
             new: "Nowe"
+            new_with_count: "Nowe (%{count})"
             unread: "Nieprzeczytane"
+            unread_with_count: "Nieprzeczytane (%{count})"
             archive: "Archiwum"
         tags:
           no_tracked_tags: "Nie śledzisz żadnych tagów."

@@ -1609,7 +1609,6 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
-      users_placeholder: "Afegeix un usuari"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "per què ho editeu?"
@@ -2672,6 +2671,7 @@ ca:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
       readonly: "Mira"
+    preloader_text: "Carregant"
     lightbox:
       download: "descarrega"
       previous: "Anterior (tecla de fletxa esquerra)"
@@ -2888,7 +2888,9 @@ ca:
             inbox: "Safata d'entrada"
             sent: "Enviat"
             new: "Nous"
+            new_with_count: "Nou (%{count})"
             unread: "No llegits"
+            unread_with_count: "No llegit (%{count})"
             archive: "Arxiva"
         tags:
           header_link_title: "totes les etiquetes"
