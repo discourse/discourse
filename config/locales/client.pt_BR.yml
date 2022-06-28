@@ -1956,7 +1956,6 @@ pt_BR:
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
       title: "Ou aperte %{modifier}Enter"
-      users_placeholder: "Adicionar um usuário"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "por que você está editando?"
@@ -3305,6 +3304,7 @@ pt_BR:
       full: "Criar/Responder/Ver"
       create_post: "Responder/Ver"
       readonly: "Ver"
+    preloader_text: "Carregando"
     lightbox:
       download: "download"
       previous: "Anterior (seta para a esquerda)"
@@ -3627,7 +3627,9 @@ pt_BR:
             inbox: "Caixa de entrada"
             sent: "Enviadas"
             new: "Novo"
+            new_with_count: "Novo (%{count})"
             unread: "Não lidos(as)"
+            unread_with_count: "Não lido (%{count})"
             archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"

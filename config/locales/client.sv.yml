@@ -2003,7 +2003,6 @@ sv:
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
       title: "Eller tryck på %{modifier}Enter"
-      users_placeholder: "Lägg till en användare"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "varför redigerar du?"
@@ -3390,6 +3389,7 @@ sv:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
       readonly: "Se"
+    preloader_text: "Laddar"
     lightbox:
       download: "ladda ned"
       open: "originalbild"
@@ -3474,6 +3474,7 @@ sv:
         edit: "%{shortcut} Redigera inlägg"
         delete: "%{shortcut} Radera inlägg"
         mark_muted: "%{shortcut} Tysta ämne"
+        mark_regular: "%{shortcut} Normalt (standard) ämne"
         mark_tracking: "%{shortcut} Följ ämne"
         mark_watching: "%{shortcut} Bevaka ämne"
         print: "%{shortcut} Skriv ut ämne"
@@ -3726,7 +3727,9 @@ sv:
             inbox: "Inkorg"
             sent: "Skickat"
             new: "Nya"
+            new_with_count: "Ny (%{count})"
             unread: "Olästa"
+            unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
           no_tracked_tags: "Du följer inga taggar."

@@ -1690,7 +1690,6 @@ bs_BA:
       create_whisper: "Šapat"
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
-      users_placeholder: "Dodaj člana"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "zašto pravite izmjenu?"
@@ -2804,6 +2803,7 @@ bs_BA:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
+    preloader_text: "Učitava"
     lightbox:
       download: "skini"
       previous: "Prošlo (Tipka sa strelicom lijevo)"
@@ -3071,7 +3071,9 @@ bs_BA:
             inbox: "Inbox"
             sent: "Poslano"
             new: "Novo"
+            new_with_count: "Novo (%{count})"
             unread: "Nepročitano"
+            unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
           header_link_title: "sve oznake"

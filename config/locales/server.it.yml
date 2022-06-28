@@ -587,6 +587,7 @@ it:
               too_many: "Troppe parole per quest'azione"
             base:
               invalid_url: "L'URL sostitutivo non è valido"
+              invalid_tag_list: "L'elenco delle etichette sostitutive non è valido"
       <<: *errors
   uncategorized_category_name: "Senza categoria"
   vip_category_name: "Salotto"
@@ -2104,6 +2105,7 @@ it:
     allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
     use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
+    splash_screen: "Visualizza una schermata di caricamento temporanea durante il caricamento delle risorse del sito"
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."

@@ -578,6 +578,7 @@ tr_TR:
               too_many: "Bu işlem için çok fazla sözcük var"
             base:
               invalid_url: "Yeni URL geçersiz"
+              invalid_tag_list: "Yedek etiket listesi geçersiz"
       <<: *errors
   uncategorized_category_name: "Kategorize"
   vip_category_name: "Lobi"
