@@ -1,3 +1,7 @@
+:root {
+  --d-sidebar-width: 240px;
+}
+
 .header-sidebar-toggle {
   margin-right: 1em;
   margin-left: -10px;
@@ -49,10 +53,16 @@
     text-transform: uppercase;
     font-size: 1em;
     font-weight: bold;
-    align-items: center;
+    align-items: stretch;
   }
 
   .sidebar-section-header-link {
+    @include ellipsis;
+    flex: 1 1 auto;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    padding: 0.25em 0.5em;
+
     &:visited {
       color: var(--primary);
     }
@@ -60,11 +70,6 @@
     &:hover {
       background: var(--primary-low);
     }
-
-    flex: 1 1 auto;
-    color: var(--primary);
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
   }
 
   .sidebar-section-header-button {
@@ -142,17 +147,25 @@
   }
 
   .sidebar-section-header-caret {
+    flex: 0 0 auto;
     width: 1.5em;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    align-items: center;
     border: none;
-    background-color: transparent;
+    background: transparent;
+    padding: 0.25em 0;
+    opacity: 0;
+    transition: opacity 0.25s;
 
     &:hover {
       opacity: 100;
     }
 
-    opacity: 0;
+    svg {
+      display: block;
+      flex: 0 0 auto;
+    }
 
     .d-icon {
       font-size: $font-down-1;
