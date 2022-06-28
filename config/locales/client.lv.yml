@@ -1729,7 +1729,6 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       create_pm: "Ziņa"
-      users_placeholder: "Pievienot lietotāju"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
@@ -2643,6 +2642,7 @@ lv:
       full: "Izveidot / Atbildēt / Skatīt"
       create_post: "Atbildēt / Skatīt"
       readonly: "Skatīt"
+    preloader_text: "Ielāde"
     lightbox:
       download: "lejuplādēt"
       counter: "%curr% no %total%"
@@ -2810,7 +2810,9 @@ lv:
             inbox: "Iesūtne"
             sent: "Nosūtne"
             new: "Jaunie"
+            new_with_count: "Jauns (%{count})"
             unread: "Nelasīts"
+            unread_with_count: "Nelasīts (%{count})"
             archive: "Arhīvs"
         tags:
           header_link_title: "visi tagi"

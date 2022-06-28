@@ -1421,7 +1421,6 @@ id:
       create_pm: "Pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
-      users_placeholder: "Tambahkan pengguna"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "mengapa Anda menyunting?"
@@ -1725,6 +1724,7 @@ id:
         all:
           title: "Sepanjang Waktu"
         all_time: "Sepanjang Waktu"
+    preloader_text: "Memuat"
     lightbox:
       download: "unduh"
     keyboard_shortcuts_help:
@@ -1794,6 +1794,7 @@ id:
             inbox: "Kotak masuk"
             sent: "Mengirim"
             new: "Baru"
+            new_with_count: "Baru (%{count})"
             unread: "Belum dibaca"
             archive: "Arsip"
         tags:

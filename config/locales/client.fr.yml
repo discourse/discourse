@@ -2002,7 +2002,6 @@ fr:
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
       title: "Ou appuyez sur %{modifier}Entrée"
-      users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
@@ -3388,6 +3387,7 @@ fr:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
       readonly: "Voir"
+    preloader_text: "Chargement"
     lightbox:
       download: "télécharger"
       open: "image originale"
@@ -3722,7 +3722,9 @@ fr:
             inbox: "Boîte de réception"
             sent: "Envoyés"
             new: "Nouveau"
+            new_with_count: "Nouveau (%{count})"
             unread: "Non lues"
+            unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
           header_link_title: "toutes les étiquettes"

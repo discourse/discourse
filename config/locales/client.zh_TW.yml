@@ -1607,7 +1607,6 @@ zh_TW:
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
-      users_placeholder: "新增使用者"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
@@ -2602,6 +2601,7 @@ zh_TW:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
       readonly: "觀看"
+    preloader_text: "載入中"
     lightbox:
       download: "下載"
       previous: "上一個（左箭頭鍵）"
@@ -2809,7 +2809,9 @@ zh_TW:
             inbox: "收件匣"
             sent: "送出"
             new: "新的"
+            new_with_count: "近期 (%{count})"
             unread: "未讀"
+            unread_with_count: "未讀 (%{count})"
             archive: "封存"
         tags:
           header_link_title: "所有標籤"

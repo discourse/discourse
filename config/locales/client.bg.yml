@@ -1840,7 +1840,6 @@ bg:
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
       title: "Или натиснете %{modifier}Enter"
-      users_placeholder: "Добави потребител"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "защо редактирате ?"
@@ -2840,6 +2839,7 @@ bg:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"
       readonly: "Виж"
+    preloader_text: "Зареждане"
     lightbox:
       download: "изтегли"
       previous: "Назад (стрелка наляво)"
@@ -2993,7 +2993,9 @@ bg:
             inbox: "Кутия"
             sent: "Изпратени"
             new: "Нов"
+            new_with_count: "Нов (%{count})"
             unread: "Непрочетени"
+            unread_with_count: "Непрочетен (%{count})"
             archive: "Архив"
         tags:
           header_link_title: "всички тагове"

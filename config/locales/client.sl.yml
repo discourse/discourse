@@ -1840,7 +1840,6 @@ sl:
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
-      users_placeholder: "Dodaj uporabnika"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "zakaj spreminjate prispevek?"
@@ -3091,6 +3090,7 @@ sl:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
+    preloader_text: "Nalagam"
     lightbox:
       download: "prenesi"
       previous: "Predhodna (leva puščična tipka)"
@@ -3379,7 +3379,9 @@ sl:
             inbox: "Prejeto"
             sent: "Poslano"
             new: "Nove"
+            new_with_count: "Nova (%{count})"
             unread: "Neprebrane"
+            unread_with_count: "Neprebrana (%{count})"
             archive: "Arhiv"
         tags:
           header_link_title: "vse oznake"
