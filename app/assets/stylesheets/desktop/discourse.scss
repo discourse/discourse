@@ -191,13 +191,13 @@ input {
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
 
-  &.has-sidebar {
-    grid-template-areas: "sidebar content";
-    grid-template-columns: 240px 1fr;
-    gap: 0 2em;
-  }
-
   #main-outlet {
     grid-area: content;
   }
+}
+
+body.has-sidebar-page #main-outlet-wrapper {
+  grid-template-areas: "sidebar content";
+  grid-template-columns: 240px 1fr;
+  gap: 0 2em;
 }
