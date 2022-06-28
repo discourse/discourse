@@ -130,6 +130,14 @@ he:
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: דרגות אמון תקפות
+              description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+            restricted_category:
+              label: קטגוריה
+              description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
       scriptables:
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:

@@ -80,6 +80,10 @@ fa_IR:
           fields:
             restricted_category:
               label: دسته‌بندی
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: دسته‌بندی
       scriptables:
         user_global_notice:
           fields:

@@ -29,6 +29,9 @@ he:
         title: פוסט נוצר/נערך
       topic:
         title: נושא
+      after_post_cook:
+        title: אחרי בישול פוסט
+        description: כאשר תוכן פוסט מבושל האוטומציה תופעל
     scriptables:
       flag_post_on_words:
         title: סימון פוסט בדגל על המילים
@@ -50,3 +53,7 @@ he:
       close_topic:
         title: סגירת נושא
         description: סגירת הנושא עם הודעת סגירה כרשות
+      append_last_edited_by:
+        title: הוספת נערך לאחרונה על ידי
+        description: מוסיף את פרטי העריכה האחרונה של הפוסט לתחתית התוכן המבושל.
+        text: "> נערך לאחרונה על ידי %{username} %{date_time}"

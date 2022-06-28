@@ -128,6 +128,14 @@ es:
             restricted_category:
               label: Categoría
               description: Opcional, permite limitar la ejecución del activador a esta categoría
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Niveles de confianza válidos
+              description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+            restricted_category:
+              label: Categoría
+              description: Opcional, permite limitar la ejecución del activador a esta categoría
       scriptables:
         zapier_webhook:
           fields:
