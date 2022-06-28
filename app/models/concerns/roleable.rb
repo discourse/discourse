@@ -22,9 +22,10 @@ module Roleable
     @whisperer ||= begin
       return false if !SiteSetting.enable_whispers?
       return true if staff?
-      return false if SiteSetting.whispers_allowed_groups.blank?
-      return true if SiteSetting.whispers_allowed_group_ids.include?(primary_group_id)
-      group_users&.exists?(group_id: SiteSetting.whispers_allowed_group_ids)
+      whispers_allowed_group_ids = SiteSetting.whispers_allowed_group_ids
+      return false if whispers_allowed_group_ids.blank?
+      return true if whispers_allowed_group_ids.include?(primary_group_id)
+      group_users&.exists?(group_id: whispers_allowed_group_ids)
     end
   end
 
