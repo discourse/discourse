@@ -13,10 +13,6 @@ RSpec.describe TopicView do
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
-  before do
-    SiteSetting.enable_whispers = true
-  end
-
   context "preload" do
     it "allows preloading of data" do
       preloaded_topic_view = nil
@@ -347,6 +343,7 @@ RSpec.describe TopicView do
 
     context '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
+        SiteSetting.enable_whispers = true
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
         # Should not be counted
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
@@ -484,6 +481,7 @@ RSpec.describe TopicView do
 
   context 'whispers' do
     it "handles their visibility properly" do
+      SiteSetting.enable_whispers = true
       p1 = Fabricate(:post, topic: topic, user: evil_trout)
       p2 = Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
       p3 = Fabricate(:post, topic: topic, user: evil_trout)

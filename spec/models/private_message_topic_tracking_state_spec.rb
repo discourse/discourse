@@ -34,10 +34,6 @@ describe PrivateMessageTopicTrackingState do
     ).topic
   end
 
-  before do
-    SiteSetting.enable_whispers = true
-  end
-
   describe '.report' do
     it 'returns the right tracking state' do
       TopicUser.find_by(user: user_2, topic: group_message).update!(
@@ -69,6 +65,7 @@ describe PrivateMessageTopicTrackingState do
     end
 
     it 'returns the right tracking state when topics contain whispers' do
+      SiteSetting.enable_whispers = true
       TopicUser.find_by(user: user_2, topic: private_message).update!(
         last_read_post_number: 1
       )

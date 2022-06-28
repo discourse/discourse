@@ -21,16 +21,13 @@ describe Unread do
                         user_id: user.id)
   end
 
-  before do
-    SiteSetting.enable_whispers = true
-  end
-
   def unread
     Unread.new(topic, topic_user, Guardian.new(user))
   end
 
   describe 'staff counts' do
     it 'should correctly return based on staff post number' do
+      SiteSetting.enable_whispers = true
       user.admin = true
 
       topic_user.last_read_post_number = 13

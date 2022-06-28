@@ -14,11 +14,6 @@ describe Topic do
   fab!(:group) { Fabricate(:group) }
   fab!(:trust_level_2) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
-  before do
-    SiteSetting.enable_whispers = true
-    SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
-  end
-
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -172,6 +167,11 @@ describe Topic do
 
   context '#visible_post_types' do
     let(:types) { Post.types }
+
+    before do
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+    end
 
     it "returns the appropriate types for anonymous users" do
       post_types = Topic.visible_post_types

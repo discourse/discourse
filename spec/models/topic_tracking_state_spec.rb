@@ -13,10 +13,6 @@ describe TopicTrackingState do
   fab!(:private_message_post) { Fabricate(:private_message_post) }
   let(:private_message_topic) { private_message_post.topic }
 
-  before do
-    SiteSetting.enable_whispers = true
-  end
-
   describe '#publish_latest' do
     it 'can correctly publish latest' do
       message = MessageBus.track_publish("/latest") do
@@ -28,6 +24,21 @@ describe TopicTrackingState do
       expect(data["topic_id"]).to eq(topic.id)
       expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    it "publishes whisper post to staff users and members of whisperers group" do
+      whisperers_group = Fabricate(:group)
+      Fabricate(:user, groups: [whisperers_group])
+      Fabricate(:topic_user_watching, topic: topic, user: user)
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+      post.update!(post_type: Post.types[:whisper])
+
+      message = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_latest(post.topic, true)
+      end.first
+
+      expect(message.group_ids).to contain_exactly(whisperers_group.id, Group::AUTO_GROUPS[:staff])
     end
 
     describe 'private message' do
@@ -59,6 +70,7 @@ describe TopicTrackingState do
     end
 
     it 'correctly publish read for staff' do
+      SiteSetting.enable_whispers = true
       create_post(
         raw: "this is a test post",
         topic: post.topic,
@@ -123,7 +135,32 @@ describe TopicTrackingState do
       expect(message.user_ids).to contain_exactly(other_user.id)
     end
 
+    it "publishes whisper post to staff users and members of whisperers group" do
+      whisperers_group = Fabricate(:group)
+      Fabricate(:topic_user_watching, topic: topic, user: user)
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+      post.update!(post_type: Post.types[:whisper])
+
+      messages = MessageBus.track_publish("/unread") do
+        TopicTrackingState.publish_unread(post)
+      end
+
+      expect(messages).to eq([])
+
+      user.groups << whisperers_group
+      other_user.grant_admin!
+
+      message = MessageBus.track_publish("/unread") do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      expect(message.user_ids).to contain_exactly(user.id, other_user.id)
+      expect(message.group_ids).to eq(nil)
+    end
+
     it "does not publish whisper post to non-staff users" do
+      SiteSetting.enable_whispers = true
       post.update!(post_type: Post.types[:whisper])
 
       messages = MessageBus.track_publish("/unread") do
@@ -637,6 +674,7 @@ describe TopicTrackingState do
 
   describe ".report" do
     it "correctly reports topics with staff posts" do
+      SiteSetting.enable_whispers = true
       create_post(
         raw: "this is a test post",
         topic: topic,

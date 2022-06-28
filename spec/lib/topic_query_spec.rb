@@ -20,10 +20,6 @@ describe TopicQuery do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
 
-  before do
-    SiteSetting.enable_whispers = true
-  end
-
   context 'secure category' do
     it "filters categories out correctly" do
       category = Fabricate(:category_with_definition)
@@ -838,6 +834,9 @@ describe TopicQuery do
     end
 
     context 'with whispers' do
+      before do
+        SiteSetting.enable_whispers = true
+      end
 
       it 'correctly shows up in unread for staff' do
 

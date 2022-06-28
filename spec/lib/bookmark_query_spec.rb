@@ -135,8 +135,8 @@ RSpec.describe BookmarkQuery do
           expect(bookmark_query.list_all.count).to eq(3)
         end
       end
-      context "when the user is whisperer" do
-        it "does return the whispered post" do
+      context "when the user is a member of whisperers group" do
+        it "returns the whispered post" do
           SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
           user.update!(groups: [whisperers_group])
           expect(bookmark_query.list_all.count).to eq(3)
