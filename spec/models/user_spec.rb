@@ -2651,7 +2651,7 @@ RSpec.describe User do
       SiteSetting.enable_whispers = true
     end
 
-    it 'admin is whisperer' do
+    it 'returns true for an admin user' do
       admin = Fabricate.create(:admin)
       expect(admin.whisperer?).to eq(true)
     end
