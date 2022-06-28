@@ -783,7 +783,7 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
-  # If a post is deleted we have to update our highest post counters
+  # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
     archetype = Topic.where(id: topic_id).pluck_first(:archetype)
 
@@ -818,7 +818,16 @@ class Topic < ActiveRecord::Base
                 deleted_at IS NULL AND
                 post_type <> 4
                 #{post_type}
-        )
+        ),
+        last_post_user_id = COALESCE((
+          SELECT user_id FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
+                post_type <> 4
+                #{post_type}
+          ORDER BY created_at desc
+          LIMIT 1
+        ), last_post_user_id)
       WHERE id = :topic_id
       RETURNING highest_post_number
     SQL
@@ -1803,6 +1812,49 @@ class Topic < ActiveRecord::Base
 
   def first_smtp_enabled_group
     self.allowed_groups.where(smtp_enabled: true).first
+  end
+
+  def secure_audience_publish_messages
+    target_audience = {}
+
+    if private_message?
+      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
+      target_audience[:user_ids] |= allowed_users.pluck(:id)
+      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+    else
+      target_audience[:group_ids] = secure_group_ids
+    end
+
+    target_audience
+  end
+
+  def self.publish_stats_to_clients!(topic_id, type, opts = {})
+    topic = Topic.find_by(id: topic_id)
+    return unless topic.present?
+
+    case type
+    when :liked, :unliked
+      stats = { like_count: topic.like_count }
+    when :created, :destroyed, :deleted, :recovered
+      stats = { posts_count: topic.posts_count,
+                last_posted_at: topic.last_posted_at.as_json,
+                last_poster: BasicUserSerializer.new(topic.last_poster, root: false).as_json }
+    else
+      stats = nil
+    end
+
+    if stats
+      secure_audience = topic.secure_audience_publish_messages
+
+      if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+        message = stats.merge({
+                                id: topic_id,
+                                updated_at: Time.now,
+                                type: :stats,
+                              })
+        MessageBus.publish("/topic/#{topic_id}", message, opts.merge(secure_audience))
+      end
+    end
   end
 
   private

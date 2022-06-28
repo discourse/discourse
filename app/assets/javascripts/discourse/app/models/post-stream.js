@@ -872,6 +872,17 @@ export default RestModel.extend({
     return resolved;
   },
 
+  triggerChangedTopicStats() {
+    if (this.firstPostNotLoaded) {
+      return Promise.reject();
+    }
+
+    return Promise.resolve().then(() => {
+      const firstPost = this.posts.findBy("post_number", 1);
+      return firstPost.id;
+    });
+  },
+
   postForPostNumber(postNumber) {
     if (!this.hasPosts) {
       return;
