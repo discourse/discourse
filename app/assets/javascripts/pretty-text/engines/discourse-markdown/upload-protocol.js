@@ -7,7 +7,7 @@ function addImage(uploads, token) {
   if (token.attrs) {
     for (let i = 0; i < token.attrs.length; i++) {
       const value = token.attrs[i][1];
-      if (value?.indexOf("upload://") === 0) {
+      if (value?.startsWith("upload://")) {
         uploads.push({ token, srcIndex: i, origSrc: value });
         break;
       }
