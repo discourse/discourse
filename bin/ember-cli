@@ -6,8 +6,8 @@ require 'pathname'
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 HOSTNAME = ENV["DISCOURSE_HOSTNAME"] ||= "127.0.0.1"
-yarn_dir = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
-
+YARN_DIR = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
+CUSTOM_ARGS = ["--try", "--test", "--unicorn", "-u", "--forward-host"]
 PROXY =
   if ARGV.include?("--try")
     "https://try.discourse.org"
@@ -38,19 +38,22 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   puts "#{"--test".cyan} To run the test suite"
   puts "#{"--unicorn, -u".cyan} To run a unicorn server as well"
   puts "The rest of the arguments are passed to ember server per:", ""
-  exec "yarn -s --cwd #{yarn_dir} run ember #{command} --help"
+  exec "yarn -s --cwd #{YARN_DIR} run ember #{command} --help"
 end
 
-args = ["-s", "--cwd", yarn_dir, "run", "ember", command] + ARGV.reject do |a|
-  ["--try", "--test", "--unicorn", "-u"].include?(a)
-end
+args = ["-s", "--cwd", YARN_DIR, "run", "ember", command] + (ARGV - CUSTOM_ARGS)
 
 if !args.include?("test") && !args.include?("--proxy")
   args << "--proxy"
   args << PROXY
 end
 
-exit 1 if !system "yarn -s install --cwd #{yarn_dir}"
+exit 1 if !system "yarn -s install --cwd #{YARN_DIR}"
+
+yarn_env = {}
+if ARGV.include?("--forward-host")
+  yarn_env["FORWARD_HOST"] = "true"
+end
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
   unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
@@ -58,7 +61,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
 
   Thread.new do
     require 'open3'
-    Open3.popen2e("yarn", *args.to_a.flatten) do |i, oe, t|
+    Open3.popen2e(yarn_env, "yarn", *args.to_a.flatten) do |i, oe, t|
       puts "Ember CLI running on PID: #{t.pid}"
       oe.each do |line|
         if line.include?("\e[32m200\e") || line.include?("\e[36m304\e[0m") || line.include?("POST /message-bus")
@@ -77,5 +80,5 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
 
   Process.wait(unicorn_pid)
 else
-  exec "yarn", *args.to_a.flatten
+  exec(yarn_env, "yarn", *args.to_a.flatten)
 end
