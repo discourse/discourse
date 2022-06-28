@@ -52,12 +52,6 @@ end
 
 exit 1 if !system "yarn -s install --cwd #{yarn_dir}"
 
-if !system("node -p 'require(\"crypto\").createHash(\"md4\")'", out: "/dev/null", err: "/dev/null")
-  $stderr << "#{"ERROR".red}: Node 17 with OpenSSL 3 is currently unsupported\n"
-  $stderr << "Please use node LTS (16.x) instead\n"
-  exit 1
-end
-
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
   unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
   unicorn_pid = spawn(unicorn_env, __dir__ + "/unicorn")
