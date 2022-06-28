@@ -26,7 +26,7 @@
     "ember-cli-htmlbars": "^6.0.1",
     "handlebars": "^4.7.0",
     "truth-helpers": "^1.0.0",
-    "webpack": "^5.67.0"
+    "webpack": "^5.73.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
