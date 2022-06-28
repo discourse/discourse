@@ -58,7 +58,7 @@
     "eslint": "^7.27.0",
     "html-entities": "^2.3.3",
     "js-yaml": "^4.1.0",
-    "jsdom": "^18.1.1",
+    "jsdom": "^20.0.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^3.3.0",
     "messageformat": "0.1.5",
