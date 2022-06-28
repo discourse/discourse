@@ -1217,7 +1217,6 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      users_placeholder: "Ongeza mtumiaji"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "kwa nini unahariri?"
@@ -2089,6 +2088,7 @@ sw:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
       readonly: "Angalia"
+    preloader_text: "Inapakuliwa"
     lightbox:
       download: "pakua"
       counter: "%curr% chini ya %total%"
@@ -2260,6 +2260,7 @@ sw:
             sent: "Imetumwa"
             new: "Mpya"
             unread: "Haijasomwa"
+            unread_with_count: "Haijasomwa (%{count})"
             archive: "Hifadhi"
         tags:
           header_link_title: "lebo zote"

@@ -2089,7 +2089,6 @@ hr:
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
       title: "Ili pritisnite %{modifier}Enter"
-      users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "zašto izmjenjujete?"
@@ -3545,6 +3544,7 @@ hr:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
       readonly: "Vidjeti"
+    preloader_text: "Učitavanje"
     lightbox:
       download: "preuzmi"
       open: "izvorna slika"
@@ -3892,7 +3892,9 @@ hr:
             inbox: "Primljeno"
             sent: "Poslano"
             new: "Novo"
+            new_with_count: "Novi (%{count})"
             unread: "Nepročitano"
+            unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
           header_link_title: "sve oznake"

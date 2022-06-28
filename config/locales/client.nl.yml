@@ -1895,7 +1895,6 @@ nl:
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
       title: "Of druk op %{modifier}Enter"
-      users_placeholder: "Een gebruiker toevoegen"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
       edit_reason_placeholder: "vanwaar deze bewerking?"
@@ -3199,6 +3198,7 @@ nl:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
       readonly: "Bekijken"
+    preloader_text: "Laden"
     lightbox:
       download: "downloaden"
       previous: "Vorige (Linkerpijltoets)"
@@ -3495,7 +3495,9 @@ nl:
             inbox: "Inbox"
             sent: "Verzonden"
             new: "Nieuw"
+            new_with_count: "Nieuw (%{count})"
             unread: "Ongelezen"
+            unread_with_count: "Ongelezen (%{count})"
             archive: "Archief"
         tags:
           header_link_title: "alle tags"

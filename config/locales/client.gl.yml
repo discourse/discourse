@@ -1835,7 +1835,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -3086,6 +3085,7 @@ gl:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "Cargando"
     lightbox:
       download: "descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
@@ -3358,7 +3358,9 @@ gl:
             inbox: "Caixa de entrada"
             sent: "Enviadas"
             new: "Novo"
+            new_with_count: "(%{count}) novo"
             unread: "Sen ler"
+            unread_with_count: "(%{count}) pendente de ler"
             archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"

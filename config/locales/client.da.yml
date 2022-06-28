@@ -1934,7 +1934,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      users_placeholder: "Tilføj en bruger"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
@@ -3247,6 +3246,7 @@ da:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
       readonly: "Se"
+    preloader_text: "Indlæser"
     lightbox:
       download: "hent"
       previous: "Forrige (Venstre piletast)"
@@ -3561,7 +3561,9 @@ da:
             inbox: "Indbakke"
             sent: "Sendt"
             new: "Nye"
+            new_with_count: "Nye (%{count})"
             unread: "Ulæste"
+            unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
           header_link_title: "alle mærker"

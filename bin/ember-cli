@@ -50,12 +50,6 @@ end
 
 exit 1 if !system "yarn -s install --cwd #{YARN_DIR}"
 
-if !system("node -p 'require(\"crypto\").createHash(\"md4\")'", out: "/dev/null", err: "/dev/null")
-  $stderr << "#{"ERROR".red}: Node 17+ with OpenSSL 3 is currently unsupported\n"
-  $stderr << "Please use node LTS (16.x) instead\n"
-  exit 1
-end
-
 yarn_env = {}
 if ARGV.include?("--forward-host")
   yarn_env["FORWARD_HOST"] = "true"
