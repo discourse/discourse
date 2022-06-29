@@ -81,15 +81,6 @@ const Discourse = Application.extend({
         initialize: () => withPluginApi(cb.version, cb.code),
       });
     });
-
-    window.addEventListener(
-      "load",
-      () => {
-        // The app booted. Remove the splash screen
-        document.querySelector("#d-splash")?.remove();
-      },
-      { once: true }
-    );
   },
 
   _registerPluginCode(version, code) {
