@@ -37,11 +37,11 @@ class RouteMatcher
 
   def action_allowed?(request)
     return true if actions.nil? # actions are unrestricted
-    path_params = request.path_parameters
 
     # message_bus is not a rails route, special handling
     return true if actions.include?("message_bus") && request.fullpath =~ /^\/message-bus\/.*\/poll/
 
+    path_params = request.path_parameters
     actions.include? "#{path_params[:controller]}##{path_params[:action]}"
   end
 

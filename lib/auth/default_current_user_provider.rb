@@ -412,6 +412,14 @@ class Auth::DefaultCurrentUserProvider
   # However, in some scenarios it is essential to send them via url parameters
   # so we need to add some exceptions
   def api_parameter_allowed?
+    if @env[ActionDispatch::Http::Parameters::PARAMETERS_KEY].nil? && @request.path_info.present?
+      @env[ActionDispatch::Http::Parameters::PARAMETERS_KEY] = begin
+        Rails.application.routes.recognize_path(@request.path_info)
+      rescue ActionController::RoutingError
+        {}
+      end
+    end
+
     parameter_api_patterns.any? { |p| p.match?(env: @env) }
   end
 
