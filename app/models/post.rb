@@ -248,7 +248,7 @@ class Post < ActiveRecord::Base
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
-    "unique-post-#{user_id}:#{raw_hash}"
+    "unique#{topic&.private_message? ? "-pm" : ""}-post-#{user_id}:#{raw_hash}"
   end
 
   def store_unique_post_key
