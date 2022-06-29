@@ -809,7 +809,6 @@ be:
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
       create_pm: "паведамленне"
-      users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
       edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
@@ -1252,6 +1251,7 @@ be:
       full: "ствараць"
       create_post: "адказваць"
       readonly: "бачыць"
+    preloader_text: "загрузка"
     lightbox:
       download: "загрузіць"
     keyboard_shortcuts_help:

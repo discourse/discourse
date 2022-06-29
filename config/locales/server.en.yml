@@ -639,6 +639,7 @@ en:
               too_many: "Too many words for that action"
             base:
               invalid_url: "Replacement URL is invalid"
+              invalid_tag_list: "Replacement tag list is invalid"
 
   uncategorized_category_name: "Uncategorized"
 

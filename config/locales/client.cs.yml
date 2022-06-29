@@ -1558,7 +1558,6 @@ cs:
       create_whisper: "Šeptat"
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
-      users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
       edit_reason_placeholder: "proč byla nutná úprava?"
@@ -2619,6 +2618,7 @@ cs:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
       readonly: "Prohlížet"
+    preloader_text: "Nahrávám"
     lightbox:
       download: "stáhnout"
       counter: "%curr% z %total%"
@@ -2822,6 +2822,7 @@ cs:
             sent: "Odeslané"
             new: "Nová"
             unread: "Nepřečtená"
+            unread_with_count: "Nepřečtená (%{count})"
             archive: "Archív"
         tags:
           header_link_title: "všechny štítky"

@@ -1886,7 +1886,6 @@ pt:
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"
       title: "Ou pressione %{modifier}Enter"
-      users_placeholder: "Adicionar um utilizador"
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
@@ -3154,6 +3153,7 @@ pt:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "A carregar"
     lightbox:
       download: "transferir"
       counter: "%curr% de %total%"
@@ -3427,7 +3427,9 @@ pt:
             inbox: "Caixa de Entrada"
             sent: "Enviado"
             new: "Novo"
+            new_with_count: "Novo (%{count})"
             unread: "Não Lido"
+            unread_with_count: "Não Lido (%{count})"
             archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"

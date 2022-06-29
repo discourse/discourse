@@ -21,6 +21,8 @@ pre-commit:
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
       run: yarn eslint -f compact --quiet {staged_files}
     ember-template-lint:
+      glob: "*.hbs"
+      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
       run: yarn run ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"

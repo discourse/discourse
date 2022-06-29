@@ -822,6 +822,47 @@ aside.onebox.xkcd .onebox-body img {
   @extend .imgur-album;
 }
 
+aside.onebox.mixcloud-preview {
+  padding: 0;
+  border: 0;
+  height: 120px;
+  background-color: #1c1f21;
+  article.onebox-body img {
+    padding: 0;
+    max-height: 120px;
+  }
+  .onebox-body {
+    a[href],
+    a[href]:visited,
+    a[href]:hover {
+      color: #d1d1d1;
+    }
+    .video-icon {
+      position: relative;
+      top: 17px;
+      height: 100%;
+      float: left;
+      padding-left: 6px;
+    }
+    .mixcloud-text {
+      padding-left: 170px;
+      font-family: sans-serif;
+      h3 {
+        font-size: 13px;
+        font-weight: 300;
+        margin: 0;
+        padding-top: 15px;
+        height: 20px;
+      }
+      h4 {
+        font-size: 12px;
+        font-weight: 200;
+      }
+      color: gray;
+    }
+  }
+}
+
 @supports (aspect-ratio: 1) {
   // Not supported on iOS < 15. For those devices, we just
   // use the fixed width/height attributes on the iframe

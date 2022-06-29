@@ -8,7 +8,12 @@ acceptance("Sidebar - Anon User", function () {
   test("sidebar is not displayed", async function (assert) {
     await visit("/");
 
-    assert.ok(!exists("#main-outlet-wrapper.has-sidebar"));
+    assert.strictEqual(
+      document.querySelectorAll("body.has-sidebar-page").length,
+      0,
+      "does not add sidebar utility class to body"
+    );
+
     assert.ok(!exists(".sidebar-wrapper"));
   });
 });
@@ -19,7 +24,12 @@ acceptance("Sidebar - User with sidebar disabled", function (needs) {
   test("sidebar is not displayed", async function (assert) {
     await visit("/");
 
-    assert.ok(!exists("#main-outlet-wrapper.has-sidebar"));
+    assert.strictEqual(
+      document.querySelectorAll("body.has-sidebar-page").length,
+      0,
+      "does not add sidebar utility class to body"
+    );
+
     assert.ok(!exists(".sidebar-wrapper"));
   });
 });
@@ -30,18 +40,20 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
   test("hiding and displaying sidebar", async function (assert) {
     await visit("/");
 
-    assert.ok(
-      exists("#main-outlet-wrapper.has-sidebar"),
-      "adds sidebar utility class on main outlet wrapper"
+    assert.strictEqual(
+      document.querySelectorAll("body.has-sidebar-page").length,
+      1,
+      "adds sidebar utility class to body"
     );
 
     assert.ok(exists(".sidebar-wrapper"), "displays the sidebar by default");
 
     await click(".header-sidebar-toggle .btn");
 
-    assert.ok(
-      !exists("#main-outlet-wrapper.has-sidebar"),
-      "removes sidebar utility class from main outlet wrapper"
+    assert.strictEqual(
+      document.querySelectorAll("body.has-sidebar-page").length,
+      0,
+      "removes sidebar utility class to body"
     );
 
     assert.ok(!exists(".sidebar-wrapper"), "hides the sidebar");

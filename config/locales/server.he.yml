@@ -224,6 +224,7 @@ he:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלת שגויה של כמות פניות ממשתמשים אנושיים."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
+      twitter_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה לאתר הזה, כיוון שהשרת ‚%{hostname}’ לא נמצא. במקום תצוגה מקדימה יופיע קישור בלבד בפוסט שלך. :cry:"
@@ -638,6 +639,7 @@ he:
               too_many: "יש יותר מדי מילים בפעולה הזו"
             base:
               invalid_url: "כתובת ההחלפה שגויה"
+              invalid_tag_list: "רשימת התגיות להחלפה שגויה"
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
   vip_category_name: "טרקלין"
@@ -2202,6 +2204,7 @@ he:
     use_email_for_username_and_name_suggestions: "להשתמש בחלק הראשון של כתובת הדוא״ל כשם משתמש והצעה לשם. נא לשים לב שזה מקל על אנשים לנחש את כתובות הדוא״ל המלאות (כיוון שרוב האנשים חולקים שירותים נפוצים כגון `gmail.com`)."
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
+    splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -3747,6 +3750,18 @@ he:
     suspicious_login:
       title: "התראת כניסה חדשה"
       subject_template: "[%{site_name}] כניסה חדשה מ%{location}"
+      text_body_template: |
+        שלום,
+
+        שמנו לב שנכנסת ממכשיר או ממיקום שאינו אופייני לך. זאת הייתה פעילות שלך?
+
+         - מיקום: %{location} (%{client_ip})
+         - דפדפן: %{browser}
+         - מכשיר: %{device} – %{os}
+
+        אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
+
+        אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/security) לצד שיקול בכובד ראש להחלפת הסיסמה שלך.
     post_approved:
       title: "הפוסט שלך אושר"
       subject_template: "[%{site_name}] הפוסט שלך אושר"

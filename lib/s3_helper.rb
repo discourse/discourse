@@ -111,37 +111,39 @@ class S3Helper
     end
 
     destination = get_path_for_s3_upload(destination)
-    if !Rails.configuration.multisite
-      options[:copy_source] = File.join(@s3_bucket_name, source)
+    source_object = if !Rails.configuration.multisite || source.include?(multisite_upload_path) || source.include?(@tombstone_prefix)
+      s3_bucket.object(source)
+    elsif @s3_bucket_folder_path
+      folder, filename = source.split("/", 2)
+      s3_bucket.object(File.join(folder, multisite_upload_path, filename))
     else
-      if source.include?(multisite_upload_path) || source.include?(@tombstone_prefix)
-        options[:copy_source] = File.join(@s3_bucket_name, source)
-      elsif @s3_bucket_folder_path
-        folder, filename = begin
-                             source.split("/", 2)
-                           end
-        options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
-      else
-        options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
-      end
+      s3_bucket.object(File.join(multisite_upload_path, source))
+    end
+
+    if source_object.size > FIFTEEN_MEGABYTES
+      options[:multipart_copy] = true
+      options[:content_length] = source_object.size
     end
 
     destination_object = s3_bucket.object(destination)
 
-    # TODO: copy_source is a legacy option here and may become unsupported
-    # in later versions, we should change to use Aws::S3::Client#copy_object
-    # at some point.
-    #
-    # See https://github.com/aws/aws-sdk-ruby/blob/version-3/gems/aws-sdk-s3/lib/aws-sdk-s3/customizations/object.rb#L67-L74
-    #
-    # ----
-    #
-    # Also note, any options for metadata (e.g. content_disposition, content_type)
-    # will not be applied unless the metadata_directive = "REPLACE" option is passed
-    # in. If this is not passed in, the source object's metadata will be used.
-    response = destination_object.copy_from(options)
+    # Note for small files that do not use multipart copy: Any options for metadata
+    # (e.g. content_disposition, content_type) will not be applied unless the
+    # metadata_directive = "REPLACE" option is passed in. If this is not passed in,
+    # the source object's metadata will be used.
+    # For larger files it copies the metadata from the source file and merges it
+    # with values from the copy call.
+    response = destination_object.copy_from(source_object, options)
 
-    [destination, response.copy_object_result.etag.gsub('"', '')]
+    etag = if response.respond_to?(:copy_object_result)
+      # small files, regular copy
+      response.copy_object_result.etag
+    else
+      # larger files, multipart copy
+      response.data.etag
+    end
+
+    [destination, etag.gsub('"', '')]
   end
 
   # Several places in the application need certain CORS rules to exist

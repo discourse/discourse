@@ -2003,7 +2003,6 @@ es:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
       title: "O pulsa %{modifier}Intro"
-      users_placeholder: "Añadir un usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
@@ -3390,6 +3389,7 @@ es:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "Cargando"
     lightbox:
       download: "descargar"
       open: "imagen original"
@@ -3474,6 +3474,7 @@ es:
         edit: "%{shortcut} Editar publicación"
         delete: "%{shortcut} Eliminar publicación"
         mark_muted: "%{shortcut} Silenciar tema"
+        mark_regular: "%{shortcut} Tema normal (por defecto)"
         mark_tracking: "%{shortcut} Seguir tema"
         mark_watching: "%{shortcut} Vigilar tema"
         print: "%{shortcut} Imprimir tema"
@@ -3719,17 +3720,23 @@ es:
       new_count: "%{count} nuevo"
       sections:
         messages:
+          header_link_title: "mensajes personales"
           header_link_text: "Mensajes"
+          header_action_title: "crear un mensaje personal"
           links:
             inbox: "Bandeja de entrada"
             sent: "Enviados"
             new: "Nuevo"
+            new_with_count: "Nuevo (%{count})"
             unread: "Sin leer"
+            unread_with_count: "Sin leer (%{count})"
             archive: "Archivo"
         tags:
+          no_tracked_tags: "No estás vigilando ninguna etiqueta."
           header_link_title: "todas las etiquetas"
           header_link_text: "Etiquetas"
         categories:
+          no_tracked_categories: "No estás vigilando ninguna categoría."
           header_link_title: "todas las categorías"
           header_link_text: "Categorías"
         topics:

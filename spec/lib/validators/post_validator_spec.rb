@@ -232,16 +232,22 @@ describe PostValidator do
 
   describe "unique_post_validator" do
     fab!(:user) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+    fab!(:post) { Fabricate(:post, raw: "Non PM topic body", user: user, topic: topic) }
+    fab!(:pm_post) { Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic)) }
 
     before do
       SiteSetting.unique_posts_mins = 5
+
       post.store_unique_post_key
+      pm_post.store_unique_post_key
+
       @key = post.unique_post_key
+      @pm_key = pm_post.unique_post_key
     end
 
     after do
       Discourse.redis.del(@key)
+      Discourse.redis.del(@pm_key)
     end
 
     context "post is unique" do
@@ -263,16 +269,44 @@ describe PostValidator do
     end
 
     context "post is not unique" do
-      let(:new_post) do
-        Fabricate.build(:post, user: user, raw: post.raw, topic: topic)
+      def build_post(is_pm:, raw:)
+        Fabricate.build(
+          :post,
+          user: user,
+          raw: raw,
+          topic: is_pm ? Fabricate.build(:private_message_topic) : topic
+        )
       end
 
-      it "should add an error" do
+      it "should add an error for post dupes" do
+        new_post = build_post(is_pm: false, raw: post.raw)
+
         validator.unique_post_validator(new_post)
         expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
       end
 
+      it "should add an error for pm dupes" do
+        new_post = build_post(is_pm: true, raw: pm_post.raw)
+
+        validator.unique_post_validator(new_post)
+        expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
+      end
+
+      it "should not add an error for cross PM / topic dupes" do
+        new_post = build_post(is_pm: true, raw: post.raw)
+
+        validator.unique_post_validator(new_post)
+        expect(new_post.errors.count).to eq(0)
+
+        new_post = build_post(is_pm: false, raw: pm_post.raw)
+
+        validator.unique_post_validator(new_post)
+        expect(new_post.errors.count).to eq(0)
+      end
+
       it "should not add an error if post.skip_unique_check is true" do
+        new_post = build_post(is_pm: false, raw: post.raw)
+
         new_post.skip_unique_check = true
         validator.unique_post_validator(new_post)
         expect(new_post.errors.count).to eq(0)

@@ -2177,7 +2177,7 @@ he:
       create_shared_draft: "צור טיוטה משותפת"
       edit_shared_draft: "עריכת טיוטה משותפת"
       title: "או ללחוץ %{modifier}Enter"
-      users_placeholder: "הוספת משתמש"
+      users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
@@ -3699,6 +3699,7 @@ he:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
       readonly: "צפה"
+    preloader_text: "בטעינה"
     lightbox:
       download: "הורדה"
       open: "תמונה מקורית"
@@ -4062,7 +4063,9 @@ he:
             inbox: "דואר נכנס"
             sent: "נשלח"
             new: "חדש"
+            new_with_count: "חדש (%{count})"
             unread: "לא-נקראו"
+            unread_with_count: "לא נקראה (%{count})"
             archive: "ארכיון"
         tags:
           no_tracked_tags: "אין לך אף תגית במעקב."
