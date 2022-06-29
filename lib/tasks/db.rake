@@ -15,7 +15,7 @@ module MultisiteTestHelpers
   end
 
   def self.create_multisite?
-    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    (Rails.env.test? || Rails.env.development?) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
 end
 
@@ -30,6 +30,24 @@ task 'db:force_skip_persist' do
   GlobalSetting.skip_redis = true
 end
 
+def config_to_url(config)
+  if config[:username] || config[:password]
+    userinfo = [config[:username], config[:password]].join(":")
+  end
+
+  URI::Generic.new(
+    config[:adapter],
+    userinfo,
+    config[:hostname] || "localhost",
+    config[:port],
+    nil,
+    "/#{config[:database]}",
+    nil,
+    nil,
+    nil
+  ).to_s
+end
+
 task 'db:create' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
     unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
@@ -39,6 +57,14 @@ task 'db:create' => [:load_config] do |_, args|
       STDERR.puts "checking the column structure when initializing, which raises an error."
       STDERR.puts "-" * 80
       raise "Could not initialize discourse_test_multisite"
+    end
+
+    RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+      spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+      next unless spec
+
+      database_url = config_to_url(spec.config)
+      system("DATABASE_URL=#{database_url} SKIP_MULTISITE=true rake db:create")
     end
   end
 end
@@ -55,20 +81,12 @@ task 'db:drop' => [:load_config] do |_, args|
   end
 end
 
-begin
-  Rake::Task["db:migrate"].clear
-  Rake::Task["db:rollback"].clear
-end
-
+Rake::Task["db:rollback"].clear
 task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
   step = ENV["STEP"] ? ENV["STEP"].to_i : 1
   ActiveRecord::Base.connection.migration_context.rollback(step)
   Rake::Task['db:_dump'].invoke
 end
-
-# our optimized version of multisite migrate, we have many sites and we have seeds
-# this ensures we can run migrations concurrently to save huge amounts of time
-Rake::Task['multisite:migrate'].clear
 
 class StdOutDemux
   def initialize(stdout)
@@ -109,6 +127,9 @@ class SeedHelper
   end
 end
 
+# our optimized version of multisite migrate, we have many sites and we have seeds
+# this ensures we can run migrations concurrently to save huge amounts of time
+Rake::Task['multisite:migrate'].clear
 task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
   if ENV["RAILS_ENV"] != "production"
     raise "Multisite migrate is only supported in production"
@@ -210,6 +231,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
 end
 
 # we need to run seed_fu every time we run rake db:migrate
+Rake::Task["db:migrate"].clear
 task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
     migrations = ActiveRecord::Base.connection.migration_context.migrations
