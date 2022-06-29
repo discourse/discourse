@@ -22,7 +22,7 @@ export default class SidebarTagsSection extends GlimmerComponent {
   get sectionLinks() {
     return this.currentUser.trackedTags.map((trackedTag) => {
       return new TagSectionLink({
-        tag: trackedTag,
+        tagName: trackedTag,
         topicTrackingState: this.topicTrackingState,
       });
     });
