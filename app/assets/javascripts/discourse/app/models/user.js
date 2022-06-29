@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { equal, filterBy, gt, or } from "@ember/object/computed";
+import { alias, equal, filterBy, gt, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -62,6 +62,8 @@ let userFields = [
   "primary_group_id",
   "flair_group_id",
   "user_notification_schedule",
+  "sidebar_category_ids",
+  "sidebar_tag_names",
 ];
 
 export function addSaveableUserField(fieldName) {
@@ -306,6 +308,27 @@ const User = RestModel.extend({
 
   @discourseComputed("silenced_till")
   silencedTillDate: longDate,
+
+  sidebarCategoryIds: alias("sidebar_category_ids"),
+  sidebarTagNames: alias("sidebar_tag_names"),
+
+  @discourseComputed("sidebar_category_ids.[]")
+  sidebarCategories(sidebarCategoryIds) {
+    if (sidebarCategoryIds.length === 0) {
+      return [];
+    }
+
+    return Site.current().categoriesList.filter((category) => {
+      if (
+        this.siteSettings.suppress_uncategorized_badge &&
+        category.isUncategorizedCategory
+      ) {
+        return false;
+      }
+
+      return sidebarCategoryIds.includes(category.id);
+    });
+  },
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {

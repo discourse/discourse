@@ -1,9 +1,15 @@
+import I18n from "I18n";
+
 import { cached } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 import GlimmerComponent from "discourse/components/glimmer";
 import TagSectionLink from "discourse/lib/sidebar/tags-section/tag-section-link";
 
 export default class SidebarTagsSection extends GlimmerComponent {
+  @service router;
+
   constructor() {
     super(...arguments);
 
@@ -20,11 +26,22 @@ export default class SidebarTagsSection extends GlimmerComponent {
 
   @cached
   get sectionLinks() {
-    return this.currentUser.trackedTags.map((trackedTag) => {
+    return this.currentUser.sidebarTagNames.map((tagName) => {
       return new TagSectionLink({
-        tagName: trackedTag,
+        tagName,
         topicTrackingState: this.topicTrackingState,
       });
     });
+  }
+
+  get noTagsText() {
+    return I18n.t("sidebar.sections.tags.no_tags", {
+      url: `/u/${this.currentUser.username}/preferences/sidebar`,
+    });
+  }
+
+  @action
+  editTracked() {
+    this.router.transitionTo("preferences.sidebar", this.currentUser);
   }
 }

@@ -202,6 +202,14 @@ class UserUpdater
         updated_associated_accounts(attributes[:user_associated_accounts])
       end
 
+      if attributes.key?(:sidebar_category_ids)
+        update_sidebar_categories(attributes[:sidebar_category_ids])
+      end
+
+      if attributes.key?(:sidebar_tag_names) && SiteSetting.tagging_enabled
+        update_sidebar_tags(attributes[:sidebar_tag_names])
+      end
+
       name_changed = user.name_changed?
       if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
@@ -282,6 +290,56 @@ class UserUpdater
   end
 
   private
+
+  def update_sidebar_tags(tag_names)
+    if tag_names.blank?
+      SidebarSectionLink.where(user: user, linkable_type: 'Tag').delete_all
+    else
+      SidebarSectionLink.transaction do
+        exisiting_tag_ids = SidebarSectionLink.where(user: user, linkable_type: 'Tag').pluck(:linkable_id)
+        new_tag_ids = Tag.where(name: tag_names).pluck(:id)
+
+        to_delete = exisiting_tag_ids - new_tag_ids
+        to_insert = new_tag_ids - exisiting_tag_ids
+
+        attributes = to_insert.map do |tag_id|
+          {
+            linkable_type: 'Tag',
+            linkable_id: tag_id,
+            user_id: user.id
+          }
+        end
+
+        SidebarSectionLink.where(user: user, linkable_type: 'Tag', linkable_id: to_delete).delete_all if to_delete.present?
+        SidebarSectionLink.insert_all(attributes) if attributes.present?
+      end
+    end
+  end
+
+  def update_sidebar_categories(category_ids)
+    if category_ids.blank?
+      SidebarSectionLink.where(user: user, linkable_type: 'Category').delete_all
+    else
+      SidebarSectionLink.transaction do
+        existing_category_ids = SidebarSectionLink.where(user: user, linkable_type: 'Category').pluck(:linkable_id)
+        new_category_ids = Category.secured(guardian).where(id: category_ids).pluck(:id)
+
+        to_delete = existing_category_ids - new_category_ids
+        to_insert = new_category_ids - existing_category_ids
+
+        attributes = to_insert.map do |category_id|
+          {
+            linkable_type: 'Category',
+            linkable_id: category_id,
+            user_id: user.id
+          }
+        end
+
+        SidebarSectionLink.where(user: user, linkable_type: 'Category', linkable_id: to_delete).delete_all if to_delete.present?
+        SidebarSectionLink.insert_all(attributes) if attributes.present?
+      end
+    end
+  end
 
   attr_reader :user, :guardian
 

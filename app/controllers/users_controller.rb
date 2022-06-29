@@ -1814,7 +1814,7 @@ class UsersController < ApplicationController
       :card_background_upload_url,
       :primary_group_id,
       :flair_group_id,
-      :featured_topic_id
+      :featured_topic_id,
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
@@ -1823,6 +1823,16 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
+
+    if current_user&.user_option&.enable_experimental_sidebar
+      params[:sidebar_category_ids] ||= []
+      permitted << { sidebar_category_ids: [] }
+
+      if SiteSetting.tagging_enabled
+        params[:sidebar_tag_names] ||= []
+        permitted << { sidebar_tag_names: [] }
+      end
+    end
 
     result = params
       .permit(permitted, theme_ids: [])
