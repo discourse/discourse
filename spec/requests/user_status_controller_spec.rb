@@ -46,8 +46,6 @@ describe UserStatusController do
           ends_at: ends_at
         }
 
-        puts user.user_status.ends_at
-
         expect(user.user_status.description).to eq(status)
         expect(user.user_status.emoji).to eq(status_emoji)
         expect(user.user_status.ends_at).to eq_time(ends_at)
