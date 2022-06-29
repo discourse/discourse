@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+/)
+      matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+(\/\w+)?\/?/)
       requires_iframe_origins "https://player.vimeo.com"
       always_https
 
