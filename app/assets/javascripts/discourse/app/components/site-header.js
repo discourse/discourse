@@ -239,7 +239,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.on("dom:clean", this, "_cleanDom");
 
       if (this.currentUser) {
-        this.currentUser.on("status-changed", () => this.queueRerender());
+        this.currentUser.on("status-changed", this, "queueRerender");
       }
 
       if (
@@ -311,6 +311,10 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
+
+      if (this.currentUser) {
+        this.currentUser.off("status-changed", this, "queueRerender");
+      }
 
       cancel(this._scheduledRemoveAnimate);
 
