@@ -15,7 +15,7 @@ module MultisiteTestHelpers
   end
 
   def self.create_multisite?
-    (Rails.env.test? || Rails.env.development?) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    (Rails.env.test? || Rails.env.development?) && !ENV["RAILS_DB"] && !ENV["DATABASE_URL"] && !ENV["SKIP_MULTISITE"]
   end
 end
 
@@ -64,7 +64,7 @@ task 'db:create' => [:load_config] do |_, args|
       next unless spec
 
       database_url = config_to_url(spec.config)
-      system("DATABASE_URL=#{database_url} SKIP_MULTISITE=true rake db:create")
+      system("DATABASE_URL=#{database_url} rake db:create")
     end
   end
 end
@@ -78,7 +78,21 @@ end
 task 'db:drop' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
     system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
+
+    RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+      spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+      next unless spec
+
+      database_url = config_to_url(spec.config)
+      system("DATABASE_URL=#{database_url} rake db:drop")
+    end
   end
+end
+
+begin
+  reqs = Rake::Task['db:drop'].prerequisites.map(&:to_sym)
+  Rake::Task['db:drop'].clear_prerequisites
+  Rake::Task['db:drop'].enhance(["db:force_skip_persist"] + reqs)
 end
 
 Rake::Task["db:rollback"].clear
