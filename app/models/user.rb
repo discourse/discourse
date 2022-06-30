@@ -676,7 +676,7 @@ class User < ActiveRecord::Base
       payload = nil
     end
 
-    MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
+    MessageBus.publish("/user-status", { id => payload })
   end
 
   def password=(password)
