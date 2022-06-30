@@ -46,6 +46,7 @@ describe UserStatusController do
           ends_at: ends_at
         }
 
+        expect(response.status).to eq(200)
         expect(user.user_status.description).to eq(status)
         expect(user.user_status.emoji).to eq(status_emoji)
         expect(user.user_status.ends_at).to eq_time(ends_at)
@@ -60,6 +61,8 @@ describe UserStatusController do
           emoji: status_emoji,
           ends_at: ends_at
         }
+        expect(response.status).to eq(200)
+
         user.reload
         expect(user.user_status.description).to eq(status)
         expect(user.user_status.emoji).to eq(status_emoji)
@@ -73,6 +76,8 @@ describe UserStatusController do
           emoji: new_status_emoji,
           ends_at: new_ends_at
         }
+        expect(response.status).to eq(200)
+
         user.reload
         expect(user.user_status.description).to eq(new_status)
         expect(user.user_status.emoji).to eq(new_status_emoji)
@@ -130,6 +135,7 @@ describe UserStatusController do
 
       it "clears user status" do
         delete "/user-status.json"
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.user_status).to be_nil
