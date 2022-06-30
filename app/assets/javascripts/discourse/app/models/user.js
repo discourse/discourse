@@ -310,11 +310,19 @@ const User = RestModel.extend({
   silencedTillDate: longDate,
 
   sidebarCategoryIds: alias("sidebar_category_ids"),
-  sidebarTagNames: alias("sidebar_tag_names"),
+
+  @discourseComputed("sidebar_tag_names.[]")
+  sidebarTagNames(sidebarTagNames) {
+    if (!sidebarTagNames || sidebarTagNames.length === 0) {
+      return [];
+    }
+
+    return sidebarTagNames;
+  },
 
   @discourseComputed("sidebar_category_ids.[]")
   sidebarCategories(sidebarCategoryIds) {
-    if (sidebarCategoryIds.length === 0) {
+    if (!sidebarCategoryIds || sidebarCategoryIds.length === 0) {
       return [];
     }
 

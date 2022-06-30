@@ -4063,12 +4063,14 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
-          no_tags: "You have not added any tags. <a href='%{url}'>Click here to get started.</a>"
+          none: "You have not added any tags."
+          click_to_get_started: "Click here to get started."
           header_link_title: "all tags"
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
         categories:
-          no_categories: "You have not added any categories. <a href='%{url}'>Click here to get started.</a>"
+          none: "You have not added any categories."
+          click_to_get_started: "Click here to get started."
           header_link_title: "all categories"
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"

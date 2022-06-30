@@ -12,19 +12,14 @@ export default class extends Controller {
   @action
   tagUpdated(tagNames) {
     this.selectedSidebarTagNames = tagNames;
-    this.model.set("sidebarTagNames", tagNames);
+    this.model.set("sidebar_tag_names", tagNames);
     this.saved = false;
   }
 
   @action
   categoryUpdated(categories) {
     this.selectedSiderbarCategories = categories;
-
-    this.model.set(
-      "sidebarCategoryIds",
-      categories.map((c) => c.id)
-    );
-
+    this.model.set("sidebarCategoryIds", categories.mapBy("id"));
     this.saved = false;
   }
 
@@ -39,7 +34,7 @@ export default class extends Controller {
       })
       .catch((error) => {
         this.model.set("sidebarCategoryIds", this.initialSidebarCategoryIds);
-        this.model.set("sidebarTagNames", this.initialSidebarTagNames);
+        this.model.set("sidebar_tag_names", this.initialSidebarTagNames);
         popupAjaxError(error);
       });
   }

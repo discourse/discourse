@@ -12,7 +12,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import Site from "discourse/models/site";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -34,12 +33,9 @@ acceptance(
         return category.id === Site.current().uncategorized_category_id;
       });
 
-      category1.set("notification_level", NotificationLevels.TRACKING);
-
-      uncategorizedCategory.set(
-        "notification_level",
-        NotificationLevels.TRACKING
-      );
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, uncategorizedCategory.id],
+      });
 
       await visit("/");
 
@@ -79,10 +75,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
 
     server.get("/c/:categorySlug/:categoryId/find_by_slug.json", () => {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
-    });
-
-    server.post("/category/:categoryId/notifications", () => {
-      return helper.response({});
     });
   });
 

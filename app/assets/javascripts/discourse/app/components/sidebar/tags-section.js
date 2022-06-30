@@ -26,18 +26,26 @@ export default class SidebarTagsSection extends GlimmerComponent {
 
   @cached
   get sectionLinks() {
-    return this.currentUser.sidebarTagNames.map((tagName) => {
-      return new TagSectionLink({
-        tagName,
-        topicTrackingState: this.topicTrackingState,
-      });
-    });
+    const links = [];
+
+    for (const tagName of this.currentUser.sidebarTagNames) {
+      links.push(
+        new TagSectionLink({
+          tagName,
+          topicTrackingState: this.topicTrackingState,
+        })
+      );
+    }
+
+    return links;
   }
 
   get noTagsText() {
-    return I18n.t("sidebar.sections.tags.no_tags", {
-      url: `/u/${this.currentUser.username}/preferences/sidebar`,
-    });
+    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
+
+    return `${I18n.t("sidebar.sections.tags.none")} <a href="${url}">${I18n.t(
+      "sidebar.sections.tags.click_to_get_started"
+    )}</a>`;
   }
 
   @action

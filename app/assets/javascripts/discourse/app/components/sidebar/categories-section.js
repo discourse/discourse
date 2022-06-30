@@ -41,9 +41,13 @@ export default class SidebarCategoriesSection extends GlimmerComponent {
   }
 
   get noCategoriesText() {
-    return I18n.t("sidebar.sections.categories.no_categories", {
-      url: `/u/${this.currentUser.username}/preferences/sidebar`,
-    });
+    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
+
+    return `${I18n.t(
+      "sidebar.sections.categories.none"
+    )} <a href="${url}">${I18n.t(
+      "sidebar.sections.categories.click_to_get_started"
+    )}</a>`;
   }
 
   @action

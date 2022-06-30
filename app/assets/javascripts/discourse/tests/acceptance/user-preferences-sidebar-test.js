@@ -27,7 +27,7 @@ acceptance("User Preferences - Sidebar - Tagging Disabled", function (needs) {
   });
 });
 
-acceptance("User Preferences - Sidebar - Tagging Enabled", function (needs) {
+acceptance("User Preferences - Sidebar", function (needs) {
   needs.user({
     experimental_sidebar_enabled: true,
     sidebar_category_ids: [],

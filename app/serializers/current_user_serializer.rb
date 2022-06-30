@@ -315,7 +315,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def sidebar_category_ids
-    object.sidebar_section_links.where(linkable_type: 'Category').pluck(:linkable_id)
+    object.sidebar_category_section_links.pluck(:linkable_id)
   end
 
   def include_sidebar_category_ids?

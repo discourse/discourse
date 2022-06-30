@@ -203,11 +203,11 @@ class UserUpdater
       end
 
       if attributes.key?(:sidebar_category_ids)
-        update_sidebar_categories(attributes[:sidebar_category_ids])
+        update_sidebar_category_section_links(attributes[:sidebar_category_ids])
       end
 
       if attributes.key?(:sidebar_tag_names) && SiteSetting.tagging_enabled
-        update_sidebar_tags(attributes[:sidebar_tag_names])
+        update_sidebar_tag_section_links(attributes[:sidebar_tag_names])
       end
 
       name_changed = user.name_changed?
@@ -291,53 +291,45 @@ class UserUpdater
 
   private
 
-  def update_sidebar_tags(tag_names)
-    if tag_names.blank?
-      SidebarSectionLink.where(user: user, linkable_type: 'Tag').delete_all
+  def delete_all_sidebar_section_links(linkable_type)
+    SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
+  end
+
+  def update_sidebar_section_links(linkable_type, new_linkable_ids)
+    if new_linkable_ids.blank?
+      SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
     else
-      SidebarSectionLink.transaction do
-        exisiting_tag_ids = SidebarSectionLink.where(user: user, linkable_type: 'Tag').pluck(:linkable_id)
-        new_tag_ids = Tag.where(name: tag_names).pluck(:id)
+      existing_linkable_ids = SidebarSectionLink.where(user: user, linkable_type: linkable_type).pluck(:linkable_id)
 
-        to_delete = exisiting_tag_ids - new_tag_ids
-        to_insert = new_tag_ids - exisiting_tag_ids
+      to_delete = existing_linkable_ids - new_linkable_ids
+      to_insert = new_linkable_ids - existing_linkable_ids
 
-        attributes = to_insert.map do |tag_id|
-          {
-            linkable_type: 'Tag',
-            linkable_id: tag_id,
-            user_id: user.id
-          }
-        end
-
-        SidebarSectionLink.where(user: user, linkable_type: 'Tag', linkable_id: to_delete).delete_all if to_delete.present?
-        SidebarSectionLink.insert_all(attributes) if attributes.present?
+      to_insert_attributes = to_insert.map do |linkable_id|
+        {
+          linkable_type: linkable_type,
+          linkable_id: linkable_id,
+          user_id: user.id
+        }
       end
+
+      SidebarSectionLink.where(user: user, linkable_type: linkable_type, linkable_id: to_delete).delete_all if to_delete.present?
+      SidebarSectionLink.insert_all(to_insert_attributes) if to_insert_attributes.present?
     end
   end
 
-  def update_sidebar_categories(category_ids)
-    if category_ids.blank?
-      SidebarSectionLink.where(user: user, linkable_type: 'Category').delete_all
+  def update_sidebar_tag_section_links(tag_names)
+    if tag_names.blank?
+      delete_all_sidebar_section_links('Tag')
     else
-      SidebarSectionLink.transaction do
-        existing_category_ids = SidebarSectionLink.where(user: user, linkable_type: 'Category').pluck(:linkable_id)
-        new_category_ids = Category.secured(guardian).where(id: category_ids).pluck(:id)
+      update_sidebar_section_links('Tag', Tag.where(name: tag_names).pluck(:id))
+    end
+  end
 
-        to_delete = existing_category_ids - new_category_ids
-        to_insert = new_category_ids - existing_category_ids
-
-        attributes = to_insert.map do |category_id|
-          {
-            linkable_type: 'Category',
-            linkable_id: category_id,
-            user_id: user.id
-          }
-        end
-
-        SidebarSectionLink.where(user: user, linkable_type: 'Category', linkable_id: to_delete).delete_all if to_delete.present?
-        SidebarSectionLink.insert_all(attributes) if attributes.present?
-      end
+  def update_sidebar_category_section_links(category_ids)
+    if category_ids.blank?
+      delete_all_sidebar_section_links('Category')
+    else
+      update_sidebar_section_links('Category', Category.secured(guardian).where(id: category_ids).pluck(:id))
     end
   end
 
