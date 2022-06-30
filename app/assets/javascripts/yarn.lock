@@ -1036,19 +1036,19 @@
     mkdirp "^1.0.4"
     silent-error "^1.1.1"
 
-"@ember/test-helpers@2.2.6":
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/@ember/test-helpers/-/test-helpers-2.2.6.tgz#48a5dd6f871dd531c81edfee8094991fd932dc12"
-  integrity sha512-nsrIeFeA2ZChLYp+qgOjpDKo0a294PVRJ3XZtid2alF4VjNTJPl+tyjQfnPje5kcQtADZlIGOqemNYC3HTo4Lg==
+"@ember/test-helpers@2.2.7":
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/@ember/test-helpers/-/test-helpers-2.2.7.tgz#7a9e5998d00ef8001e0bdb9d84360b678d93bc81"
+  integrity sha512-goYWle2o6aB+bvGGHLwpusDFpakXP2G86xSN0YXR3ZgpSS+EDToHi8Jqh35/NWNiLdqTLAZAjv3nzWMNdUMy5A==
   dependencies:
-    "@ember/test-waiters" "^2.4.3"
+    "@ember/test-waiters" "^2.4.4"
     broccoli-debug "^0.6.5"
-    broccoli-funnel "^3.0.3"
-    ember-cli-babel "^7.26.4"
+    broccoli-funnel "^3.0.6"
+    ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
     ember-destroyable-polyfill "^2.0.3"
 
-"@ember/test-waiters@^2.4.3":
+"@ember/test-waiters@^2.4.4":
   version "2.4.5"
   resolved "https://registry.yarnpkg.com/@ember/test-waiters/-/test-waiters-2.4.5.tgz#6e8e34d1bc46a9b0cc22cb11cc5936046e926031"
   integrity sha512-833JvHtHdEfBfKXgvmw+6oziFOpVfD4NQrc04Ztj59A11K9FPNfZ3P8YydL7LFTtdd7UfJ/cYCLAm+OwUxbotQ==
