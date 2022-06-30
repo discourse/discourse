@@ -145,7 +145,7 @@
     }
 
     .sidebar-section-link-content-text {
-      width: 70%;
+      @include ellipsis;
 
       .badge-wrapper {
         font-size: 100%;
