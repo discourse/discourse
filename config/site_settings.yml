@@ -841,6 +841,7 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+    max: 876000
   notify_users_after_responses_deleted_on_flagged_post:
     default: false
   traditional_markdown_linebreaks:
