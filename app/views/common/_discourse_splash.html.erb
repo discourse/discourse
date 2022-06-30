@@ -96,7 +96,7 @@
     </style>
   </noscript>
 
-  <script>
+  <script nonce="<%= ApplicationHelper.splash_screen_nonce %>">
     const connectStart = performance?.timing?.connectStart || 0;
 
     const SPLASH_DELAY = connectStart ? 2000 : 0;
