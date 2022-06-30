@@ -4,7 +4,7 @@ class SidebarSectionLink < ActiveRecord::Base
   belongs_to :user
   belongs_to :linkable, polymorphic: true
 
-  validates :user_id, presence: true
+  validates :user_id, presence: true, uniqueness: { scope: [:linkable_type, :linkable_id] }
   validates :linkable_id, presence: true
   validates :linkable_type, presence: true
   validate :ensure_supported_linkable_type, if: :will_save_change_to_linkable_type?

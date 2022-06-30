@@ -416,6 +416,12 @@ const User = RestModel.extend({
       }
     });
 
+    ["sidebar_category_ids", "sidebar_tag_names"].forEach((prop) => {
+      if (data[prop]?.length === 0) {
+        data[prop] = null;
+      }
+    });
+
     return this._saveUserData(data, updatedState);
   },
 

@@ -2316,11 +2316,22 @@ describe UsersController do
             expect(user.reload.user_option.enable_experimental_sidebar).to eq(true)
           end
 
+          it 'does not remove category or tag sidebar section links when params are not present' do
+            Fabricate(:category_sidebar_section_link, user: user)
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json"
+
+              expect(response.status).to eq(200)
+            end.to_not change { user.sidebar_section_links.count }
+          end
+
           it "should allow user to remove all category sidebar section links" do
             Fabricate(:category_sidebar_section_link, user: user)
 
             expect do
-              put "/u/#{user.username}.json", params: { sidebar_category_ids: [] }
+              put "/u/#{user.username}.json", params: { sidebar_category_ids: nil }
 
               expect(response.status).to eq(200)
             end.to change { user.sidebar_section_links.count }.from(1).to(0)
@@ -2348,7 +2359,7 @@ describe UsersController do
             Fabricate(:tag_sidebar_section_link, user: user)
 
             expect do
-              put "/u/#{user.username}.json", params: { sidebar_category_ids: [] }
+              put "/u/#{user.username}.json", params: { sidebar_tag_names: nil }
 
               expect(response.status).to eq(200)
             end.to change { user.sidebar_section_links.count }.from(1).to(0)

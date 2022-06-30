@@ -1825,11 +1825,17 @@ class UsersController < ApplicationController
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
     if current_user&.user_option&.enable_experimental_sidebar
-      params[:sidebar_category_ids] ||= []
+      if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
+        params[:sidebar_category_ids] = []
+      end
+
       permitted << { sidebar_category_ids: [] }
 
       if SiteSetting.tagging_enabled
-        params[:sidebar_tag_names] ||= []
+        if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
+          params[:sidebar_tag_names] = []
+        end
+
         permitted << { sidebar_tag_names: [] }
       end
     end

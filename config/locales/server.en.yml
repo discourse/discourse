@@ -643,7 +643,7 @@ en:
         sidebar_section_link:
           attributes:
             linkable_type:
-              invalid: "is not a valid"
+              invalid: "is not valid"
 
 
   uncategorized_category_name: "Uncategorized"

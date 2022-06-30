@@ -17,7 +17,6 @@ acceptance("User Preferences - Sidebar - Tagging Disabled", function (needs) {
   needs.user({
     experimental_sidebar_enabled: true,
     sidebar_category_ids: [],
-    sidebar_tag_names: [],
   });
 
   test("user should not see tag chooser", async function (assert) {
