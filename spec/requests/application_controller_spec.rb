@@ -665,6 +665,19 @@ RSpec.describe ApplicationController do
       expect(response.body).to include(nonce)
     end
 
+    it 'when splash screen is enabled it adds the same nonce to the policy and the inline splash script' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.splash_screen = true
+
+      get '/latest'
+      nonce = ApplicationHelper.splash_screen_nonce
+      expect(response.headers).to include('Content-Security-Policy')
+
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      expect(script_src.to_s).to include(nonce)
+      expect(response.body).to include(nonce)
+    end
+
     def parse(csp_string)
       csp_string.split(';').map do |policy|
         directive, *sources = policy.split
