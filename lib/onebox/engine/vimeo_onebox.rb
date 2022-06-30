@@ -10,9 +10,6 @@ module Onebox
       requires_iframe_origins "https://player.vimeo.com"
       always_https
 
-      WIDTH  ||= 640
-      HEIGHT ||= 360
-
       def placeholder_html
         ::Onebox::Helpers.video_placeholder_html
       end
@@ -24,8 +21,7 @@ module Onebox
 
         <<-HTML
           <iframe
-            width="#{WIDTH}"
-            height="#{HEIGHT}"
+            class="vimeo-onebox"
             src="#{video_src}"
             data-original-href="#{link}"
             frameborder="0"
