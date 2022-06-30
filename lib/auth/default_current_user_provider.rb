@@ -41,7 +41,6 @@ class Auth::DefaultCurrentUserProvider
   COOKIE_ATTEMPTS_PER_MIN ||= 10
   BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
   DECRYPTED_AUTH_COOKIE = "_DISCOURSE_DECRYPTED_AUTH_COOKIE"
-  PATH_PARAMETERS ||= "_DISCOURSE_REQUEST_PATH_PARAMETERS"
 
   TOKEN_SIZE = 32
 
@@ -413,19 +412,6 @@ class Auth::DefaultCurrentUserProvider
   # However, in some scenarios it is essential to send them via url parameters
   # so we need to add some exceptions
   def api_parameter_allowed?
-    if @env[ActionDispatch::Http::Parameters::PARAMETERS_KEY].nil? && @request.path_info.present?
-      # We need to manually recognize the path when Rails hasn't done that yet. That can happen when
-      # `currentUser` gets called in a Middleware before the controller did its work.
-      # We store the result of `recognize_path` in a custom env key, so that we don't change
-      # some Rails behavior by accident. The matchers from `parameter_api_patterns` will fall back
-      # to the custom env key if the `path_parameters` from Rails are missing.
-      @env[PATH_PARAMETERS] ||= begin
-        Rails.application.routes.recognize_path(@request.path_info)
-      rescue ActionController::RoutingError
-        {}
-      end
-    end
-
     parameter_api_patterns.any? { |p| p.match?(env: @env) }
   end
 

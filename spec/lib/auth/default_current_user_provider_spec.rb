@@ -321,14 +321,12 @@ describe Auth::DefaultCurrentUserProvider do
       provider = provider(url, env)
       env = provider.env
 
-      expect(env[Auth::DefaultCurrentUserProvider::PATH_PARAMETERS]).to be_nil
       expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_nil
       expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to be_nil
 
       u = provider.current_user
 
       expect(u).to eq(user)
-      expect(env[Auth::DefaultCurrentUserProvider::PATH_PARAMETERS]).to be_present
       expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_blank
       expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to eq(u)
     end
