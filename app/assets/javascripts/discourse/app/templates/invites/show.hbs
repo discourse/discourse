@@ -1,4 +1,4 @@
-{{#d-section pageClass="invite"}}
+<DSection @pageClass="invite">
   <div class="container invites-show clearfix">
     <div class="login-welcome-header">
       <h1 class="login-title">{{welcomeTitle}}</h1>
@@ -21,7 +21,7 @@
             </div>
           {{else}}
             <p>{{i18n "invites.invited_by"}}</p>
-            <p>{{user-info user=invitedBy}}</p>
+            <p><UserInfo @user={{invitedBy}} /></p>
 
             {{#if associateHtml}}
               <p class="create-account-associate-link">
@@ -42,10 +42,10 @@
               {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
               {{#if authOptions}}
                 {{#unless isInviteLink}}
-                  {{input-tip validation=emailValidation id="account-email-validation"}}
+                  <InputTip @validation={{emailValidation}} @id="account-email-validation" />
                 {{/unless}}
               {{else}}
-                {{login-buttons externalLogin=(action "externalLogin")}}
+                <LoginButtons @externalLogin={{action "externalLogin"}} />
               {{/if}}
             {{/if}}
 
@@ -59,29 +59,29 @@
               <form>
                 {{#if isInviteLink}}
                   <div class="input email-input input-group">
-                    {{input type="email" value=email id="new-account-email" name="email" class=(value-entered email) autofocus="autofocus" disabled=externalAuthsOnly}}
+                    <Input @type="email" @value={{email}} @id="new-account-email" @name="email" class={{value-entered email}} @autofocus="autofocus" @disabled={{externalAuthsOnly}} />
                     <label class="alt-placeholder" for="new-account-email">
                       {{i18n "user.email.title"}}
                       <span class="required">*</span>
                     </label>
-                    {{input-tip validation=emailValidation id="account-email-validation"}}
+                    <InputTip @validation={{emailValidation}} @id="account-email-validation" />
                     <div class="instructions">{{i18n "user.email.instructions"}}</div>
                   </div>
                 {{/if}}
 
                 <div class="input username-input input-group">
-                  {{input value=accountUsername class=(value-entered accountUsername) id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
+                  <Input @value={{accountUsername}} class={{value-entered accountUsername}} @id="new-account-username" @name="username" @maxlength={{maxUsernameLength}} @autocomplete="off" />
                   <label class="alt-placeholder" for="new-account-username">
                     {{i18n "user.username.title"}}
                     <span class="required">*</span>
                   </label>
-                  {{input-tip validation=usernameValidation id="username-validation"}}
+                  <InputTip @validation={{usernameValidation}} @id="username-validation" />
                   <div class="instructions">{{i18n "user.username.instructions"}}</div>
                 </div>
 
                 {{#if fullnameRequired}}
                   <div class="input name-input input-group">
-                    {{input value=accountName class=(value-entered accountName) id="new-account-name" name="name"}}
+                    <Input @value={{accountName}} class={{value-entered accountName}} @id="new-account-name" @name="name" />
                     <label class="alt-placeholder" for="new-account-name">
                       {{i18n "invites.name_label"}}
                       {{#if siteSettings.full_name_required}}
@@ -94,12 +94,12 @@
 
                 {{#unless externalAuthsOnly}}
                   <div class="input password-input input-group">
-                    {{password-field value=accountPassword class=(value-entered accountPassword) type="password" id="new-account-password" capsLockOn=capsLockOn}}
+                    <PasswordField @value={{accountPassword}} @class={{value-entered accountPassword}} @type="password" @id="new-account-password" @capsLockOn={{capsLockOn}} />
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
                       <span class="required">*</span>
                     </label>
-                    {{input-tip validation=passwordValidation}}
+                    <InputTip @validation={{passwordValidation}} />
                     <div class="instructions">
                       {{passwordInstructions}}
                       <div class="caps-lock-warning {{unless capsLockOn "invisible"}}">
@@ -113,19 +113,13 @@
                   <div class="user-fields">
                     {{#each userFields as |f|}}
                       <div class="input-group">
-                        {{user-field field=f.field value=f.value class=(value-entered f.value)}}
+                        <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} />
                       </div>
                     {{/each}}
                   </div>
                 {{/if}}
 
-                {{d-button
-                  class="btn-primary"
-                  action=(action "submit")
-                  type="submit"
-                  disabled=submitDisabled
-                  label="invites.accept_invite"
-                }}
+                <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{submitDisabled}} @label="invites.accept_invite" />
 
                 {{#if errorMessage}}
                   <br><br>
@@ -138,4 +132,4 @@
       </div>
     </div>
   </div>
-{{/d-section}}
+</DSection>

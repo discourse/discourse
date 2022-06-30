@@ -32,6 +32,7 @@ $topic-progress-height: 42px;
     max-width: calc(
       100vw - 20px
     ); // 20px is the left + right padding on .wrap in common/base/discourse.scss
+    min-width: 0; // grid needs to be able to shrink
   }
 
   .timeline-container {

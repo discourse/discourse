@@ -1,16 +1,16 @@
-{{#d-section class="current-badge content-body"}}
+<DSection @class="current-badge content-body">
   <form class="form-horizontal">
     <div class="control-group">
       <label for="name">{{i18n "admin.badges.name"}}</label>
       {{#if readOnly}}
-        {{input type="text" name="name" value=buffered.name disabled=true}}
+        <Input @type="text" @name="name" @value={{buffered.name}} @disabled={{true}} />
         <p class="help">
-          {{#link-to "adminSiteText" (query-params q=(concat textCustomizationPrefix "name"))}}
+          <LinkTo @route="adminSiteText" @query={{hash q=(concat textCustomizationPrefix "name")}}>
             {{i18n "admin.badges.read_only_setting_help"}}
-          {{/link-to}}
+          </LinkTo>
         </p>
       {{else}}
-        {{input type="text" name="name" value=buffered.name}}
+        <Input @type="text" @name="name" @value={{buffered.name}} />
       {{/if}}
     </div>
 
@@ -18,114 +18,73 @@
       <label for="graphic">{{i18n "admin.badges.graphic"}}</label>
       <div class="radios inline-form full-width">
         <label class="radio-label" for="badge-icon">
-          {{radio-button
-            name="badge-icon"
-            id="badge-icon"
-            value="icon"
-            selection=selectedGraphicType
-            onChange=(action "changeGraphicType")
-          }}
+          <RadioButton @name="badge-icon" @id="badge-icon" @value="icon" @selection={{selectedGraphicType}} @onChange={{action "changeGraphicType"}} />
           <span>{{i18n "admin.badges.select_an_icon"}}</span>
         </label>
 
         <label class="radio-label" for="badge-image">
-          {{radio-button
-            name="badge-image"
-            id="badge-image"
-            value="image"
-            selection=selectedGraphicType
-            onChange=(action "changeGraphicType")
-          }}
+          <RadioButton @name="badge-image" @id="badge-image" @value="image" @selection={{selectedGraphicType}} @onChange={{action "changeGraphicType"}} />
           <span>{{i18n "admin.badges.upload_an_image"}}</span>
         </label>
       </div>
       {{#if imageUploaderSelected}}
-        {{uppy-image-uploader
-          id="badge-image-uploader"
-          imageUrl=buffered.image_url
-          type="badge_image"
-          onUploadDone=(action "setImage")
-          onUploadDeleted=(action "removeImage")
-          class="no-repeat contain-image"
-        }}
+        <UppyImageUploader @id="badge-image-uploader" @imageUrl={{buffered.image_url}} @type="badge_image" @onUploadDone={{action "setImage"}} @onUploadDeleted={{action "removeImage"}} @class="no-repeat contain-image" />
         <div class="control-instructions">
           <p class="help">{{i18n "admin.badges.image_help"}}</p>
         </div>
       {{else if iconSelectorSelected}}
-        {{icon-picker
-          name="icon"
-          value=buffered.icon
-          options=(hash maximum=1)
-          onChange=(action (mut buffered.icon))
-        }}
+        <IconPicker @name="icon" @value={{buffered.icon}} @options={{hash maximum=1}} @onChange={{action (mut buffered.icon)}} />
       {{/if}}
     </div>
 
     <div class="control-group">
       <label for="badge_type_id">{{i18n "admin.badges.badge_type"}}</label>
-      {{combo-box
-        name="badge_type_id"
-        value=buffered.badge_type_id
-        content=badgeTypes
-        onChange=(action (mut buffered.badge_type_id))
-        options=(hash
+      <ComboBox @name="badge_type_id" @value={{buffered.badge_type_id}} @content={{badgeTypes}} @onChange={{action (mut buffered.badge_type_id)}} @options={{hash
           disabled=readOnly
-        )
-      }}
+        }} />
     </div>
 
     <div class="control-group">
       <label for="badge_grouping_id">{{i18n "admin.badges.badge_grouping"}}</label>
 
       <div class="badge-grouping-control">
-        {{combo-box
-          name="badge_grouping_id"
-          value=buffered.badge_grouping_id
-          content=badgeGroupings
-          class="badge-selector"
-          nameProperty="name"
-          onChange=(action (mut buffered.badge_grouping_id))
-        }}
-        {{d-button
-          class="btn-default"
-          action=(route-action "editGroupings")
-          icon="pencil-alt"
-        }}
+        <ComboBox @name="badge_grouping_id" @value={{buffered.badge_grouping_id}} @content={{badgeGroupings}} @class="badge-selector" @nameProperty="name" @onChange={{action (mut buffered.badge_grouping_id)}} />
+        <DButton @class="btn-default" @action={{route-action "editGroupings"}} @icon="pencil-alt" />
       </div>
     </div>
 
     <div class="control-group">
       <label for="description">{{i18n "admin.badges.description"}}</label>
       {{#if buffered.system}}
-        {{textarea name="description" value=buffered.description disabled=true}}
+        <Textarea @name="description" @value={{buffered.description}} @disabled={{true}} />
         <p class="help">
-          {{#link-to "adminSiteText" (query-params q=(concat textCustomizationPrefix "description"))}}
+          <LinkTo @route="adminSiteText" @query={{hash q=(concat textCustomizationPrefix "description")}}>
             {{i18n "admin.badges.read_only_setting_help"}}
-          {{/link-to}}
+          </LinkTo>
         </p>
       {{else}}
-        {{textarea name="description" value=buffered.description}}
+        <Textarea @name="description" @value={{buffered.description}} />
       {{/if}}
     </div>
 
     <div class="control-group">
       <label for="long_description">{{i18n "admin.badges.long_description"}}</label>
       {{#if buffered.system}}
-        {{textarea name="long_description" value=buffered.long_description disabled=true}}
+        <Textarea @name="long_description" @value={{buffered.long_description}} @disabled={{true}} />
         <p class="help">
-          {{#link-to "adminSiteText" (query-params q=(concat textCustomizationPrefix "long_description"))}}
+          <LinkTo @route="adminSiteText" @query={{hash q=(concat textCustomizationPrefix "long_description")}}>
             {{i18n "admin.badges.read_only_setting_help"}}
-          {{/link-to}}
+          </LinkTo>
         </p>
       {{else}}
-        {{textarea name="long_description" value=buffered.long_description}}
+        <Textarea @name="long_description" @value={{buffered.long_description}} />
       {{/if}}
     </div>
 
     {{#if siteSettings.enable_badge_sql}}
       <div class="control-group">
         <label for="query">{{i18n "admin.badges.query"}}</label>
-        {{ace-editor content=buffered.query mode="sql" disabled=readOnly}}
+        <AceEditor @content={{buffered.query}} @mode="sql" @disabled={{readOnly}} />
       </div>
 
       {{#if hasQuery}}
@@ -138,29 +97,23 @@
 
         <div class="control-group">
           <label>
-            {{input type="checkbox" checked=buffered.auto_revoke disabled=readOnly}}
+            <Input @type="checkbox" @checked={{buffered.auto_revoke}} @disabled={{readOnly}} />
             {{i18n "admin.badges.auto_revoke"}}
           </label>
         </div>
 
         <div class="control-group">
           <label>
-            {{input type="checkbox" checked=buffered.target_posts disabled=readOnly}}
+            <Input @type="checkbox" @checked={{buffered.target_posts}} @disabled={{readOnly}} />
             {{i18n "admin.badges.target_posts"}}
           </label>
         </div>
 
         <div class="control-group">
           <label for="trigger">{{i18n "admin.badges.trigger"}}</label>
-          {{combo-box
-            name="trigger"
-            value=buffered.trigger
-            content=badgeTriggers
-            onChange=(action (mut buffered.trigger))
-            options=(hash
+          <ComboBox @name="trigger" @value={{buffered.trigger}} @content={{badgeTriggers}} @onChange={{action (mut buffered.trigger)}} @options={{hash
               disabled=readOnly
-            )
-          }}
+            }} />
         </div>
       {{/if}}
     {{/if}}
@@ -168,63 +121,54 @@
     <div class="control-group">
       <div>
         <label>
-          {{input type="checkbox" checked=buffered.allow_title}}
+          <Input @type="checkbox" @checked={{buffered.allow_title}} />
           {{i18n "admin.badges.allow_title"}}
         </label>
       </div>
 
       <div>
         <label>
-          {{input type="checkbox" checked=buffered.multiple_grant disabled=readOnly}}
+          <Input @type="checkbox" @checked={{buffered.multiple_grant}} @disabled={{readOnly}} />
           {{i18n "admin.badges.multiple_grant"}}
         </label>
       </div>
 
       <div>
         <label>
-          {{input type="checkbox" checked=buffered.listable disabled=readOnly}}
+          <Input @type="checkbox" @checked={{buffered.listable}} @disabled={{readOnly}} />
           {{i18n "admin.badges.listable"}}
         </label>
       </div>
 
       <div>
         <label>
-          {{input type="checkbox" checked=buffered.show_posts disabled=readOnly}}
+          <Input @type="checkbox" @checked={{buffered.show_posts}} @disabled={{readOnly}} />
           {{i18n "admin.badges.show_posts"}}
         </label>
       </div>
 
       <div>
         <label>
-          {{input type="checkbox" checked=buffered.enabled}}
+          <Input @type="checkbox" @checked={{buffered.enabled}} />
           {{i18n "admin.badges.enabled"}}
         </label>
       </div>
     </div>
 
     <div class="buttons">
-      {{d-button
-        class="btn-primary"
-        action=(action "save")
-        type="submit"
-        disabled=saving
-        label="admin.badges.save"}}
+      <DButton @class="btn-primary" @action={{action "save"}} @type="submit" @disabled={{saving}} @label="admin.badges.save" />
       <span class="saving">{{savingStatus}}</span>
       {{#unless readOnly}}
-        {{d-button
-          action=(action "destroy")
-          class="btn-danger"
-          label="admin.badges.delete"
-        }}
+        <DButton @action={{action "destroy"}} @class="btn-danger" @label="admin.badges.delete" />
       {{/unless}}
     </div>
   </form>
-{{/d-section}}
+</DSection>
 
 {{#if grant_count}}
   <div class="content-body current-badge-actions">
     <div>
-      {{#link-to "badges.show" this}}{{i18n "badges.granted" count=grant_count}}{{/link-to}}
+      <LinkTo @route="badges.show" @model={{this}}>{{i18n "badges.granted" count=grant_count}}</LinkTo>
     </div>
   </div>
 {{/if}}

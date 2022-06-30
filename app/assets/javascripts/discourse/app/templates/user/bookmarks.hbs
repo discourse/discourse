@@ -1,4 +1,4 @@
-{{#conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{loading}}>
   {{#if permissionDenied}}
     <div class="alert alert-info">{{i18n "bookmarks.list_permission_denied"}}</div>
   {{else if userDoesNotHaveBookmarks}}
@@ -8,29 +8,13 @@
     />
   {{else}}
     <div class="inline-form full-width bookmark-search-form">
-      {{input type="text"
-        value=searchTerm
-        placeholder=(i18n "bookmarks.search_placeholder")
-        enter=(action "search")
-        id="bookmark-search"
-        autocomplete="off"
-      }}
-      {{d-button
-        class="btn-primary"
-        action=(action "search")
-        type="button"
-        icon="search"
-      }}
+      <Input @type="text" @value={{searchTerm}} placeholder={{i18n "bookmarks.search_placeholder"}} @enter={{action "search"}} @id="bookmark-search" @autocomplete="off" />
+      <DButton @class="btn-primary" @action={{action "search"}} @type="button" @icon="search" />
     </div>
     {{#if nothingFound}}
       <div class="alert alert-info">{{i18n "user.no_bookmarks_search"}}</div>
     {{else}}
-      {{bookmark-list
-        loadMore=(action "loadMore")
-        reload=(action "reload")
-        loadingMore=loadingMore
-        content=model.bookmarks
-      }}
+      <BookmarkList @loadMore={{action "loadMore"}} @reload={{action "reload"}} @loadingMore={{loadingMore}} @content={{model.bookmarks}} />
     {{/if}}
   {{/if}}
-{{/conditional-loading-spinner}}
+</ConditionalLoadingSpinner>

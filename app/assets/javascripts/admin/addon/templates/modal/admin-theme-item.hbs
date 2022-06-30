@@ -9,11 +9,7 @@
     {{#if theme.installed}}
       <span>{{i18n "admin.customize.theme.installed"}}</span>
     {{else}}
-      {{d-button class="btn-small"
-        label="admin.customize.theme.install"
-        disabled=installDisabled
-        icon="upload"
-        action=(action "installThemeFromList" theme.value)}}
+      <DButton @class="btn-small" @label="admin.customize.theme.install" @disabled={{installDisabled}} @icon="upload" @action={{action "installThemeFromList" theme.value}} />
     {{/if}}
   </div>
 </div>

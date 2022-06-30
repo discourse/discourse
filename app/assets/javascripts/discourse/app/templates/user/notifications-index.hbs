@@ -13,13 +13,13 @@
   />
 {{else}}
   <div class="user-notifications-filter">
-    {{notifications-filter value=filter onChange=(action (mut filter))}}
+    <NotificationsFilter @value={{filter}} @onChange={{action (mut filter)}} />
   </div>
 
   {{#if nothingFound}}
     <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
   {{else}}
-    {{user-notifications-large notifications=model}}
-    {{conditional-loading-spinner condition=loading}}
+    <UserNotificationsLarge @notifications={{model}} />
+    <ConditionalLoadingSpinner @condition={{loading}} />
   {{/if}}
 {{/if}}

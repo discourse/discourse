@@ -5,25 +5,9 @@
   </a>
 </span>
 <span class="options actionable">
-  {{d-button
-    icon="check-square"
-    class="btn btn-flat see"
-    disabled=true
-  }}
+  <DButton @icon="check-square" @class="btn btn-flat see" @disabled={{true}} />
 
-  {{d-button
-    icon=canReplyIcon
-    action=(action "setPermissionReply")
-    translatedTitle=replyTooltip
-    class=(concat "btn btn-flat reply-toggle " replyGranted)
-    disabled=replyDisabled
-  }}
+  <DButton @icon={{canReplyIcon}} @action={{action "setPermissionReply"}} @translatedTitle={{replyTooltip}} @class={{concat "btn btn-flat reply-toggle " replyGranted}} @disabled={{replyDisabled}} />
 
-  {{d-button
-    icon=canCreateIcon
-    action=(action "setPermissionFull")
-    translatedTitle=createTooltip
-    class=(concat "btn btn-flat create-toggle " createGranted)
-    disabled=createDisabled
-  }}
+  <DButton @icon={{canCreateIcon}} @action={{action "setPermissionFull"}} @translatedTitle={{createTooltip}} @class={{concat "btn btn-flat create-toggle " createGranted}} @disabled={{createDisabled}} />
 </span>

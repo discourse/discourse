@@ -1,76 +1,54 @@
-{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories tag=tag additionalTags=additionalTags}}
+<BreadCrumbs @categories={{categories}} @category={{category}} @noSubcategories={{noSubcategories}} @tag={{tag}} @additionalTags={{additionalTags}} />
 
 {{#unless additionalTags}}
   {{!-- nav bar doesn't work with tag intersections --}}
-  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+  <NavigationBar @navItems={{navItems}} @filterMode={{filterMode}} @category={{category}} />
 {{/unless}}
 
 <div class="navigation-controls">
 
   {{#if showCategoryAdmin}}
-    {{categories-admin-dropdown
-      onChange=(action "selectCategoryAdminDropdownAction")
-      options=(hash
+    <CategoriesAdminDropdown @onChange={{action "selectCategoryAdminDropdownAction"}} @options={{hash
         triggerOnChangeOnTab=false
-      )
-    }}
+      }} />
   {{/if}}
 
   {{#if category}}
     {{#unless tag}}
       {{!-- don't show category edit button on tag pages --}}
       {{#if showCategoryEdit}}
-        {{d-button
-          class="btn-default edit-category"
-          action=editCategory
-          icon="wrench"
-          ariaLabel="category.edit"}}
+        <DButton @class="btn-default edit-category" @action={{editCategory}} @icon="wrench" @ariaLabel="category.edit" />
       {{/if}}
     {{/unless}}
   {{/if}}
 
   {{#if tag}}
     {{#if showToggleInfo}}
-      {{d-button icon=(if currentUser.staff "wrench" "info-circle") class="btn-default" ariaLabel="tagging.info" action=toggleInfo id="show-tag-info"}}
+      <DButton @icon={{if currentUser.staff "wrench" "info-circle"}} @class="btn-default" @ariaLabel="tagging.info" @action={{toggleInfo}} @id="show-tag-info" />
     {{/if}}
   {{/if}}
 
-  {{plugin-outlet name="before-create-topic-button" connectorTagName="div" tagName=""
-    args=(hash
+  <PluginOutlet @name="before-create-topic-button" @connectorTagName="div" @tagName="" @args={{hash
       canCreateTopic=canCreateTopic
       createTopicDisabled=createTopicDisabled
       createTopicLabel=createTopicLabel
       additionalTags=additionalTags
       category=category
-      tag=tag)
-  }}
+      tag=tag}} />
 
-  {{create-topic-button
-    canCreateTopic=canCreateTopic
-    action=(action "clickCreateTopicButton")
-    disabled=createTopicButtonDisabled
-    label=createTopicLabel
-    btnClass=createTopicClass
-    canCreateTopicOnTag=canCreateTopicOnTag
-  }}
+  <CreateTopicButton @canCreateTopic={{canCreateTopic}} @action={{action "clickCreateTopicButton"}} @disabled={{createTopicButtonDisabled}} @label={{createTopicLabel}} @btnClass={{createTopicClass}} @canCreateTopicOnTag={{canCreateTopicOnTag}} />
 
-  {{plugin-outlet name="after-create-topic-button" connectorTagName="div" tagName=""
-    args=(hash
+  <PluginOutlet @name="after-create-topic-button" @connectorTagName="div" @tagName="" @args={{hash
       canCreateTopic=canCreateTopic
       createTopicDisabled=createTopicDisabled
       createTopicLabel=createTopicLabel
-      category=category)
-  }}
+      category=category}} />
 
   {{#if category}}
     {{#unless tag}}
       {{!-- don't show category notification menu on tag pages --}}
       {{#if showCategoryNotifications}}
-        {{category-notifications-button
-          value=categoryNotificationLevel
-          category=category
-          onChange=(action "changeCategoryNotificationLevel")
-        }}
+        <CategoryNotificationsButton @value={{categoryNotificationLevel}} @category={{category}} @onChange={{action "changeCategoryNotificationLevel"}} />
       {{/if}}
     {{/unless}}
   {{/if}}
@@ -79,10 +57,7 @@
     {{#unless category}}
       {{!-- don't show tag notification menu on category pages --}}
       {{#if showTagNotifications}}
-        {{tag-notifications-button
-          onChange=changeTagNotificationLevel
-          value=tagNotification.notification_level
-        }}
+        <TagNotificationsButton @onChange={{changeTagNotificationLevel}} @value={{tagNotification.notification_level}} />
       {{/if}}
     {{/unless}}
   {{/if}}

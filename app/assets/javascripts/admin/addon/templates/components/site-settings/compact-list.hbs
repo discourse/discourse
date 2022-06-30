@@ -1,13 +1,6 @@
-{{list-setting
-  value=settingValue
-  settingName=setting.setting
-  choices=settingChoices
-  onChange=(action "onChangeListSetting")
-  onChangeChoices=(action "onChangeChoices")
-  options=(hash
+<ListSetting @value={{settingValue}} @settingName={{setting.setting}} @choices={{settingChoices}} @onChange={{action "onChangeListSetting"}} @onChangeChoices={{action "onChangeChoices"}} @options={{hash
     allowAny=allowAny
-  )
-}}
+  }} />
 
-{{setting-validation-message message=validationMessage}}
+<SettingValidationMessage @message={{validationMessage}} />
 <div class="desc">{{html-safe setting.description}}</div>

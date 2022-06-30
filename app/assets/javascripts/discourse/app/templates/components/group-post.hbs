@@ -3,7 +3,7 @@
     {{avatar post.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}
   </a>
   <span class="time">{{format-date post.created_at leaveAgo="true"}}</span>
-  {{expand-post item=post}}
+  <ExpandPost @item={{post}} />
 
   <div class="stream-topic-details">
     <div class="stream-topic-title">
@@ -16,7 +16,7 @@
       <div class="group-member-info names">
         <span class="name">{{name}}</span>
         {{#if post.user.title}}<span class="user-title">{{post.user.title}}</span>{{/if}}
-        {{plugin-outlet name="group-post-additional-member-info" args=(hash user=post.user)}}
+        <PluginOutlet @name="group-post-additional-member-info" @args={{hash user=post.user}} />
       </div>
     {{/if}}
   </div>

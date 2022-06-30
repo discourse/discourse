@@ -1161,7 +1161,13 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
-      enable_experimental_sidebar: "Enable experimental sidebar"
+      experimental_sidebar:
+        enable: "Enable experimental sidebar"
+        options: "Options"
+        categories_section: "Categories Section"
+        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
+        tags_section: "Tags Section"
+        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1306,6 +1312,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
+        sidebar: "Sidebar"
 
       change_password:
         success: "(email sent)"
@@ -4056,13 +4063,17 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
-          no_tracked_tags: "You are not tracking any tags."
+          none: "You have not added any tags."
+          click_to_get_started: "Click here to get started."
           header_link_title: "all tags"
           header_link_text: "Tags"
+          header_action_title: "edit your sidebar tags"
         categories:
-          no_tracked_categories: "You are not tracking any categories."
+          none: "You have not added any categories."
+          click_to_get_started: "Click here to get started."
           header_link_title: "all categories"
           header_link_text: "Categories"
+          header_action_title: "edit your sidebar categories"
         topics:
           header_link_title: "home"
           header_link_text: "Topics"

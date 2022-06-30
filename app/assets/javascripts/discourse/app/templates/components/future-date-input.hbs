@@ -3,38 +3,20 @@
     <label class={{labelClasses}}>
       {{#if displayLabelIcon}}{{d-icon displayLabelIcon}}{{/if}}{{displayLabel}}
     </label>
-    {{future-date-input-selector
-      value=(readonly selection)
-      content=shortcuts
-      clearable=clearable
-      onChangeInput=onChangeInput
-      onChange=(action (mut selection))
-      options=(hash
+    <FutureDateInputSelector @value={{readonly selection}} @content={{shortcuts}} @clearable={{clearable}} @onChangeInput={{onChangeInput}} @onChange={{action (mut selection)}} @options={{hash
         none="time_shortcut.select_timeframe"
-      )
-    }}
+      }} />
   </div>
 
   {{#if displayDateAndTimePicker}}
     <div class="control-group future-date-input-date-picker">
       {{d-icon "calendar-alt"}}
-      {{date-picker-future
-        value=_date
-        defaultDate=_date
-        onSelect=(action "onChangeDate")
-      }}
+      <DatePickerFuture @value={{_date}} @defaultDate={{_date}} @onSelect={{action "onChangeDate"}} />
     </div>
 
     <div class="control-group future-date-input-time-picker">
       {{d-icon "far-clock"}}
-      {{input
-        placeholder="--:--"
-        type="time"
-        class="time-input"
-        value=_time
-        disabled=timeInputDisabled
-        input=(action "onChangeTime" value="target.value")
-      }}
+      <Input placeholder="--:--" @type="time" class="time-input" @value={{_time}} @disabled={{timeInputDisabled}} @input={{action "onChangeTime" value="target.value"}} />
     </div>
   {{/if}}
 </div>

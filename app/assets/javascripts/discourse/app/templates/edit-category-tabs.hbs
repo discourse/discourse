@@ -3,36 +3,25 @@
     <div class="edit-category-title">
       <h2>{{title}}</h2>
       {{#if model.id}}
-        {{bread-crumbs
-          categories=site.categoriesList
-          category=model
-          noSubcategories=model.noSubcategories
-          editingCategory=true
-          editingCategoryTab=selectedTab
-        }}
+        <BreadCrumbs @categories={{site.categoriesList}} @category={{model}} @noSubcategories={{model.noSubcategories}} @editingCategory={{true}} @editingCategoryTab={{selectedTab}} />
       {{/if}}
     </div>
     {{#unless mobileView}}
       {{#if model.id}}
-        {{d-button
-          class="category-back"
-          action=(action "goBack")
-          label="category.back"
-          icon="caret-left"
-        }}
+        <DButton @class="category-back" @action={{action "goBack"}} @label="category.back" @icon="caret-left" />
       {{/if}}
     {{/unless}}
   </div>
 
   <div class="edit-category-nav">
     <ul class="nav nav-stacked">
-      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="general"}}
-      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="security"}}
-      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="settings"}}
-      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="images"}}
-      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="topic-template"}}
+      <EditCategoryTab @panels={{panels}} @selectedTab={{selectedTab}} @params={{parentParams}} @tab="general" />
+      <EditCategoryTab @panels={{panels}} @selectedTab={{selectedTab}} @params={{parentParams}} @tab="security" />
+      <EditCategoryTab @panels={{panels}} @selectedTab={{selectedTab}} @params={{parentParams}} @tab="settings" />
+      <EditCategoryTab @panels={{panels}} @selectedTab={{selectedTab}} @params={{parentParams}} @tab="images" />
+      <EditCategoryTab @panels={{panels}} @selectedTab={{selectedTab}} @params={{parentParams}} @tab="topic-template" />
       {{#if siteSettings.tagging_enabled}}
-        {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="tags"}}
+        <EditCategoryTab @panels={{panels}} @selectedTab={{selectedTab}} @params={{parentParams}} @tab="tags" />
       {{/if}}
     </ul>
   </div>
@@ -52,25 +41,13 @@
   {{/if}}
 
   <div class="edit-category-footer">
-    {{d-button id="save-category" class="btn-primary" disabled=disabled action=(action "saveCategory") label=saveLabel}}
+    <DButton @id="save-category" @class="btn-primary" @disabled={{disabled}} @action={{action "saveCategory"}} @label={{saveLabel}} />
 
     {{#if model.can_delete}}
-      {{d-button
-        class="btn-danger"
-        disabled=deleteDisabled
-        action=(action "deleteCategory")
-        icon="far-trash-alt"
-        label="category.delete"
-      }}
+      <DButton @class="btn-danger" @disabled={{deleteDisabled}} @action={{action "deleteCategory"}} @icon="far-trash-alt" @label="category.delete" />
     {{else if model.id}}
       <div class="disable-info">
-        {{d-button
-          disabled=deleteDisabled
-          class="btn-default"
-          action=(action "toggleDeleteTooltip")
-          icon="question-circle"
-          label="category.delete"
-        }}
+        <DButton @disabled={{deleteDisabled}} @class="btn-default" @action={{action "toggleDeleteTooltip"}} @icon="question-circle" @label="category.delete" />
       </div>
     {{/if}}
   </div>

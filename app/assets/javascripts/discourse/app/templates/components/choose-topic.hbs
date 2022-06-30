@@ -5,11 +5,7 @@
   <span>{{i18n labelText}}</span>
 </label>
 
-{{text-field
-  value=topicTitle
-  placeholderKey="choose_topic.title.placeholder"
-  id="choose-topic-title"
-}}
+<TextField @value={{topicTitle}} @placeholderKey="choose_topic.title.placeholder" @id="choose-topic-title" />
 
 {{#if loading}}
   <p>{{i18n "loading"}}</p>
@@ -21,14 +17,8 @@
       {{#each topics as |t|}}
         <div class="controls existing-topic">
           <label class="radio">
-            {{input
-              id=(concat "choose-topic-" t.id)
-              checked=(eq t.id selectedTopicId)
-              click=(action "chooseTopic" t)
-              type="radio"
-              name="choose_topic_id"
-            }}
-            {{topic-status topic=t disableActions=true}}
+            <Input @id={{concat "choose-topic-" t.id}} @checked={{eq t.id selectedTopicId}} @click={{action "chooseTopic" t}} @type="radio" @name="choose_topic_id" />
+            <TopicStatus @topic={{t}} @disableActions={{true}} />
             <span class="topic-title">
               {{replace-emoji t.fancy_title}}
             </span>

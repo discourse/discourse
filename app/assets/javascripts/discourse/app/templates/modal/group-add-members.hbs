@@ -1,25 +1,21 @@
-{{#d-modal-body rawTitle=rawTitle}}
+<DModalBody @rawTitle={{rawTitle}}>
   <form class="form-vertical group-add-members">
     <p>{{i18n "groups.add_members.description"}}</p>
 
     <div class="input-group">
-      {{email-group-user-chooser
-        value=usernamesAndEmails
-        onChange=(action "setUsernamesAndEmails")
-        options=(hash
+      <EmailGroupUserChooser @value={{usernamesAndEmails}} @onChange={{action "setUsernamesAndEmails"}} @options={{hash
           allowEmails=currentUser.can_invite_to_forum
           filterPlaceholder=(if currentUser.can_invite_to_forum
                              "groups.add_members.usernames_or_emails_placeholder"
                              "groups.add_members.usernames_placeholder"
                             )
-        )
-      }}
+        }} />
     </div>
 
     {{#if model.can_admin_group}}
       <div class="input-group">
         <label>
-          {{input id="set-owner" type="checkbox" checked=setOwner disabled=emails}}
+          <Input @id="set-owner" @type="checkbox" @checked={{setOwner}} @disabled={{emails}} />
           {{i18n "groups.add_members.set_owner"}}
         </label>
       </div>
@@ -27,17 +23,13 @@
 
     <div class="input-group">
       <label>
-        {{input type="checkbox" checked=notifyUsers disabled=(and (not usernames) emails)}}
+        <Input @type="checkbox" @checked={{notifyUsers}} @disabled={{and (not usernames) emails}} />
         {{i18n "groups.add_members.notify_users"}}
       </label>
     </div>
   </form>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button action=(action "addMembers")
-      class="add btn-primary"
-      icon="plus"
-      disabled=(or loading (not usernamesAndEmails))
-      label="groups.add"}}
+  <DButton @action={{action "addMembers"}} @class="add btn-primary" @icon="plus" @disabled={{or loading (not usernamesAndEmails)}} @label="groups.add" />
 </div>

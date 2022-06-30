@@ -54,7 +54,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def highest_post_number
-    (scope.is_staff? && object.highest_staff_post_number) || object.highest_post_number
+    (scope.is_whisperer? && object.highest_staff_post_number) || object.highest_post_number
   end
 
   def liked

@@ -1,12 +1,7 @@
 <div class="wrapper">
   <textarea id="backupCodes" class="backup-codes-area" rows="10" readonly>{{formattedBackupCodes}}</textarea>
 
-  {{d-button
-    action=(action "copyToClipboard")
-    class="backup-codes-copy-btn"
-    icon="copy"
-    aria-label="user.second_factor_backup.copy_to_clipboard"
-    title="user.second_factor_backup.copy_to_clipboard"}}
+  <DButton @action={{action "copyToClipboard"}} @class="backup-codes-copy-btn" @icon="copy" @aria-label="user.second_factor_backup.copy_to_clipboard" @title="user.second_factor_backup.copy_to_clipboard" />
 
   <a download="{{siteTitleSlug}}-backup-codes.txt"
      class="btn no-text btn-icon backup-codes-download-btn"

@@ -1,17 +1,13 @@
 {{#if ip}}
-  {{d-button
-    class="btn-default"
-    action=(action "lookup")
-    icon="globe"
-    label="admin.user.ip_lookup"}}
+  <DButton @class="btn-default" @action={{action "lookup"}} @icon="globe" @label="admin.user.ip_lookup" />
 {{/if}}
 {{#if show}}
   <div class="location-box">
     <a href class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     {{#if copied}}
-      {{d-button class="btn-hover pull-right" icon="copy" label="ip_lookup.copied"}}
+      <DButton @class="btn-hover pull-right" @icon="copy" @label="ip_lookup.copied" />
     {{else}}
-      {{d-button action=(action "copy") class="pull-right no-text" icon="copy"}}
+      <DButton @action={{action "copy"}} @class="pull-right no-text" @icon="copy" />
     {{/if}}
     <h4>{{i18n "ip_lookup.title"}}</h4>
     <p class="powered-by">{{html-safe (i18n "ip_lookup.powered_by")}}</p>
@@ -45,16 +41,11 @@
         {{i18n "ip_lookup.other_accounts"}}
         <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
-          {{d-button
-            class="btn-danger pull-right"
-            action=(action "deleteOtherAccounts")
-            icon="exclamation-triangle"
-            translatedLabel=(i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete)
-          }}
+          <DButton @class="btn-danger pull-right" @action={{action "deleteOtherAccounts"}} @icon="exclamation-triangle" @translatedLabel={{i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete}} />
         {{/if}}
       </dt>
 
-      {{#conditional-loading-spinner size="small" condition=otherAccountsLoading}}
+      <ConditionalLoadingSpinner @size="small" @condition={{otherAccountsLoading}}>
         {{#if other_accounts.length}}
           <dd class="other-accounts">
             <table class="table table-condensed table-hover">
@@ -71,11 +62,11 @@
                 {{#each other_accounts as |a|}}
                   <tr>
                     <td>
-                      {{#link-to "adminUser" a}}
+                      <LinkTo @route="adminUser" @model={{a}}>
                         {{avatar a usernamePath="user.username" imageSize="small"}}
                         &nbsp;
                         <span>{{a.username}}</span>
-                      {{/link-to}}
+                      </LinkTo>
                     </td>
                     <td>{{a.trustLevel.id}}</td>
                     <td>{{a.time_read}}</td>
@@ -87,7 +78,7 @@
             </table>
           </dd>
         {{/if}}
-      {{/conditional-loading-spinner}}
+      </ConditionalLoadingSpinner>
     </dl>
   </div>
 {{/if}}

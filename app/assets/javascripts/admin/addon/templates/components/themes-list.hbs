@@ -1,36 +1,19 @@
 <div class="themes-list-header">
-  {{d-button
-    action=(action "changeView")
-    actionParam=THEMES
-    class=(concat "themes-tab " "tab " (if themesTabActive "btn-danger active" ""))
-    label="admin.customize.theme.title"
-  }}
-  {{d-button
-    action=(action "changeView")
-    actionParam=COMPONENTS
-    class=(concat "components-tab " "tab " (if componentsTabActive "btn-danger active" ""))
-    label="admin.customize.theme.components"
-    icon="puzzle-piece"
-  }}
+  <DButton @action={{action "changeView"}} @actionParam={{THEMES}} @class={{concat "themes-tab " "tab " (if themesTabActive "btn-danger active" "")}} @label="admin.customize.theme.title" />
+  <DButton @action={{action "changeView"}} @actionParam={{COMPONENTS}} @class={{concat "components-tab " "tab " (if componentsTabActive "btn-danger active" "")}} @label="admin.customize.theme.components" @icon="puzzle-piece" />
 </div>
 
 <div class="themes-list-container">
   {{#if showFilter}}
     <div class="themes-list-filter themes-list-item">
-      {{input
-        class="filter-input"
-        placeholder=(i18n "admin.customize.theme.filter_placeholder")
-        autocomplete="off"
-        type="search"
-        value=(mut filterTerm)
-      }}
+      <Input class="filter-input" placeholder={{i18n "admin.customize.theme.filter_placeholder"}} @autocomplete="off" @type="search" @value={{mut filterTerm}} />
       {{d-icon "search"}}
     </div>
   {{/if}}
   {{#if hasThemes}}
     {{#if hasActiveThemes}}
       {{#each activeThemes as |theme|}}
-        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+        <ThemesListItem @theme={{theme}} @navigateToTheme={{action "navigateToTheme" theme}} />
       {{/each}}
 
       {{#if hasInactiveThemes}}
@@ -48,7 +31,7 @@
 
     {{#if hasInactiveThemes}}
       {{#each inactiveThemes as |theme|}}
-        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+        <ThemesListItem @theme={{theme}} @navigateToTheme={{action "navigateToTheme" theme}} />
       {{/each}}
     {{/if}}
   {{else}}
@@ -59,5 +42,5 @@
 </div>
 
 <div class="create-actions">
-  {{d-button action=installModal icon="upload" label="admin.customize.install" class="btn-primary"}}
+  <DButton @action={{installModal}} @icon="upload" @label="admin.customize.install" @class="btn-primary" />
 </div>

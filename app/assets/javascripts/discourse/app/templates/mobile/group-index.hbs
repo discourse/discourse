@@ -1,28 +1,18 @@
 <section class="user-content">
-  {{text-field
-    value=filterInput
-    placeholderKey=filterPlaceholder
-    autocomplete="off"
-    class="group-username-filter no-blur"
-  }}
+  <TextField @value={{filterInput}} @placeholderKey={{filterPlaceholder}} @autocomplete="off" @class="group-username-filter no-blur" />
 
   <div class="group-members-manage">
     {{#if canManageGroup}}
-      {{d-button
-        icon="plus"
-        label="groups.manage.add_members"
-        class="group-members-add"
-        action=(route-action "showAddMembersModal")
-      }}
+      <DButton @icon="plus" @label="groups.manage.add_members" @class="group-members-add" @action={{route-action "showAddMembersModal"}} />
     {{/if}}
   </div>
 
   {{#if hasMembers}}
-    {{#load-more selector=".group-members .user-info" action=(action "loadMore")}}
+    <LoadMore @selector=".group-members .user-info" @action={{action "loadMore"}}>
       <div class="group-members">
         {{#each model.members as |user|}}
           <div class="group-member">
-            {{#user-info user=user skipName=skipName}}
+            <UserInfo @user={{user}} @skipName={{skipName}}>
               {{#if user.owner}}<strong class="group-owner-label">{{i18n "groups.owner"}}</strong>{{/if}}
 
               <div class="group-member-info">
@@ -36,19 +26,15 @@
               </div>
 
               {{#if canManageGroup}}
-                {{group-member-dropdown
-                  member=user
-                  canAdminGroup=model.can_admin_group
-                  onChange=(action "actOnGroup" user)
-                }}
+                <GroupMemberDropdown @member={{user}} @canAdminGroup={{model.can_admin_group}} @onChange={{action "actOnGroup" user}} />
               {{/if}}
-            {{/user-info}}
+            </UserInfo>
           </div>
         {{/each}}
       </div>
-    {{/load-more}}
+    </LoadMore>
 
-    {{conditional-loading-spinner condition=loading}}
+    <ConditionalLoadingSpinner @condition={{loading}} />
   {{else}}
     <br>
 

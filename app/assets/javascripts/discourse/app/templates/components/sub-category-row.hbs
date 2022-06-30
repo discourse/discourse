@@ -1,7 +1,7 @@
 {{#unless isHidden}}
   <tr data-category-id={{category.id}} data-notification-level={{category.notificationLevelString}} class="{{if category.description_excerpt "has-description" "no-description"}} {{if category.uploaded_logo.url "has-logo" "no-logo"}}">
     <td class="category {{if isMuted "muted"}}" style={{border-color category.color}}>
-      {{category-title-link tagName="h4" category=category}}
+      <CategoryTitleLink @tagName="h4" @category={{category}} />
       {{#if category.description_excerpt}}
         <div class="category-description subcategory-description">
           {{dir-span category.description_excerpt htmlSafe="true"}}
@@ -10,7 +10,7 @@
       {{#if category.subcategories}}
         <div class="subcategories">
           {{#each category.subcategories as |subsubcategory|}}
-            {{sub-category-item category=subsubcategory hideUnread="true" listType=listType}}
+            <SubCategoryItem @category={{subsubcategory}} @hideUnread="true" @listType={{listType}} />
           {{/each}}
         </div>
       {{/if}}

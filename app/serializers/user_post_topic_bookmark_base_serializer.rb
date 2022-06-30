@@ -48,7 +48,7 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
   end
 
   def highest_post_number
-    scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
+    scope.is_whisperer? ? topic.highest_staff_post_number : topic.highest_post_number
   end
 
   def last_read_post_number

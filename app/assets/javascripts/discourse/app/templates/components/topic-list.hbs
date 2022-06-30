@@ -17,50 +17,26 @@
   </thead>
 {{/unless}}
 
-{{plugin-outlet
-  name="before-topic-list-body"
-  args=(hash
+<PluginOutlet @name="before-topic-list-body" @args={{hash
     topics=topics
     selected=selected
     bulkSelectEnabled=bulkSelectEnabled
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
-    hideCategory=hideCategory)
- }}
+    hideCategory=hideCategory}} />
 
 <tbody class="topic-list-body">
   {{#each filteredTopics as |topic index|}}
-    {{topic-list-item topic=topic
-                      bulkSelectEnabled=bulkSelectEnabled
-                      showTopicPostBadges=showTopicPostBadges
-                      hideCategory=hideCategory
-                      showPosters=showPosters
-                      showLikes=showLikes
-                      showOpLikes=showOpLikes
-                      expandGloballyPinned=expandGloballyPinned
-                      expandAllPinned=expandAllPinned
-                      lastVisitedTopic=lastVisitedTopic
-                      selected=selected
-                      lastChecked=lastChecked
-                      tagsForUser=tagsForUser
-                      focusLastVisitedTopic=focusLastVisitedTopic
-                      index=index}}
+    <TopicListItem @topic={{topic}} @bulkSelectEnabled={{bulkSelectEnabled}} @showTopicPostBadges={{showTopicPostBadges}} @hideCategory={{hideCategory}} @showPosters={{showPosters}} @showLikes={{showLikes}} @showOpLikes={{showOpLikes}} @expandGloballyPinned={{expandGloballyPinned}} @expandAllPinned={{expandAllPinned}} @lastVisitedTopic={{lastVisitedTopic}} @selected={{selected}} @lastChecked={{lastChecked}} @tagsForUser={{tagsForUser}} @focusLastVisitedTopic={{focusLastVisitedTopic}} @index={{index}} />
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
-    {{plugin-outlet
-      name="after-topic-list-item"
-      args=(hash topic=topic index=index)
-      connectorTagName="tr"
-    }}
+    <PluginOutlet @name="after-topic-list-item" @args={{hash topic=topic index=index}} @connectorTagName="tr" />
   {{/each}}
 </tbody>
 
-{{plugin-outlet
-  name="after-topic-list-body"
-  args=(hash
+<PluginOutlet @name="after-topic-list-body" @args={{hash
     topics=topics
     selected=selected
     bulkSelectEnabled=bulkSelectEnabled
     lastVisitedTopic=lastVisitedTopic
     discoveryList=discoveryList
-    hideCategory=hideCategory)
- }}
+    hideCategory=hideCategory}} />

@@ -1,5 +1,5 @@
-{{#conditional-loading-spinner condition=isLoading}}
-  {{plugin-outlet name="admin-dashboard-general-top" tagName="span" connectorTagName="div"}}
+<ConditionalLoadingSpinner @condition={{isLoading}}>
+  <PluginOutlet @name="admin-dashboard-general-top" @tagName="span" @connectorTagName="div" />
 
   {{#if isCommunityHealthVisible}}
     <div class="community-health section">
@@ -10,55 +10,24 @@
               {{i18n "admin.dashboard.community_health"}}
             </a>
           </h2>
-          {{period-chooser
-            period=period
-            action=(action "changePeriod")
-            content=availablePeriods
-            fullDay=false}}
+          <PeriodChooser @period={{period}} @action={{action "changePeriod"}} @content={{availablePeriods}} @fullDay={{false}} />
         </div>
 
         <div class="section-body">
           <div class="charts">
-            {{admin-report
-              dataSourceName="consolidated_page_views"
-              forcedModes="stacked-chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="consolidated_page_views" @forcedModes="stacked-chart" @filters={{filters}} />
 
-            {{admin-report
-              dataSourceName="signups"
-              showTrend=true
-              forcedModes="chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="signups" @showTrend={{true}} @forcedModes="chart" @filters={{filters}} />
 
-            {{admin-report
-              dataSourceName="topics"
-              showTrend=true
-              forcedModes="chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="topics" @showTrend={{true}} @forcedModes="chart" @filters={{filters}} />
 
-            {{admin-report
-              dataSourceName="posts"
-              showTrend=true
-              forcedModes="chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="posts" @showTrend={{true}} @forcedModes="chart" @filters={{filters}} />
 
-            {{admin-report
-              dataSourceName="dau_by_mau"
-              showTrend=true
-              forcedModes="chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="dau_by_mau" @showTrend={{true}} @forcedModes="chart" @filters={{filters}} />
 
-            {{admin-report
-              dataSourceName="daily_engaged_users"
-              showTrend=true
-              forcedModes="chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="daily_engaged_users" @showTrend={{true}} @forcedModes="chart" @filters={{filters}} />
 
-            {{admin-report
-              dataSourceName="new_contributors"
-              showTrend=true
-              forcedModes="chart"
-              filters=filters}}
+            <AdminReport @dataSourceName="new_contributors" @showTrend={{true}} @forcedModes="chart" @filters={{filters}} />
           </div>
         </div>
       </div>
@@ -73,9 +42,9 @@
             <div class="header">
               <ul class="breadcrumb">
                 <li class="item report">
-                  {{#link-to "adminReports" class="report-url"}}
+                  <LinkTo @route="adminReports" class="report-url">
                     {{i18n "admin.dashboard.activity_metrics"}}
-                  {{/link-to}}
+                  </LinkTo>
                 </li>
               </ul>
             </div>
@@ -90,11 +59,7 @@
                 </div>
 
                 {{#each activityMetrics as |metric|}}
-                  {{admin-report
-                    showHeader=false
-                    filters=activityMetricsFilters
-                    forcedModes="counters"
-                    dataSourceName=metric}}
+                  <AdminReport @showHeader={{false}} @filters={{activityMetricsFilters}} @forcedModes="counters" @dataSourceName={{metric}} />
                 {{/each}}
               </div>
             </div>
@@ -103,22 +68,15 @@
       {{/if}}
 
       <div class="user-metrics">
-        {{#conditional-loading-section isLoading=isLoading}}
-          {{admin-report
-            forcedModes="inline-table"
-            dataSourceName="users_by_type"}}
+        <ConditionalLoadingSection @isLoading={{isLoading}}>
+          <AdminReport @forcedModes="inline-table" @dataSourceName="users_by_type" />
 
-          {{admin-report
-            forcedModes="inline-table"
-            dataSourceName="users_by_trust_level"}}
-        {{/conditional-loading-section}}
+          <AdminReport @forcedModes="inline-table" @dataSourceName="users_by_trust_level" />
+        </ConditionalLoadingSection>
       </div>
 
       <div class="misc">
-        {{admin-report
-          forcedModes="storage-stats"
-          dataSourceName="storage_stats"
-          showHeader=false}}
+        <AdminReport @forcedModes="storage-stats" @dataSourceName="storage_stats" @showHeader={{false}} />
 
         <div class="last-dashboard-update">
           <div>
@@ -140,21 +98,13 @@
 
     {{#if isSearchReportsVisible}}
       <div class="section-column">
-        {{admin-report
-          filters=topReferredTopicsFilters
-          dataSourceName="top_referred_topics"
-          reportOptions=topReferredTopicsOptions}}
+        <AdminReport @filters={{topReferredTopicsFilters}} @dataSourceName="top_referred_topics" @reportOptions={{topReferredTopicsOptions}} />
 
-        {{admin-report
-          dataSourceName="trending_search"
-          reportOptions=trendingSearchOptions
-          filters=trendingSearchFilters
-          isEnabled=logSearchQueriesEnabled
-          disabledLabel=trendingSearchDisabledLabel}}
+        <AdminReport @dataSourceName="trending_search" @reportOptions={{trendingSearchOptions}} @filters={{trendingSearchFilters}} @isEnabled={{logSearchQueriesEnabled}} @disabledLabel={{trendingSearchDisabledLabel}} />
         {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=(base-path))}}
       </div>
     {{/if}}
   </div>
 
-  {{plugin-outlet name="admin-dashboard-general-bottom" tagName="span" connectorTagName="div"}}
-{{/conditional-loading-spinner}}
+  <PluginOutlet @name="admin-dashboard-general-bottom" @tagName="span" @connectorTagName="div" />
+</ConditionalLoadingSpinner>

@@ -3,11 +3,7 @@
 
   <p class="desc">{{i18n "admin.emoji.help"}}</p>
 
-  {{emoji-uploader
-    emojiGroups=emojiGroups
-    done=(action "emojiUploaded")
-    id="emoji-uploader"
-  }}
+  <EmojiUploader @emojiGroups={{emojiGroups}} @done={{action "emojiUploaded"}} @id="emoji-uploader" />
 
   <hr>
 
@@ -18,13 +14,7 @@
           <th>{{i18n "admin.emoji.image"}}</th>
           <th>{{i18n "admin.emoji.name"}}</th>
           <th colspan="2">
-            {{combo-box
-              value=filter
-              content=sortingGroups
-              nameProperty=null
-              valueProperty=null
-              onChange=(action "filterGroups")
-            }}
+            <ComboBox @value={{filter}} @content={{sortingGroups}} @nameProperty={{null}} @valueProperty={{null}} @onChange={{action "filterGroups"}} />
           </th>
         </tr>
       </thead>
@@ -35,11 +25,7 @@
             <td>:{{e.name}}:</td>
             <td>{{e.group}}</td>
             <td class="action">
-              {{d-button
-                action=(action "destroyEmoji" e)
-                class="btn-danger"
-                icon="far-trash-alt"
-              }}
+              <DButton @action={{action "destroyEmoji" e}} @class="btn-danger" @icon="far-trash-alt" />
             </td>
           </tr>
         {{/each}}

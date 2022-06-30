@@ -2,14 +2,14 @@
 
   <div class="controls">
     <div class="inline-form">
-      {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
-      {{text-field id="setting-filter" value=filter placeholderKey="type_to_filter" class="no-blur"}}
-      {{d-button class="btn-default" id="clear-filter" action=(action "clearFilter") label="admin.site_settings.clear_filter"}}
+      <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
+      <TextField @id="setting-filter" @value={{filter}} @placeholderKey="type_to_filter" @class="no-blur" />
+      <DButton @class="btn-default" @id="clear-filter" @action={{action "clearFilter"}} @label="admin.site_settings.clear_filter" />
     </div>
   </div>
   <div class="search controls">
     <label>
-      {{input type="checkbox" checked=onlyOverridden}}
+      <Input @type="checkbox" @checked={{onlyOverridden}} />
       {{i18n "admin.settings.show_overriden"}}
     </label>
   </div>
@@ -19,10 +19,10 @@
   <ul class="nav nav-stacked">
     {{#each visibleSiteSettings as |category|}}
       <li class={{category.nameKey}}>
-        {{#link-to "adminSiteSettingsCategory" category.nameKey class=category.nameKey}}
+        <LinkTo @route="adminSiteSettingsCategory" @model={{category.nameKey}} class={{category.nameKey}}>
           {{category.name}}
           {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/each}}
   </ul>

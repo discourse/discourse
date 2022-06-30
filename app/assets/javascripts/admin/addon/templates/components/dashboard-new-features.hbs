@@ -5,7 +5,7 @@
 
   <div class="section-body {{columnCountClass}}">
     {{#each newFeatures as |feature|}}
-      {{dashboard-new-feature-item item=feature tagName=""}}
+      <DashboardNewFeatureItem @item={{feature}} @tagName="" />
     {{/each}}
   </div>
   <div class="section-footer">
@@ -14,6 +14,6 @@
         {{i18n "admin.dashboard.new_features.learn_more"}}
       </a>
     {{/if}}
-    {{d-button label="admin.dashboard.new_features.dismiss" class="btn-default new-features-dismiss" action=dismissNewFeatures }}
+    <DButton @label="admin.dashboard.new_features.dismiss" @class="btn-default new-features-dismiss" @action={{dismissNewFeatures}} />
   </div>
 {{/if}}

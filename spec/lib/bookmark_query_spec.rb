@@ -119,7 +119,10 @@ RSpec.describe BookmarkQuery do
     context "for a whispered post" do
       before do
         post_bookmark.bookmarkable.update(post_type: Post.types[:whisper])
+        SiteSetting.enable_whispers = true
       end
+      fab!(:whisperers_group) { Fabricate(:group) }
+
       context "when the user is moderator" do
         it "does return the whispered post" do
           user.update!(moderator: true)
@@ -129,6 +132,13 @@ RSpec.describe BookmarkQuery do
       context "when the user is admin" do
         it "does return the whispered post" do
           user.update!(admin: true)
+          expect(bookmark_query.list_all.count).to eq(3)
+        end
+      end
+      context "when the user is a member of whisperers group" do
+        it "returns the whispered post" do
+          SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+          user.update!(groups: [whisperers_group])
           expect(bookmark_query.list_all.count).to eq(3)
         end
       end

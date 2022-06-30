@@ -2,14 +2,11 @@
 
 <div class="email-advanced-test">
   <label for="email">{{i18n "admin.email.advanced_test.email"}}</label>
-  {{textarea name="email" value=email class="email-body"}}
-  {{d-button
-    action=(action "run")
-    label="admin.email.advanced_test.run"
-  }}
+  <Textarea @name="email" @value={{email}} class="email-body" />
+  <DButton @action={{action "run"}} @label="admin.email.advanced_test.run" />
 </div>
 
-{{#conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{loading}}>
   {{#if format}}
     <hr>
     <div class="text">
@@ -22,4 +19,4 @@
       <pre class="full-reason">{{html-safe elided}}</pre>
     </div>
   {{/if}}
-{{/conditional-loading-spinner}}
+</ConditionalLoadingSpinner>

@@ -1,17 +1,13 @@
 <div class="show-current-style">
-  {{plugin-outlet name="admin-customize-themes-show-top" tagName="span" connectorTagName="div" args=(hash theme=model)}}
+  <PluginOutlet @name="admin-customize-themes-show-top" @tagName="span" @connectorTagName="div" @args={{hash theme=model}} />
   <div class="title">
     {{#if editingName}}
-      {{text-field value=model.name autofocus="true"}}
-      {{d-button action=(action "finishedEditingName") class="btn-primary btn-small submit-edit" icon="check"}}
-      {{d-button action=(action "cancelEditingName") class="btn-small cancel-edit" icon="times"}}
+      <TextField @value={{model.name}} @autofocus="true" />
+      <DButton @action={{action "finishedEditingName"}} @class="btn-primary btn-small submit-edit" @icon="check" />
+      <DButton @action={{action "cancelEditingName"}} @class="btn-small cancel-edit" @icon="times" />
     {{else}}
       <span>{{model.name}}</span>
-      {{d-button
-        action=(action "startEditingName")
-        icon="pencil-alt"
-        class="btn-small"
-      }}
+      <DButton @action={{action "startEditingName"}} @icon="pencil-alt" @class="btn-small" />
     {{/if}}
   </div>
 
@@ -35,19 +31,15 @@
     <div class="alert alert-error">
       {{#if model.disabled_by}}
         {{i18n "admin.customize.theme.disabled_by"}}
-        {{#user-link user=model.disabled_by}}
+        <UserLink @user={{model.disabled_by}}>
           {{avatar model.disabled_by imageSize="tiny"}}
           {{model.disabled_by.username}}
-        {{/user-link}}
+        </UserLink>
         {{format-date model.disabled_at leaveAgo="true"}}
       {{else}}
         {{i18n "admin.customize.theme.disabled"}}
       {{/if}}
-      {{d-button
-        class="btn-default"
-        action=(action "enableComponent")
-        icon="check"
-        label="admin.customize.theme.enable"}}
+      <DButton @class="btn-default" @action={{action "enableComponent"}} @icon="check" @label="admin.customize.theme.enable" />
     </div>
   {{/unless}}
 
@@ -95,9 +87,9 @@
           {{/if}}
 
           {{#if model.remote_theme.commits_behind}}
-            {{d-button action=(action "updateToLatest") icon="download" class="btn-primary" label="admin.customize.theme.update_to_latest"}}
+            <DButton @action={{action "updateToLatest"}} @icon="download" @class="btn-primary" @label="admin.customize.theme.update_to_latest" />
           {{else}}
-            {{d-button action=(action "checkForThemeUpdates") icon="sync" class="btn-default" label="admin.customize.theme.check_for_updates"}}
+            <DButton @action={{action "checkForThemeUpdates"}} @icon="sync" @class="btn-default" @label="admin.customize.theme.check_for_updates" />
           {{/if}}
 
           <span class="status-message">
@@ -131,9 +123,9 @@
     {{else}}
       <span class="heading">{{i18n "admin.customize.theme.creator"}}</span>
       <span>
-        {{#user-link user=model.user}}
+        <UserLink @user={{model.user}}>
           {{format-username model.user.username}}
-        {{/user-link}}
+        </UserLink>
       </span>
     {{/if}}
   </div>
@@ -141,41 +133,36 @@
   {{#if showCheckboxes}}
     <div class="control-unit">
       {{#unless model.component}}
-        {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default modelId=model.id}}
-        {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable modelId=model.id}}
+        <InlineEditCheckbox @action={{action "applyDefault"}} @labelKey="admin.customize.theme.is_default" @checked={{model.default}} @modelId={{model.id}} />
+        <InlineEditCheckbox @action={{action "applyUserSelectable"}} @labelKey="admin.customize.theme.user_selectable" @checked={{model.user_selectable}} @modelId={{model.id}} />
       {{/unless}}
       {{#if model.remote_theme}}
-        {{inline-edit-checkbox action=(action "applyAutoUpdateable") labelKey="admin.customize.theme.auto_update" checked=model.auto_update modelId=model.id}}
+        <InlineEditCheckbox @action={{action "applyAutoUpdateable"}} @labelKey="admin.customize.theme.auto_update" @checked={{model.auto_update}} @modelId={{model.id}} />
       {{/if}}
     </div>
   {{/if}}
 
   {{#unless model.component}}
-    {{#d-section class="form-horizontal theme settings control-unit"}}
+    <DSection @class="form-horizontal theme settings control-unit">
       <div class="row setting">
         <div class="setting-label">
           {{i18n "admin.customize.theme.color_scheme"}}
         </div>
         <div class="setting-value">
-          {{color-palettes
-            content=colorSchemes
-            value=colorSchemeId
-            icon="paint-brush"
-            options=(hash
+          <ColorPalettes @content={{colorSchemes}} @value={{colorSchemeId}} @icon="paint-brush" @options={{hash
               filterable=true
-            )
-          }}
+            }} />
 
           <div class="desc">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
         </div>
         <div class="setting-controls">
           {{#if colorSchemeChanged}}
-            {{d-button action=(action "changeScheme") class="ok submit-edit" icon="check"}}
-            {{d-button action=(action "cancelChangeScheme") class="cancel cancel-edit" icon="times"}}
+            <DButton @action={{action "changeScheme"}} @class="ok submit-edit" @icon="check" />
+            <DButton @action={{action "cancelChangeScheme"}} @class="cancel cancel-edit" @icon="times" />
           {{/if}}
         </div>
       </div>
-    {{/d-section}}
+    </DSection>
   {{/unless}}
 
   {{#if parentThemes}}
@@ -183,24 +170,24 @@
       <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
       <ul>
         {{#each parentThemes as |theme|}}
-          <li>{{#link-to "adminCustomizeThemes.show" theme replace=true}}{{theme.name}}{{/link-to}}</li>
+          <li><LinkTo @route="adminCustomizeThemes.show" @model={{theme}} @replace={{true}}>{{theme.name}}</LinkTo></li>
         {{/each}}
       </ul>
     </div>
   {{/if}}
 
   {{#if model.component}}
-    {{#d-section class="form-horizontal theme settings control-unit"}}
+    <DSection @class="form-horizontal theme settings control-unit">
       <div class="row setting">
-        {{theme-setting-relatives-selector setting=relativesSelectorSettingsForComponent model=model class="theme-setting"}}
+        <ThemeSettingRelativesSelector @setting={{relativesSelectorSettingsForComponent}} @model={{model}} @class="theme-setting" />
       </div>
-    {{/d-section}}
+    </DSection>
   {{else}}
-    {{#d-section class="form-horizontal theme settings control-unit"}}
+    <DSection @class="form-horizontal theme settings control-unit">
       <div class="row setting">
-        {{theme-setting-relatives-selector setting=relativesSelectorSettingsForTheme model=model class="theme-setting"}}
+        <ThemeSettingRelativesSelector @setting={{relativesSelectorSettingsForTheme}} @model={{model}} @class="theme-setting" />
       </div>
-    {{/d-section}}
+    </DSection>
   {{/if}}
 
   {{#unless model.remote_theme.is_git}}
@@ -219,10 +206,7 @@
         </div>
       {{/if}}
 
-      {{d-button
-        class="btn-default edit"
-        action=(action "editTheme")
-        label="admin.customize.theme.edit_css_html"}}
+      <DButton @class="btn-default edit" @action={{action "editTheme"}} @label="admin.customize.theme.edit_css_html" />
     </div>
 
     <div class="control-unit">
@@ -233,7 +217,7 @@
             <li>
               <span class="col">${{upload.name}}: <a href={{upload.url}} rel="noopener noreferrer" target="_blank">{{upload.filename}}</a></span>
               <span class="col">
-                {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
+                <DButton @action={{action "removeUpload"}} @actionParam={{upload}} @class="second btn-default btn-default cancel-edit" @icon="times" />
               </span>
             </li>
           {{/each}}
@@ -241,7 +225,7 @@
       {{else}}
         <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
       {{/if}}
-      {{d-button action=(action "addUploadModal") class="btn-default" icon="plus" label="admin.customize.theme.add"}}
+      <DButton @action={{action "addUploadModal"}} @class="btn-default" @icon="plus" @label="admin.customize.theme.add" />
     </div>
   {{/unless}}
 
@@ -268,22 +252,22 @@
   {{#if hasSettings}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
-      {{#d-section class="form-horizontal theme settings control-unit"}}
+      <DSection @class="form-horizontal theme settings control-unit">
         {{#each settings as |setting|}}
-          {{theme-setting-editor setting=setting model=model class="theme-setting control-unit"}}
+          <ThemeSettingEditor @setting={{setting}} @model={{model}} @class="theme-setting control-unit" />
         {{/each}}
-      {{/d-section}}
+      </DSection>
     </div>
   {{/if}}
 
   {{#if hasTranslations}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.theme_translations"}}</div>
-      {{#d-section class="form-horizontal theme settings translations control-unit"}}
+      <DSection @class="form-horizontal theme settings translations control-unit">
         {{#each translations as |translation|}}
-          {{theme-translation translation=translation model=model class="theme-translation"}}
+          <ThemeTranslation @translation={{translation}} @model={{model}} @class="theme-translation" />
         {{/each}}
-      {{/d-section}}
+      </DSection>
     </div>
   {{/if}}
 
@@ -293,26 +277,18 @@
     <a class="btn btn-default export" rel="noopener noreferrer" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
 
     {{#if showConvert}}
-      {{d-button action=(action "switchType") label="admin.customize.theme.convert" icon=convertIcon class="btn-default btn-normal" title=convertTooltip}}
+      <DButton @action={{action "switchType"}} @label="admin.customize.theme.convert" @icon={{convertIcon}} @class="btn-default btn-normal" @title={{convertTooltip}} />
     {{/if}}
 
     {{#if model.component}}
       {{#if model.enabled}}
-        {{d-button
-          class="btn-default"
-          action=(action "disableComponent")
-          icon="ban"
-          label="admin.customize.theme.disable"}}
+        <DButton @class="btn-default" @action={{action "disableComponent"}} @icon="ban" @label="admin.customize.theme.disable" />
       {{else}}
-        {{d-button
-          class="btn-default"
-          action=(action "enableComponent")
-          icon="check"
-          label="admin.customize.theme.enable"}}
+        <DButton @class="btn-default" @action={{action "enableComponent"}} @icon="check" @label="admin.customize.theme.enable" />
       {{/if}}
     {{/if}}
 
-    {{d-button action=(action "destroy") label="admin.customize.delete" icon="trash-alt" class="btn-danger"}}
+    <DButton @action={{action "destroy"}} @label="admin.customize.delete" @icon="trash-alt" @class="btn-danger" />
 
   </div>
 

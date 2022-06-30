@@ -1,9 +1,9 @@
-{{plugin-outlet name="above-latest-topic-list-item" connectorTagName="div"}}
+<PluginOutlet @name="above-latest-topic-list-item" @connectorTagName="div" />
 <div class="topic-poster">
-  {{#user-link user=topic.lastPosterUser}}
+  <UserLink @user={{topic.lastPosterUser}}>
     {{avatar topic.lastPosterUser imageSize="large"}}
-  {{/user-link}}
-  {{user-avatar-flair user=topic.lastPosterUser}}
+  </UserLink>
+  <UserAvatarFlair @user={{topic.lastPosterUser}} />
 </div>
 <div class="main-link">
   <div class="top-row">
@@ -12,7 +12,7 @@
     {{~#if topic.featured_link}}
       {{topic-featured-link topic}}
     {{/if}}
-    {{~topic-post-badges unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl}}
+    <TopicPostBadges @unreadPosts={{topic.unread_posts}} @unseen={{topic.unseen}} @url={{topic.lastUnreadUrl}} />
   </div>
   <div class="bottom-row">
     {{category-link topic.category}}{{discourse-tags topic mode="list"}}{{! intentionally inline to avoid whitespace}}

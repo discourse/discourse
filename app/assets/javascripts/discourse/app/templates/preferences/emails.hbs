@@ -10,13 +10,7 @@
 
   <div class="controls controls-dropdown">
     <label for="user-email-messages-level">{{i18n "user.email_messages_level"}}</label>
-    {{combo-box
-      valueProperty="value"
-      content=emailLevelOptions
-      value=model.user_option.email_messages_level
-      id="user-email-messages-level"
-      onChange=(action (mut model.user_option.email_messages_level))
-    }}
+    <ComboBox @valueProperty="value" @content={{emailLevelOptions}} @value={{model.user_option.email_messages_level}} @id="user-email-messages-level" @onChange={{action (mut model.user_option.email_messages_level)}} />
     {{#if emailMessagesLevelAway}}
       <div class="instructions">{{emailFrequencyInstructions}}</div>
     {{/if}}
@@ -24,13 +18,7 @@
 
   <div class="controls controls-dropdown">
     <label for="user-email-level">{{i18n "user.email_level.title"}}</label>
-    {{combo-box
-      valueProperty="value"
-      content=emailLevelOptions
-      value=model.user_option.email_level
-      id="user-email-level"
-      onChange=(action (mut model.user_option.email_level))
-    }}
+    <ComboBox @valueProperty="value" @content={{emailLevelOptions}} @value={{model.user_option.email_level}} @id="user-email-level" @onChange={{action (mut model.user_option.email_level)}} />
     {{#if emailLevelAway}}
       <div class="instructions">{{emailFrequencyInstructions}}</div>
     {{/if}}
@@ -38,35 +26,24 @@
 
   <div class="controls controls-dropdown">
     <label>{{i18n "user.email_previous_replies.title"}}</label>
-    {{combo-box
-      valueProperty="value"
-      content=previousRepliesOptions
-      value=model.user_option.email_previous_replies
-      onChange=(action (mut model.user_option.email_previous_replies))
-    }}
+    <ComboBox @valueProperty="value" @content={{previousRepliesOptions}} @value={{model.user_option.email_previous_replies}} @onChange={{action (mut model.user_option.email_previous_replies)}} />
   </div>
-  {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
+  <PreferenceCheckbox @labelKey="user.email_in_reply_to" @checked={{model.user_option.email_in_reply_to}} />
 
-  {{plugin-outlet name="user-preferences-emails-pref-email-settings" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
+  <PluginOutlet @name="user-preferences-emails-pref-email-settings" @tagName="span" @connectorTagName="div" @args={{hash model=model save=(action "save")}} />
 </div>
 
 {{#unless siteSettings.disable_digest_emails}}
   <div class="control-group pref-activity-summary">
     <label class="control-label">{{i18n "user.email_activity_summary"}}</label>
-    {{preference-checkbox labelKey="user.email_digests.title" disabled=model.user_option.mailing_list_mode checked=model.user_option.email_digests}}
+    <PreferenceCheckbox @labelKey="user.email_digests.title" @disabled={{model.user_option.mailing_list_mode}} @checked={{model.user_option.email_digests}} />
     {{#if model.user_option.email_digests}}
       <div class="controls controls-dropdown">
-        {{combo-box
-          valueProperty="value"
-          content=digestFrequencies
-          value=model.user_option.digest_after_minutes
-          onChange=(action (mut model.user_option.digest_after_minutes))
-          options=(hash
+        <ComboBox @valueProperty="value" @content={{digestFrequencies}} @value={{model.user_option.digest_after_minutes}} @onChange={{action (mut model.user_option.digest_after_minutes)}} @options={{hash
             filterable=true
-          )
-        }}
+          }} />
       </div>
-      {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
+      <PreferenceCheckbox @labelKey="user.include_tl0_in_digests" @disabled={{model.user_option.mailing_list_mode}} @checked={{model.user_option.include_tl0_in_digests}} />
     {{/if}}
   </div>
 {{/unless}}
@@ -74,25 +51,20 @@
 {{#unless siteSettings.disable_mailing_list_mode}}
   <div class="control-group pref-mailing-list-mode">
     <label class="control-label">{{i18n "user.mailing_list_mode.label"}}</label>
-    {{preference-checkbox labelKey="user.mailing_list_mode.enabled" checked=model.user_option.mailing_list_mode}}
+    <PreferenceCheckbox @labelKey="user.mailing_list_mode.enabled" @checked={{model.user_option.mailing_list_mode}} />
     <div class="instructions">{{html-safe (i18n "user.mailing_list_mode.instructions")}}</div>
     {{#if model.user_option.mailing_list_mode}}
       <div class="controls controls-dropdown">
-        {{combo-box
-          valueProperty="value"
-          content=mailingListModeOptions
-          value=model.user_option.mailing_list_mode_frequency
-          onChange=(action (mut model.user_option.mailing_list_mode_frequency))
-        }}
+        <ComboBox @valueProperty="value" @content={{mailingListModeOptions}} @value={{model.user_option.mailing_list_mode_frequency}} @onChange={{action (mut model.user_option.mailing_list_mode_frequency)}} />
       </div>
     {{/if}}
   </div>
 {{/unless}}
 
-{{plugin-outlet name="user-preferences-emails" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
+<PluginOutlet @name="user-preferences-emails" @tagName="span" @connectorTagName="div" @args={{hash model=model save=(action "save")}} />
 
 <br>
 
-{{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
-{{save-controls model=model action=(action "save") saved=saved}}
+<SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}} />

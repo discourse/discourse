@@ -5,18 +5,12 @@
         <a href={{c.url}}>
           {{#unless c.isMuted}}
             {{#if c.uploaded_logo.url}}
-              {{cdn-img
-                src=c.uploaded_logo.url
-                class="logo"
-                width=c.uploaded_logo.width
-                height=c.uploaded_logo.height
-                alt=""
-              }}
+              <CdnImg @src={{c.uploaded_logo.url}} @class="logo" @width={{c.uploaded_logo.width}} @height={{c.uploaded_logo.height}} @alt="" />
             {{/if}}
           {{/unless}}
 
           <h3>
-            {{category-title-before category=c}}
+            <CategoryTitleBefore @category={{c}} />
             {{#if c.read_restricted}}
               {{d-icon lockIcon}}
             {{/if}}
@@ -30,14 +24,14 @@
           {{#if c.topics}}
             <ul>
               {{#each c.topics as |topic|}}
-                {{categories-boxes-topic topic=topic}}
+                <CategoriesBoxesTopic @topic={{topic}} />
               {{/each}}
             </ul>
           {{/if}}
         </div>
       {{/unless}}
 
-      {{plugin-outlet name="category-box-below-each-category" args=(hash category=c)}}
+      <PluginOutlet @name="category-box-below-each-category" @args={{hash category=c}} />
     </div>
   </div>
 {{/each}}

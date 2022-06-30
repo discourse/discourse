@@ -1,7 +1,7 @@
 {{#if routeParam}}
-  {{#link-to route routeParam}}{{contents}}{{/link-to}}
+  <LinkTo @route={{route}} @model={{routeParam}}>{{contents}}</LinkTo>
 {{else if route}}
-  {{#link-to route}}{{contents}}{{/link-to}}
+  <LinkTo @route={{route}}>{{contents}}</LinkTo>
 {{else}}
   <a href={{get-url path}} data-auto-route="true">{{contents}}</a>
 {{/if}}

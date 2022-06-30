@@ -1,10 +1,6 @@
-{{category-chooser
-  value=value
-  onChange=(action (mut value))
-  options=(hash
+<CategoryChooser @value={{value}} @onChange={{action (mut value)}} @options={{hash
     allowUncategorized=true
     none=(eq setting.default "")
-  )
-}}
-{{setting-validation-message message=validationMessage}}
+  }} />
+<SettingValidationMessage @message={{validationMessage}} />
 <div class="desc">{{html-safe setting.description}}</div>

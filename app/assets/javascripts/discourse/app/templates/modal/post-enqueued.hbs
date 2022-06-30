@@ -1,8 +1,8 @@
-{{#d-modal-body}}
+<DModalBody>
   <p>{{i18n "review.approval.description"}}</p>
 
   <p>{{html-safe (i18n "review.approval.pending_posts" count=model.pending_count)}}</p>
-{{/d-modal-body}}
+</DModalBody>
 <div class="modal-footer">
-  {{d-button action=(route-action "closeModal") class="btn-primary" label="review.approval.ok"}}
+  <DButton @action={{route-action "closeModal"}} @class="btn-primary" @label="review.approval.ok" />
 </div>

@@ -1,40 +1,33 @@
 <div class="watched-word-input">
   <label for="watched-word">{{i18n "admin.watched_words.form.label"}}</label>
-  {{text-field id="watched-word" value=word disabled=formSubmitted class="watched-word-input-field" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey title=(i18n placeholderKey)}}
+  <TextField @id="watched-word" @value={{word}} @disabled={{formSubmitted}} @class="watched-word-input-field" @autocorrect="off" @autocapitalize="off" @placeholderKey={{placeholderKey}} @title={{i18n placeholderKey}} />
 </div>
 
 {{#if canReplace}}
   <div class="watched-word-input">
     <label for="watched-replacement">{{i18n "admin.watched_words.form.replace_label"}}</label>
-    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input-field" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.replace_placeholder"}}
+    <TextField @id="watched-replacement" @value={{replacement}} @disabled={{formSubmitted}} @class="watched-word-input-field" @autocorrect="off" @autocapitalize="off" @placeholderKey="admin.watched_words.form.replace_placeholder" />
   </div>
 {{/if}}
 
 {{#if canTag}}
   <div class="watched-word-input">
     <label for="watched-tag">{{i18n "admin.watched_words.form.tag_label"}}</label>
-    {{tag-chooser
-      id="watched-tag"
-      class="watched-word-input-field"
-      tags=selectedTags
-      onChange=(action "changeSelectedTags")
-      everyTag=true
-      options=(hash
+    <TagChooser @id="watched-tag" @class="watched-word-input-field" @tags={{selectedTags}} @onChange={{action "changeSelectedTags"}} @everyTag={{true}} @options={{hash
         allowAny=true
         disabled=formSubmitted
-      )
-    }}
+      }} />
   </div>
 {{/if}}
 
 {{#if canLink}}
   <div class="watched-word-input">
     <label for="watched-replacement">{{i18n "admin.watched_words.form.link_label"}}</label>
-    {{text-field id="watched-replacement" value=replacement disabled=formSubmitted class="watched-word-input-field" autocorrect="off" autocapitalize="off" placeholderKey="admin.watched_words.form.link_placeholder"}}
+    <TextField @id="watched-replacement" @value={{replacement}} @disabled={{formSubmitted}} @class="watched-word-input-field" @autocorrect="off" @autocapitalize="off" @placeholderKey="admin.watched_words.form.link_placeholder" />
   </div>
 {{/if}}
 
-{{d-button class="btn btn-primary" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
+<DButton @class="btn btn-primary" @action={{action "submit"}} @disabled={{formSubmitted}} @label="admin.watched_words.form.add" />
 
 {{#if showMessage}}
   <span class="success-message">{{message}}</span>
