@@ -1,19 +1,12 @@
 {{#each categoryBreadcrumbs as |breadcrumb|}}
   {{#if breadcrumb.hasOptions}}
     <li>
-      {{category-drop
-        category=breadcrumb.category
-        categories=breadcrumb.options
-        tagId=tag.id
-        editingCategory=editingCategory
-        editingCategoryTab=editingCategoryTab
-        options=(hash
+      <CategoryDrop @category={{breadcrumb.category}} @categories={{breadcrumb.options}} @tagId={{tag.id}} @editingCategory={{editingCategory}} @editingCategoryTab={{editingCategoryTab}} @options={{hash
           parentCategory=breadcrumb.parentCategory
           subCategory=breadcrumb.isSubcategory
           noSubcategories=breadcrumb.noSubcategories
           autoFilterable=true
-        )
-      }}
+        }} />
     </li>
   {{/if}}
 {{/each}}
@@ -21,24 +14,15 @@
 {{#if showTagsSection}}
   {{#if additionalTags}}
     <li>
-      {{tags-intersection-chooser
-        currentCategory=category
-        mainTag=tag.id
-        additionalTags=additionalTags
-        options=(hash
+      <TagsIntersectionChooser @currentCategory={{category}} @mainTag={{tag.id}} @additionalTags={{additionalTags}} @options={{hash
           categoryId=category.id
-        )
-      }}
+        }} />
     </li>
   {{else}}
     <li>
-      {{tag-drop
-        currentCategory=category
-        noSubcategories=noSubcategories
-        tagId=tag.id
-      }}
+      <TagDrop @currentCategory={{category}} @noSubcategories={{noSubcategories}} @tagId={{tag.id}} />
     </li>
   {{/if}}
 {{/if}}
 
-{{plugin-outlet name="bread-crumbs-right" connectorTagName="li"}}
+<PluginOutlet @name="bread-crumbs-right" @connectorTagName="li" />

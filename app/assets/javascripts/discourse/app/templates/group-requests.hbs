@@ -1,19 +1,15 @@
 <section class="user-content">
 
   <div class="group-members-actions">
-    {{text-field
-      value=filterInput
-      placeholderKey=filterPlaceholder
-      class="group-username-filter no-blur"
-    }}
+    <TextField @value={{filterInput}} @placeholderKey={{filterPlaceholder}} @class="group-username-filter no-blur" />
   </div>
 
   {{#if hasRequesters}}
-    {{#load-more selector=".group-members tr" action=(action "loadMore")}}
+    <LoadMore @selector=".group-members tr" @action={{action "loadMore"}}>
       <table class="group-members">
         <thead>
-          {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username" automatic=true}}
-          {{table-header-toggle order=order asc=asc field="requested_at" labelKey="groups.member_requested" automatic=true}}
+          <TableHeaderToggle @order={{order}} @asc={{asc}} @field="username_lower" @labelKey="username" @automatic={{true}} />
+          <TableHeaderToggle @order={{order}} @asc={{asc}} @field="requested_at" @labelKey="groups.member_requested" @automatic={{true}} />
           <th>{{i18n "groups.requests.reason"}}</th>
           <th></th>
           <th></th>
@@ -23,7 +19,7 @@
           {{#each model.requesters as |m|}}
             <tr>
               <td class="avatar">
-                {{user-info user=m skipName=skipName}}
+                <UserInfo @user={{m}} @skipName={{skipName}} />
               </td>
               <td>
                 <span class="text">{{bound-date m.requested_at}}</span>
@@ -34,12 +30,12 @@
                   {{i18n "groups.requests.undone"}}
                 {{else if m.request_accepted}}
                   {{i18n "groups.requests.accepted"}}
-                  {{d-button action=(action "undoAcceptRequest") actionParam=m label="undo"}}
+                  <DButton @action={{action "undoAcceptRequest"}} @actionParam={{m}} @label="undo" />
                 {{else if m.request_denied}}
                   {{i18n "groups.requests.denied"}}
                 {{else}}
-                  {{d-button action=(action "acceptRequest") actionParam=m label="groups.requests.accept" class="btn-primary"}}
-                  {{d-button action=(action "denyRequest") actionParam=m label="groups.requests.deny" class="btn-danger"}}
+                  <DButton @action={{action "acceptRequest"}} @actionParam={{m}} @label="groups.requests.accept" @class="btn-primary" />
+                  <DButton @action={{action "denyRequest"}} @actionParam={{m}} @label="groups.requests.deny" @class="btn-danger" />
                 {{/if}}
               </td>
               <td></td>
@@ -47,9 +43,9 @@
           {{/each}}
         </tbody>
       </table>
-    {{/load-more}}
+    </LoadMore>
 
-    {{conditional-loading-spinner condition=loading}}
+    <ConditionalLoadingSpinner @condition={{loading}} />
   {{else}}
     <div>{{i18n "groups.empty.requests"}}</div>
   {{/if}}

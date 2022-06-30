@@ -1,13 +1,13 @@
 <section class="user-secondary-navigation">
-  {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked"}}
+  <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
     {{#each tabs as |tab|}}
       <li>
-        {{#link-to tab.route model.name}}
+        <LinkTo @route={{tab.route}} @model={{model.name}}>
           {{i18n tab.title}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/each}}
-  {{/mobile-nav}}
+  </MobileNav>
 </section>
 <section class="user-content">
   {{outlet}}

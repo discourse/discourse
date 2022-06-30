@@ -1,20 +1,6 @@
-{{#conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{loading}}>
   {{#if topics}}
-    {{topic-list
-      showPosters=showPosters
-      hideCategory=hideCategory
-      topics=topics
-      expandExcerpts=expandExcerpts
-      bulkSelectEnabled=bulkSelectEnabled
-      bulkSelectAction=bulkSelectAction
-      canBulkSelect=canBulkSelect
-      selected=selected
-      tagsForUser=tagsForUser
-      onScroll=onScroll
-      scrollOnLoad=scrollOnLoad
-      toggleBulkSelect=toggleBulkSelect
-      updateAutoAddTopicsToBulkSelect=updateAutoAddTopicsToBulkSelect
-    }}
+    <TopicList @showPosters={{showPosters}} @hideCategory={{hideCategory}} @topics={{topics}} @expandExcerpts={{expandExcerpts}} @bulkSelectEnabled={{bulkSelectEnabled}} @bulkSelectAction={{bulkSelectAction}} @canBulkSelect={{canBulkSelect}} @selected={{selected}} @tagsForUser={{tagsForUser}} @onScroll={{onScroll}} @scrollOnLoad={{scrollOnLoad}} @toggleBulkSelect={{toggleBulkSelect}} @updateAutoAddTopicsToBulkSelect={{updateAutoAddTopicsToBulkSelect}} />
   {{else}}
     {{#unless loadingMore}}
       <div class="alert alert-info">
@@ -22,4 +8,4 @@
       </div>
     {{/unless}}
   {{/if}}
-{{/conditional-loading-spinner}}
+</ConditionalLoadingSpinner>

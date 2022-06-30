@@ -1,5 +1,5 @@
 <div class="reviewable-post-header">
-  {{reviewable-created-by-name user=createdBy tagName=""}}
+  <ReviewableCreatedByName @user={{createdBy}} @tagName="" />
   {{#if reviewable.reply_to_post_number}}
     <a href={{concat reviewable.topic_url "/" reviewable.reply_to_post_number}} class="reviewable-reply-to">
       {{d-icon "share"}}

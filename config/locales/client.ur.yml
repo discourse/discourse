@@ -1950,7 +1950,6 @@ ur:
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
       title: "یا %{modifier} دبائیں۔"
-      users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
@@ -3312,6 +3311,7 @@ ur:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
       readonly: "ملاحظہ کریں"
+    preloader_text: "لوڈ ہو رہا ہے"
     lightbox:
       download: "ڈاؤن لوڈ"
       open: "اصل تصویر"
@@ -3641,7 +3641,9 @@ ur:
             inbox: "اِن باکس"
             sent: "بھیجا جا چکا"
             new: "نیا"
+            new_with_count: "نیا (%{count})"
             unread: "بغیر پڑھے"
+            unread_with_count: "بغیر پڑھا (%{count})"
             archive: "آر کائیو"
         tags:
           header_link_title: "تمام ٹیگز"

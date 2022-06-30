@@ -12,19 +12,14 @@
         <ul>
           {{#each model as |tagGroup|}}
             <li>
-              {{#link-to "tagGroups.edit" tagGroup}}
+              <LinkTo @route="tagGroups.edit" @model={{tagGroup}}>
                 {{tagGroup.name}}
-              {{/link-to}}
+              </LinkTo>
             </li>
           {{/each}}
         </ul>
 
-        {{d-button
-          class="btn-default"
-          action=(action "newTagGroup")
-          icon="plus"
-          label="tagging.groups.new"
-        }}
+        <DButton @class="btn-default" @action={{action "newTagGroup"}} @icon="plus" @label="tagging.groups.new" />
       </div>
     {{/if}}
 

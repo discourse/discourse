@@ -1,18 +1,3 @@
-{{date-time-input
-  date=from
-  onChange=(action "onChangeRanges" (hash prop="from"))
-  showTime=showFromTime
-  class="from"
-  placeholder=(i18n "dates.from_placeholder")
-}}
+<DateTimeInput @date={{from}} @onChange={{action "onChangeRanges" (hash prop="from")}} @showTime={{showFromTime}} @class="from" @placeholder={{i18n "dates.from_placeholder"}} />
 
-{{date-time-input
-  date=to
-  relativeDate=from
-  onChange=(action "onChangeRanges" (hash prop="to"))
-  timeFirst=toTimeFirst
-  showTime=showToTime
-  clearable=clearable
-  class="to"
-  placeholder=(i18n "dates.to_placeholder")
-}}
+<DateTimeInput @date={{to}} @relativeDate={{from}} @onChange={{action "onChangeRanges" (hash prop="to")}} @timeFirst={{toTimeFirst}} @showTime={{showToTime}} @clearable={{clearable}} @class="to" @placeholder={{i18n "dates.to_placeholder"}} />

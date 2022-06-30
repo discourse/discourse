@@ -298,6 +298,10 @@ export default function selectKit(selector) {
       await click(`${selector} .selected-content [data-value="${value}"]`);
     },
 
+    async deselectItemByName(name) {
+      await click(`${selector} .selected-content [data-name="${name}"]`);
+    },
+
     exists() {
       return exists(selector);
     },

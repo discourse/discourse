@@ -1664,7 +1664,6 @@ el:
       create_whisper: "Ψυθίρισμα"
       create_shared_draft: "Δημιουργήστε κοινόχρηστο προσχέδιο"
       edit_shared_draft: "Επεξεργασία κοινόχρηστου προσχεδίου"
-      users_placeholder: "Προσθήκη χρήστη"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
       edit_reason_placeholder: "γιατί αναθεωρείς;"
@@ -2803,6 +2802,7 @@ el:
       full: "Δημιούργησε / Απάντησε / Δες"
       create_post: "Απάντησε / Δες"
       readonly: "Δες"
+    preloader_text: "Φόρτωση"
     lightbox:
       download: "λήψη"
       previous: "Προηγούμενο (πλήκτρο αριστερού βέλους)"
@@ -3069,7 +3069,9 @@ el:
             inbox: "Εισερχόμενα"
             sent: "Απεσταλμένα"
             new: "Νέα"
+            new_with_count: "Νέα (%{count})"
             unread: "Αδιάβαστα"
+            unread_with_count: "Μη αναγνωσμένα (%{count})"
             archive: "Αρχείο"
         tags:
           header_link_title: "όλες οι ετικέτες"

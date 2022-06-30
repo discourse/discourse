@@ -1,9 +1,3 @@
 {{#if canCreateTopic}}
-  {{d-button
-    class=btnClass
-    id="create-topic"
-    action=action
-    icon="plus"
-    disabled=disabled
-    label=label}}
+  <DButton @class={{btnClass}} @id="create-topic" @action={{this.action}} @icon="plus" @disabled={{disabled}} @label={{label}} />
 {{/if}}

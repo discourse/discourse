@@ -19,9 +19,9 @@
       </div>
       <div class="buttons">
         {{#each enabledButtons as |buttonData|}}
-          {{d-button icon=buttonData.icon action=buttonData.action label=buttonData.key class=buttonData.classes}}
+          <DButton @icon={{buttonData.icon}} @action={{buttonData.action}} @label={{buttonData.key}} @class={{buttonData.classes}} />
         {{/each}}
-        {{conditional-loading-spinner condition=loading}}
+        <ConditionalLoadingSpinner @condition={{loading}} />
       </div>
     </div>
   {{/if}}

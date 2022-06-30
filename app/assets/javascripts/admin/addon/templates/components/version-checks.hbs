@@ -126,10 +126,5 @@
       </div>
     </div>
   {{/if}}
-  {{custom-html
-    name="upgrade-header"
-    versionCheck=versionCheck
-    tagName="div"
-    classNames="upgrade-header"
-  }}
+  <CustomHtml @name="upgrade-header" @versionCheck={{versionCheck}} @tagName="div" @classNames="upgrade-header" />
 </div>

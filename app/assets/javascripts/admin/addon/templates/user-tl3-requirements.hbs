@@ -1,8 +1,8 @@
 <div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
-      <li>{{#link-to "adminUser" model}}{{d-icon "caret-left"}} &nbsp;{{model.username}}{{/link-to}}</li>
-      <li>{{#link-to "adminUsersList.show" "member"}}{{i18n "admin.user.trust_level_2_users"}}{{/link-to}}</li>
+      <li><LinkTo @route="adminUser" @model={{model}}>{{d-icon "caret-left"}} &nbsp;{{model.username}}</LinkTo></li>
+      <li><LinkTo @route="adminUsersList.show" @model="member">{{i18n "admin.user.trust_level_2_users"}}</LinkTo></li>
     </ul>
   </nav>
 </div>

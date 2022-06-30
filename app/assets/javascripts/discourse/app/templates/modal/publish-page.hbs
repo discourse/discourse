@@ -1,38 +1,28 @@
-{{#d-modal-body}}
+<DModalBody>
   {{#if unpublished}}
     <p>{{i18n "topic.publish_page.unpublished"}}</p>
   {{else}}
-    {{#conditional-loading-spinner condition=initializing}}
+    <ConditionalLoadingSpinner @condition={{initializing}}>
       <p class="publish-description">{{i18n "topic.publish_page.description"}}</p>
 
       <form>
         <div class="controls">
           <label>{{i18n "topic.publish_page.slug"}}</label>
-          {{text-field
-            value=publishedPage.slug
-            onChange=(action "checkSlug")
-            onChangeImmediate=(action "startCheckSlug")
-            disabled=existing
-            class="publish-slug"
-          }}
+          <TextField @value={{publishedPage.slug}} @onChange={{action "checkSlug"}} @onChangeImmediate={{action "startCheckSlug"}} @disabled={{existing}} @class="publish-slug" />
         </div>
 
         <div class="controls">
           <label>{{i18n "topic.publish_page.public"}}</label>
 
           <p class="description">
-            {{input
-              type="checkbox"
-              checked=(readonly publishedPage.public)
-              click=(action "onChangePublic" value="target.checked")
-            }}
+            <Input @type="checkbox" @checked={{readonly publishedPage.public}} @click={{action "onChangePublic" value="target.checked"}} />
             {{i18n "topic.publish_page.public_description"}}
           </p>
         </div>
       </form>
 
       <div class="publish-url">
-        {{conditional-loading-spinner condition=checking}}
+        <ConditionalLoadingSpinner @condition={{checking}} />
 
         {{#if existing}}
           <div class="current-url">
@@ -55,30 +45,18 @@
         {{/if}}
 
       </div>
-    {{/conditional-loading-spinner}}
+    </ConditionalLoadingSpinner>
   {{/if}}
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
   {{#if showUnpublish}}
-    {{d-button
-      label="topic.publish_page.unpublish"
-      icon="trash-alt"
-      class="btn-danger"
-      isLoading=unpublishing
-      action=(action "unpublish")
-    }}
+    <DButton @label="topic.publish_page.unpublish" @icon="trash-alt" @class="btn-danger" @isLoading={{unpublishing}} @action={{action "unpublish"}} />
 
-    {{d-button class="close-publish-page" icon="times" label="close" action=(action "closeModal")}}
+    <DButton @class="close-publish-page" @icon="times" @label="close" @action={{action "closeModal"}} />
   {{else if unpublished}}
-    {{d-button label="topic.publish_page.publishing_settings" action=(action "startNew")}}
+    <DButton @label="topic.publish_page.publishing_settings" @action={{action "startNew"}} />
   {{else}}
-    {{d-button
-      label="topic.publish_page.publish"
-      class="btn-primary publish-page"
-      icon="file"
-      disabled=disabled
-      isLoading=saving
-      action=(action "publish") }}
+    <DButton @label="topic.publish_page.publish" @class="btn-primary publish-page" @icon="file" @disabled={{disabled}} @isLoading={{saving}} @action={{action "publish"}} />
   {{/if}}
 </div>

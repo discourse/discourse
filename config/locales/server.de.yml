@@ -589,6 +589,7 @@ de:
               too_many: "Zu viele Wörter für diese Aktion"
             base:
               invalid_url: "Ersatz-URL ist ungültig"
+              invalid_tag_list: "Ersatz-Schlagwort-Liste ist ungültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
   vip_category_name: "Lounge"
@@ -2120,6 +2121,7 @@ de:
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
+    splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -3628,6 +3630,18 @@ de:
     suspicious_login:
       title: "Warnung über neue Anmeldung"
       subject_template: "[%{site_name}] Neue Anmeldung von %{location}"
+      text_body_template: |
+        Hallo,
+
+        wir haben festgestellt, dass du dich von einem anderen Gerät oder Ort als üblich angemeldet hast. Warst du das?
+
+         - Ort: %{location} (%{client_ip})
+         - Browser: %{browser}
+         - Gerät: %{device} – %{os}
+
+        Wenn du das warst – hervorragend! Du musst nichts weiter tun.
+
+        Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/security) und erwäge, dein Passwort zu ändern.
     post_approved:
       title: "Dein Beitrag wurde genehmigt"
       subject_template: "[%{site_name}] Dein Beitrag wurde genehmigt"

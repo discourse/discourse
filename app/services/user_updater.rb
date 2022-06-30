@@ -202,6 +202,14 @@ class UserUpdater
         updated_associated_accounts(attributes[:user_associated_accounts])
       end
 
+      if attributes.key?(:sidebar_category_ids)
+        update_sidebar_category_section_links(attributes[:sidebar_category_ids])
+      end
+
+      if attributes.key?(:sidebar_tag_names) && SiteSetting.tagging_enabled
+        update_sidebar_tag_section_links(attributes[:sidebar_tag_names])
+      end
+
       name_changed = user.name_changed?
       if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
@@ -282,6 +290,48 @@ class UserUpdater
   end
 
   private
+
+  def delete_all_sidebar_section_links(linkable_type)
+    SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
+  end
+
+  def update_sidebar_section_links(linkable_type, new_linkable_ids)
+    if new_linkable_ids.blank?
+      SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
+    else
+      existing_linkable_ids = SidebarSectionLink.where(user: user, linkable_type: linkable_type).pluck(:linkable_id)
+
+      to_delete = existing_linkable_ids - new_linkable_ids
+      to_insert = new_linkable_ids - existing_linkable_ids
+
+      to_insert_attributes = to_insert.map do |linkable_id|
+        {
+          linkable_type: linkable_type,
+          linkable_id: linkable_id,
+          user_id: user.id
+        }
+      end
+
+      SidebarSectionLink.where(user: user, linkable_type: linkable_type, linkable_id: to_delete).delete_all if to_delete.present?
+      SidebarSectionLink.insert_all(to_insert_attributes) if to_insert_attributes.present?
+    end
+  end
+
+  def update_sidebar_tag_section_links(tag_names)
+    if tag_names.blank?
+      delete_all_sidebar_section_links('Tag')
+    else
+      update_sidebar_section_links('Tag', Tag.where(name: tag_names).pluck(:id))
+    end
+  end
+
+  def update_sidebar_category_section_links(category_ids)
+    if category_ids.blank?
+      delete_all_sidebar_section_links('Category')
+    else
+      update_sidebar_section_links('Category', Category.secured(guardian).where(id: category_ids).pluck(:id))
+    end
+  end
 
   attr_reader :user, :guardian
 

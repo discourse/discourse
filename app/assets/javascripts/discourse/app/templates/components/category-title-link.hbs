@@ -1,17 +1,12 @@
 <a class="category-title-link" href={{category.url}}>
   <div class="category-text-title">
-    {{category-title-before category=category}}
+    <CategoryTitleBefore @category={{category}} />
     {{#if category.read_restricted}}
       {{d-icon lockIcon}}
     {{/if}}
     <span class="category-name">{{dir-span category.name}}</span>
   </div>
   {{#if category.uploaded_logo.url}}
-    {{cdn-img
-      src=category.uploaded_logo.url
-      class="category-logo"
-      width=category.uploaded_logo.width
-      height=category.uploaded_logo.height
-      alt=""}}
+    <CdnImg @src={{category.uploaded_logo.url}} @class="category-logo" @width={{category.uploaded_logo.width}} @height={{category.uploaded_logo.height}} @alt="" />
   {{/if}}
 </a>

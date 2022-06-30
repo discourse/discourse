@@ -1,12 +1,12 @@
 {{#unless isHidden}}
   <tr data-category-id={{category.id}} style={{border-color category.color}} class="subcategory-list-item category {{if isMuted "muted"}}">
     <td>
-      {{category-title-link tagName="h4" category=category}}
+      <CategoryTitleLink @tagName="h4" @category={{category}} />
       <div class="subcategories-list">
         {{#if category.subcategories}}
           <div class="subcategories">
             {{#each category.subcategories as |subcategory|}}
-              {{sub-category-item category=subcategory listType=listType}}
+              <SubCategoryItem @category={{subcategory}} @listType={{listType}} />
             {{/each}}
           </div>
         {{/if}}

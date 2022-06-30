@@ -42,7 +42,7 @@
     "postinstall": "yarn --cwd app/assets/javascripts/discourse"
   },
   "engines": {
-    "node": "12.* || 14.* || >= 16",
+    "node": "16.* || >= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   }

@@ -1,10 +1,10 @@
-{{#load-more selector=".user-stream-item" action=(action "loadMore")}}
+<LoadMore @selector=".user-stream-item" @action={{action "loadMore"}}>
   <div class="user-stream">
     {{#each model as |post|}}
-      {{group-post post=post}}
+      <GroupPost @post={{post}} />
     {{else}}
       <div>{{i18n emptyText}}</div>
     {{/each}}
   </div>
-  {{conditional-loading-spinner condition=loading}}
-{{/load-more}}
+  <ConditionalLoadingSpinner @condition={{loading}} />
+</LoadMore>

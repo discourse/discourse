@@ -1,18 +1,12 @@
 {{#each categories as |c|}}
-  {{plugin-outlet name="category-box-before-each-box" args=(hash category=c)}}
+  <PluginOutlet @name="category-box-before-each-box" @args={{hash category=c}} />
 
   <div style={{unless noCategoryStyle (html-safe (concat (border-color c.color) (category-color-variable c.color)))}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       {{#unless c.isMuted}}
         <div class="category-logo">
           {{#if c.uploaded_logo.url}}
-            {{cdn-img
-              src=c.uploaded_logo.url
-              class="logo"
-              width=c.uploaded_logo.width
-              height=c.uploaded_logo.height
-              alt=""
-            }}
+            <CdnImg @src={{c.uploaded_logo.url}} @class="logo" @width={{c.uploaded_logo.width}} @height={{c.uploaded_logo.height}} @alt="" />
           {{/if}}
         </div>
       {{/unless}}
@@ -21,7 +15,7 @@
         <div class="category-box-heading">
           <a class="parent-box-link" href={{c.url}}>
             <h3>
-              {{category-title-before category=c}}
+              <CategoryTitleBefore @category={{c}} />
               {{#if c.read_restricted}}
                 {{d-icon lockIcon}}
               {{/if}}
@@ -39,13 +33,13 @@
             {{#each c.subcategories as |subcategory|}}
               <div data-category-id={{subcategory.id}} data-notification-level={{subcategory.notificationLevelString}} style={{border-color subcategory.color}} class="subcategory with-subcategories {{if subcategory.uploaded_logo.url "has-logo" "no-logo"}}">
                 <div class="subcategory-box-inner">
-                  {{category-title-link tagName="h4" category=subcategory}}
+                  <CategoryTitleLink @tagName="h4" @category={{subcategory}} />
                   {{#if subcategory.subcategories}}
                     <div class="subcategories">
                       {{#each subcategory.subcategories as |subsubcategory|}}
                         {{#unless subsubcategory.isMuted}}
                           <span class="subcategory">
-                            {{category-title-before category=subsubcategory}}
+                            <CategoryTitleBefore @category={{subsubcategory}} />
                             {{category-link subsubcategory hideParent="true"}}
                           </span>
                         {{/unless}}
@@ -60,12 +54,7 @@
               {{#each c.subcategories as |sc|}}
                 <a class="subcategory" href={{sc.url}}>
                   <span class="subcategory-image-placeholder">
-                    {{cdn-img
-                        src=sc.uploaded_logo.url
-                        class="logo"
-                        width=sc.uploaded_logo.width
-                        height=sc.uploaded_logo.height
-                        alt=""}}
+                    <CdnImg @src={{sc.uploaded_logo.url}} @class="logo" @width={{sc.uploaded_logo.width}} @height={{sc.uploaded_logo.height}} @alt="" />
                   </span>
 
                   {{category-link sc hideParent="true"}}
@@ -76,11 +65,11 @@
         {{/unless}}
       </div>
 
-      {{plugin-outlet name="category-box-below-each-category" args=(hash category=c)}}
+      <PluginOutlet @name="category-box-below-each-category" @args={{hash category=c}} />
     </div>
   </div>
 
-  {{plugin-outlet name="category-box-after-each-box" args=(hash category=c)}}
+  <PluginOutlet @name="category-box-after-each-box" @args={{hash category=c}} />
 {{/each}}
 
-{{plugin-outlet name="category-boxes-after-boxes" args=(hash category=c)}}
+<PluginOutlet @name="category-boxes-after-boxes" @args={{hash category=c}} />

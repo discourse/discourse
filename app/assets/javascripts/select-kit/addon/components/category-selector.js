@@ -16,7 +16,7 @@ export default MultiSelectComponent.extend({
   selectKitOptions: {
     filterable: true,
     allowAny: false,
-    allowUncategorized: "allowUncategorized",
+    allowUncategorized: true,
     displayCategoryDescription: false,
     selectedChoiceComponent: "selected-choice-category",
   },
@@ -35,6 +35,14 @@ export default MultiSelectComponent.extend({
   content: computed("categories.[]", "blockedCategories.[]", function () {
     const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
+      if (category.isUncategorizedCategory) {
+        if (this.attrs.options?.allowUncategorized !== undefined) {
+          return this.attrs.options.allowUncategorized;
+        }
+
+        return this.selectKitOptions.allowUncategorized;
+      }
+
       return (
         this.categories.includes(category) ||
         !blockedCategories.includes(category)

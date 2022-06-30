@@ -13,17 +13,11 @@
       </div>
     </div>
 
-    {{reviewable-field classes="reviewable-user-details name"
-                       name=(i18n "review.user.name")
-                       value=reviewable.payload.name}}
+    <ReviewableField @classes="reviewable-user-details name" @name={{i18n "review.user.name"}} @value={{reviewable.payload.name}} />
 
-    {{reviewable-field classes="reviewable-user-details email"
-                       name=(i18n "review.user.email")
-                       value=reviewable.payload.email}}
+    <ReviewableField @classes="reviewable-user-details email" @name={{i18n "review.user.email"}} @value={{reviewable.payload.email}} />
 
-    {{reviewable-field classes="reviewable-user-details bio"
-                       name=(i18n "review.user.bio")
-                       value=reviewable.payload.bio}}
+    <ReviewableField @classes="reviewable-user-details bio" @name={{i18n "review.user.bio"}} @value={{reviewable.payload.bio}} />
 
     {{#if reviewable.payload.website}}
       <div class="reviewable-user-details website">
@@ -34,15 +28,10 @@
       </div>
     {{/if}}
 
-    {{reviewable-field classes="reviewable-user-details reject-reason"
-                       name=(i18n "review.user.reject_reason")
-                       value=reviewable.reject_reason}}
+    <ReviewableField @classes="reviewable-user-details reject-reason" @name={{i18n "review.user.reject_reason"}} @value={{reviewable.reject_reason}} />
 
     {{#each userFields as |f|}}
-      {{reviewable-field classes="reviewable-user-details user-field"
-                         name=f.name
-                         value=f.value
-                         tagName=""}}
+      <ReviewableField @classes="reviewable-user-details user-field" @name={{f.name}} @value={{f.value}} @tagName="" />
     {{/each}}
   </div>
 

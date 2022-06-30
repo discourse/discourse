@@ -1,67 +1,67 @@
-{{#d-section class="user-secondary-navigation" pageClass="user-messages"}}
-  {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list"}}
+<DSection @class="user-secondary-navigation" @pageClass="user-messages">
+  <MobileNav @class="messages-nav" @desktopClass="nav-stacked action-list">
     <li>
-      {{#link-to "userPrivateMessages.index" model}}
+      <LinkTo @route="userPrivateMessages.index" @model={{model}}>
         {{i18n "user.messages.inbox"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
 
     {{#if isPersonal}}
       <li class="archive">
-        {{#link-to "userPrivateMessages.sent" model}}
+        <LinkTo @route="userPrivateMessages.sent" @model={{model}}>
           {{i18n "user.messages.sent"}}
-        {{/link-to}}
+        </LinkTo>
       </li>
 
       {{#if viewingSelf}}
         <li class="archive">
-          {{#link-to "userPrivateMessages.new" model class="new"}}
+          <LinkTo @route="userPrivateMessages.new" @model={{model}} class="new">
             {{newLinkText}}
-          {{/link-to}}
+          </LinkTo>
         </li>
 
         <li class="archive">
-          {{#link-to "userPrivateMessages.unread" model class="unread"}}
+          <LinkTo @route="userPrivateMessages.unread" @model={{model}} class="unread">
             {{unreadLinkText}}
-          {{/link-to}}
+          </LinkTo>
         </li>
       {{/if}}
 
       <li class="archive">
-        {{#link-to "userPrivateMessages.archive" model}}
+        <LinkTo @route="userPrivateMessages.archive" @model={{model}}>
           {{i18n "user.messages.archive"}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/if}}
 
     {{#each model.groups as |group|}}
       {{#if group.has_messages}}
         <li>
-          {{#link-to "userPrivateMessages.group" group.name}}
+          <LinkTo @route="userPrivateMessages.group" @model={{group.name}}>
             {{d-icon "users"}}
             {{capitalize-string group.name}}
-          {{/link-to}}
+          </LinkTo>
         </li>
 
         {{#if (and isGroup (eq groupFilter group.name))}}
           {{#if viewingSelf}}
             <li class="archive">
-              {{#link-to "userPrivateMessages.groupNew" group.name class="new"}}
+              <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
                 {{newLinkText}}
-              {{/link-to}}
+              </LinkTo>
             </li>
 
             <li class="archive">
-              {{#link-to "userPrivateMessages.groupUnread" group.name class="unread"}}
+              <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
                 {{unreadLinkText}}
-              {{/link-to}}
+              </LinkTo>
             </li>
           {{/if}}
 
           <li class="archive">
-            {{#link-to "userPrivateMessages.groupArchive" group.name}}
+            <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
               {{i18n "user.messages.archive"}}
-            {{/link-to}}
+            </LinkTo>
           </li>
         {{/if}}
       {{/if}}
@@ -69,35 +69,32 @@
 
     {{#if pmTaggingEnabled}}
       <li class="tags">
-        {{#link-to "userPrivateMessages.tags" model}}
+        <LinkTo @route="userPrivateMessages.tags" @model={{model}}>
           {{i18n "user.messages.tags"}}
-        {{/link-to}}
+        </LinkTo>
 
         {{#if tagId}}
           <li class="archive">
-            {{#link-to "userPrivateMessages.tagsShow" tagId}}
+            <LinkTo @route="userPrivateMessages.tagsShow" @model={{tagId}}>
               {{tagId}}
-            {{/link-to}}
+            </LinkTo>
           </li>
         {{/if}}
       </li>
     {{/if}}
 
-    {{plugin-outlet name="user-messages-nav" tagName="span" connectorTagName="li" args=(hash model=model)}}
-  {{/mobile-nav}}
-{{/d-section}}
+    <PluginOutlet @name="user-messages-nav" @tagName="span" @connectorTagName="li" @args={{hash model=model}} />
+  </MobileNav>
+</DSection>
 
 {{#unless site.mobileView}}
   <section class="user-additional-controls">
     {{#if group}}
-      {{group-notifications-button
-        value=group.group_user.notification_level
-        onChange=(action "changeGroupNotificationLevel")
-      }}
+      <GroupNotificationsButton @value={{group.group_user.notification_level}} @onChange={{action "changeGroupNotificationLevel"}} />
     {{/if}}
 
     {{#if showNewPM}}
-      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+      <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
     {{/if}}
   </section>
 {{/unless}}
@@ -105,11 +102,7 @@
 <section class="user-content">
   <div class="list-actions">
     {{#if (and site.mobileView showNewPM)}}
-      {{d-button
-        class="btn-primary new-private-message"
-        action=(route-action "composePrivateMessage")
-        icon="envelope"
-        label="user.new_private_message"}}
+      <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
     {{/if}}
   </div>
 

@@ -1374,7 +1374,6 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       create_pm: "ข้อความ"
-      users_placeholder: "เพิ่มผู้ใช้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
@@ -2256,6 +2255,7 @@ th:
       full: "สร้าง / ตอบ / ดู"
       create_post: "ตอบ / ดู"
       readonly: "ดู"
+    preloader_text: "กำลังโหลด"
     lightbox:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
@@ -2433,7 +2433,9 @@ th:
             inbox: "กล่องข้อความ"
             sent: "ส่ง"
             new: "ใหม่"
+            new_with_count: "ใหม่ (%{count})"
             unread: "ยังไม่อ่าน"
+            unread_with_count: "ยังไม่อ่าน (%{count})"
             archive: "คลัง"
         tags:
           header_link_title: "แท็กทั้งหมด"

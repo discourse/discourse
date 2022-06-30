@@ -1,45 +1,41 @@
-{{#d-section pageClass="user-activity" class="user-secondary-navigation" scrollTop=false}}
+<DSection @pageClass="user-activity" @class="user-secondary-navigation" @scrollTop={{false}}>
   <nav role="navigation">
-    {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked"}}
-      {{#d-navigation-item route="userActivity.index"}}{{i18n "user.filters.all"}}{{/d-navigation-item}}
-      {{#d-navigation-item route="userActivity.topics"}}{{i18n "user_action_groups.4"}}{{/d-navigation-item}}
-      {{#d-navigation-item route="userActivity.replies"}}{{i18n "user_action_groups.5"}}{{/d-navigation-item}}
+    <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
+      <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
+      <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
+      <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
 
       {{#if user.showRead}}
-        {{#d-navigation-item route="userActivity.read" title=(i18n "user.read_help")}}
+        <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
           {{i18n "user.read"}}
-        {{/d-navigation-item}}
+        </DNavigationItem>
       {{/if}}
 
       {{#if user.showDrafts}}
-        {{#d-navigation-item route="userActivity.drafts"}}
+        <DNavigationItem @route="userActivity.drafts">
           {{draftLabel}}
-        {{/d-navigation-item}}
+        </DNavigationItem>
       {{/if}}
 
       {{#if (gt model.pending_posts_count 0)}}
-        {{#d-navigation-item route="userActivity.pending"}}
+        <DNavigationItem @route="userActivity.pending">
           {{pendingLabel}}
-        {{/d-navigation-item}}
+        </DNavigationItem>
       {{/if}}
 
-      {{#d-navigation-item route="userActivity.likesGiven"}}{{i18n "user_action_groups.1"}}{{/d-navigation-item}}
+      <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
 
       {{#if user.showBookmarks}}
-        {{#d-navigation-item route="userActivity.bookmarks"}}{{i18n "user_action_groups.3"}}{{/d-navigation-item}}
+        <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
       {{/if}}
 
-      {{plugin-outlet
-        name="user-activity-bottom" tagName="span"
-        connectorTagName="li"
-        args=(hash model=model)
-      }}
-    {{/mobile-nav}}
+      <PluginOutlet @name="user-activity-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=model}} />
+    </MobileNav>
   </nav>
-{{/d-section}}
+</DSection>
 {{#if canDownloadPosts}}
   <section class="user-additional-controls">
-    {{d-button action=(action "exportUserArchive") class="btn-default" label="user.download_archive.button_text" icon="download"}}
+    <DButton @action={{action "exportUserArchive"}} @class="btn-default" @label="user.download_archive.button_text" @icon="download" />
   </section>
 {{/if}}
 

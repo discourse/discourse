@@ -11,9 +11,9 @@
   </section>
   <section>
     {{#unless model}}
-      {{#link-to "tagGroups.new" class="btn btn-primary"}}
+      <LinkTo @route="tagGroups.new" class="btn btn-primary">
         {{d-icon "plus"}} {{i18n "tagging.groups.new"}}
-      {{/link-to}}
+      </LinkTo>
     {{/unless}}
   </section>
 </div>

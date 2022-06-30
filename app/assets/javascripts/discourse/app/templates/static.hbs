@@ -1,24 +1,24 @@
-{{#d-section bodyClass=bodyClass class="container"}}
-  {{#watch-read action=(action "markFaqRead") path=model.path}}
+<DSection @bodyClass={{bodyClass}} @class="container">
+  <WatchRead @action={{action "markFaqRead"}} @path={{model.path}}>
     <div class="contents clearfix body-page">
 
-      {{plugin-outlet name="above-static" tagName="span" connectorTagName="div"}}
+      <PluginOutlet @name="above-static" @tagName="span" @connectorTagName="div" />
 
       {{html-safe model.html}}
 
-      {{plugin-outlet name="below-static" connectorTagName="div"}}
+      <PluginOutlet @name="below-static" @connectorTagName="div" />
 
       {{#if anyButtons}}
         <div class="body-page-button-container">
           {{#if showSignupButton}}
-            {{d-button action=(route-action "showCreateAccount") class="btn-primary sign-up-button" label="sign_up"}}
+            <DButton @action={{route-action "showCreateAccount"}} @class="btn-primary sign-up-button" @label="sign_up" />
           {{/if}}
 
           {{#if showLoginButton}}
-            {{d-button action=(route-action "showLogin") class="btn-primary login-button" icon="user" label="log_in"}}
+            <DButton @action={{route-action "showLogin"}} @class="btn-primary login-button" @icon="user" @label="log_in" />
           {{/if}}
         </div>
       {{/if}}
     </div>
-  {{/watch-read}}
-{{/d-section}}
+  </WatchRead>
+</DSection>

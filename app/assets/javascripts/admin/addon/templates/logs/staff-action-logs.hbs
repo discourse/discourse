@@ -31,23 +31,18 @@
     </div>
   {{else}}
     {{i18n "admin.logs.staff_actions.filter"}}
-    {{combo-box
-      content=userHistoryActions
-      value=filterActionId
-      onChange=(action "filterActionIdChanged")
-      options=(hash
+    <ComboBox @content={{userHistoryActions}} @value={{filterActionId}} @onChange={{action "filterActionIdChanged"}} @options={{hash
         none="admin.logs.staff_actions.all"
-      )
-    }}
+      }} />
   {{/if}}
 
-  {{d-button class="btn-default" action=(action "exportStaffActionLogs") label="admin.export_csv.button_text" icon="download"}}
+  <DButton @class="btn-default" @action={{action "exportStaffActionLogs"}} @label="admin.export_csv.button_text" @icon="download" />
 </div>
 
 <div class="clearfix"></div>
 
-{{#staff-actions}}
-  {{#load-more selector=".staff-logs tr" action=(action "loadMore")}}
+<StaffActions>
+  <LoadMore @selector=".staff-logs tr" @action={{action "loadMore"}}>
     {{#if model.content}}
       <table class="table staff-logs grid">
         <thead>
@@ -64,10 +59,10 @@
               <td class="staff-users">
                 <div class="staff-user">
                   {{#if item.acting_user}}
-                    {{#link-to "adminUser" item.acting_user}}
+                    <LinkTo @route="adminUser" @model={{item.acting_user}}>
                       {{avatar item.acting_user imageSize="tiny"}}
                       {{item.acting_user.username}}
-                    {{/link-to}}
+                    </LinkTo>
                   {{else}}
                     <span class="deleted-user" title={{i18n "admin.user.deleted"}}>
                       {{d-icon "far-trash-alt"}}
@@ -81,7 +76,7 @@
               <td class="col value subject">
                 <div class="subject">
                   {{#if item.target_user}}
-                    {{#link-to "adminUser" item.target_user}}{{avatar item.target_user imageSize="tiny"}}{{/link-to}}
+                    <LinkTo @route="adminUser" @model={{item.target_user}}>{{avatar item.target_user imageSize="tiny"}}</LinkTo>
                     <a href {{action "filterByTargetUser" item.target_user}}>{{item.target_user.username}}</a>
                   {{/if}}
                   {{#if item.subject}}
@@ -107,9 +102,9 @@
         </tbody>
       </table>
     {{else if model.loadingMore}}
-      {{conditional-loading-spinner condition=model.loadingMore}}
+      <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}
-  {{/load-more}}
-{{/staff-actions}}
+  </LoadMore>
+</StaffActions>

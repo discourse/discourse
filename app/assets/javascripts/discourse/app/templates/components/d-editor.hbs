@@ -7,31 +7,12 @@
         {{#each toolbar.groups as |group|}}
           {{#each group.buttons as |b|}}
             {{#if b.popupMenu}}
-              {{toolbar-popup-menu-options
-                content=popupMenuOptions
-                onChange=onPopupMenuAction
-                onOpen=(action b.action b)
-                class=b.className
-                tabindex=-1
-                onKeydown=rovingButtonBar
-                options=(hash
+              <ToolbarPopupMenuOptions @content={{popupMenuOptions}} @onChange={{onPopupMenuAction}} @onOpen={{action b.action b}} @class={{b.className}} @tabindex={{-1}} @onKeydown={{rovingButtonBar}} @options={{hash
                   icon=b.icon
                   focusAfterOnChange=false
-                )
-              }}
+                }} />
             {{else}}
-              {{d-button
-                action=b.action
-                type="button"
-                actionParam=b
-                translatedTitle=b.title
-                label=b.label
-                icon=b.icon
-                class=b.className
-                preventFocus=b.preventFocus
-                tabindex=b.tabindex
-                onKeyDown=rovingButtonBar
-              }}
+              <DButton @action={{b.action}} @type="button" @actionParam={{b}} @translatedTitle={{b.title}} @label={{b.label}} @icon={{b.icon}} @class={{b.className}} @preventFocus={{b.preventFocus}} @tabindex={{b.tabindex}} @onKeyDown={{rovingButtonBar}} />
             {{/if}}
           {{/each}}
 
@@ -41,21 +22,10 @@
         {{/each}}
       </div>
 
-      {{conditional-loading-spinner condition=loading}}
-      {{d-textarea
-        autocomplete="off"
-        tabindex=tabindex
-        value=value
-        class="d-editor-input"
-        placeholder=placeholderTranslated
-        aria-label=placeholderTranslated
-        disabled=disabled
-        input=change
-        focusIn=(action "focusIn")
-        focusOut=(action "focusOut")
-      }}
-      {{popup-input-tip validation=validation}}
-      {{plugin-outlet name="after-d-editor" connectorTagName="div" args=outletArgs}}
+      <ConditionalLoadingSpinner @condition={{loading}} />
+      <DTextarea @autocomplete="off" @tabindex={{tabindex}} @value={{value}} @class="d-editor-input" @placeholder={{placeholderTranslated}} @aria-label={{placeholderTranslated}} @disabled={{disabled}} @input={{change}} @focusIn={{action "focusIn"}} @focusOut={{action "focusOut"}} />
+      <PopupInputTip @validation={{validation}} />
+      <PluginOutlet @name="after-d-editor" @connectorTagName="div" @args={{outletArgs}} />
     </div>
   </div>
 
@@ -65,14 +35,8 @@
         {{html-safe preview}}
       {{/unless}}
     </div>
-    {{plugin-outlet name="editor-preview" tagName="span" connectorTagName="div" classNames="d-editor-plugin" args=outletArgs}}
+    <PluginOutlet @name="editor-preview" @tagName="span" @connectorTagName="div" @classNames="d-editor-plugin" @args={{outletArgs}} />
   </div>
 </div>
 
-{{emoji-picker
-  isActive=emojiPickerIsActive
-  isEditorFocused=isEditorFocused
-  initialFilter=this.emojiFilter
-  emojiSelected=(action "emojiSelected")
-  onEmojiPickerClose=onEmojiPickerClose
-}}
+<EmojiPicker @isActive={{emojiPickerIsActive}} @isEditorFocused={{isEditorFocused}} @initialFilter={{this.emojiFilter}} @emojiSelected={{action "emojiSelected"}} @onEmojiPickerClose={{onEmojiPickerClose}} />

@@ -2177,7 +2177,7 @@ ru:
       create_shared_draft: "Создать общий черновик"
       edit_shared_draft: "Редактировать общий черновик"
       title: "Или нажмите %{modifier}Enter"
-      users_placeholder: "Добавить пользователя"
+      users_placeholder: "Добавьте пользователей или группы"
       title_placeholder: "Название: суть темы коротким предложением"
       title_or_link_placeholder: "Введите название или вставьте здесь ссылку"
       edit_reason_placeholder: "Причина редактирования..."
@@ -3702,6 +3702,7 @@ ru:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
       readonly: "Просматривать"
+    preloader_text: "Загрузка..."
     lightbox:
       download: "скачать"
       open: "исходное изображение"
@@ -4065,7 +4066,9 @@ ru:
             inbox: "Входящие"
             sent: "Отправленные"
             new: "Новые"
+            new_with_count: "Новые (%{count})"
             unread: "Непрочитанные"
+            unread_with_count: "Непрочитанные (%{count})"
             archive: "Архив"
         tags:
           no_tracked_tags: "Вы не отслеживаете ни один тег."

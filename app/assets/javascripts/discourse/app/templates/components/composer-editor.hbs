@@ -1,27 +1,7 @@
-{{#d-editor
-  value=composer.reply
-  placeholder=replyPlaceholder
-  previewUpdated=(action "previewUpdated")
-  markdownOptions=markdownOptions
-  extraButtons=(action "extraButtons")
-  importQuote=(action "importQuote")
-  showUploadModal=showUploadModal
-  togglePreview=(action "togglePreview")
-  processPreview=processPreview
-  validation=validation
-  loading=composer.loading
-  forcePreview=forcePreview
-  showLink=showLink
-  composerEvents=true
-  onExpandPopupMenuOptions=(action "onExpandPopupMenuOptions")
-  onPopupMenuAction=onPopupMenuAction
-  popupMenuOptions=popupMenuOptions
-  disabled=disableTextarea
-  outletArgs=(hash composer=composer editorType="composer")
-}}
+<DEditor @value={{composer.reply}} @placeholder={{replyPlaceholder}} @previewUpdated={{action "previewUpdated"}} @markdownOptions={{markdownOptions}} @extraButtons={{action "extraButtons"}} @importQuote={{action "importQuote"}} @showUploadModal={{showUploadModal}} @togglePreview={{action "togglePreview"}} @processPreview={{processPreview}} @validation={{validation}} @loading={{composer.loading}} @forcePreview={{forcePreview}} @showLink={{showLink}} @composerEvents={{true}} @onExpandPopupMenuOptions={{action "onExpandPopupMenuOptions"}} @onPopupMenuAction={{onPopupMenuAction}} @popupMenuOptions={{popupMenuOptions}} @disabled={{disableTextarea}} @outletArgs={{hash composer=composer editorType="composer"}}>
   {{yield}}
-{{/d-editor}}
+</DEditor>
 
 {{#if allowUpload}}
-  {{pick-files-button fileInputId="file-uploader" allowMultiple=true}}
+  <PickFilesButton @fileInputId="file-uploader" @allowMultiple={{true}} />
 {{/if}}

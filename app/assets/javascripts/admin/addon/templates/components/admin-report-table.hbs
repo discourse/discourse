@@ -3,12 +3,7 @@
     <tr>
       {{#if model.computedLabels}}
         {{#each model.computedLabels as |label|}}
-          {{admin-report-table-header
-            showSortingUI=showSortingUI
-            currentSortDirection=sortDirection
-            currentSortLabel=sortLabel
-            label=label
-            sortByLabel=(action "sortByLabel" label)}}
+          <AdminReportTableHeader @showSortingUI={{showSortingUI}} @currentSortDirection={{sortDirection}} @currentSortLabel={{sortLabel}} @label={{label}} @sortByLabel={{action "sortByLabel" label}} />
         {{/each}}
       {{else}}
         {{#each model.data as |data|}}
@@ -19,7 +14,7 @@
   </thead>
   <tbody>
     {{#each paginatedData as |data|}}
-      {{admin-report-table-row data=data labels=model.computedLabels options=options}}
+      <AdminReportTableRow @data={{data}} @labels={{model.computedLabels}} @options={{options}} />
     {{/each}}
 
     {{#if showTotalForSample}}
@@ -65,10 +60,6 @@
 
 <div class="pagination">
   {{#each pages as |pageState|}}
-    {{d-button
-      translatedLabel=pageState.page
-      action=(action "changePage")
-      actionParam=pageState.index
-      class=pageState.class}}
+    <DButton @translatedLabel={{pageState.page}} @action={{action "changePage"}} @actionParam={{pageState.index}} @class={{pageState.class}} />
   {{/each}}
 </div>

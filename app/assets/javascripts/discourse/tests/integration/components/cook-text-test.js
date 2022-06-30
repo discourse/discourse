@@ -10,7 +10,7 @@ discourseModule("Integration | Component | cook-text", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("renders markdown", {
-    template: hbs`{{cook-text "_foo_" class="post-body"}}`,
+    template: hbs`<CookText @rawText="_foo_" @class="post-body" />`,
 
     test(assert) {
       const html = query(".post-body").innerHTML.trim();
@@ -19,7 +19,7 @@ discourseModule("Integration | Component | cook-text", function (hooks) {
   });
 
   componentTest("resolves short URLs", {
-    template: hbs`{{cook-text "![an image](upload://a.png)" class="post-body"}}`,
+    template: hbs`<CookText @rawText="![an image](upload://a.png)" @class="post-body" />`,
 
     beforeEach() {
       pretender.post("/uploads/lookup-urls", () => {

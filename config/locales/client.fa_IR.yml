@@ -1837,7 +1837,7 @@ fa_IR:
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
-      users_placeholder: "افزودن یک کاربر"
+      users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
@@ -2959,6 +2959,7 @@ fa_IR:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
       readonly: "دیدن"
+    preloader_text: "بارگیری..."
     lightbox:
       download: "دانلود"
       previous: "قبلی (مکان‌نمای چپ)"
@@ -3194,7 +3195,9 @@ fa_IR:
             inbox: "صندوق دریافت"
             sent: "ارسال شد"
             new: "جدید"
+            new_with_count: "(%{count}) جدید"
             unread: "خوانده‌ نشده‌"
+            unread_with_count: " (%{count}) خوانده‌ نشده‌"
             archive: "بایگانی"
         tags:
           no_tracked_tags: "شما هیچ برچسبی را ردیابی نمی‌کنید."

@@ -56,6 +56,9 @@ class Guardian
     def topic_create_allowed_category_ids
       []
     end
+    def groups
+      []
+    end
     def has_trust_level?(level)
       false
     end
@@ -64,6 +67,9 @@ class Guardian
     end
     def email
       nil
+    end
+    def whisperer?
+      false
     end
   end
 
@@ -97,6 +103,10 @@ class Guardian
 
   def is_moderator?
     @user.moderator?
+  end
+
+  def is_whisperer?
+    @user.whisperer?
   end
 
   def is_category_group_moderator?(category)

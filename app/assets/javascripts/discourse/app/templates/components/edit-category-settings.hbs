@@ -4,7 +4,7 @@
       <label for="category-position">
         {{i18n "category.position"}}
       </label>
-      {{text-field value=category.position id="category-position" class="position-input" type="number"}}
+      <TextField @value={{category.position}} @id="category-position" @class="position-input" @type="number" />
     </section>
   {{/if}}
 
@@ -23,7 +23,7 @@
         {{i18n "category.num_featured_topics"}}
       {{/if}}
     </label>
-    {{text-field value=category.num_featured_topics id="category-number-featured-topics" type="number"}}
+    <TextField @value={{category.num_featured_topics}} @id="category-number-featured-topics" @type="number" />
   </section>
 
   <section class="field search-priority">
@@ -31,23 +31,16 @@
       {{i18n "category.search_priority.label"}}
     </label>
     <div class="controls">
-      {{combo-box
-        valueProperty="value"
-        id="category-search-priority"
-        content=searchPrioritiesOptions
-        value=category.search_priority
-        onChange=(action (mut category.search_priority))
-        options=(hash
+      <ComboBox @valueProperty="value" @id="category-search-priority" @content={{searchPrioritiesOptions}} @value={{category.search_priority}} @onChange={{action (mut category.search_priority)}} @options={{hash
           placementStrategy="absolute"
-        )
-      }}
+        }} />
     </div>
   </section>
 
   {{#if siteSettings.enable_badges}}
     <section class="field allow-badges">
       <label>
-        {{input type="checkbox" checked=category.allow_badges}}
+        <Input @type="checkbox" @checked={{category.allow_badges}} />
         {{i18n "category.allow_badges_label"}}
       </label>
     </section>
@@ -57,7 +50,7 @@
     <section class="field topic-featured-link-allowed">
       <div class="allowed-topic-featured-link-category">
         <label class="checkbox-label">
-          {{input type="checkbox" checked=category.topic_featured_link_allowed}}
+          <Input @type="checkbox" @checked={{category.topic_featured_link_allowed}} />
           {{i18n "category.topic_featured_link_allowed"}}
         </label>
       </div>
@@ -66,21 +59,21 @@
 
   <section class="field navigate-to-first-post-after-read">
     <label>
-      {{input type="checkbox" checked=category.navigate_to_first_post_after_read}}
+      <Input @type="checkbox" @checked={{category.navigate_to_first_post_after_read}} />
       {{i18n "category.navigate_to_first_post_after_read"}}
     </label>
   </section>
 
   <section class="field all-topics-wiki">
     <label>
-      {{input type="checkbox" checked=category.all_topics_wiki}}
+      <Input @type="checkbox" @checked={{category.all_topics_wiki}} />
       {{i18n "category.all_topics_wiki"}}
     </label>
   </section>
 
   <section class="field allow-unlimited-owner-edits-on-first-post">
     <label>
-      {{input type="checkbox" checked=category.allow_unlimited_owner_edits_on_first_post}}
+      <Input @type="checkbox" @checked={{category.allow_unlimited_owner_edits_on_first_post}} />
       {{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
     </label>
   </section>
@@ -91,25 +84,20 @@
   {{#if siteSettings.enable_category_group_moderation}}
     <section class="field reviewable-by-group">
       <label>{{i18n "category.reviewable_by_group"}}</label>
-      {{group-selector
-        groupFinder=groupFinder
-        single="true"
-        groupNames=category.reviewable_by_group_name
-        placeholderKey="category.review_group_name"
-      }}
+      <GroupSelector @groupFinder={{groupFinder}} @single="true" @groupNames={{category.reviewable_by_group_name}} @placeholderKey="category.review_group_name" />
     </section>
   {{/if}}
 
   <section class="field require-topic-approval">
     <label>
-      {{input type="checkbox" checked=category.custom_fields.require_topic_approval}}
+      <Input @type="checkbox" @checked={{category.custom_fields.require_topic_approval}} />
       {{i18n "category.require_topic_approval"}}
     </label>
   </section>
 
   <section class="field require-reply-approval">
     <label>
-      {{input type="checkbox" checked=category.custom_fields.require_reply_approval}}
+      <Input @type="checkbox" @checked={{category.custom_fields.require_reply_approval}} />
       {{i18n "category.require_reply_approval"}}
     </label>
   </section>
@@ -120,11 +108,7 @@
         {{i18n "category.default_slow_mode"}}
       </label>
       <div class="category-default-slow-mode-seconds">
-        {{relative-time-picker
-            id="category-default-slow-mode"
-            durationMinutes=category.defaultSlowModeMinutes
-            hiddenIntervals=hiddenRelativeIntervals
-            onChange=(action "onDefaultSlowModeDurationChange")}}
+        <RelativeTimePicker @id="category-default-slow-mode" @durationMinutes={{category.defaultSlowModeMinutes}} @hiddenIntervals={{hiddenRelativeIntervals}} @onChange={{action "onDefaultSlowModeDurationChange"}} />
       </div>
     </div>
   </section>
@@ -135,14 +119,10 @@
         {{i18n "topic.auto_close.label"}}
       </label>
       <div class="category-topic-auto-close-hours">
-        {{relative-time-picker
-            id="topic-auto-close"
-            durationHours=category.auto_close_hours
-            hiddenIntervals=hiddenRelativeIntervals
-            onChange=(action "onAutoCloseDurationChange")}}
+        <RelativeTimePicker @id="topic-auto-close" @durationHours={{category.auto_close_hours}} @hiddenIntervals={{hiddenRelativeIntervals}} @onChange={{action "onAutoCloseDurationChange"}} />
       </div>
       <label>
-        {{input type="checkbox" checked=category.auto_close_based_on_last_post}}
+        <Input @type="checkbox" @checked={{category.auto_close_based_on_last_post}} />
         {{i18n "topic.auto_close.based_on_last_post"}}
       </label>
     </div>
@@ -153,7 +133,7 @@
       <label for="category-minimum-tags">
         {{i18n "category.minimum_required_tags"}}
       </label>
-      {{text-field value=category.minimum_required_tags id="category-minimum-tags" type="number" min="0"}}
+      <TextField @value={{category.minimum_required_tags}} @id="category-minimum-tags" @type="number" @min="0" />
     </section>
   {{/if}}
 
@@ -161,7 +141,7 @@
     <label for="category-number-daily-bump">
       {{i18n "category.num_auto_bump_daily"}}
     </label>
-    {{text-field value=category.custom_fields.num_auto_bump_daily id="category-number-daily-bump" type="number"}}
+    <TextField @value={{category.custom_fields.num_auto_bump_daily}} @id="category-number-daily-bump" @type="number" />
   </section>
 </section>
 
@@ -173,15 +153,9 @@
       {{i18n "category.default_view"}}
     </label>
     <div class="controls">
-      {{combo-box
-        valueProperty="value"
-        id="category-default-view"
-        content=availableViews
-        value=category.default_view
-        options=(hash
+      <ComboBox @valueProperty="value" @id="category-default-view" @content={{availableViews}} @value={{category.default_view}} @options={{hash
           placementStrategy="absolute"
-        )
-      }}
+        }} />
     </div>
   </section>
 
@@ -190,15 +164,9 @@
       {{i18n "category.default_top_period"}}
     </label>
     <div class="controls">
-      {{combo-box
-        valueProperty="value"
-        id="category-default-period"
-        content=availableTopPeriods
-        value=category.default_top_period
-        options=(hash
+      <ComboBox @valueProperty="value" @id="category-default-period" @content={{availableTopPeriods}} @value={{category.default_top_period}} @options={{hash
           placementStrategy="absolute"
-        )
-      }}
+        }} />
     </div>
   </section>
 
@@ -207,26 +175,14 @@
       {{i18n "category.sort_order"}}
     </label>
     <div class="controls">
-      {{combo-box
-        valueProperty="value"
-        content=availableSorts
-        value=category.sort_order
-        options=(hash
+      <ComboBox @valueProperty="value" @content={{availableSorts}} @value={{category.sort_order}} @options={{hash
           none="category.sort_options.default"
-        )
-        onChange=(action (mut category.sort_order))
-      }}
+        }} @onChange={{action (mut category.sort_order)}} />
       {{#unless isDefaultSortOrder}}
-        {{combo-box
-          valueProperty="value"
-          content=sortAscendingOptions
-          value=sortAscendingOption
-          options=(hash
+        <ComboBox @valueProperty="value" @content={{sortAscendingOptions}} @value={{sortAscendingOption}} @options={{hash
             none="category.sort_options.default"
             placementStrategy="absolute"
-          )
-          onChange=(action (mut category.sort_ascending))
-        }}
+          }} @onChange={{action (mut category.sort_ascending)}} />
       {{/unless}}
     </div>
   </section>
@@ -236,19 +192,14 @@
       {{i18n "category.default_list_filter"}}
     </label>
     <div class="controls">
-      {{combo-box
-        id="category-default-filter"
-        valueProperty="value"
-        content=availableListFilters
-        value=category.default_list_filter
-      }}
+      <ComboBox @id="category-default-filter" @valueProperty="value" @content={{availableListFilters}} @value={{category.default_list_filter}} />
     </div>
   </section>
 
   {{#if isParentCategory}}
     <section class="field show-subcategory-list-field">
       <label>
-        {{input type="checkbox" checked=category.show_subcategory_list}}
+        <Input @type="checkbox" @checked={{category.show_subcategory_list}} />
         {{i18n "category.show_subcategory_list"}}
       </label>
     </section>
@@ -259,28 +210,17 @@
       <label>
         {{i18n "category.subcategory_list_style"}}
       </label>
-      {{combo-box
-        valueProperty="value"
-        id="subcategory-list-style"
-        content=availableSubcategoryListStyles
-        value=category.subcategory_list_style
-        options=(hash
+      <ComboBox @valueProperty="value" @id="subcategory-list-style" @content={{availableSubcategoryListStyles}} @value={{category.subcategory_list_style}} @options={{hash
           placementStrategy="absolute"
-        )
-      }}
+        }} />
     </section>
   {{/if}}
 
   <section class="field category-read-only-banner">
     <label for="read-only-message">{{i18n "category.read_only_banner"}}</label>
-    {{text-field
-        valueProperty="value"
-        id="read-only-message"
-        value=category.read_only_banner
-        options=(hash
+    <TextField @valueProperty="value" @id="read-only-message" @value={{category.read_only_banner}} @options={{hash
         placementStrategy="absolute"
-        )
-    }}
+        }} />
   </section>
 </section>
 
@@ -293,24 +233,24 @@
         {{d-icon "far-envelope"}}
         {{i18n "category.email_in"}}
       </label>
-      {{text-field id="category-email-in" class="email-in" value=category.email_in}}
+      <TextField @id="category-email-in" @class="email-in" @value={{category.email_in}} />
     </section>
 
     <section class="field email-in-allow-strangers">
       <label>
-        {{input type="checkbox" checked=category.email_in_allow_strangers}}
+        <Input @type="checkbox" @checked={{category.email_in_allow_strangers}} />
         {{i18n "category.email_in_allow_strangers"}}
       </label>
     </section>
 
     <section class="field mailinglist-mirror">
       <label>
-        {{input type="checkbox" checked=category.mailinglist_mirror}}
+        <Input @type="checkbox" @checked={{category.mailinglist_mirror}} />
         {{i18n "category.mailinglist_mirror"}}
       </label>
     </section>
 
-    {{plugin-outlet name="category-email-in" tagName="span" connectorTagName="div" args=(hash category=category)}}
+    <PluginOutlet @name="category-email-in" @tagName="span" @connectorTagName="div" @args={{hash category=category}} />
   {{/if}}
 
   {{#unless emailInEnabled}}
@@ -321,4 +261,4 @@
   {{/unless}}
 </section>
 
-{{plugin-outlet name="category-custom-settings" args=(hash category=category) tagName="section"}}
+<PluginOutlet @name="category-custom-settings" @args={{hash category=category}} @tagName="section" />

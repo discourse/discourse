@@ -327,11 +327,10 @@ table {
 }
 
 .wrap {
-  @extend .clearfix;
+  max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
   padding: 0 10px;
-
   .contents {
     position: relative;
   }

@@ -1,5 +1,5 @@
-{{#create-invite-uploader as |status|}}
-  {{#d-modal-body title="user.invited.bulk_invite.text"}}
+<CreateInviteUploader as |status|>
+  <DModalBody @title="user.invited.bulk_invite.text">
     {{#if status.uploaded}}
       {{i18n "user.invited.bulk_invite.success"}}
     {{else}}
@@ -7,22 +7,13 @@
 
       <input id="csv-file" disabled={{status.uploading}} type="file" accept=".csv">
     {{/if}}
-  {{/d-modal-body}}
+  </DModalBody>
 
   <div class="modal-footer">
     {{#unless status.uploaded}}
-      {{d-button
-        icon=(if isEmail "envelope" "link")
-        translatedLabel=(if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.uploadProgress)
-                                             (i18n "user.invited.bulk_invite.text"))
-        class="btn-primary"
-        action=status.startUpload
-        disabled=status.submitDisabled
-      }}
+      <DButton @icon={{if isEmail "envelope" "link"}} @translatedLabel={{if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.uploadProgress) (i18n "user.invited.bulk_invite.text")}} @class="btn-primary" @action={{status.startUpload}} @disabled={{status.submitDisabled}} />
     {{/unless}}
 
-    {{d-button label="close"
-              class="btn-primary"
-              action=(route-action "closeModal")}}
+    <DButton @label="close" @class="btn-primary" @action={{route-action "closeModal"}} />
   </div>
-{{/create-invite-uploader}}
+</CreateInviteUploader>

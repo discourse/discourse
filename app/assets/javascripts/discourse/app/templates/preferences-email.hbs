@@ -1,4 +1,4 @@
-{{#d-section pageClass="user-preferences" tagName=""}}
+<DSection @pageClass="user-preferences" @tagName="">
   <section class="user-preferences solo-preference">
     <form class="form-horizontal">
 
@@ -28,8 +28,8 @@
         <div class="control-group">
           <label class="control-label">{{i18n "user.email.title"}}</label>
           <div class="controls">
-            {{text-field value=newEmail id="change-email" classNames="input-xxlarge" autofocus="autofocus"}}
-            {{input-tip validation=emailValidation}}
+            <TextField @value={{newEmail}} @id="change-email" @classNames="input-xxlarge" @autofocus="autofocus" />
+            <InputTip @validation={{emailValidation}} />
           </div>
           <div class="controls">
             <div class="instructions">
@@ -44,17 +44,11 @@
 
         <div class="control-group">
           <div class="controls">
-            {{d-button
-              class="btn-primary"
-              action=(action "saveEmail")
-              type="submit"
-              disabled=saveDisabled
-              translatedLabel=saveButtonText
-            }}
+            <DButton @class="btn-primary" @action={{action "saveEmail"}} @type="submit" @disabled={{saveDisabled}} @translatedLabel={{saveButtonText}} />
           </div>
         </div>
       {{/if}}
 
     </form>
   </section>
-{{/d-section}}
+</DSection>

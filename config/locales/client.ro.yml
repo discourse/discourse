@@ -1612,7 +1612,6 @@ ro:
       create_pm: "Mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
-      users_placeholder: "Adaugă un utilizator"
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
@@ -2596,6 +2595,7 @@ ro:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizează"
       readonly: "Doar citire"
+    preloader_text: "Se încarcă"
     lightbox:
       download: "descărcare"
       counter: "%curr% din %total%"
@@ -2788,7 +2788,9 @@ ro:
             inbox: "Primite"
             sent: "Trimise"
             new: "Noi"
+            new_with_count: "Nou (%{count})"
             unread: "Necitite"
+            unread_with_count: "Necitit (%{count})"
             archive: "Arhivă"
         tags:
           header_link_title: "toate etichetele"

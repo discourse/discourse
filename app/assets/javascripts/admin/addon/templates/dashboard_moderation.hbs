@@ -1,5 +1,5 @@
 <div class="sections">
-  {{plugin-outlet name="admin-dashboard-moderation-top" tagName="span" connectorTagName="div"}}
+  <PluginOutlet @name="admin-dashboard-moderation-top" @tagName="span" @connectorTagName="div" />
 
   {{#if isModeratorsActivityVisible}}
     <div class="moderators-activity section">
@@ -9,37 +9,22 @@
             {{i18n "admin.dashboard.moderators_activity"}}
           </a>
         </h2>
-        {{period-chooser
-          period=period
-          action=(action "changePeriod")
-          content=availablePeriods
-          fullDay=false}}
+        <PeriodChooser @period={{period}} @action={{action "changePeriod"}} @content={{availablePeriods}} @fullDay={{false}} />
       </div>
 
       <div class="section-body">
-        {{admin-report
-          filters=filters
-          showHeader=false
-          dataSourceName="moderators_activity"}}
+        <AdminReport @filters={{filters}} @showHeader={{false}} @dataSourceName="moderators_activity" />
       </div>
     </div>
   {{/if}}
 
   <div class="main-section">
-    {{admin-report
-      dataSourceName="flags_status"
-      reportOptions=flagsStatusOptions
-      filters=lastWeekfilters}}
+    <AdminReport @dataSourceName="flags_status" @reportOptions={{flagsStatusOptions}} @filters={{lastWeekfilters}} />
 
-    {{admin-report
-      dataSourceName="post_edits"
-      filters=lastWeekfilters}}
+    <AdminReport @dataSourceName="post_edits" @filters={{lastWeekfilters}} />
 
-    {{admin-report
-      dataSourceName="user_flagging_ratio"
-      filters=lastWeekfilters
-      reportOptions=userFlaggingRatioOptions}}
+    <AdminReport @dataSourceName="user_flagging_ratio" @filters={{lastWeekfilters}} @reportOptions={{userFlaggingRatioOptions}} />
 
-    {{plugin-outlet name="admin-dashboard-moderation-bottom" tagName="span" connectorTagName="div"}}
+    <PluginOutlet @name="admin-dashboard-moderation-bottom" @tagName="span" @connectorTagName="div" />
   </div>
 </div>

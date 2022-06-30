@@ -1,26 +1,14 @@
 <div class="backup-options">
   {{#if localBackupStorage}}
-    {{uppy-backup-uploader done=(route-action "uploadSuccess") localBackupStorage=localBackupStorage}}
+    <UppyBackupUploader @done={{route-action "uploadSuccess"}} @localBackupStorage={{localBackupStorage}} />
   {{else}}
-    {{uppy-backup-uploader done=(route-action "remoteUploadSuccess")}}
+    <UppyBackupUploader @done={{route-action "remoteUploadSuccess"}} />
   {{/if}}
 
   {{#if site.isReadOnly}}
-    {{d-button
-      class="btn-default"
-      icon="far-eye"
-      action=(action "toggleReadOnlyMode")
-      disabled=status.isOperationRunning
-      title="admin.backups.read_only.disable.title"
-      label="admin.backups.read_only.disable.label"}}
+    <DButton @class="btn-default" @icon="far-eye" @action={{action "toggleReadOnlyMode"}} @disabled={{status.isOperationRunning}} @title="admin.backups.read_only.disable.title" @label="admin.backups.read_only.disable.label" />
   {{else}}
-    {{d-button
-      class="btn-default"
-      icon="far-eye"
-      action=(action "toggleReadOnlyMode")
-      disabled=status.isOperationRunning
-      title="admin.backups.read_only.enable.title"
-      label="admin.backups.read_only.enable.label"}}
+    <DButton @class="btn-default" @icon="far-eye" @action={{action "toggleReadOnlyMode"}} @disabled={{status.isOperationRunning}} @title="admin.backups.read_only.enable.title" @label="admin.backups.read_only.enable.label" />
   {{/if}}
   <div class="backup-message">
     {{#if status.restoreDisabled}}
@@ -41,41 +29,13 @@
         <td class="backup-size">{{human-size backup.size}}</td>
         <td class="backup-controls">
           <div>
-            {{d-button class="btn-default download"
-               action=(action "download")
-               actionParam=backup
-               icon="download"
-               title="admin.backups.operations.download.title"
-               label="admin.backups.operations.download.label"}}
+            <DButton @class="btn-default download" @action={{action "download"}} @actionParam={{backup}} @icon="download" @title="admin.backups.operations.download.title" @label="admin.backups.operations.download.label" />
             {{#if status.isOperationRunning}}
-              {{d-button
-                icon="far-trash-alt"
-                action=(route-action "destroyBackup")
-                actionParam=backup class="btn-danger"
-                disabled="true"
-                title="admin.backups.operations.is_running"}}
-              {{d-button
-                icon="play"
-                action=(route-action "startRestore")
-                actionParam=backup disabled=status.restoreDisabled
-                class="btn-default"
-                title=restoreTitle
-                label="admin.backups.operations.restore.label"}}
+              <DButton @icon="far-trash-alt" @action={{route-action "destroyBackup"}} @actionParam={{backup}} @class="btn-danger" @disabled="true" @title="admin.backups.operations.is_running" />
+              <DButton @icon="play" @action={{route-action "startRestore"}} @actionParam={{backup}} @disabled={{status.restoreDisabled}} @class="btn-default" @title={{restoreTitle}} @label="admin.backups.operations.restore.label" />
             {{else}}
-              {{d-button
-                icon="far-trash-alt"
-                action=(route-action "destroyBackup")
-                actionParam=backup
-                class="btn-danger"
-                title="admin.backups.operations.destroy.title"}}
-              {{d-button
-                icon="play"
-                action=(route-action "startRestore")
-                actionParam=backup
-                disabled=status.restoreDisabled
-                class="btn-default btn-restore"
-                title=restoreTitle
-                label="admin.backups.operations.restore.label"}}
+              <DButton @icon="far-trash-alt" @action={{route-action "destroyBackup"}} @actionParam={{backup}} @class="btn-danger" @title="admin.backups.operations.destroy.title" />
+              <DButton @icon="play" @action={{route-action "startRestore"}} @actionParam={{backup}} @disabled={{status.restoreDisabled}} @class="btn-default btn-restore" @title={{restoreTitle}} @label="admin.backups.operations.restore.label" />
             {{/if}}
           </div>
         </td>
