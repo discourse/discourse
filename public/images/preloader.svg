@@ -1,6 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-ember-extension="1">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  version="1.1"
+>
   <style>
-
     /* these need to be injected dynamicly to match theme colors */
     :root {
       --primary: #222222;
@@ -17,7 +20,6 @@
       animation-timing-function: ease-in-out;
       animation-duration: 3s;
       animation-iteration-count: infinite;
-      animation-delay: 1.5s;
       stroke: #fff;
       stroke-width: 0.5px;
       transform-origin: center;
@@ -28,27 +30,27 @@
 
     .dots:first-child {
       fill: var(--tertiary);
-      animation-delay: 1.25s;
+      animation-delay: 0.625s;
     }
 
     .dots:nth-child(2) {
       fill: var(--tertiary);
-      animation-delay: 1.35s;
+      animation-delay: 0.675s;
     }
 
     .dots:nth-child(3) {
       fill: var(--highlight);
-      animation-delay: 1.45s;
+      animation-delay: 0.725s;
     }
 
     .dots:nth-child(4) {
       fill: var(--quaternary);
-      animation-delay: 1.55s;
+      animation-delay: 0.775s;
     }
 
     .dots:nth-child(5) {
       fill: var(--quaternary);
-      animation-delay: 1.65s;
+      animation-delay: 0.825s;
     }
 
     @keyframes loader {
@@ -72,10 +74,10 @@
   </style>
 
   <g class="container">
-    <circle class="dots" cx="30vw"/>
-    <circle class="dots" cx="40vw"/>
-    <circle class="dots" cx="50vw"/>
-    <circle class="dots" cx="60vw"/>
-    <circle class="dots" cx="70vw"/>
+    <circle class="dots" cx="30vw" />
+    <circle class="dots" cx="40vw" />
+    <circle class="dots" cx="50vw" />
+    <circle class="dots" cx="60vw" />
+    <circle class="dots" cx="70vw" />
   </g>
 </svg>
