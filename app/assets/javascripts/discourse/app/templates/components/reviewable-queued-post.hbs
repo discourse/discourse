@@ -18,14 +18,14 @@
   <div class="post-contents">
     <ReviewablePostHeader @reviewable={{reviewable}} @createdBy={{reviewable.created_by}} @tagName="" />
 
-    {{cook-text
-      reviewable.payload.raw
-      class="post-body"
-      categoryId=reviewable.category_id
-      topicId=reviewable.topic_id
-      paintOneboxes=true
-      opts=(hash removeMissing=true)
-    }}
+    <CookText
+      @rawText={{reviewable.payload.raw}}
+      @class="post-body"
+      @categoryId={{reviewable.category_id}}
+      @topicId={{reviewable.topic_id}}
+      @paintOneboxes={{true}}
+      @opts={{hash removeMissing=true}}
+    />
 
     {{yield}}
   </div>
