@@ -155,12 +155,6 @@
     border: none;
     background: transparent;
     padding: 0.25em 0;
-    opacity: 0;
-    transition: opacity 0.25s;
-
-    &:hover {
-      opacity: 100;
-    }
 
     svg {
       display: block;
