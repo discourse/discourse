@@ -887,6 +887,19 @@ aside.onebox.mixcloud-preview {
   }
 }
 
+iframe.vimeo-onebox {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+@supports not (aspect-ratio: auto) {
+  iframe.vimeo-onebox {
+    width: 690px;
+    height: 388px;
+  }
+}
+
 .video-container {
   .notice {
     background-color: var(--highlight-medium);
