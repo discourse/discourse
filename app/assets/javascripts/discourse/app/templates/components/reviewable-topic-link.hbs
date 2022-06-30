@@ -1,15 +1,15 @@
 <div class="post-topic">
   {{#if reviewable.topic}}
-    {{topic-status topic=reviewable.topic showPrivateMessageIcon=true}}
+    <TopicStatus @topic={{reviewable.topic}} @showPrivateMessageIcon={{true}} />
     <a href={{reviewable.target_url}} class="title-text">{{html-safe reviewable.topic.fancyTitle}}</a>
     {{category-badge reviewable.category}}
-    {{reviewable-tags tags=reviewable.topic_tags tagName=""}}
+    <ReviewableTags @tags={{reviewable.topic_tags}} @tagName="" />
   {{else if (has-block)}}
     {{yield}}
   {{else}}
     <span class="title-text">
       {{i18n "review.topics.deleted"}}
-      {{link-to (i18n "review.topics.original") "topic" "-" reviewable.removed_topic_id}}
+      <LinkTo @route="topic" @models={{array "-" reviewable.removed_topic_id}}>{{i18n "review.topics.original"}}</LinkTo>
     </span>
   {{/if}}
 </div>

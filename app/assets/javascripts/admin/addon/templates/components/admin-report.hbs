@@ -1,15 +1,15 @@
 {{#unless isHidden}}
   {{#if isEnabled}}
-    {{#conditional-loading-section isLoading=isLoading}}
+    <ConditionalLoadingSection @isLoading={{isLoading}}>
       {{#if showHeader}}
         <div class="header">
           {{#if showTitle}}
             <ul class="breadcrumb">
               {{#if showAllReportsLink}}
                 <li class="item all-reports">
-                  {{#link-to "admin.dashboardReports" class="report-url"}}
+                  <LinkTo @route="admin.dashboardReports" class="report-url">
                     {{i18n "admin.dashboard.all_reports"}}
-                  {{/link-to}}
+                  </LinkTo>
                 </li>
 
                 {{#unless showNotFoundError}}
@@ -86,7 +86,7 @@
                 {{component modeComponent model=model options=options}}
 
                 {{#if model.relatedReport}}
-                  {{admin-report showFilteringUI=false dataSourceName=model.relatedReport.type}}
+                  <AdminReport @showFilteringUI={{false}} @dataSourceName={{model.relatedReport.type}} />
                 {{/if}}
               {{/if}}
             {{else}}
@@ -121,11 +121,7 @@
             {{#if showModes}}
               <div class="modes">
                 {{#each displayedModes as |displayedMode|}}
-                  {{d-button
-                    action=(action "onChangeMode")
-                    actionParam=displayedMode.mode
-                    class=displayedMode.cssClass
-                    icon=displayedMode.icon}}
+                  <DButton @action={{action "onChangeMode"}} @actionParam={{displayedMode.mode}} @class={{displayedMode.cssClass}} @icon={{displayedMode.icon}} />
                 {{/each}}
               </div>
             {{/if}}
@@ -138,12 +134,7 @@
               {{/if}}
               <div class="chart-groupings">
                 {{#each chartGroupings as |chartGrouping|}}
-                  {{d-button
-                    label=chartGrouping.label
-                    action=(action "changeGrouping" chartGrouping.id)
-                    class=chartGrouping.class
-                    disabled=chartGrouping.disabled
-                  }}
+                  <DButton @label={{chartGrouping.label}} @action={{action "changeGrouping" chartGrouping.id}} @class={{chartGrouping.class}} @disabled={{chartGrouping.disabled}} />
                 {{/each}}
               </div>
             {{/if}}
@@ -155,13 +146,7 @@
                 </span>
 
                 <div class="input">
-                  {{date-time-input-range
-                    from=startDate
-                    to=endDate
-                    onChange=(action "onChangeDateRange")
-                    showFromTime=false
-                    showToTime=false
-                  }}
+                  <DateTimeInputRange @from={{startDate}} @to={{endDate}} @onChange={{action "onChangeDateRange"}} @showFromTime={{false}} @showToTime={{false}} />
                 </div>
               </div>
             {{/if}}
@@ -184,29 +169,21 @@
 
             <div class="control">
               <div class="input">
-                {{d-button
-                  class="btn-default export-csv-btn"
-                  action=(action "exportCsv")
-                  label="admin.export_csv.button_text"
-                  icon="download"}}
+                <DButton @class="btn-default export-csv-btn" @action={{action "exportCsv"}} @label="admin.export_csv.button_text" @icon="download" />
               </div>
             </div>
 
             {{#if showRefresh}}
               <div class="control">
                 <div class="input">
-                  {{d-button
-                    class="refresh-report-btn btn-primary"
-                    action=(action "refreshReport")
-                    label="admin.dashboard.reports.refresh_report"
-                    icon="sync"}}
+                  <DButton @class="refresh-report-btn btn-primary" @action={{action "refreshReport"}} @label="admin.dashboard.reports.refresh_report" @icon="sync" />
                 </div>
               </div>
             {{/if}}
           </div>
         {{/if}}
       </div>
-    {{/conditional-loading-section}}
+    </ConditionalLoadingSection>
   {{else}}
     <div class="alert alert-info">
       {{html-safe disabledLabel}}

@@ -1,11 +1,11 @@
 <div role="heading" aria-level="2" class="table-heading">
   {{i18n (concat "filters." filter ".title")}}
-  {{plugin-outlet name="categories-topics-table-heading" connectorTagName="div"}}
+  <PluginOutlet @name="categories-topics-table-heading" @connectorTagName="div" />
 </div>
 
 {{#if topics}}
   {{#each topics as |t|}}
-    {{latest-topic-list-item topic=t}}
+    <LatestTopicListItem @topic={{t}} />
   {{/each}}
   <div class="more-topics">
     <a href={{get-url (concat "/" filter)}} class="btn btn-default pull-right">{{i18n "more"}}</a>

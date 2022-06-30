@@ -53,7 +53,7 @@
           <td class="settings">
             {{#if currentUser.admin}}
               {{#if plugin.has_settings}}
-                {{d-button class="btn-default" action=(route-action "showSettings") actionParam=plugin icon="cog" label="admin.plugins.change_settings_short"}}
+                <DButton @class="btn-default" @action={{route-action "showSettings"}} @actionParam={{plugin}} @icon="cog" @label="admin.plugins.change_settings_short" />
               {{/if}}
             {{/if}}
           </td>
@@ -67,4 +67,4 @@
 
 <p class="admin-plugins-howto"><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
 
-{{plugin-outlet name="admin-below-plugins-index" tagName="span" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="admin-below-plugins-index" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />

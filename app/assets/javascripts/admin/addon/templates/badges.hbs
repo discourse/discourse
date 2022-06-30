@@ -2,27 +2,27 @@
   <div class="badges-header">
     <h3 class="badges-heading">{{i18n "admin.badges.title"}}</h3>
     <div class="create-new-badge">
-      {{#link-to "adminBadges.show" "new" class="btn btn-primary"}}
+      <LinkTo @route="adminBadges.show" @model="new" class="btn btn-primary">
         {{d-icon "plus"}}
         <span>{{i18n "admin.badges.new"}}</span>
-      {{/link-to}}
+      </LinkTo>
 
-      {{#link-to "adminBadges.award" "new" class="btn btn-default"}}
+      <LinkTo @route="adminBadges.award" @model="new" class="btn btn-default">
         {{d-icon "upload"}}
         <span>{{i18n "admin.badges.mass_award.title"}}</span>
-      {{/link-to}}
+      </LinkTo>
     </div>
   </div>
   <div class="content-list">
     <ul class="admin-badge-list">
       {{#each model as |badge|}}
         <li class="admin-badge-list-item">
-          {{#link-to selectedRoute badge.id}}
-            {{badge-button badge=badge}}
+          <LinkTo @route={{selectedRoute}} @model={{badge.id}}>
+            <BadgeButton @badge={{badge}} />
             {{#if badge.newBadge}}
               <span class="list-badge">{{i18n "filters.new.lower_title"}}</span>
             {{/if}}
-          {{/link-to}}
+          </LinkTo>
         </li>
       {{/each}}
     </ul>

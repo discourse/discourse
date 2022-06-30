@@ -1,65 +1,46 @@
 <section class="user-content">
   <div class="group-members-actions">
     {{#if model.can_see_members}}
-      {{text-field
-        value=filterInput
-        placeholderKey=filterPlaceholder
-        autocomplete="off"
-        class="group-username-filter no-blur"
-      }}
+      <TextField @value={{filterInput}} @placeholderKey={{filterPlaceholder}} @autocomplete="off" @class="group-username-filter no-blur" />
     {{/if}}
 
     {{#if canManageGroup}}
       <div class="group-members-manage">
-        {{d-button
-          icon="plus"
-          action=(route-action "showAddMembersModal")
-          label="groups.manage.add_members"
-          class="btn-default group-members-add"
-        }}
+        <DButton @icon="plus" @action={{route-action "showAddMembersModal"}} @label="groups.manage.add_members" @class="btn-default group-members-add" />
 
         {{#if currentUser.can_invite_to_forum}}
-          {{d-button
-            icon="plus"
-            action=(route-action "showInviteModal")
-            label="groups.manage.invite_members"
-            class="btn-default group-members-add"
-          }}
+          <DButton @icon="plus" @action={{route-action "showInviteModal"}} @label="groups.manage.invite_members" @class="btn-default group-members-add" />
         {{/if}}
       </div>
     {{/if}}
   </div>
 
   {{#if hasMembers}}
-    {{#load-more selector=".group-members tr" action=(action "loadMore")}}
+    <LoadMore @selector=".group-members tr" @action={{action "loadMore"}}>
       <table class={{if isBulk "group-members sticky-header" "group-members"}}>
         <thead>
           <tr>
             <th class="bulk-select">
               {{#if canManageGroup}}
-                {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+                <FlatButton @class="bulk-select" @icon="list" @action={{action "toggleBulkSelect"}} @title="topics.bulk.toggle" />
               {{/if}}
             </th>
             {{#if isBulk}}
               <th class="bulk-select-buttons">
                 <span class="bulk-select-buttons-wrap">
                   {{#if bulkSelection}}
-                    {{group-member-dropdown
-                      bulkSelection=bulkSelection
-                      canAdminGroup=model.can_admin_group
-                      onChange=(action "actOnSelection" bulkSelection)
-                    }}
+                    <GroupMemberDropdown @bulkSelection={{bulkSelection}} @canAdminGroup={{model.can_admin_group}} @onChange={{action "actOnSelection" bulkSelection}} />
                   {{/if}}
-                  {{d-button action=(action "bulkSelectAll") label="topics.bulk.select_all"}}
-                  {{d-button action=(action "bulkClearAll") label="topics.bulk.clear_all"}}
+                  <DButton @action={{action "bulkSelectAll"}} @label="topics.bulk.select_all" />
+                  <DButton @action={{action "bulkClearAll"}} @label="topics.bulk.clear_all" />
                 </span>
               </th>
             {{/if}}
-            {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username" class="username" automatic=true}}
+            <TableHeaderToggle @order={{order}} @asc={{asc}} @field="username_lower" @labelKey="username" @class="username" @automatic={{true}} />
             <th class="group-owner"></th>
-            {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added" automatic=true}}
-            {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post" automatic=true}}
-            {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen" automatic=true}}
+            <TableHeaderToggle @order={{order}} @asc={{asc}} @field="added_at" @labelKey="groups.member_added" @automatic={{true}} />
+            <TableHeaderToggle @order={{order}} @asc={{asc}} @field="last_posted_at" @labelKey="last_post" @automatic={{true}} />
+            <TableHeaderToggle @order={{order}} @asc={{asc}} @field="last_seen_at" @labelKey="last_seen" @automatic={{true}} />
             <th></th>
           </tr>
         </thead>
@@ -69,12 +50,12 @@
             <tr>
               {{#if isBulk}}
                 <td class="bulk-select">
-                  {{input type="checkbox" class="bulk-select" click=(action "selectMember" m)}}
+                  <Input @type="checkbox" class="bulk-select" @click={{action "selectMember" m}} />
                 </td>
               {{/if}}
 
               <td class="avatar" colspan="2">
-                {{user-info user=m skipName=skipName}}
+                <UserInfo @user={{m}} @skipName={{skipName}} />
               </td>
 
               <td class="group-owner">
@@ -97,11 +78,7 @@
 
               <td>
                 {{#if canManageGroup}}
-                  {{group-member-dropdown
-                    member=m
-                    canAdminGroup=model.can_admin_group
-                    onChange=(action "actOnGroup" m)
-                  }}
+                  <GroupMemberDropdown @member={{m}} @canAdminGroup={{model.can_admin_group}} @onChange={{action "actOnGroup" m}} />
                 {{/if}}
                 {{!-- group parameter is used by plugins --}}
               </td>
@@ -109,9 +86,9 @@
           {{/each}}
         </tbody>
       </table>
-    {{/load-more}}
+    </LoadMore>
 
-    {{conditional-loading-spinner condition=loading}}
+    <ConditionalLoadingSpinner @condition={{loading}} />
   {{else}}
     <br>
 

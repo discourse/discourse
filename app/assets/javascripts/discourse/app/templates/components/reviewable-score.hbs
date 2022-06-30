@@ -1,13 +1,10 @@
 <tr class="reviewable-score">
   <td class="user">
-    {{#user-link user=rs.user}}
+    <UserLink @user={{rs.user}}>
       {{avatar rs.user imageSize="tiny"}}
       {{rs.user.username}}
-    {{/user-link}}
-    {{user-flag-percentage
-      agreed=rs.agree_stats.agreed
-      disagreed=rs.agree_stats.disagreed
-      ignored=rs.agree_stats.ignored}}
+    </UserLink>
+    <UserFlagPercentage @agreed={{rs.agree_stats.agreed}} @disagreed={{rs.agree_stats.disagreed}} @ignored={{rs.agree_stats.ignored}} />
   </td>
   <td>
     {{d-icon rs.score_type.icon}}
@@ -24,10 +21,10 @@
 
     <td class="reviewed-by">
       {{#if rs.reviewed_by}}
-        {{#user-link user=rs.reviewed_by}}
+        <UserLink @user={{rs.reviewed_by}}>
           {{avatar rs.reviewed_by imageSize="tiny"}}
           {{rs.reviewed_by.username}}
-        {{/user-link}}
+        </UserLink>
       {{else}}
         &mdash;
       {{/if}}
@@ -59,7 +56,7 @@
     <td colspan="7">
       <div class="reviewable-conversation">
         {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
-          {{reviewable-conversation-post post=p index=index}}
+          <ReviewableConversationPost @post={{p}} @index={{index}} />
         {{/each}}
         <div class="controls">
           <a href={{rs.reviewable_conversation.permalink}} class="btn btn-small">

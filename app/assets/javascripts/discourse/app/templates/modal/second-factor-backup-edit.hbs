@@ -1,4 +1,4 @@
-{{#d-modal-body}}
+<DModalBody>
   <section class="user-preferences solo-preference  second-factor-backup-preferences">
     <form class="form-horizontal">
       {{#if successMessage}}
@@ -19,30 +19,14 @@
 
       <div class="actions">
         {{#if backupEnabled}}
-          {{d-button
-            class="btn-primary"
-            icon="redo"
-            action=(action "generateSecondFactorCodes")
-            type="submit"
-            isLoading=loading
-            label="user.second_factor_backup.regenerate"}}
-          {{d-button
-            class="btn-danger"
-            icon="ban"
-            action=(action "disableSecondFactorBackup")
-            disabled=loading
-            label="user.second_factor_backup.disable"}}
+          <DButton @class="btn-primary" @icon="redo" @action={{action "generateSecondFactorCodes"}} @type="submit" @isLoading={{loading}} @label="user.second_factor_backup.regenerate" />
+          <DButton @class="btn-danger" @icon="ban" @action={{action "disableSecondFactorBackup"}} @disabled={{loading}} @label="user.second_factor_backup.disable" />
         {{else}}
-          {{d-button
-            class="btn-primary"
-            action=(action "generateSecondFactorCodes")
-            type="submit"
-            disabled=loading
-            label="user.second_factor_backup.enable"}}
+          <DButton @class="btn-primary" @action={{action "generateSecondFactorCodes"}} @type="submit" @disabled={{loading}} @label="user.second_factor_backup.enable" />
         {{/if}}
       </div>
 
-      {{#conditional-loading-section isLoading=loading}}
+      <ConditionalLoadingSection @isLoading={{loading}}>
         {{#if backupCodes}}
           <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
 
@@ -50,11 +34,9 @@
             {{i18n "user.second_factor_backup.codes.description"}}
           </p>
 
-          {{backup-codes
-            copyBackupCode=(action "copyBackupCode")
-            backupCodes=backupCodes}}
+          <BackupCodes @copyBackupCode={{action "copyBackupCode"}} @backupCodes={{backupCodes}} />
         {{/if}}
-      {{/conditional-loading-section}}
+      </ConditionalLoadingSection>
     </form>
   </section>
-{{/d-modal-body}}
+</DModalBody>

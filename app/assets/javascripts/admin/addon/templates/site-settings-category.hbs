@@ -1,12 +1,12 @@
 {{#if filteredContent}}
-  {{#d-section class="form-horizontal settings"}}
+  <DSection @class="form-horizontal settings">
     {{#each filteredContent as |setting|}}
-      {{site-setting setting=setting afterSave=(route-action "refreshAll")}}
+      <SiteSetting @setting={{setting}} @afterSave={{route-action "refreshAll"}} />
     {{/each}}
     {{#if category.hasMore}}
       <p class="warning">{{i18n "admin.site_settings.more_than_30_results"}}</p>
     {{/if}}
-  {{/d-section}}
+  </DSection>
 {{else}}
   <br>
   {{i18n "admin.site_settings.no_results"}}

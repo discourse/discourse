@@ -6,9 +6,9 @@
   </ul>
   {{#if this.hasMore}}
     <p>
-      {{#link-to (concat "userActivity." @type) @user class="more"}}
+      <LinkTo @route={{concat "userActivity." @type}} @model={{@user}} class="more">
         {{i18n (concat "user.summary.more_" @type)}}
-      {{/link-to}}
+      </LinkTo>
     </p>
   {{/if}}
 {{else}}

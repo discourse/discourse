@@ -1,6 +1,6 @@
 <label for="choose-message-title">{{i18n "choose_message.title.search"}}</label>
 
-{{text-field value=messageTitle placeholderKey="choose_message.title.placeholder" id="choose-message-title"}}
+<TextField @value={{messageTitle}} @placeholderKey="choose_message.title.placeholder" @id="choose-message-title" />
 
 {{#if loading}}
   <p>{{i18n "loading"}}</p>

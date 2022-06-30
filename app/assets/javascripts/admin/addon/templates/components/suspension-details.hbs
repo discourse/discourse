@@ -11,16 +11,9 @@
   <label>
     {{i18n "admin.user.suspend_reason_title"}}
   </label>
-  {{combo-box
-    content=reasons
-    value=selectedReason
-    class="suspend-reason"
-    onChange=(action setSelectedReason)}}
+  <ComboBox @content={{reasons}} @value={{selectedReason}} @class="suspend-reason" @onChange={{action setSelectedReason}} />
   {{#if isCustomReason}}
-    {{text-field
-      value=customReason
-      class="suspend-reason"
-      onChange=(action setCustomReason)}}
+    <TextField @value={{customReason}} @class="suspend-reason" @onChange={{action setCustomReason}} />
   {{/if}}
 </div>
 
@@ -29,7 +22,4 @@
     {{i18n "admin.user.suspend_message"}}
   </div>
 </label>
-{{textarea
-  value=message
-  class="suspend-message"
-  placeholder=(i18n "admin.user.suspend_message_placeholder")}}
+<Textarea @value={{message}} class="suspend-message" placeholder={{i18n "admin.user.suspend_message_placeholder"}} />

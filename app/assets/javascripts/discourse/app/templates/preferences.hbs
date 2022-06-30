@@ -1,53 +1,53 @@
-{{#d-section pageClass="user-preferences" class="user-secondary-navigation"}}
-  {{#mobile-nav class="preferences-nav" desktopClass="preferences-list action-list nav-stacked"}}
+<DSection @pageClass="user-preferences" @class="user-secondary-navigation">
+  <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
     <li class="nav-account">
-      {{#link-to "preferences.account"}}
+      <LinkTo @route="preferences.account">
         {{i18n "user.preferences_nav.account"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     <li class="nav-security">
-      {{#link-to "preferences.security"}}
+      <LinkTo @route="preferences.security">
         {{i18n "user.preferences_nav.security"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     <li class="nav-profile">
-      {{#link-to "preferences.profile"}}
+      <LinkTo @route="preferences.profile">
         {{i18n "user.preferences_nav.profile"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     <li class="nav-emails">
-      {{#link-to "preferences.emails"}}
+      <LinkTo @route="preferences.emails">
         {{i18n "user.preferences_nav.emails"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     <li class="nav-notifications">
-      {{#link-to "preferences.notifications"}}
+      <LinkTo @route="preferences.notifications">
         {{i18n "user.preferences_nav.notifications"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     {{#if model.can_change_tracking_preferences}}
       <li class="indent nav-categories">
-        {{#link-to "preferences.categories"}}
+        <LinkTo @route="preferences.categories">
           {{i18n "user.preferences_nav.categories"}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/if}}
     <li class="indent nav-users">
-      {{#link-to "preferences.users"}}
+      <LinkTo @route="preferences.users">
         {{i18n "user.preferences_nav.users"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     {{#if (and model.can_change_tracking_preferences siteSettings.tagging_enabled)}}
       <li class="indent nav-tags">
-        {{#link-to "preferences.tags"}}
+        <LinkTo @route="preferences.tags">
           {{i18n "user.preferences_nav.tags"}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/if}}
     <li class="nav-interface">
-      {{#link-to "preferences.interface"}}
+      <LinkTo @route="preferences.interface">
         {{i18n "user.preferences_nav.interface"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
     {{#if this.currentUser.experimental_sidebar_enabled}}
       <li class="indent nav-sidebar">
@@ -57,21 +57,21 @@
       </li>
     {{/if}}
 
-    {{plugin-outlet name="user-preferences-nav-under-interface" tagName="span" connectorTagName="div" args=(hash model=model)}}
+    <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
     {{#if model.userApiKeys}}
       <li class="nav-apps">
-        {{#link-to "preferences.apps"}}
+        <LinkTo @route="preferences.apps">
           {{i18n "user.preferences_nav.apps"}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/if}}
-    {{plugin-outlet name="user-preferences-nav" tagName="span" connectorTagName="li" args=(hash model=model)}}
-  {{/mobile-nav}}
-{{/d-section}}
+    <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=model}} />
+  </MobileNav>
+</DSection>
 
 <section class="user-content user-preferences">
-  {{plugin-outlet name="above-user-preferences" tagName="span" connectorTagName="div" args=(hash model=model)}}
+  <PluginOutlet @name="above-user-preferences" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
   <form class="form-vertical">
     {{outlet}}

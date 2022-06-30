@@ -1,21 +1,14 @@
-{{#d-modal-body}}
-  {{#conditional-loading-spinner condition=loading}}
+<DModalBody>
+  <ConditionalLoadingSpinner @condition={{loading}}>
     <div class="control-group">
-      {{user-status-picker emoji=emoji description=description}}
+      <UserStatusPicker @emoji={{emoji}} @description={{description}} />
     </div>
     <div class="modal-footer control-group">
-      {{d-button
-        label="user_status.save"
-        class="btn-primary"
-        disabled=(not statusIsSet)
-        action=(action "saveAndClose")}}
-      {{d-modal-cancel close=(action "closeModal")}}
+      <DButton @label="user_status.save" @class="btn-primary" @disabled={{not statusIsSet}} @action={{action "saveAndClose"}} />
+      <DModalCancel @close={{action "closeModal"}} />
       {{#if showDeleteButton}}
-        {{d-button
-          icon="trash-alt"
-          class="delete-status btn-danger"
-          action=(action "delete")}}
+        <DButton @icon="trash-alt" @class="delete-status btn-danger" @action={{action "delete"}} />
       {{/if}}
     </div>
-  {{/conditional-loading-spinner}}
-{{/d-modal-body}}
+  </ConditionalLoadingSpinner>
+</DModalBody>

@@ -13,16 +13,12 @@
     {{/if}}
   </div>
 
-  {{#wizard-step-form step=step}}
+  <WizardStepForm @step={{step}}>
     {{#if includeSidebar}}
       <div class="wizard-fields-sidebar">
         {{#each step.fields as |field|}}
           {{#if field.show_in_sidebar}}
-            {{wizard-field
-              field=field
-              step=step
-              wizard=wizard
-            }}
+            <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
           {{/if}}
         {{/each}}
       </div>
@@ -30,15 +26,11 @@
     <div class="wizard-fields-main">
       {{#each step.fields as |field|}}
         {{#unless field.show_in_sidebar}}
-          {{wizard-field
-            field=field
-            step=step
-            wizard=wizard
-          }}
+          <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
         {{/unless}}
       {{/each}}
     </div>
-  {{/wizard-step-form}}
+  </WizardStepForm>
 </div>
 
 <div class="wizard-step-footer">

@@ -1,16 +1,12 @@
 {{#if setting.textarea}}
-  {{textarea value=value classNames="input-setting-textarea"}}
+  <Textarea @value={{value}} @classNames="input-setting-textarea" />
 {{else if setting.json_schema}}
-  {{d-button
-    action=(action "launchJsonEditorModal")
-    icon="pencil-alt"
-    label="admin.site_settings.json_schema.edit"
-  }}
+  <DButton @action={{action "launchJsonEditorModal"}} @icon="pencil-alt" @label="admin.site_settings.json_schema.edit" />
 {{else if isSecret}}
-  {{input type="password" value=value classNames="input-setting-string"}}
+  <Input @type="password" @value={{value}} @classNames="input-setting-string" />
 {{else}}
-  {{text-field value=value classNames="input-setting-string"}}
+  <TextField @value={{value}} @classNames="input-setting-string" />
 {{/if}}
 
-{{setting-validation-message message=validationMessage}}
+<SettingValidationMessage @message={{validationMessage}} />
 <div class="desc">{{html-safe setting.description}}</div>

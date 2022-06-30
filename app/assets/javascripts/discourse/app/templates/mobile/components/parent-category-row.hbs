@@ -1,11 +1,11 @@
 {{#unless isHidden}}
-  {{plugin-outlet name="category-list-above-each-category" args=(hash category=category)}}
+  <PluginOutlet @name="category-list-above-each-category" @args={{hash category=category}} />
   <div data-category-id={{category.id}} data-notification-level={{category.notificationLevelString}} style={{border-color category.color}} class="category-list-item category {{if isMuted "muted"}}">
     <table class="topic-list">
       <tbody>
         <tr>
           <th class="main-link">
-            {{category-title-link category=category}}
+            <CategoryTitleLink @category={{category}} />
           </th>
         </tr>
         {{#if category.description_excerpt}}
@@ -18,20 +18,20 @@
         {{#unless isMuted}}
           {{#if showTopics}}
             {{#each category.topics as |t|}}
-              {{mobile-category-topic topic=t}}
+              <MobileCategoryTopic @topic={{t}} />
             {{/each}}
           {{/if}}
         {{/unless}}
         {{#if category.isGrandParent}}
           {{#each category.subcategories as |subcategory|}}
-            {{sub-category-row category=subcategory listType=listType}}
+            <SubCategoryRow @category={{subcategory}} @listType={{listType}} />
           {{/each}}
         {{else if category.subcategories}}
           <tr class="subcategories-list">
             <td>
               <div class="subcategories">
                 {{#each category.subcategories as |subcategory|}}
-                  {{sub-category-item category=subcategory listType=listType}}
+                  <SubCategoryItem @category={{subcategory}} @listType={{listType}} />
                 {{/each}}
               </div>
             </td>

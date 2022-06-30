@@ -1,21 +1,9 @@
 {{#if canJoinGroup}}
-  {{d-button action=(action "joinGroup")
-      class="btn-default group-index-join"
-      icon="user-plus"
-      label="groups.join"
-      disabled=updatingMembership}}
+  <DButton @action={{action "joinGroup"}} @class="btn-default group-index-join" @icon="user-plus" @label="groups.join" @disabled={{updatingMembership}} />
 {{else if canLeaveGroup}}
-  {{d-button action=(action "leaveGroup")
-      class="btn-danger group-index-leave"
-      icon="user-times"
-      label="groups.leave"
-      disabled=updatingMembership}}
+  <DButton @action={{action "leaveGroup"}} @class="btn-danger group-index-leave" @icon="user-times" @label="groups.leave" @disabled={{updatingMembership}} />
 {{else if canRequestMembership}}
-  {{d-button action=(action "showRequestMembershipForm")
-      class="btn-default group-index-request"
-      disabled=loading
-      icon="user-plus"
-      label="groups.request"}}
+  <DButton @action={{action "showRequestMembershipForm"}} @class="btn-default group-index-request" @disabled={{loading}} @icon="user-plus" @label="groups.request" />
 {{else}}
   {{yield}}
 {{/if}}

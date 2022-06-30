@@ -1,13 +1,8 @@
-{{#d-modal-body}}
+<DModalBody>
   <p>{{i18n "post.controls.delete_topic_confirm_modal" count=siteSettings.min_topic_views_for_delete_confirm}}</p>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button action=(action "deleteTopic")
-             disabled=deletingTopic
-             translatedLabel=buttonTitle
-             class="btn-danger"}}
-  {{d-button action=(route-action "closeModal")
-             label="post.controls.delete_topic_confirm_modal_no"
-             class="btn-primary"}}
+  <DButton @action={{action "deleteTopic"}} @disabled={{deletingTopic}} @translatedLabel={{buttonTitle}} @class="btn-danger" />
+  <DButton @action={{route-action "closeModal"}} @label="post.controls.delete_topic_confirm_modal_no" @class="btn-primary" />
 </div>

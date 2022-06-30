@@ -14,12 +14,7 @@
       <div class="card-row first-row">
         <div class="group-card-avatar">
           <a href={{groupPath}} {{action "showGroup" group}} class="card-huge-avatar">
-            {{avatar-flair
-              flairName=group.name
-              flairUrl=group.flair_url
-              flairBgColor=group.flair_bg_color
-              flairColor=group.flair_color
-            }}
+            <AvatarFlair @flairName={{group.name}} @flairUrl={{group.flair_url}} @flairBgColor={{group.flair_bg_color}} @flairColor={{group.flair_color}} />
           </a>
         </div>
         <div class="names">
@@ -36,19 +31,11 @@
         </div>
         <ul class="usercard-controls group-details-button">
           <li>
-            {{group-membership-button
-               model=group
-               showLogin=(route-action "showLogin")
-             }}
+            <GroupMembershipButton @model={{group}} @showLogin={{route-action "showLogin"}} />
           </li>
           {{#if group.messageable}}
             <li>
-              {{d-button
-                action=(action "messageGroup")
-                class="btn-primary group-message-button inline"
-                icon="envelope"
-                label="groups.message"
-              }}
+              <DButton @action={{action "messageGroup"}} @class="btn-primary group-message-button inline" @icon="envelope" @label="groups.message" />
             </li>
           {{/if}}
         </ul>

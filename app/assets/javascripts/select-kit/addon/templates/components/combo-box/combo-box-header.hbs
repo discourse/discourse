@@ -8,12 +8,7 @@
   }}
 
   {{#if shouldDisplayClearableButton}}
-    {{d-button
-      class="btn-clear"
-      icon="times"
-      action=selectKit.onClearSelection
-      ariaLabel="clear_input"
-    }}
+    <DButton @class="btn-clear" @icon="times" @action={{selectKit.onClearSelection}} @ariaLabel="clear_input" />
   {{/if}}
 
   {{d-icon caretIcon class="caret-icon"}}

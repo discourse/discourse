@@ -1,25 +1,14 @@
-{{#d-modal-body title="topic.topic_status_update.title" autoFocus="false" id="topic-timer-modal"}}
-  {{edit-topic-timer-form
-    topic=model
-    topicTimer=topicTimer
-    timerTypes=publicTimerTypes
-    onChangeStatusType=(action "onChangeStatusType")
-    onChangeInput=(action "onChangeInput")
-  }}
+<DModalBody @title="topic.topic_status_update.title" @autoFocus="false" @id="topic-timer-modal">
+  <EditTopicTimerForm @topic={{model}} @topicTimer={{topicTimer}} @timerTypes={{publicTimerTypes}} @onChangeStatusType={{action "onChangeStatusType"}} @onChangeInput={{action "onChangeInput"}} />
 
   <div class="modal-footer control-group edit-topic-timer-buttons">
-    {{d-button class="btn-primary"
-        disabled=saveDisabled
-        label="topic.topic_status_update.save"
-        action=(action "saveTimer")}}
+    <DButton @class="btn-primary" @disabled={{saveDisabled}} @label="topic.topic_status_update.save" @action={{action "saveTimer"}} />
 
-    {{conditional-loading-spinner size="small" condition=loading}}
+    <ConditionalLoadingSpinner @size="small" @condition={{loading}} />
 
     {{#if topicTimer.execute_at}}
-      {{d-button class="pull-right btn-danger"
-          action=(action "removeTimer")
-          label="topic.topic_status_update.remove"}}
+      <DButton @class="pull-right btn-danger" @action={{action "removeTimer"}} @label="topic.topic_status_update.remove" />
     {{/if}}
   </div>
-{{/d-modal-body}}
+</DModalBody>
 

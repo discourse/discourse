@@ -3,29 +3,13 @@
 {{/if}}
 
 <div class="watched-word-controls">
-  {{d-button
-    class="btn-default download-link"
-    href=downloadLink
-    icon="download"
-    label="admin.watched_words.download"}}
+  <DButton @class="btn-default download-link" @href={{downloadLink}} @icon="download" @label="admin.watched_words.download" />
 
-  {{watched-word-uploader
-    id="watched-word-uploader"
-    uploading=uploading
-    actionKey=actionNameKey
-    done=(action "uploadComplete")}}
+  <WatchedWordUploader @id="watched-word-uploader" @uploading={{uploading}} @actionKey={{actionNameKey}} @done={{action "uploadComplete"}} />
 
-  {{d-button
-    class="watched-word-test"
-    label="admin.watched_words.test.button_label"
-    icon="far-eye"
-    action=(action "test")}}
+  <DButton @class="watched-word-test" @label="admin.watched_words.test.button_label" @icon="far-eye" @action={{action "test"}} />
 
-  {{d-button
-    class="btn-danger clear-all"
-    label="admin.watched_words.clear_all"
-    icon="trash-alt"
-    action=(action "clearAll")}}
+  <DButton @class="btn-danger clear-all" @label="admin.watched_words.clear_all" @icon="trash-alt" @action={{action "clearAll"}} />
 </div>
 
 <p class="about">{{actionDescription}}</p>
@@ -34,15 +18,11 @@
   <p>{{html-safe (i18n "admin.watched_words.regex_warning" basePath=(base-path))}}</p>
 {{/if}}
 
-{{watched-word-form
-  actionKey=actionNameKey
-  action=(action "recordAdded")
-  filteredContent=currentAction.words
-}}
+<WatchedWordForm @actionKey={{actionNameKey}} @action={{action "recordAdded"}} @filteredContent={{currentAction.words}} />
 
 {{#if currentAction.words}}
   <label class="show-words-checkbox">
-    {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
+    <Input @type="checkbox" @checked={{adminWatchedWords.showWords}} @disabled={{adminWatchedWords.disableShowWords}} />
     {{i18n "admin.watched_words.show_words" count=currentAction.words.length}}
   </label>
 {{/if}}

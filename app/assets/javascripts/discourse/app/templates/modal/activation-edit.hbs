@@ -1,11 +1,8 @@
-{{#d-modal-body}}
-  {{activation-email-form email=newEmail}}
-{{/d-modal-body}}
+<DModalBody>
+  <ActivationEmailForm @email={{newEmail}} />
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button action=(action "changeEmail")
-             label="login.submit_new_email"
-             disabled=submitDisabled
-             class="btn-primary"}}
-  {{d-button action=(route-action "closeModal") label="close"}}
+  <DButton @action={{action "changeEmail"}} @label="login.submit_new_email" @disabled={{submitDisabled}} @class="btn-primary" />
+  <DButton @action={{route-action "closeModal"}} @label="close" />
 </div>

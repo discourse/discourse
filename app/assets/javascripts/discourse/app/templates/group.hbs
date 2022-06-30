@@ -1,4 +1,4 @@
-{{plugin-outlet name="before-group-container" tagName="span" connectorTagName="div" args=(hash group=model)}}
+<PluginOutlet @name="before-group-container" @tagName="span" @connectorTagName="div" @args={{hash group=model}} />
 
 <div class="container group group-{{model.name}}">
   {{#if showTooltip}}
@@ -11,12 +11,7 @@
     <div class="group-info">
       {{#if (or model.flair_icon model.flair_url model.flair_bg_color)}}
         <div class="group-avatar-flair">
-          {{avatar-flair
-            flairName=model.name
-            flairUrl=(or model.flair_icon model.flair_url)
-            flairBgColor=model.flair_bg_color
-            flairColor=model.flair_color
-          }}
+          <AvatarFlair @flairName={{model.name}} @flairUrl={{or model.flair_icon model.flair_url}} @flairBgColor={{model.flair_bg_color}} @flairColor={{model.flair_color}} />
         </div>
       {{/if}}
 
@@ -27,42 +22,22 @@
       </div>
 
       <div class="group-details-button">
-        {{group-membership-button
-          tagName=""
-          model=model
-          showLogin=(route-action "showLogin")
-        }}
+        <GroupMembershipButton @tagName="" @model={{model}} @showLogin={{route-action "showLogin"}} />
 
         {{#if currentUser.admin}}
           {{#if model.automatic}}
-            {{d-button
-              action=(action "toggleDeleteTooltip")
-              class="btn-default"
-              icon="question-circle"
-              label="admin.groups.delete"
-            }}
+            <DButton @action={{action "toggleDeleteTooltip"}} @class="btn-default" @icon="question-circle" @label="admin.groups.delete" />
           {{else}}
-            {{d-button
-              action=(action "destroyGroup")
-              disabled=destroying
-              icon="trash-alt"
-              class="btn-danger"
-              label="admin.groups.delete"
-            }}
+            <DButton @action={{action "destroyGroup"}} @disabled={{destroying}} @icon="trash-alt" @class="btn-danger" @label="admin.groups.delete" />
           {{/if}}
         {{/if}}
 
         {{#if displayGroupMessageButton}}
-          {{d-button
-            action=(action "messageGroup")
-            class="btn-primary group-message-button"
-            icon="envelope"
-            label="groups.message"
-          }}
+          <DButton @action={{action "messageGroup"}} @class="btn-primary group-message-button" @icon="envelope" @label="groups.message" />
         {{/if}}
       </div>
 
-      {{plugin-outlet name="group-details-after" tagName="span" connectorTagName="div" args=(hash model=model)}}
+      <PluginOutlet @name="group-details-after" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
     </div>
 
     {{#if model.bio_cooked}}
@@ -77,7 +52,7 @@
   <div class="user-content-wrapper">
     <section class="user-primary-navigation">
       <div class="container">
-        {{group-navigation group=model currentPath=currentPath tabs=tabs}}
+        <GroupNavigation @group={{model}} @currentPath={{currentPath}} @tabs={{tabs}} />
       </div>
     </section>
 

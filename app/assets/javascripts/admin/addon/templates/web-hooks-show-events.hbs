@@ -1,16 +1,16 @@
 <div class="web-hook-direction">
-  {{#link-to "adminWebHooks" tagName="button" classNames="btn"}}
+  <LinkTo @route="adminWebHooks" @tagName="button" @classNames="btn">
     {{d-icon "list"}} {{i18n "admin.web_hooks.events.go_list"}}
-  {{/link-to}}
-  {{d-button icon="paper-plane" label="admin.web_hooks.events.ping" action=(action "ping") disabled=pingDisabled}}
-  {{#link-to "adminWebHooks.show" model.extras.web_hook_id tagName="button" classNames="btn"}}
+  </LinkTo>
+  <DButton @icon="paper-plane" @label="admin.web_hooks.events.ping" @action={{action "ping"}} @disabled={{pingDisabled}} />
+  <LinkTo @route="adminWebHooks.show" @model={{model.extras.web_hook_id}} @tagName="button" @classNames="btn">
     {{d-icon "far-edit"}} {{i18n "admin.web_hooks.events.go_details"}}
-  {{/link-to}}
+  </LinkTo>
 </div>
 
 <div class="web-hook-events-listing">
   {{#if model}}
-    {{#load-more selector=".web-hook-events li" action=(action "loadMore")}}
+    <LoadMore @selector=".web-hook-events li" @action={{action "loadMore"}}>
       <div class="web-hook-events content-list">
         <div class="heading-container">
           <div class="col heading first status">{{i18n "admin.web_hooks.events.status"}}</div>
@@ -22,17 +22,17 @@
         </div>
         {{#if hasIncoming}}
           <a href tabindex="0" {{action "showInserted"}} class="alert alert-info clickable">
-            {{count-i18n key="admin.web_hooks.events.incoming" count=incomingCount}}
+            <CountI18n @key="admin.web_hooks.events.incoming" @count={{incomingCount}} />
           </a>
         {{/if}}
         <ul>
           {{#each model as |webHookEvent|}}
-            {{admin-web-hook-event model=webHookEvent}}
+            <AdminWebHookEvent @model={{webHookEvent}} />
           {{/each}}
         </ul>
       </div>
-      {{conditional-loading-spinner condition=model.loadingMore}}
-    {{/load-more}}
+      <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+    </LoadMore>
   {{else}}
     <p>{{i18n "admin.web_hooks.events.none"}}</p>
   {{/if}}
