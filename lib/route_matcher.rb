@@ -41,7 +41,7 @@ class RouteMatcher
     # message_bus is not a rails route, special handling
     return true if actions.include?("message_bus") && request.fullpath =~ /^\/message-bus\/.*\/poll/
 
-    path_params = request.path_parameters
+    path_params = request.path_parameters.presence || request.env[Auth::DefaultCurrentUserProvider::PATH_PARAMETERS] || {}
     actions.include? "#{path_params[:controller]}##{path_params[:action]}"
   end
 
