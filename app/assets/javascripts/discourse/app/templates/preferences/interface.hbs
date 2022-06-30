@@ -104,7 +104,7 @@
 
   <PreferenceCheckbox @labelKey="user.external_links_in_new_tab" @checked={{model.user_option.external_links_in_new_tab}} @class="pref-external-links" />
   <PreferenceCheckbox @labelKey="user.enable_quoting" @checked={{model.user_option.enable_quoting}} @class="pref-enable-quoting" />
-  <PreferenceCheckbox @labelKey="user.enable_defer" @checked={{model.user_option.enable_defer}} @class="pref-defer-undread" />
+  <PreferenceCheckbox @labelKey="user.enable_defer" @checked={{model.user_option.enable_defer}} @class="pref-defer-unread" />
   {{#if siteSettings.automatically_unpin_topics}}
     <PreferenceCheckbox @labelKey="user.automatically_unpin_topics" @checked={{model.user_option.automatically_unpin_topics}} @class="pref-auto-unpin" />
   {{/if}}
