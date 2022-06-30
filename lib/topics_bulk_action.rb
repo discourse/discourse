@@ -69,7 +69,7 @@ class TopicsBulkAction
   end
 
   def dismiss_posts
-    highest_number_source_column = @user.staff? ? 'highest_staff_post_number' : 'highest_post_number'
+    highest_number_source_column = @user.whisperer? ? 'highest_staff_post_number' : 'highest_post_number'
     sql = <<~SQL
       UPDATE topic_users tu
       SET last_read_post_number = t.#{highest_number_source_column}

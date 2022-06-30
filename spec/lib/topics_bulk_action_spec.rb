@@ -95,6 +95,7 @@ describe TopicsBulkAction do
 
       context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
+          SiteSetting.enable_whispers = true
           post1 = create_post(user: user)
           p = create_post(topic_id: post1.topic_id)
           create_post(topic_id: post1.topic_id)

@@ -26,8 +26,14 @@ import { Promise } from "rsvp";
 import sinon from "sinon";
 
 acceptance("Composer", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.user({
+    id: 5,
+    username: "kris",
+    whisperer: true,
+  });
+  needs.settings({
+    enable_whispers: true,
+  });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -455,7 +461,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle whispers", async function (assert) {
+  test("Composer can toggle whispers when whisperer user", async function (assert) {
     const menu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/t/this-is-a-test-topic/9");

@@ -323,6 +323,13 @@ basic:
   enable_whispers:
     client: true
     default: false
+  whispers_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true

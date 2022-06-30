@@ -3890,6 +3890,7 @@ describe UsersController do
         end
 
         it "includes all post types for staff members" do
+          SiteSetting.enable_whispers = true
           sign_in(admin)
 
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
