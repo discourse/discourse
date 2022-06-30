@@ -449,7 +449,7 @@ table {
 
 .user-menu .quick-access-panel li.user-status .relative-date {
   text-align: left;
-  font-size: $font-down-3;
+  font-size: var(--font-down-3);
   padding-top: 0.45em;
   margin-left: 0.75em;
   color: var(--primary-medium);
