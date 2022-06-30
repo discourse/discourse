@@ -2297,6 +2297,102 @@ describe UsersController do
           json = response.parsed_body
           expect(json['user']['id']).to eq user.id
         end
+
+        context 'experimental sidebar' do
+          before do
+            SiteSetting.enable_experimental_sidebar = true
+            user.user_option.update!(enable_experimental_sidebar: true)
+          end
+
+          it "should allow user to update UserOption#enable_experimental_sidebar" do
+            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'false' }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_option.enable_experimental_sidebar).to eq(false)
+
+            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_option.enable_experimental_sidebar).to eq(true)
+          end
+
+          it 'does not remove category or tag sidebar section links when params are not present' do
+            Fabricate(:category_sidebar_section_link, user: user)
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json"
+
+              expect(response.status).to eq(200)
+            end.to_not change { user.sidebar_section_links.count }
+          end
+
+          it "should allow user to remove all category sidebar section links" do
+            Fabricate(:category_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_category_ids: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it "should allow user to modify category sidebar section links" do
+            category = Fabricate(:category)
+            restricted_category = Fabricate(:category, read_restricted: true)
+            category_siderbar_section_link = Fabricate(:category_sidebar_section_link, user: user)
+
+            put "/u/#{user.username}.json", params: { sidebar_category_ids: [category.id, restricted_category.id] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.count).to eq(1)
+            expect(SidebarSectionLink.exists?(id: category_siderbar_section_link.id)).to eq(false)
+
+            sidebar_section_link = user.sidebar_section_links.first
+
+            expect(sidebar_section_link.linkable).to eq(category)
+          end
+
+          it 'should allow user to remove all tag sidebar section links' do
+            SiteSetting.tagging_enabled = true
+
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_tag_names: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it 'should not allow user to add tag sidebar section links when tagging is disabled' do
+            SiteSetting.tagging_enabled = false
+
+            tag = Fabricate(:tag)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: [tag.name] }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.sidebar_section_links.count).to eq(0)
+          end
+
+          it "should allow user to add tag sidebar section links" do
+            SiteSetting.tagging_enabled = true
+
+            tag = Fabricate(:tag)
+            tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link, user: user)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: [tag.name, "somerandomtag"] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.count).to eq(1)
+            expect(SidebarSectionLink.exists?(id: tag_sidebar_section_link.id)).to eq(false)
+
+            sidebar_section_link = user.sidebar_section_links.first
+
+            expect(sidebar_section_link.linkable).to eq(tag)
+          end
+        end
       end
 
       context 'without permission to update' do
@@ -2308,21 +2404,6 @@ describe UsersController do
 
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
-        end
-
-        context 'enabling experimental sidebar' do
-          before do
-            sign_in(user)
-          end
-
-          it "should be able to update UserOption#enable_experimental_sidebar" do
-            SiteSetting.enable_experimental_sidebar = true
-
-            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
-
-            expect(response.status).to eq(200)
-            expect(user.user_option.enable_experimental_sidebar).to eq(true)
-          end
         end
       end
     end

@@ -9,10 +9,9 @@ import {
   publishToMessageBus,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import Site from "discourse/models/site";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -34,12 +33,9 @@ acceptance(
         return category.id === Site.current().uncategorized_category_id;
       });
 
-      category1.set("notification_level", NotificationLevels.TRACKING);
-
-      uncategorizedCategory.set(
-        "notification_level",
-        NotificationLevels.TRACKING
-      );
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, uncategorizedCategory.id],
+      });
 
       await visit("/");
 
@@ -58,7 +54,11 @@ acceptance(
 );
 
 acceptance("Sidebar - Categories Section", function (needs) {
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user({
+    experimental_sidebar_enabled: true,
+    sidebar_category_ids: [],
+    sidebar_tag_names: [],
+  });
 
   needs.settings({
     suppress_uncategorized_badge: false,
@@ -76,19 +76,13 @@ acceptance("Sidebar - Categories Section", function (needs) {
     server.get("/c/:categorySlug/:categoryId/find_by_slug.json", () => {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
     });
-
-    server.post("/category/:categoryId/notifications", () => {
-      return helper.response({});
-    });
   });
 
-  const setupTrackedCategories = function () {
+  const setupUserSidebarCategories = function () {
     const categories = Site.current().categories;
     const category1 = categories[0];
     const category2 = categories[1];
-    category1.set("notification_level", NotificationLevels.TRACKING);
-    category2.set("notification_level", NotificationLevels.TRACKING);
-
+    updateCurrentUser({ sidebar_category_ids: [category1.id, category2.id] });
     return { category1, category2 };
   };
 
@@ -103,27 +97,42 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("category section links when user does not have any tracked categories", async function (assert) {
+  test("clicking on section header button", async function (assert) {
     await visit("/");
+    await click(".sidebar-section-categories .sidebar-section-header-button");
 
     assert.strictEqual(
-      query(".sidebar-section-message").textContent.trim(),
-      I18n.t("sidebar.sections.categories.no_tracked_categories"),
-      "the no tracked categories message is displayed"
+      currentURL(),
+      "/u/eviltrout/preferences/sidebar",
+      "it should transition to user preferences sidebar page"
     );
   });
 
-  test("uncategorized category is shown when tracked", async function (assert) {
+  test("category section links when user has not added any categories", async function (assert) {
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-message"),
+      "the no categories message is displayed"
+    );
+
+    await click(".sidebar-section-message a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/preferences/sidebar",
+      "it should transition to user preferences sidebar page"
+    );
+  });
+
+  test("uncategorized category is shown when added to sidebar", async function (assert) {
     const categories = Site.current().categories;
 
     const uncategorizedCategory = categories.find((category) => {
-      return category.id === Site.current().uncategorized_category_id;
+      return category.isUncategorizedCategory;
     });
 
-    uncategorizedCategory.set(
-      "notification_level",
-      NotificationLevels.TRACKING
-    );
+    updateCurrentUser({ sidebar_category_ids: [uncategorizedCategory.id] });
 
     await visit("/");
 
@@ -133,8 +142,8 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("category section links for tracked categories", async function (assert) {
-    const { category1, category2 } = setupTrackedCategories();
+  test("category section links", async function (assert) {
+    const { category1, category2 } = setupUserSidebarCategories();
 
     await visit("/");
 
@@ -196,8 +205,8 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("visiting category discovery new route for tracked categories", async function (assert) {
-    const { category1 } = setupTrackedCategories();
+  test("visiting category discovery new route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
 
     await visit(`/c/${category1.slug}/${category1.id}/l/new`);
 
@@ -214,8 +223,8 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("visiting category discovery unread route for tracked categories", async function (assert) {
-    const { category1 } = setupTrackedCategories();
+  test("visiting category discovery unread route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
 
     await visit(`/c/${category1.slug}/${category1.id}/l/unread`);
 
@@ -232,8 +241,8 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("visiting category discovery top route for tracked categories", async function (assert) {
-    const { category1 } = setupTrackedCategories();
+  test("visiting category discovery top route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
 
     await visit(`/c/${category1.slug}/${category1.id}/l/top`);
 
@@ -250,58 +259,8 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("updating category notification level", async function (assert) {
-    const { category1, category2 } = setupTrackedCategories();
-
-    await visit(`/c/${category1.slug}/${category1.id}/l/top`);
-
-    assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}`),
-      `has ${category1.name} section link in sidebar`
-    );
-
-    assert.ok(
-      exists(`.sidebar-section-link-${category2.slug}`),
-      `has ${category2.name} section link in sidebar`
-    );
-
-    const notificationLevelsDropdown = selectKit(".notifications-button");
-
-    await notificationLevelsDropdown.expand();
-
-    await notificationLevelsDropdown.selectRowByValue(
-      NotificationLevels.REGULAR
-    );
-
-    assert.ok(
-      !exists(`.sidebar-section-link-${category1.slug}`),
-      `does not have ${category1.name} section link in sidebar`
-    );
-
-    assert.ok(
-      exists(`.sidebar-section-link-${category2.slug}`),
-      `has ${category2.name} section link in sidebar`
-    );
-
-    await notificationLevelsDropdown.expand();
-
-    await notificationLevelsDropdown.selectRowByValue(
-      NotificationLevels.TRACKING
-    );
-
-    assert.ok(
-      exists(`.sidebar-section-link-${category1.slug}`),
-      `has ${category1.name} section link in sidebar`
-    );
-
-    assert.ok(
-      exists(`.sidebar-section-link-${category2.slug}`),
-      `has ${category2.name} section link in sidebar`
-    );
-  });
-
   test("new and unread count for categories link", async function (assert) {
-    const { category1, category2 } = setupTrackedCategories();
+    const { category1, category2 } = setupUserSidebarCategories();
 
     this.container.lookup("topic-tracking-state:main").loadStates([
       {
@@ -426,7 +385,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
   });
 
   test("clean up topic tracking state state changed callbacks when section is destroyed", async function (assert) {
-    setupTrackedCategories();
+    setupUserSidebarCategories();
 
     await visit("/");
 

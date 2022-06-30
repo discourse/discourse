@@ -640,6 +640,11 @@ en:
             base:
               invalid_url: "Replacement URL is invalid"
               invalid_tag_list: "Replacement tag list is invalid"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "is not valid"
+
 
   uncategorized_category_name: "Uncategorized"
 
