@@ -44,7 +44,36 @@
     box-sizing: border-box;
     height: 100%;
     width: 240px;
-    padding: 1em 0.5em 1em 0;
+    padding: 1em 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    // custom scrollbar styling
+    --scrollbarBg: transparent;
+    --scrollbarThumbBg: var(--primary-low);
+    --scrollbarWidth: 1em;
+
+    scrollbar-color: transparent var(--scrollbarBg);
+    transition: scrollbar-color 0.2s ease-in-out;
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border-radius: calc(var(--scrollbarWidth) / 2);
+      border: calc(var(--scrollbarWidth) / 4) solid var(--primary-very-low);
+    }
+    &:hover {
+      scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbarThumbBg);
+      }
+    }
+    &::-webkit-scrollbar {
+      width: var(--scrollbarWidth);
+    }
+  }
+
+  .sidebar-scroll-wrap {
+    // limit the wrapper width, so when the scrollbar is added the content doesn't shift
+    max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
   }
 
   .sidebar-toggle {
