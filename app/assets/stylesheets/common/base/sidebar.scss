@@ -4,11 +4,19 @@
 
 .header-sidebar-toggle {
   margin-right: 1em;
-  margin-left: -10px;
+
+  @media screen and (min-width: 1300px) {
+    // extending the toggle beyond the page when space allows
+    // for better logo alignment with content
+    body:not(.has-sidebar-page) & {
+      margin-left: -3.7em;
+    }
+  }
 
   button {
     position: relative;
     font-size: var(--font-up-2);
+    padding: 0.5em;
 
     .discourse-no-touch & {
       &:hover {

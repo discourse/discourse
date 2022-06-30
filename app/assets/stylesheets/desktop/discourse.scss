@@ -209,12 +209,16 @@ body.has-sidebar-page {
     max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
   }
   .d-header .wrap {
-    padding-left: 1.75em;
+    padding-left: 0;
   }
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
     gap: 0 2em;
     padding-left: 0;
+  }
+  .extra-info-wrapper {
+    // align docked header title with post content
+    margin-left: 7.7em;
   }
 }
 
