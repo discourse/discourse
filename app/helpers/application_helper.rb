@@ -20,7 +20,7 @@ module ApplicationHelper
       modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
-      locationType: "auto",
+      locationType: "history",
       historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {},
@@ -136,11 +136,9 @@ module ApplicationHelper
   end
 
   def preload_script(script)
-    script = EmberCli.transform_name(script)
-
     scripts = [script]
 
-    if EmberCli.enabled? && chunks = EmberCli.script_chunks[script]
+    if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
     end
 
@@ -153,7 +151,7 @@ module ApplicationHelper
   def preload_script_url(url)
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
+      <script defer src="#{url}"></script>
     HTML
   end
 
@@ -429,6 +427,11 @@ module ApplicationHelper
     # argument only makes sense for DiscourseHub app
     SiteSetting.ios_app_id == "1173672076" ?
       ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
+  end
+
+  def include_splash_screen?
+    # A bit basic for now but will be expanded later
+    SiteSetting.splash_screen
   end
 
   def allow_plugins?

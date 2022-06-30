@@ -792,7 +792,7 @@ th:
       watched_first_post_categories: "กำลังดูโพสต์แรก"
       watched_first_post_tags: "กำลังดูโพสต์แรก"
       muted_categories: "ปิดเสียง"
-      regular_categories: "ทั่วไป"
+      regular_categories: "ปกติ"
       delete_account: "ลบบัญชีของฉัน"
       delete_account_confirm: "คุณแน่ใจไหมที่จะลบบัญชีอย่างถาวร การดำเนินการนี้ไม่สามารถยกเลิกได้"
       deleted_yourself: "บัญชีของคุณถูกลบเรียบร้อยแล้ว"
@@ -1374,7 +1374,6 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       create_pm: "ข้อความ"
-      users_placeholder: "เพิ่มผู้ใช้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
@@ -2256,6 +2255,7 @@ th:
       full: "สร้าง / ตอบ / ดู"
       create_post: "ตอบ / ดู"
       readonly: "ดู"
+    preloader_text: "กำลังโหลด"
     lightbox:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
@@ -2323,7 +2323,6 @@ th:
         edit: "%{shortcut} แก้ไขโพสต์"
         delete: "%{shortcut} ลบโพสต์"
         mark_muted: "%{shortcut} ปิดการแจ้งเตือนกระทู้"
-        mark_regular: "%{shortcut} หัวข้อ ทั่วไป (มาตราฐาน)"
         mark_tracking: "%{shortcut} ติดตามกระทู้"
         mark_watching: "%{shortcut} ดูกระทู้"
         print: "%{shortcut}พิมพ์กระทู้"
@@ -2392,7 +2391,7 @@ th:
         tracking:
           title: "กำลังติดตาม"
         regular:
-          title: "ทั่วไป"
+          title: "ปกติ"
         muted:
           title: "ปิด"
       groups:
@@ -2428,6 +2427,19 @@ th:
       unread_count: "%{count} ยังไม่อ่าน"
       new_count: "%{count} ใหม่"
       sections:
+        messages:
+          header_link_text: "ข้อความ"
+          links:
+            inbox: "กล่องข้อความ"
+            sent: "ส่ง"
+            new: "ใหม่"
+            new_with_count: "ใหม่ (%{count})"
+            unread: "ยังไม่อ่าน"
+            unread_with_count: "ยังไม่อ่าน (%{count})"
+            archive: "คลัง"
+        tags:
+          header_link_title: "แท็กทั้งหมด"
+          header_link_text: "ป้าย"
         categories:
           header_link_title: "ทุกหมวดหมู่"
           header_link_text: "หมวดหมู่"

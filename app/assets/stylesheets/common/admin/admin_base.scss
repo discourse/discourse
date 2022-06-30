@@ -81,6 +81,15 @@ $mobile-breakpoint: 700px;
       margin: 0 15px 0 -10px;
     }
   }
+
+  .row:before,
+  .row:after {
+    display: table;
+    content: "";
+  }
+  .row:after {
+    clear: both;
+  }
 }
 
 .admin-contents table {

@@ -123,23 +123,22 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-          },
-          "required": [
-
-          ]
+          }
         },
         "allowed_tags": {
-          "type": "array"
+          "type": "array",
+          "items": {}
         },
         "allowed_tag_groups": {
-          "type": "array"
+          "type": "array",
+          "items": {}
         },
         "allow_global_tags": {
           "type": "boolean"
         },
         "required_tag_groups": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -156,7 +155,6 @@
                 "min_count"
               ]
             }
-          ]
         },
         "read_only_banner": {
           "type": [
@@ -166,9 +164,9 @@
         },
         "available_groups": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "auto_close_hours": {
           "type": [
@@ -190,7 +188,7 @@
         },
         "group_permissions": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -207,7 +205,6 @@
                 "group_name"
               ]
             }
-          ]
         },
         "email_in": {
           "type": [

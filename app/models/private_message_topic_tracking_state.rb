@@ -61,7 +61,7 @@ class PrivateMessageTopicTrackingState
         SQL
 
         <<~SQL
-        #{TopicTrackingState.unread_filter_sql(staff: user.staff?)}
+        #{TopicTrackingState.unread_filter_sql(whisperer: user.whisperer?)}
         #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ""}
         SQL
       end
@@ -79,7 +79,7 @@ class PrivateMessageTopicTrackingState
         u.id AS user_id,
         last_read_post_number,
         tu.notification_level,
-        #{TopicTrackingState.highest_post_number_column_select(user.staff?)},
+        #{TopicTrackingState.highest_post_number_column_select(user.whisperer?)},
         ARRAY(SELECT group_id FROM topic_allowed_groups WHERE topic_allowed_groups.topic_id = topics.id) AS group_ids
       FROM topics
       JOIN users u on u.id = #{user.id.to_i}

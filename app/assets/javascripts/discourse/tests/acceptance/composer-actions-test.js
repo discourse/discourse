@@ -19,7 +19,11 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Composer Actions", function (needs) {
-  needs.user();
+  needs.user({
+    id: 5,
+    username: "kris",
+    whisperer: true,
+  });
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_post: false,
@@ -78,7 +82,8 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - toggle_whisper", async function (assert) {
+  test("replying to post - toggle_whisper for whisperers", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -346,7 +351,13 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post as TL3 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 3,
+      whisperer: false,
+      groups: [{ id: 13, name: "tl3_group" }],
+    });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
     await composerActions.expand();
@@ -364,7 +375,13 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post as TL4 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 4,
+      whisperer: false,
+      groups: [{ id: 13, name: "tl4_group" }],
+    });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
     await composerActions.expand();

@@ -1,13 +1,15 @@
 <div class="sidebar-section-link-wrapper">
   <Sidebar::SectionLinkTo
-    @class={{concat "sidebar-section-link sidebar-section-link-" @linkName}}
+    @class={{concat @class (concat " sidebar-section-link sidebar-section-link-" @linkName)}}
     @route={{@route}}
     @query={{@query}}
     @models={{if @model (array @model) (if @models @models (array))}}
     @current-when={{@currentWhen}}
     @title={{@title}}
   >
-    {{@content}}
+    <span class="sidebar-section-link-content-text">
+      {{@content}}
+    </span>
 
     {{#if @badgeText}}
       <span class="sidebar-section-link-content-badge">

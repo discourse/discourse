@@ -100,26 +100,55 @@ describe "S3Helper" do
     let(:destination_key) { "original/1X/destination.jpg" }
     let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
 
-    it "can copy an object from the source to the destination" do
+    it "can copy a small object from the source to the destination" do
+      source_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: source_key, client: client)
+      source_stub.stubs(:size).returns(5 * 1024 * 1024)
+      s3_helper.send(:s3_bucket).expects(:object).with(source_key).returns(source_stub)
+
       destination_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: destination_key, client: client)
       s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
-      destination_stub.expects(:copy_from).with(copy_source: "test-bucket/#{source_key}").returns(
-        stub(copy_object_result: stub(etag: "\"etag\""))
+
+      destination_stub.expects(:copy_from).with(source_stub, {}).returns(
+        stub(copy_object_result: stub(etag: '"etag"'))
       )
+
+      response = s3_helper.copy(source_key, destination_key)
+      expect(response.first).to eq(destination_key)
+      expect(response.second).to eq("etag")
+    end
+
+    it "can copy a large object from the source to the destination" do
+      source_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: source_key, client: client)
+      source_stub.stubs(:size).returns(20 * 1024 * 1024)
+      s3_helper.send(:s3_bucket).expects(:object).with(source_key).returns(source_stub)
+
+      destination_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: destination_key, client: client)
+      s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
+
+      options = { multipart_copy: true, content_length: source_stub.size }
+      destination_stub.expects(:copy_from).with(source_stub, options).returns(
+        stub(data: stub(etag: '"etag"'))
+      )
+
       response = s3_helper.copy(source_key, destination_key)
       expect(response.first).to eq(destination_key)
       expect(response.second).to eq("etag")
     end
 
     it "puts the metadata from options onto the destination if apply_metadata_to_destination" do
-      content_disposition = "attachment; filename=\"source.jpg\"; filename*=UTF-8''source.jpg"
+      source_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: source_key, client: client)
+      source_stub.stubs(:size).returns(5 * 1024 * 1024)
+      s3_helper.send(:s3_bucket).expects(:object).with(source_key).returns(source_stub)
+
       destination_stub = Aws::S3::Object.new(bucket_name: "test-bucket", key: destination_key, client: client)
       s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
-      destination_stub.expects(:copy_from).with(
-        copy_source: "test-bucket/#{source_key}", content_disposition: content_disposition, metadata_directive: "REPLACE"
-      ).returns(
-        stub(copy_object_result: stub(etag: "\"etag\""))
+
+      content_disposition = "attachment; filename=\"source.jpg\"; filename*=UTF-8''source.jpg"
+      options = { content_disposition: content_disposition, metadata_directive: "REPLACE" }
+      destination_stub.expects(:copy_from).with(source_stub, options).returns(
+        stub(data: stub(etag: '"etag"'))
       )
+
       response = s3_helper.copy(
         source_key, destination_key,
         options: { apply_metadata_to_destination: true, content_disposition: content_disposition }

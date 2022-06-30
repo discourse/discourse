@@ -65,7 +65,7 @@ class TopicTrackingState
     publish_read(topic.id, 1, topic.user)
   end
 
-  def self.publish_latest(topic, staff_only = false)
+  def self.publish_latest(topic, whisper = false)
     return unless topic.regular?
 
     tag_ids, tags = nil
@@ -89,8 +89,8 @@ class TopicTrackingState
     end
 
     group_ids =
-      if staff_only
-        [Group::AUTO_GROUPS[:staff]]
+      if whisper
+        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_group_ids]
       else
         topic.category && topic.category.secure_group_ids
       end
@@ -151,7 +151,7 @@ class TopicTrackingState
 
     group_ids =
       if post.post_type == Post.types[:whisper]
-        [Group::AUTO_GROUPS[:staff]]
+        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_group_ids]
       else
         post.topic.category && post.topic.category.secure_group_ids
       end
@@ -253,8 +253,8 @@ class TopicTrackingState
       " AND dismissed_topic_users.id IS NULL"
   end
 
-  def self.unread_filter_sql(staff: false)
-    TopicQuery.unread_filter(Topic, staff: staff).where_clause.ast.to_sql
+  def self.unread_filter_sql(whisperer: false)
+    TopicQuery.unread_filter(Topic, whisperer: whisperer).where_clause.ast.to_sql
   end
 
   def self.treat_as_new_topic_clause
@@ -319,6 +319,7 @@ class TopicTrackingState
       skip_order: true,
       staff: user.staff?,
       admin: user.admin?,
+      whisperer: user.whisperer?,
       user: user,
       muted_tag_ids: tag_ids
     )
@@ -332,6 +333,7 @@ class TopicTrackingState
       staff: user.staff?,
       filter_old_unread: true,
       admin: user.admin?,
+      whisperer: user.whisperer?,
       user: user,
       muted_tag_ids: tag_ids
     )
@@ -369,6 +371,7 @@ class TopicTrackingState
     skip_order: false,
     staff: false,
     admin: false,
+    whisperer: false,
     select: nil,
     custom_state_filter: nil,
     additional_join_sql: nil
@@ -377,7 +380,7 @@ class TopicTrackingState
       if skip_unread
         "1=0"
       else
-        unread_filter_sql(staff: staff)
+        unread_filter_sql(whisperer: whisperer)
       end
 
     filter_old_unread_sql =
@@ -399,7 +402,7 @@ class TopicTrackingState
            u.id as user_id,
            topics.created_at,
            topics.updated_at,
-           #{highest_post_number_column_select(staff)},
+           #{highest_post_number_column_select(whisperer)},
            last_read_post_number,
            c.id as category_id,
            tu.notification_level,
@@ -497,8 +500,8 @@ class TopicTrackingState
     sql
   end
 
-  def self.highest_post_number_column_select(staff)
-    "#{staff ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
+  def self.highest_post_number_column_select(whisperer)
+    "#{whisperer ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
   end
 
   def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)

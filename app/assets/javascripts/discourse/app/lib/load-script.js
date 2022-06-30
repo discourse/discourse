@@ -119,7 +119,7 @@ export function cacheBuster(url) {
   if (PUBLIC_JS_VERSIONS) {
     let [folder, ...lib] = url.split("/").filter(Boolean);
     if (folder === "javascripts") {
-      lib = lib.join("/");
+      lib = lib.join("/").toLowerCase();
       const versionedPath = PUBLIC_JS_VERSIONS[lib];
       if (versionedPath) {
         return `/javascripts/${versionedPath}`;

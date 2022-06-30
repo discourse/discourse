@@ -983,7 +983,7 @@ bs_BA:
       muted_categories: "Utišan"
       muted_categories_instructions: "Nećete biti obavešteni ni o čemu o novim temama u ovim kategorijama, i neće se pojaviti u kategorijama ili najnovijim stranicama."
       muted_categories_instructions_dont_hide: "Nećete biti obaviješteni o novim temama u ovim kategorijama."
-      regular_categories: "Redovne"
+      regular_categories: "Normalno"
       no_category_access: "Kao moderator imate ograničen pristup kategoriji, sačuvati je isključeno."
       delete_account: "Izbriši moj račun"
       delete_account_confirm: "Da li ste sigurni da želite zauvijek izbrisati vas račun? Ova radnja je kasnije nepovratna!"
@@ -1690,7 +1690,6 @@ bs_BA:
       create_whisper: "Šapat"
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
-      users_placeholder: "Dodaj člana"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "zašto pravite izmjenu?"
@@ -2804,6 +2803,7 @@ bs_BA:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
+    preloader_text: "Učitava"
     lightbox:
       download: "skini"
       previous: "Prošlo (Tipka sa strelicom lijevo)"
@@ -2883,7 +2883,6 @@ bs_BA:
         edit: "%{shortcut} Izmjeni post"
         delete: "%{shortcut} Obriši post"
         mark_muted: "%{shortcut} Mutiraj temu"
-        mark_regular: "%{shortcut} Regularna tema"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Motri temu"
         print: "%{shortcut} Odštampaj temu"
@@ -3066,6 +3065,19 @@ bs_BA:
       unread_count: "%{count} nepročitana"
       new_count: "%{count} novi"
       sections:
+        messages:
+          header_link_text: "Poruke"
+          links:
+            inbox: "Inbox"
+            sent: "Poslano"
+            new: "Novo"
+            new_with_count: "Novo (%{count})"
+            unread: "Nepročitano"
+            unread_with_count: "Nepročitano (%{count})"
+            archive: "Arhiva"
+        tags:
+          header_link_title: "sve oznake"
+          header_link_text: "Oznake"
         categories:
           header_link_title: "Sve kategorije"
           header_link_text: "Kategorije"

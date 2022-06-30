@@ -1,5 +1,7 @@
 import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { cloneJSON } from "discourse-common/lib/object";
+import TopicFixtures from "discourse/tests/fixtures/topic";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Composer, {
@@ -24,8 +26,14 @@ import { Promise } from "rsvp";
 import sinon from "sinon";
 
 acceptance("Composer", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.user({
+    id: 5,
+    username: "kris",
+    whisperer: true,
+  });
+  needs.settings({
+    enable_whispers: true,
+  });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -42,6 +50,11 @@ acceptance("Composer", function (needs) {
         cannot_see: [],
         max_users_notified_per_group_mention: 100,
       });
+    });
+    server.get("/t/960.json", () => {
+      const topicList = cloneJSON(TopicFixtures["/t/9/1.json"]);
+      topicList.post_stream.posts[2].post_type = 4;
+      return helper.response(topicList);
     });
   });
 
@@ -448,7 +461,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle whispers", async function (assert) {
+  test("Composer can toggle whispers when whisperer user", async function (assert) {
     const menu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/t/this-is-a-test-topic/9");
@@ -570,6 +583,36 @@ acceptance("Composer", function (needs) {
     assert.ok(
       !exists(".reply-details .whisper"),
       "it should reset the state of the composer's model"
+    );
+  });
+
+  test("Composer can toggle whisper when switching from reply to whisper to reply to topic", async function (assert) {
+    await visit("/t/topic-with-whisper/960");
+
+    await click(".topic-post:nth-of-type(3) button.reply");
+    await click(".reply-details summary div");
+    assert.ok(
+      !exists('.reply-details li[data-value="toggle_whisper"]'),
+      "toggle whisper is not available when reply to whisper"
+    );
+    await click('.reply-details li[data-value="reply_to_topic"]');
+    await click(".reply-details summary div");
+    assert.ok(
+      exists('.reply-details li[data-value="toggle_whisper"]'),
+      "toggle whisper is available when reply to topic"
+    );
+  });
+
+  test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
+    await visit("/t/topic-with-whisper/960");
+
+    await click(".topic-post:nth-of-type(3) button.reply");
+    await click("#reply-control .save-or-cancel a.cancel");
+    await click(".topic-footer-main-buttons button.create");
+    await click(".reply-details summary div");
+    assert.ok(
+      exists('.reply-details li[data-value="toggle_whisper"]'),
+      "toggle whisper is available when reply to topic"
     );
   });
 

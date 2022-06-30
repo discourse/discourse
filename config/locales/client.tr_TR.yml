@@ -331,7 +331,7 @@ tr_TR:
       new_private_message: "Yeni kişisel ileti taslağı"
       topic_reply: "Yanıt taslağı"
       abandon:
-        confirm: "Bu konu için devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
+        confirm: "Bu konu için süren bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "At"
         no_value: "Düzenlemeyi sürdür"
     topic_count_categories:
@@ -1110,7 +1110,7 @@ tr_TR:
       muted_categories: "Sessiz"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız ve son soyfalarda görmeyeceksiniz."
       muted_categories_instructions_dont_hide: "Bu kategorilerdeki yeni konular hakkında hiçbir şey size bildirilmeyecek."
-      regular_categories: "Düzenli"
+      regular_categories: "Normal"
       regular_categories_instructions: "Bu kategorileri \"En son\" ve \"Popüler\" konu listelerinde göreceksiniz."
       no_category_access: "Bir moderatör olarak kategori erişimin sınırlı ve kaydetme devre dışıdır."
       delete_account: "Hesabımı Sil"
@@ -1966,7 +1966,6 @@ tr_TR:
       create_shared_draft: "Paylaşılmış taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
       title: "Veya %{modifier}Enter tuşuna basın"
-      users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya bir konu gir veya bir bağlantı paylaş"
       edit_reason_placeholder: "neden düzenleme yapıyorsun?"
@@ -3345,6 +3344,7 @@ tr_TR:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
       readonly: "Bak"
+    preloader_text: "Yükleniyor"
     lightbox:
       download: "indir"
       open: "orijinal imaj"
@@ -3429,7 +3429,7 @@ tr_TR:
         edit: "%{shortcut} Gönderiyi düzenle"
         delete: "%{shortcut} Gönderiyi sil"
         mark_muted: "%{shortcut} Konuyu sessize al"
-        mark_regular: "%{shortcut} Öntanımlı (varsayılan) konu"
+        mark_regular: "%{shortcut} Normal (varsayılan) konu"
         mark_tracking: "%{shortcut} Konuyu takip et"
         mark_watching: "%{shortcut} Konuyu izle"
         print: "%{shortcut} Konuyu yazdır"
@@ -3562,7 +3562,7 @@ tr_TR:
           title: "Takip ediliyor"
           description: "Bu etiketi içeren tüm konuları otomatik olarak takip edeceksiniz. Konunun yanında okunmamış ve yeni yayınların sayısı görünecek."
         regular:
-          title: "Düzenli"
+          title: "Normal"
           description: "Birisi @adınızdan bahsederse veya gönderinizi yanıtlarsa bildirim alacaksınız."
         muted:
           title: "Sessiz"
@@ -3662,7 +3662,24 @@ tr_TR:
       unread_count: "%{count} okunmamış"
       new_count: "%{count} yeni"
       sections:
+        messages:
+          header_link_title: "kişisel mesajlar"
+          header_link_text: "İletiler"
+          header_action_title: "kişisel bir mesaj oluştur"
+          links:
+            inbox: "Gelen Kutusu"
+            sent: "Gönderilen"
+            new: "Yeni"
+            new_with_count: "Yeni (%{count})"
+            unread: "Okunmamış"
+            unread_with_count: "Okunmamış (%{count})"
+            archive: "Arşiv"
+        tags:
+          no_tracked_tags: "Herhangi bir etiketi takip etmiyorsunuz."
+          header_link_title: "tüm etiketler"
+          header_link_text: "Etiketler"
         categories:
+          no_tracked_categories: "Herhangi bir kategoriyi takip etmiyorsunuz."
           header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
         topics:
@@ -3673,6 +3690,7 @@ tr_TR:
               content: "Takipte"
             my_posts:
               content: "Gönderilerim"
+              title: "Gönderilerim"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -5220,7 +5238,7 @@ tr_TR:
         roles:
           admin: "Yönetici"
           moderator: "Moderatör"
-          regular: "Devamlı Kullanıcı"
+          regular: "Sürekli Kullanıcı"
       previews:
         topic_title: "Bir tartışma konusu başlığı"
         share_button: "Paylaş"

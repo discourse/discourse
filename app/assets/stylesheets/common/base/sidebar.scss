@@ -1,3 +1,7 @@
+:root {
+  --d-sidebar-width: 240px;
+}
+
 .header-sidebar-toggle {
   margin-right: 1em;
   margin-left: -10px;
@@ -49,10 +53,16 @@
     text-transform: uppercase;
     font-size: 1em;
     font-weight: bold;
-    align-items: center;
+    align-items: stretch;
   }
 
   .sidebar-section-header-link {
+    @include ellipsis;
+    flex: 1 1 auto;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    padding: 0.25em 0.5em;
+
     &:visited {
       color: var(--primary);
     }
@@ -60,11 +70,6 @@
     &:hover {
       background: var(--primary-low);
     }
-
-    flex: 1 1 auto;
-    color: var(--primary);
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
   }
 
   .sidebar-section-header-button {
@@ -84,13 +89,11 @@
 
   .sidebar-section-link-wrapper {
     margin-left: 1.5em;
-    display: flex;
-    align-items: center;
   }
 
   .sidebar-section-link {
-    flex: 1 1 0;
     display: flex;
+    align-items: center;
     padding: 0.25em 0.5em;
     color: var(--primary-high);
     font-size: var(--font-down-1);
@@ -104,8 +107,24 @@
       font-weight: bold;
     }
 
-    .badge-wrapper {
-      font-size: 100%;
+    .sidebar-section-link-content-badge {
+      width: 30%;
+      text-align: right;
+    }
+
+    .sidebar-section-link-content-text {
+      width: 70%;
+
+      .badge-wrapper {
+        font-size: 100%;
+        width: 100%;
+
+        .category-name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 
@@ -128,21 +147,39 @@
   }
 
   .sidebar-section-header-caret {
+    flex: 0 0 auto;
     width: 1.5em;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    align-items: center;
     border: none;
-    background-color: transparent;
+    background: transparent;
+    padding: 0.25em 0;
 
-    &:hover {
-      opacity: 100;
+    svg {
+      display: block;
+      flex: 0 0 auto;
     }
-
-    opacity: 0;
 
     .d-icon {
       font-size: $font-down-1;
       color: var(--primary-medium);
     }
+  }
+
+  .sidebar-section-content {
+    hr {
+      margin: 0em 1.5em;
+    }
+  }
+
+  .sidebar-section-link-personal-messages-sent,
+  .sidebar-section-link-personal-messages-new,
+  .sidebar-section-link-personal-messages-archive,
+  .sidebar-section-link-personal-messages-unread,
+  .sidebar-section-link-group-messages-new,
+  .sidebar-section-link-group-messages-unread,
+  .sidebar-section-link-group-messages-archive {
+    margin-left: 0.5em;
   }
 }

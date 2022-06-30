@@ -71,7 +71,7 @@ export default class LocalDateBuilder {
       pastEvent:
         !this.recurring &&
         moment.tz(this.localTimezone).isAfter(localDate.datetime),
-      formated: this._applyFormatting(localDate, displayedTimezone),
+      formatted: this._applyFormatting(localDate, displayedTimezone),
       previews,
       textPreview: this._generateTextPreviews(previews),
     };
@@ -80,8 +80,8 @@ export default class LocalDateBuilder {
   _generateTextPreviews(previews) {
     return previews
       .map((preview) => {
-        const formatedZone = this._zoneWithoutPrefix(preview.timezone);
-        return `${formatedZone} ${preview.formated}`;
+        const formattedZone = this._zoneWithoutPrefix(preview.timezone);
+        return `${formattedZone} ${preview.formatted}`;
       })
       .join(", ");
   }
@@ -96,7 +96,7 @@ export default class LocalDateBuilder {
     previewedTimezones.push({
       timezone: this._zoneWithoutPrefix(this.localTimezone),
       current: true,
-      formated: this._createDateTimeRange(
+      formatted: this._createDateTimeRange(
         DateWithZoneHelper.fromDatetime(
           localDate.datetime,
           localDate.timezone,
@@ -128,7 +128,7 @@ export default class LocalDateBuilder {
 
       previewedTimezones.push({
         timezone: this._zoneWithoutPrefix(timezone),
-        formated: this._createDateTimeRange(
+        formatted: this._createDateTimeRange(
           DateWithZoneHelper.fromDatetime(
             localDate.datetime,
             localDate.timezone,
@@ -288,7 +288,9 @@ export default class LocalDateBuilder {
   }
 
   _formatWithZone(localDate, displayedTimezone, format) {
-    let formated = localDate.datetimeWithZone(displayedTimezone).format(format);
-    return `${formated} (${this._zoneWithoutPrefix(displayedTimezone)})`;
+    let formatted = localDate
+      .datetimeWithZone(displayedTimezone)
+      .format(format);
+    return `${formatted} (${this._zoneWithoutPrefix(displayedTimezone)})`;
   }
 }

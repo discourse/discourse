@@ -890,7 +890,8 @@ export default Controller.extend(bufferedProperty("model"), {
     selectReplies(post) {
       ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
         const replyIds = replies.map((r) => r.id);
-        this.selectedPostIds.pushObjects([post.id, ...replyIds]);
+        const postIds = [...this.selectedPostIds, post.id, ...replyIds];
+        this.set("selectedPostIds", [...new Set(postIds)]);
         this._forceRefreshPostStream();
       });
     },
@@ -1697,6 +1698,30 @@ export default Controller.extend(bufferedProperty("model"), {
           }
           case "archived": {
             topic.set("message_archived", true);
+            break;
+          }
+          case "stats": {
+            let updateStream = false;
+            ["last_posted_at", "like_count", "posts_count"].forEach(
+              (property) => {
+                const value = data[property];
+                if (typeof value !== "undefined") {
+                  topic.set(property, value);
+                  updateStream = true;
+                }
+              }
+            );
+
+            if (data["last_poster"]) {
+              topic.details.set("last_poster", data["last_poster"]);
+              updateStream = true;
+            }
+
+            if (updateStream) {
+              postStream
+                .triggerChangedTopicStats()
+                .then((firstPostId) => refresh({ id: firstPostId }));
+            }
             break;
           }
           default: {

@@ -1,5 +1,6 @@
 const MUTED = 0;
 const REGULAR = 1;
+const NORMAL = 1; // alias for REGULAR
 const TRACKING = 2;
 const WATCHING = 3;
 const WATCHING_FIRST_POST = 4;
@@ -9,6 +10,7 @@ export const NotificationLevels = {
   WATCHING,
   TRACKING,
   REGULAR,
+  NORMAL,
   MUTED,
 };
 

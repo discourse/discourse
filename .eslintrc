@@ -21,6 +21,7 @@
     "fillIn": "off",
     "find": "off",
     "getSettledState": "off",
+    "globalThis": "readonly",
     "hasModule": "off",
     "invisible": "off",
     "jQuery": "off",

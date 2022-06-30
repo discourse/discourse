@@ -105,7 +105,8 @@ describe RateLimiter do
 
     context 'handles readonly' do
       before do
-        Discourse.redis.without_namespace.slaveof '10.0.0.1', '99999'
+        # random IP address in the ULA range that does not exist
+        Discourse.redis.without_namespace.slaveof 'fdec:3f5d:d0b7:4c4b:472b:636a:4370:7ac5', '49999'
       end
 
       after do

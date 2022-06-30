@@ -3,6 +3,7 @@
 class PresenceController < ApplicationController
   skip_before_action :check_xhr
   before_action :ensure_logged_in, only: [:update]
+  before_action :skip_persist_session
 
   MAX_CHANNELS_PER_REQUEST ||= 50
 
@@ -75,4 +76,12 @@ class PresenceController < ApplicationController
     render json: response
   end
 
+  private
+
+  def skip_persist_session
+    # Presence endpoints are often called asynchronously at the same time as other request,
+    # and never need to modify the session. Skipping ensures that an unneeded cookie rotation
+    # doesn't race against another request and cause issues.
+    session.options[:skip] = true
+  end
 end

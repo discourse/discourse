@@ -8,6 +8,7 @@
     "discourse-widget-hbs",
     "pretty-text",
     "select-kit",
-    "truth-helpers"
+    "truth-helpers",
+    "wizard"
   ]
 }

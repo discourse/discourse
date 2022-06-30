@@ -15,9 +15,9 @@
 
   {{plugin-outlet name="below-site-header" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
 
-  <div id="main-outlet-wrapper" class="wrap {{mainOutletWrapperClasses}}" role="main">
-    {{#if currentUser.experimental_sidebar_enabled}}
-      <Sidebar @shouldDisplay={{showSidebar}} />
+  <div id="main-outlet-wrapper" class="wrap" role="main">
+    {{#if (and currentUser.experimental_sidebar_enabled showSidebar)}}
+      <Sidebar />
     {{/if}}
 
     <div id="main-outlet">

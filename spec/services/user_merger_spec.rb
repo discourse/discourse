@@ -646,9 +646,9 @@ describe UserMerger do
   end
 
   it "updates unsubscribe keys" do
-    UnsubscribeKey.create_key_for(source_user, "digest")
-    UnsubscribeKey.create_key_for(target_user, "digest")
-    UnsubscribeKey.create_key_for(walter, "digest")
+    UnsubscribeKey.create_key_for(source_user, UnsubscribeKey::DIGEST_TYPE)
+    UnsubscribeKey.create_key_for(target_user, UnsubscribeKey::DIGEST_TYPE)
+    UnsubscribeKey.create_key_for(walter, UnsubscribeKey::DIGEST_TYPE)
 
     merge_users!
 

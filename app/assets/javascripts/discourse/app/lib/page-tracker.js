@@ -42,6 +42,8 @@ export function startPageTracking(router, appEvents, documentTitle) {
         url,
         title: documentTitle.getTitle(),
         currentRouteName: router.currentRouteName,
+        currentRouteParams: router.currentRoute.params,
+        currentRouteParentName: router.currentRoute.parent?.name,
         replacedOnlyQueryParams,
       });
     });

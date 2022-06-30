@@ -80,4 +80,19 @@ class PostBookmarkable < BaseBookmarkable
   def self.after_destroy(guardian, bookmark, opts)
     sync_topic_user_bookmarked(guardian.user, bookmark.bookmarkable.topic, opts)
   end
+
+  def self.cleanup_deleted
+    related_topics = DB.query(<<~SQL, grace_time: 3.days.ago)
+      DELETE FROM bookmarks b
+      USING topics t, posts p
+      WHERE t.id = p.topic_id AND b.bookmarkable_id = p.id AND b.bookmarkable_type = 'Post'
+      AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
+      RETURNING t.id AS topic_id
+    SQL
+
+    related_topics_ids = related_topics.map(&:topic_id).uniq
+    related_topics_ids.each do |topic_id|
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic_id)
+    end
+  end
 end

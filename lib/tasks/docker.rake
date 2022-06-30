@@ -210,17 +210,13 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
-
-          if !ENV["SKIP_WIZARD_TESTS"]
-            @good &&= run_or_fail("QUNIT_EMBER_CLI=0 bundle exec rake qunit:test['#{js_timeout}','/wizard/qunit']")
-          end
         end
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
-            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
           else
-            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
           end
         end
       end

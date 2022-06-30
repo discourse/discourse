@@ -857,11 +857,11 @@ end
 def analyze_missing_s3
   puts "List of posts with missing images:"
   sql = <<~SQL
-    SELECT post_id, url, sha1, extension, uploads.id
+    SELECT ur.target_id, u.url, u.sha1, u.extension, u.id
     FROM upload_references ur
-    RIGHT JOIN uploads on uploads.id = ur.upload_id
-    WHERE ur.target_type = 'Post' AND verification_status = :invalid_etag
-    ORDER BY created_at
+    RIGHT JOIN uploads u ON u.id = ur.upload_id
+    WHERE ur.target_type = 'Post' AND u.verification_status = :invalid_etag
+    ORDER BY ur.created_at
   SQL
 
   lookup = {}
@@ -1047,12 +1047,11 @@ def fix_missing_s3
   puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
 
   sql = <<~SQL
-    SELECT target_id
+    SELECT ur.target_id
     FROM upload_references ur
-    JOIN uploads on uploads.id = ur.upload_id
-    WHERE ur.target_type = 'Post'
-    WHERE verification_status = :invalid_etag
-    ORDER BY target_id DESC
+    JOIN uploads u ON u.id = ur.upload_id
+    WHERE ur.target_type = 'Post' AND u.verification_status = :invalid_etag
+    ORDER BY ur.target_id DESC
   SQL
 
   DB.query_single(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |post_id|

@@ -108,19 +108,17 @@ export default {
         user.notification_channel_position
       );
 
-      bus.subscribe(`/user-updates/${user.id}`, (data) => {
-        switch (data.type) {
-          case "drafts":
-            user.updateDraftProperties(data.payload);
-            break;
-          case "do_not_disturb":
-            user.updateDoNotDisturbStatus(data.payload.ends_at);
-            break;
-          case "user_status":
-            user.set("status", data.payload);
-            appEvents.trigger("user-status:changed");
-            break;
-        }
+      bus.subscribe(`/user-drafts/${user.id}`, (data) => {
+        user.updateDraftProperties(data);
+      });
+
+      bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
+        user.updateDoNotDisturbStatus(data.ends_at);
+      });
+
+      bus.subscribe(`/user-status/${user.id}`, (data) => {
+        user.set("status", data);
+        appEvents.trigger("user-status:changed");
       });
 
       const site = container.lookup("site:main");

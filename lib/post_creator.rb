@@ -633,7 +633,7 @@ class PostCreator
 
   def publish
     return if @opts[:import_mode] || @post.post_number == 1
-    @post.publish_change_to_clients! :created
+    @post.publish_change_to_clients! :created, { skip_topic_stats: @post.post_number == 1 }
   end
 
   def extract_links

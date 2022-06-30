@@ -466,7 +466,6 @@ be:
       muted_tags: "ігнаруемай"
       muted_tags_instructions: "Вы ня будзеце атрымоўваць паведамленні аб новых тэмах па гэтых цэтліках і яны не адлюструюцца ў спісе апошніх тэмаў."
       muted_categories: "ігнаруемай"
-      regular_categories: "звычайны"
       unread_message_count: "Паведамленні"
       admin_delete: "Выдаліць"
       users: "Карыстальнікі"
@@ -810,7 +809,6 @@ be:
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
       create_pm: "паведамленне"
-      users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
       edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
@@ -1253,6 +1251,7 @@ be:
       full: "ствараць"
       create_post: "адказваць"
       readonly: "бачыць"
+    preloader_text: "загрузка"
     lightbox:
       download: "загрузіць"
     keyboard_shortcuts_help:
@@ -1308,8 +1307,6 @@ be:
           title: "Сачыць"
         tracking:
           title: "Сачыць"
-        regular:
-          title: "звычайны"
         muted:
           title: "ігнараваць"
       groups:
@@ -1341,6 +1338,16 @@ be:
       no_likes_others: "Не спадабалася паведамленні."
     sidebar:
       sections:
+        messages:
+          header_link_text: "Паведамленні"
+          links:
+            inbox: "ўваходныя"
+            sent: "адпраўлена"
+            new: "Новая"
+            unread: "Непрачытаныя"
+            archive: "архіў"
+        tags:
+          header_link_text: "тэгі"
         categories:
           header_link_title: "усе катэгорыі"
           header_link_text: "катэгорыі"

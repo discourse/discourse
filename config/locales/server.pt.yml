@@ -986,7 +986,6 @@ pt:
     title: "O nome deste sítio, tal como usado na etiqueta do título."
     site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
-    download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto evita imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."

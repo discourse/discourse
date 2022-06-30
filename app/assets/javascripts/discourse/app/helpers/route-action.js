@@ -2,7 +2,7 @@ import { A } from "@ember/array";
 import Helper from "@ember/component/helper";
 import { computed, get } from "@ember/object";
 import { getOwner } from "@ember/application";
-import { run } from "@ember/runloop";
+import { join } from "@ember/runloop";
 import { assert, runInDebug } from "@ember/debug";
 
 function getCurrentRouteInfos(router) {
@@ -40,7 +40,7 @@ export function routeAction(actionName, router, ...params) {
   return function (...invocationArgs) {
     let { action, handler } = getRouteWithAction(router, actionName);
     let args = params.concat(invocationArgs);
-    return run.join(handler, action, ...args);
+    return join(handler, action, ...args);
   };
 }
 
