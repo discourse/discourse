@@ -10,12 +10,16 @@ export function parsePostData(query) {
       const item = part.split("=");
       const firstSeg = decodeURIComponent(item[0]);
       const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
-
       const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
+      const isArray = firstSeg.endsWith("[]");
+
       if (m) {
         let key = m[1];
         result[key] = result[key] || {};
         result[key][m[2].replace("][", ".")] = val;
+      } else if (isArray) {
+        result[firstSeg] ||= [];
+        result[firstSeg].push(val);
       } else {
         result[firstSeg] = val;
       }
@@ -269,7 +273,7 @@ export function applyDefaultHandlers(pretender) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "discourse visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.visited = true;
+      obj.topics.firstObject.last_read_post_number = 1;
       return response(obj);
     } else if (
       request.queryParams.q === "discourse in:personal" ||

@@ -564,6 +564,7 @@ zh_CN:
               too_many: "该操作的关注词过多"
             base:
               invalid_url: "替换 URL 无效"
+              invalid_tag_list: "替换标签名单无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -643,6 +644,11 @@ zh_CN:
   post:
     image_placeholder:
       broken: "此图片已损坏"
+      blocked_hotlinked_title: "图片托管主机在另一个站点。点击在新标签页中打开。"
+      blocked_hotlinked: "外部图片"
+    media_placeholder:
+      blocked_hotlinked_title: "媒体托管主机在另一个站点上。点击以在新标签页中打开。"
+      blocked_hotlinked: "外部媒体"
     hidden_bidi_character: "双向字符可以更改文本渲染的顺序。这可以用来掩盖恶意代码。"
     has_likes:
       other: "%{count} 个赞"
@@ -1378,9 +1384,11 @@ zh_CN:
     contact_email: "此站点主要负责人的电子邮件地址。用于重要通知，也显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上用于紧急事项。"
     contact_url: "此站点的联系 URL。显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上以应对紧急事项。"
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
-    download_remote_images_to_local: "通过下载将远程图片转换为本地图片；这样可以防止图片损坏。"
+    download_remote_images_to_local: "通过下载将远程(hotlinked)图像并转换为本地图像；即使将来从远程站点删除图像，这也能保留内容。"
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
     disabled_image_download_domains: "永远不会从这些网域下载远程图片。以 | 分隔的列表。"
+    block_hotlinked_media: "防止用户在他们的帖子中引入远程(hotlinked)媒体。未通过 'download_remote_images_to_local' 下载的远程媒体将被替换成一个占位符链接。"
+    block_hotlinked_media_exceptions: "不受 block_hotlinked_media 设置影响的基本 URL 列表。包括协议(例如：https://example.com)。"
     editing_grace_period: "发帖后 (n) 秒内，编辑不会在帖子历史记录中创建新版本。"
     editing_grace_period_max_diff: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 0 和 1）"
     editing_grace_period_max_diff_high_trust: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 2 及更高）"
@@ -2005,7 +2013,7 @@ zh_CN:
     default_categories_tracking: "默认跟踪的类别列表。"
     default_categories_muted: "默认被设为免打扰的类别列表。"
     default_categories_watching_first_post: "默认将关注每个新话题中的第一个帖子的类别列表。"
-    default_categories_regular: "默认未被设为免打扰的类别列表。启用 `mute_all_categories_by_default` 站点设置时很有用。"
+    default_categories_normal: "默认未被设为免打扰的类别列表。启用 `mute_all_categories_by_default` 站点设置时很有用。"
     mute_all_categories_by_default: "将所有类别的默认通知级别设置为免打扰。要求用户选择加入类别，以便他们出现在“最新”和“类别”页面中。如果您希望修改匿名用户的默认设置，请设置 'default_categories_' 设置。"
     default_tags_watching: "默认关注的标签列表。"
     default_tags_tracking: "默认跟踪的标签列表。"
@@ -2061,6 +2069,7 @@ zh_CN:
     use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名字的建议。请注意，这使得公众更容易猜到完整的用户电子邮件地址(因为很大一部分人共享共同的服务，如`gmail.com')。"
     use_name_for_username_suggestions: "在建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末(周六和周日) (如果你仅在工作日，周一至周五使用 Discourse，请禁用此选项)。"
+    splash_screen: "在加载站点资产时显示临时负载屏幕"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -3540,17 +3549,17 @@ zh_CN:
       title: "新登录提醒"
       subject_template: "[%{site_name}] 来自%{location}的新登录"
       text_body_template: |
-        您好，
+        你好，
 
-        我们注意到从您不常用的设备或位置登录。这是您吗？
+        我们注意到从你从不常用的设备或位置登录。这是你吗？
 
          - 位置：%{location} (%{client_ip})
          - 浏览器：%{browser}
          - 设备：%{device} – %{os}
 
-        如果这是您，太好了！您无需执行任何操作。
+        如果这是你，太好了！你无需执行任何操作。
 
-        如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改您的密码。
+        如果不是你，请[审核你的已登录会话](%{base_url}/my/preferences/account)并考虑更改密码。
     post_approved:
       title: "您的帖子已被批准"
       subject_template: "[%{site_name}] 您的帖子已被批准"

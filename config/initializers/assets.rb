@@ -22,15 +22,16 @@ Rails.application.config.assets.precompile += [lambda do |filename, path|
 end]
 
 Rails.application.config.assets.precompile += %w{
+  discourse.js
   vendor.js
   admin.js
+  wizard.js
+  test-support.js
+  test-helpers.js
   browser-detect.js
   browser-update.js
   break_string.js
-  ember_jquery.js
   pretty-text-bundle.js
-  wizard-application.js
-  wizard-vendor.js
   markdown-it-bundle.js
   service-worker.js
   google-tag-manager.js
@@ -38,10 +39,8 @@ Rails.application.config.assets.precompile += %w{
   google-universal-analytics-v4.js
   start-discourse.js
   print-page.js
-  omniauth-complete.js
   activate-account.js
   auto-redirect.js
-  wizard-start.js
   locales/i18n.js
   discourse/app/lib/webauthn.js
   confirm-new-email/confirm-new-email.js
@@ -50,26 +49,11 @@ Rails.application.config.assets.precompile += %w{
   embed-application.js
   discourse/tests/active-plugins.js
   admin-plugins.js
-  discourse/tests/test_starter.js
-  }
+  scripts/discourse-test-listen-boot
+  scripts/discourse-boot
+}
 
-if EmberCli.enabled?
-  Rails.application.config.assets.precompile += %w{
-      discourse.js
-      test-support.js
-      test-helpers.js
-      scripts/discourse-test-listen-boot
-      scripts/discourse-boot
-    }
-  Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
-else
-  Rails.application.config.assets.precompile += %w{
-    application.js
-    discourse/tests/test-support-rails.js
-    discourse/tests/test-helpers-rails.js
-    vendor-theme-tests.js
-  }
-end
+Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
 
 # Precompile all available locales
 unless GlobalSetting.try(:omit_base_locales)

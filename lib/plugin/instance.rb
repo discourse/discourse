@@ -67,13 +67,6 @@ class Plugin::Instance
     }
   end
 
-  # If plugins provide `transpile_js: true` in their metadata we will
-  # transpile regular JS files in the assets folders. Going forward,
-  # all plugins should do this.
-  def transpile_js
-    metadata.try(:transpile_js) == "true"
-  end
-
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -656,24 +649,22 @@ class Plugin::Instance
 
       # Automatically include all ES6 JS and hbs files
       root_path = "#{root_dir_name}/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(root_path, 'js') if transpile_js
+      DiscoursePluginRegistry.register_glob(root_path, 'js')
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
       admin_path = "#{root_dir_name}/admin/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true) if transpile_js
+      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
 
-      if transpile_js
-        DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-        DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+      DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+      DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
 
-        test_path = "#{root_dir_name}/test/javascripts"
-        DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-      end
+      test_path = "#{root_dir_name}/test/javascripts"
+      DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
     end
 
     self.instance_eval File.read(path), path
@@ -818,7 +809,7 @@ class Plugin::Instance
           yield [f, true]
         elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
           yield [f, false]
-        elsif transpile_js && f_str.end_with?(".js")
+        elsif f_str.end_with?(".js")
           yield [f, false]
         end
       end
@@ -1016,6 +1007,29 @@ class Plugin::Instance
   #   get "contact" => "static#show", id: "contact"
   def add_topic_static_page(page, options = {}, &blk)
     StaticController::CUSTOM_PAGES[page] = blk ? { topic_id: blk } : options
+  end
+
+  # Let plugin define custom unsubscribe keys,
+  # set custom instance variables on the `EmailController#unsubscribe` action,
+  # and describe what unsubscribing for that key does.
+  #
+  # The method receives a class that inherits from `Email::BaseEmailUnsubscriber`.
+  # Take a look at it to know how to implement your child class.
+  #
+  # In conjunction with this, you'll have to:
+  #
+  #  - Register a new connector under app/views/connectors/unsubscribe_options.
+  #  We'll include the HTML inside the unsubscribe form, so you can add your fields using the
+  #  instance variables you set in the controller previously. When the form is submitted,
+  #  it sends the updated preferences to `EmailController#perform_unsubscribe`.
+  #
+  #  - Your code is responsible for creating the custom key by calling `UnsubscribeKey#create_key_for`.
+  def register_email_unsubscriber(type, unsubscriber)
+    core_types = [UnsubscribeKey::ALL_TYPE, UnsubscribeKey::DIGEST_TYPE, UnsubscribeKey::TOPIC_TYPE]
+    raise ArgumentError.new('Type already exists') if core_types.include?(type)
+    raise ArgumentError.new('Not an email unsubscriber') if !unsubscriber.ancestors.include?(EmailControllerHelper::BaseEmailUnsubscriber)
+
+    DiscoursePluginRegistry.register_email_unsubscriber({ type => unsubscriber }, self)
   end
 
   protected

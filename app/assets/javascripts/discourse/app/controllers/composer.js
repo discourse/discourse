@@ -136,7 +136,7 @@ export default Controller.extend({
   },
 
   set disableSubmit(value) {
-    this.set("_disableSubmit", value);
+    return this.set("_disableSubmit", value);
   },
 
   @discourseComputed("showPreview")
@@ -233,6 +233,7 @@ export default Controller.extend({
   },
 
   isStaffUser: reads("currentUser.staff"),
+  whisperer: reads("currentUser.whisperer"),
 
   canUnlistTopic: and("model.creatingTopic", "isStaffUser"),
 
@@ -289,12 +290,12 @@ export default Controller.extend({
     return SAVE_LABELS[modelAction];
   },
 
-  @discourseComputed("isStaffUser", "model.action")
-  canWhisper(isStaffUser, modelAction) {
+  @discourseComputed("whisperer", "model.action")
+  canWhisper(whisperer, modelAction) {
     return (
       this.siteSettings.enable_whispers &&
-      isStaffUser &&
-      Composer.REPLY === modelAction
+      Composer.REPLY === modelAction &&
+      whisperer
     );
   },
 

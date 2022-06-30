@@ -49,6 +49,13 @@
         {{i18n "user.preferences_nav.interface"}}
       {{/link-to}}
     </li>
+    {{#if this.currentUser.experimental_sidebar_enabled}}
+      <li class="indent nav-sidebar">
+        {{#link-to "preferences.sidebar"}}
+          {{i18n "user.preferences_nav.sidebar"}}
+        {{/link-to}}
+      </li>
+    {{/if}}
 
     {{plugin-outlet name="user-preferences-nav-under-interface" tagName="span" connectorTagName="div" args=(hash model=model)}}
 

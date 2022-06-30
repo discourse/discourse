@@ -107,6 +107,10 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
+  has_many :sidebar_section_links, dependent: :delete_all
+  has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
+  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username
@@ -657,38 +661,16 @@ class User < ActiveRecord::Base
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
-  PUBLISH_USER_STATUS_TYPE = "user_status"
-  PUBLISH_DO_NOT_STATUS_TYPE = "do_not_disturb"
-  PUBLISH_DRAFTS_TYPE = "drafts"
-
-  def self.publish_updates_channel(user_id)
-    "/user-updates/#{user_id}"
-  end
-
-  def self.publish_updates(user_id:, type:, payload:)
-    MessageBus.publish(
-      publish_updates_channel(user_id),
-      {
-        type: type,
-        payload: payload
-      },
-      user_ids: [user_id]
-    )
-  end
-
-  def publish_updates(type:, payload:)
-    self.class.publish_updates(user_id: id, type: type, payload: payload)
-  end
-
   def publish_do_not_disturb(ends_at: nil)
-    publish_updates(type: PUBLISH_DO_NOT_STATUS_TYPE, payload: { ends_at: ends_at&.httpdate })
+    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
   end
 
   def publish_user_status(status)
-    publish_updates(
-      type: PUBLISH_USER_STATUS_TYPE,
-      payload: status ? { description: status.description, emoji: status.emoji } : nil
-    )
+    payload = status ?
+                { description: status.description, emoji: status.emoji } :
+                nil
+
+    MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
   end
 
   def password=(password)
@@ -1544,14 +1526,18 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description)
+  def set_status!(description, emoji)
     now = Time.zone.now
     if user_status
-      user_status.update!(description: description, set_at: now)
+      user_status.update!(
+        description: description,
+        emoji: emoji,
+        set_at: now)
     else
       self.user_status = UserStatus.create!(
         user_id: id,
         description: description,
+        emoji: emoji,
         set_at: now
       )
     end
@@ -1693,9 +1679,9 @@ class User < ActiveRecord::Base
     # * default_categories_watching
     # * default_categories_tracking
     # * default_categories_watching_first_post
-    # * default_categories_regular
+    # * default_categories_normal
     # * default_categories_muted
-    %w{watching watching_first_post tracking regular muted}.each do |setting|
+    %w{watching watching_first_post tracking normal muted}.each do |setting|
       category_ids = SiteSetting.get("default_categories_#{setting}").split("|").map(&:to_i)
       category_ids.each do |category_id|
         next if category_id == 0

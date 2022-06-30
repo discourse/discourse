@@ -4,9 +4,13 @@ class CopySiteSettingsUploadsToUploadReferences < ActiveRecord::Migration[6.1]
   def up
     execute <<~SQL
       WITH site_settings_uploads AS (
-        SELECT id, unnest(string_to_array(value, '|'))::integer upload_id
-        FROM site_settings
-        WHERE data_type = 17
+        SELECT id, raw_upload_id::integer AS upload_id
+        FROM (
+          SELECT id, unnest(string_to_array(value, '|')) AS raw_upload_id
+          FROM site_settings
+          WHERE data_type = 17
+        ) raw
+        WHERE raw_upload_id ~ '^\d+$'
         UNION
         SELECT id, value::integer
         FROM site_settings

@@ -63,7 +63,6 @@ class DiscourseJsProcessor
 
     return true if %w(
       start-discourse
-      wizard-start
       onpopstate-handler
       google-tag-manager
       google-universal-analytics-v3

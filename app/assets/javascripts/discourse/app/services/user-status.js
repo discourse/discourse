@@ -8,7 +8,7 @@ export default class UserStatusService extends Service {
     await ajax({
       url: "/user-status.json",
       type: "PUT",
-      data: { description: status.description },
+      data: status,
     });
 
     this.currentUser.set("status", status);

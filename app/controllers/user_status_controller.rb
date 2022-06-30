@@ -5,9 +5,10 @@ class UserStatusController < ApplicationController
 
   def set
     ensure_feature_enabled
-    raise Discourse::InvalidParameters.new(:description) if params[:description].blank?
+    description = params.require(:description)
+    emoji = params.require(:emoji)
 
-    current_user.set_status!(params[:description])
+    current_user.set_status!(description, emoji)
     render json: success_json
   end
 

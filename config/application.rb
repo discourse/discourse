@@ -174,6 +174,7 @@ module Discourse
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
       'admin/addon/templates' => 'admin/templates/',
+      'wizard/addon/templates' => 'wizard/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -187,13 +188,11 @@ module Discourse
     Sprockets.register_mime_type 'application/javascript', extensions: ['.js', '.es6', '.js.es6'], charset: :unicode
     Sprockets.register_postprocessor 'application/javascript', DiscourseJsProcessor
 
-    if EmberCli.enabled?
-      Discourse::Application.initializer :prepend_ember_assets do |app|
-        # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
-        app.config.assets.paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
-        Sprockets.unregister_postprocessor 'application/javascript', Sprockets::Rails::SourcemappingUrlProcessor
-        Sprockets.register_postprocessor 'application/javascript', DiscourseSourcemappingUrlProcessor
-      end
+    Discourse::Application.initializer :prepend_ember_assets do |app|
+      # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
+      app.config.assets.paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
+      Sprockets.unregister_postprocessor 'application/javascript', Sprockets::Rails::SourcemappingUrlProcessor
+      Sprockets.register_postprocessor 'application/javascript', DiscourseSourcemappingUrlProcessor
     end
 
     require 'discourse_redis'
@@ -256,7 +255,6 @@ module Discourse
               qunit.css
               test_helper.css
               discourse/tests/test-boot-rails.js
-              wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||
             logical_path =~ /\/dist/

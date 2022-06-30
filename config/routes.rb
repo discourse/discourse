@@ -488,6 +488,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/preferences/users" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/sidebar" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
       post "#{root_path}/:username/preferences/email" => "users_email#create", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: { username: RouteFormat.username }
@@ -1001,10 +1002,6 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-    unless Rails.env.production?
-      get "/qunit" => "qunit#index"
-      get "/wizard/qunit" => "wizard#qunit"
-    end
     get "/theme-qunit" => "qunit#theme"
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"

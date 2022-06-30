@@ -4,7 +4,7 @@ class SubscriptionMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def confirm_unsubscribe(user, opts = {})
-    unsubscribe_key = UnsubscribeKey.create_key_for(user, "all")
+    unsubscribe_key = UnsubscribeKey.create_key_for(user, UnsubscribeKey::ALL_TYPE)
     build_email user.email,
                 template: "unsubscribe_mailer",
                 site_title: SiteSetting.title,

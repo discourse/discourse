@@ -210,6 +210,7 @@ es:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar la velocidad a usuarios humanos por error."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
+      twitter_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -668,6 +669,11 @@ es:
   post:
     image_placeholder:
       broken: "Esta imagen está rota"
+      blocked_hotlinked_title: "Imagen alojada en otro sitio. Haz clic para abrirla en una nueva pestaña."
+      blocked_hotlinked: "Imagen externa"
+    media_placeholder:
+      blocked_hotlinked_title: "Medio alojado en otro sitio. Haz clic para abrir en una nueva pestaña."
+      blocked_hotlinked: "Medio externo"
     hidden_bidi_character: "Los caracteres bidireccionales pueden cambiar el orden en el que se muestra el texto. Esto podría usarse para ocultar código malintencionado."
     has_likes:
       one: "%{count} me gusta"
@@ -1429,9 +1435,11 @@ es:
     contact_email: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas, y también se muestra en <a href='%{base_path}/about' target='_blank'>/about</a> para asuntos urgentes."
     contact_url: "Dirección URL de contacto para el sitio. Se mostrará en la página de <a href='%{base_path}/about' target='_blank'>/about</a> (acerca de) para temas urgentes."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
-    download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
+    download_remote_images_to_local: "Convertir imágenes remotas (hotlinked) a imágenes locales descargándolas. Esto preserva el contenido incluso si las imágenes son eliminadas de su sitio remoto original en el futuro."
     download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
+    block_hotlinked_media: "Evitar que los usuarios incluyan archivos multimedia (hotlinking) en sus publicaciones. Los archivos multimedia no descargados según el ajuste «download_remote_images_to_local» serán reemplazados por un enlace."
+    block_hotlinked_media_exceptions: "Lista de comienzos de URL que están exentas del ajuste block_hotlinked_media. Incluye el protocolo (ej.: https://ejemplo.com)"
     editing_grace_period: "Durante (n) segundos después de que se publique algún mensaje, se puede editar la publicación sin crear una nueva versión en el historial."
     editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 0 y 1)"
     editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 2 y superiores)"
@@ -2055,7 +2063,7 @@ es:
     default_categories_tracking: "Lista de categorías que están seguidas por defecto"
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Lista de categorías en las que la primera publicación de cada tema nuevo se vigilará por defecto."
-    default_categories_regular: "Lista de categorías que no están silenciadas por defecto. Útil cuando el ajuste «mute_all_categories_by_default» está activado."
+    default_categories_normal: "Lista de categorías que no están silenciadas por defecto. Útil cuando el ajuste «mute_all_categories_by_default» está activado."
     mute_all_categories_by_default: "Establezca el nivel de notificación predeterminado de todas las categorías en silenciado. Solicite a los usuarios que opten por las categorías para que aparezcan en las páginas de 'latest' y 'categories'. Si desea modificar los valores predeterminados para usuarios anónimos, establezca la configuración en 'default_categories_'."
     default_tags_watching: "Lista de etiquetas vigiladas por defecto."
     default_tags_tracking: "Lista de etiquetas seguidas por defecto."
@@ -2111,6 +2119,7 @@ es:
     use_email_for_username_and_name_suggestions: "Usar la primera parte de las direcciones de correo electrónico para las sugerencias de nombre de usuario y nombre. Ten en cuenta que esto facilita que el público adivine las direcciones de correo electrónico completas de los usuarios (porque una gran proporción de personas usan servicios como `gmail.com`)."
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
+    splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."
@@ -3620,17 +3629,17 @@ es:
       title: "Alerta de nuevo inicio de sesión"
       subject_template: "[%{site_name}] Alerta de nuevo inicio de sesión desde %{location}"
       text_body_template: |
-        Hola:
+        Hola,
 
-        Hemos detectado un inicio de sesión de un dispositivo o ubicación que normalmente no usas. ¿Has sido tú?
+        Hemos detectado un inicio de sesión desde una ubicación o dispositivo que normalmente no usas. ¿Has sido tú?
 
-        - Ubicación: %{location} (%{client_ip})
-        - Navegador: %{browser}
-        - Dispositivo: %{device}– %{os}
+         - Ubicación: %{location} (%{client_ip})
+         - Navegador: %{browser}
+         - Dispositivo: %{device}, %{os}
 
-        Si has sido tú, ¡genial! No tienes que hacer más nada.
+        Si has sido tú, ¡genial! No tienes que hacer nada más.
 
-        Si no has sido tú, [revisa tus sesiones activas](%{base_url}/my/preferences/account) y considera cambiar tu contraseña.
+        Si no has sido tú, [revisa tus inicios de sesión](%{base_url}/my/preferences/security) y considera cambiar tu contraseña.
     post_approved:
       title: "Tu publicación ha sido aprobada"
       subject_template: "[%{site_name}] Tu publicación ha sido aprobada"
@@ -4724,6 +4733,9 @@ es:
     post_raw: "Siguiendo con el tema %{parent_url}.\n\nPartes anteriores:\n\n%{previous_topics}"
     small_action_post_raw: "Este tema continúa: %{new_title}."
   fallback_username: "usuario"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at debe ser mayor que set_at"
   activemodel:
     errors:
       <<: *errors

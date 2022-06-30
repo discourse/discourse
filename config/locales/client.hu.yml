@@ -1126,7 +1126,7 @@ hu:
       muted_categories: "Némított"
       muted_categories_instructions: "Semmilyen értesítést nem fog kapni a kategória témaköreiről, és a kategóriák vagy a legújabbak között sem fog megjelenni."
       muted_categories_instructions_dont_hide: "Nem fog értesítést kapni az új témákról ezekben a kategóriákban."
-      regular_categories: "Átlagos"
+      regular_categories: "Normál"
       regular_categories_instructions: "Ezek a kategóriák a „Legújabb” és a „Legnépszerűbb” témák között lesznek láthatóak."
       no_category_access: "Moderátorként korlátozott kategória-hozzáférése van, a mentés tiltott."
       delete_account: "Saját fiók törlése"
@@ -1980,7 +1980,6 @@ hu:
       create_shared_draft: "Megosztott vázlat létrehozása"
       edit_shared_draft: "Megosztott vázlat szerkesztése"
       title: "Vagy nyomjon %{modifier}Entert"
-      users_placeholder: "Felhasználó hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
       edit_reason_placeholder: "miért szerkeszt?"
@@ -3106,6 +3105,7 @@ hu:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
       readonly: "Megtekintés"
+    preloader_text: "Betöltés"
     lightbox:
       download: "letöltés"
       counter: "%curr% / %total%"
@@ -3240,7 +3240,7 @@ hu:
         tracking:
           title: "Követés"
         regular:
-          title: "Átlagos"
+          title: "Normál"
           description: "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol a bejegyzésedre."
         muted:
           title: "Némított"
@@ -3299,6 +3299,19 @@ hu:
       unread_count: "%{count} olvasatlan"
       new_count: "%{count} új"
       sections:
+        messages:
+          header_link_text: "Üzenetek"
+          links:
+            inbox: "Beérkezett üzenetek"
+            sent: "Elküldött"
+            new: "Új"
+            new_with_count: "Új (%{count})"
+            unread: "Olvasatlan"
+            unread_with_count: "Olvasatlan (%{count})"
+            archive: "Archívum"
+        tags:
+          header_link_title: "összes címke"
+          header_link_text: "Címkék"
         categories:
           header_link_title: "összes kategória"
           header_link_text: "Kategóriák"

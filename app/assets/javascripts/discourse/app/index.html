@@ -11,13 +11,26 @@
     <bootstrap-content key="before-script-load">
     {{content-for "before-script-load"}}
 
-    <script src="{{rootURL}}assets/vendor.js"></script>
-    <script src="{{rootURL}}assets/discourse.js"></script>
+    <script defer src="{{rootURL}}assets/vendor.js"></script>
+    <script defer src="{{rootURL}}assets/discourse.js"></script>
+
+    <ember-auto-import-scripts defer entrypoint="app"></ember-auto-import-scripts>
 
     <bootstrap-content key="head">
     {{content-for "head"}}
   </head>
   <body>
+    <discourse-assets>
+      <discourse-assets-stylesheets>
+        <bootstrap-content key="discourse-stylesheets">
+        {{content-for "discourse-stylesheets"}}
+      </discourse-assets-stylesheets>
+      <discourse-assets-json>
+        <bootstrap-content key="preloaded">
+      </discourse-assets-json>
+      <discourse-assets-icons></discourse-assets-icons>
+    </discourse-assets>
+
     <bootstrap-content key="body">
     {{content-for "body"}}
 
@@ -25,9 +38,8 @@
     </section>
 
     <bootstrap-content key="hidden-login-form">
-    <bootstrap-content key="preloaded">
 
-    <script src="{{rootURL}}assets/start-discourse.js"></script>
+    <script defer src="{{rootURL}}assets/start-discourse.js"></script>
 
     <bootstrap-content key="body-footer">
     {{content-for "body-footer"}}

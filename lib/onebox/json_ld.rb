@@ -4,6 +4,7 @@ module Onebox
   class JsonLd < Normalizer
     # Full schema.org hierarchy can be found here: https://schema.org/docs/full.html
     MOVIE_JSON_LD_TYPE = "Movie"
+    SUPPORTED_TYPES = [MOVIE_JSON_LD_TYPE]
 
     def initialize(doc)
       @data = extract(doc)
@@ -12,32 +13,30 @@ module Onebox
     private
 
     def extract(doc)
-      extracted_json = extract_json_from(doc)
-      parsed_json = parse_json(extracted_json)
+      return {} if Onebox::Helpers::blank?(doc)
 
-      extracted =
-        case parsed_json["@type"]
-        when MOVIE_JSON_LD_TYPE
-          Onebox::Movie.new(parsed_json)
-        else
-          {}
+      doc.css('script[type="application/ld+json"]').each do |element|
+        parsed_json = parse_json(element.text)
+
+        if parsed_json.kind_of?(Array)
+          parsed_json = parsed_json.detect { |x| SUPPORTED_TYPES.include?(x["@type"]) }
+          return {} if !parsed_json
         end
 
-      extracted.to_h
-    end
+        case parsed_json["@type"]
+        when MOVIE_JSON_LD_TYPE
+          return Onebox::Movie.new(parsed_json).to_h
+        end
+      end
 
-    def extract_json_from(doc)
-      return {} if Onebox::Helpers::blank?(doc)
-      json_ld = doc.search('script[type="application/ld+json"]').text
-      return {} if Onebox::Helpers::blank?(json_ld)
-      json_ld
+      {}
     end
 
     def parse_json(json)
       begin
         JSON[json]
       rescue JSON::ParserError => e
-        Discourse.warn_exception(e, message: "Error parsing JSON-LD json: #{json}")
+        Discourse.warn_exception(e, message: "Error parsing JSON-LD: #{json}")
         {}
       end
     end

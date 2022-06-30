@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { clearRender } from "@ember/test-helpers";
 import discourseComputed, {
   afterRender,
 } from "discourse-common/utils/decorators";
@@ -55,7 +56,7 @@ discourseModule("Unit | Utils | decorators", function (hooks) {
       assert.ok(exists(document.querySelector(".foo-component")));
       assert.strictEqual(this.baz, 1);
 
-      await this.clearRender();
+      await clearRender();
 
       assert.ok(!exists(document.querySelector(".foo-component")));
       assert.strictEqual(this.baz, 1);

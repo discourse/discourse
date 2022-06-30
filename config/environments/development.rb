@@ -67,6 +67,7 @@ Discourse::Application.configure do
   end
 
   if hosts = ENV['DISCOURSE_DEV_HOSTS']
+    Discourse.deprecate("DISCOURSE_DEV_HOSTS is deprecated. Use RAILS_DEVELOPMENT_HOSTS instead.")
     config.hosts.concat(hosts.split(","))
   end
 
@@ -111,5 +112,5 @@ Discourse::Application.configure do
     end
   end
 
-  config.hosts << /\A(([a-z-]+)\.)*localhost(\:\d+)?\Z/
+  config.hosts << /\A(([a-z0-9-]+)\.)*localhost(\:\d+)?\Z/
 end

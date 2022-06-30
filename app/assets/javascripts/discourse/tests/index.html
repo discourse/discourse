@@ -36,7 +36,6 @@
         width: 1000px;
         height: 1000px;
       }
-
     </style>
 
     <script src="{{rootURL}}assets/test-i18n.js"></script>
@@ -47,10 +46,13 @@
 
     <script src="/testem.js" integrity=""></script>
     <script src="{{rootURL}}assets/vendor.js"></script>
+    <ember-auto-import-scripts entrypoint="app"></ember-auto-import-scripts>
     <script src="{{rootURL}}assets/test-support.js"></script>
+    <ember-auto-import-scripts entrypoint="tests"></ember-auto-import-scripts>
     <script src="{{rootURL}}assets/discourse.js"></script>
     <script src="{{rootURL}}assets/discourse-markdown.js"></script>
     <script src="{{rootURL}}assets/admin.js"></script>
+    <script src="{{rootURL}}assets/wizard.js"></script>
     {{content-for "test-plugin-js"}}
     <script src="{{rootURL}}assets/test-helpers.js"></script>
     <script src="{{rootURL}}assets/core-tests.js"></script>

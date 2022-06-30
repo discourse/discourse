@@ -1,0 +1,98 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  discourse_narrative_bot:
+    quote:
+      trigger: "citat"
+    magic_8_ball:
+      answers:
+        "1": "Sigurno je"
+        "2": "It is decidedly so"
+        "3": "Without a doubt"
+        "4": "Yes definitely"
+        "5": "You may rely on it"
+        "6": "As I see it, yes"
+        "7": "Najvjerojatnije"
+        "8": "Outlook good"
+        "9": "Da"
+        "10": "Signs point to yes"
+        "11": "Reply hazy, try again"
+        "12": "Ask again later"
+        "13": "Better not tell you now"
+        "14": "Cannot predict now"
+        "15": "Concentrate and ask again"
+        "16": "Don't count on it"
+        "17": "My reply is no"
+        "18": "My sources say no"
+        "19": "Izgledi nisu baš dobri"
+        "20": "Very doubtful"
+    new_user_narrative:
+      hello:
+        title: "Pozdrav!"
+    advanced_user_narrative:
+      change_topic_notification_level:
+        reply: |-
+          Sjajan rad! Nadam se da niste isključili ovu temu jer ponekad znam biti malo pričljiv :grin:.
+
+          Imajte na umu da kada odgovarate na temu ili čitate temu dulje od nekoliko minuta, ona se automatski postavlja na razinu obavijesti "praćenja". To možete promijeniti u [vašim korisničkim postavkama](%{base_uri}/my/preferences).
+      poll:
+        instructions: |-
+          Jeste li znali da svakoj objavi možete dodati anketu? Pokušajte upotrijebiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zupčanik u uređivaču da **izradite anketu**.
+        not_found: |-
+          Ups! U vašem odgovoru nije bilo ankete.
+
+          Koristite ikonu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zupčanika u uređivaču ili kopirajte i zalijepite ovu anketu u svoj sljedeći odgovor:
+
+          ```tekst
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          Hej, dobra anketa! Kako sam te podučio?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          Ponekad ćete možda poželjeti **sakriti detalje** u svojim odgovorima:
+
+          - Kada raspravljate o točkama zapleta filma ili TV emisije koje bi se smatrale spojlerom.
+
+          - Kada vaš post treba puno neobaveznih detalja koji mogu biti neodoljivi kada ih pročitate odjednom.
+
+          [details=Odaberite ovo da vidite kako radi!]
+          1. Odaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> stupnja prijenosa u uređivaču.
+          2. Odaberite "Sakrij pojedinosti".
+          3. Uredite sažetak pojedinosti i dodajte svoj sadržaj.
+          [/details]
+
+          Možete li koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zupčanika u uređivaču da dodate odjeljak s detaljima u svoj sljedeći odgovor?
+        not_found: |-
+          Imate problema s kreiranjem widgeta s detaljima? Pokušajte uključiti sljedeće u svoj sljedeći odgovor:
+
+          ```tekst
+          [details=Odaberite me za detalje]
+          Ovdje su detalji
+          [/details]
+          ```
+        reply: |-
+          Sjajan posao - vaša pozornost na _detalje_ je vrijedna divljenja!
+      end:
+        message: |-
+          Prošao si kroz ovo kao _napredni korisnik_ doista :bow:
+
+          %{certificate}
+
+          To je sve što imam za tebe.
+
+          Zbogom za sada! Ako želite ponovo razgovarati sa mnom, pošaljite mi poruku bilo kada :sunglasses:
+      certificate:
+        alt: "Napredna potvrda o postignuću korisnika"

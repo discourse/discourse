@@ -1105,7 +1105,6 @@ zh_TW:
     site_description: "用一句話描述這個網站，用於 meta description 標籤。"
     short_site_description: "簡短描述，用於網頁標題。"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
-    download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"
@@ -1546,6 +1545,7 @@ zh_TW:
     default_categories_tracking: "分類列表預設追蹤。"
     default_categories_muted: "分類列表預設不顯示。"
     default_categories_watching_first_post: "預設監看這些分類中每個新主題的第一貼"
+    default_categories_normal: "類別沒有預設靜音的清單，當`預設所有類別靜音`網站設定啟用時很有用。"
     default_text_size: "預設選定的文字大小"
     default_title_count_mode: "頁面標題計數器的預設模式"
     retain_web_hook_events_period_days: "保留Web hook事件記錄的天數。"
@@ -2568,7 +2568,6 @@ zh_TW:
     suspicious_login:
       title: "新登入提醒"
       subject_template: "[%{site_name}] 新登入來自%{location}"
-      text_body_template: "您好，\n\n我們注意到您從未知的第三方設備登入。\n\n這是你嗎？ \n- 位置：%{location}（%{client_ip}） \n- 瀏覽器：%{browser} \n- 設備：%{device} - %{os}\n\n如果這是你，太棒了！你不需要做任何其他事情。如果這不是您，請[查看帳號個人檔案](%{base_url}/my /preferences/account)，並考慮更改您的密碼。\n"
     post_approved:
       title: "你的貼文已通過"
   page_not_found:
