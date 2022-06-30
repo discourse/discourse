@@ -107,6 +107,10 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
+  has_many :sidebar_section_links, dependent: :delete_all
+  has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
+  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username

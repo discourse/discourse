@@ -404,7 +404,7 @@ class Topic < ActiveRecord::Base
     types = Post.types
     result = [types[:regular]]
     result += [types[:moderator_action], types[:small_action]] if include_moderator_actions
-    result << types[:whisper] if viewed_by&.staff?
+    result << types[:whisper] if viewed_by&.whisperer?
     result
   end
 

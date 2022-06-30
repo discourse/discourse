@@ -14,7 +14,7 @@ class Unread
     return 0 if @topic_user.last_read_post_number.blank?
     return 0 if do_not_notify?(@topic_user.notification_level)
 
-    highest_post_number = @guardian.is_staff? ? @topic.highest_staff_post_number : @topic.highest_post_number
+    highest_post_number = @guardian.is_whisperer? ? @topic.highest_staff_post_number : @topic.highest_post_number
 
     return 0 if @topic_user.last_read_post_number > highest_post_number
 

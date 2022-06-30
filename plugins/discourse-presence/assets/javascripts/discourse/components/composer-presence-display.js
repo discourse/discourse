@@ -42,7 +42,7 @@ export default Component.extend({
 
   @discourseComputed("model.topic.id", "isReply", "isWhisper")
   whisperChannelName(topicId, isReply, isWhisper) {
-    if (topicId && this.currentUser.staff && (isReply || isWhisper)) {
+    if (topicId && this.currentUser.whisperer && (isReply || isWhisper)) {
       return `/discourse-presence/whisper/${topicId}`;
     }
   },

@@ -834,6 +834,9 @@ describe TopicQuery do
     end
 
     context 'with whispers' do
+      before do
+        SiteSetting.enable_whispers = true
+      end
 
       it 'correctly shows up in unread for staff' do
 

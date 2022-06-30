@@ -13,8 +13,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
   needs.settings({
@@ -43,6 +41,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
+    sidebar_tag_names: ["tag1", "tag2", "tag3"],
   });
 
   needs.pretender((server, helper) => {
@@ -59,16 +58,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         );
       });
     });
-
-    server.put("/tag/:tagId/notifications", (request) => {
-      return helper.response({
-        watched_tags: [],
-        watching_first_post_tags: [],
-        regular_tags: [request.params.tagId],
-        tracked_tags: [],
-        muted_tags: [],
-      });
-    });
   });
 
   test("clicking on section header link", async function (assert) {
@@ -82,11 +71,20 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
   });
 
-  test("section content when user does not have any tracked tags", async function (assert) {
+  test("clicking on section header button", async function (assert) {
+    await visit("/");
+    await click(".sidebar-section-tags .sidebar-section-header-button");
+
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/preferences/sidebar",
+      "it should transition to user preferences sidebar page"
+    );
+  });
+
+  test("section content when user has not added any tags", async function (assert) {
     updateCurrentUser({
-      tracked_tags: [],
-      watched_tags: [],
-      watching_first_post_tags: [],
+      sidebar_tag_names: [],
     });
 
     await visit("/");
@@ -95,12 +93,14 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         ".sidebar-section-tags .sidebar-section-message"
       ).textContent.trim(),
-      I18n.t("sidebar.sections.tags.no_tracked_tags"),
-      "the no tracked tags message is displayed"
+      `${I18n.t("sidebar.sections.tags.none")} ${I18n.t(
+        "sidebar.sections.tags.click_to_get_started"
+      )}`,
+      "the no tags message is displayed"
     );
   });
 
-  test("tag section links for tracked tags", async function (assert) {
+  test("tag section links for user", async function (assert) {
     await visit("/");
 
     assert.strictEqual(
@@ -166,7 +166,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
   });
 
-  test("visiting tag discovery top route for tracked tags", async function (assert) {
+  test("visiting tag discovery top route", async function (assert) {
     await visit(`/tag/tag1/l/top`);
 
     assert.strictEqual(
@@ -181,7 +181,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
   });
 
-  test("visiting tag discovery new route for tracked tags", async function (assert) {
+  test("visiting tag discovery new ", async function (assert) {
     await visit(`/tag/tag1/l/new`);
 
     assert.strictEqual(
@@ -196,7 +196,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
   });
 
-  test("visiting tag discovery unread route for tracked tags", async function (assert) {
+  test("visiting tag discovery unread route", async function (assert) {
     await visit(`/tag/tag1/l/unread`);
 
     assert.strictEqual(
@@ -339,23 +339,6 @@ acceptance("Sidebar - Tags section", function (needs) {
     assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,
       initialCallbackCount
-    );
-  });
-
-  test("updating tags notification levels", async function (assert) {
-    await visit(`/tag/tag1/l/unread`);
-
-    const notificationLevelsDropdown = selectKit(".notifications-button");
-
-    await notificationLevelsDropdown.expand();
-
-    await notificationLevelsDropdown.selectRowByValue(
-      NotificationLevels.REGULAR
-    );
-
-    assert.ok(
-      !exists(".sidebar-section-tags .sidebar-section-link-tag1"),
-      "tag1 section link is removed from sidebar"
     );
   });
 });
