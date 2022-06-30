@@ -107,11 +107,6 @@
       font-weight: bold;
     }
 
-    .sidebar-section-link-content-badge {
-      width: 30%;
-      text-align: right;
-    }
-
     .sidebar-section-link-content-text {
       width: 70%;
 
@@ -140,10 +135,11 @@
   }
 
   .sidebar-section-link-content-badge {
-    color: var(--tertiary);
     font-size: var(--font-down-1);
-    font-weight: normal;
+    color: var(--tertiary);
     margin-left: auto;
+    font-weight: normal;
+    margin-right: 0.4em;
   }
 
   .sidebar-section-header-caret {
