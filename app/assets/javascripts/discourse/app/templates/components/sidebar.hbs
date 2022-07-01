@@ -13,13 +13,14 @@
 
     {{#each this.computedCustomSections as |customSection|}}
       <Sidebar::Section
-        @sectionName="topics"
-        @headerRoute={{customSection.header.route}}
-        @headerLinkText={{customSection.header.text}}
-        @headerLinkTitle={{customSection.header.title}}
-        @headerActionIcon={{customSection.header.actionIcon}}
-        @headerAction={{customSection.header.action}}
-        @headerActionTitle={{customSection.header.actionTitle}}>
+        @sectionName={{customSection.name}}
+        @headerRoute={{customSection.route}}
+        @headerLinkText={{customSection.text}}
+        @headerLinkTitle={{customSection.title}}
+        @headerActionIcon={{customSection.actionIcon}}
+        @headerAction={{customSection.action}}
+        @headerActionTitle={{customSection.actionTitle}}>
+
         {{#each customSection.links as |link|}}
           <Sidebar::SectionLink
           @linkName={{link.name}}
