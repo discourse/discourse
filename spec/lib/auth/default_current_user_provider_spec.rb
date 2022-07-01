@@ -310,6 +310,26 @@ describe Auth::DefaultCurrentUserProvider do
         expect(u.last_seen_at).to eq(nil)
       end
     end
+
+    it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
+      SiteSetting.login_required = true
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
+      url = "/latest.rss?api_key=#{api_key.key}&api_username=#{user.username_lower}"
+      env = { ActionDispatch::Http::Parameters::PARAMETERS_KEY => nil }
+
+      provider = provider(url, env)
+      env = provider.env
+
+      expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_nil
+      expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to be_nil
+
+      u = provider.current_user
+
+      expect(u).to eq(user)
+      expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_blank
+      expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to eq(u)
+    end
   end
 
   it "should update last seen for non ajax" do
