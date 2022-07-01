@@ -126,9 +126,13 @@ acceptance("User Status", function (needs) {
     assert.equal(
       query(".date-picker").value,
       "2100-02-01",
-      "ends_at date is shown"
+      "date of auto removing of status is shown"
     );
-    assert.equal(query(".time-input").value, "09:35", "ends_at time is shown");
+    assert.equal(
+      query(".time-input").value,
+      "09:35",
+      "time of auto removing of status is shown"
+    );
   });
 
   test("emoji picking", async function (assert) {
