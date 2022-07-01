@@ -109,7 +109,7 @@
       const targetTime = connectStart + DELAY_TARGET;
 
       let splashInterval;
-      let windowLoaded;
+      let discourseReady;
 
       const swapSplash = () => {
         splashWrapper?.style.setProperty("--animation-state", "running");
@@ -118,6 +118,8 @@
           "--animation-state: paused;",
           "--animation-state: running;"
         );
+
+        performance.mark("discourse-splash-visible");
 
         clearSplashInterval();
       };
@@ -129,7 +131,7 @@
 
       (() => {
         splashInterval = setInterval(() => {
-          if (windowLoaded) {
+          if (discourseReady) {
             clearSplashInterval();
           }
 
@@ -139,11 +141,12 @@
         }, POLLING_INTERVAL);
       })();
 
-      window.addEventListener(
-        "load",
+      document.addEventListener(
+        "discourse-ready",
         () => {
-          windowLoaded = true;
+          discourseReady = true;
           splashWrapper?.remove();
+          performance.mark("discourse-splash-removed");
         },
         { once: true }
       );
