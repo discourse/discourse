@@ -1093,7 +1093,6 @@ User.reopenClass(Singleton, {
 
       const store = getOwner(this).lookup("service:store");
       const currentUser = store.createRecord("user", userJson);
-      currentUser.appEvents = getOwner(this).lookup("service:appEvents");
       currentUser.trackStatus();
       return currentUser;
     }
