@@ -1,4 +1,3 @@
-import Component from "@ember/component";
-export default Component.extend({
-  tagName: ""
-});
+import templateOnly from "@ember/component/template-only";
+
+export default templateOnly();
