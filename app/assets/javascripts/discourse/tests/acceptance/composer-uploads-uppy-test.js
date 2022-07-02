@@ -17,8 +17,7 @@ function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
     return helper.response([
       {
-        url:
-          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        url: "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
         short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
       },
@@ -40,8 +39,7 @@ function pretender(server, helper) {
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         thumbnail_height: 320,
         thumbnail_width: 690,
-        url:
-          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        url: "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
         width: 1920,
       });
     },

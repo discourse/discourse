@@ -293,9 +293,8 @@ export default class PresenceService extends Service {
   _getInitialData(channelName) {
     let promiseProxy = this._initialDataRequests[channelName];
     if (!promiseProxy) {
-      promiseProxy = this._initialDataRequests[
-        channelName
-      ] = createPromiseProxy();
+      promiseProxy = this._initialDataRequests[channelName] =
+        createPromiseProxy();
     }
 
     once(this, this._makeInitialDataRequest);

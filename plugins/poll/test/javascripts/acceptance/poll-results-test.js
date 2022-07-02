@@ -51,8 +51,7 @@ acceptance("Poll results", function (needs) {
         title_is_group: false,
         bookmarked: false,
         bookmarks: [],
-        raw:
-          "[poll type=regular results=always public=true chartType=bar]\n* Option #1\n* Option #2\n[/poll]",
+        raw: "[poll type=regular results=always public=true chartType=bar]\n* Option #1\n* Option #2\n[/poll]",
         actions_summary: [
           { id: 3, can_act: true },
           { id: 4, can_act: true },
@@ -87,14 +86,12 @@ acceptance("Poll results", function (needs) {
             options: [
               {
                 id: "db753fe0bc4e72869ac1ad8765341764",
-                html:
-                  'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
+                html: 'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
                 votes: 1,
               },
               {
                 id: "d8c22ff912e03740d9bc19e133e581e0",
-                html:
-                  'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
+                html: 'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
                 votes: 0,
               },
             ],
@@ -192,14 +189,12 @@ acceptance("Poll results", function (needs) {
                   options: [
                     {
                       id: "db753fe0bc4e72869ac1ad8765341764",
-                      html:
-                        'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
+                      html: 'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
                       votes: 1,
                     },
                     {
                       id: "d8c22ff912e03740d9bc19e133e581e0",
-                      html:
-                        'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
+                      html: 'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
                       votes: 0,
                     },
                   ],
@@ -705,8 +700,7 @@ acceptance("Poll results - no voters", function (needs) {
         title_is_group: false,
         bookmarked: false,
         bookmarks: [],
-        raw:
-          "[poll type=regular results=always public=true chartType=bar]\n* Option #1\n* Option #2\n[/poll]",
+        raw: "[poll type=regular results=always public=true chartType=bar]\n* Option #1\n* Option #2\n[/poll]",
         actions_summary: [
           { id: 3, can_act: true },
           { id: 4, can_act: true },
@@ -741,14 +735,12 @@ acceptance("Poll results - no voters", function (needs) {
             options: [
               {
                 id: "db753fe0bc4e72869ac1ad8765341764",
-                html:
-                  'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
+                html: 'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
                 votes: 0,
               },
               {
                 id: "d8c22ff912e03740d9bc19e133e581e0",
-                html:
-                  'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
+                html: 'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
                 votes: 0,
               },
             ],
@@ -835,14 +827,12 @@ acceptance("Poll results - no voters", function (needs) {
                   options: [
                     {
                       id: "db753fe0bc4e72869ac1ad8765341764",
-                      html:
-                        'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
+                      html: 'Option \u003cspan class="hashtag"\u003e#1\u003c/span\u003e',
                       votes: 0,
                     },
                     {
                       id: "d8c22ff912e03740d9bc19e133e581e0",
-                      html:
-                        'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
+                      html: 'Option \u003cspan class="hashtag"\u003e#2\u003c/span\u003e',
                       votes: 0,
                     },
                   ],
