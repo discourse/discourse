@@ -1,9 +1,9 @@
 {{#if setting.textarea}}
-  <Textarea @value={{value}} @classNames="input-setting-textarea" />
+  <Textarea @value={{value}} class="input-setting-textarea" />
 {{else if setting.json_schema}}
   <DButton @action={{action "launchJsonEditorModal"}} @icon="pencil-alt" @label="admin.site_settings.json_schema.edit" />
 {{else if isSecret}}
-  <Input @type="password" @value={{value}} @classNames="input-setting-string" />
+  <Input @type="password" @value={{value}} class="input-setting-string" />
 {{else}}
   <TextField @value={{value}} @classNames="input-setting-string" />
 {{/if}}

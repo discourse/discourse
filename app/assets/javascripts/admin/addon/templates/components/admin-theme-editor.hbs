@@ -3,7 +3,7 @@
     <ul class="nav nav-pills target">
       {{#each visibleTargets as |target|}}
         <li>
-          <LinkTo @route={{editRouteName}} @models={{array theme.id target.name fieldName}} @replace={{true}} @title={{field.title}} class={{if target.edited "edited" "blank"}}>
+          <LinkTo @route={{editRouteName}} @models={{array theme.id target.name fieldName}} @replace={{true}} title={{field.title}} class={{if target.edited "edited" "blank"}}>
             {{#if target.error}}{{d-icon "exclamation-triangle"}}{{/if}}
             {{#if target.icon}}{{d-icon target.icon}}{{/if}}
             {{i18n (concat "admin.customize.theme." target.name)}}
@@ -24,7 +24,7 @@
       <li class="spacer"></li>
       <li>
         <label>
-          <Input @type="checkbox" @checked={{onlyOverridden}} @click={{action "onlyOverriddenChanged" value="target.checked"}} />
+          <Input @type="checkbox" @checked={{onlyOverridden}} {{on "click" (action "onlyOverriddenChanged")}} />
           {{i18n "admin.customize.theme.hide_unused_fields"}}
         </label>
       </li>
@@ -37,7 +37,7 @@
     <ul class="nav nav-pills fields">
       {{#each visibleFields as |field|}}
         <li>
-          <LinkTo @route={{editRouteName}} @models={{array theme.id currentTargetName field.name}} @replace={{true}} @title={{field.title}} class={{if field.edited "edited" "blank"}}>
+          <LinkTo @route={{editRouteName}} @models={{array theme.id currentTargetName field.name}} @replace={{true}} title={{field.title}} class={{if field.edited "edited" "blank"}}>
             {{#if field.error}}{{d-icon "exclamation-triangle"}}{{/if}}
             {{#if field.icon}}{{d-icon field.icon}}{{/if}}
             {{field.translatedName}}

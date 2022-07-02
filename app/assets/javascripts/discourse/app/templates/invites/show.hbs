@@ -59,7 +59,7 @@
               <form>
                 {{#if isInviteLink}}
                   <div class="input email-input input-group">
-                    <Input @type="email" @value={{email}} @id="new-account-email" @name="email" class={{value-entered email}} @autofocus="autofocus" @disabled={{externalAuthsOnly}} />
+                    <Input @type="email" @value={{email}} id="new-account-email" name="email" class={{value-entered email}} autofocus="autofocus" disabled={{externalAuthsOnly}} />
                     <label class="alt-placeholder" for="new-account-email">
                       {{i18n "user.email.title"}}
                       <span class="required">*</span>
@@ -70,7 +70,7 @@
                 {{/if}}
 
                 <div class="input username-input input-group">
-                  <Input @value={{accountUsername}} class={{value-entered accountUsername}} @id="new-account-username" @name="username" @maxlength={{maxUsernameLength}} @autocomplete="off" />
+                  <Input @value={{accountUsername}} class={{value-entered accountUsername}} id="new-account-username" name="username" maxlength={{maxUsernameLength}} autocomplete="off" />
                   <label class="alt-placeholder" for="new-account-username">
                     {{i18n "user.username.title"}}
                     <span class="required">*</span>
@@ -81,7 +81,7 @@
 
                 {{#if fullnameRequired}}
                   <div class="input name-input input-group">
-                    <Input @value={{accountName}} class={{value-entered accountName}} @id="new-account-name" @name="name" />
+                    <Input @value={{accountName}} class={{value-entered accountName}} id="new-account-name" name="name" />
                     <label class="alt-placeholder" for="new-account-name">
                       {{i18n "invites.name_label"}}
                       {{#if siteSettings.full_name_required}}

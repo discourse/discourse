@@ -16,7 +16,7 @@
 
     <div class="control-group future-date-input-time-picker">
       {{d-icon "far-clock"}}
-      <Input placeholder="--:--" @type="time" class="time-input" @value={{_time}} @disabled={{timeInputDisabled}} @input={{action "onChangeTime" value="target.value"}} />
+      <Input placeholder="--:--" @type="time" class="time-input" @value={{_time}} disabled={{timeInputDisabled}} {{on "input" (action "onChangeTime")}} />
     </div>
   {{/if}}
 </div>

@@ -13,7 +13,7 @@
       <form id="login-form" method="post">
         <div id="credentials" class={{credentialsClass}}>
           <div class="input-group">
-            <Input @value={{loginName}} class={{value-entered loginName}} @type="email" @id="login-account-name" @autocorrect="off" @autocapitalize="off" @disabled={{showSecondFactor}} @autofocus="autofocus" />
+            <Input @value={{loginName}} class={{value-entered loginName}} @type="email" id="login-account-name" @autocorrect="off" @autocapitalize="off" disabled={{showSecondFactor}} autofocus="autofocus" />
             <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
             {{#if showLoginWithEmailLink}}
               <a href id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
@@ -22,7 +22,7 @@
             {{/if}}
           </div>
           <div class="input-group">
-            <Input @value={{loginPassword}} class={{value-entered loginPassword}} @type="password" @id="login-account-password" @maxlength="200" @disabled={{showSecondFactor}} />
+            <Input @value={{loginPassword}} class={{value-entered loginPassword}} @type="password" id="login-account-password" maxlength="200" disabled={{showSecondFactor}} />
             <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
             <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
           </div>

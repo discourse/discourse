@@ -1,7 +1,7 @@
 {{#if editing}}
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.host"}}</div>
-    <Input @value={{buffered.host}} placeholder="example.com" @enter={{action "save"}} class="host-name" @autofocus={{true}} />
+    <Input @value={{buffered.host}} placeholder="example.com" @enter={{action "save"}} class="host-name" autofocus={{true}} />
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.class_name"}}</div>

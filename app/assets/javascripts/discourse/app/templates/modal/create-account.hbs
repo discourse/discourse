@@ -17,7 +17,7 @@
                 </div>
               {{/if}}
               <div class="input-group create-account-email">
-                <Input @type="email" @disabled={{emailDisabled}} @value={{accountEmail}} @id="new-account-email" @name="email" class={{value-entered accountEmail}} @autofocus="autofocus" @focusOut={{action "checkEmailAvailability"}} @aria-describedby="account-email-validation" @aria-invalid={{emailValidation.failed}} />
+                <Input @type="email" disabled={{emailDisabled}} @value={{accountEmail}} id="new-account-email" name="email" class={{value-entered accountEmail}} autofocus="autofocus" @focusOut={{action "checkEmailAvailability"}} @aria-describedby="account-email-validation" @aria-invalid={{emailValidation.failed}} />
                 <label class="alt-placeholder" for="new-account-email">
                   {{i18n "user.email.title"}}
                   {{~#if userFields~}}
@@ -29,7 +29,7 @@
               </div>
 
               <div class="input-group">
-                <Input @value={{accountUsername}} @disabled={{usernameDisabled}} class={{value-entered accountUsername}} @id="new-account-username" @name="username" @maxlength={{maxUsernameLength}} @aria-describedby="username-validation" @aria-invalid={{usernameValidation.failed}} @autocomplete="off" />
+                <Input @value={{accountUsername}} disabled={{usernameDisabled}} class={{value-entered accountUsername}} id="new-account-username" name="username" maxlength={{maxUsernameLength}} @aria-describedby="username-validation" @aria-invalid={{usernameValidation.failed}} autocomplete="off" />
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
                   {{~#if userFields~}}
@@ -86,13 +86,13 @@
                 <div class="password-confirmation">
                   <label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label>
                   <HoneypotInput @id="new-account-confirmation" @autocomplete="new-password" @value={{accountHoneypot}} />
-                  <Input @value={{accountChallenge}} @id="new-account-challenge" />
+                  <Input @value={{accountChallenge}} id="new-account-challenge" />
                 </div>
               </div>
 
               {{#if requireInviteCode }}
                 <div class="input-group">
-                  <Input @value={{inviteCode}} class={{value-entered inviteCode}} @id="inviteCode" />
+                  <Input @value={{inviteCode}} class={{value-entered inviteCode}} id="inviteCode" />
                   <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
                   <span class="more-info">{{i18n "user.invite_code.instructions"}}</span>
                 </div>

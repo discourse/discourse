@@ -7,7 +7,7 @@
     {{/if}}
 
     <div class="groups-header-filters">
-      <Input @value={{readonly filter}} @placeholderKey="groups.index.all" class="groups-header-filters-name no-blur" @input={{action "onFilterChanged" value="target.value"}} />
+      <Input @value={{readonly filter}} @placeholderKey="groups.index.all" class="groups-header-filters-name no-blur" {{on "input" (action "onFilterChanged")}} />
 
       <ComboBox @value={{type}} @content={{types}} @class="groups-header-filters-type" @onChange={{action (mut type)}} @options={{hash
           clearable=true
@@ -22,7 +22,7 @@
         <div class="container">
           <div class="groups-boxes">
             {{#each groups as |group|}}
-              <LinkTo @route="group.members" @model={{group.name}} @classNames={{concat "group-box " group.name}}>
+              <LinkTo @route="group.members" @model={{group.name}} class={{concat "group-box " group.name}}>
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
                     {{#if group.flair_url}}

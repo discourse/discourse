@@ -15,7 +15,7 @@
     {{#if model.can_admin_group}}
       <div class="input-group">
         <label>
-          <Input @id="set-owner" @type="checkbox" @checked={{setOwner}} @disabled={{emails}} />
+          <Input id="set-owner" @type="checkbox" @checked={{setOwner}} disabled={{emails}} />
           {{i18n "groups.add_members.set_owner"}}
         </label>
       </div>
@@ -23,7 +23,7 @@
 
     <div class="input-group">
       <label>
-        <Input @type="checkbox" @checked={{notifyUsers}} @disabled={{and (not usernames) emails}} />
+        <Input @type="checkbox" @checked={{notifyUsers}} disabled={{and (not usernames) emails}} />
         {{i18n "groups.add_members.notify_users"}}
       </label>
     </div>

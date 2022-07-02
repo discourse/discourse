@@ -4,7 +4,7 @@
       {{i18n "admin.emoji.name"}}
     </span>
     <div class="input">
-      <Input @id="emoji-name" @name="name" @placeholderKey="admin.emoji.name" @value={{readonly name}} @input={{action (mut name) value="target.value"}} />
+      <Input id="emoji-name" name="name" @placeholderKey="admin.emoji.name" @value={{readonly name}} {{on "input" (action (mut name))}} />
     </div>
   </div>
   <div class="control-group">

@@ -20,7 +20,7 @@
 
     <div class="emoji-picker-content">
       <div class="emoji-picker-search-container">
-        <Input class="filter" @name="filter" @value={{@initialFilter}} placeholder={{i18n "emoji_picker.filter_placeholder"}} @autocomplete="off" @type="search" @autocorrect="off" @autocapitalize="off" @input={{action "onFilterChange"}} />
+        <Input class="filter" name="filter" @value={{@initialFilter}} placeholder={{i18n "emoji_picker.filter_placeholder"}} autocomplete="off" @type="search" @autocorrect="off" @autocapitalize="off" {{on "input" (action "onFilterChange")}} />
 
         {{d-icon "search"}}
       </div>

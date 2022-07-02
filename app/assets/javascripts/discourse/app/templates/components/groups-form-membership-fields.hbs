@@ -2,7 +2,7 @@
   <label class="control-label">{{i18n "groups.manage.membership.access"}}</label>
 
   <label>
-    <Input @type="checkbox" class="group-form-public-admission" @checked={{model.public_admission}} @disabled={{disablePublicSetting}} />
+    <Input @type="checkbox" class="group-form-public-admission" @checked={{model.public_admission}} disabled={{disablePublicSetting}} />
 
     {{i18n "groups.public_admission"}}
   </label>
@@ -14,7 +14,7 @@
   </label>
 
   <label>
-    <Input @type="checkbox" class="group-form-allow-membership-requests" @checked={{model.allow_membership_requests}} @disabled={{disableMembershipRequestSetting}} />
+    <Input @type="checkbox" class="group-form-allow-membership-requests" @checked={{model.allow_membership_requests}} disabled={{disableMembershipRequestSetting}} />
 
     {{i18n "groups.allow_membership_requests"}}
   </label>
@@ -68,7 +68,7 @@
       {{i18n "admin.groups.default_title"}}
     </label>
 
-    <Input @value={{model.title}} @name="title" class="input-xxlarge" />
+    <Input @value={{model.title}} name="title" class="input-xxlarge" />
 
     <div class="control-instructions">
       {{i18n "admin.groups.default_title_description"}}

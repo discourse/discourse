@@ -11,7 +11,7 @@
         <form id="login-form" method="post">
           <div id="credentials" class={{credentialsClass}}>
             <div class="input-group">
-              <Input @value={{loginName}} @type="email" @id="login-account-name" class={{value-entered loginName}} @autocomplete="username" @autocorrect="off" @autocapitalize="off" @disabled={{showSecondFactor}} @autofocus="autofocus" @tabindex="1" />
+              <Input @value={{loginName}} @type="email" id="login-account-name" class={{value-entered loginName}} autocomplete="username" @autocorrect="off" @autocapitalize="off" disabled={{showSecondFactor}} autofocus="autofocus" tabindex="1" />
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
               {{#if showLoginWithEmailLink}}
                 <a href class={{if loginName "" "no-login-filled"}} tabindex="3"  id="email-login-link" {{action (unless processingEmailLink "emailLogin")}}>
@@ -20,7 +20,7 @@
               {{/if}}
             </div>
             <div class="input-group">
-              <Input @value={{loginPassword}} @type="password" class={{value-entered loginPassword}} @id="login-account-password" @autocomplete="current-password" @maxlength="200" @capsLockOn={{capsLockOn}} @disabled={{disableLoginFields}} @tabindex="1" />
+              <Input @value={{loginPassword}} @type="password" class={{value-entered loginPassword}} id="login-account-password" autocomplete="current-password" maxlength="200" @capsLockOn={{capsLockOn}} disabled={{disableLoginFields}} tabindex="1" />
               <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
               <a href id="forgot-password-link" tabindex="3" {{action "forgotPassword"}}>{{i18n "forgot_password.action"}}</a>
               <div class="caps-lock-warning {{unless capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>

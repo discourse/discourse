@@ -5,11 +5,11 @@
     </AdminFormRow>
 
     <AdminFormRow @label="admin.user_fields.name">
-      <Input @value={{buffered.name}} class="user-field-name" @maxlength="255" />
+      <Input @value={{buffered.name}} class="user-field-name" maxlength="255" />
     </AdminFormRow>
 
     <AdminFormRow @label="admin.user_fields.description">
-      <Input @value={{buffered.description}} class="user-field-desc" @maxlength="255" />
+      <Input @value={{buffered.description}} class="user-field-desc" maxlength="255" />
     </AdminFormRow>
 
     {{#if bufferedFieldType.hasOptions}}

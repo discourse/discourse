@@ -29,7 +29,7 @@
   {{#if siteSettings.enable_fast_edit}}
     {{#if _displayFastEditInput}}
       <div class="fast-edit-container">
-        <Textarea @id="fast-edit-input" @value={{_fastEditNewSelection}} />
+        <Textarea id="fast-edit-input" @value={{_fastEditNewSelection}} />
         <DButton @action={{action "_saveFastEdit"}} @class="btn-small btn-primary save-fast-edit" @icon="pencil-alt" @label="composer.save_edit" @translatedTitle={{_saveEditButtonTitle}} @disabled={{_saveFastEditDisabled}} @isLoading={{_isSavingFastEdit}} />
       </div>
     {{/if}}
