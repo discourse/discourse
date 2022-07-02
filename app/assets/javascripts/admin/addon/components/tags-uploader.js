@@ -5,10 +5,10 @@ import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 
 export default Component.extend(UppyUploadMixin, {
-  tagName: "",
   type: "csv",
   uploadUrl: "/tags/upload",
   addDisabled: alias("uploading"),
+  elementId: "tag-uploader",
   preventDirectS3Uploads: true,
 
   validateUploadedFilesOptions() {
