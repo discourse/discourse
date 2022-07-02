@@ -1,4 +1,4 @@
-<DSection @class="current-badge content-body">
+<DSection class="current-badge content-body">
   <form class="form-horizontal">
     <div class="control-group">
       <label for="name">{{i18n "admin.badges.name"}}</label>
@@ -28,7 +28,7 @@
         </label>
       </div>
       {{#if this.imageUploaderSelected}}
-        <UppyImageUploader @id="badge-image-uploader" @imageUrl={{this.buffered.image_url}} @type="badge_image" @onUploadDone={{action "setImage"}} @onUploadDeleted={{action "removeImage"}} @class="no-repeat contain-image" />
+        <UppyImageUploader @id="badge-image-uploader" @imageUrl={{this.buffered.image_url}} @type="badge_image" @onUploadDone={{action "setImage"}} @onUploadDeleted={{action "removeImage"}} class="no-repeat contain-image" />
         <div class="control-instructions">
           <p class="help">{{i18n "admin.badges.image_help"}}</p>
         </div>
@@ -48,8 +48,8 @@
       <label for="badge_grouping_id">{{i18n "admin.badges.badge_grouping"}}</label>
 
       <div class="badge-grouping-control">
-        <ComboBox @name="badge_grouping_id" @value={{this.buffered.badge_grouping_id}} @content={{this.badgeGroupings}} @class="badge-selector" @nameProperty="name" @onChange={{action (mut this.buffered.badge_grouping_id)}} />
-        <DButton @class="btn-default" @action={{route-action "editGroupings"}} @icon="pencil-alt" />
+        <ComboBox @name="badge_grouping_id" @value={{this.buffered.badge_grouping_id}} @content={{this.badgeGroupings}} class="badge-selector" @nameProperty="name" @onChange={{action (mut this.buffered.badge_grouping_id)}} />
+        <DButton class="btn-default" @action={{route-action "editGroupings"}} @icon="pencil-alt" />
       </div>
     </div>
 
@@ -156,10 +156,10 @@
     </div>
 
     <div class="buttons">
-      <DButton @class="btn-primary" @action={{action "save"}} @type="submit" @disabled={{this.saving}} @label="admin.badges.save" />
+      <DButton class="btn-primary" @action={{action "save"}} @type="submit" @disabled={{this.saving}} @label="admin.badges.save" />
       <span class="saving">{{this.savingStatus}}</span>
       {{#unless this.readOnly}}
-        <DButton @action={{action "destroy"}} @class="btn-danger" @label="admin.badges.delete" />
+        <DButton @action={{action "destroy"}} class="btn-danger" @label="admin.badges.delete" />
       {{/unless}}
     </div>
   </form>

@@ -74,13 +74,13 @@
         <ul class="usercard-controls">
           {{#if this.user.can_send_private_message_to_user}}
             <li class="compose-pm">
-              <DButton @class="btn-primary" @action={{action "composePM" this.user this.post}} @icon="envelope" @label="user.private_message" />
+              <DButton class="btn-primary" @action={{action "composePM" this.user this.post}} @icon="envelope" @label="user.private_message" />
             </li>
           {{/if}}
           <PluginOutlet @name="user-card-below-message-button" @connectorTagName="li" @args={{hash user=this.user close=(action "close")}} @tagName="" />
           {{#if this.showFilter}}
             <li>
-              <DButton @class="btn-default" @action={{action "filterPosts" this.user}} @icon="filter" @translatedLabel={{this.filterPostsLabel}} />
+              <DButton class="btn-default" @action={{action "filterPosts" this.user}} @icon="filter" @translatedLabel={{this.filterPostsLabel}} />
             </li>
           {{/if}}
           {{#if this.hasUserFilters}}
@@ -90,7 +90,7 @@
           {{/if}}
           {{#if this.showDelete}}
             <li>
-              <DButton @class="btn-danger" @action={{action "deleteUser"}} @actionParam={{this.user}} @icon="exclamation-triangle" @label="admin.user.delete" />
+              <DButton class="btn-danger" @action={{action "deleteUser"}} @actionParam={{this.user}} @icon="exclamation-triangle" @label="admin.user.delete" />
             </li>
           {{/if}}
           <PluginOutlet @name="user-card-additional-buttons" @connectorTagName="div" @args={{hash user=this.user close=(action "close")}} @tagName="li" />
@@ -200,7 +200,7 @@
                 {{#if this.user.email}}
                   {{this.user.email}}
                 {{else}}
-                  <DButton @action={{action "checkEmail"}} @actionParam={{this.user}} @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
+                  <DButton @action={{action "checkEmail"}} @actionParam={{this.user}} @icon="far-envelope" @label="admin.users.check_email.text" class="btn-primary" />
                 {{/if}}
               </h3>
             {{/if}}

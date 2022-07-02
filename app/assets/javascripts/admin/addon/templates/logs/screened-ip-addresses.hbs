@@ -2,8 +2,8 @@
 
 <div class="screened-ip-controls">
   <div class="filter-screened-ip-address inline-form">
-    <TextField @value={{this.filter}} @class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.filter" @autocorrect="off" @autocapitalize="off" />
-    <DButton @class="btn-default" @action={{action "exportScreenedIpList"}} @icon="download" @title="admin.export_csv.button_title.screened_ip" @label="admin.export_csv.button_text" />
+    <TextField @value={{this.filter}} class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.filter" @autocorrect="off" @autocapitalize="off" />
+    <DButton class="btn-default" @action={{action "exportScreenedIpList"}} @icon="download" @title="admin.export_csv.button_title.screened_ip" @label="admin.export_csv.button_text" />
   </div>
 
   <ScreenedIpAddressForm @action={{action "recordAdded"}} />
@@ -62,17 +62,17 @@
             </td>
             <td class="col actions">
               {{#if item.editing}}
-                <DButton @class="btn-default" @action={{action "save"}} @actionParam={{item}} @label="admin.logs.save" />
+                <DButton class="btn-default" @action={{action "save"}} @actionParam={{item}} @label="admin.logs.save" />
                 <a href {{action "cancel" item}} class="cancel-action">
                   {{i18n "cancel"}}
                 </a>
               {{else}}
-                <DButton @class="btn-default btn-danger" @action={{action "destroy"}} @actionParam={{item}} @icon="far-trash-alt" />
-                <DButton @class="btn-default" @action={{action "edit"}} @actionParam={{item}} @icon="pencil-alt" />
+                <DButton class="btn-default btn-danger" @action={{action "destroy"}} @actionParam={{item}} @icon="far-trash-alt" />
+                <DButton class="btn-default" @action={{action "edit"}} @actionParam={{item}} @icon="pencil-alt" />
                 {{#if item.isBlocked}}
-                  <DButton @class="btn-default" @action={{action "allow"}} @actionParam={{item}} @icon="check" @label="admin.logs.screened_ips.actions.do_nothing" />
+                  <DButton class="btn-default" @action={{action "allow"}} @actionParam={{item}} @icon="check" @label="admin.logs.screened_ips.actions.do_nothing" />
                 {{else}}
-                  <DButton @class="btn-default" @action={{action "block"}} @actionParam={{item}} @icon="ban" @label="admin.logs.screened_ips.actions.block" />
+                  <DButton class="btn-default" @action={{action "block"}} @actionParam={{item}} @icon="ban" @label="admin.logs.screened_ips.actions.block" />
                 {{/if}}
               {{/if}}
             </td>

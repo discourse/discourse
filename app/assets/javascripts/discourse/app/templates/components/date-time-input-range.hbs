@@ -1,5 +1,5 @@
 <div class="d-date-time-input-range" ...attributes>
-  <DateTimeInput @date={{this.from}} @onChange={{action "onChangeRanges" (hash prop="from")}} @showTime={{this.showFromTime}} @class="from" @placeholder={{i18n "dates.from_placeholder"}} />
+  <DateTimeInput @date={{this.from}} @onChange={{action "onChangeRanges" (hash prop="from")}} @showTime={{this.showFromTime}} class="from" @placeholder={{i18n "dates.from_placeholder"}} />
 
-  <DateTimeInput @date={{this.to}} @relativeDate={{this.from}} @onChange={{action "onChangeRanges" (hash prop="to")}} @timeFirst={{this.toTimeFirst}} @showTime={{this.showToTime}} @clearable={{this.clearable}} @class="to" @placeholder={{i18n "dates.to_placeholder"}} />
+  <DateTimeInput @date={{this.to}} @relativeDate={{this.from}} @onChange={{action "onChangeRanges" (hash prop="to")}} @timeFirst={{this.toTimeFirst}} @showTime={{this.showToTime}} @clearable={{this.clearable}} class="to" @placeholder={{i18n "dates.to_placeholder"}} />
 </div>

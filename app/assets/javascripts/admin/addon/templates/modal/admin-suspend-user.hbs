@@ -10,7 +10,7 @@
 
       <div class="until-controls">
         <label>
-          <FutureDateInput @class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{this.suspendUntil}} @onChangeInput={{action (mut this.suspendUntil)}} />
+          <FutureDateInput class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{this.suspendUntil}} @onChangeInput={{action (mut this.suspendUntil)}} />
         </label>
       </div>
       <SuspensionDetails @reason={{this.reason}} @message={{this.message}} />
@@ -30,7 +30,7 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-danger perform-suspend" @action={{action "suspend"}} @disabled={{this.submitDisabled}} @icon="ban" @label="admin.user.suspend" />
+  <DButton class="btn-danger perform-suspend" @action={{action "suspend"}} @disabled={{this.submitDisabled}} @icon="ban" @label="admin.user.suspend" />
   <DModalCancel @close={{route-action "closeModal"}} />
   <ConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
 </div>

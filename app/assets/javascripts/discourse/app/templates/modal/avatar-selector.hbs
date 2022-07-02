@@ -1,4 +1,4 @@
-<DModalBody @title="user.change_avatar.title" @class="avatar-selector">
+<DModalBody @title="user.change_avatar.title" class="avatar-selector">
   {{#if this.showSelectableAvatars}}
     <div class="selectable-avatars">
       {{#each this.selectableAvatars as |avatar|}}
@@ -27,7 +27,7 @@
         <RadioButton @id="gravatar" @name="avatar" @value="gravatar" @selection={{this.selected}} />
         <label class="radio" for="gravatar">{{bound-avatar-template this.user.gravatar_avatar_template "large"}} <span>{{html-safe (i18n "user.change_avatar.gravatar" gravatarName=this.gravatarName gravatarBaseUrl=this.gravatarBaseUrl gravatarLoginUrl=this.gravatarLoginUrl)}} {{this.user.email}}</span></label>
 
-        <DButton @action={{action "refreshGravatar"}} @translatedTitle={{i18n "user.change_avatar.refresh_gravatar_title" gravatarName=this.gravatarName}} @disabled={{this.gravatarRefreshDisabled}} @icon="sync" @class="btn-default avatar-selector-refresh-gravatar" />
+        <DButton @action={{action "refreshGravatar"}} @translatedTitle={{i18n "user.change_avatar.refresh_gravatar_title" gravatarName=this.gravatarName}} @disabled={{this.gravatarRefreshDisabled}} @icon="sync" class="btn-default avatar-selector-refresh-gravatar" />
 
         {{#if this.gravatarFailed}}
           <p class="error">{{I18n "user.change_avatar.gravatar_failed" gravatarName=this.gravatarName}}</p>
@@ -43,7 +43,7 @@
             {{i18n "user.change_avatar.uploaded_avatar_empty"}}
           {{/if}}
         </label>
-        <AvatarUploader @user_id={{this.user.id}} @uploadedAvatarTemplate={{this.user.custom_avatar_template}} @uploadedAvatarId={{this.user.custom_avatar_upload_id}} @uploading={{this.uploading}} @class="avatar-uploader" @id="avatar-uploader" @done={{action "uploadComplete"}} />
+        <AvatarUploader @user_id={{this.user.id}} @uploadedAvatarTemplate={{this.user.custom_avatar_template}} @uploadedAvatarId={{this.user.custom_avatar_upload_id}} @uploading={{this.uploading}} class="avatar-uploader" @id="avatar-uploader" @done={{action "uploadComplete"}} />
       </div>
     {{/if}}
   {{/if}}
@@ -51,7 +51,7 @@
 
 {{#if this.showAvatarUploader}}
   <div class="modal-footer">
-    <DButton @action={{action "saveAvatarSelection"}} @class="btn-primary" @disabled={{this.submitDisabled}} @label="save" />
+    <DButton @action={{action "saveAvatarSelection"}} class="btn-primary" @disabled={{this.submitDisabled}} @label="save" />
     <DModalCancel @close={{route-action "closeModal"}} />
   </div>
 {{/if}}

@@ -24,7 +24,7 @@
               <td class="description">{{webHook.description}}</td>
               <td class="controls">
                 <LinkTo @route="adminWebHooks.show" @model={{webHook}} class="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
-                <DButton @class="destroy btn-danger" @action={{action "destroy"}} @actionParam={{webHook}} @icon="times" />
+                <DButton class="destroy btn-danger" @action={{action "destroy"}} @actionParam={{webHook}} @icon="times" />
               </td>
             </tr>
           {{/each}}

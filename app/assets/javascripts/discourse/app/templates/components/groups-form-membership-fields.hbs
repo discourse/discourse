@@ -26,7 +26,7 @@
           {{i18n "groups.membership_request_template"}}
         </label>
 
-        <ExpandingTextArea @name="membership-request-template" @class="group-form-membership-request-template input-xxlarge" @value={{this.model.membership_request_template}} />
+        <ExpandingTextArea @name="membership-request-template" class="group-form-membership-request-template input-xxlarge" @value={{this.model.membership_request_template}} />
       </div>
     {{/if}}
   </div>
@@ -39,14 +39,14 @@
         {{i18n "admin.groups.manage.membership.automatic_membership_email_domains"}}
       </label>
 
-      <ListSetting @name="automatic_membership" @class="group-form-automatic-membership-automatic" @value={{this.emailDomains}} @choices={{this.emailDomains}} @settingName="name" @nameProperty={{null}} @valueProperty={{null}} @onChange={{action "onChangeEmailDomainsSetting"}} @options={{hash allowAny=true}} />
+      <ListSetting @name="automatic_membership" class="group-form-automatic-membership-automatic" @value={{this.emailDomains}} @choices={{this.emailDomains}} @settingName="name" @nameProperty={{null}} @valueProperty={{null}} @onChange={{action "onChangeEmailDomainsSetting"}} @options={{hash allowAny=true}} />
 
       {{#if this.showAssociatedGroups}}
         <label for="automatic_membership_associated_groups">
           {{i18n "admin.groups.manage.membership.automatic_membership_associated_groups"}}
         </label>
 
-        <ListSetting @name="automatic_membership_associated_groups" @class="group-form-automatic-membership-associated-groups" @value={{this.model.associatedGroupIds}} @choices={{this.associatedGroups}} @settingName="name" @nameProperty="label" @valueProperty="id" @onChange={{action (mut this.model.associated_group_ids)}} />
+        <ListSetting @name="automatic_membership_associated_groups" class="group-form-automatic-membership-associated-groups" @value={{this.model.associatedGroupIds}} @choices={{this.associatedGroups}} @settingName="name" @nameProperty="label" @valueProperty="id" @onChange={{action (mut this.model.associated_group_ids)}} />
       {{/if}}
     </div>
 
@@ -56,7 +56,7 @@
       <label class="control-label">{{i18n "admin.groups.manage.membership.effects"}}</label>
       <label for="grant_trust_level">{{i18n "admin.groups.manage.membership.trust_levels_title"}}</label>
 
-      <ComboBox @name="grant_trust_level" @valueProperty="value" @value={{this.groupTrustLevel}} @content={{this.trustLevelOptions}} @class="groups-form-grant-trust-level" @onChange={{action (mut this.model.grant_trust_level)}} />
+      <ComboBox @name="grant_trust_level" @valueProperty="value" @value={{this.groupTrustLevel}} @content={{this.trustLevelOptions}} class="groups-form-grant-trust-level" @onChange={{action (mut this.model.grant_trust_level)}} />
       <label>
         <Input @type="checkbox" @checked={{this.model.primary_group}} class="groups-form-primary-group" />
 

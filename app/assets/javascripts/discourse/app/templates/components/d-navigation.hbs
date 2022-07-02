@@ -17,14 +17,14 @@
     {{#unless this.tag}}
       {{!-- don't show category edit button on tag pages --}}
       {{#if this.showCategoryEdit}}
-        <DButton @class="btn-default edit-category" @action={{this.editCategory}} @icon="wrench" @ariaLabel="category.edit" />
+        <DButton class="btn-default edit-category" @action={{this.editCategory}} @icon="wrench" @ariaLabel="category.edit" />
       {{/if}}
     {{/unless}}
   {{/if}}
 
   {{#if this.tag}}
     {{#if this.showToggleInfo}}
-      <DButton @icon={{if this.currentUser.staff "wrench" "info-circle"}} @class="btn-default" @ariaLabel="tagging.info" @action={{this.toggleInfo}} @id="show-tag-info" />
+      <DButton @icon={{if this.currentUser.staff "wrench" "info-circle"}} class="btn-default" @ariaLabel="tagging.info" @action={{this.toggleInfo}} @id="show-tag-info" />
     {{/if}}
   {{/if}}
 

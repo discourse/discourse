@@ -1,7 +1,7 @@
 <div class="current-style {{if this.maximized "maximized"}}">
   <div class="wrapper">
     <div class="editor-information">
-      <DButton @title="go_back" @action={{action "goBack"}} @icon="chevron-left" @class="btn-small editor-back-button" />
+      <DButton @title="go_back" @action={{action "goBack"}} @icon="chevron-left" class="btn-small editor-back-button" />
 
       <span class="editor-theme-name-wrapper">
         {{i18n "admin.customize.theme.edit_css_html"}}
@@ -29,7 +29,7 @@
       </div>
 
       <div class="buttons">
-        <DButton @action={{action "save"}} @disabled={{this.saveDisabled}} @class="btn-primary" @translatedLabel={{this.saveButtonText}} />
+        <DButton @action={{action "save"}} @disabled={{this.saveDisabled}} class="btn-primary" @translatedLabel={{this.saveButtonText}} />
       </div>
     </div>
   </div>

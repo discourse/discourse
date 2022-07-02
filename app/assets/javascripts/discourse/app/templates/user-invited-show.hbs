@@ -1,18 +1,18 @@
 <DSection @pageClass="user-invites" @tagName="">
   {{#if this.canInviteToForum}}
-    <LoadMore @class="user-content" @selector=".user-invite-list tr" @action={{action "loadMore"}}>
-      <DSection @class="user-additional-controls">
+    <LoadMore class="user-content" @selector=".user-invite-list tr" @action={{action "loadMore"}}>
+      <DSection class="user-additional-controls">
         {{#if this.showSearch}}
           <div class="user-invite-search">
             <form><TextField @value={{this.searchTerm}} @placeholderKey="user.invited.search" /></form>
           </div>
         {{/if}}
-        <DSection @class="user-invite-buttons">
-          <DButton @class="btn-default" @icon="plus" @action={{action "createInvite"}} @label="user.invited.create" />
+        <DSection class="user-invite-buttons">
+          <DButton class="btn-default" @icon="plus" @action={{action "createInvite"}} @label="user.invited.create" />
           {{#if this.canBulkInvite}}
             {{#if this.siteSettings.allow_bulk_invite}}
               {{#unless this.site.mobileView}}
-                <DButton @class="btn-flat" @icon="upload" @action={{action "createInviteCsv"}} @label="user.invited.bulk_invite.text" />
+                <DButton class="btn-flat" @icon="upload" @action={{action "createInviteCsv"}} @label="user.invited.bulk_invite.text" />
               {{/unless}}
             {{/if}}
           {{/if}}
@@ -33,7 +33,7 @@
                   <DButton @icon="check" @disabled={{true}} @label="user.invited.reinvited_all" />
                 </span>
               {{else if this.hasEmailInvites}}
-                <DButton @class="btn-default" @icon="sync" @action={{action "reinviteAll"}} @label="user.invited.reinvite_all" />
+                <DButton class="btn-default" @icon="sync" @action={{action "reinviteAll"}} @label="user.invited.reinvite_all" />
               {{/if}}
             {{/if}}
           {{/if}}
@@ -128,8 +128,8 @@
                     </td>
 
                     <td class="invite-actions">
-                      <DButton @class="btn-default" @icon="pencil-alt" @action={{action "editInvite" invite}} @title="user.invited.edit" />
-                      <DButton @icon="trash-alt" @class="cancel" @action={{action "destroyInvite" invite}} @title={{if invite.destroyed "user.invited.removed" "user.invited.remove"}} />
+                      <DButton class="btn-default" @icon="pencil-alt" @action={{action "editInvite" invite}} @title="user.invited.edit" />
+                      <DButton @icon="trash-alt" class="cancel" @action={{action "destroyInvite" invite}} @title={{if invite.destroyed "user.invited.removed" "user.invited.remove"}} />
                     </td>
                   </tr>
                 {{/each}}

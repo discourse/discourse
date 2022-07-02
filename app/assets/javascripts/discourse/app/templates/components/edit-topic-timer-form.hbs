@@ -1,7 +1,7 @@
 <div ...attributes>
   <form>
     <div class="control-group">
-      <ComboBox @class="timer-type" @onChange={{this.onChangeStatusType}} @content={{this.timerTypes}} @value={{this.statusType}} />
+      <ComboBox class="timer-type" @onChange={{this.onChangeStatusType}} @content={{this.timerTypes}} @value={{this.statusType}} />
     </div>
     {{#if this.publishToCategory}}
       <div class="control-group">

@@ -21,12 +21,12 @@
             </label>
             <Input @value={{readonly this.nameInput}} placeholder={{i18n "directory.filter_name"}} class="filter-name no-blur" {{on "input" (action "onUsernameFilterChanged" value="target.value")}} />
             {{#if this.showGroupFilter}}
-              <ComboBox @class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash
+              <ComboBox class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash
                   none="directory.group.all"
                 }} />
             {{/if}}
             {{#if this.currentUser.staff}}
-              <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} @class="btn-default open-edit-columns-btn" />
+              <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} class="btn-default open-edit-columns-btn" />
             {{/if}}
             <PluginOutlet @name="users-directory-controls" @args={{hash model=this.model}} />
           </div>

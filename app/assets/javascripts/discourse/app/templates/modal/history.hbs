@@ -103,7 +103,7 @@
 
     <PluginOutlet @name="post-revisions" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
-    <LinksRedirect @class="row">
+    <LinksRedirect class="row">
       {{html-safe this.bodyDiff}}
     </LinksRedirect>
   </div>
@@ -111,32 +111,32 @@
 {{#if this.topicController}}
   <div class="modal-footer">
     <div id="revision-controls">
-      <DButton @class="btn-default" @action={{action "loadFirstVersion"}} @icon="fast-backward" @title="post.revisions.controls.first" @disabled={{this.loadFirstDisabled}} />
-      <DButton @class="btn-default" @action={{action "loadPreviousVersion"}} @icon="backward" @title="post.revisions.controls.previous" @disabled={{this.loadPreviousDisabled}} />
+      <DButton class="btn-default" @action={{action "loadFirstVersion"}} @icon="fast-backward" @title="post.revisions.controls.first" @disabled={{this.loadFirstDisabled}} />
+      <DButton class="btn-default" @action={{action "loadPreviousVersion"}} @icon="backward" @title="post.revisions.controls.previous" @disabled={{this.loadPreviousDisabled}} />
       <div id="revision-numbers" class={{unless this.displayRevisions "invisible"}}>
         <ConditionalLoadingSpinner @condition={{this.loading}} @size="small">
           {{html-safe this.revisionsText}}
         </ConditionalLoadingSpinner>
       </div>
-      <DButton @class="btn-default" @action={{action "loadNextVersion"}} @icon="forward" @title="post.revisions.controls.next" @disabled={{this.loadNextDisabled}} />
-      <DButton @class="btn-default" @action={{action "loadLastVersion"}} @icon="fast-forward" @title="post.revisions.controls.last" @disabled={{this.loadLastDisabled}} />
+      <DButton class="btn-default" @action={{action "loadNextVersion"}} @icon="forward" @title="post.revisions.controls.next" @disabled={{this.loadNextDisabled}} />
+      <DButton class="btn-default" @action={{action "loadLastVersion"}} @icon="fast-forward" @title="post.revisions.controls.last" @disabled={{this.loadLastDisabled}} />
     </div>
 
     <div id="revision-footer-buttons">
       {{#if this.displayEdit}}
-        <DButton @action={{action "editPost"}} @icon="pencil-alt" @class="btn-default" @label={{this.editButtonLabel}} />
+        <DButton @action={{action "editPost"}} @icon="pencil-alt" class="btn-default" @label={{this.editButtonLabel}} />
       {{/if}}
 
       {{#if this.displayRevert}}
-        <DButton @action={{action "revertToVersion"}} @icon="undo" @translatedLabel={{this.revertToRevisionText}} @class="btn-danger" @disabled={{this.loading}} />
+        <DButton @action={{action "revertToVersion"}} @icon="undo" @translatedLabel={{this.revertToRevisionText}} class="btn-danger" @disabled={{this.loading}} />
       {{/if}}
 
       {{#if this.displayHide}}
-        <DButton @action={{action "hideVersion"}} @icon="far-eye-slash" @label="post.revisions.controls.hide" @class="btn-danger" @disabled={{this.loading}} />
+        <DButton @action={{action "hideVersion"}} @icon="far-eye-slash" @label="post.revisions.controls.hide" class="btn-danger" @disabled={{this.loading}} />
       {{/if}}
 
       {{#if this.displayShow}}
-        <DButton @action={{action "showVersion"}} @icon="far-eye" @label="post.revisions.controls.show" @class="btn-default" @disabled={{this.loading}} />
+        <DButton @action={{action "showVersion"}} @icon="far-eye" @label="post.revisions.controls.show" class="btn-default" @disabled={{this.loading}} />
       {{/if}}
     </div>
   </div>

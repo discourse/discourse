@@ -17,7 +17,7 @@
     <div class="poll-breakdown-body-header">
       <label class="poll-breakdown-body-header-label">{{i18n "poll.breakdown.breakdown"}}</label>
 
-      <ComboBox @content={{this.groupableUserFields}} @value={{this.groupedBy}} @nameProperty="label" @class="poll-breakdown-dropdown" @onChange={{action this.setGrouping}} />
+      <ComboBox @content={{this.groupableUserFields}} @value={{this.groupedBy}} @nameProperty="label" class="poll-breakdown-dropdown" @onChange={{action this.setGrouping}} />
     </div>
 
     <div class="poll-breakdown-charts">

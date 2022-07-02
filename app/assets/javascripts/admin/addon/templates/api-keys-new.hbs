@@ -12,7 +12,7 @@
       {{i18n "admin.api.not_shown_again"}}
     </AdminFormRow>
     <AdminFormRow>
-      <DButton @icon="angle-right" @label="admin.api.continue" @action={{action "continue"}} @class="btn-primary" />
+      <DButton @icon="angle-right" @label="admin.api.continue" @action={{action "continue"}} class="btn-primary" />
     </AdminFormRow>
   {{else}}
     <AdminFormRow @label="admin.api.description">
@@ -72,7 +72,7 @@
                   </span>
                 </td>
                 <td>
-                  <DButton @icon="link" @action={{action "showURLs" act.urls}} @class="btn-info" />
+                  <DButton @icon="link" @action={{action "showURLs" act.urls}} class="btn-info" />
                 </td>
                 <td>
                   {{#each act.params as |p|}}
@@ -86,6 +86,6 @@
       </table>
     {{/if}}
 
-    <DButton @icon="check" @label="admin.api.save" @action={{action "save"}} @class="btn-primary" @disabled={{this.saveDisabled}} />
+    <DButton @icon="check" @label="admin.api.save" @action={{action "save"}} class="btn-primary" @disabled={{this.saveDisabled}} />
   {{/if}}
 </div>

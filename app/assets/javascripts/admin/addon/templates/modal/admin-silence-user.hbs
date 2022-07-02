@@ -9,7 +9,7 @@
 
     <div class="until-controls">
       <label>
-        <FutureDateInput @class="silence-until" @label="admin.user.silence_duration" @clearable={{false}} @input={{this.silenceUntil}} @onChangeInput={{action (mut this.silenceUntil)}} />
+        <FutureDateInput class="silence-until" @label="admin.user.silence_duration" @clearable={{false}} @input={{this.silenceUntil}} @onChangeInput={{action (mut this.silenceUntil)}} />
       </label>
     </div>
 
@@ -23,7 +23,7 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-danger perform-silence" @action={{action "silence"}} @disabled={{this.submitDisabled}} @icon="microphone-slash" @label="admin.user.silence" />
+  <DButton class="btn-danger perform-silence" @action={{action "silence"}} @disabled={{this.submitDisabled}} @icon="microphone-slash" @label="admin.user.silence" />
   <DModalCancel @close={{route-action "closeModal"}} />
   <ConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
 </div>

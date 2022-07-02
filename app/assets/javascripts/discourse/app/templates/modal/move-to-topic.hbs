@@ -36,7 +36,7 @@
         <ChooseMessage @currentTopicId={{this.model.id}} @selectedTopicId={{this.selectedTopicId}} />
 
         <label>{{i18n "topic.move_to_new_message.participants"}}</label>
-        <EmailGroupUserChooser @class="participant-selector" @value={{this.participants}} @onChange={{action (mut this.participants)}} />
+        <EmailGroupUserChooser class="participant-selector" @value={{this.participants}} @onChange={{action (mut this.participants)}} />
       </form>
     {{/if}}
 
@@ -78,7 +78,7 @@
           <TextField @value={{this.topicName}} @placeholderKey="composer.title_placeholder" @id="split-topic-name" />
 
           <label>{{i18n "categories.category"}}</label>
-          <CategoryChooser @value={{this.categoryId}} @class="small" @onChange={{action (mut this.categoryId)}} />
+          <CategoryChooser @value={{this.categoryId}} class="small" @onChange={{action (mut this.categoryId)}} />
           {{#if this.canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>
             <TagChooser @tags={{this.tags}} @categoryId={{this.categoryId}} />
@@ -106,5 +106,5 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @disabled={{this.buttonDisabled}} @action={{action "performMove"}} @icon="sign-out-alt" @translatedLabel={{this.buttonTitle}} />
+  <DButton class="btn-primary" @disabled={{this.buttonDisabled}} @action={{action "performMove"}} @icon="sign-out-alt" @translatedLabel={{this.buttonTitle}} />
 </div>

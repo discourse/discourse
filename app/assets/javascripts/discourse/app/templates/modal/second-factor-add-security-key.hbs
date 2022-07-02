@@ -23,7 +23,7 @@
     <div class="control-group">
       <div class="controls">
         {{#unless this.webauthnUnsupported}}
-          <DButton @class="btn-primary add-security-key" @action={{action "registerSecurityKey"}} @label="user.second_factor.security_key.register" />
+          <DButton class="btn-primary add-security-key" @action={{action "registerSecurityKey"}} @label="user.second_factor.security_key.register" />
         {{/unless}}
       </div>
     </div>

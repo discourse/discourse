@@ -1,5 +1,5 @@
-<DSection @class="user-secondary-navigation" @pageClass="user-messages">
-  <MobileNav @class="messages-nav" @desktopClass="nav-stacked action-list">
+<DSection class="user-secondary-navigation" @pageClass="user-messages">
+  <MobileNav class="messages-nav" @desktopClass="nav-stacked action-list">
     <li>
       <LinkTo @route="userPrivateMessages.index" @model={{this.model}}>
         {{i18n "user.messages.inbox"}}
@@ -94,7 +94,7 @@
     {{/if}}
 
     {{#if this.showNewPM}}
-      <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+      <DButton class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
     {{/if}}
   </section>
 {{/unless}}
@@ -102,7 +102,7 @@
 <section class="user-content">
   <div class="list-actions">
     {{#if (and this.site.mobileView this.showNewPM)}}
-      <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+      <DButton class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
     {{/if}}
   </div>
 

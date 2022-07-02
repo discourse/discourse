@@ -7,7 +7,7 @@
 <div class="fps-topic">
   <div class="topic">
     {{#if this.bulkSelectEnabled}}
-      <TrackSelected @selectedList={{this.selected}} @selectedId={{this.post.topic}} @class="bulk-select" />
+      <TrackSelected @selectedList={{this.selected}} @selectedId={{this.post.topic}} class="bulk-select" />
     {{/if}}
 
     <a href={{this.post.url}} {{action "logClick" this.post.topic_id}} class="search-link{{if this.post.topic.visited " visited"}}" role="heading" aria-level="2">

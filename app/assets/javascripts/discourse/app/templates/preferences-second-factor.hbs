@@ -30,7 +30,7 @@
           <div class="control-group totp">
             <div class="controls">
               <h2>{{i18n "user.second_factor.totp.title"}}</h2>
-              <DButton @action={{action "createTotp"}} @class="btn-primary new-totp" @icon="plus" @disabled={{this.loading}} @label="user.second_factor.totp.add" />
+              <DButton @action={{action "createTotp"}} class="btn-primary new-totp" @icon="plus" @disabled={{this.loading}} @label="user.second_factor.totp.add" />
               {{#each this.totps as |totp|}}
                 <div class="second-factor-item">
                   {{#if totp.name}}
@@ -40,7 +40,7 @@
                   {{/if}}
 
                   {{#if this.isCurrentUser}}
-                    <DButton @action={{action "editSecondFactor" totp}} @class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
+                    <DButton @action={{action "editSecondFactor" totp}} class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
                   {{/if}}
                 </div>
               {{/each}}
@@ -50,7 +50,7 @@
           <div class="control-group security-key">
             <div class="controls">
               <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
-              <DButton @action={{action "createSecurityKey"}} @class="btn-primary new-security-key" @icon="plus" @disabled={{this.loading}} @label="user.second_factor.security_key.add" />
+              <DButton @action={{action "createSecurityKey"}} class="btn-primary new-security-key" @icon="plus" @disabled={{this.loading}} @label="user.second_factor.security_key.add" />
               {{#each this.security_keys as |security_key|}}
                 <div class="second-factor-item">
                   {{#if security_key.name}}
@@ -60,7 +60,7 @@
                   {{/if}}
 
                   {{#if this.isCurrentUser}}
-                    <DButton @action={{action "editSecurityKey" security_key}} @class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
+                    <DButton @action={{action "editSecurityKey" security_key}} class="btn-default btn-small btn-icon pad-left no-text edit" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
                   {{/if}}
                 </div>
               {{/each}}
@@ -78,7 +78,7 @@
                 {{/if}}
 
                 {{#if this.isCurrentUser}}
-                  <DButton @action={{action "editSecondFactorBackup"}} @class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
+                  <DButton @action={{action "editSecondFactorBackup"}} class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup" @disabled={{this.loading}} @icon="pencil-alt" @aria-label="user.second_factor.edit" @title="user.second_factor.edit" />
                 {{/if}}
               {{else}}
                 {{i18n "user.second_factor_backup.enable_prerequisites"}}
@@ -90,7 +90,7 @@
             {{#unless this.showEnforcedNotice}}
               <div class="control-group">
                 <div class="controls">
-                  <DButton @class="btn-danger" @icon="ban" @action={{action "disableAllSecondFactors"}} @disabled={{this.loading}} @label="user.second_factor.disable_all" />
+                  <DButton class="btn-danger" @icon="ban" @action={{action "disableAllSecondFactors"}} @disabled={{this.loading}} @label="user.second_factor.disable_all" />
                 </div>
               </div>
             {{/unless}}
@@ -111,7 +111,7 @@
 
           <div class="control-group">
             <div class="controls">
-              <DButton @class="btn-primary" @type="submit" @action={{action "confirmPassword"}} @disabled={{this.loading}} @label="continue" />
+              <DButton class="btn-primary" @type="submit" @action={{action "confirmPassword"}} @disabled={{this.loading}} @label="continue" />
 
               {{#unless this.showEnforcedNotice}}
                 <CancelLink @route="preferences.account" @args={{this.model.username}} />

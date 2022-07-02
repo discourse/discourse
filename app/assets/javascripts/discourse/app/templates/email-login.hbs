@@ -27,7 +27,7 @@
         {{/if}}
 
         {{#unless this.model.security_key_required }}
-          <DButton @label="email_login.confirm_button" @action={{action "finishLogin"}} @type="submit" @class="btn-primary" />
+          <DButton @label="email_login.confirm_button" @action={{action "finishLogin"}} @type="submit" class="btn-primary" />
         {{/unless}}
       {{/if}}
     </form>

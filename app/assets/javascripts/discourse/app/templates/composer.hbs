@@ -27,7 +27,7 @@
               {{/unless}}
 
               {{#if this.canEdit}}
-                <LinkToInput @onClick={{action "displayEditReason"}} @showInput={{this.showEditReason}} @icon="info-circle" @class="display-edit-reason">
+                <LinkToInput @onClick={{action "displayEditReason"}} @showInput={{this.showEditReason}} @icon="info-circle" class="display-edit-reason">
                   <TextField @value={{this.editReason}} @id="edit-reason" @maxlength="255" @placeholderKey="composer.edit_reason_placeholder" />
                 </LinkToInput>
               {{/if}}
@@ -45,7 +45,7 @@
               {{#if this.model.canEditTitle}}
                 {{#if this.model.creatingPrivateMessage}}
                   <div class="user-selector">
-                    <ComposerUserSelector @topicId={{this.topicModel.id}} @recipients={{this.model.targetRecipients}} @hasGroups={{this.model.hasTargetGroups}} @focusTarget={{this.focusTarget}} @class={{concat "users-input" (if this.showWarning " can-warn")}} />
+                    <ComposerUserSelector @topicId={{this.topicModel.id}} @recipients={{this.model.targetRecipients}} @hasGroups={{this.model.hasTargetGroups}} @focusTarget={{this.focusTarget}} class={{concat "users-input" (if this.showWarning " can-warn")}} />
                     {{#if this.showWarning}}
                       <label class="add-warning">
                         <Input @type="checkbox" @checked={{this.model.isWarning}} />
@@ -165,10 +165,10 @@
             </a>
 
             {{#if this.showPreview}}
-              <DButton @action={{action "togglePreview"}} @class="hide-preview" @ariaLabel="composer.hide_preview" @icon="pencil-alt" />
+              <DButton @action={{action "togglePreview"}} class="hide-preview" @ariaLabel="composer.hide_preview" @icon="pencil-alt" />
             {{/if}}
           {{else}}
-            <DButton @action={{action "togglePreview"}} @translatedTitle={{this.toggleText}} @icon="angle-double-left" @class={{concat "btn-flat btn-mini-toggle toggle-preview " (unless this.showPreview "active")}} />
+            <DButton @action={{action "togglePreview"}} @translatedTitle={{this.toggleText}} @icon="angle-double-left" class={{concat "btn-flat btn-mini-toggle toggle-preview " (unless this.showPreview "active")}} />
           {{/if}}
         </div>
       </div>

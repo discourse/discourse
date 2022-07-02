@@ -46,7 +46,7 @@
 
     {{#if this.previewingColorScheme}}
       {{#if this.previewingColorScheme}}
-        <DButton @action={{action "undoColorSchemePreview"}} @label="user.color_schemes.undo" @icon="undo" @class="btn-default btn-small undo-preview" />
+        <DButton @action={{action "undoColorSchemePreview"}} @label="user.color_schemes.undo" @icon="undo" class="btn-default btn-small undo-preview" />
       {{/if}}
 
       <div class="controls color-scheme-checkbox">
@@ -102,21 +102,21 @@
 <fieldset class="control-group other">
   <legend class="control-label">{{i18n "user.other_settings"}}</legend>
 
-  <PreferenceCheckbox @labelKey="user.external_links_in_new_tab" @checked={{this.model.user_option.external_links_in_new_tab}} @class="pref-external-links" />
-  <PreferenceCheckbox @labelKey="user.enable_quoting" @checked={{this.model.user_option.enable_quoting}} @class="pref-enable-quoting" />
-  <PreferenceCheckbox @labelKey="user.enable_defer" @checked={{this.model.user_option.enable_defer}} @class="pref-defer-unread" />
+  <PreferenceCheckbox @labelKey="user.external_links_in_new_tab" @checked={{this.model.user_option.external_links_in_new_tab}} class="pref-external-links" />
+  <PreferenceCheckbox @labelKey="user.enable_quoting" @checked={{this.model.user_option.enable_quoting}} class="pref-enable-quoting" />
+  <PreferenceCheckbox @labelKey="user.enable_defer" @checked={{this.model.user_option.enable_defer}} class="pref-defer-unread" />
   {{#if this.siteSettings.automatically_unpin_topics}}
-    <PreferenceCheckbox @labelKey="user.automatically_unpin_topics" @checked={{this.model.user_option.automatically_unpin_topics}} @class="pref-auto-unpin" />
+    <PreferenceCheckbox @labelKey="user.automatically_unpin_topics" @checked={{this.model.user_option.automatically_unpin_topics}} class="pref-auto-unpin" />
   {{/if}}
   {{#if this.siteSettings.allow_users_to_hide_profile}}
-    <PreferenceCheckbox @labelKey="user.hide_profile_and_presence" @checked={{this.model.user_option.hide_profile_and_presence}} @class="pref-hide-profile" />
+    <PreferenceCheckbox @labelKey="user.hide_profile_and_presence" @checked={{this.model.user_option.hide_profile_and_presence}} class="pref-hide-profile" />
   {{/if}}
-  <PreferenceCheckbox @labelKey="user.dynamic_favicon" @checked={{this.model.user_option.dynamic_favicon}} @class="pref-dynamic-favicon" />
+  <PreferenceCheckbox @labelKey="user.dynamic_favicon" @checked={{this.model.user_option.dynamic_favicon}} class="pref-dynamic-favicon" />
   <div class="controls controls-dropdown pref-page-title">
     <label for="user-title-count-mode">{{i18n "user.title_count_mode.title"}}</label>
     <ComboBox @valueProperty="value" @content={{this.titleCountModes}} @value={{this.model.user_option.title_count_mode}} @id="user-title-count-mode" @onChange={{action (mut this.model.user_option.title_count_mode)}} />
   </div>
-  <PreferenceCheckbox @labelKey="user.skip_new_user_tips.description" @checked={{this.model.user_option.skip_new_user_tips}} @class="pref-new-user-tips" />
+  <PreferenceCheckbox @labelKey="user.skip_new_user_tips.description" @checked={{this.model.user_option.skip_new_user_tips}} class="pref-new-user-tips" />
 </fieldset>
 
 <PluginOutlet @name="user-preferences-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />

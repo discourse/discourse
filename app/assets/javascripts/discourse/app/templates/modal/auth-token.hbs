@@ -30,6 +30,6 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @action={{action "highlightSecure"}} @icon="lock" @label="user.auth_tokens.secure_account" />
+  <DButton class="btn-primary" @action={{action "highlightSecure"}} @icon="lock" @label="user.auth_tokens.secure_account" />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

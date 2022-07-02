@@ -37,13 +37,13 @@
 
       <label class="control-label input-prepend">{{i18n "user.second_factor.label"}}</label>
       <div class="controls">
-        <TextField @class="second-factor-token-input" @maxlength={{6}} @value={{this.secondFactorToken}} @inputId="second-factor-token" @placeholder="123456" @autocorrect="off" @autocapitalize="off" @autofocus="autofocus" />
+        <TextField class="second-factor-token-input" @maxlength={{6}} @value={{this.secondFactorToken}} @inputId="second-factor-token" @placeholder="123456" @autocorrect="off" @autocapitalize="off" @autofocus="autofocus" />
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        <DButton @class="btn-primary add-totp" @action={{action "enableSecondFactor"}} @label="enable" />
+        <DButton class="btn-primary add-totp" @action={{action "enableSecondFactor"}} @label="enable" />
       </div>
     </div>
   </ConditionalLoadingSpinner>

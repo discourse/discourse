@@ -94,7 +94,7 @@
 
                 {{#unless this.externalAuthsOnly}}
                   <div class="input password-input input-group">
-                    <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @capsLockOn={{this.capsLockOn}} />
+                    <PasswordField @value={{this.accountPassword}} class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @capsLockOn={{this.capsLockOn}} />
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
                       <span class="required">*</span>
@@ -113,13 +113,13 @@
                   <div class="user-fields">
                     {{#each this.userFields as |f|}}
                       <div class="input-group">
-                        <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} />
+                        <UserField @field={{f.field}} @value={{f.value}} class={{value-entered f.value}} />
                       </div>
                     {{/each}}
                   </div>
                 {{/if}}
 
-                <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
+                <DButton class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
 
                 {{#if this.errorMessage}}
                   <br><br>

@@ -3,7 +3,7 @@
   <div class="content-wrapper">
     <h1>{{i18n "admin.customize.theme.themes_intro"}}</h1>
     <div class="create-actions">
-      <DButton @action={{route-action "installModal"}} @icon="upload" @label="admin.customize.install" @class="btn-primary" />
+      <DButton @action={{route-action "installModal"}} @icon="upload" @label="admin.customize.install" class="btn-primary" />
     </div>
     <div class="external-resources">
       {{#each this.externalResources as |resource|}}

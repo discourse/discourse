@@ -1,5 +1,5 @@
 {{#if this.filteredContent}}
-  <DSection @class="form-horizontal settings">
+  <DSection class="form-horizontal settings">
     {{#each this.filteredContent as |setting|}}
       <SiteSetting @setting={{setting}} @afterSave={{route-action "refreshAll"}} />
     {{/each}}

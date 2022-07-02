@@ -7,9 +7,9 @@
 
 {{#if this.canFavorite}}
   {{#if this.isFavorite}}
-    <DButton @icon="star" @class="favorite-btn" @action={{this.onFavoriteClick}} />
+    <DButton @icon="star" class="favorite-btn" @action={{this.onFavoriteClick}} />
   {{else}}
-    <DButton @icon="far-star" @class="favorite-btn" @action={{this.onFavoriteClick}} @title={{if this.canFavoriteMoreBadges "badges.favorite_max_not_reached" "badges.favorite_max_reached"}} @disabled={{not this.canFavoriteMoreBadges}} />
+    <DButton @icon="far-star" class="favorite-btn" @action={{this.onFavoriteClick}} @title={{if this.canFavoriteMoreBadges "badges.favorite_max_not_reached" "badges.favorite_max_reached"}} @disabled={{not this.canFavoriteMoreBadges}} />
   {{/if}}
 {{/if}}
 

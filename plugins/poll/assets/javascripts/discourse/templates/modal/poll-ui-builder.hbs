@@ -1,4 +1,4 @@
-<DModalBody @title="poll.ui_builder.title" @class="poll-ui-builder">
+<DModalBody @title="poll.ui_builder.title" class="poll-ui-builder">
   <div class="input-group poll-type">
     <a href {{action (mut this.pollType) "regular"}} class="poll-type-value {{if this.isRegular "active"}}">
       {{i18n "poll.ui_builder.poll_type.regular"}}
@@ -43,7 +43,7 @@
         {{/each}}
 
         <div class="poll-option-controls">
-          <DButton @class="btn-default" @icon="plus" @label="poll.ui_builder.poll_options.add" @action={{action "addOption" this.pollOptions.lastObject}} />
+          <DButton class="btn-default" @icon="plus" @label="poll.ui_builder.poll_options.add" @action={{action "addOption" this.pollOptions.lastObject}} />
           {{#if (and this.showMinNumOfOptionsValidation (not this.minNumOfOptionsValidation.ok))}}
             <InputTip @validation={{this.minNumOfOptionsValidation}} />
           {{/if}}
@@ -90,7 +90,7 @@
 
     <div class="input-group poll-select">
       <label class="input-group-label">{{i18n "poll.ui_builder.poll_result.label"}}</label>
-      <ComboBox @content={{this.pollResults}} @value={{this.pollResult}} @class="poll-result" @valueProperty="value" @onChange={{action (mut this.pollResult)}} />
+      <ComboBox @content={{this.pollResults}} @value={{this.pollResult}} class="poll-result" @valueProperty="value" @onChange={{action (mut this.pollResult)}} />
     </div>
 
     {{#unless this.isNumber}}
@@ -121,9 +121,9 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "insertPoll"}} @icon="chart-bar" @class="btn-primary" @label="poll.ui_builder.insert" @disabled={{this.disableInsert}} />
+  <DButton @action={{action "insertPoll"}} @icon="chart-bar" class="btn-primary" @label="poll.ui_builder.insert" @disabled={{this.disableInsert}} />
 
-  <DButton @label="cancel" @class="btn-flat" @action={{route-action "closeModal"}} />
+  <DButton @label="cancel" class="btn-flat" @action={{route-action "closeModal"}} />
 
-  <DButton @action={{action "toggleAdvanced"}} @class="btn-default show-advanced" @icon="cog" @title={{if this.showAdvanced "poll.ui_builder.hide_advanced" "poll.ui_builder.show_advanced"}} />
+  <DButton @action={{action "toggleAdvanced"}} class="btn-default show-advanced" @icon="cog" @title={{if this.showAdvanced "poll.ui_builder.hide_advanced" "poll.ui_builder.show_advanced"}} />
 </div>

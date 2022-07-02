@@ -3,7 +3,7 @@
 
   <div class="controls controls-dropdown">
     <label>{{i18n "user.new_topic_duration.label"}}</label>
-    <ComboBox @class="duration" @valueProperty="value" @content={{this.considerNewTopicOptions}} @value={{this.model.user_option.new_topic_duration_minutes}} @onChange={{action (mut this.model.user_option.new_topic_duration_minutes)}} />
+    <ComboBox class="duration" @valueProperty="value" @content={{this.considerNewTopicOptions}} @value={{this.model.user_option.new_topic_duration_minutes}} @onChange={{action (mut this.model.user_option.new_topic_duration_minutes)}} />
   </div>
 
   <div class="controls controls-dropdown">

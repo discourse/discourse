@@ -1,6 +1,6 @@
-<DSection @pageClass="user-activity" @class="user-secondary-navigation" @scrollTop={{false}}>
+<DSection @pageClass="user-activity" class="user-secondary-navigation" @scrollTop={{false}}>
   <nav role="navigation">
-    <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
+    <MobileNav class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
       <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
       <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
       <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
@@ -35,7 +35,7 @@
 </DSection>
 {{#if this.canDownloadPosts}}
   <section class="user-additional-controls">
-    <DButton @action={{action "exportUserArchive"}} @class="btn-default" @label="user.download_archive.button_text" @icon="download" />
+    <DButton @action={{action "exportUserArchive"}} class="btn-default" @label="user.download_archive.button_text" @icon="download" />
   </section>
 {{/if}}
 

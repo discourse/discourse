@@ -8,9 +8,9 @@
   </label>
 
   {{#if this.imageUrl}}
-    <DButton @action={{action "trash"}} @class="btn-danger pad-left no-text" @icon="far-trash-alt" @type="button" />
+    <DButton @action={{action "trash"}} class="btn-danger pad-left no-text" @icon="far-trash-alt" @type="button" />
 
-    <DButton @icon="discourse-expand" @title="expand" @type="button" @class="image-uploader-lightbox-btn no-text" @action={{action "toggleLightbox"}} @disabled={{this.loadingLightbox}} />
+    <DButton @icon="discourse-expand" @title="expand" @type="button" class="image-uploader-lightbox-btn no-text" @action={{action "toggleLightbox"}} @disabled={{this.loadingLightbox}} />
   {{/if}}
 
   <span class="btn {{unless this.uploading "hidden"}}">{{i18n "upload_selector.uploading"}} {{this.uploadProgress}}%</span>

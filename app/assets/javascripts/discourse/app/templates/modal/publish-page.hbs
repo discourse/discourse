@@ -8,7 +8,7 @@
       <form>
         <div class="controls">
           <label>{{i18n "topic.publish_page.slug"}}</label>
-          <TextField @value={{this.publishedPage.slug}} @onChange={{action "checkSlug"}} @onChangeImmediate={{action "startCheckSlug"}} @disabled={{this.existing}} @class="publish-slug" />
+          <TextField @value={{this.publishedPage.slug}} @onChange={{action "checkSlug"}} @onChangeImmediate={{action "startCheckSlug"}} @disabled={{this.existing}} class="publish-slug" />
         </div>
 
         <div class="controls">
@@ -51,12 +51,12 @@
 
 <div class="modal-footer">
   {{#if this.showUnpublish}}
-    <DButton @label="topic.publish_page.unpublish" @icon="trash-alt" @class="btn-danger" @isLoading={{this.unpublishing}} @action={{action "unpublish"}} />
+    <DButton @label="topic.publish_page.unpublish" @icon="trash-alt" class="btn-danger" @isLoading={{this.unpublishing}} @action={{action "unpublish"}} />
 
-    <DButton @class="close-publish-page" @icon="times" @label="close" @action={{action "closeModal"}} />
+    <DButton class="close-publish-page" @icon="times" @label="close" @action={{action "closeModal"}} />
   {{else if this.unpublished}}
     <DButton @label="topic.publish_page.publishing_settings" @action={{action "startNew"}} />
   {{else}}
-    <DButton @label="topic.publish_page.publish" @class="btn-primary publish-page" @icon="file" @disabled={{this.disabled}} @isLoading={{this.saving}} @action={{action "publish"}} />
+    <DButton @label="topic.publish_page.publish" class="btn-primary publish-page" @icon="file" @disabled={{this.disabled}} @isLoading={{this.saving}} @action={{action "publish"}} />
   {{/if}}
 </div>

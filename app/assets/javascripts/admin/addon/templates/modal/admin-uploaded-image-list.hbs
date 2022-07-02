@@ -1,4 +1,4 @@
-<DModalBody @class="uploaded-image-list">
+<DModalBody class="uploaded-image-list">
   <div class="selectable-avatars">
     {{#each this.images as |image|}}
       <a href class="selectable-avatar" {{action "remove" image}}>
@@ -11,5 +11,5 @@
 </DModalBody>
 <div class="modal-footer">
   <DButton @action={{action "close"}} @label="close" />
-  <ImagesUploader @uploading={{this.uploading}} @done={{action "uploadDone"}} @class="pull-right" />
+  <ImagesUploader @uploading={{this.uploading}} @done={{action "uploadDone"}} class="pull-right" />
 </div>

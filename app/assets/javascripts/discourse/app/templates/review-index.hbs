@@ -56,7 +56,7 @@
 
       <div class="reviewable-filter topic-filter">
         {{i18n "review.filtered_user"}}
-        <EmailGroupUserChooser @value={{this.filterUsername}} @onChange={{action "updateFilterUsername"}} @class="user-selector" @options={{hash
+        <EmailGroupUserChooser @value={{this.filterUsername}} @onChange={{action "updateFilterUsername"}} class="user-selector" @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
@@ -66,7 +66,7 @@
       {{#if this.filterTopic}}
         <div class="reviewable-filter topic-filter">
           {{i18n "review.filtered_topic"}}
-          <DButton @class="btn-default" @label="review.show_all_topics" @icon="times" @action={{action "resetTopic"}} />
+          <DButton class="btn-default" @label="review.show_all_topics" @icon="times" @action={{action "resetTopic"}} />
         </div>
       {{/if}}
 
@@ -82,10 +82,10 @@
     {{/if}}
 
     <div class="reviewable-filters-actions">
-      <DButton @icon="sync" @label="review.filters.refresh" @class="btn-primary refresh" @action={{action "refresh"}} />
+      <DButton @icon="sync" @label="review.filters.refresh" class="btn-primary refresh" @action={{action "refresh"}} />
 
       {{#if this.site.mobileView}}
-        <DButton @label="show_help" @icon={{this.toggleFiltersIcon}} @class="btn-default expand-secondary-filters" @action={{action "toggleFilters"}} />
+        <DButton @label="show_help" @icon={{this.toggleFiltersIcon}} class="btn-default expand-secondary-filters" @action={{action "toggleFilters"}} />
       {{/if}}
     </div>
   </div>

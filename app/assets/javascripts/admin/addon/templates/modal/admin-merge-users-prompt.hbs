@@ -8,7 +8,7 @@
   </DModalBody>
 
   <div class="modal-footer">
-    <DButton @class="btn-primary" @action={{action "showConfirmation"}} @icon="trash-alt" @disabled={{this.mergeDisabled}} @translatedLabel={{this.mergeButtonText}} />
+    <DButton class="btn-primary" @action={{action "showConfirmation"}} @icon="trash-alt" @disabled={{this.mergeDisabled}} @translatedLabel={{this.mergeButtonText}} />
     <DButton @action={{action "close"}} @label="admin.user.merge.prompt.cancel" />
   </div>
 </div>

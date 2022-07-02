@@ -1,6 +1,6 @@
 <LoginModal @loginName={{this.loginName}} @loginPassword={{this.loginPassword}} @secondFactorToken={{this.secondFactorToken}} @action={{action "login"}}>
   <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
-  <DModalBody @class={{this.modalBodyClasses}}>
+  <DModalBody class={{this.modalBodyClasses}}>
     <div class="login-welcome-header">
       <h1 class="login-title">{{i18n "login.header_title"}}</h1> <img src={{this.wavingHandURL}} alt="" class="waving-hand">
       <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
@@ -27,7 +27,7 @@
             <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
           </div>
         </div>
-        <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @class={{this.secondFactorClass}} @backupEnabled={{this.backupEnabled}} @isLogin={{true}}>
+        <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} class={{this.secondFactorClass}} @backupEnabled={{this.backupEnabled}} @isLogin={{true}}>
           {{#if this.showSecurityKey}}
             <SecurityKeyForm @allowedCredentialIds={{this.securityKeyAllowedCredentialIds}} @challenge={{this.securityKeyChallenge}} @showSecurityKey={{this.showSecurityKey}} @showSecondFactor={{this.showSecondFactor}} @secondFactorMethod={{this.secondFactorMethod}} @otherMethodAllowed={{this.otherMethodAllowed}} @action={{action "authenticateSecurityKey"}}>
             </SecurityKeyForm>
@@ -43,11 +43,11 @@
   <div class="modal-footer">
     {{#if this.canLoginLocal}}
       {{#unless this.showSecurityKey }}
-        <DButton @action={{action "login"}} @id="login-button" @icon="unlock" @label={{this.loginButtonLabel}} @disabled={{this.loginDisabled}} @class="btn-large btn-primary" />
+        <DButton @action={{action "login"}} @id="login-button" @icon="unlock" @label={{this.loginButtonLabel}} @disabled={{this.loginDisabled}} class="btn-large btn-primary" />
       {{/unless}}
 
       {{#if this.showSignupLink}}
-        <DButton @class="btn-large" @id="new-account-link" @action={{route-action "showCreateAccount"}} @label="create_account.title" />
+        <DButton class="btn-large" @id="new-account-link" @action={{route-action "showCreateAccount"}} @label="create_account.title" />
       {{/if}}
     {{/if}}
   </div>

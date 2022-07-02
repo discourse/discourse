@@ -18,8 +18,8 @@
             </label>
           </div>
           <div class="right-content">
-            <DButton @icon="arrow-up" @class="button-secondary move-column-up" @action={{action "moveUp" column}} />
-            <DButton @icon="arrow-down" @class="button-secondary" @action={{action "moveDown" column}} />
+            <DButton @icon="arrow-up" class="button-secondary move-column-up" @action={{action "moveUp" column}} />
+            <DButton @icon="arrow-down" class="button-secondary" @action={{action "moveDown" column}} />
           </div>
         </div>
       {{/each}}
@@ -28,7 +28,7 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @label="directory.edit_columns.save" @action={{action "save"}} />
+  <DButton class="btn-primary" @label="directory.edit_columns.save" @action={{action "save"}} />
 
-  <DButton @class="btn-secondary reset-to-default" @label="directory.edit_columns.reset_to_default" @action={{action "resetToDefault"}} />
+  <DButton class="btn-secondary reset-to-default" @label="directory.edit_columns.reset_to_default" @action={{action "resetToDefault"}} />
 </div>

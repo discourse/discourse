@@ -33,7 +33,7 @@
             <div class="section recent" data-section="recent">
               <div class="section-header">
                 <span class="title">{{i18n "emoji_picker.recent"}}</span>
-                <DButton @icon="trash-alt" @action={{action "onClearRecents"}} @class="trash-recent" />
+                <DButton @icon="trash-alt" @action={{action "onClearRecents"}} class="trash-recent" />
               </div>
               <div class="section-group">
                 {{#each this.recentEmojis as |emoji|}}
@@ -73,7 +73,7 @@
 
         <div class="emoji-picker-diversity-picker">
           {{#each this.diversityScales as |diversityScale index|}}
-            <DButton @icon={{diversityScale.icon}} @class={{concat "diversity-scale " diversityScale.name}} @title={{diversityScale.title}} @action={{action "onDiversitySelection" index}} />
+            <DButton @icon={{diversityScale.icon}} class={{concat "diversity-scale " diversityScale.name}} @title={{diversityScale.title}} @action={{action "onDiversitySelection" index}} />
           {{/each}}
         </div>
       </div>

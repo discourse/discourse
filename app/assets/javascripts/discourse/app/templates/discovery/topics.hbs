@@ -5,7 +5,7 @@
 <TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
 
 {{#if this.model.sharedDrafts}}
-  <TopicList @class="shared-drafts" @listTitle="shared_drafts.title" @top={{this.top}} @hideCategory="true" @category={{this.category}} @topics={{this.model.sharedDrafts}} @discoveryList={{true}} />
+  <TopicList class="shared-drafts" @listTitle="shared_drafts.title" @top={{this.top}} @hideCategory="true" @category={{this.category}} @topics={{this.model.sharedDrafts}} @discoveryList={{true}} />
 {{/if}}
 
 <DiscoveryTopicsList @model={{this.model}} @refresh={{action "refresh"}} @loadingComplete={{action "loadingComplete"}} @incomingCount={{this.topicTrackingState.incomingCount}} @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}} as |discoveryTopicList|>

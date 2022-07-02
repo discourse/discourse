@@ -1,23 +1,23 @@
 <tr class="group-manage-logs-row">
   <td>
-    <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.action key="action"}} @translatedLabel={{this.log.actionTitle}} />
+    <DButton class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.action key="action"}} @translatedLabel={{this.log.actionTitle}} />
   </td>
 
   <td>
     <span>{{avatar this.log.acting_user imageSize="tiny"}}</span>
-    <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.acting_user.username key="acting_user"}} @translatedLabel={{this.log.acting_user.username}} />
+    <DButton class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.acting_user.username key="acting_user"}} @translatedLabel={{this.log.acting_user.username}} />
   </td>
 
   <td>
     {{#if this.log.target_user}}
       <span>{{avatar this.log.target_user imageSize="tiny"}}</span>
-      <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.target_user.username key="target_user"}} @translatedLabel={{this.log.target_user.username}} />
+      <DButton class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.target_user.username key="target_user"}} @translatedLabel={{this.log.target_user.username}} />
     {{/if}}
   </td>
 
   <td>
     {{#if this.log.subject}}
-      <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.subject key="subject"}} @translatedLabel={{this.log.subject}} />
+      <DButton class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.subject key="subject"}} @translatedLabel={{this.log.subject}} />
     {{/if}}
   </td>
 

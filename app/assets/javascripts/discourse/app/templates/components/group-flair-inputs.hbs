@@ -17,7 +17,7 @@
     {{#if this.flairPreviewIcon}}
       <IconPicker @name="icon" @value={{this.model.flair_icon}} @options={{hash maximum=1}} @onChange={{action (mut this.model.flair_icon)}} />
     {{else if this.flairPreviewImage}}
-      <UppyImageUploader @imageUrl={{this.flairImageUrl}} @onUploadDone={{action "setFlairImage"}} @onUploadDeleted={{action "removeFlairImage"}} @type="group_flair" @id="group-flair-uploader" @class="no-repeat contain-image" />
+      <UppyImageUploader @imageUrl={{this.flairImageUrl}} @onUploadDone={{action "setFlairImage"}} @onUploadDeleted={{action "removeFlairImage"}} @type="group_flair" @id="group-flair-uploader" class="no-repeat contain-image" />
       <div class="control-instructions">
         {{i18n "groups.flair_upload_description"}}
       </div>
@@ -27,14 +27,14 @@
   <div class="control-group">
     <label class="control-label" for="flair_bg_color">{{i18n "groups.flair_bg_color"}}</label>
 
-    <TextField @name="flair_bg_color" @class="group-flair-bg-color input-xxlarge" @value={{this.model.flair_bg_color}} @placeholderKey="groups.flair_bg_color_placeholder" />
+    <TextField @name="flair_bg_color" class="group-flair-bg-color input-xxlarge" @value={{this.model.flair_bg_color}} @placeholderKey="groups.flair_bg_color_placeholder" />
   </div>
 
   {{#if this.flairPreviewIcon}}
     <div class="control-group">
       <label class="control-label" for="flair_color">{{i18n "groups.flair_color"}}</label>
 
-      <TextField @name="flair_color" @class="group-flair-color input-xxlarge" @value={{this.model.flair_color}} @placeholderKey="groups.flair_color_placeholder" />
+      <TextField @name="flair_color" class="group-flair-color input-xxlarge" @value={{this.model.flair_color}} @placeholderKey="groups.flair_color_placeholder" />
     </div>
   {{/if}}
 

@@ -9,8 +9,8 @@
 
 <div class="control-group pref-timezone">
   <label class="control-label">{{i18n "user.timezone"}}</label>
-  <TimezoneInput @value={{this.model.user_option.timezone}} @onChange={{action (mut this.model.user_option.timezone)}} @class="input-xxlarge" />
-  <DButton @class="btn-default" @icon="globe" @label="user.use_current_timezone" @action={{action "useCurrentTimezone"}} />
+  <TimezoneInput @value={{this.model.user_option.timezone}} @onChange={{action (mut this.model.user_option.timezone)}} class="input-xxlarge" />
+  <DButton class="btn-default" @icon="globe" @label="user.use_current_timezone" @action={{action "useCurrentTimezone"}} />
 </div>
 
 {{#if this.model.can_change_location}}
@@ -75,9 +75,9 @@
     {{/if}}
 
     <div>
-      <DButton @action={{action "showFeaturedTopicModal"}} @class="btn-default feature-topic-on-profile-btn" @label="user.feature_topic_on_profile.open_search" />
+      <DButton @action={{action "showFeaturedTopicModal"}} class="btn-default feature-topic-on-profile-btn" @label="user.feature_topic_on_profile.open_search" />
       {{#if this.model.featured_topic}}
-        <DButton @action={{action "clearFeaturedTopicFromProfile"}} @class="btn-danger clear-feature-topic-on-profile-btn" @label="user.feature_topic_on_profile.clear.title" />
+        <DButton @action={{action "clearFeaturedTopicFromProfile"}} class="btn-danger clear-feature-topic-on-profile-btn" @label="user.feature_topic_on_profile.clear.title" />
       {{/if}}
     </div>
     <div class="instructions">

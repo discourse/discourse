@@ -45,7 +45,7 @@
   </div>
 
   <div class="control-group buttons">
-    <DButton @disabled={{or this.missingSettings this.testingSettings}} @class="btn-primary test-smtp-settings" @action={{action "testSmtpSettings"}} @icon="cog" @label="groups.manage.email.test_settings" @tabindex="7" @title="groups.manage.email.settings_required" />
+    <DButton @disabled={{or this.missingSettings this.testingSettings}} class="btn-primary test-smtp-settings" @action={{action "testSmtpSettings"}} @icon="cog" @label="groups.manage.email.test_settings" @tabindex="7" @title="groups.manage.email.settings_required" />
 
     <ConditionalLoadingSpinner @size="small" @condition={{this.testingSettings}} />
 

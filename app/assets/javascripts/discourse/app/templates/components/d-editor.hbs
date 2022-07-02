@@ -7,12 +7,12 @@
         {{#each this.toolbar.groups as |group|}}
           {{#each group.buttons as |b|}}
             {{#if b.popupMenu}}
-              <ToolbarPopupMenuOptions @content={{this.popupMenuOptions}} @onChange={{this.onPopupMenuAction}} @onOpen={{action b.action b}} @class={{b.className}} @tabindex={{-1}} @onKeydown={{this.rovingButtonBar}} @options={{hash
+              <ToolbarPopupMenuOptions @content={{this.popupMenuOptions}} @onChange={{this.onPopupMenuAction}} @onOpen={{action b.action b}} class={{b.className}} @tabindex={{-1}} @onKeydown={{this.rovingButtonBar}} @options={{hash
                   icon=b.icon
                   focusAfterOnChange=false
                 }} />
             {{else}}
-              <DButton @action={{b.action}} @type="button" @actionParam={{b}} @translatedTitle={{b.title}} @label={{b.label}} @icon={{b.icon}} @class={{b.className}} @preventFocus={{b.preventFocus}} @tabindex={{b.tabindex}} @onKeyDown={{this.rovingButtonBar}} />
+              <DButton @action={{b.action}} @type="button" @actionParam={{b}} @translatedTitle={{b.title}} @label={{b.label}} @icon={{b.icon}} class={{b.className}} @preventFocus={{b.preventFocus}} @tabindex={{b.tabindex}} @onKeyDown={{this.rovingButtonBar}} />
             {{/if}}
           {{/each}}
 
@@ -23,7 +23,7 @@
       </div>
 
       <ConditionalLoadingSpinner @condition={{this.loading}} />
-      <DTextarea @autocomplete="off" @tabindex={{this.tabindex}} @value={{this.value}} @class="d-editor-input" @placeholder={{this.placeholderTranslated}} @aria-label={{this.placeholderTranslated}} @disabled={{this.disabled}} @input={{this.change}} @focusIn={{action "focusIn"}} @focusOut={{action "focusOut"}} />
+      <DTextarea @autocomplete="off" @tabindex={{this.tabindex}} @value={{this.value}} class="d-editor-input" @placeholder={{this.placeholderTranslated}} @aria-label={{this.placeholderTranslated}} @disabled={{this.disabled}} @input={{this.change}} @focusIn={{action "focusIn"}} @focusOut={{action "focusOut"}} />
       <PopupInputTip @validation={{this.validation}} />
       <PluginOutlet @name="after-d-editor" @connectorTagName="div" @args={{this.outletArgs}} />
     </div>

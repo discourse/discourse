@@ -11,9 +11,9 @@
   <label>
     {{i18n "admin.user.suspend_reason_title"}}
   </label>
-  <ComboBox @content={{this.reasons}} @value={{this.selectedReason}} @class="suspend-reason" @onChange={{action this.setSelectedReason}} />
+  <ComboBox @content={{this.reasons}} @value={{this.selectedReason}} class="suspend-reason" @onChange={{action this.setSelectedReason}} />
   {{#if this.isCustomReason}}
-    <TextField @value={{this.customReason}} @class="suspend-reason" @onChange={{action this.setCustomReason}} />
+    <TextField @value={{this.customReason}} class="suspend-reason" @onChange={{action this.setCustomReason}} />
   {{/if}}
 </div>
 

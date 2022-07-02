@@ -25,7 +25,7 @@
 
       <div class="control-group">
         <div class="controls">
-          <DButton @class="btn-primary" @action={{action "changeUsername"}} @type="submit" @disabled={{this.saveDisabled}} @translatedLabel={{this.saveButtonText}} />
+          <DButton class="btn-primary" @action={{action "changeUsername"}} @type="submit" @disabled={{this.saveDisabled}} @translatedLabel={{this.saveButtonText}} />
           {{#if this.saved}}{{i18n "saved"}}{{/if}}
         </div>
       </div>

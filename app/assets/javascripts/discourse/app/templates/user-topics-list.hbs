@@ -4,7 +4,7 @@
     @body={{this.model.emptyState.body}}
   />
 {{else}}
-  <LoadMore @class="paginated-topics-list" @selector=".paginated-topics-list .topic-list .topic-list-item" @action={{action "loadMore"}}>
+  <LoadMore class="paginated-topics-list" @selector=".paginated-topics-list .topic-list .topic-list-item" @action={{action "loadMore"}}>
     <TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
 
     {{#if (gt this.incomingCount 0)}}

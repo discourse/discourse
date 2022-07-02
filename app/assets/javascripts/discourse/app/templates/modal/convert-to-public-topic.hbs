@@ -8,6 +8,6 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @action={{action "makePublic"}} @label="composer.modal_ok" @disabled={{this.saving}} />
+  <DButton class="btn-primary" @action={{action "makePublic"}} @label="composer.modal_ok" @disabled={{this.saving}} />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

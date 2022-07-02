@@ -53,7 +53,7 @@
           <td class="settings">
             {{#if this.currentUser.admin}}
               {{#if plugin.has_settings}}
-                <DButton @class="btn-default" @action={{route-action "showSettings"}} @actionParam={{plugin}} @icon="cog" @label="admin.plugins.change_settings_short" />
+                <DButton class="btn-default" @action={{route-action "showSettings"}} @actionParam={{plugin}} @icon="cog" @label="admin.plugins.change_settings_short" />
               {{/if}}
             {{/if}}
           </td>

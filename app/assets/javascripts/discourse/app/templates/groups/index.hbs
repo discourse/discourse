@@ -3,13 +3,13 @@
 <DSection @pageClass="groups">
   <div class="groups-header">
     {{#if this.currentUser.can_create_group}}
-      <DButton @action={{action "new"}} @class="btn-default groups-header-new pull-right" @icon="plus" @label="admin.groups.new.title" />
+      <DButton @action={{action "new"}} class="btn-default groups-header-new pull-right" @icon="plus" @label="admin.groups.new.title" />
     {{/if}}
 
     <div class="groups-header-filters">
       <Input @value={{readonly this.filter}} placeholder={{i18n "groups.index.all"}} class="groups-header-filters-name no-blur" {{on "input" (action "onFilterChanged" value="target.value")}} />
 
-      <ComboBox @value={{this.type}} @content={{this.types}} @class="groups-header-filters-type" @onChange={{action (mut this.type)}} @options={{hash
+      <ComboBox @value={{this.type}} @content={{this.types}} class="groups-header-filters-type" @onChange={{action (mut this.type)}} @options={{hash
           clearable=true
           none="groups.index.filter"
         }} />

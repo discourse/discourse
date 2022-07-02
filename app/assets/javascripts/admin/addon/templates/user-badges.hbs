@@ -24,7 +24,7 @@
           <label>{{i18n "admin.badges.reason"}}</label>
           <Input @type="text" @value={{this.badgeReason}} /><br><small>{{i18n "admin.badges.reason_help"}}</small>
         </div>
-        <DButton @class="btn-primary" @action={{action "grantBadge"}} @type="submit" @label="admin.badges.grant" />
+        <DButton class="btn-primary" @action={{action "grantBadge"}} @type="submit" @label="admin.badges.grant" />
       </form>
     {{/if}}
 
@@ -56,7 +56,7 @@
               {{#if userBadge.grouped}}
                 <DButton @action={{action "expandGroup" userBadge}} @label="admin.badges.expand" />
               {{else}}
-                <DButton @class="btn-danger" @action={{action "revokeBadge" userBadge}} @label="admin.badges.revoke" />
+                <DButton class="btn-danger" @action={{action "revokeBadge" userBadge}} @label="admin.badges.revoke" />
               {{/if}}
             </td>
           </tr>

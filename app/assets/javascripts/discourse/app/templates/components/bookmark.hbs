@@ -9,13 +9,13 @@
 
   <div class="control-group bookmark-name-wrap">
     <Input id="bookmark-name" @value={{this.model.name}} name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} maxlength="100" />
-    <DButton @icon="cog" @action={{action "toggleShowOptions"}} @class="bookmark-options-button" @ariaLabel="post.bookmarks.options" />
+    <DButton @icon="cog" @action={{action "toggleShowOptions"}} class="bookmark-options-button" @ariaLabel="post.bookmarks.options" />
   </div>
 
   {{#if this.showOptions}}
     <div class="bookmark-options-panel">
       <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-      <ComboBox @content={{this.autoDeletePreferences}} @value={{this.autoDeletePreference}} @class="bookmark-option-selector" @onChange={{action (mut this.autoDeletePreference)}} />
+      <ComboBox @content={{this.autoDeletePreferences}} @value={{this.autoDeletePreference}} class="bookmark-option-selector" @onChange={{action (mut this.autoDeletePreference)}} />
     </div>
   {{/if}}
 
@@ -39,10 +39,10 @@
   </div>
 
   <div class="modal-footer control-group">
-    <DButton @id="save-bookmark" @label="bookmarks.save" @class="btn-primary" @action={{action "saveAndClose"}} />
+    <DButton @id="save-bookmark" @label="bookmarks.save" class="btn-primary" @action={{action "saveAndClose"}} />
     <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
     {{#if this.showDelete}}
-      <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} />
+      <DButton @id="delete-bookmark" @icon="trash-alt" class="delete-bookmark btn-danger" @action={{action "delete"}} />
     {{/if}}
   </div>
 </ConditionalLoadingSpinner>

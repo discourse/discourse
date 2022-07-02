@@ -1,4 +1,4 @@
-<DModalBody @class="change-timestamp">
+<DModalBody class="change-timestamp">
   <p>
     {{i18n "topic.change_timestamp.instructions"}}
   </p>
@@ -17,5 +17,5 @@
 </DModalBody>
 
 <div class="modal-footer change-timestamp-footer">
-  <DButton @class="btn-primary" @disabled={{this.buttonDisabled}} @action={{action "changeTimestamp"}} @translatedLabel={{this.buttonTitle}} />
+  <DButton class="btn-primary" @disabled={{this.buttonDisabled}} @action={{action "changeTimestamp"}} @translatedLabel={{this.buttonTitle}} />
 </div>

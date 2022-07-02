@@ -1,4 +1,4 @@
-<DModalBody @class="feature-topic">
+<DModalBody class="feature-topic">
   {{#if this.model.pinned_at}}
     <div class="feature-section">
       <div class="desc">
@@ -22,7 +22,7 @@
           <p>{{i18n "topic.feature_topic.pin_note"}}</p>
         {{/if}}
         <p>{{html-safe this.unPinMessage}}</p>
-        <p><DButton @action={{action "unpin"}} @icon="thumbtack" @label="topic.feature.unpin" @class="btn-primary" /></p>
+        <p><DButton @action={{action "unpin"}} @icon="thumbtack" @label="topic.feature.unpin" class="btn-primary" /></p>
       </div>
     </div>
   {{else}}
@@ -41,7 +41,7 @@
             {{html-safe this.pinMessage}}
           </p>
           <p class="with-validation">
-            <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedInCategoryUntil}} @onChangeInput={{action (mut this.model.pinnedInCategoryUntil)}} />
+            <FutureDateInput class="pin-until" @clearable={{true}} @input={{this.model.pinnedInCategoryUntil}} @onChangeInput={{action (mut this.model.pinnedInCategoryUntil)}} />
             <PopupInputTip @validation={{this.pinInCategoryValidation}} @shownAt={{this.pinInCategoryTipShownAt}} />
           </p>
         {{else}}
@@ -49,13 +49,13 @@
             {{html-safe this.pinMessage}}
             <span>
               {{d-icon "far-clock"}}
-              <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedInCategoryUntil}} @onChangeInput={{action (mut this.model.pinnedInCategoryUntil)}} />
+              <FutureDateInput class="pin-until" @clearable={{true}} @input={{this.model.pinnedInCategoryUntil}} @onChangeInput={{action (mut this.model.pinnedInCategoryUntil)}} />
               <PopupInputTip @validation={{this.pinInCategoryValidation}} @shownAt={{this.pinInCategoryTipShownAt}} />
             </span>
           </p>
         {{/if}}
         <p>
-          <DButton @action={{action "pin"}} @icon="thumbtack" @label="topic.feature.pin" @class="btn-primary" />
+          <DButton @action={{action "pin"}} @icon="thumbtack" @label="topic.feature.pin" class="btn-primary" />
         </p>
       </div>
     </div>
@@ -79,7 +79,7 @@
               {{i18n "topic.feature_topic.pin_globally"}}
             </p>
             <p class="with-validation">
-              <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedGloballyUntil}} @onChangeInput={{action (mut this.model.pinnedGloballyUntil)}} />
+              <FutureDateInput class="pin-until" @clearable={{true}} @input={{this.model.pinnedGloballyUntil}} @onChangeInput={{action (mut this.model.pinnedGloballyUntil)}} />
               <PopupInputTip @validation={{this.pinGloballyValidation}} @shownAt={{this.pinGloballyTipShownAt}} />
             </p>
           {{else}}
@@ -87,13 +87,13 @@
               {{i18n "topic.feature_topic.pin_globally"}}
               <span>
                 {{d-icon "far-clock"}}
-                <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedGloballyUntil}} @onChangeInput={{action (mut this.model.pinnedGloballyUntil)}} />
+                <FutureDateInput class="pin-until" @clearable={{true}} @input={{this.model.pinnedGloballyUntil}} @onChangeInput={{action (mut this.model.pinnedGloballyUntil)}} />
                 <PopupInputTip @validation={{this.pinGloballyValidation}} @shownAt={{this.pinGloballyTipShownAt}} />
               </span>
             </p>
           {{/if}}
           <p>
-            <DButton @action={{action "pinGlobally"}} @icon="thumbtack" @label="topic.feature.pin_globally" @class="btn-primary" />
+            <DButton @action={{action "pinGlobally"}} @icon="thumbtack" @label="topic.feature.pin_globally" class="btn-primary" />
           </p>
         </div>
       </div>
@@ -123,9 +123,9 @@
         </p>
         <p>
           {{#if this.model.isBanner}}
-            <DButton @action={{action "removeBanner"}} @icon="thumbtack" @label="topic.feature.remove_banner" @class="btn-primary" />
+            <DButton @action={{action "removeBanner"}} @icon="thumbtack" @label="topic.feature.remove_banner" class="btn-primary" />
           {{else}}
-            <DButton @action={{action "makeBanner"}} @icon="thumbtack" @label="topic.feature.make_banner" @class="btn-primary make-banner" />
+            <DButton @action={{action "makeBanner"}} @icon="thumbtack" @label="topic.feature.make_banner" class="btn-primary make-banner" />
           {{/if}}
         </p>
       </div>

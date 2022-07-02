@@ -13,9 +13,9 @@
         {{/if}}
         <div class="inline-form full-width">
           <Input @value={{readonly this.nameInput}} placeholder={{i18n "directory.filter_name"}} class="filter-name no-blur" {{on "input" (action "onUsernameFilterChanged" value="target.value")}} />
-          <ComboBox @class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash none="directory.group.all"}} />
+          <ComboBox class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash none="directory.group.all"}} />
           {{#if this.currentUser.staff}}
-            <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} @class="btn-default open-edit-columns-btn" />
+            <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} class="btn-default open-edit-columns-btn" />
           {{/if}}
         </div>
         <PluginOutlet @name="users-directory-controls" @args={{hash model=this.model}} />
@@ -25,7 +25,7 @@
         {{#if this.model.length}}
           <div class="total-rows">{{i18n "directory.total_rows" count=this.model.totalRows}}</div>
           {{#each this.model as |item|}}
-            <DirectoryItem @tagName="div" @class="user" @item={{item}} @columns={{this.columns}} @showTimeRead={{this.showTimeRead}} />
+            <DirectoryItem @tagName="div" class="user" @item={{item}} @columns={{this.columns}} @showTimeRead={{this.showTimeRead}} />
           {{/each}}
 
           <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />

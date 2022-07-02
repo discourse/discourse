@@ -8,7 +8,7 @@
     </div>
     {{#unless this.mobileView}}
       {{#if this.model.id}}
-        <DButton @class="category-back" @action={{action "goBack"}} @label="category.back" @icon="caret-left" />
+        <DButton class="category-back" @action={{action "goBack"}} @label="category.back" @icon="caret-left" />
       {{/if}}
     {{/unless}}
   </div>
@@ -41,13 +41,13 @@
   {{/if}}
 
   <div class="edit-category-footer">
-    <DButton @id="save-category" @class="btn-primary" @disabled={{this.disabled}} @action={{action "saveCategory"}} @label={{this.saveLabel}} />
+    <DButton @id="save-category" class="btn-primary" @disabled={{this.disabled}} @action={{action "saveCategory"}} @label={{this.saveLabel}} />
 
     {{#if this.model.can_delete}}
-      <DButton @class="btn-danger" @disabled={{this.deleteDisabled}} @action={{action "deleteCategory"}} @icon="far-trash-alt" @label="category.delete" />
+      <DButton class="btn-danger" @disabled={{this.deleteDisabled}} @action={{action "deleteCategory"}} @icon="far-trash-alt" @label="category.delete" />
     {{else if this.model.id}}
       <div class="disable-info">
-        <DButton @disabled={{this.deleteDisabled}} @class="btn-default" @action={{action "toggleDeleteTooltip"}} @icon="question-circle" @label="category.delete" />
+        <DButton @disabled={{this.deleteDisabled}} class="btn-default" @action={{action "toggleDeleteTooltip"}} @icon="question-circle" @label="category.delete" />
       </div>
     {{/if}}
   </div>

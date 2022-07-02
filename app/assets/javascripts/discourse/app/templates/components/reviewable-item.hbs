@@ -56,15 +56,15 @@
 
       {{#if this.canPerform}}
         {{#if this.editing}}
-          <DButton @class="btn-primary reviewable-action save-edit" @disabled={{this.disabled}} @icon="check" @action={{action "saveEdit"}} @label="review.save" />
-          <DButton @class="btn-danger reviewable-action cancel-edit" @disabled={{this.disabled}} @icon="times" @action={{action "cancelEdit"}} @label="review.cancel" />
+          <DButton class="btn-primary reviewable-action save-edit" @disabled={{this.disabled}} @icon="check" @action={{action "saveEdit"}} @label="review.save" />
+          <DButton class="btn-danger reviewable-action cancel-edit" @disabled={{this.disabled}} @icon="times" @action={{action "cancelEdit"}} @label="review.cancel" />
         {{else}}
           {{#each this.reviewable.bundled_actions as |bundle|}}
             <ReviewableBundledAction @bundle={{bundle}} @performAction={{action "perform"}} @reviewableUpdating={{this.disabled}} />
           {{/each}}
 
           {{#if this.reviewable.can_edit}}
-            <DButton @class="reviewable-action edit" @disabled={{this.disabled}} @icon="pencil-alt" @action={{action "edit"}} @label="review.edit" />
+            <DButton class="reviewable-action edit" @disabled={{this.disabled}} @icon="pencil-alt" @action={{action "edit"}} @label="review.edit" />
           {{/if}}
         {{/if}}
       {{/if}}

@@ -1,16 +1,16 @@
 <div class="search-area">
   <p>{{i18n "admin.site_text.description"}}</p>
 
-  <TextField @value={{this.q}} @placeholderKey="admin.site_text.search" @class="no-blur site-text-search" @autofocus="true" @key-up={{action "search"}} />
+  <TextField @value={{this.q}} @placeholderKey="admin.site_text.search" class="no-blur site-text-search" @autofocus="true" @key-up={{action "search"}} />
 
   <div class="reseed">
-    <DButton @action={{route-action "showReseedModal"}} @class="btn-default" @label="admin.reseed.action.label" @title="admin.reseed.action.title" @icon="sync" />
+    <DButton @action={{route-action "showReseedModal"}} class="btn-default" @label="admin.reseed.action.label" @title="admin.reseed.action.title" @icon="sync" />
   </div>
 
   <p class="filter-options">
     <div class="locale">
       <label>{{i18n "admin.site_text.locale"}}</label>
-      <ComboBox @valueProperty="value" @content={{this.availableLocales}} @value={{this.locale}} @onChange={{action "updateLocale"}} @class="locale-search" @options={{hash filterable=true}} />
+      <ComboBox @valueProperty="value" @content={{this.availableLocales}} @value={{this.locale}} @onChange={{action "updateLocale"}} class="locale-search" @options={{hash filterable=true}} />
     </div>
 
     <label>

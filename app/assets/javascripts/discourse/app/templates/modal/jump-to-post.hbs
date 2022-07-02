@@ -20,12 +20,12 @@
       <span class="input-hint-text post-date">
         {{i18n "topic.progress.jump_prompt_to_date"}}
       </span>
-      <DatePicker @id="post-date" @class="date-input" @value={{this.postDate}} @defaultDate="YYYY-MM-DD" />
+      <DatePicker @id="post-date" class="date-input" @value={{this.postDate}} @defaultDate="YYYY-MM-DD" />
     </div>
   </div>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @action={{action "jump"}} @label="composer.modal_ok" />
+  <DButton class="btn-primary" @action={{action "jump"}} @label="composer.modal_ok" />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

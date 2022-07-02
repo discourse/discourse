@@ -3,7 +3,7 @@
     {{#unless this.category.isUncategorizedCategory}}
       <section class="field-item">
         <label>{{i18n "category.name"}}</label>
-        <TextField @value={{this.category.name}} @placeholderKey="category.name_placeholder" @maxlength="50" @class="category-name" />
+        <TextField @value={{this.category.name}} @placeholderKey="category.name_placeholder" @maxlength="50" class="category-name" />
       </section>
     {{/unless}}
     <section class="field-item">

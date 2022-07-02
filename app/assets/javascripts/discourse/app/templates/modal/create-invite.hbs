@@ -40,7 +40,7 @@
       <div class="invite-email-container">
         <Input id="invite-email" @value={{this.buffered.emailOrDomain}} placeholder={{i18n "user.invited.invite.email_or_domain_placeholder"}} />
         {{#if this.capabilities.hasContactPicker}}
-          <DButton @icon="address-book" @action={{action "searchContact"}} @class="btn-primary open-contact-picker" />
+          <DButton @icon="address-book" @action={{action "searchContact"}} class="btn-primary open-contact-picker" />
         {{/if}}
       </div>
     </div>
@@ -93,7 +93,7 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @icon="link" @label="user.invited.invite.save_invite" @class="btn-primary save-invite" @action={{action "saveInvite"}} />
+  <DButton @icon="link" @label="user.invited.invite.save_invite" class="btn-primary save-invite" @action={{action "saveInvite"}} />
 
-  <DButton @icon="envelope" @label={{if this.invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email"}} @class="btn-primary send-invite" @action={{action "saveInvite" true}} @title={{unless this.isEmail "user.invited.invite.send_invite_email_instructions"}} @disabled={{not this.isEmail}} />
+  <DButton @icon="envelope" @label={{if this.invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email"}} class="btn-primary send-invite" @action={{action "saveInvite" true}} @title={{unless this.isEmail "user.invited.invite.send_invite_email_instructions"}} @disabled={{not this.isEmail}} />
 </div>

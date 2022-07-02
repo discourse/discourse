@@ -12,7 +12,7 @@
   <PluginOutlet @name="category-heading" @tagName="span" @connectorTagName="div" @args={{hash category=this.category}} />
 </section>
 
-<DSection @class="navigation-container category-navigation">
+<DSection class="navigation-container category-navigation">
   <DNavigation @category={{this.category}} @filterMode={{this.filterMode}} @noSubcategories={{this.noSubcategories}} @canCreateTopic={{this.canCreateTopic}} @createTopic={{route-action "createTopic"}} @createTopicDisabled={{this.cannotCreateTopicOnCategory}} @hasDraft={{this.currentUser.has_topic_draft}} @editCategory={{route-action "editCategory" this.category}} />
 
   <PluginOutlet @name="category-navigation" @connectorTagName="div" @args={{hash category=this.category}} />

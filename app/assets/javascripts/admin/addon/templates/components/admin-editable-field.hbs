@@ -10,9 +10,9 @@
 </div>
 <div class="controls">
   {{#if this.editing}}
-    <DButton @class="btn-default" @action={{action "save"}} @label="admin.user_fields.save" />
+    <DButton class="btn-default" @action={{action "save"}} @label="admin.user_fields.save" />
     <a href {{action "edit"}}>{{i18n "cancel"}}</a>
   {{else}}
-    <DButton @class="btn-default" @action={{action "edit"}} @icon="pencil-alt" />
+    <DButton class="btn-default" @action={{action "edit"}} @icon="pencil-alt" />
   {{/if}}
 </div>

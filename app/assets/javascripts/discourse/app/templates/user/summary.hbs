@@ -53,13 +53,13 @@
     {{/if}}
 
     <div class="top-section">
-      <UserSummarySection @title="top_replies" @class="replies-section pull-left">
+      <UserSummarySection @title="top_replies" class="replies-section pull-left">
         <UserSummaryTopicsList @type="replies" @items={{this.model.replies}} @user={{this.user}} as |reply|>
           <UserSummaryTopic @createdAt={{reply.createdAt}} @topic={{reply.topic}} @likes={{reply.like_count}} @url={{reply.url}} />
         </UserSummaryTopicsList>
       </UserSummarySection>
 
-      <UserSummarySection @title="top_topics" @class="topics-section pull-right">
+      <UserSummarySection @title="top_topics" class="topics-section pull-right">
         <UserSummaryTopicsList @type="topics" @items={{this.model.topics}} @user={{this.user}} as |topic|>
           <UserSummaryTopic @createdAt={{topic.created_at}} @topic={{topic}} @likes={{topic.like_count}} @url={{topic.url}} />
         </UserSummaryTopicsList>
@@ -67,7 +67,7 @@
     </div>
 
     <div class="top-section">
-      <UserSummarySection @title="top_links" @class="links-section pull-left">
+      <UserSummarySection @title="top_links" class="links-section pull-left">
         {{#if this.model.links.length}}
           <ul>
             {{!-- template-lint-disable --}}
@@ -91,7 +91,7 @@
         {{/if}}
       </UserSummarySection>
 
-      <UserSummarySection @title="most_replied_to_users" @class="summary-user-list replied-section pull-right">
+      <UserSummarySection @title="most_replied_to_users" class="summary-user-list replied-section pull-right">
         <UserSummaryUsersList @none="no_replies" @users={{this.model.most_replied_to_users}} as |user|>
           <UserSummaryUser @user={{user}} @icon="reply" @countClass="replies" />
         </UserSummaryUsersList>
@@ -99,13 +99,13 @@
     </div>
 
     <div class="top-section most-liked-section">
-      <UserSummarySection @title="most_liked_by" @class="summary-user-list liked-by-section pull-left">
+      <UserSummarySection @title="most_liked_by" class="summary-user-list liked-by-section pull-left">
         <UserSummaryUsersList @none="no_likes" @users={{this.model.most_liked_by_users}} as |user|>
           <UserSummaryUser @user={{user}} @icon="heart" @countClass="likes" />
         </UserSummaryUsersList>
       </UserSummarySection>
 
-      <UserSummarySection @title="most_liked_users" @class="summary-user-list liked-section pull-right">
+      <UserSummarySection @title="most_liked_users" class="summary-user-list liked-section pull-right">
         <UserSummaryUsersList @none="no_likes" @users={{this.model.most_liked_users}} as |user|>
           <UserSummaryUser @user={{user}} @icon="heart" @countClass="likes" />
         </UserSummaryUsersList>
@@ -114,7 +114,7 @@
 
     {{#if this.model.top_categories.length}}
       <div class="top-section top-categories-section">
-        <UserSummarySection @title="top_categories" @class="summary-category-list pull-left">
+        <UserSummarySection @title="top_categories" class="summary-category-list pull-left">
           <table>
             <thead>
               <th class="category-link"></th>

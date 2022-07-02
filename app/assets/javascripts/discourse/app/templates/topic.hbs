@@ -23,7 +23,7 @@
             <TextField @id="edit-title" @value={{this.buffered.title}} @maxlength={{this.siteSettings.max_topic_title_length}} @autofocus="true" />
 
             {{#if this.showCategoryChooser}}
-              <CategoryChooser @class="small" @value={{this.buffered.category_id}} @onChange={{action "topicCategoryChanged"}} />
+              <CategoryChooser class="small" @value={{this.buffered.category_id}} @onChange={{action "topicCategoryChanged"}} />
             {{/if}}
 
             {{#if this.canEditTags}}
@@ -37,8 +37,8 @@
             <PluginOutlet @name="edit-topic" @tagName="span" @connectorTagName="div" @args={{hash model=this.model buffered=this.buffered}} />
 
             <div class="edit-controls">
-              <DButton @action={{action "finishedEditingTopic"}} @class="btn-primary submit-edit" @icon="check" @ariaLabel="composer.save_edit" />
-              <DButton @action={{action "cancelEditingTopic"}} @class="btn-default cancel-edit" @icon="times" @ariaLabel="composer.cancel" />
+              <DButton @action={{action "finishedEditingTopic"}} class="btn-primary submit-edit" @icon="check" @ariaLabel="composer.save_edit" />
+              <DButton @action={{action "cancelEditingTopic"}} class="btn-default cancel-edit" @icon="times" @ariaLabel="composer.cancel" />
 
               {{#if this.canRemoveTopicFeaturedLink}}
                 <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
@@ -71,7 +71,7 @@
             {{/if}}
           </h1>
 
-          <TopicCategory @topic={{this.model}} @class="topic-category" />
+          <TopicCategory @topic={{this.model}} class="topic-category" />
         {{/if}}
       </TopicTitle>
 
@@ -101,7 +101,7 @@
 
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
-      <TopicNavigation @class="topic-navigation" @topic={{this.model}} @jumpToDate={{action "jumpToDate"}} @jumpToIndex={{action "jumpToIndex"}} as |info|>
+      <TopicNavigation class="topic-navigation" @topic={{this.model}} @jumpToDate={{action "jumpToDate"}} @jumpToIndex={{action "jumpToIndex"}} as |info|>
         <PluginOutlet @name="topic-navigation" @connectorTagName="div" @args={{hash topic=this.model}} />
 
         {{#if info.renderTimeline}}
@@ -153,7 +153,7 @@
                         </div>
                       </div>
                       <div class="reviewable-actions">
-                        <DButton @class="btn-danger" @label="review.delete" @icon="trash-alt" @action={{action "deletePending" pending}} />
+                        <DButton class="btn-danger" @label="review.delete" @icon="trash-alt" @action={{action "deletePending" pending}} />
                       </div>
                     </div>
                   {{/each}}
@@ -200,7 +200,7 @@
           <TopicFooterButtons @topic={{this.model}} @toggleMultiSelect={{action "toggleMultiSelect"}} @showTopicSlowModeUpdate={{route-action "showTopicSlowModeUpdate"}} @deleteTopic={{action "deleteTopic"}} @recoverTopic={{action "recoverTopic"}} @toggleClosed={{action "toggleClosed"}} @toggleArchived={{action "toggleArchived"}} @toggleVisibility={{action "toggleVisibility"}} @showTopicTimerModal={{route-action "showTopicTimerModal"}} @showFeatureTopic={{route-action "showFeatureTopic"}} @showChangeTimestamp={{route-action "showChangeTimestamp"}} @resetBumpDate={{action "resetBumpDate"}} @convertToPublicTopic={{action "convertToPublicTopic"}} @convertToPrivateMessage={{action "convertToPrivateMessage"}} @toggleBookmark={{action "toggleBookmark"}} @showFlagTopic={{route-action "showFlagTopic"}} @toggleArchiveMessage={{action "toggleArchiveMessage"}} @editFirstPost={{action "editFirstPost"}} @deferTopic={{action "deferTopic"}} @replyToPost={{action "replyToPost"}} />
         {{else}}
           <div id="topic-footer-buttons">
-            <DButton @icon="reply" @class="btn-primary pull-right" @action={{route-action "showLogin"}} @label="topic.reply.title" />
+            <DButton @icon="reply" class="btn-primary pull-right" @action={{route-action "showLogin"}} @label="topic.reply.title" />
           </div>
         {{/if}}
       {{/if}}
@@ -225,10 +225,10 @@
             <div>{{this.model.errorMessage}}</div>
             {{#if this.model.noRetry}}
               {{#unless this.currentUser}}
-                <DButton @action={{route-action "showLogin"}} @class="btn-primary topic-retry" @icon="user" @label="log_in" />
+                <DButton @action={{route-action "showLogin"}} class="btn-primary topic-retry" @icon="user" @label="log_in" />
               {{/unless}}
             {{else}}
-              <DButton @action={{action "retryLoading"}} @class="btn-primary topic-retry" @icon="sync" @label="errors.buttons.again" />
+              <DButton @action={{action "retryLoading"}} class="btn-primary topic-retry" @icon="sync" @label="errors.buttons.again" />
             {{/if}}
           </div>
           <ConditionalLoadingSpinner @condition={{this.retrying}} />

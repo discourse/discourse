@@ -50,8 +50,8 @@
           <li>
             {{#if this.addingField}}
               <Input @type={{this.text}} @value={{this.newFieldName}} @enter={{action "addField"}} @escape-press={{action "cancelAddField"}} />
-              <DButton @class="ok" @action={{action "addField" this.newFieldName}} @icon="check" />
-              <DButton @class="cancel" @action={{action "cancelAddField"}} @icon="times" />
+              <DButton class="ok" @action={{action "addField" this.newFieldName}} @icon="check" />
+              <DButton class="cancel" @action={{action "cancelAddField"}} @icon="times" />
             {{else}}
               <a href {{action "toggleAddField" this.currentTargetName}} class="no-text">
                 {{d-icon "plus"}}

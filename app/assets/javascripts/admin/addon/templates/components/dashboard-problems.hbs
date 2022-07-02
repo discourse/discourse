@@ -31,7 +31,7 @@
           </div>
 
           <p class="actions">
-            <DButton @action={{this.refreshProblems}} @class="btn-default" @icon="sync" @label="admin.dashboard.refresh_problems" />
+            <DButton @action={{this.refreshProblems}} class="btn-default" @icon="sync" @label="admin.dashboard.refresh_problems" />
             {{i18n "admin.dashboard.last_checked"}}: {{this.problemsTimestamp}}
           </p>
         </ConditionalLoadingSection>

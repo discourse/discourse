@@ -1,4 +1,4 @@
-<DModalBody @class="install-theme" @title="admin.customize.theme.install">
+<DModalBody class="install-theme" @title="admin.customize.theme.install">
   {{#unless this.directRepoInstall}}
     <div class="install-theme-items">
       <InstallThemeItem @value="popular" @selection={{this.selection}} @label="admin.customize.theme.install_popular" />
@@ -28,7 +28,7 @@
               {{#if theme.installed}}
                 <span>{{i18n "admin.customize.theme.installed"}}</span>
               {{else}}
-                <DButton @class="btn-small" @label="admin.customize.theme.install" @disabled={{this.installDisabled}} @icon="upload" @action={{action "installThemeFromList" theme.value}} />
+                <DButton class="btn-small" @label="admin.customize.theme.install" @disabled={{this.installDisabled}} @icon="upload" @action={{action "installThemeFromList" theme.value}} />
 
                 {{#if theme.preview}}
                   <a href={{theme.preview}} rel="noopener noreferrer" target="_blank">{{d-icon "desktop"}} {{i18n "admin.customize.theme.preview"}}</a>
@@ -54,7 +54,7 @@
           <Input @value={{this.uploadUrl}} placeholder={{this.urlPlaceholder}} />
         </div>
 
-        <DButton @class="btn-small advanced-repo" @action={{action "toggleAdvanced"}} @label="admin.customize.theme.import_web_advanced" />
+        <DButton class="btn-small advanced-repo" @action={{action "toggleAdvanced"}} @label="admin.customize.theme.import_web_advanced" />
 
         {{#if this.advancedVisible}}
           <div class="branch">
@@ -111,7 +111,7 @@
         ⚠️ {{this.duplicateRemoteThemeWarning}}
       </div>
     {{/if}}
-    <DButton @action={{action "installTheme"}} @disabled={{this.installDisabled}} @class="btn btn-primary" @label={{this.submitLabel}} />
+    <DButton @action={{action "installTheme"}} @disabled={{this.installDisabled}} class="btn btn-primary" @label={{this.submitLabel}} />
     <DModalCancel @close={{route-action "closeModal"}} />
   </div>
 {{/unless}}

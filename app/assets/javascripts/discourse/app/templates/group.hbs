@@ -26,14 +26,14 @@
 
         {{#if this.currentUser.admin}}
           {{#if this.model.automatic}}
-            <DButton @action={{action "toggleDeleteTooltip"}} @class="btn-default" @icon="question-circle" @label="admin.groups.delete" />
+            <DButton @action={{action "toggleDeleteTooltip"}} class="btn-default" @icon="question-circle" @label="admin.groups.delete" />
           {{else}}
-            <DButton @action={{action "destroyGroup"}} @disabled={{this.destroying}} @icon="trash-alt" @class="btn-danger" @label="admin.groups.delete" />
+            <DButton @action={{action "destroyGroup"}} @disabled={{this.destroying}} @icon="trash-alt" class="btn-danger" @label="admin.groups.delete" />
           {{/if}}
         {{/if}}
 
         {{#if this.displayGroupMessageButton}}
-          <DButton @action={{action "messageGroup"}} @class="btn-primary group-message-button" @icon="envelope" @label="groups.message" />
+          <DButton @action={{action "messageGroup"}} class="btn-primary group-message-button" @icon="envelope" @label="groups.message" />
         {{/if}}
       </div>
 

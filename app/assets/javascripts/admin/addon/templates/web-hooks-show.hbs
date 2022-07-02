@@ -26,7 +26,7 @@
     <div class="control-group">
       <label>{{i18n "admin.web_hooks.event_chooser"}}</label>
       <div>
-        <RadioButton @class="subscription-choice" @name="subscription-choice" @value="individual" @selection={{this.model.webHookType}} />
+        <RadioButton class="subscription-choice" @name="subscription-choice" @value="individual" @selection={{this.model.webHookType}} />
         {{i18n "admin.web_hooks.individual_event"}}
         <InputTip @validation={{this.eventTypeValidation}} />
       </div>
@@ -38,7 +38,7 @@
         </div>
       {{/unless}}
       <div>
-        <RadioButton @class="subscription-choice" @name="subscription-choice" @value="wildcard" @selection={{this.model.webHookType}} />
+        <RadioButton class="subscription-choice" @name="subscription-choice" @value="wildcard" @selection={{this.model.webHookType}} />
         {{i18n "admin.web_hooks.wildcard_event"}}
       </div>
     </div>
@@ -79,10 +79,10 @@
   </form>
 
   <div class="controls">
-    <DButton @class="btn-default" @translatedLabel={{this.saveButtonText}} @action={{action "save"}} @disabled={{this.saveButtonDisabled}} />
+    <DButton class="btn-default" @translatedLabel={{this.saveButtonText}} @action={{action "save"}} @disabled={{this.saveButtonDisabled}} />
 
     {{#unless this.model.isNew}}
-      <DButton @class="btn-danger" @label="admin.web_hooks.destroy" @action={{action "destroy"}} />
+      <DButton class="btn-danger" @label="admin.web_hooks.destroy" @action={{action "destroy"}} />
       <LinkTo @route="adminWebHooks.showEvents" @model={{this.model.id}} class="btn">
         {{i18n "admin.web_hooks.events.go_events"}}
       </LinkTo>

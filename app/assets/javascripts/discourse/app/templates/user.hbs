@@ -1,6 +1,6 @@
 <PluginOutlet @name="above-user-profile" @connectorTagName="div" @args={{hash model=this.model}} />
 <div class="container {{if this.viewingSelf "viewing-self"}} {{if this.model.profile_hidden "profile-hidden"}} {{this.primaryGroup}}">
-  <DSection @class="user-main">
+  <DSection class="user-main">
     <section class="{{if this.collapsedInfo "collapsed-info"}} about {{if this.hasProfileBackgroundUrl "has-background" "no-background"}}" >
       {{#unless this.collapsedInfo}}
         {{#if this.showStaffCounters}}
@@ -56,7 +56,7 @@
             <ul>
               {{#if this.model.can_send_private_message_to_user}}
                 <li>
-                  <DButton @class="btn-primary compose-pm" @action={{route-action "composePrivateMessage" this.model}} @icon="envelope" @label="user.private_message" />
+                  <DButton class="btn-primary compose-pm" @action={{route-action "composePrivateMessage" this.model}} @icon="envelope" @label="user.private_message" />
                 </li>
               {{/if}}
               {{#if this.canMuteOrIgnoreUser}}
@@ -71,7 +71,7 @@
 
               {{#if this.canExpandProfile}}
                 <li>
-                  <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
+                  <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
                 </li>
               {{/if}}
             </ul>
@@ -190,7 +190,7 @@
                   {{#if this.model.email}}
                     {{this.model.email}}
                   {{else}}
-                    <DButton @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
+                    <DButton @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" class="btn-primary" />
                   {{/if}}
                 </dd>
                 </div>
@@ -210,7 +210,7 @@
               {{/if}}
 
               {{#if this.canDeleteUser}}
-                <div class='pull-right'><DButton @action={{action "adminDelete"}} @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" /></div>
+                <div class='pull-right'><DButton @action={{action "adminDelete"}} @icon="exclamation-triangle" @label="user.admin_delete" class="btn-danger" /></div>
               {{/if}}
             </dl>
             <PluginOutlet @name="user-profile-secondary" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
@@ -220,7 +220,7 @@
     </section>
     <div class='user-content-wrapper'>
       <section class="user-primary-navigation">
-        <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
+        <MobileNav class="main-nav" @desktopClass="nav nav-pills user-nav">
           {{#unless this.model.profile_hidden}}
             <li class="summary"><LinkTo @route="user.summary">{{i18n 'user.summary.title'}}</LinkTo></li>
             <li class="activity"><LinkTo @route="userActivity">{{i18n 'user.activity_stream'}}</LinkTo></li>

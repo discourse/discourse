@@ -1,5 +1,5 @@
-<DSection @pageClass="search" @class="search-container">
-  <ScrollTracker @name="full-page-search" @tag={{this.searchTerm}} @class="hidden" />
+<DSection @pageClass="search" class="search-container">
+  <ScrollTracker @name="full-page-search" @tag={{this.searchTerm}} class="hidden" />
 
   <div class="search-header" role="search">
     <h1 class="search-page-heading">
@@ -12,11 +12,11 @@
       {{/if}}
     </h1>
     <div class="search-bar">
-      <SearchTextField @value={{this.searchTerm}} @class="full-page-search search no-blur search-query" @aria-label={{i18n "search.search_term_label"}} @enter={{action "search" (hash collapseFilters=true)}} @hasAutofocus={{this.hasAutofocus}} @aria-controls="search-result-count" />
+      <SearchTextField @value={{this.searchTerm}} class="full-page-search search no-blur search-query" @aria-label={{i18n "search.search_term_label"}} @enter={{action "search" (hash collapseFilters=true)}} @hasAutofocus={{this.hasAutofocus}} @aria-controls="search-result-count" />
       <ComboBox @id="search-type" @value={{this.search_type}} @content={{this.searchTypes}} @onChange={{action (mut this.search_type)}} @options={{hash
           castInteger=true
         }} />
-      <DButton @action={{action "search" (hash collapseFilters=true)}} @icon="search" @label="search.search_button" @class="btn-primary search-cta" @ariaLabel="search.search_button" @disabled={{this.searchButtonDisabled}} />
+      <DButton @action={{action "search" (hash collapseFilters=true)}} @icon="search" @label="search.search_button" class="btn-primary search-cta" @ariaLabel="search.search_button" @disabled={{this.searchButtonDisabled}} />
     </div>
     {{#if this.usingDefaultSearchType}}
       {{!-- context is only provided when searching from mobile view --}}
@@ -48,19 +48,19 @@
       {{#if this.usingDefaultSearchType}}
         <div class={{this.searchInfoClassNames}} role="region" ariaLabel={{i18n "search.sort_or_bulk_actions"}}>
           {{#if this.canBulkSelect}}
-            <DButton @icon="list" @class="btn-default bulk-select" @title="topics.bulk.toggle" @action={{action "toggleBulkSelect"}} />
+            <DButton @icon="list" class="btn-default bulk-select" @title="topics.bulk.toggle" @action={{action "toggleBulkSelect"}} />
             {{#if this.selected}}
-              <DButton @class="btn-default bulk-select-btn" @selected={{this.selected}} @action={{action "showBulkActions"}} @icon="wrench" />
+              <DButton class="btn-default bulk-select-btn" @selected={{this.selected}} @action={{action "showBulkActions"}} @icon="wrench" />
             {{/if}}
           {{/if}}
 
           {{#if this.bulkSelectEnabled}}
             {{#if this.hasUnselectedResults}}
-              <DButton @icon="check-square" @class="btn-default" @action={{action "selectAll"}} @label="search.select_all" />
+              <DButton @icon="check-square" class="btn-default" @action={{action "selectAll"}} @label="search.select_all" />
             {{/if}}
 
             {{#if this.hasSelection}}
-              <DButton @icon="far-square" @class="btn-default" @action={{action "clearAll"}} @label="search.clear_all" />
+              <DButton @icon="far-square" class="btn-default" @action={{action "clearAll"}} @label="search.clear_all" />
             {{/if}}
           {{/if}}
 
@@ -160,7 +160,7 @@
                 {{#if this.model.users}}
                   <div class="user-items">
                     {{#each this.model.users as |user|}}
-                      <UserLink @user={{user}} @class="fps-user-item">
+                      <UserLink @user={{user}} class="fps-user-item">
                         {{avatar user imageSize="large"}}
 
                         <div class="user-titles">

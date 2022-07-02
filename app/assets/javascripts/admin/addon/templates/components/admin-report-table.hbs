@@ -60,6 +60,6 @@
 
 <div class="pagination">
   {{#each this.pages as |pageState|}}
-    <DButton @translatedLabel={{pageState.page}} @action={{action "changePage"}} @actionParam={{pageState.index}} @class={{pageState.class}} />
+    <DButton @translatedLabel={{pageState.page}} @action={{action "changePage"}} @actionParam={{pageState.index}} class={{pageState.class}} />
   {{/each}}
 </div>

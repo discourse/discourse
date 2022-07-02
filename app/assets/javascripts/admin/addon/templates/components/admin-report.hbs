@@ -121,7 +121,7 @@
             {{#if this.showModes}}
               <div class="modes">
                 {{#each this.displayedModes as |displayedMode|}}
-                  <DButton @action={{action "onChangeMode"}} @actionParam={{displayedMode.mode}} @class={{displayedMode.cssClass}} @icon={{displayedMode.icon}} />
+                  <DButton @action={{action "onChangeMode"}} @actionParam={{displayedMode.mode}} class={{displayedMode.cssClass}} @icon={{displayedMode.icon}} />
                 {{/each}}
               </div>
             {{/if}}
@@ -134,7 +134,7 @@
               {{/if}}
               <div class="chart-groupings">
                 {{#each this.chartGroupings as |chartGrouping|}}
-                  <DButton @label={{chartGrouping.label}} @action={{action "changeGrouping" chartGrouping.id}} @class={{chartGrouping.class}} @disabled={{chartGrouping.disabled}} />
+                  <DButton @label={{chartGrouping.label}} @action={{action "changeGrouping" chartGrouping.id}} class={{chartGrouping.class}} @disabled={{chartGrouping.disabled}} />
                 {{/each}}
               </div>
             {{/if}}
@@ -169,14 +169,14 @@
 
             <div class="control">
               <div class="input">
-                <DButton @class="btn-default export-csv-btn" @action={{action "exportCsv"}} @label="admin.export_csv.button_text" @icon="download" />
+                <DButton class="btn-default export-csv-btn" @action={{action "exportCsv"}} @label="admin.export_csv.button_text" @icon="download" />
               </div>
             </div>
 
             {{#if this.showRefresh}}
               <div class="control">
                 <div class="input">
-                  <DButton @class="refresh-report-btn btn-primary" @action={{action "refreshReport"}} @label="admin.dashboard.reports.refresh_report" @icon="sync" />
+                  <DButton class="refresh-report-btn btn-primary" @action={{action "refreshReport"}} @label="admin.dashboard.reports.refresh_report" @icon="sync" />
                 </div>
               </div>
             {{/if}}

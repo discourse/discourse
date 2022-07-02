@@ -5,7 +5,7 @@
   </DModalBody>
 
   <div class="modal-footer">
-    <DButton @class="btn-danger" @action={{action "confirm"}} @icon="trash-alt" @disabled={{this.deleteDisabled}} @translatedLabel={{this.deleteButtonText}} />
+    <DButton class="btn-danger" @action={{action "confirm"}} @icon="trash-alt" @disabled={{this.deleteDisabled}} @translatedLabel={{this.deleteButtonText}} />
     <DButton @action={{action "close"}} @label="admin.user.delete_posts.confirmation.cancel" />
   </div>
 </div>
