@@ -12,6 +12,7 @@
       --highlight: #f0ea88;
       --quaternary: #65ccff;
       --success: #009900;
+      --animation-state: paused;
     }
 
     /* these styles need to live here because the SVG has a different scope */
@@ -20,6 +21,7 @@
       animation-timing-function: ease-in-out;
       animation-duration: 3s;
       animation-iteration-count: infinite;
+      animation-play-state: var(--animation-state);
       stroke: #fff;
       stroke-width: 0.5px;
       transform-origin: center;
@@ -30,27 +32,26 @@
 
     .dots:first-child {
       fill: var(--tertiary);
-      animation-delay: 0.625s;
     }
 
     .dots:nth-child(2) {
       fill: var(--tertiary);
-      animation-delay: 0.675s;
+      animation-delay: 0.15s;
     }
 
     .dots:nth-child(3) {
       fill: var(--highlight);
-      animation-delay: 0.725s;
+      animation-delay: 0.3s;
     }
 
     .dots:nth-child(4) {
       fill: var(--quaternary);
-      animation-delay: 0.775s;
+      animation-delay: 0.45s;
     }
 
     .dots:nth-child(5) {
       fill: var(--quaternary);
-      animation-delay: 0.825s;
+      animation-delay: 0.6s;
     }
 
     @keyframes loader {

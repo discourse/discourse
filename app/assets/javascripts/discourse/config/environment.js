@@ -16,6 +16,8 @@ module.exports = function (environment) {
         // Prevent Ember Data from overriding Date.parse.
         Date: false,
       },
+      // This is easier to toggle than the flag in ember-cli-deprecation-workflow.
+      RAISE_ON_DEPRECATION: false,
     },
     exportApplicationGlobal: true,
 
@@ -31,6 +33,7 @@ module.exports = function (environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV.EmberENV.RAISE_ON_DEPRECATION = true;
   }
 
   if (environment === "test") {
@@ -43,6 +46,8 @@ module.exports = function (environment) {
 
     ENV.APP.rootElement = "#ember-testing";
     ENV.APP.autoboot = false;
+
+    ENV.EmberENV.RAISE_ON_DEPRECATION = true;
   }
 
   if (environment === "production") {

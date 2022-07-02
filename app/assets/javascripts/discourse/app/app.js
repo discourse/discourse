@@ -81,19 +81,16 @@ const Discourse = Application.extend({
         initialize: () => withPluginApi(cb.version, cb.code),
       });
     });
-
-    window.addEventListener(
-      "load",
-      () => {
-        // The app booted. Remove the splash screen
-        document.querySelector("#d-splash")?.remove();
-      },
-      { once: true }
-    );
   },
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
+  },
+
+  ready() {
+    performance.mark("discourse-ready");
+    const event = new CustomEvent("discourse-ready");
+    document.dispatchEvent(event);
   },
 });
 

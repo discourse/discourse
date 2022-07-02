@@ -91,6 +91,7 @@
   },
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^0.1.4",
+    "ember-cli-deprecation-workflow": "^2.1.0",
     "ember-exam": "^7.0.1"
   }
 }
