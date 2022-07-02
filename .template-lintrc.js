@@ -7,7 +7,7 @@ module.exports = {
     "deprecated-render-helper": true,
     "eol-last": "always",
     "linebreak-style": true,
-    "link-rel-noopener": "strict",
+    "link-rel-noopener": true,
     "no-abstract-roles": true,
     "no-args-paths": true,
     "no-attrs-in-components": true,
