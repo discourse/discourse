@@ -3,7 +3,7 @@ import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
-  tagName: "span",
+  tagName: "",
   rerenderTriggers: ["count", "suffix"],
   i18nCount: null,
 

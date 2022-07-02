@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 
 export default Component.extend({
+  tagName: "",
   tokenSeparator: "|",
-
   nameProperty: "name",
   valueProperty: "id",
 
@@ -21,5 +21,5 @@ export default Component.extend({
     onChangeGroupListSetting(value) {
       this.set("value", value.join(this.tokenSeparator));
     },
-  },
+  }
 });

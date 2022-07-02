@@ -1,9 +1,11 @@
-<a href={{this.member.adminPath}}>
-  {{avatar this.member imageSize="small"}}
-</a>
-<span>{{this.member.username}}</span>
-{{#unless this.automatic}}
-  <a href {{action "remove"}} class="remove">
-    {{d-icon "times"}}
+<div class="item" ...attributes>
+  <a href={{this.member.adminPath}}>
+    {{avatar this.member imageSize="small"}}
   </a>
-{{/unless}}
+  <span>{{this.member.username}}</span>
+  {{#unless this.automatic}}
+    <a href {{action "remove"}} class="remove">
+      {{d-icon "times"}}
+    </a>
+  {{/unless}}
+</div>

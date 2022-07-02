@@ -6,6 +6,7 @@ import { longDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
+  tagName: "",
   hasEdits: gt("reviewable.post_version", 1),
 
   @discourseComputed("reviewable.post_updated_at")
@@ -31,5 +32,5 @@ export default Component.extend({
         historyController.set("topicController", null);
       });
     },
-  },
+  }
 });

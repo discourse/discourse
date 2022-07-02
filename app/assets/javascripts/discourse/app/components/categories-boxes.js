@@ -4,12 +4,7 @@ import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
-  tagName: "section",
-  classNameBindings: [
-    ":category-boxes",
-    "anyLogos:with-logos:no-logos",
-    "hasSubcategories:with-subcategories",
-  ],
+  tagName: "",
   noCategoryStyle: equal("siteSettings.category_style", "none"),
   lockIcon: "lock",
 
@@ -21,5 +16,5 @@ export default Component.extend({
   @discourseComputed("categories.[].subcategories")
   hasSubcategories() {
     return this.categories.any((c) => !isEmpty(c.get("subcategories")));
-  },
+  }
 });

@@ -6,7 +6,7 @@ import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
-  classNameBindings: ["hidden:hidden", ":create-topics-notice"],
+  tagName: "",
 
   enabled: false,
 

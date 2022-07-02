@@ -76,6 +76,7 @@ const Day = EmberObject.extend({
 });
 
 export default Component.extend({
+  tagName: "",
   days: null,
 
   didInsertElement() {
@@ -135,5 +136,5 @@ export default Component.extend({
       });
     }
     return timeOptions;
-  },
+  }
 });

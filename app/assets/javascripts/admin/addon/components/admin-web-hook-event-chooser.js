@@ -4,7 +4,7 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNames: ["hook-event"],
+  tagName: "",
   typeName: alias("type.name"),
 
   @discourseComputed("typeName")

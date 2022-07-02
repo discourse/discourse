@@ -1,4 +1,6 @@
-<label class="btn" disabled={{this.uploading}} title={{i18n "admin.backups.upload.title"}}>
-  {{d-icon "upload"}}{{this.uploadButtonText}}
-  <input class="hidden-upload-field" disabled={{this.uploading}} type="file" accept=".gz">
-</label>
+<span ...attributes>
+  <label class="btn" disabled={{this.uploading}} title={{i18n "admin.backups.upload.title"}}>
+    {{d-icon "upload"}}{{this.uploadButtonText}}
+    <input class="hidden-upload-field" disabled={{this.uploading}} type="file" accept=".gz">
+  </label>
+</span>

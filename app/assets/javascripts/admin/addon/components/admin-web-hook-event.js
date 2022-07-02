@@ -7,7 +7,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend({
-  tagName: "li",
+  tagName: "",
   expandDetails: null,
   expandDetailsRequestKey: "request",
   expandDetailsResponseKey: "response",

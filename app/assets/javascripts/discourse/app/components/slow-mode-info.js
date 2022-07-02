@@ -6,6 +6,8 @@ import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend({
+  tagName: "",
+
   @discourseComputed("topic.slow_mode_seconds")
   durationText(seconds) {
     return durationTextFromSeconds(seconds);
@@ -21,5 +23,5 @@ export default Component.extend({
     Topic.setSlowMode(this.topic.id, 0)
       .catch(popupAjaxError)
       .then(() => this.set("topic.slow_mode_seconds", 0));
-  },
+  }
 });

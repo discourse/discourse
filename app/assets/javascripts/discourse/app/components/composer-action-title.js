@@ -21,7 +21,7 @@ const TITLES = {
 };
 
 export default Component.extend({
-  classNames: ["composer-action-title"],
+  tagName: "",
   options: alias("model.replyOptions"),
   action: alias("model.action"),
 

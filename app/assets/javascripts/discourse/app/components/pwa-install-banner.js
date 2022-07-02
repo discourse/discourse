@@ -4,6 +4,7 @@ import Component from "@ember/component";
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
 export default Component.extend({
+  tagName: "",
   deferredInstallPromptEvent: null,
 
   @bind
@@ -55,5 +56,5 @@ export default Component.extend({
     dismiss() {
       this.set("bannerDismissed", true);
     },
-  },
+  }
 });

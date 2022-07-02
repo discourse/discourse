@@ -1,7 +1,9 @@
-{{#if this.shouldShow}}
-  <div class="row">
-    <div class="alert alert-info category-read-only-banner">
-      {{html-safe this.category.read_only_banner}}
+<div ...attributes>
+  {{#if this.shouldShow}}
+    <div class="row">
+      <div class="alert alert-info category-read-only-banner">
+        {{html-safe this.category.read_only_banner}}
+      </div>
     </div>
-  </div>
-{{/if}}
+  {{/if}}
+</div>

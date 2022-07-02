@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
-  classNames: ["group-membership-button"],
+  tagName: "",
 
   @discourseComputed("model.public_admission", "userIsGroupUser")
   canJoinGroup(publicAdmission, userIsGroupUser) {

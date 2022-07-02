@@ -1,7 +1,9 @@
-{{#unless this.hidden}}
-  <div class="row">
-    <div class="alert alert-info alert-too-few-topics">
-      {{this.message}}
+<div class="{{if this.hidden "hidden"}} create-topics-notice" ...attributes>
+  {{#unless this.hidden}}
+    <div class="row">
+      <div class="alert alert-info alert-too-few-topics">
+        {{this.message}}
+      </div>
     </div>
-  </div>
-{{/unless}}
+  {{/unless}}
+</div>

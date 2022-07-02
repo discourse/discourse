@@ -4,6 +4,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 
 export default Component.extend({
+  tagName: "",
+
   @discourseComputed("secondFactorMethod")
   type(secondFactorMethod) {
     if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
@@ -39,5 +41,5 @@ export default Component.extend({
     if (this.onTokenInput) {
       this.onTokenInput(...arguments);
     }
-  },
+  }
 });

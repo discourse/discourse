@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 
 export default Component.extend({
-  classNames: ["controls", "save-button"],
+  tagName: "",
 
   buttonDisabled: or("model.isSaving", "saveDisabled"),
 

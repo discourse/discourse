@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 
 export default Component.extend({
-  classNames: ["d-date-time-input-range"],
+  tagName: "",
   from: null,
   to: null,
   onChangeTo: null,

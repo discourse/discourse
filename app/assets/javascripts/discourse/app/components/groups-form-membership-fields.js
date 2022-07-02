@@ -6,6 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 
 export default Component.extend({
+  tagName: "",
   tokenSeparator: "|",
   showAssociatedGroups: readOnly("site.can_associate_groups"),
 
@@ -71,5 +72,5 @@ export default Component.extend({
         value.join(this.tokenSeparator)
       );
     },
-  },
+  }
 });

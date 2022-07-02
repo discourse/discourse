@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default Component.extend({
-  classNames: ["watched-word"],
+  tagName: "",
 
   isReplace: equal("actionKey", "replace"),
   isTag: equal("actionKey", "tag"),

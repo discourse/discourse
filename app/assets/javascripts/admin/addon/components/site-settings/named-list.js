@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 
 export default Component.extend({
+  tagName: "",
   tokenSeparator: "|",
 
   @computed("value")
@@ -29,5 +30,5 @@ export default Component.extend({
   @action
   onChangeListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
-  },
+  }
 });

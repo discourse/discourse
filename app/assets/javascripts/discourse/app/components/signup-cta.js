@@ -3,6 +3,7 @@ import { later } from "@ember/runloop";
 import { on } from "@ember/object/evented";
 
 export default Component.extend({
+  tagName: "",
   action: "showCreateAccount",
 
   actions: {
@@ -21,5 +22,5 @@ export default Component.extend({
     if (this.session.get("hideSignupCta")) {
       this.session.set("showSignupCta", false);
     }
-  }),
+  })
 });

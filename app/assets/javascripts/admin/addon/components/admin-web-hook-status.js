@@ -5,6 +5,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
+  tagName: "",
   classes: ["text-muted", "text-danger", "text-successful", "text-muted"],
   icons: ["far-circle", "times-circle", "circle", "circle"],
   circleIcon: null,
@@ -35,5 +36,5 @@ export default Component.extend({
       "deliveryStatus",
       I18n.t(`admin.web_hooks.delivery_status.${this.get("status.name")}`)
     );
-  },
+  }
 });

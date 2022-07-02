@@ -11,7 +11,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
-  classNames: ["group-flair-inputs"],
+  tagName: "",
 
   @discourseComputed
   demoAvatarUrl() {

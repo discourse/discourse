@@ -1,6 +1,8 @@
-{{#unless this.expanded}}
-  <DButton @action={{action "expand"}} @class="btn-link" @label={{this.label}} />
-{{/unless}}
-{{#if this.expanded}}
-  <span class="description" aria-live="assertive">{{this.details}}</span>
-{{/if}}
+<div ...attributes>
+  {{#unless this.expanded}}
+    <DButton @action={{action "expand"}} @class="btn-link" @label={{this.label}} />
+  {{/unless}}
+  {{#if this.expanded}}
+    <span class="description" aria-live="assertive">{{this.details}}</span>
+  {{/if}}
+</div>

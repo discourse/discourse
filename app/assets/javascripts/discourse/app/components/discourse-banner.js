@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 
 export default Component.extend({
+  tagName: "",
   hide: false,
 
   @discourseComputed("banner.html")
@@ -41,5 +42,5 @@ export default Component.extend({
         value: this.get("banner.key"),
       });
     }
-  },
+  }
 });

@@ -3,8 +3,8 @@ import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default Component.extend({
+  tagName: "",
   tokenSeparator: "|",
-
   createdChoices: null,
 
   settingValue: computed("value", function () {
@@ -36,5 +36,5 @@ export default Component.extend({
         ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
       ]);
     },
-  },
+  }
 });

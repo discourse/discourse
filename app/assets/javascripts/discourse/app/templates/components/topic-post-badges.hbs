@@ -1,6 +1,8 @@
-{{#if this.displayUnreadPosts}}
-  &nbsp;<a href={{this.url}} title={{i18n "topic.unread_posts" count=this.displayUnreadPosts}} class="badge badge-notification unread-posts">{{this.displayUnreadPosts}}</a>
-{{/if}}
-{{#if this.unseen}}
-  &nbsp;<a href={{this.url}} title={{i18n "topic.new"}} class="badge badge-notification new-topic">{{this.newDotText}}</a>
-{{/if}}
+<span class="topic-post-badges" ...attributes>
+  {{#if this.displayUnreadPosts}}
+    &nbsp;<a href={{this.url}} title={{i18n "topic.unread_posts" count=this.displayUnreadPosts}} class="badge badge-notification unread-posts">{{this.displayUnreadPosts}}</a>
+  {{/if}}
+  {{#if this.unseen}}
+    &nbsp;<a href={{this.url}} title={{i18n "topic.new"}} class="badge badge-notification new-topic">{{this.newDotText}}</a>
+  {{/if}}
+</span>

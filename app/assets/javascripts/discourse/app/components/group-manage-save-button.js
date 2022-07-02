@@ -6,6 +6,7 @@ import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new"
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
+  tagName: "",
   saving: null,
   disabled: false,
   updateExistingUsers: null,
@@ -63,5 +64,5 @@ export default Component.extend({
         })
         .finally(() => this.set("saving", false));
     },
-  },
+  }
 });

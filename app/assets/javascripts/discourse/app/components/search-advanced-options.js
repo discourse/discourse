@@ -80,9 +80,7 @@ export function addAdvancedSearchOptions(options) {
 }
 
 export default Component.extend({
-  tagName: "details",
-  attributeBindings: ["expandFilters:open"],
-  classNames: ["advanced-filters"],
+  tagName: "",
   category: null,
 
   init() {
@@ -750,5 +748,5 @@ export default Component.extend({
 
   _updateSearchTerm(searchTerm) {
     this.onChangeSearchTerm(searchTerm.trim());
-  },
+  }
 });

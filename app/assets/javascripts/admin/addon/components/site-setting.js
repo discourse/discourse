@@ -5,6 +5,7 @@ import SiteSetting from "admin/models/site-setting";
 import { readOnly } from "@ember/object/computed";
 
 export default Component.extend(BufferedContent, SettingComponent, {
+  tagName: "",
   updateExistingUsers: null,
 
   _save() {
@@ -14,5 +15,5 @@ export default Component.extend(BufferedContent, SettingComponent, {
     });
   },
 
-  staffLogFilter: readOnly("setting.staffLogFilter"),
+  staffLogFilter: readOnly("setting.staffLogFilter")
 });

@@ -5,6 +5,8 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 import { userPath } from "discourse/lib/url";
 
 export default Component.extend({
+  tagName: "",
+
   usersTemplates: computed("users.[]", function () {
     return (this.users || []).map((user) => {
       const { name, username } = user;
@@ -21,5 +23,5 @@ export default Component.extend({
         prioritizeName: prioritizeNameInUx(name),
       };
     });
-  }),
+  })
 });

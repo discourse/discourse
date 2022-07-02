@@ -7,6 +7,7 @@ import { observes } from "discourse-common/utils/decorators";
 import { searchForTerm } from "discourse/lib/search";
 
 export default Component.extend({
+  tagName: "",
   loading: null,
   noResults: null,
   messages: null,
@@ -70,5 +71,5 @@ export default Component.extend({
       next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;
     },
-  },
+  }
 });

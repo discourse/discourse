@@ -9,6 +9,7 @@ import { not } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend({
+  tagName: "",
   disableSave: null,
   nameInput: null,
 
@@ -111,5 +112,5 @@ export default Component.extend({
       options.reason = reason;
     }
     this.set("basicNameValidation", EmberObject.create(options));
-  },
+  }
 });

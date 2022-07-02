@@ -4,7 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(UppyUploadMixin, {
   type: "avatar",
-  tagName: "span",
+  tagName: "",
   imageIsNotASquare: false,
 
   validateUploadedFilesOptions() {

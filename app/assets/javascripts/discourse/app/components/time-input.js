@@ -33,7 +33,7 @@ function convertMinutesToDurationString(n) {
 }
 
 export default Component.extend({
-  classNames: ["d-time-input"],
+  tagName: "",
 
   hours: null,
 

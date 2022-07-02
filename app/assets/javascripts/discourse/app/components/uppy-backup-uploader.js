@@ -6,7 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(UppyUploadMixin, {
   id: "uppy-backup-uploader",
-  tagName: "span",
+  tagName: "",
   type: "backup",
 
   uploadRootPath: "/admin/backups",

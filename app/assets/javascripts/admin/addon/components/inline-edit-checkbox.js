@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNames: ["inline-edit"],
+  tagName: "",
 
   buffer: null,
   bufferModelId: null,

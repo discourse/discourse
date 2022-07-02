@@ -5,7 +5,7 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNames: ["flag-action-type"],
+  tagName: "",
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {

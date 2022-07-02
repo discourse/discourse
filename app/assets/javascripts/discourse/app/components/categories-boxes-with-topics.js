@@ -4,11 +4,7 @@ import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
-  tagName: "section",
-  classNameBindings: [
-    ":category-boxes-with-topics",
-    "anyLogos:with-logos:no-logos",
-  ],
+  tagName: "",
   noCategoryStyle: equal("siteSettings.category_style", "none"),
   lockIcon: "lock",
 
@@ -17,5 +13,5 @@ export default Component.extend({
     return this.categories.any((c) => {
       return !isEmpty(c.get("uploaded_logo.url"));
     });
-  },
+  }
 });

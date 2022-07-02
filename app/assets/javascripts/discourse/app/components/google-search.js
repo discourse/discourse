@@ -4,13 +4,11 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
-  classNames: ["google-search-form"],
-  classNameBindings: ["hidden:hidden"],
-
+  tagName: "",
   hidden: alias("siteSettings.login_required"),
 
   @discourseComputed
   siteUrl() {
     return `${location.protocol}//${location.host}${getURL("/")}`;
-  },
+  }
 });

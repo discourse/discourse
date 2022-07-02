@@ -7,6 +7,7 @@ import loadScript from "discourse/lib/load-script";
 import { schedule } from "@ember/runloop";
 
 export default Component.extend({
+  tagName: "",
   className: "json-editor-holder",
   editor: null,
   saveChangesCallback: null,
@@ -66,7 +67,7 @@ export default Component.extend({
     this._super(...arguments);
 
     this.editor?.destroy();
-  },
+  }
 });
 
 class DiscourseJsonSchemaEditorIconlib {

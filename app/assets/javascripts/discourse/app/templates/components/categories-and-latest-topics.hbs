@@ -1,9 +1,11 @@
-<div class="column categories">
-  <CategoriesOnly @categories={{this.categories}} />
-</div>
+<div class="categories-and-latest" ...attributes>
+  <div class="column categories">
+    <CategoriesOnly @categories={{this.categories}} />
+  </div>
 
-<div class="column">
-  <CategoriesTopicList @topics={{this.topics}} @filter="latest" @class="latest-topic-list" />
-</div>
+  <div class="column">
+    <CategoriesTopicList @topics={{this.topics}} @filter="latest" @class="latest-topic-list" />
+  </div>
 
-<PluginOutlet @name="extra-categories-column" @connectorTagName="div" />
+  <PluginOutlet @name="extra-categories-column" @connectorTagName="div" />
+</div>

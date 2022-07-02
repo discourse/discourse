@@ -9,7 +9,7 @@ import { isTesting } from "discourse-common/config/environment";
 import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
-  classNames: ["topic-timer-info"],
+  tagName: "",
   _delayedRerender: null,
   clockIcon: htmlSafe(`${iconHTML("far-clock")}`),
   trashLabel: I18n.t("post.controls.remove_timer"),

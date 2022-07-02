@@ -5,7 +5,7 @@ import { on } from "discourse-common/utils/decorators";
 import { set } from "@ember/object";
 
 export default Component.extend({
-  classNameBindings: [":value-list", ":secret-value-list"],
+  tagName: "",
   inputDelimiter: null,
   collection: null,
   values: null,

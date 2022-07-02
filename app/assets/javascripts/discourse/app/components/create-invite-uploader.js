@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(UppyUploadMixin, {
   id: "create-invite-uploader",
-  tagName: "div",
+  tagName: "",
   type: "csv",
   autoStartUploads: false,
   uploadUrl: "/invites/upload_csv",

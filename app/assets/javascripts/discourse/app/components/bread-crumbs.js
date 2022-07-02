@@ -5,8 +5,7 @@ import { filter } from "@ember/object/computed";
 
 //  A breadcrumb including category drop downs
 export default Component.extend({
-  classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
-  tagName: "ol",
+  tagName: "",
   editingCategory: false,
   editingCategoryTab: null,
 
@@ -126,5 +125,5 @@ export default Component.extend({
     return this.categories.filter(
       (c) => c.get("parentCategory") === firstCategory
     );
-  },
+  }
 });

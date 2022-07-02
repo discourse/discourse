@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { setting } from "discourse/lib/computed";
 
 export default Component.extend({
-  classNames: ["admin-report-storage-stats"],
+  tagName: "",
 
   backupLocation: setting("backup_location"),
   backupStats: alias("model.data.backups"),

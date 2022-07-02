@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNames: ["top-title-buttons"],
+  tagName: "",
 
   @discourseComputed("period")
   periods(period) {

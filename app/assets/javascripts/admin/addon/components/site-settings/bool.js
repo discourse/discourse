@@ -3,6 +3,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
+  tagName: "",
+
   @discourseComputed("value")
   enabled: {
     get(value) {
@@ -15,5 +17,5 @@ export default Component.extend({
       this.set("value", value ? "true" : "false");
       return value;
     },
-  },
+  }
 });

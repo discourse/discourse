@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { dasherize } from "@ember/string";
 
 export default Component.extend({
-  classNames: ["embed-setting"],
+  tagName: "",
 
   @discourseComputed("field")
   inputId(field) {

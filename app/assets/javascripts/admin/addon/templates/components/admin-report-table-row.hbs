@@ -1,3 +1,5 @@
-{{#each this.labels as |label|}}
-  <AdminReportTableCell @label={{label}} @data={{this.data}} @options={{this.options}} />
-{{/each}}
+<tr class="admin-report-table-row" ...attributes>
+  {{#each this.labels as |label|}}
+    <AdminReportTableCell @label={{label}} @data={{this.data}} @options={{this.options}} />
+  {{/each}}
+</tr>

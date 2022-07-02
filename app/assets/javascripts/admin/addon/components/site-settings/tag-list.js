@@ -3,6 +3,8 @@ import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
+  tagName: "",
+
   @discourseComputed("value")
   selectedTags: {
     get(value) {
@@ -13,5 +15,5 @@ export default Component.extend({
   @action
   changeSelectedTags(tags) {
     this.set("value", tags.join("|"));
-  },
+  }
 });

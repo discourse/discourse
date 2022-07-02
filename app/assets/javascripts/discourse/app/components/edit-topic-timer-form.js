@@ -22,24 +22,29 @@ import {
 import ItsATrap from "@discourse/itsatrap";
 
 export default Component.extend({
+  tagName: "",
   statusType: readOnly("topicTimer.status_type"),
   autoOpen: equal("statusType", OPEN_STATUS_TYPE),
   autoClose: equal("statusType", CLOSE_STATUS_TYPE),
+
   autoCloseAfterLastPost: equal(
     "statusType",
     CLOSE_AFTER_LAST_POST_STATUS_TYPE
   ),
+
   autoDelete: equal("statusType", DELETE_STATUS_TYPE),
   autoBump: equal("statusType", BUMP_TYPE),
   publishToCategory: equal("statusType", PUBLISH_TO_CATEGORY_STATUS_TYPE),
   autoDeleteReplies: equal("statusType", DELETE_REPLIES_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "autoBump"),
   showFutureDateInput: or("showTimeOnly", "publishToCategory", "autoClose"),
+
   useDuration: or(
     "isBasedOnLastPost",
     "autoDeleteReplies",
     "autoCloseAfterLastPost"
   ),
+
   duration: null,
   _itsatrap: null,
 
@@ -198,5 +203,5 @@ export default Component.extend({
   @action
   durationChanged(newDurationMins) {
     this.set("topicTimer.duration_minutes", newDurationMins);
-  },
+  }
 });

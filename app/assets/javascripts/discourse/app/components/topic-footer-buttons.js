@@ -6,10 +6,7 @@ import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-butto
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 
 export default Component.extend({
-  elementId: "topic-footer-buttons",
-
-  attributeBindings: ["role"],
-
+  tagName: "",
   role: "region",
 
   // Allow us to extend it
@@ -47,11 +44,8 @@ export default Component.extend({
   },
 
   canInviteTo: alias("topic.details.can_invite_to"),
-
   canDefer: alias("currentUser.enable_defer"),
-
   inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
-
   showEditOnFooter: and("topic.isPrivateMessage", "site.can_tag_pms"),
 
   @discourseComputed("topic.message_archived")
@@ -63,5 +57,5 @@ export default Component.extend({
 
   @discourseComputed("topic.message_archived")
   archiveLabel: (archived) =>
-    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
+    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title"
 });

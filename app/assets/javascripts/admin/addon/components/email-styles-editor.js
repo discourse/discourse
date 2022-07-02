@@ -5,6 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 
 export default Component.extend({
+  tagName: "",
   editorId: reads("fieldName"),
 
   @discourseComputed("fieldName")
@@ -53,5 +54,5 @@ export default Component.extend({
     save() {
       this.attrs.save();
     },
-  },
+  }
 });

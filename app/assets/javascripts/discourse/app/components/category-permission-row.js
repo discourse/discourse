@@ -7,7 +7,7 @@ import PermissionType from "discourse/models/permission-type";
 const EVERYONE = "everyone";
 
 export default Component.extend({
-  classNames: ["permission-row", "row-body"],
+  tagName: "",
   canCreate: equal("type", PermissionType.FULL),
   everyonePermissionType: alias("everyonePermission.permission_type"),
 

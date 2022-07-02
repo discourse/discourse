@@ -17,7 +17,7 @@ import { or } from "@ember/object/computed";
 const keyValueStore = new KeyValueStore(context);
 
 export default Component.extend({
-  classNames: ["controls"],
+  tagName: "",
 
   @discourseComputed("isNotSupported")
   notificationsPermission(isNotSupported) {

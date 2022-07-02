@@ -6,6 +6,7 @@ import { isDocumentRTL } from "discourse/lib/text-direction";
 import { next } from "@ember/runloop";
 
 export default Component.extend({
+  tagName: "",
   warning: null,
 
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
@@ -130,5 +131,5 @@ export default Component.extend({
     setWarning(message) {
       this.set("warning", message);
     },
-  },
+  }
 });

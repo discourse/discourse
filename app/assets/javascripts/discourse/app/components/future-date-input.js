@@ -13,6 +13,7 @@ import {
 } from "discourse/lib/time-shortcut";
 
 export default Component.extend({
+  tagName: "",
   selection: null,
   includeDateTime: true,
   isCustom: equal("selection", "custom"),
@@ -22,7 +23,6 @@ export default Component.extend({
   timeInputDisabled: empty("_date"),
   userTimezone: null,
   onChangeInput: null,
-
   _date: null,
   _time: null,
 
@@ -121,5 +121,5 @@ export default Component.extend({
         return 0 <= diff && diff < 60 * 1000;
       }
     });
-  },
+  }
 });

@@ -6,11 +6,11 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
 export default Component.extend({
+  tagName: "",
   router: service(),
   THEMES,
-  COMPONENTS,
 
-  classNames: ["themes-list"],
+  COMPONENTS,
   filterTerm: null,
 
   hasThemes: gt("themesList.length", 0),

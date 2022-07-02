@@ -4,6 +4,8 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
+  tagName: "",
+
   @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
     switch (secondFactorMethod) {
@@ -58,5 +60,5 @@ export default Component.extend({
         this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
       }
     },
-  },
+  }
 });

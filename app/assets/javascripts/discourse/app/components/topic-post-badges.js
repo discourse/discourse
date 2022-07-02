@@ -3,8 +3,7 @@ import I18n from "I18n";
 import { or } from "@ember/object/computed";
 
 export default Component.extend({
-  tagName: "span",
-  classNameBindings: [":topic-post-badges"],
+  tagName: "",
   rerenderTriggers: ["url", "unread", "newPosts", "unreadPosts", "unseen"],
   newDotText: null,
 
@@ -19,5 +18,5 @@ export default Component.extend({
     );
   },
 
-  displayUnreadPosts: or("newPosts", "unreadPosts"),
+  displayUnreadPosts: or("newPosts", "unreadPosts")
 });

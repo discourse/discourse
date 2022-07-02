@@ -25,6 +25,8 @@ function RGBToHex(rgb) {
 }
 
 export default Component.extend({
+  tagName: "",
+
   valid: computed("value", function () {
     let value = this.value.toLowerCase();
 
@@ -48,5 +50,5 @@ export default Component.extend({
   @action
   onChangeColor(color) {
     this.set("value", color);
-  },
+  }
 });

@@ -4,7 +4,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
+  tagName: "",
   item: null,
+
   actions: {
     removeIgnoredUser(item) {
       this.set("saved", false);
@@ -30,5 +32,5 @@ export default Component.extend({
         },
       });
     },
-  },
+  }
 });

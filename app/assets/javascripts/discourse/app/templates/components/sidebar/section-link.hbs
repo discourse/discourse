@@ -1,20 +1,22 @@
-<div class="sidebar-section-link-wrapper">
-  <Sidebar::SectionLinkTo
-    @class={{concat @class (concat " sidebar-section-link sidebar-section-link-" @linkName)}}
-    @route={{@route}}
-    @query={{@query}}
-    @models={{if @model (array @model) (if @models @models (array))}}
-    @current-when={{@currentWhen}}
-    @title={{@title}}
-  >
-    <span class="sidebar-section-link-content-text">
-      {{@content}}
-    </span>
-
-    {{#if @badgeCount}}
-      <span class="sidebar-section-link-content-badge">
-        {{@badgeCount}}
+<div ...attributes>
+  <div class="sidebar-section-link-wrapper">
+    <Sidebar::SectionLinkTo
+      @class={{concat @class (concat " sidebar-section-link sidebar-section-link-" @linkName)}}
+      @route={{@route}}
+      @query={{@query}}
+      @models={{if @model (array @model) (if @models @models (array))}}
+      @current-when={{@currentWhen}}
+      @title={{@title}}
+    >
+      <span class="sidebar-section-link-content-text">
+        {{@content}}
       </span>
-    {{/if}}
-  </Sidebar::SectionLinkTo>
+
+      {{#if @badgeCount}}
+        <span class="sidebar-section-link-content-badge">
+          {{@badgeCount}}
+        </span>
+      {{/if}}
+    </Sidebar::SectionLinkTo>
+  </div>
 </div>

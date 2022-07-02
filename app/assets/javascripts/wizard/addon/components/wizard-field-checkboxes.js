@@ -2,6 +2,8 @@ import Component from "@ember/component";
 import { action, set } from "@ember/object";
 
 export default Component.extend({
+  tagName: "",
+
   init(...args) {
     this._super(...args);
     this.set("field.value", this.field.value || []);
@@ -29,5 +31,5 @@ export default Component.extend({
       }
     }
     this.set("field.value", newFieldValue);
-  },
+  }
 });

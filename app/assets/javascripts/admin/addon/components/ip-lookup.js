@@ -9,7 +9,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
 
 export default Component.extend({
-  classNames: ["ip-lookup"],
+  tagName: "",
 
   @discourseComputed("other_accounts.length", "totalOthersWithSameIP")
   otherAccountsToDelete(otherAccountsLength, totalOthersWithSameIP) {

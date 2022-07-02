@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNames: ["penalty-history"],
+  tagName: "",
 
   @discourseComputed("user.penalty_counts.suspended")
   suspendedCountClass(count) {

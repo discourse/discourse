@@ -5,6 +5,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 
 export default Component.extend({
+  tagName: "",
+
   init() {
     this._super(...arguments);
 
@@ -103,5 +105,5 @@ export default Component.extend({
     return (
       membersVisibilityLevel !== this.visibilityLevelOptions.firstObject.value
     );
-  },
+  }
 });

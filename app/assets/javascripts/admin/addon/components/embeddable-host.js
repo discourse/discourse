@@ -10,7 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
-  tagName: "tr",
+  tagName: "",
   categoryId: null,
   category: null,
 
