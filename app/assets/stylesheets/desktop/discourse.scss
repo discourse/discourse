@@ -187,22 +187,6 @@ input {
   }
 }
 
-#main-outlet-wrapper {
-  box-sizing: border-box;
-  width: 100%;
-  display: grid;
-  // we can CSS transition the sidebar grid width change
-  // as long as we keep the column count consistent
-  // grid transitions are only supported in Firefox at the moment, but coming summer 2022 to Chrome
-  grid-template-areas: "sidebar content";
-  grid-template-columns: 0 minmax(0, 1fr);
-  gap: 0;
-
-  #main-outlet {
-    grid-area: content;
-  }
-}
-
 body.has-sidebar-page {
   .wrap {
     // increase page max-width to accommodate sidebar width

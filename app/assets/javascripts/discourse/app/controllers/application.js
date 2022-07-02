@@ -6,7 +6,16 @@ export default Controller.extend({
   showTop: true,
   showFooter: false,
   router: service(),
-  showSidebar: true,
+
+  @discourseComputed
+  showSidebar() {
+    if (this.site.mobileView) {
+      // never remember state on mobile
+      this.keyValueStore.removeItem("showSidebar");
+    }
+
+    return this.keyValueStore.getItem("showSidebar");
+  },
 
   @discourseComputed
   canSignUp() {
