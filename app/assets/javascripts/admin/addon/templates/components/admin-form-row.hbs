@@ -1,13 +1,13 @@
 <div class="row" ...attributes>
   <div class="form-element label-area">
-    {{#if this.label}}
-      <label>{{i18n this.label}}</label>
+    {{#if @label}}
+      <label>{{i18n @label}}</label>
     {{else}}
       &nbsp;
     {{/if}}
   </div>
   <div class="form-element input-area">
-    {{#if this.wrapLabel}}
+    {{#if @wrapLabel}}
       <label>{{yield}}</label>
     {{else}}
       {{yield}}

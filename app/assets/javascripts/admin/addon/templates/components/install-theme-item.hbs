@@ -1,10 +1,10 @@
 <div class="install-theme-item" ...attributes>
-  <RadioButton @name="install-items" @id={{this.value}} @value={{this.value}} @selection={{this.selection}} />
-  <label class="radio" for={{this.value}}>
-    {{#if this.showIcon}}
+  <RadioButton @name="install-items" @id={{@value}} @value={{@value}} @selection={{@selection}} />
+  <label class="radio" for={{@value}}>
+    {{#if showIcon}}
       {{d-icon "plus"}}
     {{/if}}
-    {{i18n this.label}}
+    {{i18n @label}}
   </label>
   {{d-icon "caret-right"}}
 </div>

@@ -1,7 +1,7 @@
 <div class="footer-message" ...attributes>
-  {{#if this.education}}<div class="education">{{html-safe this.education}}</div>{{/if}}
+  {{#if @education}}<div class="education">{{html-safe @education}}</div>{{/if}}
   <h3>
-    {{this.message}}
+    {{@message}}
     {{yield}}
   </h3>
 </div>
