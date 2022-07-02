@@ -1,0 +1,4 @@
+add|ember-template-lint|no-yield-only|1|0|1|0|a5fa6e8c1e0f03fb31b5cd17770e4368d44932e4|1657065600000|1659657600000|1662249600000|jsapp/app/components/html-with-links.hbs
+add|ember-template-lint|no-yield-only|1|0|1|0|a5fa6e8c1e0f03fb31b5cd17770e4368d44932e4|1657065600000|1659657600000|1662249600000|jsapp/app/components/mobile-nav.hbs
+add|ember-template-lint|no-yield-only|1|0|1|0|a5fa6e8c1e0f03fb31b5cd17770e4368d44932e4|1657065600000|1659657600000|1662249600000|app/assets/javascripts/discourse/app/components/html-with-links.hbs
+add|ember-template-lint|no-yield-only|1|0|1|0|a5fa6e8c1e0f03fb31b5cd17770e4368d44932e4|1657065600000|1659657600000|1662249600000|app/assets/javascripts/discourse/app/components/mobile-nav.hbs
