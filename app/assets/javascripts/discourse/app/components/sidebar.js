@@ -36,6 +36,6 @@ export default class Sidebar extends GlimmerComponent {
   }
 
   willDestroy() {
-    this._cleanUp;
+    this._cleanUp();
   }
 }
