@@ -107,7 +107,7 @@ function rowHelper(row) {
       return row.querySelector(".name").innerText.trim();
     },
     value() {
-      const value = row.getAttribute("data-value");
+      const value = row?.getAttribute("data-value");
       return isEmpty(value) ? null : value;
     },
     exists() {
