@@ -235,14 +235,10 @@ export default function selectKit(selector) {
     },
 
     displayedContent() {
-      return this.rows()
-        .map((_, row) => {
-          return {
-            name: row.getAttribute("data-name"),
-            id: row.getAttribute("data-value"),
-          };
-        })
-        .toArray();
+      return [...this.rows()].map((row) => ({
+        name: row.getAttribute("data-name"),
+        id: row.getAttribute("data-value"),
+      }));
     },
 
     rowByValue(value) {
