@@ -11,17 +11,17 @@ end
 
 module MultisiteTestHelpers
   def self.load_multisite?
-    Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    Rails.env.test? && !ENV["RAILS_TEST_DB"] && !ENV["SKIP_MULTISITE"]
   end
 
   def self.create_multisite?
-    (Rails.env.test? || Rails.env.development?) && !ENV["RAILS_DB"] && !ENV["DATABASE_URL"] && !ENV["SKIP_MULTISITE"]
+    (Rails.env.test? || Rails.env.development?) && !ENV["RAILS_TEST_DB"] && !ENV["DATABASE_URL"] && !ENV["SKIP_MULTISITE"]
   end
 end
 
 task 'db:environment:set' => [:load_config]  do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
+    system("RAILS_ENV=test RAILS_TEST_DB=discourse_test_multisite rake db:environment:set")
   end
 end
 
@@ -50,7 +50,7 @@ end
 
 task 'db:create' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+    unless system("RAILS_ENV=test RAILS_TEST_DB=discourse_test_multisite rake db:create")
 
       STDERR.puts "-" * 80
       STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
@@ -77,7 +77,7 @@ end
 
 task 'db:drop' => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
+    system("RAILS_TEST_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
 
     RailsMultisite::ConnectionManagement.all_dbs.each do |db|
       spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
@@ -269,7 +269,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     SeedFu.quiet = true
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
-    if Rails.env.development? && !ENV["RAILS_DB"]
+    if Rails.env.development? && !ENV["RAILS_TEST_DB"]
       Rake::Task['db:schema:cache:dump'].invoke
     end
 
@@ -279,7 +279,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:migrate")
+    system("RAILS_TEST_DB=discourse_test_multisite rake db:migrate")
   end
 end
 
