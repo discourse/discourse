@@ -49,5 +49,16 @@ module.exports = {
     "style-concatenation": true,
     "table-groups": true,
     "link-href-attributes": false,
+    "no-curly-component-invocation": {
+      allow: [
+        // These are helpers, not components
+        "directory-item-header-title",
+        "directory-item-user-field-value",
+        "directory-item-value",
+        "directory-table-header-title",
+        "loading-spinner",
+        "mobile-directory-item-label",
+      ],
+    },
   },
 };
