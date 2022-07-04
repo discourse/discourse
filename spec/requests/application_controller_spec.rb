@@ -540,14 +540,14 @@ RSpec.describe ApplicationController do
       get '/'
 
       expect(response.status).to eq(200)
-      expect(response.body).not_to include("d-splash")
+      expect(response.body).to include("d-splash")
 
-      SiteSetting.splash_screen = true
+      SiteSetting.splash_screen = false
 
       get '/'
 
       expect(response.status).to eq(200)
-      expect(response.body).to include("d-splash")
+      expect(response.body).not_to include("d-splash")
     end
   end
 
