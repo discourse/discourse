@@ -760,4 +760,21 @@ describe Auth::DefaultCurrentUserProvider do
     env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
     expect(provider('/', env).current_user).to eq(nil)
   end
+
+  describe "#log_off_user" do
+    it "should work when the current user was cached by a different provider instance" do
+      user_provider = provider('/')
+      user_provider.log_on_user(user, {}, user_provider.cookie_jar)
+      cookie = user_provider.cookie_jar["_t"]
+      env = create_request_env(path: "/").merge({ method: "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+
+      user_provider = TestProvider.new(env)
+      expect(user_provider.current_user).to eq(user)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_present
+
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
+  end
 end
