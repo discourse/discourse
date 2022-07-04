@@ -4,38 +4,36 @@ import { bind } from "discourse-common/utils/decorators";
 export default class Sidebar extends GlimmerComponent {
   constructor() {
     super(...arguments);
-    if (this.site.mobileView) {
-      document.addEventListener("click", this.mobileOutsideClick);
-    }
-  }
-
-  _cleanUp() {
-    this.args.applicationController.set("showSidebar", false);
 
     if (this.site.mobileView) {
-      document.removeEventListener("click", this.mobileOutsideClick);
-      this.appEvents.off("page:changed", this, this._cleanUp);
+      document.addEventListener("click", this.collapseSidebar);
     }
   }
 
   @bind
-  mobileOutsideClick(event) {
-    this.appEvents.on("page:changed", this, this._cleanUp);
+  collapseSidebar(event) {
+    let shouldCollapseSidebar = false;
 
-    let sidebarParentContainer = event
-      .composedPath()
-      .filter(
-        (element) =>
-          element.className && element.className === "sidebar-wrapper"
-      );
+    const isClickWithinSidebar = event.composedPath().some((element) => {
+      if (
+        element?.className !== "sidebar-section-header-caret" &&
+        ["A", "BUTTON"].includes(element.nodeName)
+      ) {
+        shouldCollapseSidebar = true;
+        return true;
+      }
 
-    if (!sidebarParentContainer.length) {
-      this.args.applicationController.set("showSidebar", false);
-      document.removeEventListener("click", this.mobileOutsideClick);
+      return element.className && element.className === "sidebar-wrapper";
+    });
+
+    if (shouldCollapseSidebar || !isClickWithinSidebar) {
+      this.args.toggleSidebar();
     }
   }
 
   willDestroy() {
-    this._cleanUp();
+    if (this.site.mobileView) {
+      document.removeEventListener("click", this.collapseSidebar);
+    }
   }
 }

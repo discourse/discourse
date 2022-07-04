@@ -1,7 +1,6 @@
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import discourseDebounce from "discourse-common/lib/debounce";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import OpenComposer from "discourse/mixins/open-composer";
@@ -41,37 +40,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
 
-  _mainOutletAnimate() {
-    document
-      .querySelector("#main-outlet")
-      .classList.remove("main-outlet-animate");
-  },
-
   actions: {
     toggleAnonymous() {
       ajax(userPath("toggle-anon"), { type: "POST" }).then(() => {
         window.location.reload();
       });
-    },
-
-    toggleSidebar() {
-      // enables CSS transitions, but not on did-insert
-      document.querySelector("body").classList.add("sidebar-animate");
-
-      if (!this.keyValueStore.getItem("showSidebar")) {
-        this.keyValueStore.setItem("showSidebar");
-      } else {
-        this.keyValueStore.removeItem("showSidebar");
-      }
-
-      // reduces CSS transition jank
-      document
-        .querySelector("#main-outlet")
-        .classList.add("main-outlet-animate");
-
-      discourseDebounce(this, this._mainOutletAnimate, 250);
-
-      this.controllerFor("application").toggleProperty("showSidebar");
     },
 
     toggleMobileView() {

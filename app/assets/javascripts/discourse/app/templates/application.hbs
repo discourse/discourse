@@ -2,7 +2,7 @@
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
   <PluginOutlet @name="above-site-header" @connectorTagName="div" />
-  <SiteHeader @canSignUp={{canSignUp}} @showCreateAccount={{route-action "showCreateAccount"}} @showLogin={{route-action "showLogin"}} @showKeyboard={{route-action "showKeyboardShortcutsHelp"}} @toggleMobileView={{route-action "toggleMobileView"}} @toggleAnonymous={{route-action "toggleAnonymous"}} @logout={{route-action "logout"}} @toggleSidebar={{route-action "toggleSidebar"}} />
+  <SiteHeader @canSignUp={{canSignUp}} @showCreateAccount={{route-action "showCreateAccount"}} @showLogin={{route-action "showLogin"}} @showKeyboard={{route-action "showKeyboardShortcutsHelp"}} @toggleMobileView={{route-action "toggleMobileView"}} @toggleAnonymous={{route-action "toggleAnonymous"}} @logout={{route-action "logout"}} @toggleSidebar={{action "toggleSidebar"}} />
   <SoftwareUpdatePrompt />
 
   <PluginOutlet @name="below-site-header" @connectorTagName="div" @args={{hash currentPath=router._router.currentPath}} />
@@ -12,7 +12,7 @@
     <div class="sidebar-wrapper">
       {{!-- empty div allows for animation --}}
       {{#if (and currentUser.experimental_sidebar_enabled showSidebar)}}
-        <Sidebar @applicationController={{this}}/>
+        <Sidebar @toggleSidebar={{action "toggleSidebar"}}/>
       {{/if}}
     </div>
 
