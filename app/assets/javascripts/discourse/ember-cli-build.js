@@ -105,7 +105,7 @@ module.exports = function (defaults) {
 
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
-  app.import(vendorJs + "bootbox.js");
+  app.import("node_modules/bootbox/bootbox.min.js");
   app.import(vendorJs + "bootstrap-modal.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {

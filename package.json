@@ -11,7 +11,6 @@
     "@highlightjs/cdn-assets": "^10.7.0",
     "@json-editor/json-editor": "^2.6.1",
     "ace-builds": "1.4.13",
-    "bootbox": "3.2.0",
     "bootstrap": "v3.4.1",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",

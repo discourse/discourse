@@ -2748,6 +2748,11 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
+bootbox@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/bootbox/-/bootbox-3.2.0.tgz#00bf643fc9edefd9ae1e7c648c6b022db4be0aee"
+  integrity sha512-o+J9c81s5QWkKoWFU9vpaXavCZm86VMqozSouBfr6tA9ieXRqkRc3KEdCL8jtDqfHWZbaO52Uylwk91BEaAqwA==
+
 bower-config@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/bower-config/-/bower-config-1.4.3.tgz#3454fecdc5f08e7aa9cc6d556e492be0669689ae"
