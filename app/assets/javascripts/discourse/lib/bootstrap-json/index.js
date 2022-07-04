@@ -101,6 +101,26 @@ function beforeScriptLoad(buffer, bootstrap) {
   );
 }
 
+function discoursePreloadStylesheets(buffer, bootstrap) {
+  (bootstrap.stylesheets || []).forEach((s) => {
+    let attrs = [];
+    if (s.media) {
+      attrs.push(`media="${s.media}"`);
+    }
+    if (s.target) {
+      attrs.push(`data-target="${s.target}"`);
+    }
+    if (s.theme_id) {
+      attrs.push(`data-theme-id="${s.theme_id}"`);
+    }
+    if (s.class) {
+      attrs.push(`class="${s.class}"`);
+    }
+    let link = `<link rel="preload" as="style" href="${s.href}">`;
+    buffer.push(link);
+  });
+}
+
 function discourseStylesheets(buffer, bootstrap) {
   (bootstrap.stylesheets || []).forEach((s) => {
     let attrs = [];
@@ -164,6 +184,7 @@ function preloaded(buffer, bootstrap) {
 const BUILDERS = {
   "html-tag": htmlTag,
   "before-script-load": beforeScriptLoad,
+  "discourse-preload-stylesheets": discoursePreloadStylesheets,
   head,
   body,
   "discourse-stylesheets": discourseStylesheets,
