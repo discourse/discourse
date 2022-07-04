@@ -6,6 +6,8 @@
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
+
+    <%= render partial: "common/discourse_preload_stylesheet" %>
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
