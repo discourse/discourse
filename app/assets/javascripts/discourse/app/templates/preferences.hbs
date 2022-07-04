@@ -52,9 +52,9 @@
 
     {{#if this.siteSettings.enable_experimental_sidebar}}
       <li class="indent nav-sidebar">
-        {{#link-to "preferences.sidebar"}}
+        <LinkTo @route="preferences.sidebar">
           {{i18n "user.preferences_nav.sidebar"}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/if}}
 

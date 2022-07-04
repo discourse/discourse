@@ -1,23 +1,12 @@
-{{#styleguide-example title="footer-message - default"}}
-  {{footer-message education=dummy.sentence message=dummy.short_sentence}}
-{{/styleguide-example}}
+<StyleguideExample @title="footer-message - default">
+  <FooterMessage @education={{dummy.sentence}} @message={{dummy.short_sentence}} />
+</StyleguideExample>
 
-{{#styleguide-example title="footer-message - latest"}}
-  {{footer-message
-    education=dummy.sentence
-    message=dummy.short_sentence
-    latest=true
-    canCreateTopicOnCategory=true
-    createTopic=(action "dummy")
-  }}
-{{/styleguide-example}}
+<StyleguideExample @title="footer-message - latest">
+  <FooterMessage @education={{dummy.sentence}} @message={{dummy.short_sentence}} @latest={{true}} @canCreateTopicOnCategory={{true}} @createTopic={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="footer-message - top"}}
-  {{footer-message
-    education=dummy.sentence
-    message=dummy.short_sentence
-    top=true
-    changePeriod=(action "dummy")
-  }}
-{{/styleguide-example}}
+<StyleguideExample @title="footer-message - top">
+  <FooterMessage @education={{dummy.sentence}} @message={{dummy.short_sentence}} @top={{true}} @changePeriod={{action "dummy"}} />
+</StyleguideExample>
 

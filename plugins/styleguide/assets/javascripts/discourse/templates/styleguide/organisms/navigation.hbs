@@ -1,14 +1,14 @@
-{{#styleguide-example title="navigation"}}
+<StyleguideExample @title="navigation">
   <div class="list-controls">
     <div class="container">
-      {{#d-section class="navigation-container"}}
-        {{bread-crumbs categories=dummy.categories}}
-        {{navigation-bar navItems=dummy.navItems filterMode="latest"}}
+      <DSection @class="navigation-container">
+        <BreadCrumbs @categories={{dummy.categories}} />
+        <NavigationBar @navItems={{dummy.navItems}} @filterMode="latest" />
         <div class="navigation-controls">
-          {{categories-admin-dropdown}}
-          {{create-topic-button canCreateTopic=true}}
+          <CategoriesAdminDropdown />
+          <CreateTopicButton @canCreateTopic={{true}} />
         </div>
-      {{/d-section}}
+      </DSection>
     </div>
   </div>
-{{/styleguide-example}}
+</StyleguideExample>

@@ -1,16 +1,16 @@
-{{#styleguide-example title="site header - in topic - scrolled"}}
+<StyleguideExample @title="site header - in topic - scrolled">
   <div class="d-header-wrap">
     <header class="d-header">
       <div class="wrap">
         <div class="contents">
-          {{mount-widget widget="home-logo" args=(hash minimized=true)}}
-          {{mount-widget widget="header-topic-info" args=dummy}}
+          <MountWidget @widget="home-logo" @args={{hash minimized=true}} />
+          <MountWidget @widget="header-topic-info" @args={{dummy}} />
           <div class="panel clearfix">
-            {{mount-widget widget="header-icons" args=(hash user=dummy.user)}}
+            <MountWidget @widget="header-icons" @args={{hash user=dummy.user}} />
           </div>
         </div>
       </div>
     </header>
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 

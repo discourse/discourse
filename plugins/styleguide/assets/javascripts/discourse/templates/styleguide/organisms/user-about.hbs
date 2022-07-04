@@ -1,5 +1,5 @@
-{{#styleguide-example title=".user-main .about.collapsed-info.no-background"}}
-  {{#d-section class="user-main"}}
+<StyleguideExample @title=".user-main .about.collapsed-info.no-background">
+  <DSection @class="user-main">
     <section class="collapsed-info about no-background">
       <div class="profile-image"></div>
       <div class="details">
@@ -27,11 +27,11 @@
         <div style="clear: both"></div>
       </div>
     </section>
-  {{/d-section}}
-{{/styleguide-example}}
+  </DSection>
+</StyleguideExample>
 
-{{#styleguide-example title=".user-main .about.collapsed-info.has-background"}}
-  {{#d-section class="user-main"}}
+<StyleguideExample @title=".user-main .about.collapsed-info.has-background">
+  <DSection @class="user-main">
     <section class="collapsed-info about has-background"  style={{dummy.user.profileBackground}}>
       <div class="profile-image"></div>
       <div class="details">
@@ -59,11 +59,11 @@
         <div style="clear: both"></div>
       </div>
     </section>
-  {{/d-section}}
-{{/styleguide-example}}
+  </DSection>
+</StyleguideExample>
 
-{{#styleguide-example title=".user-main .about.no-background"}}
-  {{#d-section class="user-main"}}
+<StyleguideExample @title=".user-main .about.no-background">
+  <DSection @class="user-main">
     <section class="about no-background">
 
       <div class="staff-counters">
@@ -142,7 +142,7 @@
           <dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd class="trust-level">{{dummy.user.trustLevel.name}}</dd>
           <dt>{{i18n "user.email.title"}}</dt>
           <dd title={{dummy.user.email}}>
-            {{d-button icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
+            <DButton @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
           </dd>
           <dt class="groups">{{i18n "groups.title" count=dummy.user.displayGroups.length}}</dt>
           <dd class="groups">
@@ -150,15 +150,15 @@
               <span><a href="#" class="group-link">{{group.name}}</a></span>
             {{/each}}
           </dd>
-          {{d-button icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
+          <DButton @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" />
         </dl>
       </div>
     </section>
-  {{/d-section}}
-{{/styleguide-example}}
+  </DSection>
+</StyleguideExample>
 
-{{#styleguide-example title=".user-main .about.has-background"}}
-  {{#d-section class="user-main"}}
+<StyleguideExample @title=".user-main .about.has-background">
+  <DSection @class="user-main">
     <section class="about has-background"  style={{dummy.user.profileBackground}}>
       <div class="staff-counters">
         <div><span class="helpful-flags">{{dummy.user.number_of_flags_given}}</span>&nbsp;{{i18n "user.staff_counters.flags_given"}}</div>
@@ -237,7 +237,7 @@
           <dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd class="trust-level">{{dummy.user.trustLevel.name}}</dd>
           <dt>{{i18n "user.email.title"}}</dt>
           <dd title={{dummy.user.email}}>
-            {{d-button icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
+            <DButton @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
           </dd>
           <dt class="groups">{{i18n "groups.title" count=dummy.user.displayGroups.length}}</dt>
           <dd class="groups">
@@ -245,9 +245,9 @@
               <span><a href="#" class="group-link">{{group.name}}</a></span>
             {{/each}}
           </dd>
-          {{d-button icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
+          <DButton @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" />
         </dl>
       </div>
     </section>
-  {{/d-section}}
-{{/styleguide-example}}
+  </DSection>
+</StyleguideExample>

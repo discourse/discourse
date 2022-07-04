@@ -2,9 +2,9 @@
   <div class="presence-users">
     <div class="presence-avatars">
       {{#each users as |user|}}
-        {{#user-link user=user}}
+        <UserLink @user={{user}}>
           {{avatar user imageSize="small"}}
-        {{/user-link}}
+        </UserLink>
       {{/each}}
     </div>
     <span class="presence-text">
