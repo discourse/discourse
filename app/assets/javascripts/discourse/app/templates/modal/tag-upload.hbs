@@ -1,3 +1,3 @@
 <DModalBody @title="tagging.upload">
-  {{tags-uploader refresh=(route-action "triggerRefresh") closeModal=(route-action "closeModal") id="tags-uploader"}}
+  <TagsUploader @refresh={{route-action "triggerRefresh"}} @closeModal={{route-action "closeModal"}} @id="tags-uploader" />
 </DModalBody>

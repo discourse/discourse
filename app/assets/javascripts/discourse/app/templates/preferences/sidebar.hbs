@@ -1,10 +1,10 @@
 <div class="control-group preferences-sidebar-options">
   <legend class="control-label">{{i18n "user.experimental_sidebar.options"}}</legend>
 
-  {{preference-checkbox
-      labelKey="user.experimental_sidebar.enable"
-      checked=model.user_option.enable_experimental_sidebar
-      class="preferences-sidebar-enable-checkbox"}}
+  <PreferenceCheckbox
+      @labelKey="user.experimental_sidebar.enable"
+      @checked={{model.user_option.enable_experimental_sidebar}}
+      @class="preferences-sidebar-enable-checkbox" />
 </div>
 
 {{#if model.experimental_sidebar_enabled}}
@@ -12,14 +12,14 @@
     <legend class="control-label">{{i18n "user.experimental_sidebar.categories_section"}}</legend>
 
     <div class="controls">
-      {{category-selector
-          categories=this.selectedSiderbarCategories
-          onChange=(action this.categoryUpdated)
-          options=(hash
+      <CategorySelector
+          @categories={{this.selectedSiderbarCategories}}
+          @onChange={{action this.categoryUpdated}}
+          @options={{hash
             allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
             displayCategoryDescription=true
-          )
-      }}
+          }}
+      />
     </div>
 
     <div class="instructions">{{i18n "user.experimental_sidebar.categories_section_instruction"}}</div>
@@ -30,15 +30,15 @@
       <legend class="control-label">{{i18n "user.experimental_sidebar.tags_section"}}</legend>
 
       <div class="controls">
-        {{tag-chooser
-          tags=this.selectedSidebarTagNames
-          everyTag=true
-          unlimitedTagCount=true
-          onChange=(action this.tagUpdated)
-          options=(hash
+        <TagChooser
+          @tags={{this.selectedSidebarTagNames}}
+          @everyTag={{true}}
+          @unlimitedTagCount={{true}}
+          @onChange={{action this.tagUpdated}}
+          @options={{hash
             allowAny=false
-          )
-        }}
+          }}
+        />
       </div>
 
       <div class="instructions">{{i18n "user.experimental_sidebar.tags_section_instruction"}}</div>
@@ -46,4 +46,4 @@
   {{/if}}
 {{/if}}
 
-{{save-controls model=model action=(action "save") saved=saved}}
+<SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}} />

@@ -1,76 +1,76 @@
-{{#styleguide-example title="text-field"}}
-  {{text-field placeholder="Placeholder"}}
-{{/styleguide-example}}
+<StyleguideExample @title="text-field">
+  <TextField @placeholder="Placeholder" />
+</StyleguideExample>
 
-{{#styleguide-example title="password"}}
-  {{password-field type="password" placeholder="Placeholder"}}
-{{/styleguide-example}}
+<StyleguideExample @title="password">
+  <PasswordField @type="password" @placeholder="Placeholder" />
+</StyleguideExample>
 
-{{#styleguide-example title="textarea"}}
-  {{textarea placeholder="Placeholder"}}
-{{/styleguide-example}}
+<StyleguideExample @title="textarea">
+  <Textarea placeholder="Placeholder" />
+</StyleguideExample>
 
-{{#styleguide-example title="inline-form"}}
+<StyleguideExample @title="inline-form">
   <div class="inline-form">
-    {{text-field placeholder="Placeholder"}}
-    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+    <TextField @placeholder="Placeholder" />
+    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="inline-form with icon button"}}
+<StyleguideExample @title="inline-form with icon button">
   <div class="inline-form">
-    {{text-field placeholder="Placeholder"}}
-    {{d-button class="btn-primary" icon="search" type="submit"}}
+    <TextField @placeholder="Placeholder" />
+    <DButton @class="btn-primary" @icon="search" @type="submit" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="full-width inline-form with single input"}}
+<StyleguideExample @title="full-width inline-form with single input">
   <div class="inline-form full-width">
-    {{text-field placeholder="Placeholder"}}
+    <TextField @placeholder="Placeholder" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="full-width inline-form with input and icon button"}}
+<StyleguideExample @title="full-width inline-form with input and icon button">
   <div class="inline-form full-width">
-    {{text-field placeholder="Placeholder"}}
-    {{d-button class="btn-primary" icon="search" type="submit"}}
+    <TextField @placeholder="Placeholder" />
+    <DButton @class="btn-primary" @icon="search" @type="submit" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="inline-form with combo-box" initialValue=dummy.options.[0].name as |value|}}
+<StyleguideExample @title="inline-form with combo-box" @initialValue={{dummy.options.[0].name}} as |value|>
   <div class="inline-form">
-    {{text-field placeholder="Placeholder"}}
-    {{combo-box content=dummy.options value=value onChange=(fn (mut value))}}
-    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+    <TextField @placeholder="Placeholder" />
+    <ComboBox @content={{dummy.options}} @value={{value}} @onChange={{fn (mut value)}} />
+    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="inline-form with multi-select"}}
+<StyleguideExample @title="inline-form with multi-select">
   <div class="inline-form">
-    {{text-field}}
-    {{multi-select content=dummy.options onChange=(action "dummy")}}
-    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+    <TextField />
+    <MultiSelect @content={{dummy.options}} @onChange={{action "dummy"}} />
+    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="inline-form with multi-select and label"}}
+<StyleguideExample @title="inline-form with multi-select and label">
   <div class="inline-form">
     <label>Text:</label>
-    {{text-field}}
-    {{multi-select content=dummy.options onChange=(action "dummy")}}
-    {{d-button class="btn-primary" icon="search" type="submit" translatedLabel="Submit"}}
+    <TextField />
+    <MultiSelect @content={{dummy.options}} @onChange={{action "dummy"}} />
+    <DButton @class="btn-primary" @icon="search" @type="submit" @translatedLabel="Submit" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="full-width inline-form with search type input"}}
+<StyleguideExample @title="full-width inline-form with search type input">
   <div class="inline-form full-width">
-    {{input placeholder="Search type input" type="search"}}
+    <Input placeholder="Search type input" @type="search" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="category-notifications-button and regular button"}}
+<StyleguideExample @title="category-notifications-button and regular button">
   <div class="inline-form">
-    {{category-notifications-button category=dummy.categories.[0] value=1 onChange=(action "dummy")}}
-    {{d-button icon="reply" type="submit" translatedLabel="Button"}}
+    <CategoryNotificationsButton @category={{dummy.categories.[0]}} @value={{1}} @onChange={{action "dummy"}} />
+    <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>

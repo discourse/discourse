@@ -5,13 +5,14 @@
 
   {{#if model}}
     {{#each sortedFields as |uf|}}
-      {{admin-user-field-item userField=uf
-                              fieldTypes=fieldTypes
-                              firstField=sortedFields.firstObject
-                              lastField=sortedFields.lastObject
-                              destroyAction=(action "destroy")
-                              moveUpAction=(action "moveUp")
-                              moveDownAction=(action "moveDown")}}
+      <AdminUserFieldItem @userField={{uf}}
+                          @fieldTypes={{fieldTypes}}
+                          @firstField={{sortedFields.firstObject}}
+                          @lastField={{sortedFields.lastObject}}
+                          @destroyAction={{action "destroy"}}
+                          @moveUpAction={{action "moveUp"}}
+                          @moveDownAction={{action "moveDown"}}
+                          />
     {{/each}}
   {{/if}}
 

@@ -1,31 +1,28 @@
-{{#styleguide-example title="time-input"}}
-  {{time-input}}
-{{/styleguide-example}}
+<StyleguideExample @title="time-input">
+  <TimeInput />
+</StyleguideExample>
 
-{{#styleguide-example title="date-input"}}
-  {{date-input}}
-{{/styleguide-example}}
+<StyleguideExample @title="date-input">
+  <DateInput />
+</StyleguideExample>
 
-{{#styleguide-example title="date-time-input"}}
-  {{date-time-input clearable=true}}
-{{/styleguide-example}}
+<StyleguideExample @title="date-time-input">
+  <DateTimeInput @clearable={{true}} />
+</StyleguideExample>
 
-{{#styleguide-example title="date-time-input-range"}}
-  {{date-time-input-range}}
-{{/styleguide-example}}
+<StyleguideExample @title="date-time-input-range">
+  <DateTimeInputRange />
+</StyleguideExample>
 
-{{#styleguide-example title="date-time-input-range"}}
-  {{date-time-input-range showFromTime=false showToTime=false}}
-{{/styleguide-example}}
+<StyleguideExample @title="date-time-input-range">
+  <DateTimeInputRange @showFromTime={{false}} @showToTime={{false}} />
+</StyleguideExample>
 
-{{#styleguide-example title="future-date-input"}}
-  {{future-date-input
-    displayLabelIcon="far-clock"
-    clearable=true
-  }}
-{{/styleguide-example}}
+<StyleguideExample @title="future-date-input">
+  <FutureDateInput @displayLabelIcon="far-clock" @clearable={{true}} />
+</StyleguideExample>
 
-{{#styleguide-example title="date-picker"}}
-  {{date-picker defaultDate="YYYY-MM-DD"}}
-{{/styleguide-example}}
+<StyleguideExample @title="date-picker">
+  <DatePicker @defaultDate="YYYY-MM-DD" />
+</StyleguideExample>
 
