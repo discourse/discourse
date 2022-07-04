@@ -48,6 +48,8 @@ def config_to_url(config)
   ).to_s
 end
 
+# db:create and related tasks
+
 task "multisite:create" => ["db:load_config"] do
   next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
 
@@ -87,28 +89,39 @@ begin
   Rake::Task['db:create'].enhance(["db:force_skip_persist", "multisite:create"] + reqs)
 end
 
-task 'db:drop' => [:load_config] do |_, args|
-  if Rails.env.development? && ENV["RAILS_DB"] && !ENV["DATABASE_URL"]
-    spec = RailsMultisite::ConnectionManagement.connection_spec(db: ENV["RAILS_DB"])
+# db:drop and related tasks
+
+task "multisite:drop" => ["db:load_config"] do
+  next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
+
+  spec = RailsMultisite::ConnectionManagement.connection_spec(db: ENV["RAILS_DB"])
+  database_url = config_to_url(spec.config)
+  system("DATABASE_URL=#{database_url} rake db:drop")
+  exit 0
+end
+
+task "multisite:drop:all" => ["db:load_config"] do
+  next if !MultisiteTestHelpers.create_multisite?
+
+  system("RAILS_TEST_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
+
+  RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+    spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+    next unless spec
+
     database_url = config_to_url(spec.config)
     system("DATABASE_URL=#{database_url} rake db:drop")
-  elsif MultisiteTestHelpers.create_multisite?
-    system("RAILS_TEST_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
-
-    RailsMultisite::ConnectionManagement.all_dbs.each do |db|
-      spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
-      next unless spec
-
-      database_url = config_to_url(spec.config)
-      system("DATABASE_URL=#{database_url} rake db:drop")
-    end
   end
+end
+
+task "db:drop" => :load_config do
+  Rake::Task["multisite:drop:all"].invoke
 end
 
 begin
   reqs = Rake::Task['db:drop'].prerequisites.map(&:to_sym)
   Rake::Task['db:drop'].clear_prerequisites
-  Rake::Task['db:drop'].enhance(["db:force_skip_persist"] + reqs)
+  Rake::Task['db:drop'].enhance(["db:force_skip_persist", "multisite:drop"] + reqs)
 end
 
 Rake::Task["db:rollback"].clear
