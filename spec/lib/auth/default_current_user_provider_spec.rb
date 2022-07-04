@@ -779,4 +779,21 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider2.current_user).to eq(user)
     expect(provider2.cookie_jar.encrypted["_t"].keys).to include("user_id", "token") # (strings)
   end
+
+  describe "#log_off_user" do
+    it "should work when the current user was cached by a different provider instance" do
+      user_provider = provider('/')
+      user_provider.log_on_user(user, {}, user_provider.cookie_jar)
+      cookie = CGI.escape(user_provider.cookie_jar["_t"])
+      env = create_request_env(path: "/").merge({ method: "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+
+      user_provider = TestProvider.new(env)
+      expect(user_provider.current_user).to eq(user)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_present
+
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
+  end
 end
