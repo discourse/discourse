@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { settled } from "@ember/test-helpers";
 
 discourseModule("Unit | Controller | create-account", function () {
   test("basicUsernameValidation", function (assert) {
@@ -38,7 +39,7 @@ discourseModule("Unit | Controller | create-account", function () {
     );
   });
 
-  test("passwordValidation", function (assert) {
+  test("passwordValidation", async function (assert) {
     const controller = this.getController("create-account");
 
     controller.set("authProvider", "");
@@ -80,6 +81,9 @@ discourseModule("Unit | Controller | create-account", function () {
       "pork@chops.com",
       I18n.t("user.password.same_as_email")
     );
+
+    // Wait for username check request to finish
+    await settled();
   });
 
   test("authProviderDisplayName", function (assert) {
