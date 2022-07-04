@@ -192,10 +192,6 @@ class Stylesheet::Manager
     stylesheets = stylesheet_details(target, media)
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
-      theme_id = stylesheet[:theme_id]
-      data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
-      theme_name = stylesheet[:theme_name]
-      data_theme_name = theme_name ? "data-theme-name=\"#{CGI.escapeHTML(theme_name)}\"" : ""
       %[<link href="#{href}" rel="preload" as="style"/>]
     end.join("\n").html_safe
   end
@@ -311,8 +307,6 @@ class Stylesheet::Manager
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
-
-    css_class = media == 'all' ? "light-scheme" : "dark-scheme"
 
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
