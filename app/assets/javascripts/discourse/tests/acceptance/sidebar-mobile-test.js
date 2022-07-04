@@ -1,6 +1,6 @@
 import { test } from "qunit";
 
-import { click, pauseTest, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
