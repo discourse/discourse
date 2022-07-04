@@ -1,17 +1,17 @@
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
-import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
 import { moduleForComponent } from "ember-qunit";
 
 function checkSelectKitIsNotExpanded(selector) {
-  if (queryAll(selector).hasClass("is-expanded")) {
+  if (query(selector).classList.contains("is-expanded")) {
     // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be collapsed but it is expanded.");
   }
 }
 
 function checkSelectKitIsNotCollapsed(selector) {
-  if (!queryAll(selector).hasClass("is-expanded")) {
+  if (!query(selector).classList.contains("is-expanded")) {
     // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be expanded but it is collapsed.");
   }
@@ -31,7 +31,7 @@ async function selectKitFillInFilter(filter, selector) {
   checkSelectKitIsNotCollapsed(selector);
   await fillIn(
     `${selector} .filter-input`,
-    queryAll(`${selector} .filter-input`).val() + filter
+    query(`${selector} .filter-input`).value + filter
   );
 }
 
@@ -61,7 +61,7 @@ async function selectKitSelectRowByIndex(index, selector) {
 }
 
 async function keyboardHelper(value, target, selector) {
-  target = queryAll(selector).find(target || ".filter-input");
+  target = query(selector).querySelector(target || ".filter-input");
 
   if (value === "selectAll") {
     // special casing the only one not working with triggerEvent
@@ -70,7 +70,7 @@ async function keyboardHelper(value, target, selector) {
     event.key = "A";
     event.keyCode = 65;
     event.metaKey = true;
-    target.trigger(event);
+    $(target).trigger(event);
   } else {
     const mapping = {
       enter: { key: "Enter", keyCode: 13 },
@@ -82,7 +82,7 @@ async function keyboardHelper(value, target, selector) {
     };
 
     await triggerEvent(
-      target[0],
+      target,
       "keydown",
       mapping[value.toLowerCase()] || {
         key: value,
@@ -95,19 +95,19 @@ async function keyboardHelper(value, target, selector) {
 function rowHelper(row) {
   return {
     name() {
-      return row.attr("data-name");
+      return row.getAttribute("data-name");
     },
     icon() {
-      return row.find(".d-icon");
+      return row.querySelector(".d-icon");
     },
     title() {
-      return row.attr("title");
+      return row.getAttribute("title");
     },
     label() {
-      return row.find(".name").text().trim();
+      return row.querySelector(".name").innerText.trim();
     },
     value() {
-      const value = row.attr("data-value");
+      const value = row?.getAttribute("data-value");
       return isEmpty(value) ? null : value;
     },
     exists() {
@@ -122,23 +122,22 @@ function rowHelper(row) {
 function headerHelper(header) {
   return {
     value() {
-      const value = header.attr("data-value");
+      const value = header.getAttribute("data-value");
       return isEmpty(value) ? null : value;
     },
     name() {
-      return header.attr("data-name");
+      return header.getAttribute("data-name");
     },
     label() {
-      return header
-        .text()
+      return header.innerText
         .trim()
         .replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, "");
     },
     icon() {
-      return header.find(".d-icon");
+      return header.querySelector(".d-icon");
     },
     title() {
-      return header.find(".selected-name").attr("title");
+      return header.querySelector(".selected-name").getAttribute("title");
     },
     el() {
       return header;
@@ -149,13 +148,13 @@ function headerHelper(header) {
 function filterHelper(filter) {
   return {
     icon() {
-      return filter.find(".d-icon");
+      return filter.querySelector(".d-icon");
     },
     exists() {
       return exists(filter);
     },
     value() {
-      return filter.find("input").val();
+      return filter.querySelector("input").value;
     },
     el() {
       return filter;
@@ -208,89 +207,89 @@ export default function selectKit(selector) {
     },
 
     isExpanded() {
-      return queryAll(selector).hasClass("is-expanded");
+      return query(selector).classList.contains("is-expanded");
     },
 
     isFocused() {
-      return queryAll(selector).hasClass("is-focused");
+      return query(selector).classList.contains("is-focused");
     },
 
     isHidden() {
-      return queryAll(selector).hasClass("is-hidden");
+      return query(selector).classList.contains("is-hidden");
     },
 
     isDisabled() {
-      return queryAll(selector).hasClass("is-disabled");
+      return query(selector).classList.contains("is-disabled");
     },
 
     header() {
-      return headerHelper(queryAll(selector).find(".select-kit-header"));
+      return headerHelper(query(selector).querySelector(".select-kit-header"));
     },
 
     filter() {
-      return filterHelper(queryAll(selector).find(".select-kit-filter"));
+      return filterHelper(query(selector).querySelector(".select-kit-filter"));
     },
 
     rows() {
-      return queryAll(selector).find(".select-kit-row");
+      return query(selector).querySelectorAll(".select-kit-row");
     },
 
     displayedContent() {
-      return this.rows()
-        .map((_, row) => {
-          return {
-            name: row.getAttribute("data-name"),
-            id: row.getAttribute("data-value"),
-          };
-        })
-        .toArray();
+      return [...this.rows()].map((row) => ({
+        name: row.getAttribute("data-name"),
+        id: row.getAttribute("data-value"),
+      }));
     },
 
     rowByValue(value) {
       return rowHelper(
-        queryAll(selector).find('.select-kit-row[data-value="' + value + '"]')
+        query(selector).querySelector(`.select-kit-row[data-value="${value}"]`)
       );
     },
 
     rowByName(name) {
       return rowHelper(
-        queryAll(selector).find('.select-kit-row[data-name="' + name + '"]')
+        query(selector).querySelector(`.select-kit-row[data-name="${name}"]`)
       );
     },
 
     rowByIndex(index) {
       return rowHelper(
-        queryAll(selector).find(
-          ".select-kit-row:nth-of-type(" + (index + 1) + ")"
+        query(selector).querySelector(
+          `.select-kit-row:nth-of-type(${index + 1})`
         )
       );
     },
 
     el() {
-      return queryAll(selector);
+      return query(selector);
     },
 
     noneRow() {
-      return rowHelper(queryAll(selector).find(".select-kit-row.none"));
+      return rowHelper(query(selector).querySelector(".select-kit-row.none"));
     },
 
     validationMessage() {
-      const validationMessage = queryAll(selector).find(".validation-message");
+      const validationMessage = query(selector).querySelector(
+        ".validation-message"
+      );
 
-      if (validationMessage.length) {
-        return validationMessage.html().trim();
+      if (validationMessage) {
+        return validationMessage.innerHTML.trim();
       } else {
         return null;
       }
     },
 
     selectedRow() {
-      return rowHelper(queryAll(selector).find(".select-kit-row.is-selected"));
+      return rowHelper(
+        query(selector).querySelector(".select-kit-row.is-selected")
+      );
     },
 
     highlightedRow() {
       return rowHelper(
-        queryAll(selector).find(".select-kit-row.is-highlighted")
+        query(selector).querySelector(".select-kit-row.is-highlighted")
       );
     },
 
@@ -314,11 +313,11 @@ export function testSelectKitModule(moduleName, options = {}) {
 
     beforeEach() {
       this.set("subject", selectKit());
-      options.beforeEach && options.beforeEach.call(this);
+      options.beforeEach?.call(this);
     },
 
     afterEach() {
-      options.afterEach && options.afterEach.call(this);
+      options.afterEach?.call(this);
     },
   });
 }

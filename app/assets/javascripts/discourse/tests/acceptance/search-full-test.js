@@ -299,6 +299,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
+    await click(".advanced-filters > summary");
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("bookmarks");
@@ -322,6 +323,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
+    await click(".advanced-filters > summary");
     await fillIn(".search-query", "none");
     await statusSelector.expand();
     await statusSelector.selectRowByValue("closed");
@@ -345,6 +347,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
+    await click(".advanced-filters > summary");
     await fillIn(".search-query", "status:none");
 
     assert.strictEqual(
@@ -359,6 +362,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
+    await click(".advanced-filters > summary");
     await fillIn(".search-query", "in:none");
 
     assert.strictEqual(
@@ -378,6 +382,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters > summary");
 
     await fillIn(".search-query", "none");
     await selectDate(".date-picker#search-post-date", "2016-10-05");
@@ -403,6 +408,7 @@ acceptance("Search - Full Page", function (needs) {
 
   test("update min post count through advanced search ui", async function (assert) {
     await visit("/search");
+    await click(".advanced-filters > summary");
     await fillIn(".search-query", "none");
     await fillIn("#search-min-post-count", "5");
 
@@ -422,6 +428,7 @@ acceptance("Search - Full Page", function (needs) {
 
   test("update max post count through advanced search ui", async function (assert) {
     await visit("/search");
+    await click(".advanced-filters > summary");
     await fillIn(".search-query", "none");
     await fillIn("#search-max-post-count", "5");
 
@@ -484,6 +491,7 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "admin");
     assert.ok(!exists(".fps-user-item"), "has no user results");
 
+    await click(".advanced-filters > summary");
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
 
@@ -511,6 +519,7 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.ok(!exists(".fps-tag-item"), "has no category/tag results");
 
+    await click(".advanced-filters > summary");
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
     await click(".search-cta");

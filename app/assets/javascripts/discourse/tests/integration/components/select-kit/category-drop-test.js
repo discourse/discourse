@@ -5,7 +5,7 @@ import {
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -53,10 +53,10 @@ discourseModule(
     `,
 
       async test(assert) {
-        const $header = this.subject.header().el();
+        const header = this.subject.header().el();
 
         assert.ok(
-          exists($header.find(`.d-icon-caret-right`)),
+          header.querySelector(`.d-icon-caret-right`),
           "it uses the correct default icon"
         );
       },
@@ -101,7 +101,7 @@ discourseModule(
 
         const row = this.subject.rowByValue(this.category.id);
         assert.ok(
-          exists(row.el().find(".category-desc")),
+          row.el().querySelector(".category-desc"),
           "it shows category description for newcomers"
         );
       },
@@ -127,8 +127,8 @@ discourseModule(
         await this.subject.expand();
 
         const row = this.subject.rowByValue(this.category.id);
-        assert.ok(
-          !exists(row.el().find(".category-desc")),
+        assert.notOk(
+          row.el().querySelector(".category-desc"),
           "it doesn't shows category description for TL0+"
         );
       },
@@ -154,8 +154,8 @@ discourseModule(
         await this.subject.expand();
 
         const row = this.subject.rowByValue(this.category.id);
-        assert.ok(
-          !exists(row.el().find(".category-desc")),
+        assert.notOk(
+          row.el().querySelector(".category-desc"),
           "it doesn't show category description for staff"
         );
       },
@@ -210,8 +210,8 @@ discourseModule(
         const childRow = this.subject.rowByValue(childCategoryId);
         assert.ok(childRow.exists(), "the child row is showing");
 
-        const $categoryStatus = childRow.el().find(".category-status");
-        assert.ok($categoryStatus.text().trim().match(/^spec/));
+        const categoryStatus = childRow.el().querySelector(".category-status");
+        assert.ok(categoryStatus.innerText.trim().match(/^spec/));
       },
     });
 
@@ -279,7 +279,10 @@ discourseModule(
 
         const category = Category.findById(7);
         const row = this.subject.rowByValue(category.id);
-        const topicCount = row.el().find(".topic-count").text().trim();
+        const topicCount = row
+          .el()
+          .querySelector(".topic-count")
+          .innerText.trim();
 
         assert.strictEqual(
           topicCount,
@@ -310,7 +313,10 @@ discourseModule(
 
         const category = Category.findById(7);
         const row = this.subject.rowByValue(category.id);
-        const topicCount = row.el().find(".topic-count").text().trim();
+        const topicCount = row
+          .el()
+          .querySelector(".topic-count")
+          .innerText.trim();
 
         assert.strictEqual(
           topicCount,
