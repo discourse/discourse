@@ -48,35 +48,51 @@ def config_to_url(config)
   ).to_s
 end
 
-task 'db:create' => [:load_config] do |_, args|
-  if MultisiteTestHelpers.create_multisite?
-    unless system("RAILS_ENV=test RAILS_TEST_DB=discourse_test_multisite rake db:create")
+task "multisite:create" => ["db:load_config"] do
+  next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
 
-      STDERR.puts "-" * 80
-      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
-      STDERR.puts "checking the column structure when initializing, which raises an error."
-      STDERR.puts "-" * 80
-      raise "Could not initialize discourse_test_multisite"
-    end
+  spec = RailsMultisite::ConnectionManagement.connection_spec(db: ENV["RAILS_DB"])
+  database_url = config_to_url(spec.config)
+  system("DATABASE_URL=#{database_url} rake db:create")
+  exit 0
+end
 
-    RailsMultisite::ConnectionManagement.all_dbs.each do |db|
-      spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
-      next unless spec
+task "multisite:create:all" => ["db:load_config"] do
+  next if !MultisiteTestHelpers.create_multisite?
 
-      database_url = config_to_url(spec.config)
-      system("DATABASE_URL=#{database_url} rake db:create")
-    end
+  unless system("RAILS_ENV=test RAILS_TEST_DB=discourse_test_multisite rake db:create")
+    STDERR.puts "-" * 80
+    STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
+    STDERR.puts "checking the column structure when initializing, which raises an error."
+    STDERR.puts "-" * 80
+    raise "Could not initialize discourse_test_multisite"
   end
+
+  RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+    spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+    next unless spec
+
+    database_url = config_to_url(spec.config)
+    system("DATABASE_URL=#{database_url} rake db:create")
+  end
+end
+
+task "db:create" => :load_config do
+  Rake::Task["multisite:create:all"].invoke
 end
 
 begin
   reqs = Rake::Task['db:create'].prerequisites.map(&:to_sym)
   Rake::Task['db:create'].clear_prerequisites
-  Rake::Task['db:create'].enhance(["db:force_skip_persist"] + reqs)
+  Rake::Task['db:create'].enhance(["db:force_skip_persist", "multisite:create"] + reqs)
 end
 
 task 'db:drop' => [:load_config] do |_, args|
-  if MultisiteTestHelpers.create_multisite?
+  if Rails.env.development? && ENV["RAILS_DB"] && !ENV["DATABASE_URL"]
+    spec = RailsMultisite::ConnectionManagement.connection_spec(db: ENV["RAILS_DB"])
+    database_url = config_to_url(spec.config)
+    system("DATABASE_URL=#{database_url} rake db:drop")
+  elsif MultisiteTestHelpers.create_multisite?
     system("RAILS_TEST_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
 
     RailsMultisite::ConnectionManagement.all_dbs.each do |db|
