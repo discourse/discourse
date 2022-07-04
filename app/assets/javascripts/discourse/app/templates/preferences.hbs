@@ -49,7 +49,8 @@
         {{i18n "user.preferences_nav.interface"}}
       </LinkTo>
     </li>
-    {{#if this.currentUser.experimental_sidebar_enabled}}
+
+    {{#if this.siteSettings.enable_experimental_sidebar}}
       <li class="indent nav-sidebar">
         {{#link-to "preferences.sidebar"}}
           {{i18n "user.preferences_nav.sidebar"}}
