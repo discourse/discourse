@@ -50,7 +50,7 @@
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
-    "ember-exam": "^7.0.1",
+    "ember-exam": "^8.0.0",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
     "ember-qunit": "^5.1.2",
@@ -63,8 +63,8 @@
     "jsdom": "^20.0.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^3.3.0",
-    "messageformat": "0.1.5",
-    "node-fetch": "^2.6.6",
+    "messageformat": "0.3.1",
+    "node-fetch": "^2.6.7",
     "pretender": "^3.4.7",
     "pretty-text": "^1.0.0",
     "qunit": "^2.14.0",
@@ -93,6 +93,6 @@
   },
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^0.1.4",
-    "ember-exam": "^7.0.1"
+    "ember-exam": "^8.0.0"
   }
 }
