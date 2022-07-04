@@ -1893,6 +1893,16 @@ describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "does not raise if topic has been permanently deleted" do
+        post = Fabricate(:post, user: admin)
+        PostDestroyer.new(admin, post).destroy
+        post.update!(topic_id: -1000)
+
+        sign_in(admin)
+        get "/posts/#{admin.username}/deleted.json"
+        expect(response.status).to eq(200)
+      end
+
       it "doesn't return secured categories for moderators if they don't have access" do
         Fabricate(:moderator)
 
