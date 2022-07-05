@@ -72,7 +72,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :bookmark_auto_delete_preference,
              :pending_posts_count,
              :experimental_sidebar_enabled,
-             :status,
              :sidebar_category_ids,
              :sidebar_tag_names
 
@@ -329,13 +328,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_sidebar_tag_names?
     include_sidebar_category_ids? && SiteSetting.tagging_enabled
-  end
-
-  def include_status?
-    SiteSetting.enable_user_status && object.has_status?
-  end
-
-  def status
-    UserStatusSerializer.new(object.user_status, root: false)
   end
 end
