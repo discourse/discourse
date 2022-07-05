@@ -49,7 +49,9 @@ export default class CategorySectionLink {
   }
 
   get text() {
-    return htmlSafe(categoryBadgeHTML(this.category, { link: false }));
+    return htmlSafe(
+      categoryBadgeHTML(this.category, { link: false, categoryStyle: "bullet" })
+    );
   }
 
   get badgeCount() {
