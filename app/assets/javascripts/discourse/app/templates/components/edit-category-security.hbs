@@ -18,7 +18,7 @@
         </span>
       </div>
       {{#each category.permissions as |p|}}
-        {{category-permission-row group_name=p.group_name type=p.permission_type category=category everyonePermission=everyonePermission}}
+        <CategoryPermissionRow @group_name={{p.group_name}} @type={{p.permission_type}} @category={{category}} @everyonePermission={{everyonePermission}} />
       {{/each}}
 
       {{#unless category.permissions}}
@@ -30,17 +30,9 @@
       {{#if category.availableGroups}}
         <div class="add-group">
           <span class="group-name">
-            {{combo-box
-              class="available-groups"
-              content=category.availableGroups
-              onChange=(action "onSelectGroup")
-              value=null
-              valueProperty=null
-              nameProperty=null
-              options=(hash
+            <ComboBox @class="available-groups" @content={{category.availableGroups}} @onChange={{action "onSelectGroup"}} @value={{null}} @valueProperty={{null}} @nameProperty={{null}} @options={{hash
                 none="category.security_add_group"
-              )
-            }}
+              }} />
           </span>
         </div>
       {{/if}}
@@ -52,4 +44,4 @@
   {{/unless}}
 </section>
 
-{{plugin-outlet name="category-custom-security" args=(hash category=category) tagName="section"}}
+<PluginOutlet @name="category-custom-security" @args={{hash category=category}} @tagName="section" />

@@ -2,9 +2,4 @@
 
 {{html-safe message.body}}
 
-{{d-button
-  class="btn-primary"
-  label="user.private_message"
-  icon="envelope"
-  action=(action switchPM message)
-}}
+<DButton @class="btn-primary" @label="user.private_message" @icon="envelope" @action={{action switchPM message}} />

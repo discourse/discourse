@@ -6,15 +6,15 @@
     },
     "usernames": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "emails": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     }
   },
   "required": [

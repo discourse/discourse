@@ -1413,7 +1413,6 @@ pt_BR:
     contact_email: "Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também em <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     contact_url: "URL de contato deste site. Exibida na página <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
-    download_remote_images_to_local: "Transferira para converter imagens remotas em imagens locais. Isso evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
     disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
     editing_grace_period: "Durante (n) segundos após a publicação, as edições não criarão uma nova versão no histórico da postagem."
@@ -1455,7 +1454,6 @@ pt_BR:
     favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
     apple_touch_icon: "Ícone usado para dispositivos Apple touch, que será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
-    twitter_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
     email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2030,7 +2028,7 @@ pt_BR:
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
     default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
-    default_categories_regular: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
+    default_categories_normal: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
     mute_all_categories_by_default: "Defina o nível de notificação padrão de todas as categorias para silenciado(a). É preciso que os(as) usuários(as) aceitem que suas categorias sejam exibidas nas páginas \"mais recentes\" e \"categorias\". Se quiser modificar os padrões para usuários(as) anônimos(as), defina as configurações \"default_categories_\"."
     default_tags_watching: "Lista de etiquetas que são acompanhadas por padrão."
     default_tags_tracking: "Lista de etiquetas que são monitoradas por padrão."
@@ -3547,17 +3545,6 @@ pt_BR:
     suspicious_login:
       title: "Alerta de nova entrada com conta"
       subject_template: "[%{site_name}] Nova entrada com conta em %{location}"
-      text_body_template: |
-        Olá,
-
-        Notamos que a sua conta foi usada para entrar em um dispositivo ou local que você não costuma usar. Foi você?
-
-         - Localização: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} -- %{os}
-
-        Se tiver sido você, ótimo! Não há mais nada que precise ser feito.
-        Caso contrário, [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
     post_approved:
       title: "Sua postagem foi aprovada"
       subject_template: "[%{site_name}] Sua postagem foi aprovada"

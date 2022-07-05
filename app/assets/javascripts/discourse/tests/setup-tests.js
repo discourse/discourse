@@ -10,10 +10,7 @@ import pretender, {
   pretenderHelpers,
   resetPretender,
 } from "discourse/tests/helpers/create-pretender";
-import {
-  currentSettings,
-  resetSettings,
-} from "discourse/tests/helpers/site-settings";
+import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
@@ -34,9 +31,9 @@ import { flushMap } from "discourse/services/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import sinon from "sinon";
 import { run } from "@ember/runloop";
-import { isLegacyEmber } from "discourse-common/config/environment";
 import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
+import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -213,32 +210,6 @@ function setupTestsCommon(application, container, config) {
 
   $.fn.modal = AcceptanceModal;
 
-  let server;
-
-  Object.defineProperty(window, "server", {
-    get() {
-      deprecated(
-        "Accessing the global variable `server` is deprecated. Use a `pretend()` method instead.",
-        {
-          since: "2.6.0.beta.3",
-          dropFrom: "2.6.0",
-        }
-      );
-      return server;
-    },
-  });
-  Object.defineProperty(window, "sandbox", {
-    get() {
-      deprecated(
-        "Accessing the global variable `sandbox` is deprecated. Import `sinon` instead",
-        {
-          since: "2.6.0.beta.4",
-          dropFrom: "2.6.0",
-        }
-      );
-      return sinon;
-    },
-  });
   Object.defineProperty(window, "exists", {
     get() {
       deprecated(
@@ -252,6 +223,7 @@ function setupTestsCommon(application, container, config) {
     },
   });
 
+  let server;
   let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
   if (setupDataElement) {
@@ -323,19 +295,11 @@ function setupTestsCommon(application, container, config) {
 
     createHelperContext({
       get siteSettings() {
-        if (isLegacyEmber() && container.isDestroyed) {
-          return settings;
-        } else {
-          return container.lookup("site-settings:main");
-        }
+        return container.lookup("site-settings:main");
       },
       capabilities: {},
       get site() {
-        if (isLegacyEmber() && container.isDestroyed) {
-          return Site.current();
-        } else {
-          return container.lookup("site:main") || Site.current();
-        }
+        return container.lookup("site:main") || Site.current();
       },
       registry: app.__registry__,
     });
@@ -414,19 +378,7 @@ function setupTestsCommon(application, container, config) {
     return true;
   };
 
-  if (isLegacyEmber()) {
-    Object.keys(requirejs.entries).forEach(function (entry) {
-      if (shouldLoadModule(entry)) {
-        require(entry, null, null, true);
-      }
-    });
-  } else {
-    // Ember CLI
-    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
-    emberCliTestLoader.addModuleExcludeMatcher(
-      (name) => !shouldLoadModule(name)
-    );
-  }
+  addModuleExcludeMatcher((name) => !shouldLoadModule(name));
 
   // forces 0 as duration for all jquery animations
   // eslint-disable-next-line no-undef
@@ -437,20 +389,6 @@ function setupTestsCommon(application, container, config) {
   setApplication(application);
   setDefaultOwner(application.__container__);
   resetSite();
-}
-
-export function setupTestsLegacy(application) {
-  app = application;
-  setResolver(buildResolver("discourse").create({ namespace: app }));
-  setupTestsCommon(application, app.__container__);
-
-  app.instanceInitializer({
-    name: "test-helper",
-    initialize: testsInitialized,
-    teardown: testsTornDown,
-  });
-  app.SiteSettings = currentSettings();
-  app.start();
 }
 
 export default function setupTests(config) {

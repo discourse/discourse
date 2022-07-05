@@ -210,6 +210,7 @@ de:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Benutzeragenten müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer falsch eingeschätzt werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst die Strip-Image-Metadaten nicht deaktivieren, wenn \"composer media optimization image enabled\" aktiviert ist. Deaktiviere \"composer media optimization image enabled\", bevor du Strip-Image-Metadaten deaktivierst."
+      twitter_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -588,6 +589,7 @@ de:
               too_many: "Zu viele Wörter für diese Aktion"
             base:
               invalid_url: "Ersatz-URL ist ungültig"
+              invalid_tag_list: "Ersatz-Schlagwort-Liste ist ungültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
   vip_category_name: "Lounge"
@@ -668,6 +670,11 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
+      blocked_hotlinked_title: "Das Bild befindet sich auf einer anderen Website. Anklicken, um es in einem neuen Tab zu öffnen."
+      blocked_hotlinked: "Externes Bild"
+    media_placeholder:
+      blocked_hotlinked_title: "Die Medien werden auf einer anderen Website gehostet. Anklicken, um in einem neuen Tab zu öffnen."
+      blocked_hotlinked: "Externe Medien"
     hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
@@ -1429,9 +1436,11 @@ de:
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anfragen angezeigt."
     contact_url: "Kontakt-URL für diese Website. Wird auf der Seite <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anliegen angezeigt."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
-    download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
+    download_remote_images_to_local: "Konvertiere externe (mit Hotlinks versehene) Bilder in lokale Bilder, indem du sie herunterlädst; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der verlinkten Seite entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
     disabled_image_download_domains: "Durch senkrechte Striche („|“) getrennte Liste von Domains, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
+    block_hotlinked_media: "Verhindert, dass Benutzer extrene (Hotlinked) Medien in ihren Beiträgen einfügen. Externe Medien, die nicht über 'download_remote_images_to_local' heruntergeladen werden, werden durch einen Platzhalter-Link ersetzt."
+    block_hotlinked_media_exceptions: "Eine Liste von Basis-URLs, die von der Einstellung block_hotlinked_media ausgenommen sind. Füge das Protokoll hinzu (z.B. https://example.com)."
     editing_grace_period: "Für (n) Sekunden nach dem Schreiben wird durch die Bearbeitung keine neue Version im Beitragsverlauf erstellt."
     editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
     editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 2 und höher)"
@@ -1473,7 +1482,7 @@ de:
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
     apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
-    twitter_summary_large_image: "„summary large image“ für Twitter-Karten (sollte mindestens 280 breit und 150 hoch sein). Falls leer, werden Standard-Karten-Metadaten mithilfe von opengraph_image generiert."
+    twitter_summary_large_image: "Twitter-Karte \"Zusammenfassung großes Bild\" (sollte mindestens 280 in der Breite und mindestens 150 in der Höhe sein, kann nicht .svg sein). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt."
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2056,7 +2065,7 @@ de:
     default_categories_tracking: "Liste der standardmäßig verfolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste der Kategorien, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
-    default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
+    default_categories_normal: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
     mute_all_categories_by_default: "Setze die Standard-Benachrichtigungsstufe für alle Kategorien auf stumm. Erfordere die Aktivierung der Kategorien durch die Benutzer, damit sie auf den Seiten „Aktuell“ und „Kategorien“ erscheinen. Wenn du die Standardeinstellungen für anonyme Benutzer ändern möchtest, bearbeite die „default_categories_“-Einstellungen."
     default_tags_watching: "Liste der Schlagwörter, die standardmäßig beobachtet werden."
     default_tags_tracking: "Liste der Schlagwörter, die standardmäßig verfolgt werden."
@@ -2112,6 +2121,7 @@ de:
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
+    splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -3631,7 +3641,7 @@ de:
 
         Wenn du das warst – hervorragend! Du musst nichts weiter tun.
 
-        Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/account) und erwäge, dein Passwort zu ändern.
+        Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/security) und erwäge, dein Passwort zu ändern.
     post_approved:
       title: "Dein Beitrag wurde genehmigt"
       subject_template: "[%{site_name}] Dein Beitrag wurde genehmigt"

@@ -36,11 +36,11 @@ module TopicGuardian
   end
 
   def can_create_whisper?
-    is_staff? && SiteSetting.enable_whispers?
+    @user.whisperer?
   end
 
-  def can_see_whispers?(_topic)
-    is_staff?
+  def can_see_whispers?(_topic = nil)
+    @user.whisperer?
   end
 
   def can_publish_topic?(topic, category)

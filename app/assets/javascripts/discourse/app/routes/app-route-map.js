@@ -166,6 +166,7 @@ export default function () {
         this.route("tags");
         this.route("interface");
         this.route("apps");
+        this.route("sidebar");
 
         this.route("username");
         this.route("email");

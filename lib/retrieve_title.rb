@@ -9,10 +9,8 @@ module RetrieveTitle
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit
     )
-  rescue Exception => ex
-    raise if Rails.env.test?
-    Rails.logger.error(ex)
-    nil
+  rescue Net::ReadTimeout
+    # do nothing for Net::ReadTimeout errors
   end
 
   def self.extract_title(html, encoding = nil)

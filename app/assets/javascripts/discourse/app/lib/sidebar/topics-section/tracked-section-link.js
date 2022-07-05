@@ -56,15 +56,11 @@ export default class TrackedSectionLink extends BaseSectionLink {
     return "discovery.latest discovery.new discovery.unread discovery.top";
   }
 
-  get badgeText() {
+  get badgeCount() {
     if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
-        count: this.totalUnread,
-      });
+      return this.totalUnread;
     } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
-        count: this.totalNew,
-      });
+      return this.totalNew;
     } else {
       return;
     }

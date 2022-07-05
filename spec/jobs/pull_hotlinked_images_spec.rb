@@ -87,12 +87,12 @@ describe Jobs::PullHotlinkedImages do
       stub_image_size
       post.rebake!
       post.reload
-      expect(post.post_uploads.count).to eq(1)
+      expect(post.upload_references.count).to eq(1)
 
       post.update(raw: "Post with no images")
       post.rebake!
       post.reload
-      expect(post.post_uploads.count).to eq(0)
+      expect(post.upload_references.count).to eq(0)
     end
 
     it 'replaces images again after edit' do
@@ -350,6 +350,7 @@ describe Jobs::PullHotlinkedImages do
       before do
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
+        stub_request(:head, image_url)
 
         stub_request(:get, api_url).to_return(body: "{
           \"query\": {
@@ -375,7 +376,7 @@ describe Jobs::PullHotlinkedImages do
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
-        expect(post.post_uploads.count).to eq(1)
+        expect(post.upload_references.count).to eq(1)
       end
 
       it 'associates uploads correctly' do
@@ -384,13 +385,13 @@ describe Jobs::PullHotlinkedImages do
         post.rebake!
         post.reload
 
-        expect(post.post_uploads.count).to eq(1)
+        expect(post.upload_references.count).to eq(1)
 
         post.update(raw: "no onebox")
         post.rebake!
         post.reload
 
-        expect(post.post_uploads.count).to eq(0)
+        expect(post.upload_references.count).to eq(0)
       end
 
       it 'all combinations' do
@@ -399,6 +400,7 @@ describe Jobs::PullHotlinkedImages do
         #{url}
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        #{image_url}
         MD
         stub_image_size
 
@@ -413,6 +415,7 @@ describe Jobs::PullHotlinkedImages do
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)

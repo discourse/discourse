@@ -6,6 +6,7 @@ class UserProfile < ActiveRecord::Base
   belongs_to :profile_background_upload, class_name: "Upload"
   belongs_to :granted_title_badge, class_name: "Badge"
   belongs_to :featured_topic, class_name: 'Topic'
+  has_many :upload_references, as: :target, dependent: :destroy
 
   validates :bio_raw, length: { maximum: 3000 }, watched_words: true
   validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
@@ -15,6 +16,13 @@ class UserProfile < ActiveRecord::Base
   before_save :cook
   after_save :trigger_badges
   after_save :pull_hotlinked_image
+
+  after_save do
+    if saved_change_to_profile_background_upload_id? || saved_change_to_card_background_upload_id? || saved_change_to_bio_raw?
+      upload_ids = [self.profile_background_upload_id, self.card_background_upload_id] + Upload.extract_upload_ids(self.bio_raw)
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+    end
+  end
 
   validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
 

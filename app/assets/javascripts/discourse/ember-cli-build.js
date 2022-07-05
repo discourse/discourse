@@ -29,6 +29,7 @@ module.exports = function (defaults) {
     },
     autoImport: {
       forbidEval: true,
+      insertScriptsAt: "ember-auto-import-scripts",
     },
     fingerprint: {
       // Handled by Rails asset pipeline
@@ -105,7 +106,7 @@ module.exports = function (defaults) {
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import(vendorJs + "bootstrap-modal.js");
+  app.import("node_modules/bootstrap/js/modal.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
@@ -127,6 +128,9 @@ module.exports = function (defaults) {
     }),
     concat(mergeTrees([app.options.adminTree]), {
       outputFile: `assets/admin.js`,
+    }),
+    concat(mergeTrees([app.options.wizardTree]), {
+      outputFile: `assets/wizard.js`,
     }),
     prettyTextEngine(vendorJs, "discourse-markdown"),
     concat("public/assets/scripts", {

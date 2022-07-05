@@ -116,16 +116,6 @@ pre code {
   }
 }
 
-// TODO figure out a clean place to put stuff like this
-.row:before,
-.row:after {
-  display: table;
-  content: "";
-}
-.row:after {
-  clear: both;
-}
-
 // Tables
 // --------------------------------------------------
 

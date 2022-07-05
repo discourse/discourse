@@ -1,14 +1,14 @@
 <div class="reviewable-container">
   <div class="reviewable-list">
     {{#if reviewables}}
-      {{#load-more selector=".reviewable-item" action=(action "loadMore")}}
+      <LoadMore @selector=".reviewable-item" @action={{action "loadMore"}}>
         <div class="reviewables">
           {{#each reviewables as |r|}}
-            {{reviewable-item reviewable=r remove=(action "remove")}}
+            <ReviewableItem @reviewable={{r}} @remove={{action "remove"}} />
           {{/each}}
         </div>
-      {{/load-more}}
-      {{conditional-loading-spinner condition=reviewables.loadingMore}}
+      </LoadMore>
+      <ConditionalLoadingSpinner @condition={{reviewables.loadingMore}} />
     {{else}}
       <div class="no-review">
         {{i18n "review.none"}}
@@ -19,117 +19,73 @@
   <div class="reviewable-filters">
     <div class="reviewable-filter">
       <label class="filter-label">{{i18n "review.filters.status"}}</label>
-      {{combo-box
-        value=filterStatus
-        content=statuses
-        onChange=(action (mut filterStatus))
-      }}
+      <ComboBox @value={{filterStatus}} @content={{statuses}} @onChange={{action (mut filterStatus)}} />
     </div>
 
     {{#if filtersExpanded}}
 
-      {{plugin-outlet name="above-review-filters" tagName="span" connectorTagName="div" args=(hash model=model additionalFilters=additionalFilters)}}
+      <PluginOutlet @name="above-review-filters" @tagName="span" @connectorTagName="div" @args={{hash model=model additionalFilters=additionalFilters}} />
 
       <div class="reviewable-filter">
         <label class="filter-label">{{i18n "review.filters.type.title"}}</label>
-        {{combo-box
-          value=filterType
-          content=allTypes
-          onChange=(action (mut filterType))
-          options=(hash
+        <ComboBox @value={{filterType}} @content={{allTypes}} @onChange={{action (mut filterType)}} @options={{hash
             none="review.filters.type.all"
-          )
-        }}
+          }} />
       </div>
 
       <div class="reviewable-filter">
         <label class="filter-label">{{i18n "review.filters.priority.title"}}</label>
-        {{combo-box
-          value=filterPriority
-          content=priorities
-          onChange=(action (mut filterPriority))
-        }}
+        <ComboBox @value={{filterPriority}} @content={{priorities}} @onChange={{action (mut filterPriority)}} />
       </div>
 
       <div class="reviewable-filter">
         <label class="filter-label">{{i18n "review.filters.category"}}</label>
-        {{category-chooser
-          value=filterCategoryId
-          onChange=(action (mut filterCategoryId))
-          options=(hash
+        <CategoryChooser @value={{filterCategoryId}} @onChange={{action (mut filterCategoryId)}} @options={{hash
             none="review.filters.all_categories"
-          )
-        }}
+          }} />
       </div>
 
       <div class="reviewable-filter topic-filter">
         {{i18n "review.filtered_reviewed_by"}}
-        {{email-group-user-chooser
-          value=filterReviewedBy
-          onChange=(action "updateFilterReviewedBy")
-          options=(hash
+        <EmailGroupUserChooser @value={{filterReviewedBy}} @onChange={{action "updateFilterReviewedBy"}} @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
-          )
-        }}
+          }} />
       </div>
 
       <div class="reviewable-filter topic-filter">
         {{i18n "review.filtered_user"}}
-        {{email-group-user-chooser
-          value=filterUsername
-          onChange=(action "updateFilterUsername")
-          class="user-selector"
-          options=(hash
+        <EmailGroupUserChooser @value={{filterUsername}} @onChange={{action "updateFilterUsername"}} @class="user-selector" @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
-          )
-        }}
+          }} />
       </div>
 
       {{#if filterTopic}}
         <div class="reviewable-filter topic-filter">
           {{i18n "review.filtered_topic"}}
-          {{d-button class="btn-default" label="review.show_all_topics" icon="times" action=(action "resetTopic")}}
+          <DButton @class="btn-default" @label="review.show_all_topics" @icon="times" @action={{action "resetTopic"}} />
         </div>
       {{/if}}
 
       <div class="reviewable-filter date-range">
         {{i18n "review.date_filter"}}
-        {{date-time-input-range
-          from=filterFromDate
-          to=filterToDate
-          onChange=setRange
-          showFromTime=false
-          showToTime=false
-        }}
+        <DateTimeInputRange @from={{filterFromDate}} @to={{filterToDate}} @onChange={{setRange}} @showFromTime={{false}} @showToTime={{false}} />
       </div>
 
       <div class="reviewable-filter sort-order">
         {{i18n "review.order_by"}}
-        {{combo-box
-          value=filterSortOrder
-          content=sortOrders
-          onChange=(action (mut filterSortOrder))
-        }}
+        <ComboBox @value={{filterSortOrder}} @content={{sortOrders}} @onChange={{action (mut filterSortOrder)}} />
       </div>
     {{/if}}
 
     <div class="reviewable-filters-actions">
-      {{d-button
-        icon="sync"
-        label="review.filters.refresh"
-        class="btn-primary refresh"
-        action=(action "refresh")}}
+      <DButton @icon="sync" @label="review.filters.refresh" @class="btn-primary refresh" @action={{action "refresh"}} />
 
       {{#if site.mobileView}}
-        {{d-button
-          label="show_help"
-          icon=toggleFiltersIcon
-          class="btn-default expand-secondary-filters"
-          action=(action "toggleFilters")}}
+        <DButton @label="show_help" @icon={{toggleFiltersIcon}} @class="btn-default expand-secondary-filters" @action={{action "toggleFilters"}} />
       {{/if}}
     </div>
   </div>

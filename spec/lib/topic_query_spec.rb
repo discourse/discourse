@@ -549,7 +549,7 @@ describe TopicQuery do
     end
 
     it 'should include default regular category topics in latest list for anonymous users' do
-      SiteSetting.default_categories_regular = category.id.to_s
+      SiteSetting.default_categories_normal = category.id.to_s
       expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
@@ -834,6 +834,9 @@ describe TopicQuery do
     end
 
     context 'with whispers' do
+      before do
+        SiteSetting.enable_whispers = true
+      end
 
       it 'correctly shows up in unread for staff' do
 

@@ -4,20 +4,12 @@
   <div class="controls">
     <div class="inline-form">
       <label for="last-seen">{{i18n "admin.email.last_seen_user"}}</label>
-      {{date-picker-past value=lastSeen id="last-seen"}}
+      <DatePickerPast @value={{lastSeen}} @id="last-seen" />
       <label>{{i18n "admin.email.user"}}:</label>
-      {{email-group-user-chooser
-        value=username
-        onChange=(action "updateUsername")
-        options=(hash
+      <EmailGroupUserChooser @value={{username}} @onChange={{action "updateUsername"}} @options={{hash
           maximum=1
-        )
-      }}
-      {{d-button
-        class="btn-primary digest-refresh-button"
-        action=(action "refresh")
-        label="admin.email.refresh"
-      }}
+        }} />
+      <DButton @class="btn-primary digest-refresh-button" @action={{action "refresh"}} @label="admin.email.refresh" />
       <div class="toggle">
         <label>{{i18n "admin.email.format"}}</label>
         {{#if showHtml}}
@@ -35,7 +27,7 @@
   </div>
 </div>
 
-{{#conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{loading}}>
 
   <div class="email-preview-digest">
     {{#if showSendEmailForm}}
@@ -45,12 +37,8 @@
             {{i18n "admin.email.sending_test"}}
           {{else}}
             <label>{{i18n "admin.email.send_digest_label"}}</label>
-            {{text-field value=email placeholderKey="admin.email.test_email_address"}}
-            {{d-button
-              class="btn-default"
-              action=(action "sendEmail")
-              disabled=sendEmailDisabled
-              label="admin.email.send_digest"}}
+            <TextField @value={{email}} @placeholderKey="admin.email.test_email_address" />
+            <DButton @class="btn-default" @action={{action "sendEmail"}} @disabled={{sendEmailDisabled}} @label="admin.email.send_digest" />
             {{#if sentEmail}}
               <span class="result-message">{{i18n "admin.email.sent_test"}}</span>
             {{/if}}
@@ -72,4 +60,4 @@
     </div>
   </div>
 
-{{/conditional-loading-spinner}}
+</ConditionalLoadingSpinner>

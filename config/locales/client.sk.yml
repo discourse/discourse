@@ -1287,7 +1287,6 @@ sk:
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
-      users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -1324,8 +1323,6 @@ sk:
       composer_actions:
         reply: Odpoveď
         edit: Upraviť
-        reply_as_private_message:
-          label: Nová správa
         reply_to_topic:
           label: Odpovedať na tému
         create_topic:
@@ -2116,6 +2113,7 @@ sk:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
       readonly: "Zobraz"
+    preloader_text: "Načítava sa"
     lightbox:
       download: "stiahnuť"
       counter: "%curr% z %total%"
@@ -2165,7 +2163,6 @@ sk:
         edit: "%{shortcut} Upraviť príspevok"
         delete: "%{shortcut} Zmazať príspevok"
         mark_muted: "%{shortcut} Umlčať tému"
-        mark_regular: "%{shortcut} Obyčajná (preddefinovaná) téma"
         mark_tracking: "%{shortcut} Pozorovať tému"
         mark_watching: "%{shortcut} Pozorovať tému"
     badges:
@@ -2273,6 +2270,19 @@ sk:
       unread_count: "%{count} neprečítaná"
       new_count: "%{count} nová"
       sections:
+        messages:
+          header_link_text: "Správy"
+          links:
+            inbox: "Prijaté správy"
+            sent: "Odoslané"
+            new: "Nové"
+            new_with_count: "Nová (%{count})"
+            unread: "Neprečítané"
+            unread_with_count: "Neprečítaná (%{count})"
+            archive: "Archív"
+        tags:
+          header_link_title: "všetky štítky"
+          header_link_text: "Štítky"
         categories:
           header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
@@ -2282,6 +2292,8 @@ sk:
           links:
             tracked:
               content: "Pozorované"
+            my_posts:
+              content: "Moje príspevky"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

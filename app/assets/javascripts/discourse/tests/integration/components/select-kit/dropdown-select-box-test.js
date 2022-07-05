@@ -1,7 +1,7 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -82,13 +82,13 @@ discourseModule(
       },
 
       async test(assert) {
-        assert.ok(
-          !exists(this.subject.header().el().find(".selected-name")),
+        assert.notOk(
+          this.subject.header().el().querySelector(".selected-name"),
           "it hides the text of the selected item"
         );
 
         assert.strictEqual(
-          this.subject.header().el().attr("title"),
+          this.subject.header().el().getAttribute("title"),
           "[en.test_none]",
           "it adds a title attribute to the button"
         );
@@ -112,7 +112,7 @@ discourseModule(
 
       async test(assert) {
         assert.ok(
-          exists(this.subject.header().el().find(".selected-name")),
+          this.subject.header().el().querySelector(".selected-name"),
           "it shows the text of the selected item"
         );
       },

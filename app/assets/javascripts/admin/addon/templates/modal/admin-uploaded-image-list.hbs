@@ -1,4 +1,4 @@
-{{#d-modal-body class="uploaded-image-list"}}
+<DModalBody @class="uploaded-image-list">
   <div class="selectable-avatars">
     {{#each images as |image|}}
       <a href class="selectable-avatar" {{action "remove" image}}>
@@ -8,8 +8,8 @@
       <p>{{i18n "admin.site_settings.uploaded_image_list.empty"}}</p>
     {{/each}}
   </div>
-{{/d-modal-body}}
+</DModalBody>
 <div class="modal-footer">
-  {{d-button action=(action "close") label="close"}}
-  {{images-uploader uploading=uploading done=(action "uploadDone") class="pull-right"}}
+  <DButton @action={{action "close"}} @label="close" />
+  <ImagesUploader @uploading={{uploading}} @done={{action "uploadDone"}} @class="pull-right" />
 </div>

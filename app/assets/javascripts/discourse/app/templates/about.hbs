@@ -1,17 +1,17 @@
-{{#d-section pageClass="about"}}
+<DSection @pageClass="about">
   <div class="container">
     <div class="contents clearfix body-page">
 
       <ul class="nav-pills">
-        <li class="nav-item-about">{{#link-to "about" class="active"}}{{i18n "about.simple_title"}}{{/link-to}}</li>
+        <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n "about.simple_title"}}</LinkTo></li>
         {{#if faqOverriden}}
-          <li class="nav-item-guidelines">{{#link-to "guidelines"}}{{i18n "guidelines"}}{{/link-to}}</li>
-          <li class="nav-item-faq">{{#link-to "faq"}}{{i18n "faq"}}{{/link-to}}</li>
+          <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n "guidelines"}}</LinkTo></li>
+          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n "faq"}}</LinkTo></li>
         {{else}}
-          <li class="nav-item-faq">{{#link-to "faq"}}{{i18n "faq"}}{{/link-to}}</li>
+          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n "faq"}}</LinkTo></li>
         {{/if}}
-        <li class="nav-item-tos">{{#link-to "tos"}}{{i18n "tos"}}{{/link-to}}</li>
-        <li class="nav-item-privacy">{{#link-to "privacy"}}{{i18n "privacy"}}{{/link-to}}</li>
+        <li class="nav-item-tos"><LinkTo @route="tos">{{i18n "tos"}}</LinkTo></li>
+        <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n "privacy"}}</LinkTo></li>
       </ul>
 
       <section class="about description">
@@ -19,47 +19,39 @@
         <p>{{model.description}}</p>
       </section>
 
-      {{plugin-outlet name="about-after-description"
-              connectorTagName="section"
-              args=(hash model=model)}}
+      <PluginOutlet @name="about-after-description" @connectorTagName="section" @args={{hash model=model}} />
 
       {{#if model.admins}}
         <section class="about admins">
           <h3>{{d-icon "users"}} {{i18n "about.our_admins"}}</h3>
 
-          {{about-page-users users=model.admins}}
+          <AboutPageUsers @users={{model.admins}} />
           <div class="clearfix"></div>
 
         </section>
       {{/if}}
 
-      {{plugin-outlet name="about-after-admins"
-                    tagName="span"
-                    connectorTagName="section"
-                    args=(hash model=model)}}
+      <PluginOutlet @name="about-after-admins" @tagName="span" @connectorTagName="section" @args={{hash model=model}} />
 
       {{#if model.moderators}}
         <section class="about moderators">
           <h3>{{d-icon "users"}} {{i18n "about.our_moderators"}}</h3>
 
           <div class="users">
-            {{about-page-users users=model.moderators}}
+            <AboutPageUsers @users={{model.moderators}} />
           </div>
           <div class="clearfix"></div>
         </section>
       {{/if}}
 
-      {{plugin-outlet name="about-after-moderators"
-                    tagName="span"
-                    connectorTagName="section"
-                    args=(hash model=model)}}
+      <PluginOutlet @name="about-after-moderators" @tagName="span" @connectorTagName="section" @args={{hash model=model}} />
 
       {{#if model.category_moderators.length}}
         {{#each model.category_moderators as |cm|}}
           <section class="about category-moderators moderators-{{cm.category.slug}}">
             <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
             <div class="users">
-              {{about-page-users users=cm.moderators}}
+              <AboutPageUsers @users={{cm.moderators}} />
             </div>
             <div class="clearfix"></div>
           </section>
@@ -127,4 +119,4 @@
 
     </div>
   </div>
-{{/d-section}}
+</DSection>

@@ -70,6 +70,7 @@ const Topic = RestModel.extend({
 
   lastPosterUser: alias("lastPoster.user"),
   lastPosterGroup: alias("lastPoster.primary_group"),
+  allowedGroups: alias("details.allowed_groups"),
 
   @discourseComputed("posters.[]", "participants.[]", "allowed_user_count")
   featuredUsers(posters, participants, allowedUserCount) {

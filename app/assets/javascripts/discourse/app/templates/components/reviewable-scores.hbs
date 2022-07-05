@@ -2,7 +2,7 @@
   <table class="reviewable-scores">
     <tbody>
       {{#each reviewable.reviewable_scores as |rs|}}
-        {{reviewable-score rs=rs reviewable=reviewable}}
+        <ReviewableScore @rs={{rs}} @reviewable={{reviewable}} />
       {{/each}}
     </tbody>
   </table>

@@ -153,7 +153,7 @@ module BackupRestore
       DB.exec(<<~SQL)
         UPDATE posts
         SET baked_version = NULL
-        WHERE id IN (SELECT post_id FROM post_uploads)
+        WHERE id IN (SELECT target_id FROM upload_references WHERE target_type = 'Post')
       SQL
     end
   end

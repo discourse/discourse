@@ -1,21 +1,10 @@
 {{#if multiple}}
-  {{dropdown-select-box
-    class="reviewable-action-dropdown"
-    nameProperty="label"
-    content=bundle.actions
-    onChange=(action "performById")
-    options=(hash
+  <DropdownSelectBox @class="reviewable-action-dropdown" @nameProperty="label" @content={{bundle.actions}} @onChange={{action "performById"}} @options={{hash
       icon=bundle.icon
       disabled=reviewableUpdating
       placement=placement
       translatedNone=bundle.label
-    )
-  }}
+    }} />
 {{else}}
-  {{d-button
-    class=(concat "reviewable-action " (dasherize first.id) " " first.button_class)
-    icon=first.icon
-    action=(action "perform" first)
-    translatedLabel=first.label
-    disabled=reviewableUpdating}}
+  <DButton @class={{concat "reviewable-action " (dasherize first.id) " " first.button_class}} @icon={{first.icon}} @action={{action "perform" first}} @translatedLabel={{first.label}} @disabled={{reviewableUpdating}} />
 {{/if}}

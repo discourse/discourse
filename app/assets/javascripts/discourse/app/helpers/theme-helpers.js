@@ -16,7 +16,7 @@ registerUnbound("theme-setting", (themeId, key, hash) => {
   if (hash.deprecated) {
     deprecated(
       "The `{{themeSetting.setting_name}}` syntax is deprecated. Use `{{theme-setting 'setting_name'}}` instead",
-      { since: "v2.2.0.beta8", dropFrom: "v2.3.0" }
+      { since: "v2.2.0.beta8" }
     );
   }
 

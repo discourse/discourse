@@ -1,20 +1,10 @@
 <div>
-  {{#d-modal-body title="admin.customize.colors.select_base.title"}}
+  <DModalBody @title="admin.customize.colors.select_base.title">
     {{i18n "admin.customize.colors.select_base.description"}}
-    {{combo-box
-      content=model
-      value=selectedBaseThemeId
-      onChange=(action (mut selectedBaseThemeId))
-      valueProperty="base_scheme_id"
-    }}
-  {{/d-modal-body}}
+    <ComboBox @content={{model}} @value={{selectedBaseThemeId}} @onChange={{action (mut selectedBaseThemeId)}} @valueProperty="base_scheme_id" />
+  </DModalBody>
 
   <div class="modal-footer">
-    {{d-button
-      class="btn-primary"
-      action=(action "selectBase")
-      icon="plus"
-      label="admin.customize.new"
-    }}
+    <DButton @class="btn-primary" @action={{action "selectBase"}} @icon="plus" @label="admin.customize.new" />
   </div>
 </div>

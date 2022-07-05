@@ -907,7 +907,7 @@ cs:
       watched_first_post_tags_instructions: "Budete informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
       muted_categories: "Ztišené"
       muted_categories_instructions: "Nebudete upozorněni na nic o nových tématech v těchto kategoriích ty se neobjeví v přehledu kategorií či v aktuálních,"
-      regular_categories: "Běžný"
+      regular_categories: "Normální"
       no_category_access: "Jako moderátor máte omezený přístup ke kategorii bez možnosti ukládat změny."
       delete_account: "Smazat můj účet"
       delete_account_confirm: "Jste si jisti, že chcete trvale odstranit svůj účet? Tuto akci nelze vrátit zpět!"
@@ -1558,7 +1558,6 @@ cs:
       create_whisper: "Šeptat"
       create_shared_draft: "Vytvořit sdílený koncept"
       edit_shared_draft: "Upravit sdílený koncept"
-      users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
       edit_reason_placeholder: "proč byla nutná úprava?"
@@ -1613,9 +1612,6 @@ cs:
         reply_as_new_topic:
           label: Odpovědět v propojeném tématu
           desc: Vytvořit nové téma propojené s tímto tématem
-        reply_as_private_message:
-          label: Nová zpráva
-          desc: Vytvořit novou osobní zprávu
         reply_to_topic:
           label: Odpovědět na téma
           desc: Odpovědět na téma, ale ne na konkrétní příspěvek
@@ -2622,6 +2618,7 @@ cs:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
       readonly: "Prohlížet"
+    preloader_text: "Nahrávám"
     lightbox:
       download: "stáhnout"
       counter: "%curr% z %total%"
@@ -2677,7 +2674,6 @@ cs:
         edit: "%{shortcut} Upravit příspěvek"
         delete: "%{shortcut} Smazat příspěvek"
         mark_muted: "%{shortcut} Ztišit téma"
-        mark_regular: "%{shortcut}Obvyklé (výchozí) téma"
         mark_tracking: "%{shortcut} Sledovat téma"
         mark_watching: "%{shortcut} Hlídat téma"
         print: "%{shortcut} Vytiskni téma"
@@ -2764,7 +2760,7 @@ cs:
           title: "Sledování"
           description: "Budete automaticky sledovat všechna témata s tímto tagem. Počet nepřečtených a nových příspěvků bude vidět vedle tématu."
         regular:
-          title: "Běžný"
+          title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišené"
@@ -2819,6 +2815,18 @@ cs:
       unread_count: "%{count} nepřečtené"
       new_count: "%{count} nové"
       sections:
+        messages:
+          header_link_text: "Zprávy"
+          links:
+            inbox: "Přijaté zprávy"
+            sent: "Odeslané"
+            new: "Nová"
+            unread: "Nepřečtená"
+            unread_with_count: "Nepřečtená (%{count})"
+            archive: "Archív"
+        tags:
+          header_link_title: "všechny štítky"
+          header_link_text: "Tagy"
         categories:
           header_link_title: "všechny kategorie"
           header_link_text: "Kategorie"
@@ -2828,6 +2836,8 @@ cs:
           links:
             tracked:
               content: "Sledované"
+            my_posts:
+              content: "Mé příspěvky"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:

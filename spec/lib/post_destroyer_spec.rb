@@ -656,7 +656,7 @@ describe PostDestroyer do
 
     it 'should not set Topic#last_post_user_id to a whisperer' do
       post_1 = create_post(topic: post.topic, user: moderator)
-      whisper_1 = create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
+      create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
       whisper_2 = create_post(topic: post.topic, user: Fabricate(:user), post_type: Post.types[:whisper])
 
       PostDestroyer.new(admin, whisper_2).destroy
@@ -1064,7 +1064,7 @@ describe PostDestroyer do
     fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
     fab!(:post_revision) { Fabricate(:post_revision, post: private_post) }
     fab!(:upload1) { Fabricate(:upload_s3, created_at: 5.hours.ago) }
-    fab!(:post_upload) { PostUpload.create(post: private_post, upload: upload1) }
+    fab!(:upload_reference) { UploadReference.create(target: private_post, upload: upload1) }
 
     it "destroys the post and topic if deleting first post" do
       PostDestroyer.new(reply.user, reply, permanent: true).destroy
@@ -1076,7 +1076,7 @@ describe PostDestroyer do
       expect { private_message_topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { post_action.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { post_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { post_upload.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { upload_reference.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       Jobs::CleanUpUploads.new.reset_last_cleanup!
       SiteSetting.clean_orphan_uploads_grace_period_hours = 1
@@ -1101,6 +1101,69 @@ describe PostDestroyer do
       regular_post = Fabricate(:post)
       PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "publishes messages to subscribers" do
+    # timestamps are rounded because postgres truncates the timestamp. that would cause the comparison if we compared
+    # these timestamps with the one read from the database
+    fab!(:first_post) { Fabricate(:post, created_at: 10.days.ago.round) }
+    fab!(:walter_white) { Fabricate(:walter_white) }
+    let!(:topic) { first_post.topic }
+    let!(:reply) { Fabricate(:post, topic: topic, created_at: 5.days.ago.round, user: coding_horror) }
+    let!(:expendable_reply) { Fabricate(:post, topic: topic, created_at: 2.days.ago.round, user: walter_white) }
+
+    it 'when a post is destroyed publishes updated topic stats' do
+      expect(topic.reload.posts_count).to eq(3)
+
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostDestroyer.new(moderator, expendable_reply, force_destroy: true).destroy
+      end
+
+      expect { expendable_reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:posts_count]).to eq(2)
+      expect(stats_message.data[:last_posted_at]).to eq(reply.created_at.as_json)
+      expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(reply.user, root: false).as_json)
+    end
+
+    it 'when a post is deleted publishes updated topic stats' do
+      expect(topic.reload.posts_count).to eq(3)
+
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostDestroyer.new(moderator, expendable_reply).destroy
+      end
+
+      expect(expendable_reply.reload.deleted_at).not_to eq(nil)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:posts_count]).to eq(2)
+      expect(stats_message.data[:last_posted_at]).to eq(reply.created_at.as_json)
+      expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(reply.user, root: false).as_json)
+    end
+
+    it 'when a post is recovered publishes update topic stats' do
+      expect(topic.reload.posts_count).to eq(3)
+
+      PostDestroyer.new(moderator, expendable_reply).destroy
+      expect(topic.reload.posts_count).to eq(2)
+
+      expendable_reply.reload
+
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostDestroyer.new(admin, expendable_reply).recover
+      end
+
+      expect(topic.reload.posts_count).to eq(3)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:posts_count]).to eq(3)
+      expect(stats_message.data[:last_posted_at]).to eq(expendable_reply.created_at.as_json)
+      expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(expendable_reply.user, root: false).as_json)
     end
   end
 end

@@ -7,7 +7,7 @@
       "properties": {
         "posts": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -61,7 +61,7 @@
                   "type": "integer"
                 },
                 "score": {
-                  "type": ""
+                  "type": "integer"
                 },
                 "yours": {
                   "type": "boolean"
@@ -122,7 +122,7 @@
                 },
                 "link_counts": {
                   "type": "array",
-                  "items": [
+                  "items":
                     {
                       "type": "object",
                       "additionalProperties": false,
@@ -151,7 +151,6 @@
                         "clicks"
                       ]
                     }
-                  ]
                 },
                 "read": {
                   "type": "boolean"
@@ -167,7 +166,7 @@
                 },
                 "actions_summary": {
                   "type": "array",
-                  "items": [
+                  "items":
                     {
                       "type": "object",
                       "additionalProperties": false,
@@ -184,7 +183,6 @@
                         "can_act"
                       ]
                     }
-                  ]
                 },
                 "moderator": {
                   "type": "boolean"
@@ -287,13 +285,12 @@
                 "reviewable_score_pending_count"
               ]
             }
-          ]
         },
         "stream": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         }
       },
       "required": [
@@ -303,13 +300,13 @@
     },
     "timeline_lookup": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "suggested_topics": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -397,18 +394,15 @@
             },
             "tags": {
               "type": "array",
-              "items": [
+              "items": {
 
-              ]
+              }
             },
             "tags_descriptions": {
               "type": "object",
               "additionalProperties": false,
               "properties": {
-              },
-              "required": [
-
-              ]
+              }
             },
             "like_count": {
               "type": "integer"
@@ -427,7 +421,7 @@
             },
             "posters": {
               "type": "array",
-              "items": [
+              "items":
                 {
                   "type": "object",
                   "additionalProperties": false,
@@ -469,7 +463,6 @@
                     "user"
                   ]
                 }
-              ]
             }
           },
           "required": [
@@ -504,22 +497,18 @@
             "posters"
           ]
         }
-      ]
     },
     "tags": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "tags_descriptions": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-      },
-      "required": [
-
-      ]
+      }
     },
     "id": {
       "type": "integer"
@@ -658,7 +647,7 @@
     },
     "actions_summary": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -683,7 +672,6 @@
             "can_act"
           ]
         }
-      ]
     },
     "chunk_size": {
       "type": "integer"
@@ -693,9 +681,9 @@
     },
     "bookmarks": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "topic_timer": {
       "type": [
@@ -790,7 +778,7 @@
         },
         "participants": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -866,7 +854,6 @@
                 "trust_level"
               ]
             }
-          ]
         },
         "created_by": {
           "type": "object",

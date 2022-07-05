@@ -1,8 +1,7 @@
-{{#d-modal-body}}
+<DModalBody>
   {{html-safe (i18n "login.not_activated" sentTo=sentTo)}}
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{activation-controls sendActivationEmail=(action "sendActivationEmail")
-                        editActivationEmail=(action "editActivationEmail")}}
+  <ActivationControls @sendActivationEmail={{action "sendActivationEmail"}} @editActivationEmail={{action "editActivationEmail"}} />
 </div>

@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
   has_many :user_emails, dependent: :destroy, autosave: true
   has_many :user_associated_accounts, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
@@ -106,6 +107,10 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
+  has_many :sidebar_section_links, dependent: :delete_all
+  has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
+  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username
@@ -149,6 +154,12 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+
+  after_save do
+    if saved_change_to_uploaded_avatar_id?
+      UploadReference.ensure_exist!(upload_ids: [self.uploaded_avatar_id], target: self)
+    end
+  end
 
   after_commit :trigger_user_created_event, on: :create
   after_commit :trigger_user_destroyed_event, on: :destroy
@@ -1515,14 +1526,18 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description)
+  def set_status!(description, emoji)
     now = Time.zone.now
     if user_status
-      user_status.update!(description: description, set_at: now)
+      user_status.update!(
+        description: description,
+        emoji: emoji,
+        set_at: now)
     else
       self.user_status = UserStatus.create!(
         user_id: id,
         description: description,
+        emoji: emoji,
         set_at: now
       )
     end
@@ -1664,9 +1679,9 @@ class User < ActiveRecord::Base
     # * default_categories_watching
     # * default_categories_tracking
     # * default_categories_watching_first_post
-    # * default_categories_regular
+    # * default_categories_normal
     # * default_categories_muted
-    %w{watching watching_first_post tracking regular muted}.each do |setting|
+    %w{watching watching_first_post tracking normal muted}.each do |setting|
       category_ids = SiteSetting.get("default_categories_#{setting}").split("|").map(&:to_i)
       category_ids.each do |category_id|
         next if category_id == 0

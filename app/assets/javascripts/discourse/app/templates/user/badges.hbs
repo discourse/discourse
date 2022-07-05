@@ -1,21 +1,12 @@
-{{#d-section pageClass="user-badges" class="user-content"}}
+<DSection @pageClass="user-badges" @class="user-content">
   <p class="favorite-count">
     {{i18n "badges.favorite_count" count=this.favoriteBadges.length max=siteSettings.max_favorite_badges}}
   </p>
 
   <div class="badge-group-list">
     {{#each sortedBadges as |ub|}}
-      {{badge-card
-        badge=ub.badge
-        count=ub.count
-        canFavorite=ub.can_favorite
-        isFavorite=ub.is_favorite
-        username=username
-        canFavoriteMoreBadges=canFavoriteMoreBadges
-        onFavoriteClick=(action "favorite" ub)
-        filterUser="true"
-      }}
+      <BadgeCard @badge={{ub.badge}} @count={{ub.count}} @canFavorite={{ub.can_favorite}} @isFavorite={{ub.is_favorite}} @username={{username}} @canFavoriteMoreBadges={{canFavoriteMoreBadges}} @onFavoriteClick={{action "favorite" ub}} @filterUser="true" />
     {{/each}}
-    {{plugin-outlet name="after-user-profile-badges" args=(hash user=user.model)}}
+    <PluginOutlet @name="after-user-profile-badges" @args={{hash user=user.model}} />
   </div>
-{{/d-section}}
+</DSection>

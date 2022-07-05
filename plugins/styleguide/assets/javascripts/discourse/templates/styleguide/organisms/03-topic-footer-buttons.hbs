@@ -1,9 +1,9 @@
-{{#styleguide-example title="topic-footer-buttons - logged in"}}
-  {{topic-footer-buttons topic=dummy.topic}}
-{{/styleguide-example}}
+<StyleguideExample @title="topic-footer-buttons - logged in">
+  <TopicFooterButtons @topic={{dummy.topic}} />
+</StyleguideExample>
 
-{{#styleguide-example title="topic-footer-buttons - anonymous"}}
+<StyleguideExample @title="topic-footer-buttons - anonymous">
   <div id="topic-footer-buttons">
-    {{d-button icon="reply" class="btn-primary pull-right" label="topic.reply.title"}}
+    <DButton @icon="reply" @class="btn-primary pull-right" @label="topic.reply.title" />
   </div>
-{{/styleguide-example}}
+</StyleguideExample>

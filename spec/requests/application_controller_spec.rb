@@ -529,6 +529,28 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "splash_screen" do
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      admin
+    end
+
+    it 'adds a preloader splash screen when enabled' do
+      get '/'
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("d-splash")
+
+      SiteSetting.splash_screen = false
+
+      get '/'
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("d-splash")
+    end
+  end
+
   describe 'Delegated auth' do
     let :public_key do
       <<~TXT
@@ -636,6 +658,19 @@ RSpec.describe ApplicationController do
 
       get '/latest'
       nonce = ApplicationHelper.google_tag_manager_nonce
+      expect(response.headers).to include('Content-Security-Policy')
+
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      expect(script_src.to_s).to include(nonce)
+      expect(response.body).to include(nonce)
+    end
+
+    it 'when splash screen is enabled it adds the same nonce to the policy and the inline splash script' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.splash_screen = true
+
+      get '/latest'
+      nonce = ApplicationHelper.splash_screen_nonce
       expect(response.headers).to include('Content-Security-Policy')
 
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
@@ -1000,6 +1035,55 @@ RSpec.describe ApplicationController do
         "HTTP_USER_AGENT" => "iam problematiccrawler"
       }
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#banner_json" do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+    fab!(:banner_topic) { Fabricate(:banner_topic) }
+    fab!(:p1) { Fabricate(:post, topic: banner_topic, raw: "A banner topic") }
+
+    before do
+      admin # to skip welcome wizard at home page `/`
+    end
+
+    context "login_required" do
+      before do
+        SiteSetting.login_required = true
+      end
+      it "does not include banner info for anonymous users" do
+        get "/login"
+
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(json['banner']).to eq("{}")
+        end
+      end
+
+      it "includes banner info for logged-in users" do
+        sign_in(user)
+        get "/"
+
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(JSON.parse(json['banner'])["html"]).to eq("<p>A banner topic</p>")
+        end
+      end
+    end
+
+    context "login not required" do
+      before do
+        SiteSetting.login_required = false
+      end
+      it "does include banner info for anonymous users" do
+        get "/login"
+
+        expect(response.body).to have_tag("div#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          expect(JSON.parse(json['banner'])["html"]).to eq("<p>A banner topic</p>")
+        end
+      end
     end
   end
 end

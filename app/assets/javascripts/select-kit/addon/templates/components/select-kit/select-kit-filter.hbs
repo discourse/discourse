@@ -1,21 +1,6 @@
 {{#unless isHidden}}
   {{!-- filter-input-search prevents 1password from attempting autocomplete --}}
-  {{input
-    tabindex=0
-    class="filter-input"
-    placeholder=placeholder
-    autocomplete="off"
-    autocorrect="off"
-    autocapitalize="off"
-    name="filter-input-search"
-    spellcheck=false
-    value=(readonly selectKit.filter)
-    input=(action "onInput")
-    paste=(action "onPaste")
-    keyDown=(action "onKeydown")
-    keyUp=(action "onKeyup")
-    type="search"
-  }}
+  <Input @tabindex={{0}} class="filter-input" placeholder={{placeholder}} @autocomplete="off" @autocorrect="off" @autocapitalize="off" @name="filter-input-search" @spellcheck={{false}} @value={{readonly selectKit.filter}} @input={{action "onInput"}} @paste={{action "onPaste"}} @keyDown={{action "onKeydown"}} @keyUp={{action "onKeyup"}} @type="search" />
 
   {{#if selectKit.options.filterIcon}}
     {{d-icon selectKit.options.filterIcon class="filter-icon"}}

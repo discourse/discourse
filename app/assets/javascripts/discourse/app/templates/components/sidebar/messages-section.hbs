@@ -1,0 +1,38 @@
+<Sidebar::Section
+  @sectionName="messages"
+  @headerRoute="userPrivateMessages.index"
+  @headerModel={{this.currentUser}}
+  @headerAction={{fn (route-action "composePrivateMessage") null null}}
+  @headerActionIcon="plus"
+  @headerLinkText={{i18n "sidebar.sections.messages.header_link_text"}}
+  @headerLinkTitle={{i18n "sidebar.sections.messages.header_link_title"}} >
+
+  {{#each this.personalMessagesSectionLinks as |personalMessageSectionLink|}}
+    {{#if personalMessageSectionLink.shouldDisplay}}
+      <Sidebar::SectionLink
+        @linkName={{personalMessageSectionLink.name}}
+        @class={{personalMessageSectionLink.class}}
+        @route={{personalMessageSectionLink.route}}
+        @model={{personalMessageSectionLink.model}}
+        @currentWhen={{personalMessageSectionLink.currentWhen}}
+        @content={{personalMessageSectionLink.text}} />
+    {{/if}}
+  {{/each}}
+
+  {{#if (gt this.groupMessagesSectionLinks.length 0)}}
+    <hr>
+
+    {{#each this.groupMessagesSectionLinks as |groupMessageSectionLink|}}
+      {{#if groupMessageSectionLink.shouldDisplay}}
+        <Sidebar::SectionLink
+          @linkName={{groupMessageSectionLink.name}}
+          @class={{groupMessageSectionLink.class}}
+          @route={{groupMessageSectionLink.route}}
+          @models={{groupMessageSectionLink.models}}
+          @currentWhen={{groupMessageSectionLink.currentWhen}}
+          @content={{groupMessageSectionLink.text}} />
+      {{/if}}
+    {{/each}}
+  {{/if}}
+
+</Sidebar::Section>

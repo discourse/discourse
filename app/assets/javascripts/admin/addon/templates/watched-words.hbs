@@ -2,9 +2,9 @@
   <div class="admin-controls">
     <div class="controls">
       <div class="inline-form">
-        {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
-        {{text-field value=filter placeholderKey="admin.watched_words.search" class="no-blur"}}
-        {{d-button action=(action "clearFilter") label="admin.watched_words.clear_filter"}}
+        <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
+        <TextField @value={{filter}} @placeholderKey="admin.watched_words.search" @class="no-blur" />
+        <DButton @action={{action "clearFilter"}} @label="admin.watched_words.clear_filter" />
       </div>
     </div>
   </div>
@@ -13,10 +13,10 @@
     <ul class="nav nav-stacked">
       {{#each model as |action|}}
         <li class={{action.nameKey}}>
-          {{#link-to "adminWatchedWords.action" action.nameKey}}
+          <LinkTo @route="adminWatchedWords.action" @model={{action.nameKey}}>
             {{action.name}}
             {{#if action.words}}<span class="count">({{action.words.length}})</span>{{/if}}
-          {{/link-to}}
+          </LinkTo>
         </li>
       {{/each}}
     </ul>

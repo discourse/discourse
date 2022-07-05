@@ -1054,7 +1054,7 @@ fa_IR:
       muted_categories: "خاموش"
       muted_categories_instructions: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید و آن ها در دسته بندی ها و یا صفحه تازه ها نمایش داده نخواهند شد."
       muted_categories_instructions_dont_hide: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید."
-      regular_categories: "عادی"
+      regular_categories: "معمولی"
       no_category_access: "به عنوان یک مدیر دسترسی محدودی به این دسته بندی دارید، ذخیره سازی غیر فعال است."
       delete_account: "حساب‌کاربری من را پاک کن"
       delete_account_confirm: "آیا مطمئنید که می‌خواهید شناسه‌تان را برای همیشه پاک کنید؟ برگشتی در کار نیست!"
@@ -1837,7 +1837,7 @@ fa_IR:
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
-      users_placeholder: "افزودن یک کاربر"
+      users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
@@ -1898,9 +1898,6 @@ fa_IR:
           desc: ساخت تاپیک جدید، لینک شده به این تاپیک
         reply_as_new_group_message:
           label: پاسخ به عنوان پیام گروهی جدید
-        reply_as_private_message:
-          label: پیام جدید
-          desc: یک پیام شخصی جدید بساز
         reply_to_topic:
           label: پاسخ به مبحث
           desc: به مبحث اصلی پاسخ بده و نه هیچ کدام از نوشته ها
@@ -2962,6 +2959,7 @@ fa_IR:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
       readonly: "دیدن"
+    preloader_text: "بارگیری..."
     lightbox:
       download: "دانلود"
       previous: "قبلی (مکان‌نمای چپ)"
@@ -3036,7 +3034,6 @@ fa_IR:
         edit: "%{shortcut} ویرایش نوشته"
         delete: "%{shortcut} حذف نوشته"
         mark_muted: "%{shortcut} بی‌صدا کردن موضوع"
-        mark_regular: "%{shortcut} موضوع معمولی (پیشفرض)"
         mark_tracking: "%{shortcut} پیگیری موضوع"
         mark_watching: "%{shortcut} نمایش موضوع"
         print: "%{shortcut} چاپ موضوع"
@@ -3128,7 +3125,7 @@ fa_IR:
         tracking:
           title: "پیگیری"
         regular:
-          title: "عادی"
+          title: "معمولی"
           description: "اگر کسی به صورت @نام به شما اشاره کند، به شما اطلاع داده خواهد شد."
         muted:
           title: "خاموش"
@@ -3190,6 +3187,22 @@ fa_IR:
       unread_count: "%{count} خوانده نشده"
       new_count: "%{count} تازه"
       sections:
+        messages:
+          header_link_title: "پیام‌های شخصی"
+          header_link_text: "پیام‌ها"
+          header_action_title: "ایجاد پیام شخصی"
+          links:
+            inbox: "صندوق دریافت"
+            sent: "ارسال شد"
+            new: "جدید"
+            new_with_count: "(%{count}) جدید"
+            unread: "خوانده‌ نشده‌"
+            unread_with_count: " (%{count}) خوانده‌ نشده‌"
+            archive: "بایگانی"
+        tags:
+          no_tracked_tags: "شما هیچ برچسبی را ردیابی نمی‌کنید."
+          header_link_title: "تمام برچسب‌ها"
+          header_link_text: "برچسب"
         categories:
           header_link_title: "همه‌ی دسته‌بندی‌ها"
           header_link_text: "دسته‌بندی‌ها"
@@ -3207,6 +3220,12 @@ fa_IR:
             bookmarked:
               content: "نشانک گذاری شده"
               title: "همه موضوعات نشانک گذاری شده"
+            my_posts:
+              content: "نوشته‌های من"
+              title: "نوشته‌های من"
+              draft_count:
+                one: "%{count} پیش‌نویس"
+                other: "%{count} پیش‌نویس"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

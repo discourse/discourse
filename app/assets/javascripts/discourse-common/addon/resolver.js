@@ -93,6 +93,7 @@ export function buildResolver(baseName) {
       if (split.length > 1) {
         const appBase = `${baseName}/${split[0]}s/`;
         const adminBase = "admin/" + split[0] + "s/";
+        const wizardBase = "wizard/" + split[0] + "s/";
 
         // Allow render 'admin/templates/xyz' too
         split[1] = split[1].replace(".templates", "").replace("/templates", "");
@@ -101,7 +102,8 @@ export function buildResolver(baseName) {
         let dashed = dasherize(split[1].replace(/\./g, "/"));
         if (
           requirejs.entries[appBase + dashed] ||
-          requirejs.entries[adminBase + dashed]
+          requirejs.entries[adminBase + dashed] ||
+          requirejs.entries[wizardBase + dashed]
         ) {
           return split[0] + ":" + dashed;
         }
@@ -110,7 +112,8 @@ export function buildResolver(baseName) {
         dashed = dasherize(split[1].replace(/\./g, "-"));
         if (
           requirejs.entries[appBase + dashed] ||
-          requirejs.entries[adminBase + dashed]
+          requirejs.entries[adminBase + dashed] ||
+          requirejs.entries[wizardBase + dashed]
         ) {
           return split[0] + ":" + dashed;
         }
@@ -253,6 +256,7 @@ export function buildResolver(baseName) {
         templates[decamelized.replace(/\_/, "/")] ||
         templates[`${baseName}/templates/${withoutType}`] ||
         this.findAdminTemplate(parsedName) ||
+        this.findWizardTemplate(parsedName) ||
         this.findUnderscoredTemplate(parsedName)
       );
     },
@@ -293,6 +297,38 @@ export function buildResolver(baseName) {
           Ember.TEMPLATES[decamelized] ||
           Ember.TEMPLATES[dashed] ||
           Ember.TEMPLATES[dashed.replace("admin-", "admin/")]
+        );
+      }
+    },
+
+    findWizardTemplate(parsedName) {
+      let decamelized = decamelize(parsedName.fullNameWithoutType);
+      if (decamelized.startsWith("components")) {
+        let comPath = `wizard/templates/${decamelized}`;
+        const compTemplate =
+          Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
+        if (compTemplate) {
+          return compTemplate;
+        }
+      }
+
+      if (decamelized === "javascripts/wizard") {
+        return Ember.TEMPLATES["wizard/templates/wizard"];
+      }
+
+      if (
+        decamelized.startsWith("wizard") ||
+        decamelized.startsWith("javascripts/wizard")
+      ) {
+        decamelized = decamelized.replace(/^wizard\_/, "wizard/templates/");
+        decamelized = decamelized.replace(/^wizard\./, "wizard/templates/");
+        decamelized = decamelized.replace(/\./g, "_");
+
+        const dashed = decamelized.replace(/_/g, "-");
+        return (
+          Ember.TEMPLATES[decamelized] ||
+          Ember.TEMPLATES[dashed] ||
+          Ember.TEMPLATES[dashed.replace("wizard-", "wizard/")]
         );
       }
     },

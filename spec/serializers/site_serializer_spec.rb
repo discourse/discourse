@@ -61,7 +61,7 @@ describe SiteSerializer do
 
   it "returns correct notification level for categories" do
     SiteSetting.mute_all_categories_by_default = true
-    SiteSetting.default_categories_regular = category.id.to_s
+    SiteSetting.default_categories_normal = category.id.to_s
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     categories = serialized[:categories]

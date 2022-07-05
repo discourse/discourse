@@ -6,7 +6,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { equal, reads } from "@ember/object/computed";
-import { run } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import { action } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 
@@ -33,7 +33,7 @@ export default Controller.extend(bufferedProperty("model"), {
     // this is needed because the model doesnt have default values
     // and as we are using a bufferedProperty it's not accessible
     // in any other way
-    run.next(() => {
+    next(() => {
       if (this.model) {
         if (!this.model.badge_type_id) {
           this.model.set(

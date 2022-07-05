@@ -185,6 +185,7 @@ describe Draft do
 
     expect(messages.first.data[:draft_count]).to eq(1)
     expect(messages.first.data[:has_topic_draft]).to eq(true)
+    expect(messages.first.user_ids).to contain_exactly(user.id)
 
     messages = MessageBus.track_publish("/user-drafts/#{user.id}") do
       Draft.where(user: user).destroy_all
@@ -192,6 +193,7 @@ describe Draft do
 
     expect(messages.first.data[:draft_count]).to eq(0)
     expect(messages.first.data[:has_topic_draft]).to eq(false)
+    expect(messages.first.user_ids).to contain_exactly(user.id)
   end
 
   describe '#stream' do

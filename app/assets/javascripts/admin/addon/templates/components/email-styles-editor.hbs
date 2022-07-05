@@ -2,17 +2,17 @@
   <div class="admin-controls">
     <nav>
       <ul class="nav nav-pills">
-        <li>{{#link-to "adminCustomizeEmailStyle.edit" "html" replace=true}}{{i18n "admin.customize.email_style.html"}}{{/link-to}}</li>
-        <li>{{#link-to "adminCustomizeEmailStyle.edit" "css" replace=true}}{{i18n "admin.customize.email_style.css"}}{{/link-to}}</li>
+        <li><LinkTo @route="adminCustomizeEmailStyle.edit" @model="html" @replace={{true}}>{{i18n "admin.customize.email_style.html"}}</LinkTo></li>
+        <li><LinkTo @route="adminCustomizeEmailStyle.edit" @model="css" @replace={{true}}>{{i18n "admin.customize.email_style.css"}}</LinkTo></li>
       </ul>
     </nav>
   </div>
 </div>
 
-{{ace-editor content=editorContents mode=currentEditorMode editorId=editorId save=(action "save")}}
+<AceEditor @content={{editorContents}} @mode={{currentEditorMode}} @editorId={{editorId}} @save={{action "save"}} />
 
 <div class="admin-footer">
   <div class="buttons">
-    {{d-button action=(action "reset") disabled=resetDisabled class="btn-default" label="admin.customize.email_style.reset"}}
+    <DButton @action={{action "reset"}} @disabled={{resetDisabled}} @class="btn-default" @label="admin.customize.email_style.reset" />
   </div>
 </div>

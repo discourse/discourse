@@ -203,6 +203,7 @@ zh_CN:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度至少为 3 个字符，以免错误地限制了人类用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中： %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了“composer media optimization image enabled”，则无法去除图片元数据。在去除图片元数据之前，禁用“已启用作曲家媒体优化图像”。"
+      twitter_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 摘要图像不能是 .svg 图像。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。:cry:"
@@ -563,6 +564,7 @@ zh_CN:
               too_many: "该操作的关注词过多"
             base:
               invalid_url: "替换 URL 无效"
+              invalid_tag_list: "替换标签名单无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -642,6 +644,11 @@ zh_CN:
   post:
     image_placeholder:
       broken: "此图片已损坏"
+      blocked_hotlinked_title: "图片托管主机在另一个站点。点击在新标签页中打开。"
+      blocked_hotlinked: "外部图片"
+    media_placeholder:
+      blocked_hotlinked_title: "媒体托管主机在另一个站点上。点击以在新标签页中打开。"
+      blocked_hotlinked: "外部媒体"
     hidden_bidi_character: "双向字符可以更改文本渲染的顺序。这可以用来掩盖恶意代码。"
     has_likes:
       other: "%{count} 个赞"
@@ -1377,9 +1384,11 @@ zh_CN:
     contact_email: "此站点主要负责人的电子邮件地址。用于重要通知，也显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上用于紧急事项。"
     contact_url: "此站点的联系 URL。显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 页面上以应对紧急事项。"
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
-    download_remote_images_to_local: "通过下载将远程图片转换为本地图片；这样可以防止图片损坏。"
+    download_remote_images_to_local: "通过下载将远程(hotlinked)图像并转换为本地图像；即使将来从远程站点删除图像，这也能保留内容。"
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
     disabled_image_download_domains: "永远不会从这些网域下载远程图片。以 | 分隔的列表。"
+    block_hotlinked_media: "防止用户在他们的帖子中引入远程(hotlinked)媒体。未通过 'download_remote_images_to_local' 下载的远程媒体将被替换成一个占位符链接。"
+    block_hotlinked_media_exceptions: "不受 block_hotlinked_media 设置影响的基本 URL 列表。包括协议(例如：https://example.com)。"
     editing_grace_period: "发帖后 (n) 秒内，编辑不会在帖子历史记录中创建新版本。"
     editing_grace_period_max_diff: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 0 和 1）"
     editing_grace_period_max_diff_high_trust: "编辑宽限期内允许的最大字符更改数，超过此值将保存另一个帖子修订（信任级别 2 及更高）"
@@ -1421,7 +1430,7 @@ zh_CN:
     favicon: "您的站点的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
     apple_touch_icon: "用于 Apple 触控设备的图标。将自动调整为 180x180。如果留空，将使用 large_icon。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
-    twitter_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150）。如果留空，则使用 opengraph_image 生成常规卡片元数据。"
+    twitter_summary_large_image: "Twitter 卡片“摘要大图” (宽度至少应为 280，高度至少应为 150，不能为 .svg)。如果留空，则使用 opengraph_image 生成常规卡片元数据，只要它不是 .svg"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2004,7 +2013,7 @@ zh_CN:
     default_categories_tracking: "默认跟踪的类别列表。"
     default_categories_muted: "默认被设为免打扰的类别列表。"
     default_categories_watching_first_post: "默认将关注每个新话题中的第一个帖子的类别列表。"
-    default_categories_regular: "默认未被设为免打扰的类别列表。启用 `mute_all_categories_by_default` 站点设置时很有用。"
+    default_categories_normal: "默认未被设为免打扰的类别列表。启用 `mute_all_categories_by_default` 站点设置时很有用。"
     mute_all_categories_by_default: "将所有类别的默认通知级别设置为免打扰。要求用户选择加入类别，以便他们出现在“最新”和“类别”页面中。如果您希望修改匿名用户的默认设置，请设置 'default_categories_' 设置。"
     default_tags_watching: "默认关注的标签列表。"
     default_tags_tracking: "默认跟踪的标签列表。"
@@ -2060,6 +2069,7 @@ zh_CN:
     use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名字的建议。请注意，这使得公众更容易猜到完整的用户电子邮件地址(因为很大一部分人共享共同的服务，如`gmail.com')。"
     use_name_for_username_suggestions: "在建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末(周六和周日) (如果你仅在工作日，周一至周五使用 Discourse，请禁用此选项)。"
+    splash_screen: "在加载站点资产时显示临时负载屏幕"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -3539,17 +3549,17 @@ zh_CN:
       title: "新登录提醒"
       subject_template: "[%{site_name}] 来自%{location}的新登录"
       text_body_template: |
-        您好，
+        你好，
 
-        我们注意到从您不常用的设备或位置登录。这是您吗？
+        我们注意到从你从不常用的设备或位置登录。这是你吗？
 
          - 位置：%{location} (%{client_ip})
          - 浏览器：%{browser}
          - 设备：%{device} – %{os}
 
-        如果这是您，太好了！您无需执行任何操作。
+        如果这是你，太好了！你无需执行任何操作。
 
-        如果不是您，请[查看您现有的会话](%{base_url}/my/preferences/account)并考虑更改您的密码。
+        如果不是你，请[审核你的已登录会话](%{base_url}/my/preferences/account)并考虑更改密码。
     post_approved:
       title: "您的帖子已被批准"
       subject_template: "[%{site_name}] 您的帖子已被批准"

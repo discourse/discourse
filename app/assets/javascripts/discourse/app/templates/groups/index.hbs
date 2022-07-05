@@ -1,59 +1,38 @@
-{{plugin-outlet name="before-groups-index-container" connectorTagName="div"}}
+<PluginOutlet @name="before-groups-index-container" @connectorTagName="div" />
 
-{{#d-section pageClass="groups"}}
+<DSection @pageClass="groups">
   <div class="groups-header">
     {{#if currentUser.can_create_group}}
-      {{d-button
-        action=(action "new")
-        class="btn-default groups-header-new pull-right"
-        icon="plus"
-        label="admin.groups.new.title"
-      }}
+      <DButton @action={{action "new"}} @class="btn-default groups-header-new pull-right" @icon="plus" @label="admin.groups.new.title" />
     {{/if}}
 
     <div class="groups-header-filters">
-      {{input
-        value=(readonly filter)
-        placeholderKey="groups.index.all"
-        class="groups-header-filters-name no-blur"
-        input=(action "onFilterChanged" value="target.value")
-      }}
+      <Input @value={{readonly filter}} @placeholderKey="groups.index.all" class="groups-header-filters-name no-blur" @input={{action "onFilterChanged" value="target.value"}} />
 
-      {{combo-box
-        value=type
-        content=types
-        class="groups-header-filters-type"
-        onChange=(action (mut type))
-        options=(hash
+      <ComboBox @value={{type}} @content={{types}} @class="groups-header-filters-type" @onChange={{action (mut type)}} @options={{hash
           clearable=true
           none="groups.index.filter"
-        )
-      }}
+        }} />
     </div>
   </div>
 
-  {{#conditional-loading-spinner condition=isLoading}}
+  <ConditionalLoadingSpinner @condition={{isLoading}}>
     {{#if groups}}
-      {{#load-more selector=".groups-boxes .group-box" action=(action "loadMore")}}
+      <LoadMore @selector=".groups-boxes .group-box" @action={{action "loadMore"}}>
         <div class="container">
           <div class="groups-boxes">
             {{#each groups as |group|}}
-              {{#link-to "group.members" group.name classNames=(concat "group-box " group.name)}}
+              <LinkTo @route="group.members" @model={{group.name}} @classNames={{concat "group-box " group.name}}>
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
                     {{#if group.flair_url}}
                       <span class="group-avatar-flair">
-                        {{avatar-flair
-                          flairName=group.name
-                          flairUrl=group.flair_url
-                          flairBgColor=group.flair_bg_color
-                          flairColor=group.flair_color
-                        }}
+                        <AvatarFlair @flairName={{group.name}} @flairUrl={{group.flair_url}} @flairBgColor={{group.flair_bg_color}} @flairColor={{group.flair_color}} />
                       </span>
                     {{/if}}
 
                     <span class="group-info">
-                      {{groups-info group=group}}
+                      <GroupsInfo @group={{group}} />
                       <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
                     </span>
                   </div>
@@ -61,7 +40,7 @@
                   <div class="group-description">{{html-safe group.bio_excerpt}}</div>
 
                   <div class="group-membership">
-                    {{#group-membership-button tagName="" model=group showLogin=(route-action "showLogin")}}
+                    <GroupMembershipButton @tagName="" @model={{group}} @showLogin={{route-action "showLogin"}}>
                       {{#if group.is_group_owner}}
                         <span class="is-group-owner">
                           {{d-icon "shield-alt"}}
@@ -85,23 +64,23 @@
                           {{i18n "groups.index.closed"}}
                         {{/if}}
                       {{/if}}
-                    {{/group-membership-button}}
+                    </GroupMembershipButton>
 
-                    {{plugin-outlet name="group-index-box-after" tagName="span" connectorTagName="div" args=(hash model=group)}}
+                    <PluginOutlet @name="group-index-box-after" @tagName="span" @connectorTagName="div" @args={{hash model=group}} />
                   </div>
                 </div>
-              {{/link-to}}
+              </LinkTo>
             {{/each}}
           </div>
         </div>
-      {{/load-more}}
+      </LoadMore>
 
-      {{conditional-loading-spinner condition=groups.loadingMore}}
+      <ConditionalLoadingSpinner @condition={{groups.loadingMore}} />
     {{else}}
       <p>{{i18n "groups.index.empty"}}</p>
     {{/if}}
-  {{/conditional-loading-spinner}}
+  </ConditionalLoadingSpinner>
 
-{{/d-section}}
+</DSection>
 
-{{plugin-outlet name="after-groups-index-container" connectorTagName="div"}}
+<PluginOutlet @name="after-groups-index-container" @connectorTagName="div" />

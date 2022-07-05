@@ -1066,7 +1066,7 @@ vi:
       muted_categories: "Im lặng"
       muted_categories_instructions: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới trong các danh mục này và chúng sẽ không xuất hiện trên các danh mục hoặc các trang mới nhất."
       muted_categories_instructions_dont_hide: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới trong các danh mục này."
-      regular_categories: "Đều đặn"
+      regular_categories: "Bình thường"
       regular_categories_instructions: "Bạn sẽ thấy các danh mục này trong danh sách chủ đề \"Mới nhất\" và \"Hàng đầu\"."
       no_category_access: "Với tư cách là người kiểm duyệt, bạn có quyền truy cập danh mục hạn chế, tính năng lưu bị tắt."
       delete_account: "Xoá Tài khoản của tôi"
@@ -1891,7 +1891,6 @@ vi:
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
       title: "Hoặc nhấn %{modifier}Enter"
-      users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
@@ -1961,9 +1960,6 @@ vi:
         reply_as_new_group_message:
           label: Trả lời dưới dạng tin nhắn nhóm mới
           desc: Tạo tin nhắn mới bắt đầu với cùng người nhận
-        reply_as_private_message:
-          label: Tin nhắn mới
-          desc: Tạo một tin nhắn cá nhân mới
         reply_to_topic:
           label: Trả lời chủ đề
           desc: Trả lời chủ đề, không ảnh hưởng bất kỳ bài đăng nào
@@ -3166,6 +3162,7 @@ vi:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
       readonly: "Xem"
+    preloader_text: "Đang tải"
     lightbox:
       download: "tải về"
       open: "ảnh gốc"
@@ -3249,7 +3246,6 @@ vi:
         edit: "%{shortcut} Sửa bài viết"
         delete: "%{shortcut} Xóa bài viết"
         mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Chủ đề thông thường (mặc định)"
         mark_tracking: "%{shortcut} Theo dõi chủ đề"
         mark_watching: "%{shortcut} theo dõi chủ đề"
         print: "%{shortcut} In chủ đề"
@@ -3373,7 +3369,7 @@ vi:
           title: "Đang theo dõi"
           description: "Bạn sẽ tự động theo dõi tất cả các chủ đề với thẻ này. Một số bài viết chưa đọc và bài viết mới sẽ xuất hiện bên cạnh chủ đề."
         regular:
-          title: "Thường xuyên"
+          title: "Bình thường"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @name của bạn hoặc trả lời bài đăng của bạn."
         muted:
           title: "Im lặng"
@@ -3460,6 +3456,19 @@ vi:
       unread_count: "%{count} chưa đọc"
       new_count: "%{count} mới"
       sections:
+        messages:
+          header_link_text: "Tin nhắn"
+          links:
+            inbox: "Hộp thư"
+            sent: "Đã gửi"
+            new: "Mới"
+            new_with_count: "Mới (%{count})"
+            unread: "Chưa đọc"
+            unread_with_count: "Chưa đọc (%{count})"
+            archive: "Lưu Trữ"
+        tags:
+          header_link_title: "tất cả thẻ"
+          header_link_text: "Thẻ"
         categories:
           header_link_title: "tất cả chuyên mục"
           header_link_text: "Thư mục"
@@ -3469,6 +3478,10 @@ vi:
           links:
             tracked:
               content: "Theo dõi"
+            my_posts:
+              content: "Bài viết của tôi"
+              draft_count:
+                other: "%{count} bản nháp"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:

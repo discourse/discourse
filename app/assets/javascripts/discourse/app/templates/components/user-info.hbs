@@ -2,7 +2,7 @@
   <div class="user-image">
     <div class="user-image-inner">
       <a href={{this.userPath}} data-user-card={{@user.username}}>{{avatar @user imageSize="large"}}</a>
-      {{user-avatar-flair user=@user}}
+      <UserAvatarFlair @user={{@user}} />
     </div>
   </div>
 {{/if}}
@@ -27,7 +27,7 @@
         {{if nameFirst (format-username @user.username) @user.name}}
       {{/if}}
     </span>
-    {{plugin-outlet name="after-user-name" tagName="span" connectorTagName="span" args=(hash user=user)}}
+    <PluginOutlet @name="after-user-name" @tagName="span" @connectorTagName="span" @args={{hash user=user}} />
   </div>
   <div class="title">{{@user.title}}</div>
 
@@ -39,4 +39,4 @@
 
 </div>
 
-{{plugin-outlet name="after-user-info" tagName="span" connectorTagName="div" args=(hash user=user)}}
+<PluginOutlet @name="after-user-info" @tagName="span" @connectorTagName="div" @args={{hash user=user}} />

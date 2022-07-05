@@ -4,13 +4,8 @@
       <div class="input-group invite-link">
         <label for="invite-link">{{html-safe flashText}} {{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
-          {{input
-            name="invite-link"
-            class="invite-link"
-            value=invite.link
-            readonly=true
-          }}
-          {{copy-button selector="input.invite-link" copied=(action "copied")}}
+          <Input @name="invite-link" class="invite-link" @value={{invite.link}} @readonly={{true}} />
+          <CopyButton @selector="input.invite-link" @copied={{action "copied"}} />
         </div>
       </div>
     {{else}}
@@ -19,19 +14,14 @@
   </div>
 {{/if}}
 
-{{#d-modal-body title=(if editing "user.invited.invite.edit_title" "user.invited.invite.new_title")}}
+<DModalBody @title={{if editing "user.invited.invite.edit_title" "user.invited.invite.new_title"}}>
   <form>
     {{#if editing}}
       <div class="input-group invite-link">
         <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
-          {{input
-            name="invite-link"
-            class="invite-link"
-            value=invite.link
-            readonly=true
-          }}
-          {{copy-button selector="input.invite-link" copied=(action "copied")}}
+          <Input @name="invite-link" class="invite-link" @value={{invite.link}} @readonly={{true}} />
+          <CopyButton @selector="input.invite-link" @copied={{action "copied"}} />
         </div>
       </div>
     {{/if}}
@@ -48,17 +38,9 @@
         {{/if}}
       </label>
       <div class="invite-email-container">
-        {{input
-          id="invite-email"
-          value=buffered.emailOrDomain
-          placeholderKey="user.invited.invite.email_or_domain_placeholder"
-        }}
+        <Input @id="invite-email" @value={{buffered.emailOrDomain}} @placeholderKey="user.invited.invite.email_or_domain_placeholder" />
         {{#if capabilities.hasContactPicker}}
-          {{d-button
-            icon="address-book"
-            action=(action "searchContact")
-            class="btn-primary open-contact-picker"
-          }}
+          <DButton @icon="address-book" @action={{action "searchContact"}} @class="btn-primary open-contact-picker" />
         {{/if}}
       </div>
     </div>
@@ -66,69 +48,41 @@
     {{#if isLink}}
       <div class="input-group invite-max-redemptions">
         <label for="invite-max-redemptions">{{d-icon "users"}}{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
-        {{input
-          id="invite-max-redemptions"
-          type="number"
-          value=buffered.max_redemptions_allowed
-          min="1"
-          max=maxRedemptionsAllowedLimit
-        }}
+        <Input @id="invite-max-redemptions" @type="number" @value={{buffered.max_redemptions_allowed}} @min="1" @max={{maxRedemptionsAllowedLimit}} />
       </div>
     {{/if}}
 
     {{#if isEmail}}
       <div class="input-group invite-custom-message">
         <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-        {{textarea id="invite-message" value=buffered.custom_message}}
+        <Textarea @id="invite-message" @value={{buffered.custom_message}} />
       </div>
     {{/if}}
 
     {{#if currentUser.staff}}
       <div class="input-group invite-to-topic">
         <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
-        {{topic-chooser
-          value=buffered.topicId
-          content=topics
-          onChange=(action "onChangeTopic")
-          options=(hash
+        <TopicChooser @value={{buffered.topicId}} @content={{topics}} @onChange={{action "onChangeTopic"}} @options={{hash
             additionalFilters="status:public"
-          )
-        }}
+          }} />
       </div>
     {{else if buffered.topicTitle}}
       <div class="input-group invite-to-topic">
         <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
-        {{input
-          name="invite-topic"
-          class="invite-topic"
-          value=buffered.topicTitle
-          readonly=true
-        }}
+        <Input @name="invite-topic" class="invite-topic" @value={{buffered.topicTitle}} @readonly={{true}} />
       </div>
     {{/if}}
 
     {{#if canInviteToGroup}}
       <div class="input-group invite-to-groups">
         <label>{{d-icon "users"}}{{i18n "user.invited.invite.add_to_groups"}}</label>
-        {{group-chooser
-          content=allGroups
-          value=buffered.groupIds
-          labelProperty="name"
-          onChange=(action (mut buffered.groupIds))
-        }}
+        <GroupChooser @content={{allGroups}} @value={{buffered.groupIds}} @labelProperty="name" @onChange={{action (mut buffered.groupIds)}} />
       </div>
     {{/if}}
 
     {{#if currentUser.staff}}
       <div class="input-group invite-expires-at">
-        {{future-date-input
-          displayLabelIcon="far-clock"
-          displayLabel=(i18n "user.invited.invite.expires_at")
-          customShortcuts=timeShortcuts
-          clearable=true
-          input=buffered.expires_at
-          onChangeInput=(action (mut buffered.expires_at))
-        }}
+        <FutureDateInput @displayLabelIcon="far-clock" @displayLabel={{i18n "user.invited.invite.expires_at"}} @customShortcuts={{timeShortcuts}} @clearable={{true}} @input={{buffered.expires_at}} @onChangeInput={{action (mut buffered.expires_at)}} />
       </div>
     {{else}}
       <div class="input-group input-expires-at">
@@ -136,22 +90,10 @@
       </div>
     {{/if}}
   </form>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    icon="link"
-    label="user.invited.invite.save_invite"
-    class="btn-primary save-invite"
-    action=(action "saveInvite")
-  }}
+  <DButton @icon="link" @label="user.invited.invite.save_invite" @class="btn-primary save-invite" @action={{action "saveInvite"}} />
 
-  {{d-button
-    icon="envelope"
-    label=(if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email")
-    class="btn-primary send-invite"
-    action=(action "saveInvite" true)
-    title=(unless isEmail "user.invited.invite.send_invite_email_instructions")
-    disabled=(not isEmail)
-  }}
+  <DButton @icon="envelope" @label={{if invite.emailed "user.invited.reinvite" "user.invited.invite.send_invite_email"}} @class="btn-primary send-invite" @action={{action "saveInvite" true}} @title={{unless isEmail "user.invited.invite.send_invite_email_instructions"}} @disabled={{not isEmail}} />
 </div>

@@ -16,7 +16,8 @@ class GroupSmtpMailer < ActionMailer::Base
       user_name: from_group.email_username,
       password: from_group.email_password,
       authentication: GlobalSetting.smtp_authentication,
-      enable_starttls_auto: from_group.smtp_ssl
+      enable_starttls_auto: from_group.smtp_ssl,
+      return_response: true
     }
 
     group_name = from_group.name_full_preferred

@@ -1,31 +1,22 @@
-{{#d-modal-body title="admin.user.suspend_modal_title"}}
-  {{#conditional-loading-spinner condition=loadingUser}}
+<DModalBody @title="admin.user.suspend_modal_title">
+  <ConditionalLoadingSpinner @condition={{loadingUser}}>
 
     {{#if errorMessage}}
       <div class="alert alert-error">{{errorMessage}}</div>
     {{/if}}
 
     {{#if user.canSuspend}}
-      {{admin-penalty-history user=user}}
+      <AdminPenaltyHistory @user={{user}} />
 
       <div class="until-controls">
         <label>
-          {{future-date-input
-            class="suspend-until"
-            label="admin.user.suspend_duration"
-            clearable=false
-            input=suspendUntil
-            onChangeInput=(action (mut suspendUntil))
-          }}
+          <FutureDateInput @class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{suspendUntil}} @onChangeInput={{action (mut suspendUntil)}} />
         </label>
       </div>
-      {{suspension-details reason=reason message=message}}
+      <SuspensionDetails @reason={{reason}} @message={{message}} />
 
       {{#if postId}}
-        {{penalty-post-action
-          postId=postId
-          postAction=postAction
-          postEdit=postEdit}}
+        <PenaltyPostAction @postId={{postId}} @postAction={{postAction}} @postEdit={{postEdit}} />
       {{/if}}
 
     {{else}}
@@ -34,17 +25,12 @@
       </div>
     {{/if}}
 
-  {{/conditional-loading-spinner}}
+  </ConditionalLoadingSpinner>
 
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-danger perform-suspend"
-    action=(action "suspend")
-    disabled=submitDisabled
-    icon="ban"
-    label="admin.user.suspend"}}
-  {{d-modal-cancel close=(route-action "closeModal")}}
-  {{conditional-loading-spinner condition=loading size="small"}}
+  <DButton @class="btn-danger perform-suspend" @action={{action "suspend"}} @disabled={{submitDisabled}} @icon="ban" @label="admin.user.suspend" />
+  <DModalCancel @close={{route-action "closeModal"}} />
+  <ConditionalLoadingSpinner @condition={{loading}} @size="small" />
 </div>

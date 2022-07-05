@@ -1,32 +1,17 @@
 <div class="current-style {{if maximized "maximized"}}">
   <div class="wrapper">
     <div class="editor-information">
-      {{d-button
-        title="go_back"
-        action=(action "goBack")
-        icon="chevron-left"
-        class="btn-small editor-back-button"
-      }}
+      <DButton @title="go_back" @action={{action "goBack"}} @icon="chevron-left" @class="btn-small editor-back-button" />
 
       <span class="editor-theme-name-wrapper">
         {{i18n "admin.customize.theme.edit_css_html"}}
-        {{#link-to showRouteName model.id replace=true class="editor-theme-name"
-        }}
+        <LinkTo @route={{showRouteName}} @model={{model.id}} @replace={{true}} class="editor-theme-name">
           {{model.name}}
-        {{/link-to}}
+        </LinkTo>
       </span>
     </div>
 
-    {{admin-theme-editor
-      theme=model
-      editRouteName=editRouteName
-      currentTargetName=currentTargetName
-      fieldName=fieldName
-      fieldAdded=(action "fieldAdded")
-      maximized=maximized
-      onlyOverriddenChanged=(action "onlyOverriddenChanged")
-      save=(action "save")
-    }}
+    <AdminThemeEditor @theme={{model}} @editRouteName={{editRouteName}} @currentTargetName={{currentTargetName}} @fieldName={{fieldName}} @fieldAdded={{action "fieldAdded"}} @maximized={{maximized}} @onlyOverriddenChanged={{action "onlyOverriddenChanged"}} @save={{action "save"}} />
 
     <div class="admin-footer">
       <div class="status-actions">
@@ -44,12 +29,7 @@
       </div>
 
       <div class="buttons">
-        {{d-button
-          action=(action "save")
-          disabled=saveDisabled
-          class="btn-primary"
-          translatedLabel=saveButtonText
-        }}
+        <DButton @action={{action "save"}} @disabled={{saveDisabled}} @class="btn-primary" @translatedLabel={{saveButtonText}} />
       </div>
     </div>
   </div>

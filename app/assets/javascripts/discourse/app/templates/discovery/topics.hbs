@@ -2,91 +2,51 @@
   <div class="alert alert-info">{{redirectedReason}}</div>
 {{/if}}
 
-{{topic-dismiss-buttons position="top" selectedTopics=selected
-model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
+<TopicDismissButtons @position="top" @selectedTopics={{selected}} @model={{model}} @showResetNew={{showResetNew}} @showDismissRead={{showDismissRead}} @resetNew={{action "resetNew"}} />
 
 {{#if model.sharedDrafts}}
-  {{topic-list
-    class="shared-drafts"
-    listTitle="shared_drafts.title"
-    top=top
-    hideCategory="true"
-    category=category
-    topics=model.sharedDrafts
-    discoveryList=true}}
+  <TopicList @class="shared-drafts" @listTitle="shared_drafts.title" @top={{top}} @hideCategory="true" @category={{category}} @topics={{model.sharedDrafts}} @discoveryList={{true}} />
 {{/if}}
 
-{{#discovery-topics-list
-  model=model
-  refresh=(action "refresh")
-  loadingComplete=(action "loadingComplete")
-  incomingCount=topicTrackingState.incomingCount
-  autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
-  bulkSelectEnabled=bulkSelectEnabled
-  addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
-  as |discoveryTopicList|}}
+<DiscoveryTopicsList @model={{model}} @refresh={{action "refresh"}} @loadingComplete={{action "loadingComplete"}} @incomingCount={{topicTrackingState.incomingCount}} @autoAddTopicsToBulkSelect={{autoAddTopicsToBulkSelect}} @bulkSelectEnabled={{bulkSelectEnabled}} @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}} as |discoveryTopicList|>
   {{#if top}}
     <div class="top-lists">
-      {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
+      <PeriodChooser @period={{period}} @action={{action "changePeriod"}} @fullDay={{false}} />
     </div>
   {{else}}
     {{#if topicTrackingState.hasIncoming}}
       <div class="show-more {{if hasTopics "has-topics"}}">
         <a tabindex="0" href {{action "showInserted"}} class="alert alert-info clickable">
-          {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+          <CountI18n @key="topic_count_" @suffix={{topicTrackingState.filter}} @count={{topicTrackingState.incomingCount}} />
         </a>
       </div>
     {{/if}}
   {{/if}}
-  {{plugin-outlet name="before-topic-list" tagName="span" connectorTagName="div" args=(hash category=category)}}
+  <PluginOutlet @name="before-topic-list" @tagName="span" @connectorTagName="div" @args={{hash category=category}} />
 
   {{#if hasTopics}}
-    {{topic-list
-      highlightLastVisited=true
-      top=top
-      showTopicPostBadges=showTopicPostBadges
-      showPosters=true
-      canBulkSelect=canBulkSelect
-      changeSort=(route-action "changeSort")
-      toggleBulkSelect=(action "toggleBulkSelect")
-      updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
-      hideCategory=model.hideCategory
-      order=order
-      ascending=ascending
-      bulkSelectEnabled=bulkSelectEnabled
-      bulkSelectAction=(action "refresh")
-      selected=selected
-      expandGloballyPinned=expandGloballyPinned
-      expandAllPinned=expandAllPinned
-      category=category
-      topics=model.topics
-      discoveryList=true
-      scrollOnLoad=true
-      onScroll=discoveryTopicList.saveScrollPosition
-      focusLastVisitedTopic=true
-    }}
+    <TopicList @highlightLastVisited={{true}} @top={{top}} @showTopicPostBadges={{showTopicPostBadges}} @showPosters={{true}} @canBulkSelect={{canBulkSelect}} @changeSort={{route-action "changeSort"}} @toggleBulkSelect={{action "toggleBulkSelect"}} @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}} @hideCategory={{model.hideCategory}} @order={{order}} @ascending={{ascending}} @bulkSelectEnabled={{bulkSelectEnabled}} @bulkSelectAction={{action "refresh"}} @selected={{selected}} @expandGloballyPinned={{expandGloballyPinned}} @expandAllPinned={{expandAllPinned}} @category={{category}} @topics={{model.topics}} @discoveryList={{true}} @scrollOnLoad={{true}} @onScroll={{discoveryTopicList.saveScrollPosition}} @focusLastVisitedTopic={{true}} />
   {{/if}}
 
-  {{plugin-outlet name="after-topic-list" tagName="span" connectorTagName="div" args=(hash category=category)}}
-{{/discovery-topics-list}}
+  <PluginOutlet @name="after-topic-list" @tagName="span" @connectorTagName="div" @args={{hash category=category}} />
+</DiscoveryTopicsList>
 
 <footer class="topic-list-bottom">
-  {{conditional-loading-spinner condition=model.loadingMore}}
+  <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
   {{#if allLoaded}}
-    {{topic-dismiss-buttons position="bottom" selectedTopics=selected
-    model=model showResetNew=showResetNew showDismissRead=showDismissRead resetNew=(action "resetNew")}}
+    <TopicDismissButtons @position="bottom" @selectedTopics={{selected}} @model={{model}} @showResetNew={{showResetNew}} @showDismissRead={{showDismissRead}} @resetNew={{action "resetNew"}} />
 
-    {{#footer-message education=footerEducation message=footerMessage}}
+    <FooterMessage @education={{footerEducation}} @message={{footerMessage}}>
       {{#if latest}}
         {{#if canCreateTopicOnCategory}}
-          {{discourse-linked-text action=(route-action "createTopic") text="topic.suggest_create_topic"}}
+          <DiscourseLinkedText @action={{route-action "createTopic"}} @text="topic.suggest_create_topic" />
         {{/if}}
       {{else if top}}
-        {{#link-to "discovery.categories"}}{{i18n "topic.browse_all_categories"}}{{/link-to}}, {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}} {{i18n "or"}} {{i18n "filters.top.other_periods"}}
-        {{top-period-buttons period=period action=(action "changePeriod")}}
+        <LinkTo @route="discovery.categories">{{i18n "topic.browse_all_categories"}}</LinkTo>, <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo> {{i18n "or"}} {{i18n "filters.top.other_periods"}}
+        <TopPeriodButtons @period={{period}} @action={{action "changePeriod"}} />
       {{else}}
-        {{#link-to "discovery.categories"}} {{i18n "topic.browse_all_categories"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}
+        <LinkTo @route="discovery.categories"> {{i18n "topic.browse_all_categories"}}</LinkTo> {{i18n "or"}} <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo>
       {{/if}}
-    {{/footer-message}}
+    </FooterMessage>
   {{/if}}
 </footer>

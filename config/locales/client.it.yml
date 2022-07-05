@@ -1111,7 +1111,7 @@ it:
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
       muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica relativa a nuovi argomenti in queste categorie."
-      regular_categories: "Abituale"
+      regular_categories: "Normale"
       regular_categories_instructions: "Vedrai queste categorie nelle liste di argomenti \"Recenti\" e \"Popolari\"."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
@@ -1983,7 +1983,7 @@ it:
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
       title: "Oppure premi %{modifier}Invio"
-      users_placeholder: "Aggiunti un utente"
+      users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "perché stai scrivendo?"
@@ -2053,9 +2053,6 @@ it:
         reply_as_new_group_message:
           label: Rispondi come nuovo messaggio di gruppo
           desc: Crea un nuovo messaggio iniziando con gli stessi destinatari
-        reply_as_private_message:
-          label: Nuovo messaggio
-          desc: Crea un nuovo messaggio personale
         reply_to_topic:
           label: Rispondi all'argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
@@ -3360,6 +3357,7 @@ it:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
       readonly: "Visualizza"
+    preloader_text: "Caricamento"
     lightbox:
       download: "scarica"
       open: "immagine originale"
@@ -3444,7 +3442,6 @@ it:
         edit: "%{shortcut} Modifica messaggio"
         delete: "%{shortcut} Cancella messaggio"
         mark_muted: "%{shortcut} Silenzia argomento"
-        mark_regular: "%{shortcut} Argomento normale (default)"
         mark_tracking: "%{shortcut} Segui argomento"
         mark_watching: "%{shortcut} Osserva argomento"
         print: "%{shortcut} Stampa argomento"
@@ -3683,7 +3680,24 @@ it:
       unread_count: "%{count} non letti"
       new_count: "%{count} nuovi"
       sections:
+        messages:
+          header_link_title: "messaggi personali"
+          header_link_text: "Messaggi"
+          header_action_title: "crea un messaggio personale"
+          links:
+            inbox: "Posta in arrivo"
+            sent: "Inviati"
+            new: "Nuovi"
+            new_with_count: "Nuovo (%{count})"
+            unread: "Non letti"
+            unread_with_count: "Non letto (%{count})"
+            archive: "Archiviati"
+        tags:
+          no_tracked_tags: "Non stai seguendo alcuna etichetteta."
+          header_link_title: "tutte le etichette"
+          header_link_text: "Etichette"
         categories:
+          no_tracked_categories: "Non stai monitorando nessuna categoria."
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
         topics:
@@ -3700,6 +3714,12 @@ it:
             bookmarked:
               content: "Aggiunti ai segnalibri"
               title: "Tutti gli argomenti aggiunti ai segnalibri"
+            my_posts:
+              content: "I miei messaggi"
+              title: "I miei messaggi"
+              draft_count:
+                one: "%{count} bozza"
+                other: "%{count} bozze"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

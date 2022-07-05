@@ -1,19 +1,6 @@
-{{composer-actions
-  composerModel=model
-  replyOptions=model.replyOptions
-  canWhisper=canWhisper
-  openComposer=openComposer
-  closeComposer=closeComposer
-  action=model.action
-  tabindex=tabindex
-  topic=model.topic
-  post=model.post
-  whisper=model.whisper
-  noBump=model.noBump
-  options=(hash
+<ComposerActions @composerModel={{model}} @replyOptions={{model.replyOptions}} @canWhisper={{canWhisper}} @openComposer={{openComposer}} @closeComposer={{closeComposer}} @action={{model.action}} @tabindex={{tabindex}} @topic={{model.topic}} @post={{model.post}} @whisper={{model.whisper}} @noBump={{model.noBump}} @options={{hash
     mobilePlacementStrategy="fixed"
-  )
-}}
+  }} />
 
 <span class="action-title">
   {{actionTitle}}

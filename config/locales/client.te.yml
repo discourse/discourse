@@ -422,7 +422,6 @@ te:
       watched_categories: "ఒకకన్నేసారు"
       tracked_categories: "గమనించారు"
       muted_categories: "నిశ్శబ్దం"
-      regular_categories: "రెగ్యులరు"
       delete_account: "నా ఖాతా తొలగించు"
       delete_account_confirm: "నిజ్జంగా మీరు మీ ఖాతాను శాస్వతంగా తొలగించాలనుకుంటున్నారా? ఈ చర్య రద్దుచేయలేరు సుమా! "
       deleted_yourself: "మీ ఖాతా విజయవంతంగా తొలగించబడింది. "
@@ -733,7 +732,6 @@ te:
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
-      users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       view_new_post: "మీ కొత్త టపా చూడండి"
@@ -1246,6 +1244,7 @@ te:
       full: "సృష్టించి / జవాబివ్వు / చూడు"
       create_post: "జవాబివ్వు / చూడు"
       readonly: "చూడు"
+    preloader_text: "లోడవుతోంది"
     lightbox:
       download: "దిగుమతించు"
     keyboard_shortcuts_help:
@@ -1286,7 +1285,6 @@ te:
         edit: "%{shortcut} టపా సవరణ"
         delete: "%{shortcut} టపా తొలగించు"
         mark_muted: "%{shortcut} విషయాన్ని ఆపివేయండి"
-        mark_regular: "%{shortcut} నిత్య (అప్రమేయ) విషయం"
         mark_tracking: "%{shortcut} విషయం వెతుకు"
         mark_watching: "%{shortcut} చూసిన విషయం"
     badges:
@@ -1319,7 +1317,6 @@ te:
         tracking:
           title: "గమనిస్తున్నారు"
         regular:
-          title: "రెగ్యులరు"
           description: "ఎవరన్నా మీ @పేరు ప్రస్తావించినా లేదా జవాబిచ్చినా మీకు ప్రకటన వస్తుంది"
         muted:
           title: "నిశ్శబ్దం"
@@ -1352,6 +1349,15 @@ te:
       unread_count: "%{count} చదవనవి"
       new_count: "%{count} కొత్త"
       sections:
+        messages:
+          header_link_text: "సందేశాలు"
+          links:
+            inbox: "ఇన్ బాక్స్"
+            sent: "పంపిన"
+            new: "కొత్త"
+            unread: "చదవని"
+        tags:
+          header_link_text: "ట్యాగులు"
         categories:
           header_link_title: "అన్ని వర్గాలు"
           header_link_text: "వర్గాలు"
@@ -1360,6 +1366,8 @@ te:
           links:
             tracked:
               content: "గమనించారు"
+            my_posts:
+              content: "నా టపాలు"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:

@@ -1915,7 +1915,6 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
-      users_placeholder: "添加用户"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "编辑原因"
@@ -1985,9 +1984,6 @@ zh_CN:
         reply_as_new_group_message:
           label: 作为新群组消息回复
           desc: 创建以相同收件人开头的新消息
-        reply_as_private_message:
-          label: 新建消息
-          desc: 创建新的个人消息
         reply_to_topic:
           label: 回复话题
           desc: 回复话题，不是任何特定的帖子
@@ -3236,6 +3232,7 @@ zh_CN:
       full: "创建/回复/查看"
       create_post: "回复/查看"
       readonly: "查看"
+    preloader_text: "正在加载"
     lightbox:
       download: "下载"
       open: "原始图像"
@@ -3320,7 +3317,7 @@ zh_CN:
         edit: "%{shortcut} 编辑帖子"
         delete: "%{shortcut} 删除帖子"
         mark_muted: "%{shortcut} 将话题设为免打扰"
-        mark_regular: "%{shortcut} 常规（默认）话题"
+        mark_regular: "%{shortcut} 常规(默认)话题"
         mark_tracking: "%{shortcut} 跟踪话题"
         mark_watching: "%{shortcut} 关注话题"
         print: "%{shortcut} 打印话题"
@@ -3552,7 +3549,24 @@ zh_CN:
       unread_count: "%{count} 未读"
       new_count: "%{count} 新"
       sections:
+        messages:
+          header_link_title: "个人消息"
+          header_link_text: "消息"
+          header_action_title: "创建个人消息"
+          links:
+            inbox: "收件箱"
+            sent: "已发送"
+            new: "新"
+            new_with_count: "新消息 (%{count})"
+            unread: "未读"
+            unread_with_count: "未读 (%{count})"
+            archive: "归档"
+        tags:
+          no_tracked_tags: "你没有跟踪任何标签。"
+          header_link_title: "所有标签"
+          header_link_text: "标签"
         categories:
+          no_tracked_categories: "你没有跟踪任何类别。"
           header_link_title: "所有类别"
           header_link_text: "类别"
         topics:
@@ -3569,6 +3583,11 @@ zh_CN:
             bookmarked:
               content: "已加入书签"
               title: "所有被列入书签的主题"
+            my_posts:
+              content: "我的帖子"
+              title: "我的帖子"
+              draft_count:
+                other: "%{count} 草稿"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

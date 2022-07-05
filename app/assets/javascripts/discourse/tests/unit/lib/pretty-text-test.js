@@ -877,7 +877,7 @@ eviltrout</p>
 
     assert.cooked(
       "    ```\n    hello\n    ```",
-      "<pre><code>```\nhello\n```</code></pre>",
+      "<pre><code>```\nhello\n```\n</code></pre>",
       "only detect ``` at the beginning of lines"
     );
 
@@ -925,13 +925,13 @@ eviltrout</p>
 
     assert.cooked(
       "    <pre>test</pre>",
-      "<pre><code>&lt;pre&gt;test&lt;/pre&gt;</code></pre>",
+      "<pre><code>&lt;pre&gt;test&lt;/pre&gt;\n</code></pre>",
       "it does not parse other block types in markdown code blocks"
     );
 
     assert.cooked(
       "    [quote]test[/quote]",
-      "<pre><code>[quote]test[/quote]</code></pre>",
+      "<pre><code>[quote]test[/quote]\n</code></pre>",
       "it does not parse other block types in markdown code blocks"
     );
 

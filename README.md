@@ -40,8 +40,6 @@ If you want to set up a Discourse forum for production use, see our [**Discourse
 
 If you're looking for business class hosting, see [discourse.org/buy](https://www.discourse.org/buy/).
 
-If you're looking for our remote work solution, see [teams.discourse.com](https://teams.discourse.com/).
-
 ## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high.

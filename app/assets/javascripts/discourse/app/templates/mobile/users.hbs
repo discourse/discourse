@@ -1,10 +1,10 @@
-{{#load-more selector=".directory .user" action=(action "loadMore")}}
+<LoadMore @selector=".directory .user" @action={{action "loadMore"}}>
   <div class="container">
     <div class="users-directory directory">
-      {{plugin-outlet name="users-top" tagName="span" connectorTagName="div" args=(hash model=model)}}
+      <PluginOutlet @name="users-top" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
       <div class="directory-controls">
-        {{period-chooser period=period onChange=(action (mut period)) fullDay=false}}
+        <PeriodChooser @period={{period}} @onChange={{action (mut period)}} @fullDay={{false}} />
         {{#if lastUpdatedAt}}
           <div class="directory-last-updated">
             {{i18n "directory.last_updated"}}
@@ -12,44 +12,29 @@
           </div>
         {{/if}}
         <div class="inline-form full-width">
-          {{input
-            value=(readonly nameInput)
-            input=(action "onUsernameFilterChanged" value="target.value")
-            placeholderKey="directory.filter_name"
-            class="filter-name no-blur"
-          }}
-          {{combo-box
-            class="directory-group-selector"
-            value=group
-            content=groupOptions
-            onChange=(action groupChanged)
-            options=(hash none="directory.group.all")
-          }}
+          <Input @value={{readonly nameInput}} @input={{action "onUsernameFilterChanged" value="target.value"}} @placeholderKey="directory.filter_name" class="filter-name no-blur" />
+          <ComboBox @class="directory-group-selector" @value={{group}} @content={{groupOptions}} @onChange={{action groupChanged}} @options={{hash none="directory.group.all"}} />
           {{#if currentUser.staff}}
-            {{d-button
-              icon="wrench"
-              action=(action "showEditColumnsModal")
-              class="btn-default open-edit-columns-btn"
-            }}
+            <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} @class="btn-default open-edit-columns-btn" />
           {{/if}}
         </div>
-        {{plugin-outlet name="users-directory-controls" args=(hash model=model)}}
+        <PluginOutlet @name="users-directory-controls" @args={{hash model=model}} />
       </div>
 
-      {{#conditional-loading-spinner condition=isLoading}}
+      <ConditionalLoadingSpinner @condition={{isLoading}}>
         {{#if model.length}}
           <div class="total-rows">{{i18n "directory.total_rows" count=model.totalRows}}</div>
           {{#each model as |item|}}
-            {{directory-item tagName="div" class="user" item=item columns=columns showTimeRead=showTimeRead}}
+            <DirectoryItem @tagName="div" @class="user" @item={{item}} @columns={{columns}} @showTimeRead={{showTimeRead}} />
           {{/each}}
 
-          {{conditional-loading-spinner condition=model.loadingMore}}
+          <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
         {{else}}
           <div class="clearfix"></div>
           <p>{{i18n "directory.no_results"}}</p>
         {{/if}}
-      {{/conditional-loading-spinner}}
+      </ConditionalLoadingSpinner>
 
     </div>
   </div>
-{{/load-more}}
+</LoadMore>

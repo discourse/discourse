@@ -1388,7 +1388,6 @@ fi:
     contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
     contact_url: "URL-osoite sivuston yhteydenottoja varten. Näytetään <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
     crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
-    download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu luettelo."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin historiaan."
@@ -1429,7 +1428,6 @@ fi:
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
     apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
-    twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1981,7 +1979,7 @@ fi:
     default_categories_tracking: "Luettelo oletuksena seurattavista alueista."
     default_categories_muted: "Luettelo oletuksena vaimennetuista alueista."
     default_categories_watching_first_post: "Luettelo alueista, joiden ketjujen ensimmäisiä viestejä tarkkaillaan oletuksena."
-    default_categories_regular: "Luettelo alueista, joita ei ole vaimennettu oletuksena. Hyödyllinen, kun \"mute_all_categories_by_default\"-sivustoasetus on käytössä."
+    default_categories_normal: "Luettelo alueista, joita ei ole vaimennettu oletuksena. Hyödyllinen, kun \"mute_all_categories_by_default\"-sivustoasetus on käytössä."
     mute_all_categories_by_default: "Aseta kaikkien alueiden oletusilmoitustasoksi vaimennettu. Vaadi käyttäjää valitsemaan itse alueet, jotka näkyvät Tuoreimmat- ja Alueet-sivuilla. Jos haluat muuttaa oletusarvoja kirjautumattomille käyttäjille, säädä 'default_categories_' -asetuksia."
     default_tags_watching: "Luettelo tunnisteista, joita tarkkaillaan oletuksena."
     default_tags_tracking: "Luettelo tunnisteista, joita seurataan oletuksena."
@@ -3396,18 +3394,6 @@ fi:
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
       subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
-      text_body_template: |
-        Hei,
-
-        Huomasimme, että kirjauduit sinulle epätavalliselta laitteelta tai paikasta. Olitko se sinä?
-
-         – Paikka: %{location} (%{client_ip})
-         – Selain: %{browser}
-         – Laite: %{device} – %{os}
-
-        Jos se olit sinä, hyvä! Sinun ei tarvitse reagoida mitenkään.
-
-        Jollet se ollut sinä, [tarkastele käynnissä olevia istuntojasi](%{base_url}/my/preferences/account) ja harkitse salasanasi vaihtamista.
     post_approved:
       title: "Viestisi hyväksyttiin"
       subject_template: "[%{site_name}] Viestisi hyväksyttiin"

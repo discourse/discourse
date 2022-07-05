@@ -1090,7 +1090,7 @@ da:
       muted_categories: "Stille!"
       muted_categories_instructions: "Du vil ikke blive underrettet om noget vedr. nye emner i disse kategorier, og de vises ikke på siderne \"kategori\" eller \"seneste\"."
       muted_categories_instructions_dont_hide: "Du vil ikke blive underrettet om noget vedr. nye emner i disse kategorier."
-      regular_categories: "Almindelig"
+      regular_categories: "Normal"
       regular_categories_instructions: "Du vil se disse kategorier i “seneste” og “Top” emnelister."
       no_category_access: "Som moderator har du begrænset kategori-adgang, at gemme er slået fra. "
       delete_account: "Slet min konto"
@@ -1782,9 +1782,11 @@ da:
         sr_title: "Log ind med GitHub"
       discord:
         name: "Discord"
+        sr_title: "Log ind med Discord"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
+        security_key: "Brug en sikkerhedsnøgle i stedet"
     invites:
       accept_title: "Invitation"
       emoji: "konvolut humørikon"
@@ -1932,7 +1934,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      users_placeholder: "Tilføj en bruger"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
@@ -1999,9 +2000,6 @@ da:
           confirm: Du har gemt et nyt emneudkast, som overskrives, hvis du opretter et sammenkædet emne.
         reply_as_new_group_message:
           label: Svar som ny gruppemeddelelse
-        reply_as_private_message:
-          label: Ny meddelelse
-          desc: Opret en ny privat besked
         reply_to_topic:
           label: Besvar emne
           desc: Besvar emnet, ikke noget specifikt indlæg
@@ -3248,6 +3246,7 @@ da:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
       readonly: "Se"
+    preloader_text: "Indlæser"
     lightbox:
       download: "hent"
       previous: "Forrige (Venstre piletast)"
@@ -3330,7 +3329,6 @@ da:
         edit: "%{shortcut} Redigér indlæg"
         delete: "%{shortcut} Slet indlæg"
         mark_muted: "%{shortcut} Gøre emne Stille!"
-        mark_regular: "%{shortcut} Almindeligt (standard) emne"
         mark_tracking: "%{shortcut} Følg emne"
         mark_watching: "%{shortcut} Hold øje med emne"
         print: "%{shortcut} Print emne"
@@ -3457,7 +3455,7 @@ da:
           title: "Følger"
           description: "Du sporer automatisk alle emner med dette mærke. Et antal for ulæste og nye indlæg vises ved siden af emnet."
         regular:
-          title: "Almindeligt"
+          title: "Normal"
           description: "Du får besked, hvis nogen nævner dit @navn eller svarer på dit indlæg."
         muted:
           title: "Lydløs"
@@ -3557,6 +3555,19 @@ da:
       unread_count: "%{count} ulæst"
       new_count: "%{count} ny"
       sections:
+        messages:
+          header_link_text: "Beskeder"
+          links:
+            inbox: "Indbakke"
+            sent: "Sendt"
+            new: "Nye"
+            new_with_count: "Nye (%{count})"
+            unread: "Ulæste"
+            unread_with_count: "Ulæst (%{count})"
+            archive: "Arkiv"
+        tags:
+          header_link_title: "alle mærker"
+          header_link_text: "Tags"
         categories:
           header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
@@ -3566,6 +3577,8 @@ da:
           links:
             tracked:
               content: "Sporet"
+            my_posts:
+              content: "Mine indlæg"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

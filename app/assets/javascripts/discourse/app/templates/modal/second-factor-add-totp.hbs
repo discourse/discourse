@@ -1,5 +1,5 @@
-{{#d-modal-body}}
-  {{#conditional-loading-spinner condition=loading}}
+<DModalBody>
+  <ConditionalLoadingSpinner @condition={{loading}}>
     {{#if errorMessage}}
       <div class="control-group">
         <div class="controls">
@@ -32,30 +32,19 @@
     <div class="control-group">
       <label class="control-label input-prepend">{{i18n "user.second_factor.name"}}</label>
       <div class="controls">
-        {{second-factor-input value=secondFactorName inputId="second-factor-name" placeholder=(i18n "user.second_factor.totp.default_name")}}
+        <SecondFactorInput @value={{secondFactorName}} @inputId="second-factor-name" @placeholder={{i18n "user.second_factor.totp.default_name"}} />
       </div>
 
       <label class="control-label input-prepend">{{i18n "user.second_factor.label"}}</label>
       <div class="controls">
-        {{text-field
-          class="second-factor-token-input"
-          maxlength=6
-          value=secondFactorToken
-          inputId="second-factor-token"
-          placeholder="123456"
-          autocorrect="off"
-          autocapitalize="off"
-          autofocus="autofocus"}}
+        <TextField @class="second-factor-token-input" @maxlength={{6}} @value={{secondFactorToken}} @inputId="second-factor-token" @placeholder="123456" @autocorrect="off" @autocapitalize="off" @autofocus="autofocus" />
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        {{d-button
-          class="btn-primary add-totp"
-          action=(action "enableSecondFactor")
-          label="enable"}}
+        <DButton @class="btn-primary add-totp" @action={{action "enableSecondFactor"}} @label="enable" />
       </div>
     </div>
-  {{/conditional-loading-spinner}}
-{{/d-modal-body}}
+  </ConditionalLoadingSpinner>
+</DModalBody>

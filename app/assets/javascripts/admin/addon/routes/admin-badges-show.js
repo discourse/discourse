@@ -33,16 +33,6 @@ export default Route.extend({
   },
 
   actions: {
-    saveError(e) {
-      let msg = I18n.t("generic_error");
-      if (e.responseJSON && e.responseJSON.errors) {
-        msg = I18n.t("generic_error_with_reason", {
-          error: e.responseJSON.errors.join(". "),
-        });
-      }
-      bootbox.alert(msg);
-    },
-
     editGroupings() {
       const model = this.controllerFor("admin-badges").get("badgeGroupings");
       showModal("admin-edit-badge-groupings", { model, admin: true });

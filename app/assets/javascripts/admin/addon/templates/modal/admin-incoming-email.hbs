@@ -1,4 +1,4 @@
-{{#d-modal-body class="incoming-emails" title="admin.email.incoming_emails.modal.title"}}
+<DModalBody @class="incoming-emails" @title="admin.email.incoming_emails.modal.title">
   <div class="control-group">
     <label>{{i18n "admin.email.incoming_emails.modal.error"}}</label>
     <div class="controls">
@@ -14,7 +14,7 @@
   <div class="control-group">
     <label>{{i18n "admin.email.incoming_emails.modal.headers"}}</label>
     <div class="controls">
-      {{textarea value=model.headers wrap="off"}}
+      <Textarea @value={{model.headers}} @wrap="off" />
     </div>
   </div>
 
@@ -28,7 +28,7 @@
   <div class="control-group">
     <label>{{i18n "admin.email.incoming_emails.modal.body"}}</label>
     <div class="controls">
-      {{textarea value=model.body}}
+      <Textarea @value={{model.body}} />
     </div>
   </div>
 
@@ -38,8 +38,8 @@
     <div class="control-group">
       <label>{{i18n "admin.email.incoming_emails.modal.rejection_message"}}</label>
       <div class="controls">
-        {{textarea value=model.rejection_message}}
+        <Textarea @value={{model.rejection_message}} />
       </div>
     </div>
   {{/if}}
-{{/d-modal-body}}
+</DModalBody>

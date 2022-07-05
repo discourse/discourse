@@ -1161,7 +1161,13 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
-      enable_experimental_sidebar: "Enable experimental sidebar"
+      experimental_sidebar:
+        enable: "Enable experimental sidebar"
+        options: "Options"
+        categories_section: "Categories Section"
+        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
+        tags_section: "Tags Section"
+        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1204,7 +1210,7 @@ en:
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
-      regular_categories: "Regular"
+      regular_categories: "Normal"
       regular_categories_instructions: "You will see these categories in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
@@ -1306,6 +1312,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
+        sidebar: "Sidebar"
 
       change_password:
         success: "(email sent)"
@@ -2200,7 +2207,7 @@ en:
       edit_shared_draft: "Edit Shared Draft"
       title: "Or press %{modifier}Enter"
 
-      users_placeholder: "Add a user"
+      users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
@@ -3691,6 +3698,8 @@ en:
       create_post: "Reply / See"
       readonly: "See"
 
+    preloader_text: "Loading"
+
     lightbox:
       download: "download"
       open: "original image"
@@ -3777,7 +3786,7 @@ en:
         edit: "%{shortcut} Edit post"
         delete: "%{shortcut} Delete post"
         mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Regular (default) topic"
+        mark_regular: "%{shortcut} Normal (default) topic"
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
@@ -3921,7 +3930,7 @@ en:
           title: "Tracking"
           description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
@@ -4041,9 +4050,30 @@ en:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
       sections:
+        messages:
+          header_link_title: "personal messages"
+          header_link_text: "Messages"
+          header_action_title: "create a personal message"
+          links:
+            inbox: "Inbox"
+            sent: "Sent"
+            new: "New"
+            new_with_count: "New (%{count})"
+            unread: "Unread"
+            unread_with_count: "Unread (%{count})"
+            archive: "Archive"
+        tags:
+          none: "You have not added any tags."
+          click_to_get_started: "Click here to get started."
+          header_link_title: "all tags"
+          header_link_text: "Tags"
+          header_action_title: "edit your sidebar tags"
         categories:
+          none: "You have not added any categories."
+          click_to_get_started: "Click here to get started."
           header_link_title: "all categories"
           header_link_text: "Categories"
+          header_action_title: "edit your sidebar categories"
         topics:
           header_link_title: "home"
           header_link_text: "Topics"

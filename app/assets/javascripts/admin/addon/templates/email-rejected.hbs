@@ -1,4 +1,4 @@
-{{#load-more selector=".email-list tr" action=(action "loadMore")}}
+<LoadMore @selector=".email-list tr" @action={{action "loadMore"}}>
   <table class="table email-list">
     <thead>
       <tr>
@@ -13,10 +13,10 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td>{{text-field value=filter.from placeholderKey="admin.email.incoming_emails.filters.from_placeholder"}}</td>
-        <td>{{text-field value=filter.to placeholderKey="admin.email.incoming_emails.filters.to_placeholder"}}</td>
-        <td>{{text-field value=filter.subject placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"}}</td>
-        <td colspan="2">{{text-field value=filter.error placeholderKey="admin.email.incoming_emails.filters.error_placeholder"}}</td>
+        <td><TextField @value={{filter.from}} @placeholderKey="admin.email.incoming_emails.filters.from_placeholder" /></td>
+        <td><TextField @value={{filter.to}} @placeholderKey="admin.email.incoming_emails.filters.to_placeholder" /></td>
+        <td><TextField @value={{filter.subject}} @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder" /></td>
+        <td colspan="2"><TextField @value={{filter.error}} @placeholderKey="admin.email.incoming_emails.filters.error_placeholder" /></td>
       </tr>
 
       {{#each model as |email|}}
@@ -25,10 +25,10 @@
           <td class="username">
             <div>
               {{#if email.user}}
-                {{#link-to "adminUser" email.user}}
+                <LinkTo @route="adminUser" @model={{email.user}}>
                   {{avatar email.user imageSize="tiny"}}
                   {{email.from_address}}
-                {{/link-to}}
+                </LinkTo>
               {{else}}
                 {{#if email.from_address}}
                   <a href="mailto:{{email.from_address}}">{{email.from_address}}</a>
@@ -61,6 +61,6 @@
       {{/each}}
     </tbody>
   </table>
-{{/load-more}}
+</LoadMore>
 
-{{conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{loading}} />

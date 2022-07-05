@@ -1,22 +1,9 @@
 <section class="field category-logo">
   <label>{{i18n "category.logo"}}</label>
-  {{uppy-image-uploader
-    imageUrl=logoImageUrl
-    onUploadDone=(action "logoUploadDone")
-    onUploadDeleted=(action "logoUploadDeleted")
-    type="category_logo"
-    class="no-repeat contain-image"
-    id="category-logo-uploader"
-  }}
+  <UppyImageUploader @imageUrl={{logoImageUrl}} @onUploadDone={{action "logoUploadDone"}} @onUploadDeleted={{action "logoUploadDeleted"}} @type="category_logo" @class="no-repeat contain-image" @id="category-logo-uploader" />
 </section>
 
 <section class="field category-background-image">
   <label>{{i18n "category.background_image"}}</label>
-  {{uppy-image-uploader
-    imageUrl=backgroundImageUrl
-    onUploadDone=(action "backgroundUploadDone")
-    onUploadDeleted=(action "backgroundUploadDeleted")
-    type="category_background"
-    id="category-background-uploader"
-  }}
+  <UppyImageUploader @imageUrl={{backgroundImageUrl}} @onUploadDone={{action "backgroundUploadDone"}} @onUploadDeleted={{action "backgroundUploadDeleted"}} @type="category_background" @id="category-background-uploader" />
 </section>

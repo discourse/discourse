@@ -3,10 +3,5 @@
 {{html-safe message.body}}
 
 {{#if currentUser.can_invite_to_forum}}
-  {{d-button
-    class="btn-primary"
-    label="footer_nav.share"
-    icon="link"
-    action=(action shareModal)
-  }}
+  <DButton @class="btn-primary" @label="footer_nav.share" @icon="link" @action={{action shareModal}} />
 {{/if}}

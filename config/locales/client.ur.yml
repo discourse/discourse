@@ -1105,7 +1105,7 @@ ur:
       muted_categories: "خاموش کِیا ہوا"
       muted_categories_instructions: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ زمرہ جات یا تازہ ترین صفحات پر نظر نہیں آئیں گے۔"
       muted_categories_instructions_dont_hide: "آپ کو اِن زمرہ جات میں نئے ٹاپک کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا۔"
-      regular_categories: "معمولی"
+      regular_categories: "عمومی"
       regular_categories_instructions: "آپ ان اقسام کو “تازہ ترین” اور “سرفہرست” موضوع کی فہرست میں دیکھیں گے."
       no_category_access: "ایک ماڈریٹر کے طور پر آپ کو زمرہ پر محدود رسائی حاصل ہے، محفوظ کرنا غیر فعال ہے۔"
       delete_account: "میرا اکاؤنٹ مٹائیں"
@@ -1950,7 +1950,6 @@ ur:
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
       title: "یا %{modifier} دبائیں۔"
-      users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
@@ -2020,9 +2019,6 @@ ur:
         reply_as_new_group_message:
           label: نئے گروپ پیغام کے بطور جواب دیں
           desc: ایک ہی وصول کنندگان سے شروع ہونے والا نیا پیغام بنائیں
-        reply_as_private_message:
-          label: نیا پیغام
-          desc: نیا ذاتی پیغام بنائیں
         reply_to_topic:
           label: ٹاپک پر جواب دیں
           desc: ٹاپک کا جواب دیں، نہ کہ کسی مخصوص پوسٹ کا
@@ -3315,6 +3311,7 @@ ur:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
       readonly: "ملاحظہ کریں"
+    preloader_text: "لوڈ ہو رہا ہے"
     lightbox:
       download: "ڈاؤن لوڈ"
       open: "اصل تصویر"
@@ -3399,7 +3396,6 @@ ur:
         edit: "%{shortcut} پوسٹ ترمیم کریں"
         delete: "%{shortcut} پوسٹ مٹائیں"
         mark_muted: "%{shortcut} ٹاپک خاموش کریں"
-        mark_regular: "%{shortcut} معمول کا (ڈیفالٹ) ٹاپک"
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
         mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
         print: "%{shortcut} ٹاپک پرِنٹ کریں"
@@ -3536,7 +3532,7 @@ ur:
           title: "ٹریک کیا جا رہا"
           description: "آپ خود کار طریقے سے اِس ٹیگ کے ساتھ موجود تمام ٹاپکس کو ٹریک کریں گے۔ بغیر پڑھی اور نئی پوسٹس کی گنتی ٹاپک کے ساتھ دکھائی جائے گی۔"
         regular:
-          title: "معمولی"
+          title: "عمومی"
           description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا آپ کی پوسٹ پر جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
           title: "خاموش کِیا ہوا"
@@ -3639,6 +3635,19 @@ ur:
       unread_count: "%{count} بغیر پڑھا ہوا"
       new_count: "%{count} نیا"
       sections:
+        messages:
+          header_link_text: "پیغامات"
+          links:
+            inbox: "اِن باکس"
+            sent: "بھیجا جا چکا"
+            new: "نیا"
+            new_with_count: "نیا (%{count})"
+            unread: "بغیر پڑھے"
+            unread_with_count: "بغیر پڑھا (%{count})"
+            archive: "آر کائیو"
+        tags:
+          header_link_title: "تمام ٹیگز"
+          header_link_text: "ٹیگز"
         categories:
           header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
@@ -3648,6 +3657,8 @@ ur:
           links:
             tracked:
               content: "ٹریک کیا ہوا"
+            my_posts:
+              content: "میری پوسٹ"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:

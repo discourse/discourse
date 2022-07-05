@@ -1,15 +1,15 @@
 {{#each categories as |category|}}
   <div class="category-list subcategory-list with-topics">
     <div class="parent-category">
-      {{category-title-link category=category}}
+      <CategoryTitleLink @category={{category}} />
       <span class="stat" title={{category.statTitle}}>{{html-safe category.stat}}</span>
     </div>
     <div class="subcategories">
       {{#each category.subcategories as |subCategory|}}
-        {{parent-category-row category=subCategory showTopics=true}}
+        <ParentCategoryRow @category={{subCategory}} @showTopics={{true}} />
       {{else}}
         {{!-- No subcategories... so just show the parent to avoid confusion --}}
-        {{parent-category-row category=category showTopics=true}}
+        <ParentCategoryRow @category={{category}} @showTopics={{true}} />
       {{/each}}
     </div>
   </div>

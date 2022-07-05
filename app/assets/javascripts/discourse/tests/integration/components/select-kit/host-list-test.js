@@ -22,7 +22,7 @@ discourseModule(
 
       async test(assert) {
         assert.strictEqual(
-          query(".formated-selection").innerText,
+          query(".formatted-selection").innerText,
           "a.com, b.com"
         );
       },

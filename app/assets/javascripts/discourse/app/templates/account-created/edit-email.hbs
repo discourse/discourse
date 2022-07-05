@@ -1,11 +1,8 @@
 <div class="ac-message">
-  {{activation-email-form email=newEmail}}
+  <ActivationEmailForm @email={{newEmail}} />
 </div>
 
 <div class="activation-controls">
-  {{d-button action=(action "changeEmail")
-             label="login.submit_new_email"
-             disabled=submitDisabled
-             class="btn-primary"}}
-  {{d-button action=(action "cancel") label="cancel" class="edit-cancel"}}
+  <DButton @action={{action "changeEmail"}} @label="login.submit_new_email" @disabled={{submitDisabled}} @class="btn-primary" />
+  <DButton @action={{action "cancel"}} @label="cancel" @class="edit-cancel" />
 </div>

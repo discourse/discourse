@@ -73,7 +73,7 @@ class FileHelper
             # attempt error API compatibility
             io = FakeIO.new
             io.status = [response.code, ""]
-            raise OpenURI::HTTPError.new("#{response.code} Error: #{response.body}", io)
+            raise OpenURI::HTTPError.new("#{response.code} Error", io)
           else
             log(:error, "FinalDestination did not work for: #{url}") if verbose
             throw :done

@@ -1006,7 +1006,7 @@ ro:
       watched_first_post_tags: "Urmărire activă prima postare"
       watched_first_post_tags_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect cu aceste etichete."
       muted_categories: "Setat pe silențios"
-      regular_categories: "Utilizator frecvent"
+      regular_categories: "Normal"
       no_category_access: "În calitate de moderator ai acces limitat la categorii, salvarea este dezactivată."
       delete_account: "Șterge-mi contul"
       delete_account_confirm: "Ești sigur că vrei să ștergi contul? Această acțiune este ireversibilă!"
@@ -1612,7 +1612,6 @@ ro:
       create_pm: "Mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
-      users_placeholder: "Adaugă un utilizator"
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
@@ -1660,8 +1659,6 @@ ro:
         reply_as_new_topic:
           label: Răspunde cu link către subiect
           desc: Creați o discuție nouă legată de această discuție
-        reply_as_private_message:
-          label: Mesaj nou
         reply_to_topic:
           label: Răspunde la subiect
           desc: Răspundeți subiectului, nu unei anumite postări
@@ -2598,6 +2595,7 @@ ro:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizează"
       readonly: "Doar citire"
+    preloader_text: "Se încarcă"
     lightbox:
       download: "descărcare"
       counter: "%curr% din %total%"
@@ -2656,7 +2654,6 @@ ro:
         edit: "%{shortcut} Editează postare"
         delete: "%{shortcut} Șterge postare"
         mark_muted: "%{shortcut} Setează subiect pe silențios"
-        mark_regular: "%{shortcut} Subiect obișnuit (implicit)"
         mark_tracking: "%{shortcut} Urmărește subiect"
         mark_watching: "%{shortcut} Urmărește activ subiect"
         print: "%{shortcut} Tipărire subiect"
@@ -2733,7 +2730,7 @@ ro:
           title: "Urmărind"
           description: "Vei urmări automat toate discuțiile cu această etichetă. Un contor cu postările necitite și cu cele noi va apărea lângă discuție."
         regular:
-          title: "Utilizator frecvent"
+          title: "Normal"
           description: "Vei fi notificat dacă cineva îți menționează @numele sau răspunde la postare."
         muted:
           title: "Silențios"
@@ -2785,6 +2782,19 @@ ro:
       unread_count: "%{count} necitit"
       new_count: "%{count} nou"
       sections:
+        messages:
+          header_link_text: "Mesaje"
+          links:
+            inbox: "Primite"
+            sent: "Trimise"
+            new: "Noi"
+            new_with_count: "Nou (%{count})"
+            unread: "Necitite"
+            unread_with_count: "Necitit (%{count})"
+            archive: "Arhivă"
+        tags:
+          header_link_title: "toate etichetele"
+          header_link_text: "Etichete"
         categories:
           header_link_title: "Toate categoriile"
           header_link_text: "Categorii"
@@ -2794,6 +2804,8 @@ ro:
           links:
             tracked:
               content: "Urmărite"
+            my_posts:
+              content: "Postările mele"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

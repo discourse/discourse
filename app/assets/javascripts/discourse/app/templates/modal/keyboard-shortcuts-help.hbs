@@ -1,4 +1,4 @@
-{{#d-modal-body id="keyboard-shortcuts-help"}}
+<DModalBody @id="keyboard-shortcuts-help">
   {{#each-in shortcuts as |category shortcutCategory|}}
     <section class="shortcut-category span-{{shortcutCategory.count}} shortcut-category-{{category}}">
       <h4>{{i18n (concat "keyboard_shortcuts_help." category ".title")}}</h4>
@@ -9,4 +9,4 @@
       </ul>
     </section>
   {{/each-in}}
-{{/d-modal-body}}
+</DModalBody>

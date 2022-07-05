@@ -9,7 +9,7 @@ export default createWidget("sidebar-toggle", {
         title: "",
         icon: "bars",
         action: "toggleSidebar",
-        className: "btn btn-flat",
+        className: "btn btn-flat btn-sidebar-toggle",
       }),
     ];
   },

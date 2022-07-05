@@ -1,9 +1,9 @@
 {{#unless isMuted}}
   <span class="subcategory">
-    {{category-title-before category=category}}
+    <CategoryTitleBefore @category={{category}} />
     {{category-link category hideParent="true"}}
     {{#unless hideUnread}}
-      {{category-unread category=category}}
+      <CategoryUnread @category={{category}} />
     {{/unless}}
   </span>
 {{/unless}}

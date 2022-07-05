@@ -480,7 +480,7 @@ module("Unit | Model | report", function () {
     assert.strictEqual(usernameLabel.type, "user");
     const computedUsernameLabel = usernameLabel.compute(row);
     assert.strictEqual(
-      computedUsernameLabel.formatedValue,
+      computedUsernameLabel.formattedValue,
       "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='20' height='20' src='/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"
     );
     assert.strictEqual(computedUsernameLabel.value, "joffrey");
@@ -491,12 +491,12 @@ module("Unit | Model | report", function () {
     assert.strictEqual(flagCountLabel.title, "Flag count");
     assert.strictEqual(flagCountLabel.type, "number");
     let computedFlagCountLabel = flagCountLabel.compute(row);
-    assert.strictEqual(computedFlagCountLabel.formatedValue, "1.9k");
+    assert.strictEqual(computedFlagCountLabel.formattedValue, "1.9k");
     assert.strictEqual(computedFlagCountLabel.value, 1876);
     computedFlagCountLabel = flagCountLabel.compute(row, {
       formatNumbers: false,
     });
-    assert.strictEqual(computedFlagCountLabel.formatedValue, "1876");
+    assert.strictEqual(computedFlagCountLabel.formattedValue, "1876");
 
     const timeReadLabel = computedLabels[2];
     assert.strictEqual(timeReadLabel.mainProperty, "time_read");
@@ -504,7 +504,7 @@ module("Unit | Model | report", function () {
     assert.strictEqual(timeReadLabel.title, "Time read");
     assert.strictEqual(timeReadLabel.type, "seconds");
     const computedTimeReadLabel = timeReadLabel.compute(row);
-    assert.strictEqual(computedTimeReadLabel.formatedValue, "3d");
+    assert.strictEqual(computedTimeReadLabel.formattedValue, "3d");
     assert.strictEqual(computedTimeReadLabel.value, 287362);
 
     const noteLabel = computedLabels[3];
@@ -513,7 +513,7 @@ module("Unit | Model | report", function () {
     assert.strictEqual(noteLabel.title, "Note");
     assert.strictEqual(noteLabel.type, "text");
     const computedNoteLabel = noteLabel.compute(row);
-    assert.strictEqual(computedNoteLabel.formatedValue, "This is a long note");
+    assert.strictEqual(computedNoteLabel.formattedValue, "This is a long note");
     assert.strictEqual(computedNoteLabel.value, "This is a long note");
 
     const topicLabel = computedLabels[4];
@@ -523,7 +523,7 @@ module("Unit | Model | report", function () {
     assert.strictEqual(topicLabel.type, "topic");
     const computedTopicLabel = topicLabel.compute(row);
     assert.strictEqual(
-      computedTopicLabel.formatedValue,
+      computedTopicLabel.formattedValue,
       "<a href='/t/-/2'>Test topic &lt;html&gt;</a>"
     );
     assert.strictEqual(computedTopicLabel.value, "Test topic <html>");
@@ -535,7 +535,7 @@ module("Unit | Model | report", function () {
     assert.strictEqual(postLabel.type, "post");
     const computedPostLabel = postLabel.compute(row);
     assert.strictEqual(
-      computedPostLabel.formatedValue,
+      computedPostLabel.formattedValue,
       "<a href='/t/-/2/3'>This is the beginning of &lt;html&gt;</a>"
     );
     assert.strictEqual(
@@ -549,25 +549,25 @@ module("Unit | Model | report", function () {
     assert.strictEqual(filesizeLabel.title, "Filesize");
     assert.strictEqual(filesizeLabel.type, "bytes");
     const computedFilesizeLabel = filesizeLabel.compute(row);
-    assert.strictEqual(computedFilesizeLabel.formatedValue, "569.0 KB");
+    assert.strictEqual(computedFilesizeLabel.formattedValue, "569.0 KB");
     assert.strictEqual(computedFilesizeLabel.value, 582641);
 
     // subfolder support
     setPrefix("/forum");
 
-    const postLink = computedLabels[5].compute(row).formatedValue;
+    const postLink = computedLabels[5].compute(row).formattedValue;
     assert.strictEqual(
       postLink,
       "<a href='/forum/t/-/2/3'>This is the beginning of &lt;html&gt;</a>"
     );
 
-    const topicLink = computedLabels[4].compute(row).formatedValue;
+    const topicLink = computedLabels[4].compute(row).formattedValue;
     assert.strictEqual(
       topicLink,
       "<a href='/forum/t/-/2'>Test topic &lt;html&gt;</a>"
     );
 
-    const userLink = computedLabels[0].compute(row).formatedValue;
+    const userLink = computedLabels[0].compute(row).formattedValue;
     assert.strictEqual(
       userLink,
       "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='20' height='20' src='/forum/' class='avatar' title='joffrey' aria-label='joffrey'><span class='username'>joffrey</span></a>"

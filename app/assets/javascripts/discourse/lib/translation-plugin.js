@@ -59,6 +59,7 @@ class TranslationPlugin extends Plugin {
     let extras = {
       en: {
         admin: parsed.en.admin_js.admin,
+        wizard: parsed.en.wizard_js.wizard,
       },
     };
 
@@ -70,7 +71,7 @@ class TranslationPlugin extends Plugin {
     this.replaceMF(formats, parsed);
     this.replaceMF(formats, extras);
 
-    formats = Object.keys(formats).map((k) => `"${k}": ${formats[k]}`);
+    formats = Object.entries(formats).map(([k, v]) => `"${k}": ${v}`);
 
     let contents = `
       I18n.locale = 'en';

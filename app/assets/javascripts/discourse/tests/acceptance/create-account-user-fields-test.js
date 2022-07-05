@@ -1,9 +1,10 @@
 import {
   acceptance,
+  count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Create Account - User Fields", function (needs) {
@@ -64,5 +65,17 @@ acceptance("Create Account - User Fields", function (needs) {
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
     await click(".modal-footer .btn-primary");
+  });
+
+  test("can submit with enter", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+    await triggerKeyEvent(".modal-footer .btn-primary", "keydown", 13);
+
+    assert.strictEqual(
+      count("#modal-alert:visible"),
+      1,
+      "hitting Enter triggers action"
+    );
   });
 });

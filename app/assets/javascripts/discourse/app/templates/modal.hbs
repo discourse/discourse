@@ -1,13 +1,3 @@
-{{#d-modal
-  modalClass=modalClass
-  title=title
-  titleAriaElementId=titleAriaElementId
-  subtitle=subtitle
-  panels=panels
-  selectedPanel=selectedPanel
-  onSelectPanel=onSelectPanel
-  class="hidden"
-  errors=errors
-  closeModal=(route-action "closeModal")}}
+<DModal @modalClass={{modalClass}} @title={{title}} @titleAriaElementId={{titleAriaElementId}} @subtitle={{subtitle}} @panels={{panels}} @selectedPanel={{selectedPanel}} @onSelectPanel={{onSelectPanel}} @class="hidden" @errors={{errors}} @closeModal={{route-action "closeModal"}}>
   {{outlet "modalBody"}}
-{{/d-modal}}
+</DModal>

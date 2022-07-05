@@ -1,5 +1,5 @@
-{{#d-modal-body}}
+<DModalBody>
   {{html-safe (i18n "login.sent_activation_email_again" currentEmail=currentEmail)}}
-{{/d-modal-body}}
+</DModalBody>
 
-{{modal-footer-close closeModal=(route-action "closeModal")}}
+<ModalFooterClose @closeModal={{route-action "closeModal"}} />

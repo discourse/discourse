@@ -1835,7 +1835,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1900,9 +1899,6 @@ gl:
           confirm: Ten gardado un borrador do novo tema, que se sobrescribirá se crea un tema ligado a este.
         reply_as_new_group_message:
           label: Responder como nova mensaxe de grupo
-        reply_as_private_message:
-          label: Nova mensaxe
-          desc: Crear unha nova mensaxe privada
         reply_to_topic:
           label: Responder ao tema
           desc: Responder ao tema, non a ningunha publicación específica
@@ -3089,6 +3085,7 @@ gl:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "Cargando"
     lightbox:
       download: "descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
@@ -3170,7 +3167,6 @@ gl:
         edit: "%{shortcut} Editar a publicación"
         delete: "%{shortcut} Eliminar a publicación"
         mark_muted: "%{shortcut} Silenciar o tema"
-        mark_regular: "%{shortcut} Tema normal (predeterminado)"
         mark_tracking: "%{shortcut} Seguir o tema"
         mark_watching: "%{shortcut} Ver o tema"
         print: "%{shortcut} Imprimir o tema"
@@ -3356,6 +3352,19 @@ gl:
       unread_count: "%{count} pendente de lectura"
       new_count: "%{count} novo"
       sections:
+        messages:
+          header_link_text: "Mensaxes"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            new_with_count: "(%{count}) novo"
+            unread: "Sen ler"
+            unread_with_count: "(%{count}) pendente de ler"
+            archive: "Arquivo"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
         categories:
           header_link_title: "todas as categorías"
           header_link_text: "Categorías"
@@ -3365,6 +3374,8 @@ gl:
           links:
             tracked:
               content: "Seguido"
+            my_posts:
+              content: "As miñas publicacións"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
