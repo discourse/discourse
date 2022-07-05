@@ -19,7 +19,11 @@ module.exports = {
     "no-inline-styles": false,
     "no-input-block": true,
     "no-input-tagname": true,
-    "no-implicit-this": false,
+    "no-implicit-this": {
+      allow: [
+        'loading-spinner'
+      ]
+    },
     "no-invalid-interactive": true,
     "no-invalid-link-text": true,
     "no-invalid-meta": true,
