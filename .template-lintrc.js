@@ -3,9 +3,7 @@ module.exports = {
   extends: "discourse:recommended",
 
   rules: {
-    "no-implicit-this": {
-      allow: ["loading-spinner"],
-    },
+    "no-capital-arguments": false, // TODO: we extensively use `args` argument name
     "no-curly-component-invocation": {
       allow: [
         // These are helpers, not components
@@ -16,6 +14,9 @@ module.exports = {
         "loading-spinner",
         "mobile-directory-item-label",
       ],
+    },
+    "no-implicit-this": {
+      allow: ["loading-spinner"],
     },
   },
 };
