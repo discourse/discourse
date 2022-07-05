@@ -124,11 +124,58 @@ begin
   Rake::Task['db:drop'].enhance(["db:force_skip_persist", "multisite:drop"] + reqs)
 end
 
-Rake::Task["db:rollback"].clear
-task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
-  step = ENV["STEP"] ? ENV["STEP"].to_i : 1
-  ActiveRecord::Base.connection.migration_context.rollback(step)
-  Rake::Task['db:_dump'].invoke
+# db:migrate and related tasks
+
+# we need to run seed_fu every time we run rake db:migrate
+Rake::Task["db:migrate"].clear
+task "db:migrate" => ["load_config", "environment", "set_locale"] do |_, args|
+  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
+    migrations = ActiveRecord::Base.connection.migration_context.migrations
+    now_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+    epoch_timestamp = Time.at(0).utc.strftime("%Y%m%d%H%M%S").to_i
+
+    raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
+    raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
+
+    %i[pg_trgm unaccent].each do |extension|
+      begin
+        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
+      rescue => e
+        STDERR.puts "Cannot enable database extension #{extension}"
+        STDERR.puts e
+      end
+    end
+
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+
+    SeedFu.quiet = true
+    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+
+    if Rails.env.development? && !ENV["RAILS_TEST_DB"] && !ENV["RAILS_DB"]
+      Rake::Task["db:schema:cache:dump"].invoke
+    end
+
+    if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
+      SiteIconManager.ensure_optimized!
+    end
+  end
+
+  next if Discourse.is_parallel_test?
+
+  if MultisiteTestHelpers.load_multisite?
+    system("RAILS_TEST_DB=discourse_test_multisite rake db:migrate")
+    next
+  end
+
+  next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
+
+  RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+    spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+    next unless spec
+
+    database_url = config_to_url(spec.config)
+    system("DATABASE_URL=#{database_url} rake db:migrate")
+  end
 end
 
 class StdOutDemux
@@ -273,43 +320,13 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   end
 end
 
-# we need to run seed_fu every time we run rake db:migrate
-Rake::Task["db:migrate"].clear
-task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
-  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
-    migrations = ActiveRecord::Base.connection.migration_context.migrations
-    now_timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S').to_i
-    epoch_timestamp = Time.at(0).utc.strftime('%Y%m%d%H%M%S').to_i
+# Other tasks
 
-    raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
-    raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
-
-    %i[pg_trgm unaccent].each do |extension|
-      begin
-        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
-      rescue => e
-        STDERR.puts "Cannot enable database extension #{extension}"
-        STDERR.puts e
-      end
-    end
-
-    ActiveRecord::Tasks::DatabaseTasks.migrate
-
-    SeedFu.quiet = true
-    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
-
-    if Rails.env.development? && !ENV["RAILS_TEST_DB"]
-      Rake::Task['db:schema:cache:dump'].invoke
-    end
-
-    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
-      SiteIconManager.ensure_optimized!
-    end
-  end
-
-  if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-    system("RAILS_TEST_DB=discourse_test_multisite rake db:migrate")
-  end
+Rake::Task["db:rollback"].clear
+task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
+  step = ENV["STEP"] ? ENV["STEP"].to_i : 1
+  ActiveRecord::Base.connection.migration_context.rollback(step)
+  Rake::Task['db:_dump'].invoke
 end
 
 task 'test:prepare' => 'environment' do
@@ -357,7 +374,6 @@ end
 
 desc 'Statistics about database'
 task 'db:stats' => 'environment' do
-
   sql = <<~SQL
     select table_name,
     (
@@ -408,7 +424,6 @@ end
 
 desc 'Validate indexes'
 task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment'] do |_, args|
-
   db = TemporaryDb.new
   db.start
   db.migrate
