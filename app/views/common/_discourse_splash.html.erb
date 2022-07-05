@@ -24,8 +24,7 @@
       height: 100vh;
     }
 
-    #d-splash .preloader-text {
-      padding-top: 4em;
+    #d-splash .preloader-text-wrapper {
       position: absolute;
       opacity: 0;
       animation: fade-in 0.5s ease-in-out;
@@ -35,11 +34,14 @@
       color: var(--primary);
     }
 
+    #d-splash .preloader-text {
+      padding-top: 4em;
+    }
+
     #d-splash .preloader-text:after {
       animation: loading-text 3s infinite;
       content: "";
       position: absolute;
-      top: 4em;
       margin: 0 0.1em;
       left: 100%;
     }
@@ -80,8 +82,8 @@
     alt="<%=SiteSetting.title%>"
   />
 
-  <div class="preloader-text">
-    <span> <%= I18n.t("js.preloader_text") %> </span>
+  <div class="preloader-text-wrapper">
+    <div class="preloader-text"><%= I18n.t("js.preloader_text") %></div>
   </div>
 
   <noscript>
