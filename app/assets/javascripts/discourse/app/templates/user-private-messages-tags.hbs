@@ -6,16 +6,8 @@
 
 <div class="tag-sort-options">
   {{i18n "tagging.sort_by"}}
-  <span class="tag-sort-count {{if sortedByCount "active"}}">
-    <a href {{action "sortByCount"}}>
-      {{i18n "tagging.sort_by_count"}}
-    </a>
-  </span>
-  <span class="tag-sort-name {{if sortedByName "active"}}">
-    <a href {{action "sortById"}}>
-      {{i18n "tagging.sort_by_name"}}
-    </a>
-  </span>
+  <span class="tag-sort-count {{if sortedByCount "active"}}"><a href {{action "sortByCount"}}>{{i18n "tagging.sort_by_count"}}</a></span>
+  <span class="tag-sort-name {{if sortedByName "active"}}"><a href {{action "sortById"}}>{{i18n "tagging.sort_by_name"}}</a></span>
 </div>
 
 <hr>
