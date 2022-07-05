@@ -1,7 +1,7 @@
 <StyleguideExample @title="topic list item">
   <table class="topic-list">
     <tbody>
-      <TopicListItem @topic={{dummy.topic}} @showPosters={{true}} />
+      <TopicListItem @topic={{this.dummy.topic}} @showPosters={{true}} />
     </tbody>
   </table>
 </StyleguideExample>
@@ -9,7 +9,7 @@
 <StyleguideExample @title="topic list item - hide category">
   <table class="topic-list">
     <tbody>
-      <TopicListItem @topic={{dummy.topic}} @hideCategory={{true}} @showPosters={{true}} />
+      <TopicListItem @topic={{this.dummy.topic}} @hideCategory={{true}} @showPosters={{true}} />
     </tbody>
   </table>
 </StyleguideExample>
@@ -17,11 +17,11 @@
 <StyleguideExample @title="topic list item - show likes">
   <table class="topic-list">
     <tbody>
-      <TopicListItem @topic={{dummy.topic}} @showLikes={{true}} @showPosters={{true}} />
+      <TopicListItem @topic={{this.dummy.topic}} @showLikes={{true}} @showPosters={{true}} />
     </tbody>
   </table>
 </StyleguideExample>
 
 <StyleguideExample @title="topic list item - latest" class="half-size">
-  <LatestTopicListItem @topic={{dummy.topic}} />
+  <LatestTopicListItem @topic={{this.dummy.topic}} />
 </StyleguideExample>
