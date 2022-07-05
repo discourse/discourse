@@ -948,6 +948,8 @@ zh_TW:
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
+      experimental_sidebar:
+        options: "選項"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"

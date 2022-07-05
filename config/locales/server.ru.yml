@@ -641,6 +641,10 @@ ru:
             base:
               invalid_url: "Указанный URL не является корректной ссылкой"
               invalid_tag_list: "Некорректный список замещающих тегов"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "Недопустимый тип"
       <<: *errors
   uncategorized_category_name: "РАЗНОЕ"
   vip_category_name: "Комната отдыха"

@@ -1006,6 +1006,8 @@ ja:
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       enable_defer: "トピックを未読にマークして延期を有効にする"
+      experimental_sidebar:
+        options: "オプション"
       change: "変更"
       featured_topic: "注目のトピック"
       moderator: "%{user} はモデレーターです"

@@ -1012,7 +1012,13 @@ fa_IR:
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       enable_defer: "تاخیر را برای علامت زدن مباحث به عنوان خوانده نشده فعال کن"
-      enable_experimental_sidebar: "فعال کردن نوار کناری آزمایشی"
+      experimental_sidebar:
+        enable: "فعال کردن نوار کناری آزمایشی"
+        options: "تنظیمات"
+        categories_section: "بخش دسته‌بندی‌ها"
+        categories_section_instruction: "دسته‌بندی‌های انتخاب شده در بخش دسته‌بندی نوار کناری نمایش داده می‌شود."
+        tags_section: "بخش برچسب‌ها"
+        tags_section_instruction: "برچسب‌های انتخاب شده در بخش برچسب‌ها نوار کناری نمایش داده می‌شود."
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -1115,6 +1121,7 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
+        sidebar: "نوار کناری"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -3200,12 +3207,17 @@ fa_IR:
             unread_with_count: " (%{count}) خوانده‌ نشده‌"
             archive: "بایگانی"
         tags:
-          no_tracked_tags: "شما هیچ برچسبی را ردیابی نمی‌کنید."
+          none: "شما هنوز هیچ برچسبی اضافه نکرده‌اید."
+          click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_title: "تمام برچسب‌ها"
           header_link_text: "برچسب"
+          header_action_title: "برچسب‌های نوار کناری خود را ویرایش کنید"
         categories:
+          none: "شما هنوز هیچ دسته‌بندی اضافه نکرده‌اید."
+          click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_title: "همه‌ی دسته‌بندی‌ها"
           header_link_text: "دسته‌بندی‌ها"
+          header_action_title: "دسته‌بندی‌های نوار کناری خود را ویرایش کنید"
         topics:
           header_link_title: "خانه"
           header_link_text: "موضوعات"

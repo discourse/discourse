@@ -1015,6 +1015,8 @@ sl:
       external_links_in_new_tab: "Odpri vse zunanje povezave v novem zavihku"
       enable_quoting: "Omogoči odgovarjanje s citiranjem za poudarjen tekst"
       enable_defer: "Omogoči preloži za označiti teme kot neprebrane"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "spremeni"
       featured_topic: "Izpostavljena tema"
       moderator: "%{user} je moderator"

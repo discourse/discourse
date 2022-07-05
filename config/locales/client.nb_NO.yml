@@ -1023,6 +1023,8 @@ nb_NO:
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       enable_defer: "Aktiver utsettelse for å merke emner ulest"
+      experimental_sidebar:
+        options: "Alternativer"
       change: "Endre"
       featured_topic: "Utvalgte emne"
       moderator: "%{user} er en moderator"

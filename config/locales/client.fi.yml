@@ -1031,6 +1031,8 @@ fi:
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_defer: "Ota käyttöön lykkäystoiminto, jolla voi merkitä ketjun lukemattomaksi"
+      experimental_sidebar:
+        options: "Asetukset"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
