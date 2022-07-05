@@ -134,3 +134,57 @@ blockquote {
 #simple-container {
   width: 90%;
 }
+
+#main-outlet-wrapper {
+  width: 100%;
+
+  #main-outlet {
+    &.main-outlet-animate {
+      width: 95vw; // prevents content width shift during animation
+    }
+  }
+}
+
+.sidebar-wrapper {
+  width: 0;
+  transition: width 0.25s ease-in-out;
+}
+
+body.has-sidebar-page {
+  position: fixed;
+  height: calc(100vh - var(--header-offset));
+
+  #main {
+    overflow: hidden;
+  }
+
+  .sidebar-wrapper {
+    width: var(--d-sidebar-width);
+  }
+
+  #main-outlet {
+    position: relative;
+    width: 95vw; // prevents content width shift during animation
+    &:after {
+      content: "";
+      background: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 0;
+      left: -2em; // compensate for gap
+      right: 0;
+      bottom: 0;
+      z-index: z("dropdown");
+    }
+  }
+
+  #main-outlet-wrapper {
+    grid-template-columns: min-content minmax(0, 100vw);
+    gap: 0 2em;
+    padding-left: 0;
+
+    .sidebar-container {
+      padding-bottom: 6.6em;
+      transition: width 0.25s;
+    }
+  }
+}

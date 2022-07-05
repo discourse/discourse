@@ -1,16 +1,14 @@
-<DSection @pageClass="has-sidebar" @class="sidebar-wrapper">
-  <div class="sidebar-container">
-    <div class="sidebar-scroll-wrap">
-      <Sidebar::TopicsSection />
-      <Sidebar::CategoriesSection />
+<DSection @pageClass="has-sidebar" @class="sidebar-container">
+  <div class="sidebar-scroll-wrap">
+    <Sidebar::TopicsSection />
+    <Sidebar::CategoriesSection />
 
-      {{#if this.siteSettings.tagging_enabled}}
-        <Sidebar::TagsSection />
-      {{/if}}
+    {{#if this.siteSettings.tagging_enabled}}
+      <Sidebar::TagsSection />
+    {{/if}}
 
-      {{#if this.siteSettings.enable_personal_messages}}
-        <Sidebar::MessagesSection />
-      {{/if}}
-    </div>
+    {{#if this.siteSettings.enable_personal_messages}}
+      <Sidebar::MessagesSection />
+    {{/if}}
   </div>
 </DSection>
