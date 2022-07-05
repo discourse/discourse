@@ -24,7 +24,7 @@
       <li class="spacer"></li>
       <li>
         <label>
-          <Input @type="checkbox" @checked={{this.onlyOverridden}} {{on "click" (action "onlyOverriddenChanged")}} />
+          <Input @type="checkbox" @checked={{this.onlyOverridden}} {{on "click" (action "onlyOverriddenChanged" value="target.checked")}} />
           {{i18n "admin.customize.theme.hide_unused_fields"}}
         </label>
       </li>
