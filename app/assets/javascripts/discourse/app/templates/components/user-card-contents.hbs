@@ -63,7 +63,11 @@
             <h2 class="staged">{{i18n "user.staged"}}</h2>
           {{/if}}
           {{#if this.hasStatus}}
-            <h3 class="user-status">{{html-safe this.userStatusEmoji}} {{this.user.status.description}}</h3>
+            <h3 class="user-status">
+              {{html-safe this.userStatusEmoji}}
+              {{this.user.status.description}}
+              {{format-date this.user.status.ends_at format="tiny"}}
+            </h3>
           {{/if}}
           <PluginOutlet @name="user-card-post-names" @connectorTagName="div" @args={{hash user=this.user}} @tagName="div" />
         </div>

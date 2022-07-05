@@ -31,6 +31,9 @@ import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import Evented from "@ember/object/evented";
+import { cancel, later } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -1072,6 +1075,8 @@ User.reopenClass(Singleton, {
   createCurrent() {
     const userJson = PreloadStore.get("currentUser");
     if (userJson) {
+      userJson.isCurrent = true;
+
       if (userJson.primary_group_id) {
         const primaryGroup = userJson.groups.find(
           (group) => group.id === userJson.primary_group_id
@@ -1087,7 +1092,9 @@ User.reopenClass(Singleton, {
       }
 
       const store = getOwner(this).lookup("service:store");
-      return store.createRecord("user", userJson);
+      const currentUser = store.createRecord("user", userJson);
+      currentUser.trackStatus();
+      return currentUser;
     }
 
     return null;
@@ -1167,6 +1174,78 @@ User.reopenClass(Singleton, {
       dataType: "json",
       data: { timezone: user.timezone },
     });
+  },
+});
+
+// user status tracking
+User.reopen(Evented, {
+  _clearStatusTimerId: null,
+
+  // always call stopTrackingStatus() when done with a user
+  trackStatus() {
+    this.addObserver("status", this, "_statusChanged");
+
+    if (this.isCurrent) {
+      this.appEvents.on(
+        "current-user-status:changed",
+        this,
+        this._updateStatus
+      );
+    }
+
+    if (this.status && this.status.ends_at) {
+      this._scheduleStatusClearing(this.status.ends_at);
+    }
+  },
+
+  stopTrackingStatus() {
+    this.removeObserver("status", this, "_statusChanged");
+    if (this.isCurrent) {
+      this.appEvents.off(
+        "current-user-status:changed",
+        this,
+        this._updateStatus
+      );
+    }
+    this._unscheduleStatusClearing();
+  },
+
+  _statusChanged(sender, key) {
+    this.trigger("status-changed");
+
+    const status = this.get(key);
+    if (status && status.ends_at) {
+      this._scheduleStatusClearing(status.ends_at);
+    } else {
+      this._unscheduleStatusClearing();
+    }
+  },
+
+  _scheduleStatusClearing(endsAt) {
+    if (isTesting()) {
+      return;
+    }
+
+    if (this._clearStatusTimerId) {
+      this._unscheduleStatusClearing();
+    }
+
+    const utcNow = moment.utc();
+    const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
+    this._clearStatusTimerId = later(this, "_autoClearStatus", remaining);
+  },
+
+  _unscheduleStatusClearing() {
+    cancel(this._clearStatusTimerId);
+    this._clearStatusTimerId = null;
+  },
+
+  _autoClearStatus() {
+    this.set("status", null);
+  },
+
+  _updateStatus(status) {
+    this.set("status", status);
   },
 });
 

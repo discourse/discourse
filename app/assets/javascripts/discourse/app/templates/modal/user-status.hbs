@@ -3,8 +3,24 @@
     <div class="control-group">
       <UserStatusPicker @emoji={{emoji}} @description={{description}} />
     </div>
+    <div class="control-group control-group-remove-status">
+      <label class="control-label">
+        {{i18n "user_status.remove_status"}}
+      </label>
+      <TimeShortcutPicker
+        @timeShortcuts={{timeShortcuts}}
+        @hiddenOptions={{hiddenTimeShortcutOptions}}
+        @customLabels={{customTimeShortcutLabels}}
+        @prefilledDatetime={{prefilledDateTime}}
+        @onTimeSelected={{action "onTimeSelected"}}
+        @_itsatrap={{_itsatrap}} />
+    </div>
     <div class="modal-footer control-group">
-      <DButton @label="user_status.save" @class="btn-primary" @disabled={{not statusIsSet}} @action={{action "saveAndClose"}} />
+      <DButton
+        @label="user_status.save"
+        @class="btn-primary"
+        @disabled={{not statusIsSet}}
+        @action={{action "saveAndClose"}} />
       <DModalCancel @close={{action "closeModal"}} />
       {{#if showDeleteButton}}
         <DButton @icon="trash-alt" @class="delete-status btn-danger" @action={{action "delete"}} />

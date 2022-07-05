@@ -76,7 +76,7 @@ describe UserCardSerializer do
     fab!(:user) { Fabricate(:user, user_status: user_status) }
     let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
 
-    it "serializes when enabled" do
+    it "adds user status when enabled" do
       SiteSetting.enable_user_status = true
 
       json = serializer.as_json
@@ -87,9 +87,29 @@ describe UserCardSerializer do
       end
     end
 
-    it "doesn't serialize when disabled" do
+    it "doesn't add user status when disabled" do
       SiteSetting.enable_user_status = false
       json = serializer.as_json
+      expect(json.keys).not_to include :status
+    end
+
+    it "doesn't add expired user status" do
+      SiteSetting.enable_user_status = true
+
+      user.user_status.ends_at = 1.minutes.ago
+      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
+      json = serializer.as_json
+
+      expect(json.keys).not_to include :status
+    end
+
+    it "doesn't return status if user doesn't have it set" do
+      SiteSetting.enable_user_status = true
+
+      user.clear_status!
+      user.reload
+      json = serializer.as_json
+
       expect(json.keys).not_to include :status
     end
   end

@@ -446,6 +446,14 @@ table {
   }
 }
 
+.user-menu .quick-access-panel li.user-status .relative-date {
+  text-align: left;
+  font-size: var(--font-down-3);
+  padding-top: 0.45em;
+  margin-left: 0.75em;
+  color: var(--primary-medium);
+}
+
 .user-menu .quick-access-panel li.do-not-disturb {
   display: flex;
   flex: 0 0 100%;

@@ -38,38 +38,72 @@ describe UserStatusController do
       it "sets user status" do
         status = "off to dentist"
         status_emoji = "tooth"
-        put "/user-status.json", params: { description: status, emoji: status_emoji }
+        ends_at = DateTime.parse("2100-01-01 18:00")
+
+        put "/user-status.json", params: {
+          description: status,
+          emoji: status_emoji,
+          ends_at: ends_at
+        }
+
+        expect(response.status).to eq(200)
         expect(user.user_status.description).to eq(status)
         expect(user.user_status.emoji).to eq(status_emoji)
+        expect(user.user_status.ends_at).to eq_time(ends_at)
       end
 
       it "following calls update status" do
         status = "off to dentist"
         status_emoji = "tooth"
-        put "/user-status.json", params: { description: status, emoji: status_emoji }
+        ends_at = DateTime.parse("2100-01-01 18:00")
+        put "/user-status.json", params: {
+          description: status,
+          emoji: status_emoji,
+          ends_at: ends_at
+        }
+        expect(response.status).to eq(200)
+
         user.reload
         expect(user.user_status.description).to eq(status)
         expect(user.user_status.emoji).to eq(status_emoji)
+        expect(user.user_status.ends_at).to eq_time(ends_at)
 
         new_status = "surfing"
         new_status_emoji = "surfing_man"
-        put "/user-status.json", params: { description: new_status, emoji: new_status_emoji }
+        new_ends_at = DateTime.parse("2100-01-01 18:59")
+        put "/user-status.json", params: {
+          description: new_status,
+          emoji: new_status_emoji,
+          ends_at: new_ends_at
+        }
+        expect(response.status).to eq(200)
+
         user.reload
         expect(user.user_status.description).to eq(new_status)
         expect(user.user_status.emoji).to eq(new_status_emoji)
+        expect(user.user_status.ends_at).to eq_time(new_ends_at)
       end
 
       it "publishes to message bus" do
         status = "off to dentist"
         emoji = "tooth"
+        ends_at = "2100-01-01T18:00:00Z"
+
         messages = MessageBus.track_publish do
-          put "/user-status.json", params: { description: status, emoji: emoji }
+          put "/user-status.json", params: {
+            description: status,
+            emoji: emoji,
+            ends_at: ends_at
+          }
         end
 
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq("/user-status/#{user.id}")
-        expect(messages[0].data[:description]).to eq(status)
         expect(messages[0].user_ids).to eq([user.id])
+
+        expect(messages[0].data[:description]).to eq(status)
+        expect(messages[0].data[:emoji]).to eq(emoji)
+        expect(messages[0].data[:ends_at]).to eq(ends_at)
       end
     end
   end
@@ -101,6 +135,7 @@ describe UserStatusController do
 
       it "clears user status" do
         delete "/user-status.json"
+        expect(response.status).to eq(200)
 
         user.reload
         expect(user.user_status).to be_nil
