@@ -14,7 +14,7 @@
     <div class="controls">
       <CategorySelector
           @categories={{this.selectedSiderbarCategories}}
-          @onChange={{action this.categoryUpdated}}
+          @onChange={{action (mut this.selectedSiderbarCategories)}}
           @options={{hash
             allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
             displayCategoryDescription=true
@@ -34,7 +34,7 @@
           @tags={{this.selectedSidebarTagNames}}
           @everyTag={{true}}
           @unlimitedTagCount={{true}}
-          @onChange={{action this.tagUpdated}}
+          @onChange={{action (mut this.selectedSidebarTagNames)}}
           @options={{hash
             allowAny=false
           }}
