@@ -1,11 +1,11 @@
 <div class="topic-footer-main-buttons">
-  <TopicAdminMenuButton @topic={{topic}} @openUpwards="true" @toggleMultiSelect={{toggleMultiSelect}} @showTopicSlowModeUpdate={{showTopicSlowModeUpdate}} @deleteTopic={{deleteTopic}} @recoverTopic={{recoverTopic}} @toggleFeaturedOnProfile={{toggleFeaturedOnProfile}} @toggleClosed={{toggleClosed}} @toggleArchived={{toggleArchived}} @toggleVisibility={{toggleVisibility}} @showTopicTimerModal={{showTopicTimerModal}} @showFeatureTopic={{showFeatureTopic}} @showChangeTimestamp={{showChangeTimestamp}} @resetBumpDate={{resetBumpDate}} @convertToPublicTopic={{convertToPublicTopic}} @convertToPrivateMessage={{convertToPrivateMessage}} />
+  <TopicAdminMenuButton @topic={{this.topic}} @openUpwards="true" @toggleMultiSelect={{this.toggleMultiSelect}} @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}} @deleteTopic={{this.deleteTopic}} @recoverTopic={{this.recoverTopic}} @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}} @toggleClosed={{this.toggleClosed}} @toggleArchived={{this.toggleArchived}} @toggleVisibility={{this.toggleVisibility}} @showTopicTimerModal={{this.showTopicTimerModal}} @showFeatureTopic={{this.showFeatureTopic}} @showChangeTimestamp={{this.showChangeTimestamp}} @resetBumpDate={{this.resetBumpDate}} @convertToPublicTopic={{this.convertToPublicTopic}} @convertToPrivateMessage={{this.convertToPrivateMessage}} />
 
-  {{#if site.mobileView}}
-    <TopicFooterMobileDropdown @topic={{topic}} @content={{dropdownButtons}} />
+  {{#if this.site.mobileView}}
+    <TopicFooterMobileDropdown @topic={{this.topic}} @content={{this.dropdownButtons}} />
   {{/if}}
 
-  {{#each inlineActionables as |actionable|}}
+  {{#each this.inlineActionables as |actionable|}}
     {{#if (eq actionable.type "inline-button")}}
       <DButton @id={{concat "topic-footer-button-" actionable.id}} @class={{concat "btn-default topic-footer-button " actionable.classNames}} @action={{actionable.action}} @icon={{actionable.icon}} @translatedLabel={{actionable.label}} @translatedTitle={{actionable.title}} @translatedAriaLabel={{actionable.ariaLabel}} @disabled={{actionable.disabled}} />
     {{else}}
@@ -17,19 +17,19 @@
     {{/if}}
   {{/each}}
 
-  <PluginOutlet @name="topic-footer-main-buttons-before-create" @args={{hash topic=topic}} @connectorTagName="span" />
+  <PluginOutlet @name="topic-footer-main-buttons-before-create" @args={{hash topic=this.topic}} @connectorTagName="span" />
 
-  {{#if topic.details.can_create_post}}
-    <DButton @class="btn-primary create" @icon="reply" @action={{replyToPost}} @label="topic.reply.title" @title="topic.reply.help" />
+  {{#if this.topic.details.can_create_post}}
+    <DButton @class="btn-primary create" @icon="reply" @action={{this.replyToPost}} @label="topic.reply.title" @title="topic.reply.help" />
   {{/if}}
 
-  <PluginOutlet @name="after-topic-footer-main-buttons" @args={{hash topic=topic}} @connectorTagName="span" />
+  <PluginOutlet @name="after-topic-footer-main-buttons" @args={{hash topic=this.topic}} @connectorTagName="span" />
 </div>
 
-<PinnedButton @pinned={{topic.pinned}} @topic={{topic}} />
+<PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
 
-{{#if showNotificationsButton}}
-  <TopicNotificationsButton @notificationLevel={{topic.details.notification_level}} @topic={{topic}} />
+{{#if this.showNotificationsButton}}
+  <TopicNotificationsButton @notificationLevel={{this.topic.details.notification_level}} @topic={{this.topic}} />
 {{/if}}
 
-<PluginOutlet @name="after-topic-footer-buttons" @args={{hash topic=topic}} @connectorTagName="span" />
+<PluginOutlet @name="after-topic-footer-buttons" @args={{hash topic=this.topic}} @connectorTagName="span" />

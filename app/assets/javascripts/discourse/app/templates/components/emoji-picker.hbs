@@ -1,9 +1,9 @@
-{{#if isActive}}
+{{#if this.isActive}}
   {{!-- template-lint-disable no-invalid-interactive --}}
   <div {{on "keydown" (action "keydown")}} class="emoji-picker {{if this.isActive "opened"}}">
     {{!-- template-lint-enable no-invalid-interactive --}}
     <div class="emoji-picker-category-buttons">
-      {{#if recentEmojis.length}}
+      {{#if this.recentEmojis.length}}
         <button type="button" data-section="recent" {{action "onCategorySelection" "recent"}} class="btn btn-default category-button emoji">
           {{replace-emoji ":star:"}}
         </button>
@@ -11,7 +11,7 @@
 
       <EmojiGroupButtons @onCategorySelection={{action "onCategorySelection"}} @tagName="" />
 
-      {{#each-in customEmojis as |group emojis|}}
+      {{#each-in this.customEmojis as |group emojis|}}
         <button type="button" data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
           {{replace-emoji (concat ":" emojis.firstObject.code ":")}}
         </button>
@@ -29,14 +29,14 @@
         <div class="results"></div>
 
         <div class="emojis-container">
-          {{#if recentEmojis.length}}
+          {{#if this.recentEmojis.length}}
             <div class="section recent" data-section="recent">
               <div class="section-header">
                 <span class="title">{{i18n "emoji_picker.recent"}}</span>
                 <DButton @icon="trash-alt" @action={{action "onClearRecents"}} @class="trash-recent" />
               </div>
               <div class="section-group">
-                {{#each recentEmojis as |emoji|}}
+                {{#each this.recentEmojis as |emoji|}}
                   {{replace-emoji (concat ":" emoji ":") (hash lazy=true)}}
                 {{/each}}
               </div>
@@ -45,7 +45,7 @@
 
           <EmojiGroupSections />
 
-          {{#each-in customEmojis as |group emojis|}}
+          {{#each-in this.customEmojis as |group emojis|}}
             <div class="section" data-section="custom-{{group}}">
               <div class="section-header">
                 <span class="title">
@@ -66,13 +66,13 @@
 
       <div class="emoji-picker-footer">
         <div class="emoji-picker-emoji-info">
-          {{#if hoveredEmoji}}
-            {{replace-emoji (concat ":" hoveredEmoji ":")}}
+          {{#if this.hoveredEmoji}}
+            {{replace-emoji (concat ":" this.hoveredEmoji ":")}}
           {{/if}}
         </div>
 
         <div class="emoji-picker-diversity-picker">
-          {{#each diversityScales as |diversityScale index|}}
+          {{#each this.diversityScales as |diversityScale index|}}
             <DButton @icon={{diversityScale.icon}} @class={{concat "diversity-scale " diversityScale.name}} @title={{diversityScale.title}} @action={{action "onDiversitySelection" index}} />
           {{/each}}
         </div>
@@ -80,7 +80,7 @@
     </div>
   </div>
 
-  {{#if site.mobileView}}
+  {{#if this.site.mobileView}}
     <div role="button" class="emoji-picker-modal-overlay" {{on "click" this.onClose}}></div>
   {{/if}}
 {{/if}}

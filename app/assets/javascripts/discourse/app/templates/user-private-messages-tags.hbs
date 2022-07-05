@@ -6,12 +6,12 @@
 
 <div class="tag-sort-options">
   {{i18n "tagging.sort_by"}}
-  <span class="tag-sort-count {{if sortedByCount "active"}}">
+  <span class="tag-sort-count {{if this.sortedByCount "active"}}">
     <a href {{action "sortByCount"}}>
       {{i18n "tagging.sort_by_count"}}
     </a>
   </span>
-  <span class="tag-sort-name {{if sortedByName "active"}}">
+  <span class="tag-sort-name {{if this.sortedByName "active"}}">
     <a href {{action "sortById"}}>
       {{i18n "tagging.sort_by_name"}}
     </a>
@@ -20,6 +20,6 @@
 
 <hr>
 
-{{#if model}}
-  <TagList @tags={{model}} @sortProperties={{sortProperties}} @titleKey="tagging.all_tags" @isPrivateMessage={{true}} @tagsForUser={{tagsForUser}} />
+{{#if this.model}}
+  <TagList @tags={{this.model}} @sortProperties={{this.sortProperties}} @titleKey="tagging.all_tags" @isPrivateMessage={{true}} @tagsForUser={{this.tagsForUser}} />
 {{/if}}

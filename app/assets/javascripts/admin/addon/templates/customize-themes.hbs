@@ -1,5 +1,5 @@
-{{#unless editingTheme}}
-  <ThemesList @themes={{fullThemes}} @components={{childThemes}} @currentTab={{currentTab}} @installModal={{route-action "installModal"}} />
+{{#unless this.editingTheme}}
+  <ThemesList @themes={{this.fullThemes}} @components={{this.childThemes}} @currentTab={{this.currentTab}} @installModal={{route-action "installModal"}} />
 {{/unless}}
 
 {{outlet}}

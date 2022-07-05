@@ -11,11 +11,11 @@
       <PluginOutlet @name="admin-users-list-nav-after" />
 
       <li class="admin-actions">
-        {{#if currentUser.can_invite_to_forum}}
+        {{#if this.currentUser.can_invite_to_forum}}
           <DButton @class="btn-default" @action={{route-action "sendInvites"}} @title="admin.invite.button_title" @icon="user-plus" @label="admin.invite.button_text" />
         {{/if}}
 
-        {{#if currentUser.admin}}
+        {{#if this.currentUser.admin}}
           <DButton @class="btn-default" @action={{route-action "exportUsers"}} @title="admin.export_csv.button_title.user" @icon="download" @label="admin.export_csv.button_text" />
         {{/if}}
       </li>

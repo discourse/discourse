@@ -1,15 +1,15 @@
 <DModalBody @title="directory.edit_columns.title">
-  {{#if loading}}
+  {{#if this.loading}}
     {{loading-spinner size="large"}}
   {{else}}
     <div class="edit-directory-columns-container">
-      {{#each columns as |column|}}
+      {{#each this.columns as |column|}}
         <div class="edit-directory-column">
           <div class="left-content">
             <label class="column-name">
               <Input @type="checkbox" @checked={{column.enabled}} />
               {{#if (directory-column-is-automatic column=column)}}
-                {{directory-table-header-title field=column.name labelKey=labelKey icon=column.icon}}
+                {{directory-table-header-title field=column.name labelKey=this.labelKey icon=column.icon}}
               {{else if (directory-column-is-user-field column=column)}}
                 {{directory-table-header-title field=column.user_field.name translated=true}}
               {{else}}

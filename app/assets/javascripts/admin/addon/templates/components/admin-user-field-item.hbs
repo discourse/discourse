@@ -1,41 +1,41 @@
 <div class="user-field">
-  {{#if (or isEditing (not userField.id))}}
+  {{#if (or this.isEditing (not this.userField.id))}}
     <AdminFormRow @label="admin.user_fields.type">
-      <ComboBox @content={{fieldTypes}} @value={{buffered.field_type}} @onChange={{action (mut buffered.field_type)}} />
+      <ComboBox @content={{this.fieldTypes}} @value={{this.buffered.field_type}} @onChange={{action (mut this.buffered.field_type)}} />
     </AdminFormRow>
 
     <AdminFormRow @label="admin.user_fields.name">
-      <Input @value={{buffered.name}} class="user-field-name" @maxlength="255" />
+      <Input @value={{this.buffered.name}} class="user-field-name" @maxlength="255" />
     </AdminFormRow>
 
     <AdminFormRow @label="admin.user_fields.description">
-      <Input @value={{buffered.description}} class="user-field-desc" @maxlength="255" />
+      <Input @value={{this.buffered.description}} class="user-field-desc" @maxlength="255" />
     </AdminFormRow>
 
-    {{#if bufferedFieldType.hasOptions}}
+    {{#if this.bufferedFieldType.hasOptions}}
       <AdminFormRow @label="admin.user_fields.options">
-        <ValueList @values={{buffered.options}} @inputType="array" />
+        <ValueList @values={{this.buffered.options}} @inputType="array" />
       </AdminFormRow>
     {{/if}}
 
     <AdminFormRow @wrapLabel="true">
-      <Input @type="checkbox" @checked={{buffered.editable}} /> <span>{{i18n "admin.user_fields.editable.title"}}</span>
+      <Input @type="checkbox" @checked={{this.buffered.editable}} /> <span>{{i18n "admin.user_fields.editable.title"}}</span>
     </AdminFormRow>
 
     <AdminFormRow @wrapLabel="true">
-      <Input @type="checkbox" @checked={{buffered.required}} /> <span>{{i18n "admin.user_fields.required.title"}}</span>
+      <Input @type="checkbox" @checked={{this.buffered.required}} /> <span>{{i18n "admin.user_fields.required.title"}}</span>
     </AdminFormRow>
 
     <AdminFormRow @wrapLabel="true">
-      <Input @type="checkbox" @checked={{buffered.show_on_profile}} /> <span>{{i18n "admin.user_fields.show_on_profile.title"}}</span>
+      <Input @type="checkbox" @checked={{this.buffered.show_on_profile}} /> <span>{{i18n "admin.user_fields.show_on_profile.title"}}</span>
     </AdminFormRow>
 
     <AdminFormRow @wrapLabel="true">
-      <Input @type="checkbox" @checked={{buffered.show_on_user_card}} /> <span>{{i18n "admin.user_fields.show_on_user_card.title"}}</span>
+      <Input @type="checkbox" @checked={{this.buffered.show_on_user_card}} /> <span>{{i18n "admin.user_fields.show_on_user_card.title"}}</span>
     </AdminFormRow>
 
     <AdminFormRow @wrapLabel="true">
-      <Input @type="checkbox" @checked={{buffered.searchable}} /> <span>{{i18n "admin.user_fields.searchable.title"}}</span>
+      <Input @type="checkbox" @checked={{this.buffered.searchable}} /> <span>{{i18n "admin.user_fields.searchable.title"}}</span>
     </AdminFormRow>
 
     <AdminFormRow>
@@ -45,18 +45,18 @@
   {{else}}
     <div class="row">
       <div class="form-display">
-        <b class="name">{{userField.name}}</b>
+        <b class="name">{{this.userField.name}}</b>
         <br>
-        <span class="description">{{html-safe userField.description}}</span>
+        <span class="description">{{html-safe this.userField.description}}</span>
       </div>
-      <div class="form-display field-type">{{fieldName}}</div>
+      <div class="form-display field-type">{{this.fieldName}}</div>
       <div class="form-element controls">
         <DButton @action={{action "edit"}} @class="btn-default edit" @icon="pencil-alt" @label="admin.user_fields.edit" />
-        <DButton @action={{destroyAction}} @actionParam={{userField}} @class="btn-danger cancel" @icon="far-trash-alt" @label="admin.user_fields.delete" />
-        <DButton @action={{moveUpAction}} @actionParam={{userField}} @class="btn-default" @icon="arrow-up" @disabled={{cantMoveUp}} />
-        <DButton @action={{moveDownAction}} @actionParam={{userField}} @class="btn-default" @icon="arrow-down" @disabled={{cantMoveDown}} />
+        <DButton @action={{this.destroyAction}} @actionParam={{this.userField}} @class="btn-danger cancel" @icon="far-trash-alt" @label="admin.user_fields.delete" />
+        <DButton @action={{this.moveUpAction}} @actionParam={{this.userField}} @class="btn-default" @icon="arrow-up" @disabled={{this.cantMoveUp}} />
+        <DButton @action={{this.moveDownAction}} @actionParam={{this.userField}} @class="btn-default" @icon="arrow-down" @disabled={{this.cantMoveDown}} />
       </div>
     </div>
-    <div class="row">{{flags}}</div>
+    <div class="row">{{this.flags}}</div>
   {{/if}}
 </div>

@@ -1,41 +1,41 @@
 <p>
-  <CountI18n @key="topic.multi_select.description" @count={{selectedPostsCount}} />
+  <CountI18n @key="topic.multi_select.description" @count={{this.selectedPostsCount}} />
 </p>
 
-{{#if canSelectAll}}
+{{#if this.canSelectAll}}
   <p>
-    <a class="select-all" href {{action selectAll}}>
+    <a class="select-all" href {{action this.selectAll}}>
       {{i18n "topic.multi_select.select_all"}}
     </a>
   </p>
 {{/if}}
 
-{{#if canDeselectAll}}
+{{#if this.canDeselectAll}}
   <p>
-    <a href {{action deselectAll}}>
+    <a href {{action this.deselectAll}}>
       {{i18n "topic.multi_select.deselect_all"}}
     </a>
   </p>
 {{/if}}
 
-{{#if canDeleteSelected}}
-  <DButton @action={{deleteSelected}} @icon="far-trash-alt" @label="topic.multi_select.delete" @class="btn-danger" />
+{{#if this.canDeleteSelected}}
+  <DButton @action={{this.deleteSelected}} @icon="far-trash-alt" @label="topic.multi_select.delete" @class="btn-danger" />
 {{/if}}
 
-{{#if canMergeTopic}}
+{{#if this.canMergeTopic}}
   <DButton @action={{route-action "moveToTopic"}} @icon="sign-out-alt" @label="topic.move_to.action" @class="btn-primary move-to-topic" />
 {{/if}}
 
-{{#if canChangeOwner}}
+{{#if this.canChangeOwner}}
   <DButton @action={{route-action "changeOwner"}} @icon="user" @label="topic.change_owner.action" @class="btn-primary" />
 {{/if}}
 
-{{#if canMergePosts}}
-  <DButton @action={{mergePosts}} @icon="arrows-alt-v" @label="topic.merge_posts.action" @class="btn-primary" />
+{{#if this.canMergePosts}}
+  <DButton @action={{this.mergePosts}} @icon="arrows-alt-v" @label="topic.merge_posts.action" @class="btn-primary" />
 {{/if}}
 
 <p class="cancel">
-  <a href {{action toggleMultiSelect}}>
+  <a href {{action this.toggleMultiSelect}}>
     {{i18n "topic.multi_select.cancel"}}
   </a>
 </p>

@@ -1,7 +1,7 @@
 <div class="admin-title">
-  <h2>{{title}}</h2>
-  {{#if canCheckEmails}}
-    {{#if showEmails}}
+  <h2>{{this.title}}</h2>
+  {{#if this.canCheckEmails}}
+    {{#if this.showEmails}}
       <DButton @action={{action "toggleEmailVisibility"}} @class="hide-emails btn-default" @label="admin.users.hide_emails" />
     {{else}}
       <DButton @action={{action "toggleEmailVisibility"}} @class="show-emails btn-default" @label="admin.users.show_emails" />
@@ -10,28 +10,28 @@
 </div>
 
 <div class="username controls">
-  <TextField @value={{listFilter}} @placeholder={{searchHint}} @title={{searchHint}} />
+  <TextField @value={{this.listFilter}} @placeholder={{this.searchHint}} @title={{this.searchHint}} />
 </div>
 
 <LoadMore @class="users-list-container" @selector=".users-list tr" @action={{action "loadMore"}}>
-  {{#if model}}
+  {{#if this.model}}
     <table class="table users-list grid">
       <thead>
-        <TableHeaderToggle @field="username" @labelKey="username" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @class={{if showEmails "" "hidden"}} @field="email" @labelKey="email" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="last_emailed" @labelKey="admin.users.last_emailed" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="seen" @labelKey="last_seen" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="topics_viewed" @labelKey="admin.user.topics_entered" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="posts_read" @labelKey="admin.user.posts_read_count" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="read_time" @labelKey="admin.user.time_read" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="created" @labelKey="created" @order={{order}} @asc={{asc}} @automatic={{true}} />
-        {{#if siteSettings.must_approve_users}}
+        <TableHeaderToggle @field="username" @labelKey="username" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @class={{if this.showEmails "" "hidden"}} @field="email" @labelKey="email" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @field="last_emailed" @labelKey="admin.users.last_emailed" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @field="seen" @labelKey="last_seen" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @field="topics_viewed" @labelKey="admin.user.topics_entered" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @field="posts_read" @labelKey="admin.user.posts_read_count" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @field="read_time" @labelKey="admin.user.time_read" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        <TableHeaderToggle @field="created" @labelKey="created" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+        {{#if this.siteSettings.must_approve_users}}
           <th>{{i18n "admin.users.approved"}}</th>
         {{/if}}
         <th>&nbsp;</th>
       </thead>
       <tbody>
-        {{#each model as |user|}}
+        {{#each this.model as |user|}}
           <tr class="user {{user.selected}} {{unless user.active "not-activated"}}">
             <td class="username">
               <a href={{user.path}} data-user-card={{user.username}}>
@@ -42,7 +42,7 @@
                 {{d-icon "far-envelope" title="user.staged" }}
               {{/if}}
             </td>
-            <td class="email {{if showEmails "" "hidden"}}">
+            <td class="email {{if this.showEmails "" "hidden"}}">
               {{~user.email~}}
             </td>
 
@@ -80,7 +80,7 @@
               <div>{{format-duration user.created_at_age}}</div>
             </td>
 
-            {{#if siteSettings.must_approve_users}}
+            {{#if this.siteSettings.must_approve_users}}
               <td>{{i18n-yes-no user.approved}}</td>
             {{/if}}
 
@@ -94,13 +94,13 @@
               {{#if user.second_factor_enabled}}
                 {{d-icon "lock" title="admin.user.second_factor_enabled" }}
               {{/if}}
-              <PluginOutlet @name="admin-users-list-icon" @connectorTagName="div" @args={{hash user=user query=query}} />
+              <PluginOutlet @name="admin-users-list-icon" @connectorTagName="div" @args={{hash user=user query=this.query}} />
             </td>
           </tr>
         {{/each}}
       </tbody>
     </table>
-    <ConditionalLoadingSpinner @condition={{refreshing}} />
+    <ConditionalLoadingSpinner @condition={{this.refreshing}} />
   {{else}}
     <p>{{i18n "search.no_results"}}</p>
   {{/if}}

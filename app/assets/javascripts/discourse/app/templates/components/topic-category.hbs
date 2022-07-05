@@ -1,15 +1,15 @@
-{{#unless topic.isPrivateMessage}}
-  {{bound-category-link topic.category recursive=true hideParent=true}}
+{{#unless this.topic.isPrivateMessage}}
+  {{bound-category-link this.topic.category recursive=true hideParent=true}}
 {{/unless}}
 <div class="topic-header-extra">
-  {{#if siteSettings.tagging_enabled}}
+  {{#if this.siteSettings.tagging_enabled}}
     <div class="list-tags">
-      {{discourse-tags topic mode="list" tags=topic.tags}}
+      {{discourse-tags this.topic mode="list" tags=this.topic.tags}}
     </div>
   {{/if}}
-  {{#if siteSettings.topic_featured_link_enabled}}
-    {{topic-featured-link topic}}
+  {{#if this.siteSettings.topic_featured_link_enabled}}
+    {{topic-featured-link this.topic}}
   {{/if}}
 </div>
 
-<PluginOutlet @name="topic-category" @tagName="span" @connectorTagName="div" @args={{hash topic=topic category=topic.category}} />
+<PluginOutlet @name="topic-category" @tagName="span" @connectorTagName="div" @args={{hash topic=this.topic category=this.topic.category}} />

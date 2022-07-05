@@ -1,11 +1,11 @@
-{{#if selectedHtml}}
+{{#if this.selectedHtml}}
   <li>
     <a href {{action "toggleExpanded"}} class="expander">
-      <span class="selection">{{html-safe selectedHtml}}</span>
+      <span class="selection">{{html-safe this.selectedHtml}}</span>
       {{d-icon "caret-down"}}
     </a>
   </li>
 {{/if}}
-<ul class="drop {{if expanded "expanded"}}">
+<ul class="drop {{if this.expanded "expanded"}}">
   {{yield}}
 </ul>

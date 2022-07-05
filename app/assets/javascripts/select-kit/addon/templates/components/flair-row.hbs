@@ -1,5 +1,5 @@
-{{#if item.url}}
-  <AvatarFlair @flairName={{item.name}} @flairUrl={{item.url}} @flairBgColor={{item.bgColor}} @flairColor={{item.color}} />
+{{#if this.item.url}}
+  <AvatarFlair @flairName={{this.item.name}} @flairUrl={{this.item.url}} @flairBgColor={{this.item.bgColor}} @flairColor={{this.item.color}} />
 {{/if}}
 
-<span>{{label}}</span>
+<span>{{this.label}}</span>

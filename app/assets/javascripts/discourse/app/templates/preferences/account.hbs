@@ -1,40 +1,40 @@
 <div class="control-group pref-username">
   <label class="control-label">{{i18n "user.username.title"}}</label>
   <div class="controls">
-    <span class="static">{{model.username}}</span>
-    {{#if model.can_edit_username}}
+    <span class="static">{{this.model.username}}</span>
+    {{#if this.model.can_edit_username}}
       <LinkTo @route="preferences.username" @name={{i18n "user.username.edit"}} class="btn btn-default btn-small btn-icon pad-left no-text">
         {{d-icon "pencil-alt"}}
       </LinkTo>
     {{/if}}
   </div>
-  {{#if siteSettings.enable_mentions}}
+  {{#if this.siteSettings.enable_mentions}}
     <div class="instructions">
-      {{html-safe (i18n "user.username.short_instructions" username=model.username)}}
+      {{html-safe (i18n "user.username.short_instructions" username=this.model.username)}}
     </div>
   {{/if}}
 </div>
 
-{{#unless siteSettings.discourse_connect_overrides_avatar}}
+{{#unless this.siteSettings.discourse_connect_overrides_avatar}}
   <div class="control-group pref-avatar">
     <label class="control-label" id="profile-picture">{{i18n "user.avatar.title"}}</label>
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
-      {{bound-avatar model "huge"}}
-      <DButton @action={{route-action "showAvatarSelector"}} @actionParam={{model}} @class="btn-default pad-left" @icon="pencil-alt" />
+      {{bound-avatar this.model "huge"}}
+      <DButton @action={{route-action "showAvatarSelector"}} @actionParam={{this.model}} @class="btn-default pad-left" @icon="pencil-alt" />
     </div>
   </div>
 {{/unless}}
 
-{{#if canCheckEmails}}
+{{#if this.canCheckEmails}}
   <div class="control-group pref-email">
     <label class="control-label">{{i18n "user.email.title"}}</label>
-    {{#if model.email}}
-      {{#if siteSettings.enable_secondary_emails}}
+    {{#if this.model.email}}
+      {{#if this.siteSettings.enable_secondary_emails}}
         <div class="emails">
-          {{#each emails as |email|}}
+          {{#each this.emails as |email|}}
             <div class="row email">
-              {{#if model.can_edit_email}}
+              {{#if this.model.can_edit_email}}
                 <EmailDropdown @email={{email}} @setPrimaryEmail={{action "setPrimaryEmail"}} @destroyEmail={{action "destroyEmail"}} />
               {{/if}}
 
@@ -61,48 +61,48 @@
           {{/each}}
         </div>
 
-        {{#if model.can_edit_email}}
+        {{#if this.model.can_edit_email}}
           <LinkTo @route="preferences.email" @query={{hash new=1}} class="pull-right">
             {{d-icon "plus"}} {{i18n "user.email.add_email"}}
           </LinkTo>
         {{/if}}
       {{else}}
         <div class="controls">
-          <span class="static">{{model.email}}</span>
-          {{#if model.can_edit_email}}
+          <span class="static">{{this.model.email}}</span>
+          {{#if this.model.can_edit_email}}
             <LinkTo @route="preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text">{{d-icon "pencil-alt"}}</LinkTo>
           {{/if}}
         </div>
       {{/if}}
 
       <div class="instructions">
-        {{#if siteSettings.auth_overrides_email}}
+        {{#if this.siteSettings.auth_overrides_email}}
           {{i18n "user.email.auth_override_instructions"}}
         {{/if}}
         {{i18n "user.email.instructions"}}
       </div>
     {{else}}
       <div class="controls">
-        <DButton @action={{route-action "checkEmail"}} @class="btn-default" @actionParam={{model}} @title="admin.users.check_email.title" @icon="far-envelope" @label="admin.users.check_email.text" />
+        <DButton @action={{route-action "checkEmail"}} @class="btn-default" @actionParam={{this.model}} @title="admin.users.check_email.title" @icon="far-envelope" @label="admin.users.check_email.text" />
       </div>
     {{/if}}
   </div>
 {{/if}}
 
-{{#if canUpdateAssociatedAccounts}}
+{{#if this.canUpdateAssociatedAccounts}}
   <div class="control-group pref-associated-accounts">
     <label class="control-label">{{i18n "user.associated_accounts.title"}}</label>
-    {{#if associatedAccountsLoaded}}
+    {{#if this.associatedAccountsLoaded}}
       <table>
         <tbody>
-          {{#each authProviders as |authProvider|}}
+          {{#each this.authProviders as |authProvider|}}
             {{#if authProvider.account}}
               <tr class="{{dasherize authProvider.method.name}} account-connected">
                 <td>{{authProvider.method.prettyName}}</td>
                 <td>{{authProvider.account.description}}</td>
                 <td>
                   {{#if authProvider.method.can_revoke}}
-                    <DButton @action={{action "revokeAccount"}} @actionParam={{authProvider.account}} @title="user.associated_accounts.revoke" @class="btn-danger no-text" @icon="trash-alt" @disabled={{get revoking authProvider.method.name}} />
+                    <DButton @action={{action "revokeAccount"}} @actionParam={{authProvider.account}} @title="user.associated_accounts.revoke" @class="btn-danger no-text" @icon="trash-alt" @disabled={{get this.revoking authProvider.method.name}} />
                   {{/if}}
                 </td>
               </tr>
@@ -111,7 +111,7 @@
                 <td>{{authProvider.method.prettyName}}</td>
                 <td colspan="2">
                   {{#if authProvider.method.can_connect}}
-                    <DButton @action={{action "connectAccount"}} @actionParam={{authProvider.method}} @label="user.associated_accounts.connect" @class="btn-default" @icon="plug" @disabled={{disableConnectButtons}} />
+                    <DButton @action={{action "connectAccount"}} @actionParam={{authProvider.method}} @label="user.associated_accounts.connect" @class="btn-default" @icon="plug" @disabled={{this.disableConnectButtons}} />
                   {{else}}
                     {{i18n "user.associated_accounts.not_connected"}}
                   {{/if}}
@@ -123,33 +123,33 @@
       </table>
     {{else}}
       <div class="controls">
-        <DButton @action={{route-action "checkEmail"}} @actionParam={{model}} @title="admin.users.check_email.title" @icon="far-envelope" @label="admin.users.check_email.text" />
+        <DButton @action={{route-action "checkEmail"}} @actionParam={{this.model}} @title="admin.users.check_email.title" @icon="far-envelope" @label="admin.users.check_email.text" />
       </div>
     {{/if}}
   </div>
 {{/if}}
 
-{{#if canEditName}}
+{{#if this.canEditName}}
   <div class="control-group pref-name">
     <label class="control-label">{{i18n "user.name.title"}}</label>
     <div class="controls">
-      {{#if model.can_edit_name}}
-        <TextField @value={{newNameInput}} @classNames="input-xxlarge" @maxlength="255" />
+      {{#if this.model.can_edit_name}}
+        <TextField @value={{this.newNameInput}} @classNames="input-xxlarge" @maxlength="255" />
       {{else}}
-        <span class="static">{{model.name}}</span>
+        <span class="static">{{this.model.name}}</span>
       {{/if}}
     </div>
     <div class="instructions">
-      {{nameInstructions}}
+      {{this.nameInstructions}}
     </div>
   </div>
 {{/if}}
 
-{{#if canSelectTitle}}
+{{#if this.canSelectTitle}}
   <div class="control-group pref-title">
     <label class="control-label">{{i18n "user.title.title"}}</label>
     <div class="controls">
-      <ComboBox @value={{newTitleInput}} @content={{model.availableTitles}} @onChange={{action (mut newTitleInput)}} @options={{hash
+      <ComboBox @value={{this.newTitleInput}} @content={{this.model.availableTitles}} @onChange={{action (mut this.newTitleInput)}} @options={{hash
           none="user.title.none"
         }} />
     </div>
@@ -159,11 +159,11 @@
   </div>
 {{/if}}
 
-{{#if canSelectFlair}}
+{{#if this.canSelectFlair}}
   <div class="control-group pref-flair">
     <label class="control-label">{{i18n "user.flair.title"}}</label>
     <div class="controls">
-      <FlairChooser @value={{newFlairGroupId}} @content={{model.availableFlairs}} @onChange={{action (mut newFlairGroupId)}} @options={{hash
+      <FlairChooser @value={{this.newFlairGroupId}} @content={{this.model.availableFlairs}} @onChange={{action (mut this.newFlairGroupId)}} @options={{hash
           none="user.flair.none"
         }} />
     </div>
@@ -173,32 +173,32 @@
   </div>
 {{/if}}
 
-{{#if canSelectPrimaryGroup}}
+{{#if this.canSelectPrimaryGroup}}
   <div class="control-group pref-primary-group">
     <label class="control-label">{{i18n "user.primary_group.title"}}</label>
     <div class="controls">
-      <ComboBox @value={{newPrimaryGroupInput}} @content={{model.filteredGroups}} @options={{hash
+      <ComboBox @value={{this.newPrimaryGroupInput}} @content={{this.model.filteredGroups}} @options={{hash
           none="user.primary_group.none"
         }} />
     </div>
   </div>
 {{/if}}
 
-<PluginOutlet @name="user-preferences-account" @tagName="span" @connectorTagName="div" @args={{hash model=model save=(action "save")}} />
+<PluginOutlet @name="user-preferences-account" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
 
 <br>
 
-<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
-{{#if canSaveUser}}
-  <SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}} />
+{{#if this.canSaveUser}}
+  <SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />
 {{/if}}
 
-{{#if model.canDeleteAccount}}
+{{#if this.model.canDeleteAccount}}
   <div class="control-group delete-account">
     <br>
     <div class="controls">
-      <DButton @action={{action "delete"}} @disabled={{deleteDisabled}} @class="btn-danger" @icon="far-trash-alt" @label="user.delete_account" />
+      <DButton @action={{action "delete"}} @disabled={{this.deleteDisabled}} @class="btn-danger" @icon="far-trash-alt" @label="user.delete_account" />
     </div>
   </div>
 {{/if}}

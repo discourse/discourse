@@ -1,23 +1,23 @@
 <label for="choose-topic-title">
-  {{#if labelIcon}}
-    {{d-icon labelIcon}}
+  {{#if this.labelIcon}}
+    {{d-icon this.labelIcon}}
   {{/if}}
-  <span>{{i18n labelText}}</span>
+  <span>{{i18n this.labelText}}</span>
 </label>
 
-<TextField @value={{topicTitle}} @placeholderKey="choose_topic.title.placeholder" @id="choose-topic-title" />
+<TextField @value={{this.topicTitle}} @placeholderKey="choose_topic.title.placeholder" @id="choose-topic-title" />
 
-{{#if loading}}
+{{#if this.loading}}
   <p>{{i18n "loading"}}</p>
 {{else}}
-  {{#if noResults}}
+  {{#if this.noResults}}
     <p>{{i18n "choose_topic.none_found"}}</p>
   {{else}}
     <div class="choose-topic-list">
-      {{#each topics as |t|}}
+      {{#each this.topics as |t|}}
         <div class="controls existing-topic">
           <label class="radio">
-            <Input @id={{concat "choose-topic-" t.id}} @checked={{eq t.id selectedTopicId}} @click={{action "chooseTopic" t}} @type="radio" @name="choose_topic_id" />
+            <Input @id={{concat "choose-topic-" t.id}} @checked={{eq t.id this.selectedTopicId}} @click={{action "chooseTopic" t}} @type="radio" @name="choose_topic_id" />
             <TopicStatus @topic={{t}} @disableActions={{true}} />
             <span class="topic-title">
               {{replace-emoji t.fancy_title}}

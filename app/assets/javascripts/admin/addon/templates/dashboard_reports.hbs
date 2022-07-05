@@ -1,4 +1,4 @@
-<ConditionalLoadingSpinner @condition={{isLoading}}>
+<ConditionalLoadingSpinner @condition={{this.isLoading}}>
   <div class="reports-index section">
     <div class="section-title">
       <h2>{{i18n "admin.reports.title"}}</h2>
@@ -6,7 +6,7 @@
     </div>
 
     <ul class="reports-list">
-      {{#each filterReports as |report|}}
+      {{#each this.filterReports as |report|}}
         <li class="report">
           <LinkTo @route="adminReports.show" @model={{report.type}}>
             <h3 class="report-title">{{report.title}}</h3>

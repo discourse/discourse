@@ -9,14 +9,14 @@
 
       <div class="control-group">
         <div class="controls">
-          <ComboBox @value={{_selectedUserBadgeId}} @nameProperty="badge.name" @content={{selectableUserBadges}} @onChange={{action (mut _selectedUserBadgeId)}} />
+          <ComboBox @value={{this._selectedUserBadgeId}} @nameProperty="badge.name" @content={{this.selectableUserBadges}} @onChange={{action (mut this._selectedUserBadgeId)}} />
         </div>
       </div>
 
       <div class="control-group">
         <div class="controls">
-          <DButton @class="btn-primary" @action={{action "saveBadgeTitle"}} @disabled={{_isSaving}} @label={{if _isSaving "saving" "save"}} />
-          {{#if _isSaved}}
+          <DButton @class="btn-primary" @action={{action "saveBadgeTitle"}} @disabled={{this._isSaving}} @label={{if this._isSaving "saving" "save"}} />
+          {{#if this._isSaved}}
             <span>{{i18n "saved"}}</span>
           {{/if}}
         </div>

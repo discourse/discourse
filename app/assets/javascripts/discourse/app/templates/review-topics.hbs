@@ -1,4 +1,4 @@
-{{#if reviewableTopics}}
+{{#if this.reviewableTopics}}
   <table class="reviewable-topics">
     <thead>
       <th>{{i18n "review.topics.topic"}} </th>
@@ -7,7 +7,7 @@
       <th></th>
     </thead>
     <tbody>
-      {{#each reviewableTopics as |rt|}}
+      {{#each this.reviewableTopics as |rt|}}
         <tr class="reviewable-topic">
           <td class="topic-title">
             <div class="combined-title">

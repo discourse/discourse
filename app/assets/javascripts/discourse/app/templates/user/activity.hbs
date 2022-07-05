@@ -5,35 +5,35 @@
       <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
       <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
 
-      {{#if user.showRead}}
+      {{#if this.user.showRead}}
         <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
           {{i18n "user.read"}}
         </DNavigationItem>
       {{/if}}
 
-      {{#if user.showDrafts}}
+      {{#if this.user.showDrafts}}
         <DNavigationItem @route="userActivity.drafts">
-          {{draftLabel}}
+          {{this.draftLabel}}
         </DNavigationItem>
       {{/if}}
 
-      {{#if (gt model.pending_posts_count 0)}}
+      {{#if (gt this.model.pending_posts_count 0)}}
         <DNavigationItem @route="userActivity.pending">
-          {{pendingLabel}}
+          {{this.pendingLabel}}
         </DNavigationItem>
       {{/if}}
 
       <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
 
-      {{#if user.showBookmarks}}
+      {{#if this.user.showBookmarks}}
         <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
       {{/if}}
 
-      <PluginOutlet @name="user-activity-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=model}} />
+      <PluginOutlet @name="user-activity-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
     </MobileNav>
   </nav>
 </DSection>
-{{#if canDownloadPosts}}
+{{#if this.canDownloadPosts}}
   <section class="user-additional-controls">
     <DButton @action={{action "exportUserArchive"}} @class="btn-default" @label="user.download_archive.button_text" @icon="download" />
   </section>

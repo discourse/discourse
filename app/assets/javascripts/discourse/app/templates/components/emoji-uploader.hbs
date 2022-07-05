@@ -4,7 +4,7 @@
       {{i18n "admin.emoji.name"}}
     </span>
     <div class="input">
-      <Input @id="emoji-name" @name="name" @placeholderKey="admin.emoji.name" @value={{readonly name}} @input={{action (mut name) value="target.value"}} />
+      <Input @id="emoji-name" @name="name" @placeholderKey="admin.emoji.name" @value={{readonly this.name}} @input={{action (mut this.name) value="target.value"}} />
     </div>
   </div>
   <div class="control-group">
@@ -12,7 +12,7 @@
       {{i18n "admin.emoji.group"}}
     </span>
     <div class="input">
-      <ComboBox @name="group" @id="emoji-group-selector" @value={{group}} @content={{newEmojiGroups}} @onChange={{action "createEmojiGroup"}} @valueProperty={{null}} @nameProperty={{null}} @options={{hash
+      <ComboBox @name="group" @id="emoji-group-selector" @value={{this.group}} @content={{this.newEmojiGroups}} @onChange={{action "createEmojiGroup"}} @valueProperty={{null}} @nameProperty={{null}} @options={{hash
           allowAny=true
         }} />
     </div>
@@ -21,11 +21,11 @@
     <div class="input">
       <input
         class="hidden-upload-field"
-        disabled={{uploading}}
+        disabled={{this.uploading}}
         type="file"
         multiple="true"
         accept=".png,.gif">
-      <DButton @class="btn-primary" @translatedLabel={{buttonLabel}} @icon="plus" @action={{action "chooseFiles"}} @disabled={{uploading}} />
+      <DButton @class="btn-primary" @translatedLabel={{this.buttonLabel}} @icon="plus" @action={{action "chooseFiles"}} @disabled={{this.uploading}} />
     </div>
   </div>
 </div>

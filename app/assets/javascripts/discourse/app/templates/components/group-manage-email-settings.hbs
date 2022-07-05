@@ -3,15 +3,15 @@
   <p>{{i18n "groups.manage.email.smtp_instructions"}}</p>
 
   <label for="enable_smtp">
-    <Input @type="checkbox" @checked={{group.smtp_enabled}} @id="enable_smtp" @change={{action "smtpEnabledChange"}} @tabindex="1" />
+    <Input @type="checkbox" @checked={{this.group.smtp_enabled}} @id="enable_smtp" @change={{action "smtpEnabledChange"}} @tabindex="1" />
     {{i18n "groups.manage.email.enable_smtp"}}
   </label>
 
-  {{#if group.smtp_enabled}}
-    <GroupSmtpEmailSettings @group={{group}} @smtpSettingsValid={{smtpSettingsValid}} />
+  {{#if this.group.smtp_enabled}}
+    <GroupSmtpEmailSettings @group={{this.group}} @smtpSettingsValid={{this.smtpSettingsValid}} />
   {{/if}}
 
-  {{#if siteSettings.enable_imap}}
+  {{#if this.siteSettings.enable_imap}}
     <div class="group-manage-email-imap-wrapper">
       <br>
 
@@ -23,12 +23,12 @@
       <div class="alert alert-warning">{{i18n "groups.manage.email.imap_alpha_warning"}}</div>
 
       <label for="enable_imap">
-        <Input @type="checkbox" @disabled={{not enableImapSettings}} @checked={{group.imap_enabled}} @id="enable_imap" @change={{action "imapEnabledChange"}} @tabindex="8" />
+        <Input @type="checkbox" @disabled={{not this.enableImapSettings}} @checked={{this.group.imap_enabled}} @id="enable_imap" @change={{action "imapEnabledChange"}} @tabindex="8" />
         {{i18n "groups.manage.email.enable_imap"}}
       </label>
 
-      {{#if group.imap_enabled}}
-        <GroupImapEmailSettings @group={{group}} @imapSettingsValid={{imapSettingsValid}} />
+      {{#if this.group.imap_enabled}}
+        <GroupImapEmailSettings @group={{this.group}} @imapSettingsValid={{this.imapSettingsValid}} />
       {{/if}}
     </div>
   {{/if}}
@@ -37,7 +37,7 @@
     <div class="control-group">
       <h3>{{i18n "groups.manage.email.imap_additional_settings"}}</h3>
       <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
-        <Input @type="checkbox" @name="allow_unknown_sender_topic_replies" @id="allow_unknown_sender_topic_replies" @checked={{group.allow_unknown_sender_topic_replies}} @tabindex="13" />
+        <Input @type="checkbox" @name="allow_unknown_sender_topic_replies" @id="allow_unknown_sender_topic_replies" @checked={{this.group.allow_unknown_sender_topic_replies}} @tabindex="13" />
         <span>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>
       </label>
       <p>{{i18n "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"}}</p>
@@ -45,5 +45,5 @@
   </div>
 
   <br>
-  <GroupManageSaveButton @model={{group}} @disabled={{not emailSettingsValid}} @beforeSave={{beforeSave}} @afterSave={{afterSave}} @tabindex="15" />
+  <GroupManageSaveButton @model={{this.group}} @disabled={{not this.emailSettingsValid}} @beforeSave={{this.beforeSave}} @afterSave={{this.afterSave}} @tabindex="15" />
 </div>

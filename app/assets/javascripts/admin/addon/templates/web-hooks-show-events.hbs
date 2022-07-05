@@ -2,14 +2,14 @@
   <LinkTo @route="adminWebHooks" @tagName="button" @classNames="btn">
     {{d-icon "list"}} {{i18n "admin.web_hooks.events.go_list"}}
   </LinkTo>
-  <DButton @icon="paper-plane" @label="admin.web_hooks.events.ping" @action={{action "ping"}} @disabled={{pingDisabled}} />
-  <LinkTo @route="adminWebHooks.show" @model={{model.extras.web_hook_id}} @tagName="button" @classNames="btn">
+  <DButton @icon="paper-plane" @label="admin.web_hooks.events.ping" @action={{action "ping"}} @disabled={{this.pingDisabled}} />
+  <LinkTo @route="adminWebHooks.show" @model={{this.model.extras.web_hook_id}} @tagName="button" @classNames="btn">
     {{d-icon "far-edit"}} {{i18n "admin.web_hooks.events.go_details"}}
   </LinkTo>
 </div>
 
 <div class="web-hook-events-listing">
-  {{#if model}}
+  {{#if this.model}}
     <LoadMore @selector=".web-hook-events li" @action={{action "loadMore"}}>
       <div class="web-hook-events content-list">
         <div class="heading-container">
@@ -20,18 +20,18 @@
           <div class="col heading actions">{{i18n "admin.web_hooks.events.actions"}}</div>
           <div class="clearfix"></div>
         </div>
-        {{#if hasIncoming}}
+        {{#if this.hasIncoming}}
           <a href tabindex="0" {{action "showInserted"}} class="alert alert-info clickable">
-            <CountI18n @key="admin.web_hooks.events.incoming" @count={{incomingCount}} />
+            <CountI18n @key="admin.web_hooks.events.incoming" @count={{this.incomingCount}} />
           </a>
         {{/if}}
         <ul>
-          {{#each model as |webHookEvent|}}
+          {{#each this.model as |webHookEvent|}}
             <AdminWebHookEvent @model={{webHookEvent}} />
           {{/each}}
         </ul>
       </div>
-      <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+      <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
     </LoadMore>
   {{else}}
     <p>{{i18n "admin.web_hooks.events.none"}}</p>

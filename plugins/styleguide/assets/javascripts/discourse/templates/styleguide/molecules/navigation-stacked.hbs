@@ -1,6 +1,6 @@
 <StyleguideExample @title=".nav-stacked" class="half-size">
   <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
-    {{#each dummy.navItems as |ni|}}
+    {{#each this.dummy.navItems as |ni|}}
       <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
     {{/each}}
   </MobileNav>
@@ -9,7 +9,7 @@
 <StyleguideExample @title=".user-navigation .nav-stacked" class="half-size">
   <DSection @class="user-navigation">
     <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
-      {{#each dummy.navItems as |ni|}}
+      {{#each this.dummy.navItems as |ni|}}
         <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
       {{/each}}
     </MobileNav>

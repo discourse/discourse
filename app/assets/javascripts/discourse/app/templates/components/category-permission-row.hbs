@@ -1,5 +1,5 @@
 <span class="group-name">
-  <span class="group-name-label">{{group_name}}</span>
+  <span class="group-name-label">{{this.group_name}}</span>
   <a class="remove-permission" href {{action "removeRow"}}>
     {{d-icon "far-trash-alt"}}
   </a>
@@ -7,7 +7,7 @@
 <span class="options actionable">
   <DButton @icon="check-square" @class="btn btn-flat see" @disabled={{true}} />
 
-  <DButton @icon={{canReplyIcon}} @action={{action "setPermissionReply"}} @translatedTitle={{replyTooltip}} @class={{concat "btn btn-flat reply-toggle " replyGranted}} @disabled={{replyDisabled}} />
+  <DButton @icon={{this.canReplyIcon}} @action={{action "setPermissionReply"}} @translatedTitle={{this.replyTooltip}} @class={{concat "btn btn-flat reply-toggle " this.replyGranted}} @disabled={{this.replyDisabled}} />
 
-  <DButton @icon={{canCreateIcon}} @action={{action "setPermissionFull"}} @translatedTitle={{createTooltip}} @class={{concat "btn btn-flat create-toggle " createGranted}} @disabled={{createDisabled}} />
+  <DButton @icon={{this.canCreateIcon}} @action={{action "setPermissionFull"}} @translatedTitle={{this.createTooltip}} @class={{concat "btn btn-flat create-toggle " this.createGranted}} @disabled={{this.createDisabled}} />
 </span>

@@ -3,13 +3,13 @@
     <div class="control-group">
       <div class="ics">
         <label class="radio" for="ics">
-          <RadioButton @name="select-calendar" @id="ics" @value="ics" @selection={{selectedCalendar}} @onChange={{action (mut selectedCalendar)}} />
+          <RadioButton @name="select-calendar" @id="ics" @value="ics" @selection={{this.selectedCalendar}} @onChange={{action (mut this.selectedCalendar)}} />
           {{i18n "download_calendar.save_ics"}}
         </label>
       </div>
       <div class="google">
         <label class="radio" for="google">
-          <RadioButton @name="select-calendar" @id="google" @value="google" @selection={{selectedCalendar}} @onChange={{action (mut selectedCalendar)}} />
+          <RadioButton @name="select-calendar" @id="google" @value="google" @selection={{this.selectedCalendar}} @onChange={{action (mut this.selectedCalendar)}} />
           {{i18n "download_calendar.save_google"}}
         </label>
       </div>
@@ -17,7 +17,7 @@
 
     <div class="control-group remember">
       <label>
-        <Input @type="checkbox" @checked={{remember}} /> <span>{{i18n "download_calendar.remember"}}</span>
+        <Input @type="checkbox" @checked={{this.remember}} /> <span>{{i18n "download_calendar.remember"}}</span>
       </label>
       <span>{{i18n "download_calendar.remember_explanation"}}</span>
     </div>

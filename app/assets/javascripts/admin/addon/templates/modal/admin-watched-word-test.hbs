@@ -1,20 +1,20 @@
-<DModalBody @rawTitle={{i18n "admin.watched_words.test.modal_title" action=model.name}} @class="watched-words-test-modal">
+<DModalBody @rawTitle={{i18n "admin.watched_words.test.modal_title" action=this.model.name}} @class="watched-words-test-modal">
   <p>{{i18n "admin.watched_words.test.description"}}</p>
-  <Textarea @name="test_value" @value={{value}} @autofocus="autofocus" />
-  {{#if matches}}
+  <Textarea @name="test_value" @value={{this.value}} @autofocus="autofocus" />
+  {{#if this.matches}}
     <p>
       {{i18n "admin.watched_words.test.found_matches"}}
       <ul>
-        {{#if (or isReplace isLink)}}
-          {{#each matches as |match|}}
+        {{#if (or this.isReplace this.isLink)}}
+          {{#each this.matches as |match|}}
             <li>
               <span class="match">{{match.match}}</span>
               &rarr;
               <span class="replacement">{{match.replacement}}</span>
             </li>
           {{/each}}
-        {{else if isTag}}
-          {{#each matches as |match|}}
+        {{else if this.isTag}}
+          {{#each this.matches as |match|}}
             <li>
               <span class="match">{{match.match}}</span>
               &rarr;
@@ -24,7 +24,7 @@
             </li>
           {{/each}}
         {{else}}
-          {{#each matches as |match|}}
+          {{#each this.matches as |match|}}
             <li>{{match}}</li>
           {{/each}}
         {{/if}}

@@ -1,17 +1,17 @@
-<PluginOutlet @name="above-discovery-categories" @connectorTagName="div" @args={{hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics}} />
+<PluginOutlet @name="above-discovery-categories" @connectorTagName="div" @args={{hash categories=this.model.categories categoryPageStyle=this.categoryPageStyle topics=this.model.topics}} />
 
 <DiscoveryCategories @refresh={{action "refresh"}}>
-  {{#if topicTrackingState.hasIncoming}}
-    <div class="show-more {{if hasTopics "has-topics"}}">
+  {{#if this.topicTrackingState.hasIncoming}}
+    <div class="show-more {{if this.hasTopics "has-topics"}}">
       <div role="button" class="alert alert-info clickable" {{action "showInserted"}}>
-        <CountI18n @key="topic_count_" @suffix={{topicTrackingState.filter}} @count={{topicTrackingState.incomingCount}} />
+        <CountI18n @key="topic_count_" @suffix={{this.topicTrackingState.filter}} @count={{this.topicTrackingState.incomingCount}} />
       </div>
     </div>
   {{/if}}
 
-  {{component categoryPageStyle
-              categories=model.categories
-              topics=model.topics}}
+  {{component this.categoryPageStyle
+              categories=this.model.categories
+              topics=this.model.topics}}
 </DiscoveryCategories>
 
-<PluginOutlet @name="below-discovery-categories" @connectorTagName="div" @args={{hash categories=model.categories categoryPageStyle=categoryPageStyle topics=model.topics}} />
+<PluginOutlet @name="below-discovery-categories" @connectorTagName="div" @args={{hash categories=this.model.categories categoryPageStyle=this.categoryPageStyle topics=this.model.topics}} />

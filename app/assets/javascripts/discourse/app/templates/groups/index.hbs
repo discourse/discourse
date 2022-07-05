@@ -2,26 +2,26 @@
 
 <DSection @pageClass="groups">
   <div class="groups-header">
-    {{#if currentUser.can_create_group}}
+    {{#if this.currentUser.can_create_group}}
       <DButton @action={{action "new"}} @class="btn-default groups-header-new pull-right" @icon="plus" @label="admin.groups.new.title" />
     {{/if}}
 
     <div class="groups-header-filters">
-      <Input @value={{readonly filter}} @placeholderKey="groups.index.all" class="groups-header-filters-name no-blur" @input={{action "onFilterChanged" value="target.value"}} />
+      <Input @value={{readonly this.filter}} @placeholderKey="groups.index.all" class="groups-header-filters-name no-blur" @input={{action "onFilterChanged" value="target.value"}} />
 
-      <ComboBox @value={{type}} @content={{types}} @class="groups-header-filters-type" @onChange={{action (mut type)}} @options={{hash
+      <ComboBox @value={{this.type}} @content={{this.types}} @class="groups-header-filters-type" @onChange={{action (mut this.type)}} @options={{hash
           clearable=true
           none="groups.index.filter"
         }} />
     </div>
   </div>
 
-  <ConditionalLoadingSpinner @condition={{isLoading}}>
-    {{#if groups}}
+  <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+    {{#if this.groups}}
       <LoadMore @selector=".groups-boxes .group-box" @action={{action "loadMore"}}>
         <div class="container">
           <div class="groups-boxes">
-            {{#each groups as |group|}}
+            {{#each this.groups as |group|}}
               <LinkTo @route="group.members" @model={{group.name}} @classNames={{concat "group-box " group.name}}>
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
@@ -75,7 +75,7 @@
         </div>
       </LoadMore>
 
-      <ConditionalLoadingSpinner @condition={{groups.loadingMore}} />
+      <ConditionalLoadingSpinner @condition={{this.groups.loadingMore}} />
     {{else}}
       <p>{{i18n "groups.index.empty"}}</p>
     {{/if}}

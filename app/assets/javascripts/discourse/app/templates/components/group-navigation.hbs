@@ -1,5 +1,5 @@
 <MobileNav @class="group-nav" @desktopClass="nav nav-pills">
-  {{#if site.mobileView}}
+  {{#if this.site.mobileView}}
     <li>
       <LinkTo @route="groups.index">
         {{i18n "groups.index.all"}}
@@ -7,18 +7,18 @@
     </li>
   {{else}}
     <li>
-      <GroupDropdown @groups={{group.extras.visible_group_names}} @value={{group.name}} />
+      <GroupDropdown @groups={{this.group.extras.visible_group_names}} @value={{this.group.name}} />
     </li>
   {{/if}}
 
-  {{#each tabs as |tab|}}
+  {{#each this.tabs as |tab|}}
     <li>
-      <LinkTo @route={{tab.route}} @model={{group}} @title={{tab.message}} class={{tab.name}}>
+      <LinkTo @route={{tab.route}} @model={{this.group}} @title={{tab.message}} class={{tab.name}}>
         {{#if tab.icon}}{{d-icon tab.icon}}{{/if}}
         {{tab.message}}
         {{#if tab.count}}<span class="count">({{tab.count}})</span>{{/if}}
       </LinkTo>
     </li>
   {{/each}}
-  <PluginOutlet @name="group-reports-nav-item" @args={{hash group=group}} @connectorTagName="li" />
+  <PluginOutlet @name="group-reports-nav-item" @args={{hash group=this.group}} @connectorTagName="li" />
 </MobileNav>

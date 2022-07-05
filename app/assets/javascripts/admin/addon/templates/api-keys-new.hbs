@@ -4,9 +4,9 @@
 </LinkTo>
 
 <div class="api-key api-key-new">
-  {{#if model.id}}
+  {{#if this.model.id}}
     <AdminFormRow @label="admin.api.key">
-      <div>{{model.key}}</div>
+      <div>{{this.model.key}}</div>
     </AdminFormRow>
     <AdminFormRow>
       {{i18n "admin.api.not_shown_again"}}
@@ -16,16 +16,16 @@
     </AdminFormRow>
   {{else}}
     <AdminFormRow @label="admin.api.description">
-      <Input @value={{model.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
+      <Input @value={{this.model.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
     </AdminFormRow>
 
     <AdminFormRow @label="admin.api.user_mode">
-      <ComboBox @content={{userModes}} @value={{userMode}} @onChange={{action "changeUserMode"}} />
+      <ComboBox @content={{this.userModes}} @value={{this.userMode}} @onChange={{action "changeUserMode"}} />
     </AdminFormRow>
 
-    {{#if showUserSelector}}
+    {{#if this.showUserSelector}}
       <AdminFormRow @label="admin.api.user">
-        <EmailGroupUserChooser @value={{model.username}} @onChange={{action "updateUsername"}} @options={{hash
+        <EmailGroupUserChooser @value={{this.model.username}} @onChange={{action "updateUsername"}} @options={{hash
             maximum=1
             filterPlaceholder="admin.api.user_placeholder"
           }} />
@@ -33,16 +33,16 @@
     {{/if}}
 
     <AdminFormRow @label="admin.api.scope_mode">
-      <ComboBox @content={{scopeModes}} @value={{scopeMode}} @onChange={{action "changeScopeMode"}} />
+      <ComboBox @content={{this.scopeModes}} @value={{this.scopeMode}} @onChange={{action "changeScopeMode"}} />
 
-      {{#if (eq scopeMode "read_only")}}
+      {{#if (eq this.scopeMode "read_only")}}
         <p>{{i18n "admin.api.scopes.descriptions.global.read"}}</p>
-      {{else if (eq scopeMode "global")}}
+      {{else if (eq this.scopeMode "global")}}
         <p>{{i18n "admin.api.scopes.global_description"}}</p>
       {{/if}}
     </AdminFormRow>
 
-    {{#if (eq scopeMode "granular")}}
+    {{#if (eq this.scopeMode "granular")}}
       <h2 class="scopes-title">{{i18n "admin.api.scopes.title"}}</h2>
       <p>{{i18n "admin.api.scopes.description"}}</p>
       <table class="scopes-table grid">
@@ -55,7 +55,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each-in scopes as |resource actions|}}
+          {{#each-in this.scopes as |resource actions|}}
             <tr class="scope-resource-name">
               <td><b>{{resource}}</b></td>
               <td></td>
@@ -86,6 +86,6 @@
       </table>
     {{/if}}
 
-    <DButton @icon="check" @label="admin.api.save" @action={{action "save"}} @class="btn-primary" @disabled={{saveDisabled}} />
+    <DButton @icon="check" @label="admin.api.save" @action={{action "save"}} @class="btn-primary" @disabled={{this.saveDisabled}} />
   {{/if}}
 </div>

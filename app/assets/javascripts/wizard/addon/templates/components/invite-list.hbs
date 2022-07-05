@@ -1,18 +1,18 @@
 
-{{#if users}}
+{{#if this.users}}
   <div class="users-list">
-    {{#each users as |user|}}
-      <InviteListUser @user={{user}} @roles={{roles}} @removeUser={{action "removeUser"}} />
+    {{#each this.users as |user|}}
+      <InviteListUser @user={{user}} @roles={{this.roles}} @removeUser={{action "removeUser"}} />
     {{/each}}
   </div>
 {{/if}}
 
 <div class="new-user">
-  <div class="text-field {{if invalid "invalid"}}">
-    <Input class="invite-email wizard-focusable" @value={{inviteEmail}} placeholder="user@example.com" @tabindex="9" />
+  <div class="text-field {{if this.invalid "invalid"}}">
+    <Input class="invite-email wizard-focusable" @value={{this.inviteEmail}} placeholder="user@example.com" @tabindex="9" />
   </div>
 
-  <ComboBox @value={{inviteRole}} @content={{roles}} @nameProperty="label" @onChange={{action (mut inviteRole)}} />
+  <ComboBox @value={{this.inviteRole}} @content={{this.roles}} @nameProperty="label" @onChange={{action (mut this.inviteRole)}} />
 
   <button type="button" class="wizard-btn small add-user" {{action "addUser"}}>
     {{d-icon "plus"}}{{i18n "wizard.invites.add_user"}}

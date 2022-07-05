@@ -1,14 +1,14 @@
-<td><UserInfo @user={{item.user}} /></td>
-{{#each columns as |column|}}
+<td><UserInfo @user={{this.item.user}} /></td>
+{{#each this.columns as |column|}}
   <td>
     {{#if (directory-column-is-user-field column=column)}}
-      {{directory-item-user-field-value item=item column=column}}
+      {{directory-item-user-field-value item=this.item column=column}}
     {{else}}
-      {{directory-item-value item=item column=column}}
+      {{directory-item-value item=this.item column=column}}
     {{/if}}
   </td>
 {{/each}}
 
-{{#if showTimeRead}}
-  <td><span class="time-read">{{format-duration item.time_read}}</span></td>
+{{#if this.showTimeRead}}
+  <td><span class="time-read">{{format-duration this.item.time_read}}</span></td>
 {{/if}}

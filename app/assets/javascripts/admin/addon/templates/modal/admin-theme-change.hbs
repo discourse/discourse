@@ -1,6 +1,6 @@
 <div>
   <DModalBody @title="admin.logs.staff_actions.modal_title">
-    {{html-safe diff}}
+    {{html-safe this.diff}}
   </DModalBody>
   <div class="modal-footer">
     <DButton @class="btn-primary" @action={{route-action "closeModal"}} @label="close" />

@@ -1,4 +1,4 @@
-{{#if model.length}}
+{{#if this.model.length}}
   <h3>{{i18n "admin.plugins.installed"}}</h3>
 
   <table class="admin-plugins grid">
@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each model as |plugin|}}
+      {{#each this.model as |plugin|}}
         <tr>
           <td>
             {{#if plugin.is_official}}
@@ -51,7 +51,7 @@
             {{/if}}
           </td>
           <td class="settings">
-            {{#if currentUser.admin}}
+            {{#if this.currentUser.admin}}
               {{#if plugin.has_settings}}
                 <DButton @class="btn-default" @action={{route-action "showSettings"}} @actionParam={{plugin}} @icon="cog" @label="admin.plugins.change_settings_short" />
               {{/if}}
@@ -67,4 +67,4 @@
 
 <p class="admin-plugins-howto"><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
 
-<PluginOutlet @name="admin-below-plugins-index" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+<PluginOutlet @name="admin-below-plugins-index" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

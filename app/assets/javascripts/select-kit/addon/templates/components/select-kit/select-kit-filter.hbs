@@ -1,8 +1,8 @@
-{{#unless isHidden}}
+{{#unless this.isHidden}}
   {{!-- filter-input-search prevents 1password from attempting autocomplete --}}
-  <Input @tabindex={{0}} class="filter-input" placeholder={{placeholder}} @autocomplete="off" @autocorrect="off" @autocapitalize="off" @name="filter-input-search" @spellcheck={{false}} @value={{readonly selectKit.filter}} @input={{action "onInput"}} @paste={{action "onPaste"}} @keyDown={{action "onKeydown"}} @keyUp={{action "onKeyup"}} @type="search" />
+  <Input @tabindex={{0}} class="filter-input" placeholder={{this.placeholder}} @autocomplete="off" @autocorrect="off" @autocapitalize="off" @name="filter-input-search" @spellcheck={{false}} @value={{readonly this.selectKit.filter}} @input={{action "onInput"}} @paste={{action "onPaste"}} @keyDown={{action "onKeydown"}} @keyUp={{action "onKeyup"}} @type="search" />
 
-  {{#if selectKit.options.filterIcon}}
-    {{d-icon selectKit.options.filterIcon class="filter-icon"}}
+  {{#if this.selectKit.options.filterIcon}}
+    {{d-icon this.selectKit.options.filterIcon class="filter-icon"}}
   {{/if}}
 {{/unless}}

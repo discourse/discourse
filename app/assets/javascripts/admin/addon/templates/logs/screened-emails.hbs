@@ -6,8 +6,8 @@
 
 <br>
 
-<ConditionalLoadingSpinner @condition={{loading}}>
-  {{#if model.length}}
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  {{#if this.model.length}}
 
     <table class="screened-emails grid">
       <thead>
@@ -20,7 +20,7 @@
         <th class="action"></th>
       </thead>
       <tbody>
-        {{#each model as |item|}}
+        {{#each this.model as |item|}}
           <tr class="admin-list-item">
             <td class="col first email">
               <div class="overflow-ellipsis" title={{item.email}}>{{item.email}}</div>

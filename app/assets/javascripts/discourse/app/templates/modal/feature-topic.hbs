@@ -1,12 +1,12 @@
 <DModalBody @class="feature-topic">
-  {{#if model.pinned_at}}
+  {{#if this.model.pinned_at}}
     <div class="feature-section">
       <div class="desc">
-        {{#if model.pinned_globally}}
+        {{#if this.model.pinned_globally}}
           <p>
-            <ConditionalLoadingSpinner @size="small" @condition={{loading}}>
-              {{#if pinnedGloballyCount}}
-                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
+            <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}>
+              {{#if this.pinnedGloballyCount}}
+                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=this.pinnedGloballyCount)}}
               {{else}}
                 {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
               {{/if}}
@@ -15,13 +15,13 @@
           <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
         {{else}}
           <p>
-            <ConditionalLoadingSpinner @size="small" @condition={{loading}}>
-              {{html-safe alreadyPinnedMessage}}
+            <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}>
+              {{html-safe this.alreadyPinnedMessage}}
             </ConditionalLoadingSpinner>
           </p>
           <p>{{i18n "topic.feature_topic.pin_note"}}</p>
         {{/if}}
-        <p>{{html-safe unPinMessage}}</p>
+        <p>{{html-safe this.unPinMessage}}</p>
         <p><DButton @action={{action "unpin"}} @icon="thumbtack" @label="topic.feature.unpin" @class="btn-primary" /></p>
       </div>
     </div>
@@ -29,28 +29,28 @@
     <div class="feature-section">
       <div class="desc">
         <p>
-          <ConditionalLoadingSpinner @size="small" @condition={{loading}}>
-            {{html-safe alreadyPinnedMessage}}
+          <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}>
+            {{html-safe this.alreadyPinnedMessage}}
           </ConditionalLoadingSpinner>
         </p>
         <p>
           {{i18n "topic.feature_topic.pin_note"}}
         </p>
-        {{#if site.isMobileDevice}}
+        {{#if this.site.isMobileDevice}}
           <p>
-            {{html-safe pinMessage}}
+            {{html-safe this.pinMessage}}
           </p>
           <p class="with-validation">
-            <FutureDateInput @class="pin-until" @clearable={{true}} @input={{model.pinnedInCategoryUntil}} @onChangeInput={{action (mut model.pinnedInCategoryUntil)}} />
-            <PopupInputTip @validation={{pinInCategoryValidation}} @shownAt={{pinInCategoryTipShownAt}} />
+            <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedInCategoryUntil}} @onChangeInput={{action (mut this.model.pinnedInCategoryUntil)}} />
+            <PopupInputTip @validation={{this.pinInCategoryValidation}} @shownAt={{this.pinInCategoryTipShownAt}} />
           </p>
         {{else}}
           <p class="with-validation">
-            {{html-safe pinMessage}}
+            {{html-safe this.pinMessage}}
             <span>
               {{d-icon "far-clock"}}
-              <FutureDateInput @class="pin-until" @clearable={{true}} @input={{model.pinnedInCategoryUntil}} @onChangeInput={{action (mut model.pinnedInCategoryUntil)}} />
-              <PopupInputTip @validation={{pinInCategoryValidation}} @shownAt={{pinInCategoryTipShownAt}} />
+              <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedInCategoryUntil}} @onChangeInput={{action (mut this.model.pinnedInCategoryUntil)}} />
+              <PopupInputTip @validation={{this.pinInCategoryValidation}} @shownAt={{this.pinInCategoryTipShownAt}} />
             </span>
           </p>
         {{/if}}
@@ -59,13 +59,13 @@
         </p>
       </div>
     </div>
-    {{#if canPinGlobally}}
+    {{#if this.canPinGlobally}}
       <div class="feature-section">
         <div class="desc">
           <p>
-            <ConditionalLoadingSpinner @size="small" @condition={{loading}}>
-              {{#if pinnedGloballyCount}}
-                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
+            <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}>
+              {{#if this.pinnedGloballyCount}}
+                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=this.pinnedGloballyCount)}}
               {{else}}
                 {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
               {{/if}}
@@ -74,21 +74,21 @@
           <p>
             {{i18n "topic.feature_topic.global_pin_note"}}
           </p>
-          {{#if site.isMobileDevice}}
+          {{#if this.site.isMobileDevice}}
             <p>
               {{i18n "topic.feature_topic.pin_globally"}}
             </p>
             <p class="with-validation">
-              <FutureDateInput @class="pin-until" @clearable={{true}} @input={{model.pinnedGloballyUntil}} @onChangeInput={{action (mut model.pinnedGloballyUntil)}} />
-              <PopupInputTip @validation={{pinGloballyValidation}} @shownAt={{pinGloballyTipShownAt}} />
+              <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedGloballyUntil}} @onChangeInput={{action (mut this.model.pinnedGloballyUntil)}} />
+              <PopupInputTip @validation={{this.pinGloballyValidation}} @shownAt={{this.pinGloballyTipShownAt}} />
             </p>
           {{else}}
             <p class="with-validation">
               {{i18n "topic.feature_topic.pin_globally"}}
               <span>
                 {{d-icon "far-clock"}}
-                <FutureDateInput @class="pin-until" @clearable={{true}} @input={{model.pinnedGloballyUntil}} @onChangeInput={{action (mut model.pinnedGloballyUntil)}} />
-                <PopupInputTip @validation={{pinGloballyValidation}} @shownAt={{pinGloballyTipShownAt}} />
+                <FutureDateInput @class="pin-until" @clearable={{true}} @input={{this.model.pinnedGloballyUntil}} @onChangeInput={{action (mut this.model.pinnedGloballyUntil)}} />
+                <PopupInputTip @validation={{this.pinGloballyValidation}} @shownAt={{this.pinGloballyTipShownAt}} />
               </span>
             </p>
           {{/if}}
@@ -99,12 +99,12 @@
       </div>
     {{/if}}
   {{/if}}
-  {{#if currentUser.staff}}
+  {{#if this.currentUser.staff}}
     <div class="feature-section">
       <div class="desc">
         <p>
-          <ConditionalLoadingSpinner @size="small" @condition={{loading}}>
-            {{#if bannerCount}}
+          <ConditionalLoadingSpinner @size="small" @condition={{this.loading}}>
+            {{#if this.bannerCount}}
               {{html-safe (i18n "topic.feature_topic.banner_exists")}}
             {{else}}
               {{html-safe (i18n "topic.feature_topic.no_banner_exists")}}
@@ -115,14 +115,14 @@
           {{i18n "topic.feature_topic.banner_note"}}
         </p>
         <p>
-          {{#if model.isBanner}}
+          {{#if this.model.isBanner}}
             {{i18n "topic.feature_topic.remove_banner"}}
           {{else}}
             {{i18n "topic.feature_topic.make_banner"}}
           {{/if}}
         </p>
         <p>
-          {{#if model.isBanner}}
+          {{#if this.model.isBanner}}
             <DButton @action={{action "removeBanner"}} @icon="thumbtack" @label="topic.feature.remove_banner" @class="btn-primary" />
           {{else}}
             <DButton @action={{action "makeBanner"}} @icon="thumbtack" @label="topic.feature.make_banner" @class="btn-primary make-banner" />

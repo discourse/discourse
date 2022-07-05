@@ -4,24 +4,24 @@
   {{else}}
     <div class="error-page">
       <div class="face">:(</div>
-      <div class="reason">{{reason}}</div>
-      {{#if requestUrl}}
+      <div class="reason">{{this.reason}}</div>
+      {{#if this.requestUrl}}
         <div class="url">
-          {{i18n "errors.prev_page"}} <a href={{requestUrl}} data-auto-route="true">{{requestUrl}}</a>
+          {{i18n "errors.prev_page"}} <a href={{this.requestUrl}} data-auto-route="true">{{this.requestUrl}}</a>
         </div>
       {{/if}}
       <div class="desc">
-        {{#if networkFixed}}
+        {{#if this.networkFixed}}
           {{d-icon "check-circle"}}
         {{/if}}
 
-        {{desc}}
+        {{this.desc}}
       </div>
       <div class="buttons">
-        {{#each enabledButtons as |buttonData|}}
+        {{#each this.enabledButtons as |buttonData|}}
           <DButton @icon={{buttonData.icon}} @action={{buttonData.action}} @label={{buttonData.key}} @class={{buttonData.classes}} />
         {{/each}}
-        <ConditionalLoadingSpinner @condition={{loading}} />
+        <ConditionalLoadingSpinner @condition={{this.loading}} />
       </div>
     </div>
   {{/if}}

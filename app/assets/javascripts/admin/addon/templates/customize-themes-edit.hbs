@@ -1,23 +1,23 @@
-<div class="current-style {{if maximized "maximized"}}">
+<div class="current-style {{if this.maximized "maximized"}}">
   <div class="wrapper">
     <div class="editor-information">
       <DButton @title="go_back" @action={{action "goBack"}} @icon="chevron-left" @class="btn-small editor-back-button" />
 
       <span class="editor-theme-name-wrapper">
         {{i18n "admin.customize.theme.edit_css_html"}}
-        <LinkTo @route={{showRouteName}} @model={{model.id}} @replace={{true}} class="editor-theme-name">
-          {{model.name}}
+        <LinkTo @route={{this.showRouteName}} @model={{this.model.id}} @replace={{true}} class="editor-theme-name">
+          {{this.model.name}}
         </LinkTo>
       </span>
     </div>
 
-    <AdminThemeEditor @theme={{model}} @editRouteName={{editRouteName}} @currentTargetName={{currentTargetName}} @fieldName={{fieldName}} @fieldAdded={{action "fieldAdded"}} @maximized={{maximized}} @onlyOverriddenChanged={{action "onlyOverriddenChanged"}} @save={{action "save"}} />
+    <AdminThemeEditor @theme={{this.model}} @editRouteName={{this.editRouteName}} @currentTargetName={{this.currentTargetName}} @fieldName={{this.fieldName}} @fieldAdded={{action "fieldAdded"}} @maximized={{this.maximized}} @onlyOverriddenChanged={{action "onlyOverriddenChanged"}} @save={{action "save"}} />
 
     <div class="admin-footer">
       <div class="status-actions">
-        {{#unless model.changed}}
+        {{#unless this.model.changed}}
           <a
-            href={{previewUrl}}
+            href={{this.previewUrl}}
             rel="noopener noreferrer"
             title={{i18n "admin.customize.explain_preview"}}
             class="preview-link"
@@ -29,7 +29,7 @@
       </div>
 
       <div class="buttons">
-        <DButton @action={{action "save"}} @disabled={{saveDisabled}} @class="btn-primary" @translatedLabel={{saveButtonText}} />
+        <DButton @action={{action "save"}} @disabled={{this.saveDisabled}} @class="btn-primary" @translatedLabel={{this.saveButtonText}} />
       </div>
     </div>
   </div>

@@ -2,10 +2,10 @@
   <tbody>
     <tr>
       <th>{{i18n "admin.email.delivery_method"}}</th>
-      <td>{{delivery_method}}</td>
+      <td>{{this.delivery_method}}</td>
     </tr>
 
-    {{#each model.settings as |s|}}
+    {{#each this.model.settings as |s|}}
       <tr>
         <th style="width: 25%">{{s.name}}</th>
         <td>{{s.value}}</td>
@@ -18,13 +18,13 @@
   <div class="admin-controls">
     <div class="controls">
       <div class="inline-form">
-        {{#if sendingEmail}}
+        {{#if this.sendingEmail}}
           {{i18n "admin.email.sending_test"}}
         {{else}}
-          <TextField @value={{testEmailAddress}} @placeholderKey="admin.email.test_email_address" />
-          <DButton @class="btn-primary" @action={{action "sendTestEmail"}} @disabled={{sendTestEmailDisabled}} @label="admin.email.send_test" @type="submit" />
-          {{#if sentTestEmailMessage}}
-            <span class="result-message">{{sentTestEmailMessage}}</span>
+          <TextField @value={{this.testEmailAddress}} @placeholderKey="admin.email.test_email_address" />
+          <DButton @class="btn-primary" @action={{action "sendTestEmail"}} @disabled={{this.sendTestEmailDisabled}} @label="admin.email.send_test" @type="submit" />
+          {{#if this.sentTestEmailMessage}}
+            <span class="result-message">{{this.sentTestEmailMessage}}</span>
           {{/if}}
         {{/if}}
       </div>

@@ -1,21 +1,21 @@
 <div class="select-kit-header-wrapper">
-  {{#if icons}}
+  {{#if this.icons}}
     <div class="future-date-input-selector-icons">
-      {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+      {{#each this.icons as |icon|}} {{d-icon icon}} {{/each}}
     </div>
   {{/if}}
 
-  {{component selectKit.options.selectedNameComponent
-    tabindex=tabindex
-    item=selectedContent
-    selectKit=selectKit
+  {{component this.selectKit.options.selectedNameComponent
+    tabindex=this.tabindex
+    item=this.selectedContent
+    selectKit=this.selectKit
   }}
 
-  {{#if selectedContent.timeFormatted}}
+  {{#if this.selectedContent.timeFormatted}}
     <span class="future-date-input-selector-datetime">
-      {{selectedContent.timeFormatted}}
+      {{this.selectedContent.timeFormatted}}
     </span>
   {{/if}}
 
-  {{d-icon caretIcon class="caret-icon"}}
+  {{d-icon this.caretIcon class="caret-icon"}}
 </div>

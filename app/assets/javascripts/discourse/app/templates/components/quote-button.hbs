@@ -1,22 +1,22 @@
 <div class="buttons">
-  {{#if embedQuoteButton}}
+  {{#if this.embedQuoteButton}}
     <DButton @class="btn-flat insert-quote" @action={{action "insertQuote"}} @icon="quote-left" @label="post.quote_reply" @title="post.quote_reply_shortcut" />
   {{/if}}
 
-  {{#if siteSettings.enable_fast_edit}}
-    {{#if _canEditPost}}
+  {{#if this.siteSettings.enable_fast_edit}}
+    {{#if this._canEditPost}}
       <DButton @icon="pencil-alt" @action={{action "_toggleFastEditForm"}} @label="post.quote_edit" @class="btn-flat quote-edit-label" @title="post.quote_edit_shortcut" />
     {{/if}}
   {{/if}}
 
-  {{#if quoteSharingEnabled}}
+  {{#if this.quoteSharingEnabled}}
     <span class="quote-sharing">
-      {{#if quoteSharingShowLabel}}
+      {{#if this.quoteSharingShowLabel}}
         <DButton @icon="share" @label="post.quote_share" @class="btn-flat quote-share-label" />
       {{/if}}
 
       <span class="quote-share-buttons">
-        {{#each quoteSharingSources as |source|}}
+        {{#each this.quoteSharingSources as |source|}}
           <DButton @class="btn-flat" @action={{action "share" source}} @translatedTitle={{source.title}} @icon={{source.icon}} />
         {{/each}}
         <PluginOutlet @name="quote-share-buttons-after" @connectorTagName="div" />
@@ -26,11 +26,10 @@
 </div>
 
 <div class="extra">
-  {{#if siteSettings.enable_fast_edit}}
-    {{#if _displayFastEditInput}}
+  {{#if this.siteSettings.enable_fast_edit}}
+    {{#if this._displayFastEditInput}}
       <div class="fast-edit-container">
-        <Textarea @id="fast-edit-input" @value={{_fastEditNewSelection}} />
-        <DButton @action={{action "_saveFastEdit"}} @class="btn-small btn-primary save-fast-edit" @icon="pencil-alt" @label="composer.save_edit" @translatedTitle={{_saveEditButtonTitle}} @disabled={{_saveFastEditDisabled}} @isLoading={{_isSavingFastEdit}} />
+        <Textarea @id="fast-edit-input" @value={{this._fastEditNewSelection}} />        <DButton @action={{action "_saveFastEdit"}} @class="btn-small btn-primary save-fast-edit" @icon="pencil-alt" @label="composer.save_edit" @translatedTitle={{this._saveEditButtonTitle}} @disabled={{this._saveFastEditDisabled}} @isLoading={{this._isSavingFastEdit}} />
       </div>
     {{/if}}
   {{/if}}

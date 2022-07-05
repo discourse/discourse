@@ -1,8 +1,8 @@
-<ConditionalLoadingSpinner @condition={{loading}}>
-  <LoadMore @selector=".bookmark-list .bookmark-list-item" @action={{loadMore}}>
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  <LoadMore @selector=".bookmark-list .bookmark-list-item" @action={{this.loadMore}}>
     <table class="topic-list bookmark-list">
       <thead class="topic-list-header">
-        {{#unless site.mobileView}}
+        {{#unless this.site.mobileView}}
           <th class="topic-list-data">{{i18n "topic.title"}}</th>
           <th class="topic-list-data">&nbsp;</th>
           <th class="post-metadata topic-list-data">{{i18n "post.bookmarks.updated"}}</th>
@@ -11,7 +11,7 @@
         {{/unless}}
       </thead>
       <tbody class="topic-list-body">
-        {{#each content as |bookmark|}}
+        {{#each this.content as |bookmark|}}
           <tr class="topic-list-item bookmark-list-item">
             <td class="main-link topic-list-data" role="rowheader">
               <span class="link-top-line">
@@ -48,10 +48,10 @@
               {{#if bookmark.bookmarkableTopicAlike}}
                 <div class="link-bottom-line">
                   {{category-link bookmark.category}}
-                  {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
+                  {{discourse-tags bookmark mode="list" tagsForUser=this.tagsForUser}}
                 </div>
               {{/if}}
-              {{#if (and site.mobileView bookmark.excerpt bookmark.user.avatar_template)}}
+              {{#if (and this.site.mobileView bookmark.excerpt bookmark.user.avatar_template)}}
                 <a href={{bookmark.bookmarkableUser.path}} data-user-card={{bookmark.user.username}} class="avatar">
                   {{avatar bookmark.bookmarkableUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
                 </a>
@@ -59,7 +59,7 @@
               {{!-- template-lint-disable --}}
               <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
             </td>
-            {{#unless site.mobileView}}
+            {{#unless this.site.mobileView}}
               <td class="topic-list-data">
                 {{#if bookmark.user.avatar_template}}
                   <a href={{bookmark.user.path}} data-user-card={{bookmark.user.username}} class="avatar">
@@ -77,6 +77,6 @@
         {{/each}}
       </tbody>
     </table>
-    <ConditionalLoadingSpinner @condition={{loadingMore}} />
+    <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
   </LoadMore>
 </ConditionalLoadingSpinner>

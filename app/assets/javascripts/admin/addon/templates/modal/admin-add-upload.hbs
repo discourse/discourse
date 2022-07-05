@@ -6,17 +6,17 @@
     </section>
     <section class="field">
       <label for="theme-variable-name">{{i18n "admin.customize.theme.variable_name"}}</label>
-      <Input @id="theme-variable-name" @value={{name}} />
+      <Input @id="theme-variable-name" @value={{this.name}} />
     </section>
-    {{#if fileSelected}}
-      {{#if errorMessage}}
-        <span class="alert alert-error">{{errorMessage}}</span>
+    {{#if this.fileSelected}}
+      {{#if this.errorMessage}}
+        <span class="alert alert-error">{{this.errorMessage}}</span>
       {{/if}}
     {{/if}}
   </div>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "upload"}} @disabled={{disabled}} @class="btn btn-primary" @icon="upload" @label="admin.customize.theme.upload" />
+  <DButton @action={{action "upload"}} @disabled={{this.disabled}} @class="btn btn-primary" @icon="upload" @label="admin.customize.theme.upload" />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

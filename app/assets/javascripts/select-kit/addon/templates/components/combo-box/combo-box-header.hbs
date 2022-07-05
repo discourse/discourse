@@ -1,15 +1,15 @@
 <div class="select-kit-header-wrapper">
-  {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+  {{#each this.icons as |icon|}} {{d-icon icon}} {{/each}}
 
-  {{component selectKit.options.selectedNameComponent
-    tabindex=tabindex
-    item=selectedContent
-    selectKit=selectKit
+  {{component this.selectKit.options.selectedNameComponent
+    tabindex=this.tabindex
+    item=this.selectedContent
+    selectKit=this.selectKit
   }}
 
-  {{#if shouldDisplayClearableButton}}
-    <DButton @class="btn-clear" @icon="times" @action={{selectKit.onClearSelection}} @ariaLabel="clear_input" />
+  {{#if this.shouldDisplayClearableButton}}
+    <DButton @class="btn-clear" @icon="times" @action={{this.selectKit.onClearSelection}} @ariaLabel="clear_input" />
   {{/if}}
 
-  {{d-icon caretIcon class="caret-icon"}}
+  {{d-icon this.caretIcon class="caret-icon"}}
 </div>
