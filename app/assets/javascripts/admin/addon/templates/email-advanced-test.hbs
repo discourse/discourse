@@ -2,7 +2,7 @@
 
 <div class="email-advanced-test">
   <label for="email">{{i18n "admin.email.advanced_test.email"}}</label>
-  <Textarea @name="email" @value={{this.email}} class="email-body" />  <DButton @action={{action "run"}} @label="admin.email.advanced_test.run" />
+  <Textarea name="email" @value={{this.email}} class="email-body" />  <DButton @action={{action "run"}} @label="admin.email.advanced_test.run" />
 </div>
 
 <ConditionalLoadingSpinner @condition={{this.loading}}>

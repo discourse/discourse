@@ -1,7 +1,7 @@
 <p>
   {{i18n "admin.logs.screened_urls.description"}}
 </p>
-  <DButton @class="btn-default" @action={{action "exportScreenedUrlList"}} @title="admin.export_csv.button_title.screened_url" @icon="download" @label="admin.export_csv.button_text" />
+<DButton @class="btn-default" @action={{action "exportScreenedUrlList"}} @title="admin.export_csv.button_title.screened_url" @icon="download" @label="admin.export_csv.button_text" />
 <br>
 
 <ConditionalLoadingSpinner @condition={{this.loading}}>

@@ -29,7 +29,7 @@
   {{#if this.siteSettings.enable_fast_edit}}
     {{#if this._displayFastEditInput}}
       <div class="fast-edit-container">
-        <Textarea @id="fast-edit-input" @value={{this._fastEditNewSelection}} />        <DButton @action={{action "_saveFastEdit"}} @class="btn-small btn-primary save-fast-edit" @icon="pencil-alt" @label="composer.save_edit" @translatedTitle={{this._saveEditButtonTitle}} @disabled={{this._saveFastEditDisabled}} @isLoading={{this._isSavingFastEdit}} />
+        <Textarea id="fast-edit-input" @value={{this._fastEditNewSelection}} />        <DButton @action={{action "_saveFastEdit"}} @class="btn-small btn-primary save-fast-edit" @icon="pencil-alt" @label="composer.save_edit" @translatedTitle={{this._saveEditButtonTitle}} @disabled={{this._saveFastEditDisabled}} @isLoading={{this._isSavingFastEdit}} />
       </div>
     {{/if}}
   {{/if}}

@@ -11,7 +11,7 @@
 
   <AdminFormRow @label="admin.api.description">
     {{#if this.editingDescription}}
-      <Input @value={{this.buffered.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
+      <Input @value={{this.buffered.description}} maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
     {{else}}
       <span>
         {{if this.model.description this.model.description (i18n "admin.api.no_description")}}

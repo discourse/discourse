@@ -16,7 +16,7 @@
     </AdminFormRow>
   {{else}}
     <AdminFormRow @label="admin.api.description">
-      <Input @value={{this.model.description}} @maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
+      <Input @value={{this.model.description}} maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
     </AdminFormRow>
 
     <AdminFormRow @label="admin.api.user_mode">
@@ -76,7 +76,7 @@
                 </td>
                 <td>
                   {{#each act.params as |p|}}
-                    <Input @maxlength="255" @value={{get act p}} placeholder={{p}} />
+                    <Input maxlength="255" @value={{get act p}} placeholder={{p}} />
                   {{/each}}
                 </td>
               </tr>
