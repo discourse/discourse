@@ -80,8 +80,6 @@ export function buildResolver(baseName) {
         }
       }
 
-      this._uncorrectedValues ??= Object.create(null);
-
       let normalized = super._normalize(fullName);
 
       // This is code that we don't really want to keep long term. The main situation where we need it is for
@@ -124,38 +122,8 @@ export function buildResolver(baseName) {
           }
         }
 
-        let wasCorrected = false;
         if (corrected && corrected !== normalized) {
-          this._uncorrectedValues[fullName] = normalized;
           normalized = corrected;
-          wasCorrected = true;
-        }
-
-        // Check if we have any other values that normalized to the same thing. In the future,
-        // when we remove this code, these will no longer work as expected.
-        let match = Object.entries(this._normalizeCache).find(
-          ([key, value]) => {
-            return (
-              value === normalized &&
-              (wasCorrected || this._uncorrectedValues[key])
-            );
-          }
-        );
-        if (match) {
-          deprecated(
-            function () {
-              let message = `Both ${fullName} and ${match[0]} normalized to the same value: ${normalized}. In the future they will not normalize to the same thing.`;
-              if (this._uncorrectedValues[fullName]) {
-                message += ` ${fullName} will normalize to ${this._uncorrectedValues[fullName]}`;
-              }
-              if (this._uncorrectedValues[match[0]]) {
-                message += ` ${match[0]} will normalize to ${
-                  this._uncorrectedValues[match[0]]
-                }`;
-              }
-              return message;
-            }.call(this)
-          );
         }
       }
 
