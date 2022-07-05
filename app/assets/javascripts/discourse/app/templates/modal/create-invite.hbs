@@ -38,7 +38,7 @@
         {{/if}}
       </label>
       <div class="invite-email-container">
-        <Input id="invite-email" @value={{this.buffered.emailOrDomain}} @placeholderKey="user.invited.invite.email_or_domain_placeholder" />
+        <Input id="invite-email" @value={{this.buffered.emailOrDomain}} placeholder={{i18n "user.invited.invite.email_or_domain_placeholder"}} />
         {{#if this.capabilities.hasContactPicker}}
           <DButton @icon="address-book" @action={{action "searchContact"}} @class="btn-primary open-contact-picker" />
         {{/if}}

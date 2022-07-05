@@ -114,9 +114,9 @@
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
       <span class="control-label">{{i18n "search.advanced.post.count.label"}}</span>
       <div class="controls">
-        <Input @type="number" @value={{readonly this.searchedTerms.min_posts}} class="input-small" id="search-min-post-count" placeholder={{i18n "search.advanced.post.min.placeholder"}} @aria-label={{i18n "search.advanced.post.min.aria_label"}} {{on "input" (action "onChangeSearchTermMinPostCount")}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.min_posts}} class="input-small" id="search-min-post-count" placeholder={{i18n "search.advanced.post.min.placeholder"}} aria-label={{i18n "search.advanced.post.min.aria_label"}} {{on "input" (action "onChangeSearchTermMinPostCount")}} />
         {{d-icon "arrows-alt-h"}}
-        <Input @type="number" @value={{readonly this.searchedTerms.max_posts}} class="input-small" id="search-max-post-count" placeholder={{i18n "search.advanced.post.max.placeholder"}} @aria-label={{i18n "search.advanced.post.max.aria_label"}} {{on "input" (action "onChangeSearchTermMaxPostCount")}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.max_posts}} class="input-small" id="search-max-post-count" placeholder={{i18n "search.advanced.post.max.placeholder"}} aria-label={{i18n "search.advanced.post.max.aria_label"}} {{on "input" (action "onChangeSearchTermMaxPostCount")}} />
       </div>
     </div>
 
@@ -124,9 +124,9 @@
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
       <span class="control-label">{{i18n "search.advanced.views.label"}}</span>
       <div class="controls">
-        <Input @type="number" @value={{readonly this.searchedTerms.min_views}} class="input-small" id="search-min-views" placeholder={{i18n "search.advanced.min_views.placeholder"}} @aria-label={{i18n "search.advanced.min_views.aria_label"}} {{on "input" (action "onChangeSearchTermMinViews")}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.min_views}} class="input-small" id="search-min-views" placeholder={{i18n "search.advanced.min_views.placeholder"}} aria-label={{i18n "search.advanced.min_views.aria_label"}} {{on "input" (action "onChangeSearchTermMinViews")}} />
         {{d-icon "arrows-alt-h"}}
-        <Input @type="number" @value={{readonly this.searchedTerms.max_views}} class="input-small" id="search-max-views" placeholder={{i18n "search.advanced.max_views.placeholder"}} @aria-label={{i18n "search.advanced.max_views.aria_label"}} {{on "input" (action "onChangeSearchTermMaxViews")}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.max_views}} class="input-small" id="search-max-views" placeholder={{i18n "search.advanced.max_views.placeholder"}} aria-label={{i18n "search.advanced.max_views.aria_label"}} {{on "input" (action "onChangeSearchTermMaxViews")}} />
       </div>
     </div>
   </details>

@@ -13,7 +13,7 @@
       <tbody class="topic-list-body">
         {{#each this.content as |bookmark|}}
           <tr class="topic-list-item bookmark-list-item">
-            <td class="main-link topic-list-data" role="rowheader">
+            <th scope="row" class="main-link topic-list-data">
               <span class="link-top-line">
                 <div class="bookmark-metadata">
                   {{#if bookmark.reminder_at}}
@@ -58,7 +58,7 @@
               {{/if}}
               {{!-- template-lint-disable --}}
               <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
-            </td>
+            </th>
             {{#unless this.site.mobileView}}
               <td class="topic-list-data">
                 {{#if bookmark.user.avatar_template}}

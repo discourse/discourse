@@ -11,14 +11,12 @@
           <DButton @action={{action "shift" 1 index}} @icon="arrow-down" @class="shift-down-value-btn btn-small" />
         {{/if}}
       </div>
-
     {{/each}}
-
   </div>
 {{/if}}
 
 <div class="simple-list-input">
-  <Input @type="text" @value={{this.newValue}} @placeholderKey="admin.site_settings.simple_list.add_item" class="add-value-input" autocomplete="off" @autocorrect="off" @autocapitalize="off" />
+  <Input @type="text" @value={{this.newValue}} placeholder={{i18n "admin.site_settings.simple_list.add_item"}} class="add-value-input" autocomplete="off" autocorrect="off" autocapitalize="off" />
 
   <DButton @action={{action "addValue"}} @actionParam={{this.newValue}} @disabled={{this.inputEmpty}} @icon="plus" @class="add-value-btn btn-small" />
 </div>
