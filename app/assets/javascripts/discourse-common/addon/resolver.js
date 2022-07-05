@@ -4,6 +4,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
 import Resolver from "ember-resolver";
+import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legacy-resolver";
 
 let _options = {};
 let moduleSuffixTrie = null;
@@ -33,7 +34,16 @@ function lookupModuleBySuffix(suffix) {
 }
 
 export function buildResolver(baseName) {
+  let LegacyResolver = buildLegacyResolver(baseName);
+
   return class extends Resolver {
+    LegacyResolver = LegacyResolver;
+
+    init(props) {
+      super.init(props);
+      this.legacyResolver = this.LegacyResolver.create(props);
+    }
+
     resolveRouter(/* parsedName */) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
@@ -174,6 +184,22 @@ export function buildResolver(baseName) {
           return resolved;
         }
       }
+    }
+
+    resolveOther(parsedName) {
+      let resolved = super.resolveOther(parsedName);
+      if (!resolved) {
+        let legacyParsedName = this.legacyResolver.parseName(
+          `${parsedName.type}:${parsedName.fullName}`
+        );
+        resolved = this.legacyResolver.resolveOther(legacyParsedName);
+        if (resolved) {
+          deprecated(
+            `Unable to resolve with new resolver, but resolved with legacy resolver: ${parsedName.fullName}`
+          );
+        }
+      }
+      return resolved;
     }
 
     resolveHelper(parsedName) {
