@@ -323,6 +323,13 @@ basic:
   enable_whispers:
     client: true
     default: false
+  whispers_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -834,6 +841,7 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+    max: 876000
   notify_users_after_responses_deleted_on_flagged_post:
     default: false
   traditional_markdown_linebreaks:
@@ -1704,6 +1712,7 @@ security:
     default: false
   content_security_policy_collect_reports:
     default: false
+    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -2422,6 +2431,9 @@ uncategorized:
     client: true
     default: true
     hidden: true
+
+  splash_screen:
+    default: true
 
   suggest_weekends_in_date_pickers:
     client: true

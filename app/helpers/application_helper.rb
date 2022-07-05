@@ -20,7 +20,7 @@ module ApplicationHelper
       modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
-      locationType: "auto",
+      locationType: "history",
       historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {},
@@ -135,12 +135,14 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
-    script = EmberCli.transform_name(script)
+  def self.splash_screen_nonce
+    @splash_screen_nonce ||= SecureRandom.hex
+  end
 
+  def preload_script(script)
     scripts = [script]
 
-    if EmberCli.enabled? && chunks = EmberCli.script_chunks[script]
+    if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
     end
 
@@ -431,6 +433,11 @@ module ApplicationHelper
       ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
   end
 
+  def include_splash_screen?
+    # A bit basic for now but will be expanded later
+    SiteSetting.splash_screen
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
@@ -563,6 +570,19 @@ module ApplicationHelper
     )
   end
 
+  def discourse_stylesheet_preload_tag(name, opts = {})
+    manager =
+      if opts.key?(:theme_id)
+        Stylesheet::Manager.new(
+          theme_id: customization_disabled? ? nil : opts[:theme_id]
+        )
+      else
+        stylesheet_manager
+      end
+
+    manager.stylesheet_preload_tag(name, 'all')
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     manager =
       if opts.key?(:theme_id)
@@ -574,6 +594,17 @@ module ApplicationHelper
       end
 
     manager.stylesheet_link_tag(name, 'all')
+  end
+
+  def discourse_preload_color_scheme_stylesheets
+    result = +""
+    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(scheme_id, 'all')
+
+    if dark_scheme_id != -1
+      result << stylesheet_manager.color_scheme_stylesheet_preload_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
+    end
+
+    result.html_safe
   end
 
   def discourse_color_scheme_stylesheets

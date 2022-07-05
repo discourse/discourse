@@ -64,9 +64,6 @@ end
 def dependencies
   [
     {
-      source: 'bootstrap/js/modal.js',
-      destination: 'bootstrap-modal.js'
-    }, {
       source: 'ace-builds/src-min-noconflict/ace.js',
       destination: 'ace.js',
       public: true
@@ -90,18 +87,10 @@ def dependencies
       source: 'pikaday/pikaday.js',
       public: true
     }, {
-      source: 'handlebars/dist/handlebars.js'
-    }, {
-      source: 'handlebars/dist/handlebars.runtime.js'
-    }, {
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery/dist/jquery.js'
-    }, {
       source: 'markdown-it/dist/markdown-it.js'
-    }, {
-      source: '@discourse/itsatrap/itsatrap.js'
     }, {
       source: 'moment/moment.js'
     }, {
@@ -143,39 +132,6 @@ def dependencies
       destination: 'workbox',
       skip_versioning: true,
       public: true
-    }, {
-      source: '@popperjs/core/dist/umd/popper.js'
-    }, {
-      source: '@popperjs/core/dist/umd/popper.js.map',
-      public_root: true
-    }, {
-      source: 'tippy.js/dist/tippy.umd.js'
-    }, {
-      source: 'tippy.js/dist/tippy.umd.js.map',
-      public_root: true
-    }, {
-      source: 'tippy.js/dist/tippy.css',
-      destination: '../../../app/assets/stylesheets/vendor'
-    }, {
-      source: 'tippy.js/dist/svg-arrow.css',
-      destination: '../../../app/assets/stylesheets/vendor'
-    }, {
-      source: 'route-recognizer/dist/route-recognizer.js'
-    }, {
-      source: 'route-recognizer/dist/route-recognizer.js.map',
-      public_root: true
-    },
-    {
-      source: 'qunit/qunit/qunit.js'
-    },
-    {
-      source: 'pretender/dist/pretender.js'
-    },
-    {
-      source: 'fake-xml-http-request/fake_xml_http_request.js'
-    },
-    {
-      source: 'sinon/pkg/sinon.js'
     },
     {
       source: 'squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js',
@@ -200,10 +156,6 @@ def dependencies
       destination: 'squoosh',
       public: true,
       skip_versioning: true
-    },
-    {
-      source: 'custom-uppy-build.js',
-      destination: 'uppy.js'
     }
   ]
 end
@@ -331,13 +283,6 @@ task 'javascript:update' => 'clean_up' do
       end
     end
 
-    # we need a custom build of uppy because we cannot import
-    # their modules easily, using browserify to do so
-    if src.include? "custom-uppy-build"
-      puts "Building custom uppy using browserify"
-      system("yarn run browserify #{vendor_js}/custom-uppy.js -o node_modules/custom-uppy-build.js")
-    end
-
     unless File.exist?(dest)
       STDERR.puts "New dependency added: #{dest}"
     end
@@ -346,14 +291,6 @@ task 'javascript:update' => 'clean_up' do
       File.write(dest, Uglifier.new.compile(File.read(src)))
     else
       FileUtils.cp_r(src, dest)
-    end
-
-    # avoids noisy console warnings in dev environment for non-homepage paths
-    if dest.end_with? "popper.js"
-      absolute_sourcemap(dest)
-    end
-    if dest.end_with? "tippy.umd.js"
-      absolute_sourcemap(dest)
     end
   end
 

@@ -1,9 +1,5 @@
 <div class="control-group buttons group-manage-save-button">
-  {{d-button action=(action "save")
-    disabled=(or disabled saving)
-    class="btn btn-primary group-manage-save"
-    translatedLabel=savingText
-  }}
+  <DButton @action={{action "save"}} @disabled={{or disabled saving}} @class="btn btn-primary group-manage-save" @translatedLabel={{savingText}} />
   {{#if saved}}
     <span>{{i18n "saved"}}</span>
   {{/if}}

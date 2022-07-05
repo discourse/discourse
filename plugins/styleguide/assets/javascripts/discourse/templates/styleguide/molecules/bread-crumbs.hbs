@@ -1,9 +1,9 @@
-{{#styleguide-example title="category-breadcrumbs"}}
-  {{bread-crumbs categories=dummy.categories showTags=false}}
-{{/styleguide-example}}
+<StyleguideExample @title="category-breadcrumbs">
+  <BreadCrumbs @categories={{dummy.categories}} @showTags={{false}} />
+</StyleguideExample>
 
 {{#if siteSettings.tagging_enabled}}
-  {{#styleguide-example title="category-breadcrumbs - tags"}}
-    {{bread-crumbs categories=dummy.categories showTags=true}}
-  {{/styleguide-example}}
+  <StyleguideExample @title="category-breadcrumbs - tags">
+    <BreadCrumbs @categories={{dummy.categories}} @showTags={{true}} />
+  </StyleguideExample>
 {{/if}}

@@ -1,6 +1,6 @@
-{{plugin-outlet name="above-user-profile" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="above-user-profile" @connectorTagName="div" @args={{hash model=model}} />
 <div class="container {{if viewingSelf "viewing-self"}} {{if model.profile_hidden "profile-hidden"}} {{primaryGroup}}">
-  {{#d-section class="user-main"}}
+  <DSection @class="user-main">
     <section class="{{if collapsedInfo "collapsed-info"}} about {{if hasProfileBackgroundUrl "has-background" "no-background"}}" >
       {{#unless collapsedInfo}}
         {{#if showStaffCounters}}
@@ -10,24 +10,24 @@
             {{/if}}
             {{#if model.number_of_flagged_posts}}
               <div>
-                {{#link-to "review" (query-params username=model.username status="all" type="ReviewableFlaggedPost")}}
+                <LinkTo @route="review" @query={{hash username=model.username status="all" type="ReviewableFlaggedPost"}}>
                   <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n "user.staff_counters.flagged_posts"}}
-                {{/link-to}}
+                </LinkTo>
               </div>
             {{/if}}
             {{#if model.number_of_rejected_posts}}
               <div>
-                {{#link-to "review" (query-params username=model.username status="rejected" type="ReviewableQueuedPost")}}
+                <LinkTo @route="review" @query={{hash username=model.username status="rejected" type="ReviewableQueuedPost"}}>
                   <span class="flagged-posts">{{model.number_of_rejected_posts}}</span>{{i18n "user.staff_counters.rejected_posts"}}
-                {{/link-to}}
+                </LinkTo>
               </div>
             {{/if}}
 
             {{#if model.number_of_deleted_posts}}
               <div>
-                {{#link-to "user.deletedPosts" model}}
+                <LinkTo @route="user.deletedPosts" @model={{model}}>
                   <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>{{i18n "user.staff_counters.deleted_posts"}}
-                {{/link-to}}
+                </LinkTo>
               </div>
             {{/if}}
             {{#if model.number_of_suspensions}}
@@ -39,9 +39,9 @@
             {{/if}}
             {{#if model.warnings_received_count}}
               <div>
-                {{#link-to "userPrivateMessages.warnings" model}}
+                <LinkTo @route="userPrivateMessages.warnings" @model={{model}}>
                   <span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n "user.staff_counters.warnings_received"}}
-                {{/link-to}}
+                </LinkTo>
               </div>
             {{/if}}
           </div>
@@ -50,45 +50,28 @@
       {{/unless}}
       <div class="details">
         <div class="primary">
-          {{plugin-outlet name="before-user-profile-avatar" args=(hash model=model)}}
-          {{user-profile-avatar user=model tagName=""}}
+          <PluginOutlet @name="before-user-profile-avatar" @args={{hash model=model}} />
+          <UserProfileAvatar @user={{model}} @tagName="" />
           <section class="controls">
             <ul>
               {{#if model.can_send_private_message_to_user}}
                 <li>
-                  {{d-button class="btn-primary compose-pm"
-                    action=(route-action "composePrivateMessage" model)
-                    icon="envelope"
-                    label="user.private_message"}}
+                  <DButton @class="btn-primary compose-pm" @action={{route-action "composePrivateMessage" model}} @icon="envelope" @label="user.private_message" />
                 </li>
               {{/if}}
               {{#if canMuteOrIgnoreUser}}
                 <li>
-                  {{user-notifications-dropdown
-                      user=model
-                      value=userNotificationLevel
-                      updateNotificationLevel=(action "updateNotificationLevel")
-                  }}
+                  <UserNotificationsDropdown @user={{model}} @value={{userNotificationLevel}} @updateNotificationLevel={{action "updateNotificationLevel"}} />
                 </li>
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
               {{/if}}
-              {{plugin-outlet name="user-profile-controls"
-                              connectorTagName="li"
-                              args=(hash model=model)}}
+              <PluginOutlet @name="user-profile-controls" @connectorTagName="li" @args={{hash model=model}} />
 
               {{#if canExpandProfile}}
                 <li>
-                  {{d-button
-                    ariaExpanded=collapsedInfoState.isExpanded
-                    ariaLabel=collapsedInfoState.ariaLabel
-                    ariaControls="collapsed-info-panel"
-                    class="btn-default"
-                    label=(concat "user." collapsedInfoState.label)
-                    icon=collapsedInfoState.icon
-                    action=(action collapsedInfoState.action)
-                  }}
+                  <DButton @ariaExpanded={{collapsedInfoState.isExpanded}} @ariaLabel={{collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." collapsedInfoState.label}} @icon={{collapsedInfoState.icon}} @action={{action collapsedInfoState.action}} />
                 </li>
               {{/if}}
             </ul>
@@ -104,13 +87,13 @@
               {{#if model.title}}
                 <h3>{{model.title}}</h3>
               {{/if}}
-              {{plugin-outlet name="user-post-names" tagName="span" connectorTagName="div" args=(hash model=model)}}
+              <PluginOutlet @name="user-post-names" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
             </div>
 
             {{#if showFeaturedTopic}}
               <h3 class="featured-topic">
                 <span>{{i18n "user.featured_topic"}}</span>
-                {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}{{html-safe (replace-emoji model.featured_topic.fancy_title)}}{{/link-to}}
+                <LinkTo @route="topic" @models={{array model.featured_topic.slug model.featured_topic.id}}>{{html-safe (replace-emoji model.featured_topic.fancy_title)}}</LinkTo>
               </h3>
             {{/if}}
 
@@ -127,7 +110,7 @@
                   {{/if}}
                 </div>
               {{/if}}
-              {{plugin-outlet name="user-location-and-website" tagName="span" connectorTagName="div" args=(hash model=model)}}
+              <PluginOutlet @name="user-location-and-website" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
             </h3>
 
             <div class='bio'>
@@ -148,9 +131,9 @@
                 </div>
               {{/if}}
               {{#if isNotSuspendedOrIsStaff}}
-                {{#html-with-links}}
+                <HtmlWithLinks>
                   {{html-safe model.bio_cooked}}
-                {{/html-with-links}}
+                </HtmlWithLinks>
               {{/if}}
             </div>
 
@@ -171,16 +154,15 @@
                   {{/if}}
                 {{/each}}
 
-                {{plugin-outlet name="user-profile-public-fields" tagName="span" connectorTagName="div"
-                                args=(hash publicUserFields=publicUserFields
-                                      model=model)}}
+                <PluginOutlet @name="user-profile-public-fields" @tagName="span" @connectorTagName="div" @args={{hash publicUserFields=publicUserFields
+                                      model=model}} />
               </div>
             {{/if}}
 
-            {{plugin-outlet name="user-profile-primary" tagName="span" connectorTagName="div" args=(hash model=model)}}
+            <PluginOutlet @name="user-profile-primary" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
           </div>
         </div>
-        {{plugin-outlet name="user-profile-above-collapsed-info" args=(hash model=model collapsedInfo=collapsedInfo)}}
+        <PluginOutlet @name="user-profile-above-collapsed-info" @args={{hash model=model collapsedInfo=collapsedInfo}} />
         {{#unless collapsedInfo}}
           <div class='secondary' id='collapsed-info-panel'>
             <dl>
@@ -197,7 +179,7 @@
                 <div><dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd></div>
               {{/if}}
               {{#if model.invited_by}}
-                <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd></div>
+                <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by"><LinkTo @route="user" @model={{model.invited_by}}>{{model.invited_by.username}}</LinkTo></dd></div>
               {{/if}}
               {{#if model.trust_level}}
                 <div><dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd></div>
@@ -208,7 +190,7 @@
                   {{#if model.email}}
                     {{model.email}}
                   {{else}}
-                    {{d-button action=(route-action "checkEmail") actionParam=model icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
+                    <DButton @action={{route-action "checkEmail"}} @actionParam={{model}} @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
                   {{/if}}
                 </dd>
                 </div>
@@ -217,55 +199,55 @@
                 <div><dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
                 <dd class='groups'>
                   {{#each model.displayGroups as |group|}}
-                    <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
+                    <span><LinkTo @route="group" @model={{group.name}} class="group-link">{{group.name}}</LinkTo></span>
                   {{/each}}
 
-                  {{#link-to "groups" (query-params username=model.username)}}
+                  <LinkTo @route="groups" @query={{hash username=model.username}}>
                     ...
-                  {{/link-to}}
+                  </LinkTo>
                 </dd>
                 </div>
               {{/if}}
 
               {{#if canDeleteUser}}
-                <div class='pull-right'>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
+                <div class='pull-right'><DButton @action={{action "adminDelete"}} @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" /></div>
               {{/if}}
             </dl>
-            {{plugin-outlet name="user-profile-secondary" tagName="span" connectorTagName="div" args=(hash model=model)}}
+            <PluginOutlet @name="user-profile-secondary" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
           </div>
         {{/unless}}
       </div>
     </section>
     <div class='user-content-wrapper'>
       <section class="user-primary-navigation">
-        {{#mobile-nav class='main-nav' desktopClass="nav nav-pills user-nav"}}
+        <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
           {{#unless model.profile_hidden}}
-            <li class="summary">{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
-            <li class="activity">{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
+            <li class="summary"><LinkTo @route="user.summary">{{i18n 'user.summary.title'}}</LinkTo></li>
+            <li class="activity"><LinkTo @route="userActivity">{{i18n 'user.activity_stream'}}</LinkTo></li>
           {{/unless}}
           {{#if showNotificationsTab}}
             <li class="user-notifications">
-              {{#link-to 'userNotifications'}}
+              <LinkTo @route="userNotifications">
                 {{d-icon "comment" class="glyph"}}{{i18n 'user.notifications'}}
-              {{/link-to}}
+              </LinkTo>
             </li>
           {{/if}}
           {{#if showPrivateMessages}}
-            <li class="private-messages">{{#link-to 'userPrivateMessages'}}{{d-icon "far-envelope"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
+            <li class="private-messages"><LinkTo @route="userPrivateMessages">{{d-icon "far-envelope"}}{{i18n 'user.private_messages'}}</LinkTo></li>
           {{/if}}
           {{#if canInviteToForum}}
-            <li class="invited">{{#link-to 'userInvited'}}{{d-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+            <li class="invited"><LinkTo @route="userInvited">{{d-icon "user-plus"}}{{i18n 'user.invited.title'}}</LinkTo></li>
           {{/if}}
           {{#if showBadges}}
-            <li class="badges">{{#link-to 'user.badges'}}{{d-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
+            <li class="badges"><LinkTo @route="user.badges">{{d-icon "certificate"}}{{i18n 'badges.title'}}</LinkTo></li>
           {{/if}}
-          {{plugin-outlet name="user-main-nav" tagName="span" connectorTagName="div" tagName='' connectorTagName='li' args=(hash model=model)}}
+          <PluginOutlet @name="user-main-nav" @tagName="span" @connectorTagName="div" @tagName="" @connectorTagName="li" @args={{hash model=model}} />
           {{#if model.can_edit}}
-            <li class="preferences">{{#link-to 'preferences'}}{{d-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+            <li class="preferences"><LinkTo @route="preferences">{{d-icon "cog"}}{{i18n 'user.preferences'}}</LinkTo></li>
           {{/if}}
-        {{/mobile-nav}}
+        </MobileNav>
       </section>
     {{outlet}}
   </div>
-  {{/d-section}}
+  </DSection>
 </div>

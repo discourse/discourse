@@ -246,6 +246,7 @@ pl_PL:
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
     not_found_template_link: |
       <p>To zaproszenie do <a href="%{base_url}">%{site_name}</a> nie może już zostać zrealizowane. Poproś osobę, która Cię zaprosiła, aby wysłała Ci nowe zaproszenie.</p>
+    user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, ponieważ ma już konto!"
     invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     rate_limit:
@@ -258,6 +259,7 @@ pl_PL:
     disabled_errors:
       discourse_connect_enabled: "Zaproszenia są wyłączone, ponieważ DiscourseConnect jest włączony."
       invalid_access: "Nie masz uprawnień do przeglądania żądanego zasobu."
+    requires_groups: "Zaproszenie nie zostało zapisane, ponieważ podany temat jest niedostępny. Dodaj jedną z następujących grup: %{groups}."
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
@@ -438,6 +440,7 @@ pl_PL:
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
+      invalid_bookmarkable: "%{type} nie można dodać do zakładek."
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"
@@ -713,6 +716,11 @@ pl_PL:
   post:
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
+      blocked_hotlinked_title: "Obraz przechowywany jest w innej witrynie. Kliknij, aby otworzyć nową kartę."
+      blocked_hotlinked: "Zewnętrzny obraz"
+    media_placeholder:
+      blocked_hotlinked_title: "Media przechowywane są w innej witrynie. Kliknij, aby otworzyć nową kartę."
+      blocked_hotlinked: "Zewnętrzne media"
     hidden_bidi_character: "Znaki dwukierunkowe mogą zmienić kolejność renderowania tekstu. Może to służyć do ukrywania złośliwego kodu."
     has_likes:
       one: "%{count} polubienie"
@@ -1623,6 +1631,7 @@ pl_PL:
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
     gtm_container_id: "Identyfikator menedżera tagów Google. np .: GTM-ABCDEF. <br/>Uwaga: skrypty innych firm ładowane przez GTM mogą wymagać uwzględnienia w 'content security policy script src'."
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Zezwalaj moderatorom na tworzenie kategorii i grup oraz zarządzanie nimi"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście ekranowanych adresów IP (Administrator > Logi > Ekranowane adresy IP)."
@@ -2143,7 +2152,7 @@ pl_PL:
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
     default_categories_muted: "Lista domyślnie wyciszonych kategorii."
     default_categories_watching_first_post: "Lista kategorii, w której domyślnie każdy pierwszy wpis w temacie będzie obserwowany."
-    default_categories_regular: "Lista kategorii, które nie są domyślnie wyciszone. Przydatne, gdy włączone jest ustawienie witryny `mute_all_categories_by_default`."
+    default_categories_normal: "Lista kategorii, które nie są domyślnie wyciszone. Przydatne, gdy włączone jest ustawienie witryny `mute_all_categories_by_default`."
     mute_all_categories_by_default: "Ustaw domyślny poziom powiadomień wszystkich kategorii na wyciszony. Wymagaj od użytkowników wyrażenia zgody na kategorie, aby pojawiały się na stronach 'latest' i 'categories'. Jeśli chcesz zmienić ustawienia domyślne dla anonimowych użytkowników, ustaw ustawienia 'default_categories_'."
     default_tags_watching: "Lista tagów, które są domyślnie obserwowane."
     default_tags_tracking: "Lista tagów, które są śledzone domyślnie."
@@ -2195,6 +2204,7 @@ pl_PL:
     create_revision_on_bulk_topic_moves: "Utwórz rewizję dla pierwszych postów, gdy tematy zostaną przeniesione do nowej kategorii zbiorczo."
     allow_changing_staged_user_tracking: "Zezwalaj na zmianę preferencji powiadomień o kategoriach i tagach użytkownika etapowego przez administratora."
     use_email_for_username_and_name_suggestions: "Użyj pierwszej części adresów e-mail jako sugestii dla nazwy użytkownika i pełnej nazwy. Pamiętaj, że ułatwia to odgadnięcie pełnych adresów e-mail użytkowników (ponieważ duża część osób korzysta z wspólnych usług, takich jak `gmail.com`)."
+    suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2862,6 +2872,14 @@ pl_PL:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Gratulujemy awansu na następny poziom zaufania!"
+      text_body_template: |
+        Awansowaliśmy Cię o kolejny [poziom zaufania](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Osiągnięcie 2. poziomu zaufania oznacza, że przeczytałeś(-aś) i aktywnie uczestniczyłeś(-aś) w życiu społeczności na tyle, by być uznanym za jej członka.
+
+        Jako doświadczony użytkownik możesz docenić [tę listę przydatnych wskazówek i trików](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Zapraszamy Cię do dalszego zaangażowania - cieszymy się, że jesteś z nami.
     backup_succeeded:
       title: "Kopia zapasowa została utworzona "
       subject_template: "Kopia zapasowa jest gotowa"
@@ -3743,18 +3761,6 @@ pl_PL:
     suspicious_login:
       title: "Alert nowego logowania"
       subject_template: "[%{site_name}] Nowe logowanie z %{location}"
-      text_body_template: |
-        Witaj,
-
-        Zauważyliśmy logowanie z urządzenia lub lokalizacji, z której zwykle nie korzystasz. Czy to byłeś/łaś ty?
-
-         - Lokalizacja: %{location} (%{client_ip})
-         - Przeglądarka: %{browser}
-         - Urządzenie: %{device} - %{os}
-
-        Jeśli to byłeś/łaś ty, świetnie! Nie musisz nic więcej robić.
-
-        Jeśli to nie byłeś/łaś Ty, proszę [przejrzyj swoje istniejące sesje](%{base_url}/my/preferences/account) i rozważ zmianę hasła.
     post_approved:
       title: "Twój post został zatwierdzony"
       subject_template: "[%{site_name}] Twój post został zatwierdzony"
@@ -3800,6 +3806,7 @@ pl_PL:
     create_multipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
+    size_zero_failure: "Przepraszamy, wygląda na to, że coś poszło nie tak, plik, który próbujesz przesłać ma 0 bajtów. Spróbuj ponownie."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
       too_large_humanized: "Przepraszamy, plik, który próbujesz przesłać, jest za duży (maksymalny rozmiar to %{max_size})."
@@ -4650,6 +4657,10 @@ pl_PL:
                 label: "Kategorie i ostatnie tematy"
               categories_and_top_topics:
                 label: "Kategorie i najlepsze tematy"
+              categories_boxes:
+                label: "Bloki kategorii"
+              categories_boxes_with_topics:
+                label: "Bloki kategorii z tematami"
               subcategories_with_featured_topics:
                 label: "Podkategorie z polecanymi tematami"
       logos:
@@ -4828,6 +4839,7 @@ pl_PL:
   notification_level:
     ignore_error: "Przepraszamy, nie możesz zignorować tego użytkownika."
     mute_error: "Przepraszamy, nie możesz wyciszyć tego użytkownika."
+    error: "Przepraszamy, nie możesz zmienić poziomu powiadomień dla tego użytkownika."
   discord:
     not_in_allowed_guild: "Uwierzytelnianie nie powiodło się. Nie jesteś członkiem dozwolonej gildii Discord."
   old_keys_reminder:
@@ -4849,6 +4861,9 @@ pl_PL:
     post_raw: "Kontynuacja dyskusji z %{parent_url}.\n\nPoprzednie dyskusje:\n\n%{previous_topics}"
     small_action_post_raw: "Kontynuuj dyskusję na %{new_title}."
   fallback_username: "użytkownik"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at powinno być większe niż set_at"
   activemodel:
     errors:
       <<: *errors

@@ -820,7 +820,7 @@ et:
       watched_first_post_tags: "Vaatan esimest postitust"
       watched_first_post_tags_instructions: "Sind teavitatakse esimesest postitusest igas nende siltidega uues teemas."
       muted_categories: "Vaigistatud"
-      regular_categories: "Tavaline"
+      regular_categories: "Normaalne"
       delete_account: "Kustuta minu konto"
       delete_account_confirm: "Kas oled kindel, et soovid oma konto jäädavalt kustutada? Seda toimingut ei ole võimalik tagasi võtta!"
       deleted_yourself: "Konto on edukalt kustutatud."
@@ -1365,7 +1365,6 @@ et:
       create_whisper: "Sosistamine"
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
-      users_placeholder: "Lisa kasutaja"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "miks sa seda muudad?"
@@ -2363,6 +2362,7 @@ et:
       full: "Loo / Vasta / Vaata"
       create_post: "Vasta / Vaata"
       readonly: "Vaata"
+    preloader_text: "Laetakse"
     lightbox:
       download: "lae alla"
       counter: "%curr% %total%st"
@@ -2412,7 +2412,6 @@ et:
         edit: "%{shortcut} Muuda postitust"
         delete: "%{shortcut} Kustuta postitus"
         mark_muted: "%{shortcut} Vaigista teema"
-        mark_regular: "%{shortcut} Tavaline (vaikimisi) teema"
         mark_tracking: "%{shortcut} Jälgi teemat"
         mark_watching: "%{shortcut} Vaatle teemat"
         print: "%{shortcut} Prindi teema"
@@ -2477,7 +2476,7 @@ et:
         tracking:
           title: "Jälgin"
         regular:
-          title: "Tavaline"
+          title: "Normaalne"
           description: "Sind teavitatakse, kui keegi Sinu @name mainib või vastab Sinu positusele."
         muted:
           title: "Vaigistatud"
@@ -2535,6 +2534,14 @@ et:
       sections:
         messages:
           header_link_text: "Sõnumid"
+          links:
+            inbox: "Postkast"
+            sent: "Saadetud"
+            new: "Uus"
+            new_with_count: "Uus (%{count})"
+            unread: "Lugemata"
+            unread_with_count: "Lugemata (%{count})"
+            archive: "Arhiiv"
         tags:
           header_link_title: "kõik sildid"
           header_link_text: "Sildid"

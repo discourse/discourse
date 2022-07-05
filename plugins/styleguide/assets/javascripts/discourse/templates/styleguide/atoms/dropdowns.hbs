@@ -1,86 +1,77 @@
-{{#styleguide-example title="combo-box" initialValue=dummy.options.[0].name as |value|}}
-  {{combo-box content=dummy.options value=value onChange=(fn (mut value))}}
-{{/styleguide-example}}
+<StyleguideExample @title="combo-box" @initialValue={{dummy.options.[0].name}} as |value|>
+  <ComboBox @content={{dummy.options}} @value={{value}} @onChange={{fn (mut value)}} />
+</StyleguideExample>
 
-{{#styleguide-example title="filterable combo-box" initialValue=dummy.categories.[0].name as |value|}}
-  {{combo-box content=dummy.categories value=value options=(hash filterable=true) onChange=(fn (mut value))}}
-{{/styleguide-example}}
+<StyleguideExample @title="filterable combo-box" @initialValue={{dummy.categories.[0].name}} as |value|>
+  <ComboBox @content={{dummy.categories}} @value={{value}} @options={{hash filterable=true}} @onChange={{fn (mut value)}} />
+</StyleguideExample>
 
-{{#styleguide-example title="combo-box with a default state" initialValue=dummy.options.[0].name as |value|}}
-  {{combo-box content=dummy.options value=value options=(hash none="category.none") onChange=(fn (mut value))}}
-{{/styleguide-example}}
+<StyleguideExample @title="combo-box with a default state" @initialValue={{dummy.options.[0].name}} as |value|>
+  <ComboBox @content={{dummy.options}} @value={{value}} @options={{hash none="category.none"}} @onChange={{fn (mut value)}} />
+</StyleguideExample>
 
-{{#styleguide-example title="combo-box clearable" initialValue=dummy.options.[0].name as |value|}}
-  {{combo-box content=dummy.options clearable=true value=value options=(hash none="category.none") onChange=(fn (mut value))}}
-{{/styleguide-example}}
+<StyleguideExample @title="combo-box clearable" @initialValue={{dummy.options.[0].name}} as |value|>
+  <ComboBox @content={{dummy.options}} @clearable={{true}} @value={{value}} @options={{hash none="category.none"}} @onChange={{fn (mut value)}} />
+</StyleguideExample>
 
-{{#styleguide-example title="topic-notifications-options" initialValue=1 as |value|}}
-  {{topic-notifications-options topic=dummy.topic value=value onChange=(fn (mut value))}}
-{{/styleguide-example}}
+<StyleguideExample @title="topic-notifications-options" @initialValue={{1}} as |value|>
+  <TopicNotificationsOptions @topic={{dummy.topic}} @value={{value}} @onChange={{fn (mut value)}} />
+</StyleguideExample>
 
-{{#styleguide-example title="topic-footer-mobile-dropdown"}}
-  {{topic-footer-mobile-dropdown topic=dummy.topic}}
-{{/styleguide-example}}
+<StyleguideExample @title="topic-footer-mobile-dropdown">
+  <TopicFooterMobileDropdown @topic={{dummy.topic}} />
+</StyleguideExample>
 
-{{#styleguide-example title="category-chooser" initialValue=categories.[0].name as |value|}}
-  {{category-chooser value=value onChange=(fn (mut value))}}
-{{/styleguide-example}}
+<StyleguideExample @title="category-chooser" @initialValue={{categories.[0].name}} as |value|>
+  <CategoryChooser @value={{value}} @onChange={{fn (mut value)}} />
+</StyleguideExample>
 
-{{#styleguide-example title="pinned-button"}}
-  {{pinned-button topic=dummy.pinnedTopic}}
-{{/styleguide-example}}
+<StyleguideExample @title="pinned-button">
+  <PinnedButton @topic={{dummy.pinnedTopic}} />
+</StyleguideExample>
 
-{{#styleguide-example title="pinned-options"}}
-  {{pinned-options topic=dummy.pinnedTopic}}
-{{/styleguide-example}}
+<StyleguideExample @title="pinned-options">
+  <PinnedOptions @topic={{dummy.pinnedTopic}} />
+</StyleguideExample>
 
-{{#styleguide-example title="categories-admin-dropdown"}}
-  {{categories-admin-dropdown onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="categories-admin-dropdown">
+  <CategoriesAdminDropdown @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="category-notifications-button"}}
-  {{category-notifications-button category=dummy.categories.[0] value=1 onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="category-notifications-button">
+  <CategoryNotificationsButton @category={{dummy.categories.[0]}} @value={{1}} @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="notifications-button"}}
-  {{notifications-button options=(hash i18nPrefix="groups.notifications") value=2 onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="notifications-button">
+  <NotificationsButton @options={{hash i18nPrefix="groups.notifications"}} @value={{2}} @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="dropdown-select-box"}}
-  {{dropdown-select-box
-    content=dummy.options
-    onChange=(action "dummy")
-    options=(hash
+<StyleguideExample @title="dropdown-select-box">
+  <DropdownSelectBox @content={{dummy.options}} @onChange={{action "dummy"}} @options={{hash
       translatedNone="Something"
-    )
-  }}
-{{/styleguide-example}}
+    }} />
+</StyleguideExample>
 
-{{#styleguide-example title="future-date-input-selector"}}
-  {{future-date-input-selector
-    input=dummy.topicTimerUpdateDate
-    includeWeekend=true
-    includeForever=true
-    options=(hash none="time_shortcut.select_timeframe")
-  }}
-{{/styleguide-example}}
+<StyleguideExample @title="future-date-input-selector">
+  <FutureDateInputSelector @input={{dummy.topicTimerUpdateDate}} @includeWeekend={{true}} @includeForever={{true}} @options={{hash none="time_shortcut.select_timeframe"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="multi-select"}}
-  {{multi-select content=dummy.options onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="multi-select">
+  <MultiSelect @content={{dummy.options}} @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="admin group-chooser"}}
-  {{group-chooser selected=dummy.selectedGroups content=dummy.groups onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="admin group-chooser">
+  <GroupChooser @selected={{dummy.selectedGroups}} @content={{dummy.groups}} @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="list-setting"}}
-  {{list-setting settingValue=dummy.settings onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="list-setting">
+  <ListSetting @settingValue={{dummy.settings}} @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="list-setting with colors"}}
-  {{list-setting settingValue=dummy.colors nameProperty="color" onChange=(action "dummy")}}
-{{/styleguide-example}}
+<StyleguideExample @title="list-setting with colors">
+  <ListSetting @settingValue={{dummy.colors}} @nameProperty="color" @onChange={{action "dummy"}} />
+</StyleguideExample>
 
-{{#styleguide-example title="user-notifications-dropdown"}}
-  {{user-notifications-dropdown user=currentUser value="changeToNormal"}}
-{{/styleguide-example}}
+<StyleguideExample @title="user-notifications-dropdown">
+  <UserNotificationsDropdown @user={{currentUser}} @value="changeToNormal" />
+</StyleguideExample>

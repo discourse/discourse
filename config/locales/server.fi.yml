@@ -1979,7 +1979,7 @@ fi:
     default_categories_tracking: "Luettelo oletuksena seurattavista alueista."
     default_categories_muted: "Luettelo oletuksena vaimennetuista alueista."
     default_categories_watching_first_post: "Luettelo alueista, joiden ketjujen ensimmäisiä viestejä tarkkaillaan oletuksena."
-    default_categories_regular: "Luettelo alueista, joita ei ole vaimennettu oletuksena. Hyödyllinen, kun \"mute_all_categories_by_default\"-sivustoasetus on käytössä."
+    default_categories_normal: "Luettelo alueista, joita ei ole vaimennettu oletuksena. Hyödyllinen, kun \"mute_all_categories_by_default\"-sivustoasetus on käytössä."
     mute_all_categories_by_default: "Aseta kaikkien alueiden oletusilmoitustasoksi vaimennettu. Vaadi käyttäjää valitsemaan itse alueet, jotka näkyvät Tuoreimmat- ja Alueet-sivuilla. Jos haluat muuttaa oletusarvoja kirjautumattomille käyttäjille, säädä 'default_categories_' -asetuksia."
     default_tags_watching: "Luettelo tunnisteista, joita tarkkaillaan oletuksena."
     default_tags_tracking: "Luettelo tunnisteista, joita seurataan oletuksena."
@@ -3394,18 +3394,6 @@ fi:
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
       subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
-      text_body_template: |
-        Hei,
-
-        Huomasimme, että kirjauduit sinulle epätavalliselta laitteelta tai paikasta. Olitko se sinä?
-
-         – Paikka: %{location} (%{client_ip})
-         – Selain: %{browser}
-         – Laite: %{device} – %{os}
-
-        Jos se olit sinä, hyvä! Sinun ei tarvitse reagoida mitenkään.
-
-        Jollet se ollut sinä, [tarkastele käynnissä olevia istuntojasi](%{base_url}/my/preferences/account) ja harkitse salasanasi vaihtamista.
     post_approved:
       title: "Viestisi hyväksyttiin"
       subject_template: "[%{site_name}] Viestisi hyväksyttiin"

@@ -1,11 +1,7 @@
-{{d-button
-  class="btn-primary"
-  action=(route-action "new")
-  icon="plus"
-  label="admin.api.new_key"}}
+<DButton @class="btn-primary" @action={{route-action "new"}} @icon="plus" @label="admin.api.new_key" />
 
 {{#if model}}
-  {{#load-more selector=".api-keys tr" action=(action "loadMore")}}
+  <LoadMore @selector=".api-keys tr" @action={{action "loadMore"}}>
     <table class="api-keys grid">
       <thead>
         <th>{{i18n "admin.api.key"}}</th>
@@ -28,9 +24,9 @@
             <td class="key-user">
               <div class="label">{{i18n "admin.api.user"}}</div>
               {{#if k.user}}
-                {{#link-to "adminUser" k.user}}
+                <LinkTo @route="adminUser" @model={{k.user}}>
                   {{avatar k.user imageSize="small"}}
-                {{/link-to}}
+                </LinkTo>
               {{else}}
                 {{i18n "admin.api.all_users"}}
               {{/if}}
@@ -48,28 +44,20 @@
               {{/if}}
             </td>
             <td class="key-controls">
-              {{d-button action=(route-action "show" k) icon="far-eye" title="admin.api.show_details"}}
+              <DButton @action={{route-action "show" k}} @icon="far-eye" @title="admin.api.show_details" />
               {{#if k.revoked_at}}
-                {{d-button
-                  action=(action "undoRevokeKey")
-                  actionParam=k icon="undo"
-                  title="admin.api.undo_revoke"}}
+                <DButton @action={{action "undoRevokeKey"}} @actionParam={{k}} @icon="undo" @title="admin.api.undo_revoke" />
               {{else}}
-                {{d-button
-                  class="btn-danger"
-                  action=(action "revokeKey")
-                  actionParam=k
-                  icon="times"
-                  title="admin.api.revoke"}}
+                <DButton @class="btn-danger" @action={{action "revokeKey"}} @actionParam={{k}} @icon="times" @title="admin.api.revoke" />
               {{/if}}
             </td>
           </tr>
         {{/each}}
       </tbody>
     </table>
-  {{/load-more}}
+  </LoadMore>
 
-  {{conditional-loading-spinner condition=loading}}
+  <ConditionalLoadingSpinner @condition={{loading}} />
 {{else}}
   <p>{{i18n "admin.api.none"}}</p>
 {{/if}}

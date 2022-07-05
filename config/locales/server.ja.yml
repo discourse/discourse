@@ -1937,7 +1937,7 @@ ja:
     default_categories_tracking: "デフォルトで追跡されるカテゴリのリスト。"
     default_categories_muted: "デフォルトでミュートされるカテゴリのリスト。"
     default_categories_watching_first_post: "デフォルトで新規トピックの最初の投稿がウォッチされるカテゴリのリスト。"
-    default_categories_regular: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
+    default_categories_normal: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
     mute_all_categories_by_default: "すべてのカテゴリのデフォルトの通知レベルをミュートに設定する。カテゴリが '最新' と 'カテゴリ' ページに表示されるように、ユーザーがカテゴリを選択する必要があります。匿名ユーザーのデフォルトを変更する場合は、'default_categories_' 設定を設定してください。"
     default_tags_watching: "デフォルトでウォッチされるタグのリスト。"
     default_tags_tracking: "デフォルトで追跡されるタグのリスト。"
@@ -3313,18 +3313,6 @@ ja:
     suspicious_login:
       title: "新しいログインのアラート"
       subject_template: "[%{site_name}] %{location} からの新しいログイン"
-      text_body_template: |
-        こんにちは。
-
-        普段使用されていないデバイスまたは場所からログインがあったようです。これはあなたですか？
-
-         - 場所: %{location} (%{client_ip})
-         - ブラウザ: %{browser}
-         - デバイス: %{device} – %{os}
-
-        これがあなたであったなら良いことです！ほかに何もする必要はありません。
-
-        これがあなたでなかったなら、[既存のセッションをレビュー](%{base_url}/my/preferences/account)し、パスワードを変更することを検討してください。
     post_approved:
       title: "あなたの投稿は承認されました"
       subject_template: "[%{site_name}] あなたの投稿は承認されました"

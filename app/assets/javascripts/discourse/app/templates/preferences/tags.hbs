@@ -4,45 +4,27 @@
 
     <div class="controls tracking-controls">
       <label>{{d-icon "d-watching" class="icon watching"}} {{i18n "user.watched_tags"}}</label>
-      {{tag-chooser
-        tags=model.watched_tags
-        blockedTags=selectedTags
-        everyTag=true
-        unlimitedTagCount=true
-        options=(hash
+      <TagChooser @tags={{model.watched_tags}} @blockedTags={{selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
           allowAny=false
-        )
-      }}
+        }} />
     </div>
 
     <div class="instructions">{{i18n "user.watched_tags_instructions"}}</div>
 
     <div class="controls tracking-controls">
       <label>{{d-icon "d-tracking" class="icon tracking"}} {{i18n "user.tracked_tags"}}</label>
-      {{tag-chooser
-        tags=model.tracked_tags
-        blockedTags=selectedTags
-        everyTag=true
-        unlimitedTagCount=true
-        options=(hash
+      <TagChooser @tags={{model.tracked_tags}} @blockedTags={{selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
           allowAny=false
-        )
-      }}
+        }} />
     </div>
 
     <div class="instructions">{{i18n "user.tracked_tags_instructions"}}</div>
 
     <div class="controls tracking-controls">
       <label>{{d-icon "d-watching-first" class="icon watching-first-post"}} {{i18n "user.watched_first_post_tags"}}</label>
-      {{tag-chooser
-        tags=model.watching_first_post_tags
-        blockedTags=selectedTags
-        everyTag=true
-        unlimitedTagCount=true
-        options=(hash
+      <TagChooser @tags={{model.watching_first_post_tags}} @blockedTags={{selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
           allowAny=false
-        )
-      }}
+        }} />
     </div>
 
     <div class="instructions">
@@ -51,24 +33,18 @@
 
     <div class="controls tracking-controls">
       <label>{{d-icon "d-muted" class="icon muted"}} {{i18n "user.muted_tags"}}</label>
-      {{tag-chooser
-        tags=model.muted_tags
-        blockedTags=selectedTags
-        everyTag=true
-        unlimitedTagCount=true
-        options=(hash
+      <TagChooser @tags={{model.muted_tags}} @blockedTags={{selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
           allowAny=false
-        )
-      }}
+        }} />
     </div>
     <div class="instructions">{{i18n "user.muted_tags_instructions"}}</div>
   </div>
 
-  {{plugin-outlet name="user-preferences-tags" tagName="span" connectorTagName="div" args=(hash model=model save=(action "save"))}}
+  <PluginOutlet @name="user-preferences-tags" @tagName="span" @connectorTagName="div" @args={{hash model=model save=(action "save")}} />
 
   <br>
 
-  {{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
+  <PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
-  {{save-controls model=model action=(action "save") saved=saved}}
+  <SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}} />
 {{/if}}

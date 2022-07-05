@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
+class SidekiqLogsterReporter
   def call(ex, context = {})
 
     return if Jobs::HandledExceptionWrapper === ex

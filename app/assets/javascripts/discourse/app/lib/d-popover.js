@@ -1,5 +1,3 @@
-import { isLegacyEmber } from "discourse-common/config/environment";
-import { begin, end } from "@ember/runloop";
 import tippy from "tippy.js";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
@@ -39,14 +37,6 @@ export function showPopover(event, options = {}) {
     ? event.target._tippy
     : setup(event.target, options);
 
-  // hangs on legacy ember
-  if (!isLegacyEmber) {
-    begin();
-    instance.popper.addEventListener("transitionend", end, {
-      once: true,
-    });
-  }
-
   if (instance.state.isShown) {
     instance.hide();
   } else {
@@ -72,8 +62,7 @@ export default function setup(target, options) {
     options
   );
 
-  // legacy support
-  delete tippyOptions.textContent;
+  // legacy support delete tippyOptions.textContent;
   delete tippyOptions.htmlContent;
 
   return tippy(target, tippyOptions);

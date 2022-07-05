@@ -1686,7 +1686,7 @@ da:
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard har tavshed."
-    default_categories_regular: "Liste over kategorier som ikke er tavse som standard. Nyttigt når `mute_all_categories_by_default` webstedsindstilling er aktiveret."
+    default_categories_normal: "Liste over kategorier som ikke er tavse som standard. Nyttigt når `mute_all_categories_by_default` webstedsindstilling er aktiveret."
     mute_all_categories_by_default: "Indstil standardunderretningsniveauet for alle kategorier til tavshed. Kræv, at brugerne tilmelder sig kategorier for at de skal vises på 'seneste' og 'kategorisider'. Hvis du ønsker at ændre standardindstillingerne for anonyme brugere, skal du indstille 'default_category_settings'."
     default_tags_watching: "Liste over mærker, der er overvåget som standard."
     default_tags_tracking: "Liste over mærker, der spores som standard."

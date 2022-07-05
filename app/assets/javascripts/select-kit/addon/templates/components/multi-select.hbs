@@ -7,7 +7,7 @@
     id=(concat selectKit.uniqueID "-header")
   }}
 
-  {{#select-kit/select-kit-body selectKit=selectKit id=(concat selectKit.uniqueID "-body")}}
+  <SelectKit::SelectKitBody @selectKit={{selectKit}} @id={{concat selectKit.uniqueID "-body"}}>
     {{component selectKit.options.filterComponent
       selectKit=selectKit
       id=(concat selectKit.uniqueID "-filter")
@@ -51,5 +51,5 @@
         {{/if}}
       {{/if}}
     {{/if}}
-  {{/select-kit/select-kit-body}}
+  </SelectKit::SelectKitBody>
 {{/unless}}

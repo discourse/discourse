@@ -1,27 +1,27 @@
-{{#styleguide-example title="topic list item"}}
+<StyleguideExample @title="topic list item">
   <table class="topic-list">
     <tbody>
-      {{topic-list-item topic=dummy.topic showPosters=true}}
+      <TopicListItem @topic={{dummy.topic}} @showPosters={{true}} />
     </tbody>
   </table>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="topic list item - hide category"}}
+<StyleguideExample @title="topic list item - hide category">
   <table class="topic-list">
     <tbody>
-      {{topic-list-item topic=dummy.topic hideCategory=true showPosters=true}}
+      <TopicListItem @topic={{dummy.topic}} @hideCategory={{true}} @showPosters={{true}} />
     </tbody>
   </table>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="topic list item - show likes"}}
+<StyleguideExample @title="topic list item - show likes">
   <table class="topic-list">
     <tbody>
-      {{topic-list-item topic=dummy.topic showLikes=true showPosters=true}}
+      <TopicListItem @topic={{dummy.topic}} @showLikes={{true}} @showPosters={{true}} />
     </tbody>
   </table>
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title="topic list item - latest" class="half-size"}}
-  {{latest-topic-list-item topic=dummy.topic}}
-{{/styleguide-example}}
+<StyleguideExample @title="topic list item - latest" class="half-size">
+  <LatestTopicListItem @topic={{dummy.topic}} />
+</StyleguideExample>

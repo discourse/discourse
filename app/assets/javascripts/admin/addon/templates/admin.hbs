@@ -1,32 +1,32 @@
-{{#admin-wrapper class="container"}}
+<AdminWrapper @class="container">
   <div class="row">
     <div class="full-width">
       <div class="admin-main-nav">
         <ul class="nav nav-pills">
-          {{nav-item route="admin.dashboard" label="admin.dashboard.title"}}
+          <NavItem @route="admin.dashboard" @label="admin.dashboard.title" />
           {{#if currentUser.admin}}
-            {{nav-item route="adminSiteSettings" label="admin.site_settings.title"}}
+            <NavItem @route="adminSiteSettings" @label="admin.site_settings.title" />
           {{/if}}
-          {{nav-item route="adminUsers" label="admin.users.title"}}
+          <NavItem @route="adminUsers" @label="admin.users.title" />
           {{#if showGroups}}
-            {{nav-item route="groups" label="admin.groups.title"}}
+            <NavItem @route="groups" @label="admin.groups.title" />
           {{/if}}
           {{#if showBadges}}
-            {{nav-item route="adminBadges" label="admin.badges.title"}}
+            <NavItem @route="adminBadges" @label="admin.badges.title" />
           {{/if}}
           {{#if currentUser.admin}}
-            {{nav-item route="adminEmail" label="admin.email.title"}}
+            <NavItem @route="adminEmail" @label="admin.email.title" />
           {{/if}}
-          {{nav-item route="adminLogs" label="admin.logs.title"}}
-          {{nav-item route="adminCustomize" label="admin.customize.title"}}
+          <NavItem @route="adminLogs" @label="admin.logs.title" />
+          <NavItem @route="adminCustomize" @label="admin.customize.title" />
           {{#if currentUser.admin}}
-            {{nav-item route="adminApi" label="admin.api.title"}}
+            <NavItem @route="adminApi" @label="admin.api.title" />
             {{#if siteSettings.enable_backups}}
-              {{nav-item route="admin.backups" label="admin.backups.title"}}
+              <NavItem @route="admin.backups" @label="admin.backups.title" />
             {{/if}}
           {{/if}}
-          {{nav-item route="adminPlugins" label="admin.plugins.title"}}
-          {{plugin-outlet name="admin-menu"}}
+          <NavItem @route="adminPlugins" @label="admin.plugins.title" />
+          <PluginOutlet @name="admin-menu" />
         </ul>
       </div>
 
@@ -37,4 +37,4 @@
       </div>
     </div>
   </div>
-{{/admin-wrapper}}
+</AdminWrapper>

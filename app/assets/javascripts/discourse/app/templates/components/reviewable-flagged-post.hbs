@@ -1,12 +1,12 @@
 <div class="flagged-post-header">
-  {{reviewable-topic-link reviewable=reviewable tagName=""}}
-  {{reviewable-post-edits reviewable=reviewable tagName=""}}
+  <ReviewableTopicLink @reviewable={{reviewable}} @tagName="" />
+  <ReviewablePostEdits @reviewable={{reviewable}} @tagName="" />
 </div>
 
 <div class="post-contents-wrapper">
-  {{reviewable-created-by user=reviewable.target_created_by tagName=""}}
+  <ReviewableCreatedBy @user={{reviewable.target_created_by}} @tagName="" />
   <div class="post-contents">
-    {{reviewable-post-header reviewable=reviewable createdBy=reviewable.target_created_by tagName=""}}
+    <ReviewablePostHeader @reviewable={{reviewable}} @createdBy={{reviewable.target_created_by}} @tagName="" />
     <div class="post-body">
       {{#if reviewable.blank_post}}
         <p>{{i18n "review.deleted_post"}}</p>
@@ -14,7 +14,7 @@
         {{html-safe reviewable.cooked}}
       {{/if}}
     </div>
-    {{plugin-outlet name="after-reviewable-flagged-post-body" tagName="span" connectorTagName="div" args=(hash model=reviewable)}}
+    <PluginOutlet @name="after-reviewable-flagged-post-body" @tagName="span" @connectorTagName="div" @args={{hash model=reviewable}} />
     {{yield}}
   </div>
 </div>

@@ -7,19 +7,9 @@
 
 {{#if canFavorite}}
   {{#if isFavorite}}
-    {{d-button
-      icon="star"
-      class="favorite-btn"
-      action=onFavoriteClick
-    }}
+    <DButton @icon="star" @class="favorite-btn" @action={{onFavoriteClick}} />
   {{else}}
-    {{d-button
-      icon="far-star"
-      class="favorite-btn"
-      action=onFavoriteClick
-      title=(if canFavoriteMoreBadges "badges.favorite_max_not_reached" "badges.favorite_max_reached")
-      disabled=(not canFavoriteMoreBadges)
-    }}
+    <DButton @icon="far-star" @class="favorite-btn" @action={{onFavoriteClick}} @title={{if canFavoriteMoreBadges "badges.favorite_max_not_reached" "badges.favorite_max_reached"}} @disabled={{not canFavoriteMoreBadges}} />
   {{/if}}
 {{/if}}
 

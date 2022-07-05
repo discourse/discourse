@@ -1,9 +1,9 @@
 <div class="column categories">
-  {{categories-only categories=categories}}
+  <CategoriesOnly @categories={{categories}} />
 </div>
 
 <div class="column">
-  {{categories-topic-list topics=topics filter="top" class="top-topic-list"}}
+  <CategoriesTopicList @topics={{topics}} @filter="top" @class="top-topic-list" />
 </div>
 
-{{plugin-outlet name="extra-categories-column" connectorTagName="div"}}
+<PluginOutlet @name="extra-categories-column" @connectorTagName="div" />

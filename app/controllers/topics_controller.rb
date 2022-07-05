@@ -1257,7 +1257,7 @@ class TopicsController < ApplicationController
       topic_query.options[:limit] = false
       topics = topic_query.filter_private_messages_unread(current_user, filter)
     else
-      topics = TopicQuery.unread_filter(topic_query.joined_topic_user, staff: guardian.is_staff?).listable_topics
+      topics = TopicQuery.unread_filter(topic_query.joined_topic_user, whisperer: guardian.is_whisperer?).listable_topics
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]

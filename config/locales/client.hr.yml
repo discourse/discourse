@@ -1185,7 +1185,7 @@ hr:
       muted_categories: "Utišano"
       muted_categories_instructions: "Nećete biti obaviješteni o bilo čemu o novim temama u tim kategorijama, a oni se neće pojaviti na kategorijama ili najnovijim postovima."
       muted_categories_instructions_dont_hide: "Nećete biti obaviješteni o ničemu o novim temama u tim kategorijama."
-      regular_categories: "Stalni član"
+      regular_categories: "Normalno"
       regular_categories_instructions: "Te kategorije vidjet ćete u popisima tema \"Najnovije\" i \"Top\"."
       no_category_access: "Kao moderator imate ograničen pristup kategoriji, spremanje je onemogućeno."
       delete_account: "Obriši moj račun"
@@ -2089,7 +2089,6 @@ hr:
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
       title: "Ili pritisnite %{modifier}Enter"
-      users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "zašto izmjenjujete?"
@@ -3545,6 +3544,7 @@ hr:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
       readonly: "Vidjeti"
+    preloader_text: "Učitavanje"
     lightbox:
       download: "preuzmi"
       open: "izvorna slika"
@@ -3629,7 +3629,6 @@ hr:
         edit: "%{shortcut} Uredi objavu"
         delete: "%{shortcut} Izbriši objavu"
         mark_muted: "%{shortcut} Utišaj objavu"
-        mark_regular: "%{shortcut} Standardna tema"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Promatraj temu"
         print: "%{shortcut} Ispis teme"
@@ -3782,7 +3781,7 @@ hr:
           title: "Praćenje"
           description: "Automatski ćete pratiti sve teme s ovom oznakom. Uz temu će se pojaviti broj nepročitanih i novih postova."
         regular:
-          title: "Stalni član"
+          title: "Normalno"
           description: "Biti će te obaviješteni ako vas netko spomene @imenom ili odgovori na vaš članak."
         muted:
           title: "Utišano"
@@ -3893,7 +3892,9 @@ hr:
             inbox: "Primljeno"
             sent: "Poslano"
             new: "Novo"
+            new_with_count: "Novi (%{count})"
             unread: "Nepročitano"
+            unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
           header_link_title: "sve oznake"

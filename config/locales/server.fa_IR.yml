@@ -355,6 +355,8 @@ fa_IR:
           attributes:
             word:
               too_many: "برای چنین کاری کلمات زیادی است"
+            base:
+              invalid_tag_list: "فهرست برچسب جایگزین نامعتبر است"
       <<: *errors
   uncategorized_category_name: "دسته‌بندی‌نشده"
   vip_category_name: "سالن"

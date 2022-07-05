@@ -1,17 +1,14 @@
-{{#d-modal-body class="explain-reviewable"}}
-  {{textarea value=rejectReason}}
+<DModalBody @class="explain-reviewable">
+  <Textarea @value={{rejectReason}} />
   <div class="control-group">
     <label>
-      {{input type="checkbox"
-        class="inline"
-        checked=sendEmail
-      }}
+      <Input @type="checkbox" class="inline" @checked={{sendEmail}} />
       {{i18n "review.reject_reason.send_email"}}
     </label>
   </div>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button icon="trash-alt" class="btn-danger" action=(action "perform") label="admin.user.delete"}}
-  {{d-button action=(route-action "closeModal") label="cancel" class="cancel"}}
+  <DButton @icon="trash-alt" @class="btn-danger" @action={{action "perform"}} @label="admin.user.delete" />
+  <DButton @action={{route-action "closeModal"}} @label="cancel" @class="cancel" />
 </div>

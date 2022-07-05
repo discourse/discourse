@@ -1,11 +1,11 @@
-{{#d-modal-body title=modalTitleKey maxHeight="70%"}}
+<DModalBody @title={{modalTitleKey}} @maxHeight="70%">
   <div id="revision">
     <div id="revision-details">
       {{d-icon "pencil-alt"}}
-      {{#link-to "user" model.username}}
+      <LinkTo @route="user" @model={{model.username}}>
         {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
-      {{/link-to}}
-      {{plugin-outlet name="revision-user-details-after" args=(hash model=model)}}
+      </LinkTo>
+      <PluginOutlet @name="revision-user-details-after" @args={{hash model=model}} />
       <span class="date">{{bound-date model.created_at}}</span>
       {{#if model.edit_reason}}
         &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
@@ -16,10 +16,10 @@
           &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
         {{/if}}
         {{#if model.wiki_changes}}
-          &mdash; {{disabled-icon icon="far-edit" disabled=wikiDisabled}}
+          &mdash; <DisabledIcon @icon="far-edit" @disabled={{wikiDisabled}} />
         {{/if}}
         {{#if model.post_type_changes}}
-          &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
+          &mdash; <DisabledIcon @icon="shield-alt" @disabled={{postTypeDisabled}} />
         {{/if}}
         {{#if model.category_id_changes}}
           &mdash; {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
@@ -66,12 +66,12 @@
       {{/if}}
       {{#if model.wiki_changes}}
         <div class="row">
-          {{disabled-icon icon="far-edit" disabled=wikiDisabled}}
+          <DisabledIcon @icon="far-edit" @disabled={{wikiDisabled}} />
         </div>
       {{/if}}
       {{#if model.post_type_changes}}
         <div class="row">
-          {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
+          <DisabledIcon @icon="shield-alt" @disabled={{postTypeDisabled}} />
         </div>
       {{/if}}
       {{#if model.category_id_changes}}
@@ -101,45 +101,42 @@
       </div>
     {{/if}}
 
-    {{plugin-outlet name="post-revisions" tagName="span" connectorTagName="div" args=(hash model=model)}}
+    <PluginOutlet @name="post-revisions" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
-    {{#links-redirect class="row"}}
+    <LinksRedirect @class="row">
       {{html-safe bodyDiff}}
-    {{/links-redirect}}
+    </LinksRedirect>
   </div>
-{{/d-modal-body}}
+</DModalBody>
 {{#if topicController}}
   <div class="modal-footer">
     <div id="revision-controls">
-      {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
-      {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
+      <DButton @class="btn-default" @action={{action "loadFirstVersion"}} @icon="fast-backward" @title="post.revisions.controls.first" @disabled={{loadFirstDisabled}} />
+      <DButton @class="btn-default" @action={{action "loadPreviousVersion"}} @icon="backward" @title="post.revisions.controls.previous" @disabled={{loadPreviousDisabled}} />
       <div id="revision-numbers" class={{unless displayRevisions "invisible"}}>
-        {{#conditional-loading-spinner condition=loading size="small"}}
+        <ConditionalLoadingSpinner @condition={{loading}} @size="small">
           {{html-safe revisionsText}}
-        {{/conditional-loading-spinner}}
+        </ConditionalLoadingSpinner>
       </div>
-      {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
-      {{d-button class="btn-default" action=(action "loadLastVersion") icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
+      <DButton @class="btn-default" @action={{action "loadNextVersion"}} @icon="forward" @title="post.revisions.controls.next" @disabled={{loadNextDisabled}} />
+      <DButton @class="btn-default" @action={{action "loadLastVersion"}} @icon="fast-forward" @title="post.revisions.controls.last" @disabled={{loadLastDisabled}} />
     </div>
 
     <div id="revision-footer-buttons">
       {{#if displayEdit}}
-        {{d-button action=(action "editPost")
-            icon="pencil-alt"
-            class="btn-default"
-            label=editButtonLabel}}
+        <DButton @action={{action "editPost"}} @icon="pencil-alt" @class="btn-default" @label={{editButtonLabel}} />
       {{/if}}
 
       {{#if displayRevert}}
-        {{d-button action=(action "revertToVersion") icon="undo" translatedLabel=revertToRevisionText class="btn-danger" disabled=loading}}
+        <DButton @action={{action "revertToVersion"}} @icon="undo" @translatedLabel={{revertToRevisionText}} @class="btn-danger" @disabled={{loading}} />
       {{/if}}
 
       {{#if displayHide}}
-        {{d-button action=(action "hideVersion") icon="far-eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
+        <DButton @action={{action "hideVersion"}} @icon="far-eye-slash" @label="post.revisions.controls.hide" @class="btn-danger" @disabled={{loading}} />
       {{/if}}
 
       {{#if displayShow}}
-        {{d-button action=(action "showVersion") icon="far-eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
+        <DButton @action={{action "showVersion"}} @icon="far-eye" @label="post.revisions.controls.show" @class="btn-default" @disabled={{loading}} />
       {{/if}}
     </div>
   </div>

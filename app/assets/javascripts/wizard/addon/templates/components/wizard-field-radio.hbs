@@ -1,12 +1,7 @@
 {{#each field.choices as |choice|}}
   <div class="radio-field-choice {{fieldClass}}">
     <div class="radio-area">
-      {{radio-button
-        selection=field.value
-        value=choice.id
-        name=choice.label
-        onChange=(action "changed")
-      }}
+      <RadioButton @selection={{field.value}} @value={{choice.id}} @name={{choice.label}} @onChange={{action "changed"}} />
 
       <span class="radio-label">
         {{#if choice.icon}}

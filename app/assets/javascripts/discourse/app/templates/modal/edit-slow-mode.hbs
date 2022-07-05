@@ -1,57 +1,37 @@
-{{#d-modal-body title="topic.slow_mode_update.title" autoFocus=false}}
+<DModalBody @title="topic.slow_mode_update.title" @autoFocus={{false}}>
   <div class="control-group">
     <label class="slow-mode-label">{{i18n "topic.slow_mode_update.description"}}</label>
   </div>
 
   <div class="control-group">
     <label class="slow-mode-label">{{i18n "topic.slow_mode_update.select"}}</label>
-    {{combo-box
-      class="slow-mode-type"
-      content=slowModes
-      value=selectedSlowMode
-      onChange=(action "setSlowModeDuration")
-    }}
+    <ComboBox @class="slow-mode-type" @content={{slowModes}} @value={{selectedSlowMode}} @onChange={{action "setSlowModeDuration"}} />
   </div>
 
   {{#if showCustomSelect}}
     <div class="control-group">
       <label class="slow-mode-label">{{i18n "topic.slow_mode_update.hours"}}</label>
-      {{input value=hours type="number" class="input-small"}}
+      <Input @value={{hours}} @type="number" class="input-small" />
 
       <label class="slow-mode-label">{{i18n "topic.slow_mode_update.minutes"}}</label>
-      {{input value=minutes type="number" class="input-small"}}
+      <Input @value={{minutes}} @type="number" class="input-small" />
 
       <label class="slow-mode-label">{{i18n "topic.slow_mode_update.seconds"}}</label>
-      {{input value=seconds type="number" class="input-small"}}
+      <Input @value={{seconds}} @type="number" class="input-small" />
     </div>
   {{/if}}
 
   <div class="control-group">
-    {{future-date-input
-      class="enabled-until"
-      label="topic.slow_mode_update.enabled_until"
-      labelClasses="slow-mode-label"
-      customShortcuts=timeShortcuts
-      clearable=true
-      input=model.slow_mode_enabled_until
-      onChangeInput=(action (mut model.slow_mode_enabled_until))
-    }}
+    <FutureDateInput @class="enabled-until" @label="topic.slow_mode_update.enabled_until" @labelClasses="slow-mode-label" @customShortcuts={{timeShortcuts}} @clearable={{true}} @input={{model.slow_mode_enabled_until}} @onChangeInput={{action (mut model.slow_mode_enabled_until)}} />
   </div>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button class="btn-primary"
-      disabled=submitDisabled
-      icon="hourglass-start"
-      label=saveButtonLabel
-      action=(action "enableSlowMode")}}
+  <DButton @class="btn-primary" @disabled={{submitDisabled}} @icon="hourglass-start" @label={{saveButtonLabel}} @action={{action "enableSlowMode"}} />
 
-  {{conditional-loading-spinner size="small" condition=loading}}
+  <ConditionalLoadingSpinner @size="small" @condition={{loading}} />
 
   {{#if model.slow_mode_seconds}}
-    {{d-button class="btn-danger"
-               action=(action "disableSlowMode")
-               disabled=submitDisabled
-               label="topic.slow_mode_update.remove"}}
+    <DButton @class="btn-danger" @action={{action "disableSlowMode"}} @disabled={{submitDisabled}} @label="topic.slow_mode_update.remove" />
   {{/if}}
 </div>

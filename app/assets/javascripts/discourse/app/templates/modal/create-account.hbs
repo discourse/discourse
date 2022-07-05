@@ -1,7 +1,7 @@
-{{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
+<CreateAccount @email={{accountEmail}} @disabled={{submitDisabled}} @action={{action "createAccount"}}>
   {{#unless complete}}
-    {{plugin-outlet name="create-account-before-modal-body" tagName="span" connectorTagName="div"}}
-    {{#d-modal-body class=modalBodyClasses preventModalAlertHiding=true}}
+    <PluginOutlet @name="create-account-before-modal-body" @tagName="span" @connectorTagName="div" />
+    <DModalBody @class={{modalBodyClasses}} @preventModalAlertHiding={{true}}>
       <div class="create-account-form">
         <div class="login-welcome-header" id="create-account-title">
           <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{wavingHandURL}} alt="" class="waving-hand">
@@ -17,40 +17,19 @@
                 </div>
               {{/if}}
               <div class="input-group create-account-email">
-                {{input
-                  type="email"
-                  disabled=emailDisabled
-                  value=accountEmail
-                  id="new-account-email"
-                  name="email"
-                  class=(value-entered accountEmail)
-                  autofocus="autofocus"
-                  focusOut=(action "checkEmailAvailability")
-                  aria-describedby="account-email-validation"
-                  aria-invalid=emailValidation.failed
-                }}
+                <Input @type="email" @disabled={{emailDisabled}} @value={{accountEmail}} @id="new-account-email" @name="email" class={{value-entered accountEmail}} @autofocus="autofocus" @focusOut={{action "checkEmailAvailability"}} @aria-describedby="account-email-validation" @aria-invalid={{emailValidation.failed}} />
                 <label class="alt-placeholder" for="new-account-email">
                   {{i18n "user.email.title"}}
                   {{~#if userFields~}}
                     <span class="required">*</span>
                   {{/if}}
                 </label>
-                {{input-tip validation=emailValidation id="account-email-validation"}}
+                <InputTip @validation={{emailValidation}} @id="account-email-validation" />
                 <span class="more-info">{{i18n "user.email.instructions"}}</span>
               </div>
 
               <div class="input-group">
-                {{input
-                  value=accountUsername
-                  disabled=usernameDisabled
-                  class=(value-entered accountUsername)
-                  id="new-account-username"
-                  name="username"
-                  maxlength=maxUsernameLength
-                  aria-describedby="username-validation"
-                  aria-invalid=usernameValidation.failed
-                  autocomplete="off"
-                }}
+                <Input @value={{accountUsername}} @disabled={{usernameDisabled}} class={{value-entered accountUsername}} @id="new-account-username" @name="username" @maxlength={{maxUsernameLength}} @aria-describedby="username-validation" @aria-invalid={{usernameValidation.failed}} @autocomplete="off" />
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
                   {{~#if userFields~}}
@@ -58,20 +37,13 @@
                   {{/if}}
                 </label>
 
-                {{input-tip validation=usernameValidation id="username-validation"}}
+                <InputTip @validation={{usernameValidation}} @id="username-validation" />
                 <span class="more-info">{{i18n "user.username.instructions"}}</span>
               </div>
 
               <div class="input-group">
                 {{#if fullnameRequired}}
-                  {{text-field
-                    disabled=nameDisabled
-                    value=accountName
-                    id="new-account-name"
-                    class=(value-entered accountName)
-                    aria-describedby="fullname-validation"
-                    aria-invalid=nameValidation.failed
-                  }}
+                  <TextField @disabled={{nameDisabled}} @value={{accountName}} @id="new-account-name" @class={{value-entered accountName}} @aria-describedby="fullname-validation" @aria-invalid={{nameValidation.failed}} />
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "user.name.title"}}
                     {{#if siteSettings.full_name_required}}
@@ -81,34 +53,22 @@
                     {{/if}}
                   </label>
 
-                  {{input-tip validation=nameValidation id="fullname-validation"}}
+                  <InputTip @validation={{nameValidation}} @id="fullname-validation" />
                   <span class="more-info">{{nameInstructions}}</span>
                 {{/if}}
               </div>
 
-              {{plugin-outlet
-                  name="create-account-before-password"
-                  args=(hash
+              <PluginOutlet @name="create-account-before-password" @args={{hash
                     accountName=accountName
                     accountUsername=accountUsername
                     accountPassword=accountPassword
                     userFields=userFields
                     authOptions=authOptions
-                  )
-              }}
+                  }} />
 
               <div class="input-group">
                 {{#if passwordRequired}}
-                  {{password-field
-                    value=accountPassword
-                    class=(value-entered accountPassword)
-                    type="password"
-                    id="new-account-password"
-                    autocomplete="current-password"
-                    capsLockOn=capsLockOn
-                    aria-describedby="password-validation"
-                    aria-invalid=passwordValidation.failed
-                  }}
+                  <PasswordField @value={{accountPassword}} @class={{value-entered accountPassword}} @type="password" @id="new-account-password" @autocomplete="current-password" @capsLockOn={{capsLockOn}} @aria-describedby="password-validation" @aria-invalid={{passwordValidation.failed}} />
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "user.password.title"}}
                     {{~#if userFields~}}
@@ -116,7 +76,7 @@
                     {{/if}}
                   </label>
 
-                  {{input-tip validation=passwordValidation id="password-validation"}}
+                  <InputTip @validation={{passwordValidation}} @id="password-validation" />
                   <span class="more-info">{{passwordInstructions}}</span>
                   <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
                     {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
@@ -125,28 +85,25 @@
 
                 <div class="password-confirmation">
                   <label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label>
-                  {{honeypot-input id="new-account-confirmation" autocomplete="new-password" value=accountHoneypot}}
-                  {{input value=accountChallenge id="new-account-challenge"}}
+                  <HoneypotInput @id="new-account-confirmation" @autocomplete="new-password" @value={{accountHoneypot}} />
+                  <Input @value={{accountChallenge}} @id="new-account-challenge" />
                 </div>
               </div>
 
               {{#if requireInviteCode }}
                 <div class="input-group">
-                  {{input value=inviteCode class=(value-entered inviteCode) id="inviteCode"}}
+                  <Input @value={{inviteCode}} class={{value-entered inviteCode}} @id="inviteCode" />
                   <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
                   <span class="more-info">{{i18n "user.invite_code.instructions"}}</span>
                 </div>
               {{/if}}
 
-              {{plugin-outlet
-                name="create-account-after-password"
-                args=(hash
+              <PluginOutlet @name="create-account-after-password" @args={{hash
                   accountName=accountName
                   accountUsername=accountUsername
                   accountPassword=accountPassword
                   userFields=userFields
-                )
-              }}
+                }} />
 
               {{#if userFields}}
                 <div class="user-fields">
@@ -155,8 +112,7 @@
                       {{!-- adding the value-entered class here to
                       be able to detect if the user field has a value
                       entered --}}
-                      {{user-field field=f.field value=f.value
-                      class=(value-entered f.value)}}
+                      <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} />
                     </div>
                   {{/each}}
                 </div>
@@ -165,16 +121,10 @@
           </div>
 
           <div class="modal-footer">
-            {{d-button
-              class="btn-large btn-primary"
-              action=(action "createAccount")
-              disabled=submitDisabled
-              label="create_account.title"
-              isLoading=formSubmitted
-            }}
+            <DButton @class="btn-large btn-primary" @action={{action "createAccount"}} @disabled={{submitDisabled}} @label="create_account.title" @isLoading={{formSubmitted}} />
 
             {{#unless hasAuthOptions}}
-              {{d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted label="log_in"}}
+              <DButton @class="btn-large" @id="login-link" @action={{route-action "showLogin"}} @disabled={{formSubmitted}} @label="log_in" />
             {{/unless}}
 
             <div class="disclaimer">
@@ -182,12 +132,12 @@
             </div>
           </div>
 
-          {{plugin-outlet name="create-account-after-modal-footer" connectorTagName="div"}}
+          <PluginOutlet @name="create-account-after-modal-footer" @connectorTagName="div" />
 
         {{/if}}
         {{#unless hasAuthOptions}}
           <div class="create-account-login-buttons">
-            {{login-buttons externalLogin=(action "externalLogin")}}
+            <LoginButtons @externalLogin={{action "externalLogin"}} />
           </div>
         {{/unless}}
 
@@ -195,6 +145,6 @@
           {{loading-spinner size="large"}}
         {{/if}}
       </div>
-    {{/d-modal-body}}
+    </DModalBody>
   {{/unless}}
-{{/create-account}}
+</CreateAccount>

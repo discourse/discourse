@@ -22,17 +22,5 @@
     @media (max-width: 600px) {
       width: 100%;
     }
-
-    .ember-text-field.user-status-description {
-      min-width: 220px;
-      width: 100%;
-      margin-bottom: 0.5em;
-    }
-
-    .user-status-description-wrap {
-      display: inline-flex;
-      width: 100%;
-      align-items: end;
-    }
   }
 }

@@ -19,7 +19,6 @@ import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import hbs from "htmlbars-inline-precompile";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { isLegacyEmber } from "discourse-common/config/environment";
 
 discourseModule("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -99,9 +98,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       beforeEach() {
         this.set("value", "hello world.");
       },
-      test(assert) {
+      async test(assert) {
         const textarea = jumpEnd(query("textarea.d-editor-input"));
-        testFunc.call(this, assert, textarea);
+        await testFunc.call(this, assert, textarea);
       },
       skip: !navigator.userAgent.includes("Chrome"),
     });
@@ -114,9 +113,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
         this.set("value", "hello world.");
       },
 
-      test(assert) {
+      async test(assert) {
         const textarea = jumpEnd(query("textarea.d-editor-input"));
-        testFunc.call(this, assert, textarea);
+        await testFunc.call(this, assert, textarea);
       },
     });
   }
@@ -734,21 +733,19 @@ third line`
         "it works when there is no partial emoji"
       );
 
-      if (!isLegacyEmber()) {
-        await click("textarea.d-editor-input");
-        await fillIn(".d-editor-input", "starting to type an emoji like :gri");
-        jumpEnd(query("textarea.d-editor-input"));
-        await click("button.emoji");
+      await click("textarea.d-editor-input");
+      await fillIn(".d-editor-input", "starting to type an emoji like :gri");
+      jumpEnd(query("textarea.d-editor-input"));
+      await click("button.emoji");
 
-        await click(
-          '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-        );
-        assert.strictEqual(
-          this.value,
-          "starting to type an emoji like :grinning:",
-          "it works when there is a partial emoji"
-        );
-      }
+      await click(
+        '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
+      );
+      assert.strictEqual(
+        this.value,
+        "starting to type an emoji like :grinning:",
+        "it works when there is a partial emoji"
+      );
     },
   });
 

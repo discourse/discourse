@@ -1,13 +1,11 @@
-{{#styleguide-example title="header-icons"}}
-  {{mount-widget widget="header-icons"}}
-{{/styleguide-example}}
+<StyleguideExample @title="header-icons">
+  <MountWidget @widget="header-icons" />
+</StyleguideExample>
 
-{{#styleguide-example title="header-icons - user"}}
-  {{mount-widget widget="header-icons" args=(hash user=dummy.user)}}
-{{/styleguide-example}}
+<StyleguideExample @title="header-icons - user">
+  <MountWidget @widget="header-icons" @args={{hash user=dummy.user}} />
+</StyleguideExample>
 
-{{#styleguide-example title="header-icons - notifications"}}
-  {{mount-widget
-    widget="header-icons"
-    args=(hash user=dummy.userWithUnread flagCount=5)}}
-{{/styleguide-example}}
+<StyleguideExample @title="header-icons - notifications">
+  <MountWidget @widget="header-icons" @args={{hash user=dummy.userWithUnread flagCount=5}} />
+</StyleguideExample>

@@ -25,6 +25,7 @@ module(
         "shows later_today in the morning"
       );
 
+      this.clock.restore();
       this.clock = fakeTime("2100-04-19 18:00:00", timezone, true); // evening
       result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
       assert.notOk(result.includes("doesn't show later_today in the evening"));
@@ -41,6 +42,7 @@ module(
         "shows later_this_week on Wednesdays"
       );
 
+      this.clock.restore();
       this.clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Thursday
       result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
       assert.notOk(
@@ -48,6 +50,7 @@ module(
         "doesn't show later_this_week on Thursdays"
       );
 
+      this.clock.restore();
       this.clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
       result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
       assert.notOk(
@@ -72,6 +75,7 @@ module(
         "shows this_weekend on Thursdays"
       );
 
+      this.clock.restore();
       this.clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
       result = hideDynamicTimeShortcuts(
         shortcuts,
@@ -83,6 +87,7 @@ module(
         "doesn't show this_weekend on Fridays"
       );
 
+      this.clock.restore();
       this.clock = fakeTime("2100-04-24 18:00:00", timezone, true); // Saturday
       result = hideDynamicTimeShortcuts(
         shortcuts,
@@ -94,6 +99,7 @@ module(
         "doesn't show this_weekend on Saturdays"
       );
 
+      this.clock.restore();
       this.clock = fakeTime("2100-04-25 18:00:00", timezone, true); // Sunday
       result = hideDynamicTimeShortcuts(
         shortcuts,

@@ -1,10 +1,5 @@
-{{combo-box
-  content=filter.choices
-  value=filter.default
-  onChange=(action "onChange")
-  options=(hash
+<ComboBox @content={{filter.choices}} @value={{filter.default}} @onChange={{action "onChange"}} @options={{hash
     allowAny=filter.allow_any
     filterable=true
     none="admin.dashboard.report_filter_any"
-  )
-}}
+  }} />

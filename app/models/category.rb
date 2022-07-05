@@ -113,6 +113,7 @@ class Category < ActiveRecord::Base
   has_many :tag_groups, through: :category_tag_groups
 
   has_many :category_required_tag_groups, -> { order(order: :asc) }, dependent: :destroy
+  has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
 
   belongs_to :reviewable_by_group, class_name: 'Group'
 

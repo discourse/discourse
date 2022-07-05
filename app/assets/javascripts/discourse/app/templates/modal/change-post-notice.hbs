@@ -1,11 +1,11 @@
-{{#d-modal-body title=(if model.notice "post.controls.change_post_notice" "post.controls.add_post_notice")}}
-  <form>{{textarea value=notice}}</form>
-{{/d-modal-body}}
+<DModalBody @title={{if model.notice "post.controls.change_post_notice" "post.controls.add_post_notice"}}>
+  <form><Textarea @value={{notice}} /></form>
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button class="btn-primary" label=(if saving "saving" "save") action=(action "setNotice" notice) disabled=disabled}}
+  <DButton @class="btn-primary" @label={{if saving "saving" "save"}} @action={{action "setNotice" notice}} @disabled={{disabled}} />
   {{#if model.notice}}
-    {{d-button class="btn-danger" label="post.controls.delete_post_notice" action=(action "setNotice") disabled=saving}}
+    <DButton @class="btn-danger" @label="post.controls.delete_post_notice" @action={{action "setNotice"}} @disabled={{saving}} />
   {{/if}}
-  {{d-modal-cancel close=(route-action "closeModal")}}
+  <DModalCancel @close={{route-action "closeModal"}} />
 </div>

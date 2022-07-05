@@ -1,6 +1,1 @@
-{{d-button
-  action=(action "share" source)
-  class=(concat "btn-default share-" source.id)
-  translatedTitle=source.title
-  icon=(if source.icon source.icon source.htmlIcon)
- }}
+<DButton @action={{action "share" source}} @class={{concat "btn-default share-" source.id}} @translatedTitle={{source.title}} @icon={{if source.icon source.icon source.htmlIcon}} />

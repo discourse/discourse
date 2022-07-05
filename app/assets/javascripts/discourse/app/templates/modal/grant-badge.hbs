@@ -1,27 +1,18 @@
-{{#d-modal-body class="grant-badge"}}
-  {{#conditional-loading-spinner condition=loading}}
+<DModalBody @class="grant-badge">
+  <ConditionalLoadingSpinner @condition={{loading}}>
     {{#if noGrantableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <p>
-        {{combo-box
-          value=selectedBadgeId
-          content=grantableBadges
-          onChange=(action (mut selectedBadgeId))
-          options=(hash
+        <ComboBox @value={{selectedBadgeId}} @content={{grantableBadges}} @onChange={{action (mut selectedBadgeId)}} @options={{hash
             filterable=true
             none="badges.none"
-          )
-        }}
+          }} />
       </p>
     {{/if}}
-  {{/conditional-loading-spinner}}
-{{/d-modal-body}}
+  </ConditionalLoadingSpinner>
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-primary"
-    disabled=buttonDisabled
-    action=(action "grantBadge")
-    label="admin.badges.grant"}}
+  <DButton @class="btn-primary" @disabled={{buttonDisabled}} @action={{action "grantBadge"}} @label="admin.badges.grant" />
 </div>

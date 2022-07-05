@@ -28,7 +28,7 @@ describe ThemeJavascriptCompiler do
 
     let(:mini_racer) {
       ctx = MiniRacer::Context.new
-      ctx.eval(File.open("#{Rails.root}/vendor/assets/javascripts/handlebars.js").read)
+      ctx.eval(File.open("#{Rails.root}/app/assets/javascripts/node_modules/handlebars/dist/handlebars.js").read)
       ctx.eval(helpers)
       ctx
     }

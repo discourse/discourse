@@ -1,53 +1,36 @@
-{{#d-section pageClass="groups-new"}}
+<DSection @pageClass="groups-new">
   <h1>{{i18n "admin.groups.new.title"}}</h1>
 
   <hr>
 
   <form class="groups-form form-vertical">
-    {{#groups-form-profile-fields model=model disableSave=saving}}
+    <GroupsFormProfileFields @model={{model}} @disableSave={{saving}}>
       <div class="control-group">
         <label class="control-label" for="owner-selector">{{i18n "admin.groups.add_owners"}}</label>
 
-        {{email-group-user-chooser
-          class="input-xxlarge"
-          id="owner-selector"
-          value=splitOwnerUsernames
-          onChange=(action "updateOwnerUsernames")
-          options=(hash
+        <EmailGroupUserChooser @class="input-xxlarge" @id="owner-selector" @value={{splitOwnerUsernames}} @onChange={{action "updateOwnerUsernames"}} @options={{hash
             filterPlaceholder="groups.selector_placeholder"
-          )
-        }}
+          }} />
       </div>
 
       <div class="control-group">
         <label class="control-label" for="member-selector">{{i18n "groups.members.title"}}</label>
 
-        {{email-group-user-chooser
-          class="input-xxlarge"
-          id="member-selector"
-          value=splitUsernames
-          onChange=(action "updateUsernames")
-          options=(hash
+        <EmailGroupUserChooser @class="input-xxlarge" @id="member-selector" @value={{splitUsernames}} @onChange={{action "updateUsernames"}} @options={{hash
             filterPlaceholder="groups.selector_placeholder"
-          )
-        }}
+          }} />
       </div>
-    {{/groups-form-profile-fields}}
+    </GroupsFormProfileFields>
 
-    {{groups-form-membership-fields model=model}}
-    {{groups-form-interaction-fields model=model}}
+    <GroupsFormMembershipFields @model={{model}} />
+    <GroupsFormInteractionFields @model={{model}} />
 
     <div class="control-group buttons">
-      {{d-button
-        action=(action "save")
-        type="submit"
-        disabled=saving
-        class="btn btn-primary group-form-save"
-        label="admin.groups.new.create"}}
+      <DButton @action={{action "save"}} @type="submit" @disabled={{saving}} @class="btn btn-primary group-form-save" @label="admin.groups.new.create" />
 
-      {{#link-to "groups"}}
+      <LinkTo @route="groups">
         {{i18n "cancel"}}
-      {{/link-to}}
+      </LinkTo>
     </div>
   </form>
-{{/d-section}}
+</DSection>

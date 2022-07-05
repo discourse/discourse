@@ -1,27 +1,14 @@
 <div>
-  {{#d-modal-body rawTitle=(i18n "admin.user.merge.prompt.title" username=username)}}
+  <DModalBody @rawTitle={{i18n "admin.user.merge.prompt.title" username=username}}>
     <p>{{html-safe (i18n "admin.user.merge.prompt.description" username=username)}}</p>
-    {{email-group-user-chooser
-      value=targetUsername
-      onChange=(action "updateUsername")
-      options=(hash
+    <EmailGroupUserChooser @value={{targetUsername}} @onChange={{action "updateUsername"}} @options={{hash
         maximum=1
         filterPlaceholder="admin.user.merge.prompt.target_username_placeholder"
-      )
-    }}
-  {{/d-modal-body}}
+      }} />
+  </DModalBody>
 
   <div class="modal-footer">
-    {{d-button
-      class="btn-primary"
-      action=(action "showConfirmation")
-      icon="trash-alt"
-      disabled=mergeDisabled
-      translatedLabel=mergeButtonText
-    }}
-    {{d-button
-      action=(action "close")
-      label="admin.user.merge.prompt.cancel"
-    }}
+    <DButton @class="btn-primary" @action={{action "showConfirmation"}} @icon="trash-alt" @disabled={{mergeDisabled}} @translatedLabel={{mergeButtonText}} />
+    <DButton @action={{action "close"}} @label="admin.user.merge.prompt.cancel" />
   </div>
 </div>

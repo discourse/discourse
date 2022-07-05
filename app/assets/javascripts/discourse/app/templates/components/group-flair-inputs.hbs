@@ -3,31 +3,20 @@
 
   <div class="radios">
     <label class="radio-label" for="avatar-flair-icon">
-      {{radio-button name="avatar-flair-icon" id="avatar-flair-icon" value="icon" selection=model.flair_type}}
+      <RadioButton @name="avatar-flair-icon" @id="avatar-flair-icon" @value="icon" @selection={{model.flair_type}} />
       <b>{{i18n "groups.flair_type.icon"}}</b>
     </label>
 
     <label class="radio-label" for="avatar-flair-image">
-      {{radio-button name="avatar-flair-image" id="avatar-flair-image" value="image" selection=model.flair_type}}
+      <RadioButton @name="avatar-flair-image" @id="avatar-flair-image" @value="image" @selection={{model.flair_type}} />
       <b>{{i18n "groups.flair_type.image"}}</b>
     </label>
   </div>
 
   {{#if flairPreviewIcon}}
-    {{icon-picker
-      name="icon"
-      value=model.flair_icon
-      options=(hash maximum=1)
-      onChange=(action (mut model.flair_icon))
-    }}
+    <IconPicker @name="icon" @value={{model.flair_icon}} @options={{hash maximum=1}} @onChange={{action (mut model.flair_icon)}} />
   {{else if flairPreviewImage}}
-    {{uppy-image-uploader
-      imageUrl=flairImageUrl
-      onUploadDone=(action "setFlairImage")
-      onUploadDeleted=(action "removeFlairImage")
-      type="group_flair"
-      id="group-flair-uploader"
-      class="no-repeat contain-image"}}
+    <UppyImageUploader @imageUrl={{flairImageUrl}} @onUploadDone={{action "setFlairImage"}} @onUploadDeleted={{action "removeFlairImage"}} @type="group_flair" @id="group-flair-uploader" @class="no-repeat contain-image" />
     <div class="control-instructions">
       {{i18n "groups.flair_upload_description"}}
     </div>
@@ -37,20 +26,14 @@
 <div class="control-group">
   <label class="control-label" for="flair_bg_color">{{i18n "groups.flair_bg_color"}}</label>
 
-  {{text-field name="flair_bg_color"
-      class="group-flair-bg-color input-xxlarge"
-      value=model.flair_bg_color
-      placeholderKey="groups.flair_bg_color_placeholder"}}
+  <TextField @name="flair_bg_color" @class="group-flair-bg-color input-xxlarge" @value={{model.flair_bg_color}} @placeholderKey="groups.flair_bg_color_placeholder" />
 </div>
 
 {{#if flairPreviewIcon}}
   <div class="control-group">
     <label class="control-label" for="flair_color">{{i18n "groups.flair_color"}}</label>
 
-    {{text-field name="flair_color"
-        class="group-flair-color input-xxlarge"
-        value=model.flair_color
-        placeholderKey="groups.flair_color_placeholder"}}
+    <TextField @name="flair_color" @class="group-flair-color input-xxlarge" @value={{model.flair_color}} @placeholderKey="groups.flair_color_placeholder" />
   </div>
 {{/if}}
 
@@ -63,12 +46,7 @@
     </div>
 
     {{#if (or model.flair_icon flairImageUrl model.flairBackgroundHexColor)}}
-      {{avatar-flair
-        flairName=model.name
-        flairUrl=(if flairPreviewIcon model.flair_icon (if flairPreviewImage flairImageUrl ""))
-        flairBgColor=model.flairBackgroundHexColor
-        flairColor=model.flairHexColor
-      }}
+      <AvatarFlair @flairName={{model.name}} @flairUrl={{if flairPreviewIcon model.flair_icon (if flairPreviewImage flairImageUrl "")}} @flairBgColor={{model.flairBackgroundHexColor}} @flairColor={{model.flairHexColor}} />
     {{/if}}
   </div>
 </div>

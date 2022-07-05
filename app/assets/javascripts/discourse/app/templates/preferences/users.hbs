@@ -3,7 +3,7 @@
   <div class="control-group user-ignore">
     <div class="controls tracking-controls user-notifications">
       <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n "user.ignored_users"}}</label>
-      {{ignored-user-list model=model items=model.ignored_usernames saving=saved}}
+      <IgnoredUserList @model={{model}} @items={{model.ignored_usernames}} @saving={{saved}} />
     </div>
   </div>
 {{/if}}
@@ -14,13 +14,9 @@
       {{d-icon "d-muted" class="icon"}}
       <span>{{i18n "user.muted_users"}}</span>
     </label>
-    {{user-chooser
-      value=mutedUsernames
-      onChange=(action "onChangeMutedUsernames")
-      options=(hash
+    <UserChooser @value={{mutedUsernames}} @onChange={{action "onChangeMutedUsernames"}} @options={{hash
         excludeCurrentUser=true
-      )
-    }}
+      }} />
   </div>
   <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
 </div>
@@ -28,26 +24,19 @@
 {{#if siteSettings.enable_personal_messages}}
   <div class="control-group user-allow-pm">
     <div class="controls">
-      {{preference-checkbox
-          labelKey="user.allow_private_messages_from_specific_users"
-          checked=model.user_option.enable_allowed_pm_users
-          disabled=disableAllowPmUsersSetting}}
+      <PreferenceCheckbox @labelKey="user.allow_private_messages_from_specific_users" @checked={{model.user_option.enable_allowed_pm_users}} @disabled={{disableAllowPmUsersSetting}} />
     </div>
     {{#if allowPmUsersEnabled}}
       <div class="controls tracking-controls">
-        {{user-chooser
-          value=allowedPmUsernames
-          onChange=(action "onChangeAllowedPmUsernames")
-          options=(hash
+        <UserChooser @value={{allowedPmUsernames}} @onChange={{action "onChangeAllowedPmUsernames"}} @options={{hash
             excludeCurrentUser=true
-          )
-        }}
+          }} />
       </div>
       <div class="instructions">{{i18n "user.allowed_pm_users_instructions"}}</div>
     {{/if}}
   </div>
 {{/if}}
 
-{{plugin-outlet name="user-custom-controls" tagName="span" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
 
-{{#save-controls model=model action=(action "save") saved=saved}}{{/save-controls}}
+<SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}}></SaveControls>

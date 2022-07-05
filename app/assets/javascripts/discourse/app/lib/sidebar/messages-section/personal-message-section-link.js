@@ -38,7 +38,13 @@ export default class PersonalMessageSectionLink extends MessageSectionLink {
   }
 
   get text() {
-    return I18n.t(`sidebar.sections.messages.links.${this.type}`);
+    if (this.count > 0) {
+      return I18n.t(`sidebar.sections.messages.links.${this.type}_with_count`, {
+        count: this.count,
+      });
+    } else {
+      return I18n.t(`sidebar.sections.messages.links.${this.type}`);
+    }
   }
 
   pageChanged({ currentRouteName, privateMessageTopic }) {

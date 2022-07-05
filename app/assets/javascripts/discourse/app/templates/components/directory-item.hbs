@@ -1,4 +1,4 @@
-<td>{{user-info user=item.user}}</td>
+<td><UserInfo @user={{item.user}} /></td>
 {{#each columns as |column|}}
   <td>
     {{#if (directory-column-is-user-field column=column)}}

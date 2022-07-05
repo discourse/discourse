@@ -1,56 +1,49 @@
-{{plugin-outlet name="admin-dashboard-top" tagName="span" connectorTagName="div"}}
+<PluginOutlet @name="admin-dashboard-top" @tagName="span" @connectorTagName="div" />
 
 {{#if showVersionChecks}}
   <div class="section-top">
     <div class="version-checks">
-      {{version-checks versionCheck=versionCheck tagName=""}}
+      <VersionChecks @versionCheck={{versionCheck}} @tagName="" />
     </div>
   </div>
 {{/if}}
 
-{{dashboard-problems
-  loadingProblems=loadingProblems
-  foundProblems=foundProblems
-  lowPriorityProblems=lowPriorityProblems
-  highPriorityProblems=highPriorityProblems
-  problemsTimestamp=problemsTimestamp
-  refreshProblems=(action "refreshProblems")
-}}
+<DashboardProblems @loadingProblems={{loadingProblems}} @foundProblems={{foundProblems}} @lowPriorityProblems={{lowPriorityProblems}} @highPriorityProblems={{highPriorityProblems}} @problemsTimestamp={{problemsTimestamp}} @refreshProblems={{action "refreshProblems"}} />
 
 <ul class="navigation">
   <li class="navigation-item general">
-    {{#link-to "admin.dashboard.general" class="navigation-link"}}
+    <LinkTo @route="admin.dashboard.general" class="navigation-link">
       {{i18n "admin.dashboard.general_tab"}}
-    {{/link-to}}
+    </LinkTo>
   </li>
 
   {{#if isModerationTabVisible}}
     <li class="navigation-item moderation">
-      {{#link-to "admin.dashboardModeration" class="navigation-link"}}
+      <LinkTo @route="admin.dashboardModeration" class="navigation-link">
         {{i18n "admin.dashboard.moderation_tab"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
   {{/if}}
 
   {{#if isSecurityTabVisible}}
     <li class="navigation-item security">
-      {{#link-to "admin.dashboardSecurity" class="navigation-link"}}
+      <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
         {{i18n "admin.dashboard.security_tab"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
   {{/if}}
 
   {{#if isReportsTabVisible}}
     <li class="navigation-item reports">
-      {{#link-to "admin.dashboardReports" class="navigation-link"}}
+      <LinkTo @route="admin.dashboardReports" class="navigation-link">
         {{i18n "admin.dashboard.reports_tab"}}
-      {{/link-to}}
+      </LinkTo>
     </li>
   {{/if}}
 </ul>
 
 {{outlet}}
 
-{{dashboard-new-features tagName="div"}}
+<DashboardNewFeatures @tagName="div" />
 
-{{plugin-outlet name="admin-dashboard-bottom" tagName="span" connectorTagName="div"}}
+<PluginOutlet @name="admin-dashboard-bottom" @tagName="span" @connectorTagName="div" />

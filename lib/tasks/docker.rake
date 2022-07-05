@@ -214,9 +214,9 @@ task 'docker:test' do
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
-            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['#{ENV['SINGLE_PLUGIN']}','#{js_timeout}']")
           else
-            @good &&= run_or_fail("CI=1 QUNIT_EMBER_CLI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
           end
         end
       end

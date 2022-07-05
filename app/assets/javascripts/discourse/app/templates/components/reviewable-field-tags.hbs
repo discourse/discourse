@@ -1,7 +1,3 @@
-{{mini-tag-chooser
-  value=value
-  onChange=(action "onChange")
-  options=(hash
+<MiniTagChooser @value={{value}} @onChange={{action "onChange"}} @options={{hash
     categoryId=tagCategoryId
-  )
-}}
+  }} />

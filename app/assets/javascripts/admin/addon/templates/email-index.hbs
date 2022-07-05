@@ -21,14 +21,8 @@
         {{#if sendingEmail}}
           {{i18n "admin.email.sending_test"}}
         {{else}}
-          {{text-field value=testEmailAddress placeholderKey="admin.email.test_email_address"}}
-          {{d-button
-            class="btn-primary"
-            action=(action "sendTestEmail")
-            disabled=sendTestEmailDisabled
-            label="admin.email.send_test"
-            type="submit"
-          }}
+          <TextField @value={{testEmailAddress}} @placeholderKey="admin.email.test_email_address" />
+          <DButton @class="btn-primary" @action={{action "sendTestEmail"}} @disabled={{sendTestEmailDisabled}} @label="admin.email.send_test" @type="submit" />
           {{#if sentTestEmailMessage}}
             <span class="result-message">{{sentTestEmailMessage}}</span>
           {{/if}}

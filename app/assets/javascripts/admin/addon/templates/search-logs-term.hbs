@@ -1,19 +1,14 @@
 <div class="admin-title">
-  {{period-chooser period=period onChange=(action (mut period))}}
-  {{combo-box
-    content=searchTypeOptions
-    value=searchType
-    class="search-logs-filter"
-    onChange=(action (mut searchType))
-  }}
+  <PeriodChooser @period={{period}} @onChange={{action (mut period)}} />
+  <ComboBox @content={{searchTypeOptions}} @value={{searchType}} @class="search-logs-filter" @onChange={{action (mut searchType)}} />
 </div>
 
 <h2>
-  {{#link-to "full-page-search" (query-params q=term)}}{{term}}{{/link-to}}
+  <LinkTo @route="full-page-search" @query={{hash q=term}}>{{term}}</LinkTo>
 </h2>
 
-{{#conditional-loading-spinner condition=refreshing}}
-  {{admin-graph model=model type="bar"}}
+<ConditionalLoadingSpinner @condition={{refreshing}}>
+  <AdminGraph @model={{model}} @type="bar" />
 
   <br><br>
   <h2> {{i18n "admin.logs.search_logs.header_search_results"}} </h2>
@@ -31,14 +26,14 @@
         <div class="fps-topic">
           <div class="topic">
             <a href={{result.url}} class="search-link">
-              {{topic-status topic=result.topic disableActions=true}}
+              <TopicStatus @topic={{result.topic}} @disableActions={{true}} />
               <span class="topic-title">
                 {{#if result.useTopicTitleHeadline}}
                   {{html-safe result.topicTitleHeadline}}
                 {{else}}
-                  {{#highlight-search highlight=q}}
+                  <HighlightSearch @highlight={{q}}>
                     {{html-safe result.topic.fancyTitle}}
-                  {{/highlight-search}}
+                  </HighlightSearch>
                 {{/if}}
               </span>
             </a>
@@ -66,9 +61,9 @@
               {{#if siteSettings.use_pg_headlines_for_excerpt}}
                 {{html-safe result.blurb}}
               {{else}}
-                {{#highlight-search highlight=highlightQuery}}
+                <HighlightSearch @highlight={{highlightQuery}}>
                   {{html-safe result.blurb}}
-                {{/highlight-search}}
+                </HighlightSearch>
               {{/if}}
             {{/if}}
           </div>
@@ -76,4 +71,4 @@
       </div>
     {{/each}}
   </div>
-{{/conditional-loading-spinner}}
+</ConditionalLoadingSpinner>

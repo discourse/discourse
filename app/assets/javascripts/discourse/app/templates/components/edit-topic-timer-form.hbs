@@ -1,38 +1,23 @@
 <form>
   <div class="control-group">
-    {{combo-box
-      class="timer-type"
-      onChange=onChangeStatusType
-      content=timerTypes
-      value=statusType
-    }}
+    <ComboBox @class="timer-type" @onChange={{onChangeStatusType}} @content={{timerTypes}} @value={{statusType}} />
   </div>
   {{#if publishToCategory}}
     <div class="control-group">
       <label class="control-label">{{i18n "topic.topic_status_update.publish_to"}}</label>
-      {{category-chooser
-        value=topicTimer.category_id
-        onChange=(action (mut topicTimer.category_id))
-        options=(hash
+      <CategoryChooser @value={{topicTimer.category_id}} @onChange={{action (mut topicTimer.category_id)}} @options={{hash
           excludeCategoryId=excludeCategoryId
-        )
-      }}
+        }} />
     </div>
   {{/if}}
   {{#if showFutureDateInput}}
     <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
-    {{time-shortcut-picker
-      timeShortcuts=timeOptions
-      prefilledDatetime=topicTimer.execute_at
-      onTimeSelected=onTimeSelected
-      hiddenOptions=hiddenTimeShortcutOptions
-      _itsatrap=_itsatrap
-    }}
+    <TimeShortcutPicker @timeShortcuts={{timeOptions}} @prefilledDatetime={{topicTimer.execute_at}} @onTimeSelected={{onTimeSelected}} @hiddenOptions={{hiddenTimeShortcutOptions}} @_itsatrap={{_itsatrap}} />
   {{/if}}
   {{#if useDuration}}
     <div class="controls">
       <label class="control-label">{{i18n "topic.topic_status_update.duration"}}</label>
-      {{relative-time-picker onChange=(action "durationChanged") durationMinutes=(readonly topicTimer.duration_minutes)}}
+      <RelativeTimePicker @onChange={{action "durationChanged"}} @durationMinutes={{readonly topicTimer.duration_minutes}} />
     </div>
   {{/if}}
   {{#if willCloseImmediately}}
@@ -43,13 +28,7 @@
   {{/if}}
   {{#if showTopicTimerInfo}}
     <div class="alert alert-info modal-topic-timer-info">
-      {{topic-timer-info
-        statusType=statusType
-        executeAt=executeAt
-        basedOnLastPost=topicTimer.based_on_last_post
-        durationMinutes=topicTimer.duration_minutes
-        categoryId=topicTimer.category_id
-      }}
+      <TopicTimerInfo @statusType={{statusType}} @executeAt={{executeAt}} @basedOnLastPost={{topicTimer.based_on_last_post}} @durationMinutes={{topicTimer.duration_minutes}} @categoryId={{topicTimer.category_id}} />
     </div>
   {{/if}}
 </form>

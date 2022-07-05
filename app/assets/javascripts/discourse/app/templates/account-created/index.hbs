@@ -2,6 +2,5 @@
   {{html-safe accountCreated.message}}
 </div>
 {{#if accountCreated.show_controls}}
-  {{activation-controls sendActivationEmail=(action "sendActivationEmail")
-                        editActivationEmail=(action "editActivationEmail")}}
+  <ActivationControls @sendActivationEmail={{action "sendActivationEmail"}} @editActivationEmail={{action "editActivationEmail"}} />
 {{/if}}

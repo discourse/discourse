@@ -1,4 +1,4 @@
-{{#d-modal-body class="change-ownership"}}
+<DModalBody @class="change-ownership">
   <span>
     {{html-safe (i18n (if selectedPostsUsername "topic.change_owner.instructions" "topic.change_owner.instructions_without_old_user")
         count=selectedPostsCount
@@ -9,22 +9,13 @@
 
   <form>
     <label></label>
-    {{email-group-user-chooser
-      value=newOwner
-      autofocus=true
-      onChange=(action "updateNewOwner")
-      options=(hash
+    <EmailGroupUserChooser @value={{newOwner}} @autofocus={{true}} @onChange={{action "updateNewOwner"}} @options={{hash
         maximum=1
         filterPlaceholder="topic.change_owner.placeholder"
-      )
-    }}
+      }} />
   </form>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-primary"
-    action=(action "changeOwnershipOfPosts")
-    disabled=buttonDisabled
-    label=(if saving "saving" "topic.change_owner.action")}}
+  <DButton @class="btn-primary" @action={{action "changeOwnershipOfPosts"}} @disabled={{buttonDisabled}} @label={{if saving "saving" "topic.change_owner.action"}} />
 </div>

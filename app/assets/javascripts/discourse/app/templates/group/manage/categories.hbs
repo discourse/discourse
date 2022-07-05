@@ -7,11 +7,7 @@
   <div class="control-group">
     <label>{{d-icon "d-watching"}} {{i18n "groups.notifications.watching.title"}}</label>
 
-    {{category-selector
-      categories=model.watchingCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.watchingCategories))
-    }}
+    <CategorySelector @categories={{model.watchingCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.watchingCategories)}} />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.watched_categories_instructions"}}
@@ -21,11 +17,7 @@
   <div class="control-group">
     <label>{{d-icon "d-tracking"}} {{i18n "groups.notifications.tracking.title"}}</label>
 
-    {{category-selector
-      categories=model.trackingCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.trackingCategories))
-    }}
+    <CategorySelector @categories={{model.trackingCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.trackingCategories)}} />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.tracked_categories_instructions"}}
@@ -35,11 +27,7 @@
   <div class="control-group">
     <label>{{d-icon "d-watching-first"}} {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
-    {{category-selector
-      categories=model.watchingFirstPostCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.watchingFirstPostCategories))
-    }}
+    <CategorySelector @categories={{model.watchingFirstPostCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.watchingFirstPostCategories)}} />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.watching_first_post_categories_instructions"}}
@@ -49,11 +37,7 @@
   <div class="control-group">
     <label>{{d-icon "d-regular"}} {{i18n "groups.notifications.regular.title"}}</label>
 
-    {{category-selector
-      categories=model.regularCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.regularCategories))
-    }}
+    <CategorySelector @categories={{model.regularCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.regularCategories)}} />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.regular_categories_instructions"}}
@@ -63,16 +47,12 @@
   <div class="control-group">
     <label>{{d-icon "d-muted"}} {{i18n "groups.notifications.muted.title"}}</label>
 
-    {{category-selector
-      categories=model.mutedCategories
-      blockedCategories=selectedCategories
-      onChange=(action (mut model.mutedCategories))
-    }}
+    <CategorySelector @categories={{model.mutedCategories}} @blockedCategories={{selectedCategories}} @onChange={{action (mut model.mutedCategories)}} />
 
     <div class="control-instructions">
       {{i18n "groups.manage.categories.muted_categories_instructions"}}
     </div>
   </div>
 
-  {{group-manage-save-button model=model}}
+  <GroupManageSaveButton @model={{model}} />
 </form>

@@ -1,7 +1,7 @@
 {{#if post}}
   <div class="reviewable-conversation-post">
     {{#if showUsername}}
-      {{#link-to "user" post.user class="username"}}@{{post.user.username}}{{/link-to}}
+      <LinkTo @route="user" @model={{post.user}} class="username">@{{post.user.username}}</LinkTo>
     {{/if}}
     {{html-safe post.excerpt}}
   </div>

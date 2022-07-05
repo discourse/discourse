@@ -1,8 +1,4 @@
 <label>
-  {{input
-    type="checkbox"
-    class="wizard-checkbox"
-    checked=field.value
-  }}
+  <Input @type="checkbox" class="wizard-checkbox" @checked={{field.value}} />
   {{field.placeholder}}
 </label>

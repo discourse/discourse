@@ -1,31 +1,19 @@
 <section class="field allowed-tags">
   <label>{{i18n "category.tags_allowed_tags"}}</label>
-  {{tag-chooser
-    id="category-allowed-tags"
-    tags=category.allowed_tags
-    everyTag=true
-    excludeSynonyms=true
-    unlimitedTagCount=true
-    onChange=(action (mut category.allowed_tags))
-    options=(hash
+  <TagChooser @id="category-allowed-tags" @tags={{category.allowed_tags}} @everyTag={{true}} @excludeSynonyms={{true}} @unlimitedTagCount={{true}} @onChange={{action (mut category.allowed_tags)}} @options={{hash
       filterPlaceholder="category.tags_placeholder"
-    )
-  }}
+    }} />
 </section>
 
 <section class="field allowed-tag-groups">
   <label>{{i18n "category.tags_allowed_tag_groups"}}</label>
-  {{tag-group-chooser
-    id="category-allowed-tag-groups"
-    tagGroups=category.allowed_tag_groups
-    onChange=(action (mut category.allowed_tag_groups))
-  }}
-  {{#link-to "tagGroups" class="manage-tag-groups"}}{{i18n "category.manage_tag_groups_link"}}{{/link-to}}
+  <TagGroupChooser @id="category-allowed-tag-groups" @tagGroups={{category.allowed_tag_groups}} @onChange={{action (mut category.allowed_tag_groups)}} />
+  <LinkTo @route="tagGroups" class="manage-tag-groups">{{i18n "category.manage_tag_groups_link"}}</LinkTo>
 </section>
 
 <section class="field allow-global-tags">
   <label>
-    {{input type="checkbox" checked=category.allow_global_tags id="allow_global_tags" disabled=disableAllowGlobalTags}}
+    <Input @type="checkbox" @checked={{category.allow_global_tags}} @id="allow_global_tags" @disabled={{disableAllowGlobalTags}} />
     {{i18n "category.allow_global_tags_label"}}
   </label>
 </section>
@@ -42,26 +30,14 @@
   <section class="field-item required-tag-groups">
     {{#each category.required_tag_groups as |rtg|}}
       <div class="required-tag-group-row">
-        {{text-field value=rtg.min_count type="number" min="1"}}
-        {{tag-group-chooser
-          tagGroups=(if rtg.name (array rtg.name) (array))
-          onChange=(action "onTagGroupChange" rtg)
-          options=(hash
+        <TextField @value={{rtg.min_count}} @type="number" @min="1" />
+        <TagGroupChooser @tagGroups={{if rtg.name (array rtg.name) (array )}} @onChange={{action "onTagGroupChange" rtg}} @options={{hash
             maximum=1
             filterPlaceholder="category.required_tag_group.placeholder"
-          )
-        }}
-        {{d-button
-          label="category.required_tag_group.delete"
-          action=(action "deleteRequiredTagGroup" rtg)
-          icon="trash-alt"
-          class="delete-required-tag-group"}}
+          }} />
+        <DButton @label="category.required_tag_group.delete" @action={{action "deleteRequiredTagGroup" rtg}} @icon="trash-alt" @class="delete-required-tag-group" />
       </div>
     {{/each}}
-    {{d-button
-      label="category.required_tag_group.add"
-      action=(action "addRequiredTagGroup")
-      icon="plus"
-      class="add-required-tag-group"}}
+    <DButton @label="category.required_tag_group.add" @action={{action "addRequiredTagGroup"}} @icon="plus" @class="add-required-tag-group" />
   </section>
 </section>
