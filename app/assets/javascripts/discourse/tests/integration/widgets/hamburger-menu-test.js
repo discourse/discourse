@@ -164,8 +164,8 @@ discourseModule(
 
       beforeEach() {
         this.siteSettings.header_dropdown_category_count = 8;
-        maxCategoriesToDisplay = this.siteSettings
-          .header_dropdown_category_count;
+        maxCategoriesToDisplay =
+          this.siteSettings.header_dropdown_category_count;
         categoriesByCount = this.site.get("categoriesByCount").slice();
         categoriesByCount.every((c) => {
           if (!topCategoryIds.includes(c.id)) {
