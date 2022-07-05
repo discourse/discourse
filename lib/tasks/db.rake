@@ -84,9 +84,9 @@ task "db:create" => :load_config do
 end
 
 begin
-  reqs = Rake::Task['db:create'].prerequisites.map(&:to_sym)
+  prerequisites = Rake::Task['db:create'].prerequisites.map(&:to_sym)
   Rake::Task['db:create'].clear_prerequisites
-  Rake::Task['db:create'].enhance(["db:force_skip_persist", "multisite:create"] + reqs)
+  Rake::Task['db:create'].enhance(["db:force_skip_persist", "multisite:create"] + prerequisites)
 end
 
 # db:drop and related tasks
@@ -119,9 +119,9 @@ task "db:drop" => :load_config do
 end
 
 begin
-  reqs = Rake::Task['db:drop'].prerequisites.map(&:to_sym)
+  prerequisites = Rake::Task['db:drop'].prerequisites.map(&:to_sym)
   Rake::Task['db:drop'].clear_prerequisites
-  Rake::Task['db:drop'].enhance(["db:force_skip_persist", "multisite:drop"] + reqs)
+  Rake::Task['db:drop'].enhance(["db:force_skip_persist", "multisite:drop"] + prerequisites)
 end
 
 # db:migrate and related tasks
