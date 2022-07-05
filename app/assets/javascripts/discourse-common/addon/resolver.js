@@ -268,7 +268,6 @@ export function buildResolver(baseName) {
 
       if (parsedName.fullNameWithoutType.startsWith("components/")) {
         // Look up components as-is
-        namespaced = parsedName.fullNameWithoutType;
       } else if (/^admin[_\.-]/.test(parsedName.fullNameWithoutType)) {
         namespaced = parsedName.fullNameWithoutType.slice(6);
       } else if (
@@ -277,15 +276,24 @@ export function buildResolver(baseName) {
         namespaced = `${match[1].toLowerCase()}${match[2]}`;
       }
 
+      let resolved;
+
       if (namespaced) {
         let adminParsedName = this.parseName(`template:${namespaced}`);
-        return (
+        resolved =
           // Built-in
           this.findTemplate(adminParsedName, "admin/templates/") ||
           // Plugin
-          this.findTemplate(adminParsedName, "javascripts/admin/")
-        );
+          this.findTemplate(adminParsedName, "javascripts/admin/");
       }
+
+      resolved ??=
+        // Built-in
+        this.findTemplate(parsedName, "admin/templates/") ||
+        // Plugin
+        this.findTemplate(parsedName, "javascripts/admin/");
+
+      return resolved;
     }
 
     findWizardTemplate(parsedName) {
