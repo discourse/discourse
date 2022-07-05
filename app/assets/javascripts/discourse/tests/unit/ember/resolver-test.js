@@ -393,7 +393,7 @@ module("Unit | Ember | resolver", function (hooks) {
       assert,
       "template:admin-plugin/template",
       "javascripts/admin/plugin-template",
-      "looks up templates in pluginss"
+      "looks up templates in plugins"
     );
   });
 
@@ -421,7 +421,9 @@ module("Unit | Ember | resolver", function (hooks) {
     );
   });
 
-  // TODO: Is this necessary? IIRC internal Ember code will use the top level loading template by default
+  // We can probably remove this in the future since this behavior seems pretty
+  // close to Ember's default behavior.
+  // See https://guides.emberjs.com/release/routing/loading-and-error-substates/
   test("resolves loading templates", function (assert) {
     setTemplates(["fooloading", "foo/loading", "foo_loading", "loading"]);
 
@@ -500,10 +502,6 @@ module("Unit | Ember | resolver", function (hooks) {
       "javascripts/connectors/foo-bar/baz_qux",
       "underscores last segment"
     );
-
-    // TODO: Test that other normal lookup rules apply
-
-    // TODO: Maybe test precedence
   });
 
   test("returns 'not_found' template when template name cannot be resolved", function (assert) {
@@ -512,7 +510,93 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(assert, "template:foo/bar/baz", "not_found", "");
   });
 
-  // TODO: Test wizard resolution
+  test("resolves templates with 'wizard' prefix", function (assert) {
+    setTemplates([
+      "wizard/templates/foo",
+      "wizard_bar",
+      "wizard.bar",
+      "wizard/templates/bar",
+      "wizard/templates/dashboard_general",
+      "wizard-baz-qux",
+      "javascripts/wizard/plugin-template",
+    ]);
 
-  // TODO: Test normalizing
+    // Switches prefix to wizard/templates when underscored
+    lookupTemplate(
+      assert,
+      "template:wizard_foo",
+      "wizard/templates/foo",
+      "when prefix is separated by underscore"
+    );
+
+    // Switches prefix to wizard/templates when dotted
+    lookupTemplate(
+      assert,
+      "template:wizard.foo",
+      "wizard/templates/foo",
+      "when prefix is separated by dot"
+    );
+
+    // Doesn't match unseparated prefix
+    lookupTemplate(
+      assert,
+      "template:wizardfoo",
+      undefined,
+      "but not when prefix is not separated in any way"
+    );
+
+    // Prioritized the default match when underscored
+    lookupTemplate(
+      assert,
+      "template:wizard_bar",
+      "wizard_bar",
+      "but not when template with the exact underscored name exists"
+    );
+
+    // Prioritized the default match when dotted
+    lookupTemplate(
+      assert,
+      "template:wizard.bar",
+      "wizard.bar",
+      "but not when template with the exact dotted name exists"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:wizard-dashboard-general",
+      "wizard/templates/dashboard_general",
+      "finds namespaced and underscored version"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:wizard-baz/qux",
+      "wizard-baz-qux",
+      "also tries dasherized"
+    );
+  });
+
+  test("resolves component templates with 'wizard' prefix to 'wizard/templates/' namespace", function (assert) {
+    setTemplates([
+      "wizard/templates/components/foo",
+      "components/bar",
+      "wizard/templates/components/bar",
+    ]);
+
+    // Looks for components in wizard/templates
+    lookupTemplate(
+      assert,
+      "template:components/foo",
+      "wizard/templates/components/foo",
+      "uses wizard template component when no standard match"
+    );
+
+    // Prioritized non-wizard component
+    lookupTemplate(
+      assert,
+      "template:components/bar",
+      "components/bar",
+      "uses standard match when both exist"
+    );
+  });
 });

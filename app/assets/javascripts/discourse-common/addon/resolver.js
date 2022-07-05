@@ -90,7 +90,6 @@ export function buildResolver(baseName) {
       // items and so we can end up with two distinct version of the controller!
       const split = fullName.split(":");
       const type = split[0];
-      // This should only matter for controllerFor and routeFor
       if (
         split.length > 1 &&
         (type === "controller" || type === "route" || type === "template")
@@ -104,7 +103,7 @@ export function buildResolver(baseName) {
           const dashed = dasherize(split[1].replace(/[\.\/]/g, "-"));
 
           const adminBase = `admin/${type}s/`;
-          const wizardBase = "wizard/" + split[0] + "s/";
+          const wizardBase = `wizard/${type}s/`;
           if (
             lookupModuleBySuffix(`${type}s/${dashed}`) ||
             requirejs.entries[adminBase + dashed] ||
