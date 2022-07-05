@@ -11,9 +11,6 @@
       backface-visibility: hidden;
       background: var(--secondary);
       position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
       width: 100%;
       z-index: 1001;
       --animation-state: paused;
@@ -32,10 +29,7 @@
       animation-fill-mode: forwards;
       animation-play-state: var(--animation-state);
       color: var(--primary);
-    }
-
-    #d-splash .preloader-text {
-      padding-top: 4em;
+      margin-bottom: -4em;
     }
 
     #d-splash .preloader-text:after {
