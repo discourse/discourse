@@ -188,6 +188,14 @@ class Stylesheet::Manager
     stylesheet_details(target, "all")
   end
 
+  def stylesheet_preload_tag(target = :desktop, media = 'all')
+    stylesheets = stylesheet_details(target, media)
+    stylesheets.map do |stylesheet|
+      href = stylesheet[:new_href]
+      %[<link href="#{href}" rel="preload" as="style"/>]
+    end.join("\n").html_safe
+  end
+
   def stylesheet_link_tag(target = :desktop, media = 'all')
     stylesheets = stylesheet_details(target, media)
     stylesheets.map do |stylesheet|
@@ -291,6 +299,16 @@ class Stylesheet::Manager
     stylesheet[:new_href] = href
     cache.defer_set(cache_key, stylesheet.freeze)
     stylesheet
+  end
+
+  def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, media = 'all')
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
+
+    return '' if !stylesheet
+
+    href = stylesheet[:new_href]
+
+    %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
   def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')

@@ -1,7 +1,4 @@
-{{#d-modal-body
-  title="discourse_local_dates.title"
-  class="discourse-local-dates-create-modal"
-  style="overflow: auto"}}
+<DModalBody @title="discourse_local_dates.title" @class="discourse-local-dates-create-modal" @style="overflow: auto">
 
   <div class="form">
     {{#if isValid}}
@@ -23,41 +20,41 @@
       <div class="inputs-panel">
         <div class="date-time-control from {{if fromSelected "is-selected"}} {{if fromFilled "is-filled"}}">
           {{d-icon "calendar-alt"}}
-          {{d-button
-            id="from-date-time"
-            action=(action "focusFrom")
-            translatedLabel=formattedFrom
-            class="date-time"}}
+          <DButton
+            @id="from-date-time"
+            @action={{action "focusFrom"}}
+            @translatedLabel={{formattedFrom}}
+            @class="date-time" />
         </div>
 
         <div class="date-time-control to {{if toSelected "is-selected"}} {{if toFilled "is-filled"}}">
           {{d-icon "calendar-alt"}}
-          {{d-button
-            action=(action "focusTo")
-            translatedLabel=formattedTo
-            class="date-time"}}
+          <DButton
+            @action={{action "focusTo"}}
+            @translatedLabel={{formattedTo}}
+            @class="date-time" />
           {{#if toFilled}}
-            {{d-button icon="times" action=(action "eraseToDateTime") class="delete-to-date"}}
+            <DButton @icon="times" action={{action "eraseToDateTime"}} @class="delete-to-date" />
           {{/if}}
         </div>
 
         {{#unless site.mobileView}}
-          {{timezone-input
-            options=(hash icon="globe")
-            value=timezone
-            onChange=(action (mut timezone))
-          }}
+          <TimezoneInput
+            @options={{hash icon="globe"}}
+            @value={{timezone}}
+            @onChange={{action (mut timezone)}}
+          />
         {{/unless}}
       </div>
 
       <div class="picker-panel">
-        {{input class="fake-input"}}
+        <Input @class="fake-input" />
         <div class="date-picker" id="picker-container-{{elementId}}"></div>
 
         {{#if fromSelected}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            {{input maxlength=5 placeholder="hh:mm" input=(action "setTime") type="time" value=time class="time-picker"}}
+            <Input @maxlength={{5}} @placeholder="hh:mm" @input={{action "setTime"}} @type="time" @value={{time}} @class="time-picker" />
           </div>
         {{/if}}
 
@@ -65,18 +62,18 @@
           {{#if toDate}}
             <div class="time-pickers">
               {{d-icon "far-clock"}}
-              {{input maxlength=5 placeholder="hh:mm" input=(action "setToTime") type="time" value=toTime class="time-picker"}}
+              <Input @maxlength={{5}} @placeholder="hh:mm" @input={{action "setToTime"}} @type="time" @value={{toTime}} @class="time-picker" />
             </div>
           {{/if}}
         {{/if}}
       </div>
 
       {{#if site.mobileView}}
-        {{timezone-input
-          value=timezone
-          options=(hash icon="globe")
-          onChange=(action (mut timezone))
-        }}
+        <TimezoneInput
+          @value={{timezone}}
+          @options={{hash icon="globe"}}
+          @onChange={{action (mut timezone)}}
+        />
       {{/if}}
     </div>
 
@@ -89,15 +86,15 @@
             </label>
             <p>{{html-safe (i18n "discourse_local_dates.create.form.recurring_description")}}</p>
             <div class="controls">
-              {{combo-box
-                content=recurringOptions
-                class="recurrence-input"
-                value=recurring
-                onChange=(action (mut recurring))
-                options=(hash
+              <ComboBox
+                @content={{recurringOptions}}
+                @class="recurrence-input"
+                @value={{recurring}}
+                @onChange={{action (mut recurring)}}
+                @options={{hash
                   none="discourse_local_dates.create.form.recurring_none"
-                )
-              }}
+                }}
+              />
             </div>
           </div>
         {{/unless}}
@@ -111,7 +108,7 @@
             </a>
           </p>
           <div class="controls">
-            {{text-field value=format class="format-input"}}
+            <TextField @value={{format}} @class="format-input" />
           </div>
         </div>
         <div class="control-group">
@@ -133,39 +130,39 @@
           <label>{{i18n "discourse_local_dates.create.form.timezones_title"}}</label>
           <p>{{i18n "discourse_local_dates.create.form.timezones_description"}}</p>
           <div class="controls">
-            {{multi-select
-              valueProperty=null
-              nameProperty=null
-              class="timezones-input"
-              content=allTimezones
-              value=timezones
-              options=(hash
+            <MultiSelect
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @class="timezones-input"
+              @content={{allTimezones}}
+              @value={{timezones}}
+              @options={{hash
                 allowAny=false
                 maximum=5
-              )
-            }}
+              }}
+            />
           </div>
         </div>
       </div>
     {{/if}}
   </div>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer discourse-local-dates-create-modal-footer">
   {{#if isValid}}
-    {{d-button
-      class="btn-primary"
-      action=(action "save")
-      label="discourse_local_dates.create.form.insert"}}
+    <DButton
+      @class="btn-primary"
+      @action={{action "save"}}
+      @label="discourse_local_dates.create.form.insert" />
   {{/if}}
 
   <a class="cancel-action" href {{action "cancel"}}>
     {{i18n "cancel"}}
   </a>
 
-  {{d-button
-    class="btn-default advanced-mode-btn"
-    action=(action "advancedMode")
-    icon="cog"
-    label=toggleModeBtnLabel}}
+  <DButton
+    @class="btn-default advanced-mode-btn"
+    @action={{action "advancedMode"}}
+    @icon="cog"
+    @label={{toggleModeBtnLabel}} />
 </div>

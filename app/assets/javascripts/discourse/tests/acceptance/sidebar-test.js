@@ -14,7 +14,7 @@ acceptance("Sidebar - Anon User", function () {
       "does not add sidebar utility class to body"
     );
 
-    assert.ok(!exists(".sidebar-wrapper"));
+    assert.ok(!exists(".sidebar-container"));
   });
 });
 
@@ -30,7 +30,7 @@ acceptance("Sidebar - User with sidebar disabled", function (needs) {
       "does not add sidebar utility class to body"
     );
 
-    assert.ok(!exists(".sidebar-wrapper"));
+    assert.ok(!exists(".sidebar-container"));
   });
 });
 
@@ -46,7 +46,7 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
       "adds sidebar utility class to body"
     );
 
-    assert.ok(exists(".sidebar-wrapper"), "displays the sidebar by default");
+    assert.ok(exists(".sidebar-container"), "displays the sidebar by default");
 
     await click(".header-sidebar-toggle .btn");
 
@@ -56,10 +56,10 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
       "removes sidebar utility class to body"
     );
 
-    assert.ok(!exists(".sidebar-wrapper"), "hides the sidebar");
+    assert.ok(!exists(".sidebar-container"), "hides the sidebar");
 
     await click(".header-sidebar-toggle .btn");
 
-    assert.ok(exists(".sidebar-wrapper"), "displays the sidebar");
+    assert.ok(exists(".sidebar-container"), "displays the sidebar");
   });
 });

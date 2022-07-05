@@ -5,6 +5,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { emailValid } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { userPath } from "discourse/lib/url";
+import { ajax } from "discourse/lib/ajax";
 
 let cache = {},
   cacheKey,
@@ -75,7 +76,7 @@ function performSearch(
   }
 
   // need to be able to cancel this
-  oldSearch = $.ajax(userPath("search/users"), {
+  oldSearch = ajax(userPath("search/users"), {
     data,
   });
 
@@ -102,7 +103,7 @@ function performSearch(
         returnVal = r;
       }
     })
-    .always(function () {
+    .finally(function () {
       oldSearch = null;
       resultsFn(returnVal);
     });

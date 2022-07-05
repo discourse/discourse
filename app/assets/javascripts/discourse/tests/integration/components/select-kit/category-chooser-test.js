@@ -314,7 +314,7 @@ discourseModule(
         await this.subject.expand();
 
         assert.strictEqual(
-          this.subject.rowByIndex(0).el()[0].querySelector(".category-desc")
+          this.subject.rowByIndex(0).el().querySelector(".category-desc")
             .innerText,
           'baz "bar ‘foo’'
         );

@@ -1,17 +1,17 @@
-{{#styleguide-example title=".nav-stacked" class="half-size"}}
-  {{#mobile-nav class="preferences-nav" desktopClass="preferences-list action-list nav-stacked"}}
+<StyleguideExample @title=".nav-stacked" class="half-size">
+  <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
     {{#each dummy.navItems as |ni|}}
       <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
     {{/each}}
-  {{/mobile-nav}}
-{{/styleguide-example}}
+  </MobileNav>
+</StyleguideExample>
 
-{{#styleguide-example title=".user-navigation .nav-stacked" class="half-size"}}
-  {{#d-section class="user-navigation"}}
-    {{#mobile-nav class="preferences-nav" desktopClass="preferences-list action-list nav-stacked"}}
+<StyleguideExample @title=".user-navigation .nav-stacked" class="half-size">
+  <DSection @class="user-navigation">
+    <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
       {{#each dummy.navItems as |ni|}}
         <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
       {{/each}}
-    {{/mobile-nav}}
-  {{/d-section}}
-{{/styleguide-example}}
+    </MobileNav>
+  </DSection>
+</StyleguideExample>

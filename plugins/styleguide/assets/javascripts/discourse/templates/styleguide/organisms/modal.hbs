@@ -1,10 +1,10 @@
-{{#styleguide-example title="d-modal"}}
-  {{#d-modal closeModal=(action "dummy") modalStyle="inline-modal" title=(i18n "styleguide.sections.modal.header")}}
-    {{#d-modal-body}}
+<StyleguideExample @title="d-modal">
+  <DModal @closeModal={{action "dummy"}} @modalStyle="inline-modal" @title={{i18n "styleguide.sections.modal.header"}}>
+    <DModalBody>
       {{html-safe dummy.lorem}}
-    {{/d-modal-body}}
+    </DModalBody>
     <div class="modal-footer">
       {{i18n "styleguide.sections.modal.footer"}}
     </div>
-  {{/d-modal}}
-{{/styleguide-example}}
+  </DModal>
+</StyleguideExample>

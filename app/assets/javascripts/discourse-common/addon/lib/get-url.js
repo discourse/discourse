@@ -5,7 +5,11 @@ let snapshot;
 
 export default function getURL(url) {
   if (baseUri === undefined) {
-    setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
+    setPrefix(
+      document
+        .querySelector('meta[name="discourse-base-uri"]')
+        ?.getAttribute("content") || ""
+    );
   }
 
   if (!url) {
@@ -104,9 +108,14 @@ export function setupS3CDN(configS3BaseUrl, configS3CDN, opts) {
 // prefix directory. For example from `/forum` to `/about-us` which is not discourse
 export function samePrefix(url) {
   if (baseUri === undefined) {
-    setPrefix($('meta[name="discourse-base-uri"]').attr("content") || "");
+    setPrefix(
+      document
+        .querySelector('meta[name="discourse-base-uri"]')
+        ?.getAttribute("content") || ""
+    );
   }
+
   let origin = window.location.origin;
   let cmp = url[0] === "/" ? baseUri || "/" : origin + baseUri || origin;
-  return url.indexOf(cmp) === 0;
+  return url.startsWith(cmp);
 }

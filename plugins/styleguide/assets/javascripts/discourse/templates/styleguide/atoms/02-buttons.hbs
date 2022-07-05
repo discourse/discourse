@@ -1,91 +1,71 @@
-{{#styleguide-example title=".btn-icon - sizes (large, default, small)"}}
+<StyleguideExample @title=".btn-icon - sizes (large, default, small)">
   {{#each dummy.buttonSizes as |bs|}}
-    {{d-button icon="times" translatedTitle=bs.text class=bs.class disabled=bs.disabled}}
+    <DButton @icon="times" @translatedTitle={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-icon - states"}}
+<StyleguideExample @title=".btn-icon - states">
   {{#each dummy.buttonStates as |bs|}}
-    {{d-button icon="times" translatedTitle=bs.text class=bs.class disabled=bs.disabled}}
+    <DButton @icon="times" @translatedTitle={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-text - sizes (large, default, small)"}}
+<StyleguideExample @title=".btn-text - sizes (large, default, small)">
   {{#each dummy.buttonSizes as |bs|}}
-    {{d-button translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+    <DButton @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-text - states"}}
+<StyleguideExample @title=".btn-text - states">
   {{#each dummy.buttonStates as |bs|}}
-    {{d-button translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+    <DButton @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-default .btn-icon-text - sizes (large, default, small)"}}
+<StyleguideExample @title=".btn-default .btn-icon-text - sizes (large, default, small)">
   {{#each dummy.buttonSizes as |bs|}}
-    {{d-button icon="plus" translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+    <DButton @icon="plus" @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-default .btn-icon-text - states"}}
+<StyleguideExample @title=".btn-default .btn-icon-text - states">
   {{#each dummy.buttonStates as |bs|}}
-    {{d-button icon="plus" translatedLabel=bs.text class=bs.class disabled=bs.disabled}}
+    <DButton @icon="plus" @translatedLabel={{bs.text}} @class={{bs.class}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-primary .btn-icon-text - sizes (large, default, small)"}}
+<StyleguideExample @title=".btn-primary .btn-icon-text - sizes (large, default, small)">
   {{#each dummy.buttonSizes as |bs|}}
-    {{d-button
-      class=(concat "btn-primary " bs.class)
-      icon="plus"
-      translatedLabel=bs.text
-      disabled=bs.disabled
-    }}
+    <DButton @class={{concat "btn-primary " bs.class}} @icon="plus" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-primary .btn-icon-text - states"}}
+<StyleguideExample @title=".btn-primary .btn-icon-text - states">
   {{#each dummy.buttonStates as |bs|}}
-    {{d-button
-      class=(concat "btn-primary " bs.class)
-      icon="plus"
-      translatedLabel=bs.text
-      disabled=bs.disabled
-    }}
+    <DButton @class={{concat "btn-primary " bs.class}} @icon="plus" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-danger .btn-icon-text - sizes (large, default, small)"}}
+<StyleguideExample @title=".btn-danger .btn-icon-text - sizes (large, default, small)">
   {{#each dummy.buttonSizes as |bs|}}
-    {{d-button
-      class=(concat "btn-danger " bs.class)
-      icon="trash-alt"
-      translatedLabel=bs.text
-      disabled=bs.disabled
-    }}
+    <DButton @class={{concat "btn-danger " bs.class}} @icon="trash-alt" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-danger .btn-icon-text - states"}}
+<StyleguideExample @title=".btn-danger .btn-icon-text - states">
   {{#each dummy.buttonStates as |bs|}}
-    {{d-button
-      class=(concat "btn-danger " bs.class)
-      icon="trash-alt"
-      translatedLabel=bs.text
-      disabled=bs.disabled
-    }}
+    <DButton @class={{concat "btn-danger " bs.class}} @icon="trash-alt" @translatedLabel={{bs.text}} @disabled={{bs.disabled}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-flat - sizes (large, default, small)"}}
+<StyleguideExample @title=".btn-flat - sizes (large, default, small)">
   {{#each dummy.buttonSizes as |bs|}}
-    {{flat-button icon="trash-alt" disabled=bs.disabled translatedTitle=bs.title}}
+    <FlatButton @icon="trash-alt" @disabled={{bs.disabled}} @translatedTitle={{bs.title}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>
 
-{{#styleguide-example title=".btn-flat - states"}}
+<StyleguideExample @title=".btn-flat - states">
   {{#each dummy.buttonStates as |bs|}}
-    {{flat-button icon="trash-alt" disabled=bs.disabled translatedTitle=bs.title}}
+    <FlatButton @icon="trash-alt" @disabled={{bs.disabled}} @translatedTitle={{bs.title}} />
   {{/each}}
-{{/styleguide-example}}
+</StyleguideExample>

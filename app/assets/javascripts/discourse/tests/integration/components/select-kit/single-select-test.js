@@ -401,19 +401,19 @@ discourseModule(
 
       async test(assert) {
         assert.strictEqual(
-          this.subject.header().el()[0].querySelector(".selected-name").lang,
+          this.subject.header().el().querySelector(".selected-name").lang,
           ""
         );
 
         await this.subject.expand();
 
         const row = this.subject.rowByValue(1);
-        assert.strictEqual(row.el()[0].lang, "be");
+        assert.strictEqual(row.el().lang, "be");
 
         await this.subject.selectRowByValue(1);
 
         assert.strictEqual(
-          this.subject.header().el()[0].querySelector(".selected-name").lang,
+          this.subject.header().el().querySelector(".selected-name").lang,
           "be"
         );
       },
@@ -431,7 +431,7 @@ discourseModule(
 
       async test(assert) {
         assert.strictEqual(
-          this.subject.header().el()[0].getAttribute("name"),
+          this.subject.header().el().getAttribute("name"),
           I18n.t("select_kit.select_to_filter")
         );
 
@@ -439,7 +439,7 @@ discourseModule(
         await this.subject.selectRowByValue(1);
 
         assert.strictEqual(
-          this.subject.header().el()[0].getAttribute("name"),
+          this.subject.header().el().getAttribute("name"),
           I18n.t("select_kit.filter_by", {
             name: this.content.firstObject.name,
           })

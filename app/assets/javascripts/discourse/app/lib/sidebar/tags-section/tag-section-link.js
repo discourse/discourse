@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
@@ -47,15 +45,11 @@ export default class TagSectionLink {
     return this.tagName;
   }
 
-  get badgeText() {
+  get badgeCount() {
     if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
-        count: this.totalUnread,
-      });
+      return this.totalUnread;
     } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
-        count: this.totalNew,
-      });
+      return this.totalNew;
     }
   }
 
