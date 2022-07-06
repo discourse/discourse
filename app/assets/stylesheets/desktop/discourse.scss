@@ -187,6 +187,15 @@ input {
   }
 }
 
+#main-outlet-wrapper {
+  //  grid-template-columns transition supported in Firefox, Chrome support coming summer 2022
+  transition: grid-template-columns var(--d-sidebar-animation-time);
+}
+
+.d-header-wrap .wrap {
+  transition: max-width var(--d-sidebar-animation-time);
+}
+
 body.has-sidebar-page {
   .wrap {
     // increase page max-width to accommodate sidebar width
@@ -203,8 +212,7 @@ body.has-sidebar-page {
 }
 
 body.sidebar-animate {
-  .d-header .wrap,
   #main-outlet-wrapper {
-    transition: ease-in-out 0.5s;
+    transition: all var(--d-sidebar-animation-time);
   }
 }
