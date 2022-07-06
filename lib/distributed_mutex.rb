@@ -12,10 +12,10 @@ class DistributedMutex
     local current_expire_time = redis.call("get", KEYS[1])
 
     if current_expire_time and tonumber(now) <= tonumber(current_expire_time) then
-      return { false, expire_time }
+      return nil
     else
       local result = redis.call("setex", KEYS[1], ARGV[1] + 1, tostring(expire_time))
-      return { true, expire_time }
+      return expire_time
     end
   LUA
 
@@ -81,9 +81,9 @@ class DistributedMutex
     attempts = 0
 
     while true
-      got_lock, expire_time = LOCK_SCRIPT.eval(redis, [prefixed_key], [validity])
+      expire_time = LOCK_SCRIPT.eval(redis, [prefixed_key], [validity])
 
-      return expire_time if got_lock
+      return expire_time if expire_time
 
       sleep 0.001
 
