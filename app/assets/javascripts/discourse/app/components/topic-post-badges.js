@@ -18,5 +18,5 @@ export default Component.extend({
     );
   },
 
-  displayUnreadPosts: or("newPosts", "unreadPosts")
+  displayUnreadPosts: or("newPosts", "unreadPosts"),
 });

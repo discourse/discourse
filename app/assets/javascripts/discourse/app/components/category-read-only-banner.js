@@ -10,5 +10,5 @@ export default Component.extend({
     return this.currentUser;
   },
 
-  shouldShow: and("category.read_only_banner", "readOnly", "user")
+  shouldShow: and("category.read_only_banner", "readOnly", "user"),
 });

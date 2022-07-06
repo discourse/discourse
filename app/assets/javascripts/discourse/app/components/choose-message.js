@@ -71,5 +71,5 @@ export default Component.extend({
       next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;
     },
-  }
+  },
 });

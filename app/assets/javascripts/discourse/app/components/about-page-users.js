@@ -23,5 +23,5 @@ export default Component.extend({
         prioritizeName: prioritizeNameInUx(name),
       };
     });
-  })
+  }),
 });

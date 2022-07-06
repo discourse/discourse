@@ -131,5 +131,5 @@ export default Component.extend({
     setWarning(message) {
       this.set("warning", message);
     },
-  }
+  },
 });

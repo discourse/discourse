@@ -18,5 +18,5 @@ export default Component.extend({
     }
 
     this.set("value", value.join(this.tokenSeparator));
-  }
+  },
 });

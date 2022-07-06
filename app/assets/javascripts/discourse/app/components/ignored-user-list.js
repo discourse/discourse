@@ -32,5 +32,5 @@ export default Component.extend({
         },
       });
     },
-  }
+  },
 });

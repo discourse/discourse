@@ -7,5 +7,5 @@ export default Component.extend({
   @action
   changed(value) {
     this.set("field.value", value);
-  }
+  },
 });

@@ -748,5 +748,5 @@ export default Component.extend({
 
   _updateSearchTerm(searchTerm) {
     this.onChangeSearchTerm(searchTerm.trim());
-  }
+  },
 });

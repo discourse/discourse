@@ -23,5 +23,5 @@ export default Component.extend({
     Topic.setSlowMode(this.topic.id, 0)
       .catch(popupAjaxError)
       .then(() => this.set("topic.slow_mode_seconds", 0));
-  }
+  },
 });

@@ -42,5 +42,5 @@ export default Component.extend({
         value: this.get("banner.key"),
       });
     }
-  }
+  },
 });

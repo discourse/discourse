@@ -17,5 +17,5 @@ export default Component.extend({
       this.set("value", value ? "true" : "false");
       return value;
     },
-  }
+  },
 });

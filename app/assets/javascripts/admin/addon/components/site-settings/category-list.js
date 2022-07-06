@@ -13,5 +13,5 @@ export default Component.extend({
     onChangeSelectedCategories(value) {
       this.set("value", (value || []).mapBy("id").join("|"));
     },
-  }
+  },
 });

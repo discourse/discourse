@@ -30,5 +30,5 @@ export default Component.extend({
   @action
   onChangeListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
-  }
+  },
 });

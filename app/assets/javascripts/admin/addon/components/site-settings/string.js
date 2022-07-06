@@ -18,5 +18,5 @@ export default Component.extend({
     schemaModal.set("onClose", () => {
       this.set("value", schemaModal.model.value);
     });
-  }
+  },
 });

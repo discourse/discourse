@@ -15,5 +15,5 @@ export default Component.extend({
   @action
   changeSelectedTags(tags) {
     this.set("value", tags.join("|"));
-  }
+  },
 });

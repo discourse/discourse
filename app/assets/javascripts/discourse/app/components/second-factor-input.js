@@ -41,5 +41,5 @@ export default Component.extend({
     if (this.onTokenInput) {
       this.onTokenInput(...arguments);
     }
-  }
+  },
 });

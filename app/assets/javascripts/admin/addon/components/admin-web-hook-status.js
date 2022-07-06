@@ -36,5 +36,5 @@ export default Component.extend({
       "deliveryStatus",
       I18n.t(`admin.web_hooks.delivery_status.${this.get("status.name")}`)
     );
-  }
+  },
 });

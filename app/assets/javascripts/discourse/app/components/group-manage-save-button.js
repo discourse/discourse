@@ -64,5 +64,5 @@ export default Component.extend({
         })
         .finally(() => this.set("saving", false));
     },
-  }
+  },
 });

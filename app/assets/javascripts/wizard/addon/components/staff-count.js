@@ -5,5 +5,5 @@ export default Component.extend({
   tagName: "",
 
   @discourseComputed("field.value")
-  showStaffCount: (staffCount) => staffCount > 1
+  showStaffCount: (staffCount) => staffCount > 1,
 });

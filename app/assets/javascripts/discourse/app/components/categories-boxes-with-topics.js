@@ -13,5 +13,5 @@ export default Component.extend({
     return this.categories.any((c) => {
       return !isEmpty(c.get("uploaded_logo.url"));
     });
-  }
+  },
 });

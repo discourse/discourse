@@ -112,5 +112,5 @@ export default Component.extend({
       options.reason = reason;
     }
     this.set("basicNameValidation", EmberObject.create(options));
-  }
+  },
 });

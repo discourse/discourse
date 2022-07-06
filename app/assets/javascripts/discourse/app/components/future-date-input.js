@@ -121,5 +121,5 @@ export default Component.extend({
         return 0 <= diff && diff < 60 * 1000;
       }
     });
-  }
+  },
 });

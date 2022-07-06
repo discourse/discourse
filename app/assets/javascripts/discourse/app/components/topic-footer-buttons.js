@@ -57,5 +57,5 @@ export default Component.extend({
 
   @discourseComputed("topic.message_archived")
   archiveLabel: (archived) =>
-    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title"
+    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
 });

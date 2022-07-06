@@ -7,5 +7,5 @@ export default Component.extend({
   @action
   expand() {
     this.set("expanded", true);
-  }
+  },
 });

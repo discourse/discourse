@@ -105,5 +105,5 @@ export default Component.extend({
     return (
       membersVisibilityLevel !== this.visibilityLevelOptions.firstObject.value
     );
-  }
+  },
 });

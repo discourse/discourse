@@ -14,5 +14,5 @@ export default Component.extend(BufferedContent, SettingComponent, {
     });
   },
 
-  staffLogFilter: readOnly("setting.staffLogFilter")
+  staffLogFilter: readOnly("setting.staffLogFilter"),
 });

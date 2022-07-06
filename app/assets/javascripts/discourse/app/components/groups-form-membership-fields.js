@@ -72,5 +72,5 @@ export default Component.extend({
         value.join(this.tokenSeparator)
       );
     },
-  }
+  },
 });

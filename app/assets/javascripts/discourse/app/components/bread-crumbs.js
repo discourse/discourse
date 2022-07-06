@@ -125,5 +125,5 @@ export default Component.extend({
     return this.categories.filter(
       (c) => c.get("parentCategory") === firstCategory
     );
-  }
+  },
 });

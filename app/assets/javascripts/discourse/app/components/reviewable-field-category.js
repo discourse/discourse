@@ -8,5 +8,5 @@ export default Component.extend({
       this.set("value", category);
       this.categoryChanged && this.categoryChanged(category);
     },
-  }
+  },
 });

@@ -7,5 +7,5 @@ export default Component.extend({
   @discourseComputed("group.full_name")
   showFullName(fullName) {
     return fullName && fullName.length;
-  }
+  },
 });

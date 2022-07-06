@@ -8,5 +8,5 @@ export default Component.extend({
     showRawEmail() {
       showModal("raw-email").set("rawEmail", this.reviewable.payload.raw_email);
     },
-  }
+  },
 });

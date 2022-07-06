@@ -9,5 +9,5 @@ export default Component.extend({
 
   ariaCurrent: computed("router.currentRouteName", "route", function () {
     return this.router.currentRouteName === this.route ? "page" : null;
-  })
+  }),
 });

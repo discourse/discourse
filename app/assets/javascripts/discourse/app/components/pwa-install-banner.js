@@ -56,5 +56,5 @@ export default Component.extend({
     dismiss() {
       this.set("bannerDismissed", true);
     },
-  }
+  },
 });

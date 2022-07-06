@@ -50,5 +50,5 @@ export default Component.extend({
   @action
   onChangeColor(color) {
     this.set("value", color);
-  }
+  },
 });

@@ -31,5 +31,5 @@ export default Component.extend({
       }
     }
     this.set("field.value", newFieldValue);
-  }
+  },
 });

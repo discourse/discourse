@@ -16,5 +16,5 @@ export default Component.extend({
   @discourseComputed("categories.[].subcategories")
   hasSubcategories() {
     return this.categories.any((c) => !isEmpty(c.get("subcategories")));
-  }
+  },
 });

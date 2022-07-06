@@ -13,5 +13,5 @@ export default Component.extend({
       return "lock";
     }
     return "far-file-alt";
-  }
+  },
 });

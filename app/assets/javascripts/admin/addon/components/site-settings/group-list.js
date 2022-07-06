@@ -21,5 +21,5 @@ export default Component.extend({
     onChangeGroupListSetting(value) {
       this.set("value", value.join(this.tokenSeparator));
     },
-  }
+  },
 });

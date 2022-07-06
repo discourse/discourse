@@ -136,5 +136,5 @@ export default Component.extend({
       });
     }
     return timeOptions;
-  }
+  },
 });

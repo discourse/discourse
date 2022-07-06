@@ -36,5 +36,5 @@ export default Component.extend({
         ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
       ]);
     },
-  }
+  },
 });

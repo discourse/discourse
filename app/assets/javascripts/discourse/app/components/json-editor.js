@@ -67,7 +67,7 @@ export default Component.extend({
     this._super(...arguments);
 
     this.editor?.destroy();
-  }
+  },
 });
 
 class DiscourseJsonSchemaEditorIconlib {

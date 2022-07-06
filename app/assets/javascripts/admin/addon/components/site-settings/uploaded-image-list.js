@@ -14,5 +14,5 @@ export default Component.extend({
         save: (v) => this.set("value", v),
       });
     },
-  }
+  },
 });

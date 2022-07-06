@@ -22,5 +22,5 @@ export default Component.extend({
     if (this.session.get("hideSignupCta")) {
       this.session.set("showSignupCta", false);
     }
-  })
+  }),
 });

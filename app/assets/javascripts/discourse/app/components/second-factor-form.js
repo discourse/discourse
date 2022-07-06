@@ -60,5 +60,5 @@ export default Component.extend({
         this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
       }
     },
-  }
+  },
 });
