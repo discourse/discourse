@@ -134,7 +134,7 @@ class ShrinkUploadedImage
 
     if existing_upload
       begin
-        UploadReferences
+        UploadReference
           .where(target_type: 'Post')
           .where(upload_id: original_upload.id)
           .update_all(upload_id: upload.id)
