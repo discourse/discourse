@@ -1,6 +1,6 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { bind } from "discourse-common/utils/decorators";
-import { customSections } from "discourse/lib/sidebar/custom-sections";
+import { sidebarCustomSections } from "discourse/lib/sidebar/custom-sections";
 
 export default class Sidebar extends GlimmerComponent {
   constructor() {
