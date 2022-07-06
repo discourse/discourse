@@ -121,7 +121,7 @@
 }
 
 .onscreen-post .row {
-  display: flex; // children should never wrap
+  display: block; // children should never wrap
 }
 
 @media all and (min-width: 400px) {
