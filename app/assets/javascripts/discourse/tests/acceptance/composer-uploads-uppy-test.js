@@ -12,6 +12,7 @@ import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
+import sinon from "sinon";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -387,6 +388,9 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   });
 
   test("should show an error message for the failed upload", async function (assert) {
+    // Don't log the upload error
+    sinon.stub(console, "error");
+
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
