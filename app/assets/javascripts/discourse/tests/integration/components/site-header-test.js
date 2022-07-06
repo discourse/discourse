@@ -13,13 +13,13 @@ import { click } from "@ember/test-helpers";
 discourseModule("Integration | Component | site-header", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.currentUser.set("unread_high_priority_notifications", 1);
+    this.currentUser.set("read_first_notification", false);
+  });
+
   componentTest("first notification mask", {
     template: hbs`{{site-header}}`,
-
-    beforeEach() {
-      this.set("currentUser.unread_high_priority_notifications", 1);
-      this.set("currentUser.read_first_notification", false);
-    },
 
     async test(assert) {
       assert.strictEqual(

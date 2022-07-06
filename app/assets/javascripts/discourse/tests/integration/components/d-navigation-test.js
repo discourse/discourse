@@ -8,6 +8,17 @@ import hbs from "htmlbars-inline-precompile";
 discourseModule("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    const categories = this.site.categoriesList
+      .filter((category) => !category.parent_category_id)
+      .slice(0, 4);
+    this.site.setProperties({ categories });
+    this.currentUser.set(
+      "indirectly_muted_category_ids",
+      categories.slice(0, 3).map((category) => category.id)
+    );
+  });
+
   componentTest("filters indirectly muted categories", {
     template: hbs`
       {{d-navigation
@@ -15,19 +26,9 @@ discourseModule("Integration | Component | d-navigation", function (hooks) {
       }}
     `,
 
-    beforeEach() {
-      const categories = this.site.categoriesList
-        .filter((category) => !category.parent_category_id)
-        .slice(0, 4);
-      this.site.setProperties({ categories });
-      this.currentUser.set(
-        "indirectly_muted_category_ids",
-        categories.slice(0, 3).map((category) => category.id)
-      );
-    },
-
     async test(assert) {
       await click(".category-drop .select-kit-header-wrapper");
+
       assert.strictEqual(
         document.querySelectorAll(".category-row").length,
         1,
