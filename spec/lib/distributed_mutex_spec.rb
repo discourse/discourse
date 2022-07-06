@@ -31,31 +31,28 @@ describe DistributedMutex do
 
     Discourse.redis.setnx key, Time.now.to_i - 1
 
-    start = Time.now.to_i
+    start = Time.now
     m.synchronize do
       "nop"
     end
 
     # no longer than a second
-    expect(Time.now.to_i).to be <= start + 1
+    expect(Time.now).to be <= start + 1
   end
 
   it "allows the validity of the lock to be configured" do
-    freeze_time
     mutex = DistributedMutex.new(key, validity: 2)
 
     mutex.synchronize do
-      expect(Discourse.redis.ttl(key)).to eq(3)
-      expect(Discourse.redis.get(key).to_i).to eq(Time.now.to_i + 2)
+      expect(Discourse.redis.ttl(key)).to be <= 3
+      expect(Discourse.redis.get(key).to_i).to be_within(1.second).of(Time.now.to_i + 2)
     end
 
     mutex = DistributedMutex.new(key)
 
     mutex.synchronize do
-      expect(Discourse.redis.ttl(key)).to eq(DistributedMutex::DEFAULT_VALIDITY + 1)
-
-      expect(Discourse.redis.get(key).to_i)
-        .to eq(Time.now.to_i + DistributedMutex::DEFAULT_VALIDITY)
+      expect(Discourse.redis.ttl(key)).to be <= DistributedMutex::DEFAULT_VALIDITY + 1
+      expect(Discourse.redis.get(key).to_i).to be_within(1.second).of(Time.now.to_i + DistributedMutex::DEFAULT_VALIDITY)
     end
   end
 
@@ -90,7 +87,7 @@ describe DistributedMutex do
       }.to raise_error(Discourse::ReadOnly)
 
       expect(done).to eq(false)
-      expect(Time.now - start).to be <= 1.second
+      expect(Time.now).to be <= start + 1
     end
   end
 
