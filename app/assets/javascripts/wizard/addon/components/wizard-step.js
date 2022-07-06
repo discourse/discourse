@@ -17,27 +17,31 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  @discourseComputed("step.index")
-  showQuitButton: (index) => index === 0,
-
   @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showNextButton: (current, total) => current < total,
 
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showDoneButton: (current, total) => current === total,
+  @discourseComputed("step.id")
+  showDoneButton: (step) => {
+    return step === "ready" || step === "corporate";
+  },
 
-  @discourseComputed(
-    "step.index",
-    "step.displayIndex",
-    "wizard.totalSteps",
-    "wizard.completed"
-  )
-  showFinishButton: (index, displayIndex, total, completed) => {
-    return index !== 0 && displayIndex !== total && completed;
+  @discourseComputed("step.id")
+  showFinishButton: (step) => {
+    return step === "styling" || step === "branding";
   },
 
   @discourseComputed("step.index")
   showBackButton: (index) => index > 0,
+
+  @discourseComputed("step.id")
+  nextButtonLabel: (step) => {
+    return `wizard.${step === "ready" ? "configure_more" : "next"}`;
+  },
+
+  @discourseComputed("step.id")
+  nextButtonClass: (step) => {
+    return step === "ready" ? "configure-more" : "next";
+  },
 
   @discourseComputed("step.banner")
   bannerImage(src) {
