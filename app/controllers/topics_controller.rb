@@ -622,19 +622,22 @@ class TopicsController < ApplicationController
   def destroy
     topic = Topic.with_deleted.find_by(id: params[:id])
 
-    force_destroy = false
     if params[:force_destroy].present?
       if !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
 
-      force_destroy = true
+      # can_permanently_delete? returns true even if there are still some
+      # small actions in the topic and these must be deleted too.
+      topic.posts.with_deleted.order(post_number: :desc).find_each do |post|
+        PostDestroyer.new(current_user, post, context: params[:context], force_destroy: true).destroy
+      end
     else
       guardian.ensure_can_delete!(topic)
-    end
 
-    first_post = topic.posts.with_deleted.order(:post_number).first
-    PostDestroyer.new(current_user, first_post, context: params[:context], force_destroy: force_destroy).destroy
+      first_post = topic.posts.with_deleted.order(:post_number).first
+      PostDestroyer.new(current_user, first_post, context: params[:context]).destroy
+    end
 
     render body: nil
   rescue Discourse::InvalidAccess
