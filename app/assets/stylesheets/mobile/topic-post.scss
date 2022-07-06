@@ -430,3 +430,9 @@ span.highlighted {
   opacity: 100%;
   margin-bottom: 1rem;
 }
+
+// fix staff color margins
+.moderator .regular>.cooked {
+  padding-top: 1em;
+  adding-left: 1em;
+}
