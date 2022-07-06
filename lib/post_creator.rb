@@ -112,38 +112,9 @@ class PostCreator
       end
 
       # Make sure none of the users have muted or ignored the creator
-      users = User.where(username_lower: names).pluck(:id, :username).to_h
-
-      User
-        .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
-        .joins("LEFT JOIN muted_users ON muted_users.user_id = users.id AND muted_users.muted_user_id = #{@user.id.to_i}")
-        .joins("LEFT JOIN ignored_users ON ignored_users.user_id = users.id AND ignored_users.ignored_user_id = #{@user.id.to_i}")
-        .where("user_options.user_id IS NOT NULL")
-        .where("
-          (user_options.user_id IN (:user_ids) AND NOT user_options.allow_private_messages) OR
-          muted_users.user_id IN (:user_ids) OR
-          ignored_users.user_id IN (:user_ids)
-        ", user_ids: users.keys)
-        .pluck(:id).each do |m|
-
-        errors.add(:base, I18n.t(:not_accepting_pms, username: users[m]))
-      end
-
-      # Is Allowed PM users list enabled for any recipients?
-      users_with_allowed_pms = allowed_pms_enabled(users).pluck(:id).uniq
-
-      # If any of the users has allowed_pm_users enabled check to see if the creator
-      # is in their list
-      if users_with_allowed_pms.any?
-        users_sender_can_pm = allowed_pms_enabled(users)
-          .where("allowed_pm_users.allowed_pm_user_id" => @user.id.to_i)
-          .pluck(:id).uniq
-
-        # If not in the list add an error
-        users_not_allowed = users_with_allowed_pms - users_sender_can_pm
-        users_not_allowed.each do |id|
-          errors.add(:base, I18n.t(:not_accepting_pms, username: users[id]))
-        end
+      users_not_accepting_communication = UserCommunicationDefender.new(acting_user_id: @user.id, target_usernames: names).vet_access
+      users_not_accepting_communication.each do |user_id, detail|
+        errors.add(:base, I18n.t(:not_accepting_pms, username: detail[:username]))
       end
 
       return false if errors[:base].present?
