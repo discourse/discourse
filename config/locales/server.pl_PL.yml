@@ -634,6 +634,10 @@ pl_PL:
               too_many: "Za długi opis akcji"
             base:
               invalid_url: "Adres URL zamiany jest nieprawidłowy"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "nie jest prawidłowy"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   vip_category_name: "Salon"

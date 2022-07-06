@@ -985,6 +985,8 @@ gl:
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
+      experimental_sidebar:
+        options: "Opcións"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"

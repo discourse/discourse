@@ -1069,7 +1069,12 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_defer: "Abilita opzione di contrassegnare gli argomenti da leggere in seguito"
-      enable_experimental_sidebar: "Abilita la barra laterale sperimentale"
+      experimental_sidebar:
+        enable: "Abilita la barra laterale sperimentale"
+        options: "Opzioni"
+        categories_section: "Sezione Categorie"
+        categories_section_instruction: "Le categorie selezionate saranno visualizzate nella sezione Categorie della barra laterale."
+        tags_section: "Sezione Tag"
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -1180,6 +1185,7 @@ it:
         tags: "Etichette"
         interface: "Interfaccia"
         apps: "App"
+        sidebar: "Barra laterale"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -3693,11 +3699,9 @@ it:
             unread_with_count: "Non letto (%{count})"
             archive: "Archiviati"
         tags:
-          no_tracked_tags: "Non stai seguendo alcuna etichetteta."
           header_link_title: "tutte le etichette"
           header_link_text: "Etichette"
         categories:
-          no_tracked_categories: "Non stai monitorando nessuna categoria."
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
         topics:

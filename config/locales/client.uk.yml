@@ -1201,7 +1201,9 @@ uk:
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_defer: "Увімкнути відкладання позначення тем непрочитаними"
-      enable_experimental_sidebar: "Увімкнути експериментальну бічну панель"
+      experimental_sidebar:
+        enable: "Увімкнути експериментальну бічну панель"
+        options: "Налаштування"
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -4070,11 +4072,9 @@ uk:
             unread_with_count: "Непрочитані (%{count})"
             archive: "Архів"
         tags:
-          no_tracked_tags: "Ви не відстежуєте жоден тег."
           header_link_title: "усі мітки"
           header_link_text: "Теги"
         categories:
-          no_tracked_categories: "Ви не відстежуєте жодної категорії."
           header_link_title: "усі розділи"
           header_link_text: "Категорії"
         topics:

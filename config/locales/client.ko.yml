@@ -1005,6 +1005,8 @@ ko:
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림 활성화"
       enable_defer: "글을 읽지 않은 상태로 표시 연장"
+      experimental_sidebar:
+        options: "옵션"
       change: "변경"
       featured_topic: "주요 글"
       moderator: "%{user}님은 운영자입니다"

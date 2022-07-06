@@ -1143,7 +1143,9 @@ hr:
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
       enable_quoting: "Omogući citirani odgovor označenoj teksta"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
-      enable_experimental_sidebar: "Omogući eksperimentalnu bočnu traku"
+      experimental_sidebar:
+        enable: "Omogući eksperimentalnu bočnu traku"
+        options: "Mogućnosti"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"

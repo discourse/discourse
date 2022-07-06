@@ -1568,6 +1568,7 @@ tr_TR:
     enable_badges: "Rozet sistemini etkinleştir"
     max_favorite_badges: "Kullanıcının seçebileceği maksimum rozet sayısı"
     enable_whispers: "Konular dahilinde yetkililerin özel iletişimine izin ver."
+    whispers_allowed_groups: "Belirli grupların üyeleri için konu içinde özel iletişime izin ver."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt dosyasını geçersiz kılabilirsiniz </a>."
     blocked_email_domains: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     allowed_email_domains: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"

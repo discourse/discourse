@@ -1032,6 +1032,8 @@ bg:
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
       enable_quoting: "Включи отговор с цитат при маркиран текст."
       enable_defer: "Активирайте отлагане, за да маркирате темите като непрочетени"
+      experimental_sidebar:
+        options: "Опции"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"

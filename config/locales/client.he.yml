@@ -1201,7 +1201,13 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
-      enable_experimental_sidebar: "הפעלת סרגל צד ניסיוני"
+      experimental_sidebar:
+        enable: "הפעלת סרגל צד ניסיוני"
+        options: "אפשרויות"
+        categories_section: "סעיף קטגוריות"
+        categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד."
+        tags_section: "סעיף תגיות"
+        tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד."
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -1316,6 +1322,7 @@ he:
         tags: "תגיות"
         interface: "מנשק"
         apps: "יישומים"
+        sidebar: "סרגל צד"
       change_password:
         success: "(דוא״ל נשלח)"
         in_progress: "(דוא״ל בשליחה)"
@@ -4068,13 +4075,17 @@ he:
             unread_with_count: "לא נקראה (%{count})"
             archive: "ארכיון"
         tags:
-          no_tracked_tags: "אין לך אף תגית במעקב."
+          none: "עדיין לא הוספת תגיות."
+          click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_title: "כל התגיות"
           header_link_text: "תגיות"
+          header_action_title: "לערוך את תגיות סרגל הצד שלך"
         categories:
-          no_tracked_categories: "אין לך אף קטגוריה במעקב."
+          none: "עדיין לא הוספת קטגוריות."
+          click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
+          header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
         topics:
           header_link_title: "בית"
           header_link_text: "נושאים"

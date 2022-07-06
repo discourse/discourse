@@ -1068,7 +1068,9 @@ tr_TR:
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Bahsedilen konu için yanıtlama özelliğini etkinleştir"
       enable_defer: "Okunmamış konuları işaretlemek için ertelemeyi aktif edin"
-      enable_experimental_sidebar: "Deneysel kenar çubuğunu etkinleştir"
+      experimental_sidebar:
+        enable: "Deneysel kenar çubuğunu etkinleştir"
+        options: "Seçenekler"
       change: "değiştir"
       featured_topic: "Öne Çıkan Konu"
       moderator: "%{user} moderatördür"
@@ -1966,6 +1968,7 @@ tr_TR:
       create_shared_draft: "Paylaşılmış taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
       title: "Veya %{modifier}Enter tuşuna basın"
+      users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya bir konu gir veya bir bağlantı paylaş"
       edit_reason_placeholder: "neden düzenleme yapıyorsun?"
@@ -3675,11 +3678,9 @@ tr_TR:
             unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
-          no_tracked_tags: "Herhangi bir etiketi takip etmiyorsunuz."
           header_link_title: "tüm etiketler"
           header_link_text: "Etiketler"
         categories:
-          no_tracked_categories: "Herhangi bir kategoriyi takip etmiyorsunuz."
           header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
         topics:
