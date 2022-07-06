@@ -26,7 +26,6 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     topic.setProperties({
       selectedPostIds: [],
       selectedPostUsername: null,
-      currentUser: null,
     });
   });
 
@@ -279,7 +278,6 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
     const controller = this.getController("topic", {
       model,
-      currentUser,
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
@@ -376,10 +374,8 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2],
     });
-    model.set("currentUser", { admin: false });
     const controller = this.getController("topic", {
       model,
-      currentUser,
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
@@ -421,10 +417,8 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2],
     });
-    model.set("currentUser", { moderator: false });
     const controller = this.getController("topic", {
       model,
-      currentUser,
       siteSettings: {
         moderators_change_post_ownership: true,
       },
@@ -679,11 +673,16 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
 
     const currentUser = EmberObject.create({ moderator: true });
+    this.registry.register("current-user:main", currentUser, {
+      instantiate: false,
+    });
+    this.registry.injection("controller", "currentUser", "current-user:main");
+
     let model = topicWithStream({
       stream: [2, 3, 4],
       posts: [post, { id: 3 }, { id: 4 }],
     });
-    const controller = this.getController("topic", { model, currentUser });
+    const controller = this.getController("topic", { model });
 
     const done = assert.async();
     controller.send("deletePost", post);
