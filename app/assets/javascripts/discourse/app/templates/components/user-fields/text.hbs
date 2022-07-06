@@ -3,6 +3,6 @@
   {{#if this.field.required}}<span class="required">*</span>{{/if}}
 </label>
 <div class="controls">
-  <Input @id={{concat "user-" this.elementId}} @value={{this.value}} @maxlength={{this.site.user_field_max_length}} />
+  <Input id={{concat "user-" this.elementId}} @value={{this.value}} maxlength={{this.site.user_field_max_length}} />
   <div class="instructions">{{html-safe this.field.description}}</div>
 </div>

@@ -8,7 +8,7 @@
   {{/if}}
 
   <div class="control-group bookmark-name-wrap">
-    <Input @id="bookmark-name" @value={{this.model.name}} @name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} @maxlength="100" />
+    <Input id="bookmark-name" @value={{this.model.name}} name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} maxlength="100" />
     <DButton @icon="cog" @action={{action "toggleShowOptions"}} @class="bookmark-options-button" @ariaLabel="post.bookmarks.options" />
   </div>
 

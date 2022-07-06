@@ -96,14 +96,16 @@ Some text [date-range from=2022-06-17T09:30:00 to=2022-06-18T10:30:00 format="LL
   });
 });
 
-acceptance("Local Dates - quoting with recurring and countdown", function (needs) {
-  needs.user();
-  needs.settings({ discourse_local_dates_enabled: true });
+acceptance(
+  "Local Dates - quoting with recurring and countdown",
+  function (needs) {
+    needs.user();
+    needs.settings({ discourse_local_dates_enabled: true });
 
-  needs.pretender((server, helper) => {
-    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
-    const firstPost = topicResponse.post_stream.posts[0];
-    firstPost.cooked += `<div class='select-local-date-test'><p dir="ltr">Testing countdown <span data-date="2022-06-21" data-time="09:30:00" class="discourse-local-date cooked-date" data-format="LL" data-countdown="true" data-timezone="Australia/Brisbane" data-email-preview="2022-06-20T23:30:00Z UTC" aria-label="Brisbane Tuesday, June 21, 2022 <br /><svg class='fa d-icon d-icon-clock svg-icon svg-string' xmlns=&quot;http://www.w3.org/2000/svg&quot;><use href=&quot;#clock&quot; /></svg> 9:30 AM, Paris Tuesday, June 21, 2022 <br /><svg class='fa d-icon d-icon-clock svg-icon svg-string' xmlns=&quot;http://www.w3.org/2000/svg&quot;><use href=&quot;#clock&quot; /></svg> 1:30 AM, Los Angeles Monday, June 20, 2022 <br /><svg class='fa d-icon d-icon-clock svg-icon svg-string' xmlns=&quot;http://www.w3.org/2000/svg&quot;><use href=&quot;#clock&quot; /></svg> 4:30 PM" data-title="This is a new topic to check on chat quote issues">
+    needs.pretender((server, helper) => {
+      const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+      const firstPost = topicResponse.post_stream.posts[0];
+      firstPost.cooked += `<div class='select-local-date-test'><p dir="ltr">Testing countdown <span data-date="2022-06-21" data-time="09:30:00" class="discourse-local-date cooked-date" data-format="LL" data-countdown="true" data-timezone="Australia/Brisbane" data-email-preview="2022-06-20T23:30:00Z UTC" aria-label="Brisbane Tuesday, June 21, 2022 <br /><svg class='fa d-icon d-icon-clock svg-icon svg-string' xmlns=&quot;http://www.w3.org/2000/svg&quot;><use href=&quot;#clock&quot; /></svg> 9:30 AM, Paris Tuesday, June 21, 2022 <br /><svg class='fa d-icon d-icon-clock svg-icon svg-string' xmlns=&quot;http://www.w3.org/2000/svg&quot;><use href=&quot;#clock&quot; /></svg> 1:30 AM, Los Angeles Monday, June 20, 2022 <br /><svg class='fa d-icon d-icon-clock svg-icon svg-string' xmlns=&quot;http://www.w3.org/2000/svg&quot;><use href=&quot;#clock&quot; /></svg> 4:30 PM" data-title="This is a new topic to check on chat quote issues">
         <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
           <use href="#globe-americas"></use>
         </svg>
@@ -116,25 +118,25 @@ acceptance("Local Dates - quoting with recurring and countdown", function (needs
         <span class="relative-time">Wednesday</span>
       </span></p></div>`;
 
-    server.get("/t/280.json", () => helper.response(topicResponse));
-    server.get("/t/280/:post_number.json", () => {
-      helper.response(topicResponse);
+      server.get("/t/280.json", () => helper.response(topicResponse));
+      server.get("/t/280/:post_number.json", () => {
+        helper.response(topicResponse);
+      });
     });
-  });
 
-  test("quoting single local dates with recurring and countdown options", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_1 .select-local-date-test");
-    await click(".insert-quote");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
-      `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
+    test("quoting single local dates with recurring and countdown options", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_1 .select-local-date-test");
+      await click(".insert-quote");
+      assert.strictEqual(
+        queryAll(".d-editor-input").val().trim(),
+        `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
 Testing countdown [date=2022-06-21 time=09:30:00 format="LL" timezone="Australia/Brisbane" countdown="true"]
 
 Testing recurring [date=2022-06-22 timezone="Australia/Brisbane" recurring="2.weeks"]
 [/quote]`,
-      "converts the dates to markdown with all options correctly"
-    );
-  });
-});
-
+        "converts the dates to markdown with all options correctly"
+      );
+    });
+  }
+);

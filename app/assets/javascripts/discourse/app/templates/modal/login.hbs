@@ -11,7 +11,7 @@
         <form id="login-form" method="post">
           <div id="credentials" class={{this.credentialsClass}}>
             <div class="input-group">
-              <Input @value={{this.loginName}} @type="email" @id="login-account-name" class={{value-entered this.loginName}} @autocomplete="username" @autocorrect="off" @autocapitalize="off" @disabled={{this.showSecondFactor}} @autofocus="autofocus" @tabindex="1" />
+              <Input @value={{this.loginName}} @type="email" id="login-account-name" class={{value-entered this.loginName}} autocomplete="username" autocorrect="off" autocapitalize="off" disabled={{this.showSecondFactor}} autofocus="autofocus" tabindex="1" />
               <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
               {{#if this.showLoginWithEmailLink}}
                 <a href class={{if this.loginName "" "no-login-filled"}} tabindex="3" id="email-login-link" {{action (unless this.processingEmailLink "emailLogin")}}>
@@ -20,7 +20,7 @@
               {{/if}}
             </div>
             <div class="input-group">
-              <Input @value={{this.loginPassword}} @type="password" class={{value-entered this.loginPassword}} @id="login-account-password" @autocomplete="current-password" @maxlength="200" @capsLockOn={{this.capsLockOn}} @disabled={{this.disableLoginFields}} @tabindex="1" />
+              <PasswordField @value={{this.loginPassword}} @type="password" class={{value-entered this.loginPassword}} id="login-account-password" autocomplete="current-password" maxlength="200" @capsLockOn={{this.capsLockOn}} disabled={{this.disableLoginFields}} tabindex="1" />
               <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
               <a href id="forgot-password-link" tabindex="3" {{action "forgotPassword"}}>{{i18n "forgot_password.action"}}</a>
               <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>

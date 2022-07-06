@@ -534,9 +534,8 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/500.json", () => response(502, {}));
 
   pretender.put("/t/:slug/:id", (request) => {
-    const isJSON = request.requestHeaders["Content-Type"].includes(
-      "application/json"
-    );
+    const isJSON =
+      request.requestHeaders["Content-Type"].includes("application/json");
 
     const data = isJSON
       ? JSON.parse(request.requestBody)

@@ -186,7 +186,7 @@ export default {
           description:
             'This is a special, temporary category to organize work on the <a href="http://www.meetup.com/torontoruby/events/192168702/">Discourse Hack Night</a> in Toronto. ',
           description_text:
-            'This is a special, temporary category to organize work on the Discourse Hack Night in Toronto.',
+            "This is a special, temporary category to organize work on the Discourse Hack Night in Toronto.",
           topic_url: "/t/about-the-hack-night-category/17878",
           read_restricted: false,
           permission: 1,
@@ -398,7 +398,7 @@ export default {
           description:
             'Support for the official Discourse WordPress plugin at <a href="https://github.com/discourse/wp-discourse">https://github.com/discourse/wp-discourse</a>',
           description_text:
-            'Support for the official Discourse WordPress plugin at https://github.com/discourse/wp-discourse',
+            "Support for the official Discourse WordPress plugin at https://github.com/discourse/wp-discourse",
           topic_url: "/t/category-definition-for-wordpress/12282",
           read_restricted: false,
           permission: 1,
@@ -551,7 +551,6 @@ export default {
           notification_level: null,
           background_url: null,
         },
-
       ],
       post_action_types: [
         {

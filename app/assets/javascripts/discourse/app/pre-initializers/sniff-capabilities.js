@@ -48,9 +48,8 @@ export default {
 
     caps.isiOSPWA = caps.isPwa && caps.isIOS;
 
-    caps.wasLaunchedFromDiscourseHub = window.location.search.includes(
-      "discourse_app=1"
-    );
+    caps.wasLaunchedFromDiscourseHub =
+      window.location.search.includes("discourse_app=1");
     caps.isAppWebview = window.ReactNativeWebView !== undefined;
 
     // Inject it

@@ -47,8 +47,7 @@ acceptance("Poll quote", function (needs) {
         title_is_group: false,
         bookmarked: false,
         bookmarks: [],
-        raw:
-          "[poll name=poll1 type=regular results=always chartType=bar]\n* Alpha\n* Beta\n[/poll]\n\n[poll name=poll2 type=regular results=always chartType=bar]\n* First\n* Second\n[/poll]",
+        raw: "[poll name=poll1 type=regular results=always chartType=bar]\n* Alpha\n* Beta\n[/poll]\n\n[poll name=poll2 type=regular results=always chartType=bar]\n* First\n* Second\n[/poll]",
         actions_summary: [
           {
             id: 3,

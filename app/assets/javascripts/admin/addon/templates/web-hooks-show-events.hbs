@@ -1,9 +1,9 @@
 <div class="web-hook-direction">
-  <LinkTo @route="adminWebHooks" @tagName="button" @classNames="btn">
+  <LinkTo @route="adminWebHooks" class="btn">
     {{d-icon "list"}} {{i18n "admin.web_hooks.events.go_list"}}
   </LinkTo>
   <DButton @icon="paper-plane" @label="admin.web_hooks.events.ping" @action={{action "ping"}} @disabled={{this.pingDisabled}} />
-  <LinkTo @route="adminWebHooks.show" @model={{this.model.extras.web_hook_id}} @tagName="button" @classNames="btn">
+  <LinkTo @route="adminWebHooks.show" @model={{this.model.extras.web_hook_id}} class="btn">
     {{d-icon "far-edit"}} {{i18n "admin.web_hooks.events.go_details"}}
   </LinkTo>
 </div>

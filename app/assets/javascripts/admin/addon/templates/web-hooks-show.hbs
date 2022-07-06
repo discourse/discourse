@@ -66,11 +66,11 @@
     <PluginOutlet @name="web-hook-fields" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
     <div>
-      <Input @type="checkbox" @name="verify_certificate" @checked={{this.model.verify_certificate}} /> {{i18n "admin.web_hooks.verify_certificate"}}
+      <Input @type="checkbox" name="verify_certificate" @checked={{this.model.verify_certificate}} /> {{i18n "admin.web_hooks.verify_certificate"}}
     </div>
     <div>
       <div>
-        <Input @type="checkbox" @name="active" @checked={{this.model.active}} /> {{i18n "admin.web_hooks.active"}}
+        <Input @type="checkbox" name="active" @checked={{this.model.active}} /> {{i18n "admin.web_hooks.active"}}
       </div>
       {{#if this.model.active}}
         <div class="instructions">{{i18n "admin.web_hooks.active_notice"}}</div>

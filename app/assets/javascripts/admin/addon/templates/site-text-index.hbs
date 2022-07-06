@@ -14,7 +14,7 @@
     </div>
 
     <label>
-      <Input @type="checkbox" @checked={{this.overridden}} @click={{action "toggleOverridden"}} />
+      <Input @type="checkbox" @checked={{this.overridden}} {{on "click" (action "toggleOverridden")}} />
       {{i18n "admin.site_text.show_overriden"}}
     </label>
   </p>

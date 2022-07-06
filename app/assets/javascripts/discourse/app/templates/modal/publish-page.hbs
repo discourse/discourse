@@ -15,7 +15,7 @@
           <label>{{i18n "topic.publish_page.public"}}</label>
 
           <p class="description">
-            <Input @type="checkbox" @checked={{readonly this.publishedPage.public}} @click={{action "onChangePublic" value="target.checked"}} />
+            <Input @type="checkbox" @checked={{readonly this.publishedPage.public}} {{on "click" (action "onChangePublic" value="target.checked")}} />
             {{i18n "topic.publish_page.public_description"}}
           </p>
         </div>

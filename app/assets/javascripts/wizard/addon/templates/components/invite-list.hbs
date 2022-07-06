@@ -9,7 +9,7 @@
 
 <div class="new-user">
   <div class="text-field {{if this.invalid "invalid"}}">
-    <Input class="invite-email wizard-focusable" @value={{this.inviteEmail}} placeholder="user@example.com" @tabindex="9" />
+    <Input class="invite-email wizard-focusable" @value={{this.inviteEmail}} placeholder="user@example.com" tabindex="9" />
   </div>
 
   <ComboBox @value={{this.inviteRole}} @content={{this.roles}} @nameProperty="label" @onChange={{action (mut this.inviteRole)}} />

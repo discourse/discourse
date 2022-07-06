@@ -27,7 +27,7 @@ export default {
         "trust_level_1",
         "trust_level_2",
         "trust_level_3",
-        "trust_level_4"
+        "trust_level_4",
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
@@ -36,8 +36,8 @@ export default {
       cannot_delete_reason:
         "Can't delete this category because it has 2030 topics. Oldest topic is <a href=\"https://localhost:3000/t/when-a-new-post-appears-in-a-topic-the-bookmark-isn-t-updated/39\">When a new post appears in a topic, the bookmark isn't updated</a>.",
       allow_badges: true,
-      custom_fields: {}
-    }
+      custom_fields: {},
+    },
   },
   "/c/11/show.json": {
     category: {
@@ -46,8 +46,8 @@ export default {
       color: "0088CC",
       text_color: "FFFFFF",
       slug: "testing",
-      can_edit: true
-    }
+      can_edit: true,
+    },
   },
   "/c/2481/show.json": {
     category: {
@@ -59,7 +59,6 @@ export default {
       read_restricted: true,
       permission: null,
       group_permissions: [{ permission_type: 1, group_name: "moderators" }],
-    }
+    },
   },
-
 };

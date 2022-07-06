@@ -114,9 +114,8 @@ acceptance("User directory - Editing columns", function (needs) {
       "Replies Posted"
     );
 
-    const moveUserFieldColumnUpBtn = columns[columns.length - 1].querySelector(
-      ".move-column-up"
-    );
+    const moveUserFieldColumnUpBtn =
+      columns[columns.length - 1].querySelector(".move-column-up");
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
