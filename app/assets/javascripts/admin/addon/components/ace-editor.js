@@ -5,7 +5,8 @@ import I18n from "I18n";
 import { bind, observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 
-const COLOR_VARS_REGEX = /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
+const COLOR_VARS_REGEX =
+  /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
 
 export default Component.extend({
   mode: "css",

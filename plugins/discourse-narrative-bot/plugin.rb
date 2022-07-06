@@ -5,7 +5,6 @@
 # version: 1.0
 # authors: Nick Sahler, Alan Tan
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-narrative-bot
-# transpile_js: true
 
 enabled_site_setting :discourse_narrative_bot_enabled
 hide_plugin if self.respond_to?(:hide_plugin)

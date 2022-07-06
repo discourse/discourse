@@ -107,6 +107,10 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
+  has_many :sidebar_section_links, dependent: :delete_all
+  has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
+  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username
@@ -662,9 +666,15 @@ class User < ActiveRecord::Base
   end
 
   def publish_user_status(status)
-    payload = status ?
-                { description: status.description, emoji: status.emoji } :
-                nil
+    if status
+      payload = {
+        description: status.description,
+        emoji: status.emoji,
+        ends_at: status.ends_at&.iso8601
+      }
+    else
+      payload = nil
+    end
 
     MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
   end
@@ -1522,19 +1532,25 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description)
-    now = Time.zone.now
+  def set_status!(description, emoji, ends_at)
+    status = {
+      description: description,
+      emoji: emoji,
+      set_at: Time.zone.now,
+      ends_at: ends_at
+    }
+
     if user_status
-      user_status.update!(description: description, set_at: now)
+      user_status.update!(status)
     else
-      self.user_status = UserStatus.create!(
-        user_id: id,
-        description: description,
-        set_at: now
-      )
+      self.user_status = UserStatus.create!(status)
     end
 
     publish_user_status(user_status)
+  end
+
+  def has_status?
+    user_status && !user_status.expired?
   end
 
   protected

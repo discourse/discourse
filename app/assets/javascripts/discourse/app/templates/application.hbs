@@ -1,36 +1,32 @@
-{{#discourse-root}}
+<DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
-  {{d-document}}
-  {{plugin-outlet name="above-site-header" connectorTagName="div"}}
-  {{site-header canSignUp=canSignUp
-                showCreateAccount=(route-action "showCreateAccount")
-                showLogin=(route-action "showLogin")
-                showKeyboard=(route-action "showKeyboardShortcutsHelp")
-                toggleMobileView=(route-action "toggleMobileView")
-                toggleAnonymous=(route-action "toggleAnonymous")
-                logout=(route-action "logout")
-                toggleSidebar=(route-action "toggleSidebar")
-                }}
-  {{software-update-prompt}}
+  <DDocument />
+  <PluginOutlet @name="above-site-header" @connectorTagName="div" />
+  <SiteHeader @canSignUp={{this.canSignUp}} @showCreateAccount={{route-action "showCreateAccount"}} @showLogin={{route-action "showLogin"}} @showKeyboard={{route-action "showKeyboardShortcutsHelp"}} @toggleMobileView={{route-action "toggleMobileView"}} @toggleAnonymous={{route-action "toggleAnonymous"}} @logout={{route-action "logout"}} @toggleSidebar={{action "toggleSidebar"}} />
+  <SoftwareUpdatePrompt />
 
-  {{plugin-outlet name="below-site-header" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
+  <PluginOutlet @name="below-site-header" @connectorTagName="div" @args={{hash currentPath=this.router._router.currentPath}} />
 
-  <div id="main-outlet-wrapper" class="wrap {{mainOutletWrapperClasses}}" role="main">
-    {{#if currentUser.experimental_sidebar_enabled}}
-      <Sidebar @shouldDisplay={{showSidebar}} />
-    {{/if}}
+  <div id="main-outlet-wrapper" class="wrap" role="main">
+
+    <div class="sidebar-wrapper">
+      {{!-- empty div allows for animation --}}
+      {{#if (and this.currentUser.experimental_sidebar_enabled this.showSidebar)}}
+        <Sidebar @toggleSidebar={{action "toggleSidebar"}}/>
+      {{/if}}
+    </div>
 
     <div id="main-outlet">
-      {{plugin-outlet name="above-main-container" connectorTagName="div"}}
+      <PluginOutlet @name="above-main-container" @connectorTagName="div" />
       <div class="container" id="main-container">
-        {{#if showTop}}
-          {{custom-html name="top"}}
+        {{#if this.showTop}}
+          <CustomHtml @name="top" />
         {{/if}}
-        {{notification-consent-banner}}
-        {{pwa-install-banner}}
-        {{global-notice}}
-        {{create-topics-notice}}
-        {{plugin-outlet name="top-notices" connectorTagName="div" args=(hash currentPath=router._router.currentPath)}}
+        <NotificationConsentBanner />
+        <PwaInstallBanner />
+        <GlobalNotice />
+        <CreateTopicsNotice />
+        <PluginOutlet @name="top-notices" @connectorTagName="div" @args={{hash currentPath=this.router._router.currentPath}} />
       </div>
 
       {{outlet}}
@@ -38,20 +34,17 @@
     </div>
   </div>
 
-  {{plugin-outlet name="above-footer" connectorTagName="div" args=(hash showFooter=showFooter)}}
-  {{#if showFooter}}
-    {{custom-html
-      name="footer"
-      triggerAppEvent="true"
-      classNames="custom-footer-content"}}
+  <PluginOutlet @name="above-footer" @connectorTagName="div" @args={{hash showFooter=this.showFooter}} />
+  {{#if this.showFooter}}
+    <CustomHtml @name="footer" @triggerAppEvent="true" @classNames="custom-footer-content" />
   {{/if}}
-  {{plugin-outlet name="below-footer" connectorTagName="div" args=(hash showFooter=showFooter)}}
+  <PluginOutlet @name="below-footer" @connectorTagName="div" @args={{hash showFooter=this.showFooter}} />
 
   {{outlet "modal"}}
-  {{topic-entrance}}
+  <TopicEntrance />
   {{outlet "composer"}}
 
-  {{#if showFooterNav}}
-    {{footer-nav}}
+  {{#if this.showFooterNav}}
+    <FooterNav />
   {{/if}}
-{{/discourse-root}}
+</DiscourseRoot>

@@ -1,7 +1,7 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -54,21 +54,21 @@ discourseModule(
       },
 
       async test(assert) {
-        const $header = this.subject.header();
+        const header = this.subject.header();
 
         assert.ok(
-          exists($header.el().find(".btn-clear")),
+          header.el().querySelector(".btn-clear"),
           "it shows the clear button"
         );
-        assert.strictEqual($header.value(), DEFAULT_VALUE.toString());
+        assert.strictEqual(header.value(), DEFAULT_VALUE.toString());
 
-        await click($header.el().find(".btn-clear")[0]);
+        await click(header.el().querySelector(".btn-clear"));
 
         assert.notOk(
-          exists($header.el().find(".btn-clear")),
+          header.el().querySelector(".btn-clear"),
           "it hides the clear button"
         );
-        assert.strictEqual($header.value(), null);
+        assert.strictEqual(header.value(), null);
       },
     });
 
@@ -92,17 +92,17 @@ discourseModule(
       },
 
       async test(assert) {
-        const $header = this.subject.header().el();
+        const header = this.subject.header().el();
 
         assert.ok(
-          exists($header.find(`.d-icon-${this.caretDownIcon}`)),
+          header.querySelector(`.d-icon-${this.caretDownIcon}`),
           "it uses the icon provided"
         );
 
         await this.subject.expand();
 
         assert.ok(
-          exists($header.find(`.d-icon-${this.caretUpIcon}`)),
+          header.querySelector(`.d-icon-${this.caretUpIcon}`),
           "it uses the icon provided"
         );
       },

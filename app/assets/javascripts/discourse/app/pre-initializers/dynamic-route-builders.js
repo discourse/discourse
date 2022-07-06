@@ -26,15 +26,12 @@ export default {
     const site = Site.current();
     site.get("filters").forEach((filter) => {
       const filterCapitalized = capitalize(filter);
-      app[
-        `Discovery${filterCapitalized}Controller`
-      ] = DiscoverySortableController.extend();
-      app[
-        `Discovery${filterCapitalized}CategoryController`
-      ] = DiscoverySortableController.extend();
-      app[
-        `Discovery${filterCapitalized}CategoryNoneController`
-      ] = DiscoverySortableController.extend();
+      app[`Discovery${filterCapitalized}Controller`] =
+        DiscoverySortableController.extend();
+      app[`Discovery${filterCapitalized}CategoryController`] =
+        DiscoverySortableController.extend();
+      app[`Discovery${filterCapitalized}CategoryNoneController`] =
+        DiscoverySortableController.extend();
 
       if (filter === "top") {
         app.DiscoveryTopRoute = buildTopicRoute("top", {
@@ -50,12 +47,10 @@ export default {
         app[`Discovery${filterCapitalized}Route`] = buildTopicRoute(filter);
       }
 
-      app[`Discovery${filterCapitalized}CategoryRoute`] = buildCategoryRoute(
-        filter
-      );
-      app[
-        `Discovery${filterCapitalized}CategoryNoneRoute`
-      ] = buildCategoryRoute(filter, { no_subcategories: true });
+      app[`Discovery${filterCapitalized}CategoryRoute`] =
+        buildCategoryRoute(filter);
+      app[`Discovery${filterCapitalized}CategoryNoneRoute`] =
+        buildCategoryRoute(filter, { no_subcategories: true });
     });
 
     app["TagsShowCategoryRoute"] = TagShowRoute.extend();
@@ -70,15 +65,12 @@ export default {
       app["TagShow" + capitalize(filter) + "Route"] = TagShowRoute.extend({
         navMode: filter,
       });
-      app[
-        "TagsShowCategory" + capitalize(filter) + "Route"
-      ] = TagShowRoute.extend({ navMode: filter });
-      app[
-        "TagsShowCategoryNone" + capitalize(filter) + "Route"
-      ] = TagShowRoute.extend({ navMode: filter, noSubcategories: true });
-      app[
-        "TagsShowCategoryAll" + capitalize(filter) + "Route"
-      ] = TagShowRoute.extend({ navMode: filter, noSubcategories: false });
+      app["TagsShowCategory" + capitalize(filter) + "Route"] =
+        TagShowRoute.extend({ navMode: filter });
+      app["TagsShowCategoryNone" + capitalize(filter) + "Route"] =
+        TagShowRoute.extend({ navMode: filter, noSubcategories: true });
+      app["TagsShowCategoryAll" + capitalize(filter) + "Route"] =
+        TagShowRoute.extend({ navMode: filter, noSubcategories: false });
     });
   },
 };

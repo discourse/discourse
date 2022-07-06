@@ -86,6 +86,12 @@ const Discourse = Application.extend({
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
   },
+
+  ready() {
+    performance.mark("discourse-ready");
+    const event = new CustomEvent("discourse-ready");
+    document.dispatchEvent(event);
+  },
 });
 
 function moduleThemeId(moduleName) {

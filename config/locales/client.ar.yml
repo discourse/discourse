@@ -1260,6 +1260,8 @@ ar:
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميز"
       enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
+      experimental_sidebar:
+        options: "الخيارات"
       change: "تغيير"
       featured_topic: "الموضوع المميز"
       moderator: "‏%{user} مشرف في الموقع"
@@ -2283,7 +2285,6 @@ ar:
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
       title: "أو اضغط على %{modifier}Enter"
-      users_placeholder: "إضافة مستخدم"
       title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
@@ -3905,6 +3906,7 @@ ar:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
       readonly: "العرض"
+    preloader_text: "جارٍ التحميل"
     lightbox:
       download: "تنزيل"
       previous: "السابق (مفتاح السهم الأيسر)"
@@ -4280,7 +4282,9 @@ ar:
             inbox: "صندوق الوارد"
             sent: "المُرسَلة"
             new: "الجديدة"
+            new_with_count: "الجديدة (%{count})"
             unread: "غير المقروءة"
+            unread_with_count: "غير المقروءة (%{count})"
             archive: "الأرشيف"
         tags:
           header_link_title: "كل الوسوم"

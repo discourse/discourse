@@ -176,10 +176,9 @@
   }
 }
 
-button.dismiss-read {
-  float: right;
-  margin-bottom: 5px;
-  margin-left: 10px;
+.dismiss-container-top {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .category-breadcrumb {

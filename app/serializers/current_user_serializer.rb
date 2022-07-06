@@ -12,6 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :notification_channel_position,
              :moderator?,
              :staff?,
+             :whisperer?,
              :title,
              :any_posts,
              :enable_quoting,
@@ -71,7 +72,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :bookmark_auto_delete_preference,
              :pending_posts_count,
              :experimental_sidebar_enabled,
-             :status
+             :status,
+             :sidebar_category_ids,
+             :sidebar_tag_names
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -312,8 +315,24 @@ class CurrentUserSerializer < BasicUserSerializer
     SiteSetting.enable_experimental_sidebar
   end
 
+  def sidebar_category_ids
+    object.category_sidebar_section_links.pluck(:linkable_id)
+  end
+
+  def include_sidebar_category_ids?
+    include_experimental_sidebar_enabled? && object.user_option.enable_experimental_sidebar
+  end
+
+  def sidebar_tag_names
+    object.sidebar_tags.pluck(:name)
+  end
+
+  def include_sidebar_tag_names?
+    include_sidebar_category_ids? && SiteSetting.tagging_enabled
+  end
+
   def include_status?
-    SiteSetting.enable_user_status
+    SiteSetting.enable_user_status && object.has_status?
   end
 
   def status

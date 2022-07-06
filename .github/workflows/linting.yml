@@ -86,8 +86,9 @@ jobs:
         if: ${{ always() }}
         run: |
           yarn ember-template-lint \
-            app/assets/javascripts \
-            plugins/**/assets/javascripts
+            --no-error-on-unmatched-pattern \
+            "app/assets/javascripts/**/*.hbs" \
+            "plugins/**/assets/javascripts/**/*.hbs"
 
       - name: English locale lint (core)
         if: ${{ always() }}

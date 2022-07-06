@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 # cache_critical_dns is intended to be used for performing DNS lookups against
 # the services critical for Discourse to run - PostgreSQL and Redis. The
 # cache mechanism is storing the resolved host addresses in /etc/hosts. This can
@@ -360,6 +362,15 @@ def env_srv_name(env_name)
   nilempty(ENV[env_srv_var(env_name)])
 end
 
+def run_and_report(hostname_vars)
+  errors = run(hostname_vars)
+  if errors.empty?
+    report_success
+  else
+    report_failure(errors)
+  end
+end
+
 def run(hostname_vars)
   # HOSTNAME: [IP_ADDRESS, ...]
   # this will usually be a single address
@@ -411,11 +422,7 @@ rescue => e
   error("DNS lookup failed: #{e}")
   errors[nil] = 1
 ensure
-  if errors == {}
-    report_success
-  else
-    report_failure(errors)
-  end
+  return errors
 end
 
 # If any of the host variables are an explicit IP we will not attempt to cache
@@ -448,7 +455,21 @@ CRITICAL_HOST_ENV_VARS.each do |v|
   end
 end
 
+options = {
+  once: false,
+}
+OptionParser.new do |opts|
+  opts.on("--once", "run script once instead of indefinitely") do |o|
+    options[:once] = true
+  end
+end.parse!
+
+if options[:once]
+  errors = run(all_hostname_vars)
+  exit errors.empty? ? 0 : 1
+end
+
 while true
-  run(all_hostname_vars)
+  run_and_report(all_hostname_vars)
   sleep REFRESH_SECONDS
 end

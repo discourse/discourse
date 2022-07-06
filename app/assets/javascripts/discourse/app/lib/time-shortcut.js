@@ -11,6 +11,7 @@ import {
   nextBusinessWeekStart,
   nextMonth,
   now,
+  oneHour,
   oneYear,
   sixMonths,
   thisWeekend,
@@ -18,12 +19,15 @@ import {
   threeMonths,
   tomorrow,
   twoDays,
+  twoHours,
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
 import I18n from "I18n";
 
 export const TIME_SHORTCUT_TYPES = {
+  ONE_HOUR: "one_hour",
+  TWO_HOURS: "two_hours",
   LATER_TODAY: "later_today",
   TOMORROW: "tomorrow",
   THIS_WEEKEND: "this_weekend",
@@ -77,6 +81,24 @@ export function specialShortcutOptions() {
 
 export function timeShortcuts(timezone) {
   return {
+    oneHour() {
+      return {
+        id: TIME_SHORTCUT_TYPES.ONE_HOUR,
+        icon: "angle-right",
+        label: "time_shortcut.in_one_hour",
+        time: oneHour(timezone),
+        timeFormatKey: "dates.time",
+      };
+    },
+    twoHours() {
+      return {
+        id: TIME_SHORTCUT_TYPES.TWO_HOURS,
+        icon: "angle-right",
+        label: "time_shortcut.in_two_hours",
+        time: twoHours(timezone),
+        timeFormatKey: "dates.time",
+      };
+    },
     laterToday() {
       return {
         id: TIME_SHORTCUT_TYPES.LATER_TODAY,

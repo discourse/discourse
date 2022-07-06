@@ -104,13 +104,13 @@ class TemporaryDb
     old_user = ENV["PGUSER"]
     old_port = ENV["PGPORT"]
     old_dev_db = ENV["DISCOURSE_DEV_DB"]
-    old_rails_db = ENV["RAILS_DB"]
+    old_rails_test_db = ENV["RAILS_TEST_DB"]
 
     ENV["PGHOST"] = "localhost"
     ENV["PGUSER"] = "discourse"
     ENV["PGPORT"] = pg_port.to_s
     ENV["DISCOURSE_DEV_DB"] = "discourse"
-    ENV["RAILS_DB"] = "discourse"
+    ENV["RAILS_TEST_DB"] = "discourse"
 
     yield
   ensure
@@ -118,7 +118,7 @@ class TemporaryDb
     ENV["PGUSER"] = old_user
     ENV["PGPORT"] = old_port
     ENV["DISCOURSE_DEV_DB"] = old_dev_db
-    ENV["RAILS_DB"] = old_rails_db
+    ENV["RAILS_TEST_DB"] = old_rails_test_db
   end
 
   def remove

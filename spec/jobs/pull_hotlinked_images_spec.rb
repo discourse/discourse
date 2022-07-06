@@ -350,6 +350,7 @@ describe Jobs::PullHotlinkedImages do
       before do
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
+        stub_request(:head, image_url)
 
         stub_request(:get, api_url).to_return(body: "{
           \"query\": {
@@ -399,6 +400,7 @@ describe Jobs::PullHotlinkedImages do
         #{url}
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        #{image_url}
         MD
         stub_image_size
 
@@ -413,6 +415,7 @@ describe Jobs::PullHotlinkedImages do
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)

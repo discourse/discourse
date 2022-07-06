@@ -3,6 +3,10 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
+:root {
+  --d-max-width: 1110px;
+}
+
 // Base Elements
 body.widget-dragging {
   cursor: ns-resize;
@@ -183,21 +187,24 @@ input {
   }
 }
 
-#main-outlet-wrapper {
-  box-sizing: border-box;
-  width: 100%;
-  display: grid;
-  grid-template-areas: "content";
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0;
-
-  &.has-sidebar {
-    grid-template-areas: "sidebar content";
-    grid-template-columns: 240px 1fr;
-    gap: 0 2em;
+body.has-sidebar-page {
+  .wrap {
+    // increase page max-width to accommodate sidebar width
+    max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
   }
+  .d-header .wrap {
+    padding-left: 0;
+  }
+  #main-outlet-wrapper {
+    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
+    gap: 0 2em;
+    padding-left: 0;
+  }
+}
 
-  #main-outlet {
-    grid-area: content;
+body.sidebar-animate {
+  .d-header .wrap,
+  #main-outlet-wrapper {
+    transition: ease-in-out 0.5s;
   }
 }

@@ -130,7 +130,8 @@ TemplateCompiler.prototype.targetExtension = "js";
 
 TemplateCompiler.prototype.registerPlugins = function registerPlugins() {};
 
-TemplateCompiler.prototype.initializeFeatures = function initializeFeatures() {};
+TemplateCompiler.prototype.initializeFeatures =
+  function initializeFeatures() {};
 
 TemplateCompiler.prototype.processString = function (string, relativePath) {
   let filename = relativePath.replace(/^templates\//, "").replace(/\.hbr$/, "");

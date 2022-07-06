@@ -29,17 +29,9 @@
 .groups-boxes {
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
   margin: 1em 0;
   width: 100%;
-
-  @include breakpoint("medium") {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @include breakpoint("mobile-extra-large") {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
   .group-box {
     display: flex;

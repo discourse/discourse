@@ -1,16 +1,16 @@
-{{#if shouldDisplay}}
+{{#if this.shouldDisplay}}
   <div class="presence-users">
     <div class="presence-avatars">
-      {{#each presenceUsers as |user|}}
+      {{#each this.presenceUsers as |user|}}
         {{avatar user imageSize="small"}}
       {{/each}}
     </div>
     <span class="presence-text">
       <span class="description">
-        {{#if isReply ~}}
-          {{i18n "presence.replying" count=presenceUsers.length}}
+        {{#if this.isReply ~}}
+          {{i18n "presence.replying" count=this.presenceUsers.length}}
         {{~else~}}
-          {{i18n "presence.editing" count=presenceUsers.length}}
+          {{i18n "presence.editing" count=this.presenceUsers.length}}
         {{~/if}}
         {{~""~}}
       </span>

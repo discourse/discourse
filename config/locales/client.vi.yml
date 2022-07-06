@@ -1022,7 +1022,9 @@ vi:
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
-      enable_experimental_sidebar: "Bật thanh bên thử nghiệm"
+      experimental_sidebar:
+        enable: "Bật thanh bên thử nghiệm"
+        options: "Lựa chọn"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1891,7 +1893,6 @@ vi:
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
       title: "Hoặc nhấn %{modifier}Enter"
-      users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
@@ -3163,6 +3164,7 @@ vi:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
       readonly: "Xem"
+    preloader_text: "Đang tải"
     lightbox:
       download: "tải về"
       open: "ảnh gốc"
@@ -3462,7 +3464,9 @@ vi:
             inbox: "Hộp thư"
             sent: "Đã gửi"
             new: "Mới"
+            new_with_count: "Mới (%{count})"
             unread: "Chưa đọc"
+            unread_with_count: "Chưa đọc (%{count})"
             archive: "Lưu Trữ"
         tags:
           header_link_title: "tất cả thẻ"

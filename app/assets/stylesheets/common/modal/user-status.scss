@@ -23,16 +23,12 @@
       width: 100%;
     }
 
-    .ember-text-field.user-status-description {
-      min-width: 220px;
-      width: 100%;
-      margin-bottom: 0.5em;
+    .control-group-remove-status {
+      margin-top: 25px;
     }
 
-    .user-status-description-wrap {
-      display: inline-flex;
-      width: 100%;
-      align-items: end;
+    .control-label {
+      font-weight: 700;
     }
   }
 }

@@ -444,20 +444,10 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("nextWindow", function (assert) {
-    const postStream = buildStream(1234, [
-      1,
-      2,
-      3,
-      5,
-      8,
-      9,
-      10,
-      11,
-      13,
-      14,
-      15,
-      16,
-    ]);
+    const postStream = buildStream(
+      1234,
+      [1, 2, 3, 5, 8, 9, 10, 11, 13, 14, 15, 16]
+    );
 
     assert.blank(
       postStream.get("nextWindow"),
@@ -486,20 +476,10 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("previousWindow", function (assert) {
-    const postStream = buildStream(1234, [
-      1,
-      2,
-      3,
-      5,
-      8,
-      9,
-      10,
-      11,
-      13,
-      14,
-      15,
-      16,
-    ]);
+    const postStream = buildStream(
+      1234,
+      [1, 2, 3, 5, 8, 9, 10, 11, 13, 14, 15, 16]
+    );
 
     assert.blank(
       postStream.get("previousWindow"),

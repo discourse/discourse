@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
@@ -8,8 +6,8 @@ export default class TagSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ tag, topicTrackingState }) {
-    this.tag = tag;
+  constructor({ tagName, topicTrackingState }) {
+    this.tagName = tagName;
     this.topicTrackingState = topicTrackingState;
     this.refreshCounts();
   }
@@ -17,22 +15,22 @@ export default class TagSectionLink {
   @bind
   refreshCounts() {
     this.totalUnread = this.topicTrackingState.countUnread({
-      tagId: this.tag,
+      tagId: this.tagName,
     });
 
     if (this.totalUnread === 0) {
       this.totalNew = this.topicTrackingState.countNew({
-        tagId: this.tag,
+        tagId: this.tagName,
       });
     }
   }
 
   get name() {
-    return this.tag;
+    return this.tagName;
   }
 
   get model() {
-    return this.tag;
+    return this.tagName;
   }
 
   get currentWhen() {
@@ -44,18 +42,14 @@ export default class TagSectionLink {
   }
 
   get text() {
-    return this.tag;
+    return this.tagName;
   }
 
-  get badgeText() {
+  get badgeCount() {
     if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
-        count: this.totalUnread,
-      });
+      return this.totalUnread;
     } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
-        count: this.totalNew,
-      });
+      return this.totalNew;
     }
   }
 

@@ -3,6 +3,7 @@ import {
   chromeTest,
   count,
   exists,
+  publishToMessageBus,
   query,
   queryAll,
   selectText,
@@ -12,6 +13,7 @@ import {
   click,
   currentURL,
   fillIn,
+  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -649,5 +651,138 @@ acceptance("Navigating between topics", function (needs) {
     await visit("/t/-/280");
     await click("a.by-post-id");
     assert.ok(currentURL().includes("/280"));
+  });
+});
+
+acceptance("Topic stats update automatically", function () {
+  test("Likes count updates automatically", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const likesDisplay = query("#post_1 .topic-map .likes .number");
+    const oldLikes = likesDisplay.textContent;
+
+    const likesChangedFixture = {
+      id: 280,
+      type: "stats",
+      like_count: 999,
+    };
+
+    // simulate the topic like_count being changed
+    publishToMessageBus("/topic/280", likesChangedFixture);
+
+    await settled();
+    const newLikes = likesDisplay.textContent;
+
+    assert.notEqual(
+      oldLikes,
+      newLikes,
+      "it updates the like count on the topic stats"
+    );
+    assert.equal(
+      newLikes,
+      likesChangedFixture.like_count,
+      "it updates the like count with the expected value"
+    );
+  });
+
+  const postsChangedFixture = {
+    id: 280,
+    type: "stats",
+    posts_count: 999,
+    last_posted_at: "2022-06-20T21:01:45.844Z",
+    last_poster: {
+      id: 1,
+      username: "test",
+      name: "Mr. Tester",
+      avatar_template: "http://www.example.com/avatar/updated_avatar.png",
+    },
+  };
+
+  test("Replies count updates automatically", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const repliesDisplay = query("#post_1 .topic-map .replies .number");
+    const oldReplies = repliesDisplay.textContent;
+
+    // simulate the topic posts_count being changed
+    publishToMessageBus("/topic/280", postsChangedFixture);
+
+    await settled();
+    const newLikes = repliesDisplay.textContent;
+
+    assert.notEqual(
+      oldReplies,
+      newLikes,
+      "it updates the replies count on the topic stats"
+    );
+    assert.equal(
+      newLikes,
+      postsChangedFixture.posts_count - 1, // replies = posts_count - 1
+      "it updates the replies count with the expected value"
+    );
+  });
+
+  test("Last replier avatar updates automatically", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const avatarImg = query("#post_1 .topic-map .last-reply .avatar");
+    const oldAvatarTitle = avatarImg.title;
+    const oldAvatarSrc = avatarImg.src;
+
+    // simulate the topic posts_count being changed
+    publishToMessageBus("/topic/280", postsChangedFixture);
+
+    await settled();
+
+    const newAvatarTitle = avatarImg.title;
+    const newAvatarSrc = avatarImg.src;
+
+    assert.notEqual(
+      oldAvatarTitle,
+      newAvatarTitle,
+      "it updates the last poster avatar title on the topic stats"
+    );
+    assert.equal(
+      newAvatarTitle,
+      postsChangedFixture.last_poster.name,
+      "it updates the last poster avatar title with the expected value"
+    );
+    assert.notEqual(
+      oldAvatarSrc,
+      newAvatarSrc,
+      "it updates the last poster avatar src on the topic stats"
+    );
+    assert.equal(
+      newAvatarSrc,
+      postsChangedFixture.last_poster.avatar_template,
+      "it updates the last poster avatar src with the expected value"
+    );
+  });
+
+  test("Last replied at updates automatically", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const lastRepliedAtDisplay = query(
+      "#post_1 .topic-map .last-reply .relative-date"
+    );
+    const oldTime = lastRepliedAtDisplay.dataset.time;
+
+    // simulate the topic posts_count being changed
+    publishToMessageBus("/topic/280", postsChangedFixture);
+
+    await settled();
+
+    const newTime = lastRepliedAtDisplay.dataset.time;
+
+    assert.notEqual(
+      oldTime,
+      newTime,
+      "it updates the last posted time on the topic stats"
+    );
+    assert.equal(
+      newTime,
+      new Date(postsChangedFixture.last_posted_at).getTime(),
+      "it updates the last posted time with the expected value"
+    );
   });
 });

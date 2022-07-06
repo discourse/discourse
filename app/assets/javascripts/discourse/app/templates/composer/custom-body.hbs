@@ -1,3 +1,3 @@
-<a href {{action closeMessage message}} class="close">{{d-icon "times"}}</a>
-{{#if message.title}}<h3>{{message.title}}</h3>{{/if}}
-<p>{{html-safe message.body}}</p>
+<a href {{action this.closeMessage this.message}} class="close">{{d-icon "times"}}</a>
+{{#if this.message.title}}<h3>{{this.message.title}}</h3>{{/if}}
+<p>{{html-safe this.message.body}}</p>

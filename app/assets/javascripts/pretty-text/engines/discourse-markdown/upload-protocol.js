@@ -6,8 +6,9 @@ const HTML_TYPES = ["html_block", "html_inline"];
 function addImage(uploads, token) {
   if (token.attrs) {
     for (let i = 0; i < token.attrs.length; i++) {
-      if (token.attrs[i][1].indexOf("upload://") === 0) {
-        uploads.push({ token, srcIndex: i, origSrc: token.attrs[i][1] });
+      const value = token.attrs[i][1];
+      if (value?.startsWith("upload://")) {
+        uploads.push({ token, srcIndex: i, origSrc: value });
         break;
       }
     }
@@ -31,16 +32,16 @@ function findUploadsInHtml(uploads, blockToken) {
   // image src attributes, and replace them with a placeholder.
   // Note that we can't use browser DOM APIs because this needs
   // to run in mini-racer.
-  const fakeAllowList = {};
-
   let foundImage = false;
-  const newContent = xss(blockToken.content, {
-    allowList: fakeAllowList,
+  let allowList;
+
+  const filter = new xss.FilterXSS({
+    allowList: [],
     allowCommentTag: true,
-    onTag(tag, html, options) {
+    onTag(tag, html, info) {
       // We're not using this for sanitizing, so allow all tags through
-      options.isWhite = true;
-      fakeAllowList[tag] = [];
+      info.isWhite = true;
+      allowList[tag] = [];
     },
     onTagAttr(tag, name, value) {
       if (tag === "img" && name === "src" && value.startsWith("upload://")) {
@@ -51,6 +52,10 @@ function findUploadsInHtml(uploads, blockToken) {
       return attr(name, value);
     },
   });
+
+  allowList = filter.options.whiteList;
+  const newContent = filter.process(blockToken.content);
+
   if (foundImage) {
     blockToken.content = newContent;
   }
@@ -119,9 +124,8 @@ function rule(state) {
         } else {
           // no point putting a transparent .png for audio/video
           if (token.content.match(/\|video|\|audio/)) {
-            token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
-              "/404"
-            );
+            token.attrs[srcIndex][1] =
+              state.md.options.discourse.getURL("/404");
           } else {
             token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
               "/images/transparent.png"

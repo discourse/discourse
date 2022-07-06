@@ -67,13 +67,6 @@ class Plugin::Instance
     }
   end
 
-  # If plugins provide `transpile_js: true` in their metadata we will
-  # transpile regular JS files in the assets folders. Going forward,
-  # all plugins should do this.
-  def transpile_js
-    metadata.try(:transpile_js) == "true"
-  end
-
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -656,24 +649,22 @@ class Plugin::Instance
 
       # Automatically include all ES6 JS and hbs files
       root_path = "#{root_dir_name}/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(root_path, 'js') if transpile_js
+      DiscoursePluginRegistry.register_glob(root_path, 'js')
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
       admin_path = "#{root_dir_name}/admin/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true) if transpile_js
+      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
 
-      if transpile_js
-        DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-        DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+      DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+      DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
 
-        test_path = "#{root_dir_name}/test/javascripts"
-        DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-      end
+      test_path = "#{root_dir_name}/test/javascripts"
+      DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
     end
 
     self.instance_eval File.read(path), path
@@ -818,7 +809,7 @@ class Plugin::Instance
           yield [f, true]
         elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
           yield [f, false]
-        elsif transpile_js && f_str.end_with?(".js")
+        elsif f_str.end_with?(".js")
           yield [f, false]
         end
       end

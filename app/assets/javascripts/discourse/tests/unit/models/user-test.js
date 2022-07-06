@@ -3,8 +3,15 @@ import Group from "discourse/models/group";
 import User from "discourse/models/user";
 import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
+import { settled } from "@ember/test-helpers";
 
-module("Unit | Model | user", function () {
+module("Unit | Model | user", function (hooks) {
+  hooks.afterEach(function () {
+    if (this.clock) {
+      this.clock.restore();
+    }
+  });
+
   test("staff", function (assert) {
     let user = User.create({ id: 1, username: "eviltrout" });
 
@@ -77,7 +84,7 @@ module("Unit | Model | user", function () {
     assert.deepEqual(user.calculateMutedIds(1, 1, "muted_category_ids"), []);
   });
 
-  test("createCurrent() guesses timezone if user doesn't have it set", function (assert) {
+  test("createCurrent() guesses timezone if user doesn't have it set", async function (assert) {
     PreloadStore.store("currentUser", {
       username: "eviltrout",
       timezone: null,
@@ -88,6 +95,8 @@ module("Unit | Model | user", function () {
     const currentUser = User.createCurrent();
 
     assert.deepEqual(currentUser.timezone, expectedTimezone);
+
+    await settled(); // `User` sends a request to save the timezone
   });
 
   test("createCurrent() doesn't guess timezone if user has it already set", function (assert) {

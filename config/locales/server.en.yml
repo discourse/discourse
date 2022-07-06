@@ -639,6 +639,12 @@ en:
               too_many: "Too many words for that action"
             base:
               invalid_url: "Replacement URL is invalid"
+              invalid_tag_list: "Replacement tag list is invalid"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "is not valid"
+
 
   uncategorized_category_name: "Uncategorized"
 
@@ -1682,6 +1688,7 @@ en:
     enable_badges: "Enable the badge system"
     max_favorite_badges: "Maximum number of badges that user can select"
     enable_whispers: "Allow staff private communication within topics."
+    whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -2369,6 +2376,8 @@ en:
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
+    splash_screen: "Displays a temporary loading screen while site assets load"
+
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
@@ -2422,7 +2431,7 @@ en:
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
-      discourse_connect_cannot_be_enabled_if_second_factor_enforced:  "You cannot enable DiscourseConnect if 2FA is enforced."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
 
     placeholder:
       discourse_connect_provider_secrets:
