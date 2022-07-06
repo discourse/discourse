@@ -38,8 +38,8 @@ export default class Sidebar extends GlimmerComponent {
     }
   }
 
-  get computedCustomSections() {
-    return customSections.map((customSection) => {
+  get customSections() {
+    return sidebarCustomSections.map((customSection) => {
       return new customSection();
     });
   }
