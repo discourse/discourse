@@ -1,4 +1,7 @@
 <label>
   <Input @type="checkbox" class="wizard-checkbox" @checked={{field.value}} />
+  {{#if field.icon}}
+    {{d-icon field.icon}}
+  {{/if}}
   {{field.placeholder}}
 </label>

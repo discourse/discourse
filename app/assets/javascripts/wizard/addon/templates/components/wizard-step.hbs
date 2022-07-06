@@ -43,10 +43,6 @@
   </div>
 
   <div class="wizard-buttons">
-    {{#if showQuitButton}}
-      <a href {{action "quit"}} tabindex="11" class="action-link quit">{{i18n "wizard.quit"}}</a>
-    {{/if}}
-
     {{#if showFinishButton}}
       <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn finish">
         {{i18n "wizard.finish"}}
@@ -58,9 +54,8 @@
     {{/if}}
 
     {{#if showNextButton}}
-      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn next primary">
-        {{i18n "wizard.next"}}
-        {{d-icon "chevron-right"}}
+      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn primary {{nextButtonClass}}">
+        {{i18n nextButtonLabel}}
       </button>
     {{/if}}
 
