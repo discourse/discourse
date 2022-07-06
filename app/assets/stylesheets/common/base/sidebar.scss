@@ -134,6 +134,23 @@
     }
   }
 
+  .select-kit {
+    .btn {
+      background: transparent;
+      &:hover {
+        background: var(--primary-low);
+      }
+    }
+    .d-icon {
+      font-size: $font-down-1;
+      color: var(--primary-medium);
+      margin-right: 0;
+    }
+    summary {
+      padding: 0.25em 0.5em;
+    }
+  }
+
   .sidebar-section-header-button {
     background: none;
     border: none;
@@ -146,6 +163,16 @@
 
     &:hover {
       background: var(--primary-low);
+    }
+  }
+  .select-kit-collection {
+    .texts {
+      font-size: var(--font-0);
+      text-transform: none;
+      line-height: var(--line-height-medium);
+      .name {
+        font-size: var(--font-0);
+      }
     }
   }
 

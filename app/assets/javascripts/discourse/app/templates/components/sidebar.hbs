@@ -17,14 +17,14 @@
         @headerRoute={{customSection.route}}
         @headerLinkText={{customSection.text}}
         @headerLinkTitle={{customSection.title}}
-        @headerActionIcon={{customSection.actionIcon}}
-        @headerAction={{customSection.action}}
-        @headerActionTitle={{customSection.actionTitle}}>
+        @headerActionsIcon={{customSection.actionsIcon}}
+        @headerActions={{customSection.actions}}>
 
         {{#each customSection.links as |link|}}
           <Sidebar::SectionLink
           @linkName={{link.name}}
           @route={{link.route}}
+          @model={{link.model}}
           @title={{link.title}}
           @content={{link.text}} />
         {{/each}}

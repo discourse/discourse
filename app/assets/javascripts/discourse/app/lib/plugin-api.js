@@ -101,7 +101,7 @@ import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.3.0";
+const PLUGIN_API_VERSION = "1.3.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1635,11 +1635,11 @@ class PluginApi {
    * api.addTopicsSectionLink((baseSectionLink) => {
    *   return class CustomSectionLink extends baseSectionLink {
    *     get name() {
-   *       returns "bookmarked";
+   *       return "bookmarked";
    *     }
    *
    *     get route() {
-   *       returns "userActivity.bookmarks";
+   *       return "userActivity.bookmarks";
    *     }
    *
    *     get model() {
@@ -1682,6 +1682,70 @@ class PluginApi {
     addSectionLink(arg);
   }
 
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a Sidebar section by returning a class which extends from the BaseSectionHeader
+   * class interface. See `lib/sidebar/base-section-header.js` for documentation on the BaseSectionHeader class
+   * interface.
+   *
+   * ```
+   * api.addSidebarSection((BaseSectionHeader, BaseSectionLink) => {
+   *   return class extends BaseSectionHeader {
+   *     get name() {
+   *       return "chat-channels";
+   *     }
+   *
+   *     get route() {
+   *       return "chat";
+   *     }
+   *
+   *     get title() {
+   *       return I18n.t("sidebar.sections.chat.title");
+   *     }
+   *
+   *     get text() {
+   *       return I18n.t("sidebar.sections.chat.text");
+   *     }
+   *
+   *     get actionsIcon() {
+   *       return "cog";
+   *     }
+   *
+   *     get actions() {
+   *       return [
+   *         { id: "browseChannels", title: "Browse channel", action: () => {} },
+   *         { id: "settings", title: "Settings", action: () => {} },
+   *       ];
+   *     }
+   *
+   *     get links() {
+   *       return [
+   *         new (class extends BaseSectionLink {
+   *           get name() {
+   *             "channel name"
+   *           }
+   *           get route() {
+   *             return "chat.channel";
+   *           }
+   *           get model() {
+   *             return {
+   *               channelId: "1",
+   *               channelTitle: "random channel"
+   *             };
+   *           }
+   *           get title() {
+   *             return "random channel";
+   *           }
+   *           get text() {
+   *             return "random channel";
+   *           }
+   *         })()
+   *       ];
+   *     }
+   *   }
+   * })
+   * ```
+   */
   addSidebarSection(arg) {
     addSidebarSection(arg);
   }

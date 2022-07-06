@@ -2,11 +2,6 @@
  * Base class representing a sidebar section header interface.
  */
 export default class BaseSectionHeader {
-  constructor({ currentUser, appEvents } = {}) {
-    this.currentUser = currentUser;
-    this.appEvents = appEvents;
-  }
-
   /**
    * Called when sidebar component is torn down.
    */
@@ -16,13 +11,6 @@ export default class BaseSectionHeader {
    * @returns {string} The name of the section header. Needs to be dasherized and lowercase.
    */
   get name() {
-    this._notImplemented();
-  }
-
-  /**
-   * @returns {string} Ember route
-   */
-  get route() {
     this._notImplemented();
   }
 
