@@ -6,6 +6,8 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 const Discourse = Application.extend({
+  modulePrefix: "discourse",
+
   rootElement: "#main",
 
   customEvents: {

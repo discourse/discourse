@@ -156,7 +156,9 @@ export default Component.extend({
   },
 
   willDestroyElement() {
-    this._darkModeListener.removeListener(this.setAceTheme);
+    if (this._darkModeListener) {
+      this._darkModeListener.removeListener(this.setAceTheme);
+    }
   },
 
   @bind
