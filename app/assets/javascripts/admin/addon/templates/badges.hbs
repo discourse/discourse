@@ -15,9 +15,9 @@
   </div>
   <div class="content-list">
     <ul class="admin-badge-list">
-      {{#each model as |badge|}}
+      {{#each this.model as |badge|}}
         <li class="admin-badge-list-item">
-          <LinkTo @route={{selectedRoute}} @model={{badge.id}}>
+          <LinkTo @route={{this.selectedRoute}} @model={{badge.id}}>
             <BadgeButton @badge={{badge}} />
             {{#if badge.newBadge}}
               <span class="list-badge">{{i18n "filters.new.lower_title"}}</span>

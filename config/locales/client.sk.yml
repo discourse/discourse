@@ -725,6 +725,8 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"

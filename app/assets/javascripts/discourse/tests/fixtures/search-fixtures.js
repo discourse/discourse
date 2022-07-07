@@ -541,9 +541,9 @@ export default {
         posters: [],
         tags: ["dev", "slow"],
         tags_descriptions: {
-          "dev": "dev description",
-          "slow": "slow description",
-        }
+          dev: "dev description",
+          slow: "slow description",
+        },
       },
       {
         id: 14727,
@@ -583,8 +583,7 @@ export default {
           "Beginners Guide to Install Discourse on Mac OS X for Development",
         fancy_title:
           "Beginners Guide to Install Discourse on Mac OS X for Development",
-        slug:
-          "beginners-guide-to-install-discourse-on-mac-os-x-for-development",
+        slug: "beginners-guide-to-install-discourse-on-mac-os-x-for-development",
         posts_count: 51,
         reply_count: 28,
         highest_post_number: 52,

@@ -6,7 +6,7 @@
       <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
     </thead>
     <tbody>
-      {{#each categoriesOrdered as |cat|}}
+      {{#each this.categoriesOrdered as |cat|}}
         <tr data-category-id={{cat.id}}>
           <td>
             <div class={{concat "reorder-categories-depth-" cat.depth}}>

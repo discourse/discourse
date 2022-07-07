@@ -1437,6 +1437,7 @@ a.mention-group {
   background-color: var(--tertiary-low);
   border-top: 1px solid var(--primary-low);
   display: flex;
+  width: 100%;
   max-width: calc(
     #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
       (0.8em * 2)

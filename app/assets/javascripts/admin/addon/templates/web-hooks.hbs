@@ -1,11 +1,11 @@
 <div class="web-hooks-listing">
   <p>{{i18n "admin.web_hooks.instruction"}}</p>
   <div class="new-webhook">
-    <LinkTo @route="adminWebHooks.show" @model="new" @tagName="button" @classNames="btn btn-default">
+    <LinkTo @route="adminWebHooks.show" @model="new" class="btn btn-default">
       {{d-icon "plus"}} {{i18n "admin.web_hooks.new"}}
     </LinkTo>
   </div>
-  {{#if model}}
+  {{#if this.model}}
     <LoadMore @selector=".web-hooks tr" @action={{action "loadMore"}}>
       <table class="web-hooks grid">
         <thead>
@@ -17,20 +17,20 @@
           </tr>
         </thead>
         <tbody>
-          {{#each model as |webHook|}}
+          {{#each this.model as |webHook|}}
             <tr>
-              <td class="delivery-status"><LinkTo @route="adminWebHooks.showEvents" @model={{webHook.id}}><AdminWebHookStatus @deliveryStatuses={{deliveryStatuses}} @model={{webHook}} /></LinkTo></td>
+              <td class="delivery-status"><LinkTo @route="adminWebHooks.showEvents" @model={{webHook.id}}><AdminWebHookStatus @deliveryStatuses={{this.deliveryStatuses}} @model={{webHook}} /></LinkTo></td>
               <td class="payload-url"><LinkTo @route="adminWebHooks.show" @model={{webHook}}>{{webHook.payload_url}}</LinkTo></td>
               <td class="description">{{webHook.description}}</td>
               <td class="controls">
-                <LinkTo @route="adminWebHooks.show" @model={{webHook}} @tagName="button" @classNames="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
+                <LinkTo @route="adminWebHooks.show" @model={{webHook}} class="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
                 <DButton @class="destroy btn-danger" @action={{action "destroy"}} @actionParam={{webHook}} @icon="times" />
               </td>
             </tr>
           {{/each}}
         </tbody>
       </table>
-      <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+      <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
     </LoadMore>
   {{else}}
     <p>{{i18n "admin.web_hooks.none"}}</p>

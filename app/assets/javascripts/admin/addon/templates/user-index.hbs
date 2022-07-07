@@ -1,51 +1,51 @@
-<section class="details {{unless model.active "not-activated"}}">
+<section class="details {{unless this.model.active "not-activated"}}">
   <div class="user-controls">
-    {{#if model.canViewProfile}}
-      <LinkTo @route="user" @model={{model}} class="btn btn-default">
+    {{#if this.model.canViewProfile}}
+      <LinkTo @route="user" @model={{this.model}} class="btn btn-default">
         {{d-icon "user"}}
         {{i18n "admin.user.show_public_profile"}}
       </LinkTo>
     {{/if}}
 
-    {{#if model.can_view_action_logs}}
-      <DButton @action={{action "viewActionLogs"}} @class="btn-default" @actionParam={{model.username}} @icon="far-list-alt" @label="admin.user.action_logs" />
+    {{#if this.model.can_view_action_logs}}
+      <DButton @action={{action "viewActionLogs"}} @class="btn-default" @actionParam={{this.model.username}} @icon="far-list-alt" @label="admin.user.action_logs" />
     {{/if}}
-    {{#if model.active}}
-      {{#if currentUser.admin}}
+    {{#if this.model.active}}
+      {{#if this.currentUser.admin}}
         <DButton @class="btn-default" @action={{action "logOut"}} @icon="power-off" @label="admin.user.log_out" />
       {{/if}}
     {{/if}}
-    <PluginOutlet @name="admin-user-controls-after" @args={{hash model=model}} />
+    <PluginOutlet @name="admin-user-controls-after" @args={{hash model=this.model}} />
   </div>
 
   <div class="display-row username">
-    <AdminEditableField @name="user.username.title" @value={{model.username}} @action={{action "saveUsername"}} @editing={{editingUsername}} />
+    <AdminEditableField @name="user.username.title" @value={{this.model.username}} @action={{action "saveUsername"}} @editing={{this.editingUsername}} />
   </div>
 
   <div class="display-row name">
-    <AdminEditableField @name="user.name.title" @value={{model.name}} @action={{action "saveName"}} @editing={{editingName}} />
+    <AdminEditableField @name="user.name.title" @value={{this.model.name}} @action={{action "saveName"}} @editing={{this.editingName}} />
   </div>
 
-  <PluginOutlet @name="admin-user-below-names" @args={{hash user=model}} />
+  <PluginOutlet @name="admin-user-below-names" @args={{hash user=this.model}} />
 
-  {{#if canCheckEmails}}
+  {{#if this.canCheckEmails}}
     <div class="display-row email">
       <div class="field">{{i18n "user.email.primary"}}</div>
       <div class="value">
-        {{#unless model.active}}
+        {{#unless this.model.active}}
           <div class="controls">{{i18n "admin.users.not_verified"}}</div>
         {{/unless}}
-        {{#if model.email}}
-          <a href="mailto:{{model.email}}">{{model.email}}</a>
+        {{#if this.model.email}}
+          <a href="mailto:{{this.model.email}}">{{this.model.email}}</a>
         {{else}}
-          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
         {{/if}}
       </div>
       <div class="controls">
-        {{#if siteSettings.auth_overrides_email}}
+        {{#if this.siteSettings.auth_overrides_email}}
           {{i18n "user.email.auth_override_instructions"}}
-        {{else if model.email}}
-          {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
+        {{else if this.model.email}}
+          {{html-safe (i18n "admin.user.visit_profile" url=this.preferencesPath)}}
         {{/if}}
       </div>
     </div>
@@ -54,10 +54,10 @@
       <div class="field">{{i18n "user.email.secondary"}}</div>
 
       <div class="value">
-        {{#if model.email}}
-          {{#if model.secondary_emails}}
+        {{#if this.model.email}}
+          {{#if this.model.secondary_emails}}
             <ul>
-              {{#each model.secondary_emails as |email| }}
+              {{#each this.model.secondary_emails as |email| }}
                 <li><a href="mailto:{{email}}">{{email}}</a></li>
               {{/each}}
             </ul>
@@ -65,17 +65,17 @@
             {{i18n "user.email.no_secondary"}}
           {{/if}}
         {{else}}
-          <DButton @action={{route-action "checkEmail"}} @class="btn-default" @actionParam={{model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+          <DButton @action={{route-action "checkEmail"}} @class="btn-default" @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
         {{/if}}
       </div>
 
       <div class="controls">
-        {{#if model.email}}
-          {{#if model.secondary_emails}}
-            {{#if siteSettings.auth_overrides_email}}
+        {{#if this.model.email}}
+          {{#if this.model.secondary_emails}}
+            {{#if this.siteSettings.auth_overrides_email}}
               {{i18n "user.email.auth_override_instructions"}}
             {{else}}
-              {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
+              {{html-safe (i18n "admin.user.visit_profile" url=this.preferencesPath)}}
             {{/if}}
           {{/if}}
         {{/if}}
@@ -83,23 +83,23 @@
     </div>
 
     <div class="display-row bounce-score">
-      <div class="field"><a href={{model.bounceLink}}>{{i18n "admin.user.bounce_score"}}</a></div>
-      <div class="value">{{model.bounceScore}}</div>
+      <div class="field"><a href={{this.model.bounceLink}}>{{i18n "admin.user.bounce_score"}}</a></div>
+      <div class="value">{{this.model.bounceScore}}</div>
       <div class="controls">
-        {{#if model.canResetBounceScore}}
+        {{#if this.model.canResetBounceScore}}
           <DButton @class="btn-default" @action={{action "resetBounceScore"}} @label="admin.user.reset_bounce_score.label" @title="admin.user.reset_bounce_score.title" />
         {{/if}}
-        {{model.bounceScoreExplanation}}
+        {{this.model.bounceScoreExplanation}}
       </div>
     </div>
 
     <div class="display-row associations">
       <div class="field">{{i18n "user.associated_accounts.title"}}</div>
       <div class="value">
-        {{#if associatedAccountsLoaded}}
-          {{associatedAccounts}}
+        {{#if this.associatedAccountsLoaded}}
+          {{this.associatedAccounts}}
         {{else}}
-          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
         {{/if}}
       </div>
     </div>
@@ -107,44 +107,44 @@
 
   <div class="display-row">
     <div class="field">{{i18n "user.avatar.title"}}</div>
-    <div class="value">{{avatar model imageSize="large"}}</div>
+    <div class="value">{{avatar this.model imageSize="large"}}</div>
     <div class="controls">
-      {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
+      {{html-safe (i18n "admin.user.visit_profile" url=this.preferencesPath)}}
     </div>
   </div>
 
   <div class="display-row">
-    <AdminEditableField @name="user.title.title" @value={{model.title}} @action={{action "saveTitle"}} @editing={{editingTitle}} />
+    <AdminEditableField @name="user.title.title" @value={{this.model.title}} @action={{action "saveTitle"}} @editing={{this.editingTitle}} />
   </div>
 
   <div class="display-row last-ip">
     <div class="field">{{i18n "user.ip_address.title"}}</div>
-    <div class="value">{{model.ip_address}}</div>
+    <div class="value">{{this.model.ip_address}}</div>
     <div class="controls">
-      {{#if currentUser.staff}}
-        <IpLookup @ip={{model.ip_address}} @userId={{model.id}} />
+      {{#if this.currentUser.staff}}
+        <IpLookup @ip={{this.model.ip_address}} @userId={{this.model.id}} />
       {{/if}}
     </div>
   </div>
 
   <div class="display-row registration-ip">
     <div class="field">{{i18n "user.registration_ip_address.title"}}</div>
-    <div class="value">{{model.registration_ip_address}}</div>
+    <div class="value">{{this.model.registration_ip_address}}</div>
     <div class="controls">
-      {{#if currentUser.staff}}
-        <IpLookup @ip={{model.registration_ip_address}} @userId={{model.id}} />
+      {{#if this.currentUser.staff}}
+        <IpLookup @ip={{this.model.registration_ip_address}} @userId={{this.model.id}} />
       {{/if}}
     </div>
   </div>
 
-  {{#if showBadges}}
+  {{#if this.showBadges}}
     <div class="display-row">
       <div class="field">{{i18n "admin.badges.title"}}</div>
       <div class="value">
-        {{i18n "badges.badge_count" count=model.badge_count}}
+        {{i18n "badges.badge_count" count=this.model.badge_count}}
       </div>
       <div class="controls">
-        <LinkTo @route="adminUser.badges" @model={{model}} class="btn btn-default">
+        <LinkTo @route="adminUser.badges" @model={{this.model}} class="btn btn-default">
           {{d-icon "certificate"}}
           {{i18n "admin.badges.edit_badges"}}
         </LinkTo>
@@ -155,23 +155,23 @@
   <div class="display-row">
     <div class="field">{{i18n "user.second_factor.title"}}</div>
     <div class="value">
-      {{#if model.second_factor_enabled}}
+      {{#if this.model.second_factor_enabled}}
         {{i18n "yes_value"}}
       {{else}}
         {{i18n "no_value"}}
       {{/if}}
     </div>
     <div class="controls">
-      {{#if canDisableSecondFactor}}
+      {{#if this.canDisableSecondFactor}}
         <DButton @class="btn-default" @action={{action "disableSecondFactor"}} @icon="unlock-alt" @label="user.second_factor.disable" />
       {{/if}}
     </div>
   </div>
 </section>
 
-{{#if userFields}}
+{{#if this.userFields}}
   <section class="details">
-    {{#each userFields as |uf|}}
+    {{#each this.userFields as |uf|}}
       <div class="display-row">
         <div class="field">{{uf.name}}</div>
         <div class="value">
@@ -186,32 +186,32 @@
   </section>
 {{/if}}
 
-<PluginOutlet @name="admin-user-details" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+<PluginOutlet @name="admin-user-details" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
 <section class="details">
   <h1>{{i18n "admin.user.permissions"}}</h1>
 
-  {{#if siteSettings.must_approve_users}}
+  {{#if this.siteSettings.must_approve_users}}
     <div class="display-row">
       <div class="field">{{i18n "admin.users.approved"}}</div>
       <div class="value">
-        {{#if model.approved}}
+        {{#if this.model.approved}}
           {{i18n "admin.user.approved_by"}}
-          <LinkTo @route="adminUser" @model={{model.approvedBy}}>
-            {{avatar model.approvedBy imageSize="small"}}
+          <LinkTo @route="adminUser" @model={{this.model.approvedBy}}>
+            {{avatar this.model.approvedBy imageSize="small"}}
           </LinkTo>
-          <LinkTo @route="adminUser" @model={{model.approvedBy}}>
-            {{model.approvedBy.username}}
+          <LinkTo @route="adminUser" @model={{this.model.approvedBy}}>
+            {{this.model.approvedBy.username}}
           </LinkTo>
         {{else}}
           {{i18n "no_value"}}
         {{/if}}
       </div>
       <div class="controls">
-        {{#if model.approved}}
+        {{#if this.model.approved}}
           {{i18n "admin.user.approve_success"}}
         {{else}}
-          {{#if model.can_approve}}
+          {{#if this.model.can_approve}}
             <DButton @class="btn-default" @action={{action "approve"}} @icon="check" @label="admin.user.approve" />
           {{/if}}
         {{/if}}
@@ -221,18 +221,18 @@
 
   <div class="display-row">
     <div class="field">{{i18n "admin.users.active"}}</div>
-    <div class="value">{{i18n-yes-no model.active}}</div>
+    <div class="value">{{i18n-yes-no this.model.active}}</div>
     <div class="controls">
-      {{#if model.active}}
-        {{#if model.can_deactivate}}
+      {{#if this.model.active}}
+        {{#if this.model.can_deactivate}}
           <DButton @class="btn-default" @action={{action "deactivate"}} @label="admin.user.deactivate_account" />
           {{i18n "admin.user.deactivate_explanation"}}
         {{/if}}
       {{else}}
-        {{#if model.can_send_activation_email}}
+        {{#if this.model.can_send_activation_email}}
           <DButton @class="btn-default" @action={{action "sendActivationEmail"}} @icon="envelope" @label="admin.user.send_activation_email" />
         {{/if}}
-        {{#if model.can_activate}}
+        {{#if this.model.can_activate}}
           <DButton @class="btn-default" @action={{action "activate"}} @icon="check" @label="admin.user.activate" />
         {{/if}}
       {{/if}}
@@ -241,15 +241,15 @@
 
   <div class="display-row">
     <div class="field">{{i18n "admin.user.staged"}}</div>
-    <div class="value">{{i18n-yes-no model.staged}}</div>
+    <div class="value">{{i18n-yes-no this.model.staged}}</div>
     <div class="controls">{{i18n "admin.user.staged_explanation"}}</div>
   </div>
 
-  {{#if currentUser.admin}}
+  {{#if this.currentUser.admin}}
     <div class="display-row">
       <div class="field">{{i18n "admin.api.active_keys"}}</div>
       <div class="value">
-        {{model.api_key_count}}
+        {{this.model.api_key_count}}
       </div>
       <div class="controls">
         <DButton @class="btn-default" @href="/admin/api/keys" @label="admin.api.manage_keys" />
@@ -259,12 +259,12 @@
 
   <div class="display-row">
     <div class="field">{{i18n "admin.user.admin"}}</div>
-    <div class="value">{{i18n-yes-no model.admin}}</div>
+    <div class="value">{{i18n-yes-no this.model.admin}}</div>
     <div class="controls">
-      {{#if model.can_revoke_admin}}
+      {{#if this.model.can_revoke_admin}}
         <DButton @class="btn-default" @action={{action "revokeAdmin"}} @icon="shield-alt" @label="admin.user.revoke_admin" />
       {{/if}}
-      {{#if model.can_grant_admin}}
+      {{#if this.model.can_grant_admin}}
         <DButton @class="btn-default grant-admin" @action={{action "grantAdmin"}} @icon="shield-alt" @label="admin.user.grant_admin" />
       {{/if}}
     </div>
@@ -272,12 +272,12 @@
 
   <div class="display-row">
     <div class="field">{{i18n "admin.user.moderator"}}</div>
-    <div class="value">{{i18n-yes-no model.moderator}}</div>
+    <div class="value">{{i18n-yes-no this.model.moderator}}</div>
     <div class="controls">
-      {{#if model.can_revoke_moderation}}
+      {{#if this.model.can_revoke_moderation}}
         <DButton @class="btn-default" @action={{action "revokeModeration"}} @icon="shield-alt" @label="admin.user.revoke_moderation" />
       {{/if}}
-      {{#if model.can_grant_moderation}}
+      {{#if this.model.can_grant_moderation}}
         <DButton @class="btn-default" @action={{action "grantModeration"}} @icon="shield-alt" @label="admin.user.grant_moderation" />
       {{/if}}
     </div>
@@ -286,9 +286,9 @@
   <div class="display-row">
     <div class="field">{{i18n "trust_level"}}</div>
     <div class="value">
-      <ComboBox @content={{site.trustLevels}} @nameProperty="detailedName" @value={{model.trustLevel.id}} @onChange={{action (mut model.trust_level)}} />
+      <ComboBox @content={{this.site.trustLevels}} @nameProperty="detailedName" @value={{this.model.trustLevel.id}} @onChange={{action (mut this.model.trust_level)}} />
 
-      {{#if model.dirty}}
+      {{#if this.model.dirty}}
         <div>
           <DButton @class="ok no-text" @action={{action "saveTrustLevel"}} @icon="check" />
           <DButton @class="cancel no-text" @action={{action "restoreTrustLevel"}} @icon="times" />
@@ -296,8 +296,8 @@
       {{/if}}
     </div>
     <div class="controls">
-      {{#if model.canLockTrustLevel}}
-        {{#if hasLockedTrustLevel}}
+      {{#if this.model.canLockTrustLevel}}
+        {{#if this.hasLockedTrustLevel}}
           {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
           <DButton @class="btn-default" @action={{action "lockTrustLevel"}} @actionParam={{false}} @label="admin.user.unlock_trust_level" />
         {{else}}
@@ -305,30 +305,30 @@
           <DButton @class="btn-default" @action={{action "lockTrustLevel"}} @actionParam={{true}} @label="admin.user.lock_trust_level" />
         {{/if}}
       {{/if}}
-      {{#if model.tl3Requirements}}
-        <LinkTo @route="adminUser.tl3Requirements" @model={{model}} class="btn btn-default">
+      {{#if this.model.tl3Requirements}}
+        <LinkTo @route="adminUser.tl3Requirements" @model={{this.model}} class="btn btn-default">
           {{i18n "admin.user.trust_level_3_requirements"}}
         </LinkTo>
       {{/if}}
     </div>
   </div>
 
-  <div class="user-suspended display-row {{if model.suspended "highlight-danger"}}">
+  <div class="user-suspended display-row {{if this.model.suspended "highlight-danger"}}">
     <div class="field">{{i18n "admin.user.suspended"}}</div>
     <div class="value">
-      {{i18n-yes-no model.suspended}}
-      {{#if model.suspended}}
-        {{#unless model.suspendedForever}}
-          {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+      {{i18n-yes-no this.model.suspended}}
+      {{#if this.model.suspended}}
+        {{#unless this.model.suspendedForever}}
+          {{i18n "admin.user.suspended_until" until=this.model.suspendedTillDate}}
         {{/unless}}
       {{/if}}
     </div>
     <div class="controls">
-      {{#if model.suspended}}
+      {{#if this.model.suspended}}
         <DButton @class="btn-danger unsuspend-user" @action={{action "unsuspend"}} @icon="ban" @label="admin.user.unsuspend" />
         {{i18n "admin.user.suspended_explanation"}}
       {{else}}
-        {{#if model.canSuspend}}
+        {{#if this.model.canSuspend}}
           <DButton @class="btn-danger suspend-user" @action={{action "showSuspendModal"}} @icon="ban" @label="admin.user.suspend" />
           {{i18n "admin.user.suspended_explanation"}}
         {{/if}}
@@ -336,37 +336,37 @@
     </div>
   </div>
 
-  {{#if model.suspended}}
+  {{#if this.model.suspended}}
     <div class="display-row highlight-danger suspension-info">
       <div class="field">{{i18n "admin.user.suspended_by"}}</div>
       <div class="value">
-        <LinkTo @route="adminUser" @model={{model.suspendedBy}}>
-          {{avatar model.suspendedBy imageSize="tiny"}}
+        <LinkTo @route="adminUser" @model={{this.model.suspendedBy}}>
+          {{avatar this.model.suspendedBy imageSize="tiny"}}
         </LinkTo>
-        <LinkTo @route="adminUser" @model={{model.suspendedBy}}>
-          {{model.suspendedBy.username}}
+        <LinkTo @route="adminUser" @model={{this.model.suspendedBy}}>
+          {{this.model.suspendedBy.username}}
         </LinkTo>
       </div>
       <div class="controls">
         <b>{{i18n "admin.user.suspend_reason"}}</b>:
-        <div class="full-reason">{{model.full_suspend_reason}}</div>
+        <div class="full-reason">{{this.model.full_suspend_reason}}</div>
       </div>
     </div>
   {{/if}}
 
-  <div class="display-row {{if model.silenced "highlight-danger"}}">
+  <div class="display-row {{if this.model.silenced "highlight-danger"}}">
     <div class="field">{{i18n "admin.user.silenced"}}</div>
     <div class="value">
-      {{i18n-yes-no model.silenced}}
-      {{#if model.silenced}}
-        {{#unless model.silencedForever}}
-          {{i18n "admin.user.suspended_until" until=model.silencedTillDate}}
+      {{i18n-yes-no this.model.silenced}}
+      {{#if this.model.silenced}}
+        {{#unless this.model.silencedForever}}
+          {{i18n "admin.user.suspended_until" until=this.model.silencedTillDate}}
         {{/unless}}
       {{/if}}
     </div>
     <div class="controls">
-      <ConditionalLoadingSpinner @size="small" @condition={{model.silencingUser}}>
-        {{#if model.silenced}}
+      <ConditionalLoadingSpinner @size="small" @condition={{this.model.silencingUser}}>
+        {{#if this.model.silenced}}
           <DButton @class="btn-danger unsilence-user" @action={{action "unsilence"}} @icon="microphone-slash" @label="admin.user.unsilence" />
           {{i18n "admin.user.silence_explanation"}}
         {{else}}
@@ -377,29 +377,29 @@
     </div>
   </div>
 
-  {{#if model.silenced}}
+  {{#if this.model.silenced}}
     <div class="display-row highlight-danger silence-info">
       <div class="field">{{i18n "admin.user.silenced_by"}}</div>
       <div class="value">
-        <LinkTo @route="adminUser" @model={{model.silencedBy}}>
-          {{avatar model.silencedBy imageSize="tiny"}}
+        <LinkTo @route="adminUser" @model={{this.model.silencedBy}}>
+          {{avatar this.model.silencedBy imageSize="tiny"}}
         </LinkTo>
-        <LinkTo @route="adminUser" @model={{model.silencedBy}}>
-          {{model.silencedBy.username}}
+        <LinkTo @route="adminUser" @model={{this.model.silencedBy}}>
+          {{this.model.silencedBy.username}}
         </LinkTo>
       </div>
       <div class="controls">
         <b>{{i18n "admin.user.silence_reason"}}</b>:
-        <div class="full-reason">{{model.silence_reason}}</div>
+        <div class="full-reason">{{this.model.silence_reason}}</div>
       </div>
     </div>
   {{/if}}
 
-  {{#if model.tl3_requirements.penalty_counts.total}}
+  {{#if this.model.tl3_requirements.penalty_counts.total}}
     <div class="display-row clear-penalty-history">
       <div class="field">{{i18n "admin.user.penalty_count"}}</div>
-      <div class="value">{{model.tl3_requirements.penalty_counts.total}}</div>
-      {{#if currentUser.admin}}
+      <div class="value">{{this.model.tl3_requirements.penalty_counts.total}}</div>
+      {{#if this.currentUser.admin}}
         <div class="controls">
           <DButton @label="admin.user.clear_penalty_history.title" @class="btn-default" @icon="times" @action={{action "clearPenaltyHistory"}} />
           {{i18n "admin.user.clear_penalty_history.description"}}
@@ -410,34 +410,34 @@
 
 </section>
 
-{{#if currentUser.admin}}
+{{#if this.currentUser.admin}}
   <section class="details">
     <h1>{{i18n "admin.groups.title"}}</h1>
     <div class="display-row">
       <div class="field">{{i18n "admin.groups.automatic"}}</div>
-      <div class="value">{{html-safe automaticGroups}}</div>
+      <div class="value">{{html-safe this.automaticGroups}}</div>
     </div>
     <div class="display-row">
       <div class="field">{{i18n "admin.groups.custom"}}</div>
       <div class="value">
-        <GroupChooser @content={{availableGroups}} @value={{customGroupIdsBuffer}} @labelProperty="name" @onChange={{action (mut customGroupIdsBuffer)}} />
+        <GroupChooser @content={{this.availableGroups}} @value={{this.customGroupIdsBuffer}} @labelProperty="name" @onChange={{action (mut this.customGroupIdsBuffer)}} />
       </div>
-      {{#if customGroupsDirty}}
+      {{#if this.customGroupsDirty}}
         <div class="controls">
           <DButton @icon="check" @class="ok" @action={{action "saveCustomGroups"}} />
           <DButton @icon="times" @class="cancel" @action={{action "resetCustomGroups"}} />
         </div>
       {{/if}}
     </div>
-    {{#if model.customGroups}}
+    {{#if this.model.customGroups}}
       <div class="display-row">
         <div class="field">{{i18n "admin.groups.primary"}}</div>
         <div class="value">
-          <ComboBox @content={{model.customGroups}} @value={{model.primary_group_id}} @onChange={{action (mut model.primary_group_id)}} @options={{hash
+          <ComboBox @content={{this.model.customGroups}} @value={{this.model.primary_group_id}} @onChange={{action (mut this.model.primary_group_id)}} @options={{hash
               none="admin.groups.no_primary"
             }} />
         </div>
-        {{#if primaryGroupDirty}}
+        {{#if this.primaryGroupDirty}}
           <div class="controls">
             <DButton @icon="check" @class="ok" @action={{action "savePrimaryGroup"}} />
             <DButton @icon="times" @class="cancel" @action={{action "resetPrimaryGroup"}} />
@@ -453,53 +453,53 @@
 
   <div class="display-row">
     <div class="field">{{i18n "created"}}</div>
-    <div class="value">{{format-date model.created_at leaveAgo="true"}}</div>
+    <div class="value">{{format-date this.model.created_at leaveAgo="true"}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.users.last_emailed"}}</div>
-    <div class="value">{{format-date model.last_emailed_at}}</div>
+    <div class="value">{{format-date this.model.last_emailed_at}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "last_seen"}}</div>
-    <div class="value">{{format-date model.last_seen_at leaveAgo="true"}}</div>
+    <div class="value">{{format-date this.model.last_seen_at leaveAgo="true"}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.like_count"}}</div>
-    <div class="value">{{model.like_given_count}} / {{model.like_count}}</div>
+    <div class="value">{{this.model.like_given_count}} / {{this.model.like_count}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.topics_entered"}}</div>
-    <div class="value">{{model.topics_entered}}</div>
+    <div class="value">{{this.model.topics_entered}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.post_count"}}</div>
-    <div class="value">{{model.post_count}}</div>
+    <div class="value">{{this.model.post_count}}</div>
     <div class="controls">
-      {{#if model.can_delete_all_posts}}
-        {{#if model.post_count}}
+      {{#if this.model.can_delete_all_posts}}
+        {{#if this.model.post_count}}
           <DButton @class="btn-danger" @action={{action "showDeletePostsConfirmation"}} @icon="far-trash-alt" @label="admin.user.delete_posts.button" />
         {{/if}}
       {{else}}
-        {{deleteAllPostsExplanation}}
+        {{this.deleteAllPostsExplanation}}
       {{/if}}
     </div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.posts_read_count"}}</div>
-    <div class="value">{{model.posts_read_count}}</div>
+    <div class="value">{{this.model.posts_read_count}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.warnings_received_count"}}</div>
-    <div class="value">{{model.warnings_received_count}}</div>
+    <div class="value">{{this.model.warnings_received_count}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.flags_given_received_count"}}</div>
     <div class="value">
-      {{model.flags_given_count}} / {{model.flags_received_count}}
+      {{this.model.flags_given_count}} / {{this.model.flags_received_count}}
     </div>
     <div class="controls">
-      {{#if model.flags_received_count}}
-        <LinkTo @route="review" @query={{hash username=model.username type="ReviewableFlaggedPost" status="all"}} class="btn">
+      {{#if this.model.flags_received_count}}
+        <LinkTo @route="review" @query={{hash username=this.model.username type="ReviewableFlaggedPost" status="all"}} class="btn">
           {{i18n "admin.user.show_flags_received"}}
         </LinkTo>
       {{/if}}
@@ -507,24 +507,24 @@
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.private_topics_count"}}</div>
-    <div class="value">{{model.private_topics_count}}</div>
+    <div class="value">{{this.model.private_topics_count}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "admin.user.time_read"}}</div>
-    <div class="value">{{format-duration model.time_read}}</div>
+    <div class="value">{{format-duration this.model.time_read}}</div>
   </div>
   <div class="display-row">
     <div class="field">{{i18n "user.invited.days_visited"}}</div>
-    <div class="value">{{html-safe model.days_visited}}</div>
+    <div class="value">{{html-safe this.model.days_visited}}</div>
   </div>
   <div class="display-row post-edits-count">
     <div class="field">{{i18n "admin.user.post_edits_count" }}</div>
     <div class="value">
-      {{if (gt model.post_edits_count 0) model.post_edits_count "0"}}
+      {{if (gt this.model.post_edits_count 0) this.model.post_edits_count "0"}}
     </div>
     <div class="controls">
-      {{#if (gt model.post_edits_count 0) }}
-        <LinkTo @route="adminReports.show" @model="post_edits" @query={{hash filters=postEditsByEditorFilter}} class="btn btn-icon">
+      {{#if (gt this.model.post_edits_count 0) }}
+        <LinkTo @route="adminReports.show" @model="post_edits" @query={{hash filters=this.postEditsByEditorFilter}} class="btn btn-icon">
           {{d-icon "far-eye"}}
           {{i18n "admin.user.view_edits"}}
         </LinkTo>
@@ -533,15 +533,15 @@
   </div>
 </section>
 
-{{#if model.single_sign_on_record}}
+{{#if this.model.single_sign_on_record}}
   <section class="details">
     <h1>{{i18n "admin.user.discourse_connect.title"}}</h1>
 
-    {{#let model.single_sign_on_record as |sso|}}
+    {{#let this.model.single_sign_on_record as |sso|}}
       <div class="display-row">
         <div class="field">{{i18n "admin.user.discourse_connect.external_id"}}</div>
         <div class="value">{{sso.external_id}}</div>
-        {{#if model.can_delete_sso_record}}
+        {{#if this.model.can_delete_sso_record}}
           <div class="controls">
             <DButton @class="btn-danger" @action={{action "deleteSSORecord"}} @icon="far-trash-alt" @label="admin.user.discourse_connect.delete_sso_record" />
           </div>
@@ -555,13 +555,13 @@
         <div class="field">{{i18n "admin.user.discourse_connect.external_name"}}</div>
         <div class="value">{{sso.external_name}}</div>
       </div>
-      {{#if canAdminCheckEmails}}
+      {{#if this.canAdminCheckEmails}}
         <div class="display-row">
           <div class="field">{{i18n "admin.user.discourse_connect.external_email"}}</div>
-          {{#if ssoExternalEmail}}
-            <div class="value">{{ssoExternalEmail}}</div>
+          {{#if this.ssoExternalEmail}}
+            <div class="value">{{this.ssoExternalEmail}}</div>
           {{else}}
-            <DButton @class="btn-default" @action={{action "checkSsoEmail"}} @actionParam={{model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+            <DButton @class="btn-default" @action={{action "checkSsoEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
           {{/if}}
         </div>
       {{/if}}
@@ -569,17 +569,17 @@
         <div class="field">{{i18n "admin.user.discourse_connect.external_avatar_url"}}</div>
         <div class="value">{{sso.external_avatar_url}}</div>
       </div>
-      {{#if canAdminCheckEmails}}
+      {{#if this.canAdminCheckEmails}}
         <div class="display-row">
           <div class="field">{{i18n "admin.user.discourse_connect.last_payload"}}</div>
-          {{#if ssoLastPayload}}
+          {{#if this.ssoLastPayload}}
             <div class="value">
-              {{#each ssoPayload as |line|}}
+              {{#each this.ssoPayload as |line|}}
                 {{line}}<br>
               {{/each}}
             </div>
           {{else}}
-            <DButton @class="btn-default" @action={{action "checkSsoPayload"}} @actionParam={{model}} @icon="far-list-alt" @label="admin.users.check_sso.text" @title="admin.users.check_sso.title" />
+            <DButton @class="btn-default" @action={{action "checkSsoPayload"}} @actionParam={{this.model}} @icon="far-list-alt" @label="admin.users.check_sso.text" @title="admin.users.check_sso.title" />
           {{/if}}
         </div>
       {{/if}}
@@ -587,35 +587,35 @@
   </section>
 {{/if}}
 
-<PluginOutlet @name="after-user-details" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+<PluginOutlet @name="after-user-details" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
 <section>
   <hr>
   <div class="pull-right">
-    {{#if model.active}}
-      {{#if model.can_impersonate}}
+    {{#if this.model.active}}
+      {{#if this.model.can_impersonate}}
         <DButton @class="btn-danger btn-impersonate" @action={{action "impersonate"}} @icon="crosshairs" @label="admin.impersonate.title" @title="admin.impersonate.help" />
       {{/if}}
     {{/if}}
 
-    {{#if model.can_be_anonymized}}
+    {{#if this.model.can_be_anonymized}}
       <DButton @label="admin.user.anonymize" @icon="exclamation-triangle" @class="btn-danger btn-anonymize" @action={{action "anonymize"}} />
     {{/if}}
 
-    {{#if model.canBeDeleted}}
+    {{#if this.model.canBeDeleted}}
       <DButton @label="admin.user.delete" @icon="trash-alt" @class="btn-danger btn-user-delete" @action={{action "destroy"}} />
     {{/if}}
 
-    {{#if model.can_be_merged}}
+    {{#if this.model.can_be_merged}}
       <DButton @label="admin.user.merge.button" @icon="arrows-alt-h" @class="btn-danger btn-user-merge" @action={{action "promptTargetUser"}} />
     {{/if}}
   </div>
 
-  {{#if deleteExplanation}}
+  {{#if this.deleteExplanation}}
     <div class="clearfix"></div>
     <br>
     <div class="pull-right">
-      {{d-icon "exclamation-triangle"}} {{deleteExplanation}}
+      {{d-icon "exclamation-triangle"}} {{this.deleteExplanation}}
     </div>
   {{/if}}
 </section>

@@ -1,12 +1,12 @@
 <DModalBody @class="explain-reviewable">
-  <ConditionalLoadingSpinner @condition={{loading}}>
+  <ConditionalLoadingSpinner @condition={{this.loading}}>
     <table>
       <tbody>
         <tr>
           <th>{{i18n "review.explain.formula"}}</th>
           <th>{{i18n "review.explain.subtotal"}}</th>
         </tr>
-        {{#each reviewableExplanation.scores as |s|}}
+        {{#each this.reviewableExplanation.scores as |s|}}
           <tr>
             <td>
               <ScoreValue @value="1.0" @tagName="" />
@@ -20,7 +20,7 @@
         {{/each}}
         <tr class="total">
           <td>{{i18n "review.explain.total"}}</td>
-          <td class="sum">{{float reviewableExplanation.total_score}}</td>
+          <td class="sum">{{float this.reviewableExplanation.total_score}}</td>
         </tr>
       </tbody>
     </table>
@@ -30,13 +30,13 @@
         <tr>
           <td>{{i18n "review.explain.min_score_visibility"}}</td>
           <td class="sum">
-            {{float reviewableExplanation.min_score_visibility}}
+            {{float this.reviewableExplanation.min_score_visibility}}
           </td>
         </tr>
         <tr>
           <td>{{i18n "review.explain.score_to_hide"}}</td>
           <td class="sum">
-            {{float reviewableExplanation.hide_post_score}}
+            {{float this.reviewableExplanation.hide_post_score}}
           </td>
         </tr>
       </tbody>

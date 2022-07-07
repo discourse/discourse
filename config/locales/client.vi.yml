@@ -1022,7 +1022,9 @@ vi:
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
-      enable_experimental_sidebar: "Bật thanh bên thử nghiệm"
+      experimental_sidebar:
+        enable: "Bật thanh bên thử nghiệm"
+        options: "Lựa chọn"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"

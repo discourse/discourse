@@ -11,7 +11,7 @@
 
   <div class="modal-footer">
     {{#unless status.uploaded}}
-      <DButton @icon={{if isEmail "envelope" "link"}} @translatedLabel={{if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.uploadProgress) (i18n "user.invited.bulk_invite.text")}} @class="btn-primary" @action={{status.startUpload}} @disabled={{status.submitDisabled}} />
+      <DButton @icon={{if this.isEmail "envelope" "link"}} @translatedLabel={{if status.uploading (i18n "user.invited.bulk_invite.progress" progress=status.uploadProgress) (i18n "user.invited.bulk_invite.text")}} @class="btn-primary" @action={{status.startUpload}} @disabled={{status.submitDisabled}} />
     {{/unless}}
 
     <DButton @label="close" @class="btn-primary" @action={{route-action "closeModal"}} />

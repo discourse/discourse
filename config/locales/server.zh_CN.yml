@@ -1534,6 +1534,7 @@ zh_CN:
     enable_badges: "启用徽章系统"
     max_favorite_badges: "用户可以选择的最大徽章数"
     enable_whispers: "允许管理人员在话题中进行不公开交流。"
+    whispers_allowed_groups: "允许指定组的成员在话题内进行私人交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"

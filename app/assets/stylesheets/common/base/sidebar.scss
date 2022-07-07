@@ -1,22 +1,31 @@
 :root {
-  --d-sidebar-width: 240px;
+  --d-sidebar-width: 16em;
+  --d-sidebar-animation-time: 0.25s;
+  --d-sidebar-animation-ease: ease-in-out;
 }
 
 .header-sidebar-toggle {
-  margin-right: 1em;
+  --toggle-padding: 0.5em;
+  margin-right: 0.75em;
 
   @media screen and (min-width: 1300px) {
     // extending the toggle beyond the page when space allows
     // for better logo alignment with content
     body:not(.has-sidebar-page) & {
       margin-left: -3.7em;
+      transition: margin var(--d-sidebar-animation-speed)
+        var(--d-sidebar-animation-ease);
     }
+  }
+
+  .mobile-view & {
+    margin-left: calc(var(--toggle-padding) * -1);
   }
 
   button {
     position: relative;
     font-size: var(--font-up-2);
-    padding: 0.5em;
+    padding: var(--toggle-padding);
 
     .discourse-no-touch & {
       &:hover {

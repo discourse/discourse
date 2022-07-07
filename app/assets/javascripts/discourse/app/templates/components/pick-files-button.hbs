@@ -1,8 +1,8 @@
-{{#if showButton}}
-  <DButton @action={{action "openSystemFilePicker"}} @label={{label}} @icon={{icon}} />
+{{#if this.showButton}}
+  <DButton @action={{action "openSystemFilePicker"}} @label={{this.label}} @icon={{this.icon}} />
 {{/if}}
-{{#if acceptsAllFormats}}
-  <input type="file" id={{fileInputId}} class={{fileInputClass}} multiple={{allowMultiple}} disabled={{fileInputDisabled}}>
+{{#if this.acceptsAllFormats}}
+  <input type="file" id={{this.fileInputId}} class={{this.fileInputClass}} multiple={{this.allowMultiple}} disabled={{this.fileInputDisabled}}>
 {{else}}
-  <input type="file" id={{fileInputId}} class={{fileInputClass}} accept={{acceptedFormats}} multiple={{allowMultiple}} disabled={{fileInputDisabled}}>
+  <input type="file" id={{this.fileInputId}} class={{this.fileInputClass}} accept={{this.acceptedFormats}} multiple={{this.allowMultiple}} disabled={{this.fileInputDisabled}}>
 {{/if}}

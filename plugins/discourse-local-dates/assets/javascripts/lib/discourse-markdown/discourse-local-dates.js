@@ -202,9 +202,8 @@ export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.datesEmailFormat = siteSettings.discourse_local_dates_email_format;
 
-    opts.features[
-      "discourse-local-dates"
-    ] = !!siteSettings.discourse_local_dates_enabled;
+    opts.features["discourse-local-dates"] =
+      !!siteSettings.discourse_local_dates_enabled;
   });
 
   helper.registerPlugin((md) => {

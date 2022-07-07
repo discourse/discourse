@@ -12,13 +12,13 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td><TextField @value={{filter.user}} @placeholderKey="admin.email.logs.filters.user_placeholder" /></td>
-        <td><TextField @value={{filter.address}} @placeholderKey="admin.email.logs.filters.address_placeholder" /></td>
-        <td><TextField @value={{filter.type}} @placeholderKey="admin.email.logs.filters.type_placeholder" /></td>
-        <td><TextField @value={{filter.reply_key}} @placeholderKey="admin.email.logs.filters.reply_key_placeholder" /></td>
+        <td><TextField @value={{this.filter.user}} @placeholderKey="admin.email.logs.filters.user_placeholder" /></td>
+        <td><TextField @value={{this.filter.address}} @placeholderKey="admin.email.logs.filters.address_placeholder" /></td>
+        <td><TextField @value={{this.filter.type}} @placeholderKey="admin.email.logs.filters.type_placeholder" /></td>
+        <td><TextField @value={{this.filter.reply_key}} @placeholderKey="admin.email.logs.filters.reply_key_placeholder" /></td>
       </tr>
 
-      {{#each model as |l|}}
+      {{#each this.model as |l|}}
         <tr class="sent-email-item">
           <td class="sent-email-date">{{format-date l.created_at}}</td>
           <td class="sent-email-username">
@@ -44,7 +44,7 @@
           </td>
         </tr>
       {{else}}
-        {{#unless loading}}
+        {{#unless this.loading}}
           <tr><td colspan="5">{{i18n "admin.email.logs.none"}}</td></tr>
         {{/unless}}
       {{/each}}
@@ -52,4 +52,4 @@
   </table>
 </LoadMore>
 
-<ConditionalLoadingSpinner @condition={{loading}} />
+<ConditionalLoadingSpinner @condition={{this.loading}} />

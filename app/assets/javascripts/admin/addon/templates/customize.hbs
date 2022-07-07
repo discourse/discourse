@@ -1,5 +1,5 @@
 <AdminNav>
-  {{#if currentUser.admin}}
+  {{#if this.currentUser.admin}}
     <NavItem @route="adminCustomizeThemes" @label="admin.customize.theme.title" @class="admin-customize-themes" />
     <NavItem @route="adminCustomize.colors" @label="admin.customize.colors.title" @class="admin-customize-colors" />
     <NavItem @route="adminSiteText" @label="admin.site_text.title" @class="admin-customize-site-text" />

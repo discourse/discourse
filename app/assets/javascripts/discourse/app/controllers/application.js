@@ -39,18 +39,13 @@ export default Controller.extend({
   },
 
   _mainOutletAnimate() {
-    document
-      .querySelector("#main-outlet")
-      .classList.remove("main-outlet-animate");
+    document.querySelector("body").classList.remove("sidebar-animate");
   },
 
   @action
   toggleSidebar() {
     // enables CSS transitions, but not on did-insert
     document.querySelector("body").classList.add("sidebar-animate");
-
-    // reduces CSS transition jank
-    document.querySelector("#main-outlet").classList.add("main-outlet-animate");
 
     discourseDebounce(this, this._mainOutletAnimate, 250);
 

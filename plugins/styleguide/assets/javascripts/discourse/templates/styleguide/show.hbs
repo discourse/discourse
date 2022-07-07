@@ -1,7 +1,7 @@
-<StyleguideSection @section={{section}}>
-  {{#if note}}
+<StyleguideSection @section={{this.section}}>
+  {{#if this.note}}
     <div class="styleguide-note">
-      {{component (concat "notes/" note)}}
+      {{component (concat "notes/" this.note)}}
     </div>
   {{/if}}
 

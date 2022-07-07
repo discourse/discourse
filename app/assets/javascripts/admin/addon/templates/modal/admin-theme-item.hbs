@@ -1,15 +1,15 @@
 <div class="popular-theme-item">
   <div class="popular-theme-name">
-    {{theme.name}}
-    {{#if theme.preview}}
-      <a href={{theme.preview}} title="Preview" rel="noopener noreferrer" target="_blank">{{d-icon "far-eye"}}</a>
+    {{this.theme.name}}
+    {{#if this.theme.preview}}
+      <a href={{this.theme.preview}} title="Preview" rel="noopener noreferrer" target="_blank">{{d-icon "far-eye"}}</a>
     {{/if}}
   </div>
   <div class="popular-theme-buttons">
-    {{#if theme.installed}}
+    {{#if this.theme.installed}}
       <span>{{i18n "admin.customize.theme.installed"}}</span>
     {{else}}
-      <DButton @class="btn-small" @label="admin.customize.theme.install" @disabled={{installDisabled}} @icon="upload" @action={{action "installThemeFromList" theme.value}} />
+      <DButton @class="btn-small" @label="admin.customize.theme.install" @disabled={{this.installDisabled}} @icon="upload" @action={{action "installThemeFromList" this.theme.value}} />
     {{/if}}
   </div>
 </div>

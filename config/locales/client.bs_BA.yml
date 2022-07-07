@@ -942,6 +942,8 @@ bs_BA:
       external_links_in_new_tab: "Otvori sve eksterne linkove u novom tab-u"
       enable_quoting: "Uključi \"citiran odgovor\" za označen tekst"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
+      experimental_sidebar:
+        options: "Opcije"
       change: "promjeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"

@@ -1,10 +1,10 @@
-{{#if showBasedOnPosition}}
-  <div class="row {{containerClass}}">
-    {{#if showDismissRead}}
-      <DButton @class="btn-default dismiss-read" @id={{dismissReadId}} @action={{action "dismissReadPosts"}} @translatedLabel={{dismissLabel}} @title="topics.bulk.dismiss_tooltip" />
+{{#if this.showBasedOnPosition}}
+  <div class="row {{this.containerClass}}">
+    {{#if this.showDismissRead}}
+      <DButton @class="btn-default dismiss-read" @id={{this.dismissReadId}} @action={{action "dismissReadPosts"}} @translatedLabel={{this.dismissLabel}} @title="topics.bulk.dismiss_tooltip" />
     {{/if}}
-    {{#if showResetNew}}
-      <DButton @class="btn-default dismiss-read" @id={{dismissNewId}} @action={{resetNew}} @icon="check" @translatedLabel={{dismissNewLabel}} />
+    {{#if this.showResetNew}}
+      <DButton @class="btn-default dismiss-read" @id={{this.dismissNewId}} @action={{this.resetNew}} @icon="check" @translatedLabel={{this.dismissNewLabel}} />
     {{/if}}
   </div>
 {{/if}}

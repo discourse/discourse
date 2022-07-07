@@ -1,7 +1,7 @@
-{{#each categories as |c|}}
+{{#each this.categories as |c|}}
   <PluginOutlet @name="category-box-before-each-box" @args={{hash category=c}} />
 
-  <div style={{unless noCategoryStyle (html-safe (concat (border-color c.color) (category-color-variable c.color)))}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+  <div style={{unless this.noCategoryStyle (html-safe (concat (border-color c.color) (category-color-variable c.color)))}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if this.noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       {{#unless c.isMuted}}
         <div class="category-logo">
@@ -17,7 +17,7 @@
             <h3>
               <CategoryTitleBefore @category={{c}} />
               {{#if c.read_restricted}}
-                {{d-icon lockIcon}}
+                {{d-icon this.lockIcon}}
               {{/if}}
               {{c.name}}
             </h3>
@@ -72,4 +72,4 @@
   <PluginOutlet @name="category-box-after-each-box" @args={{hash category=c}} />
 {{/each}}
 
-<PluginOutlet @name="category-boxes-after-boxes" @args={{hash category=c}} />
+<PluginOutlet @name="category-boxes-after-boxes" @args={{hash category=this.c}} />

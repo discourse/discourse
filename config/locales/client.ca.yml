@@ -911,6 +911,8 @@ ca:
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
       enable_quoting: "Permet citar la resposta en el text destacat"
       enable_defer: "Habilita l'ajornament per a marcar temes no llegits"
+      experimental_sidebar:
+        options: "Opcions"
       change: "canvia"
       featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"

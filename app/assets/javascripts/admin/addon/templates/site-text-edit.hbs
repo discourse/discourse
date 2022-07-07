@@ -1,21 +1,21 @@
 <div class="edit-site-text">
   <div class="title">
-    <h3>{{siteText.id}}</h3>
+    <h3>{{this.siteText.id}}</h3>
   </div>
 
   <div class="title">
-    <h4>{{i18n "admin.site_text.locale"}} {{localeFullName}}</h4>
+    <h4>{{i18n "admin.site_text.locale"}} {{this.localeFullName}}</h4>
   </div>
 
-  <ExpandingTextArea @value={{buffered.value}} @rows="1" @class="site-text-value" />
+  <ExpandingTextArea @value={{this.buffered.value}} @rows="1" @class="site-text-value" />
 
-  <SaveControls @model={{siteText}} @action={{action "saveChanges"}} @saved={{saved}} @saveDisabled={{saveDisabled}}>
-    {{#if siteText.can_revert}}
+  <SaveControls @model={{this.siteText}} @action={{action "saveChanges"}} @saved={{this.saved}} @saveDisabled={{this.saveDisabled}}>
+    {{#if this.siteText.can_revert}}
       <DButton @action={{action "revertChanges"}} @label="admin.site_text.revert" @class="revert-site-text" />
     {{/if}}
   </SaveControls>
 
-  <LinkTo @route="adminSiteText.index" @query={{hash locale=locale}} class="go-back">
+  <LinkTo @route="adminSiteText.index" @query={{hash locale=this.locale}} class="go-back">
     {{d-icon "arrow-left"}}
     {{i18n "admin.site_text.go_back"}}
   </LinkTo>

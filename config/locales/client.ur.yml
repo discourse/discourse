@@ -1064,6 +1064,8 @@ ur:
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
       enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
+      experimental_sidebar:
+        options: "اختیارات"
       change: "بدلیں"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"

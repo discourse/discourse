@@ -1,29 +1,29 @@
-{{#if canChangePassword}}
+{{#if this.canChangePassword}}
   <div class="control-group pref-password">
     <label class="control-label">{{i18n "user.password.title"}}</label>
     <div class="controls">
       <a href {{action "changePassword"}} class="btn btn-default">
         {{d-icon "envelope"}}
-        {{#if model.no_password}}
+        {{#if this.model.no_password}}
           {{i18n "user.change_password.set_password"}}
         {{else}}
           {{i18n "user.change_password.action"}}
         {{/if}}
       </a>
 
-      {{passwordProgress}}
+      {{this.passwordProgress}}
     </div>
   </div>
 
   <div class="control-group pref-second-factor">
     <label class="control-label">{{i18n "user.second_factor.title"}}</label>
-    {{#unless model.second_factor_enabled}}
+    {{#unless this.model.second_factor_enabled}}
       <label>
         {{i18n "user.second_factor.short_description"}}
       </label>
     {{/unless}}
     <div class="controls pref-second-factor">
-      {{#if isCurrentUser}}
+      {{#if this.isCurrentUser}}
         <LinkTo @route="preferences.second-factor" class="btn btn-default">
           {{d-icon "lock"}} <span>{{i18n "user.second_factor.enable"}}</span>
         </LinkTo>
@@ -32,12 +32,12 @@
   </div>
 {{/if}}
 
-{{#if canCheckEmails}}
+{{#if this.canCheckEmails}}
   <div class="control-group pref-auth-tokens">
     <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
 
     <div class="auth-tokens">
-      {{#each authTokens as |token|}}
+      {{#each this.authTokens as |token|}}
         <div class="row auth-token">
           <div class="auth-token-icon">{{d-icon token.icon}}</div>
           {{#unless token.is_active}}
@@ -57,12 +57,12 @@
       {{/each}}
     </div>
 
-    {{#if canShowAllAuthTokens}}
+    {{#if this.canShowAllAuthTokens}}
       <a href {{action "toggleShowAllAuthTokens"}}>
-        {{#if showAllAuthTokens}}
+        {{#if this.showAllAuthTokens}}
           {{d-icon "caret-up"}} {{i18n "user.auth_tokens.show_few"}}
         {{else}}
-          {{d-icon "caret-down"}} {{i18n "user.auth_tokens.show_all" count=model.user_auth_tokens.length}}
+          {{d-icon "caret-down"}} {{i18n "user.auth_tokens.show_all" count=this.model.user_auth_tokens.length}}
         {{/if}}
       </a>
     {{/if}}
@@ -71,8 +71,8 @@
   </div>
 {{/if}}
 
-<PluginOutlet @name="user-preferences-security" @tagName="span" @connectorTagName="div" @args={{hash model=model save=(action "save")}} />
+<PluginOutlet @name="user-preferences-security" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
 
 <br>
 
-<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+<PluginOutlet @name="user-custom-controls" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

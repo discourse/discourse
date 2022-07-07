@@ -1,28 +1,28 @@
 <DModalBody>
-  <ConditionalLoadingSpinner @condition={{loading}}>
+  <ConditionalLoadingSpinner @condition={{this.loading}}>
     <div class="control-group">
-      <UserStatusPicker @emoji={{emoji}} @description={{description}} />
+      <UserStatusPicker @emoji={{this.emoji}} @description={{this.description}} />
     </div>
     <div class="control-group control-group-remove-status">
       <label class="control-label">
         {{i18n "user_status.remove_status"}}
       </label>
       <TimeShortcutPicker
-        @timeShortcuts={{timeShortcuts}}
-        @hiddenOptions={{hiddenTimeShortcutOptions}}
-        @customLabels={{customTimeShortcutLabels}}
-        @prefilledDatetime={{prefilledDateTime}}
+        @timeShortcuts={{this.timeShortcuts}}
+        @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+        @customLabels={{this.customTimeShortcutLabels}}
+        @prefilledDatetime={{this.prefilledDateTime}}
         @onTimeSelected={{action "onTimeSelected"}}
-        @_itsatrap={{_itsatrap}} />
+        @_itsatrap={{this._itsatrap}} />
     </div>
     <div class="modal-footer control-group">
       <DButton
         @label="user_status.save"
         @class="btn-primary"
-        @disabled={{not statusIsSet}}
+        @disabled={{not this.statusIsSet}}
         @action={{action "saveAndClose"}} />
       <DModalCancel @close={{action "closeModal"}} />
-      {{#if showDeleteButton}}
+      {{#if this.showDeleteButton}}
         <DButton @icon="trash-alt" @class="delete-status btn-danger" @action={{action "delete"}} />
       {{/if}}
     </div>

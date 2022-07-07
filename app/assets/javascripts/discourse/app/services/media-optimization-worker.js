@@ -73,18 +73,23 @@ export default class MediaOptimizationWorkerService extends Service {
           width: imageData.width,
           height: imageData.height,
           settings: {
-            resize_threshold: this.siteSettings
-              .composer_media_optimization_image_resize_dimensions_threshold,
-            resize_target: this.siteSettings
-              .composer_media_optimization_image_resize_width_target,
-            resize_pre_multiply: this.siteSettings
-              .composer_media_optimization_image_resize_pre_multiply,
-            resize_linear_rgb: this.siteSettings
-              .composer_media_optimization_image_resize_linear_rgb,
-            encode_quality: this.siteSettings
-              .composer_media_optimization_image_encode_quality,
-            debug_mode: this.siteSettings
-              .composer_media_optimization_debug_mode,
+            resize_threshold:
+              this.siteSettings
+                .composer_media_optimization_image_resize_dimensions_threshold,
+            resize_target:
+              this.siteSettings
+                .composer_media_optimization_image_resize_width_target,
+            resize_pre_multiply:
+              this.siteSettings
+                .composer_media_optimization_image_resize_pre_multiply,
+            resize_linear_rgb:
+              this.siteSettings
+                .composer_media_optimization_image_resize_linear_rgb,
+            encode_quality:
+              this.siteSettings
+                .composer_media_optimization_image_encode_quality,
+            debug_mode:
+              this.siteSettings.composer_media_optimization_debug_mode,
           },
         },
         [imageData.data.buffer]

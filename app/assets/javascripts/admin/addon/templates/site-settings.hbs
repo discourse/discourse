@@ -3,13 +3,13 @@
   <div class="controls">
     <div class="inline-form">
       <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
-      <TextField @id="setting-filter" @value={{filter}} @placeholderKey="type_to_filter" @class="no-blur" />
+      <TextField @id="setting-filter" @value={{this.filter}} @placeholderKey="type_to_filter" @class="no-blur" />
       <DButton @class="btn-default" @id="clear-filter" @action={{action "clearFilter"}} @label="admin.site_settings.clear_filter" />
     </div>
   </div>
   <div class="search controls">
     <label>
-      <Input @type="checkbox" @checked={{onlyOverridden}} />
+      <Input @type="checkbox" @checked={{this.onlyOverridden}} />
       {{i18n "admin.settings.show_overriden"}}
     </label>
   </div>
@@ -17,7 +17,7 @@
 
 <div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
-    {{#each visibleSiteSettings as |category|}}
+    {{#each this.visibleSiteSettings as |category|}}
       <li class={{category.nameKey}}>
         <LinkTo @route="adminSiteSettingsCategory" @model={{category.nameKey}} class={{category.nameKey}}>
           {{category.name}}

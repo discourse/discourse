@@ -1,44 +1,44 @@
 <tr class="group-manage-logs-row">
   <td>
-    <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=log.action key="action"}} @translatedLabel={{log.actionTitle}} />
+    <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.action key="action"}} @translatedLabel={{this.log.actionTitle}} />
   </td>
 
   <td>
-    <span>{{avatar log.acting_user imageSize="tiny"}}</span>
-    <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=log.acting_user.username key="acting_user"}} @translatedLabel={{log.acting_user.username}} />
+    <span>{{avatar this.log.acting_user imageSize="tiny"}}</span>
+    <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.acting_user.username key="acting_user"}} @translatedLabel={{this.log.acting_user.username}} />
   </td>
 
   <td>
-    {{#if log.target_user}}
-      <span>{{avatar log.target_user imageSize="tiny"}}</span>
-      <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=log.target_user.username key="target_user"}} @translatedLabel={{log.target_user.username}} />
+    {{#if this.log.target_user}}
+      <span>{{avatar this.log.target_user imageSize="tiny"}}</span>
+      <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.target_user.username key="target_user"}} @translatedLabel={{this.log.target_user.username}} />
     {{/if}}
   </td>
 
   <td>
-    {{#if log.subject}}
-      <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=log.subject key="subject"}} @translatedLabel={{log.subject}} />
+    {{#if this.log.subject}}
+      <DButton @class="btn-default" @action={{action "filter"}} @actionParam={{hash value=this.log.subject key="subject"}} @translatedLabel={{this.log.subject}} />
     {{/if}}
   </td>
 
-  <td>{{bound-date log.created_at}}</td>
+  <td>{{bound-date this.log.created_at}}</td>
 
   <td class="group-manage-logs-expand-details">
-    {{#if log.prev_value}}
-      <DButton @action={{action "toggleDetails"}} @icon={{if expandDetails "angle-up" "angle-down"}} />
+    {{#if this.log.prev_value}}
+      <DButton @action={{action "toggleDetails"}} @icon={{if this.expandDetails "angle-up" "angle-down"}} />
     {{/if}}
   </td>
 </tr>
 
-{{#if expandDetails}}
+{{#if this.expandDetails}}
   <tr>
     <td colspan="6">
       <p>
-        <strong>{{i18n "groups.manage.logs.from"}}</strong>: <code>{{log.prev_value}}</code>
+        <strong>{{i18n "groups.manage.logs.from"}}</strong>: <code>{{this.log.prev_value}}</code>
       </p>
 
       <p>
-        <strong>{{i18n "groups.manage.logs.to"}}</strong>: <code>{{log.new_value}}</code>
+        <strong>{{i18n "groups.manage.logs.to"}}</strong>: <code>{{this.log.new_value}}</code>
       </p>
     </td>
   </tr>
