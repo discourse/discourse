@@ -389,7 +389,12 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
   test("should show an error message for the failed upload", async function (assert) {
     // Don't log the upload error
-    sinon.stub(console, "error");
+    const stub = sinon
+      .stub(console, "error")
+      .withArgs(
+        sinon.match(/\[Uppy\]/),
+        sinon.match(/Failed to upload avatar\.png/)
+      );
 
     await visit("/");
     await click("#create-topic");
@@ -398,6 +403,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-error", async () => {
+      sinon.assert.calledOnce(stub);
       assert.strictEqual(
         query(".bootbox .modal-body").innerHTML,
         "There was an error uploading the file, the gif was way too cool.",
