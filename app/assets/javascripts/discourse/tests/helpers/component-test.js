@@ -5,7 +5,6 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
-
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 
 export function setupRenderingTest(hooks) {
@@ -14,6 +13,11 @@ export function setupRenderingTest(hooks) {
   hooks.beforeEach(function () {
     this.site = Site.current();
     this.session = Session.current();
+
+    if (!this.registry) {
+      this.registry = this.owner.__registry__;
+    }
+
     this.container = this.owner;
 
     const currentUser = User.create({

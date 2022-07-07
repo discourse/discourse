@@ -1,14 +1,10 @@
 import { click, render } from "@ember/test-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  discourseModule,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { count, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { test } from "qunit";
+import { module, test } from "qunit";
 
-discourseModule("Integration | Component | d-navigation", function (hooks) {
+module("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
