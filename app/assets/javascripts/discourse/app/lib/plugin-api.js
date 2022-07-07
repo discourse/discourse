@@ -1746,8 +1746,8 @@ class PluginApi {
    * })
    * ```
    */
-  addSidebarSection(arg) {
-    addSidebarSection(arg);
+  addSidebarSection(func) {
+    addSidebarSection(func);
   }
 }
 
