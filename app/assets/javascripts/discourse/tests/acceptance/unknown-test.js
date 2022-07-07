@@ -1,6 +1,7 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 
 acceptance("Category 404", function (needs) {
   needs.pretender((server, helper) => {
@@ -12,7 +13,11 @@ acceptance("Category 404", function (needs) {
       });
     });
   });
+
   test("Navigating to a bad category link does not break the router", async function (assert) {
+    // Don't log the XHR error
+    sinon.stub(console, "error");
+
     await visit("/t/internationalization-localization/280");
 
     await click('[data-for-test="category-404"]');
