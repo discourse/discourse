@@ -10,5 +10,7 @@
     {{#if this.siteSettings.enable_personal_messages}}
       <Sidebar::MessagesSection />
     {{/if}}
+
+    <PluginOutlet @name="after-sidebar" />
   </div>
 </DSection>
