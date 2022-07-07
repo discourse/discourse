@@ -11,7 +11,7 @@
       <Sidebar::MessagesSection />
     {{/if}}
 
-    {{#each this.computedCustomSections as |customSection|}}
+    {{#each this.customSections as |customSection|}}
       <Sidebar::Section
         @sectionName={{customSection.name}}
         @headerRoute={{customSection.route}}
