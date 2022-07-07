@@ -1,7 +1,10 @@
-<label>
-  <Input @type="checkbox" class="wizard-checkbox" @checked={{field.value}} />
+<label class="wizard-container__lable">
+  <Input @type="checkbox" class="wizard-container__checkbox" @checked={{field.value}} />
+  <span class="wizard-container__checkbox-slider"></span>
   {{#if field.icon}}
     {{d-icon field.icon}}
   {{/if}}
-  {{field.placeholder}}
+  <span class="wizard-container__checkbox-label">
+    {{field.placeholder}}
+  </span>
 </label>

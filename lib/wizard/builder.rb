@@ -11,7 +11,7 @@ class Wizard
       return @wizard unless SiteSetting.wizard_enabled? && @wizard.user.try(:staff?)
 
       @wizard.append_step('introduction') do |step|
-        # step.banner = "welcome.png"
+        step.banner = "welcome-illustration.png"
 
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: false, value: SiteSetting.site_description)
@@ -48,20 +48,21 @@ class Wizard
       end
 
       @wizard.append_step('privacy') do |step|
+        step.banner = "members-illusration.png"
         step.add_field(id: 'login_required',
-                      type: 'checkbox',
-                      icon: 'unlock',
-                      value: SiteSetting.login_required)
+                       type: 'checkbox',
+                       icon: 'unlock',
+                       value: SiteSetting.login_required)
 
         step.add_field(id: 'invite_only',
-                      type: 'checkbox',
-                      icon: 'user-plus',
-                      value: SiteSetting.invite_only)
+                       type: 'checkbox',
+                       icon: 'user-plus',
+                       value: SiteSetting.invite_only)
 
         step.add_field(id: 'must_approve_users',
-                      type: 'checkbox',
-                      icon: 'user-shield',
-                      value: SiteSetting.must_approve_users)
+                       type: 'checkbox',
+                       icon: 'user-shield',
+                       value: SiteSetting.must_approve_users)
 
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:login_required])

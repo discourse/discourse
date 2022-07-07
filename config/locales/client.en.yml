@@ -5691,7 +5691,7 @@ en:
       back: "Back"
       next: "Next"
       configure_more: "Configure More..."
-      step: "%{current} of %{total}"
+      step: "Step %{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."

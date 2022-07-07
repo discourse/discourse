@@ -1,50 +1,50 @@
-<div class="wizard-step-contents">
+<div class="wizard-container__step-contents">
   {{#if step.title}}
-    <h1 class="wizard-step-title">{{step.title}}</h1>
+    <h1 class="wizard-container__step-title">{{step.title}}</h1>
   {{/if}}
 
-  <div class={{bannerAndDescriptionClass}}>
-    {{#if bannerImage}}
-      <img src={{bannerImage}} class="wizard-step-banner">
-    {{/if}}
-
-    {{#if step.description}}
-      <p class="wizard-step-description">{{html-safe step.description}}</p>
-    {{/if}}
-  </div>
-
-  <WizardStepForm @step={{step}}>
-    {{#if includeSidebar}}
-      <div class="wizard-fields-sidebar">
+  <div class="wizard-container__step-flex">
+    <WizardStepForm @step={{step}}>
+      {{#if includeSidebar}}
+        <div class="wizard-container__sidebar">
+          {{#each step.fields as |field|}}
+            {{#if field.show_in_sidebar}}
+              <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
+            {{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
+      <div class="wizard-container__fields">
         {{#each step.fields as |field|}}
-          {{#if field.show_in_sidebar}}
+          {{#unless field.show_in_sidebar}}
             <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
-          {{/if}}
+          {{/unless}}
         {{/each}}
       </div>
+    </WizardStepForm>
+    {{#if (or bannerImage step.description)}}
+      <div class={{bannerAndDescriptionClass}}>
+        {{#if bannerImage}}
+          <img src={{bannerImage}} class="wizard-container__step-banner-image">
+        {{/if}}
+
+        {{#if step.description}}
+          <p class="wizard-container__step-description">{{html-safe step.description}}</p>
+        {{/if}}
+      </div>
     {{/if}}
-    <div class="wizard-fields-main">
-      {{#each step.fields as |field|}}
-        {{#unless field.show_in_sidebar}}
-          <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
-        {{/unless}}
-      {{/each}}
-    </div>
-  </WizardStepForm>
+  </div>
 </div>
 
-<div class="wizard-step-footer">
+<div class="wizard-container__step-footer">
 
-  <div class="wizard-progress">
-    <div class="white"></div>
-    <div style={{barStyle}} class="black"></div>
-    <div class="screen"></div>
+  <div class="wizard-container__step-progress">
     <span>{{bound-i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</span>
   </div>
 
-  <div class="wizard-buttons">
+  <div class="wizard-container__buttons">
     {{#if showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn finish">
+      <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" type="button" class="wizard-container__button finish">
         {{i18n "wizard.finish"}}
       </button>
     {{/if}}
@@ -54,13 +54,13 @@
     {{/if}}
 
     {{#if showNextButton}}
-      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn primary {{nextButtonClass}}">
+      <button {{action "nextStep"}} disabled={{saving}} tabindex="10" type="button" class="wizard-container__button primary {{nextButtonClass}}">
         {{i18n nextButtonLabel}}
       </button>
     {{/if}}
 
     {{#if showDoneButton}}
-      <button {{action "quit"}} disabled={{saving}} tabindex="10" type="button" class="wizard-btn done">
+      <button {{action "quit"}} disabled={{saving}} tabindex="10" type="button" class="wizard-container__button done">
         {{i18n "wizard.done"}}
       </button>
     {{/if}}

@@ -9,7 +9,7 @@ import { action } from "@ember/object";
 const alreadyWarned = {};
 
 export default Component.extend({
-  classNames: ["wizard-step"],
+  classNames: ["wizard-container__step"],
   saving: null,
 
   didInsertElement() {
@@ -51,9 +51,9 @@ export default Component.extend({
     return getUrl(`/images/wizard/${src}`);
   },
 
-  @discourseComputed("step.id")
-  bannerAndDescriptionClass(id) {
-    return `wizard-banner-and-description wizard-banner-and-description-${id}`;
+  @discourseComputed()
+  bannerAndDescriptionClass() {
+    return `wizard-container__step-banner`;
   },
 
   @observes("step.id")
@@ -93,7 +93,7 @@ export default Component.extend({
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
-        ".wizard-field.invalid:nth-of-type(1) .wizard-focusable"
+        ".wizard-container__input.invalid:nth-of-type(1) .wizard-focusable"
       );
 
       if ($invalid.length) {
