@@ -73,6 +73,7 @@ class Wizard
 
       @wizard.append_step('ready') do |step|
         # no form on this page, just info.
+        step.banner = "finished-illustration.png"
       end
 
       @wizard.append_step('styling') do |step|
@@ -179,8 +180,6 @@ class Wizard
       @wizard.append_step('branding') do |step|
         step.add_field(id: 'logo', type: 'image')
         step.add_field(id: 'logo_small', type: 'image')
-        step.add_field(id: 'favicon', type: 'image')
-        step.add_field(id: 'large_icon', type: 'image')
 
         step.on_update do |updater|
           if SiteSetting.site_logo_url != updater.fields[:logo] ||
@@ -189,8 +188,6 @@ class Wizard
             updater.refresh_required = true
           end
 
-          updater.apply_settings(:favicon) if SiteSetting.site_favicon_url != updater.fields[:favicon]
-          updater.apply_settings(:large_icon) if SiteSetting.site_large_icon_url != updater.fields[:large_icon]
         end
       end
 

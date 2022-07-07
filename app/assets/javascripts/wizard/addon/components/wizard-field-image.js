@@ -10,7 +10,7 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 
 export default Component.extend({
-  classNames: ["wizard-image-row"],
+  classNames: ["wizard-container__image-upload"],
   uploading: false,
 
   @discourseComputed("field.id")

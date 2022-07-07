@@ -9,7 +9,7 @@ import { action } from "@ember/object";
 const alreadyWarned = {};
 
 export default Component.extend({
-  classNames: ["wizard-container__step"],
+  classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
   didInsertElement() {
@@ -41,6 +41,11 @@ export default Component.extend({
   @discourseComputed("step.id")
   nextButtonClass: (step) => {
     return step === "ready" ? "configure-more" : "next";
+  },
+
+  @discourseComputed("step.id")
+  stepClass: (step) => {
+    return step;
   },
 
   @discourseComputed("step.banner")

@@ -59,7 +59,10 @@ acceptance("Wizard", function (needs) {
 
     await click(".wizard-container__button.next");
     assert.ok(exists(".select-kit.field-snack"), "went to the next step");
-    assert.ok(exists(".preview-area"), "renders the component field");
+    assert.ok(
+      exists(".wizard-container__preview"),
+      "renders the component field"
+    );
     assert.ok(
       exists(".wizard-container__button.done"),
       "last step shows a done button"

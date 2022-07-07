@@ -3,25 +3,27 @@
     <h1 class="wizard-container__step-title">{{step.title}}</h1>
   {{/if}}
 
-  <div class="wizard-container__step-flex">
-    <WizardStepForm @step={{step}}>
-      {{#if includeSidebar}}
-        <div class="wizard-container__sidebar">
+  <div class="wizard-container__step-container">
+    {{#if step.fields}}
+      <WizardStepForm @step={{step}}>
+        {{#if includeSidebar}}
+          <div class="wizard-container__sidebar">
+            {{#each step.fields as |field|}}
+              {{#if field.show_in_sidebar}}
+                <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
+              {{/if}}
+            {{/each}}
+          </div>
+        {{/if}}
+        <div class="wizard-container__fields">
           {{#each step.fields as |field|}}
-            {{#if field.show_in_sidebar}}
+            {{#unless field.show_in_sidebar}}
               <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
-            {{/if}}
+            {{/unless}}
           {{/each}}
         </div>
-      {{/if}}
-      <div class="wizard-container__fields">
-        {{#each step.fields as |field|}}
-          {{#unless field.show_in_sidebar}}
-            <WizardField @field={{field}} @step={{step}} @wizard={{wizard}} />
-          {{/unless}}
-        {{/each}}
-      </div>
-    </WizardStepForm>
+      </WizardStepForm>
+    {{/if}}
     {{#if (or bannerImage step.description)}}
       <div class={{bannerAndDescriptionClass}}>
         {{#if bannerImage}}
@@ -50,7 +52,7 @@
     {{/if}}
 
     {{#if showBackButton}}
-      <a href {{action "backStep"}} tabindex="11" class="action-link back">{{i18n "wizard.back"}}</a>
+      <a href {{action "backStep"}} tabindex="11" class="wizard-container__link back">{{i18n "wizard.back"}}</a>
     {{/if}}
 
     {{#if showNextButton}}
@@ -60,7 +62,7 @@
     {{/if}}
 
     {{#if showDoneButton}}
-      <button {{action "quit"}} disabled={{saving}} tabindex="10" type="button" class="wizard-container__button done">
+      <button {{action "quit"}} disabled={{saving}} tabindex="10" type="button" class="wizard-container__button jump-in">
         {{i18n "wizard.done"}}
       </button>
     {{/if}}
