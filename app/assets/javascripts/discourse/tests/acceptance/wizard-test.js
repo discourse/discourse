@@ -7,7 +7,7 @@ acceptance("Wizard", function (needs) {
 
   test("Wizard starts", async function (assert) {
     await visit("/wizard");
-    assert.ok(exists(".wizard-container-contents"));
+    assert.ok(exists(".wizard-container"));
     assert.strictEqual(currentRouteName(), "wizard.step");
   });
 
