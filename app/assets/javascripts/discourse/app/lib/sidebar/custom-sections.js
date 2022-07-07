@@ -3,6 +3,6 @@ import BaseSectionLink from "discourse/lib/sidebar/base-section-link";
 
 export const customSections = [];
 
-export function addSidebarSection(arg) {
-  customSections.push(arg.call(this, BaseSectionHeader, BaseSectionLink));
+export function addSidebarSection(func) {
+  customSections.push(func.call(this, BaseSectionHeader, BaseSectionLink));
 }
