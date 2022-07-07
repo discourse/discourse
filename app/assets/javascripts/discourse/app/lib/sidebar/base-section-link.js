@@ -1,7 +1,7 @@
 /**
  * Base class representing a sidebar section link interface.
  */
-export default class BaseSectionLink {
+export default class BaseCustomSidebarSectionLink {
   /**
    * @returns {string} The name of the section header. Needs to be dasherized and lowercase.
    */
