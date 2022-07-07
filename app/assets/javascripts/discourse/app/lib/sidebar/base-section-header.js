@@ -1,7 +1,7 @@
 /**
  * Base class representing a sidebar section header interface.
  */
-export default class BaseSectionHeader {
+export default class BaseCustomSidebarSection {
   /**
    * Called when sidebar component is torn down.
    */
