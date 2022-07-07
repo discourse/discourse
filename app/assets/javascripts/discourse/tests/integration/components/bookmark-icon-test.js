@@ -12,14 +12,13 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 
-discourseModule("Component | bookmark-icon", function (hooks) {
+discourseModule("Integration | Component | bookmark-icon", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("with reminder", {
     template: hbs`{{bookmark-icon bookmark=bookmark}}`,
 
     beforeEach() {
-      this.currentUser.set("timezone", "Australia/Brisbane");
       this.setProperties({
         bookmark: Bookmark.create({
           reminder_at: tomorrow(this.currentUser.timezone),
