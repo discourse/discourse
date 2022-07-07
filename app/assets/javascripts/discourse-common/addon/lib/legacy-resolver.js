@@ -280,13 +280,13 @@ export function buildResolver(baseName) {
         }
       }
 
-      if (decamelized === "javascripts/admin") {
+      if (decamelized === "enabled-plugins/admin") {
         return Ember.TEMPLATES["admin/templates/admin"];
       }
 
       if (
         decamelized.indexOf("admin") === 0 ||
-        decamelized.indexOf("javascripts/admin") === 0
+        decamelized.indexOf("enabled-plugins/admin") === 0
       ) {
         decamelized = decamelized.replace(/^admin\_/, "admin/templates/");
         decamelized = decamelized.replace(/^admin\./, "admin/templates/");
@@ -312,13 +312,13 @@ export function buildResolver(baseName) {
         }
       }
 
-      if (decamelized === "javascripts/wizard") {
+      if (decamelized === "enabled-plugins/wizard") {
         return Ember.TEMPLATES["wizard/templates/wizard"];
       }
 
       if (
         decamelized.startsWith("wizard") ||
-        decamelized.startsWith("javascripts/wizard")
+        decamelized.startsWith("enabled-plugins/wizard")
       ) {
         decamelized = decamelized.replace(/^wizard\_/, "wizard/templates/");
         decamelized = decamelized.replace(/^wizard\./, "wizard/templates/");

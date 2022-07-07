@@ -8,9 +8,10 @@ import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 
-const HELLO = "javascripts/multi-test/connectors/user-profile-primary/hello";
+const HELLO =
+  "enabled-plugins/multi-test/connectors/user-profile-primary/hello";
 const GOODBYE =
-  "javascripts/multi-test/connectors/user-profile-primary/goodbye";
+  "enabled-plugins/multi-test/connectors/user-profile-primary/goodbye";
 
 acceptance("Plugin Outlet - Multi Template", function (needs) {
   needs.hooks.beforeEach(() => {

@@ -12,7 +12,7 @@ import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 
 const CONNECTOR =
-  "javascripts/raw-test/connectors/topic-list-before-status/lala";
+  "enabled-plugins/raw-test/connectors/topic-list-before-status/lala";
 
 acceptance("Raw Plugin Outlet", function (needs) {
   needs.hooks.beforeEach(() => {

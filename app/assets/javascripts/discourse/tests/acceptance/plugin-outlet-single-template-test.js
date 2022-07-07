@@ -8,7 +8,7 @@ import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 
 const CONNECTOR =
-  "javascripts/single-test/connectors/user-profile-primary/hello";
+  "enabled-plugins/single-test/connectors/user-profile-primary/hello";
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {

@@ -80,6 +80,11 @@ class Ember::Handlebars::Template
 
     template_name = input[:name]
 
+    relative = Pathname.new(filename).relative_path_from(Rails.root)
+    if (m = relative.to_s.match(%r{^plugins/[^/]+/}))
+      template_name = m[0] + template_name.sub(%r{^javascripts/}, '')
+    end
+
     module_name =
       case config.output_type
       when :amd

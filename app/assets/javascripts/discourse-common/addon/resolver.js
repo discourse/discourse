@@ -25,7 +25,7 @@ function lookupModuleBySuffix(suffix) {
   if (!moduleSuffixTrie) {
     moduleSuffixTrie = new SuffixTrie("/");
     Object.keys(requirejs.entries).forEach((name) => {
-      if (!name.includes("/templates/")) {
+      if (!name.includes("/templates/") && !name.startsWith("plugins/")) {
         moduleSuffixTrie.add(name);
       }
     });
@@ -216,17 +216,17 @@ export function buildResolver(baseName) {
             .replace("template:connectors/", "template:")
             .replace("components/", "")
         );
-        return this.findTemplate(connectorParsedName, "javascripts/");
+        return this.findTemplate(connectorParsedName, "enabled-plugins/");
       }
     }
 
     findPluginTemplate(parsedName) {
-      return this.findTemplate(parsedName, "javascripts/");
+      return this.findTemplate(parsedName, "enabled-plugins/");
     }
 
     findPluginMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        return this.findTemplate(parsedName, "javascripts/mobile/");
+        return this.findTemplate(parsedName, "enabled-plugins/mobile/");
       }
     }
 
@@ -291,14 +291,14 @@ export function buildResolver(baseName) {
           // Built-in
           this.findTemplate(adminParsedName, "admin/templates/") ||
           // Plugin
-          this.findTemplate(adminParsedName, "javascripts/admin/");
+          this.findTemplate(adminParsedName, "admin/");
       }
 
       resolved ??=
         // Built-in
         this.findTemplate(parsedName, "admin/templates/") ||
         // Plugin
-        this.findTemplate(parsedName, "javascripts/admin/");
+        this.findTemplate(parsedName, "enabled-plugins/admin/");
 
       return resolved;
     }

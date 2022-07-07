@@ -64,6 +64,9 @@ function head(buffer, bootstrap, headers, baseURL) {
       setupData += ` data-${sd.replace(/\_/g, "-")}="${encode(val)}"`;
     }
   });
+  setupData += ` data-enabled-plugins=${encode(
+    JSON.stringify(bootstrap.enabled_plugins)
+  )}`;
   buffer.push(`<meta id="data-discourse-setup"${setupData} />`);
 
   if (bootstrap.preloaded.currentUser) {

@@ -61,9 +61,16 @@ class BootstrapController < ApplicationController
       extra_locales << ExtraLocalesController.url('wizard')
     end
 
+    enabled_plugins = Discourse.find_plugin_js_assets(
+      include_official: allow_plugins?,
+      include_unofficial: allow_third_party_plugins?,
+      request: assets_fake_request
+    )
+
     plugin_js = Discourse.find_plugin_js_assets(
       include_official: allow_plugins?,
       include_unofficial: allow_third_party_plugins?,
+      include_disabled: true,
       request: assets_fake_request
     ).map { |f| script_asset_path(f) }
 
@@ -90,7 +97,8 @@ class BootstrapController < ApplicationController
       html_classes: html_classes,
       html_lang: html_lang,
       login_path: main_app.login_path,
-      authentication_data: authentication_data
+      authentication_data: authentication_data,
+      enabled_plugins: enabled_plugins,
     }
     bootstrap[:extra_locales] = extra_locales if extra_locales.present?
     bootstrap[:csrf_token] = form_authenticity_token if current_user

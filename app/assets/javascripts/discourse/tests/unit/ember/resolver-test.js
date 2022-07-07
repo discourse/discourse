@@ -243,26 +243,26 @@ module("Unit | Ember | resolver", function (hooks) {
     );
   });
 
-  test("resolves plugin templates to 'javascripts/' namespace", function (assert) {
-    setTemplates(["javascripts/foo", "bar", "javascripts/bar", "baz"]);
+  test("resolves plugin templates to 'enabled-plugins/' namespace", function (assert) {
+    setTemplates(["enabled-plugins/foo", "bar", "enabled-plugins/bar", "baz"]);
 
-    // Default with javascripts/ added
+    // Default with enabled-plugins/ added
     lookupTemplate(
       assert,
       "template:foo",
-      "javascripts/foo",
+      "enabled-plugins/foo",
       "finding plugin version even if normal one is not present"
     );
 
-    // Default with javascripts/ added, takes precedence
+    // Default with enabled-plugins/ added, takes precedence
     lookupTemplate(
       assert,
       "template:bar",
-      "javascripts/bar",
+      "enabled-plugins/bar",
       "preferring plugin version when both versions are present"
     );
 
-    // Default when javascripts version not present
+    // Default when enabled-plugins version not present
     lookupTemplate(
       assert,
       "template:baz",
@@ -271,38 +271,38 @@ module("Unit | Ember | resolver", function (hooks) {
     );
   });
 
-  test("resolves plugin mobile templates to 'javascripts/mobile/' namespace", function (assert) {
+  test("resolves plugin mobile templates to 'enabled-plugins/mobile/' namespace", function (assert) {
     setTemplates([
-      "javascripts/mobile/foo",
-      "javascripts/mobile/bar",
-      "javascripts/bar",
-      "javascripts/mobile/baz",
+      "enabled-plugins/mobile/foo",
+      "enabled-plugins/mobile/bar",
+      "enabled-plugins/bar",
+      "enabled-plugins/mobile/baz",
       "mobile/baz",
     ]);
 
     setResolverOption("mobileView", true);
 
-    // Default with javascripts/mobile/ added
+    // Default with enabled-plugins/mobile/ added
     lookupTemplate(
       assert,
       "template:foo",
-      "javascripts/mobile/foo",
+      "enabled-plugins/mobile/foo",
       "finding plugin version even if normal one is not present"
     );
 
-    // Default with javascripts/mobile added, takes precedence over non-mobile
+    // Default with enabled-plugins/mobile added, takes precedence over non-mobile
     lookupTemplate(
       assert,
       "template:bar",
-      "javascripts/mobile/bar",
+      "enabled-plugins/mobile/bar",
       "preferring plugin mobile version when both non-mobile plugin version is also present"
     );
 
-    // Default with javascripts/mobile when non-plugin mobile version is present
+    // Default with enabled-plugins/mobile when non-plugin mobile version is present
     lookupTemplate(
       assert,
       "template:baz",
-      "javascripts/mobile/baz",
+      "enabled-plugins/mobile/baz",
       "preferring plugin mobile version over non-plugin mobile version"
     );
   });
@@ -316,7 +316,7 @@ module("Unit | Ember | resolver", function (hooks) {
       "admin/templates/bar",
       "admin/templates/dashboard_general",
       "admin-baz-qux",
-      "javascripts/admin/plugin-template",
+      "enabled-plugins/admin/plugin-template",
     ]);
 
     // Switches prefix to admin/templates when camelized
@@ -392,7 +392,7 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:admin-plugin/template",
-      "javascripts/admin/plugin-template",
+      "enabled-plugins/admin/plugin-template",
       "looks up templates in plugins"
     );
   });
@@ -481,43 +481,43 @@ module("Unit | Ember | resolver", function (hooks) {
 
   test("resolves connector templates", function (assert) {
     setTemplates([
-      "javascripts/foo",
-      "javascripts/connectors/foo-bar/baz_qux",
-      "javascripts/connectors/foo-bar/camelCase",
+      "enabled-plugins/foo",
+      "enabled-plugins/connectors/foo-bar/baz_qux",
+      "enabled-plugins/connectors/foo-bar/camelCase",
     ]);
 
     lookupTemplate(
       assert,
       "template:connectors/foo",
-      "javascripts/foo",
-      "looks up in javascripts/ namespace"
+      "enabled-plugins/foo",
+      "looks up in enabled-plugins/ namespace"
     );
 
     lookupTemplate(
       assert,
       "template:connectors/components/foo",
-      "javascripts/foo",
+      "enabled-plugins/foo",
       "removes components segment"
     );
 
     lookupTemplate(
       assert,
       "template:connectors/foo-bar/baz-qux",
-      "javascripts/connectors/foo-bar/baz_qux",
+      "enabled-plugins/connectors/foo-bar/baz_qux",
       "underscores last segment"
     );
 
     lookupTemplate(
       assert,
       "template:connectors/foo-bar/camelCase",
-      "javascripts/connectors/foo-bar/camelCase",
+      "enabled-plugins/connectors/foo-bar/camelCase",
       "handles camelcase file names"
     );
 
     lookupTemplate(
       assert,
       resolver.normalize("template:connectors/foo-bar/camelCase"),
-      "javascripts/connectors/foo-bar/camelCase",
+      "enabled-plugins/connectors/foo-bar/camelCase",
       "handles camelcase file names when normalized"
     );
   });
@@ -536,7 +536,7 @@ module("Unit | Ember | resolver", function (hooks) {
       "wizard/templates/bar",
       "wizard/templates/dashboard_general",
       "wizard-baz-qux",
-      "javascripts/wizard/plugin-template",
+      "enabled-plugins/wizard/plugin-template",
     ]);
 
     // Switches prefix to wizard/templates when underscored

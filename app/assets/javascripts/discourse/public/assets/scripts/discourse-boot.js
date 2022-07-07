@@ -3,6 +3,22 @@
     throw "Unsupported browser detected";
   }
 
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  let setupData;
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+  }
+
+  let enabledPlugins = setupData && setupData.enabledPlugins && JSON.parse(setupData.enabledPlugins);
+
+  Object.keys(Ember.TEMPLATES).forEach(function (key) {
+    let match = key.match(/^(plugins\/[^\/]+)\//);
+    if (match && (!enabledPlugins || enabledPlugins.includes(match[1]))) {
+      console.log('enabled', key);
+      Ember.TEMPLATES[key.replace(match[0], 'enabled-plugins/')] = Ember.TEMPLATES[key];
+    }
+  });
+
   // TODO: Remove this and have resolver find the templates
   const prefix = "discourse/templates/";
   const adminPrefix = "admin/templates/";
