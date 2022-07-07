@@ -15,7 +15,7 @@ acceptance("Wizard", function (needs) {
     await visit("/wizard/steps/hello-world");
     assert.ok(exists(".wizard-container__step"));
     assert.ok(
-      exists(".wizard-container__step-hello-world"),
+      exists(".wizard-container__step.introduction"),
       "it adds a class for the step id"
     );
     assert.ok(
@@ -30,9 +30,7 @@ acceptance("Wizard", function (needs) {
       "don't show it as invalid until the user does something"
     );
     assert.ok(
-      exists(
-        ".wizard-container__inputiner__input .wizard-container__description"
-      )
+      exists(".wizard-container__input .wizard-container__description")
     );
     assert.ok(!exists(".wizard-container__button.back"));
     assert.ok(!exists(".wizard-container__input .field-error-description"));
