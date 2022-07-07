@@ -116,8 +116,8 @@ export default {
         user.updateDoNotDisturbStatus(data.ends_at);
       });
 
-      bus.subscribe(`/user-status/${user.id}`, (data) => {
-        appEvents.trigger("current-user-status:changed", data);
+      bus.subscribe(`/user-status`, (data) => {
+        appEvents.trigger("user-status:changed", data);
       });
 
       const site = container.lookup("site:main");
