@@ -1,0 +1,35 @@
+<DSection
+  @class="topic-timeline"
+  @topic={{@model}}
+  @notificationLevel={{@model.details.notification_level}}
+  @prevEvent={{@info.prevEvent}}
+  @enteredIndex={{this.enteredIndex}}
+  @loading={{@model.postStream.loading}}
+  @jumpToPost={{this.jumpToPost}}
+  @jumpTop={{this.jumpTop}}
+  @jumpBottom={{this.jumpBottom}}
+  @jumpEnd={{this.jumpEnd}}
+  @jumpToPostPrompt={{this.jumpToPostPrompt}}
+  @jumpToIndex={{this.jumpToIndex}}
+  @replyToPost={{this.replyToPost}}
+  @showSummary={{this.showSummary}}
+  @toggleMultiSelect={{this.toggleMultiSelect}}
+  @showTopicSlowModeUpdate={{fn (route-action "showTopicSlowModeUpdate") null null}}
+  @deleteTopic={{this.deleteTopic}}
+  @recoverTopic={{this.recoverTopic}}
+  @toggleClosed={{this.toggleClosed}}
+  @toggleArchived={{this.toggleArchived}}
+  @toggleVisibility={{this.toggleVisibility}}
+  @showTopicTimerModal={{fn (route-action "showTopicTimerModal") null null}}
+  @showFeatureTopic={{fn (route-action "showFeatureTopic") null null}}
+  @showChangeTimestamp={{route-action "showChangeTimestamp"}}
+  @resetBumpDate={{this.resetBumpDate}}
+  @convertToPublicTopic={{this.convertToPublicTopic}}
+  @convertToPrivateMessage={{this.convertToPrivateMessage}}
+>
+  <TopicTimeline::Container
+    @fullscreen={{@info.topicProgressExpanded}}
+    @dockAt={{@dockAt}}
+    @dockBottom={{@dockBottom}}
+  />
+</DSection>

@@ -1,65 +1,60 @@
+import GlimmerComponent from "discourse/components/glimmer";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
+
 import Docking from "discourse/mixins/docking";
-import MountWidget from "discourse/components/mount-widget";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 
-export default MountWidget.extend(Docking, {
-  adminTools: optionalService(),
-  widget: "topic-timeline-container",
-  dockBottom: null,
-  dockAt: null,
-  intersectionObserver: null,
+export default class TopicTimeline extends GlimmerComponent {
+  @tracked prevEvent;
 
-  buildArgs() {
-    let attrs = {
-      topic: this.topic,
-      notificationLevel: this.notificationLevel,
-      topicTrackingState: this.topicTrackingState,
-      enteredIndex: this.enteredIndex,
-      dockAt: this.dockAt,
-      dockBottom: this.dockBottom,
-      mobileView: this.get("site.mobileView"),
-    };
+  mobileView = this.site.mobileView;
+  intersectionObserver = null;
+  dockAt = null;
+  dockBottom = null;
+  adminTools = optionalService();
 
-    let event = this.prevEvent;
-    if (event) {
-      attrs.enteredIndex = event.postIndex - 1;
+  constructor() {
+    super(...arguments);
+  }
+
+  @action
+  updateEnteredIndex(prevEvent) {
+    this.prevEvent = prevEvent;
+    if (prevEvent) {
+      this.enteredIndex = prevEvent.postIndex - 1;
     }
-
-    if (this.fullscreen) {
-      attrs.fullScreen = true;
-      attrs.addShowClass = this.addShowClass;
-    }
-
-    return attrs;
-  },
+  }
 
   @observes("topic.highest_post_number", "loading")
   newPostAdded() {
-    this.queueRerender(() => this.queueDockCheck());
-  },
+    // not sure if this is the play
+    Docking.queueDockCheck();
+  }
 
   @observes("topic.details.notification_level")
-  _queueRerender() {
-    this.queueRerender();
-  },
+  updateNotificationLevel() {
+    // update value here
+  }
 
+  @bind
   dockCheck() {
     const timeline = this.element.querySelector(".timeline-container");
     const timelineHeight = (timeline && timeline.offsetHeight) || 400;
 
-    const prev = this.dockAt;
+    const prev = this.args.dockAt;
     const posTop = headerOffset() + window.pageYOffset;
     const pos = posTop + timelineHeight;
 
-    this.dockBottom = false;
+    this.args.dockBottom = false;
     if (posTop < this.topicTop) {
-      this.dockAt = parseInt(this.topicTop, 10);
+      this.args.dockAt = parseInt(this.topicTop, 10);
     } else if (pos > this.topicBottom) {
-      this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
-      this.dockBottom = true;
+      this.args.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
+      this.args.dockBottom = true;
       if (this.dockAt < 0) {
         this.dockAt = 0;
       }
@@ -71,21 +66,12 @@ export default MountWidget.extend(Docking, {
     if (this.dockAt !== prev) {
       this.queueRerender();
     }
-  },
+  }
 
-  didInsertElement() {
-    this._super(...arguments);
-
-    if (this.fullscreen && !this.addShowClass) {
-      next(() => {
-        this.set("addShowClass", true);
-        this.queueRerender();
-      });
-    }
-
+  didInsert() {
     this.dispatch(
       "topic:current-post-scrolled",
-      () => `timeline-scrollarea-${this.topic.id}`
+      () => `timeline-scrollarea-${this.args.topic.id}`
     );
     this.dispatch("topic:toggle-actions", "topic-admin-menu-button");
     if (!this.site.mobileView) {
@@ -115,11 +101,9 @@ export default MountWidget.extend(Docking, {
         }
       }
     }
-  },
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-
+  willDestroy() {
     if (!this.site.mobileView) {
       this.appEvents.off("composer:opened", this, this.queueRerender);
       this.appEvents.off("composer:resized", this, this.queueRerender);
@@ -129,5 +113,5 @@ export default MountWidget.extend(Docking, {
         this.intersectionObserver = null;
       }
     }
-  },
-});
+  }
+}
