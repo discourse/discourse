@@ -22,11 +22,11 @@
 
         {{#each customSection.links as |link|}}
           <Sidebar::SectionLink
-          @linkName={{link.name}}
-          @route={{link.route}}
-          @model={{link.model}}
-          @title={{link.title}}
-          @content={{link.text}} />
+            @linkName={{link.name}}
+            @route={{link.route}}
+            @model={{link.model}}
+            @title={{link.title}}
+            @content={{link.text}} />
         {{/each}}
       </Sidebar::Section>
     {{/each}}
