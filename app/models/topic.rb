@@ -1042,7 +1042,7 @@ class Topic < ActiveRecord::Base
 
       communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).fetch_user_preferences
       target_user_communication_preferences = communication_preferences.for_user(target_user.id)
-      raise NotAllowed if !communication_preferences.acting_user_staff? && target_user_communication_preferences&.ignoring_or_muting?
+      raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username)) if !communication_preferences.acting_user_staff? && target_user_communication_preferences&.ignoring_or_muting?
 
       if TopicUser
           .where(topic: self,
@@ -1761,7 +1761,7 @@ class Topic < ActiveRecord::Base
 
   def create_invite_notification!(target_user, notification_type, invited_by_user_id, post_number: 1)
     communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by_user_id, target_usernames: target_user.username).fetch_user_preferences
-    raise NotAllowed if !communication_preferences.acting_user_staff? && communication_preferences.for_user(target_user.id)&.ignoring_or_muting?
+    raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username)) if !communication_preferences.acting_user_staff? && communication_preferences.for_user(target_user.id)&.ignoring_or_muting?
 
     target_user.notifications.create!(
       notification_type: notification_type,
