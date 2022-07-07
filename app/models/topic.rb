@@ -1040,9 +1040,9 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      # ensure_can_invite!(target_user, invited_by)
-      communication_access = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).vet_access
-      raise NotAllowed if communication_access.any? && (communication_access[target_user.id][:is_ignoring] || communication_access[target_user.id][:is_muting])
+      communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).fetch_user_preferences
+      target_user_communication_preferences = communication_preferences.for_user(target_user.id)
+      raise NotAllowed if !communication_preferences.acting_user_staff? && target_user_communication_preferences&.ignoring_or_muting?
 
       if TopicUser
           .where(topic: self,
@@ -1052,10 +1052,7 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.muted_topic"))
       end
 
-      if !target_user.staff? &&
-         target_user&.user_option&.enable_allowed_pm_users &&
-         communication_access[target_user.id][:is_disallowing_pms_from_acting_user]
-         # !AllowedPmUser.where(user: target_user, allowed_pm_user: invited_by).exists?
+      if !target_user.staff? && target_user_communication_preferences&.disallowing_pms?
         raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_pm"))
       end
 
@@ -1080,22 +1077,6 @@ class Topic < ActiveRecord::Base
       )
     end
   end
-
-  # def ensure_can_invite!(target_user, invited_by)
-    # if MutedUser
-    #     .where(user: target_user, muted_user: invited_by)
-    #     .joins(:muted_user)
-    #     .where('NOT admin AND NOT moderator')
-    #     .exists?
-    #   raise NotAllowed
-    # elsif IgnoredUser
-    #     .where(user: target_user, ignored_user: invited_by)
-    #     .joins(:ignored_user)
-    #     .where('NOT admin AND NOT moderator')
-    #     .exists?
-    #   raise NotAllowed
-    # end
-  # end
 
   def email_already_exists_for?(invite)
     invite.email_already_exists && private_message?
@@ -1778,11 +1759,9 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
-  def create_invite_notification!(target_user, notification_type, username, post_number: 1)
-    invited_by = User.find_by_username(username)
-    # ensure_can_invite!(target_user, invited_by)
-      communication_access = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).vet_access
-      raise NotAllowed if communication_access.any? && (communication_access[target_user.id][:is_ignoring] || communication_access[target_user.id][:is_muting])
+  def create_invite_notification!(target_user, notification_type, invited_by_user_id, post_number: 1)
+    communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by_user_id, target_usernames: target_user.username).fetch_user_preferences
+    raise NotAllowed if !communication_preferences.acting_user_staff? && communication_preferences.for_user(target_user.id)&.ignoring_or_muting?
 
     target_user.notifications.create!(
       notification_type: notification_type,
@@ -1881,7 +1860,7 @@ class Topic < ActiveRecord::Base
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_private_message],
-        invited_by.username
+        invited_by.id
       )
     end
   end
@@ -1909,7 +1888,7 @@ class Topic < ActiveRecord::Base
         create_invite_notification!(
           target_user,
           Notification.types[:invited_to_topic],
-          invited_by.username
+          invited_by.id
         )
       end
     end

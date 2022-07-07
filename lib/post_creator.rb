@@ -111,10 +111,14 @@ class PostCreator
         return false
       end
 
-      # Make sure none of the users have muted or ignored the creator
-      users_not_accepting_communication = UserCommunicationDefender.new(acting_user_id: @user.id, target_usernames: names).vet_access
-      users_not_accepting_communication.each do |user_id, detail|
-        errors.add(:base, I18n.t(:not_accepting_pms, username: detail[:username]))
+      # Make sure none of the users have muted or ignored the creator or prevented
+      # PMs from being sent to them
+      target_user_communication_preferences = UserCommunicationDefender.new(acting_user_id: @user.id, target_usernames: names).fetch_user_preferences
+
+      target_user_communication_preferences.each do |preferences|
+        if !preferences.communication_allowed?
+          errors.add(:base, I18n.t(:not_accepting_pms, username: preferences.username))
+        end
       end
 
       return false if errors[:base].present?
@@ -457,17 +461,6 @@ class PostCreator
   end
 
   private
-
-  def allowed_pms_enabled(users)
-    User
-      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
-      .joins("LEFT JOIN allowed_pm_users ON allowed_pm_users.user_id = users.id")
-      .where("
-        user_options.user_id IS NOT NULL AND
-        user_options.user_id IN (:user_ids) AND
-        user_options.enable_allowed_pm_users
-      ", user_ids: users.keys)
-  end
 
   def create_topic
     return if @topic

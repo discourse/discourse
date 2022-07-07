@@ -393,8 +393,10 @@ class PostAlerter
     return if user.staged? && topic.category&.mailinglist_mirror?
 
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
-    return if notifier_id && \
-      UserCommunicationDefender.new(acting_user_id: notifier_id, target_usernames: user.username).vet_access.any?
+    if notifier_id
+      communication_preferences = UserCommunicationDefender.new(acting_user_id: notifier_id, target_usernames: user.username).fetch_user_preferences
+      return if !communication_preferences.acting_user_staff? && communication_preferences.for_user(user.id)&.ignoring_or_muting?
+    end
 
     # skip if muted on the topic
     return if TopicUser.where(
