@@ -1,9 +1,12 @@
-import { click } from "@ember/test-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import { click, render } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  count,
+  discourseModule,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
+import { test } from "qunit";
 
 discourseModule("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,31 +16,25 @@ discourseModule("Integration | Component | d-navigation", function (hooks) {
       .filter((category) => !category.parent_category_id)
       .slice(0, 4);
     this.site.setProperties({ categories });
+
     this.currentUser.set(
       "indirectly_muted_category_ids",
       categories.slice(0, 3).map((category) => category.id)
     );
   });
 
-  componentTest("filters indirectly muted categories", {
-    template: hbs`
-      {{d-navigation
-        filterType="categories"
-      }}
-    `,
+  test("filters indirectly muted categories", async function (assert) {
+    await render(hbs`<DNavigation @filterType="categories" />`);
+    await click(".category-drop .select-kit-header-wrapper");
 
-    async test(assert) {
-      await click(".category-drop .select-kit-header-wrapper");
-
-      assert.strictEqual(
-        document.querySelectorAll(".category-row").length,
-        1,
-        "displays only categories that are not muted"
-      );
-      assert.strictEqual(
-        query(".category-row .badge-category span").textContent.trim(),
-        "dev"
-      );
-    },
+    assert.strictEqual(
+      count(".category-row"),
+      1,
+      "displays only categories that are not muted"
+    );
+    assert.strictEqual(
+      query(".category-row .badge-category span").textContent.trim(),
+      "dev"
+    );
   });
 });
