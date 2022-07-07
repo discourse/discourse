@@ -134,7 +134,7 @@ class ThemeJavascriptCompiler
 
     def discourse_extension
       <<~JS
-        Ember.HTMLBars.registerPlugin('ast', function() {
+        module.exports.registerPlugin('ast', function() {
           return {
             name: 'theme-template-manipulator',
             visitor: {
