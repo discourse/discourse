@@ -9,6 +9,17 @@ $wizard-bg: svg-uri(
   </svg>'
 );
 
+$wizard-mobile-bg: svg-uri(
+  '<?xml version="1.0" encoding="UTF-8"?>
+  <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+    <path d="M65.11,755.03c-.95,0-1.9,.08-2.87,.23-10.9,1.74-20.73,12.53-18.33,27.56,2.4,15.03,16.43,23.52,27.44,21.76,5.23-.84,9.15-3.57,11.65-8.12,2.72-4.93,3.55-11.8,2.36-19.32-1.19-7.39-4.29-13.63-8.75-17.6-3.35-2.98-7.28-4.52-11.49-4.52h-.01Zm3.05,65.41c-18.96,0-36.43-14.97-39.65-35.14-3.53-22.1,10.2-42.06,31.26-45.43,9.94-1.58,19.59,1.27,27.2,8.04,7.14,6.35,12.04,15.87,13.78,26.78,1.78,11.1,.36,21.23-4.08,29.3-4.8,8.74-12.92,14.41-22.86,16-1.89,.3-3.77,.45-5.65,.45h0Z"/>
+    <path d="M118.58,461.13c0,42.64-27.43,60.69-72.35,60.69s-101.49-63.7-101.49-106.34,70.65-54.87,115.57-54.87,58.27,57.88,58.27,100.52h0Z" style="fill: #0ca64e; fill-rule: evenodd;"/>
+    <path d="M492.26,712.49c-90.96,16.64-161.99-38.28-219.31-142.86-47.68-87.02,25.41-193.64,97.18-244.1,80.59-56.65,193.7,26.32,248.35,183.9,32.51,93.76-28.61,185.21-126.22,203.06h0Z" style="fill: #e84a51; fill-rule: evenodd;"/>
+    <path d="M393,717.3c-17.29,16.8-36.86,24.94-53.76,12.76s-19.47-31.75-3.5-49.8c15.58-17.6,37.62-33.19,54.52-21.02,16.9,12.18,20.84,40.46,2.74,58.05h0Z" style="fill: #fbf5af; fill-rule: evenodd;"/>
+    <path d="M69.29,124.46c0,19.4-22.98,39.33-40.94,39.33S-9.71,147.18-9.71,127.78s25.03-43.21,42.99-43.21,36.01,20.49,36.01,39.89Z" style="fill: #f0794a; fill-rule: evenodd;"/>
+  </svg>'
+);
+
 @keyframes bump {
   0% {
     transform: scale(1);
@@ -33,10 +44,6 @@ body.wizard {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
-  label {
-    display: block;
-  }
-
   #wizard-main {
     display: flex;
     flex-direction: column;
@@ -46,211 +53,18 @@ body.wizard {
   .discourse-logo svg {
     height: 70px;
     width: auto;
-  }
-
-  .wizard-warning {
-    font-family: sans-serif;
-
-    p {
-      margin-top: 0;
-    }
-
-    fieldset {
-      display: none;
-    }
-
-    h2 {
-      display: none;
-    }
-    .sa-icon {
-      display: none !important;
-    }
-  }
-
-  .select {
-    width: 400px;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .wizard-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-  }
-
-  .staff-count {
-    font-weight: bold;
-  }
-
-  &__step-privacy {
-    label[for="privacy_options"] .wizard-container__description {
-      margin-bottom: 1em;
-      font-weight: bold;
-    }
-
-    .field-privacy-options {
-      margin-bottom: 0.8em;
-
-      .radio-label {
-        font-weight: normal;
-      }
-    }
-  }
-
-  .textarea-field.invalid textarea,
-  .text-field.invalid input {
-    outline: 0;
-    border: 3px solid var(--danger);
-    animation: bump 0.25s ease-in-out;
-    animation-iteration-count: 2;
-  }
-
-  .radio-field-choice {
-    margin-bottom: 1.25em;
-
-    .radio-label {
-      font-weight: bold;
-      margin-left: 0.5em;
-    }
-    .radio-description {
-      margin-top: 0.25em;
-      margin-left: 1.75em;
-      color: var(--primary-high);
-    }
-  }
-
-  .invite-list {
-    .users-list {
-      margin-bottom: 1em;
-
-      .invite-list-user {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-bottom: 1em;
-
-        .email {
-          width: 330px;
-        }
-
-        .role {
-          width: 200px;
-        }
-      }
-    }
-
-    .new-user {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1em;
-
-      .invite-email {
-        width: 350px;
-      }
-    }
-
-    button.add-user {
-      .fa {
-        margin-right: 0.5em;
-      }
-    }
-  }
-
-  .modal-footer {
-    a.btn {
-      text-decoration: none;
-      display: inline-block;
-      padding: 6px 12px;
-      background: var(--primary-low);
-      color: var(--primary);
-      &:hover {
-        background: var(--primary-medium);
-        color: var(--secondary);
-      }
-
-      &.btn-primary {
-        background: var(--tertiary);
-        color: var(--secondary);
-        &:hover {
-          background-color: var(--tertiary-hover);
-        }
-      }
+    @media only screen and (max-device-width: 568px) {
+      height: 50px;
     }
   }
 
   /* fix wizard for mobile -- iPhone 5 default width */
   @media only screen and (max-device-width: 568px) {
-    h1 {
-      font-size: var(--font-up-2) !important;
-    }
-    .wizard-container {
-      margin: auto !important;
-    }
-    .wizard-container__step-form {
-      max-height: none;
-    }
-    .wizard-container__step-contents {
-      height: auto !important;
-    }
-    .wizard-container__step-banner {
-      width: 100% !important;
-      margin-bottom: 1em !important;
-    }
-    .wizard-container__step-footer {
-      display: block !important;
-    }
-    .wizard-progress {
-      margin-bottom: 10px !important;
-    }
-    .wizard-buttons {
-      text-align: right !important;
-    }
-    .wizard-footer {
-      display: none !important;
-    }
-    .wizard-container__step-description {
-      margin-bottom: 1em !important;
-    }
-    .wizard-container-contents {
-      padding: 1em !important;
-    }
-    .emoji-preview img {
-      width: 16px !important;
-      height: 16px !important;
-    }
-    .invite-list .new-user {
-      flex-direction: column !important;
-      align-items: inherit !important;
-    }
-    .invite-list .new-user .invite-email {
-      width: 100% !important;
-      margin-bottom: 5px !important;
-    }
-    .invite-list .add-user {
-      margin-top: 5px !important;
-    }
-
-    canvas {
-      max-width: 365px;
-    }
-
-    .wizard-container__step-logos,
-    .wizard-container__step-icons {
-      canvas {
-        max-width: 225px;
-      }
-    }
+    background: $wizard-mobile-bg;
   }
 }
 
-// Refactor SCSS
-
+// Refactored SCSS
 .wizard-container {
   position: relative;
   z-index: 11;
@@ -266,9 +80,18 @@ body.wizard {
   border-radius: 8px;
   padding: 2em 3em;
 
+  @media only screen and (max-device-width: 568px) {
+    padding: 1em;
+    max-width: 98%;
+    margin: 1.5em auto;
+  }
+
   &__fields {
     width: 100%;
     padding-right: 20%;
+    @media only screen and (max-device-width: 568px) {
+      padding-right: 0;
+    }
   }
 
   &__step.branding .wizard-container__fields {
@@ -277,6 +100,30 @@ body.wizard {
     grid-template-columns: 50% 50%;
     grid-column-gap: 2em;
     width: calc(100% - 2em);
+    @media only screen and (max-device-width: 568px) {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+  }
+
+  &__step.branding .wizard-container__field {
+    @media only screen and (max-device-width: 568px) {
+      max-width: 100%;
+    }
+  }
+
+  &__step.branding .wizard-container__description {
+    @media only screen and (max-device-width: 568px) {
+      display: none;
+    }
+  }
+
+  &__step.branding .wizard-container__preview canvas {
+    @media only screen and (max-device-width: 568px) {
+      max-width: 100%;
+      height: auto;
+    }
   }
 
   &__step.corporate .wizard-container__fields {
@@ -286,6 +133,10 @@ body.wizard {
     grid-template-rows: 1fr 1fr 1fr;
     padding-right: 0;
     width: calc(100% - 2em);
+    @media only screen and (max-device-width: 568px) {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
 
   &__field {
@@ -294,6 +145,34 @@ body.wizard {
 
   &__field.checkbox-field {
     margin-bottom: 3em;
+    @media only screen and (max-device-width: 568px) {
+      margin-bottom: 1em;
+    }
+  }
+
+  &__field.invalid input {
+    outline: 0;
+    border: 3px solid var(--danger);
+    animation: bump 0.25s ease-in-out;
+    animation-iteration-count: 2;
+  }
+
+  &__field label {
+    display: block;
+  }
+
+  &__field.component-styling-preview {
+    display: inline;
+    @media only screen and (max-device-width: 568px) {
+      display: none;
+    }
+  }
+
+  &__field.text-governing-law,
+  &__field.text-city-for-disputes {
+    @media only screen and (max-device-width: 568px) {
+      display: none;
+    }
   }
 
   &__step-form {
@@ -371,6 +250,9 @@ body.wizard {
     font-size: 3em;
     color: var(--primary);
     margin: 0 0 1em 0;
+    @media only screen and (max-device-width: 568px) {
+      font-size: var(--font-up-2);
+    }
   }
 
   &__step.styling .wizard-container__step-title {
@@ -391,6 +273,16 @@ body.wizard {
 
   &__step-form {
     flex: 1 0 50%;
+    @media only screen and (max-device-width: 568px) {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (max-device-width: 568px) {
+    &__step.introduction .wizard-container__step-banner,
+    &__step.privacy .wizard-container__step-banner {
+      display: none;
+    }
   }
 
   &__step-banner {
@@ -403,6 +295,9 @@ body.wizard {
     flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
+    @media only screen and (max-device-width: 568px) {
+      flex-direction: column;
+    }
   }
 
   &__step-banner-image {
@@ -416,6 +311,11 @@ body.wizard {
   &__step.ready .wizard-container__step-description {
     width: 50%;
     font-size: var(--font-up-3);
+    @media only screen and (max-device-width: 568px) {
+      font-size: var(--font-up-2);
+      width: 100%;
+      text-align: center;
+    }
   }
 
   &__step.branding .wizard-container__description {
@@ -424,6 +324,16 @@ body.wizard {
 
   &__step-progress {
     font-weight: bold;
+    @media only screen and (max-device-width: 568px) {
+      margin-bottom: 1em;
+    }
+  }
+
+  &__step-text {
+    display: inline;
+    @media only screen and (max-device-width: 568px) {
+      display: none;
+    }
   }
 
   a:visited {
@@ -581,6 +491,10 @@ body.wizard {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    @media only screen and (max-device-width: 568px) {
+      flex-direction: column;
+      justify-content: center;
+    }
   }
 
   &__image-upload {
@@ -601,6 +515,9 @@ body.wizard {
   &__label {
     font-weight: bold;
     font-size: var(--font-up-2);
+    @media only screen and (max-device-width: 568px) {
+      font-size: var(--font-up-1);
+    }
   }
 
   &__step.styling .wizard-container__label {
@@ -616,6 +533,9 @@ body.wizard {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     margin: 0.5em 0;
+    @media only screen and (max-device-width: 568px) {
+      font-size: var(--font-0);
+    }
   }
 
   &__description.extra {
@@ -655,6 +575,10 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
+    @media only screen and (max-device-width: 568px) {
+      height: 20px;
+      width: 35px;
+    }
   }
   &__checkbox-slider:before,
   &__checkbox-slider:after {
@@ -671,6 +595,10 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
+    @media only screen and (max-device-width: 568px) {
+      height: 12px;
+      width: 12px;
+    }
   }
   &__field.checkbox-field
     .wizard-container__label:hover
@@ -683,6 +611,9 @@ body.wizard {
   }
   &__checkbox:checked + .wizard-container__checkbox-slider:before {
     left: 30px;
+    @media only screen and (max-device-width: 568px) {
+      left: 20px;
+    }
   }
 
   &__checkbox {
