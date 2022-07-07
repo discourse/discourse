@@ -1759,8 +1759,8 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
-  def create_invite_notification!(target_user, notification_type, invited_by_user_id, post_number: 1)
-    communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by_user_id, target_usernames: target_user.username).fetch_user_preferences
+  def create_invite_notification!(target_user, notification_type, invited_by, post_number: 1)
+    communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).fetch_user_preferences
     raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username)) if !communication_preferences.acting_user_staff? && communication_preferences.for_user(target_user.id)&.ignoring_or_muting?
 
     target_user.notifications.create!(
@@ -1769,7 +1769,7 @@ class Topic < ActiveRecord::Base
       post_number: post_number,
       data: {
         topic_title: self.title,
-        display_username: username,
+        display_username: invited_by.username,
         original_user_id: user.id,
         original_username: user.username
       }.to_json
@@ -1860,7 +1860,7 @@ class Topic < ActiveRecord::Base
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_private_message],
-        invited_by.id
+        invited_by
       )
     end
   end
@@ -1888,7 +1888,7 @@ class Topic < ActiveRecord::Base
         create_invite_notification!(
           target_user,
           Notification.types[:invited_to_topic],
-          invited_by.id
+          invited_by
         )
       end
     end
