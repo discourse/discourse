@@ -486,8 +486,9 @@ blockquote {
     padding-left: $topic-body-width-padding;
   }
   .moderator .regular {
-    margin-left: 8px;
-  }
+    margin-left: 4px;
+    padding-left: 8px;
+    }
 }
 
 .topic-avatar {
