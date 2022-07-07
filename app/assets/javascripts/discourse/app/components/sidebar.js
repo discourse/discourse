@@ -40,7 +40,7 @@ export default class Sidebar extends GlimmerComponent {
 
   get customSections() {
     return sidebarCustomSections.map((customSection) => {
-      return new customSection();
+      return new customSection({ sidebar: this });
     });
   }
 }

@@ -3,7 +3,7 @@
  */
 export default class BaseCustomSidebarSectionLink {
   /**
-   * @returns {string} The name of the section header. Needs to be dasherized and lowercase.
+   * @returns {string} The name of the section link. Needs to be dasherized and lowercase.
    */
   get name() {
     this._notImplemented();

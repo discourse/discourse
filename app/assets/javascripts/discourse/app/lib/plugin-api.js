@@ -1684,13 +1684,13 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Support for adding a Sidebar section by returning a class which extends from the BaseSectionHeader
-   * class interface. See `lib/sidebar/base-section-header.js` for documentation on the BaseSectionHeader class
+   * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
+   * class interface. See `lib/sidebar/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
    *
    * ```
-   * api.addSidebarSection((BaseSectionHeader, BaseSectionLink) => {
-   *   return class extends BaseSectionHeader {
+   * api.addSidebarSection((BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+   *   return class extends BaseCustomSidebarSection {
    *     get name() {
    *       return "chat-channels";
    *     }
@@ -1720,9 +1720,9 @@ class PluginApi {
    *
    *     get links() {
    *       return [
-   *         new (class extends BaseSectionLink {
+   *         new (class extends BaseCustomSidebarSectionLink {
    *           get name() {
-   *             "channel name"
+   *             "dev"
    *           }
    *           get route() {
    *             return "chat.channel";
@@ -1730,6 +1730,26 @@ class PluginApi {
    *           get model() {
    *             return {
    *               channelId: "1",
+   *               channelTitle: "dev channel"
+   *             };
+   *           }
+   *           get title() {
+   *             return "dev channel";
+   *           }
+   *           get text() {
+   *             return "dev channel";
+   *           }
+   *         })(),
+   *         new (class extends BaseCustomSidebarSectionLink {
+   *           get name() {
+   *             "random"
+   *           }
+   *           get route() {
+   *             return "chat.channel";
+   *           }
+   *           get model() {
+   *             return {
+   *               channelId: "2",
    *               channelTitle: "random channel"
    *             };
    *           }
