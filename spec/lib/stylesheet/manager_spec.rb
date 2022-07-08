@@ -801,7 +801,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       Stylesheet::Manager.precompile_theme_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
+      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include("color_definitions_#{scheme2.name}_#{scheme2.id}_#{default_theme.id}")
