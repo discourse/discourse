@@ -10,6 +10,24 @@ describe MaxUsernameLengthValidator do
     expect(validator.error_message).to eq(I18n.t("site_settings.errors.max_username_length_range"))
   end
 
+  context "checks for valid ranges" do
+    it "fails for values below the valid range" do
+      expect do
+        SiteSetting.max_username_length = 5
+      end.to raise_error(Discourse::InvalidParameters)
+    end
+    it "fails for values above the valid range" do
+      expect do
+        SiteSetting.max_username_length = 61
+      end.to raise_error(Discourse::InvalidParameters)
+    end
+    it "works for values below the valid range" do
+      expect do
+        SiteSetting.max_username_length = 42
+      end.not_to raise_error
+    end
+  end
+
   it "checks for users with short usernames" do
     user = Fabricate(:user, username: 'jackjackjack')
 
