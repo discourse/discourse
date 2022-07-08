@@ -205,10 +205,13 @@ body.has-sidebar-page {
 body.sidebar-animate {
   #main-outlet-wrapper {
     //  grid-template-columns transition supported in Firefox, Chrome support coming summer 2022
-    transition: grid-template-columns var(--d-sidebar-animation-time);
+    transition-property: grid-template-columns, max-width;
+    transition-timing-function: var(--d-sidebar-animation-ease);
+    transition-duration: var(--d-sidebar-animation-time);
   }
 
   .d-header-wrap .wrap {
-    transition: max-width var(--d-sidebar-animation-time);
+    transition: max-width var(--d-sidebar-animation-time)
+      var(--d-sidebar-animation-ease);
   }
 }
