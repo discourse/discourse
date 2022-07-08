@@ -14,7 +14,7 @@
 
   <ComboBox @value={{inviteRole}} @content={{roles}} @nameProperty="label" @onChange={{action (mut inviteRole)}} />
 
-  <button type="button" class="wizard-btn small add-user" {{action "addUser"}}>
+  <button type="button" class="wizard-container__button small add-user" {{action "addUser"}}>
     {{d-icon "plus"}}{{i18n "wizard.invites.add_user"}}
   </button>
 </div>

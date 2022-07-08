@@ -125,7 +125,7 @@ Register a new admin account using one of the email addresses you entered before
 
 After registering your admin account, the setup wizard will launch and guide you through basic configuration of your Discourse.
 
-<img src="https://www.discourse.org/images/install/17/discourse-wizard-step-1.png" width="650">
+<img src="https://www.discourse.org/images/install/17/discourse-wizard-container__step-1.png" width="650">
 
 After completing the setup wizard, you should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains advice for further configuring and customizing your Discourse install.
 

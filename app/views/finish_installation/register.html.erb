@@ -3,7 +3,7 @@
 <%- if @allowed_emails.present? %>
   <%= form_tag(finish_installation_register_path) do %>
 
-    <div class='wizard-field text-field'>
+    <div class='wizard-container__input text-field'>
       <label for="email">
         <span class="label-value"><%= t 'js.user.email.title' %></span>
       </label>
@@ -15,12 +15,12 @@
       </div>
     </div>
 
-    <div class='wizard-field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+    <div class='wizard-container__input text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
       <label for="username">
         <span class="label-value"><%= t 'js.user.username.title' %></span>
       </label>
 
-      <div class='field-description'><%= t 'js.user.username.instructions' %></div>
+      <div class='wizard-container__description'><%= t 'js.user.username.instructions' %></div>
 
       <div class='input-area'>
         <%= text_field_tag(:username, params[:username]) %>
@@ -30,12 +30,12 @@
       <%- end %>
     </div>
 
-    <div class='wizard-field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+    <div class='wizard-container__input text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
       <label for="password">
         <span class="label-value"><%= t 'js.user.password.title' %></span>
       </label>
 
-      <div class='field-description'><%= t 'js.user.password.instructions', count: SiteSetting.min_admin_password_length  %></div>
+      <div class='wizard-container__description'><%= t 'js.user.password.instructions', count: SiteSetting.min_admin_password_length  %></div>
 
       <div class='input-area'>
         <%= password_field_tag(:password, params[:password]) %>
@@ -45,7 +45,7 @@
       <% end %>
     </div>
 
-    <%= submit_tag(t('finish_installation.register.button'), class: 'wizard-btn primary') %>
+    <%= submit_tag(t('finish_installation.register.button'), class: 'wizard-container__button primary') %>
 
   <%- end %>
 <%- else -%>
