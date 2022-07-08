@@ -126,6 +126,7 @@ class ColorScheme < ActiveRecord::Base
       "success" =>           '3d854d',
       "love" =>              '9D256B'
     },
+    # By @zenorocha
     "Dracula": {
       "primary_very_low" => "373A47",
       "primary_low" => "414350",
@@ -158,6 +159,7 @@ class ColorScheme < ActiveRecord::Base
       "love_low" => "6C4667",
       "love" => 'ff79c6'
     },
+    # By @altercation
     "Solarized Light": {
       "primary_very_low" => "F0ECD7",
       "primary_low" => "D6D8C7",
@@ -189,6 +191,7 @@ class ColorScheme < ActiveRecord::Base
       "love_low" => "FCDDD2",
       "love" => 'fa6c8d'
     },
+    # By @altercation
     "Solarized Dark": {
       "primary_very_low" => "0D353F",
       "primary_low" => "193F47",
@@ -328,7 +331,7 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
     new_color_scheme.base_scheme_id = params[:base_scheme_id]
-    new_color_scheme.user_selectable = true if params[:user_selectable]
+    new_color_scheme.user_selectable = true
 
     colors = CUSTOM_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
       { name: name, hex: hex }
