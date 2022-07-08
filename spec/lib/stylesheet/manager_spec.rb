@@ -783,7 +783,7 @@ describe Stylesheet::Manager do
       # Ensure we force compile each theme only once
       expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(16) # (3 themes * 2 targets) + 10 color schemes (2 themes * 5 color schemes (4 defaults + 1 theme scheme))
+      expect(results.size).to eq(22) # (3 themes * 2 targets) + 16 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme))
 
       # themes + core
       Stylesheet::Manager.precompile_css
