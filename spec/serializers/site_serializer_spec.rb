@@ -25,7 +25,7 @@ describe SiteSerializer do
 
     expect(c1[:custom_fields]["enable_marketplace"]).to eq("t")
   ensure
-    Site.preloaded_category_custom_fields.clear
+    Site.reset_preloaded_category_custom_fields
   end
 
   it "includes category tags" do
