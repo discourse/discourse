@@ -228,9 +228,9 @@
     const splashWrapper = document.querySelector("#d-splash");
     const splashImage = splashWrapper?.querySelector(".preloader-image");
 
-    splashImage.src = `data:image/svg+xml;base64,${encodedSvg}`;
-
     if (splashImage) {
+      splashImage.src = `data:image/svg+xml;base64,${encodedSvg}`;
+
       const connectStart = performance?.timing?.connectStart || 0;
       const splashDelay = connectStart ? DELAY_TARGET : 0;
       const targetTime = connectStart + DELAY_TARGET;
