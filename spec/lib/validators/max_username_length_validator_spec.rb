@@ -21,7 +21,7 @@ describe MaxUsernameLengthValidator do
         SiteSetting.max_username_length = 61
       end.to raise_error(Discourse::InvalidParameters)
     end
-    it "works for values below the valid range" do
+    it "works for values within the valid range" do
       expect do
         SiteSetting.max_username_length = 42
       end.not_to raise_error
