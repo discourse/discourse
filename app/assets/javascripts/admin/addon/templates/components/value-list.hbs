@@ -4,7 +4,7 @@
       <div data-index={{index}} class="value">
         <DButton @action={{action "removeValue"}} @actionParam={{value}} @icon="times" @class="remove-value-btn btn-small" />
 
-        <Input title={{value}} @value={{value}} class="value-input" {{on "focusout" (action "changeValue" index)}} />
+        <Input title={{value}} @value={{value}} class="value-input" {{on "focusout" (fn (action "changeValue") index)}} />
 
         {{#if this.showUpDownButtons}}
           <DButton @action={{action "shift" -1 index}} @icon="arrow-up" @class="shift-up-value-btn btn-small" />

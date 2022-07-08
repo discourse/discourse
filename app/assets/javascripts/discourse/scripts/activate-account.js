@@ -1,4 +1,3 @@
-// discourse-skip-module
 (function () {
   setTimeout(function () {
     const $activateButton = $("#activate-account-button");

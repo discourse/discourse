@@ -44,7 +44,7 @@ end
 def run_or_fail_prettier(*patterns)
   if patterns.any? { |p| Dir[p].any? }
     patterns = patterns.map { |p| "'#{p}'" }.join(' ')
-    run_or_fail("yarn prettier --list-different #{patterns}")
+    run_or_fail("yarn pprettier --list-different #{patterns}")
   else
     puts "Skipping prettier. Pattern not found."
     true
@@ -84,12 +84,12 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"')
+          @good &&= run_or_fail('yarn pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"')
         end
 
         unless ENV["SKIP_PLUGINS"]
           puts "Listing prettier offenses in plugins:"
-          @good &&= run_or_fail('yarn prettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"')
+          @good &&= run_or_fail('yarn pprettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"')
         end
       end
     end

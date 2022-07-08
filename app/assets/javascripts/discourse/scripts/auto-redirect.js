@@ -1,4 +1,3 @@
-// discourse-skip-module
 (function () {
   const path = document.getElementById("data-auto-redirect").dataset.path;
   setTimeout(function () {

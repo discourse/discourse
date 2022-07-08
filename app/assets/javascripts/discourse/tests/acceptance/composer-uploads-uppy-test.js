@@ -12,6 +12,7 @@ import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
+import sinon from "sinon";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -387,6 +388,14 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   });
 
   test("should show an error message for the failed upload", async function (assert) {
+    // Don't log the upload error
+    const stub = sinon
+      .stub(console, "error")
+      .withArgs(
+        sinon.match(/\[Uppy\]/),
+        sinon.match(/Failed to upload avatar\.png/)
+      );
+
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -394,6 +403,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-error", async () => {
+      sinon.assert.calledOnce(stub);
       assert.strictEqual(
         query(".bootbox .modal-body").innerHTML,
         "There was an error uploading the file, the gif was way too cool.",
