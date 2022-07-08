@@ -6,12 +6,12 @@
   <style>
     /* these need to be injected dynamicly to match theme colors */
     :root {
-      --primary: #222222;
-      --secondary: #ffffff;
-      --tertiary: #f15c21;
-      --highlight: #f0ea88;
-      --quaternary: #65ccff;
-      --success: #009900;
+      --primary: #000;
+      --secondary: #000;
+      --tertiary: #000;
+      --highlight: #000;
+      --quaternary: #000;
+      --success: #000;
       --animation-state: paused;
     }
 
