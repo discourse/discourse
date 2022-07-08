@@ -9,7 +9,7 @@ module EmberCli
     pretty-text-bundle.js
     start-discourse.js
     vendor.js
-  )
+  ) + Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
 
   def self.script_chunks
     return @@chunk_infos if defined? @@chunk_infos

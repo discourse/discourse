@@ -80,7 +80,17 @@ export function buildResolver(baseName) {
         }
       }
 
-      let normalized = super._normalize(fullName);
+      const split = fullName.split(":");
+      const type = split[0];
+
+      let normalized;
+      if (type === "template" && split[1]?.includes("connectors/")) {
+        // The default normalize implementation will skip dasherizing component template names
+        // We need the same for our connector templates names
+        normalized = "template:" + split[1].replace(/_/g, "-");
+      } else {
+        normalized = super._normalize(fullName);
+      }
 
       // This is code that we don't really want to keep long term. The main situation where we need it is for
       // doing stuff like `controllerFor('adminWatchedWordsAction')` where the real route name
@@ -88,8 +98,6 @@ export function buildResolver(baseName) {
       // normalize to `adminWatchedWordsAction` where the latter becomes `adminWatchedWords.action`.
       // While these end up looking up the same file ultimately, they are treated as different
       // items and so we can end up with two distinct version of the controller!
-      const split = fullName.split(":");
-      const type = split[0];
       if (
         split.length > 1 &&
         (type === "controller" || type === "route" || type === "template")

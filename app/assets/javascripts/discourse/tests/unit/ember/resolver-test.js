@@ -480,7 +480,11 @@ module("Unit | Ember | resolver", function (hooks) {
   });
 
   test("resolves connector templates", function (assert) {
-    setTemplates(["javascripts/foo", "javascripts/connectors/foo-bar/baz_qux"]);
+    setTemplates([
+      "javascripts/foo",
+      "javascripts/connectors/foo-bar/baz_qux",
+      "javascripts/connectors/foo-bar/camelCase",
+    ]);
 
     lookupTemplate(
       assert,
@@ -501,6 +505,20 @@ module("Unit | Ember | resolver", function (hooks) {
       "template:connectors/foo-bar/baz-qux",
       "javascripts/connectors/foo-bar/baz_qux",
       "underscores last segment"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:connectors/foo-bar/camelCase",
+      "javascripts/connectors/foo-bar/camelCase",
+      "handles camelcase file names"
+    );
+
+    lookupTemplate(
+      assert,
+      resolver.normalize("template:connectors/foo-bar/camelCase"),
+      "javascripts/connectors/foo-bar/camelCase",
+      "handles camelcase file names when normalized"
     );
   });
 
