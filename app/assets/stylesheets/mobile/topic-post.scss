@@ -392,6 +392,7 @@ span.highlighted {
 }
 
 .post-notice {
+  box-sizing: border-box;
   margin-bottom: 1em;
   &.old {
     border-top: none;
