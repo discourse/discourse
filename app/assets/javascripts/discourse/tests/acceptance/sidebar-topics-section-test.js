@@ -289,7 +289,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 1,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -300,7 +299,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 2,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -311,7 +309,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 3,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -322,7 +319,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 4,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
     ]);
@@ -486,7 +482,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: category.id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -497,7 +492,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: category.subcategories[0].id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -508,7 +502,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: category.subcategories[0].subcategories[0].id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -519,7 +512,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 3,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -530,7 +522,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 3,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -541,7 +532,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 1234,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag3"],
       },

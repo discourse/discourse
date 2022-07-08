@@ -171,7 +171,6 @@ class TopicTrackingState
       created_at: post.created_at,
       category_id: post.topic.category_id,
       archetype: post.topic.archetype,
-      unread_not_too_old: true
     }
 
     if tags
