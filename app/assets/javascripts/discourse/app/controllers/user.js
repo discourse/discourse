@@ -5,7 +5,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import I18n from "I18n";
 import bootbox from "bootbox";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isEmpty } from "@ember/utils";
@@ -18,6 +18,8 @@ export default Controller.extend(CanCheckEmails, {
   router: service(),
   userNotifications: controller("user-notifications"),
   adminTools: optionalService(),
+  invitesCount: null,
+  user: controller(),
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -185,6 +187,69 @@ export default Controller.extend(CanCheckEmails, {
     }
   ),
 
+  @discourseComputed("currentUser.draft_count")
+  draftLabel(count) {
+    return count > 0
+      ? I18n.t("drafts.label_with_count", { count })
+      : I18n.t("drafts.label");
+  },
+
+  @discourseComputed("router.currentRoute")
+  currentRouteParent(currentRoute) {
+    if (currentRoute && currentRoute.parent.name) {
+      return currentRoute.parent.name;
+    }
+  },
+
+  @discourseComputed("invitesCount.total", "invitesCount.pending")
+  pendingLabel(invitesCountTotal, invitesCountPending) {
+    if (invitesCountTotal > 0) {
+      return I18n.t("user.invited.pending_tab_with_count", {
+        count: invitesCountPending,
+      });
+    } else {
+      return I18n.t("user.invited.pending_tab");
+    }
+  },
+
+  @discourseComputed("invitesCount.total", "invitesCount.expired")
+  expiredLabel(invitesCountTotal, invitesCountExpired) {
+    if (invitesCountTotal > 0) {
+      return I18n.t("user.invited.expired_tab_with_count", {
+        count: invitesCountExpired,
+      });
+    } else {
+      return I18n.t("user.invited.expired_tab");
+    }
+  },
+
+  @discourseComputed("invitesCount.total", "invitesCount.redeemed")
+  redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
+    if (invitesCountTotal > 0) {
+      return I18n.t("user.invited.redeemed_tab_with_count", {
+        count: invitesCountRedeemed,
+      });
+    } else {
+      return I18n.t("user.invited.redeemed_tab");
+    }
+  },
+
+  @bind
+  userMenuOutside(e) {
+    const isClickWithinUserMenu = e.composedPath().some((element) => {
+      if (element?.classList?.contains("user-primary-navigation_item-parent")) {
+        return true;
+      }
+    });
+
+    if (!isClickWithinUserMenu) {
+      document.querySelectorAll(".user-nav > li").forEach((navParent) => {
+        navParent.classList.remove("show-children");
+      });
+      document.removeEventListener("click", this.userMenuOutside);
+    }
+  },
+
   actions: {
     collapseProfile() {
       this.set("forceExpand", false);
@@ -199,6 +264,20 @@ export default Controller.extend(CanCheckEmails, {
         target_user: this.get("model.username"),
         action_name: "suspend_user",
       });
+    },
+
+    toggleSubmenu(e) {
+      document.addEventListener("click", this.userMenuOutside);
+
+      if (e.currentTarget.classList.contains("show-children")) {
+        return e.currentTarget.classList.remove("show-children");
+      }
+
+      document.querySelectorAll(".user-nav > li").forEach((navParent) => {
+        navParent.classList.remove("show-children");
+      });
+
+      e.currentTarget.classList.toggle("show-children");
     },
 
     adminDelete() {

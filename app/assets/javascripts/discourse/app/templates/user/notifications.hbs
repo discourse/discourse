@@ -1,42 +1,14 @@
 <DSection @pageClass="user-notifications" @class="user-secondary-navigation">
-  <MobileNav @class="notifications-nav" @desktopClass="notification-list action-list nav-stacked">
-    <li>
-      <LinkTo @route="userNotifications.index">
-        {{i18n "user.filters.all"}}
-      </LinkTo>
-    </li>
-    <li>
-      <LinkTo @route="userNotifications.responses">
-        {{i18n "user_action_groups.6"}}
-      </LinkTo>
-    </li>
-    <li>
-      <LinkTo @route="userNotifications.likesReceived">
-        {{i18n "user_action_groups.2"}}
-      </LinkTo>
-    </li>
-    {{#if this.siteSettings.enable_mentions}}
-      <li>
-        <LinkTo @route="userNotifications.mentions">
-          {{i18n "user_action_groups.7"}}
-        </LinkTo>
-      </li>
-    {{/if}}
-    <li>
-      <LinkTo @route="userNotifications.edits">
-        {{i18n "user_action_groups.11"}}
-      </LinkTo>
-    </li>
-    <PluginOutlet @name="user-notifications-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
-  </MobileNav>
-
 </DSection>
 
+{{!-- todo: MOVE
 {{#if this.model}}
   <section class="user-additional-controls">
     <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{this.allNotificationsRead}} />
   </section>
 {{/if}}
+
+--}}
 
 <section class="user-content">
   <LoadMore @class="notification-history user-stream" @selector=".user-stream .notification" @action={{action "loadMore"}}>

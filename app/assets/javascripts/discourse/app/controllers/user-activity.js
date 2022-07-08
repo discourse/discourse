@@ -28,13 +28,6 @@ export default Controller.extend({
     this.set("application.showFooter", showFooter);
   },
 
-  @discourseComputed("currentUser.draft_count")
-  draftLabel(count) {
-    return count > 0
-      ? I18n.t("drafts.label_with_count", { count })
-      : I18n.t("drafts.label");
-  },
-
   @discourseComputed("model.pending_posts_count")
   pendingLabel(count) {
     return count > 0

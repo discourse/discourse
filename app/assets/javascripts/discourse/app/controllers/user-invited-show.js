@@ -31,9 +31,11 @@ export default Controller.extend({
     discourseDebounce(
       this,
       function () {
-        Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-          (invites) => this.set("model", invites)
-        );
+        Invite.findInvitedBy(
+          this.user,
+          this.filter,
+          this.searchTerm
+        ).then((invites) => this.set("model", invites));
       },
       INPUT_DELAY
     );

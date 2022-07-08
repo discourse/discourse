@@ -36,6 +36,15 @@ export default Controller.extend({
     return this._linkText("new");
   },
 
+  @discourseComputed()
+  hasGroupMessages() {
+    let groupsWithMessages = this.model.groups.filter(
+      (group) => group.hasMessages
+    );
+
+    return groupsWithMessages.length;
+  },
+
   @discourseComputed(
     "pmTopicTrackingState.newIncoming.[]",
     "pmTopicTrackingState.statesModificationCounter",
