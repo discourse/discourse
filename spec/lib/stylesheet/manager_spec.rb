@@ -788,7 +788,7 @@ describe Stylesheet::Manager do
       # themes + core
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
+      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
 
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
