@@ -22,17 +22,23 @@ export default Component.extend({
   },
 
   actions: {
-    changeKey(index, newValue) {
+    changeKey(index, event) {
+      const newValue = event.target.value;
+
       if (this._checkInvalidInput(newValue)) {
         return;
       }
+
       this._replaceValue(index, newValue, "key");
     },
 
-    changeSecret(index, newValue) {
+    changeSecret(index, event) {
+      const newValue = event.target.value;
+
       if (this._checkInvalidInput(newValue)) {
         return;
       }
+
       this._replaceValue(index, newValue, "secret");
     },
 

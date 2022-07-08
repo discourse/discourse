@@ -24,8 +24,8 @@ export default Component.extend({
   },
 
   @action
-  changeValue(index, newValue) {
-    this.collection.replace(index, 1, [newValue]);
+  changeValue(index, event) {
+    this.collection.replace(index, 1, [event.target.value]);
     this.collection.arrayContentDidChange(index);
     this._onChange();
   },
@@ -65,7 +65,7 @@ export default Component.extend({
   },
 
   _onChange() {
-    this.attrs.onChange && this.attrs.onChange(this.collection);
+    this.onChange?.(this.collection);
   },
 
   @discourseComputed("collection")
