@@ -4962,16 +4962,16 @@ en:
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
           logo_small:
             label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left of your site when scrolling down, in the browser, and when sharing on social platforms. Ideally larger than 512x512."
+            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
           favicon:
             label: "Browser Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes. Recommended image extensions are PNG or JPG. We'll use the square logo by default."
+            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is reccomended. Square logo is used by default."
           large_icon:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
+            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
         title: "Contact & Org"

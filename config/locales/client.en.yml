@@ -5696,6 +5696,7 @@ en:
       back: "Back"
       next: "Next"
       configure_more: "Configure More..."
+      step-text: "Step"
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
