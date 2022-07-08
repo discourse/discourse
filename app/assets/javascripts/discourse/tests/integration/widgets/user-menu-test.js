@@ -154,21 +154,6 @@ discourseModule(
       },
     });
 
-    componentTest("bookmarks - experimental sidebar enabled", {
-      template: hbs`{{mount-widget widget="user-menu"}}`,
-
-      beforeEach() {
-        this.currentUser.setProperties({ experimental_sidebar_enabled: true });
-      },
-
-      async test(assert) {
-        assert.notOk(
-          exists(".user-bookmarks-link"),
-          "user bookmark link is not displayed"
-        );
-      },
-    });
-
     componentTest("bookmarks", {
       template: hbs`{{mount-widget widget="user-menu"}}`,
 
