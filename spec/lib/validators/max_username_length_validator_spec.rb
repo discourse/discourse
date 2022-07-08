@@ -2,10 +2,11 @@
 
 describe MaxUsernameLengthValidator do
   it "checks for minimum range" do
-    SiteSetting.min_username_length = 6
+    User.update_all('username = username || username')
+    SiteSetting.min_username_length = 9
 
     validator = described_class.new
-    expect(validator.valid_value?(5)).to eq(false)
+    expect(validator.valid_value?(8)).to eq(false)
     expect(validator.error_message).to eq(I18n.t("site_settings.errors.max_username_length_range"))
   end
 
