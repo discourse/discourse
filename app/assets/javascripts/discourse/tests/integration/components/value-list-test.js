@@ -6,7 +6,7 @@ import {
   discourseModule,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click } from "@ember/test-helpers";
+import { blur, click, fillIn } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -36,6 +36,25 @@ discourseModule("Integration | Component | value-list", function (hooks) {
         "vinkas\nosama\neviltrout",
         "it adds the value to the list of values"
       );
+    },
+  });
+
+  componentTest("changing a value", {
+    template: hbs`{{value-list values=values}}`,
+
+    beforeEach() {
+      this.set("values", "vinkas\nosama");
+    },
+
+    async test(assert) {
+      await fillIn(".values .value[data-index='1'] .value-input", "jarek");
+      await blur(".values .value[data-index='1'] .value-input");
+
+      assert.strictEqual(
+        query(".values .value[data-index='1'] .value-input").value,
+        "jarek"
+      );
+      assert.deepEqual(this.values, "vinkas\njarek", "updates the value list");
     },
   });
 
