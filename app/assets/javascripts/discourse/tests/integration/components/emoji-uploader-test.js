@@ -7,10 +7,10 @@ import {
   discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fillIn } from "@ember/test-helpers";
 
-let requestNumber = 1;
+let requestNumber;
 
 discourseModule("Integration | Component | emoji-uploader", function (hooks) {
   setupRenderingTest(hooks);
@@ -22,33 +22,26 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
   }}`;
 
   hooks.beforeEach(function () {
-    requestNumber = 1;
+    requestNumber = 0;
     this.setProperties({
-      emojiGroups: ["default", "coolemojis"],
+      emojiGroups: ["default", "cool-emojis"],
     });
 
     pretender.post("/admin/customize/emojis.json", () => {
+      requestNumber++;
+
       if (requestNumber === 1) {
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          {
-            group: "coolemojis",
-            name: "okey",
-            url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
-          },
-        ];
-        requestNumber += 1;
+        return response({
+          group: "cool-emojis",
+          name: "okay",
+          url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
+        });
       } else if (requestNumber === 2) {
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          {
-            group: "coolemojis",
-            name: null,
-            url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/456.png",
-          },
-        ];
+        return response({
+          group: "cool-emojis",
+          name: null,
+          url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/456.png",
+        });
       }
     });
   });
@@ -59,10 +52,10 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
     async test(assert) {
       const done = assert.async();
       await selectKit("#emoji-group-selector").expand();
-      await selectKit("#emoji-group-selector").selectRowByValue("coolemojis");
+      await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
 
       this.set("doneUpload", (upload, group) => {
-        assert.equal("coolemojis", group);
+        assert.strictEqual("cool-emojis", group);
         done();
       });
       const image = createFile("avatar.png");
@@ -78,12 +71,12 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
     async test(assert) {
       const done = assert.async();
       await selectKit("#emoji-group-selector").expand();
-      await selectKit("#emoji-group-selector").selectRowByValue("coolemojis");
+      await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
 
       let uploadDoneCount = 0;
       this.set("doneUpload", (upload, group) => {
-        uploadDoneCount += 1;
-        assert.equal("coolemojis", group);
+        uploadDoneCount++;
+        assert.strictEqual("cool-emojis", group);
 
         if (uploadDoneCount === 2) {
           done();
@@ -106,21 +99,21 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
       async test(assert) {
         const done = assert.async();
         await selectKit("#emoji-group-selector").expand();
-        await selectKit("#emoji-group-selector").selectRowByValue("coolemojis");
-        await fillIn("#emoji-name", "okey");
+        await selectKit("#emoji-group-selector").selectRowByValue(
+          "cool-emojis"
+        );
+        await fillIn("#emoji-name", "okay");
 
         let uploadDoneCount = 0;
         this.set("doneUpload", (upload) => {
-          if (uploadDoneCount === 0) {
-            assert.equal(upload.name, "okey");
-          }
-          uploadDoneCount += 1;
+          uploadDoneCount++;
 
           if (uploadDoneCount === 1) {
-            assert.equal(this.name, null);
+            assert.strictEqual(upload.name, "okay");
           }
 
           if (uploadDoneCount === 2) {
+            assert.strictEqual(upload.name, null);
             done();
           }
         });
