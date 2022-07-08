@@ -1,47 +1,35 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 
-discourseModule("Integration | Component | flat-button", function (hooks) {
+module("Integration | Component | flat-button", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("press Enter", {
-    template: hbs`{{flat-button action=action}}`,
+  test("press Enter", async function (assert) {
+    this.set("foo", null);
+    this.set("action", () => {
+      this.set("foo", "bar");
+    });
 
-    beforeEach() {
-      this.set("foo", null);
-      this.set("action", () => {
-        this.set("foo", "bar");
-      });
-    },
+    await render(hbs`<FlatButton @action={{this.action}} />`);
 
-    async test(assert) {
-      await triggerKeyEvent(".btn-flat", "keydown", 32);
+    await triggerKeyEvent(".btn-flat", "keydown", 32);
+    assert.strictEqual(this.foo, null);
 
-      assert.strictEqual(this.foo, null);
-
-      await triggerKeyEvent(".btn-flat", "keydown", 13);
-
-      assert.strictEqual(this.foo, "bar");
-    },
+    await triggerKeyEvent(".btn-flat", "keydown", 13);
+    assert.strictEqual(this.foo, "bar");
   });
-  componentTest("click", {
-    template: hbs`{{flat-button action=action}}`,
 
-    beforeEach() {
-      this.set("foo", null);
-      this.set("action", () => {
-        this.set("foo", "bar");
-      });
-    },
+  test("click", async function (assert) {
+    this.set("foo", null);
+    this.set("action", () => {
+      this.set("foo", "bar");
+    });
 
-    async test(assert) {
-      await click(".btn-flat");
+    await render(hbs`<FlatButton @action={{this.action}} />`);
 
-      assert.strictEqual(this.foo, "bar");
-    },
+    await click(".btn-flat");
+    assert.strictEqual(this.foo, "bar");
   });
 });

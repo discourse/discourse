@@ -1,41 +1,33 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-discourseModule(
-  "Integration | Component | select-kit/list-setting",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Integration | Component | select-kit/list-setting", function (hooks) {
+  setupRenderingTest(hooks);
 
-    hooks.beforeEach(function () {
-      this.set("subject", selectKit());
-    });
+  hooks.beforeEach(function () {
+    this.set("subject", selectKit());
+  });
 
-    componentTest("default", {
-      template: hbs`
-      {{list-setting
-        value=value
-        choices=choices
-      }}
-    `,
+  test("default", async function (assert) {
+    this.set("value", ["bold", "italic"]);
+    this.set("choices", ["bold", "italic", "underline"]);
 
-      beforeEach() {
-        this.set("value", ["bold", "italic"]);
-        this.set("choices", ["bold", "italic", "underline"]);
-      },
+    await render(hbs`
+      <ListSetting
+        @value={{this.value}}
+        @choices={{this.choices}}
+      />
+    `);
 
-      async test(assert) {
-        assert.strictEqual(this.subject.header().name(), "bold,italic");
-        assert.strictEqual(this.subject.header().value(), "bold,italic");
+    assert.strictEqual(this.subject.header().name(), "bold,italic");
+    assert.strictEqual(this.subject.header().value(), "bold,italic");
 
-        await this.subject.expand();
+    await this.subject.expand();
 
-        assert.strictEqual(this.subject.rows().length, 1);
-        assert.strictEqual(this.subject.rowByIndex(0).value(), "underline");
-      },
-    });
-  }
-);
+    assert.strictEqual(this.subject.rows().length, 1);
+    assert.strictEqual(this.subject.rowByIndex(0).value(), "underline");
+  });
+});

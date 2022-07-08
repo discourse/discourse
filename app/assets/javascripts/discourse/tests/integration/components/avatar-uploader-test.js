@@ -1,14 +1,11 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import pretender from "discourse/tests/helpers/create-pretender";
-import {
-  createFile,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
+import pretender from "discourse/tests/helpers/create-pretender";
 
-discourseModule("Integration | Component | avatar-uploader", function (hooks) {
+module("Integration | Component | avatar-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -17,25 +14,24 @@ discourseModule("Integration | Component | avatar-uploader", function (hooks) {
     });
   });
 
-  componentTest("default", {
-    template: hbs`{{avatar-uploader
-      id="avatar-uploader"
-      done=done
-    }}`,
+  test("default", async function (assert) {
+    const done = assert.async();
+    this.set("done", () => {
+      assert.ok(true, "action is called after avatar is uploaded");
+      done();
+    });
 
-    async test(assert) {
-      const done = assert.async();
+    await render(hbs`
+      <AvatarUploader
+        @id="avatar-uploader"
+        @done={{this.done}}
+      />
+    `);
 
-      this.set("done", () => {
-        assert.ok(true, "action is called after avatar is uploaded");
-        done();
-      });
-
-      await this.container
-        .lookup("service:app-events")
-        .trigger("upload-mixin:avatar-uploader:add-files", [
-          createFile("avatar.png"),
-        ]);
-    },
+    await this.container
+      .lookup("service:app-events")
+      .trigger("upload-mixin:avatar-uploader:add-files", [
+        createFile("avatar.png"),
+      ]);
   });
 });

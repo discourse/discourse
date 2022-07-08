@@ -6,6 +6,7 @@ import User from "discourse/models/user";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
+import { currentSettings } from "discourse/tests/helpers/site-settings";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
@@ -13,6 +14,7 @@ export function setupRenderingTest(hooks) {
   hooks.beforeEach(function () {
     this.site = Site.current();
     this.session = Session.current();
+    this.siteSettings = currentSettings();
 
     if (!this.registry) {
       this.registry = this.owner.__registry__;
@@ -45,6 +47,7 @@ export function setupRenderingTest(hooks) {
     );
 
     autoLoadModules(this.owner, this.registry);
+    this.owner.lookup("service:store");
 
     $.fn.autocomplete = function () {};
   });

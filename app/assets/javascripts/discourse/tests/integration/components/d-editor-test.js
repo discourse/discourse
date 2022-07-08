@@ -1,89 +1,81 @@
-import { click, fillIn, settled } from "@ember/test-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, fillIn, render, settled } from "@ember/test-helpers";
 import {
-  discourseModule,
+  chromeTest,
   exists,
   paste,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
+import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import hbs from "htmlbars-inline-precompile";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-discourseModule("Integration | Component | d-editor", function (hooks) {
+module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("preview updates with markdown", {
-    template: hbs`{{d-editor value=value}}`,
-
-    async test(assert) {
-      assert.ok(exists(".d-editor-button-bar"));
-      await fillIn(".d-editor-input", "hello **world**");
-
-      assert.strictEqual(this.value, "hello **world**");
-      assert.strictEqual(
-        queryAll(".d-editor-preview").html().trim(),
-        "<p>hello <strong>world</strong></p>"
-      );
-    },
+  hooks.afterEach(function () {
+    clearToolbarCallbacks();
   });
 
-  componentTest("links in preview are not tabbable", {
-    template: hbs`{{d-editor value=value}}`,
+  test("preview updates with markdown", async function (assert) {
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-    async test(assert) {
-      await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
+    assert.ok(exists(".d-editor-button-bar"));
+    await fillIn(".d-editor-input", "hello **world**");
 
-      assert.strictEqual(
-        queryAll(".d-editor-preview").html().trim(),
-        '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
-      );
-    },
+    assert.strictEqual(this.value, "hello **world**");
+    assert.strictEqual(
+      query(".d-editor-preview").innerHTML.trim(),
+      "<p>hello <strong>world</strong></p>"
+    );
   });
 
-  componentTest("preview sanitizes HTML", {
-    template: hbs`{{d-editor value=value}}`,
+  test("links in preview are not tabbable", async function (assert) {
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-    async test(assert) {
-      await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-      assert.strictEqual(
-        queryAll(".d-editor-preview").html().trim(),
-        '<p>"&gt;</p>'
-      );
-    },
+    await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
+
+    assert.strictEqual(
+      query(".d-editor-preview").innerHTML.trim(),
+      '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
+    );
   });
 
-  componentTest("updating the value refreshes the preview", {
-    template: hbs`{{d-editor value=value}}`,
+  test("preview sanitizes HTML", async function (assert) {
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-    beforeEach() {
-      this.set("value", "evil trout");
-    },
+    await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
+    assert.strictEqual(
+      query(".d-editor-preview").innerHTML.trim(),
+      '<p>"&gt;</p>'
+    );
+  });
 
-    async test(assert) {
-      assert.strictEqual(
-        queryAll(".d-editor-preview").html().trim(),
-        "<p>evil trout</p>"
-      );
+  test("updating the value refreshes the preview", async function (assert) {
+    this.set("value", "evil trout");
 
-      this.set("value", "zogstrip");
-      await settled();
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-      assert.strictEqual(
-        queryAll(".d-editor-preview").html().trim(),
-        "<p>zogstrip</p>"
-      );
-    },
+    assert.strictEqual(
+      query(".d-editor-preview").innerHTML.trim(),
+      "<p>evil trout</p>"
+    );
+
+    this.set("value", "zogstrip");
+    await settled();
+
+    assert.strictEqual(
+      query(".d-editor-preview").innerHTML.trim(),
+      "<p>zogstrip</p>"
+    );
   });
 
   function jumpEnd(textarea) {
@@ -93,30 +85,26 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
   }
 
   function testCase(title, testFunc) {
-    componentTest(title, {
-      template: hbs`{{d-editor value=value}}`,
-      beforeEach() {
-        this.set("value", "hello world.");
-      },
-      async test(assert) {
-        const textarea = jumpEnd(query("textarea.d-editor-input"));
-        await testFunc.call(this, assert, textarea);
-      },
-      skip: !navigator.userAgent.includes("Chrome"),
+    chromeTest(title, async function (assert) {
+      this.set("value", "hello world.");
+
+      await render(hbs`<DEditor @value={{this.value}} />`);
+
+      const textarea = jumpEnd(query("textarea.d-editor-input"));
+      await testFunc.call(this, assert, textarea);
     });
   }
 
   function composerTestCase(title, testFunc) {
-    componentTest(title, {
-      template: hbs`{{d-editor value=value composerEvents=true}}`,
-      beforeEach() {
-        this.set("value", "hello world.");
-      },
+    test(title, async function (assert) {
+      this.set("value", "hello world.");
 
-      async test(assert) {
-        const textarea = jumpEnd(query("textarea.d-editor-input"));
-        await testFunc.call(this, assert, textarea);
-      },
+      await render(
+        hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
+      );
+
+      const textarea = jumpEnd(query("textarea.d-editor-input"));
+      await testFunc.call(this, assert, textarea);
     });
   }
 
@@ -255,283 +243,271 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     }
   );
 
-  componentTest("advanced code", {
-    template: hbs`{{d-editor value=value}}`,
-    beforeEach() {
-      this.siteSettings.code_formatting_style = "4-spaces-indent";
-      this.set(
-        "value",
-        `
-  function xyz(x, y, z) {
-    if (y === z) {
-      return true;
-    }
+  test("advanced code", async function (assert) {
+    this.siteSettings.code_formatting_style = "4-spaces-indent";
+    this.set(
+      "value",
+      `
+function xyz(x, y, z) {
+  if (y === z) {
+    return true;
   }
-  `
-      );
-    },
+}
+`
+    );
 
-    async test(assert) {
-      const textarea = query("textarea.d-editor-input");
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = textarea.value.length;
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        `
-      function xyz(x, y, z) {
-        if (y === z) {
-          return true;
-        }
+    const textarea = query("textarea.d-editor-input");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = textarea.value.length;
+
+    await click("button.code");
+    assert.strictEqual(
+      this.value,
+      `
+    function xyz(x, y, z) {
+      if (y === z) {
+        return true;
       }
-  `
-      );
-    },
+    }
+`
+    );
   });
 
-  componentTest("code button", {
-    template: hbs`{{d-editor value=value}}`,
-    beforeEach() {
-      this.siteSettings.code_formatting_style = "4-spaces-indent";
-    },
+  test("code button", async function (assert) {
+    this.siteSettings.code_formatting_style = "4-spaces-indent";
 
-    async test(assert) {
-      const textarea = jumpEnd(query("textarea.d-editor-input"));
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-      await click("button.code");
-      assert.strictEqual(this.value, `    ${I18n.t("composer.code_text")}`);
+    const textarea = jumpEnd(query("textarea.d-editor-input"));
 
-      this.set("value", "first line\n\nsecond line\n\nthird line");
+    await click("button.code");
+    assert.strictEqual(this.value, `    ${I18n.t("composer.code_text")}`);
 
-      textarea.selectionStart = 11;
-      textarea.selectionEnd = 11;
+    this.set("value", "first line\n\nsecond line\n\nthird line");
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        `first line
+    textarea.selectionStart = 11;
+    textarea.selectionEnd = 11;
+
+    await click("button.code");
+    assert.strictEqual(
+      this.value,
+      `first line
     ${I18n.t("composer.code_text")}
 second line
 
 third line`
-      );
+    );
 
-      this.set("value", "first line\n\nsecond line\n\nthird line");
+    this.set("value", "first line\n\nsecond line\n\nthird line");
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        `first line
+    await click("button.code");
+    assert.strictEqual(
+      this.value,
+      `first line
 
 second line
 
 third line\`${I18n.t("composer.code_title")}\``
-      );
-      this.set("value", "first line\n\nsecond line\n\nthird line");
+    );
+    this.set("value", "first line\n\nsecond line\n\nthird line");
 
-      textarea.selectionStart = 5;
-      textarea.selectionEnd = 5;
+    textarea.selectionStart = 5;
+    textarea.selectionEnd = 5;
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        `first\`${I18n.t("composer.code_title")}\` line
+    await click("button.code");
+    assert.strictEqual(
+      this.value,
+      `first\`${I18n.t("composer.code_title")}\` line
 
 second line
 
 third line`
-      );
-      this.set("value", "first line\n\nsecond line\n\nthird line");
+    );
+    this.set("value", "first line\n\nsecond line\n\nthird line");
 
-      textarea.selectionStart = 6;
-      textarea.selectionEnd = 10;
+    textarea.selectionStart = 6;
+    textarea.selectionEnd = 10;
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        "first `line`\n\nsecond line\n\nthird line"
-      );
-      assert.strictEqual(textarea.selectionStart, 7);
-      assert.strictEqual(textarea.selectionEnd, 11);
+    await click("button.code");
+    assert.strictEqual(this.value, "first `line`\n\nsecond line\n\nthird line");
+    assert.strictEqual(textarea.selectionStart, 7);
+    assert.strictEqual(textarea.selectionEnd, 11);
 
-      await click("button.code");
-      assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
-      assert.strictEqual(textarea.selectionStart, 6);
-      assert.strictEqual(textarea.selectionEnd, 10);
+    await click("button.code");
+    assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
+    assert.strictEqual(textarea.selectionStart, 6);
+    assert.strictEqual(textarea.selectionEnd, 10);
 
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = 23;
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 23;
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        "    first line\n\n    second line\n\nthird line"
-      );
-      assert.strictEqual(textarea.selectionStart, 0);
-      assert.strictEqual(textarea.selectionEnd, 31);
+    await click("button.code");
+    assert.strictEqual(
+      this.value,
+      "    first line\n\n    second line\n\nthird line"
+    );
+    assert.strictEqual(textarea.selectionStart, 0);
+    assert.strictEqual(textarea.selectionEnd, 31);
 
-      await click("button.code");
-      assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
-      assert.strictEqual(textarea.selectionStart, 0);
-      assert.strictEqual(textarea.selectionEnd, 23);
-    },
+    await click("button.code");
+    assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
+    assert.strictEqual(textarea.selectionStart, 0);
+    assert.strictEqual(textarea.selectionEnd, 23);
   });
 
-  componentTest("code fences", {
-    template: hbs`{{d-editor value=value}}`,
-    beforeEach() {
-      this.set("value", "");
-    },
+  test("code fences", async function (assert) {
+    this.set("value", "");
 
-    async test(assert) {
-      const textarea = jumpEnd(query("textarea.d-editor-input"));
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-      await click("button.code");
-      assert.strictEqual(
-        this.value,
-        `\`\`\`
+    const textarea = jumpEnd(query("textarea.d-editor-input"));
+
+    await click("button.code");
+    assert.strictEqual(
+      this.value,
+      `\`\`\`
 ${I18n.t("composer.paste_code_text")}
 \`\`\``
-      );
+    );
 
-      assert.strictEqual(textarea.selectionStart, 4);
-      assert.strictEqual(textarea.selectionEnd, 27);
+    assert.strictEqual(textarea.selectionStart, 4);
+    assert.strictEqual(textarea.selectionEnd, 27);
 
-      this.set("value", "first line\nsecond line\nthird line");
+    this.set("value", "first line\nsecond line\nthird line");
 
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = textarea.value.length;
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = textarea.value.length;
 
-      await click("button.code");
+    await click("button.code");
 
-      assert.strictEqual(
-        this.value,
-        `\`\`\`
+    assert.strictEqual(
+      this.value,
+      `\`\`\`
 first line
 second line
 third line
 \`\`\`
 `
-      );
+    );
 
-      assert.strictEqual(textarea.selectionStart, textarea.value.length);
-      assert.strictEqual(textarea.selectionEnd, textarea.value.length);
+    assert.strictEqual(textarea.selectionStart, textarea.value.length);
+    assert.strictEqual(textarea.selectionEnd, textarea.value.length);
 
-      this.set("value", "first line\nsecond line\nthird line");
+    this.set("value", "first line\nsecond line\nthird line");
 
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = 0;
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 0;
 
-      await click("button.code");
+    await click("button.code");
 
-      assert.strictEqual(
-        this.value,
-        `\`${I18n.t("composer.code_title")}\`first line
+    assert.strictEqual(
+      this.value,
+      `\`${I18n.t("composer.code_title")}\`first line
 second line
 third line`
-      );
+    );
 
-      assert.strictEqual(textarea.selectionStart, 1);
-      assert.strictEqual(
-        textarea.selectionEnd,
-        I18n.t("composer.code_title").length + 1
-      );
+    assert.strictEqual(textarea.selectionStart, 1);
+    assert.strictEqual(
+      textarea.selectionEnd,
+      I18n.t("composer.code_title").length + 1
+    );
 
-      this.set("value", "first line\nsecond line\nthird line");
+    this.set("value", "first line\nsecond line\nthird line");
 
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = 10;
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 10;
 
-      await click("button.code");
+    await click("button.code");
 
-      assert.strictEqual(
-        this.value,
-        `\`first line\`
+    assert.strictEqual(
+      this.value,
+      `\`first line\`
 second line
 third line`
-      );
+    );
 
-      assert.strictEqual(textarea.selectionStart, 1);
-      assert.strictEqual(textarea.selectionEnd, 11);
+    assert.strictEqual(textarea.selectionStart, 1);
+    assert.strictEqual(textarea.selectionEnd, 11);
 
-      this.set("value", "first line\nsecond line\nthird line");
+    this.set("value", "first line\nsecond line\nthird line");
 
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = 23;
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 23;
 
-      await click("button.code");
+    await click("button.code");
 
-      assert.strictEqual(
-        this.value,
-        `\`\`\`
+    assert.strictEqual(
+      this.value,
+      `\`\`\`
 first line
 second line
 \`\`\`
 third line`
-      );
+    );
 
-      assert.strictEqual(textarea.selectionStart, 30);
-      assert.strictEqual(textarea.selectionEnd, 30);
+    assert.strictEqual(textarea.selectionStart, 30);
+    assert.strictEqual(textarea.selectionEnd, 30);
 
-      this.set("value", "first line\nsecond line\nthird line");
+    this.set("value", "first line\nsecond line\nthird line");
 
-      textarea.selectionStart = 6;
-      textarea.selectionEnd = 17;
+    textarea.selectionStart = 6;
+    textarea.selectionEnd = 17;
 
-      await click("button.code");
+    await click("button.code");
 
-      assert.strictEqual(
-        this.value,
-        `first \n\`\`\`\nline\nsecond\n\`\`\`\n line\nthird line`
-      );
+    assert.strictEqual(
+      this.value,
+      `first \n\`\`\`\nline\nsecond\n\`\`\`\n line\nthird line`
+    );
 
-      assert.strictEqual(textarea.selectionStart, 27);
-      assert.strictEqual(textarea.selectionEnd, 27);
+    assert.strictEqual(textarea.selectionStart, 27);
+    assert.strictEqual(textarea.selectionEnd, 27);
 
-      document.execCommand("undo");
-      assert.strictEqual(this.value, "first line\nsecond line\nthird line");
-    },
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "first line\nsecond line\nthird line");
   });
 
-  componentTest("quote button - empty lines", {
-    template: hbs`{{d-editor value=value composerEvents=true}}`,
-    beforeEach() {
-      this.set("value", "one\n\ntwo\n\nthree");
-    },
-    async test(assert) {
-      const textarea = jumpEnd(query("textarea.d-editor-input"));
+  test("quote button - empty lines", async function (assert) {
+    this.set("value", "one\n\ntwo\n\nthree");
 
-      textarea.selectionStart = 0;
+    await render(
+      hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
+    );
 
-      await click("button.blockquote");
+    const textarea = jumpEnd(query("textarea.d-editor-input"));
 
-      assert.strictEqual(this.value, "> one\n> \n> two\n> \n> three");
-      assert.strictEqual(textarea.selectionStart, 0);
-      assert.strictEqual(textarea.selectionEnd, 25);
+    textarea.selectionStart = 0;
 
-      await click("button.blockquote");
-      assert.strictEqual(this.value, "one\n\ntwo\n\nthree");
-    },
+    await click("button.blockquote");
+
+    assert.strictEqual(this.value, "> one\n> \n> two\n> \n> three");
+    assert.strictEqual(textarea.selectionStart, 0);
+    assert.strictEqual(textarea.selectionEnd, 25);
+
+    await click("button.blockquote");
+    assert.strictEqual(this.value, "one\n\ntwo\n\nthree");
   });
 
-  componentTest("quote button - selecting empty lines", {
-    template: hbs`{{d-editor value=value composerEvents=true}}`,
-    beforeEach() {
-      this.set("value", "one\n\n\n\ntwo");
-    },
-    async test(assert) {
-      const textarea = jumpEnd(query("textarea.d-editor-input"));
+  test("quote button - selecting empty lines", async function (assert) {
+    this.set("value", "one\n\n\n\ntwo");
 
-      textarea.selectionStart = 6;
-      textarea.selectionEnd = 10;
+    await render(
+      hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
+    );
 
-      await click("button.blockquote");
-      assert.strictEqual(this.value, "one\n\n\n> \n> two");
+    const textarea = jumpEnd(query("textarea.d-editor-input"));
 
-      document.execCommand("undo");
-      assert.strictEqual(this.value, "one\n\n\n\ntwo");
-    },
+    textarea.selectionStart = 6;
+    textarea.selectionEnd = 10;
+
+    await click("button.blockquote");
+    assert.strictEqual(this.value, "one\n\n\n> \n> two");
+
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "one\n\n\n\ntwo");
   });
 
   testCase("quote button", async function (assert, textarea) {
@@ -652,33 +628,29 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 18);
   });
 
-  componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
-    template: hbs`{{d-editor value=value}}`,
-    beforeEach() {
-      this.siteSettings.support_mixed_text_direction = true;
-      this.siteSettings.default_locale = "en";
-    },
+  test("clicking the toggle-direction changes dir from ltr to rtl", async function (assert) {
+    this.siteSettings.support_mixed_text_direction = true;
+    this.siteSettings.default_locale = "en";
 
-    async test(assert) {
-      const textarea = queryAll("textarea.d-editor-input");
-      await click("button.toggle-direction");
-      assert.strictEqual(textarea.attr("dir"), "rtl");
-    },
+    await render(hbs`<DEditor @value={{this.value}} />`);
+
+    await click("button.toggle-direction");
+    assert.strictEqual(
+      query("textarea.d-editor-input").getAttribute("dir"),
+      "rtl"
+    );
   });
 
-  componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
-    template: hbs`{{d-editor value=value}}`,
-    beforeEach() {
-      this.siteSettings.support_mixed_text_direction = true;
-      this.siteSettings.default_locale = "en";
-    },
+  test("clicking the toggle-direction changes dir from ltr to rtl", async function (assert) {
+    this.siteSettings.support_mixed_text_direction = true;
+    this.siteSettings.default_locale = "en";
 
-    async test(assert) {
-      const textarea = queryAll("textarea.d-editor-input");
-      textarea.attr("dir", "ltr");
-      await click("button.toggle-direction");
-      assert.strictEqual(textarea.attr("dir"), "rtl");
-    },
+    await render(hbs`<DEditor @value={{this.value}} />`);
+
+    const textarea = query("textarea.d-editor-input");
+    textarea.setAttribute("dir", "ltr");
+    await click("button.toggle-direction");
+    assert.strictEqual(textarea.getAttribute("dir"), "rtl");
   });
 
   testCase(
@@ -699,54 +671,47 @@ third line`
     }
   );
 
-  componentTest("emoji", {
-    template: hbs`{{d-editor value=value}}`,
-    beforeEach() {
-      // Test adding a custom button
-      withPluginApi("0.1", (api) => {
-        api.onToolbarCreate((toolbar) => {
-          toolbar.addButton({
-            id: "emoji",
-            group: "extras",
-            icon: "far-smile",
-            action: () => toolbar.context.send("emoji"),
-          });
+  test("emoji", async function (assert) {
+    // Test adding a custom button
+    withPluginApi("0.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "emoji",
+          group: "extras",
+          icon: "far-smile",
+          action: () => toolbar.context.send("emoji"),
         });
       });
-      this.set("value", "hello world.");
-    },
+    });
+    this.set("value", "hello world.");
 
-    afterEach() {
-      clearToolbarCallbacks();
-    },
+    await render(hbs`<DEditor @value={{this.value}} />`);
 
-    async test(assert) {
-      jumpEnd(query("textarea.d-editor-input"));
-      await click("button.emoji");
+    jumpEnd(query("textarea.d-editor-input"));
+    await click("button.emoji");
 
-      await click(
-        '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-      );
-      assert.strictEqual(
-        this.value,
-        "hello world. :grinning:",
-        "it works when there is no partial emoji"
-      );
+    await click(
+      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
+    );
+    assert.strictEqual(
+      this.value,
+      "hello world. :grinning:",
+      "it works when there is no partial emoji"
+    );
 
-      await click("textarea.d-editor-input");
-      await fillIn(".d-editor-input", "starting to type an emoji like :gri");
-      jumpEnd(query("textarea.d-editor-input"));
-      await click("button.emoji");
+    await click("textarea.d-editor-input");
+    await fillIn(".d-editor-input", "starting to type an emoji like :gri");
+    jumpEnd(query("textarea.d-editor-input"));
+    await click("button.emoji");
 
-      await click(
-        '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-      );
-      assert.strictEqual(
-        this.value,
-        "starting to type an emoji like :grinning:",
-        "it works when there is a partial emoji"
-      );
-    },
+    await click(
+      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
+    );
+    assert.strictEqual(
+      this.value,
+      "starting to type an emoji like :grinning:",
+      "it works when there is a partial emoji"
+    );
   });
 
   testCase("replace-text event by default", async function (assert) {
@@ -863,35 +828,33 @@ third line`
     }
   );
 
-  componentTest("paste table", {
-    template: hbs`{{d-editor value=value composerEvents=true}}`,
-    beforeEach() {
-      this.set("value", "");
-      this.siteSettings.enable_rich_text_paste = true;
-    },
+  test("paste table", async function (assert) {
+    this.set("value", "");
+    this.siteSettings.enable_rich_text_paste = true;
 
-    async test(assert) {
-      let element = query(".d-editor");
-      await paste(element, "\ta\tb\n1\t2\t3");
-      assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+    await render(
+      hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
+    );
 
-      document.execCommand("undo");
-      assert.strictEqual(this.value, "");
-    },
+    let element = query(".d-editor");
+    await paste(element, "\ta\tb\n1\t2\t3");
+    assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "");
   });
 
-  componentTest("paste a different table", {
-    template: hbs`{{d-editor value=value composerEvents=true}}`,
-    beforeEach() {
-      this.set("value", "");
-      this.siteSettings.enable_rich_text_paste = true;
-    },
+  test("paste a different table", async function (assert) {
+    this.set("value", "");
+    this.siteSettings.enable_rich_text_paste = true;
 
-    async test(assert) {
-      let element = query(".d-editor");
-      await paste(element, '\ta\tb\n1\t"2\n2.5"\t3');
-      assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
-    },
+    await render(
+      hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
+    );
+
+    let element = query(".d-editor");
+    await paste(element, '\ta\tb\n1\t"2\n2.5"\t3');
+    assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
   });
 
   testCase(
@@ -1066,7 +1029,7 @@ third line`
 
         await focus(textarea);
 
-        assert.ok(textarea.value === BEFORE);
+        assert.strictEqual(textarea.value, BEFORE);
 
         const [start, len] = CASE.before;
         setTextareaSelection(textarea, start, start + len);

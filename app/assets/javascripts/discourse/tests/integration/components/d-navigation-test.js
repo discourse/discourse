@@ -1,8 +1,8 @@
-import { click, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { module, test } from "qunit";
 
 module("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,19 +1,22 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import { module } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { chromeTest, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
-discourseModule(
+module(
   "Integration | Component | consistent input/dropdown/button sizes",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("icon only button, icon and text button, text only button", {
-      template: hbs`{{d-button icon="plus"}} {{d-button icon="plus" label="topic.create"}} {{d-button label="topic.create"}}`,
+    // these tests fail on Firefox 78 in CI, skipping for now
+    chromeTest(
+      "icon only button, icon and text button, text only button",
+      async function (assert) {
+        await render(
+          hbs`<DButton @icon="plus" /> <DButton @icon="plus" @label="topic.create" /> <DButton @label="topic.create" />`
+        );
 
-      test(assert) {
         assert.strictEqual(
           query(".btn:nth-child(1)").offsetHeight,
           query(".btn:nth-child(2)").offsetHeight,
@@ -24,37 +27,31 @@ discourseModule(
           query(".btn:nth-child(3)").offsetHeight,
           "have equal height"
         );
-      },
-      // these tests fail on Firefox 78 in CI, skipping for now
-      skip: !navigator.userAgent.includes("Chrome"),
+      }
+    );
+
+    chromeTest("button + text input", async function (assert) {
+      await render(
+        hbs`<TextField /> <DButton @icon="plus" @label="topic.create" />`
+      );
+
+      assert.strictEqual(
+        query("input").offsetHeight,
+        query(".btn").offsetHeight,
+        "have equal height"
+      );
     });
 
-    componentTest("button + text input", {
-      template: hbs`{{text-field}} {{d-button icon="plus" label="topic.create"}}`,
+    chromeTest("combo box + input", async function (assert) {
+      await render(
+        hbs`<ComboBox @options={{hash none="category.none"}} /> <TextField />`
+      );
 
-      test(assert) {
-        assert.strictEqual(
-          query("input").offsetHeight,
-          query(".btn").offsetHeight,
-          "have equal height"
-        );
-      },
-
-      skip: !navigator.userAgent.includes("Chrome"),
-    });
-
-    componentTest("combo box + input", {
-      template: hbs`{{combo-box options=(hash none="category.none")}} {{text-field}}`,
-
-      test(assert) {
-        assert.strictEqual(
-          query("input").offsetHeight,
-          query(".combo-box").offsetHeight,
-          "have equal height"
-        );
-      },
-
-      skip: !navigator.userAgent.includes("Chrome"),
+      assert.strictEqual(
+        query("input").offsetHeight,
+        query(".combo-box").offsetHeight,
+        "have equal height"
+      );
     });
   }
 );

@@ -1,7 +1,6 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -9,51 +8,45 @@ function setTime(time) {
   this.setProperties(time);
 }
 
-discourseModule("Integration | Component | time-input", function (hooks) {
+module("Integration | Component | time-input", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     this.set("subject", selectKit());
   });
 
-  componentTest("default", {
-    template: hbs`{{time-input hours=hours minutes=minutes}}`,
+  test("default", async function (assert) {
+    this.setProperties({ hours: "14", minutes: "58" });
 
-    beforeEach() {
-      this.setProperties({ hours: "14", minutes: "58" });
-    },
+    await render(
+      hbs`<TimeInput @hours={{this.hours}} @minutes={{this.minutes}} />`
+    );
 
-    test(assert) {
-      assert.strictEqual(this.subject.header().name(), "14:58");
-    },
+    assert.strictEqual(this.subject.header().name(), "14:58");
   });
 
-  componentTest("prevents mutations", {
-    template: hbs`{{time-input hours=hours minutes=minutes}}`,
+  test("prevents mutations", async function (assert) {
+    this.setProperties({ hours: "14", minutes: "58" });
 
-    beforeEach() {
-      this.setProperties({ hours: "14", minutes: "58" });
-    },
+    await render(
+      hbs`<TimeInput @hours={{this.hours}} @minutes={{this.minutes}} />`
+    );
 
-    async test(assert) {
-      await this.subject.expand();
-      await this.subject.selectRowByIndex(3);
-      assert.strictEqual(this.subject.header().name(), "14:58");
-    },
+    await this.subject.expand();
+    await this.subject.selectRowByIndex(3);
+    assert.strictEqual(this.subject.header().name(), "14:58");
   });
 
-  componentTest("allows mutations through actions", {
-    template: hbs`{{time-input hours=hours minutes=minutes onChange=onChange}}`,
+  test("allows mutations through actions", async function (assert) {
+    this.setProperties({ hours: "14", minutes: "58" });
+    this.set("onChange", setTime);
 
-    beforeEach() {
-      this.setProperties({ hours: "14", minutes: "58" });
-      this.set("onChange", setTime);
-    },
+    await render(
+      hbs`<TimeInput @hours={{this.hours}} @minutes={{this.minutes}} @onChange={{this.onChange}} />`
+    );
 
-    async test(assert) {
-      await this.subject.expand();
-      await this.subject.selectRowByIndex(3);
-      assert.strictEqual(this.subject.header().name(), "00:45");
-    },
+    await this.subject.expand();
+    await this.subject.selectRowByIndex(3);
+    assert.strictEqual(this.subject.header().name(), "00:45");
   });
 });
