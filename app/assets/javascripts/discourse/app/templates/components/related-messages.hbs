@@ -4,16 +4,16 @@
   </h3>
 
   <div class="topics">
-    <BasicTopicList @hideCategory="true" @showPosters="true" @topics={{topic.relatedMessages}} />
+    <BasicTopicList @hideCategory="true" @showPosters="true" @topics={{this.topic.relatedMessages}} />
   </div>
 
-  {{#if targetUser}}
+  {{#if this.targetUser}}
     <h3 class="see-all-pms-message">
       {{html-safe
         (i18n
           "related_messages.see_all"
-          path=searchLink
-          username=targetUser.username
+          path=this.searchLink
+          username=this.targetUser.username
         )
       }}
     </h3>

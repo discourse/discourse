@@ -1,4 +1,4 @@
-<CategorySelector @categories={{selectedCategories}} @onChange={{action "onChangeSelectedCategories"}} />
+<CategorySelector @categories={{this.selectedCategories}} @onChange={{action "onChangeSelectedCategories"}} />
 
-<div class="desc">{{html-safe setting.description}}</div>
-<SettingValidationMessage @message={{validationMessage}} />
+<div class="desc">{{html-safe this.setting.description}}</div>
+<SettingValidationMessage @message={{this.validationMessage}} />

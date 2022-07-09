@@ -1,8 +1,8 @@
-<ConditionalLoadingSpinner @condition={{loading}}>
-  {{#if topics}}
-    <TopicList @showPosters={{showPosters}} @hideCategory={{hideCategory}} @topics={{topics}} @expandExcerpts={{expandExcerpts}} @bulkSelectEnabled={{bulkSelectEnabled}} @bulkSelectAction={{bulkSelectAction}} @canBulkSelect={{canBulkSelect}} @selected={{selected}} @tagsForUser={{tagsForUser}} @onScroll={{onScroll}} @scrollOnLoad={{scrollOnLoad}} @toggleBulkSelect={{toggleBulkSelect}} @updateAutoAddTopicsToBulkSelect={{updateAutoAddTopicsToBulkSelect}} />
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  {{#if this.topics}}
+    <TopicList @showPosters={{this.showPosters}} @hideCategory={{this.hideCategory}} @topics={{this.topics}} @expandExcerpts={{this.expandExcerpts}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @bulkSelectAction={{this.bulkSelectAction}} @canBulkSelect={{this.canBulkSelect}} @selected={{this.selected}} @tagsForUser={{this.tagsForUser}} @onScroll={{this.onScroll}} @scrollOnLoad={{this.scrollOnLoad}} @toggleBulkSelect={{this.toggleBulkSelect}} @updateAutoAddTopicsToBulkSelect={{this.updateAutoAddTopicsToBulkSelect}} />
   {{else}}
-    {{#unless loadingMore}}
+    {{#unless this.loadingMore}}
       <div class="alert alert-info">
         {{i18n "choose_topic.none_found"}}
       </div>

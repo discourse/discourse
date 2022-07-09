@@ -6,9 +6,8 @@ const ForgotPasswordRoute = buildStaticRoute("password-reset");
 
 ForgotPasswordRoute.reopen({
   beforeModel() {
-    const loginRequired = this.controllerFor("application").get(
-      "loginRequired"
-    );
+    const loginRequired =
+      this.controllerFor("application").get("loginRequired");
     this.replaceWith(
       loginRequired ? "login" : `discovery.${defaultHomepage()}`
     ).then((e) => {

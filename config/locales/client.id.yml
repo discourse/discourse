@@ -930,6 +930,8 @@ id:
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
+      experimental_sidebar:
+        options: "Pilihan"
       change: "ubah"
       featured_topic: "Topik Unggulan"
       moderator: "%{user} adalah moderator"

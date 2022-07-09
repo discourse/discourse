@@ -1,41 +1,41 @@
 <div class="inner-wrapper">
-  <PluginOutlet @name="admin-customize-themes-list-item" @tagName="span" @connectorTagName="span" @args={{hash theme=theme}} />
+  <PluginOutlet @name="admin-customize-themes-list-item" @tagName="span" @connectorTagName="span" @args={{hash theme=this.theme}} />
 
   <div class="info">
     <span class="name">
-      {{theme.name}}
+      {{this.theme.name}}
     </span>
 
     <span class="icons">
-      {{#if theme.selected}}
+      {{#if this.theme.selected}}
         {{d-icon "caret-right"}}
       {{else}}
-        {{#if theme.default}}
+        {{#if this.theme.default}}
           {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
         {{/if}}
-        {{#if theme.isPendingUpdates}}
+        {{#if this.theme.isPendingUpdates}}
           {{d-icon "sync" title="admin.customize.theme.updates_available_tooltip" class="light-grey-icon"}}
         {{/if}}
-        {{#if theme.isBroken}}
+        {{#if this.theme.isBroken}}
           {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
         {{/if}}
-        {{#unless theme.enabled}}
+        {{#unless this.theme.enabled}}
           {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
         {{/unless}}
       {{/if}}
     </span>
   </div>
 
-  {{#if displayComponents}}
+  {{#if this.displayComponents}}
     <div class="components-list">
-      <span class="components">{{html-safe childrenString}}</span>
+      <span class="components">{{html-safe this.childrenString}}</span>
 
-      {{#if displayHasMore}}
+      {{#if this.displayHasMore}}
         <a href {{action "toggleChildrenExpanded"}} class="others-count">
-          {{#if childrenExpanded}}
+          {{#if this.childrenExpanded}}
             {{i18n "admin.customize.theme.collapse"}}
           {{else}}
-            {{i18n "admin.customize.theme.and_x_more" count=moreCount}}
+            {{i18n "admin.customize.theme.and_x_more" count=this.moreCount}}
           {{/if}}
         </a>
       {{/if}}

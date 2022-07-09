@@ -1,4 +1,4 @@
-import { click, fillIn } from "@ember/test-helpers";
+import { blur, click, fillIn } from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -6,6 +6,7 @@ import {
   count,
   discourseModule,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -84,6 +85,43 @@ discourseModule(
             .indexOf(I18n.t("admin.site_settings.secret_list.invalid_input")) >
             -1,
           "it shows validation error"
+        );
+      },
+    });
+
+    componentTest("changing a value", {
+      template: hbs`{{secret-value-list values=values}}`,
+
+      async test(assert) {
+        this.set("values", "firstKey|FirstValue\nsecondKey|secondValue");
+
+        await fillIn(
+          ".values .value[data-index='1'] .value-input:first-of-type",
+          "changedKey"
+        );
+        await blur(".values .value[data-index='1'] .value-input:first-of-type");
+
+        assert.strictEqual(
+          query(".values .value[data-index='1'] .value-input:first-of-type")
+            .value,
+          "changedKey"
+        );
+
+        await fillIn(
+          ".values .value[data-index='1'] .value-input:last-of-type",
+          "changedValue"
+        );
+        await blur(".values .value[data-index='1'] .value-input:last-of-type");
+
+        assert.strictEqual(
+          query(".values .value[data-index='1'] .value-input:last-of-type")
+            .value,
+          "changedValue"
+        );
+        assert.deepEqual(
+          this.values,
+          "firstKey|FirstValue\nchangedKey|changedValue",
+          "updates the value list"
         );
       },
     });

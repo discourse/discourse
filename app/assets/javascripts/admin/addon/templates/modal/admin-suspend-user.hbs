@@ -1,22 +1,22 @@
 <DModalBody @title="admin.user.suspend_modal_title">
-  <ConditionalLoadingSpinner @condition={{loadingUser}}>
+  <ConditionalLoadingSpinner @condition={{this.loadingUser}}>
 
-    {{#if errorMessage}}
-      <div class="alert alert-error">{{errorMessage}}</div>
+    {{#if this.errorMessage}}
+      <div class="alert alert-error">{{this.errorMessage}}</div>
     {{/if}}
 
-    {{#if user.canSuspend}}
-      <AdminPenaltyHistory @user={{user}} />
+    {{#if this.user.canSuspend}}
+      <AdminPenaltyHistory @user={{this.user}} />
 
       <div class="until-controls">
         <label>
-          <FutureDateInput @class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{suspendUntil}} @onChangeInput={{action (mut suspendUntil)}} />
+          <FutureDateInput @class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{this.suspendUntil}} @onChangeInput={{action (mut this.suspendUntil)}} />
         </label>
       </div>
-      <SuspensionDetails @reason={{reason}} @message={{message}} />
+      <SuspensionDetails @reason={{this.reason}} @message={{this.message}} />
 
-      {{#if postId}}
-        <PenaltyPostAction @postId={{postId}} @postAction={{postAction}} @postEdit={{postEdit}} />
+      {{#if this.postId}}
+        <PenaltyPostAction @postId={{this.postId}} @postAction={{this.postAction}} @postEdit={{this.postEdit}} />
       {{/if}}
 
     {{else}}
@@ -30,7 +30,7 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-danger perform-suspend" @action={{action "suspend"}} @disabled={{submitDisabled}} @icon="ban" @label="admin.user.suspend" />
+  <DButton @class="btn-danger perform-suspend" @action={{action "suspend"}} @disabled={{this.submitDisabled}} @icon="ban" @label="admin.user.suspend" />
   <DModalCancel @close={{route-action "closeModal"}} />
-  <ConditionalLoadingSpinner @condition={{loading}} @size="small" />
+  <ConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
 </div>

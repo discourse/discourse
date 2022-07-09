@@ -1030,7 +1030,9 @@ zh_CN:
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为突出显示的文字启用引用回复"
       enable_defer: "启用延迟以将话题标记为未读"
-      enable_experimental_sidebar: "启用实验性侧边栏"
+      experimental_sidebar:
+        enable: "启用实验性侧边栏"
+        options: "选项"
       change: "更改"
       featured_topic: "精选话题"
       moderator: "%{user} 是版主"
@@ -1915,6 +1917,7 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
+      users_placeholder: "添加用户或组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "编辑原因"
@@ -3562,11 +3565,9 @@ zh_CN:
             unread_with_count: "未读 (%{count})"
             archive: "归档"
         tags:
-          no_tracked_tags: "你没有跟踪任何标签。"
           header_link_title: "所有标签"
           header_link_text: "标签"
         categories:
-          no_tracked_categories: "你没有跟踪任何类别。"
           header_link_title: "所有类别"
           header_link_text: "类别"
         topics:

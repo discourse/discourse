@@ -640,6 +640,10 @@ he:
             base:
               invalid_url: "כתובת ההחלפה שגויה"
               invalid_tag_list: "רשימת התגיות להחלפה שגויה"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "לא תקף"
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
   vip_category_name: "טרקלין"
@@ -1669,6 +1673,7 @@ he:
     enable_badges: "הפעלת מערכת העיטורים"
     max_favorite_badges: "מספר העיטורים המרבי שמשתמש יכול לבחור"
     enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
+    whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
     blocked_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שאסור להירשם דרכם. למשל: mailinator.com|trashmail.net"
     allowed_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שמולם חייבים המשתמשים להיות רשומים. אזהרה: משתמשים שכתובת הדוא״ל שלהם אינה רשומה תחת שמות התחום שברשימה לא יורשו!"

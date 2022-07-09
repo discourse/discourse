@@ -833,6 +833,8 @@ hy:
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
+      experimental_sidebar:
+        options: "Տարբերակներ"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"

@@ -4,24 +4,24 @@
       <div class="admin-main-nav">
         <ul class="nav nav-pills">
           <NavItem @route="admin.dashboard" @label="admin.dashboard.title" />
-          {{#if currentUser.admin}}
+          {{#if this.currentUser.admin}}
             <NavItem @route="adminSiteSettings" @label="admin.site_settings.title" />
           {{/if}}
           <NavItem @route="adminUsers" @label="admin.users.title" />
-          {{#if showGroups}}
+          {{#if this.showGroups}}
             <NavItem @route="groups" @label="admin.groups.title" />
           {{/if}}
-          {{#if showBadges}}
+          {{#if this.showBadges}}
             <NavItem @route="adminBadges" @label="admin.badges.title" />
           {{/if}}
-          {{#if currentUser.admin}}
+          {{#if this.currentUser.admin}}
             <NavItem @route="adminEmail" @label="admin.email.title" />
           {{/if}}
           <NavItem @route="adminLogs" @label="admin.logs.title" />
           <NavItem @route="adminCustomize" @label="admin.customize.title" />
-          {{#if currentUser.admin}}
+          {{#if this.currentUser.admin}}
             <NavItem @route="adminApi" @label="admin.api.title" />
-            {{#if siteSettings.enable_backups}}
+            {{#if this.siteSettings.enable_backups}}
               <NavItem @route="admin.backups" @label="admin.backups.title" />
             {{/if}}
           {{/if}}
@@ -31,7 +31,7 @@
       </div>
 
       <div class="boxed white admin-content">
-        <div class="admin-contents {{adminContentsClassName}}">
+        <div class="admin-contents {{this.adminContentsClassName}}">
           {{outlet}}
         </div>
       </div>

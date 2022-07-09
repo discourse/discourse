@@ -5,7 +5,13 @@ import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
 
-module("Unit | Model | user", function () {
+module("Unit | Model | user", function (hooks) {
+  hooks.afterEach(function () {
+    if (this.clock) {
+      this.clock.restore();
+    }
+  });
+
   test("staff", function (assert) {
     let user = User.create({ id: 1, username: "eviltrout" });
 

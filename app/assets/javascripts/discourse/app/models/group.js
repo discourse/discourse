@@ -258,8 +258,8 @@ const Group = RestModel.extend({
       default_notification_level: this.default_notification_level,
       membership_request_template: this.membership_request_template,
       publish_read_state: this.publish_read_state,
-      allow_unknown_sender_topic_replies: this
-        .allow_unknown_sender_topic_replies,
+      allow_unknown_sender_topic_replies:
+        this.allow_unknown_sender_topic_replies,
     };
 
     ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(

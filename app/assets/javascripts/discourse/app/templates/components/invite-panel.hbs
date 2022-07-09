@@ -1,62 +1,62 @@
-{{#if inviteModel.error}}
+{{#if this.inviteModel.error}}
   <div class="alert alert-error">
-    {{html-safe errorMessage}}
+    {{html-safe this.errorMessage}}
   </div>
 {{/if}}
 
 <div class="body">
-  {{#if inviteModel.finished}}
-    {{#if inviteModel.inviteLink}}
-      <GeneratedInviteLink @link={{inviteModel.inviteLink}} @email={{invitee}} />
+  {{#if this.inviteModel.finished}}
+    {{#if this.inviteModel.inviteLink}}
+      <GeneratedInviteLink @link={{this.inviteModel.inviteLink}} @email={{this.invitee}} />
     {{else}}
       <div class="success-message">
-        {{html-safe successMessage}}
+        {{html-safe this.successMessage}}
       </div>
     {{/if}}
   {{else}}
     <div class="invite-user-control">
-      <label class="instructions">{{inviteInstructions}}</label>
+      <label class="instructions">{{this.inviteInstructions}}</label>
       <div class="invite-user-input-wrapper">
-        {{#if allowExistingMembers}}
-          <EmailGroupUserChooser @class="invite-user-input" @value={{invitee}} @onChange={{action "updateInvitee"}} @options={{hash
+        {{#if this.allowExistingMembers}}
+          <EmailGroupUserChooser @class="invite-user-input" @value={{this.invitee}} @onChange={{action "updateInvitee"}} @options={{hash
               maximum=1
-              allowEmails=canInviteViaEmail
+              allowEmails=this.canInviteViaEmail
               excludeCurrentUser=true
-              includeMessageableGroups=isPM
-              filterPlaceholder=placeholderKey
+              includeMessageableGroups=this.isPM
+              filterPlaceholder=this.placeholderKey
               fullWidthWrap=true
             }} />
         {{else}}
-          <TextField @class="email-or-username-input" @value={{invitee}} @placeholderKey="topic.invite_reply.email_placeholder" />
+          <TextField @class="email-or-username-input" @value={{this.invitee}} @placeholderKey="topic.invite_reply.email_placeholder" />
         {{/if}}
-        {{#if capabilities.hasContactPicker}}
+        {{#if this.capabilities.hasContactPicker}}
           <DButton @icon="address-book" @action={{action "searchContact"}} @class="btn-primary open-contact-picker" />
         {{/if}}
       </div>
     </div>
 
-    {{#if showGroups}}
+    {{#if this.showGroups}}
       <div class="group-access-control">
-        <label class="instructions {{showGroupsClass}}">
+        <label class="instructions {{this.showGroupsClass}}">
           {{i18n "topic.automatically_add_to_groups"}}
         </label>
-        <GroupChooser @content={{allGroups}} @value={{groupIds}} @labelProperty="name" @onChange={{action (mut groupIds)}} />
+        <GroupChooser @content={{this.allGroups}} @value={{this.groupIds}} @labelProperty="name" @onChange={{action (mut this.groupIds)}} />
       </div>
     {{/if}}
 
-    {{#if showCustomMessage}}
+    {{#if this.showCustomMessage}}
       <div class="show-custom-message-control">
         <label class="instructions">
           <DiscourseLinkedText @class="optional" @action={{action "showCustomMessageBox"}} @text="invite.custom_message" />
         </label>
-        {{#if hasCustomMessage}}
-          <Textarea @value={{customMessage}} placeholder={{customMessagePlaceholder}} />
+        {{#if this.hasCustomMessage}}
+          <Textarea @value={{this.customMessage}} placeholder={{this.customMessagePlaceholder}} />
         {{/if}}
       </div>
     {{/if}}
   {{/if}}
 
-  {{#if showApprovalMessage}}
+  {{#if this.showApprovalMessage}}
     <label class="instructions approval-notice">
       {{i18n "invite.approval_not_required"}}
     </label>
@@ -64,12 +64,12 @@
 </div>
 
 <div class="footer">
-  {{#if inviteModel.finished}}
+  {{#if this.inviteModel.finished}}
     <DButton @class="btn-primary" @action={{action "sendCloseModal"}} @label="close" />
   {{else}}
-    <DButton @icon={{inviteIcon}} @action={{action "createInvite"}} @class="btn-primary send-invite" @disabled={{disabled}} @label={{buttonTitle}} />
-    {{#if showCopyInviteButton}}
-      <DButton @icon="link" @action={{action "generateInviteLink"}} @class="btn-primary generate-invite-link" @disabled={{disabledCopyLink}} @label="user.invited.generate_link" />
+    <DButton @icon={{this.inviteIcon}} @action={{action "createInvite"}} @class="btn-primary send-invite" @disabled={{this.disabled}} @label={{this.buttonTitle}} />
+    {{#if this.showCopyInviteButton}}
+      <DButton @icon="link" @action={{action "generateInviteLink"}} @class="btn-primary generate-invite-link" @disabled={{this.disabledCopyLink}} @label="user.invited.generate_link" />
     {{/if}}
   {{/if}}
 </div>

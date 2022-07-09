@@ -1,28 +1,28 @@
 <div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
-      <li><LinkTo @route="adminUser" @model={{user}}>{{d-icon "caret-left"}} &nbsp;{{user.username}}</LinkTo></li>
+      <li><LinkTo @route="adminUser" @model={{this.user}}>{{d-icon "caret-left"}} &nbsp;{{this.user.username}}</LinkTo></li>
     </ul>
   </nav>
 </div>
 
-<ConditionalLoadingSpinner @condition={{loading}}>
+<ConditionalLoadingSpinner @condition={{this.loading}}>
   <div class="admin-container user-badges">
     <h2>{{i18n "admin.badges.grant_badge"}}</h2>
     <br>
-    {{#if noGrantableBadges}}
+    {{#if this.noGrantableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <form class="form-horizontal">
         <div class="control-group">
           <label>{{i18n "admin.badges.badge"}}</label>
-          <ComboBox @value={{selectedBadgeId}} @content={{grantableBadges}} @onChange={{action (mut selectedBadgeId)}} @options={{hash
+          <ComboBox @value={{this.selectedBadgeId}} @content={{this.grantableBadges}} @onChange={{action (mut this.selectedBadgeId)}} @options={{hash
               filterable=true
             }} />
         </div>
         <div class="control-group">
           <label>{{i18n "admin.badges.reason"}}</label>
-          <Input @type="text" @value={{badgeReason}} /><br><small>{{i18n "admin.badges.reason_help"}}</small>
+          <Input @type="text" @value={{this.badgeReason}} /><br><small>{{i18n "admin.badges.reason_help"}}</small>
         </div>
         <DButton @class="btn-primary" @action={{action "grantBadge"}} @type="submit" @label="admin.badges.grant" />
       </form>
@@ -37,7 +37,7 @@
           <th>{{i18n "admin.badges.granted_at"}}</th>
           <th></th>
         </tr>
-        {{#each groupedBadges as |userBadge|}}
+        {{#each this.groupedBadges as |userBadge|}}
           <tr>
             <td><UserBadge @badge={{userBadge.badge}} @count={{userBadge.count}} /></td>
             <td>
@@ -63,7 +63,7 @@
         {{else}}
           <tr>
             <td colspan="5">
-              <p>{{i18n "admin.badges.no_user_badges" name=user.username}}</p>
+              <p>{{i18n "admin.badges.no_user_badges" name=this.user.username}}</p>
             </td>
           </tr>
         {{/each}}

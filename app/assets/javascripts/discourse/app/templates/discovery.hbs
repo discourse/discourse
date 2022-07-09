@@ -1,7 +1,7 @@
 <div class="container">
-  <DiscourseBanner @user={{currentUser}} @banner={{site.banner}} />
-  {{#unless viewingCategoriesList}}
-    <CategoryReadOnlyBanner @category={{category}} @readOnly={{navigationCategory.cannotCreateTopicOnCategory}} />
+  <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
+  {{#unless this.viewingCategoriesList}}
+    <CategoryReadOnlyBanner @category={{this.category}} @readOnly={{this.navigationCategory.cannotCreateTopicOnCategory}} />
   {{/unless}}
 </div>
 
@@ -14,16 +14,16 @@
   </div>
 </div>
 
-<ConditionalLoadingSpinner @condition={{loading}} />
+<ConditionalLoadingSpinner @condition={{this.loading}} />
 
 <PluginOutlet @name="discovery-above" @tagName="span" @connectorTagName="div" />
 
-<div class="container list-container {{if loading "hidden"}}">
+<div class="container list-container {{if this.loading "hidden"}}">
   <div class="row">
     <div class="full-width">
       <div id="header-list-area">
         {{outlet "header-list-container"}}
-        <PluginOutlet @name="header-list-container-bottom" @args={{hash category=category}} />
+        <PluginOutlet @name="header-list-container-bottom" @args={{hash category=this.category}} />
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@
     <div class="full-width">
       <PluginOutlet @name="before-list-area" />
       <div id="list-area">
-        <PluginOutlet @name="discovery-list-container-top" @tagName="" @connectorTagName="span" @args={{hash category=category listLoading=loading}} />
+        <PluginOutlet @name="discovery-list-container-top" @tagName="" @connectorTagName="span" @args={{hash category=this.category listLoading=this.loading}} />
         {{outlet "list-container"}}
       </div>
     </div>

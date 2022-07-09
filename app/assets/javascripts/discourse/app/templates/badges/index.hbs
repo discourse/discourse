@@ -5,14 +5,14 @@
     <PluginOutlet @name="below-badges-title" @tagName="span" @connectorTagName="div" />
 
     <div class="badge-groups">
-      {{#each badgeGroups as |bg|}}
+      {{#each this.badgeGroups as |bg|}}
         <div class="badge-grouping">
           <div class="title">
             <h3>{{bg.badgeGrouping.displayName}}</h3>
           </div>
           <div class="badge-group-list">
             {{#each bg.badges as |b|}}
-              <BadgeCard @badge={{b}} @username={{currentUser.username}} />
+              <BadgeCard @badge={{b}} @username={{this.currentUser.username}} />
             {{/each}}
           </div>
         </div>

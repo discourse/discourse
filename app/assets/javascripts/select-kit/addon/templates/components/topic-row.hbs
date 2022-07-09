@@ -1,7 +1,7 @@
-<TopicStatus @topic={{item}} @disableActions={{true}} />
-<div class="topic-title">{{replace-emoji item.fancy_title}}</div>
+<TopicStatus @topic={{this.item}} @disableActions={{true}} />
+<div class="topic-title">{{replace-emoji this.item.fancy_title}}</div>
 <div class="topic-categories">
-  {{bound-category-link item.category
+  {{bound-category-link this.item.category
     recursive=true
     hideParent=true
     link=false

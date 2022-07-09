@@ -634,6 +634,16 @@
             },
             "can_edit": {
               "type": "boolean"
+            },
+            "custom_fields": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": true
+            },
+            "parent_category_id": {
+              "type": "integer"
             }
           },
           "required": [

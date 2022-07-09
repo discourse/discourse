@@ -7,10 +7,10 @@
   <h2>{{i18n "tagging.groups.title"}}</h2>
 
   {{#if this.siteSettings.tagging_enabled}}
-    {{#if model}}
+    {{#if this.model}}
       <div class="tag-groups-sidebar content-list">
         <ul>
-          {{#each model as |tagGroup|}}
+          {{#each this.model as |tagGroup|}}
             <li>
               <LinkTo @route="tagGroups.edit" @model={{tagGroup}}>
                 {{tagGroup.name}}

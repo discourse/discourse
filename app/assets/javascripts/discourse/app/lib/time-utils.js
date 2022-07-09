@@ -19,6 +19,14 @@ export function startOfDay(momentDate, startOfDayHour = START_OF_DAY_HOUR) {
   return momentDate.hour(startOfDayHour).startOf("hour");
 }
 
+export function oneHour(timezone) {
+  return now(timezone).add(1, "hours");
+}
+
+export function twoHours(timezone) {
+  return now(timezone).add(2, "hours");
+}
+
 export function tomorrow(timezone) {
   return startOfDay(now(timezone).add(1, "day"));
 }

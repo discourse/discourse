@@ -95,9 +95,10 @@ export default Mixin.create({
     const post = value.slice(end);
 
     if (opts && opts.lineVal) {
-      const lineVal = value.split("\n")[
-        value.slice(0, this._textarea.selectionStart).split("\n").length - 1
-      ];
+      const lineVal =
+        value.split("\n")[
+          value.slice(0, this._textarea.selectionStart).split("\n").length - 1
+        ];
       return { start, end, value: selVal, pre, post, lineVal };
     } else {
       return { start, end, value: selVal, pre, post };

@@ -691,6 +691,8 @@ sr:
         regular: "Stalni član"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
+      experimental_sidebar:
+        options: "Opcije"
       change: "promeni"
       moderator: "%{user} je moderator"
       admin: "%{user} je administrator"

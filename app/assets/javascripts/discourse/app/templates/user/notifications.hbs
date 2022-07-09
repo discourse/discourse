@@ -15,7 +15,7 @@
         {{i18n "user_action_groups.2"}}
       </LinkTo>
     </li>
-    {{#if siteSettings.enable_mentions}}
+    {{#if this.siteSettings.enable_mentions}}
       <li>
         <LinkTo @route="userNotifications.mentions">
           {{i18n "user_action_groups.7"}}
@@ -27,20 +27,20 @@
         {{i18n "user_action_groups.11"}}
       </LinkTo>
     </li>
-    <PluginOutlet @name="user-notifications-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=model}} />
+    <PluginOutlet @name="user-notifications-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
   </MobileNav>
 
 </DSection>
 
-{{#if model}}
+{{#if this.model}}
   <section class="user-additional-controls">
-    <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{allNotificationsRead}} />
+    <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{this.allNotificationsRead}} />
   </section>
 {{/if}}
 
 <section class="user-content">
   <LoadMore @class="notification-history user-stream" @selector=".user-stream .notification" @action={{action "loadMore"}}>
     {{outlet}}
-    <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+    <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
   </LoadMore>
 </section>

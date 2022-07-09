@@ -1,12 +1,12 @@
-<tr class="day {{dayLabel}}">
-  <td class="day-label">{{dayLabel}}</td>
+<tr class="day {{this.dayLabel}}">
+  <td class="day-label">{{this.dayLabel}}</td>
   <td class="starts-at">
-    <ComboBox @valueProperty="value" @content={{startTimeOptions}} @value={{startTimeValue}} @onChange={{onChangeStartTime}} />
+    <ComboBox @valueProperty="value" @content={{this.startTimeOptions}} @value={{this.startTimeValue}} @onChange={{this.onChangeStartTime}} />
   </td>
-  {{#if endTimeOptions}}
+  {{#if this.endTimeOptions}}
     <td class="to">{{i18n "user.notification_schedule.to"}}</td>
     <td class="ends-at">
-      <ComboBox @valueProperty="value" @content={{endTimeOptions}} @value={{endTimeValue}} @onChange={{onChangeEndTime}} />
+      <ComboBox @valueProperty="value" @content={{this.endTimeOptions}} @value={{this.endTimeValue}} @onChange={{this.onChangeEndTime}} />
     </td>
   {{/if}}
 </tr>

@@ -7,23 +7,23 @@
   <div>
     <h3>{{i18n "user.auth_tokens.details"}}</h3>
     <ul style="list-style-type:none">
-      <li>{{d-icon "far-clock"}} {{format-date model.seen_at}}</li>
-      <li>{{d-icon "map-marker-alt"}} {{model.location}}</li>
-      <li>{{d-icon model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=model.browser device=model.device}}</li>
+      <li>{{d-icon "far-clock"}} {{format-date this.model.seen_at}}</li>
+      <li>{{d-icon "map-marker-alt"}} {{this.model.location}}</li>
+      <li>{{d-icon this.model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=this.model.browser device=this.model.device}}</li>
     </ul>
   </div>
 
-  {{#if latest_post}}
+  {{#if this.latest_post}}
     <div>
       <h3>
         {{i18n "user.auth_tokens.latest_post"}}
-        <a href {{action "toggleExpanded"}}>{{d-icon (if expanded "caret-up" "caret-down")}}</a>
+        <a href {{action "toggleExpanded"}}>{{d-icon (if this.expanded "caret-up" "caret-down")}}</a>
       </h3>
 
-      {{#if expanded}}
-        <blockquote>{{html-safe latest_post.cooked}}</blockquote>
+      {{#if this.expanded}}
+        <blockquote>{{html-safe this.latest_post.cooked}}</blockquote>
       {{else}}
-        <blockquote>{{html-safe latest_post.excerpt}}</blockquote>
+        <blockquote>{{html-safe this.latest_post.excerpt}}</blockquote>
       {{/if}}
     </div>
   {{/if}}

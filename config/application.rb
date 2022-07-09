@@ -266,6 +266,10 @@ module Discourse
       require 'rbtrace'
     end
 
+    if ENV['RAILS_QUERY_LOG_TAGS'] == "1"
+      config.active_record.query_log_tags_enabled = true
+    end
+
     config.generators do |g|
       g.test_framework :rspec, fixture: false
     end

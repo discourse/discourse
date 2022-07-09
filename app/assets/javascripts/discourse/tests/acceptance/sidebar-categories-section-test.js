@@ -141,6 +141,20 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
+  test("category section links uses the bullet style even when category_style site setting has been configured", async function (assert) {
+    this.siteSettings.category_style = "box";
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit("/");
+
+    assert.ok(
+      exists(
+        `.sidebar-section-categories .sidebar-section-link-${category1.slug} .badge-wrapper.bullet`
+      ),
+      "category badge uses the bullet style"
+    );
+  });
+
   test("category section links", async function (assert) {
     const { category1, category2 } = setupUserSidebarCategories();
 

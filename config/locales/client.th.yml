@@ -762,6 +762,8 @@ th:
       allow_private_messages: "อนุญาตให้ผู้ใช้อื่นส่งข้อความส่วนตัวหาฉัน"
       external_links_in_new_tab: "เปิดลิงก์ภายนอกทั้งหมดในแท็บใหม่"
       enable_quoting: "เปิดการตอบกลับการอ้างอิงโดยไฮไลท์ข้อความ"
+      experimental_sidebar:
+        options: "ตัวเลือก"
       change: "เปลี่ยนแปลง"
       featured_topic: "กระทู้เด่น"
       moderator: "%{user} เป็นผู้ดูแลระบบ"

@@ -1,6 +1,7 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 const EMAIL = `
 From: "somebody" <somebody@example.com>
@@ -17,25 +18,40 @@ This part should be elided.`;
 
 acceptance("Admin - Emails", function (needs) {
   needs.user();
-  needs.pretender((server, helper) => {
-    server.post("/admin/email/advanced-test", () => {
-      return helper.response({
+  test("shows selected and elided text", async function (assert) {
+    pretender.post("/admin/email/advanced-test", () => {
+      return response({
         format: 1,
         text: "Hello, this is a test!",
         elided: "---\n\nThis part should be elided.",
       });
     });
-  });
 
-  test("shows selected and elided text", async function (assert) {
     await visit("/admin/email/advanced-test");
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");
 
-    assert.strictEqual(queryAll(".text pre").text(), "Hello, this is a test!");
+    assert.strictEqual(query(".text pre").innerText, "Hello, this is a test!");
     assert.strictEqual(
-      queryAll(".elided pre").text(),
+      query(".elided pre").innerText,
       "---\n\nThis part should be elided."
     );
+  });
+
+  test("displays received errors when testing emails", async function (assert) {
+    pretender.get("/admin/email.json", () => {
+      return response({});
+    });
+
+    pretender.post("/admin/email/test", () => {
+      return response(422, { errors: ["some error"] });
+    });
+
+    await visit("/admin/email");
+    await fillIn(".admin-controls input", "test@example.com");
+    await click(".btn-primary");
+
+    assert.ok(query(".bootbox.modal").innerText.includes("some error"));
+    await click(".bootbox .btn-primary");
   });
 });

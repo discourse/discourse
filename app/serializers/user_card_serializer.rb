@@ -224,7 +224,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_status?
-    SiteSetting.enable_user_status
+    SiteSetting.enable_user_status && user.has_status?
   end
 
   def status

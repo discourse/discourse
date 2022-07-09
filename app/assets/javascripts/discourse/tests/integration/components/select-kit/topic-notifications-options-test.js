@@ -19,12 +19,8 @@ const buildTopic = function (archetype) {
   });
 };
 
-function extractDescs(rows) {
-  return Array.from(
-    rows.find(".desc").map(function () {
-      return this.textContent.trim();
-    })
-  );
+function extractDescriptions(rows) {
+  return [...rows].map((el) => el.querySelector(".desc").textContent.trim());
 }
 
 function getTranslations(type = "") {
@@ -53,7 +49,7 @@ discourseModule(
       async test(assert) {
         await selectKit().expand();
 
-        const uiTexts = extractDescs(selectKit().rows());
+        const uiTexts = extractDescriptions(selectKit().rows());
         const descriptions = getTranslations();
 
         assert.strictEqual(
@@ -86,7 +82,7 @@ discourseModule(
       async test(assert) {
         await selectKit().expand();
 
-        const uiTexts = extractDescs(selectKit().rows());
+        const uiTexts = extractDescriptions(selectKit().rows());
         const descriptions = getTranslations("_pm");
 
         assert.strictEqual(

@@ -44,7 +44,7 @@ discourseModule(
           "it shows the regular choice when value is not set"
         );
 
-        const icon = this.subject.header().icon()[0];
+        const icon = this.subject.header().icon();
         assert.ok(
           icon.classList.contains("d-icon-d-regular"),
           "it shows the correct icon"

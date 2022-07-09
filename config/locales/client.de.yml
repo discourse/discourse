@@ -1087,7 +1087,13 @@ de:
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
-      enable_experimental_sidebar: "Experimentelle Seitenleiste aktivieren"
+      experimental_sidebar:
+        enable: "Experimentelle Seitenleiste aktivieren"
+        options: "Optionen"
+        categories_section: "Kategorien Abschnitt"
+        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt Kategorien der Seitenleiste angezeigt."
+        tags_section: "Schlagwort-Abschnitt"
+        tags_section_instruction: "Ausgewählte Schlagwörter werden im Abschnitt Schlagwörter der Seitenleiste angezeigt."
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1200,6 +1206,7 @@ de:
         tags: "Schlagwörter"
         interface: "Oberfläche"
         apps: "Apps"
+        sidebar: "Seitenleiste"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -3733,13 +3740,17 @@ de:
             unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
-          no_tracked_tags: "Du verfolgst keine Schlagwörter (tags)."
+          none: "Du hast keine Schlagwörter hinzugefügt."
+          click_to_get_started: "Klicke hier, um zu starten."
           header_link_title: "alle Schlagwörter"
           header_link_text: "Schlagwörter"
+          header_action_title: "Bearbeite deine Seitenleisten-Schlagwörter"
         categories:
-          no_tracked_categories: "Du verfolgst keine Kategorien."
+          none: "Du hast keine Kategorien hinzugefügt."
+          click_to_get_started: "Klicke hier, um zu starten."
           header_link_title: "alle Kategorien"
           header_link_text: "Kategorien"
+          header_action_title: "Bearbeite deine Seitenleisten-Kategorien"
         topics:
           header_link_title: "startseite"
           header_link_text: "Themen"

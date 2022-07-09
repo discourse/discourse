@@ -1029,7 +1029,7 @@ def fix_missing_s3
           puts "Failed to save upload #{save_error}"
         else
           OptimizedImage.where(upload_id: upload.id).destroy_all
-          rebake_ids = UploadReferences.where(upload_id: upload.id).where(target_type: 'Post').pluck(:target_id)
+          rebake_ids = UploadReference.where(upload_id: upload.id).where(target_type: 'Post').pluck(:target_id)
 
           if rebake_ids.present?
             Post.where(id: rebake_ids).each do |post|

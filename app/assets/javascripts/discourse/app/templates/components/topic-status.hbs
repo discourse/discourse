@@ -1,33 +1,33 @@
-{{~#if topicClosedArchived~}}
-  <span title={{closedArchivedTitle}} class="topic-status">{{closedArchivedIcon}}</span>
+{{~#if this.topicClosedArchived~}}
+  <span title={{this.closedArchivedTitle}} class="topic-status">{{this.closedArchivedIcon}}</span>
 {{~/if~}}
-{{~#if closedIcon~}}
-  <span title={{closedTitle}} class="topic-status">{{closedIcon}}</span>
+{{~#if this.closedIcon~}}
+  <span title={{this.closedTitle}} class="topic-status">{{this.closedIcon}}</span>
 {{~/if~}}
-{{~#if archivedIcon~}}
-  <span title={{archivedTitle}} class="topic-status">{{archivedIcon}}</span>
+{{~#if this.archivedIcon~}}
+  <span title={{this.archivedTitle}} class="topic-status">{{this.archivedIcon}}</span>
 {{~/if~}}
-{{~#if topicPrivateMessage~}}
-  <span title={{privateMessageTitle}} class="topic-status">{{privateMessageIcon}}</span>
+{{~#if this.topicPrivateMessage~}}
+  <span title={{this.privateMessageTitle}} class="topic-status">{{this.privateMessageIcon}}</span>
 {{~/if~}}
-{{~#if topicWarning~}}
-  <span title={{warningTitle}} class="topic-status topic-status-warning">{{warningIcon}}</span>
+{{~#if this.topicWarning~}}
+  <span title={{this.warningTitle}} class="topic-status topic-status-warning">{{this.warningIcon}}</span>
 {{~/if~}}
-{{~#if topicPinned~}}
-  {{~#if canAct~}}
-    <a href="" title={{pinnedTitle}} class="topic-status">{{pinnedIcon}}</a>
+{{~#if this.topicPinned~}}
+  {{~#if this.canAct~}}
+    <a href="" title={{this.pinnedTitle}} class="topic-status">{{this.pinnedIcon}}</a>
   {{~else~}}
-    <span title={{pinnedTitle}} class="topic-status">{{pinnedIcon}}</span>
+    <span title={{this.pinnedTitle}} class="topic-status">{{this.pinnedIcon}}</span>
   {{~/if~}}
 {{~/if~}}
-{{~#if topicUnpinned~}}
-  {{~#if canAct~}}
-    <a href="" title={{unpinnedTitle}} class="topic-status">{{unpinnedIcon}}</a>
+{{~#if this.topicUnpinned~}}
+  {{~#if this.canAct~}}
+    <a href="" title={{this.unpinnedTitle}} class="topic-status">{{this.unpinnedIcon}}</a>
   {{~else~}}
-    <span title={{unpinnedTitle}} class="topic-status">{{unpinnedIcon}}</span>
+    <span title={{this.unpinnedTitle}} class="topic-status">{{this.unpinnedIcon}}</span>
   {{~/if~}}
 {{~/if~}}
-{{~#if topicInvisible~}}
-  <span title={{invisibleTitle}} class="topic-status">{{invisibleIcon}}</span>
+{{~#if this.topicInvisible~}}
+  <span title={{this.invisibleTitle}} class="topic-status">{{this.invisibleIcon}}</span>
 {{~/if~}}
-<PluginOutlet @name="after-topic-status" @connectorTagName="div" @args={{hash topic=topic}} />
+<PluginOutlet @name="after-topic-status" @connectorTagName="div" @args={{hash topic=this.topic}} />

@@ -1,9 +1,9 @@
 <DModalBody>
-  <ConditionalLoadingSpinner @condition={{loading}}>
-    {{#if errorMessage}}
+  <ConditionalLoadingSpinner @condition={{this.loading}}>
+    {{#if this.errorMessage}}
       <div class="control-group">
         <div class="controls">
-          <div class="alert alert-error">{{errorMessage}}</div>
+          <div class="alert alert-error">{{this.errorMessage}}</div>
         </div>
       </div>
     {{/if}}
@@ -17,11 +17,11 @@
     <div class="control-group">
       <div class="controls">
         <div class="qr-code">
-          <img src={{html-safe secondFactorImage}}>
+          <img src={{html-safe this.secondFactorImage}}>
         </div>
         <p>
-          {{#if showSecondFactorKey}}
-            {{secondFactorKey}}
+          {{#if this.showSecondFactorKey}}
+            {{this.secondFactorKey}}
           {{else}}
             <a href {{action "showSecondFactorKey"}}>{{i18n "user.second_factor.show_key_description"}}</a>
           {{/if}}
@@ -32,12 +32,12 @@
     <div class="control-group">
       <label class="control-label input-prepend">{{i18n "user.second_factor.name"}}</label>
       <div class="controls">
-        <SecondFactorInput @value={{secondFactorName}} @inputId="second-factor-name" @placeholder={{i18n "user.second_factor.totp.default_name"}} />
+        <SecondFactorInput @value={{this.secondFactorName}} @inputId="second-factor-name" @placeholder={{i18n "user.second_factor.totp.default_name"}} />
       </div>
 
       <label class="control-label input-prepend">{{i18n "user.second_factor.label"}}</label>
       <div class="controls">
-        <TextField @class="second-factor-token-input" @maxlength={{6}} @value={{secondFactorToken}} @inputId="second-factor-token" @placeholder="123456" @autocorrect="off" @autocapitalize="off" @autofocus="autofocus" />
+        <TextField @class="second-factor-token-input" @maxlength={{6}} @value={{this.secondFactorToken}} @inputId="second-factor-token" @placeholder="123456" @autocorrect="off" @autocapitalize="off" @autofocus="autofocus" />
       </div>
     </div>
 

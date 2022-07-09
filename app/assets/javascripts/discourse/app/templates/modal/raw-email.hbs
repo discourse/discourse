@@ -1,31 +1,29 @@
 <DModalBody @title="raw_email.title" @class="incoming-email-modal" @maxHeight="80%">
   <div class="incoming-email-tabs">
-    <DButton @action={{action "displayRaw"}} @label="post.raw_email.displays.raw.button" @title="post.raw_email.displays.raw.title" @class={{if showRawEmail "active"}} />
+    <DButton @action={{action "displayRaw"}} @label="post.raw_email.displays.raw.button" @title="post.raw_email.displays.raw.title" @class={{if this.showRawEmail "active"}} />
 
-    {{#if textPart}}
-      <DButton @action={{action "displayTextPart"}} @label="post.raw_email.displays.text_part.button" @title="post.raw_email.displays.text_part.title" @class={{if showTextPart "active"}} />
+    {{#if this.textPart}}
+      <DButton @action={{action "displayTextPart"}} @label="post.raw_email.displays.text_part.button" @title="post.raw_email.displays.text_part.title" @class={{if this.showTextPart "active"}} />
     {{/if}}
 
-    {{#if htmlPart}}
-      <DButton @action={{action "displayHtmlPart"}} @label="post.raw_email.displays.html_part.button" @title="post.raw_email.displays.html_part.title" @class={{if showHtmlPart "active"}} />
+    {{#if this.htmlPart}}
+      <DButton @action={{action "displayHtmlPart"}} @label="post.raw_email.displays.html_part.button" @title="post.raw_email.displays.html_part.title" @class={{if this.showHtmlPart "active"}} />
     {{/if}}
   </div>
 
   <div class="incoming-email-content">
-    {{#if showRawEmail}}
-      {{#if rawEmail}}
-        <Textarea @value={{rawEmail}} />
+    {{#if this.showRawEmail}}
+      {{#if this.rawEmail}}
+        <Textarea @value={{this.rawEmail}} />
       {{else}}
         {{i18n "raw_email.not_available"}}
       {{/if}}
     {{/if}}
-
-    {{#if showTextPart}}
-      <Textarea @value={{textPart}} />
+    {{#if this.showTextPart}}
+      <Textarea @value={{this.textPart}} />
     {{/if}}
-
-    {{#if showHtmlPart}}
-      <IframedHtml @html={{htmlPart}} @className="incoming-email-html-part" />
+    {{#if this.showHtmlPart}}
+      <IframedHtml @html={{this.htmlPart}} @className="incoming-email-html-part" />
     {{/if}}
   </div>
 </DModalBody>

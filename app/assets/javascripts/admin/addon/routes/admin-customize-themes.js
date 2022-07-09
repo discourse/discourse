@@ -32,8 +32,9 @@ export default Route.extend({
 
   actions: {
     installModal() {
-      const currentTheme = this.controllerFor("adminCustomizeThemes.show")
-        .model;
+      const currentTheme = this.controllerFor(
+        "adminCustomizeThemes.show"
+      ).model;
       if (currentTheme && currentTheme.warnUnassignedComponent) {
         showUnassignedComponentWarning(currentTheme, (result) => {
           if (!result) {
