@@ -226,12 +226,12 @@
     const encodedSvg = btoa(svgString);
 
     const splashWrapper = document.querySelector("#d-splash");
-    const splashImage = splashWrapper?.querySelector(".preloader-image");
+    const splashImage = splashWrapper && splashWrapper.querySelector(".preloader-image");
 
     if (splashImage) {
       splashImage.src = `data:image/svg+xml;base64,${encodedSvg}`;
 
-      const connectStart = performance?.timing?.connectStart || 0;
+      const connectStart = performance.timing.connectStart || 0;
       const splashDelay = connectStart ? DELAY_TARGET : 0;
       const targetTime = connectStart + DELAY_TARGET;
 
@@ -239,8 +239,8 @@
       let discourseReady;
 
       const swapSplash = () => {
-        splashWrapper?.style.setProperty("--animation-state", "running");
-        svgElement?.style.setProperty("--animation-state", "running");
+        splashWrapper && splashWrapper.style.setProperty("--animation-state", "running");
+        svgElement && svgElement.style.setProperty("--animation-state", "running");
 
         const newSvgString = new XMLSerializer().serializeToString(svgElement);
         const newEncodedSvg = btoa(newSvgString);
@@ -273,7 +273,7 @@
         "discourse-ready",
         () => {
           discourseReady = true;
-          splashWrapper?.remove();
+          splashWrapper && splashWrapper.remove();
           performance.mark("discourse-splash-removed");
         },
         { once: true }
