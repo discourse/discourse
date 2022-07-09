@@ -161,16 +161,16 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername",
+      avatar_template: "/images/avatar.png",
+      username: "my-username",
     });
 
     assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername2",
+      avatar_template: "/images/avatar.png",
+      username: "my-username2",
     });
 
     assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
@@ -198,16 +198,16 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername",
+      avatar_template: "/images/avatar.png",
+      username: "my-username",
     });
 
     assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername2",
+      avatar_template: "/images/avatar.png",
+      username: "my-username2",
     });
 
     assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
