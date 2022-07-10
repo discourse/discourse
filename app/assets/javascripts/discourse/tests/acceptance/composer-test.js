@@ -912,6 +912,16 @@ acceptance("Composer", function (needs) {
     await click(".save-or-cancel .cancel");
     assert.notOk(exists(".discard-draft-modal .save-draft"));
   });
+
+  test("Saves drafts that only contain quotes", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+
+    await fillIn(".d-editor-input", "[quote]some quote[/quote]");
+
+    await click(".save-or-cancel .cancel");
+    assert.ok(exists(".discard-draft-modal .save-draft"));
+  });
 });
 
 acceptance("Composer - Customizations", function (needs) {
