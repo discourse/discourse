@@ -4,8 +4,6 @@
     <title>Theme QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
     <%- if !@suggested_themes %>
-      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
-      <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
       <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "vendor" %>
       <%= preload_script "discourse" %>
@@ -18,10 +16,16 @@
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
+
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">
       <meta property="og:url" content="">
       <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
+
+      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+      <style>
+        <%= File.read("#{Rails.root}/app/assets/javascripts/node_modules/qunit/qunit/qunit.css") %>
+      </style>
     <%- else %>
       <style>
         html {
@@ -29,6 +33,7 @@
         }
       </style>
     <%- end %>
+
     <%- if params['testem'] %>
       <script defer src="/assets/testem.js"></script>
     <%- end %>
@@ -36,6 +41,7 @@
   <body>
     <%- if @suggested_themes %>
       <h2>Theme QUnit Test Runner</h2>
+
       <%- if @suggested_themes.size == 0 %>
         <p>Cannot find any theme tests.</p>
       <%- else %>
