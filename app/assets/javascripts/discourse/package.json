@@ -20,7 +20,7 @@
     "@discourse/itsatrap": "^2.0.10",
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^2.0.0",
-    "@ember/test-helpers": "^2.2.0",
+    "@ember/test-helpers": "^2.8.1",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "2.10.2",
