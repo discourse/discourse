@@ -161,7 +161,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
-      avatar_template: "/a/b/c.jpg",
+      avatar_template: "/images/avatar.png",
       username: "my-username",
     });
 
@@ -169,7 +169,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
-      avatar_template: "/a/b/c.jpg",
+      avatar_template: "/images/avatar.png",
       username: "my-username2",
     });
 
@@ -198,7 +198,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
-      avatar_template: "/a/b/c.jpg",
+      avatar_template: "/images/avatar.png",
       username: "my-username",
     });
 
@@ -206,7 +206,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
-      avatar_template: "/a/b/c.jpg",
+      avatar_template: "/images/avatar.png",
       username: "my-username2",
     });
 
