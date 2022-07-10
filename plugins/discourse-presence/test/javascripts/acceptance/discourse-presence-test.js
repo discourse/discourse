@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -116,8 +116,8 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
-      queryAll(".topic-post:nth-of-type(1) .cooked > p").text(),
+      query(".d-editor-input").value,
+      query(".topic-post:nth-of-type(1) .cooked > p").innerText,
       "composer has contents of post to be edited"
     );
 
