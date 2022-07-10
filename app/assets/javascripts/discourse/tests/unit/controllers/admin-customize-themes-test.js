@@ -1,8 +1,10 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import Theme from "admin/models/theme";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
-discourseModule("Unit | Controller | admin-customize-themes", function () {
+module("Unit | Controller | admin-customize-themes", function (hooks) {
+  setupTest(hooks);
+
   test("can list themes correctly", function (assert) {
     const defaultTheme = Theme.create({
       id: 2,
@@ -22,7 +24,8 @@ discourseModule("Unit | Controller | admin-customize-themes", function () {
       component: true,
     });
 
-    const controller = this.getController("admin-customize-themes", {
+    const controller = this.owner.lookup("controller:admin-customize-themes");
+    controller.setProperties({
       model: [
         strayTheme2,
         strayTheme1,
@@ -33,16 +36,14 @@ discourseModule("Unit | Controller | admin-customize-themes", function () {
     });
 
     assert.deepEqual(
-      controller.get("fullThemes").map((t) => t.get("name")),
-      [strayTheme2, strayTheme1, userTheme, defaultTheme].map((t) =>
-        t.get("name")
-      ),
+      controller.fullThemes.map((t) => t.name),
+      [strayTheme2, strayTheme1, userTheme, defaultTheme].map((t) => t.name),
       "returns a list of themes without components"
     );
 
     assert.deepEqual(
-      controller.get("childThemes").map((t) => t.get("name")),
-      [componentTheme].map((t) => t.get("name")),
+      controller.childThemes.map((t) => t.name),
+      [componentTheme].map((t) => t.name),
       "separate components from themes"
     );
   });

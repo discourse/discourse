@@ -1,11 +1,13 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { registerRouter } from "discourse/mapping-router";
-import { test } from "qunit";
 
-discourseModule("Unit | Controller | avatar-selector", function (hooks) {
+module("Unit | Controller | avatar-selector", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
-    registerRouter(this.registry);
+    registerRouter(this.owner);
   });
 
   test("avatarTemplate", function (assert) {
@@ -18,27 +20,28 @@ discourseModule("Unit | Controller | avatar-selector", function (hooks) {
       gravatar_avatar_upload_id: 2,
       custom_avatar_upload_id: 3,
     });
-    const avatarSelectorController = this.getController("avatar-selector", {
+    const controller = this.owner.lookup("controller:avatar-selector");
+    controller.setProperties({
       user,
     });
 
     user.set("avatar_template", "system");
     assert.strictEqual(
-      avatarSelectorController.get("selectedUploadId"),
+      controller.selectedUploadId,
       1,
       "we are using system by default"
     );
 
     user.set("avatar_template", "gravatar");
     assert.strictEqual(
-      avatarSelectorController.get("selectedUploadId"),
+      controller.selectedUploadId,
       2,
       "we are using gravatar when set"
     );
 
     user.set("avatar_template", "avatar");
     assert.strictEqual(
-      avatarSelectorController.get("selectedUploadId"),
+      controller.selectedUploadId,
       3,
       "we are using custom when set"
     );

@@ -1,18 +1,21 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import * as showModal from "discourse/lib/show-modal";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import sinon from "sinon";
-import EmberObject from "@ember/object";
-import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
+import EmberObject from "@ember/object";
+import * as showModal from "discourse/lib/show-modal";
+import User from "discourse/models/user";
 
-discourseModule("Unit | Controller | user-notifications", function () {
+module("Unit | Controller | user-notifications", function (hooks) {
+  setupTest(hooks);
+
   test("Mark read marks all models read when response is 200", async function (assert) {
     const model = [
       EmberObject.create({ read: false }),
       EmberObject.create({ read: false }),
     ];
-    const controller = this.getController("user-notifications", {
+    const controller = this.owner.lookup("controller:user-notifications");
+    controller.setProperties({
       model,
     });
     pretender.put("/notifications/mark-read", () => {
@@ -32,7 +35,8 @@ discourseModule("Unit | Controller | user-notifications", function () {
       EmberObject.create({ read: false }),
       EmberObject.create({ read: true }),
     ];
-    const controller = this.getController("user-notifications", { model });
+    const controller = this.owner.lookup("controller:user-notifications");
+    controller.setProperties({ model });
     pretender.put("/notifications/mark-read", () => {
       return [500];
     });
@@ -48,7 +52,8 @@ discourseModule("Unit | Controller | user-notifications", function () {
   test("Marks all notifications read when no high priority notifications", function (assert) {
     let markRead = false;
     const currentUser = User.create({ unread_high_priority_notifications: 0 });
-    const controller = this.getController("user-notifications", {
+    const controller = this.owner.lookup("controller:user-notifications");
+    controller.setProperties({
       model: [],
       currentUser,
     });
@@ -70,7 +75,8 @@ discourseModule("Unit | Controller | user-notifications", function () {
         setProperties: (properties) => (capturedProperties = properties),
       });
     const currentUser = User.create({ unread_high_priority_notifications: 1 });
-    const controller = this.getController("user-notifications", {
+    const controller = this.owner.lookup("controller:user-notifications");
+    controller.setProperties({
       currentUser,
     });
     const markReadFake = sinon.fake();
