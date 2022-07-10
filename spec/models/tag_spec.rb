@@ -13,10 +13,22 @@ describe Tag do
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_level_to_tag_topics = 0
+  end
+
+  context 'associations' do
+    it 'should delete associated sidebar_section_links when tag is destroyed' do
+      tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
+      tag_sidebar_section_link_2 = Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
+      category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
+
+      expect { tag_sidebar_section_link.linkable.destroy! }.to change { SidebarSectionLink.count }.from(3).to(1)
+      expect(SidebarSectionLink.first).to eq(category_sidebar_section_link)
+    end
   end
 
   describe 'new' do

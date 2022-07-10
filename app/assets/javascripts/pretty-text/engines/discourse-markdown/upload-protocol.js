@@ -6,8 +6,9 @@ const HTML_TYPES = ["html_block", "html_inline"];
 function addImage(uploads, token) {
   if (token.attrs) {
     for (let i = 0; i < token.attrs.length; i++) {
-      if (token.attrs[i][1].indexOf("upload://") === 0) {
-        uploads.push({ token, srcIndex: i, origSrc: token.attrs[i][1] });
+      const value = token.attrs[i][1];
+      if (value?.startsWith("upload://")) {
+        uploads.push({ token, srcIndex: i, origSrc: value });
         break;
       }
     }
@@ -123,9 +124,8 @@ function rule(state) {
         } else {
           // no point putting a transparent .png for audio/video
           if (token.content.match(/\|video|\|audio/)) {
-            token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
-              "/404"
-            );
+            token.attrs[srcIndex][1] =
+              state.md.options.discourse.getURL("/404");
           } else {
             token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
               "/images/transparent.png"

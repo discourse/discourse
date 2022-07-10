@@ -587,6 +587,7 @@ it:
               too_many: "Troppe parole per quest'azione"
             base:
               invalid_url: "L'URL sostitutivo non è valido"
+              invalid_tag_list: "L'elenco delle etichette sostitutive non è valido"
       <<: *errors
   uncategorized_category_name: "Senza categoria"
   vip_category_name: "Salotto"
@@ -1578,6 +1579,7 @@ it:
     enable_badges: "Attiva il sistema a distintivi"
     max_favorite_badges: "Numero massimo di distintivi che l'utente può selezionare"
     enable_whispers: "Consenti allo staff comunicazioni private all'interno degli argomenti."
+    whispers_allowed_groups: "Consenti la comunicazione privata all'interno degli argomenti per i membri di gruppi specifici."
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
     blocked_email_domains: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
@@ -2104,6 +2106,7 @@ it:
     allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
     use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
+    splash_screen: "Visualizza una schermata di caricamento temporanea durante il caricamento delle risorse del sito"
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."

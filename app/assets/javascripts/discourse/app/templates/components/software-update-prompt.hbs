@@ -1,5 +1,5 @@
-{{#if showPrompt}}
-  <div class="software-update-prompt{{if animatePrompt " require-software-refresh"}}">
+{{#if this.showPrompt}}
+  <div class="software-update-prompt{{if this.animatePrompt " require-software-refresh"}}">
     <div class="wrap">
       <div class="update-prompt-main-content" aria-live="polite">
         <span role="button" onclick={{action "refreshPage"}} class="update-prompt-message">{{d-icon "redo"}} {{html-safe (i18n "software_update_prompt.message")}}</span>

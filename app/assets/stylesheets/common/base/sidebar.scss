@@ -1,10 +1,36 @@
+:root {
+  --d-sidebar-width: 16em;
+  --d-sidebar-animation-time: 0.25s;
+  --d-sidebar-animation-ease: ease-in-out;
+}
+
 .header-sidebar-toggle {
-  margin-right: 1em;
-  margin-left: -10px;
+  --toggle-padding: 0.5em;
+  margin-right: 0.75em;
+  // extending the toggle beyond the page when space allows
+  // for better logo alignment with content
+  margin-left: -3.5em;
+  @media screen and (max-width: 1480px) {
+    margin-left: -0.75em;
+  }
+
+  @media screen and (max-width: 1380px) {
+    body.has-sidebar-page & {
+      margin-left: 0;
+    }
+  }
+
+  transition: margin var(--d-sidebar-animation-speed)
+    var(--d-sidebar-animation-ease);
+
+  .mobile-view & {
+    margin-left: calc(var(--toggle-padding) * -1);
+  }
 
   button {
     position: relative;
     font-size: var(--font-up-2);
+    padding: var(--toggle-padding);
 
     .discourse-no-touch & {
       &:hover {
@@ -32,7 +58,36 @@
     box-sizing: border-box;
     height: 100%;
     width: 240px;
-    padding: 1em 0.5em 1em 0;
+    padding: 1em 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    // custom scrollbar styling
+    --scrollbarBg: transparent;
+    --scrollbarThumbBg: var(--primary-low);
+    --scrollbarWidth: 1em;
+
+    scrollbar-color: transparent var(--scrollbarBg);
+    transition: scrollbar-color 0.2s ease-in-out;
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border-radius: calc(var(--scrollbarWidth) / 2);
+      border: calc(var(--scrollbarWidth) / 4) solid var(--primary-very-low);
+    }
+    &:hover {
+      scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbarThumbBg);
+      }
+    }
+    &::-webkit-scrollbar {
+      width: var(--scrollbarWidth);
+    }
+  }
+
+  .sidebar-scroll-wrap {
+    // limit the wrapper width, so when the scrollbar is added the content doesn't shift
+    max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
   }
 
   .sidebar-toggle {
@@ -49,10 +104,16 @@
     text-transform: uppercase;
     font-size: 1em;
     font-weight: bold;
-    align-items: center;
+    align-items: stretch;
   }
 
   .sidebar-section-header-link {
+    @include ellipsis;
+    flex: 1 1 auto;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    padding: 0.25em 0.5em;
+
     &:visited {
       color: var(--primary);
     }
@@ -60,11 +121,6 @@
     &:hover {
       background: var(--primary-low);
     }
-
-    flex: 1 1 auto;
-    color: var(--primary);
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
   }
 
   .sidebar-section-header-button {
@@ -89,7 +145,7 @@
   .sidebar-section-link {
     display: flex;
     align-items: center;
-    padding: 0.25em 0.5em;
+    padding: 0.35em 0.5em;
     color: var(--primary-high);
     font-size: var(--font-down-1);
 
@@ -102,13 +158,8 @@
       font-weight: bold;
     }
 
-    .sidebar-section-link-content-badge {
-      width: 30%;
-      text-align: right;
-    }
-
     .sidebar-section-link-content-text {
-      width: 70%;
+      @include ellipsis;
 
       .badge-wrapper {
         font-size: 100%;
@@ -135,24 +186,27 @@
   }
 
   .sidebar-section-link-content-badge {
-    color: var(--tertiary);
     font-size: var(--font-down-1);
-    font-weight: normal;
+    color: var(--tertiary);
     margin-left: auto;
+    font-weight: normal;
+    margin-right: 0.4em;
   }
 
   .sidebar-section-header-caret {
+    flex: 0 0 auto;
     width: 1.5em;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    align-items: center;
     border: none;
-    background-color: transparent;
+    background: transparent;
+    padding: 0.25em 0;
 
-    &:hover {
-      opacity: 100;
+    svg {
+      display: block;
+      flex: 0 0 auto;
     }
-
-    opacity: 0;
 
     .d-icon {
       font-size: $font-down-1;

@@ -12,7 +12,7 @@ module TopicTrackingStatePublishable
                              notification_level: nil)
 
       highest_post_number = DB.query_single(
-        "SELECT #{user.staff? ? "highest_staff_post_number" : "highest_post_number"} FROM topics WHERE id = ?",
+        "SELECT #{user.whisperer? ? "highest_staff_post_number" : "highest_post_number"} FROM topics WHERE id = ?",
         topic_id
       ).first
 

@@ -1005,6 +1005,8 @@ ko:
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림 활성화"
       enable_defer: "글을 읽지 않은 상태로 표시 연장"
+      experimental_sidebar:
+        options: "옵션"
       change: "변경"
       featured_topic: "주요 글"
       moderator: "%{user}님은 운영자입니다"
@@ -1858,7 +1860,6 @@ ko:
       create_shared_draft: "공유 초안 만들기"
       edit_shared_draft: "공유 초안 편집"
       title: "또는 %{modifier}Enter 키를 누릅니다."
-      users_placeholder: "사용자 추가"
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요."
       edit_reason_placeholder: "왜 편집 중입니까?"
@@ -3136,6 +3137,7 @@ ko:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
       readonly: "보기"
+    preloader_text: "로딩중"
     lightbox:
       download: "다운로드"
       open: "원본 이미지"
@@ -3445,7 +3447,9 @@ ko:
             inbox: "받은 편지함"
             sent: "보낸 편지함"
             new: "새글"
+            new_with_count: "새글 (%{count})"
             unread: "읽지 않음"
+            unread_with_count: "읽지 않은 글 (%{count})"
             archive: "저장함"
         tags:
           header_link_title: "모든 태그"

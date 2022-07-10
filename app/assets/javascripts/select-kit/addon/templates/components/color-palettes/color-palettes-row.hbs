@@ -1,9 +1,9 @@
 <span class="name">
-  {{label}}
+  {{this.label}}
 </span>
 
-{{#if item.colors}}
-  <div class="palettes" style={{backgroundColor}}>
-    {{palettes}}
+{{#if this.item.colors}}
+  <div class="palettes" style={{this.backgroundColor}}>
+    {{this.palettes}}
   </div>
 {{/if}}

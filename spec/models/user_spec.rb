@@ -11,6 +11,15 @@ RSpec.describe User do
 
   it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
 
+  context 'associations' do
+    it 'should delete sidebar_section_links when a user is destroyed' do
+      Fabricate(:category_sidebar_section_link, user: user)
+      Fabricate(:tag_sidebar_section_link, user: user)
+
+      expect { user.destroy! }.to change { SidebarSectionLink.where(user: user).count }.from(2).to(0)
+    end
+  end
+
   context 'validations' do
     describe '#username' do
       it { is_expected.to validate_presence_of :username }
@@ -2643,6 +2652,39 @@ RSpec.describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe "#whisperer?" do
+    before do
+      SiteSetting.enable_whispers = true
+    end
+
+    it 'returns true for an admin user' do
+      admin = Fabricate.create(:admin)
+      expect(admin.whisperer?).to eq(true)
+    end
+
+    it 'returns false for an admin user when whispers are not enabled' do
+      SiteSetting.enable_whispers = false
+
+      admin = Fabricate.create(:admin)
+      expect(admin.whisperer?).to eq(false)
+    end
+
+    it 'returns true for user belonging to whisperers groups' do
+      group = Fabricate(:group)
+      whisperer = Fabricate(:user)
+      user = Fabricate(:user)
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+
+      expect(whisperer.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
+
+      group.add(whisperer)
+
+      expect(whisperer.whisperer?).to eq(true)
+      expect(user.whisperer?).to eq(false)
     end
   end
 end

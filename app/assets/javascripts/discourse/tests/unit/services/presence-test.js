@@ -5,6 +5,7 @@ import {
 import { test } from "qunit";
 import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
+import sinon from "sinon";
 
 function usersFixture() {
   return [
@@ -122,6 +123,12 @@ acceptance("Presence - Subscribing", function (needs) {
       "updates following messagebus message"
     );
 
+    const stub = sinon
+      .stub(console, "log")
+      .withArgs(
+        "PresenceChannel '/test/ch1' dropped message (received 99, expecting 3), resyncing..."
+      );
+
     publishToMessageBus(
       "/presence/test/ch1",
       {
@@ -133,6 +140,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
     await channel._presenceState._resubscribePromise;
 
+    sinon.assert.calledOnce(stub);
     assert.strictEqual(
       channel.users.length,
       3,

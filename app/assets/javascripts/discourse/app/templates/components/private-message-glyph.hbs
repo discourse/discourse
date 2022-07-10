@@ -1,6 +1,6 @@
-{{#if shouldShow}}
-  {{#if href}}
-    <a href={{href}} title={{i18n title}} aria-label={{i18n ariaLabel}}>
+{{#if this.shouldShow}}
+  {{#if this.href}}
+    <a href={{this.href}} title={{i18n this.title}} aria-label={{i18n this.ariaLabel}}>
       <span class="private-message-glyph-wrapper">
         {{d-icon "envelope" class="private-message-glyph"}}
       </span>

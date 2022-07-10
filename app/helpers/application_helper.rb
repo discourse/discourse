@@ -135,6 +135,10 @@ module ApplicationHelper
     path
   end
 
+  def self.splash_screen_nonce
+    @splash_screen_nonce ||= SecureRandom.hex
+  end
+
   def preload_script(script)
     scripts = [script]
 
@@ -566,6 +570,19 @@ module ApplicationHelper
     )
   end
 
+  def discourse_stylesheet_preload_tag(name, opts = {})
+    manager =
+      if opts.key?(:theme_id)
+        Stylesheet::Manager.new(
+          theme_id: customization_disabled? ? nil : opts[:theme_id]
+        )
+      else
+        stylesheet_manager
+      end
+
+    manager.stylesheet_preload_tag(name, 'all')
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     manager =
       if opts.key?(:theme_id)
@@ -577,6 +594,17 @@ module ApplicationHelper
       end
 
     manager.stylesheet_link_tag(name, 'all')
+  end
+
+  def discourse_preload_color_scheme_stylesheets
+    result = +""
+    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(scheme_id, 'all')
+
+    if dark_scheme_id != -1
+      result << stylesheet_manager.color_scheme_stylesheet_preload_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
+    end
+
+    result.html_safe
   end
 
   def discourse_color_scheme_stylesheets

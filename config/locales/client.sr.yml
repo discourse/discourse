@@ -691,6 +691,8 @@ sr:
         regular: "Stalni član"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
+      experimental_sidebar:
+        options: "Opcije"
       change: "promeni"
       moderator: "%{user} je moderator"
       admin: "%{user} je administrator"
@@ -1094,7 +1096,6 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       create_pm: "Privatna poruka"
-      users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1691,6 +1692,7 @@ sr:
       full: "Otvoriti / Odgovori / Pogledaj"
       create_post: "Odgovori / Pogledaj"
       readonly: "Pogledaj"
+    preloader_text: "Učitavanje"
     lightbox:
       download: "preuzmi"
       counter: "%curr% od %total%"
@@ -1806,7 +1808,9 @@ sr:
             inbox: "Primljeno"
             sent: "Poslato"
             new: "Novo"
+            new_with_count: "Nove (%{count})"
             unread: "Nepročitano"
+            unread_with_count: "Nepročitane (%{count})"
             archive: "Arhiviraj"
         categories:
           header_link_title: "sve kategorije"

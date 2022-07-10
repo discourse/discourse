@@ -289,6 +289,9 @@ export function acceptance(name, optionsOrCallback) {
         if (userChanges) {
           updateCurrentUser(userChanges);
         }
+
+        User.current().appEvents = getOwner(this).lookup("service:appEvents");
+        User.current().trackStatus();
       }
 
       if (settingChanges) {
@@ -313,6 +316,9 @@ export function acceptance(name, optionsOrCallback) {
       resetMobile();
       let app = getApplication();
       options?.afterEach?.call(this);
+      if (loggedIn) {
+        User.current().stopTrackingStatus();
+      }
       testCleanup(this.container, app);
 
       // We do this after reset so that the willClearRender will have already fired

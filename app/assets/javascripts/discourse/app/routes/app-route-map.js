@@ -166,6 +166,7 @@ export default function () {
         this.route("tags");
         this.route("interface");
         this.route("apps");
+        this.route("sidebar");
 
         this.route("username");
         this.route("email");
@@ -247,6 +248,9 @@ export default function () {
     this.route("intersection", {
       path: "intersection/:tag_id/*additional_tags",
     });
+
+    // legacy route
+    this.route("legacyRedirect", { path: "/:tag_id" });
   });
 
   this.route(

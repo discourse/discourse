@@ -196,6 +196,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
           );
         }
         this.setProperties({ user });
+        this.user.trackStatus();
         return user;
       })
       .catch(() => this._close())
@@ -203,6 +204,10 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   _close() {
+    if (this.user) {
+      this.user.stopTrackingStatus();
+    }
+
     this.setProperties({
       user: null,
       topicPostCount: null,

@@ -725,6 +725,8 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"
@@ -1287,7 +1289,6 @@ sk:
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
-      users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -2114,6 +2115,7 @@ sk:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
       readonly: "Zobraz"
+    preloader_text: "Načítava sa"
     lightbox:
       download: "stiahnuť"
       counter: "%curr% z %total%"
@@ -2276,7 +2278,9 @@ sk:
             inbox: "Prijaté správy"
             sent: "Odoslané"
             new: "Nové"
+            new_with_count: "Nová (%{count})"
             unread: "Neprečítané"
+            unread_with_count: "Neprečítaná (%{count})"
             archive: "Archív"
         tags:
           header_link_title: "všetky štítky"

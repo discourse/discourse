@@ -1200,7 +1200,13 @@ pl_PL:
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
-      enable_experimental_sidebar: "Włącz eksperymentalny pasek boczny"
+      experimental_sidebar:
+        enable: "Włącz eksperymentalny pasek boczny"
+        options: "Opcje"
+        categories_section: "Sekcja kategorii"
+        categories_section_instruction: "Wybrane kategorie będą wyświetlane w sekcji kategorii paska bocznego."
+        tags_section: "Sekcja tagów"
+        tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1316,6 +1322,7 @@ pl_PL:
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
+        sidebar: "Pasek boczny"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -2175,7 +2182,7 @@ pl_PL:
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
       title: "Lub naciśnij %{modifier}Enter"
-      users_placeholder: "Dodaj osobę"
+      users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Wprowadź tytuł, lub wklej tutaj link"
       edit_reason_placeholder: "powód edycji?"
@@ -3692,6 +3699,7 @@ pl_PL:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
       readonly: "przeglądać"
+    preloader_text: "Ładowanie"
     lightbox:
       download: "pobierz"
       open: "oryginalny obraz"
@@ -4047,21 +4055,29 @@ pl_PL:
       new_count: "%{count} nowy"
       sections:
         messages:
+          header_link_title: "osobiste wiadomości"
           header_link_text: "Wiadomości"
+          header_action_title: "utwórz osobistą wiadomość"
           links:
             inbox: "Skrzynka odbiorcza"
             sent: "Wysłane"
             new: "Nowe"
+            new_with_count: "Nowe (%{count})"
             unread: "Nieprzeczytane"
+            unread_with_count: "Nieprzeczytane (%{count})"
             archive: "Archiwum"
         tags:
-          no_tracked_tags: "Nie śledzisz żadnych tagów."
+          none: "Nie dodałeś żadnych tagów."
+          click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_title: "wszystkie tagi"
           header_link_text: "Etykiety"
+          header_action_title: "edytuj tagi paska bocznego"
         categories:
-          no_tracked_categories: "Nie śledzisz żadnych kategorii."
+          none: "Nie dodałeś żadnych kategorii."
+          click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"
+          header_action_title: "edytuj kategorie paska bocznego"
         topics:
           header_link_title: "strona główna"
           header_link_text: "Tematy"
@@ -4074,6 +4090,7 @@ pl_PL:
               content: "Śledzone"
               title: "Wszystkie śledzone tematy"
             bookmarked:
+              content: "Zakładki"
               title: "Wszystkie tematy dodane do zakładek"
             my_posts:
               content: "Wysłane"

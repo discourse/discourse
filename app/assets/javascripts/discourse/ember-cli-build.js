@@ -7,6 +7,7 @@ const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
+const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 
 module.exports = function (defaults) {
@@ -106,7 +107,7 @@ module.exports = function (defaults) {
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import(vendorJs + "bootstrap-modal.js");
+  app.import("node_modules/bootstrap/js/modal.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
@@ -138,5 +139,6 @@ module.exports = function (defaults) {
       headerFiles: [`start-app.js`],
       inputFiles: [`discourse-boot.js`],
     }),
+    generateScriptsTree(app),
   ]);
 };

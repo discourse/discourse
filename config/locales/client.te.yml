@@ -408,6 +408,8 @@ te:
         regular: "రెగ్యులరు"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
       enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
+      experimental_sidebar:
+        options: "ఎంపికలు"
       change: "మార్చు"
       moderator: "%{user} ఒక నిర్వాహకుడు"
       admin: "%{user} ఒక అధికారి"
@@ -732,7 +734,6 @@ te:
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
-      users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       view_new_post: "మీ కొత్త టపా చూడండి"
@@ -1245,6 +1246,7 @@ te:
       full: "సృష్టించి / జవాబివ్వు / చూడు"
       create_post: "జవాబివ్వు / చూడు"
       readonly: "చూడు"
+    preloader_text: "లోడవుతోంది"
     lightbox:
       download: "దిగుమతించు"
     keyboard_shortcuts_help:

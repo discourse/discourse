@@ -1087,7 +1087,9 @@ fr:
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
-      enable_experimental_sidebar: "Activer la barre latérale expérimentale"
+      experimental_sidebar:
+        enable: "Activer la barre latérale expérimentale"
+        options: "Options"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -2002,7 +2004,6 @@ fr:
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
       title: "Ou appuyez sur %{modifier}Entrée"
-      users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
@@ -3388,6 +3389,7 @@ fr:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
       readonly: "Voir"
+    preloader_text: "Chargement"
     lightbox:
       download: "télécharger"
       open: "image originale"
@@ -3722,7 +3724,9 @@ fr:
             inbox: "Boîte de réception"
             sent: "Envoyés"
             new: "Nouveau"
+            new_with_count: "Nouveau (%{count})"
             unread: "Non lues"
+            unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
           header_link_title: "toutes les étiquettes"

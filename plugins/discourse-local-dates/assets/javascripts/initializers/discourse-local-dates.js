@@ -190,9 +190,8 @@ function initializeDiscourseLocalDates(api) {
         return "";
       }
       if (this.element.attributes["data-range"] === "true") {
-        this.metadata.discourseLocalDateStartRangeOpts = buildOptionsFromMarkdownTag(
-          this.element
-        );
+        this.metadata.discourseLocalDateStartRangeOpts =
+          buildOptionsFromMarkdownTag(this.element);
         return "";
       }
       const opts = buildOptionsFromMarkdownTag(this.element, siteSettings);

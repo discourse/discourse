@@ -781,8 +781,8 @@ export default Controller.extend(bufferedProperty("model"), {
             Bookmark.create({
               bookmarkable_id: post.id,
               bookmarkable_type: "Post",
-              auto_delete_preference: this.currentUser
-                .bookmark_auto_delete_preference,
+              auto_delete_preference:
+                this.currentUser.bookmark_auto_delete_preference,
             }),
           post
         );
@@ -1335,8 +1335,8 @@ export default Controller.extend(bufferedProperty("model"), {
         Bookmark.create({
           bookmarkable_id: this.model.id,
           bookmarkable_type: "Topic",
-          auto_delete_preference: this.currentUser
-            .bookmark_auto_delete_preference,
+          auto_delete_preference:
+            this.currentUser.bookmark_auto_delete_preference,
         })
       );
     }
@@ -1698,6 +1698,30 @@ export default Controller.extend(bufferedProperty("model"), {
           }
           case "archived": {
             topic.set("message_archived", true);
+            break;
+          }
+          case "stats": {
+            let updateStream = false;
+            ["last_posted_at", "like_count", "posts_count"].forEach(
+              (property) => {
+                const value = data[property];
+                if (typeof value !== "undefined") {
+                  topic.set(property, value);
+                  updateStream = true;
+                }
+              }
+            );
+
+            if (data["last_poster"]) {
+              topic.details.set("last_poster", data["last_poster"]);
+              updateStream = true;
+            }
+
+            if (updateStream) {
+              postStream
+                .triggerChangedTopicStats()
+                .then((firstPostId) => refresh({ id: firstPostId }));
+            }
             break;
           }
           default: {

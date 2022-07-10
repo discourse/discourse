@@ -89,6 +89,12 @@ describe WatchedWord do
       }.to_not change { described_class.count }
     end
 
+    it "error when an tag action is created without valid tags" do
+      expect {
+        described_class.create!(word: "ramones", action: described_class.actions[:tag])
+      }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     it "replaces link with absolute URL" do
       word = Fabricate(:watched_word, action: described_class.actions[:link], word: "meta1")
       expect(word.replacement).to eq("http://test.localhost/")

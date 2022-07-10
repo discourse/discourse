@@ -34,7 +34,8 @@ discourseModule(
     setupRenderingTest(hooks);
 
     hooks.afterEach(function () {
-      I18n.translations.en.js.topic.notifications.tracking_pm.title = originalTranslation;
+      I18n.translations.en.js.topic.notifications.tracking_pm.title =
+        originalTranslation;
     });
 
     componentTest("the header has a localized title", {
