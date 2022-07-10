@@ -1,4 +1,4 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
@@ -13,7 +13,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_11 .select-below");
 
     assert.strictEqual(
-      queryAll(".selected-posts .move-to-topic").text().trim(),
+      query(".selected-posts .move-to-topic").innerText.trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
     );
@@ -21,30 +21,30 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      queryAll(".choose-topic-modal .title")
-        .html()
-        .includes(I18n.t("topic.move_to.title")),
+      query(".choose-topic-modal .title").innerHTML.includes(
+        I18n.t("topic.move_to.title")
+      ),
       "it opens move to modal"
     );
 
     assert.ok(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.split_topic.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.split_topic.radio_label")
+      ),
       "it shows an option to move to new topic"
     );
 
     assert.ok(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.merge_topic.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.merge_topic.radio_label")
+      ),
       "it shows an option to move to existing topic"
     );
 
     assert.ok(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.move_to_new_message.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.move_to_new_message.radio_label")
+      ),
       "it shows an option to move to new message"
     );
   });
@@ -57,30 +57,30 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      queryAll(".choose-topic-modal .title")
-        .html()
-        .includes(I18n.t("topic.move_to.title")),
+      query(".choose-topic-modal .title").innerHTML.includes(
+        I18n.t("topic.move_to.title")
+      ),
       "it opens move to modal"
     );
 
     assert.notOk(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.split_topic.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.split_topic.radio_label")
+      ),
       "it does not show an option to move to new topic"
     );
 
     assert.ok(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.merge_topic.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.merge_topic.radio_label")
+      ),
       "it shows an option to move to existing topic"
     );
 
     assert.notOk(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.move_to_new_message.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.move_to_new_message.radio_label")
+      ),
       "it does not show an option to move to new message"
     );
   });
@@ -92,7 +92,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_1 .select-post");
 
     assert.strictEqual(
-      queryAll(".selected-posts .move-to-topic").text().trim(),
+      query(".selected-posts .move-to-topic").innerText.trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
     );
@@ -100,23 +100,23 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      queryAll(".choose-topic-modal .title")
-        .html()
-        .includes(I18n.t("topic.move_to.title")),
+      query(".choose-topic-modal .title").innerHTML.includes(
+        I18n.t("topic.move_to.title")
+      ),
       "it opens move to modal"
     );
 
     assert.ok(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.move_to_new_message.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.move_to_new_message.radio_label")
+      ),
       "it shows an option to move to new message"
     );
 
     assert.ok(
-      queryAll(".choose-topic-modal .radios")
-        .html()
-        .includes(I18n.t("topic.move_to_existing_message.radio_label")),
+      query(".choose-topic-modal .radios").innerHTML.includes(
+        I18n.t("topic.move_to_existing_message.radio_label")
+      ),
       "it shows an option to move to existing message"
     );
   });
@@ -128,7 +128,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_2 .select-below");
 
     assert.strictEqual(
-      queryAll(".selected-posts .move-to-topic").text().trim(),
+      query(".selected-posts .move-to-topic").innerText.trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
     );
@@ -136,9 +136,9 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      queryAll(".choose-topic-modal .title")
-        .html()
-        .includes(I18n.t("topic.move_to.title")),
+      query(".choose-topic-modal .title").innerHTML.includes(
+        I18n.t("topic.move_to.title")
+      ),
       "it opens move to modal"
     );
   });
