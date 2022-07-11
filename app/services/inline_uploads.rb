@@ -245,7 +245,7 @@ class InlineUploads
     # Markdown inline - ![alt](http://... "image title")
     InlineUploads.match_md_inline_img(raw, external_src: true, &replace)
 
-    raw.gsub!(/^(https?:\/\/\S+)(\s?)$/) do |match|
+    raw = raw.gsub(/^(https?:\/\/\S+)(\s?)$/) do |match|
       if upload = blk.call(match)
         "![](#{upload.short_url})"
       else

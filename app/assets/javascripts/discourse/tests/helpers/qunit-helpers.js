@@ -138,7 +138,7 @@ export function applyPretender(name, server, helper) {
 }
 
 // Add clean up code here to run after every test
-function testCleanup(container, app) {
+export function testCleanup(container, app) {
   if (_initialized.has(QUnit.config.current.testId)) {
     if (!app) {
       app = getApplication();
@@ -223,6 +223,7 @@ export function discourseModule(name, options) {
 
       this.moduleName = name;
 
+      hooks.usingDiscourseModule = true;
       options.call(this, hooks);
     });
 

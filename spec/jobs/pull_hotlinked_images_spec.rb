@@ -423,6 +423,25 @@ describe Jobs::PullHotlinkedImages do
         expect(post.cooked).to match(/<span class="broken-image/)
         expect(post.cooked).to match(/<div class="large-image-placeholder">/)
       end
+
+      it 'rewrites a lone onebox' do
+        post = Fabricate(:post, raw: <<~MD)
+        Onebox here:
+        #{image_url}
+        MD
+        stub_image_size
+
+        post.rebake!
+
+        post.reload
+
+        expect(post.raw).to eq(<<~MD.chomp)
+        Onebox here:
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        MD
+
+        expect(post.cooked).to match(/<img src=.*\/uploads/)
+      end
     end
   end
 

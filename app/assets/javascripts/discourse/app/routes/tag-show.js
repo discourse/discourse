@@ -213,7 +213,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   @action
   dismissRead(operationType) {
-    const controller = this.controllerFor("tags-show");
+    const controller = this.controllerFor("tag-show");
     let options = {
       tagName: controller.tag?.id,
     };

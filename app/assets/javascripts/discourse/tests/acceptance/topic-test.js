@@ -186,7 +186,7 @@ acceptance("Topic", function (needs) {
     );
   });
 
-  test("Updating the topic title with unicode emojis without whitespaces", async function (assert) {
+  test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
     this.siteSettings.enable_inline_emoji_translation = true;
     await visit("/t/internationalization-localization/280");
     await click("#topic-title .d-icon-pencil-alt");
@@ -694,7 +694,7 @@ acceptance("Topic stats update automatically", function () {
       id: 1,
       username: "test",
       name: "Mr. Tester",
-      avatar_template: "http://www.example.com/avatar/updated_avatar.png",
+      avatar_template: "/images/d-logo-sketch-small.png",
     },
   };
 
@@ -754,7 +754,7 @@ acceptance("Topic stats update automatically", function () {
     );
     assert.equal(
       newAvatarSrc,
-      postsChangedFixture.last_poster.avatar_template,
+      `${document.location.origin}${postsChangedFixture.last_poster.avatar_template}`,
       "it updates the last poster avatar src with the expected value"
     );
   });

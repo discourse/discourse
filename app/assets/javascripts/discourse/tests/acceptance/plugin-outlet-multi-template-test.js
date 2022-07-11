@@ -1,7 +1,7 @@
 import {
   acceptance,
   count,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { clearCache } from "discourse/lib/plugin-connectors";
 import hbs from "htmlbars-inline-precompile";
@@ -42,12 +42,12 @@ acceptance("Plugin Outlet - Multi Template", function (needs) {
       "it has class names"
     );
     assert.strictEqual(
-      queryAll(".hello-span").text(),
+      query(".hello-span").innerText,
       "Hello",
       "it renders into the outlet"
     );
     assert.strictEqual(
-      queryAll(".bye-span").text(),
+      query(".bye-span").innerText,
       "Goodbye",
       "it renders into the outlet"
     );

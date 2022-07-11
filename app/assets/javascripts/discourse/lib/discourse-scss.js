@@ -24,10 +24,28 @@ class DiscourseScss extends Plugin {
 
     let file = this.inputPaths[0] + "/" + this.inputFile;
 
+    let deprecationCount = 0;
     let result = sass.renderSync({
       file,
       includePaths: this.inputPaths,
+      verbose: true, // call warn() for all deprecations
+      logger: {
+        warn(message, options) {
+          if (options.deprecation) {
+            deprecationCount += 1;
+          } else {
+            // eslint-disable-next-line no-console
+            console.warn(`\nWARNING: ${message}`);
+          }
+        },
+      },
     });
+    if (deprecationCount > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `\nWARNING: ${deprecationCount} deprecations encountered while compiling scss. (we cannot correct these until the Ruby SCSS pipeline is updated)`
+      );
+    }
 
     fs.writeFileSync(
       `${this.outputPath}/` + this.inputFile.replace(".scss", ".css"),

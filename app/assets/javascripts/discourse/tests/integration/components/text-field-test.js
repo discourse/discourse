@@ -1,102 +1,84 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { fillIn } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { fillIn, render } from "@ember/test-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import sinon from "sinon";
+import I18n from "I18n";
 
-discourseModule("Integration | Component | text-field", function (hooks) {
+module("Integration | Component | text-field", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("renders correctly with no properties set", {
-    template: hbs`{{text-field}}`,
+  test("renders correctly with no properties set", async function (assert) {
+    await render(hbs`<TextField />`);
 
-    test(assert) {
-      assert.ok(exists("input[type=text]"));
-    },
+    assert.ok(exists("input[type=text]"));
   });
 
-  componentTest("support a placeholder", {
-    template: hbs`{{text-field placeholderKey="placeholder.i18n.key"}}`,
+  test("support a placeholder", async function (assert) {
+    sinon.stub(I18n, "t").returnsArg(0);
 
-    beforeEach() {
-      sinon.stub(I18n, "t").returnsArg(0);
-    },
+    await render(hbs`<TextField @placeholderKey="placeholder.i18n.key" />`);
 
-    test(assert) {
-      assert.ok(exists("input[type=text]"));
-      assert.strictEqual(
-        queryAll("input").prop("placeholder"),
-        "placeholder.i18n.key"
-      );
-    },
+    assert.ok(exists("input[type=text]"));
+    assert.strictEqual(query("input").placeholder, "placeholder.i18n.key");
   });
 
-  componentTest("sets the dir attribute to ltr for Hebrew text", {
-    template: hbs`{{text-field value='זהו שם עברי עם מקום עברי'}}`,
-    beforeEach() {
-      this.siteSettings.support_mixed_text_direction = true;
-    },
+  test("sets the dir attribute to ltr for Hebrew text", async function (assert) {
+    this.siteSettings.support_mixed_text_direction = true;
 
-    test(assert) {
-      assert.strictEqual(queryAll("input").attr("dir"), "rtl");
-    },
+    await render(hbs`<TextField @value="זהו שם עברי עם מקום עברי" />`);
+
+    assert.strictEqual(query("input").getAttribute("dir"), "rtl");
   });
 
-  componentTest("sets the dir attribute to ltr for English text", {
-    template: hbs`{{text-field value='This is a ltr title'}}`,
-    beforeEach() {
-      this.siteSettings.support_mixed_text_direction = true;
-    },
+  test("sets the dir attribute to ltr for English text", async function (assert) {
+    this.siteSettings.support_mixed_text_direction = true;
 
-    test(assert) {
-      assert.strictEqual(queryAll("input").attr("dir"), "ltr");
-    },
+    await render(hbs`<TextField @value="This is a ltr title" />`);
+
+    assert.strictEqual(query("input").getAttribute("dir"), "ltr");
   });
 
-  componentTest("supports onChange", {
-    template: hbs`{{text-field class="tf-test" value=value onChange=changed}}`,
-    beforeEach() {
-      this.called = false;
-      this.newValue = null;
-      this.set("value", "hello");
-      this.set("changed", (v) => {
-        this.newValue = v;
-        this.called = true;
-      });
-    },
-    async test(assert) {
-      await fillIn(".tf-test", "hello");
-      assert.ok(!this.called);
-      await fillIn(".tf-test", "new text");
-      assert.ok(this.called);
-      assert.strictEqual(this.newValue, "new text");
-    },
+  test("supports onChange", async function (assert) {
+    this.called = false;
+    this.newValue = null;
+    this.set("value", "hello");
+    this.set("changed", (v) => {
+      this.newValue = v;
+      this.called = true;
+    });
+
+    await render(
+      hbs`<TextField class="tf-test" @value={{this.value}} @onChange={{this.changed}} />`
+    );
+
+    await fillIn(".tf-test", "hello");
+    assert.ok(!this.called);
+
+    await fillIn(".tf-test", "new text");
+    assert.ok(this.called);
+    assert.strictEqual(this.newValue, "new text");
   });
 
-  componentTest("supports onChangeImmediate", {
-    template: hbs`{{text-field class="tf-test" value=value onChangeImmediate=changed}}`,
-    beforeEach() {
-      this.called = false;
-      this.newValue = null;
-      this.set("value", "old");
-      this.set("changed", (v) => {
-        this.newValue = v;
-        this.called = true;
-      });
-    },
-    async test(assert) {
-      await fillIn(".tf-test", "old");
-      assert.ok(!this.called);
-      await fillIn(".tf-test", "no longer old");
-      assert.ok(this.called);
-      assert.strictEqual(this.newValue, "no longer old");
-    },
+  test("supports onChangeImmediate", async function (assert) {
+    this.called = false;
+    this.newValue = null;
+    this.set("value", "old");
+    this.set("changed", (v) => {
+      this.newValue = v;
+      this.called = true;
+    });
+
+    await render(
+      hbs`<TextField class="tf-test" @value={{this.value}} @onChangeImmediate={{this.changed}} />`
+    );
+
+    await fillIn(".tf-test", "old");
+    assert.ok(!this.called);
+
+    await fillIn(".tf-test", "no longer old");
+    assert.ok(this.called);
+    assert.strictEqual(this.newValue, "no longer old");
   });
 });

@@ -1,105 +1,81 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
-discourseModule("Integration | Component | badge-button", function (hooks) {
+module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("disabled badge", {
-    template: hbs`{{badge-button badge=badge}}`,
+  test("disabled badge", async function (assert) {
+    this.set("badge", { enabled: false });
 
-    beforeEach() {
-      this.set("badge", { enabled: false });
-    },
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    async test(assert) {
-      assert.ok(exists(".user-badge.disabled"));
-    },
+    assert.ok(exists(".user-badge.disabled"));
   });
 
-  componentTest("enabled badge", {
-    template: hbs`{{badge-button badge=badge}}`,
+  test("enabled badge", async function (assert) {
+    this.set("badge", { enabled: true });
 
-    beforeEach() {
-      this.set("badge", { enabled: true });
-    },
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    async test(assert) {
-      assert.notOk(exists(".user-badge.disabled"));
-    },
+    assert.notOk(exists(".user-badge.disabled"));
   });
 
-  componentTest("data-badge-name", {
-    template: hbs`{{badge-button badge=badge}}`,
+  test("data-badge-name", async function (assert) {
+    this.set("badge", { name: "foo" });
 
-    beforeEach() {
-      this.set("badge", { name: "foo" });
-    },
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    async test(assert) {
-      assert.ok(exists('.user-badge[data-badge-name="foo"]'));
-    },
+    assert.ok(exists('.user-badge[data-badge-name="foo"]'));
   });
 
-  componentTest("title", {
-    template: hbs`{{badge-button badge=badge}}`,
+  test("title", async function (assert) {
+    this.set("badge", { description: "a <a href>good</a> run" });
 
-    beforeEach() {
-      this.set("badge", { description: "a <a href>good</a> run" });
-    },
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    async test(assert) {
-      assert.equal(query(".user-badge").title, "a good run", "it strips html");
+    assert.strictEqual(
+      query(".user-badge").title,
+      "a good run",
+      "it strips html"
+    );
 
-      this.set("badge", { description: "a bad run" });
+    this.set("badge", { description: "a bad run" });
 
-      assert.equal(
-        query(".user-badge").title,
-        "a bad run",
-        "it updates title when changing description"
-      );
-    },
+    assert.strictEqual(
+      query(".user-badge").title,
+      "a bad run",
+      "it updates title when changing description"
+    );
   });
 
-  componentTest("icon", {
-    template: hbs`{{badge-button badge=badge}}`,
+  test("icon", async function (assert) {
+    this.set("badge", { icon: "times" });
 
-    beforeEach() {
-      this.set("badge", { icon: "times" });
-    },
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    async test(assert) {
-      assert.ok(exists(".d-icon.d-icon-times"));
-    },
+    assert.ok(exists(".d-icon.d-icon-times"));
   });
 
-  componentTest("accepts block", {
-    template: hbs`{{#badge-button badge=badge}}<span class="test"></span>{{/badge-button}}`,
+  test("accepts block", async function (assert) {
+    this.set("badge", {});
 
-    beforeEach() {
-      this.set("badge", {});
-    },
+    await render(hbs`
+      <BadgeButton @badge={{this.badge}}>
+        <span class="test"></span>
+      </BadgeButton>
+    `);
 
-    async test(assert) {
-      assert.ok(exists(".test"));
-    },
+    assert.ok(exists(".test"));
   });
 
-  componentTest("badgeTypeClassName", {
-    template: hbs`{{badge-button badge=badge}}`,
+  test("badgeTypeClassName", async function (assert) {
+    this.set("badge", { badgeTypeClassName: "foo" });
 
-    beforeEach() {
-      this.set("badge", { badgeTypeClassName: "foo" });
-    },
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    async test(assert) {
-      assert.ok(exists(".user-badge.foo"));
-    },
+    assert.ok(exists(".user-badge.foo"));
   });
 });

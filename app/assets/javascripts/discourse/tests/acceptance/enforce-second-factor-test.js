@@ -1,9 +1,8 @@
 import {
   acceptance,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 async function catchAbortedTransition() {
@@ -14,7 +13,6 @@ async function catchAbortedTransition() {
       throw e;
     }
   }
-  await settled();
 }
 
 acceptance("Enforce Second Factor", function (needs) {
@@ -35,8 +33,8 @@ acceptance("Enforce Second Factor", function (needs) {
     await catchAbortedTransition();
 
     assert.strictEqual(
-      queryAll(".control-label").text(),
-      "Password",
+      currentRouteName(),
+      "preferences.second-factor",
       "it will not transition from second-factor preferences"
     );
 
@@ -44,8 +42,8 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("a.admin-link");
 
     assert.strictEqual(
-      queryAll(".control-label").text(),
-      "Password",
+      currentRouteName(),
+      "preferences.second-factor",
       "it stays at second-factor preferences"
     );
   });
@@ -59,8 +57,8 @@ acceptance("Enforce Second Factor", function (needs) {
     await catchAbortedTransition();
 
     assert.strictEqual(
-      queryAll(".control-label").text(),
-      "Password",
+      currentRouteName(),
+      "preferences.second-factor",
       "it will not transition from second-factor preferences"
     );
 
@@ -68,8 +66,8 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("a.about-link");
 
     assert.strictEqual(
-      queryAll(".control-label").text(),
-      "Password",
+      currentRouteName(),
+      "preferences.second-factor",
       "it stays at second-factor preferences"
     );
   });
@@ -83,18 +81,18 @@ acceptance("Enforce Second Factor", function (needs) {
 
     await catchAbortedTransition();
 
-    assert.notStrictEqual(
-      queryAll(".control-label").text(),
-      "Password",
+    assert.strictEqual(
+      currentRouteName(),
+      "user.summary",
       "it will transition from second-factor preferences"
     );
 
     await click("#toggle-hamburger-menu");
     await click("a.about-link");
 
-    assert.notStrictEqual(
-      queryAll(".control-label").text(),
-      "Password",
+    assert.strictEqual(
+      currentRouteName(),
+      "about",
       "it is possible to navigate to other pages"
     );
   });

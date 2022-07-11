@@ -2,7 +2,6 @@ import GlimmerComponent from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
-import { DEBUG } from "@glimmer/env";
 
 /*
   Glimmer components are not EmberObjects, and therefore do not support automatic
@@ -70,12 +69,4 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
     const applicationInstance = getOwner(this);
     return applicationInstance.lookup("key-value-store:main");
   }
-}
-
-// This little hack will trick our outdated Ember GlobalResolver into
-// accepting glimmer components in debug mode.
-// https://github.com/emberjs/ember.js/blob/d4dc4b4cc5/packages/%40ember/application/globals-resolver.js#L142-L165
-// We can remove it once we've updated our resolver to a more recent implementation
-if (DEBUG) {
-  DiscourseGlimmerComponent.isComponentFactory = true;
 }

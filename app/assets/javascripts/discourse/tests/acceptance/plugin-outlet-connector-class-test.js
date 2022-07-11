@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { action } from "@ember/object";
@@ -88,14 +88,14 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
 
     await click(".say-hello");
     assert.strictEqual(
-      queryAll(".hello-result").text(),
+      query(".hello-result").innerText,
       "hello!",
       "actions delegate properly"
     );
 
     await click(".say-hi");
     assert.strictEqual(
-      queryAll(".hi-result").text(),
+      query(".hi-result").innerText,
       "hi!",
       "actions delegate properly"
     );

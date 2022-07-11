@@ -3,7 +3,7 @@ import {
   controllerFor,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -90,7 +90,7 @@ acceptance("Modal", function (needs) {
     await settled();
 
     assert.strictEqual(
-      queryAll(".d-modal .modal-tab:first-child").text().trim(),
+      query(".d-modal .modal-tab:first-child").innerText.trim(),
       "Test 1",
       "it should display the raw title"
     );
@@ -109,7 +109,7 @@ acceptance("Modal", function (needs) {
     showModal("test-title", { title: "test_title" });
     await settled();
     assert.strictEqual(
-      queryAll(".d-modal .title").text().trim(),
+      query(".d-modal .title").innerText.trim(),
       "Test title",
       "it should display the title"
     );
@@ -119,7 +119,7 @@ acceptance("Modal", function (needs) {
     showModal("test-title-with-body", { title: "test_title" });
     await settled();
     assert.strictEqual(
-      queryAll(".d-modal .title").text().trim(),
+      query(".d-modal .title").innerText.trim(),
       "Test title",
       "it should display the title when used with d-modal-body"
     );

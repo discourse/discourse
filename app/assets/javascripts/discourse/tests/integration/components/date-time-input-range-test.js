@@ -1,7 +1,7 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 function fromDateInput() {
@@ -22,24 +22,19 @@ function toTimeInput() {
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 
-discourseModule(
-  "Integration | Component | date-time-input-range",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Integration | Component | date-time-input-range", function (hooks) {
+  setupRenderingTest(hooks);
 
-    componentTest("default", {
-      template: hbs`{{date-time-input-range from=from to=to}}`,
+  test("default", async function (assert) {
+    this.setProperties({ from: DEFAULT_DATE_TIME, to: null });
 
-      beforeEach() {
-        this.setProperties({ from: DEFAULT_DATE_TIME, to: null });
-      },
+    await render(
+      hbs`<DateTimeInputRange @from={{this.from}} @to={{this.to}} />`
+    );
 
-      test(assert) {
-        assert.strictEqual(fromDateInput().value, "2019-01-29");
-        assert.strictEqual(fromTimeInput().dataset.name, "14:45");
-        assert.strictEqual(toDateInput().value, "");
-        assert.strictEqual(toTimeInput().dataset.name, "--:--");
-      },
-    });
-  }
-);
+    assert.strictEqual(fromDateInput().value, "2019-01-29");
+    assert.strictEqual(fromTimeInput().dataset.name, "14:45");
+    assert.strictEqual(toDateInput().value, "");
+    assert.strictEqual(toTimeInput().dataset.name, "--:--");
+  });
+});

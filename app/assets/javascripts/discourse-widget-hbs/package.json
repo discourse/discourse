@@ -24,6 +24,7 @@
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
     "@glimmer/component": "^1.1.2",
+    "@glimmer/syntax": "^0.84.2",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.25.3",
     "ember-cli-dependency-checker": "^3.3.1",

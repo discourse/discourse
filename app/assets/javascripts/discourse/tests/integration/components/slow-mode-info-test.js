@@ -1,82 +1,62 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  count,
-  discourseModule,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
-discourseModule("Integration | Component | slow-mode-info", function (hooks) {
+module("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("doesn't render if the topic is closed", {
-    template: hbs`{{slow-mode-info topic=topic}}`,
+  test("doesn't render if the topic is closed", async function (assert) {
+    this.set("topic", { slow_mode_seconds: 3600, closed: true });
 
-    beforeEach() {
-      this.set("topic", { slow_mode_seconds: 3600, closed: true });
-    },
+    await render(hbs`<SlowModeInfo @topic={{this.topic}} />`);
 
-    test(assert) {
-      assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
-    },
+    assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
   });
 
-  componentTest("doesn't render if the slow mode is disabled", {
-    template: hbs`{{slow-mode-info topic=topic}}`,
+  test("doesn't render if the slow mode is disabled", async function (assert) {
+    this.set("topic", { slow_mode_seconds: 0, closed: false });
 
-    beforeEach() {
-      this.set("topic", { slow_mode_seconds: 0, closed: false });
-    },
+    await render(hbs`<SlowModeInfo @topic={{this.topic}} />`);
 
-    test(assert) {
-      assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
-    },
+    assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
   });
 
-  componentTest("renders if slow mode is enabled", {
-    template: hbs`{{slow-mode-info topic=topic}}`,
+  test("renders if slow mode is enabled", async function (assert) {
+    this.set("topic", { slow_mode_seconds: 3600, closed: false });
 
-    beforeEach() {
-      this.set("topic", { slow_mode_seconds: 3600, closed: false });
-    },
+    await render(hbs`<SlowModeInfo @topic={{this.topic}} />`);
 
-    test(assert) {
-      assert.strictEqual(count(".slow-mode-heading"), 1);
-    },
+    assert.strictEqual(count(".slow-mode-heading"), 1);
   });
 
-  componentTest("staff and TL4 users can disable slow mode", {
-    template: hbs`{{slow-mode-info topic=topic user=user}}`,
+  test("staff and TL4 users can disable slow mode", async function (assert) {
+    this.setProperties({
+      topic: { slow_mode_seconds: 3600, closed: false },
+      user: { canManageTopic: true },
+    });
 
-    beforeEach() {
-      this.setProperties({
-        topic: { slow_mode_seconds: 3600, closed: false },
-        user: { canManageTopic: true },
-      });
-    },
+    await render(
+      hbs`<SlowModeInfo @topic={{this.topic}} @user={{this.user}} />`
+    );
 
-    test(assert) {
-      assert.strictEqual(count(".slow-mode-remove"), 1);
-    },
+    assert.strictEqual(count(".slow-mode-remove"), 1);
   });
 
-  componentTest("regular users can't disable slow mode", {
-    template: hbs`{{slow-mode-info topic=topic user=user}}`,
+  test("regular users can't disable slow mode", async function (assert) {
+    this.setProperties({
+      topic: { slow_mode_seconds: 3600, closed: false },
+      user: { canManageTopic: false },
+    });
 
-    beforeEach() {
-      this.setProperties({
-        topic: { slow_mode_seconds: 3600, closed: false },
-        user: { canManageTopic: false },
-      });
-    },
+    await render(
+      hbs`<SlowModeInfo @topic={{this.topic}} @user={{this.user}} />`
+    );
 
-    test(assert) {
-      assert.ok(
-        !exists(".slow-mode-remove"),
-        "it doesn't let you disable slow mode"
-      );
-    },
+    assert.ok(
+      !exists(".slow-mode-remove"),
+      "it doesn't let you disable slow mode"
+    );
   });
 });
