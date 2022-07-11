@@ -1163,10 +1163,27 @@
   resolved "https://registry.yarnpkg.com/@glimmer/di/-/di-0.1.11.tgz#a6878c07a13a2c2c76fcde598a5c97637bfc4280"
   integrity sha1-poeMB6E6LCx2/N5ZilyXY3v8QoA=
 
-"@glimmer/env@^0.1.7":
+"@glimmer/env@0.1.7", "@glimmer/env@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@glimmer/env/-/env-0.1.7.tgz#fd2d2b55a9029c6b37a6c935e8c8871ae70dfa07"
   integrity sha1-/S0rVakCnGs3psk16MiHGucN+gc=
+
+"@glimmer/interfaces@0.84.2":
+  version "0.84.2"
+  resolved "https://registry.yarnpkg.com/@glimmer/interfaces/-/interfaces-0.84.2.tgz#764cf92c954adcd1a851e5dc68ec1f6b654dc3bd"
+  integrity sha512-tMZxQpOddUVmHEOuripkNqVR7ba0K4doiYnFd4WyswqoHPlxqpBujbIamQ+bWCWEF0U4yxsXKa31ekS/JHkiBQ==
+  dependencies:
+    "@simple-dom/interface" "^1.4.0"
+
+"@glimmer/syntax@^0.84.2":
+  version "0.84.2"
+  resolved "https://registry.yarnpkg.com/@glimmer/syntax/-/syntax-0.84.2.tgz#a3f65e51eec20f6adb79c6159d1ad1166fa5bccd"
+  integrity sha512-SPBd1tpIR9XeaXsXsMRCnKz63eLnIZ0d5G9QC4zIBFBC3pQdtG0F5kWeuRVCdfTIFuR+5WBMfk5jvg+3gbQhjg==
+  dependencies:
+    "@glimmer/interfaces" "0.84.2"
+    "@glimmer/util" "0.84.2"
+    "@handlebars/parser" "~2.0.0"
+    simple-html-tokenizer "^0.5.11"
 
 "@glimmer/tracking@^1.0.4", "@glimmer/tracking@^1.1.2":
   version "1.1.2"
@@ -1175,6 +1192,15 @@
   dependencies:
     "@glimmer/env" "^0.1.7"
     "@glimmer/validator" "^0.44.0"
+
+"@glimmer/util@0.84.2":
+  version "0.84.2"
+  resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.84.2.tgz#2711ba40f25f44b2ea309cad49f5c2622c6211bc"
+  integrity sha512-VbhzE2s4rmU+qJF3gGBTL1IDjq+/G2Th51XErS8MQVMCmE4CU2pdwSzec8PyOowqCGUOrVIWuMzEI6VoPM4L4w==
+  dependencies:
+    "@glimmer/env" "0.1.7"
+    "@glimmer/interfaces" "0.84.2"
+    "@simple-dom/interface" "^1.4.0"
 
 "@glimmer/util@^0.44.0":
   version "0.44.0"
@@ -1185,6 +1211,11 @@
   version "0.44.0"
   resolved "https://registry.yarnpkg.com/@glimmer/validator/-/validator-0.44.0.tgz#03d127097dc9cb23052cdb7fcae59d0a9dca53e1"
   integrity sha512-i01plR0EgFVz69GDrEuFgq1NheIjZcyTy3c7q+w7d096ddPVeVcRzU3LKaqCfovvLJ+6lJx40j45ecycASUUyw==
+
+"@handlebars/parser@~2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@handlebars/parser/-/parser-2.0.0.tgz#5e8b7298f31ff8f7b260e6b7363c7e9ceed7d9c5"
+  integrity sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
@@ -1256,6 +1287,11 @@
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.0.tgz#6734f8ebc106a0860dff7f92bf90df193f0935d7"
   integrity sha512-zrsUxjLOKAzdewIDRWy9nsV1GQsKBCWaGwsZQlCgr6/q+vjyZhFgqedLfFBuI9anTPEUT4APq9Mu0SZBTzIcGQ==
+
+"@simple-dom/interface@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@simple-dom/interface/-/interface-1.4.0.tgz#e8feea579232017f89b0138e2726facda6fbb71f"
+  integrity sha512-l5qumKFWU0S+4ZzMaLXFU8tQZsicHEMEyAxI5kDFGhJsRqDwe0a7/iPA/GdxlGyDKseQQAgIz5kzU7eXTrlSpA==
 
 "@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.3":
   version "1.8.3"
@@ -9389,6 +9425,11 @@ silent-error@^1.0.0, silent-error@^1.0.1, silent-error@^1.1.1:
   integrity sha512-n4iEKyNcg4v6/jpb3c0/iyH2G1nzUNl7Gpqtn/mHIJK9S/q/7MCfoO4rwVOoO59qPFIc0hVHvMbiOJ0NdtxKKw==
   dependencies:
     debug "^2.2.0"
+
+simple-html-tokenizer@^0.5.11:
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/simple-html-tokenizer/-/simple-html-tokenizer-0.5.11.tgz#4c5186083c164ba22a7b477b7687ac056ad6b1d9"
+  integrity sha512-C2WEK/Z3HoSFbYq8tI7ni3eOo/NneSPRoPpcM7WdLjFOArFuyXEjAoCdOC3DgMfRyziZQ1hCNR4mrNdWEvD0og==
 
 sinon@^14.0.0:
   version "14.0.0"
