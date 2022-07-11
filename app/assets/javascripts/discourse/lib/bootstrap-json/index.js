@@ -392,9 +392,12 @@ to serve API requests. For example:
 
   shouldForwardRequest(request) {
     if (
-      ["/tests/index.html", "/ember-cli-live-reload.js", "/testem.js"].includes(
-        request.path
-      )
+      [
+        "/tests/index.html",
+        "/ember-cli-live-reload.js",
+        "/testem.js",
+        "/assets/test-i18n.js",
+      ].includes(request.path)
     ) {
       return false;
     }
