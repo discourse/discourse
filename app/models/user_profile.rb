@@ -1,19 +1,27 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
+  BAKED_VERSION = 1
+
   belongs_to :user, inverse_of: :user_profile
   belongs_to :card_background_upload, class_name: "Upload"
   belongs_to :profile_background_upload, class_name: "Upload"
   belongs_to :granted_title_badge, class_name: "Badge"
   belongs_to :featured_topic, class_name: 'Topic'
+
   has_many :upload_references, as: :target, dependent: :destroy
+  has_many :user_profile_views, dependent: :destroy
 
   validates :bio_raw, length: { maximum: 3000 }, watched_words: true
-  validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
+  validates :website, url: true, allow_blank: true, if: :validate_website?
   validates :user, presence: true
   validates :location, watched_words: true
 
+  validate :website_domain_validator, if: :validate_website?
+
   before_save :cook
+  before_save :apply_watched_words, if: :location?
+
   after_save :trigger_badges
   after_save :pull_hotlinked_image
 
@@ -23,12 +31,6 @@ class UserProfile < ActiveRecord::Base
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
-
-  validate :website_domain_validator, if: Proc.new { |c| c.new_record? || c.website_changed? }
-
-  has_many :user_profile_views, dependent: :destroy
-
-  BAKED_VERSION = 1
 
   attr_accessor :skip_pull_hotlinked_image
 
@@ -138,6 +140,10 @@ class UserProfile < ActiveRecord::Base
 
   private
 
+  def self.remove_featured_topic_from_all_profiles(topic)
+    where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+  end
+
   def cooked
     if self.bio_raw.present?
       PrettyText.cook(self.bio_raw, omit_nofollow: user.has_trust_level?(TrustLevel[3]) && !SiteSetting.tl3_links_no_follow)
@@ -157,6 +163,10 @@ class UserProfile < ActiveRecord::Base
     end
   end
 
+  def apply_watched_words
+    self.location = PrettyText.cook(location).gsub(/^<p>(.*)<\/p>$/, "\\1")
+  end
+
   def website_domain_validator
     allowed_domains = SiteSetting.allowed_user_website_domains
     return if (allowed_domains.blank? || self.website.blank?)
@@ -168,8 +178,8 @@ class UserProfile < ActiveRecord::Base
     self.errors.add :base, (I18n.t('user.website.domain_not_allowed', domains: allowed_domains.split('|').join(", "))) unless allowed_domains.split('|').include?(domain)
   end
 
-  def self.remove_featured_topic_from_all_profiles(topic)
-    where(featured_topic_id: topic.id).update_all(featured_topic_id: nil)
+  def validate_website?
+    new_record? || website_changed?
   end
 end
 

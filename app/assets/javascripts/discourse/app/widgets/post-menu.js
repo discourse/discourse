@@ -10,6 +10,7 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import { isTesting } from "discourse-common/config/environment";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -721,7 +722,7 @@ export default createWidget("post-menu", {
       return this.sendWidgetAction("showLogin");
     }
 
-    if (this.capabilities.canVibrate) {
+    if (this.capabilities.canVibrate && !isTesting()) {
       navigator.vibrate(VIBRATE_DURATION);
     }
 
