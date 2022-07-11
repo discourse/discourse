@@ -5,6 +5,27 @@
 # find which of the target users are ignoring, muting, or preventing
 # private messages from the acting user, so we can take alternative
 # action (such as raising an error or showing a helpful message) if so.
+#
+# Users may Mute another user (the actor), which will:
+#
+#   * Prevent PMs from the actor
+#   * Prevent notifications from the actor
+#
+# Users may Ignore another user (the actor), which will:
+#
+#   * Do everything that Mute does as well as suppressing content made by
+#     the actor (such as posts) from the UI
+#
+# Users may also either:
+#
+#   a) disallow all PMs sent to them or
+#   b) disallow PMs except from a certain allowlist of users
+#
+# A user may have this preference but have no Muted or Ignored users, which
+# necessitates the difference between methods in this class.
+#
+# An important note is that **all of these settings do not apply when the actor
+# is a staff member**. So admins and moderators can PM and notify anyone they please.
 class UserCommScreener
   attr_reader :acting_user, :preferences
 
@@ -20,12 +41,8 @@ class UserCommScreener
       @is_disallowing_pms_from_acting_user = preferences[:is_disallowing_pms_from_acting_user]
     end
 
-    def communication_allowed?
-      !ignoring_or_muting? && !disallowing_pms?
-    end
-
     def communication_prevented?
-      !communication_allowed?
+      ignoring_or_muting? || disallowing_pms?
     end
 
     def ignoring_or_muting?
@@ -42,14 +59,18 @@ class UserCommScreener
       acting_user.staff?
     end
 
+    def usernames
+      user_preference_map.values.map(&:username)
+    end
+
     def for_user(user_id)
       user_preference_map[user_id]
     end
 
     def allowing_actor_communication
       return user_preference_map.values if acting_user_staff?
-      user_preference_map.select do |user_id, pref|
-        pref.communication_allowed?
+      user_preference_map.reject do |user_id, pref|
+        pref.communication_prevented?
       end.values
     end
 
@@ -62,14 +83,18 @@ class UserCommScreener
 
     def ignoring_or_muting?(user_id)
       return false if acting_user_staff?
-      for_user(user_id)&.ignoring_or_muting?
+      pref = for_user(user_id)
+      pref.present? && pref.ignoring_or_muting?
     end
 
     def disallowing_pms?(user_id)
       return false if acting_user_staff?
-      for_user(user_id)&.disallowing_pms?
+      pref = for_user(user_id)
+      pref.present? && pref.disallowing_pms?
     end
   end
+  private_constant :UserCommPref
+  private_constant :UserCommPrefs
 
   def initialize(acting_user, target_usernames:)
     @acting_user = acting_user.is_a?(Integer) ? User.find(acting_user) : acting_user
@@ -77,23 +102,43 @@ class UserCommScreener
     @preferences = load_preference_map
   end
 
+  ##
+  # Users who have preferences are the only ones initially loaded by the query,
+  # so implicitly the leftover usernames have no preferences that mute, ignore,
+  # or disallow PMs from any other user.
   def allowing_actor_communication
-    preferences.allowing_actor_communication.map(&:username)
+    (preferences.allowing_actor_communication.map(&:username) + usernames_with_no_preference).uniq
   end
 
+  ##
+  # Any users who are either ignoring, muting, or disallowing PMs from the actor.
+  # Ignoring and muting implicitly ignore PMs which is why they fall under this
+  # umbrella as well.
   def preventing_actor_communication
     preferences.preventing_actor_communication.map(&:username)
   end
 
+  ##
+  # Whether the user is ignoring or muting the actor, meaning the actor cannot
+  # PM or send notifications to this target user.
   def ignoring_or_muting_actor?(user_id)
     preferences.ignoring_or_muting?(user_id)
   end
 
+  ##
+  # Whether the user is disallowing PMs from the actor specifically or in general,
+  # meaning the actor cannot send PMs to this target user. Ignoring or muting
+  # implicitly disallows PMs, so we need to take into account those preferences
+  # here too.
   def disallowing_pms_from_actor?(user_id)
-    preferences.disallowing_pms?(user_id)
+    preferences.disallowing_pms?(user_id) || ignoring_or_muting_actor?(user_id)
   end
 
   private
+
+  def usernames_with_no_preference
+    @target_users.values - @preferences.usernames
+  end
 
   def load_preference_map
     resolved_user_communication_preferences = {}
@@ -151,12 +196,12 @@ class UserCommScreener
       LEFT JOIN user_options ON user_options.user_id = users.id
       LEFT JOIN muted_users ON muted_users.user_id = users.id AND muted_users.muted_user_id = :acting_user_id
       LEFT JOIN ignored_users ON ignored_users.user_id = users.id AND ignored_users.ignored_user_id = :acting_user_id
-      WHERE (user_options.user_id IS NOT NULL AND user_options.user_id IN (:target_user_ids)) AND
+      WHERE users.id IN (:target_user_ids) AND
       (
         NOT user_options.allow_private_messages OR
         user_options.enable_allowed_pm_users OR
-        muted_users.user_id IN (:target_user_ids) OR
-        ignored_users.user_id IN (:target_user_ids)
+        muted_users.user_id IS NOT NULL OR
+        ignored_users.user_id IS NOT NULL
       )
     SQL
   end
