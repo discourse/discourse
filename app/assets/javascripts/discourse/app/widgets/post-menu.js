@@ -17,40 +17,20 @@ const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const _builders = {};
-export let apiExtraButtons = {};
-let _extraButtons = {};
-let _buttonsToRemoveCallbacks = {};
 
-export function addButton(name, builder) {
-  _extraButtons[name] = builder;
-}
-
-export function resetPostMenuExtraButtons() {
-  for (const key of Object.keys(apiExtraButtons)) {
-    delete apiExtraButtons[key];
-  }
-
-  _extraButtons = {};
-  _buttonsToRemoveCallbacks = {};
-}
-
-export function removeButton(name, callback) {
-  // 🏌️
-  _buttonsToRemoveCallbacks[name] ??= [];
-  _buttonsToRemoveCallbacks[name].push(callback || (() => true));
-}
-
+// TODO: Remove this DIY DSL
 function registerButton(name, builder) {
   _builders[name] = builder;
 }
 
 export function buildButton(name, widget) {
-  let { attrs, state, siteSettings, settings, currentUser } = widget;
-
+  let { attrs, state, siteSettings, settings, currentUser, register } = widget;
   let shouldAddButton = true;
+  const { buttonsToRemoveCallbacks } =
+    register.lookup("service:api-store").postMenu;
 
-  if (_buttonsToRemoveCallbacks[name]) {
-    shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+  if (buttonsToRemoveCallbacks[name]) {
+    shouldAddButton = !buttonsToRemoveCallbacks[name].some((c) =>
       c(attrs, state, siteSettings, settings, currentUser)
     );
   }
@@ -549,11 +529,14 @@ export default createWidget("post-menu", {
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
     }
 
-    Object.values(_extraButtons).forEach((builder) => {
+    const { extraButtons, buttonsToRemoveCallbacks } =
+      this.register.lookup("service:api-store").postMenu;
+
+    Object.values(extraButtons).forEach((builder) => {
       let shouldAddButton = true;
 
-      if (_buttonsToRemoveCallbacks[name]) {
-        shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+      if (buttonsToRemoveCallbacks[name]) {
+        shouldAddButton = !buttonsToRemoveCallbacks[name].some((c) =>
           c(
             attrs,
             this.state,

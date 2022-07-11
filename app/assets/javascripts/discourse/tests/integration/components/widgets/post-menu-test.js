@@ -3,15 +3,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Integration | Component | Widget | post-menu", function (hooks) {
   setupRenderingTest(hooks);
-
-  hooks.afterEach(function () {
-    resetPostMenuExtraButtons();
-  });
 
   test("add extra button", async function (assert) {
     this.set("args", {});
