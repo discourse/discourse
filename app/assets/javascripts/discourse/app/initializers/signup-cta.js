@@ -16,8 +16,6 @@ export default {
     const user = container.lookup("current-user:main");
     const appEvents = container.lookup("service:app-events");
 
-    screenTrack.keyValueStore = keyValueStore;
-
     // Preconditions
     if (user) {
       return;
