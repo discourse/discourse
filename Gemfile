@@ -74,7 +74,7 @@ gem 'barber'
 
 gem 'message_bus'
 
-gem 'rails_multisite'
+gem 'rails_multisite', github: 'discourse/rails_multisite', branch: 'loic-rails-7.1-compat'
 
 gem 'fast_xs', platform: :ruby
 

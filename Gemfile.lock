@@ -5,6 +5,15 @@ GIT
     mail (2.8.0.edge)
       mini_mime (>= 0.1.1)
 
+GIT
+  remote: https://github.com/discourse/rails_multisite.git
+  revision: ab9a5fd77440d33b3eecb64f3dd60a63a7b49983
+  branch: loic-rails-7.1-compat
+  specs:
+    rails_multisite (4.0.1)
+      activerecord (> 5.0, < 7.1)
+      railties (> 5.0, < 7.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -346,9 +355,6 @@ GEM
       activerecord (> 6.0, < 7.1)
       concurrent-ruby
       railties (> 6.0, < 7.1)
-    rails_multisite (4.0.1)
-      activerecord (> 5.0, < 7.1)
-      railties (> 5.0, < 7.1)
     railties (7.0.3)
       actionpack (= 7.0.3)
       activesupport (= 7.0.3)
@@ -596,7 +602,7 @@ DEPENDENCIES
   rack-mini-profiler
   rack-protection
   rails_failover
-  rails_multisite
+  rails_multisite!
   railties (= 7.0.3)
   rake
   rb-fsevent
