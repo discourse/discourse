@@ -1,7 +1,7 @@
 import {
   acceptance,
   count,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
@@ -31,7 +31,7 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
       "it has class names"
     );
     assert.strictEqual(
-      queryAll(".hello-username").text(),
+      query(".hello-username").innerText,
       "eviltrout",
       "it renders into the outlet"
     );

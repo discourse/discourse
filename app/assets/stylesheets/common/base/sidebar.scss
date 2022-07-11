@@ -7,16 +7,21 @@
 .header-sidebar-toggle {
   --toggle-padding: 0.5em;
   margin-right: 0.75em;
+  // extending the toggle beyond the page when space allows
+  // for better logo alignment with content
+  margin-left: -3.5em;
+  @media screen and (max-width: 1480px) {
+    margin-left: -0.75em;
+  }
 
-  @media screen and (min-width: 1300px) {
-    // extending the toggle beyond the page when space allows
-    // for better logo alignment with content
-    body:not(.has-sidebar-page) & {
-      margin-left: -3.7em;
-      transition: margin var(--d-sidebar-animation-speed)
-        var(--d-sidebar-animation-ease);
+  @media screen and (max-width: 1380px) {
+    body.has-sidebar-page & {
+      margin-left: 0;
     }
   }
+
+  transition: margin var(--d-sidebar-animation-speed)
+    var(--d-sidebar-animation-ease);
 
   .mobile-view & {
     margin-left: calc(var(--toggle-padding) * -1);

@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import { setCustomHTML } from "discourse/helpers/custom-html";
@@ -19,7 +19,7 @@ acceptance("CustomHTML set", function () {
 
     await visit("/static/faq");
     assert.strictEqual(
-      queryAll("span.custom-html-test").text(),
+      query("span.custom-html-test").innerText,
       "HTML",
       "it inserted the markup"
     );
@@ -32,7 +32,7 @@ acceptance("CustomHTML set", function () {
 
     await visit("/static/faq");
     assert.strictEqual(
-      queryAll("span.cookie").text(),
+      query("span.cookie").innerText,
       "monster",
       "it inserted the markup"
     );

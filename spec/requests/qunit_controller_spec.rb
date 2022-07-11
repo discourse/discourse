@@ -94,7 +94,7 @@ describe QunitController do
         expect(response.status).to eq(200)
         expect(response.body).to include("/stylesheets/color_definitions_base_")
         expect(response.body).to include("/stylesheets/desktop_")
-        expect(response.body).to include("/stylesheets/test_helper_")
+        expect(response.body).to include("* https://qunitjs.com/") # inlined QUnit CSS
         expect(response.body).to include("/assets/locales/en.js")
         expect(response.body).to include("/test-support")
         expect(response.body).to include("/test-helpers")

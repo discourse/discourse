@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
@@ -15,11 +15,11 @@ acceptance("Category New", function (needs) {
   test("Creating a new category", async function (assert) {
     await visit("/new-category");
 
-    assert.ok(queryAll(".badge-category"));
+    assert.ok(exists(".badge-category"));
     assert.notOk(exists(".category-breadcrumb"));
 
     await fillIn("input.category-name", "testing");
-    assert.strictEqual(queryAll(".badge-category").text(), "testing");
+    assert.strictEqual(query(".badge-category").innerText, "testing");
 
     await click("#save-category");
 
@@ -30,7 +30,7 @@ acceptance("Category New", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".edit-category-title h2").text(),
+      query(".edit-category-title h2").innerText,
       I18n.t("category.edit_dialog_title", {
         categoryName: "testing",
       })
@@ -38,13 +38,13 @@ acceptance("Category New", function (needs) {
 
     await click(".edit-category-security a");
     assert.ok(
-      queryAll("button.edit-permission"),
+      exists(".permission-row button.reply-toggle"),
       "it can switch to the security tab"
     );
 
     await click(".edit-category-settings a");
     assert.ok(
-      queryAll("#category-search-priority"),
+      exists("#category-search-priority"),
       "it can switch to the settings tab"
     );
 

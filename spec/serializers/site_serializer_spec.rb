@@ -72,19 +72,22 @@ describe SiteSerializer do
   it "includes user-selectable color schemes" do
     # it includes seeded color schemes
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(3)
+    expect(serialized[:user_color_schemes].count).to eq(6)
 
     scheme_names = serialized[:user_color_schemes].map { |x| x[:name] }
     expect(scheme_names).to include(I18n.t("color_schemes.dark"))
     expect(scheme_names).to include(I18n.t("color_schemes.wcag"))
     expect(scheme_names).to include(I18n.t("color_schemes.wcag_dark"))
+    expect(scheme_names).to include(I18n.t("color_schemes.solarized_light"))
+    expect(scheme_names).to include(I18n.t("color_schemes.solarized_dark"))
+    expect(scheme_names).to include(I18n.t("color_schemes.dracula"))
 
     dark_scheme = ColorScheme.create_from_base(name: "AnotherDarkScheme", base_scheme_id: "Dark")
     dark_scheme.user_selectable = true
     dark_scheme.save!
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(4)
+    expect(serialized[:user_color_schemes].count).to eq(7)
     expect(serialized[:user_color_schemes][0][:is_dark]).to eq(true)
   end
 

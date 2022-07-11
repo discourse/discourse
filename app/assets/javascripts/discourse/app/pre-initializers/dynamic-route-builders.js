@@ -107,15 +107,15 @@ export default {
         })
       );
       app.register(
-        `route:tag.show-${filterDasherized}-category`,
+        `route:tags.show-category-${filterDasherized}`,
         TagShowRoute.extend({ navMode: filter })
       );
       app.register(
-        `route:tag.show-${filterDasherized}-category-none`,
+        `route:tags.show-category-none-${filterDasherized}`,
         TagShowRoute.extend({ navMode: filter, noSubcategories: true })
       );
       app.register(
-        `route:tag.show-${filterDasherized}-category-all`,
+        `route:tags.show-category-all-${filterDasherized}`,
         TagShowRoute.extend({ navMode: filter, noSubcategories: false })
       );
     });
