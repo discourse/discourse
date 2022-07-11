@@ -7,7 +7,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import createStore from "discourse/tests/helpers/create-store";

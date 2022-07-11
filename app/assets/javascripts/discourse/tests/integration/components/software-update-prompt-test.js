@@ -6,7 +6,7 @@ import {
   exists,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { later } from "@ember/runloop";
 
 module("Integration | Component | software-update-prompt", function (hooks) {

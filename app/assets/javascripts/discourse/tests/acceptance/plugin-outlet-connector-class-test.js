@@ -7,7 +7,7 @@ import {
 import { click, visit } from "@ember/test-helpers";
 import { action } from "@ember/object";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 
 const PREFIX = "javascripts/single-test/connectors";

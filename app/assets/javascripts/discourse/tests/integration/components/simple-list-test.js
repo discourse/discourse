@@ -8,7 +8,7 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
