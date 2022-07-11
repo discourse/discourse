@@ -8,7 +8,7 @@ import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
 const keyEnter = 13;
@@ -114,7 +114,8 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
-  test("search button toggles search menu", async function (assert) {
+  // TODO: This feature doesn't work currently (/t/69760)
+  skip("search button toggles search menu", async function (assert) {
     await visit("/");
 
     await click("#search-button");

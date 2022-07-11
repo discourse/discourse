@@ -1185,13 +1185,7 @@ User.reopen(Evented, {
   trackStatus() {
     this.addObserver("status", this, "_statusChanged");
 
-    if (this.isCurrent) {
-      this.appEvents.on(
-        "current-user-status:changed",
-        this,
-        this._updateStatus
-      );
-    }
+    this.appEvents.on("user-status:changed", this, this._updateStatus);
 
     if (this.status && this.status.ends_at) {
       this._scheduleStatusClearing(this.status.ends_at);
@@ -1200,13 +1194,7 @@ User.reopen(Evented, {
 
   stopTrackingStatus() {
     this.removeObserver("status", this, "_statusChanged");
-    if (this.isCurrent) {
-      this.appEvents.off(
-        "current-user-status:changed",
-        this,
-        this._updateStatus
-      );
-    }
+    this.appEvents.off("user-status:changed", this, this._updateStatus);
     this._unscheduleStatusClearing();
   },
 
@@ -1244,8 +1232,8 @@ User.reopen(Evented, {
     this.set("status", null);
   },
 
-  _updateStatus(status) {
-    this.set("status", status);
+  _updateStatus(statuses) {
+    this.set("status", statuses[this.id]);
   },
 });
 

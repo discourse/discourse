@@ -98,12 +98,12 @@ describe UserStatusController do
         end
 
         expect(messages.size).to eq(1)
-        expect(messages[0].channel).to eq("/user-status/#{user.id}")
-        expect(messages[0].user_ids).to eq([user.id])
+        expect(messages[0].channel).to eq("/user-status")
+        expect(messages[0].group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])
 
-        expect(messages[0].data[:description]).to eq(status)
-        expect(messages[0].data[:emoji]).to eq(emoji)
-        expect(messages[0].data[:ends_at]).to eq(ends_at)
+        expect(messages[0].data[user.id][:description]).to eq(status)
+        expect(messages[0].data[user.id][:emoji]).to eq(emoji)
+        expect(messages[0].data[user.id][:ends_at]).to eq(ends_at)
       end
     end
   end
@@ -145,9 +145,10 @@ describe UserStatusController do
         messages = MessageBus.track_publish { delete "/user-status.json" }
 
         expect(messages.size).to eq(1)
-        expect(messages[0].channel).to eq("/user-status/#{user.id}")
-        expect(messages[0].data).to eq(nil)
-        expect(messages[0].user_ids).to eq([user.id])
+        expect(messages[0].channel).to eq("/user-status")
+        expect(messages[0].group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])
+
+        expect(messages[0].data[user.id]).to eq(nil)
       end
     end
   end

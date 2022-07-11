@@ -153,9 +153,7 @@ createWidget("user-menu-links", {
       });
     }
 
-    if (!this.currentUser.experimental_sidebar_enabled) {
-      glyphs.push(this.bookmarksGlyph());
-    }
+    glyphs.push(this.bookmarksGlyph());
 
     if (this.siteSettings.enable_personal_messages || this.currentUser.staff) {
       glyphs.push(this.messagesGlyph());

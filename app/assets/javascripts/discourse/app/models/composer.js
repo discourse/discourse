@@ -1211,11 +1211,6 @@ const Composer = RestModel.extend({
       if (isEmpty(this.reply)) {
         return false;
       }
-
-      // Do not save when the reply's length is too small
-      if (this.replyLength < this.minimumPostLength) {
-        return false;
-      }
     }
 
     return true;

@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import PreloadStore from "discourse/lib/preload-store";
@@ -16,7 +16,7 @@ acceptance("Account Created", function () {
 
     assert.ok(exists(".account-created"));
     assert.strictEqual(
-      queryAll(".account-created .ac-message").text().trim(),
+      query(".account-created .ac-message").innerText.trim(),
       "Hello World",
       "it displays the message"
     );
@@ -35,7 +35,7 @@ acceptance("Account Created", function () {
 
     assert.ok(exists(".account-created"));
     assert.strictEqual(
-      queryAll(".account-created .ac-message").text().trim(),
+      query(".account-created .ac-message").innerText.trim(),
       "Hello World",
       "it displays the message"
     );
@@ -43,7 +43,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .resend");
 
     assert.strictEqual(currentRouteName(), "account-created.resent");
-    const email = queryAll(".account-created .ac-message b").text();
+    const email = query(".account-created .ac-message b").innerText;
     assert.strictEqual(email, "eviltrout@example.com");
   });
 
@@ -88,7 +88,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .btn-primary");
 
     assert.strictEqual(currentRouteName(), "account-created.resent");
-    const email = queryAll(".account-created .ac-message b").text();
+    const email = query(".account-created .ac-message b").innerText;
     assert.strictEqual(email, "newemail@example.com");
   });
 });

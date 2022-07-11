@@ -26,6 +26,9 @@
       <div class="control-group">
         <div class="controls">
           <DButton @class="btn-primary" @action={{action "changeUsername"}} @type="submit" @disabled={{this.saveDisabled}} @translatedLabel={{this.saveButtonText}} />
+          <LinkTo @route="preferences" @model={{this.currentUser}} class="btn btn-flat -cancel">
+            {{i18n "cancel"}}
+          </LinkTo>
           {{#if this.saved}}{{i18n "saved"}}{{/if}}
         </div>
       </div>
