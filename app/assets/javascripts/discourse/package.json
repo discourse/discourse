@@ -63,7 +63,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^20.0.0",
     "loader.js": "^4.7.0",
-    "message-bus-client": "^3.3.0",
+    "message-bus-client": "^4.2.0",
     "messageformat": "0.1.5",
     "node-fetch": "^2.6.6",
     "pretender": "^3.4.7",

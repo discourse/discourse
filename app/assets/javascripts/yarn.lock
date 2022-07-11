@@ -7624,10 +7624,10 @@ merge2@^1.2.3, merge2@^1.3.0:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
-message-bus-client@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/message-bus-client/-/message-bus-client-3.3.0.tgz#ee38ad26fa54f14dce17e65cc466be4e1aa7028b"
-  integrity sha512-dPfGLsxTkw1fNaQ+9nwbB1TXH5NnLXapjGkJtW9fZVsq7fNHaSomiTHZfXJHBibePZ10RH6AuHGemWKqgMtlIA==
+message-bus-client@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/message-bus-client/-/message-bus-client-4.2.0.tgz#1b994a1309eaa3d5b1ebe6d0b2f911e3355c2314"
+  integrity sha512-m0aOFoZybxNjrILZdG6tkawMHdwxi5AysUusZSkl5AYbcFwxHhHVlmyBILzuMKNcR1oET3d5eKpFlgPAc9IjOQ==
 
 messageformat@0.1.5:
   version "0.1.5"
