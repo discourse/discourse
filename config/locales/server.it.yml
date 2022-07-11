@@ -1579,6 +1579,7 @@ it:
     enable_badges: "Attiva il sistema a distintivi"
     max_favorite_badges: "Numero massimo di distintivi che l'utente può selezionare"
     enable_whispers: "Consenti allo staff comunicazioni private all'interno degli argomenti."
+    whispers_allowed_groups: "Consenti la comunicazione privata all'interno degli argomenti per i membri di gruppi specifici."
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
     blocked_email_domains: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"

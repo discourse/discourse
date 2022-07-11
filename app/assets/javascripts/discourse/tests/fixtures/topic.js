@@ -276,16 +276,14 @@ export default {
               clicks: 2,
             },
             {
-              url:
-                "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
+              url: "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
               internal: true,
               reflection: true,
               title: "Solving XDA-Developer style forums",
               clicks: 2,
             },
             {
-              url:
-                "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
+              url: "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
               internal: true,
               reflection: true,
               title:
@@ -293,8 +291,7 @@ export default {
               clicks: 1,
             },
             {
-              url:
-                "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
+              url: "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
               internal: true,
               reflection: true,
               title:
@@ -398,8 +395,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
+              url: "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
               internal: false,
               reflection: false,
               clicks: 118,
@@ -494,8 +490,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "https://github.com/discourse/discourse/blob/main/config/locales",
+              url: "https://github.com/discourse/discourse/blob/main/config/locales",
               internal: false,
               reflection: false,
               title:
@@ -503,8 +498,7 @@ export default {
               clicks: 62,
             },
             {
-              url:
-                "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
+              url: "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
               internal: true,
               reflection: true,
               title: "GitHub OneBox Rendering Issue",
@@ -696,8 +690,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
+              url: "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
               internal: false,
               reflection: false,
               title:
@@ -998,8 +991,7 @@ export default {
           can_recover: true,
           link_counts: [
             {
-              url:
-                "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
+              url: "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
               internal: true,
               reflection: true,
               title: "What I love about WordPress plugins",
@@ -2154,26 +2146,8 @@ export default {
         },
       ],
       stream: [
-        398,
-        419,
-        1060,
-        3623,
-        3651,
-        3654,
-        3655,
-        3658,
-        3660,
-        3667,
-        3673,
-        3675,
-        3690,
-        3925,
-        3938,
-        3982,
-        3989,
-        3996,
-        4009,
-        4012,
+        398, 419, 1060, 3623, 3651, 3654, 3655, 3658, 3660, 3667, 3673, 3675,
+        3690, 3925, 3938, 3982, 3989, 3996, 4009, 4012,
       ],
       gaps: { before: {}, after: { 398: [4012] } },
     },
@@ -2403,8 +2377,7 @@ export default {
       ],
       links: [
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/en.yml",
           title: null,
           fancy_title: null,
           internal: false,
@@ -2424,8 +2397,7 @@ export default {
           domain: "www.localeapp.com",
         },
         {
-          url:
-            "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
+          url: "http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders",
           title:
             "internationalization - Why do people use plain english as translation placeholders? - Stack Overflow",
           fancy_title: null,
@@ -2436,8 +2408,7 @@ export default {
           domain: "stackoverflow.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales",
           title:
             "discourse/config/locales at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2458,8 +2429,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "http://www.localeapp.com/projects/1537/translations?utf8=%E2%9C%93&search=source_code",
+          url: "http://www.localeapp.com/projects/1537/translations?utf8=%E2%9C%93&search=source_code",
           title: "langforums | Locale",
           fancy_title: null,
           internal: false,
@@ -2519,8 +2489,7 @@ export default {
           domain: "weblate.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/tree/main/config/locales",
+          url: "https://github.com/discourse/discourse/tree/main/config/locales",
           title:
             "discourse/config/locales at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2552,8 +2521,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/gururea/discourse/tree/master/config/locales",
+          url: "https://github.com/gururea/discourse/tree/master/config/locales",
           title:
             "discourse/config/locales at master · gururea/discourse · GitHub",
           fancy_title: null,
@@ -2564,8 +2532,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/client.en.yml#L691",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/client.en.yml#L691",
           title:
             "discourse/config/locales/client.en.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2586,8 +2553,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/client.nl.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/client.nl.yml",
           title:
             "discourse/config/locales/client.nl.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2598,8 +2564,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/commit/c5761eae8afe37e20cec0d0f9d14b85b6e585bda",
+          url: "https://github.com/discourse/discourse/commit/c5761eae8afe37e20cec0d0f9d14b85b6e585bda",
           title:
             "Support for Simplified Chinese thanks to tangramor · c5761ea · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2631,8 +2596,7 @@ export default {
           domain: "www.getlocalization.com",
         },
         {
-          url:
-            "http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/",
+          url: "http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/",
           title: "Discourse as Your First Rails App",
           fancy_title: null,
           internal: false,
@@ -2642,8 +2606,7 @@ export default {
           domain: "blog.discourse.org",
         },
         {
-          url:
-            "https://github.com/alxndr/discourse/blob/i18n-chinese/config/locales/server.zh.yml",
+          url: "https://github.com/alxndr/discourse/blob/i18n-chinese/config/locales/server.zh.yml",
           title: null,
           fancy_title: null,
           internal: false,
@@ -2693,8 +2656,7 @@ export default {
           domain: "en.wikipedia.org",
         },
         {
-          url:
-            "http://www.slideshare.net/HeatherRivers/linguistic-potluck-crowdsourcing-localization-with-rails",
+          url: "http://www.slideshare.net/HeatherRivers/linguistic-potluck-crowdsourcing-localization-with-rails",
           title: "Linguistic Potluck: Crowdsourcing localization with Rails",
           fancy_title: null,
           internal: false,
@@ -2714,8 +2676,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "http://www.madanalogy.com/2012/06/rails-i18n-translations-in-yaml.html",
+          url: "http://www.madanalogy.com/2012/06/rails-i18n-translations-in-yaml.html",
           title:
             "Mad Analogy: Rails i18n translations in Yaml: translation tool support",
           fancy_title: null,
@@ -2767,8 +2728,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
+          url: "https://meta.discourse.org/t/solving-xda-developer-style-forums/4368/4",
           title: "Solving XDA-Developer style forums",
           fancy_title: null,
           internal: true,
@@ -2818,8 +2778,7 @@ export default {
           domain: "blog.discourse.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/app/assets/javascripts/locales/date_locales.js",
+          url: "https://github.com/discourse/discourse/blob/main/app/assets/javascripts/locales/date_locales.js",
           title: null,
           fancy_title: null,
           internal: false,
@@ -2849,8 +2808,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
+          url: "https://meta.discourse.org/t/comrades-lets-join-our-efforts-on-ukrainian-and-russian-translations/4403/5",
           title:
             "Comrades let's join our efforts on ukrainian and russian translations",
           fancy_title: null,
@@ -2871,8 +2829,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
+          url: "https://meta.discourse.org/t/bookmark-last-read-sometimes-doesn-t-go-to-the-end-of-a-topic/4825/9",
           title:
             "Bookmark/last read sometimes doesn't go to the end of a topic",
           fancy_title: null,
@@ -2883,8 +2840,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/client.de.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/client.de.yml",
           title:
             "discourse/config/locales/client.de.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2895,8 +2851,7 @@ export default {
           domain: "github.com",
         },
         {
-          url:
-            "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
+          url: "https://meta.discourse.org/t/what-i-love-about-wordpress-plugins/5697",
           title: "What I love about WordPress plugins",
           fancy_title: null,
           internal: true,
@@ -2906,8 +2861,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
+          url: "https://meta.discourse.org/t/github-onebox-rendering-issue/7616",
           title: "GitHub OneBox Rendering Issue",
           fancy_title: null,
           internal: true,
@@ -2917,8 +2871,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://github.com/discourse/discourse/blob/main/config/locales/server.de.yml",
+          url: "https://github.com/discourse/discourse/blob/main/config/locales/server.de.yml",
           title:
             "discourse/config/locales/server.de.yml at master · discourse/discourse · GitHub",
           fancy_title: null,
@@ -2939,8 +2892,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763",
+          url: "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763",
           title: "Translation Tools: Transifex? Localeapp?",
           fancy_title: null,
           internal: true,
@@ -2970,8 +2922,7 @@ export default {
           domain: "meta.discourse.org",
         },
         {
-          url:
-            "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763/41",
+          url: "https://meta.discourse.org/t/translation-tools-transifex-localeapp/7763/41",
           title: "Translation Tools: Transifex? Localeapp?",
           fancy_title: null,
           internal: true,
@@ -3053,8 +3004,7 @@ export default {
           "Mobile theme doesn't show last activity time for topics on category page",
         fancy_title:
           "Mobile theme doesn&rsquo;t show last activity time for topics on category page",
-        slug:
-          "mobile-theme-doesnt-show-last-activity-time-for-topics-on-category-page",
+        slug: "mobile-theme-doesnt-show-last-activity-time-for-topics-on-category-page",
         posts_count: 4,
         reply_count: 2,
         highest_post_number: 4,
@@ -3097,8 +3047,7 @@ export default {
           'Reply+{messagekey}@... optionally in header "from" in addition to "reply-to"',
         fancy_title:
           "Reply+{messagekey}@&hellip; optionally in header &ldquo;from&rdquo; in addition to &ldquo;reply-to&rdquo;",
-        slug:
-          "reply-messagekey-optionally-in-header-from-in-addition-to-reply-to",
+        slug: "reply-messagekey-optionally-in-header-from-in-addition-to-reply-to",
         posts_count: 1,
         reply_count: 0,
         highest_post_number: 1,
@@ -3178,8 +3127,7 @@ export default {
           "Support for Piwik Analytics as an alternative to Google Analytics",
         fancy_title:
           "Support for Piwik Analytics as an alternative to Google Analytics",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         posts_count: 53,
         reply_count: 41,
         highest_post_number: 65,
@@ -3308,7 +3256,7 @@ export default {
           avatar_template: "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
           created_at: "2020-07-05T09:28:36.371Z",
           cooked:
-            "<p><span data-date=\"2021-09-30\" data-time=\"13:00:00\" class=\"discourse-local-date\" data-timezone=\"Africa/Cairo\" data-email-preview=\"2021-09-30T11:00:00Z UTC\">2021-09-30T11:00:00Z</span></p>",
+            '<p><span data-date="2021-09-30" data-time="13:00:00" class="discourse-local-date" data-timezone="Africa/Cairo" data-email-preview="2021-09-30T11:00:00Z UTC">2021-09-30T11:00:00Z</span></p>',
           post_number: 1,
           post_type: 1,
           updated_at: "2020-07-05T09:28:36.371Z",
@@ -3521,8 +3469,7 @@ export default {
           can_recover: false,
           link_counts: [
             {
-              url:
-                "https://meta.discourse.org/t/post-reply-on-different-topic-no-longer-works/28825",
+              url: "https://meta.discourse.org/t/post-reply-on-different-topic-no-longer-works/28825",
               internal: true,
               reflection: false,
               title: "Post reply on different topic no longer works",
@@ -3877,8 +3824,7 @@ export default {
             "Plugins not being parsed in correct javascript context when loaded for jobs",
           fancy_title:
             "Plugins not being parsed in correct javascript context when loaded for jobs",
-          slug:
-            "plugins-not-being-parsed-in-correct-javascript-context-when-loaded-for-jobs",
+          slug: "plugins-not-being-parsed-in-correct-javascript-context-when-loaded-for-jobs",
           posts_count: 2,
           reply_count: 0,
           highest_post_number: 2,
@@ -4034,8 +3980,7 @@ export default {
       ],
       links: [
         {
-          url:
-            "https://meta.discourse.org/t/post-reply-on-different-topic-no-longer-works/28825",
+          url: "https://meta.discourse.org/t/post-reply-on-different-topic-no-longer-works/28825",
           title: "Post reply on different topic no longer works",
           fancy_title: null,
           internal: true,
@@ -5382,7 +5327,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          notice: { type: "new_user" }
+          notice: { type: "new_user" },
         },
       ],
       stream: [25, 26, 27],
@@ -5667,7 +5612,8 @@ export default {
           username: "group_moderator",
           avatar_template: "/images/avatar.png",
           created_at: "2020-07-24T17:50:17.274Z",
-          cooked: '<aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/57350945"><header class="source"><a href="https://example.com/57350945" target="_blank" rel="noopener">XYZ News Site</a> </header> <article class="onebox-body"> <div class="aspect-image" style="--aspect-ratio:690/388;"><img src="/assets/logo.png" class="thumbnail d-lazyload" width="690" height="388"></div> <h3><a href="https://example.com/57350945" target="_blank" rel="noopener">News Headline</a></h3> <p>Article summary</p> </article> <div class="onebox-metadata"> </div> <div style="clear: both"></div> </aside>',
+          cooked:
+            '<aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/57350945"><header class="source"><a href="https://example.com/57350945" target="_blank" rel="noopener">XYZ News Site</a> </header> <article class="onebox-body"> <div class="aspect-image" style="--aspect-ratio:690/388;"><img src="/assets/logo.png" class="thumbnail d-lazyload" width="690" height="388"></div> <h3><a href="https://example.com/57350945" target="_blank" rel="noopener">News Headline</a></h3> <p>Article summary</p> </article> <div class="onebox-metadata"> </div> <div style="clear: both"></div> </aside>',
           post_number: 3,
           post_type: 1,
           updated_at: "2020-07-24T17:50:17.274Z",
@@ -6010,7 +5956,8 @@ export default {
           username: "group_moderator",
           avatar_template: "/images/avatar.png",
           created_at: "2020-07-24T17:50:17.274Z",
-          cooked: '<aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/57350945"><header class="source"><a href="https://example.com/57350945" target="_blank" rel="noopener">XYZ News Site</a> </header> <article class="onebox-body"> <div class="aspect-image" style="--aspect-ratio:690/388;"><img src="/assets/logo.png" class="thumbnail d-lazyload" width="690" height="388"></div> <h3><a href="https://example.com/57350945" target="_blank" rel="noopener">News Headline</a></h3> <p>Article summary</p> </article> <div class="onebox-metadata"> </div> <div style="clear: both"></div> </aside>',
+          cooked:
+            '<aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/57350945"><header class="source"><a href="https://example.com/57350945" target="_blank" rel="noopener">XYZ News Site</a> </header> <article class="onebox-body"> <div class="aspect-image" style="--aspect-ratio:690/388;"><img src="/assets/logo.png" class="thumbnail d-lazyload" width="690" height="388"></div> <h3><a href="https://example.com/57350945" target="_blank" rel="noopener">News Headline</a></h3> <p>Article summary</p> </article> <div class="onebox-metadata"> </div> <div style="clear: both"></div> </aside>',
           post_number: 3,
           post_type: 1,
           updated_at: "2020-07-24T17:50:17.274Z",
@@ -6606,7 +6553,8 @@ export default {
           uploaded_avatar_id: 40181,
           created_at: "2013-02-05T21:32:47.649Z",
           cooked: "<p>Yeah it is a short one</p>",
-          cooked: '<aside class="quote no-group" data-username="james_john" data-post="2" data-topic="54079"><div class="title" style="cursor: pointer;"><div class="quote-controls"><span class="svg-icon-title" title="expand/collapse"><svg class="fa d-icon d-icon-chevron-down svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#chevron-down"></use></svg></span><a href="/t/hello-world-i-am-posting-an-image/158/1" title="go to the quoted post" class="back"><svg class="fa d-icon d-icon-arrow-up svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#arrow-up"></use></svg></a></div> <img alt="" width="20" height="20" src="/letter_avatar_proxy/v4/letter/j/3be4f8/90.png" class="avatar"> james_john:</div><blockquote><p>This is a short topic.</p></blockquote></aside><p>there is a quote above</p>',
+          cooked:
+            '<aside class="quote no-group" data-username="james_john" data-post="2" data-topic="54079"><div class="title" style="cursor: pointer;"><div class="quote-controls"><span class="svg-icon-title" title="expand/collapse"><svg class="fa d-icon d-icon-chevron-down svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#chevron-down"></use></svg></span><a href="/t/hello-world-i-am-posting-an-image/158/1" title="go to the quoted post" class="back"><svg class="fa d-icon d-icon-arrow-up svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#arrow-up"></use></svg></a></div> <img alt="" width="20" height="20" src="/letter_avatar_proxy/v4/letter/j/3be4f8/90.png" class="avatar"> james_john:</div><blockquote><p>This is a short topic.</p></blockquote></aside><p>there is a quote above</p>',
           post_number: 4,
           post_type: 1,
           updated_at: "2013-02-06T10:15:27.965Z",

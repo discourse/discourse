@@ -1,58 +1,9 @@
 module.exports = {
-  extends: "recommended",
-  ignore: ["**/*.raw"],
+  plugins: ["ember-template-lint-plugin-discourse"],
+  extends: "discourse:recommended",
 
   rules: {
-    "block-indentation": true,
-    "deprecated-render-helper": true,
-    "eol-last": "always",
-    "linebreak-style": true,
-    "link-rel-noopener": "strict",
-    "no-abstract-roles": true,
-    "no-args-paths": true,
-    "no-attrs-in-components": true,
-    "no-debugger": true,
-    "no-duplicate-attributes": true,
-    "no-extra-mut-helper-argument": true,
-    "no-html-comments": true,
-    "no-index-component-invocation": true,
-    "no-inline-styles": false,
-    "no-input-block": true,
-    "no-input-tagname": true,
-    "no-implicit-this": {
-      allow: [
-        'loading-spinner'
-      ]
-    },
-    "no-invalid-interactive": true,
-    "no-invalid-link-text": true,
-    "no-invalid-meta": true,
-    "no-invalid-role": true,
-    "no-log": true,
-    "no-negated-condition": true,
-    "no-nested-interactive": true,
-    "no-multiple-empty-lines": true,
-    "no-obsolete-elements": true,
-    "no-outlet-outside-routes": true,
-    "no-partial": true,
-    "no-positive-tabindex": false,
-    "no-quoteless-attributes": true,
-    "no-shadowed-elements": true,
-    "no-trailing-spaces": true,
-    "no-triple-curlies": true,
-    "no-unbound": true,
-    "no-unnecessary-concat": true,
-    "no-unnecessary-component-helper": true,
-    "no-unused-block-params": true,
-    quotes: "double",
-    "require-button-type": true,
-    "require-iframe-title": true,
-    "require-valid-alt-text": false,
-    "self-closing-void-elements": true,
-    "simple-unless": true,
-    "style-concatenation": true,
-    "table-groups": true,
-    "link-href-attributes": false,
+    "no-capital-arguments": false, // TODO: we extensively use `args` argument name
     "no-curly-component-invocation": {
       allow: [
         // These are helpers, not components
@@ -63,6 +14,9 @@ module.exports = {
         "loading-spinner",
         "mobile-directory-item-label",
       ],
+    },
+    "no-implicit-this": {
+      allow: ["loading-spinner"],
     },
   },
 };

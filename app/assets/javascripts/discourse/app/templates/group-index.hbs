@@ -50,7 +50,7 @@
             <tr>
               {{#if this.isBulk}}
                 <td class="bulk-select">
-                  <Input @type="checkbox" class="bulk-select" @click={{action "selectMember" m}} />
+                  <Input @type="checkbox" class="bulk-select" {{on "click" (action "selectMember" m)}} />
                 </td>
               {{/if}}
 

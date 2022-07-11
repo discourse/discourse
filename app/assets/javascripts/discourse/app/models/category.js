@@ -221,8 +221,8 @@ const Category = RestModel.extend({
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
         all_topics_wiki: this.all_topics_wiki,
-        allow_unlimited_owner_edits_on_first_post: this
-          .allow_unlimited_owner_edits_on_first_post,
+        allow_unlimited_owner_edits_on_first_post:
+          this.allow_unlimited_owner_edits_on_first_post,
         allowed_tags: this.allowed_tags,
         allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,

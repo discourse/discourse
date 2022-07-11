@@ -1,7 +1,8 @@
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { helperContext } from "discourse-common/lib/helpers";
 
-export const QUOTE_REGEXP = /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
+export const QUOTE_REGEXP =
+  /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;
 
 // Build the BBCode quote around the selected text
 export function buildQuote(post, contents, opts = {}) {

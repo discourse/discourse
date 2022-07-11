@@ -3,11 +3,11 @@
     <div>
       <div class="control-group">
         <label for="imap_server">{{i18n "groups.manage.email.credentials.imap_server"}}</label>
-        <Input @type="text" @name="imap_server" @value={{this.form.imap_server}} @tabindex="8" @onChange={{action "resetSettingsValid"}} />
+        <Input @type="text" name="imap_server" @value={{this.form.imap_server}} tabindex="8" {{on "change" (action "resetSettingsValid")}} />
       </div>
 
       <label for="enable_ssl_imap">
-        <Input @type="checkbox" @checked={{this.form.imap_ssl}} @id="enable_ssl_imap" @tabindex="11" @onChange={{action "resetSettingsValid"}} />
+        <Input @type="checkbox" @checked={{this.form.imap_ssl}} id="enable_ssl_imap" tabindex="11" {{on "change" (action "resetSettingsValid")}} />
         {{i18n "groups.manage.email.credentials.imap_ssl"}}
       </label>
     </div>
@@ -15,7 +15,7 @@
     <div>
       <div class="control-group">
         <label for="imap_port">{{i18n "groups.manage.email.credentials.imap_port"}}</label>
-        <Input @type="text" @name="imap_port" @value={{this.form.imap_port}} @tabindex="9" @onChange={{action "resetSettingsValid" this.form.imap_port}} />
+        <Input @type="text" name="imap_port" @value={{this.form.imap_port}} tabindex="9" {{on "change" (action "resetSettingsValid" this.form.imap_port)}} />
       </div>
     </div>
 

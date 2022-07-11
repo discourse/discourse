@@ -590,6 +590,10 @@ de:
             base:
               invalid_url: "Ersatz-URL ist ungültig"
               invalid_tag_list: "Ersatz-Schlagwort-Liste ist ungültig"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "ist nicht gültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
   vip_category_name: "Lounge"
@@ -1586,6 +1590,7 @@ de:
     enable_badges: "Abzeichen aktivieren"
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     enable_whispers: "Erlaube dem Team private Kommunikation innerhalb von Themen."
+    whispers_allowed_groups: "Erlaube private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche („|“) getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"

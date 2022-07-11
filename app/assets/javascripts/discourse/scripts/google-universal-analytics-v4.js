@@ -1,4 +1,3 @@
-// discourse-skip-module
 (function () {
   const gaDataElement = document.getElementById("data-ga-universal-analytics");
   window.dataLayer = window.dataLayer || [];

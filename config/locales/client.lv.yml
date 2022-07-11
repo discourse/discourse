@@ -972,6 +972,8 @@ lv:
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
       enable_quoting: "Ieslēgt atbildi ar iezīmētā teksta citēšanu"
       enable_defer: "Iespējot atlikšanu, lai atzīmētu tēmas kā nelasītas"
+      experimental_sidebar:
+        options: "Iespējas"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"

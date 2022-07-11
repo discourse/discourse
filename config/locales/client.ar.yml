@@ -1260,6 +1260,8 @@ ar:
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميز"
       enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
+      experimental_sidebar:
+        options: "الخيارات"
       change: "تغيير"
       featured_topic: "الموضوع المميز"
       moderator: "‏%{user} مشرف في الموقع"

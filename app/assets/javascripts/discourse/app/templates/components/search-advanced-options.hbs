@@ -23,7 +23,7 @@
           {{#if this.showAllTagsCheckbox}}
             <section class="field">
               <label>
-                <Input @type="checkbox" class="all-tags" @checked={{this.searchedTerms.special.all_tags}} @click={{action "onChangeSearchTermForAllTags" value="target.checked"}} />
+                <Input @type="checkbox" class="all-tags" @checked={{this.searchedTerms.special.all_tags}} {{on "click" (action "onChangeSearchTermForAllTags" value="target.checked")}} />
                 {{i18n "search.advanced.filters.all_tags"}}
               </label>
             </section>
@@ -39,24 +39,24 @@
 
           {{#if this.currentUser}}
             <div class="grouped-control-field">
-              <Input @id="matching-title-only" @type="checkbox" class="in-title" @checked={{this.searchedTerms.special.in.title}} @click={{action "onChangeSearchTermForSpecialInTitle" value="target.checked"}} />
+              <Input id="matching-title-only" @type="checkbox" class="in-title" @checked={{this.searchedTerms.special.in.title}} {{on "click" (action "onChangeSearchTermForSpecialInTitle" value="target.checked")}} />
               <label for="matching-title-only">
                 {{i18n "search.advanced.filters.title"}}
               </label>
             </div>
 
             <div class="grouped-control-field">
-              <Input @id="matching-liked" @type="checkbox" class="in-likes" @checked={{this.searchedTerms.special.in.likes}} @click={{action "onChangeSearchTermForSpecialInLikes" value="target.checked"}} />
+              <Input id="matching-liked" @type="checkbox" class="in-likes" @checked={{this.searchedTerms.special.in.likes}} {{on "click" (action "onChangeSearchTermForSpecialInLikes" value="target.checked")}} />
               <label for="matching-liked">{{i18n "search.advanced.filters.likes"}}</label>
             </div>
 
             <div class="grouped-control-field">
-              <Input @id="matching-in-messages" @type="checkbox" class="in-private" @checked={{this.searchedTerms.special.in.messages}} @click={{action "onChangeSearchTermForSpecialInMessages" value="target.checked"}} />
+              <Input id="matching-in-messages" @type="checkbox" class="in-private" @checked={{this.searchedTerms.special.in.messages}} {{on "click" (action "onChangeSearchTermForSpecialInMessages" value="target.checked")}} />
               <label for="matching-in-messages">{{i18n "search.advanced.filters.private"}}</label>
             </div>
 
             <div class="grouped-control-field">
-              <Input @id="matching-seen" @type="checkbox" class="in-seen" @checked={{this.searchedTerms.special.in.seen}} @click={{action "onChangeSearchTermForSpecialInSeen" value="target.checked"}} />
+              <Input id="matching-seen" @type="checkbox" class="in-seen" @checked={{this.searchedTerms.special.in.seen}} {{on "click" (action "onChangeSearchTermForSpecialInSeen" value="target.checked")}} />
               <label for="matching-seen">{{i18n "search.advanced.filters.seen"}}</label>
             </div>
           {{/if}}
@@ -114,9 +114,9 @@
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
       <span class="control-label">{{i18n "search.advanced.post.count.label"}}</span>
       <div class="controls">
-        <Input @type="number" @value={{readonly this.searchedTerms.min_posts}} class="input-small" @id="search-min-post-count" @input={{action "onChangeSearchTermMinPostCount" value="target.value"}} placeholder={{i18n "search.advanced.post.min.placeholder"}} @aria-label={{i18n "search.advanced.post.min.aria_label"}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.min_posts}} class="input-small" id="search-min-post-count" placeholder={{i18n "search.advanced.post.min.placeholder"}} aria-label={{i18n "search.advanced.post.min.aria_label"}} {{on "input" (action "onChangeSearchTermMinPostCount" value="target.value")}} />
         {{d-icon "arrows-alt-h"}}
-        <Input @type="number" @value={{readonly this.searchedTerms.max_posts}} class="input-small" @id="search-max-post-count" @input={{action "onChangeSearchTermMaxPostCount" value="target.value"}} placeholder={{i18n "search.advanced.post.max.placeholder"}} @aria-label={{i18n "search.advanced.post.max.aria_label"}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.max_posts}} class="input-small" id="search-max-post-count" placeholder={{i18n "search.advanced.post.max.placeholder"}} aria-label={{i18n "search.advanced.post.max.aria_label"}} {{on "input" (action "onChangeSearchTermMaxPostCount" value="target.value")}} />
       </div>
     </div>
 
@@ -124,9 +124,9 @@
       {{!-- TODO: Using a label here fails no-nested-interactive lint rule --}}
       <span class="control-label">{{i18n "search.advanced.views.label"}}</span>
       <div class="controls">
-        <Input @type="number" @value={{readonly this.searchedTerms.min_views}} class="input-small" @id="search-min-views" @input={{action "onChangeSearchTermMinViews" value="target.value"}} placeholder={{i18n "search.advanced.min_views.placeholder"}} @aria-label={{i18n "search.advanced.min_views.aria_label"}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.min_views}} class="input-small" id="search-min-views" placeholder={{i18n "search.advanced.min_views.placeholder"}} aria-label={{i18n "search.advanced.min_views.aria_label"}} {{on "input" (action "onChangeSearchTermMinViews" value="target.value")}} />
         {{d-icon "arrows-alt-h"}}
-        <Input @type="number" @value={{readonly this.searchedTerms.max_views}} class="input-small" @id="search-max-views" @input={{action "onChangeSearchTermMaxViews" value="target.value"}} placeholder={{i18n "search.advanced.max_views.placeholder"}} @aria-label={{i18n "search.advanced.max_views.aria_label"}} />
+        <Input @type="number" @value={{readonly this.searchedTerms.max_views}} class="input-small" id="search-max-views" placeholder={{i18n "search.advanced.max_views.placeholder"}} aria-label={{i18n "search.advanced.max_views.aria_label"}} {{on "input" (action "onChangeSearchTermMaxViews" value="target.value")}} />
       </div>
     </div>
   </details>

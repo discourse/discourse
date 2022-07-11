@@ -1087,7 +1087,9 @@ fr:
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
-      enable_experimental_sidebar: "Activer la barre latérale expérimentale"
+      experimental_sidebar:
+        enable: "Activer la barre latérale expérimentale"
+        options: "Options"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"

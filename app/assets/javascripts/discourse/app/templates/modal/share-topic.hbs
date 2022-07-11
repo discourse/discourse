@@ -5,7 +5,7 @@
         {{if this.post (i18n "post.share.instructions" post_number=this.post.post_number) (i18n "topic.share.instructions")}}
       </label>
       <div class="link-share-container">
-        <Input @name="invite-link" class="invite-link" @value={{this.url}} @readonly={{true}} />
+        <Input name="invite-link" class="invite-link" @value={{this.url}} readonly={{true}} />
         <CopyButton @selector="input.invite-link" />
       </div>
     </div>

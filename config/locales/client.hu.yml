@@ -1084,6 +1084,8 @@ hu:
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
       enable_quoting: "A kijelölt szöveg idézése a válaszban"
       enable_defer: "A témák olvasatlannak jelölésének engedélyezése"
+      experimental_sidebar:
+        options: "Beállítások"
       change: "módosítás"
       featured_topic: "Kiemelt téma"
       moderator: "%{user} egy moderátor"

@@ -45,7 +45,7 @@ if ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
   pid = Process.spawn("redis-server --dir tmp/test_data_#{n}/redis --port #{port}", out: "/dev/null")
 
   ENV["DISCOURSE_REDIS_PORT"] = port.to_s
-  ENV["RAILS_DB"] = "discourse_test_#{n}"
+  ENV["RAILS_TEST_DB"] = "discourse_test_#{n}"
 
   at_exit do
     Process.kill("SIGTERM", pid)

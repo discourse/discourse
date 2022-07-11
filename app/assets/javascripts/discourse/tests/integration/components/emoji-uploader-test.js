@@ -35,8 +35,7 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
           {
             group: "coolemojis",
             name: "okey",
-            url:
-              "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
+            url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
           },
         ];
         requestNumber += 1;
@@ -47,8 +46,7 @@ discourseModule("Integration | Component | emoji-uploader", function (hooks) {
           {
             group: "coolemojis",
             name: null,
-            url:
-              "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/456.png",
+            url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/456.png",
           },
         ];
       }

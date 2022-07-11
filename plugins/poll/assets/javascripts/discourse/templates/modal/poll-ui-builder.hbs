@@ -26,7 +26,7 @@
     <div class="poll-options">
       {{#if this.showAdvanced}}
         <label class="input-group-label">{{i18n "poll.ui_builder.poll_options.label"}}</label>
-        <Textarea @value={{this.pollOptionsText}} @input={{action "onOptionsTextChange"}} />
+        <Textarea @value={{this.pollOptionsText}} {{on "input" (action "onOptionsTextChange")}} />
         {{#if this.showMinNumOfOptionsValidation}}
           {{#unless this.minNumOfOptionsValidation.ok}}
             <InputTip @validation={{this.minNumOfOptionsValidation}} />
@@ -56,18 +56,18 @@
     <div class="options">
       <div class="input-group poll-number">
         <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.min"}}</label>
-        <Input @type="number" @value={{this.pollMin}} @valueProperty="value" class="poll-options-min" @min={{1}} />
+        <Input @type="number" @value={{this.pollMin}} class="poll-options-min" min="1" />
       </div>
 
       <div class="input-group poll-number">
         <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.max"}}</label>
-        <Input @type="number" @value={{this.pollMax}} @valueProperty="value" class="poll-options-max" @min={{1}} />
+        <Input @type="number" @value={{this.pollMax}} class="poll-options-max" min="1" />
       </div>
 
       {{#if this.isNumber}}
         <div class="input-group poll-number">
           <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.step"}}</label>
-          <Input @type="number" @value={{this.pollStep}} @valueProperty="value" @min="1" class="poll-options-step" />
+          <Input @type="number" @value={{this.pollStep}} min="1" class="poll-options-step" />
         </div>
       {{/if}}
     </div>

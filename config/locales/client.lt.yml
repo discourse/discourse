@@ -1050,6 +1050,8 @@ lt:
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
       enable_defer: "Įgalinti atidėjimą, kad pažymėtumėte temas kaip neskaitytas"
+      experimental_sidebar:
+        options: "Nustatymai"
       change: "pakeisti"
       featured_topic: "Įpatinga tema"
       moderator: "%{user} yra moderatorius"

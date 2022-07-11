@@ -12,7 +12,7 @@
           </div>
         {{/if}}
         <div class="inline-form full-width">
-          <Input @value={{readonly this.nameInput}} @input={{action "onUsernameFilterChanged" value="target.value"}} @placeholderKey="directory.filter_name" class="filter-name no-blur" />
+          <Input @value={{readonly this.nameInput}} placeholder={{i18n "directory.filter_name"}} class="filter-name no-blur" {{on "input" (action "onUsernameFilterChanged" value="target.value")}} />
           <ComboBox @class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash none="directory.group.all"}} />
           {{#if this.currentUser.staff}}
             <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} @class="btn-default open-edit-columns-btn" />

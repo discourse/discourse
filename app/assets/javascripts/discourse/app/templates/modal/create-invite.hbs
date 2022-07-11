@@ -4,7 +4,7 @@
       <div class="input-group invite-link">
         <label for="invite-link">{{html-safe this.flashText}} {{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
-          <Input @name="invite-link" class="invite-link" @value={{this.invite.link}} @readonly={{true}} />
+          <Input name="invite-link" class="invite-link" @value={{this.invite.link}} readonly={{true}} />
           <CopyButton @selector="input.invite-link" @copied={{action "copied"}} />
         </div>
       </div>
@@ -20,7 +20,7 @@
       <div class="input-group invite-link">
         <label for="invite-link">{{i18n "user.invited.invite.instructions"}}</label>
         <div class="link-share-container">
-          <Input @name="invite-link" class="invite-link" @value={{this.invite.link}} @readonly={{true}} />
+          <Input name="invite-link" class="invite-link" @value={{this.invite.link}} readonly={{true}} />
           <CopyButton @selector="input.invite-link" @copied={{action "copied"}} />
         </div>
       </div>
@@ -38,7 +38,7 @@
         {{/if}}
       </label>
       <div class="invite-email-container">
-        <Input @id="invite-email" @value={{this.buffered.emailOrDomain}} @placeholderKey="user.invited.invite.email_or_domain_placeholder" />
+        <Input id="invite-email" @value={{this.buffered.emailOrDomain}} placeholder={{i18n "user.invited.invite.email_or_domain_placeholder"}} />
         {{#if this.capabilities.hasContactPicker}}
           <DButton @icon="address-book" @action={{action "searchContact"}} @class="btn-primary open-contact-picker" />
         {{/if}}
@@ -48,14 +48,14 @@
     {{#if this.isLink}}
       <div class="input-group invite-max-redemptions">
         <label for="invite-max-redemptions">{{d-icon "users"}}{{i18n "user.invited.invite.max_redemptions_allowed"}}</label>
-        <Input @id="invite-max-redemptions" @type="number" @value={{this.buffered.max_redemptions_allowed}} @min="1" @max={{this.maxRedemptionsAllowedLimit}} />
+        <Input id="invite-max-redemptions" @type="number" @value={{this.buffered.max_redemptions_allowed}} min="1" max={{this.maxRedemptionsAllowedLimit}} />
       </div>
     {{/if}}
 
     {{#if this.isEmail}}
       <div class="input-group invite-custom-message">
         <label for="invite-message">{{i18n "user.invited.invite.custom_message"}}</label>
-        <Textarea @id="invite-message" @value={{this.buffered.custom_message}} />
+        <Textarea id="invite-message" @value={{this.buffered.custom_message}} />
       </div>
     {{/if}}
 
@@ -69,7 +69,7 @@
     {{else if this.buffered.topicTitle}}
       <div class="input-group invite-to-topic">
         <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
-        <Input @name="invite-topic" class="invite-topic" @value={{this.buffered.topicTitle}} @readonly={{true}} />
+        <Input name="invite-topic" class="invite-topic" @value={{this.buffered.topicTitle}} readonly={{true}} />
       </div>
     {{/if}}
 

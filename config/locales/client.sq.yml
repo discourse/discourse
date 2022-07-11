@@ -546,6 +546,8 @@ sq:
         regular: "Normal"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
+      experimental_sidebar:
+        options: "Opsione"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"

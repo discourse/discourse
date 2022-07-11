@@ -6,7 +6,7 @@
 <div class="themes-list-container">
   {{#if this.showFilter}}
     <div class="themes-list-filter themes-list-item">
-      <Input class="filter-input" placeholder={{i18n "admin.customize.theme.filter_placeholder"}} @autocomplete="off" @type="search" @value={{mut this.filterTerm}} />
+      <Input class="filter-input" placeholder={{i18n "admin.customize.theme.filter_placeholder"}} autocomplete="off" @type="search" @value={{mut this.filterTerm}} />
       {{d-icon "search"}}
     </div>
   {{/if}}

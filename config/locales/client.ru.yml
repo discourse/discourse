@@ -1201,7 +1201,13 @@ ru:
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
       enable_defer: "Включить кнопку 'Отложить', чтобы помечать темы как непрочитанные"
-      enable_experimental_sidebar: "Включить экспериментальную боковую панель"
+      experimental_sidebar:
+        enable: "Включить экспериментальную боковую панель"
+        options: "Настройки"
+        categories_section: "Разделы"
+        categories_section_instruction: "Выбранные разделы будут отображаться в соответствующей секции боковой панели."
+        tags_section: "Теги"
+        tags_section_instruction: "Выбранные теги будут отображаться в соответствующей секции боковой панели."
       change: "изменить"
       featured_topic: "Избранная тема:"
       moderator: "%{user} — модератор"
@@ -1318,6 +1324,7 @@ ru:
         tags: "Теги"
         interface: "Интерфейс"
         apps: "Приложения"
+        sidebar: "Боковая панель"
       change_password:
         success: "(письмо отправлено)"
         in_progress: "(отправка письма)"
@@ -4071,13 +4078,17 @@ ru:
             unread_with_count: "Непрочитанные (%{count})"
             archive: "Архив"
         tags:
-          no_tracked_tags: "Вы не отслеживаете ни один тег."
+          none: "Вы не добавили ни одного тега."
+          click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_title: "Все теги"
           header_link_text: "Теги"
+          header_action_title: "Редактировать теги боковой панели"
         categories:
-          no_tracked_categories: "Вы не отслеживаете ни один раздел."
+          none: "Вы не добавили ни одного раздела."
+          click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_title: "Все разделы"
           header_link_text: "Разделы"
+          header_action_title: "Редактировать разделы боковой панели"
         topics:
           header_link_title: "Темы"
           header_link_text: "Темы"

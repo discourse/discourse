@@ -48,13 +48,13 @@
       </div>
 
       <div class="picker-panel">
-        <Input @class="fake-input" />
+        <Input class="fake-input" />
         <div class="date-picker" id="picker-container-{{this.elementId}}"></div>
 
         {{#if this.fromSelected}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            <Input @maxlength={{5}} @placeholder="hh:mm" @input={{action "setTime"}} @type="time" @value={{this.time}} @class="time-picker" />
+            <Input maxlength={{5}} placeholder="hh:mm" @type="time" @value={{this.time}} class="time-picker" {{on "input" (action "setTime")}} />
           </div>
         {{/if}}
 
@@ -62,7 +62,7 @@
           {{#if this.toDate}}
             <div class="time-pickers">
               {{d-icon "far-clock"}}
-              <Input @maxlength={{5}} @placeholder="hh:mm" @input={{action "setToTime"}} @type="time" @value={{this.toTime}} @class="time-picker" />
+              <Input maxlength={{5}} placeholder="hh:mm" @type="time" @value={{this.toTime}} class="time-picker" {{on "input" (action "setToTime")}} />
             </div>
           {{/if}}
         {{/if}}

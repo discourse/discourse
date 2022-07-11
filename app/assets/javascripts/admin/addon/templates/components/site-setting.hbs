@@ -2,7 +2,7 @@
   <h3>
     {{#if this.staffLogFilter}}
       {{this.settingName}}
-      <LinkTo @route="adminLogs.staffActionLogs" @query={{hash filters=this.staffLogFilter force_refresh=true}} @title={{i18n "admin.settings.history"}}>
+      <LinkTo @route="adminLogs.staffActionLogs" @query={{hash filters=this.staffLogFilter force_refresh=true}} title={{i18n "admin.settings.history"}}>
         <span class="history-icon">
           {{d-icon "history"}}
         </span>

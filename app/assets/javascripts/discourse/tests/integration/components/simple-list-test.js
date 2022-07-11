@@ -1,4 +1,10 @@
-import { click, fillIn, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  blur,
+  click,
+  fillIn,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
@@ -9,6 +15,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
+import { test } from "qunit";
 
 discourseModule("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -49,6 +56,26 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
         "it adds the value when keying Enter"
       );
     },
+  });
+
+  test("changing a value", async function (assert) {
+    const done = assert.async();
+
+    this.set("values", "vinkas\nosama");
+    this.set("onChange", function (collection) {
+      assert.deepEqual(collection, ["vinkas", "jarek"]);
+      done();
+    });
+
+    await render(hbs`{{simple-list values=values onChange=onChange}}`);
+
+    await fillIn(".values .value[data-index='1'] .value-input", "jarek");
+    await blur(".values .value[data-index='1'] .value-input");
+
+    assert.strictEqual(
+      query(".values .value[data-index='1'] .value-input").value,
+      "jarek"
+    );
   });
 
   componentTest("removing a value", {

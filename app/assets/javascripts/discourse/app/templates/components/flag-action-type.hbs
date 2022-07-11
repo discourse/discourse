@@ -7,7 +7,7 @@
       <div class="flag-action-type-details">
         <span class="description">{{html-safe this.flag.description}}</span>
         {{#if this.showMessageInput}}
-          <Textarea @name="message" class="flag-message" placeholder={{this.customPlaceholder}} @value={{this.message}} />          <div class="custom-message-length {{this.customMessageLengthClasses}}">{{this.customMessageLength}}</div>
+          <Textarea name="message" class="flag-message" placeholder={{this.customPlaceholder}} @value={{this.message}} />          <div class="custom-message-length {{this.customMessageLengthClasses}}">{{this.customMessageLength}}</div>
         {{/if}}
       </div>
     </label>
@@ -26,7 +26,7 @@
           <div class="description">{{html-safe this.description}}</div>
         {{/if}}
         {{#if this.showMessageInput}}
-          <Textarea @name="message" class="flag-message" placeholder={{this.customPlaceholder}} @value={{this.message}} />          <div class="custom-message-length {{this.customMessageLengthClasses}}">{{this.customMessageLength}}</div>
+          <Textarea name="message" class="flag-message" placeholder={{this.customPlaceholder}} @value={{this.message}} />          <div class="custom-message-length {{this.customMessageLengthClasses}}">{{this.customMessageLength}}</div>
         {{/if}}
       </div>
     </label>

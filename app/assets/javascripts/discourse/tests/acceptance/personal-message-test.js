@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
@@ -23,7 +23,7 @@ acceptance("Personal Message", function (needs) {
     await visit("/t/pm-for-testing/12");
 
     assert.strictEqual(
-      queryAll("#suggested-topics .suggested-topics-title").text().trim(),
+      query("#suggested-topics .suggested-topics-title").innerText.trim(),
       I18n.t("suggested_topics.pm_title")
     );
   });

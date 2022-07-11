@@ -22,7 +22,7 @@
 
 {{#if this.currentAction.words}}
   <label class="show-words-checkbox">
-    <Input @type="checkbox" @checked={{this.adminWatchedWords.showWords}} @disabled={{this.adminWatchedWords.disableShowWords}} />
+    <Input @type="checkbox" @checked={{this.adminWatchedWords.showWords}} disabled={{this.adminWatchedWords.disableShowWords}} />
     {{i18n "admin.watched_words.show_words" count=this.currentAction.words.length}}
   </label>
 {{/if}}

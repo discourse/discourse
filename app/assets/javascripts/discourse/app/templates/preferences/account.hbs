@@ -3,7 +3,7 @@
   <div class="controls">
     <span class="static">{{this.model.username}}</span>
     {{#if this.model.can_edit_username}}
-      <LinkTo @route="preferences.username" @name={{i18n "user.username.edit"}} class="btn btn-default btn-small btn-icon pad-left no-text">
+      <LinkTo @route="preferences.username" title={{i18n "user.username.edit"}} class="btn btn-default btn-small btn-icon pad-left no-text">
         {{d-icon "pencil-alt"}}
       </LinkTo>
     {{/if}}

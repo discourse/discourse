@@ -45,9 +45,10 @@
         <%- end %>
       <%- end %>
     <%- end %>
+
+    <%- if !@suggested_themes %>
+      <%= preload_script "scripts/discourse-test-listen-boot" %>
+      <%= preload_script "scripts/discourse-boot" %>
+    <%- end %>
   </body>
-  <%- if !@suggested_themes %>
-    <%= preload_script "scripts/discourse-test-listen-boot" %>
-    <%= preload_script "scripts/discourse-boot" %>
-  <%- end %>
 </html>

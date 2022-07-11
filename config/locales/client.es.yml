@@ -1087,7 +1087,13 @@ es:
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_defer: "Activar diferir para marcar temas no leídos"
-      enable_experimental_sidebar: "Activar barra lateral experimental"
+      experimental_sidebar:
+        enable: "Activar la barra lateral experimental"
+        options: "Opciones"
+        categories_section: "Sección de categorías"
+        categories_section_instruction: "Las categorías que elijas aparecerán en esta categoría de la barra lateral."
+        tags_section: "Sección de etiquetas"
+        tags_section_instruction: "Las etiquetas seleccionadas aparecerán en esta sección de la barra lateral."
       change: "cambio"
       featured_topic: "Tema destacado"
       moderator: "%{user} es un moderador"
@@ -1200,6 +1206,7 @@ es:
         tags: "Etiquetas"
         interface: "Interfaz"
         apps: "Aplicaciones"
+        sidebar: "Barra lateral"
       change_password:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
@@ -2003,6 +2010,7 @@ es:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
       title: "O pulsa %{modifier}Intro"
+      users_placeholder: "Añadir usuarios o grupos"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
@@ -3732,13 +3740,17 @@ es:
             unread_with_count: "Sin leer (%{count})"
             archive: "Archivo"
         tags:
-          no_tracked_tags: "No estás vigilando ninguna etiqueta."
+          none: "No has añadido ninguna etiqueta."
+          click_to_get_started: "Haz clic aquí para empezar."
           header_link_title: "todas las etiquetas"
           header_link_text: "Etiquetas"
+          header_action_title: "editar las etiquetas de tu barra lateral"
         categories:
-          no_tracked_categories: "No estás vigilando ninguna categoría."
+          none: "No has añadido ninguna categoría."
+          click_to_get_started: "Haz clic aquí para empezar."
           header_link_title: "todas las categorías"
           header_link_text: "Categorías"
+          header_action_title: "editar las categorías de tu barra lateral"
         topics:
           header_link_title: "inicio"
           header_link_text: "Temas"
@@ -3752,7 +3764,7 @@ es:
               title: "Todos los temas seguidos"
             bookmarked:
               content: "Añadidos a marcadores"
-              title: "Todos los temas enn marcadores"
+              title: "Todos los temas en marcadores"
             my_posts:
               content: "Mis publicaciones"
               title: "Mis publicaciones"

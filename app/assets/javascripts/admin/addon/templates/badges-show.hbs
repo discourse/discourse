@@ -3,14 +3,14 @@
     <div class="control-group">
       <label for="name">{{i18n "admin.badges.name"}}</label>
       {{#if this.readOnly}}
-        <Input @type="text" @name="name" @value={{this.buffered.name}} @disabled={{true}} />
+        <Input @type="text" name="name" @value={{this.buffered.name}} disabled={{true}} />
         <p class="help">
           <LinkTo @route="adminSiteText" @query={{hash q=(concat this.textCustomizationPrefix "name")}}>
             {{i18n "admin.badges.read_only_setting_help"}}
           </LinkTo>
         </p>
       {{else}}
-        <Input @type="text" @name="name" @value={{this.buffered.name}} />
+        <Input @type="text" name="name" @value={{this.buffered.name}} />
       {{/if}}
     </div>
 
@@ -56,28 +56,28 @@
     <div class="control-group">
       <label for="description">{{i18n "admin.badges.description"}}</label>
       {{#if this.buffered.system}}
-        <Textarea @name="description" @value={{this.buffered.description}} @disabled={{true}} />
+        <Textarea name="description" @value={{this.buffered.description}} disabled={{true}} />
         <p class="help">
           <LinkTo @route="adminSiteText" @query={{hash q=(concat this.textCustomizationPrefix "description")}}>
             {{i18n "admin.badges.read_only_setting_help"}}
           </LinkTo>
         </p>
       {{else}}
-        <Textarea @name="description" @value={{this.buffered.description}} />
+        <Textarea name="description" @value={{this.buffered.description}} />
       {{/if}}
     </div>
 
     <div class="control-group">
       <label for="long_description">{{i18n "admin.badges.long_description"}}</label>
       {{#if this.buffered.system}}
-        <Textarea @name="long_description" @value={{this.buffered.long_description}} @disabled={{true}} />
+        <Textarea name="long_description" @value={{this.buffered.long_description}} disabled={{true}} />
         <p class="help">
           <LinkTo @route="adminSiteText" @query={{hash q=(concat this.textCustomizationPrefix "long_description")}}>
             {{i18n "admin.badges.read_only_setting_help"}}
           </LinkTo>
         </p>
       {{else}}
-        <Textarea @name="long_description" @value={{this.buffered.long_description}} />
+        <Textarea name="long_description" @value={{this.buffered.long_description}} />
       {{/if}}
     </div>
 
@@ -97,14 +97,14 @@
 
         <div class="control-group">
           <label>
-            <Input @type="checkbox" @checked={{this.buffered.auto_revoke}} @disabled={{this.readOnly}} />
+            <Input @type="checkbox" @checked={{this.buffered.auto_revoke}} disabled={{this.readOnly}} />
             {{i18n "admin.badges.auto_revoke"}}
           </label>
         </div>
 
         <div class="control-group">
           <label>
-            <Input @type="checkbox" @checked={{this.buffered.target_posts}} @disabled={{this.readOnly}} />
+            <Input @type="checkbox" @checked={{this.buffered.target_posts}} disabled={{this.readOnly}} />
             {{i18n "admin.badges.target_posts"}}
           </label>
         </div>
@@ -128,21 +128,21 @@
 
       <div>
         <label>
-          <Input @type="checkbox" @checked={{this.buffered.multiple_grant}} @disabled={{this.readOnly}} />
+          <Input @type="checkbox" @checked={{this.buffered.multiple_grant}} disabled={{this.readOnly}} />
           {{i18n "admin.badges.multiple_grant"}}
         </label>
       </div>
 
       <div>
         <label>
-          <Input @type="checkbox" @checked={{this.buffered.listable}} @disabled={{this.readOnly}} />
+          <Input @type="checkbox" @checked={{this.buffered.listable}} disabled={{this.readOnly}} />
           {{i18n "admin.badges.listable"}}
         </label>
       </div>
 
       <div>
         <label>
-          <Input @type="checkbox" @checked={{this.buffered.show_posts}} @disabled={{this.readOnly}} />
+          <Input @type="checkbox" @checked={{this.buffered.show_posts}} disabled={{this.readOnly}} />
           {{i18n "admin.badges.show_posts"}}
         </label>
       </div>

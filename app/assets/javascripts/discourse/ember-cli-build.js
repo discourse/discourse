@@ -7,6 +7,7 @@ const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
+const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 
 module.exports = function (defaults) {
@@ -138,5 +139,6 @@ module.exports = function (defaults) {
       headerFiles: [`start-app.js`],
       inputFiles: [`discourse-boot.js`],
     }),
+    generateScriptsTree(app),
   ]);
 };

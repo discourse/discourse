@@ -968,6 +968,8 @@ ro:
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
+      experimental_sidebar:
+        options: "Opțiuni"
       change: "Schimbă"
       featured_topic: "Subiect recomandat"
       moderator: "%{user} este moderator"
