@@ -11,7 +11,7 @@ import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import I18n from "I18n";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";

@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module(
   "Integration | Component | select-kit/notifications-button",

@@ -7,7 +7,7 @@ import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Integration | Component | select-kit/api", function (hooks) {

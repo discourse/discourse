@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { showPopover } from "discourse/lib/d-popover";
 
 module("Integration | Component | d-popover", function (hooks) {
