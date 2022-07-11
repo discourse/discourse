@@ -284,6 +284,7 @@ acceptance("Tag info", function (needs) {
     [
       "/tags/c/faq/4/planters/l/latest.json",
       "/tags/c/feature/2/planters/l/latest.json",
+      "/tags/c/feature/2/planters/l/top.json",
       "/tags/c/feature/2/none/planters/l/latest.json",
     ].forEach((url) => {
       server.get(url, () => {
@@ -495,6 +496,17 @@ acceptance("Tag info", function (needs) {
       `.category-breadcrumb li:nth-of-type(2) .category-row[data-value="no-categories"]`
     );
     assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters");
+  });
+
+  test("can visit show-category-latest routes", async function (assert) {
+    await visit("/tags/c/feature/2/planters");
+
+    await click(".nav-item_latest a[href]");
+    // await pauseTest();
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/latest");
+
+    await click(".nav-item_top a[href]");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/top");
   });
 
   test("admin can manage tags", async function (assert) {
