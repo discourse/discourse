@@ -5,16 +5,28 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
-
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
+import { currentSettings } from "discourse/tests/helpers/site-settings";
+import { clearResolverOptions } from "discourse-common/resolver";
+import { testCleanup } from "discourse/tests/helpers/qunit-helpers";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    if (!hooks.usingDiscourseModule) {
+      this.siteSettings = currentSettings();
+
+      if (!this.registry) {
+        this.registry = this.owner.__registry__;
+      }
+
+      this.container = this.owner;
+      clearResolverOptions();
+    }
+
     this.site = Site.current();
     this.session = Session.current();
-    this.container = this.owner;
 
     const currentUser = User.create({
       username: "eviltrout",
@@ -41,9 +53,16 @@ export function setupRenderingTest(hooks) {
     );
 
     autoLoadModules(this.owner, this.registry);
+    this.owner.lookup("service:store");
 
     $.fn.autocomplete = function () {};
   });
+
+  if (!hooks.usingDiscourseModule) {
+    hooks.afterEach(function () {
+      testCleanup(this.container);
+    });
+  }
 }
 
 export default function (name, hooks, opts) {

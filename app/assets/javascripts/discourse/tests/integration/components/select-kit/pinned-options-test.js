@@ -1,8 +1,7 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import Topic from "discourse/models/topic";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -15,49 +14,42 @@ const buildTopic = function (pinned = true) {
   });
 };
 
-discourseModule(
-  "Integration | Component | select-kit/pinned-options",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Integration | Component | select-kit/pinned-options", function (hooks) {
+  setupRenderingTest(hooks);
 
-    hooks.beforeEach(function () {
-      this.set("subject", selectKit());
-    });
+  hooks.beforeEach(function () {
+    this.set("subject", selectKit());
+  });
 
-    componentTest("unpinning", {
-      template: hbs`{{pinned-options value=topic.pinned topic=topic}}`,
+  test("unpinning", async function (assert) {
+    this.siteSettings.automatically_unpin_topics = false;
+    this.set("topic", buildTopic());
 
-      beforeEach() {
-        this.siteSettings.automatically_unpin_topics = false;
-        this.set("topic", buildTopic());
-      },
+    await render(
+      hbs`<PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />`
+    );
 
-      async test(assert) {
-        assert.strictEqual(this.subject.header().name(), "pinned");
+    assert.strictEqual(this.subject.header().name(), "pinned");
 
-        await this.subject.expand();
-        await this.subject.selectRowByValue("unpinned");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("unpinned");
 
-        assert.strictEqual(this.subject.header().name(), "unpinned");
-      },
-    });
+    assert.strictEqual(this.subject.header().name(), "unpinned");
+  });
 
-    componentTest("pinning", {
-      template: hbs`{{pinned-options value=topic.pinned topic=topic}}`,
+  test("pinning", async function (assert) {
+    this.siteSettings.automatically_unpin_topics = false;
+    this.set("topic", buildTopic(false));
 
-      beforeEach() {
-        this.siteSettings.automatically_unpin_topics = false;
-        this.set("topic", buildTopic(false));
-      },
+    await render(
+      hbs`<PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />`
+    );
 
-      async test(assert) {
-        assert.strictEqual(this.subject.header().name(), "unpinned");
+    assert.strictEqual(this.subject.header().name(), "unpinned");
 
-        await this.subject.expand();
-        await this.subject.selectRowByValue("pinned");
+    await this.subject.expand();
+    await this.subject.selectRowByValue("pinned");
 
-        assert.strictEqual(this.subject.header().name(), "pinned");
-      },
-    });
-  }
-);
+    assert.strictEqual(this.subject.header().name(), "pinned");
+  });
+});

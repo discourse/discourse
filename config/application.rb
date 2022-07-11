@@ -251,11 +251,6 @@ module Discourse
 
         ActionView::Base.precompiled_asset_checker = -> logical_path do
           default_checker[logical_path] ||
-            %w{qunit.js
-              qunit.css
-              test_helper.css
-              discourse/tests/test-boot-rails.js
-            }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||
             logical_path =~ /\/dist/
         end

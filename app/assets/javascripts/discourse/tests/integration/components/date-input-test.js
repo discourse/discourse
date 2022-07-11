@@ -1,7 +1,7 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 function dateInput() {
@@ -16,50 +16,42 @@ function noop() {}
 
 const DEFAULT_DATE = moment("2019-01-29");
 
-discourseModule("Integration | Component | date-input", function (hooks) {
+module("Integration | Component | date-input", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("default", {
-    template: hbs`{{date-input date=date}}`,
+  test("default", async function (assert) {
+    this.setProperties({ date: DEFAULT_DATE });
 
-    beforeEach() {
-      this.setProperties({ date: DEFAULT_DATE });
-    },
+    await render(hbs`<DateInput @date={{this.date}} />`);
 
-    test(assert) {
-      assert.strictEqual(dateInput().value, "2019-01-29");
-    },
+    assert.strictEqual(dateInput().value, "2019-01-29");
   });
 
-  componentTest("prevents mutations", {
-    template: hbs`{{date-input date=date onChange=onChange}}`,
+  test("prevents mutations", async function (assert) {
+    this.setProperties({ date: DEFAULT_DATE });
+    this.set("onChange", noop);
 
-    beforeEach() {
-      this.setProperties({ date: DEFAULT_DATE });
-      this.set("onChange", noop);
-    },
+    await render(
+      hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
+    );
 
-    async test(assert) {
-      dateInput().value = "2019-01-02";
-      dateInput().dispatchEvent(new Event("change"));
+    dateInput().value = "2019-01-02";
+    dateInput().dispatchEvent(new Event("change"));
 
-      assert.ok(this.date.isSame(DEFAULT_DATE));
-    },
+    assert.ok(this.date.isSame(DEFAULT_DATE));
   });
 
-  componentTest("allows mutations through actions", {
-    template: hbs`{{date-input date=date onChange=onChange}}`,
+  test("allows mutations through actions", async function (assert) {
+    this.setProperties({ date: DEFAULT_DATE });
+    this.set("onChange", setDate);
 
-    beforeEach() {
-      this.setProperties({ date: DEFAULT_DATE });
-      this.set("onChange", setDate);
-    },
+    await render(
+      hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
+    );
 
-    async test(assert) {
-      dateInput().value = "2019-02-02";
-      dateInput().dispatchEvent(new Event("change"));
+    dateInput().value = "2019-02-02";
+    dateInput().dispatchEvent(new Event("change"));
 
-      assert.ok(this.date.isSame(moment("2019-02-02")));
-    },
+    assert.ok(this.date.isSame(moment("2019-02-02")));
   });
 });

@@ -1,102 +1,102 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { showPopover } from "discourse/lib/d-popover";
-import { click, triggerKeyEvent } from "@ember/test-helpers";
 
-discourseModule("Integration | Component | d-popover", function (hooks) {
+module("Integration | Component | d-popover", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("show/hide popover from lib", {
-    template: hbs`{{d-button translatedLabel="test" action=onButtonClick forwardEvent=true}}`,
+  test("show/hide popover from lib", async function (assert) {
+    this.set("onButtonClick", (_, event) => {
+      showPopover(event, { content: "test", trigger: "click", duration: 0 });
+    });
 
-    beforeEach() {
-      this.set("onButtonClick", (_, event) => {
-        showPopover(event, { content: "test", trigger: "click", duration: 0 });
-      });
-    },
+    await render(hbs`
+      <DButton
+        @translatedLabel="test"
+        @action={{this.onButtonClick}}
+        @forwardEvent={{true}}
+      />
+    `);
 
-    async test(assert) {
-      assert.notOk(document.querySelector("div[data-tippy-root]"));
+    assert.notOk(document.querySelector("div[data-tippy-root]"));
 
-      await click(".btn");
+    await click(".btn");
+    assert.strictEqual(
+      document.querySelector("div[data-tippy-root]").innerText.trim(),
+      "test"
+    );
 
-      assert.equal(
-        document.querySelector("div[data-tippy-root]").innerText.trim(),
-        "test"
-      );
-
-      await click(".btn");
-
-      assert.notOk(document.querySelector("div[data-tippy-root]"));
-    },
+    await click(".btn");
+    assert.notOk(document.querySelector("div[data-tippy-root]"));
   });
 
-  componentTest("show/hide popover from component", {
-    template: hbs`{{#d-popover}}{{d-button class="trigger" icon="chevron-down"}}<ul><li class="test">foo</li><li>{{d-button icon="times" class="closer"}}</li></ul>{{/d-popover}}`,
+  test("show/hide popover from component", async function (assert) {
+    await render(hbs`
+      <DPopover>
+        <DButton class="trigger" @icon="chevron-down" />
+        <ul>
+          <li class="test">foo</li>
+          <li><DButton class="closer" @icon="times" /></li>
+        </ul>
+      </DPopover>
+    `);
 
-    async test(assert) {
-      assert.notOk(exists(".d-popover.is-expanded"));
-      assert.notOk(exists(".test"));
+    assert.notOk(exists(".d-popover.is-expanded"));
+    assert.notOk(exists(".test"));
 
-      await click(".trigger");
+    await click(".trigger");
 
-      assert.ok(exists(".d-popover.is-expanded"));
-      assert.equal(query(".test").innerText.trim(), "foo");
+    assert.ok(exists(".d-popover.is-expanded"));
+    assert.strictEqual(query(".test").innerText.trim(), "foo");
 
-      await click(".closer");
-
-      assert.notOk(exists(".d-popover.is-expanded"));
-    },
+    await click(".closer");
+    assert.notOk(exists(".d-popover.is-expanded"));
   });
 
-  componentTest("using options with component", {
-    template: hbs`{{#d-popover options=(hash content="bar")}}{{d-button icon="chevron-down"}}{{/d-popover}}`,
+  test("using options with component", async function (assert) {
+    await render(hbs`
+      <DPopover @options={{hash content="bar"}}>
+        <DButton @icon="chevron-down" />
+      </DPopover>
+    `);
 
-    async test(assert) {
-      await click(".btn");
-
-      assert.equal(query(".tippy-content").innerText.trim(), "bar");
-    },
+    await click(".btn");
+    assert.strictEqual(query(".tippy-content").innerText.trim(), "bar");
   });
 
-  componentTest("d-popover component accepts a block", {
-    template: hbs`{{#d-popover as |state|}}{{d-button icon=(if state.isExpanded "chevron-up" "chevron-down")}}{{/d-popover}}`,
+  test("d-popover component accepts a block", async function (assert) {
+    await render(hbs`
+      <DPopover as |state|>
+        <DButton @icon={{if state.isExpanded "chevron-up" "chevron-down"}} />
+      </DPopover>
+    `);
 
-    async test(assert) {
-      assert.ok(exists(".d-icon-chevron-down"));
+    assert.ok(exists(".d-icon-chevron-down"));
 
-      await click(".btn");
-
-      assert.ok(exists(".d-icon-chevron-up"));
-    },
+    await click(".btn");
+    assert.ok(exists(".d-icon-chevron-up"));
   });
 
-  componentTest("d-popover component accepts a class property", {
-    template: hbs`{{#d-popover class="foo"}}{{/d-popover}}`,
+  test("d-popover component accepts a class property", async function (assert) {
+    await render(hbs`<DPopover @class="foo"></DPopover>`);
 
-    async test(assert) {
-      assert.ok(exists(".d-popover.foo"));
-    },
+    assert.ok(exists(".d-popover.foo"));
   });
 
-  componentTest("d-popover component closes on escape key", {
-    template: hbs`{{#d-popover as |state|}}{{d-button icon=(if state.isExpanded "chevron-up" "chevron-down")}}{{/d-popover}}`,
+  test("d-popover component closes on escape key", async function (assert) {
+    await render(hbs`
+      <DPopover as |state|>
+        <DButton @icon={{if state.isExpanded "chevron-up" "chevron-down"}} />
+      </DPopover>
+    `);
 
-    async test(assert) {
-      await click(".btn");
+    await click(".btn");
+    assert.ok(exists(".d-popover.is-expanded"));
 
-      assert.ok(exists(".d-popover.is-expanded"));
-
-      await triggerKeyEvent(document, "keydown", 27);
-
-      assert.notOk(exists(".d-popover.is-expanded"));
-    },
+    await triggerKeyEvent(document, "keydown", 27);
+    assert.notOk(exists(".d-popover.is-expanded"));
   });
 });
