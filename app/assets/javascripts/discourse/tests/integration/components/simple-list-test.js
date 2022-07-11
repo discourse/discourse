@@ -1,3 +1,5 @@
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   blur,
   click,
@@ -5,57 +7,45 @@ import {
   render,
   triggerKeyEvent,
 } from "@ember/test-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  count,
-  discourseModule,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { test } from "qunit";
 
-discourseModule("Integration | Component | simple-list", function (hooks) {
+module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("adding a value", {
-    template: hbs`{{simple-list values=values}}`,
+  test("adding a value", async function (assert) {
+    this.set("values", "vinkas\nosama");
 
-    beforeEach() {
-      this.set("values", "vinkas\nosama");
-    },
+    await render(hbs`<SimpleList @values={{this.values}} />`);
 
-    async test(assert) {
-      assert.ok(
-        exists(".add-value-btn[disabled]"),
-        "while loading the + button is disabled"
-      );
+    assert.ok(
+      exists(".add-value-btn[disabled]"),
+      "while loading the + button is disabled"
+    );
 
-      await fillIn(".add-value-input", "penar");
-      await click(".add-value-btn");
+    await fillIn(".add-value-input", "penar");
+    await click(".add-value-btn");
 
-      assert.strictEqual(
-        count(".values .value"),
-        3,
-        "it adds the value to the list of values"
-      );
+    assert.strictEqual(
+      count(".values .value"),
+      3,
+      "it adds the value to the list of values"
+    );
 
-      assert.ok(
-        query(".values .value[data-index='2'] .value-input").value === "penar",
-        "it sets the correct value for added item"
-      );
+    assert.strictEqual(
+      query(".values .value[data-index='2'] .value-input").value,
+      "penar",
+      "it sets the correct value for added item"
+    );
 
-      await fillIn(".add-value-input", "eviltrout");
-      await triggerKeyEvent(".add-value-input", "keydown", 13); // enter
+    await fillIn(".add-value-input", "eviltrout");
+    await triggerKeyEvent(".add-value-input", "keydown", 13); // enter
 
-      assert.strictEqual(
-        count(".values .value"),
-        4,
-        "it adds the value when keying Enter"
-      );
-    },
+    assert.strictEqual(
+      count(".values .value"),
+      4,
+      "it adds the value when keying Enter"
+    );
   });
 
   test("changing a value", async function (assert) {
@@ -67,7 +57,9 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
       done();
     });
 
-    await render(hbs`{{simple-list values=values onChange=onChange}}`);
+    await render(
+      hbs`<SimpleList @values={{this.values}} @onChange={{this.onChange}} />`
+    );
 
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
     await blur(".values .value[data-index='1'] .value-input");
@@ -78,51 +70,46 @@ discourseModule("Integration | Component | simple-list", function (hooks) {
     );
   });
 
-  componentTest("removing a value", {
-    template: hbs`{{simple-list values=values}}`,
+  test("removing a value", async function (assert) {
+    this.set("values", "vinkas\nosama");
 
-    beforeEach() {
-      this.set("values", "vinkas\nosama");
-    },
+    await render(hbs`<SimpleList @values={{this.values}} />`);
 
-    async test(assert) {
-      await click(".values .value[data-index='0'] .remove-value-btn");
+    await click(".values .value[data-index='0'] .remove-value-btn");
 
-      assert.strictEqual(
-        count(".values .value"),
-        1,
-        "it removes the value from the list of values"
-      );
+    assert.strictEqual(
+      count(".values .value"),
+      1,
+      "it removes the value from the list of values"
+    );
 
-      assert.ok(
-        query(".values .value[data-index='0'] .value-input").value === "osama",
-        "it removes the correct value"
-      );
-    },
+    assert.strictEqual(
+      query(".values .value[data-index='0'] .value-input").value,
+      "osama",
+      "it removes the correct value"
+    );
   });
 
-  componentTest("delimiter support", {
-    template: hbs`{{simple-list values=values inputDelimiter='|'}}`,
+  test("delimiter support", async function (assert) {
+    this.set("values", "vinkas|osama");
 
-    beforeEach() {
-      this.set("values", "vinkas|osama");
-    },
+    await render(
+      hbs`<SimpleList @values={{this.values}} @inputDelimiter="|" />`
+    );
 
-    async test(assert) {
-      await fillIn(".add-value-input", "eviltrout");
-      await click(".add-value-btn");
+    await fillIn(".add-value-input", "eviltrout");
+    await click(".add-value-btn");
 
-      assert.strictEqual(
-        count(".values .value"),
-        3,
-        "it adds the value to the list of values"
-      );
+    assert.strictEqual(
+      count(".values .value"),
+      3,
+      "it adds the value to the list of values"
+    );
 
-      assert.ok(
-        query(".values .value[data-index='2'] .value-input").value ===
-          "eviltrout",
-        "it adds the correct value"
-      );
-    },
+    assert.strictEqual(
+      query(".values .value[data-index='2'] .value-input").value,
+      "eviltrout",
+      "it adds the correct value"
+    );
   });
 });

@@ -1,18 +1,16 @@
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
-discourseModule("Integration | Component | empty-state", function (hooks) {
+module("Integration | Component | empty-state", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("it renders", {
-    template: hbs`<EmptyState @title="title" @body="body" />`,
+  test("it renders", async function (assert) {
+    await render(hbs`<EmptyState @title="title" @body="body" />`);
 
-    test(assert) {
-      assert.strictEqual(query("[data-test-title]").textContent, "title");
-      assert.strictEqual(query("[data-test-body]").textContent, "body");
-    },
+    assert.strictEqual(query("[data-test-title]").textContent, "title");
+    assert.strictEqual(query("[data-test-body]").textContent, "body");
   });
 });

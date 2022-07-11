@@ -1,52 +1,43 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { click } from "@ember/test-helpers";
 
-discourseModule("Integration | Component | emoji-picker", function (hooks) {
+module("Integration | Component | emoji-picker", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("when placement == bottom, places the picker on the bottom", {
-    template: hbs`
-      {{d-button class="emoji-picker-anchor" action=showEmojiPicker}}
-      {{emoji-picker isActive=pickerIsActive placement="bottom"}}
-    `,
+  test("when placement == bottom, places the picker on the bottom", async function (assert) {
+    this.set("showEmojiPicker", () => {
+      this.set("pickerIsActive", true);
+    });
 
-    beforeEach() {
-      this.set("showEmojiPicker", () => {
-        this.set("pickerIsActive", true);
-      });
-    },
+    await render(hbs`
+      <DButton class="emoji-picker-anchor" @action={{this.showEmojiPicker}} />
+      <EmojiPicker @isActive={{this.pickerIsActive}} @placement="bottom" />
+    `);
 
-    async test(assert) {
-      await click(".emoji-picker-anchor");
-      assert.equal(
-        query(".emoji-picker.opened").getAttribute("data-popper-placement"),
-        "bottom"
-      );
-    },
+    await click(".emoji-picker-anchor");
+    assert.strictEqual(
+      query(".emoji-picker.opened").getAttribute("data-popper-placement"),
+      "bottom"
+    );
   });
 
-  componentTest("when placement == right, places the picker on the right", {
-    template: hbs`
-      {{d-button class="emoji-picker-anchor" action=showEmojiPicker}}
-      {{emoji-picker isActive=pickerIsActive placement="right"}}
-    `,
+  test("when placement == right, places the picker on the right", async function (assert) {
+    this.set("showEmojiPicker", () => {
+      this.set("pickerIsActive", true);
+    });
 
-    beforeEach() {
-      this.set("showEmojiPicker", () => {
-        this.set("pickerIsActive", true);
-      });
-    },
+    await render(hbs`
+      <DButton class="emoji-picker-anchor" @action={{this.showEmojiPicker}} />
+      <EmojiPicker @isActive={{this.pickerIsActive}} @placement="right" />
+    `);
 
-    async test(assert) {
-      await click(".emoji-picker-anchor");
-      assert.equal(
-        query(".emoji-picker.opened").getAttribute("data-popper-placement"),
-        "right"
-      );
-    },
+    await click(".emoji-picker-anchor");
+    assert.strictEqual(
+      query(".emoji-picker.opened").getAttribute("data-popper-placement"),
+      "right"
+    );
   });
 });

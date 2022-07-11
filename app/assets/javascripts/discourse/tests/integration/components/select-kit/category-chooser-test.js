@@ -1,13 +1,12 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import I18n from "I18n";
 import createStore from "discourse/tests/helpers/create-store";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-discourseModule(
+module(
   "Integration | Component | select-kit/category-chooser",
   function (hooks) {
     setupRenderingTest(hooks);
@@ -16,309 +15,265 @@ discourseModule(
       this.set("subject", selectKit());
     });
 
-    componentTest("with value", {
-      template: hbs`
-        {{category-chooser
-          value=value
-        }}
-      `,
+    test("with value", async function (assert) {
+      this.set("value", 2);
 
-      beforeEach() {
-        this.set("value", 2);
-      },
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+        />
+      `);
 
-      async test(assert) {
-        assert.strictEqual(this.subject.header().value(), "2");
-        assert.strictEqual(this.subject.header().label(), "feature");
-      },
+      assert.strictEqual(this.subject.header().value(), "2");
+      assert.strictEqual(this.subject.header().label(), "feature");
     });
 
-    componentTest("with excludeCategoryId", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with excludeCategoryId", async function (assert) {
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             excludeCategoryId=2
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      async test(assert) {
-        await this.subject.expand();
+      await this.subject.expand();
 
-        assert.notOk(this.subject.rowByValue(2).exists());
-      },
+      assert.notOk(this.subject.rowByValue(2).exists());
     });
 
-    componentTest("with scopedCategoryId", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with scopedCategoryId", async function (assert) {
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             scopedCategoryId=2
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      async test(assert) {
-        await this.subject.expand();
+      await this.subject.expand();
 
-        assert.strictEqual(this.subject.rowByIndex(0).title(), "feature");
-        assert.strictEqual(this.subject.rowByIndex(0).value(), "2");
-        assert.strictEqual(this.subject.rowByIndex(1).title(), "spec");
-        assert.strictEqual(this.subject.rowByIndex(1).value(), "26");
-        assert.strictEqual(
-          this.subject.rows().length,
-          2,
-          "default content is scoped"
-        );
+      assert.strictEqual(this.subject.rowByIndex(0).title(), "feature");
+      assert.strictEqual(this.subject.rowByIndex(0).value(), "2");
+      assert.strictEqual(this.subject.rowByIndex(1).title(), "spec");
+      assert.strictEqual(this.subject.rowByIndex(1).value(), "26");
+      assert.strictEqual(
+        this.subject.rows().length,
+        2,
+        "default content is scoped"
+      );
 
-        await this.subject.fillInFilter("bug");
+      await this.subject.fillInFilter("bug");
 
-        assert.strictEqual(
-          this.subject.rowByIndex(0).name(),
-          "bug",
-          "search finds outside of scope"
-        );
-      },
+      assert.strictEqual(
+        this.subject.rowByIndex(0).name(),
+        "bug",
+        "search finds outside of scope"
+      );
     });
 
-    componentTest("with prioritizedCategoryId", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with prioritizedCategoryId", async function (assert) {
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             prioritizedCategoryId=5
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      async test(assert) {
-        await this.subject.expand();
+      await this.subject.expand();
 
-        // The prioritized category
-        assert.strictEqual(this.subject.rowByIndex(0).value(), "5");
-        // The prioritized category's child
-        assert.strictEqual(this.subject.rowByIndex(1).value(), "22");
-        // Other categories in the default order
-        assert.strictEqual(this.subject.rowByIndex(2).value(), "6");
-        assert.strictEqual(this.subject.rowByIndex(3).value(), "21");
-        assert.strictEqual(this.subject.rowByIndex(4).value(), "1");
+      // The prioritized category
+      assert.strictEqual(this.subject.rowByIndex(0).value(), "5");
+      // The prioritized category's child
+      assert.strictEqual(this.subject.rowByIndex(1).value(), "22");
+      // Other categories in the default order
+      assert.strictEqual(this.subject.rowByIndex(2).value(), "6");
+      assert.strictEqual(this.subject.rowByIndex(3).value(), "21");
+      assert.strictEqual(this.subject.rowByIndex(4).value(), "1");
 
-        assert.strictEqual(
-          this.subject.rows().length,
-          25,
-          "all categories are visible"
-        );
+      assert.strictEqual(
+        this.subject.rows().length,
+        25,
+        "all categories are visible"
+      );
 
-        await this.subject.fillInFilter("bug");
+      await this.subject.fillInFilter("bug");
 
-        assert.strictEqual(
-          this.subject.rowByIndex(0).name(),
-          "bug",
-          "search still finds categories"
-        );
-      },
+      assert.strictEqual(
+        this.subject.rowByIndex(0).name(),
+        "bug",
+        "search still finds categories"
+      );
     });
 
-    componentTest("with allowUncategorized=null", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with allowUncategorized=null", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = false;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             allowUncategorized=null
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      beforeEach() {
-        this.siteSettings.allow_uncategorized_topics = false;
-      },
-
-      test(assert) {
-        assert.strictEqual(this.subject.header().value(), null);
-        assert.strictEqual(this.subject.header().label(), "category…");
-      },
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "category…");
     });
 
-    componentTest("with allowUncategorized=null none=true", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with allowUncategorized=null none=true", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = false;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             allowUncategorized=null
             none=true
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      beforeEach() {
-        this.siteSettings.allow_uncategorized_topics = false;
-      },
-
-      test(assert) {
-        assert.strictEqual(this.subject.header().value(), null);
-        assert.strictEqual(this.subject.header().label(), "(no category)");
-      },
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "(no category)");
     });
 
-    componentTest("with disallowed uncategorized, none", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with disallowed uncategorized, none", async function (assert) {
+      I18n.translations[I18n.locale].js.test = { root: "root none label" };
+      this.siteSettings.allow_uncategorized_topics = false;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             allowUncategorized=null
             none="test.root"
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      beforeEach() {
-        I18n.translations[I18n.locale].js.test = { root: "root none label" };
-        this.siteSettings.allow_uncategorized_topics = false;
-      },
-
-      test(assert) {
-        assert.strictEqual(this.subject.header().value(), null);
-        assert.strictEqual(this.subject.header().label(), "root none label");
-      },
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "root none label");
     });
 
-    componentTest("with allowed uncategorized", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with allowed uncategorized", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = true;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             allowUncategorized=true
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      beforeEach() {
-        this.siteSettings.allow_uncategorized_topics = true;
-      },
-
-      test(assert) {
-        assert.strictEqual(this.subject.header().value(), null);
-        assert.strictEqual(this.subject.header().label(), "uncategorized");
-      },
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "uncategorized");
     });
 
-    componentTest("with allowed uncategorized and none=true", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with allowed uncategorized and none=true", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = true;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             allowUncategorized=true
             none=true
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      beforeEach() {
-        this.siteSettings.allow_uncategorized_topics = true;
-      },
-
-      test(assert) {
-        assert.strictEqual(this.subject.header().value(), null);
-        assert.strictEqual(this.subject.header().label(), "(no category)");
-      },
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "(no category)");
     });
 
-    componentTest("with allowed uncategorized and none", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash
+    test("with allowed uncategorized and none", async function (assert) {
+      I18n.translations[I18n.locale].js.test = { root: "root none label" };
+      this.siteSettings.allow_uncategorized_topics = true;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
             allowUncategorized=true
             none="test.root"
-          )
-        }}
-      `,
+          }}
+        />
+      `);
 
-      beforeEach() {
-        I18n.translations[I18n.locale].js.test = { root: "root none label" };
-        this.siteSettings.allow_uncategorized_topics = true;
-      },
-
-      test(assert) {
-        assert.strictEqual(this.subject.header().value(), null);
-        assert.strictEqual(this.subject.header().label(), "root none label");
-      },
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "root none label");
     });
 
-    componentTest("filter is case insensitive", {
-      template: hbs`
-        {{category-chooser
-          value=value
-        }}
-      `,
+    test("filter is case insensitive", async function (assert) {
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+        />
+      `);
 
-      async test(assert) {
-        await this.subject.expand();
-        await this.subject.fillInFilter("bug");
+      await this.subject.expand();
+      await this.subject.fillInFilter("bug");
 
-        assert.strictEqual(this.subject.rows().length, 1);
-        assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
+      assert.strictEqual(this.subject.rows().length, 1);
+      assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
 
-        await this.subject.emptyFilter();
-        await this.subject.fillInFilter("Bug");
+      await this.subject.emptyFilter();
+      await this.subject.fillInFilter("Bug");
 
-        assert.strictEqual(this.subject.rows().length, 1);
-        assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
-      },
+      assert.strictEqual(this.subject.rows().length, 1);
+      assert.strictEqual(this.subject.rowByIndex(0).name(), "bug");
     });
 
-    componentTest("filter works with non english characters", {
-      template: hbs`
-        {{category-chooser
-          value=value
-        }}
-      `,
+    test("filter works with non english characters", async function (assert) {
+      const store = createStore();
+      store.createRecord("category", {
+        id: 1,
+        name: "chữ Quốc ngữ",
+      });
 
-      beforeEach() {
-        const store = createStore();
-        store.createRecord("category", {
-          id: 1,
-          name: "chữ Quốc ngữ",
-        });
-      },
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+        />
+      `);
 
-      async test(assert) {
-        await this.subject.expand();
-        await this.subject.fillInFilter("gữ");
+      await this.subject.expand();
+      await this.subject.fillInFilter("gữ");
 
-        assert.strictEqual(this.subject.rows().length, 1);
-        assert.strictEqual(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
-      },
+      assert.strictEqual(this.subject.rows().length, 1);
+      assert.strictEqual(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
     });
 
-    componentTest("decodes entities in row title", {
-      template: hbs`
-        {{category-chooser
-          value=value
-          options=(hash scopedCategoryId=1)
-        }}
-      `,
+    test("decodes entities in row title", async function (assert) {
+      const store = createStore();
+      store.createRecord("category", {
+        id: 1,
+        name: "cat-with-entities",
+        description_text: "baz &quot;bar ‘foo’",
+      });
 
-      beforeEach() {
-        const store = createStore();
-        store.createRecord("category", {
-          id: 1,
-          name: "cat-with-entities",
-          description_text: "baz &quot;bar ‘foo’",
-        });
-      },
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash scopedCategoryId=1}}
+        />
+      `);
 
-      async test(assert) {
-        await this.subject.expand();
+      await this.subject.expand();
 
-        assert.strictEqual(
-          this.subject.rowByIndex(0).el().querySelector(".category-desc")
-            .innerText,
-          'baz "bar ‘foo’'
-        );
-      },
+      assert.strictEqual(
+        this.subject.rowByIndex(0).el().querySelector(".category-desc")
+          .innerText,
+        'baz "bar ‘foo’'
+      );
     });
   }
 );
