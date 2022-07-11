@@ -5,8 +5,10 @@
 # find which of the target users are ignoring, muting, or preventing
 # private messages from the acting user, so we can take alternative
 # action (such as raising an error or showing a helpful message) if so.
-class UserCommunicationDefender
-  class UserCommunicationPreference
+class UserCommScreener
+  attr_reader :acting_user, :preferences
+
+  class UserCommPref
     attr_accessor :username, :is_muting, :is_ignoring, :is_disallowing_all_pms,
       :is_disallowing_pms_from_acting_user
 
@@ -22,6 +24,10 @@ class UserCommunicationDefender
       !ignoring_or_muting? && !disallowing_pms?
     end
 
+    def communication_prevented?
+      !communication_allowed?
+    end
+
     def ignoring_or_muting?
       is_muting || is_ignoring
     end
@@ -31,7 +37,7 @@ class UserCommunicationDefender
     end
   end
 
-  UserCommunicationPreferences = Struct.new(:acting_user, :user_preference_map) do
+  UserCommPrefs = Struct.new(:acting_user, :user_preference_map) do
     def acting_user_staff?
       acting_user.staff?
     end
@@ -40,26 +46,62 @@ class UserCommunicationDefender
       user_preference_map[user_id]
     end
 
-    def each(&block)
-      user_preference_map.each do |user_id, pref|
-        yield pref
-      end
+    def allowing_actor_communication
+      return user_preference_map.values if acting_user_staff?
+      user_preference_map.select do |user_id, pref|
+        pref.communication_allowed?
+      end.values
+    end
+
+    def preventing_actor_communication
+      return [] if acting_user_staff?
+      user_preference_map.select do |user_id, pref|
+        pref.communication_prevented?
+      end.values
+    end
+
+    def ignoring_or_muting?(user_id)
+      return false if acting_user_staff?
+      for_user(user_id)&.ignoring_or_muting?
+    end
+
+    def disallowing_pms?(user_id)
+      return false if acting_user_staff?
+      for_user(user_id)&.disallowing_pms?
     end
   end
 
-  def initialize(acting_user_id:, target_usernames:)
-    @acting_user = User.find(acting_user_id)
-    target_usernames = target_usernames.is_a?(Array) ? target_usernames : [target_usernames]
-    @target_users = User.where(username_lower: target_usernames).pluck(:id, :username).to_h
+  def initialize(acting_user, target_usernames:)
+    @acting_user = acting_user.is_a?(Integer) ? User.find(acting_user) : acting_user
+    @target_users = User.where(username_lower: Array.wrap(target_usernames)).pluck(:id, :username).to_h
+    @preferences = load_preference_map
   end
 
-  def fetch_user_preferences
+  def allowing_actor_communication
+    preferences.allowing_actor_communication.map(&:username)
+  end
+
+  def preventing_actor_communication
+    preferences.preventing_actor_communication.map(&:username)
+  end
+
+  def ignoring_or_muting_actor?(user_id)
+    preferences.ignoring_or_muting?(user_id)
+  end
+
+  def disallowing_pms_from_actor?(user_id)
+    preferences.disallowing_pms?(user_id)
+  end
+
+  private
+
+  def load_preference_map
     resolved_user_communication_preferences = {}
 
     # Add all users who have muted or ignored the acting user, or have
     # disabled PMs from them or anyone at all.
     user_communication_preferences.each do |user|
-      resolved_user_communication_preferences[user.id] = UserCommunicationPreference.new(
+      resolved_user_communication_preferences[user.id] = UserCommPref.new(
         username: @target_users[user.id],
         is_muting: user.is_muting,
         is_ignoring: user.is_ignoring,
@@ -75,7 +117,7 @@ class UserCommunicationDefender
 
       user_ids_with_allowed_pms = users_with_allowed_pms.map(&:id)
       user_ids_acting_can_pm = AllowedPmUser.where(
-        allowed_pm_user_id: @acting_user.id, user_id: user_ids_with_allowed_pms
+        allowed_pm_user_id: acting_user.id, user_id: user_ids_with_allowed_pms
       ).pluck(:user_id).uniq
 
       # If not in the list mark them as not accepting communication.
@@ -84,7 +126,7 @@ class UserCommunicationDefender
         if resolved_user_communication_preferences[user_id]
           resolved_user_communication_preferences[user_id].is_disallowing_pms_from_acting_user = true
         else
-          resolved_user_communication_preferences[user_id] = UserCommunicationPreference.new(
+          resolved_user_communication_preferences[user_id] = UserCommPref.new(
             username: @target_users[user_id],
             is_muting: false,
             is_ignoring: false,
@@ -95,13 +137,11 @@ class UserCommunicationDefender
       end
     end
 
-    UserCommunicationPreferences.new(@acting_user, resolved_user_communication_preferences)
+    UserCommPrefs.new(acting_user, resolved_user_communication_preferences)
   end
 
-  private
-
   def user_communication_preferences
-    @user_communication_preferences ||= DB.query(<<~SQL, acting_user_id: @acting_user.id, target_user_ids: @target_users.keys)
+    @user_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
       SELECT users.id,
       CASE WHEN muted_users.muted_user_id IS NOT NULL THEN true ELSE false END AS is_muting,
       CASE WHEN ignored_users.ignored_user_id IS NOT NULL THEN true ELSE false END AS is_ignoring,

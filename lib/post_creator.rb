@@ -113,12 +113,8 @@ class PostCreator
 
       # Make sure none of the users have muted or ignored the creator or prevented
       # PMs from being sent to them
-      target_user_communication_preferences = UserCommunicationDefender.new(acting_user_id: @user.id, target_usernames: names).fetch_user_preferences
-
-      target_user_communication_preferences.each do |preferences|
-        if !preferences.communication_allowed?
-          errors.add(:base, I18n.t(:not_accepting_pms, username: preferences.username))
-        end
+      UserCommScreener.new(@user, target_usernames: names).preventing_actor_communication.each do |username|
+        errors.add(:base, I18n.t(:not_accepting_pms, username: username))
       end
 
       return false if errors[:base].present?

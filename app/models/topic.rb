@@ -1040,9 +1040,10 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).fetch_user_preferences
-      target_user_communication_preferences = communication_preferences.for_user(target_user.id)
-      raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username)) if !communication_preferences.acting_user_staff? && target_user_communication_preferences&.ignoring_or_muting?
+      comm_screener = UserCommScreener.new(invited_by.id, target_usernames: target_user.username)
+      if comm_screener.ignoring_or_muting_actor?(target_user.id)
+        raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+      end
 
       if TopicUser
           .where(topic: self,
@@ -1052,13 +1053,11 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.muted_topic"))
       end
 
-      if !target_user.staff? && target_user_communication_preferences&.disallowing_pms?
+      if comm_screener.disallowing_pms_from_actor?(target_user.id)
         raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_pm"))
       end
 
-      if !target_user.staff? &&
-         invited_by&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: invited_by, allowed_pm_user: target_user).exists?
+      if UserCommScreener.new(target_user, target_usernames: invited_by.username).disallowing_pms_from_actor?(invited_by.id)
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
@@ -1760,8 +1759,9 @@ class Topic < ActiveRecord::Base
   end
 
   def create_invite_notification!(target_user, notification_type, invited_by, post_number: 1)
-    communication_preferences = UserCommunicationDefender.new(acting_user_id: invited_by.id, target_usernames: target_user.username).fetch_user_preferences
-    raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username)) if !communication_preferences.acting_user_staff? && communication_preferences.for_user(target_user.id)&.ignoring_or_muting?
+    if UserCommScreener.new(invited_by.id, target_usernames: target_user.username).ignoring_or_muting_actor?(target_user.id)
+      raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+    end
 
     target_user.notifications.create!(
       notification_type: notification_type,
