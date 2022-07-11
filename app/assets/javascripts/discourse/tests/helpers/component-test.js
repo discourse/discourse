@@ -7,7 +7,6 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
-import { clearResolverOptions } from "discourse-common/resolver";
 import { testCleanup } from "discourse/tests/helpers/qunit-helpers";
 
 export function setupRenderingTest(hooks) {
@@ -22,7 +21,6 @@ export function setupRenderingTest(hooks) {
       }
 
       this.container = this.owner;
-      clearResolverOptions();
     }
 
     this.site = Site.current();
