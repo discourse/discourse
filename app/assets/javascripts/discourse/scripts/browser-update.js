@@ -24,21 +24,23 @@
     }
 
     document.getElementsByTagName("body")[0].className += " crawler";
-    var mainElement = document.getElementById("main");
     var noscriptElements = document.getElementsByTagName("noscript");
     // find the element with the "data-path" attribute set
-    for (var i = 0; i < noscriptElements.length; ++i) {
-      if (noscriptElements[i].getAttribute("data-path")) {
-        // noscriptElements[i].innerHTML contains encoded HTML, so we need to access
-        // the childNodes instead. Browsers seem to split very long content into multiple
-        // text childNodes.
-        var result = "";
-        for (var j = 0; j < noscriptElements[i].childNodes.length; j++) {
-          result += noscriptElements[i].childNodes[j].nodeValue;
-        }
+    for (var i = noscriptElements.length - 1; i >= 0; i--) {
+      var element = noscriptElements[i];
 
-        mainElement.outerHTML = result;
-        break;
+      // noscriptElements[i].innerHTML contains encoded HTML, so we need to access
+      // the childNodes instead. Browsers seem to split very long content into multiple
+      // text childNodes.
+      var result = "";
+      for (var j = 0; j < element.childNodes.length; j++) {
+        result += element.childNodes[j].nodeValue;
+      }
+
+      if (element.getAttribute("data-path")) {
+        document.getElementById("main").outerHTML = result;
+      } else {
+        element.outerHTML = result;
       }
     }
 
