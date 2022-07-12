@@ -19,6 +19,7 @@ export default SelectKitComponent.extend({
     closeOnChange: false,
     autoInsertNoneItem: false,
     headerComponent: "multi-select/multi-select-header",
+    filterComponent: "multi-select/multi-select-filter",
     autoFilterable: true,
     caretDownIcon: "caretIcon",
     caretUpIcon: "caretIcon",

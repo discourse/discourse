@@ -40,7 +40,7 @@ export default MultiSelectComponent.extend({
           return this.attrs.options.allowUncategorized;
         }
 
-        return this.selectKitOptions.allowUncategorized;
+        return this.selectKit.options.allowUncategorized;
       }
 
       return (

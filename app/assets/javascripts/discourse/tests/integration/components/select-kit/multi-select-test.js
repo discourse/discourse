@@ -3,6 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { paste, query } from "discourse/tests/helpers/qunit-helpers";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -99,5 +100,22 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.selectRowByValue(1);
 
     assert.ok(this.subject.isExpanded(), "it doesn’t close the dropdown");
+  });
+
+  test("pasting", async function (assert) {
+    setDefaultState(this);
+
+    await render(hbs`
+      <MultiSelect
+        @value={{this.value}}
+        @content={{this.content}}
+        @options={{hash maximum=2}}
+      />
+    `);
+
+    await this.subject.expand();
+    await paste(query(".filter-input"), "foo|bar");
+
+    assert.equal(this.subject.header().value(), "1,2");
   });
 });
