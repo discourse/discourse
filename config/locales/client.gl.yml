@@ -551,6 +551,7 @@ gl:
       forever: "Sempre"
       relative: "Tempo relativo"
       none: "Non se necesita"
+      never: "Nunca"
       custom: "Personalizar data e hora"
       select_timeframe: "Seleccione un marco temporal"
     user_action:

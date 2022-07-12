@@ -536,6 +536,8 @@ zh_CN:
       relative: "相对"
     time_shortcut:
       now: "现在"
+      in_one_hour: "在一个小时内"
+      in_two_hours: "两小时内"
       later_today: "今天晚些时候"
       two_days: "两天"
       next_business_day: "下一个工作日"
@@ -556,6 +558,7 @@ zh_CN:
       forever: "永远"
       relative: "相对时间"
       none: "不需要时间/日期"
+      never: "从不"
       last_custom: "上次自定义日期时间"
       custom: "自定义日期和时间"
       select_timeframe: "选择时间范围"
@@ -1033,6 +1036,10 @@ zh_CN:
       experimental_sidebar:
         enable: "启用实验性侧边栏"
         options: "选项"
+        categories_section: "类别部分"
+        categories_section_instruction: "选定的类别将显示在侧边栏的类别部分下。"
+        tags_section: "标签部分"
+        tags_section_instruction: "选定的标签将显示在侧边栏的标签部分下。"
       change: "更改"
       featured_topic: "精选话题"
       moderator: "%{user} 是版主"
@@ -1143,6 +1150,7 @@ zh_CN:
         tags: "标签"
         interface: "界面"
         apps: "应用"
+        sidebar: "侧边栏"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -1568,6 +1576,7 @@ zh_CN:
       save: "保存"
       set_custom_status: "设置自定义状态"
       what_are_you_doing: "你在做什么？"
+      remove_status: "移除状态"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -3565,11 +3574,17 @@ zh_CN:
             unread_with_count: "未读 (%{count})"
             archive: "归档"
         tags:
+          none: "你还没有添加任何标签。"
+          click_to_get_started: "点击这里开始。"
           header_link_title: "所有标签"
           header_link_text: "标签"
+          header_action_title: "编辑您的侧边栏标签"
         categories:
+          none: "你还没有添加任何类别。"
+          click_to_get_started: "点击这里开始。"
           header_link_title: "所有类别"
           header_link_text: "类别"
+          header_action_title: "编辑你的侧边栏类别"
         topics:
           header_link_title: "首页"
           header_link_text: "话题"

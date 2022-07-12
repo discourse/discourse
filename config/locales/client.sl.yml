@@ -570,6 +570,7 @@ sl:
       forever: "Za vedno"
       relative: "Relativni čas"
       none: "Brez opomnika"
+      never: "Nikoli"
       custom: "Izberi datum in čas"
       select_timeframe: "Izberi časovni okvir"
     user_action:

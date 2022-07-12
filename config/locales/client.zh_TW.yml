@@ -543,6 +543,7 @@ zh_TW:
       forever: "永久"
       relative: "相對時間"
       none: "不需要"
+      never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
       select_timeframe: "選擇有效時間範圍"

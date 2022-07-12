@@ -547,6 +547,7 @@ id:
       next_month: "Bulan depan"
       six_months: "Enam bulan"
       none: "Tidak dibutuhkan"
+      never: "Tidak pernah"
       custom: "Tanggal dan waktu tersuai"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"

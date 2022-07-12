@@ -569,6 +569,8 @@ tr_TR:
       relative: "Göreceli"
     time_shortcut:
       now: "Şimdi"
+      in_one_hour: "Bir saat içinde"
+      in_two_hours: "İki saat içinde"
       later_today: "Bugün ilerleyen saatlerde"
       two_days: "İki gün"
       next_business_day: "Bir sonraki iş günü"
@@ -589,6 +591,7 @@ tr_TR:
       forever: "Sonsuza dek"
       relative: "Göreli zaman"
       none: "Hiçbiri"
+      never: "Asla"
       last_custom: "En son belirlenen özel tarih/saat"
       custom: "Özel tarih ve saat"
       select_timeframe: "Zaman aralığı seç"
@@ -1614,6 +1617,7 @@ tr_TR:
       save: "Kaydet"
       set_custom_status: "Özel bir durum ayarla"
       what_are_you_doing: "Ne yapıyorsun?"
+      remove_status: "Durumu kaldır"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"

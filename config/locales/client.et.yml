@@ -432,6 +432,7 @@ et:
       forever: "Igavesti"
       relative: "Suhteline aeg"
       none: "Pole vaja"
+      never: "Mitte kunagi"
       custom: "Vali kuupäev ja kellaaeg"
       select_timeframe: "Vali ajavahemik"
     user_action:
