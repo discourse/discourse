@@ -6,7 +6,7 @@ export default Component.extend({
   @discourseComputed("prefixIconColor")
   prefixCss(color) {
     if (!color || !color.match(/^\w{6}$/)) {
-      return "";
+      return htmlSafe("");
     }
     return htmlSafe("color: #" + color);
   },
