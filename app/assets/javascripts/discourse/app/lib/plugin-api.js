@@ -1739,6 +1739,21 @@ class PluginApi {
    *           get text() {
    *             return "dev channel";
    *           }
+   *           get prefixIcon() {
+   *             return "hashtag";
+   *           }
+   *           get prefixIconColor() {
+   *             return "000000";
+   *           }
+   *           get prefixIconBadge() {
+   *             return "lock";
+   *           }
+   *           get suffixIcon() {
+   *             return "circle";
+   *           }
+   *           get suffixCssClass() {
+   *             return "unread";
+   *           }
    *         })(),
    *         new (class extends BaseCustomSidebarSectionLink {
    *           get name() {

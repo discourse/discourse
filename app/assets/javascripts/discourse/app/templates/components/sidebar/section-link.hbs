@@ -7,6 +7,14 @@
     @current-when={{@currentWhen}}
     @title={{@title}}
   >
+    {{#if @prefixIcon}}
+      <span class="sidebar-section-link-prefix-icon" style={{this.prefixCss}}>
+        {{d-icon @prefixIcon class="prefix-icon"}}
+        {{#if @prefixIconBadge}}
+          {{d-icon @prefixIconBadge class="prefix-icon-badge"}}
+        {{/if}}
+      </span>
+    {{/if}}
     <span class="sidebar-section-link-content-text">
       {{@content}}
     </span>
@@ -14,6 +22,12 @@
     {{#if @badgeCount}}
       <span class="sidebar-section-link-content-badge">
         {{@badgeCount}}
+      </span>
+    {{/if}}
+
+    {{#if @suffixIcon}}
+      <span class="sidebar-section-link-suffix-icon {{@suffixCssClass}}">
+        {{d-icon @suffixIcon}}
       </span>
     {{/if}}
   </Sidebar::SectionLinkTo>

@@ -12,7 +12,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 acceptance("Sidebar - section API", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
 
-  test("multiple header actions and links", async function (assert) {
+  test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
@@ -73,6 +73,21 @@ acceptance("Sidebar - section API", function (needs) {
                   get text() {
                     return "random channel text";
                   }
+                  get prefixIcon() {
+                    return "hashtag";
+                  }
+                  get prefixIconColor() {
+                    return "FF0000";
+                  }
+                  get prefixIconBadge() {
+                    return "lock";
+                  }
+                  get suffixIcon() {
+                    return "circle";
+                  }
+                  get suffixCssClass() {
+                    return "unread";
+                  }
                 })(),
                 new (class extends BaseCustomSidebarSectionLink {
                   get name() {
@@ -92,6 +107,12 @@ acceptance("Sidebar - section API", function (needs) {
                   }
                   get text() {
                     return "dev channel text";
+                  }
+                  get prefixIconColor() {
+                    return "alert";
+                  }
+                  get prefixIcon() {
+                    return "hashtag";
                   }
                 })(),
               ];
@@ -148,6 +169,27 @@ acceptance("Sidebar - section API", function (needs) {
       "displays first link with correct title attribute"
     );
     assert.strictEqual(
+      $links[0].children.item(0).style.color,
+      "rgb(255, 0, 0)",
+      "has correct prefix color"
+    );
+    assert.strictEqual(
+      $($links[0].children.item(0).children.item(0)).hasClass("d-icon-hashtag"),
+      true,
+      "displays prefix icon"
+    );
+    assert.strictEqual(
+      $($links[0].children.item(0).children.item(1)).hasClass("d-icon-lock"),
+      true,
+      "displays prefix icon badge"
+    );
+    assert.strictEqual(
+      $($links[0].children.item(2).children.item(0)).hasClass("d-icon-circle"),
+      true,
+      "displays suffix icon"
+    );
+
+    assert.strictEqual(
       $links[1].textContent.trim(),
       "dev channel text",
       "displays second link with correct text"
@@ -157,9 +199,14 @@ acceptance("Sidebar - section API", function (needs) {
       "dev channel title",
       "displays second link with correct title attribute"
     );
+    assert.strictEqual(
+      $links[1].children.item(0).style.color,
+      "",
+      "has no color style when value is invalid"
+    );
   });
 
-  test("single header action and no links", async function (assert) {
+  test("Single header action and no links", async function (assert) {
     withPluginApi("1.3.1", (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {

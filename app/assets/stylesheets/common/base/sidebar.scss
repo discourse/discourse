@@ -178,6 +178,35 @@
 
   .sidebar-section-link-wrapper {
     margin-left: 1.5em;
+    .sidebar-section-link-prefix-icon {
+      position: relative;
+      margin-right: 0.75em;
+      svg.prefix-icon-badge {
+        position: absolute;
+        background-color: var(--secondary);
+        border-radius: 50%;
+        padding: 2px 2px 3px;
+        color: var(--primary-high);
+        height: 0.5rem;
+        width: 0.5rem;
+        margin-left: -0.4rem;
+      }
+    }
+    .sidebar-section-link-suffix-icon {
+      align-items: center;
+      display: flex;
+      margin-left: 0.5em;
+      svg {
+        width: 0.75em;
+        height: 0.75em;
+      }
+      &.urgent svg {
+        color: $success;
+      }
+      &.unread svg {
+        color: var(--tertiary-med-or-tertiary);
+      }
+    }
   }
 
   .sidebar-section-link {
