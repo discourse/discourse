@@ -563,6 +563,7 @@ nb_NO:
       forever: "For alltid"
       relative: "Relativ tid"
       none: "Ingen behov"
+      never: "Aldri"
       last_custom: "Siste egendefinerte datotid"
       custom: "Egendefinert dato og tid"
       select_timeframe: "Velg et tidsrom"

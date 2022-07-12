@@ -249,6 +249,7 @@ be:
         other: "дзён"
     time_shortcut:
       tomorrow: "заўтра"
+      never: "ніколі"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'> %{user} <"
       you_posted_topic: "<a href='%{userUrl}'> Вы <"

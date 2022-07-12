@@ -585,6 +585,7 @@ lt:
       forever: "Am-inai"
       relative: "Santykinis laikas"
       none: "Nė vienas reikalingas"
+      never: "Niekada"
       last_custom: "Paskutinė tinkinta data ir laikas"
       custom: "Pasirinkite datą ir laiką"
       select_timeframe: "Pasirinkite laikotarpį"

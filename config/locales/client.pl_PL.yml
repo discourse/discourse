@@ -194,6 +194,7 @@ pl_PL:
       to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
+      post: "post #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
@@ -705,6 +706,7 @@ pl_PL:
       forever: "Zawsze"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
+      never: "Nigdy"
       last_custom: "Ostatnia niestandardowa data i godzina"
       custom: "Niestandardowa data i godzina"
       select_timeframe: "Wybierz przedział czasowy"
@@ -1785,6 +1787,7 @@ pl_PL:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
+      remove_status: "Usuń status"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -3068,6 +3071,7 @@ pl_PL:
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
+      sr_date: "Data wysłania"
       expand_collapse: "rozwiń/zwiń"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
       gap:

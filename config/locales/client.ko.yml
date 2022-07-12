@@ -535,6 +535,7 @@ ko:
       forever: "영원히"
       relative: "상대 시간"
       none: "필요 없음"
+      never: "절대"
       last_custom: "마지막 맞춤 시간"
       custom: "사용자 지정 날짜 및 시간"
       select_timeframe: "시간대 선택"

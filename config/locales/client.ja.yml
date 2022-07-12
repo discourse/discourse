@@ -534,6 +534,7 @@ ja:
       forever: "永遠"
       relative: "相対時間"
       none: "不要"
+      never: "削除しない"
       last_custom: "最後のカスタム日時"
       custom: "カスタムの日付と時刻"
       select_timeframe: "時間枠を選択してください"

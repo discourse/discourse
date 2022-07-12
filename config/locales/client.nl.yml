@@ -565,6 +565,7 @@ nl:
       forever: "Voor altijd"
       relative: "Relatieve tijd"
       none: "Niet nodig"
+      never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
       select_timeframe: "Selecteer een tijdsbestek"

@@ -606,6 +606,7 @@ fr:
       forever: "Pour toujours"
       relative: "Me le rappeler d'ici"
       none: "Ne pas me le rappeler"
+      never: "Jamais"
       last_custom: "Date et heure personnalisées précédentes"
       custom: "Date et heure personnalisées"
       select_timeframe: "Sélectionner un intervalle de temps"

@@ -753,6 +753,7 @@ ar:
       forever: "للأبد"
       relative: "وقت نسبي"
       none: "لا حاجة إليه"
+      never: "أبدًا"
       last_custom: "آخر تاريخ ووقت مخصَّصين"
       custom: "تاريخ ووقت مخصَّصان"
       select_timeframe: "تحديد إطار زمني"
