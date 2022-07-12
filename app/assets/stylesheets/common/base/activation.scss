@@ -13,11 +13,16 @@
       font-size: $font-up-1;
       line-height: $line-height-large;
     }
-
     .activation-controls {
       button {
         margin-right: 0.5em;
       }
+    }
+    .ac-page {
+      border-radius: 10px;
+      margin-top: 25px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      border-top: 6px solid var(--tertiary);
     }
   }
 }
