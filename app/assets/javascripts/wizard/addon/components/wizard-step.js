@@ -20,9 +20,9 @@ export default Component.extend({
   @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showNextButton: (current, total) => current < total,
 
-  @discourseComputed("step.id")
-  showDoneButton: (step) => {
-    return step === "ready" || step === "corporate";
+  @discourseComputed("step.id", "step.displayIndex", "wizard.totalSteps")
+  showDoneButton: (step, current, total) => {
+    return step === "ready" || current === total;
   },
 
   @discourseComputed("step.id")
