@@ -105,6 +105,15 @@
                 <td>{{number this.model.stats.likes_30_days}}</td>
                 <td>{{number this.model.stats.like_count}}</td>
               </tr>
+              {{#each-in this.model.stats.plugin_stats as |statGroupName stat|}}
+                <tr>
+                  <td>{{i18n (concat "about." statGroupName "_count")}}</td>
+                  <td>{{number stat.last_day}}</td>
+                  <td>{{number stat.7_days}}</td>
+                  <td>{{number stat.30_days}}</td>
+                  <td>{{number stat.count}}</td>
+                </tr>
+              {{/each-in}}
             </tbody>
           </table>
         </section>

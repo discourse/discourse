@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 class About
+  cattr_reader :plugin_stat_groups
+
+  def self.add_plugin_stat_group(prefix, show_in_ui: false, &block)
+    @@plugin_stat_groups[prefix] = { block: block, show_in_ui: show_in_ui }
+  end
+  def self.clear_plugin_stat_groups
+    @@plugin_stat_groups = {}
+  end
+  def self.hidden_plugin_stat_groups
+    @@plugin_stat_groups.reject { |key, value| value[:show_in_ui] }.keys
+  end
+
+  clear_plugin_stat_groups
+
   class CategoryMods
     include ActiveModel::Serialization
     attr_reader :category_id, :moderators
@@ -82,7 +96,20 @@ class About
       likes_last_day: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.days.ago).count,
       likes_7_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
       likes_30_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count
-    }
+    }.merge(plugin_stats)
+  end
+
+  def plugin_stats
+    final_plugin_stats = { plugin_stats: {} }
+    @@plugin_stat_groups.each do |plugin_stat_group_name, stat_group|
+      stats = stat_group[:block].call
+      if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") || !stats.key?(:count)
+        Rails.logger.warn("Plugin stat group #{plugin_stat_group_name} does not have all required keys, skipping.")
+      else
+        final_plugin_stats[:plugin_stats][plugin_stat_group_name] = stats
+      end
+    end
+    final_plugin_stats
   end
 
   def category_moderators

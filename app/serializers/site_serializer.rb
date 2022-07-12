@@ -33,7 +33,8 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_replace,
     :watched_words_link,
     :categories,
-    :markdown_additional_options
+    :markdown_additional_options,
+    :hidden_about_plugn_stat_groups
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -206,6 +207,10 @@ class SiteSerializer < ApplicationSerializer
 
   def markdown_additional_options
     Site.markdown_additional_options
+  end
+
+  def hidden_about_plugn_stat_groups
+    About.hidden_plugin_stat_groups
   end
 
   private

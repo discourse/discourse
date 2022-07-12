@@ -100,6 +100,17 @@
         <td><%= stats["likes_7_days"] %></td>
         <td><%= stats["likes_30_days"] %></td>
       </tr>
+      <% stats["plugin_stats"].each do |stat_group_name, stat| %>
+      <% if !About.hidden_plugin_stat_groups.include?(stat_group_name) %>
+      <tr>
+        <td><%=t "js.about.#{stat_group_name}_count" %></td>
+        <td><%= stat["count"] %></td>
+        <td><%= stat["last_day"] %></td>
+        <td><%= stat["7_days"] %></td>
+        <td><%= stat["30_days"] %></td>
+      </tr>
+      <% end %>
+      <% end %>
     </table>
   </section>
 

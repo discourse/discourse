@@ -29,6 +29,16 @@ export default DiscourseRoute.extend({
           result.about.category_moderators[index].category = category;
         });
       }
+
+      const filteredPluginStats = {};
+      Object.entries(result.about.stats.plugin_stats)
+        .reject((pluginStat) =>
+          this.site.hidden_about_plugn_stat_groups.includes(pluginStat[0])
+        )
+        .forEach((pluginStat) => {
+          filteredPluginStats[pluginStat[0]] = pluginStat[1];
+        });
+      result.about.stats.plugin_stats = filteredPluginStats;
       return result.about;
     });
   },
