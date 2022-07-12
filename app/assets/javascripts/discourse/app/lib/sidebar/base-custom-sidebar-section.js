@@ -3,11 +3,6 @@
  */
 export default class BaseCustomSidebarSection {
   /**
-   * Called when sidebar component is torn down.
-   */
-  teardown() {}
-
-  /**
    * @returns {string} The name of the section header. Needs to be dasherized and lowercase.
    */
   get name() {
@@ -27,6 +22,21 @@ export default class BaseCustomSidebarSection {
   get text() {
     this._notImplemented();
   }
+
+  /**
+   * @returns {array} Actions for header options button
+   */
+  get actions() {}
+
+  /**
+   * @returns {string} Icon for header options button
+   */
+  get actionsIcon() {}
+
+  /**
+   * @returns {array} Links for section, instances of BaseCustomSidebarSectionLink
+   */
+  get links() {}
 
   _notImplemented() {
     throw "not implemented";

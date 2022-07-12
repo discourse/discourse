@@ -20,23 +20,21 @@ acceptance("Sidebar - section API", function (needs) {
             get name() {
               return "chat-channels";
             }
-
             get route() {
-              return "chat";
+              return "discovery.latest";
             }
-
+            get model() {
+              return false;
+            }
             get title() {
               return "chat channels title";
             }
-
             get text() {
               return "chat channels text";
             }
-
             get actionsIcon() {
               return "cog";
             }
-
             get actions() {
               return [
                 {
@@ -51,7 +49,6 @@ acceptance("Sidebar - section API", function (needs) {
                 },
               ];
             }
-
             get links() {
               return [
                 new (class extends BaseCustomSidebarSectionLink {
@@ -59,13 +56,10 @@ acceptance("Sidebar - section API", function (needs) {
                     "random-channel";
                   }
                   get route() {
-                    return "chat.channel";
+                    return "discovery.latest";
                   }
                   get model() {
-                    return {
-                      channelId: "1",
-                      channelTitle: "random channel",
-                    };
+                    return false;
                   }
                   get title() {
                     return "random channel title";
@@ -94,13 +88,10 @@ acceptance("Sidebar - section API", function (needs) {
                     "dev-channel";
                   }
                   get route() {
-                    return "chat.channel";
+                    return "discovery.latest";
                   }
                   get model() {
-                    return {
-                      channelId: "2",
-                      channelTitle: "dev channel",
-                    };
+                    return false;
                   }
                   get title() {
                     return "dev channel title";
@@ -207,29 +198,27 @@ acceptance("Sidebar - section API", function (needs) {
   });
 
   test("Single header action and no links", async function (assert) {
-    withPluginApi("1.3.1", (api) => {
+    withPluginApi("1.3.0", (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
           get name() {
             return "chat-channels";
           }
-
           get route() {
-            return "chat";
+            return "discovery.latest";
           }
-
+          get model() {
+            return false;
+          }
           get title() {
             return "chat channels title";
           }
-
           get text() {
             return "chat channels text";
           }
-
           get actionsIcon() {
             return "cog";
           }
-
           get actions() {
             return [
               {
@@ -239,7 +228,6 @@ acceptance("Sidebar - section API", function (needs) {
               },
             ];
           }
-
           get links() {
             return [];
           }
