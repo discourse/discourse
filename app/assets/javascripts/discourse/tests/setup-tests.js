@@ -172,7 +172,7 @@ function writeSummaryLine(message) {
   }
 }
 
-function setupTestsCommon(config) {
+export default function setupTests(config) {
   disableCloaking();
 
   QUnit.config.hidepassed = true;
@@ -371,10 +371,6 @@ function setupTestsCommon(config) {
 
   setupToolbar();
   reportMemoryUsageAfterTests();
-}
-
-export default function setupTests(config) {
-  setupTestsCommon(config);
 }
 
 function getUrlParameter(name) {
