@@ -102,9 +102,15 @@ class About
   def plugin_stats
     final_plugin_stats = { plugin_stats: {} }
     @@plugin_stat_groups.each do |plugin_stat_group_name, stat_group|
-      stats = stat_group[:block].call
+      begin
+        stats = stat_group[:block].call
+      rescue StandardError => err
+        Discourse.warn_exception(err, message: "Unexpected error when collecting #{plugin_stat_group_name} About stats.")
+        next
+      end
+
       if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") || !stats.key?(:count)
-        Rails.logger.warn("Plugin stat group #{plugin_stat_group_name} does not have all required keys, skipping.")
+        Rails.logger.warn("Plugin stat group #{plugin_stat_group_name} for About stats does not have all required keys, skipping.")
       else
         final_plugin_stats[:plugin_stats][plugin_stat_group_name] = stats
       end

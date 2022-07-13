@@ -697,6 +697,7 @@ export default {
           can_revoke: true,
         },
       ],
+      hidden_about_plugn_stat_groups: ["chat_users"]
     },
   },
 };

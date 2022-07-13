@@ -6,17 +6,36 @@ export default {
         topic_count: 27480,
         post_count: 490358,
         user_count: 41719,
+        topics_last_day: 34,
         topics_7_days: 169,
         topics_30_days: 517,
+        posts_last_day: 794,
         posts_7_days: 3128,
         posts_30_days: 10660,
+        users_last_day: 123,
         users_7_days: 237,
         users_30_days: 866,
+        active_users_last_day: 432,
         active_users_7_days: 1004,
         active_users_30_days: 2026,
         like_count: 499135,
+        likes_last_day: 120,
         likes_7_days: 3449,
         likes_30_days: 12313,
+        plugin_stats: {
+          chat_messages: {
+            last_day: 10,
+            "7_days": 100,
+            "30_days": 1000,
+            count: 10000
+          },
+          chat_users: {
+            last_day: 10,
+            "7_days": 100,
+            "30_days": 1000,
+            count: 10000
+          }
+        }
       },
       description:
         "Discussion about the next-generation open source Discourse forum software",
