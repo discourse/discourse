@@ -553,6 +553,14 @@ body.wizard {
     border-radius: 4px;
   }
 
+  &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
+    flex: 0 0 30%;
+  }
+  &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
+    flex: 1 1 70%;
+    overflow: hidden;
+  }
+
   &__field.checkbox-field .wizard-container__label {
     cursor: pointer;
     display: inline-block;
