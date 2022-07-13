@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   @discourseComputed("prefixIconColor")
-  prefixCss(color) {
+  prefixCSS(color) {
     if (!color || !color.match(/^\w{6}$/)) {
       return htmlSafe("");
     }
