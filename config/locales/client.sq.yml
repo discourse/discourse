@@ -305,6 +305,8 @@ sq:
       days:
         one: "ditë"
         other: "ditë"
+    time_shortcut:
+      never: "Asnjëherë"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postoi <a href='%{topicUrl}'>temën</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ju</a> postuat <a href='%{topicUrl}'>temën</a>"
@@ -546,6 +548,8 @@ sq:
         regular: "Normal"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
+      experimental_sidebar:
+        options: "Opsione"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"

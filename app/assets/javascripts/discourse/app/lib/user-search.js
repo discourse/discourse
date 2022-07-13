@@ -5,6 +5,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { emailValid } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { userPath } from "discourse/lib/url";
+import { ajax } from "discourse/lib/ajax";
 
 let cache = {},
   cacheKey,
@@ -75,7 +76,7 @@ function performSearch(
   }
 
   // need to be able to cancel this
-  oldSearch = $.ajax(userPath("search/users"), {
+  oldSearch = ajax(userPath("search/users"), {
     data,
   });
 
@@ -102,7 +103,7 @@ function performSearch(
         returnVal = r;
       }
     })
-    .always(function () {
+    .finally(function () {
       oldSearch = null;
       resultsFn(returnVal);
     });
@@ -198,7 +199,8 @@ function organizeResults(r, options) {
 // will not find me, which is a reasonable compromise
 //
 // we also ignore if we notice a double space or a string that is only a space
-const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$|^[^+]*\+[^@]*$/;
+const ignoreRegex =
+  /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$|^[^+]*\+[^@]*$/;
 
 export function skipSearch(term, allowEmails, lastSeenUsers = false) {
   if (lastSeenUsers) {

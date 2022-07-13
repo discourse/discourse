@@ -644,6 +644,8 @@ en:
 
     time_shortcut:
       now: "Now"
+      in_one_hour: "In one hour"
+      in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
       next_business_day: "Next business day"
@@ -664,6 +666,7 @@ en:
       forever: "Forever"
       relative: "Relative time"
       none: "None needed"
+      never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
       select_timeframe: "Select a timeframe"
@@ -1796,6 +1799,7 @@ en:
       save: "Save"
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
+      remove_status: "Remove status"
 
     loading: "Loading..."
     errors:

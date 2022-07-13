@@ -543,6 +543,7 @@ zh_TW:
       forever: "永久"
       relative: "相對時間"
       none: "不需要"
+      never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
       select_timeframe: "選擇有效時間範圍"
@@ -948,6 +949,8 @@ zh_TW:
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
+      experimental_sidebar:
+        options: "選項"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"

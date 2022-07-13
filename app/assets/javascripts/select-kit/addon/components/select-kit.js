@@ -22,7 +22,7 @@ export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 
 const EMPTY_OBJECT = Object.freeze({});
 const SELECT_KIT_OPTIONS = Mixin.create({
-  mergedProperties: ["selectKitOptions"],
+  concatenatedProperties: ["selectKitOptions"],
   selectKitOptions: EMPTY_OBJECT,
 });
 
@@ -207,13 +207,14 @@ export default Component.extend(
     didReceiveAttrs() {
       this._super(...arguments);
 
-      Object.keys(this.selectKitOptions).forEach((key) => {
+      const mergedOptions = Object.assign({}, ...this.selectKitOptions);
+      Object.keys(mergedOptions).forEach((key) => {
         if (isPresent(this.options[key])) {
           this.selectKit.options.set(key, this.options[key]);
           return;
         }
 
-        const value = this.selectKitOptions[key];
+        const value = mergedOptions[key];
 
         if (
           key === "componentForRow" ||

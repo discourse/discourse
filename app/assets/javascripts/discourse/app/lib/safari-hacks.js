@@ -10,7 +10,7 @@ export function isWorkaroundActive() {
 }
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
-function positioningWorkaround($fixedElement) {
+function positioningWorkaround(fixedElement) {
   let caps = helperContext().capabilities;
   if (!caps.isIOS) {
     return;
@@ -22,7 +22,6 @@ function positioningWorkaround($fixedElement) {
     }
   });
 
-  const fixedElement = $fixedElement[0];
   let originalScrollTop = 0;
   let lastTouchedElement = null;
 
@@ -30,10 +29,7 @@ function positioningWorkaround($fixedElement) {
     if (workaroundActive) {
       document.body.classList.remove("ios-safari-composer-hacks");
       window.scrollTo(0, originalScrollTop);
-
-      if (evt && evt.target) {
-        evt.target.removeEventListener("blur", blurred);
-      }
+      evt?.target?.removeEventListener("blur", blurred);
 
       workaroundActive = false;
     }
@@ -56,13 +52,13 @@ function positioningWorkaround($fixedElement) {
     if (
       lastTouchedElement &&
       (document.visibilityState === "hidden" ||
-        $fixedElement.hasClass("edit-title") ||
-        $(lastTouchedElement).hasClass("select-kit-header") ||
-        $(lastTouchedElement).closest(".autocomplete").length ||
-        (lastTouchedElement.nodeName.toLowerCase() === "textarea" &&
+        fixedElement.classList.contains("edit-title") ||
+        lastTouchedElement.classList.contains("select-kit-header") ||
+        lastTouchedElement.closest(".autocomplete") ||
+        (lastTouchedElement.nodeName === "TEXTAREA" &&
           document.activeElement === lastTouchedElement) ||
-        $(lastTouchedElement).closest(".d-editor-button-bar").length ||
-        $(lastTouchedElement).hasClass("emoji"))
+        lastTouchedElement.closest(".d-editor-button-bar") ||
+        lastTouchedElement.classList.contains("emoji"))
     ) {
       return;
     }
@@ -75,8 +71,6 @@ function positioningWorkaround($fixedElement) {
   };
 
   let positioningHack = function (evt) {
-    let _this = this;
-
     if (evt === undefined) {
       evt = new CustomEvent("no-op");
     }
@@ -86,10 +80,12 @@ function positioningWorkaround($fixedElement) {
 
     // resets focus out of select-kit elements
     // might become redundant after select-kit refactoring
-    $fixedElement.find(".select-kit.is-expanded > button").trigger("click");
-    $fixedElement
-      .find(".select-kit > button.is-focused")
-      .removeClass("is-focused");
+    fixedElement
+      .querySelectorAll(".select-kit.is-expanded > button")
+      .forEach((el) => el.click());
+    fixedElement
+      .querySelectorAll(".select-kit > button.is-focused")
+      .forEach((el) => el.classList.remove("is-focused"));
 
     if (window.pageYOffset > 0) {
       originalScrollTop = window.pageYOffset;
@@ -109,7 +105,7 @@ function positioningWorkaround($fixedElement) {
       }
 
       // don't trigger keyboard on disabled element (happens when a category is required)
-      if (_this.disabled) {
+      if (this.disabled) {
         return;
       }
 
@@ -117,7 +113,7 @@ function positioningWorkaround($fixedElement) {
       window.scrollTo(0, 0);
 
       evt.preventDefault();
-      _this.focus();
+      this.focus();
       workaroundActive = true;
     }, delay);
   };
@@ -141,9 +137,11 @@ function positioningWorkaround($fixedElement) {
       function () {
         attachTouchStart(fixedElement, lastTouched);
 
-        $fixedElement.find("input[type=text],textarea").each(function () {
-          attachTouchStart(this, positioningHack);
-        });
+        fixedElement
+          .querySelectorAll("input[type=text], textarea")
+          .forEach((el) => {
+            attachTouchStart(el, positioningHack);
+          });
       },
       100
     );
@@ -154,14 +152,13 @@ function positioningWorkaround($fixedElement) {
     triggerHack();
   };
 
-  const config = {
+  const observer = new MutationObserver(checkForInputs);
+  observer.observe(fixedElement, {
     childList: true,
     subtree: true,
     attributes: false,
     characterData: false,
-  };
-  const observer = new MutationObserver(checkForInputs);
-  observer.observe(fixedElement, config);
+  });
 }
 
 export default positioningWorkaround;

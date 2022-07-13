@@ -1,15 +1,15 @@
-{{#d-modal-body title="directory.edit_columns.title"}}
-  {{#if loading}}
+<DModalBody @title="directory.edit_columns.title">
+  {{#if this.loading}}
     {{loading-spinner size="large"}}
   {{else}}
     <div class="edit-directory-columns-container">
-      {{#each columns as |column|}}
+      {{#each this.columns as |column|}}
         <div class="edit-directory-column">
           <div class="left-content">
             <label class="column-name">
-              {{input type="checkbox" checked=column.enabled}}
+              <Input @type="checkbox" @checked={{column.enabled}} />
               {{#if (directory-column-is-automatic column=column)}}
-                {{directory-table-header-title field=column.name labelKey=labelKey icon=column.icon}}
+                {{directory-table-header-title field=column.name labelKey=this.labelKey icon=column.icon}}
               {{else if (directory-column-is-user-field column=column)}}
                 {{directory-table-header-title field=column.user_field.name translated=true}}
               {{else}}
@@ -18,33 +18,17 @@
             </label>
           </div>
           <div class="right-content">
-            {{d-button
-              icon="arrow-up"
-              class="button-secondary move-column-up"
-              action=(action "moveUp" column)
-            }}
-            {{d-button
-              icon="arrow-down"
-              class="button-secondary"
-              action=(action "moveDown" column)
-            }}
+            <DButton @icon="arrow-up" @class="button-secondary move-column-up" @action={{action "moveUp" column}} />
+            <DButton @icon="arrow-down" @class="button-secondary" @action={{action "moveDown" column}} />
           </div>
         </div>
       {{/each}}
     </div>
   {{/if}}
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    class="btn-primary"
-    label="directory.edit_columns.save"
-    action=(action "save")
-  }}
+  <DButton @class="btn-primary" @label="directory.edit_columns.save" @action={{action "save"}} />
 
-  {{d-button
-    class="btn-secondary reset-to-default"
-    label="directory.edit_columns.reset_to_default"
-    action=(action "resetToDefault")
-  }}
+  <DButton @class="btn-secondary reset-to-default" @label="directory.edit_columns.reset_to_default" @action={{action "resetToDefault"}} />
 </div>

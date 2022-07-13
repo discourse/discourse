@@ -380,7 +380,7 @@ table {
   border-radius: 50%;
 }
 
-.profiler-results.profiler-left {
+.profiler-results.profiler-right {
   top: var(--header-offset) !important;
 }
 
@@ -444,6 +444,14 @@ table {
     height: 14px;
     display: block;
   }
+}
+
+.user-menu .quick-access-panel li.user-status .relative-date {
+  text-align: left;
+  font-size: var(--font-down-3);
+  padding-top: 0.45em;
+  margin-left: 0.75em;
+  color: var(--primary-medium);
 }
 
 .user-menu .quick-access-panel li.do-not-disturb {
@@ -670,6 +678,19 @@ table {
 }
 
 // Special elements
+
+#main-outlet-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  display: grid;
+  grid-template-areas: "sidebar content";
+  grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
+  gap: 0;
+
+  #main-outlet {
+    grid-area: content;
+  }
+}
 
 #main-outlet {
   padding-top: 2.5em;

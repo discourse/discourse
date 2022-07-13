@@ -535,6 +535,7 @@ ko:
       forever: "영원히"
       relative: "상대 시간"
       none: "필요 없음"
+      never: "절대"
       last_custom: "마지막 맞춤 시간"
       custom: "사용자 지정 날짜 및 시간"
       select_timeframe: "시간대 선택"
@@ -1005,6 +1006,8 @@ ko:
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림 활성화"
       enable_defer: "글을 읽지 않은 상태로 표시 연장"
+      experimental_sidebar:
+        options: "옵션"
       change: "변경"
       featured_topic: "주요 글"
       moderator: "%{user}님은 운영자입니다"

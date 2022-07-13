@@ -47,13 +47,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       });
     },
 
-    toggleSidebar() {
-      // enables CSS transitions, but not on did-insert
-      document.querySelector("body").classList.add("sidebar-animate");
-
-      this.controllerFor("application").toggleProperty("showSidebar");
-    },
-
     toggleMobileView() {
       mobile.toggleMobileView();
     },

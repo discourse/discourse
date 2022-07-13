@@ -125,8 +125,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           user: this.currentUser,
           siteSettings: this.siteSettings,
           isPrivateMessage,
-          allowStaffToUploadAnyFileInPm: this.siteSettings
-            .allow_staff_to_upload_any_file_in_pm,
+          allowStaffToUploadAnyFileInPm:
+            this.siteSettings.allow_staff_to_upload_any_file_in_pm,
         };
 
         const isUploading = validateUploadedFile(currentFile, validationOpts);

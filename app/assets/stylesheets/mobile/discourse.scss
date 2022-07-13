@@ -123,6 +123,12 @@ blockquote {
 
 #main-outlet {
   padding-top: 1.25em;
+  &:after {
+    // setup overlay for sidebar
+    content: "";
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
 }
 
 #main {
@@ -133,4 +139,50 @@ blockquote {
 // their account or changing their email.
 #simple-container {
   width: 90%;
+}
+
+// Sidebar styles
+
+.sidebar-wrapper {
+  width: 0;
+  transition: width 0.2s ease-in-out;
+  z-index: z("modal", "content");
+}
+
+#main-outlet-wrapper {
+  grid-template-columns: 0 minmax(0, 100vw);
+  gap: 0;
+  .sidebar-container {
+    padding-bottom: 6.6em; // extra space to watch out for navbar
+  }
+}
+
+body.has-sidebar-page {
+  .d-header-wrap {
+    // edits the z-index when the sidebar is open:
+    // header
+    // sidebar & body overlay
+    // composer
+    z-index: z("modal", "content") + 1;
+  }
+
+  .sidebar-wrapper {
+    width: var(--d-sidebar-width);
+    grid-area: content;
+    margin-left: -10px; // compensate for main-outlet-wrapper padding
+  }
+
+  #main-outlet {
+    &:after {
+      content: "";
+      background: rgb(0, 0, 0); // always a black overlay
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: z("modal", "overlay");
+      opacity: 0.5;
+    }
+  }
 }

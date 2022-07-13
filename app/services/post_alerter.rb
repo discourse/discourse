@@ -393,18 +393,9 @@ class PostAlerter
     return if user.staged? && topic.category&.mailinglist_mirror?
 
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
-
-    # apply muting here
-    return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
-      .joins(:muted_user)
-      .where('NOT admin AND NOT moderator')
-      .exists?
-
-    # apply ignored here
-    return if notifier_id && IgnoredUser.where(user_id: user.id, ignored_user_id: notifier_id)
-      .joins(:ignored_user)
-      .where('NOT admin AND NOT moderator')
-      .exists?
+    return if notifier_id && UserCommScreener.new(
+      acting_user_id: notifier_id, target_usernames: user.username
+    ).ignoring_or_muting_actor?(user.username)
 
     # skip if muted on the topic
     return if TopicUser.where(

@@ -589,6 +589,11 @@ sv:
               too_many: "För många ord för den funktionen"
             base:
               invalid_url: "Ersättnings-URL är ogiltig"
+              invalid_tag_list: "Listan över ersättningstaggar är ogiltig"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "är inte giltig"
       <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
   vip_category_name: "Lounge"
@@ -1565,6 +1570,7 @@ sv:
     enable_badges: "Aktivera utmärkelsesystemet"
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
+    whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
@@ -3435,7 +3441,7 @@ sv:
     suspicious_login:
       title: "Ny inloggningsvarning"
       subject_template: "[%{site_name}] Ny inloggning från %{location}"
-      text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n- Plats: %{location} (%{client_ip})\n- Webbläsare: %{browser}\n- Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/security) samt överväga att ändra ditt lösenord.\n"
+      text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n - Plats: %{location} (%{client_ip})\n - Webbläsare: %{browser}\n - Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/security) samt överväga att ändra ditt lösenord.\n"
     post_approved:
       title: "Ditt inlägg godkändes"
       subject_template: "[%{site_name}] Ditt inlägg godkändes"

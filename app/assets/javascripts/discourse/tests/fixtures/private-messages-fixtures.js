@@ -5,14 +5,14 @@ export default {
         id: 19,
         username: "eviltrout",
         name: null,
-        avatar_template: "/letter_avatar_proxy/v4/letter/t/f9ae1b/{size}.png"
+        avatar_template: "/letter_avatar_proxy/v4/letter/t/f9ae1b/{size}.png",
       },
       {
         id: 13,
         username: "mixtape",
         name: null,
-        avatar_template: "/letter_avatar_proxy/v4/letter/m/34f0e0/{size}.png"
-      }
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/34f0e0/{size}.png",
+      },
     ],
     primary_groups: [],
     topic_list: {
@@ -60,19 +60,19 @@ export default {
               extras: "latest single",
               description: "Original Poster, Most Recent Poster",
               user_id: 13,
-              primary_group_id: null
-            }
+              primary_group_id: null,
+            },
           ],
           participants: [
             {
               extras: "latest",
               description: null,
               user_id: 13,
-              primary_group_id: null
-            }
-          ]
-        }
-      ]
-    }
-  }
+              primary_group_id: null,
+            },
+          ],
+        },
+      ],
+    },
+  },
 };

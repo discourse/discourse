@@ -101,6 +101,13 @@ function beforeScriptLoad(buffer, bootstrap) {
   );
 }
 
+function discoursePreloadStylesheets(buffer, bootstrap) {
+  (bootstrap.stylesheets || []).forEach((s) => {
+    let link = `<link rel="preload" as="style" href="${s.href}">`;
+    buffer.push(link);
+  });
+}
+
 function discourseStylesheets(buffer, bootstrap) {
   (bootstrap.stylesheets || []).forEach((s) => {
     let attrs = [];
@@ -134,7 +141,7 @@ function bodyFooter(buffer, bootstrap, headers) {
 
   let v = generateUID();
   buffer.push(`
-		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers.get(
+		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="right" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers.get(
     "x-miniprofiler-ids"
   )}"></script>
 	`);
@@ -164,6 +171,7 @@ function preloaded(buffer, bootstrap) {
 const BUILDERS = {
   "html-tag": htmlTag,
   "before-script-load": beforeScriptLoad,
+  "discourse-preload-stylesheets": discoursePreloadStylesheets,
   head,
   body,
   "discourse-stylesheets": discourseStylesheets,
@@ -384,9 +392,12 @@ to serve API requests. For example:
 
   shouldForwardRequest(request) {
     if (
-      ["/tests/index.html", "/ember-cli-live-reload.js", "/testem.js"].includes(
-        request.path
-      )
+      [
+        "/tests/index.html",
+        "/ember-cli-live-reload.js",
+        "/testem.js",
+        "/assets/test-i18n.js",
+      ].includes(request.path)
     ) {
       return false;
     }

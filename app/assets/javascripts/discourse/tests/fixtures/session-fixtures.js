@@ -32,7 +32,7 @@ export default {
       title_count_mode: "notifications",
       timezone: "Australia/Brisbane",
       skip_new_user_tips: false,
-      can_review: true
-    }
-  }
+      can_review: true,
+    },
+  },
 };

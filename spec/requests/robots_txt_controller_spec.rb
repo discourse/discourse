@@ -161,5 +161,25 @@ RSpec.describe RobotsTxtController do
         expect(response.body).not_to include(sitemap_line)
       end
     end
+
+    describe 'plugins' do
+      let(:event_handler) do
+        Proc.new { |robots_info| robots_info[:agents] << { name: 'Test', disallow: ['/test/'] } }
+      end
+
+      before do
+        DiscourseEvent.on(:robots_info, &event_handler)
+      end
+
+      after do
+        DiscourseEvent.off(:robots_info, &event_handler)
+      end
+
+      it 'can add to robots.txt' do
+        get '/robots.txt'
+
+        expect(response.parsed_body).to include("User-agent: Test\nDisallow: /test/")
+      end
+    end
   end
 end

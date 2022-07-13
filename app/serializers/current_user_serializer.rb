@@ -332,7 +332,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_status?
-    SiteSetting.enable_user_status
+    SiteSetting.enable_user_status && object.has_status?
   end
 
   def status

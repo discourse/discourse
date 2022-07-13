@@ -542,14 +542,10 @@ users:
   min_username_length:
     client: true
     default: 3
-    min: 1
-    max: 60
     validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
-    min: 8
-    max: 60
     validator: "MaxUsernameLengthValidator"
   unicode_usernames:
     default: false
@@ -2433,7 +2429,7 @@ uncategorized:
     hidden: true
 
   splash_screen:
-    default: false
+    default: true
 
   suggest_weekends_in_date_pickers:
     client: true

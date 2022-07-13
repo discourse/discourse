@@ -2,7 +2,6 @@ import {
   acceptance,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -86,7 +85,7 @@ acceptance("Admin - User Index", function (needs) {
 
     server.put("/admin/users/4/grant_admin", () => {
       return helper.response(403, {
-        second_factor_challenge_nonce: "somenonce",
+        second_factor_challenge_nonce: "some-nonce",
       });
     });
 
@@ -104,7 +103,7 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/2/sam");
 
     assert.strictEqual(
-      queryAll(".display-row.username .value").text().trim(),
+      query(".display-row.username .value").innerText.trim(),
       "sam"
     );
 
@@ -113,7 +112,7 @@ acceptance("Admin - User Index", function (needs) {
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username a");
     assert.strictEqual(
-      queryAll(".display-row.username .value").text().trim(),
+      query(".display-row.username .value").innerText.trim(),
       "sam"
     );
 
@@ -122,7 +121,7 @@ acceptance("Admin - User Index", function (needs) {
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username button");
     assert.strictEqual(
-      queryAll(".display-row.username .value").text().trim(),
+      query(".display-row.username .value").innerText.trim(),
       "new-sam"
     );
   });
@@ -130,7 +129,7 @@ acceptance("Admin - User Index", function (needs) {
   test("shows the number of post edits", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(queryAll(".post-edits-count .value").text().trim(), "6");
+    assert.strictEqual(query(".post-edits-count .value").innerText.trim(), "6");
 
     assert.ok(
       exists(".post-edits-count .controls .btn.btn-icon"),
@@ -165,7 +164,7 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/2/sam");
 
     assert.strictEqual(
-      queryAll(".display-row.username .value").text().trim(),
+      query(".display-row.username .value").innerText.trim(),
       "sam",
       "the name should be correct"
     );
@@ -182,7 +181,7 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/1/eviltrout");
 
     assert.strictEqual(
-      queryAll(".display-row.username .value").text().trim(),
+      query(".display-row.username .value").innerText.trim(),
       "eviltrout",
       "the name should be correct"
     );
@@ -209,7 +208,7 @@ acceptance("Admin - User Index", function (needs) {
     await click(".grant-admin");
     assert.equal(
       currentURL(),
-      "/session/2fa?nonce=somenonce",
+      "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
     );
   });

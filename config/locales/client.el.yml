@@ -514,6 +514,7 @@ el:
       next_week: "Την άλλη εβδομάδα"
       next_month: "Τον άλλο μήνα"
       forever: "Για Πάντα"
+      never: "Ποτέ"
       custom: "Προσαρμοσμένη ημερομηνία και ώρα"
       select_timeframe: "Επιλέξτε χρονικό περιθώριο"
     user_action:
@@ -910,6 +911,8 @@ el:
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       enable_defer: "Ενεργοποίηση αναβολής για επισήμανση θεμάτων ως μη αναγνωσμένων"
+      experimental_sidebar:
+        options: "Επιλογές"
       change: "αλλαγή"
       featured_topic: "Επιλεγμένο θέμα"
       moderator: "Ο/Η %{user} είναι συντονιστής"

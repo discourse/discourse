@@ -581,6 +581,7 @@ pt_BR:
       forever: "Para sempre"
       relative: "Tempo relativo"
       none: "Nenhum necessário"
+      never: "Nunca"
       last_custom: "Última data personalizada"
       custom: "Data e hora personalizadas"
       select_timeframe: "Selecione um intervalo de tempo"
@@ -1060,6 +1061,8 @@ pt_BR:
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
+      experimental_sidebar:
+        options: "Opções"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"

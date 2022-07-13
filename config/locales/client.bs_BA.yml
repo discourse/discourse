@@ -548,6 +548,7 @@ bs_BA:
       next_week: "Sljedeće sedmice"
       next_month: "Sljedeći mjesec"
       forever: "Zauvijek"
+      never: "Nikad"
       custom: "Precizirano vrijeme i datum"
       select_timeframe: "Označi vremenski period"
     user_action:
@@ -942,6 +943,8 @@ bs_BA:
       external_links_in_new_tab: "Otvori sve eksterne linkove u novom tab-u"
       enable_quoting: "Uključi \"citiran odgovor\" za označen tekst"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
+      experimental_sidebar:
+        options: "Opcije"
       change: "promjeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"

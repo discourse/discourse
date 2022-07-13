@@ -553,6 +553,7 @@ bg:
       forever: "Завинаги"
       relative: "Относително време"
       none: "Няма нужда"
+      never: "Никога"
       last_custom: "Последна персонализирана дата и час"
       custom: "Друга дата и час"
       select_timeframe: "Избери времева рамка"
@@ -1032,6 +1033,8 @@ bg:
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
       enable_quoting: "Включи отговор с цитат при маркиран текст."
       enable_defer: "Активирайте отлагане, за да маркирате темите като непрочетени"
+      experimental_sidebar:
+        options: "Опции"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"

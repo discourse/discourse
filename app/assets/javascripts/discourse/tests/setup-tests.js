@@ -30,7 +30,6 @@ import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
 import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import sinon from "sinon";
-import { run } from "@ember/runloop";
 import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
@@ -62,15 +61,12 @@ function AcceptanceModal(option, _relatedTarget) {
   });
 }
 
-let app;
 let started = false;
 
 function createApplication(config, settings) {
-  if (app) {
-    run(app, "destroy");
-  }
+  const app = Application.create(config);
 
-  app = Application.create(config);
+  app.injectTestHelpers();
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
@@ -117,14 +113,9 @@ function createApplication(config, settings) {
 function setupToolbar() {
   // Most default toolbar items aren't useful for Discourse
   QUnit.config.urlConfig = QUnit.config.urlConfig.reject((c) =>
-    [
-      "noglobals",
-      "notrycatch",
-      "nolint",
-      "devmode",
-      "dockcontainer",
-      "nocontainer",
-    ].includes(c.id)
+    ["noglobals", "nolint", "devmode", "dockcontainer", "nocontainer"].includes(
+      c.id
+    )
   );
 
   QUnit.config.urlConfig.push({
@@ -181,14 +172,10 @@ function writeSummaryLine(message) {
   }
 }
 
-function setupTestsCommon(application, container, config) {
+export default function setupTests(config) {
   disableCloaking();
 
   QUnit.config.hidepassed = true;
-
-  application.rootElement = "#ember-testing";
-  application.setupForTesting();
-  application.injectTestHelpers();
 
   sinon.config = {
     injectIntoThis: false,
@@ -230,15 +217,13 @@ function setupTestsCommon(application, container, config) {
     setupData = setupDataElement.dataset;
     setupDataElement.remove();
   }
+
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
     resetThemeSettings();
 
-    if (config) {
-      // Ember CLI testing environment
-      app = createApplication(config, settings);
-    }
+    const app = createApplication(config, settings);
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
@@ -295,11 +280,11 @@ function setupTestsCommon(application, container, config) {
 
     createHelperContext({
       get siteSettings() {
-        return container.lookup("site-settings:main");
+        return app.__container__.lookup("site-settings:main");
       },
       capabilities: {},
       get site() {
-        return container.lookup("site:main") || Site.current();
+        return app.__container__.lookup("site:main") || Site.current();
       },
       registry: app.__registry__,
     });
@@ -310,9 +295,6 @@ function setupTestsCommon(application, container, config) {
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
     sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
-
-    // Unless we ever need to test this, let's leave it off.
-    $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
@@ -386,16 +368,6 @@ function setupTestsCommon(application, container, config) {
 
   setupToolbar();
   reportMemoryUsageAfterTests();
-  setApplication(application);
-  setDefaultOwner(application.__container__);
-  resetSite();
-}
-
-export default function setupTests(config) {
-  let settings = resetSettings();
-  app = createApplication(config, settings);
-  setupTestsCommon(app, app.__container__, config);
-  sinon.restore();
 }
 
 function getUrlParameter(name) {

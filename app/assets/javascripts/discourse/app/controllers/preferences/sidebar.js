@@ -10,31 +10,25 @@ export default class extends Controller {
   @tracked selectedSidebarTagNames = [];
 
   @action
-  tagUpdated(tagNames) {
-    this.selectedSidebarTagNames = tagNames;
-    this.model.set("sidebar_tag_names", tagNames);
-    this.saved = false;
-  }
-
-  @action
-  categoryUpdated(categories) {
-    this.selectedSiderbarCategories = categories;
-    this.model.set("sidebarCategoryIds", categories.mapBy("id"));
-    this.saved = false;
-  }
-
-  @action
   save() {
+    const initialSidebarCategoryIds = this.model.sidebarCategoryIds;
+    const initialSidebarTagNames = this.model.sidebarTagNames;
+
+    this.model.set("sidebar_tag_names", this.selectedSidebarTagNames);
+
+    this.model.set(
+      "sidebarCategoryIds",
+      this.selectedSiderbarCategories.mapBy("id")
+    );
+
     this.model
       .save()
       .then(() => {
         this.saved = true;
-        this.initialSidebarCategoryIds = this.model.sidebarCategoryIds;
-        this.initialSidebarTagNames = this.model.initialSidebarTagNames;
       })
       .catch((error) => {
-        this.model.set("sidebarCategoryIds", this.initialSidebarCategoryIds);
-        this.model.set("sidebar_tag_names", this.initialSidebarTagNames);
+        this.model.set("sidebarCategoryIds", initialSidebarCategoryIds);
+        this.model.set("sidebar_tag_names", initialSidebarTagNames);
         popupAjaxError(error);
       });
   }

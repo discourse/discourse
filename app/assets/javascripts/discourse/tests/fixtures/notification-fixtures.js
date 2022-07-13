@@ -10,7 +10,14 @@ export default {
         post_number: 1,
         topic_id: 130,
         slug: "lorem-ipsum-dolor-sit-amet",
-        data: { topic_title: "edited topic 443", display_username: "velesin", revision_number: 1, original_post_id: 133, original_post_type: 1, original_username: "velesin" },
+        data: {
+          topic_title: "edited topic 443",
+          display_username: "velesin",
+          revision_number: 1,
+          original_post_id: 133,
+          original_post_type: 1,
+          original_username: "velesin",
+        },
       },
       {
         id: 123,

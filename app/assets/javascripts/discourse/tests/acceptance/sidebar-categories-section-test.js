@@ -1,4 +1,3 @@
-import I18n from "I18n";
 import { test } from "qunit";
 
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
@@ -139,6 +138,20 @@ acceptance("Sidebar - Categories Section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-${uncategorizedCategory.slug}`),
       `displays the section link for ${uncategorizedCategory.slug} category`
+    );
+  });
+
+  test("category section links uses the bullet style even when category_style site setting has been configured", async function (assert) {
+    this.siteSettings.category_style = "box";
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit("/");
+
+    assert.ok(
+      exists(
+        `.sidebar-section-categories .sidebar-section-link-${category1.slug} .badge-wrapper.bullet`
+      ),
+      "category badge uses the bullet style"
     );
   });
 
@@ -315,7 +328,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
+      "1",
       `displays 1 unread count for ${category1.slug} section link`
     );
 
@@ -323,7 +336,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 2 }),
+      "2",
       `displays 2 unread count for ${category2.slug} section link`
     );
 
@@ -342,7 +355,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.new_count", { count: 1 }),
+      "1",
       `displays 1 new count for ${category1.slug} section link`
     );
 
@@ -379,7 +392,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
+      "1",
       `displays 1 unread count for ${category2.slug} section link`
     );
   });

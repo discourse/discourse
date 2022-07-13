@@ -1,5 +1,5 @@
-{{#if item.truncated}}
-  {{#if expanded}}
+{{#if this.item.truncated}}
+  {{#if this.expanded}}
     <a href class="collapse-item" onclick={{action "toggleItem"}} title={{i18n "post.expand_collapse"}}>
       {{d-icon "chevron-up"}}
     </a>
