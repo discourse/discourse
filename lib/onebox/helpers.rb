@@ -201,7 +201,7 @@ module Onebox
     def self.get_absolute_image_url(src, url)
       begin
         URI.parse(url).merge(src).to_s
-      rescue ArgumentError, URI::BadURIError, URI::InvalidURIError => e
+      rescue ArgumentError, URI::BadURIError, URI::InvalidURIError
         src
       end
     end
