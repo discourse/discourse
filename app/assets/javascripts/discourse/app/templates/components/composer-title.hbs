@@ -1,3 +1,3 @@
-<TextField @value={{composer.title}} @id="reply-title" @maxLength={{titleMaxLength}} @placeholderKey={{composer.titlePlaceholder}} @aria-label={{I18n composer.titlePlaceholder}} @disabled={{disabled}} @autocomplete="off" />
+<TextField @value={{this.composer.title}} @id="reply-title" @maxLength={{this.titleMaxLength}} @placeholderKey={{this.composer.titlePlaceholder}} @aria-label={{I18n this.composer.titlePlaceholder}} @disabled={{this.disabled}} @autocomplete="off" />
 
-<PopupInputTip @validation={{validation}} />
+<PopupInputTip @validation={{this.validation}} />

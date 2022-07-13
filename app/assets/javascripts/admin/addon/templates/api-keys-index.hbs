@@ -1,6 +1,6 @@
 <DButton @class="btn-primary" @action={{route-action "new"}} @icon="plus" @label="admin.api.new_key" />
 
-{{#if model}}
+{{#if this.model}}
   <LoadMore @selector=".api-keys tr" @action={{action "loadMore"}}>
     <table class="api-keys grid">
       <thead>
@@ -12,7 +12,7 @@
         <th>&nbsp;</th>
       </thead>
       <tbody>
-        {{#each model as |k|}}
+        {{#each this.model as |k|}}
           <tr class={{if k.revoked_at "revoked"}}>
             <td class="key">
               {{#if k.revoked_at}}{{d-icon "times-circle"}}{{/if}}
@@ -57,7 +57,7 @@
     </table>
   </LoadMore>
 
-  <ConditionalLoadingSpinner @condition={{loading}} />
+  <ConditionalLoadingSpinner @condition={{this.loading}} />
 {{else}}
   <p>{{i18n "admin.api.none"}}</p>
 {{/if}}

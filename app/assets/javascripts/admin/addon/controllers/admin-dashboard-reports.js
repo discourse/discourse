@@ -12,7 +12,7 @@ export default Controller.extend({
     "filter",
     "siteSettings.dashboard_hidden_reports"
   )
-  filterReports(reports, filter) {
+  filteredReports(reports, filter) {
     if (filter) {
       filter = filter.toLowerCase();
       reports = reports.filter((report) => {

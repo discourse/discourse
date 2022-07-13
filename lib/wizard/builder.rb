@@ -178,8 +178,8 @@ class Wizard
       end
 
       @wizard.append_step('branding') do |step|
-        step.add_field(id: 'logo', type: 'image')
-        step.add_field(id: 'logo_small', type: 'image')
+        step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
+        step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
 
         step.on_update do |updater|
           if SiteSetting.site_logo_url != updater.fields[:logo] ||

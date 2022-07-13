@@ -432,6 +432,7 @@ et:
       forever: "Igavesti"
       relative: "Suhteline aeg"
       none: "Pole vaja"
+      never: "Mitte kunagi"
       custom: "Vali kuupäev ja kellaaeg"
       select_timeframe: "Vali ajavahemik"
     user_action:
@@ -782,6 +783,8 @@ et:
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
       enable_quoting: "Luba esiletõstetud tekstile tsitaadiga vastata"
+      experimental_sidebar:
+        options: "Võimalused"
       change: "muuda"
       featured_topic: "Esile tõstetud teema"
       moderator: "%{user} on moderaator"

@@ -1,25 +1,25 @@
 <div class="modal-outer-container">
   <div class="modal-middle-container">
     <div class="modal-inner-container">
-      <div class="modal-header {{headerClass}}">
-        {{#if dismissable}}
+      <div class="modal-header {{this.headerClass}}">
+        {{#if this.dismissable}}
           <DButton @icon="times" @action={{route-action "closeModal" "initiatedByCloseButton"}} @class="btn-flat modal-close close" @title="modal.close" />
         {{/if}}
 
-        {{#if title}}
+        {{#if this.title}}
           <div class="title">
-            <h3 id="discourse-modal-title">{{title}}</h3>
+            <h3 id="discourse-modal-title">{{this.title}}</h3>
 
-            {{#if subtitle}}
-              <p class="subtitle">{{subtitle}}</p>
+            {{#if this.subtitle}}
+              <p class="subtitle">{{this.subtitle}}</p>
             {{/if}}
           </div>
         {{/if}}
 
-        {{#if panels}}
+        {{#if this.panels}}
           <ul class="modal-tabs">
-            {{#each panels as |panel|}}
-              <ModalTab @panel={{panel}} @panelsLength={{panels.length}} @selectedPanel={{selectedPanel}} @onSelectPanel={{onSelectPanel}} />
+            {{#each this.panels as |panel|}}
+              <ModalTab @panel={{panel}} @panelsLength={{this.panels.length}} @selectedPanel={{this.selectedPanel}} @onSelectPanel={{this.onSelectPanel}} />
             {{/each}}
           </ul>
         {{/if}}
@@ -29,7 +29,7 @@
 
       {{yield}}
 
-      {{#each errors as |error|}}
+      {{#each this.errors as |error|}}
         <div class="alert alert-error">
           <button type="button" class="close" data-dismiss="alert" aria-label={{i18n "modal.dismiss_error"}}>×</button>
           {{error}}

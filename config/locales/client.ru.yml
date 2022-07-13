@@ -201,9 +201,9 @@ ru:
       email: "Отправить по электронной почте"
       url: "Копировать и поделиться ссылкой"
     action_codes:
-      public_topic: "Сделал эту тему публичной %{when}"
+      public_topic: "Сделал тему публичной %{when}"
       open_topic: "Преобразовал это в тему %{when}"
-      private_topic: "Сделал эту тему личным сообщением %{when}"
+      private_topic: "Сделал тему личным сообщением %{when}"
       split_topic: "Разделил эту тему %{when}"
       invited_user: "Пригласил %{who} %{when}"
       invited_group: "Пригласил %{who} %{when}"
@@ -686,6 +686,8 @@ ru:
       relative: "Напомнить через:"
     time_shortcut:
       now: "Сейчас"
+      in_one_hour: "Через час"
+      in_two_hours: "Через два часа"
       later_today: "Сегодня, но позже"
       two_days: "Через день"
       next_business_day: "На следующий рабочий день"
@@ -706,6 +708,7 @@ ru:
       forever: "Навсегда"
       relative: "Через указанное время"
       none: "Не настраивать напоминание"
+      never: "Никогда"
       last_custom: "Использовать ранее установленные дату и время"
       custom: "Установить дату и время"
       select_timeframe: "Выбор даты"
@@ -1188,7 +1191,7 @@ ru:
       color_scheme: "Цветовая схема"
       color_schemes:
         default_description: "Тема по умолчанию"
-        disable_dark_scheme: "То же самое, что и обычный"
+        disable_dark_scheme: "Обычная"
         dark_instructions: "Вы можете просмотреть цветовую схему тёмного режима, переключив тёмный режим вашего устройства."
         undo: "Сбросить"
         regular: "Обычная"
@@ -1201,7 +1204,13 @@ ru:
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
       enable_defer: "Включить кнопку 'Отложить', чтобы помечать темы как непрочитанные"
-      enable_experimental_sidebar: "Включить экспериментальную боковую панель"
+      experimental_sidebar:
+        enable: "Включить экспериментальную боковую панель"
+        options: "Настройки"
+        categories_section: "Разделы"
+        categories_section_instruction: "Выбранные разделы будут отображаться в соответствующей секции боковой панели."
+        tags_section: "Теги"
+        tags_section_instruction: "Выбранные теги будут отображаться в соответствующей секции боковой панели."
       change: "изменить"
       featured_topic: "Избранная тема:"
       moderator: "%{user} — модератор"
@@ -1318,6 +1327,7 @@ ru:
         tags: "Теги"
         interface: "Интерфейс"
         apps: "Приложения"
+        sidebar: "Боковая панель"
       change_password:
         success: "(письмо отправлено)"
         in_progress: "(отправка письма)"
@@ -1583,10 +1593,10 @@ ru:
         never: "Никогда"
         immediately: "Немедленно"
         after_30_seconds: "Более 30 секунд"
-        after_1_minute: "Более 1ой минуты"
-        after_2_minutes: "Более 2х минут"
-        after_3_minutes: "Более 3х минут"
-        after_4_minutes: "Более 4х минут"
+        after_1_minute: "Более 1 минуты"
+        after_2_minutes: "Более 2 минут"
+        after_3_minutes: "Более 3 минут"
+        after_4_minutes: "Более 4 минут"
         after_5_minutes: "Более 5 минут"
         after_10_minutes: "Более 10 минут"
       notification_level_when_replying: "Когда я пишу в теме, установить для неё следующий уровень уведомлений"
@@ -1780,6 +1790,7 @@ ru:
       save: "Сохранить"
       set_custom_status: "Поменять статус"
       what_are_you_doing: "Что вы сейчас делаете?"
+      remove_status: "Удалить статус"
     loading: "Загрузка..."
     errors:
       prev_page: "при попытке загрузки"
@@ -3265,7 +3276,7 @@ ru:
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
-            title: "Отобразить сообщение со всеми добавлениями и удалениями."
+            title: "Показать сообщение со всеми добавлениями и удалениями."
             button: "HTML"
           side_by_side:
             title: "Показать отличия версий бок о бок"
@@ -4071,13 +4082,17 @@ ru:
             unread_with_count: "Непрочитанные (%{count})"
             archive: "Архив"
         tags:
-          no_tracked_tags: "Вы не отслеживаете ни один тег."
+          none: "Вы не добавили ни одного тега."
+          click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_title: "Все теги"
           header_link_text: "Теги"
+          header_action_title: "Редактировать теги боковой панели"
         categories:
-          no_tracked_categories: "Вы не отслеживаете ни один раздел."
+          none: "Вы не добавили ни одного раздела."
+          click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_title: "Все разделы"
           header_link_text: "Разделы"
+          header_action_title: "Редактировать разделы боковой панели"
         topics:
           header_link_title: "Темы"
           header_link_text: "Темы"

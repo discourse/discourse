@@ -97,10 +97,8 @@ export default ComboBoxComponent.extend({
     "selectKit.options.prioritizedCategoryId",
     function () {
       if (!this.selectKit.filter) {
-        let {
-          scopedCategoryId,
-          prioritizedCategoryId,
-        } = this.selectKit.options;
+        let { scopedCategoryId, prioritizedCategoryId } =
+          this.selectKit.options;
 
         if (scopedCategoryId) {
           return this.categoriesByScope({ scopedCategoryId });

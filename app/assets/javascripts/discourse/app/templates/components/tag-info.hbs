@@ -1,13 +1,13 @@
 <section class="tag-info">
-  {{#if tagInfo}}
+  {{#if this.tagInfo}}
     <div class="tag-name">
-      {{#if editing}}
+      {{#if this.editing}}
         <div class="edit-tag-wrapper">
-          <TextField @id="edit-name" @value={{readonly tagInfo.name}} @maxlength={{siteSettings.max_tag_length}} @input={{action (mut newTagName) value="target.value"}} @autofocus="true" />
-          <TextField @id="edit-description" @value={{readonly tagInfo.description}} @placeholder={{i18n "tagging.description"}} @maxlength={{280}} @input={{action (mut newTagDescription) value="target.value"}} @autofocus="true" />
+          <TextField @id="edit-name" @value={{readonly this.tagInfo.name}} @maxlength={{this.siteSettings.max_tag_length}} @input={{action (mut this.newTagName) value="target.value"}} @autofocus="true" />
+          <TextField @id="edit-description" @value={{readonly this.tagInfo.description}} @placeholder={{i18n "tagging.description"}} @maxlength={{280}} @input={{action (mut this.newTagDescription) value="target.value"}} @autofocus="true" />
 
           <div class="edit-controls">
-            {{#unless updateDisabled}}
+            {{#unless this.updateDisabled}}
               <DButton @action={{action "finishedEditing"}} @class="btn-primary submit-edit" @icon="check" @ariaLabel="tagging.save" />
             {{/unless}}
             <DButton @action={{action "cancelEditing"}} @class="btn-default cancel-edit" @icon="times" @ariaLabel="cancel" />
@@ -15,47 +15,47 @@
         </div>
       {{else}}
         <div class="tag-name-wrapper">
-          {{discourse-tag tagInfo.name tagName="div"}}
-          {{#if canAdminTag}}
+          {{discourse-tag this.tagInfo.name tagName="div"}}
+          {{#if this.canAdminTag}}
             <a href {{action "edit"}} class="edit-tag" title={{i18n "tagging.edit_tag"}}>{{d-icon "pencil-alt"}}</a>
           {{/if}}
         </div>
         <div class="tag-description-wrapper">
-          {{tagInfo.description}}
+          {{this.tagInfo.description}}
         </div>
       {{/if}}
     </div>
     <div class="tag-associations">
-      {{#if tagInfo.tag_group_names}}
-        {{tagGroupsInfo}}
+      {{#if this.tagInfo.tag_group_names}}
+        {{this.tagGroupsInfo}}
       {{/if}}
-      {{#if tagInfo.categories}}
-        {{categoriesInfo}}
+      {{#if this.tagInfo.categories}}
+        {{this.categoriesInfo}}
         <br>
-        {{#each tagInfo.categories as |category|}}
+        {{#each this.tagInfo.categories as |category|}}
           {{category-link category}}
         {{/each}}
       {{/if}}
-      {{#if nothingToShow}}
-        {{#if tagInfo.category_restricted}}
+      {{#if this.nothingToShow}}
+        {{#if this.tagInfo.category_restricted}}
           {{i18n "tagging.category_restricted"}}
         {{else}}
           {{html-safe (i18n "tagging.default_info")}}
-          {{#if canAdminTag}}
+          {{#if this.canAdminTag}}
             {{html-safe (i18n "tagging.staff_info" basePath=(base-path))}}
           {{/if}}
         {{/if}}
       {{/if}}
     </div>
-    {{#if tagInfo.synonyms}}
+    {{#if this.tagInfo.synonyms}}
       <div class="synonyms-list">
         <h3>{{i18n "tagging.synonyms"}}</h3>
-        <div>{{html-safe (i18n "tagging.synonyms_description" base_tag_name=tagInfo.name)}}</div>
+        <div>{{html-safe (i18n "tagging.synonyms_description" base_tag_name=this.tagInfo.name)}}</div>
         <div class="tag-list">
-          {{#each tagInfo.synonyms as |tag|}}
+          {{#each this.tagInfo.synonyms as |tag|}}
             <div class="tag-box">
               {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
-              {{#if editSynonymsMode}}
+              {{#if this.editSynonymsMode}}
                 <a href {{action "unlinkSynonym" tag}} class="unlink-synonym">
                   {{d-icon "unlink" title="tagging.remove_synonym"}}
                 </a>
@@ -68,26 +68,26 @@
         </div>
       </div>
     {{/if}}
-    {{#if editSynonymsMode}}
+    {{#if this.editSynonymsMode}}
       <section class="add-synonyms field">
         <label for="add-synonyms">{{i18n "tagging.add_synonyms_label"}}</label>
         <div>
-          <TagChooser @id="add-synonyms" @tags={{newSynonyms}} @blockedTags={{array tagInfo.name}} @everyTag={{true}} @excludeSynonyms={{true}} @excludeHasSynonyms={{true}} @unlimitedTagCount={{true}} />
-          <DButton @class="ok" @action={{action "addSynonyms"}} @disabled={{addSynonymsDisabled}} @icon="check" />
+          <TagChooser @id="add-synonyms" @tags={{this.newSynonyms}} @blockedTags={{array this.tagInfo.name}} @everyTag={{true}} @excludeSynonyms={{true}} @excludeHasSynonyms={{true}} @unlimitedTagCount={{true}} />
+          <DButton @class="ok" @action={{action "addSynonyms"}} @disabled={{this.addSynonymsDisabled}} @icon="check" />
         </div>
       </section>
     {{/if}}
-    {{#if canAdminTag}}
-      <PluginOutlet @name="tag-custom-settings" @args={{hash tag=tagInfo}} @tagName="section" />
+    {{#if this.canAdminTag}}
+      <PluginOutlet @name="tag-custom-settings" @args={{hash tag=this.tagInfo}} @tagName="section" />
       <div class="tag-actions">
         <DButton @class="btn-default" @action={{action "toggleEditControls"}} @icon="cog" @label="tagging.edit_synonyms" @id="edit-synonyms" />
-        {{#if deleteAction}}
+        {{#if this.deleteAction}}
           <DButton @class="btn-danger delete-tag" @action={{action "deleteTag"}} @icon="far-trash-alt" @label="tagging.delete_tag" @id="delete-tag" />
         {{/if}}
       </div>
     {{/if}}
   {{/if}}
-  {{#if loading}}
+  {{#if this.loading}}
     <div>{{i18n "loading"}}</div>
   {{/if}}
 </section>

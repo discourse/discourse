@@ -1,3 +1,3 @@
-<SimpleList @values={{value}} @inputDelimiter={{inputDelimiter}} @onChange={{action "onChange"}} />
-<SettingValidationMessage @message={{validationMessage}} />
-<div class="desc">{{html-safe setting.description}}</div>
+<SimpleList @values={{this.value}} @inputDelimiter={{this.inputDelimiter}} @onChange={{action "onChange"}} />
+<SettingValidationMessage @message={{this.validationMessage}} />
+<div class="desc">{{html-safe this.setting.description}}</div>

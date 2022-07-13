@@ -25,7 +25,7 @@
         {{i18n "user.preferences_nav.notifications"}}
       </LinkTo>
     </li>
-    {{#if model.can_change_tracking_preferences}}
+    {{#if this.model.can_change_tracking_preferences}}
       <li class="indent nav-categories">
         <LinkTo @route="preferences.categories">
           {{i18n "user.preferences_nav.categories"}}
@@ -37,7 +37,7 @@
         {{i18n "user.preferences_nav.users"}}
       </LinkTo>
     </li>
-    {{#if (and model.can_change_tracking_preferences siteSettings.tagging_enabled)}}
+    {{#if (and this.model.can_change_tracking_preferences this.siteSettings.tagging_enabled)}}
       <li class="indent nav-tags">
         <LinkTo @route="preferences.tags">
           {{i18n "user.preferences_nav.tags"}}
@@ -58,21 +58,21 @@
       </li>
     {{/if}}
 
-    <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+    <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
-    {{#if model.userApiKeys}}
+    {{#if this.model.userApiKeys}}
       <li class="nav-apps">
         <LinkTo @route="preferences.apps">
           {{i18n "user.preferences_nav.apps"}}
         </LinkTo>
       </li>
     {{/if}}
-    <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=model}} />
+    <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
   </MobileNav>
 </DSection>
 
 <section class="user-content user-preferences">
-  <PluginOutlet @name="above-user-preferences" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+  <PluginOutlet @name="above-user-preferences" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
   <form class="form-vertical">
     {{outlet}}

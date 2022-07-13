@@ -15,40 +15,37 @@ acceptance("Wizard", function (needs) {
     await visit("/wizard/steps/hello-world");
     assert.ok(exists(".wizard-container__step"));
     assert.ok(
-      exists(".wizard-container__step.introduction"),
+      exists(".wizard-container__step.hello-world"),
       "it adds a class for the step id"
     );
     assert.ok(
       !exists(".wizard-container__button.finish"),
       "cannot finish on first step"
     );
-    assert.ok(exists(".wizard-progress"));
+    assert.ok(exists(".wizard-container__step-progress"));
     assert.ok(exists(".wizard-container__step-title"));
     assert.ok(exists(".wizard-container__step-description"));
     assert.ok(
-      !exists(".invalid .field-full-name"),
+      !exists(".invalid #full_name"),
       "don't show it as invalid until the user does something"
     );
-    assert.ok(
-      exists(".wizard-container__input .wizard-container__description")
-    );
     assert.ok(!exists(".wizard-container__button.back"));
-    assert.ok(!exists(".wizard-container__input .field-error-description"));
+    assert.ok(!exists(".wizard-container__field .error"));
 
     // invalid data
     await click(".wizard-container__button.next");
-    assert.ok(exists(".invalid .field-full-name"));
+    assert.ok(exists(".invalid #full_name"));
 
     // server validation fail
-    await fillIn("input.field-full-name", "Server Fail");
+    await fillIn("input#full_name", "Server Fail");
     await click(".wizard-container__button.next");
-    assert.ok(exists(".invalid .field-full-name"));
-    assert.ok(exists(".wizard-container__input .field-error-description"));
+    assert.ok(exists(".invalid #full_name"));
+    assert.ok(exists(".wizard-container__field .error"));
 
     // server validation ok
-    await fillIn("input.field-full-name", "Evil Trout");
+    await fillIn("input#full_name", "Evil Trout");
     await click(".wizard-container__button.next");
-    assert.ok(!exists(".wizard-container__input .field-error-description"));
+    assert.ok(!exists(".wizard-container__field .error"));
     assert.ok(!exists(".wizard-container__step-description"));
     assert.ok(
       exists(".wizard-container__button.finish"),
@@ -56,23 +53,23 @@ acceptance("Wizard", function (needs) {
     );
 
     await click(".wizard-container__button.next");
-    assert.ok(exists(".select-kit.field-snack"), "went to the next step");
+    assert.ok(exists(".dropdown-field.dropdown-snack"), "went to the next step");
     assert.ok(
       exists(".wizard-container__preview"),
       "renders the component field"
     );
     assert.ok(
-      exists(".wizard-container__button.done"),
-      "last step shows a done button"
+      exists(".wizard-container__button.jump-in"),
+      "last step shows a jump in button"
     );
-    assert.ok(exists(".action-link.back"), "shows the back button");
+    assert.ok(exists(".wizard-container__link.back"), "shows the back button");
     assert.ok(!exists(".wizard-container__step-title"));
     assert.ok(
       !exists(".wizard-container__button.finish"),
       "cannot finish on last step"
     );
 
-    await click(".action-link.back");
+    await click(".wizard-container__link.back");
     assert.ok(exists(".wizard-container__step-title"));
     assert.ok(exists(".wizard-container__button.next"));
     assert.ok(!exists(".wizard-prev"));

@@ -705,10 +705,13 @@ class PostsController < ApplicationController
   private
 
   def user_posts(guardian, user_id, opts)
-    posts = Post.includes(:user, :topic, :deleted_by, :user_actions)
-      .where(user_id: user_id)
-      .with_deleted
-      .order(created_at: :desc)
+    # Topic.unscoped is necessary to remove the default deleted_at: nil scope
+    posts = Topic.unscoped do
+      Post.includes(:user, :topic, :deleted_by, :user_actions)
+        .where(user_id: user_id)
+        .with_deleted
+        .order(created_at: :desc)
+    end
 
     if guardian.user.moderator?
 

@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
@@ -81,7 +81,10 @@ acceptance("User Preferences", function (needs) {
   test("update some fields", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
-    assert.ok($("body.user-preferences-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-preferences-page"),
+      "has the body class"
+    );
     assert.strictEqual(
       currentURL(),
       "/u/eviltrout/preferences/account",
@@ -93,7 +96,7 @@ acceptance("User Preferences", function (needs) {
       assert.ok(!exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
-      queryAll(".saved").remove();
+      query(".saved").remove();
     };
 
     await fillIn(".pref-name input[type=text]", "Jon Snow");
@@ -149,10 +152,10 @@ acceptance("User Preferences", function (needs) {
 
     assert.ok(exists("#change-email"), "it has the input element");
 
-    await fillIn("#change-email", "invalidemail");
+    await fillIn("#change-email", "invalid-email");
 
     assert.strictEqual(
-      queryAll(".tip.bad").text().trim(),
+      query(".tip.bad").innerText.trim(),
       I18n.t("user.email.invalid"),
       "it should display invalid email tip"
     );
@@ -180,11 +183,9 @@ acceptance("User Preferences", function (needs) {
       "it has the connected accounts section"
     );
     assert.ok(
-      queryAll(
+      query(
         ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
-      )
-        .html()
-        .indexOf("Facebook") > -1,
+      ).innerHTML.includes("Facebook"),
       "it lists facebook"
     );
 
@@ -192,9 +193,11 @@ acceptance("User Preferences", function (needs) {
       ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
     );
 
-    queryAll(".pref-associated-accounts table tr:nth-of-type(1) td:last button")
-      .html()
-      .indexOf("Connect") > -1;
+    assert.ok(
+      query(
+        ".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type"
+      ).innerHTML.includes("Connect")
+    );
   });
 
   test("second factor totp", async function (assert) {
@@ -212,8 +215,7 @@ acceptance("User Preferences", function (needs) {
     await click(".add-totp");
 
     assert.ok(
-      queryAll(".alert-error").html().indexOf("provide a name and the code") >
-        -1,
+      query(".alert-error").innerHTML.includes("provide a name and the code"),
       "shows name/token missing error message"
     );
   });
@@ -238,7 +240,7 @@ acceptance("User Preferences", function (needs) {
       await click(".add-security-key");
 
       assert.ok(
-        queryAll(".alert-error").html().indexOf("provide a name") > -1,
+        query(".alert-error").innerHTML.indexOf("provide a name") > -1,
         "shows name missing error message"
       );
     }
@@ -356,7 +358,7 @@ acceptance(
         )
       );
     });
-    test("disallow nonstaff", async function (assert) {
+    test("disallow non-staff", async function (assert) {
       await visit("/u/eviltrout/preferences");
       await updateCurrentUser({
         trust_level: 3,
@@ -454,7 +456,10 @@ acceptance("User Preferences when badges are disabled", function (needs) {
 
   test("visit my preferences", async function (assert) {
     await visit("/u/eviltrout/preferences");
-    assert.ok($("body.user-preferences-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-preferences-page"),
+      "has the body class"
+    );
     assert.strictEqual(
       currentURL(),
       "/u/eviltrout/preferences/account",
@@ -489,9 +494,9 @@ acceptance(
         "clear button not present"
       );
 
-      const selectTopicBtn = queryAll(
+      const selectTopicBtn = query(
         ".feature-topic-on-profile-btn:nth-of-type(1)"
-      )[0];
+      );
       assert.ok(exists(selectTopicBtn), "feature topic button is present");
 
       await click(selectTopicBtn);
@@ -501,9 +506,9 @@ acceptance(
         "topic picker modal is open"
       );
 
-      const topicRadioBtn = queryAll(
+      const topicRadioBtn = query(
         'input[name="choose_topic_id"]:nth-of-type(1)'
-      )[0];
+      );
       assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
       await click(topicRadioBtn);
 
@@ -616,15 +621,15 @@ acceptance("Security", function (needs) {
     await visit("/u/eviltrout/preferences/security");
 
     assert.strictEqual(
-      queryAll(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
-        .text()
-        .trim(),
+      query(
+        ".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device"
+      ).innerText.trim(),
       "Linux Computer",
       "it should display active token first"
     );
 
     assert.strictEqual(
-      queryAll(".pref-auth-tokens > a:nth-of-type(1)").text().trim(),
+      query(".pref-auth-tokens > a:nth-of-type(1)").innerText.trim(),
       I18n.t("user.auth_tokens.show_all", { count: 3 }),
       "it should display two tokens"
     );
@@ -670,7 +675,10 @@ acceptance(
     test("staged user doesn't show category and tag preferences", async function (assert) {
       await visit("/u/staged/preferences");
 
-      assert.ok($("body.user-preferences-page").length, "has the body class");
+      assert.ok(
+        document.body.classList.contains("user-preferences-page"),
+        "has the body class"
+      );
       assert.strictEqual(
         currentURL(),
         "/u/staged/preferences/account",

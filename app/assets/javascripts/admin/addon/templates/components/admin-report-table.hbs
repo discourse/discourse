@@ -1,30 +1,30 @@
 <table class="table">
   <thead>
     <tr>
-      {{#if model.computedLabels}}
-        {{#each model.computedLabels as |label|}}
-          <AdminReportTableHeader @showSortingUI={{showSortingUI}} @currentSortDirection={{sortDirection}} @currentSortLabel={{sortLabel}} @label={{label}} @sortByLabel={{action "sortByLabel" label}} />
+      {{#if this.model.computedLabels}}
+        {{#each this.model.computedLabels as |label|}}
+          <AdminReportTableHeader @showSortingUI={{this.showSortingUI}} @currentSortDirection={{this.sortDirection}} @currentSortLabel={{this.sortLabel}} @label={{label}} @sortByLabel={{action "sortByLabel" label}} />
         {{/each}}
       {{else}}
-        {{#each model.data as |data|}}
+        {{#each this.model.data as |data|}}
           <th>{{data.x}}</th>
         {{/each}}
       {{/if}}
     </tr>
   </thead>
   <tbody>
-    {{#each paginatedData as |data|}}
-      <AdminReportTableRow @data={{data}} @labels={{model.computedLabels}} @options={{options}} />
+    {{#each this.paginatedData as |data|}}
+      <AdminReportTableRow @data={{data}} @labels={{this.model.computedLabels}} @options={{this.options}} />
     {{/each}}
 
-    {{#if showTotalForSample}}
+    {{#if this.showTotalForSample}}
       <tr class="total-row">
-        <td colspan={{totalsForSample.length}}>
+        <td colspan={{this.totalsForSample.length}}>
           {{i18n "admin.dashboard.reports.totals_for_sample"}}
         </td>
       </tr>
       <tr class="admin-report-table-row">
-        {{#each totalsForSample as |total|}}
+        {{#each this.totalsForSample as |total|}}
           <td class="admin-report-table-cell {{total.type}} {{total.property}}">
             {{total.formattedValue}}
           </td>
@@ -32,7 +32,7 @@
       </tr>
     {{/if}}
 
-    {{#if showTotal}}
+    {{#if this.showTotal}}
       <tr class="total-row">
         <td colspan="2">
           {{i18n "admin.dashboard.reports.total"}}
@@ -40,11 +40,11 @@
       </tr>
       <tr class="admin-report-table-row">
         <td class="admin-report-table-cell date x">—</td>
-        <td class="admin-report-table-cell number y">{{number model.total}}</td>
+        <td class="admin-report-table-cell number y">{{number this.model.total}}</td>
       </tr>
     {{/if}}
 
-    {{#if showAverage}}
+    {{#if this.showAverage}}
       <tr class="total-row">
         <td colspan="2">
           {{i18n "admin.dashboard.reports.average_for_sample"}}
@@ -52,14 +52,14 @@
       </tr>
       <tr class="admin-report-table-row">
         <td class="admin-report-table-cell date x">—</td>
-        <td class="admin-report-table-cell number y">{{number averageForSample}}</td>
+        <td class="admin-report-table-cell number y">{{number this.averageForSample}}</td>
       </tr>
     {{/if}}
   </tbody>
 </table>
 
 <div class="pagination">
-  {{#each pages as |pageState|}}
+  {{#each this.pages as |pageState|}}
     <DButton @translatedLabel={{pageState.page}} @action={{action "changePage"}} @actionParam={{pageState.index}} @class={{pageState.class}} />
   {{/each}}
 </div>

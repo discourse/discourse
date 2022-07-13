@@ -1,7 +1,7 @@
-<PluginOutlet @name="before-group-container" @tagName="span" @connectorTagName="div" @args={{hash group=model}} />
+<PluginOutlet @name="before-group-container" @tagName="span" @connectorTagName="div" @args={{hash group=this.model}} />
 
-<div class="container group group-{{model.name}}">
-  {{#if showTooltip}}
+<div class="container group group-{{this.model.name}}">
+  {{#if this.showTooltip}}
     <div class="group-delete-tooltip">
       <p>{{i18n "admin.groups.delete_automatic_group"}}</p>
     </div>
@@ -9,42 +9,42 @@
 
   <div class="group-details-container">
     <div class="group-info">
-      {{#if (or model.flair_icon model.flair_url model.flair_bg_color)}}
+      {{#if (or this.model.flair_icon this.model.flair_url this.model.flair_bg_color)}}
         <div class="group-avatar-flair">
-          <AvatarFlair @flairName={{model.name}} @flairUrl={{or model.flair_icon model.flair_url}} @flairBgColor={{model.flair_bg_color}} @flairColor={{model.flair_color}} />
+          <AvatarFlair @flairName={{this.model.name}} @flairUrl={{or this.model.flair_icon this.model.flair_url}} @flairBgColor={{this.model.flair_bg_color}} @flairColor={{this.model.flair_color}} />
         </div>
       {{/if}}
 
       <div class="group-info-names">
-        <span class="group-info-name">{{groupName}}</span>
+        <span class="group-info-name">{{this.groupName}}</span>
 
-        {{#if model.full_name}}<div class="group-info-full-name">{{model.name}}</div>{{/if}}
+        {{#if this.model.full_name}}<div class="group-info-full-name">{{this.model.name}}</div>{{/if}}
       </div>
 
       <div class="group-details-button">
-        <GroupMembershipButton @tagName="" @model={{model}} @showLogin={{route-action "showLogin"}} />
+        <GroupMembershipButton @tagName="" @model={{this.model}} @showLogin={{route-action "showLogin"}} />
 
-        {{#if currentUser.admin}}
-          {{#if model.automatic}}
+        {{#if this.currentUser.admin}}
+          {{#if this.model.automatic}}
             <DButton @action={{action "toggleDeleteTooltip"}} @class="btn-default" @icon="question-circle" @label="admin.groups.delete" />
           {{else}}
-            <DButton @action={{action "destroyGroup"}} @disabled={{destroying}} @icon="trash-alt" @class="btn-danger" @label="admin.groups.delete" />
+            <DButton @action={{action "destroyGroup"}} @disabled={{this.destroying}} @icon="trash-alt" @class="btn-danger" @label="admin.groups.delete" />
           {{/if}}
         {{/if}}
 
-        {{#if displayGroupMessageButton}}
+        {{#if this.displayGroupMessageButton}}
           <DButton @action={{action "messageGroup"}} @class="btn-primary group-message-button" @icon="envelope" @label="groups.message" />
         {{/if}}
       </div>
 
-      <PluginOutlet @name="group-details-after" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+      <PluginOutlet @name="group-details-after" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
     </div>
 
-    {{#if model.bio_cooked}}
+    {{#if this.model.bio_cooked}}
       <hr>
 
       <div class="group-bio">
-        <p>{{html-safe model.bio_cooked}}</p>
+        <p>{{html-safe this.model.bio_cooked}}</p>
       </div>
     {{/if}}
   </div>
@@ -52,7 +52,7 @@
   <div class="user-content-wrapper">
     <section class="user-primary-navigation">
       <div class="container">
-        <GroupNavigation @group={{model}} @currentPath={{currentPath}} @tabs={{tabs}} />
+        <GroupNavigation @group={{this.model}} @currentPath={{this.currentPath}} @tabs={{this.tabs}} />
       </div>
     </section>
 

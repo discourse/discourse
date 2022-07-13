@@ -153,20 +153,68 @@ RSpec.describe User do
       before { user.set_user_field(user_field.id, value) }
 
       context "when user fields contain watched words" do
-        let(:value) { "bad user field value" }
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
-        context "when user field is public" do
-          it "is not valid" do
-            user.valid?
-            expect(user.errors[:base].size).to eq(1)
-            expect(user.errors.messages[:base]).to include(/you can't post the word/)
+        context "when watched words are of type 'Block'" do
+          let(:value) { "bad user field value" }
+
+          context "when user field is public" do
+            it "is not valid" do
+              user.valid?
+              expect(user.errors[:base].size).to eq(1)
+              expect(user.errors.messages[:base]).to include(/you can't post the word/)
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it { is_expected.to be_valid }
           end
         end
 
-        context "when user field is private" do
-          before { user_field.update(show_on_profile: false) }
+        context "when watched words are of type 'Censor'" do
+          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let(:value) { "censored word" }
 
-          it { is_expected.to be_valid }
+          context "when user field is public" do
+            it "censors the words upon saving" do
+              user.save!
+              expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it "does not censor anything" do
+              user.save!
+              expect(user_field_value).to eq "censored word"
+            end
+          end
+        end
+
+        context "when watched words are of type 'Replace'" do
+          let(:value) { "word to replace" }
+          let!(:replace_word) do
+            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+          end
+
+          context "when user field is public" do
+            it "replaces the words upon saving" do
+              user.save!
+              expect(user_field_value).to eq "word replaced"
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it "does not replace anything" do
+              user.save!
+              expect(user_field_value).to eq "word to replace"
+            end
+          end
         end
       end
 

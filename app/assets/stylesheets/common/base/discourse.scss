@@ -380,7 +380,7 @@ table {
   border-radius: 50%;
 }
 
-.profiler-results.profiler-left {
+.profiler-results.profiler-right {
   top: var(--header-offset) !important;
 }
 
@@ -444,6 +444,14 @@ table {
     height: 14px;
     display: block;
   }
+}
+
+.user-menu .quick-access-panel li.user-status .relative-date {
+  text-align: left;
+  font-size: var(--font-down-3);
+  padding-top: 0.45em;
+  margin-left: 0.75em;
+  color: var(--primary-medium);
 }
 
 .user-menu .quick-access-panel li.do-not-disturb {
@@ -675,11 +683,8 @@ table {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  // we can CSS transition the sidebar grid width change
-  // as long as we keep the column count consistent
-  // grid transitions are only supported in Firefox at the moment, but coming summer 2022 to Chrome
   grid-template-areas: "sidebar content";
-  grid-template-columns: min-content minmax(0, 1fr);
+  grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
   #main-outlet {

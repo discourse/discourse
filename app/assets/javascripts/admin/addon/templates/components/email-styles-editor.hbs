@@ -9,10 +9,10 @@
   </div>
 </div>
 
-<AceEditor @content={{editorContents}} @mode={{currentEditorMode}} @editorId={{editorId}} @save={{action "save"}} />
+<AceEditor @content={{this.editorContents}} @mode={{this.currentEditorMode}} @editorId={{this.editorId}} @save={{action "save"}} />
 
 <div class="admin-footer">
   <div class="buttons">
-    <DButton @action={{action "reset"}} @disabled={{resetDisabled}} @class="btn-default" @label="admin.customize.email_style.reset" />
+    <DButton @action={{action "reset"}} @disabled={{this.resetDisabled}} @class="btn-default" @label="admin.customize.email_style.reset" />
   </div>
 </div>

@@ -146,6 +146,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
+  before_save :apply_watched_words, unless: :custom_fields_clean?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -666,11 +667,17 @@ class User < ActiveRecord::Base
   end
 
   def publish_user_status(status)
-    payload = status ?
-                { description: status.description, emoji: status.emoji } :
-                nil
+    if status
+      payload = {
+        description: status.description,
+        emoji: status.emoji,
+        ends_at: status.ends_at&.iso8601
+      }
+    else
+      payload = nil
+    end
 
-    MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
+    MessageBus.publish("/user-status", { id => payload }, group_ids: [Group::AUTO_GROUPS[:trust_level_0]])
   end
 
   def password=(password)
@@ -1267,12 +1274,22 @@ class User < ActiveRecord::Base
   end
 
   def public_user_field_values
-    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
-    user_fields(@public_user_field_ids).values.join(" ")
+    public_user_fields.values.join(" ")
   end
 
   def set_user_field(field_id, value)
     custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
+  end
+
+  def apply_watched_words
+    public_user_fields.each do |id, value|
+      set_user_field(id, PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1"))
+    end
+  end
+
+  def public_user_fields
+    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
+    user_fields(@public_user_field_ids)
   end
 
   def number_of_deleted_posts
@@ -1526,23 +1543,25 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description, emoji)
-    now = Time.zone.now
+  def set_status!(description, emoji, ends_at)
+    status = {
+      description: description,
+      emoji: emoji,
+      set_at: Time.zone.now,
+      ends_at: ends_at
+    }
+
     if user_status
-      user_status.update!(
-        description: description,
-        emoji: emoji,
-        set_at: now)
+      user_status.update!(status)
     else
-      self.user_status = UserStatus.create!(
-        user_id: id,
-        description: description,
-        emoji: emoji,
-        set_at: now
-      )
+      self.user_status = UserStatus.create!(status)
     end
 
     publish_user_status(user_status)
+  end
+
+  def has_status?
+    user_status && !user_status.expired?
   end
 
   protected

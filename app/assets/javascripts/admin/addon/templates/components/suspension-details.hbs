@@ -1,7 +1,7 @@
 <div class="reason-controls">
   <label>
     <div class="suspend-reason-label">
-      {{#if siteSettings.hide_suspension_reasons}}
+      {{#if this.siteSettings.hide_suspension_reasons}}
         {{html-safe (i18n "admin.user.suspend_reason_hidden_label")}}
       {{else}}
         {{html-safe (i18n "admin.user.suspend_reason_label")}}
@@ -11,9 +11,9 @@
   <label>
     {{i18n "admin.user.suspend_reason_title"}}
   </label>
-  <ComboBox @content={{reasons}} @value={{selectedReason}} @class="suspend-reason" @onChange={{action setSelectedReason}} />
-  {{#if isCustomReason}}
-    <TextField @value={{customReason}} @class="suspend-reason" @onChange={{action setCustomReason}} />
+  <ComboBox @content={{this.reasons}} @value={{this.selectedReason}} @class="suspend-reason" @onChange={{action this.setSelectedReason}} />
+  {{#if this.isCustomReason}}
+    <TextField @value={{this.customReason}} @class="suspend-reason" @onChange={{action this.setCustomReason}} />
   {{/if}}
 </div>
 
@@ -22,4 +22,4 @@
     {{i18n "admin.user.suspend_message"}}
   </div>
 </label>
-<Textarea @value={{message}} class="suspend-message" placeholder={{i18n "admin.user.suspend_message_placeholder"}} />
+<Textarea @value={{this.message}} class="suspend-message" placeholder={{i18n "admin.user.suspend_message_placeholder"}} />

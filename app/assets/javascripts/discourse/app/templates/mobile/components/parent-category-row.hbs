@@ -1,37 +1,37 @@
-{{#unless isHidden}}
-  <PluginOutlet @name="category-list-above-each-category" @args={{hash category=category}} />
-  <div data-category-id={{category.id}} data-notification-level={{category.notificationLevelString}} style={{border-color category.color}} class="category-list-item category {{if isMuted "muted"}}">
+{{#unless this.isHidden}}
+  <PluginOutlet @name="category-list-above-each-category" @args={{hash category=this.category}} />
+  <div data-category-id={{this.category.id}} data-notification-level={{this.category.notificationLevelString}} style={{border-color this.category.color}} class="category-list-item category {{if this.isMuted "muted"}}">
     <table class="topic-list">
       <tbody>
         <tr>
           <th class="main-link">
-            <CategoryTitleLink @category={{category}} />
+            <CategoryTitleLink @category={{this.category}} />
           </th>
         </tr>
-        {{#if category.description_excerpt}}
+        {{#if this.category.description_excerpt}}
           <tr class="category-description">
             <td colspan="3">
-              {{html-safe category.description_excerpt}}
+              {{html-safe this.category.description_excerpt}}
             </td>
           </tr>
         {{/if}}
-        {{#unless isMuted}}
-          {{#if showTopics}}
-            {{#each category.topics as |t|}}
+        {{#unless this.isMuted}}
+          {{#if this.showTopics}}
+            {{#each this.category.topics as |t|}}
               <MobileCategoryTopic @topic={{t}} />
             {{/each}}
           {{/if}}
         {{/unless}}
-        {{#if category.isGrandParent}}
-          {{#each category.subcategories as |subcategory|}}
-            <SubCategoryRow @category={{subcategory}} @listType={{listType}} />
+        {{#if this.category.isGrandParent}}
+          {{#each this.category.subcategories as |subcategory|}}
+            <SubCategoryRow @category={{subcategory}} @listType={{this.listType}} />
           {{/each}}
-        {{else if category.subcategories}}
+        {{else if this.category.subcategories}}
           <tr class="subcategories-list">
             <td>
               <div class="subcategories">
-                {{#each category.subcategories as |subcategory|}}
-                  <SubCategoryItem @category={{subcategory}} @listType={{listType}} />
+                {{#each this.category.subcategories as |subcategory|}}
+                  <SubCategoryItem @category={{subcategory}} @listType={{this.listType}} />
                 {{/each}}
               </div>
             </td>
@@ -41,14 +41,14 @@
     </table>
     <footer class="clearfix category-topics-count">
       <div class="category-stat">
-        <a href={{category.url}}>
-          {{html-safe category.statTotal}}
+        <a href={{this.category.url}}>
+          {{html-safe this.category.statTotal}}
         </a>
       </div>
-      {{#unless category.pickAll}}
+      {{#unless this.category.pickAll}}
         <div class="category-stat">
-          <a href={{category.url}}>
-            {{html-safe category.stat}}
+          <a href={{this.category.url}}>
+            {{html-safe this.category.stat}}
           </a>
         </div>
       {{/unless}}

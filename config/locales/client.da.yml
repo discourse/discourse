@@ -578,6 +578,7 @@ da:
       forever: "Forevigt"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
+      never: "Aldrig"
       last_custom: "Sidste brugerdefineret dato"
       custom: "Brugerdefineret dato og tid"
       select_timeframe: "Vælg en tidsramme"
@@ -1049,6 +1050,8 @@ da:
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       enable_defer: "Aktivér 'udsæt' for at markere emner som ulæste"
+      experimental_sidebar:
+        options: "Indstillinger"
       change: "skift"
       featured_topic: "Fremhævet emne"
       moderator: "%{user} er en moderator"

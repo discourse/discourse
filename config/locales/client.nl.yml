@@ -565,6 +565,7 @@ nl:
       forever: "Voor altijd"
       relative: "Relatieve tijd"
       none: "Niet nodig"
+      never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
       select_timeframe: "Selecteer een tijdsbestek"
@@ -1027,6 +1028,8 @@ nl:
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
       enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst inschakelen"
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
+      experimental_sidebar:
+        options: "Opties"
       change: "wijzigen"
       featured_topic: "Aanbevolen topic"
       moderator: "%{user} is een moderator"

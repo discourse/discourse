@@ -46,8 +46,8 @@ export default function offsetCalculator() {
 
   const windowHeight = window.innerHeight;
   const documentHeight = document.body.clientHeight;
-  const topicBottomOffsetTop = document.getElementById("topic-bottom")
-    .offsetTop;
+  const topicBottomOffsetTop =
+    document.getElementById("topic-bottom").offsetTop;
 
   // the footer is bigger than the window, we can scroll down past the last post
   if (documentHeight - windowHeight > topicBottomOffsetTop) {

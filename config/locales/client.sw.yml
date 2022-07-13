@@ -338,6 +338,7 @@ sw:
       next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
       forever: "Milele"
+      never: "Kamwe"
       select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
@@ -638,6 +639,8 @@ sw:
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
+      experimental_sidebar:
+        options: "Chaguo"
       change: "badilisha"
       moderator: "%{mtumiaji} ni msimamizi"
       admin: "%{mtumiaji} ni kiongozi"

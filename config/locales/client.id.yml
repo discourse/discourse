@@ -547,6 +547,7 @@ id:
       next_month: "Bulan depan"
       six_months: "Enam bulan"
       none: "Tidak dibutuhkan"
+      never: "Tidak pernah"
       custom: "Tanggal dan waktu tersuai"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
@@ -930,6 +931,8 @@ id:
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
+      experimental_sidebar:
+        options: "Pilihan"
       change: "ubah"
       featured_topic: "Topik Unggulan"
       moderator: "%{user} adalah moderator"

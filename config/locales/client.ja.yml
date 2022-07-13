@@ -534,6 +534,7 @@ ja:
       forever: "永遠"
       relative: "相対時間"
       none: "不要"
+      never: "削除しない"
       last_custom: "最後のカスタム日時"
       custom: "カスタムの日付と時刻"
       select_timeframe: "時間枠を選択してください"
@@ -1006,6 +1007,8 @@ ja:
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       enable_defer: "トピックを未読にマークして延期を有効にする"
+      experimental_sidebar:
+        options: "オプション"
       change: "変更"
       featured_topic: "注目のトピック"
       moderator: "%{user} はモデレーターです"

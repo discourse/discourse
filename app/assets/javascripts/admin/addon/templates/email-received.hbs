@@ -12,12 +12,12 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td><TextField @value={{filter.from}} @placeholderKey="admin.email.incoming_emails.filters.from_placeholder" /></td>
-        <td><TextField @value={{filter.to}} @placeholderKey="admin.email.incoming_emails.filters.to_placeholder" /></td>
-        <td><TextField @value={{filter.subject}} @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder" /></td>
+        <td><TextField @value={{this.filter.from}} @placeholderKey="admin.email.incoming_emails.filters.from_placeholder" /></td>
+        <td><TextField @value={{this.filter.to}} @placeholderKey="admin.email.incoming_emails.filters.to_placeholder" /></td>
+        <td><TextField @value={{this.filter.subject}} @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder" /></td>
       </tr>
 
-      {{#each model as |email|}}
+      {{#each this.model as |email|}}
         <tr>
           <td class="time">{{format-date email.created_at}}</td>
           <td class="username">
@@ -55,4 +55,4 @@
   </table>
 </LoadMore>
 
-<ConditionalLoadingSpinner @condition={{loading}} />
+<ConditionalLoadingSpinner @condition={{this.loading}} />

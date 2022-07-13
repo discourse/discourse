@@ -1,9 +1,9 @@
-{{#if showSortingUI}}
-  <DButton @action={{sortByLabel}} @icon={{sortIcon}} @class="sort-btn" />
+{{#if this.showSortingUI}}
+  <DButton @action={{this.sortByLabel}} @icon={{this.sortIcon}} @class="sort-btn" />
 {{/if}}
 
-{{#if label.htmlTitle}}
-  <span class="title">{{html-safe label.htmlTitle}}</span>
+{{#if this.label.htmlTitle}}
+  <span class="title">{{html-safe this.label.htmlTitle}}</span>
 {{else}}
-  <span class="title">{{label.title}}</span>
+  <span class="title">{{this.label.title}}</span>
 {{/if}}

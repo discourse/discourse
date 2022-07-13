@@ -4,7 +4,7 @@
       {{html-safe (i18n "admin.user.silence_reason_label")}}
     </div>
   </label>
-  <TextField @value={{reason}} @class="silence-reason" @placeholderKey="admin.user.silence_reason_placeholder" />
+  <TextField @value={{this.reason}} @class="silence-reason" @placeholderKey="admin.user.silence_reason_placeholder" />
 </div>
 
 <label>
@@ -12,4 +12,4 @@
     {{i18n "admin.user.silence_message"}}
   </div>
 </label>
-<Textarea @value={{message}} class="silence-message" placeholder={{i18n "admin.user.silence_message_placeholder"}} />
+<Textarea @value={{this.message}} class="silence-message" placeholder={{i18n "admin.user.silence_message_placeholder"}} />

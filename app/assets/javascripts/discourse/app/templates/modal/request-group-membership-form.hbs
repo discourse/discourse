@@ -1,18 +1,18 @@
 <form class="request-group-membership-form">
-  <DModalBody @rawTitle={{title}}>
+  <DModalBody @rawTitle={{this.title}}>
     <div class="control-group">
       <label>
         {{i18n "groups.membership_request.reason"}}
       </label>
 
-      <ExpandingTextArea @value={{reason}} />
+      <ExpandingTextArea @value={{this.reason}} />
     </div>
   </DModalBody>
 
   <div class="modal-footer">
-    <DButton @class="btn-primary" @disabled={{disableSubmit}} @label="groups.membership_request.submit" @action={{action "requestMember"}} />
+    <DButton @class="btn-primary" @disabled={{this.disableSubmit}} @label="groups.membership_request.submit" @action={{action "requestMember"}} />
 
     <DModalCancel @close={{route-action "closeModal"}} />
-    <ConditionalLoadingSpinner @size="small" @condition={{loading}} />
+    <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
   </div>
 </form>

@@ -3,7 +3,9 @@ require 'swagger_helper'
 
 describe 'site' do
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
   before do
     Jobs.run_immediately!
@@ -21,12 +23,18 @@ describe 'site' do
 
       produces 'application/json'
       response '200', 'success response' do
-        expected_response_schema = load_spec_schema('site_response')
-        schema expected_response_schema
+        begin
+          Site.preloaded_category_custom_fields << "no_oddjob"
 
-        it_behaves_like "a JSON endpoint", 200 do
-          let(:expected_response_schema) { expected_response_schema }
-          let(:expected_request_schema) { expected_request_schema }
+          expected_response_schema = load_spec_schema('site_response')
+          schema expected_response_schema
+
+          it_behaves_like "a JSON endpoint", 200 do
+            let(:expected_response_schema) { expected_response_schema }
+            let(:expected_request_schema) { expected_request_schema }
+          end
+        ensure
+          Site.preloaded_category_custom_fields = Set.new
         end
       end
     end

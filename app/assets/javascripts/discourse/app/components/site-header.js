@@ -238,7 +238,9 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("dom:clean", this, "_cleanDom");
 
-      this.appEvents.on("user-status:changed", () => this.queueRerender());
+      if (this.currentUser) {
+        this.currentUser.on("status-changed", this, "queueRerender");
+      }
 
       if (
         this.currentUser &&
@@ -309,6 +311,10 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
+
+      if (this.currentUser) {
+        this.currentUser.off("status-changed", this, "queueRerender");
+      }
 
       cancel(this._scheduledRemoveAnimate);
 
@@ -442,6 +448,39 @@ const SiteHeaderComponent = MountWidget.extend(
 
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
+
+  init() {
+    this._super(...arguments);
+
+    this._resizeObserver = null;
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    if ("ResizeObserver" in window) {
+      const header = document.querySelector(".d-header-wrap");
+
+      this._resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          if (entry.contentRect) {
+            document.documentElement.style.setProperty(
+              "--header-offset",
+              entry.contentRect.height + "px"
+            );
+          }
+        }
+      });
+
+      this._resizeObserver.observe(header);
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this._resizeObserver?.disconnect();
+  },
 });
 
 export function headerTop() {

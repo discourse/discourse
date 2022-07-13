@@ -1,11 +1,11 @@
-{{#if visible}}
+{{#if this.visible}}
   <div class="row">
-    <div id="banner" class={{overlay}}>
+    <div id="banner" class={{this.overlay}}>
       <div class="floated-buttons">
-        {{#if currentUser.staff}}
-          <a href={{banner.url}} class="btn btn-flat edit-banner">
+        {{#if this.currentUser.staff}}
+          <a href={{this.banner.url}} class="btn btn-flat edit-banner">
             {{d-icon "pencil-alt"}}
-            {{#unless site.mobileView}}
+            {{#unless this.site.mobileView}}
               {{html-safe (i18n "banner.edit")}}
             {{/unless}}
           </a>
@@ -14,7 +14,7 @@
         <DButton @icon="times" @action={{action "dismiss"}} @class="btn btn-flat close" @title="banner.close" />
       </div>
       <div id="banner-content">
-        {{html-safe content}}
+        {{html-safe this.content}}
       </div>
     </div>
   </div>

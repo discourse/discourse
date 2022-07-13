@@ -1,25 +1,25 @@
-{{#if model.error}}
+{{#if this.model.error}}
   <div class="item error">
-    {{#if model.forbidden}}
+    {{#if this.model.forbidden}}
       {{i18n "errors.reasons.forbidden"}}
     {{else}}
       {{i18n "errors.desc.unknown"}}
     {{/if}}
   </div>
-{{else if doesNotHaveNotifications}}
+{{else if this.doesNotHaveNotifications}}
   <EmptyState
     @title={{i18n "user.no_notifications_page_title"}}
-    @body={{emptyStateBody}}
+    @body={{this.emptyStateBody}}
   />
 {{else}}
   <div class="user-notifications-filter">
-    <NotificationsFilter @value={{filter}} @onChange={{action (mut filter)}} />
+    <NotificationsFilter @value={{this.filter}} @onChange={{action (mut this.filter)}} />
   </div>
 
-  {{#if nothingFound}}
+  {{#if this.nothingFound}}
     <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
   {{else}}
-    <UserNotificationsLarge @notifications={{model}} />
-    <ConditionalLoadingSpinner @condition={{loading}} />
+    <UserNotificationsLarge @notifications={{this.model}} />
+    <ConditionalLoadingSpinner @condition={{this.loading}} />
   {{/if}}
 {{/if}}

@@ -1,21 +1,21 @@
 <div class="admin-title">
-  <PeriodChooser @period={{period}} @onChange={{action (mut period)}} />
-  <ComboBox @content={{searchTypeOptions}} @value={{searchType}} @class="search-logs-filter" @onChange={{action (mut searchType)}} />
+  <PeriodChooser @period={{this.period}} @onChange={{action (mut this.period)}} />
+  <ComboBox @content={{this.searchTypeOptions}} @value={{this.searchType}} @class="search-logs-filter" @onChange={{action (mut this.searchType)}} />
 </div>
 
 <h2>
-  <LinkTo @route="full-page-search" @query={{hash q=term}}>{{term}}</LinkTo>
+  <LinkTo @route="full-page-search" @query={{hash q=this.term}}>{{this.term}}</LinkTo>
 </h2>
 
-<ConditionalLoadingSpinner @condition={{refreshing}}>
-  <AdminGraph @model={{model}} @type="bar" />
+<ConditionalLoadingSpinner @condition={{this.refreshing}}>
+  <AdminGraph @model={{this.model}} @type="bar" />
 
   <br><br>
   <h2> {{i18n "admin.logs.search_logs.header_search_results"}} </h2>
   <br>
 
   <div class="header-search-results">
-    {{#each model.search_result.posts as |result|}}
+    {{#each this.model.search_result.posts as |result|}}
       <div class="fps-result">
         <div class="author">
           <a href={{result.userPath}} data-user-card={{result.username}}>
@@ -31,7 +31,7 @@
                 {{#if result.useTopicTitleHeadline}}
                   {{html-safe result.topicTitleHeadline}}
                 {{else}}
-                  <HighlightSearch @highlight={{q}}>
+                  <HighlightSearch @highlight={{this.q}}>
                     {{html-safe result.topic.fancyTitle}}
                   </HighlightSearch>
                 {{/if}}
@@ -58,10 +58,10 @@
             </span>
 
             {{#if result.blurb}}
-              {{#if siteSettings.use_pg_headlines_for_excerpt}}
+              {{#if this.siteSettings.use_pg_headlines_for_excerpt}}
                 {{html-safe result.blurb}}
               {{else}}
-                <HighlightSearch @highlight={{highlightQuery}}>
+                <HighlightSearch @highlight={{this.highlightQuery}}>
                   {{html-safe result.blurb}}
                 </HighlightSearch>
               {{/if}}

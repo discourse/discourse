@@ -2,12 +2,12 @@
   <legend class="control-label">{{i18n "user.experimental_sidebar.options"}}</legend>
 
   <PreferenceCheckbox
-      @labelKey="user.experimental_sidebar.enable"
-      @checked={{model.user_option.enable_experimental_sidebar}}
-      @class="preferences-sidebar-enable-checkbox" />
+    @labelKey="user.experimental_sidebar.enable"
+    @checked={{this.model.user_option.enable_experimental_sidebar}}
+    @class="preferences-sidebar-enable-checkbox" />
 </div>
 
-{{#if model.experimental_sidebar_enabled}}
+{{#if this.model.experimental_sidebar_enabled}}
   <div class="control-group preferences-sidebar-categories">
     <legend class="control-label">{{i18n "user.experimental_sidebar.categories_section"}}</legend>
 
@@ -46,4 +46,4 @@
   {{/if}}
 {{/if}}
 
-<SaveControls @model={{model}} @action={{action "save"}} @saved={{saved}} />
+<SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />

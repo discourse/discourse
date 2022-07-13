@@ -1,5 +1,5 @@
-{{#if field.value}}
-  {{component previewComponent field=field fieldClass=fieldClass wizard=wizard}}
+{{#if this.field.value}}
+  {{component this.previewComponent field=this.field fieldClass=this.fieldClass wizard=this.wizard}}
 {{/if}}
 
 <label class="wizard-container__button wizard-container__button-upload {{if uploading "disabled"}}">
@@ -10,5 +10,5 @@
     {{d-icon "far-image"}}
   {{/if}}
 
-  <input class="wizard-hidden-upload-field" disabled={{uploading}} type="file" accept="image/*">
+  <input class="wizard-hidden-upload-field" disabled={{this.uploading}} type="file" accept="image/*">
 </label>

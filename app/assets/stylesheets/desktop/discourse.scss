@@ -203,8 +203,15 @@ body.has-sidebar-page {
 }
 
 body.sidebar-animate {
-  .d-header .wrap,
   #main-outlet-wrapper {
-    transition: ease-in-out 0.5s;
+    //  grid-template-columns transition supported in Firefox, Chrome support coming summer 2022
+    transition-property: grid-template-columns, max-width;
+    transition-timing-function: var(--d-sidebar-animation-ease);
+    transition-duration: var(--d-sidebar-animation-time);
+  }
+
+  .d-header-wrap .wrap {
+    transition: max-width var(--d-sidebar-animation-time)
+      var(--d-sidebar-animation-ease);
   }
 }

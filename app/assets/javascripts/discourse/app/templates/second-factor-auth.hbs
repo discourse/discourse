@@ -1,26 +1,26 @@
-{{#if message}}
-  <div class="alert {{alertClass}}">{{message}}</div>
+{{#if this.message}}
+  <div class="alert {{this.alertClass}}">{{this.message}}</div>
 {{/if}}
-{{#unless loadError}}
-  <h3>{{secondFactorTitle}}</h3>
-  {{#if customDescription}}
-    <p class="action-description">{{customDescription}}</p>
+{{#unless this.loadError}}
+  <h3>{{this.secondFactorTitle}}</h3>
+  {{#if this.customDescription}}
+    <p class="action-description">{{this.customDescription}}</p>
   {{/if}}
-  <p>{{secondFactorDescription}}</p>
-  {{#if showSecurityKeyForm}}
+  <p>{{this.secondFactorDescription}}</p>
+  {{#if this.showSecurityKeyForm}}
     <div id="security-key">
       <DButton @action={{action "authenticateSecurityKey"}} @icon="key" @id="security-key-authenticate-button" @label="login.security_key_authenticate" @type="button" @class="btn btn-large btn-primary" />
     </div>
-  {{else if (or showTotpForm showBackupCodesForm)}}
-    <form class={{inputFormClass}}>
-      <SecondFactorInput @value={{secondFactorToken}} @secondFactorMethod={{shownSecondFactorMethod}} @onTokenInput={{action "onTokenInput"}} />
+  {{else if (or this.showTotpForm this.showBackupCodesForm)}}
+    <form class={{this.inputFormClass}}>
+      <SecondFactorInput @value={{this.secondFactorToken}} @secondFactorMethod={{this.shownSecondFactorMethod}} @onTokenInput={{action "onTokenInput"}} />
       <DButton @action={{action "authenticateToken"}} @class="btn-primary" @label="submit" @type="submit" />
     </form>
   {{/if}}
 
-  {{#if alternativeMethods.length}}
+  {{#if this.alternativeMethods.length}}
     <p>
-      {{#each alternativeMethods as |method index|}}
+      {{#each this.alternativeMethods as |method index|}}
         {{#if (gt index 0)}}
           <span>&middot;</span>
         {{/if}}

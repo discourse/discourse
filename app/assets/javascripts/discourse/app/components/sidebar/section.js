@@ -28,6 +28,6 @@ export default class SidebarSection extends GlimmerComponent {
   }
 
   get headerCaretIcon() {
-    return this.displaySection ? "angle-down" : "angle-up";
+    return this.displaySection ? "angle-down" : "angle-right";
   }
 }

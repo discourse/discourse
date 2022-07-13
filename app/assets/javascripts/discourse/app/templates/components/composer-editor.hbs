@@ -1,7 +1,7 @@
-<DEditor @value={{composer.reply}} @placeholder={{replyPlaceholder}} @previewUpdated={{action "previewUpdated"}} @markdownOptions={{markdownOptions}} @extraButtons={{action "extraButtons"}} @importQuote={{action "importQuote"}} @showUploadModal={{showUploadModal}} @togglePreview={{action "togglePreview"}} @processPreview={{processPreview}} @validation={{validation}} @loading={{composer.loading}} @forcePreview={{forcePreview}} @showLink={{showLink}} @composerEvents={{true}} @onExpandPopupMenuOptions={{action "onExpandPopupMenuOptions"}} @onPopupMenuAction={{onPopupMenuAction}} @popupMenuOptions={{popupMenuOptions}} @disabled={{disableTextarea}} @outletArgs={{hash composer=composer editorType="composer"}}>
+<DEditor @value={{this.composer.reply}} @placeholder={{this.replyPlaceholder}} @previewUpdated={{action "previewUpdated"}} @markdownOptions={{this.markdownOptions}} @extraButtons={{action "extraButtons"}} @importQuote={{action "importQuote"}} @showUploadModal={{this.showUploadModal}} @togglePreview={{action "togglePreview"}} @processPreview={{this.processPreview}} @validation={{this.validation}} @loading={{this.composer.loading}} @forcePreview={{this.forcePreview}} @showLink={{this.showLink}} @composerEvents={{true}} @onExpandPopupMenuOptions={{action "onExpandPopupMenuOptions"}} @onPopupMenuAction={{this.onPopupMenuAction}} @popupMenuOptions={{this.popupMenuOptions}} @disabled={{this.disableTextarea}} @outletArgs={{hash composer=this.composer editorType="composer"}}>
   {{yield}}
 </DEditor>
 
-{{#if allowUpload}}
+{{#if this.allowUpload}}
   <PickFilesButton @fileInputId="file-uploader" @allowMultiple={{true}} />
 {{/if}}

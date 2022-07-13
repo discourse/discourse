@@ -1,18 +1,18 @@
-{{#if appendReason}}
+{{#if this.appendReason}}
   <p class="reason">
-    <TopicNotificationsOptions @value={{notificationLevel}} @topic={{topic}} @onChange={{action "changeTopicNotificationLevel"}} @options={{hash
-        icon=icon
-        showFullTitle=showFullTitle
-        showCaret=showCaret
+    <TopicNotificationsOptions @value={{this.notificationLevel}} @topic={{this.topic}} @onChange={{action "changeTopicNotificationLevel"}} @options={{hash
+        icon=this.icon
+        showFullTitle=this.showFullTitle
+        showCaret=this.showCaret
         headerAriaLabel=(i18n "topic.notifications.title")
       }} />
-    <span class="text">{{html-safe notificationReasonText}}</span>
+    <span class="text">{{html-safe this.notificationReasonText}}</span>
   </p>
 {{else}}
-  <TopicNotificationsOptions @value={{notificationLevel}} @topic={{topic}} @onChange={{action "changeTopicNotificationLevel"}} @options={{hash
-      icon=icon
-      showFullTitle=showFullTitle
-      showCaret=showCaret
+  <TopicNotificationsOptions @value={{this.notificationLevel}} @topic={{this.topic}} @onChange={{action "changeTopicNotificationLevel"}} @options={{hash
+      icon=this.icon
+      showFullTitle=this.showFullTitle
+      showCaret=this.showCaret
       headerAriaLabel=(i18n "topic.notifications.title")
     }} />
 {{/if}}

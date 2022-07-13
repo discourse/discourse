@@ -1,12 +1,12 @@
 <section class="user-secondary-navigation">
   <MobileNav @class="messages-nav" @desktopClass="nav-stacked action-list">
     <li>
-      <LinkTo @route="group.messages.inbox" @model={{model.name}}>
+      <LinkTo @route="group.messages.inbox" @model={{this.model.name}}>
         {{i18n "user.messages.inbox"}}
       </LinkTo>
     </li>
     <li>
-      <LinkTo @route="group.messages.archive" @model={{model.name}}>
+      <LinkTo @route="group.messages.archive" @model={{this.model.name}}>
         {{i18n "user.messages.archive"}}
       </LinkTo>
     </li>

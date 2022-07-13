@@ -6,26 +6,26 @@
 
 <div
   class="dashboard-stats version-check
-    {{if versionCheck.critical_updates "critical" "normal"}}"
+    {{if this.versionCheck.critical_updates "critical" "normal"}}"
 >
   <div class="version-number">
     <h4>
       {{i18n "admin.dashboard.installed_version"}}
     </h4>
     <h3>
-      {{dash-if-empty versionCheck.installed_version}}
+      {{dash-if-empty this.versionCheck.installed_version}}
     </h3>
-    {{#if versionCheck.gitLink}}
+    {{#if this.versionCheck.gitLink}}
       <div class="sha-link">
         (
-        <a href={{versionCheck.gitLink}} rel="noopener noreferrer" target="_blank">
-          {{versionCheck.shortSha}}
+        <a href={{this.versionCheck.gitLink}} rel="noopener noreferrer" target="_blank">
+          {{this.versionCheck.shortSha}}
         </a>
         )
       </div>
     {{/if}}
   </div>
-  {{#if versionCheck.noCheckPerformed}}
+  {{#if this.versionCheck.noCheckPerformed}}
     <div class="version-number">
       <h4>
         {{i18n "admin.dashboard.latest_version"}}
@@ -46,20 +46,20 @@
         </span>
       </div>
     </div>
-  {{else if versionCheck.stale_data}}
+  {{else if this.versionCheck.stale_data}}
     <div class="version-number">
       <h4>
         {{i18n "admin.dashboard.latest_version"}}
       </h4>
       <h3>
-        {{#if versionCheck.version_check_pending}}
-          {{dash-if-empty versionCheck.installed_version}}
+        {{#if this.versionCheck.version_check_pending}}
+          {{dash-if-empty this.versionCheck.installed_version}}
         {{/if}}
       </h3>
     </div>
     <div class="version-status">
       <div class="face">
-        {{#if versionCheck.version_check_pending}}
+        {{#if this.versionCheck.version_check_pending}}
           <span class="icon up-to-date">
             {{d-icon "far-smile"}}
           </span>
@@ -71,7 +71,7 @@
       </div>
       <div class="version-notes">
         <span class="normal-note">
-          {{#if versionCheck.version_check_pending}}
+          {{#if this.versionCheck.version_check_pending}}
             {{i18n "admin.dashboard.version_check_pending"}}
           {{else}}
             {{i18n "admin.dashboard.stale_data"}}
@@ -85,12 +85,12 @@
         {{i18n "admin.dashboard.latest_version"}}
       </h4>
       <h3>
-        {{dash-if-empty versionCheck.latest_version}}
+        {{dash-if-empty this.versionCheck.latest_version}}
       </h3>
     </div>
     <div class="version-status">
       <div class="face">
-        {{#if versionCheck.upToDate}}
+        {{#if this.versionCheck.upToDate}}
           <span class="icon up-to-date">
             {{d-icon "far-smile"}}
           </span>
@@ -98,12 +98,12 @@
           <span
             class="icon
               {{if
-                versionCheck.critical_updates
+                this.versionCheck.critical_updates
                 "critical-updates-available"
                 "updates-available"
               }}"
           >
-            {{#if versionCheck.behindByOneVersion}}
+            {{#if this.versionCheck.behindByOneVersion}}
               {{d-icon "far-meh"}}
             {{else}}
               {{d-icon "far-frown"}}
@@ -112,7 +112,7 @@
         {{/if}}
       </div>
       <div class="version-notes">
-        {{#if versionCheck.upToDate}}
+        {{#if this.versionCheck.upToDate}}
           {{i18n "admin.dashboard.up_to_date"}}
         {{else}}
           <span class="critical-note">
@@ -126,5 +126,5 @@
       </div>
     </div>
   {{/if}}
-  <CustomHtml @name="upgrade-header" @versionCheck={{versionCheck}} @tagName="div" @classNames="upgrade-header" />
+  <CustomHtml @name="upgrade-header" @versionCheck={{this.versionCheck}} @tagName="div" @classNames="upgrade-header" />
 </div>
