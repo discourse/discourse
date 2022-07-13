@@ -8,3 +8,7 @@ export function addSidebarSection(func) {
     func.call(this, BaseCustomSidebarSection, BaseCustomSidebarSectionLink)
   );
 }
+
+export function resetSidebarSection() {
+  customSections.splice(0, customSections.length);
+}

@@ -1751,7 +1751,7 @@ class PluginApi {
    *           get suffixIcon() {
    *             return "circle";
    *           }
-   *           get suffixCssClass() {
+   *           get suffixCSSClass() {
    *             return "unread";
    *           }
    *         })(),

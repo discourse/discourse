@@ -8,9 +8,14 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
 
 acceptance("Sidebar - section API", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
+
+  needs.hooks.afterEach(() => {
+    resetSidebarSection();
+  });
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
@@ -79,7 +84,7 @@ acceptance("Sidebar - section API", function (needs) {
                   get suffixIcon() {
                     return "circle";
                   }
-                  get suffixCssClass() {
+                  get suffixCSSClass() {
                     return "unread";
                   }
                 })(),
@@ -126,22 +131,26 @@ acceptance("Sidebar - section API", function (needs) {
       "chat channels text",
       "displays header with correct text"
     );
-    await click(".edit-channels-dropdown summary");
+    await click(
+      ".sidebar-section-chat-channels .edit-channels-dropdown summary"
+    );
     assert.strictEqual(
-      queryAll(".edit-channels-dropdown .select-kit-collection li").length,
+      queryAll(
+        ".sidebar-section-chat-channels .edit-channels-dropdown .select-kit-collection li"
+      ).length,
       2,
       "displays two actions"
     );
     const actions = queryAll(
-      ".edit-channels-dropdown .select-kit-collection li"
+      ".sidebar-section-chat-channels .edit-channels-dropdown .select-kit-collection li"
     );
     assert.strictEqual(
-      $actions[0].textContent.trim(),
+      actions[0].textContent.trim(),
       "Browse channels",
       "displays first header action with correct text"
     );
     assert.strictEqual(
-      $actions[1].textContent.trim(),
+      actions[1].textContent.trim(),
       "Settings",
       "displays second header action with correct text"
     );
@@ -150,48 +159,48 @@ acceptance("Sidebar - section API", function (needs) {
       ".sidebar-section-chat-channels .sidebar-section-content a"
     );
     assert.strictEqual(
-      $links[0].textContent.trim(),
+      links[0].textContent.trim(),
       "random channel text",
       "displays first link with correct text"
     );
     assert.strictEqual(
-      $links[0].title,
+      links[0].title,
       "random channel title",
       "displays first link with correct title attribute"
     );
     assert.strictEqual(
-      $links[0].children.item(0).style.color,
+      links[0].children.item(0).style.color,
       "rgb(255, 0, 0)",
       "has correct prefix color"
     );
     assert.strictEqual(
-      $($links[0].children.item(0).children.item(0)).hasClass("d-icon-hashtag"),
+      $(links[0].children.item(0).children.item(0)).hasClass("d-icon-hashtag"),
       true,
       "displays prefix icon"
     );
     assert.strictEqual(
-      $($links[0].children.item(0).children.item(1)).hasClass("d-icon-lock"),
+      $(links[0].children.item(0).children.item(1)).hasClass("d-icon-lock"),
       true,
       "displays prefix icon badge"
     );
     assert.strictEqual(
-      $($links[0].children.item(2).children.item(0)).hasClass("d-icon-circle"),
+      $(links[0].children.item(2).children.item(0)).hasClass("d-icon-circle"),
       true,
       "displays suffix icon"
     );
 
     assert.strictEqual(
-      $links[1].textContent.trim(),
+      links[1].textContent.trim(),
       "dev channel text",
       "displays second link with correct text"
     );
     assert.strictEqual(
-      $links[1].title,
+      links[1].title,
       "dev channel title",
       "displays second link with correct title attribute"
     );
     assert.strictEqual(
-      $links[1].children.item(0).style.color,
+      links[1].children.item(0).style.color,
       "",
       "has no color style when value is invalid"
     );
