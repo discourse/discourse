@@ -828,7 +828,7 @@ module("Unit | Model | post-stream", function () {
 
     const found = postStream.findLoadedPost(stagedPost.get("id"));
     assert.present(found, "the post is in the identity map");
-    assert.ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
+    assert.ok(postStream.includes(stagedPost), "the post is in the stream");
     assert.strictEqual(
       found.get("raw"),
       "different raw value",

@@ -73,9 +73,9 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "123");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      query(".password-reset .tip.bad").innerHTML.indexOf(
+      query(".password-reset .tip.bad").innerHTML.includes(
         I18n.t("user.password.too_short")
-      ) > -1,
+      ),
       "password too short"
     );
 
@@ -83,9 +83,9 @@ acceptance("Password Reset", function (needs) {
     await click(".password-reset form button");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      query(".password-reset .tip.bad").innerHTML.indexOf(
+      query(".password-reset .tip.bad").innerHTML.includes(
         "is the name of your cat"
-      ) > -1,
+      ),
       "server validation error message shows"
     );
 
@@ -112,7 +112,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(exists(".alert-error"), "shows 2 factor error");
 
     assert.ok(
-      query(".alert-error").innerHTML.indexOf("invalid token") > -1,
+      query(".alert-error").innerHTML.includes("invalid token"),
       "shows server validation error message"
     );
 

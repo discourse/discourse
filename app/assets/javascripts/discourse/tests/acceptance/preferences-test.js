@@ -240,7 +240,7 @@ acceptance("User Preferences", function (needs) {
       await click(".add-security-key");
 
       assert.ok(
-        query(".alert-error").innerHTML.indexOf("provide a name") > -1,
+        query(".alert-error").innerHTML.includes("provide a name"),
         "shows name missing error message"
       );
     }
