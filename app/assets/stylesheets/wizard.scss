@@ -234,14 +234,14 @@ body.wizard {
       position: absolute;
       left: 0px;
       top: 0px;
-      transform: scale(0.85) translateX(-45px);
+      // transform: scale(0.85) translateX(-45px);
     }
     .homepage-preview {
       position: absolute;
       left: calc(100% + 25px);
       top: 0px;
-      transform: scale(0.85);
-      padding-right: 20px;
+      // transform: scale(0.85);
+      // padding-right: 20px;
     }
   }
 
@@ -502,10 +502,6 @@ body.wizard {
     flex-direction: column;
     justify-content: space-between;
     align-items: baseline;
-  }
-
-  &__preview {
-    margin: 1em 0;
   }
 
   &__description {
