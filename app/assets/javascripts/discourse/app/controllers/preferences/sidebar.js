@@ -6,7 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class extends Controller {
   @tracked saved = false;
-  @tracked selectedSiderbarCategories = [];
+  @tracked selectedSidebarCategories = [];
   @tracked selectedSidebarTagNames = [];
 
   @action
@@ -18,7 +18,7 @@ export default class extends Controller {
 
     this.model.set(
       "sidebarCategoryIds",
-      this.selectedSiderbarCategories.mapBy("id")
+      this.selectedSidebarCategories.mapBy("id")
     );
 
     this.model

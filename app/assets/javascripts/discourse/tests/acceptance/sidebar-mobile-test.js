@@ -44,7 +44,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     );
   });
 
-  test("collpasing sidebar sections does not collapse sidebar", async function (assert) {
+  test("collapsing sidebar sections does not collapse sidebar", async function (assert) {
     await visit("/");
 
     await click(".btn-sidebar-toggle");

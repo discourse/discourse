@@ -185,7 +185,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
         break;
       case "unread":
-        // Note: At some point we may want to make the same peformance optimisation
+        // Note: At some point we may want to make the same performance optimisation
         // here as we did with the other topic tracking state, where we only send
         // one 'unread' update to all users, not a more accurate unread update to
         // each individual user with their own read state. In this case, we need to
