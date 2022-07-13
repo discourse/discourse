@@ -1,5 +1,9 @@
 <DModalBody @headerClass="hidden" @class="dismiss-notification-confirmation">
-  {{i18n "notifications.dismiss_confirmation.body" count=this.count}}
+  {{#if this.confirmationMessage}}
+    {{this.confirmationMessage}}
+  {{else}}
+    {{i18n "notifications.dismiss_confirmation.body.default" count=this.count}}
+  {{/if}}
 </DModalBody>
 
 <div class="modal-footer">

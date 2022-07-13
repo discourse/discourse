@@ -23,7 +23,17 @@ function defaultComponentForType() {
 }
 
 let _componentForType = defaultComponentForType();
-// TODO(osama): add plugin API
+
+export function registerUserMenuComponentForNotificationType(
+  notificationType,
+  component
+) {
+  _componentForType[notificationType] = component;
+}
+
+export function resetUserMenuCustomComponents() {
+  _componentForType = defaultComponentForType();
+}
 
 export default class Notification extends RestModel {
   @tracked read;

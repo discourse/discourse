@@ -3,6 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, render } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -124,6 +125,23 @@ module(
       assert.ok(
         !exists(".panel-body-bottom .btn.notifications-dismiss"),
         "dismiss button is not shown"
+      );
+    });
+
+    test("executes callbacks registered via the plugin API for modifying fetched notifications", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.addUserMenuNotificationsProcessor((notifications) => {
+          notifications.forEach((notification, index) => {
+            notification.set("data.topic_title", `customized title ${index}`);
+          });
+        });
+      });
+      await render(template);
+      const notification = query("ul li.edited");
+      assert.strictEqual(
+        notification.textContent.trim().replaceAll(/\s+/g, " "),
+        "velesin customized title 0",
+        "modifications made by the plugin API are applied"
       );
     });
   }

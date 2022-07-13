@@ -4,6 +4,7 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -46,6 +47,10 @@ acceptance("User menu - Dismiss button", function (needs) {
   needs.user({
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 10,
+    grouped_unread_high_priority_notifications: {
+      [NOTIFICATION_TYPES.private_message]: 48,
+      [NOTIFICATION_TYPES.bookmark_reminder]: 103,
+    },
   });
 
   let markRead = false;
@@ -80,6 +85,62 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal when there are no unread high pri notifications"
+    );
+  });
+
+  test("shows confirmation modal for the PM notifications panel/list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await click("#user-menu-button-pms");
+    await click(".user-menu .notifications-dismiss");
+    assert.strictEqual(
+      query(".dismiss-notification-confirmation").textContent.trim(),
+      I18n.t("notifications.dismiss_confirmation.body.pms", { count: 48 }),
+      "confirmation modal is shown when there are unread PM notifications"
+    );
+    assert.ok(!markRead, "mark-read request isn't sent");
+
+    await click(".modal-footer .btn-default"); // click cancel on the dismiss modal
+
+    updateCurrentUser({
+      grouped_unread_high_priority_notifications: {
+        [NOTIFICATION_TYPES.bookmark_reminder]: 98,
+      },
+    });
+    await click(".user-menu .notifications-dismiss");
+    assert.ok(
+      markRead,
+      "mark-read request is sent without a confirmation modal when there are no unread PM notifications"
+    );
+  });
+
+  test("shows confirmation modal for the bookmark reminder notifications panel/list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await click("#user-menu-button-bookmarks");
+    await click(".user-menu .notifications-dismiss");
+    assert.strictEqual(
+      query(".dismiss-notification-confirmation").textContent.trim(),
+      I18n.t("notifications.dismiss_confirmation.body.bookmark_reminders", {
+        count: 103,
+      }),
+      "confirmation modal is shown when there are unread bookmark reminder notifications"
+    );
+    assert.ok(!markRead, "mark-read request isn't sent");
+
+    await click(".modal-footer .btn-default"); // click cancel on the dismiss modal
+
+    updateCurrentUser({
+      grouped_unread_high_priority_notifications: {
+        [NOTIFICATION_TYPES.private_message]: 9,
+      },
+    });
+    await click(".user-menu .notifications-dismiss");
+    assert.ok(
+      markRead,
+      "mark-read request is sent without a confirmation modal when there are no unread bookmark reminder notifications"
     );
   });
 

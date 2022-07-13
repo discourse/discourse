@@ -2361,8 +2361,15 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "Are you sure? You have %{count} important notification."
-          other: "Are you sure? You have %{count} important notifications."
+          default:
+            one: "Are you sure? You have %{count} important notification."
+            other: "Are you sure? You have %{count} important notifications."
+          pms:
+            one: "Are you sure? You have %{count} unread PM notification."
+            other: "Are you sure? You have %{count} unread PM notifications."
+          bookmark_reminders:
+            one: "Are you sure? You have %{count} unread bookmark reminder."
+            other: "Are you sure? You have %{count} unread bookmark reminders."
         dismiss: "Dismiss"
         cancel: "Cancel"
 

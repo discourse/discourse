@@ -3,6 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { render, settled } from "@ember/test-helpers";
 import { deepMerge } from "discourse-common/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import Notification from "discourse/models/notification";
 import { hbs } from "ember-cli-htmlbars";
@@ -157,6 +158,26 @@ module(
         description.textContent.trim(),
         "this is title before it becomes fancy <a>!",
         "topic_title from data is rendered safely"
+      );
+    });
+
+    test("fancy_title can be decorated via the plugin API", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerUserMenuTopicTitleDecorator((fancy_title) => {
+          return fancy_title.replaceAll("fancy", "ycnaf");
+        });
+        api.registerUserMenuTopicTitleDecorator((fancy_title) => {
+          return fancy_title.replaceAll("title", "eltit");
+        });
+      });
+      this.set("notification", getNotification());
+      await render(template);
+      const description = query("li a .notification-description");
+
+      assert.strictEqual(
+        description.textContent.trim(),
+        "This is ycnaf eltit <a>!",
+        "fancy_title decorators registered via plugin API are applied"
       );
     });
 

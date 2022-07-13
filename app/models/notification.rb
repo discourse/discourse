@@ -236,8 +236,8 @@ class Notification < ActiveRecord::Base
 
     if notifications.present?
       builder = DB.build(<<~SQL)
-         SELECT n.id FROM notifications n
-         /*where*/
+        SELECT n.id FROM notifications n
+        /*where*/
         ORDER BY n.id ASC
         /*limit*/
       SQL

@@ -4,6 +4,16 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
+import { allSettled } from "rsvp";
+
+let _processors = [];
+export function addUserMenuNotificationsProcessor(proc) {
+  _processors.push(proc);
+}
+
+export function resetUserMenuNotificationsProcessors() {
+  _processors = [];
+}
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   get filterByTypes() {
@@ -47,7 +57,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     const params = {
       limit: 30,
       recent: true,
-      bump_last_seen_reviewable: true,
       silent: this.currentUser.enforcedSecondFactor,
     };
 
@@ -59,7 +68,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return this.store
       .findStale("notification", params)
       .refresh()
-      .then((c) => c.content);
+      .then((c) => {
+        return allSettled(
+          _processors.map((proc) => {
+            return proc(c.content);
+          })
+        ).then(() => c.content);
+      });
   }
 
   dismissWarningModal() {

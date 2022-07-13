@@ -48,17 +48,23 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 4);
-    ["all-notifications", "replies", "mentions", "likes"].forEach(
-      (tab, index) => {
-        assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
-        assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
-        assert.strictEqual(
-          tabs[index].getAttribute("aria-controls"),
-          `quick-access-${tab}`
-        );
-      }
-    );
+    assert.strictEqual(tabs.length, 7);
+    [
+      "all-notifications",
+      "replies",
+      "mentions",
+      "likes",
+      "pms",
+      "bookmarks",
+      "badges",
+    ].forEach((tab, index) => {
+      assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
+      assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
+      assert.strictEqual(
+        tabs[index].getAttribute("aria-controls"),
+        `quick-access-${tab}`
+      );
+    });
   });
 
   test("the menu has a group of tabs at the bottom", async function (assert) {
@@ -67,7 +73,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const preferencesTab = tabs[0];
     assert.ok(preferencesTab.href.endsWith("/u/eviltrout/preferences"));
-    assert.strictEqual(preferencesTab.dataset.tabNumber, "4");
+    assert.strictEqual(preferencesTab.dataset.tabNumber, "7");
     assert.strictEqual(preferencesTab.getAttribute("tabindex"), "-1");
   });
 
@@ -77,11 +83,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 4);
+    assert.strictEqual(tabs.length, 7);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3"],
+      ["0", "1", "2", "3", "4", "5", "6"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -90,14 +96,14 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
-    assert.strictEqual(tab.dataset.tabNumber, "4");
+    assert.strictEqual(tab.dataset.tabNumber, "7");
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 9);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
   });
@@ -115,6 +121,50 @@ module("Integration | Component | user-menu", function (hooks) {
     await settled();
 
     assert.ok(!exists("#user-menu-button-review-queue .badge-notification"));
+  });
+
+  test("private_message notifications count is shown on the PMs tab", async function (assert) {
+    this.currentUser.set("grouped_unread_high_priority_notifications", {
+      [NOTIFICATION_TYPES.private_message]: 3,
+    });
+    await render(template);
+    let countBadge = query("#user-menu-button-pms .badge-notification");
+    assert.strictEqual(countBadge.textContent, "3");
+
+    this.currentUser.set("grouped_unread_high_priority_notifications", {
+      [NOTIFICATION_TYPES.private_message]: 8,
+    });
+    await settled();
+
+    countBadge = query("#user-menu-button-pms .badge-notification");
+    assert.strictEqual(countBadge.textContent, "8");
+
+    this.currentUser.set("grouped_unread_high_priority_notifications", {});
+    await settled();
+
+    assert.ok(!exists("#user-menu-button-pms .badge-notification"));
+  });
+
+  test("bookmark_reminder notifications count is shown on the bookmarks tab", async function (assert) {
+    this.currentUser.set("grouped_unread_high_priority_notifications", {
+      [NOTIFICATION_TYPES.bookmark_reminder]: 2,
+    });
+    await render(template);
+    let countBadge = query("#user-menu-button-bookmarks .badge-notification");
+    assert.strictEqual(countBadge.textContent, "2");
+
+    this.currentUser.set("grouped_unread_high_priority_notifications", {
+      [NOTIFICATION_TYPES.bookmark_reminder]: 9,
+    });
+    await settled();
+
+    countBadge = query("#user-menu-button-bookmarks .badge-notification");
+    assert.strictEqual(countBadge.textContent, "9");
+
+    this.currentUser.set("grouped_unread_high_priority_notifications", {});
+    await settled();
+
+    assert.ok(!exists("#user-menu-button-bookmarks .badge-notification"));
   });
 
   test("changing tabs", async function (assert) {
@@ -139,6 +189,49 @@ module("Integration | Component | user-menu", function (hooks) {
             slug: "greetings",
             data: {
               topic_title: "Greetings!",
+              original_post_id: 20,
+              original_post_type: 1,
+              original_username: "discobot",
+              revision_number: null,
+              display_username: "discobot",
+            },
+          },
+        ];
+      } else if (queryParams.filter_by_types === "bookmark_reminder") {
+        data = [
+          {
+            id: 42,
+            user_id: 1,
+            notification_type: NOTIFICATION_TYPES.bookmark_reminder,
+            read: true,
+            high_priority: false,
+            created_at: "2021-11-25T19:31:13.241Z",
+            post_number: 6,
+            topic_id: 10,
+            fancy_title: "Greetings!",
+            slug: "greetings",
+            data: {
+              topic_title: "Greetings!",
+              original_post_id: 20,
+              original_post_type: 1,
+              original_username: "discobot",
+              revision_number: null,
+              display_username: "discobot",
+            },
+          },
+          {
+            id: 73,
+            user_id: 1,
+            notification_type: NOTIFICATION_TYPES.bookmark_reminder,
+            read: false,
+            high_priority: true,
+            created_at: "2021-11-25T19:31:13.241Z",
+            post_number: 6,
+            topic_id: 10,
+            fancy_title: "Greetings 123!",
+            slug: "greetings 123",
+            data: {
+              topic_title: "Greetings 123!",
               original_post_id: 20,
               original_post_type: 1,
               original_username: "discobot",
@@ -239,6 +332,23 @@ module("Integration | Component | user-menu", function (hooks) {
       "active tab is now the mentions tab"
     );
     assert.strictEqual(queryAll("#quick-access-mentions ul li").length, 1);
+
+    await click("#user-menu-button-bookmarks");
+    assert.ok(exists("#quick-access-bookmarks.quick-access-panel"));
+    assert.strictEqual(
+      queryParams.filter_by_types,
+      "bookmark_reminder",
+      "request params has filter_by_types set to `bookmark_reminder`"
+    );
+    assert.strictEqual(queryParams.silent, "true");
+    activeTabs = queryAll(".top-tabs .btn.active");
+    assert.strictEqual(activeTabs.length, 1);
+    assert.strictEqual(
+      activeTabs[0].id,
+      "user-menu-button-bookmarks",
+      "active tab is now the bookmark reminders tab"
+    );
+    assert.strictEqual(queryAll("#quick-access-bookmarks ul li").length, 2);
 
     await click("#user-menu-button-likes");
     assert.ok(exists("#quick-access-likes.quick-access-panel"));
