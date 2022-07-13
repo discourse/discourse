@@ -146,7 +146,7 @@ acceptance("Sidebar - section API", function (needs) {
       "displays second header action with correct text"
     );
 
-    const $links = queryAll(
+    const links = queryAll(
       ".sidebar-section-chat-channels .sidebar-section-content a"
     );
     assert.strictEqual(
