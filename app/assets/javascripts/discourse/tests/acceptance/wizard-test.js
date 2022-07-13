@@ -53,7 +53,10 @@ acceptance("Wizard", function (needs) {
     );
 
     await click(".wizard-container__button.next");
-    assert.ok(exists(".dropdown-field.dropdown-snack"), "went to the next step");
+    assert.ok(
+      exists(".dropdown-field.dropdown-snack"),
+      "went to the next step"
+    );
     assert.ok(
       exists(".wizard-container__preview"),
       "renders the component field"

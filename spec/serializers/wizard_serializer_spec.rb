@@ -43,14 +43,11 @@ describe WizardSerializer do
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
       steps = json['wizard']['steps']
 
-      expect(steps.first['id']).to eq('locale')
-      expect(steps.last['id']).to eq('finished')
+      expect(steps.first['id']).to eq('introduction')
+      expect(steps.last['id']).to eq('corporate')
 
       privacy_step = steps.find { |s| s['id'] == 'privacy' }
       expect(privacy_step).to_not be_nil
-
-      privacy_field = privacy_step['fields'].find { |f| f['id'] == 'privacy' }
-      expect(privacy_field['choices'].find { |c| c['id'] == 'open' }).to_not be_nil
     end
   end
 end

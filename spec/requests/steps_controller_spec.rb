@@ -29,15 +29,15 @@ describe StepsController do
 
     it "raises an error if the wizard is disabled" do
       SiteSetting.wizard_enabled = false
-      put "/wizard/steps/contact.json", params: {
+      put "/wizard/steps/introduction.json", params: {
         fields: { contact_email: "eviltrout@example.com" }
       }
       expect(response).to be_forbidden
     end
 
     it "updates properly if you are staff" do
-      put "/wizard/steps/contact.json", params: {
-        fields: { contact_email: "eviltrout@example.com" }
+      put "/wizard/steps/introduction.json", params: {
+        fields: { title: "FooBar", default_locale: SiteSetting.default_locale, contact_email: "eviltrout@example.com" }
       }
 
       expect(response.status).to eq(200)
@@ -45,7 +45,7 @@ describe StepsController do
     end
 
     it "returns errors if the field has them" do
-      put "/wizard/steps/contact.json", params: {
+      put "/wizard/steps/introduction.json", params: {
         fields: { contact_email: "not-an-email" }
       }
 
