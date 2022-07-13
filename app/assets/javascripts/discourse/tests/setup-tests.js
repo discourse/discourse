@@ -210,7 +210,6 @@ export default function setupTests(config) {
     },
   });
 
-  let server;
   let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
   if (setupDataElement) {
@@ -234,24 +233,23 @@ export default function setupTests(config) {
       setupS3CDN(null, null, { snapshot: true });
     }
 
-    server = pretender;
-    applyDefaultHandlers(server);
+    applyDefaultHandlers(pretender);
 
-    server.prepareBody = function (body) {
-      if (body && typeof body === "object") {
+    pretender.prepareBody = function (body) {
+      if (typeof body === "object") {
         return JSON.stringify(body);
       }
       return body;
     };
 
     if (QUnit.config.logAllRequests) {
-      server.handledRequest = function (verb, path) {
+      pretender.handledRequest = function (verb, path) {
         // eslint-disable-next-line no-console
         console.log("REQ: " + verb + " " + path);
       };
     }
 
-    server.unhandledRequest = function (verb, path) {
+    pretender.unhandledRequest = function (verb, path) {
       if (QUnit.config.logAllRequests) {
         // eslint-disable-next-line no-console
         console.log("REQ: " + verb + " " + path + " missing");
@@ -265,10 +263,10 @@ export default function setupTests(config) {
       throw new Error(error);
     };
 
-    server.checkPassthrough = (request) =>
+    pretender.checkPassthrough = (request) =>
       request.requestHeaders["Discourse-Script"];
 
-    applyPretender(ctx.module, server, pretenderHelpers());
+    applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
     if (setupData) {
@@ -319,7 +317,6 @@ export default function setupTests(config) {
     flushMap();
 
     MessageBus.unsubscribe("*");
-    server = null;
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
