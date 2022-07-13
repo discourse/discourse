@@ -78,7 +78,7 @@ export default Component.extend(LoadMore, {
     if (scrollTo >= 0) {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo + 1));
+          next(() => window.scrollTo(0, scrollTo));
         }
       });
     }
