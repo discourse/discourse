@@ -18,7 +18,6 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
 
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {
-        console.log("yay");
         document.querySelector(
           "#qunit-fixture"
         ).innerHTML = `<div id="added-element">Test adding plugin shortcut</div>`;

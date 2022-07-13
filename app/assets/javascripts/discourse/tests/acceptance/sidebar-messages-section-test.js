@@ -7,7 +7,6 @@ import {
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
