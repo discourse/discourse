@@ -112,7 +112,10 @@ acceptance("Search - Full Page", function (needs) {
   test("perform various searches", async function (assert) {
     await visit("/search");
 
-    assert.ok($("body.search-page").length, "has body class");
+    assert.ok(
+      document.body.classList.contains("search-page"),
+      "has body class"
+    );
     assert.ok(exists(".search-container"), "has container class");
     assert.ok(exists(".search-query"));
     assert.ok(!exists(".fps-topic"));
