@@ -1041,6 +1041,7 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
+        title: "Export account data"
         button_text: "Download All"
         confirm: "Are you sure you want to download your posts?"
         success: "Download initiated, you will be notified via message when the process is complete."

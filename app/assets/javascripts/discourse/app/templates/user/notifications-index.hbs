@@ -12,10 +12,15 @@
     @body={{this.emptyStateBody}}
   />
 {{else}}
-  <div class="user-notifications-filter">
-    <NotificationsFilter @value={{this.filter}} @onChange={{action (mut this.filter)}} />
-  </div>
+  <div class="user-stream-secondary-controls">
+    <div class="user-notifications-filter">
+      <NotificationsFilter @value={{this.filter}} @onChange={{action (mut this.filter)}} />
+    </div>
 
+    {{#if this.model}}
+      <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{this.allNotificationsRead}} />
+    {{/if}}
+  </div>
   {{#if this.nothingFound}}
     <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
   {{else}}

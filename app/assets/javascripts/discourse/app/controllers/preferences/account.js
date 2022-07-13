@@ -3,6 +3,7 @@ import { propertyNotEqual, setting } from "discourse/lib/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
+import { exportUserArchive } from "discourse/lib/export-csv";
 import I18n from "I18n";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -130,6 +131,12 @@ export default Controller.extend(CanCheckEmails, {
     return findAll().length > 0;
   },
 
+  @discourseComputed("model.username")
+  viewingSelf(username) {
+    let currentUser = this.currentUser;
+    return currentUser && username === currentUser.get("username");
+  },
+
   actions: {
     save() {
       this.set("saved", false);
@@ -221,6 +228,15 @@ export default Controller.extend(CanCheckEmails, {
 
     connectAccount(method) {
       method.doLogin({ reconnect: true });
+    },
+
+    exportUserArchive() {
+      bootbox.confirm(
+        I18n.t("user.download_archive.confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (confirmed) => (confirmed ? exportUserArchive() : null)
+      );
     },
   },
 });

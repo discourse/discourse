@@ -184,6 +184,15 @@
   </div>
 {{/if}}
 
+{{#if this.viewingSelf}}
+  <div class="control-group pref-export-archive">
+    <label class="control-label">{{i18n "user.download_archive.title"}}</label>
+    <div class="controls">
+      <DButton @action={{action "exportUserArchive"}} @class="btn-default" @label="user.download_archive.button_text" @icon="download" />
+    </div>
+  </div>
+{{/if}}
+
 <PluginOutlet @name="user-preferences-account" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />
 
 <br>

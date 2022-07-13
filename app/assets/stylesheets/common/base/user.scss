@@ -137,10 +137,20 @@
     color: var(--love);
   }
 
+  .user-stream-secondary-controls {
+    display: flex;
+    padding-bottom: 1em;
+
+    .btn.dismiss-notifications {
+      white-space: nowrap;
+      margin: 0 0 0 auto;
+    }
+  }
+
   .user-notifications-filter {
+    align-self: flex-end;
     display: block;
     width: 100%;
-    border-bottom: 0.5px solid var(--primary-low);
   }
 }
 

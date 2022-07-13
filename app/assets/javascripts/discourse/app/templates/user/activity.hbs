@@ -1,14 +1,4 @@
-<DSection @pageClass="user-activity" @class="user-secondary-navigation" @scrollTop={{false}}>
-
-</DSection>
-
-{{!-- todo: MOVE
-{{#if this.canDownloadPosts}}
-  <section class="user-additional-controls">
-    <DButton @action={{action "exportUserArchive"}} @class="btn-default" @label="user.download_archive.button_text" @icon="download" />
-  </section>
-{{/if}}
---}}
+<DSection @pageClass="user-activity" @scrollTop={{false}} />
 
 <section class="user-content">
   {{outlet}}

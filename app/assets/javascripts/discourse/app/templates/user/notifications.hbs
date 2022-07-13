@@ -1,14 +1,4 @@
-<DSection @pageClass="user-notifications" @class="user-secondary-navigation">
-</DSection>
-
-{{!-- todo: MOVE
-{{#if this.model}}
-  <section class="user-additional-controls">
-    <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{this.allNotificationsRead}} />
-  </section>
-{{/if}}
-
---}}
+<DSection @pageClass="user-notifications" />
 
 <section class="user-content">
   <LoadMore @class="notification-history user-stream" @selector=".user-stream .notification" @action={{action "loadMore"}}>
