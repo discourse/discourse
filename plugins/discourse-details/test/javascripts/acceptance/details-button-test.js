@@ -1,8 +1,4 @@
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -23,7 +19,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `\n[details="${I18n.t("composer.details_title")}"]\n${I18n.t(
         "composer.details_text"
       )}\n[/details]\n`,
@@ -40,7 +36,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nThis is my title\n[/details]\n`,
@@ -67,7 +63,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `Before \n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n After`,
@@ -94,7 +90,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `Before \n\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n\n After`,
@@ -129,7 +125,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\n${multilineInput}\n[/details]\n`,

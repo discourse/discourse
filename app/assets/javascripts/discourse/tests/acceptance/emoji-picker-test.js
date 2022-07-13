@@ -45,7 +45,7 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       ":grinning:",
       "it adds the emoji code in the editor when selected"
     );
@@ -60,7 +60,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "This is a test input :grinning:",
       "it adds the emoji code and a leading whitespace when there is text"
     );
@@ -70,7 +70,7 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "This is a test input :grinning:",
       "it adds the emoji code and no leading whitespace when user already entered whitespace"
     );
