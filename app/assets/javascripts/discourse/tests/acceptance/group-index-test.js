@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -14,8 +15,9 @@ acceptance("Group Members - Anonymous", function () {
   test("Viewing Members as anon user", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      count(".avatar-flair .d-icon-adjust") === 1,
+    assert.strictEqual(
+      count(".avatar-flair .d-icon-adjust"),
+      1,
       "it displays the group's avatar flair"
     );
     assert.ok(exists(".group-members tr"), "it lists group members");
@@ -26,7 +28,7 @@ acceptance("Group Members - Anonymous", function () {
     );
 
     assert.strictEqual(
-      queryAll(".group-username-filter").attr("placeholder"),
+      query(".group-username-filter").getAttribute("placeholder"),
       I18n.t("groups.members.filter_placeholder"),
       "it should display the right filter placeholder"
     );
@@ -64,7 +66,7 @@ acceptance("Group Members", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".group-username-filter").attr("placeholder"),
+      query(".group-username-filter").getAttribute("placeholder"),
       I18n.t("groups.members.filter_placeholder_admin"),
       "it should display the right filter placeholder"
     );

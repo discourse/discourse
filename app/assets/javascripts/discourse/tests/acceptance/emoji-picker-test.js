@@ -130,7 +130,7 @@ acceptance("EmojiPicker", function (needs) {
 
     assert.strictEqual(
       /grinning/.test(
-        queryAll(".section.recent .section-group img.emoji").first().attr("src")
+        query(".section.recent .section-group img.emoji").getAttribute("src")
       ),
       true,
       "it puts the last used emoji in first"
