@@ -234,14 +234,11 @@ body.wizard {
       position: absolute;
       left: 0px;
       top: 0px;
-      transform: scale(0.85) translateX(-45px);
     }
     .homepage-preview {
       position: absolute;
       left: calc(100% + 25px);
       top: 0px;
-      transform: scale(0.85);
-      padding-right: 20px;
     }
   }
 
@@ -504,10 +501,6 @@ body.wizard {
     align-items: baseline;
   }
 
-  &__preview {
-    margin: 1em 0;
-  }
-
   &__description {
     margin-top: 0.5em;
   }
@@ -558,6 +551,14 @@ body.wizard {
 
   &__dropdown .select-kit-header:not(.btn) {
     border-radius: 4px;
+  }
+
+  &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
+    flex: 0 0 30%;
+  }
+  &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
+    flex: 1 1 70%;
+    overflow: hidden;
   }
 
   &__field.checkbox-field .wizard-container__label {
