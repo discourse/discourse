@@ -1,6 +1,7 @@
 import {
   acceptance,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -33,7 +34,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.strictEqual(
-      queryAll(".alert-error").html().trim(),
+      query(".alert-error").innerHTML.trim(),
       I18n.t("forgot_password.complete_username_not_found", {
         username: "someuser",
       }),
@@ -44,7 +45,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.strictEqual(
-      queryAll(".alert-error").html().trim(),
+      query(".alert-error").innerHTML.trim(),
       I18n.t("forgot_password.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),
@@ -63,7 +64,7 @@ acceptance("Forgot password", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".modal-body").html().trim(),
+      query(".modal-body").innerHTML.trim(),
       I18n.t("forgot_password.complete_username_found", {
         username: "someuser",
       }),
@@ -77,7 +78,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.strictEqual(
-      queryAll(".modal-body").html().trim(),
+      query(".modal-body").innerHTML.trim(),
       I18n.t("forgot_password.complete_email_found", {
         email: "someuser@gmail.com",
       }),
@@ -110,7 +111,7 @@ acceptance(
       await click(".forgot-password-reset");
 
       assert.strictEqual(
-        queryAll(".modal-body").html().trim(),
+        query(".modal-body").innerHTML.trim(),
         I18n.t("forgot_password.complete_username", {
           username: "someuser",
         }),
