@@ -36,6 +36,7 @@
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
     "discourse-common": "^1.0.0",
+    "discourse-ensure-deprecation-order": "^1.0.0",
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
     "ember-auto-import": "^2.4.2",
