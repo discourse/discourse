@@ -144,6 +144,8 @@ body > noscript {
   div#main-outlet {
     div.post {
       word-break: break-word;
+      overflow: auto;
+      max-width: 100%;
       img {
         max-width: 100%;
         height: auto;
