@@ -69,11 +69,7 @@ createWidget("header-notifications", {
     ];
 
     if (this.currentUser.status) {
-      contents.push(
-        this.attach("user-status-bubble", {
-          emoji: this.currentUser.status.emoji,
-        })
-      );
+      contents.push(this.attach("user-status-bubble", this.currentUser.status));
     }
 
     if (user.isInDoNotDisturb()) {
