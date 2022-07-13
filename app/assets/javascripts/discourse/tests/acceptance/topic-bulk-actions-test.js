@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   invisible,
   query,
   queryAll,
@@ -137,8 +138,8 @@ acceptance("Topic - Bulk Actions", function (needs) {
     await triggerEvent(queryAll("input.bulk-select")[3], "click", {
       shiftKey: true,
     });
-    assert.equal(
-      queryAll("input.bulk-select:checked").length,
+    assert.strictEqual(
+      count("input.bulk-select:checked"),
       4,
       "Shift click selects a range"
     );
@@ -149,8 +150,8 @@ acceptance("Topic - Bulk Actions", function (needs) {
     await triggerEvent(queryAll("input.bulk-select")[1], "click", {
       shiftKey: true,
     });
-    assert.equal(
-      queryAll("input.bulk-select:checked").length,
+    assert.strictEqual(
+      count("input.bulk-select:checked"),
       5,
       "Bottom-up Shift click range selection works"
     );

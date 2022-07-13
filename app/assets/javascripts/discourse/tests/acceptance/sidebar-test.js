@@ -1,5 +1,4 @@
 import { test } from "qunit";
-
 import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
@@ -8,9 +7,8 @@ acceptance("Sidebar - Anon User", function () {
   test("sidebar is not displayed", async function (assert) {
     await visit("/");
 
-    assert.strictEqual(
-      document.querySelectorAll("body.has-sidebar-page").length,
-      0,
+    assert.ok(
+      !document.body.classList.contains("has-sidebar-page"),
       "does not add sidebar utility class to body"
     );
 
@@ -24,9 +22,8 @@ acceptance("Sidebar - User with sidebar disabled", function (needs) {
   test("sidebar is not displayed", async function (assert) {
     await visit("/");
 
-    assert.strictEqual(
-      document.querySelectorAll("body.has-sidebar-page").length,
-      0,
+    assert.ok(
+      !document.body.classList.contains("has-sidebar-page"),
       "does not add sidebar utility class to body"
     );
 
@@ -40,9 +37,8 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
   test("hiding and displaying sidebar", async function (assert) {
     await visit("/");
 
-    assert.strictEqual(
-      document.querySelectorAll("body.has-sidebar-page").length,
-      1,
+    assert.ok(
+      document.body.classList.contains("has-sidebar-page"),
       "adds sidebar utility class to body"
     );
 
@@ -50,9 +46,8 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
 
     await click(".header-sidebar-toggle .btn");
 
-    assert.strictEqual(
-      document.querySelectorAll("body.has-sidebar-page").length,
-      0,
+    assert.ok(
+      !document.body.classList.contains("has-sidebar-page"),
       "removes sidebar utility class to body"
     );
 

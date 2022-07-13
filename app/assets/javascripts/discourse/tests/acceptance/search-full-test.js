@@ -3,7 +3,6 @@ import {
   count,
   exists,
   query,
-  queryAll,
   selectDate,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -583,11 +582,11 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
-    assert.equal(queryAll(".visited").length, 0);
+    assert.equal(count(".visited"), 0);
 
     await fillIn(".search-query", "discourse visited");
     await click(".search-cta");
-    assert.equal(queryAll(".visited").length, 1);
+    assert.equal(count(".visited"), 1);
   });
 
   test("result link click tracking is invoked", async function (assert) {

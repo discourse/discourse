@@ -1,13 +1,11 @@
 import { test } from "qunit";
-
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
-
 import {
   acceptance,
+  count,
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import Site from "discourse/models/site";
@@ -39,7 +37,7 @@ acceptance(
       await visit("/");
 
       assert.strictEqual(
-        queryAll(".sidebar-section-categories .sidebar-section-link").length,
+        count(".sidebar-section-categories .sidebar-section-link"),
         1,
         "there should only be one section link under the section"
       );
@@ -161,7 +159,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-categories .sidebar-section-link").length,
+      count(".sidebar-section-categories .sidebar-section-link"),
       2,
       "there should only be two section link under the section"
     );
@@ -186,8 +184,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-categories .sidebar-section-link.active")
-        .length,
+      count(".sidebar-section-categories .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -206,8 +203,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-categories .sidebar-section-link.active")
-        .length,
+      count(".sidebar-section-categories .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -224,8 +220,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/new`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-categories .sidebar-section-link.active")
-        .length,
+      count(".sidebar-section-categories .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -242,8 +237,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/unread`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-categories .sidebar-section-link.active")
-        .length,
+      count(".sidebar-section-categories .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -260,8 +254,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     await visit(`/c/${category1.slug}/${category1.id}/l/top`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-categories .sidebar-section-link.active")
-        .length,
+      count(".sidebar-section-categories .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );

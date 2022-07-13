@@ -1,14 +1,12 @@
 import I18n from "I18n";
 import { test } from "qunit";
-
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
-
 import {
   acceptance,
+  count,
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
@@ -104,7 +102,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link").length,
+      count(".sidebar-section-tags .sidebar-section-link"),
       3,
       "3 section links under the section"
     );
@@ -136,7 +134,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -155,7 +153,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -170,7 +168,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit(`/tag/tag1/l/top`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -185,7 +183,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit(`/tag/tag1/l/new`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -200,7 +198,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit(`/tag/tag1/l/unread`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );

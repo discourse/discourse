@@ -22,7 +22,7 @@ acceptance("Topic Discovery", function (needs) {
   test("Visit Discovery Pages", async function (assert) {
     await visit("/");
     assert.ok(
-      document.querySelectorAll("body.navigation-topics").length,
+      document.body.classList.contains("navigation-topics"),
       "has the default navigation"
     );
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
@@ -45,28 +45,28 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
     assert.ok(!exists(".category-list"), "doesn't render subcategories");
     assert.ok(
-      document.querySelectorAll("body.category-bug").length,
+      document.body.classList.contains("category-bug"),
       "has a custom css class for the category id on the body"
     );
 
     await visit("/categories");
     assert.ok(
-      document.querySelectorAll("body.navigation-categories").length,
+      document.body.classList.contains("navigation-categories"),
       "has the body class"
     );
     assert.ok(
-      document.querySelectorAll("body.category-bug").length === 0,
+      !document.body.classList.contains("category-bug"),
       "removes the custom category class"
     );
     assert.ok(exists(".category"), "has a list of categories");
     assert.ok(
-      document.querySelectorAll("body.categories-list").length,
+      document.body.classList.contains("categories-list"),
       "has a custom class to indicate categories"
     );
 
     await visit("/top");
     assert.ok(
-      document.querySelectorAll("body.categories-list").length === 0,
+      !document.body.classList.contains("categories-list"),
       "removes the `categories-list` class"
     );
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");

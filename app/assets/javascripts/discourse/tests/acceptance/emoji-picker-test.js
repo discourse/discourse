@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   query,
   queryAll,
@@ -122,8 +123,7 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.strictEqual(
-      queryAll('.section[data-section="recent"] .section-group img.emoji')
-        .length,
+      count('.section[data-section="recent"] .section-group img.emoji'),
       2,
       "it has multiple recent emojis"
     );
