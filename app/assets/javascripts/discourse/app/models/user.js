@@ -33,7 +33,6 @@ import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
 import Evented from "@ember/object/evented";
 import { cancel, later } from "@ember/runloop";
-import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -1179,23 +1178,37 @@ User.reopenClass(Singleton, {
 
 // user status tracking
 User.reopen(Evented, {
+  _subscribersCount: 0,
   _clearStatusTimerId: null,
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    this.addObserver("status", this, "_statusChanged");
+    if (this._subscribersCount === 0) {
+      this.addObserver("status", this, "_statusChanged");
 
-    this.appEvents.on("user-status:changed", this, this._updateStatus);
+      this.appEvents.on("user-status:changed", this, this._updateStatus);
 
-    if (this.status && this.status.ends_at) {
-      this._scheduleStatusClearing(this.status.ends_at);
+      if (this.status && this.status.ends_at) {
+        this._scheduleStatusClearing(this.status.ends_at);
+      }
     }
+
+    this._subscribersCount++;
   },
 
   stopTrackingStatus() {
-    this.removeObserver("status", this, "_statusChanged");
-    this.appEvents.off("user-status:changed", this, this._updateStatus);
-    this._unscheduleStatusClearing();
+    if (this._subscribersCount === 0) {
+      return;
+    }
+
+    if (this._subscribersCount === 1) {
+      // the last subscriber is unsubscribing
+      this.removeObserver("status", this, "_statusChanged");
+      this.appEvents.off("user-status:changed", this, this._updateStatus);
+      this._unscheduleStatusClearing();
+    }
+
+    this._subscribersCount--;
   },
 
   _statusChanged(sender, key) {
@@ -1210,10 +1223,6 @@ User.reopen(Evented, {
   },
 
   _scheduleStatusClearing(endsAt) {
-    if (isTesting()) {
-      return;
-    }
-
     if (this._clearStatusTimerId) {
       this._unscheduleStatusClearing();
     }

@@ -4,6 +4,7 @@ import User from "discourse/models/user";
 import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Model | user", function (hooks) {
   hooks.afterEach(function () {
@@ -110,5 +111,60 @@ module("Unit | Model | user", function (hooks) {
     User.createCurrent();
 
     assert.ok(spyMomentGuess.notCalled);
+  });
+
+  test("user status gets auto cleared after ends_at", function (assert) {
+    const timezone = "UTC";
+    this.clock = fakeTime("2100-01-01T08:00:00.000Z", timezone, true);
+
+    const user = User.create({
+      timezone,
+      status: {
+        ends_at: "2100-01-01T08:10:00.000Z",
+      },
+    });
+    assert.notEqual(user.status, null);
+
+    user.trackStatus();
+    this.clock.tick("10:00");
+
+    assert.equal(user.status, null);
+  });
+
+  test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
+    const timezone = "UTC";
+    this.clock = fakeTime("2100-01-01T08:00:00.000Z", timezone, true);
+
+    const user = User.create({
+      timezone,
+      status: {
+        ends_at: "2100-01-01T08:10:00.000Z",
+      },
+    });
+
+    assert.equal(user._subscribersCount, 0);
+    assert.equal(user._clearStatusTimerId, null, "timer isn't set yet");
+
+    user.trackStatus();
+    assert.equal(user._subscribersCount, 1);
+    assert.notEqual(user._clearStatusTimerId, null, "timer is set");
+
+    user.trackStatus();
+    assert.equal(user._subscribersCount, 2);
+    assert.notEqual(user._clearStatusTimerId, null, "timer is set yet");
+
+    user.stopTrackingStatus();
+    assert.equal(user._subscribersCount, 1);
+    assert.notEqual(user._clearStatusTimerId, null, "timer is set yet");
+
+    user.stopTrackingStatus();
+    assert.equal(user._subscribersCount, 0);
+    assert.equal(user._clearStatusTimerId, null, "timer is removed");
+  });
+
+  test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
+    const user = User.create();
+    user.stopTrackingStatus();
+    assert.ok(true);
   });
 });
