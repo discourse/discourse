@@ -493,6 +493,7 @@ blockquote {
   width: $topic-avatar-width;
   float: left;
   z-index: z("base") + 1;
+  height: 100%;
 }
 
 .gap {
