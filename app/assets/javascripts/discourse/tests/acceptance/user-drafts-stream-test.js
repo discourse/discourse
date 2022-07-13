@@ -4,7 +4,6 @@ import {
   exists,
   normalizeHtml,
   query,
-  queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -42,7 +41,7 @@ acceptance("User Drafts", function (needs) {
 
     await click(".user-stream-item .resume-draft");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       "A fun new topic for testing drafts."
     );
   });

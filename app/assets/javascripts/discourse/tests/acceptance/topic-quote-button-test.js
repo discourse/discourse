@@ -2,6 +2,7 @@ import {
   acceptance,
   chromeTest,
   exists,
+  query,
   queryAll,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -55,7 +56,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
       await click(".insert-quote");
 
       assert.strictEqual(
-        queryAll(".d-editor-input").val().trim(),
+        query(".d-editor-input").value.trim(),
         '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
         "quote only contains a link"
       );
@@ -135,7 +136,7 @@ acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
     assert.ok(exists(".d-editor-input"), "the editor is open");
 
     assert.ok(
-      queryAll(".d-editor-input").val().includes("Any plans to support"),
+      query(".d-editor-input").value.includes("Any plans to support"),
       "editor includes selected text"
     );
   });

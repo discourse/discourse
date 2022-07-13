@@ -1,5 +1,4 @@
 import { test } from "qunit";
-
 import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
