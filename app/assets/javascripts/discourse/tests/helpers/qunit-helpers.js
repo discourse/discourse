@@ -22,7 +22,6 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -153,7 +152,6 @@ export function testCleanup(container, app) {
     });
   }
 
-  flushMap();
   localStorage.clear();
   User.resetCurrent();
   resetExtraClasses();
