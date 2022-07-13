@@ -197,6 +197,12 @@ body > noscript {
     }
   }
 
+  .tag-crawler {
+    .tag-box {
+      margin-bottom: 0.5em;
+    }
+  }
+
   #topic-title {
     > * {
       display: block;
