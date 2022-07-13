@@ -18,7 +18,7 @@
 #
 # Users may also either:
 #
-#   a) disallow all PMs sent to them or
+#   a) disallow PMs from being sent to them or
 #   b) disallow PMs except from a certain allowlist of users
 #
 # A user may have this preference but have no Muted or Ignored users, which
@@ -158,8 +158,8 @@ class UserCommScreener
     # If any of the users has allowed_pm_users enabled check to see if the creator
     # is in their list.
     users_with_allowed_pms = user_communication_preferences.select(&:enable_allowed_pm_users)
+    
     if users_with_allowed_pms.any?
-
       user_ids_with_allowed_pms = users_with_allowed_pms.map(&:id)
       user_ids_acting_can_pm = AllowedPmUser.where(
         allowed_pm_user_id: acting_user.id, user_id: user_ids_with_allowed_pms
