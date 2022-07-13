@@ -5,6 +5,14 @@ GIT
     mail (2.8.0.edge)
       mini_mime (>= 0.1.1)
 
+GIT
+  remote: https://github.com/discourse/rubocop-discourse.git
+  revision: 0de6d72891fea488cae22332505e4e3f26b4e157
+  specs:
+    rubocop-discourse (2.5.0)
+      rubocop (>= 1.1.0)
+      rubocop-rspec (>= 2.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -422,9 +430,6 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.19.1)
       parser (>= 3.1.1.0)
-    rubocop-discourse (2.5.0)
-      rubocop (>= 1.1.0)
-      rubocop-rspec (>= 2.0.0)
     rubocop-rspec (2.12.1)
       rubocop (~> 1.31)
     ruby-prof (1.4.3)
@@ -612,7 +617,7 @@ DEPENDENCIES
   rspec-rails
   rss
   rswag-specs
-  rubocop-discourse
+  rubocop-discourse!
   ruby-prof
   ruby-readability
   rubyzip
