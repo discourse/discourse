@@ -215,7 +215,8 @@ export default Component.extend(KeyEnterEscape, {
     afterTransition($(this.element), () => {
       triggerOpen();
     });
-    positioningWorkaround($(this.element));
+
+    positioningWorkaround(this.element);
   },
 
   willDestroyElement() {
