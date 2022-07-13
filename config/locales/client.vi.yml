@@ -552,6 +552,7 @@ vi:
       forever: "Mãi mãi"
       relative: "Thời gian tương đối"
       none: "Không cần thiết"
+      never: "Không bao giờ"
       last_custom: "Ngày giờ tùy chỉnh cuối cùng"
       custom: "Ngày giờ tùy chỉnh"
       select_timeframe: "Chọn khung thời gian"

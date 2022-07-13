@@ -146,6 +146,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
+  before_save :apply_watched_words, unless: :custom_fields_clean?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -1273,12 +1274,22 @@ class User < ActiveRecord::Base
   end
 
   def public_user_field_values
-    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
-    user_fields(@public_user_field_ids).values.join(" ")
+    public_user_fields.values.join(" ")
   end
 
   def set_user_field(field_id, value)
     custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
+  end
+
+  def apply_watched_words
+    public_user_fields.each do |id, value|
+      set_user_field(id, PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1"))
+    end
+  end
+
+  def public_user_fields
+    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
+    user_fields(@public_user_field_ids)
   end
 
   def number_of_deleted_posts

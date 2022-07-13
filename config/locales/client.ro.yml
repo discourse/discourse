@@ -586,6 +586,7 @@ ro:
       six_months: "Șase luni"
       one_year: "Un an"
       forever: "Pentru totdeanua"
+      never: "Niciodată"
       custom: "Data și ora personalizată"
       select_timeframe: "Alege un interval de timp"
     user_action:

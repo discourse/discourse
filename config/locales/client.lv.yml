@@ -519,6 +519,7 @@ lv:
       six_months: "Seši mēneši"
       relative: "Relatīvais laiks"
       none: "Neviens nav vajadzīgs"
+      never: "Nekad"
       last_custom: "Pēdējais pielāgotais datuma laiks"
       custom: "Pielāgots datums un laiks"
     user_action:

@@ -586,6 +586,8 @@ sv:
       relative: "Relativ"
     time_shortcut:
       now: "Nu"
+      in_one_hour: "Om en timme"
+      in_two_hours: "Om två timmar"
       later_today: "Senare idag"
       two_days: "Två dagar"
       next_business_day: "Nästa vardag"
@@ -606,6 +608,7 @@ sv:
       forever: "För alltid"
       relative: "Relativ tid"
       none: "Ingen behövs"
+      never: "Aldrig"
       last_custom: "Senaste anpassade datumtid"
       custom: "Anpassa datum och tid"
       select_timeframe: "Välj en tidsram"
@@ -1645,6 +1648,7 @@ sv:
       save: "Spara"
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
+      remove_status: "Ta bort status"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"

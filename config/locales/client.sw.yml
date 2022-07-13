@@ -338,6 +338,7 @@ sw:
       next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
       forever: "Milele"
+      never: "Kamwe"
       select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"

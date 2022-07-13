@@ -570,6 +570,7 @@ pt:
       forever: "Para Sempre"
       relative: "Tempo relativo"
       none: "Não é necessário"
+      never: "Nunca"
       last_custom: "Data e hora do último personalizado"
       custom: "Data e hora personalizadas"
       select_timeframe: "Selecione um intervalo de tempo"

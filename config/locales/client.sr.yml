@@ -482,6 +482,7 @@ sr:
       start_of_next_business_week_alt: "Naredni ponedeljak"
       next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
+      never: "Nikad"
       custom: "Prilagođen datum i vreme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio <a href='%{topicUrl}'>temu</a>"

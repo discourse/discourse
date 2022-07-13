@@ -484,6 +484,7 @@ hy:
       next_week: "Հաջորդ շաբաթ"
       next_month: "Հաջորդ ամիս"
       forever: "Ընդմիշտ"
+      never: "Երբեք"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
       select_timeframe: "Ընտրել ժամանակահատված"
     user_action:

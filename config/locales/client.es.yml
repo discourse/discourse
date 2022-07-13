@@ -586,6 +586,8 @@ es:
       relative: "Relativo"
     time_shortcut:
       now: "Ahora"
+      in_one_hour: "En una hora"
+      in_two_hours: "En dos horas"
       later_today: "Más tarde durante el día de hoy"
       two_days: "Dos días"
       next_business_day: "Siguiente día hábil"
@@ -606,6 +608,7 @@ es:
       forever: "Para siempre"
       relative: "Tiempo relativo"
       none: "No se necesita"
+      never: "Nunca"
       last_custom: "Última fecha y hora personalizada"
       custom: "Fecha y hora personalizadas"
       select_timeframe: "Selecciona el plazo"
@@ -1645,6 +1648,7 @@ es:
       save: "Guardar"
       set_custom_status: "Escribir estado personalizado"
       what_are_you_doing: "¿Qué estás haciendo?"
+      remove_status: "Quitar estado"
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"

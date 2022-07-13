@@ -586,6 +586,8 @@ de:
       relative: "Relativ"
     time_shortcut:
       now: "Jetzt"
+      in_one_hour: "In einer Stunde"
+      in_two_hours: "In zwei Stunden"
       later_today: "Im Laufe des Tages"
       two_days: "Zwei Tage"
       next_business_day: "Nächster Arbeitstag"
@@ -606,6 +608,7 @@ de:
       forever: "Für immer"
       relative: "Relative Zeit"
       none: "Nicht notwendig"
+      never: "Nie"
       last_custom: "Letztes benutzerdefiniertes Datum"
       custom: "Datum und Uhrzeit auswählen"
       select_timeframe: "Wähle einen Zeitrahmen aus"
@@ -1645,6 +1648,7 @@ de:
       save: "Speichern"
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du da?"
+      remove_status: "Status entfernen"
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -3728,7 +3732,7 @@ de:
       new_count: "%{count} neues"
       sections:
         messages:
-          header_link_title: "persönliche Nachrichten"
+          header_link_title: "Persönliche Nachrichten"
           header_link_text: "Nachrichten"
           header_action_title: "eine persönliche Nachricht erstellen"
           links:
@@ -3744,15 +3748,15 @@ de:
           click_to_get_started: "Klicke hier, um zu starten."
           header_link_title: "alle Schlagwörter"
           header_link_text: "Schlagwörter"
-          header_action_title: "Bearbeite deine Seitenleisten-Schlagwörter"
+          header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
         categories:
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu starten."
           header_link_title: "alle Kategorien"
           header_link_text: "Kategorien"
-          header_action_title: "Bearbeite deine Seitenleisten-Kategorien"
+          header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
         topics:
-          header_link_title: "startseite"
+          header_link_title: "Startseite"
           header_link_text: "Themen"
           header_action_title: "ein neues Thema erstellen"
           links:
@@ -3763,7 +3767,7 @@ de:
               content: "Verfolgt"
               title: "Alle verfolgten Themen"
             bookmarked:
-              content: "Mit einem Lesezeichen versehen"
+              content: "Lesezeichen"
               title: "Alle mit Lesezeichen versehenen Themen"
             my_posts:
               content: "Meine Beiträge"
@@ -4918,7 +4922,7 @@ de:
           confirmation:
             title: "Lösche alle Beiträge von @%{username}"
             description: |
-              <p>Bist Du sicher, dass Du <b>%{post_count}</b> Beiträge von @%{username}löschen möchtest?
+              <p>Bist Du sicher, dass Du <b>%{post_count}</b> Beiträge von @%{username} löschen möchtest?
 
               <p><b>Dies kann nicht rückgängig gemacht werden!</b></p>
 

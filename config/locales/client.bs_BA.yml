@@ -548,6 +548,7 @@ bs_BA:
       next_week: "Sljedeće sedmice"
       next_month: "Sljedeći mjesec"
       forever: "Zauvijek"
+      never: "Nikad"
       custom: "Precizirano vrijeme i datum"
       select_timeframe: "Označi vremenski period"
     user_action:

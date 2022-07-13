@@ -47,6 +47,7 @@ import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
+import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
@@ -138,7 +139,7 @@ export function applyPretender(name, server, helper) {
 }
 
 // Add clean up code here to run after every test
-function testCleanup(container, app) {
+export function testCleanup(container, app) {
   if (_initialized.has(QUnit.config.current.testId)) {
     if (!app) {
       app = getApplication();
@@ -192,6 +193,8 @@ function testCleanup(container, app) {
   clearTagDecorateCallbacks();
   clearBlockDecorateCallbacks();
   clearTextDecorateCallbacks();
+  clearResolverOptions();
+  clearLegacyResolverOptions();
 }
 
 export function discourseModule(name, options) {
@@ -207,8 +210,8 @@ export function discourseModule(name, options) {
         this.registry = this.container.registry;
         this.owner = this.container;
         this.siteSettings = currentSettings();
-        clearResolverOptions();
       });
+
       hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
@@ -223,6 +226,7 @@ export function discourseModule(name, options) {
 
       this.moduleName = name;
 
+      hooks.usingDiscourseModule = true;
       options.call(this, hooks);
     });
 

@@ -686,6 +686,8 @@ he:
       relative: "יחסי"
     time_shortcut:
       now: "כעת"
+      in_one_hour: "תוך שעה"
+      in_two_hours: "תוך שעתיים"
       later_today: "בהמשך היום"
       two_days: "יומיים"
       next_business_day: "יום העסקים הבא"
@@ -706,6 +708,7 @@ he:
       forever: "לנצח"
       relative: "זמן יחסי"
       none: "אין צורך"
+      never: "לעולם לא"
       last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
       custom: "תאריך ושעה מותאמים אישית"
       select_timeframe: "נא לבחור טווח זמן"
@@ -1787,6 +1790,7 @@ he:
       save: "שמירה"
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
+      remove_status: "הסרת מצב"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"

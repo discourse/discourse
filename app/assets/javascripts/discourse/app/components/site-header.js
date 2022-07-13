@@ -448,6 +448,39 @@ const SiteHeaderComponent = MountWidget.extend(
 
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
+
+  init() {
+    this._super(...arguments);
+
+    this._resizeObserver = null;
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    if ("ResizeObserver" in window) {
+      const header = document.querySelector(".d-header-wrap");
+
+      this._resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          if (entry.contentRect) {
+            document.documentElement.style.setProperty(
+              "--header-offset",
+              entry.contentRect.height + "px"
+            );
+          }
+        }
+      });
+
+      this._resizeObserver.observe(header);
+    }
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this._resizeObserver?.disconnect();
+  },
 });
 
 export function headerTop() {

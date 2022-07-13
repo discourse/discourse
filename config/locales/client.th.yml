@@ -438,6 +438,7 @@ th:
       next_week: "สัปดาห์หน้า"
       next_month: "เดือนหน้า"
       forever: "ตลอดไป"
+      never: "ไม่เคย"
       custom: "วันและเวลาที่กำหนดเอง"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> โพสต์ <a href='%{topicUrl}'>กระทู้</a>"
