@@ -58,7 +58,7 @@ export default class BaseCustomSidebarSectionLink {
   /**
    * @returns {string} CSS class for suffix icon
    */
-  get SuffixCssClass() {}
+  get SuffixCSSClass() {}
 
   _notImplemented() {
     throw "not implemented";
