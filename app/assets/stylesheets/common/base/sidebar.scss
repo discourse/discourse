@@ -142,7 +142,7 @@
       }
     }
     .d-icon {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       color: var(--primary-medium);
       margin-right: 0;
     }
