@@ -132,7 +132,7 @@ acceptance("Sidebar - section API", function (needs) {
       2,
       "displays two actions"
     );
-    const $actions = queryAll(
+    const actions = queryAll(
       ".edit-channels-dropdown .select-kit-collection li"
     );
     assert.strictEqual(
