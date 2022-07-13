@@ -23,9 +23,8 @@ acceptance("Forgot password", function (needs) {
     await click("header .login-button");
     await click("#forgot-password-link");
 
-    assert.strictEqual(
-      query(".forgot-password-reset").getAttribute("disabled"),
-      "disabled",
+    assert.ok(
+      query(".forgot-password-reset").disabled,
       "it should disable the button until the field is filled"
     );
 
@@ -100,9 +99,8 @@ acceptance(
       await click("header .login-button");
       await click("#forgot-password-link");
 
-      assert.strictEqual(
-        query(".forgot-password-reset").getAttribute("disabled"),
-        "disabled",
+      assert.ok(
+        query(".forgot-password-reset").disabled,
         "it should disable the button until the field is filled"
       );
 

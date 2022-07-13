@@ -33,7 +33,7 @@ module("Unit | Utility | search", function () {
 
     assert.ok(blurb.includes("thinking.png"));
     assert.ok(blurb.startsWith('<img width="20" height="20" src'));
-    assert.ok(!blurb.includes(":thinking:") === -1);
+    assert.ok(!blurb.includes(":thinking:"));
   });
 
   test("searchContextDescription", function (assert) {

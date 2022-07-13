@@ -188,7 +188,7 @@ acceptance(
       assert.ok(exists(".light-color-scheme"), "has light scheme dropdown");
       assert.strictEqual(
         query(".light-color-scheme .selected-name").dataset.value,
-        session.userColorSchemeId,
+        session.userColorSchemeId.toString(),
         "user's selected color scheme is selected value in light scheme dropdown"
       );
     });
@@ -245,7 +245,7 @@ acceptance(
       assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
       assert.strictEqual(
         query(".dark-color-scheme .selected-name").dataset.value,
-        session.userDarkSchemeId,
+        session.userDarkSchemeId.toString(),
         "sets site default as selected dark scheme"
       );
       assert.ok(
