@@ -1,5 +1,5 @@
 {{#if this.field.label}}
-  <label for={{field.id}}>
+  <label for={{this.field.id}}>
     <span class="wizard-container__label">
       {{this.field.label}}
     </span>
@@ -25,9 +25,9 @@
 </div>
 
 {{#if this.field.errorDescription}}
-  <div class="wizard-container__description error">{{html-safe field.errorDescription}}</div>
+  <div class="wizard-container__description error">{{html-safe this.field.errorDescription}}</div>
 {{/if}}
 
 {{#if this.field.extra_description}}
-  <div class="wizard-container__description extra">{{html-safe field.extra_description}}</div>
+  <div class="wizard-container__description extra">{{html-safe this.field.extra_description}}</div>
 {{/if}}

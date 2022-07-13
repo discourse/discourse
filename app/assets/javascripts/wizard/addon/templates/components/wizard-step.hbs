@@ -46,7 +46,7 @@
 
   <div class="wizard-container__buttons">
     {{#if this.showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{saving}} tabindex="10" type="button" class="wizard-container__button finish">
+      <button {{action "exitEarly"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-container__button finish">
         {{i18n "wizard.finish"}}
       </button>
     {{/if}}
