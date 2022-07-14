@@ -118,13 +118,16 @@
     align-items: stretch;
   }
 
-  .sidebar-section-header-link {
+  .sidebar-section-header-link,
+  .sidebar-section-header-text {
     @include ellipsis;
     flex: 1 1 auto;
     color: var(--primary);
     font-size: var(--font-down-1);
     padding: 0.25em 0.5em;
+  }
 
+  .sidebar-section-header-link {
     &:visited {
       color: var(--primary);
     }
@@ -322,7 +325,7 @@
       }
     }
   }
-  .sidebar-section-link-suffix-icon {
+  .sidebar-section-link-suffix.icon {
     align-items: center;
     display: flex;
     margin-left: 0.5em;
