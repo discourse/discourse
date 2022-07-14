@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 import { test } from "qunit";
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import {
@@ -62,6 +64,12 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.ok(
       exists(".sidebar-section-topics .sidebar-section-content"),
       "shows content section"
+    );
+
+    assert.strictEqual(
+      query(".sidebar-section-topics .sidebar-section-header-caret").title,
+      I18n.t("sidebar.toggle_section"),
+      "caret has the right title"
     );
 
     await click(".sidebar-section-topics .sidebar-section-header-caret");
@@ -287,7 +295,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 1,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -298,7 +305,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 2,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -309,7 +315,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 3,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -320,7 +325,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 4,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
     ]);
@@ -484,7 +488,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: category.id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -495,7 +498,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: category.subcategories[0].id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -506,7 +508,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: category.subcategories[0].subcategories[0].id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -517,7 +518,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 3,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -528,7 +528,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 3,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -539,7 +538,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         category_id: 1234,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag3"],
       },

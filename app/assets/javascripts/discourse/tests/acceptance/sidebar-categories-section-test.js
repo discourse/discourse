@@ -277,7 +277,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
         category_id: category1.id,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -288,7 +287,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
         category_id: category1.id,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -299,7 +297,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
         category_id: category2.id,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -310,7 +307,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
         category_id: category2.id,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
     ]);
