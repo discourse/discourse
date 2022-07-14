@@ -243,7 +243,7 @@ export default RestModel.extend({
     });
   },
 
-  refreshAndJumptoSecondVisible() {
+  refreshAndJumpToSecondVisible() {
     return this.refresh({}).then(() => {
       if (this.posts && this.posts.length > 1) {
         DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
@@ -254,14 +254,14 @@ export default RestModel.extend({
   showSummary() {
     this.cancelFilter();
     this.set("filter", "summary");
-    return this.refreshAndJumptoSecondVisible();
+    return this.refreshAndJumpToSecondVisible();
   },
 
   // Filter the stream to a particular user.
   filterParticipant(username) {
     this.cancelFilter();
     this.userFilters.addObject(username);
-    return this.refreshAndJumptoSecondVisible();
+    return this.refreshAndJumpToSecondVisible();
   },
 
   filterReplies(postNumber, postId) {

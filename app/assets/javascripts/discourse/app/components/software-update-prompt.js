@@ -18,7 +18,7 @@ export default Component.extend({
   },
 
   @on("init")
-  initSubscribtions() {
+  initSubscriptions() {
     this.messageBus.subscribe("/refresh_client", () => {
       this.session.requiresRefresh = true;
     });

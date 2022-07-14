@@ -515,7 +515,7 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrollin on menu panels, except on overflow
+    // prevent all scrolling on menu panels, except on overflow
     const height = window.innerHeight ? window.innerHeight : $(window).height();
     if (
       !$(e.target).parents(".menu-panel").length ||

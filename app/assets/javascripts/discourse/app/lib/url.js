@@ -71,7 +71,7 @@ export function groupPath(subPath) {
 
 let _jumpScheduled = false;
 let _transitioning = false;
-let lockon = null;
+let lockOn = null;
 
 export function jumpToElement(elementId) {
   if (_jumpScheduled || isEmpty(elementId)) {
@@ -82,17 +82,17 @@ export function jumpToElement(elementId) {
   _jumpScheduled = true;
 
   schedule("afterRender", function () {
-    if (lockon) {
-      lockon.clearLock();
+    if (lockOn) {
+      lockOn.clearLock();
     }
 
-    lockon = new LockOn(selector, {
+    lockOn = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
-        lockon = null;
+        lockOn = null;
       },
     });
-    lockon.lock();
+    lockOn.lock();
   });
 }
 
@@ -142,20 +142,20 @@ const DiscourseURL = EmberObject.extend({
         holder = document.querySelector(selector);
       }
 
-      if (lockon) {
-        lockon.clearLock();
+      if (lockOn) {
+        lockOn.clearLock();
       }
 
-      lockon = new LockOn(selector, {
+      lockOn = new LockOn(selector, {
         originalTopOffset: opts.originalTopOffset,
         finished() {
           _transitioning = false;
-          lockon = null;
+          lockOn = null;
         },
       });
 
       if (holder && opts.skipIfOnScreen) {
-        const elementTop = lockon.elementTop();
+        const elementTop = lockOn.elementTop();
         const scrollTop = $(window).scrollTop();
         const windowHeight = $(window).height() - offsetCalculator();
         const height = $(holder).height();
@@ -169,8 +169,8 @@ const DiscourseURL = EmberObject.extend({
         }
       }
 
-      lockon.lock();
-      if (lockon.elementTop() < 1) {
+      lockOn.lock();
+      if (lockOn.elementTop() < 1) {
         _transitioning = false;
         return;
       }

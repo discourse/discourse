@@ -72,7 +72,7 @@ export default Controller.extend({
       } else if (backupCodesAvailable) {
         return BACKUP_CODE;
       } else {
-        throw new Error("unpexected state of user 2fa settings!");
+        throw new Error("unexpected state of user 2fa settings!");
       }
     }
   },
