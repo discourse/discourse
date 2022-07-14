@@ -3,6 +3,7 @@
 
 div.profiler-results.profiler-top {
   top: var(--header-offset);
+  z-index: z("header") - 1;
 
   .profiler-button {
     background-color: var(--header_background);
