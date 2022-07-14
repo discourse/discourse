@@ -236,12 +236,34 @@ RSpec.describe User do
           end
         end
 
-        let(:value) { %w{ Axe Sword } }
         let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
-        it "validates properly" do
-          user.save!
-          expect(user_field_value).to eq %w{ Axe Sword }
+        context "with a non watched word" do
+          let(:value) { %w{ Axe Sword } }
+
+          it "validates properly" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe Sword }
+          end
+        end
+
+        context "with a blocked word" do
+          let(:value) { %w{ Axe bad Sword } }
+
+          it "does not block the word since it is not UGC" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
+        context "with a censored word" do
+          let(:value) { %w{ Axe bad Sword } }
+          before { watched_word.action = WatchedWord.actions[:censor] }
+
+          it "does not censor the word since it is not UGC" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
         end
 
       end
