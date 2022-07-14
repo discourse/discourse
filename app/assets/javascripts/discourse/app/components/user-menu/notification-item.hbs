@@ -1,0 +1,32 @@
+<li class={{this.className}}>
+  <a
+    href={{this.url}}
+    title={{if this.linkTitle this.linkTitle}}
+    {{on "click" this.onClick}}
+  >
+    {{d-icon this.icon}}
+    <div>
+      {{#if this.label}}
+        {{#if this.wrapLabel}}
+          <span class={{if this.labelWrapperClasses this.labelWrapperClasses}}>
+            {{this.label}}
+          </span>
+        {{else}}
+          {{this.label}}
+        {{/if}}
+      {{/if}}
+      {{#if this.description}}
+        <span
+          class={{if this.descriptionElementClasses this.descriptionElementClasses}}
+          data-topic-id={{if this.topicId this.topicId}}
+        >
+          {{#if this.descriptionHtmlSafe}}
+            {{html-safe this.description}}
+          {{else}}
+            {{this.description}}
+          {{/if}}
+        </span>
+      {{/if}}
+    </div>
+  </a>
+</li>
