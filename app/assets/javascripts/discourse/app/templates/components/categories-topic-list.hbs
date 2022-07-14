@@ -8,7 +8,11 @@
     <LatestTopicListItem @topic={{t}} />
   {{/each}}
   <div class="more-topics">
-    <a href={{get-url (concat "/" this.filter)}} class="btn btn-default pull-right">{{i18n "more"}}</a>
+    {{#if this.orderTopicsBy}}
+      <a href={{get-url (concat "/" this.filter "?order=" this.orderTopicsBy)}} class="btn btn-default pull-right">{{i18n "more"}}</a>
+    {{else}}
+      <a href={{get-url (concat "/" this.filter)}} class="btn btn-default pull-right">{{i18n "more"}}</a>
+    {{/if}}
   </div>
 {{else}}
   <div class="no-topics">

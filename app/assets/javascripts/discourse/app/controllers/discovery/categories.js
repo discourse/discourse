@@ -23,8 +23,14 @@ export default DiscoveryController.extend({
   category: null,
 
   canEdit: reads("currentUser.staff"),
-
   @discourseComputed("model.parentCategory")
+  orderTopicsBy() {
+    if (this.siteSettings.desktop_category_page_sort_order === "default") {
+      return null;
+    }
+    return this.siteSettings.desktop_category_page_sort_order;
+  },
+  @discourseComputed
   categoryPageStyle(parentCategory) {
     let style = this.siteSettings.desktop_category_page_style;
 

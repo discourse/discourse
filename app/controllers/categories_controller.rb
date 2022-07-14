@@ -48,7 +48,8 @@ class CategoriesController < ApplicationController
         style = SiteSetting.desktop_category_page_style
         topic_options = {
           per_page: CategoriesController.topics_per_page,
-          no_definitions: true
+          no_definitions: true,
+          order: SiteSetting.desktop_category_page_sort_order
         }
 
         if style == "categories_and_latest_topics"
@@ -284,7 +285,8 @@ class CategoriesController < ApplicationController
 
     topic_options = {
       per_page: CategoriesController.topics_per_page,
-      no_definitions: true
+      no_definitions: true,
+      order: SiteSetting.desktop_category_page_sort_order
     }
 
     result = CategoryAndTopicLists.new
