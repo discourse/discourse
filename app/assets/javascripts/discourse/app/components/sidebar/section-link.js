@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 export default class SectionLink extends GlimmerComponent {
   @cached
   get prefixCSS() {
-    const color = this.args.prefixIconColor;
+    const color = this.args.prefixColor;
     if (!color || !color.match(/^\w{6}$/)) {
       return htmlSafe("");
     }

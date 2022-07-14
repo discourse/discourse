@@ -36,27 +36,42 @@ export default class BaseCustomSidebarSectionLink {
   }
 
   /**
-   * @returns {string} Prefix icon for the link
+   * @returns {string} Prefix type for the link. Accepted value: icon, image, text
    */
-  get prefixIcon() {}
+  get prefixType() {}
 
   /**
-   * @returns {string} Prefix icon hex color
+   * @returns {string} Prefix value for the link. Accepted value: icon name, image url, text
    */
-  get prefixIconColor() {}
+  get prefixValue() {}
 
   /**
-   * @returns {string} Badge icon for prefix icon
+   * @returns {string} Prefix hex color
    */
-  get prefixIconBadge() {}
+  get prefixColor() {}
 
   /**
-   * @returns {string} Suffix icon for the link
+   * @returns {string} Prefix badge icon
    */
-  get SuffixIcon() {}
+  get prefixBadge() {}
 
   /**
-   * @returns {string} CSS class for suffix icon
+   * @returns {string} CSS class for prefix
+   */
+  get PrefixCSSClass() {}
+
+  /**
+   * @returns {string} Suffix type for the link. Accepted value: icon
+   */
+  get SuffixType() {}
+
+  /**
+   * @returns {string} Suffix value for the link. Accepted value: icon name
+   */
+  get SuffixValue() {}
+
+  /**
+   * @returns {string} CSS class for suffix
    */
   get SuffixCSSClass() {}
 

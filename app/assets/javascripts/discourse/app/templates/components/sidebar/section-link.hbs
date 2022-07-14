@@ -7,11 +7,19 @@
     @current-when={{@currentWhen}}
     @title={{@title}}
   >
-    {{#if @prefixIcon}}
-      <span class="sidebar-section-link-prefix-icon" style={{this.prefixCSS}}>
-        {{d-icon @prefixIcon class="prefix-icon"}}
-        {{#if @prefixIconBadge}}
-          {{d-icon @prefixIconBadge class="prefix-icon-badge"}}
+    {{#if @prefixValue }}
+      <span class="sidebar-section-link-prefix {{@prefixType}} {{@prefixCSSClass}}" style={{this.prefixCSS}}>
+        {{#if (eq @prefixType "image")}}
+          <img src={{@prefixValue}}>
+        {{/if}}
+        {{#if (eq @prefixType "text")}}
+          {{@prefixValue}}
+        {{/if}}
+        {{#if (eq @prefixType "icon")}}
+          {{d-icon @prefixValue }}
+        {{/if}}
+        {{#if @prefixBadge}}
+          {{d-icon @prefixBadge class="prefix-badge"}}
         {{/if}}
       </span>
     {{/if}}
@@ -19,15 +27,18 @@
       {{@content}}
     </span>
 
+    {{! TODO move badge count to suffixType="text", suffixValue="3" like prefix}}
     {{#if @badgeCount}}
       <span class="sidebar-section-link-content-badge">
         {{@badgeCount}}
       </span>
     {{/if}}
 
-    {{#if @suffixIcon}}
-      <span class="sidebar-section-link-suffix-icon {{@suffixCSSClass}}">
-        {{d-icon @suffixIcon}}
+    {{#if @suffixValue }}
+      <span class="sidebar-section-link-suffix {{@suffixType}} {{@suffixCSSClass}}">
+        {{#if (eq @suffixType "icon")}}
+          {{d-icon @suffixValue}}
+        {{/if}}
       </span>
     {{/if}}
   </Sidebar::SectionLinkTo>

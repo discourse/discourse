@@ -1739,16 +1739,22 @@ class PluginApi {
    *           get text() {
    *             return "dev channel";
    *           }
-   *           get prefixIcon() {
+   *           get prefixValue() {
+   *             return "icon";
+   *           }
+   *           get prefixValue() {
    *             return "hashtag";
    *           }
-   *           get prefixIconColor() {
+   *           get prefixColor() {
    *             return "000000";
    *           }
-   *           get prefixIconBadge() {
+   *           get prefixBadge() {
    *             return "lock";
    *           }
-   *           get suffixIcon() {
+   *           get suffixType() {
+   *             return "icon";
+   *           }
+   *           get suffixValue() {
    *             return "circle";
    *           }
    *           get suffixCSSClass() {
