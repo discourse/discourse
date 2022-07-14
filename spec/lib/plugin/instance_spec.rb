@@ -755,9 +755,7 @@ describe Plugin::Instance do
       plugin.register_about_stat_group("some_group", show_in_ui: true) do
         stats
       end
-      expect(About.new.plugin_stats).to eq({
-        plugin_stats: { "some_group" => stats }
-      })
+      expect(About.new.plugin_stats).to eq({ "some_group" => stats })
     end
 
     it "hides the stat group from the UI by default" do
