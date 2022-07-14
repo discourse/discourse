@@ -470,7 +470,7 @@
     "markdown_additional_options" : {
       "type": "object"
     },
-    "hidden_about_plugn_stat_groups" : {
+    "displayed_about_plugin_stat_groups" : {
       "type": "array"
     },
     "categories": {

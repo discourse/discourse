@@ -755,7 +755,14 @@ describe Plugin::Instance do
       plugin.register_about_stat_group("some_group", show_in_ui: true) do
         stats
       end
-      expect(About.new.plugin_stats).to eq({ "some_group" => stats })
+      expect(About.new.plugin_stats.with_indifferent_access).to match(
+        hash_including(
+          some_group_last_day: 1,
+          some_group_7_days: 10,
+          some_group_30_days: 100,
+          some_group_count: 1000,
+        )
+      )
     end
 
     it "hides the stat group from the UI by default" do
@@ -763,7 +770,7 @@ describe Plugin::Instance do
       plugin.register_about_stat_group("some_group") do
         stats
       end
-      expect(About.hidden_plugin_stat_groups).to eq(["some_group"])
+      expect(About.displayed_plugin_stat_groups).to eq([])
     end
   end
 end

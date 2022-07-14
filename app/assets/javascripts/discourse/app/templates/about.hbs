@@ -104,15 +104,15 @@
                 <td>{{number this.model.stats.likes_30_days}}</td>
                 <td>{{number this.model.stats.like_count}}</td>
               </tr>
-              {{#each-in this.model.stats.plugin_stats as |statGroupName stat|}}
+              {{#each this.site.displayed_about_plugin_stat_groups as |statGroupName|}}
                 <tr class={{concat "about-" statGroupName "-count"}}>
                   <td>{{i18n (concat "about." statGroupName "_count")}}</td>
-                  <td>{{number stat.last_day}}</td>
-                  <td>{{number stat.7_days}}</td>
-                  <td>{{number stat.30_days}}</td>
-                  <td>{{number stat.count}}</td>
+                  <td>{{number (get this.model.stats (concat statGroupName "_last_day"))}}</td>
+                  <td>{{number (get this.model.stats (concat statGroupName "_7_days"))}}</td>
+                  <td>{{number (get this.model.stats (concat statGroupName "_30_days"))}}</td>
+                  <td>{{number (get this.model.stats (concat statGroupName "_count"))}}</td>
                 </tr>
-              {{/each-in}}
+              {{/each}}
             </tbody>
           </table>
         </section>
