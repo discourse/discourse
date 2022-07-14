@@ -1,7 +1,9 @@
 // Some basic overrides to https://github.com/MiniProfiler/rack-mini-profiler/blob/master/lib/html/includes.scss
 // which make the badge conform to the current site theme.
 
-div.profiler-results {
+div.profiler-results.profiler-top {
+  top: var(--header-offset);
+
   .profiler-button {
     background-color: var(--header_background);
     color: var(--header_primary);
@@ -16,7 +18,11 @@ div.profiler-results {
     }
   }
 
-  &.profiler-left.profiler-top .profiler-button {
+  &.profiler-left .profiler-button {
     border-right: 1px solid var(--header_primary-low);
+  }
+
+  &.profiler-right .profiler-button {
+    border-left: 1px solid var(--header_primary-low);
   }
 }
