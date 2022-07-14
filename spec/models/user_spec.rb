@@ -223,6 +223,41 @@ RSpec.describe User do
 
         it { is_expected.to be_valid }
       end
+
+      context "with a multiselect user field" do
+        fab!(:user_field) do
+          Fabricate(:user_field, field_type: 'multiselect', show_on_profile: true) do
+            user_field_options do
+              [
+                Fabricate(:user_field_option, value: 'Axe'),
+                Fabricate(:user_field_option, value: 'Sword')
+              ]
+            end
+          end
+        end
+
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        context "with a blocked word" do
+          let(:value) { %w{ Axe bad Sword } }
+
+          it "does not block the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
+        context "with a censored word" do
+          let(:value) { %w{ Axe bad Sword } }
+          before { watched_word.action = WatchedWord.actions[:censor] }
+
+          it "does not censor the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
+      end
     end
   end
 
