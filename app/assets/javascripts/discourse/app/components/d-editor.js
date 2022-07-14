@@ -18,7 +18,6 @@ import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
-import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
@@ -207,11 +206,6 @@ export function addToolbarCallback(func) {
 }
 export function clearToolbarCallbacks() {
   _createCallbacks = [];
-}
-
-export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.");
-  addToolbarCallback(func);
 }
 
 export default Component.extend(TextareaTextManipulation, {

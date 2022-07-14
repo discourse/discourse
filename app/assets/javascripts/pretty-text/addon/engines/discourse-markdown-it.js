@@ -6,19 +6,6 @@ import { sanitize } from "pretty-text/sanitizer";
 
 export const ATTACHMENT_CSS_CLASS = "attachment";
 
-function deprecate(feature, name) {
-  return function () {
-    if (window.console && window.console.log) {
-      window.console.log(
-        feature +
-          ": " +
-          name +
-          " is deprecated, please use the new markdown it APIs"
-      );
-    }
-  };
-}
-
 // We have some custom extensions and extension points for markdown-it, including
 // the helper (passed in via setup) that has registerOptions, registerPlugin etc.
 // as well as our postProcessText rule to replace text with a regex.
@@ -45,16 +32,6 @@ function createHelper(
     helper.allowList(info);
   };
 
-  helper.registerInline = deprecate(featureName, "registerInline");
-  helper.replaceBlock = deprecate(featureName, "replaceBlock");
-  helper.addPreProcessor = deprecate(featureName, "addPreProcessor");
-  helper.inlineReplace = deprecate(featureName, "inlineReplace");
-  helper.postProcessTag = deprecate(featureName, "postProcessTag");
-  helper.inlineRegexp = deprecate(featureName, "inlineRegexp");
-  helper.inlineBetween = deprecate(featureName, "inlineBetween");
-  helper.postProcessText = deprecate(featureName, "postProcessText");
-  helper.onParseNode = deprecate(featureName, "onParseNode");
-  helper.registerBlock = deprecate(featureName, "registerBlock");
   // hack to allow moving of getOptions
   helper.getOptions = () => getOptions.f();
 
