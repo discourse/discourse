@@ -33,7 +33,7 @@ export default class BaseCustomSidebarSection {
   }
 
   /**
-   * @returns {array} Actions for header options button
+   * @returns {Array} Actions for header options button
    */
   get actions() {}
 
