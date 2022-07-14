@@ -74,7 +74,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :experimental_sidebar_enabled,
              :status,
              :sidebar_category_ids,
-             :sidebar_tag_names
+             :sidebar_tag_names,
+             :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -337,5 +338,12 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def status
     UserStatusSerializer.new(object.user_status, root: false)
+  end
+
+  def redesigned_user_menu_enabled
+    if defined?(@redesigned_user_menu_enabled)
+      return @redesigned_user_menu_enabled
+    end
+    @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
   end
 end
