@@ -4054,6 +4054,7 @@ en:
     sidebar:
       unread_count: "%{count} unread"
       new_count: "%{count} new"
+      toggle_section: "toggle section"
       sections:
         messages:
           header_link_title: "personal messages"
