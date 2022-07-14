@@ -43,7 +43,7 @@ export default class BaseCustomSidebarSection {
   get actionsIcon() {}
 
   /**
-   * @returns {array} Links for section, instances of BaseCustomSidebarSectionLink
+   * @returns {BaseCustomSidebarSectionLink[]} Links for section
    */
   get links() {}
 
