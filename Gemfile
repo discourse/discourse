@@ -105,7 +105,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# pending: https://github.com/ohler55/oj/issues/789
+gem 'oj', '3.13.14'
 
 gem 'pg'
 gem 'mini_sql'
