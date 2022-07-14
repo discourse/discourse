@@ -6,9 +6,11 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
+  BASE_COMPILER_VERSION = 56
+
   attr_accessor :child_components
 
-  @cache = DistributedCache.new('theme')
+  @cache = DistributedCache.new("theme:compiler#{BASE_COMPILER_VERSION}")
 
   belongs_to :user
   belongs_to :color_scheme
@@ -154,7 +156,6 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 56
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
