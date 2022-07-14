@@ -178,7 +178,7 @@ GEM
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
-    i18n (1.10.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     image_optim (0.31.1)
       exifr (~> 1.2, >= 1.2.2)
