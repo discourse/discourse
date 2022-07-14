@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 import { test } from "qunit";
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import {
@@ -62,6 +64,12 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.ok(
       exists(".sidebar-section-topics .sidebar-section-content"),
       "shows content section"
+    );
+
+    assert.strictEqual(
+      query(".sidebar-section-topics .sidebar-section-header-caret").title,
+      I18n.t("sidebar.toggle_section"),
+      "caret has the right title"
     );
 
     await click(".sidebar-section-topics .sidebar-section-header-caret");
