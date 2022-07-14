@@ -394,8 +394,8 @@ class PostAlerter
 
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
     return if notifier_id && UserCommScreener.new(
-      acting_user_id: notifier_id, target_usernames: user.username
-    ).ignoring_or_muting_actor?(user.username)
+      acting_user_id: notifier_id, target_user_ids: user.id
+    ).ignoring_or_muting_actor?(user.id)
 
     # skip if muted on the topic
     return if TopicUser.where(
