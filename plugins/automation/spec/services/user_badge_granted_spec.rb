@@ -39,7 +39,11 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
       end
 
       context 'badge has been granted already' do
-        fab!(:tracked_badge) { Fabricate(:badge, grant_count: 2) }
+        fab!(:tracked_badge) { Fabricate(:badge) }
+
+        before do
+          BadgeGranter.grant(tracked_badge, user)
+        end
 
         it 'doesn’t trigger the automation' do
           output = capture_stdout do

@@ -11,7 +11,7 @@ module DiscourseAutomation
       badge = Badge.find(badge_id)
 
       only_first_grant = automation.trigger_field('only_first_grant')['value']
-      if only_first_grant && badge.grant_count > 1
+      if only_first_grant && UserBadge.where(user_id: user_id, badge_id: badge_id).count >= 1
         return
       end
 
