@@ -1,6 +1,6 @@
 <PluginOutlet @name="above-user-profile" @connectorTagName="div" @args={{hash model=this.model}} />
 <div class="container {{if this.viewingSelf "viewing-self"}} {{if this.model.profile_hidden "profile-hidden"}} {{this.primaryGroup}}">
-  <DSection @class='user-main {{if showMobileUserMenu "show-mobile-profile-menu"}}'>
+  <DSection @class="user-main {{if this.showMobileUserMenu "show-mobile-profile-menu"}}">
     <section class="{{if this.collapsedInfo "collapsed-info"}} about {{if this.hasProfileBackgroundUrl "has-background" "no-background"}}" >
       {{#unless this.collapsedInfo}}
         {{#if this.showStaffCounters}}
