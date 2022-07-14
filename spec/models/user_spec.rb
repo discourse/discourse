@@ -223,6 +223,28 @@ RSpec.describe User do
 
         it { is_expected.to be_valid }
       end
+
+      context "with a multiselect user field" do
+        fab!(:user_field) do
+          Fabricate(:user_field, field_type: 'multiselect', show_on_profile: true) do
+            user_field_options do
+              [
+                Fabricate(:user_field_option, value: 'Axe'),
+                Fabricate(:user_field_option, value: 'Sword')
+              ]
+            end
+          end
+        end
+
+        let(:value) { %w{ Axe Sword } }
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        it "validates properly" do
+          user.save!
+          expect(user_field_value).to eq %w{ Axe Sword }
+        end
+
+      end
     end
   end
 
