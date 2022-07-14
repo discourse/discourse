@@ -23,8 +23,7 @@ function isUnread(topic) {
   return (
     topic.last_read_post_number !== null &&
     topic.last_read_post_number < topic.highest_post_number &&
-    topic.notification_level >= NotificationLevels.TRACKING &&
-    topic.unread_not_too_old
+    topic.notification_level >= NotificationLevels.TRACKING
   );
 }
 
