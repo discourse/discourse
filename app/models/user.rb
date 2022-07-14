@@ -1281,20 +1281,9 @@ class User < ActiveRecord::Base
     custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
   end
 
-  def clean_user_value(value)
-    PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1")
-  end
-
   def apply_watched_words
     validatable_user_fields.each do |id, value|
-      cooked_value =
-        if value.class == Array
-          value.map { |v| clean_user_value v }
-        else
-          clean_user_value value
-        end
-
-      set_user_field(id, cooked_value)
+      set_user_field(id, PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1"))
     end
   end
 
