@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
@@ -58,7 +58,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     assert.strictEqual(
-      queryAll(".row.setting .setting-label h3 a").attr("href"),
+      query(".row.setting .setting-label h3 a").getAttribute("href"),
       "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D&force_refresh=true",
       "it links to the staff action log"
     );

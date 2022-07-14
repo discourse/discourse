@@ -558,6 +558,8 @@ fa_IR:
       relative: "مرتبط"
     time_shortcut:
       now: "اکنون"
+      in_one_hour: "در عرض یک ساعت"
+      in_two_hours: "در عرض دو ساعت"
       later_today: "بعد از امروز"
       two_days: "دو روز"
       next_business_day: "روز کاری بعدی"
@@ -578,6 +580,7 @@ fa_IR:
       forever: "همیشه"
       relative: "زمان نسبی"
       none: "هیچکدام نیازی نیست"
+      never: "هرگز"
       last_custom: "آخرین تاریخ سفارشی"
       custom: "تاریخ و زمان سفارشی"
       select_timeframe: "انتخاب یک دوره‌زمانی"
@@ -1521,6 +1524,7 @@ fa_IR:
       save: "ذخیره"
       set_custom_status: "تنظیم وضعیت سفارشی"
       what_are_you_doing: "داری چیکار می‌کنی؟"
+      remove_status: "حذف وضعیت"
     loading: "بارگذاری..."
     errors:
       prev_page: "هنگام تلاش برای بارگذاری"

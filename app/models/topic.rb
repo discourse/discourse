@@ -1040,7 +1040,10 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      ensure_can_invite!(target_user, invited_by)
+      comm_screener = UserCommScreener.new(acting_user: invited_by, target_usernames: target_user.username)
+      if comm_screener.ignoring_or_muting_actor?(target_user.username)
+        raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+      end
 
       if TopicUser
           .where(topic: self,
@@ -1050,15 +1053,11 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.muted_topic"))
       end
 
-      if !target_user.staff? &&
-         target_user&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: target_user, allowed_pm_user: invited_by).exists?
+      if comm_screener.disallowing_pms_from_actor?(target_user.username)
         raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_pm"))
       end
 
-      if !target_user.staff? &&
-         invited_by&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: invited_by, allowed_pm_user: target_user).exists?
+      if UserCommScreener.new(acting_user: target_user, target_usernames: invited_by.username).disallowing_pms_from_actor?(invited_by.username)
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
@@ -1075,22 +1074,6 @@ class Topic < ActiveRecord::Base
         custom_message: custom_message,
         invite_to_topic: true
       )
-    end
-  end
-
-  def ensure_can_invite!(target_user, invited_by)
-    if MutedUser
-        .where(user: target_user, muted_user: invited_by)
-        .joins(:muted_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
-      raise NotAllowed
-    elsif IgnoredUser
-        .where(user: target_user, ignored_user: invited_by)
-        .joins(:ignored_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
-      raise NotAllowed
     end
   end
 
@@ -1775,9 +1758,10 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
-  def create_invite_notification!(target_user, notification_type, username, post_number: 1)
-    invited_by = User.find_by_username(username)
-    ensure_can_invite!(target_user, invited_by)
+  def create_invite_notification!(target_user, notification_type, invited_by, post_number: 1)
+    if UserCommScreener.new(acting_user: invited_by, target_usernames: target_user.username).ignoring_or_muting_actor?(target_user.username)
+      raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+    end
 
     target_user.notifications.create!(
       notification_type: notification_type,
@@ -1785,7 +1769,7 @@ class Topic < ActiveRecord::Base
       post_number: post_number,
       data: {
         topic_title: self.title,
-        display_username: username,
+        display_username: invited_by.username,
         original_user_id: user.id,
         original_username: user.username
       }.to_json
@@ -1876,7 +1860,7 @@ class Topic < ActiveRecord::Base
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_private_message],
-        invited_by.username
+        invited_by
       )
     end
   end
@@ -1904,7 +1888,7 @@ class Topic < ActiveRecord::Base
         create_invite_notification!(
           target_user,
           Notification.types[:invited_to_topic],
-          invited_by.username
+          invited_by
         )
       end
     end

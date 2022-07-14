@@ -147,7 +147,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       },
     });
 
-    // droptarget is a UI plugin, only preprocessors must call _useUploadPlugin
+    // DropTarget is a UI plugin, only preprocessors must call _useUploadPlugin
     this._uppyInstance.use(DropTarget, this._uploadDropTargetOptions());
 
     this._uppyInstance.on("progress", (progress) => {

@@ -1,14 +1,12 @@
 import { test } from "qunit";
 import I18n from "I18n";
-
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
-
 import {
   acceptance,
+  count,
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -71,7 +69,6 @@ acceptance(
 
     test("clicking on section header button", async function (assert) {
       await visit("/");
-
       await click(".sidebar-section-messages .sidebar-section-header-button");
 
       assert.ok(
@@ -87,7 +84,7 @@ acceptance(
       assert.strictEqual(
         currentURL(),
         `/u/eviltrout/messages`,
-        "it should transistion to the user's messages"
+        "it should transition to the user's messages"
       );
     });
 
@@ -102,7 +99,7 @@ acceptance(
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        count(".sidebar-section-messages .sidebar-section-link"),
         1,
         "only displays the personal message inbox link"
       );
@@ -119,7 +116,7 @@ acceptance(
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        count(".sidebar-section-messages .sidebar-section-link"),
         5,
         "expands and displays the links for personal messages"
       );
@@ -144,8 +141,7 @@ acceptance(
         );
 
         assert.strictEqual(
-          queryAll(".sidebar-section-messages .sidebar-section-link.active")
-            .length,
+          count(".sidebar-section-messages .sidebar-section-link.active"),
           2,
           "only two links are marked as active in the sidebar"
         );
@@ -203,14 +199,13 @@ acceptance(
       await visit("/u/eviltrout/messages/group/GrOuP1");
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        count(".sidebar-section-messages .sidebar-section-link"),
         6,
         "expands and displays the links for group1 group messages"
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link.group1")
-          .length,
+        count(".sidebar-section-messages .sidebar-section-link.group1"),
         4,
         "expands the links for group1 group messages"
       );
@@ -220,15 +215,13 @@ acceptance(
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link.group1")
-          .length,
+        count(".sidebar-section-messages .sidebar-section-link.group1"),
         1,
         "collapses the links for group1 group messages"
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link.group3")
-          .length,
+        count(".sidebar-section-messages .sidebar-section-link.group3"),
         4,
         "expands the links for group3 group messages"
       );
@@ -270,8 +263,7 @@ acceptance(
         );
 
         assert.strictEqual(
-          queryAll(".sidebar-section-messages .sidebar-section-link.active")
-            .length,
+          count(".sidebar-section-messages .sidebar-section-link.active"),
           2,
           "only two links are marked as active in the sidebar"
         );
@@ -305,22 +297,21 @@ acceptance(
       await visit("/t/130");
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        count(".sidebar-section-messages .sidebar-section-link"),
         5,
         "5 section links are displayed"
       );
 
       assert.strictEqual(
-        queryAll(
+        count(
           ".sidebar-section-messages .sidebar-section-link.personal-messages"
-        ).length,
+        ),
         1,
         "personal messages inbox filter links are not shown"
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link.foo_group")
-          .length,
+        count(".sidebar-section-messages .sidebar-section-link.foo_group"),
         4,
         "foo_group messages inbox filter links are shown"
       );
@@ -339,22 +330,21 @@ acceptance(
       await visit("/t/34");
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link").length,
+        count(".sidebar-section-messages .sidebar-section-link"),
         6,
         "6 section links are displayed"
       );
 
       assert.strictEqual(
-        queryAll(
+        count(
           ".sidebar-section-messages .sidebar-section-link.personal-messages"
-        ).length,
+        ),
         5,
         "personal messages inbox filter links are shown"
       );
 
       assert.strictEqual(
-        queryAll(".sidebar-section-messages .sidebar-section-link.foo_group")
-          .length,
+        count(".sidebar-section-messages .sidebar-section-link.foo_group"),
         1,
         "foo_group messages inbox filter links are not shown"
       );

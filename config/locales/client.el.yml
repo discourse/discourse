@@ -514,6 +514,7 @@ el:
       next_week: "Την άλλη εβδομάδα"
       next_month: "Τον άλλο μήνα"
       forever: "Για Πάντα"
+      never: "Ποτέ"
       custom: "Προσαρμοσμένη ημερομηνία και ώρα"
       select_timeframe: "Επιλέξτε χρονικό περιθώριο"
     user_action:

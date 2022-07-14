@@ -125,13 +125,6 @@ module ApplicationHelper
       path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
-    if Rails.env == "development"
-      if !path.include?("?")
-        # cache breaker for mobile iOS
-        path = path + "?#{Time.now.to_f}"
-      end
-    end
-
     path
   end
 

@@ -186,7 +186,7 @@ export default Component.extend({
   }),
 
   @action
-  onClearRecents() {
+  onClearRecent() {
     this.emojiStore.favorites = [];
     this.set("recentEmojis", []);
   },

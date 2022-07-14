@@ -418,6 +418,7 @@ sk:
       next_week: "Budúci týždeň"
       next_month: "Budúci mesiac"
       forever: "Vždy"
+      never: "Nikdy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vy</a> ste založili <a href='%{topicUrl}'>tému</a>"

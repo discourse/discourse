@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
@@ -14,7 +14,9 @@ acceptance("Topic Discovery - Mobile", function (needs) {
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     assert.strictEqual(
-      queryAll("a[data-user-card=codinghorror] img.avatar").attr("loading"),
+      query("a[data-user-card=codinghorror] img.avatar").getAttribute(
+        "loading"
+      ),
       "lazy",
       "it adds loading=`lazy` to topic list avatars"
     );

@@ -655,6 +655,7 @@ hr:
       forever: "Zauvijek"
       relative: "Relativno vrijeme"
       none: "Nijedna nije potrebna"
+      never: "Nikad"
       last_custom: "Posljednji prilagođeni datum"
       custom: "Prilagođeni datum i vrijeme"
       select_timeframe: "Odabir vremenskog okvira"

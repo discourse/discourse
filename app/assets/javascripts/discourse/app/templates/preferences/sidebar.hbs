@@ -13,8 +13,8 @@
 
     <div class="controls">
       <CategorySelector
-          @categories={{this.selectedSiderbarCategories}}
-          @onChange={{action (mut this.selectedSiderbarCategories)}}
+          @categories={{this.selectedSidebarCategories}}
+          @onChange={{action (mut this.selectedSidebarCategories)}}
           @options={{hash
             allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
             displayCategoryDescription=true

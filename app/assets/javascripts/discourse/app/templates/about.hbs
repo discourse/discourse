@@ -4,7 +4,7 @@
 
       <ul class="nav-pills">
         <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n "about.simple_title"}}</LinkTo></li>
-        {{#if this.faqOverriden}}
+        {{#if this.faqOverridden}}
           <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n "guidelines"}}</LinkTo></li>
           <li class="nav-item-faq"><LinkTo @route="faq">{{i18n "faq"}}</LinkTo></li>
         {{else}}
@@ -27,7 +27,6 @@
 
           <AboutPageUsers @users={{this.model.admins}} />
           <div class="clearfix"></div>
-
         </section>
       {{/if}}
 

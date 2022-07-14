@@ -2340,13 +2340,13 @@ describe UsersController do
           it "should allow user to modify category sidebar section links" do
             category = Fabricate(:category)
             restricted_category = Fabricate(:category, read_restricted: true)
-            category_siderbar_section_link = Fabricate(:category_sidebar_section_link, user: user)
+            category_sidebar_section_link = Fabricate(:category_sidebar_section_link, user: user)
 
             put "/u/#{user.username}.json", params: { sidebar_category_ids: [category.id, restricted_category.id] }
 
             expect(response.status).to eq(200)
             expect(user.sidebar_section_links.count).to eq(1)
-            expect(SidebarSectionLink.exists?(id: category_siderbar_section_link.id)).to eq(false)
+            expect(SidebarSectionLink.exists?(id: category_sidebar_section_link.id)).to eq(false)
 
             sidebar_section_link = user.sidebar_section_links.first
 

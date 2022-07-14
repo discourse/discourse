@@ -527,7 +527,7 @@ export function clipboardCopy(text) {
   return clipboardCopyFallback(text);
 }
 
-// Use this verison of clipboardCopy if you must use an AJAX call
+// Use this version of clipboardCopy if you must use an AJAX call
 // to retrieve/generate server-side text to copy to the clipboard,
 // otherwise this write function will error in certain browsers, because
 // the time taken from the user event to the clipboard text being copied

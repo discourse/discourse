@@ -69,11 +69,7 @@ createWidget("header-notifications", {
     ];
 
     if (this.currentUser.status) {
-      contents.push(
-        this.attach("user-status-bubble", {
-          emoji: this.currentUser.status.emoji,
-        })
-      );
+      contents.push(this.attach("user-status-bubble", this.currentUser.status));
     }
 
     if (user.isInDoNotDisturb()) {
@@ -519,7 +515,7 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrollin on menu panels, except on overflow
+    // prevent all scrolling on menu panels, except on overflow
     const height = window.innerHeight ? window.innerHeight : $(window).height();
     if (
       !$(e.target).parents(".menu-panel").length ||

@@ -542,6 +542,7 @@ ca:
       forever: "Sempre"
       relative: "Temps relatiu"
       none: "No cal cap"
+      never: "Mai"
       custom: "Data i hora personalitzades"
       select_timeframe: "Seleccioneu un període de temps"
     user_action:

@@ -7,7 +7,7 @@ import { module, test } from "qunit";
 
 module("Unit | Utility | icon-library", function () {
   test("return icon markup", function (assert) {
-    assert.ok(iconHTML("bars").indexOf('use href="#bars"') > -1);
+    assert.ok(iconHTML("bars").includes('use href="#bars"'));
 
     const nodeIcon = iconNode("bars");
     assert.strictEqual(nodeIcon.tagName, "svg");
@@ -19,10 +19,10 @@ module("Unit | Utility | icon-library", function () {
 
   test("convert icon names", function (assert) {
     const fa5Icon = convertIconClass("fab fa-facebook");
-    assert.ok(iconHTML(fa5Icon).indexOf("fab-facebook") > -1, "FA 5 syntax");
+    assert.ok(iconHTML(fa5Icon).includes("fab-facebook"), "FA 5 syntax");
 
     const iconC = convertIconClass("  fab fa-facebook  ");
-    assert.ok(iconHTML(iconC).indexOf("  ") === -1, "trims whitespace");
+    assert.ok(!iconHTML(iconC).includes("  "), "trims whitespace");
   });
 
   test("escape icon names, classes and titles", function (assert) {

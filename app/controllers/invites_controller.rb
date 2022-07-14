@@ -482,7 +482,7 @@ class InvitesController < ApplicationController
           topic.create_invite_notification!(
             user,
             Notification.types[:invited_to_topic],
-            invite.invited_by.username
+            invite.invited_by
           )
         end
       end

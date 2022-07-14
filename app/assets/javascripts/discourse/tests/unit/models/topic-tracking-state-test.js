@@ -254,7 +254,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         }
       }
 
-      if (topic.tags && topic.tags.indexOf("random") > -1) {
+      if (topic.tags?.includes("random")) {
         if (isNew) {
           randomNew += 1;
         }

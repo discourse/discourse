@@ -603,6 +603,7 @@ hu:
       forever: "Örökre"
       relative: "Relatív idő"
       none: "Nem szükséges"
+      never: "Soha"
       last_custom: "Legutóbbi egyéni dátum/idő"
       custom: "Egyéni dátum és idő"
       select_timeframe: "Válasszon egy időkeretet"

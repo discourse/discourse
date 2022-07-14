@@ -341,9 +341,8 @@ acceptance("Composer", function (needs) {
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("Any plans to support"),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("Any plans to support"),
       "it populates the input with the post text"
     );
 
@@ -356,15 +355,15 @@ acceptance("Composer", function (needs) {
       "it has the edits icon"
     );
     assert.ok(
-      query("#topic-title h1").innerText.indexOf(
+      query("#topic-title h1").innerText.includes(
         "This is the new text for the title"
-      ) !== -1,
+      ),
       "it shows the new title"
     );
     assert.ok(
-      query(".topic-post:nth-of-type(1) .cooked").innerText.indexOf(
+      query(".topic-post:nth-of-type(1) .cooked").innerText.includes(
         "This is the new text for the post"
-      ) !== -1,
+      ),
       "it updates the post"
     );
   });
@@ -406,15 +405,13 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
     await click(".topic-post:nth-of-type(2) button.edit");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the second post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
     );
   });
@@ -431,9 +428,8 @@ acceptance("Composer", function (needs) {
     );
 
     await click(".modal-footer button.discard-draft");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the second post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
     );
   });
@@ -442,9 +438,8 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
     await click(".topic-post:nth-of-type(1) button.reply");
@@ -454,9 +449,8 @@ acceptance("Composer", function (needs) {
       "it clears the input"
     );
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
   });
@@ -627,9 +621,8 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     await click(".modal-footer button.discard-draft");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
   });
@@ -656,9 +649,8 @@ acceptance("Composer", function (needs) {
       "has keep editing button"
     );
     await click(".modal-footer button.save-draft");
-    assert.strictEqual(
-      query(".d-editor-input").value.indexOf("This is the second post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
     );
   });
@@ -928,7 +920,7 @@ acceptance("Composer - Customizations", function (needs) {
 
   function customComposerAction(composer) {
     return (
-      (composer.tags || []).indexOf("monkey") !== -1 &&
+      (composer.tags || []).includes("monkey") &&
       composer.action === CREATE_TOPIC
     );
   }

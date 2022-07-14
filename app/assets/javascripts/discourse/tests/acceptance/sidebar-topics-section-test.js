@@ -1,14 +1,12 @@
 import { test } from "qunit";
-
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
-
 import {
   acceptance,
+  count,
   exists,
   loggedInUser,
   publishToMessageBus,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -88,11 +86,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/latest",
-      "it should transistion to the homepage"
+      "it should transition to the homepage"
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -110,11 +108,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/latest",
-      "it should transistion to the latest page"
+      "it should transition to the latest page"
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -132,11 +130,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/latest?f=tracked",
-      "it should transistion to the tracked url"
+      "it should transition to the tracked url"
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -154,11 +152,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       `/u/${loggedInUser().username}/activity/bookmarks`,
-      "it should transistion to the bookmarked url"
+      "it should transition to the bookmarked url"
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -176,11 +174,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       `/u/${loggedInUser().username}/activity`,
-      "it should transistion to the user's activity url"
+      "it should transition to the user's activity url"
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -212,11 +210,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       `/u/${loggedInUser().username}/activity/drafts`,
-      "it transistions to the user's activity drafts url"
+      "it transitions to the user's activity drafts url"
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -238,7 +236,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/top");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -253,7 +251,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/unread");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -268,7 +266,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/new");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -429,7 +427,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/top?f=tracked");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -444,7 +442,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/unread?f=tracked");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -459,7 +457,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/new?f=tracked");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-topics .sidebar-section-link.active").length,
+      count(".sidebar-section-topics .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );

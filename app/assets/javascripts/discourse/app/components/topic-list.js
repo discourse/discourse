@@ -78,7 +78,7 @@ export default Component.extend(LoadMore, {
     if (scrollTo >= 0) {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo + 1));
+          next(() => window.scrollTo(0, scrollTo));
         }
       });
     }
@@ -164,10 +164,10 @@ export default Component.extend(LoadMore, {
 
   click(e) {
     const onClick = (sel, callback) => {
-      let target = $(e.target).closest(sel);
+      let target = e.target.closest(sel);
 
-      if (target.length === 1) {
-        callback.apply(this, [target]);
+      if (target) {
+        callback.call(this, target);
       }
     };
 
@@ -186,8 +186,8 @@ export default Component.extend(LoadMore, {
       $("input.bulk-select:checked").click();
     });
 
-    onClick("th.sortable", function (e2) {
-      this.changeSort(e2.data("sort-order"));
+    onClick("th.sortable", function (element) {
+      this.changeSort(element.dataset.sortOrder);
       this.rerender();
     });
 
@@ -210,15 +210,15 @@ export default Component.extend(LoadMore, {
   keyDown(e) {
     if (e.key === "Enter" || e.key === " ") {
       let onKeyDown = (sel, callback) => {
-        let target = $(e.target).closest(sel);
+        let target = e.target.closest(sel);
 
-        if (target.length === 1) {
-          callback.apply(this, [target]);
+        if (target) {
+          callback.call(this, target);
         }
       };
 
-      onKeyDown("th.sortable", (e2) => {
-        this.changeSort(e2.data("sort-order"));
+      onKeyDown("th.sortable", (element) => {
+        this.changeSort(element.dataset.sortOrder);
         this.rerender();
       });
     }
