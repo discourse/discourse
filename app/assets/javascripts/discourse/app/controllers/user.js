@@ -13,6 +13,7 @@ import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import { scrollTop } from "discourse/mixins/scroll-top";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
@@ -20,6 +21,7 @@ export default Controller.extend(CanCheckEmails, {
   adminTools: optionalService(),
   invitesCount: null,
   user: controller(),
+  showMobileUserMenu: false,
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -250,6 +252,31 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @bind
+  collapseMobileProfileMenu(event) {
+    let shouldcollapseProfileMenu = false;
+
+    const allowedInsideClick = event.composedPath().some((element) => {
+      if (
+        element.classList?.contains("user-primary-navigation_submenu-link") ||
+        (!element.classList?.contains("user-primary-navigation_item-parent") &&
+          element.nodeName?.includes("LI"))
+      ) {
+        shouldcollapseProfileMenu = true;
+        return false;
+      }
+
+      if (element.classList?.contains("user-primary-navigation_item-parent")) {
+        return true;
+      }
+    });
+
+    if (shouldcollapseProfileMenu || !allowedInsideClick) {
+      scrollTop();
+      this.set("showMobileUserMenu", false);
+    }
+  },
+
   actions: {
     collapseProfile() {
       this.set("forceExpand", false);
@@ -278,6 +305,31 @@ export default Controller.extend(CanCheckEmails, {
       });
 
       e.currentTarget.classList.toggle("show-children");
+
+      if (this.site.mobileView) {
+        // scroll to end so the last submenu is visible
+        document
+          .querySelector(".preferences-nav")
+          .scrollIntoView({ inline: "end" });
+      }
+    },
+
+    toggleMobileMenu() {
+      document.addEventListener("click", this.collapseMobileProfileMenu);
+      this.toggleProperty("showMobileUserMenu");
+
+      if (this.showMobileUserMenu) {
+        this.set("forceExpand", false);
+      }
+
+      document.querySelectorAll(".user-nav > li").forEach((navParent) => {
+        navParent.classList.remove("show-children");
+      });
+
+      document
+        .querySelector(".user-nav a.active")
+        .closest("li")
+        .classList.add("show-children");
     },
 
     adminDelete() {

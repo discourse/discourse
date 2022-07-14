@@ -7,7 +7,7 @@
     </ol>
   {{/if}}
 
-  <MobileNav @id="navigation-bar" @class="messages-nav" @desktopClass="nav-pills action-list">
+  <ul id="navigation-bar" class="messages-nav nav-pills action-list">
     {{#if this.isPersonal}}
       <li>
         <LinkTo @route="userPrivateMessages.index" @model={{this.model}}>
@@ -91,7 +91,7 @@
     {{/if}}
 
     <PluginOutlet @name="user-messages-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
-  </MobileNav>
+  </ul>
 
   {{#unless this.site.mobileView}}
     <div class="navigation-controls">

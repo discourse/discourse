@@ -1,6 +1,6 @@
 <PluginOutlet @name="above-user-profile" @connectorTagName="div" @args={{hash model=this.model}} />
 <div class="container {{if this.viewingSelf "viewing-self"}} {{if this.model.profile_hidden "profile-hidden"}} {{this.primaryGroup}}">
-  <DSection @class="user-main">
+  <DSection @class='user-main {{if showMobileUserMenu "show-mobile-profile-menu"}}'>
     <section class="{{if this.collapsedInfo "collapsed-info"}} about {{if this.hasProfileBackgroundUrl "has-background" "no-background"}}" >
       {{#unless this.collapsedInfo}}
         {{#if this.showStaffCounters}}
@@ -64,14 +64,22 @@
                   <UserNotificationsDropdown @user={{this.model}} @value={{this.userNotificationLevel}} @updateNotificationLevel={{action "updateNotificationLevel"}} />
                 </li>
               {{/if}}
-              {{#if this.currentUser.staff}}
-                <li><a href={{this.model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
-              {{/if}}
+              {{#unless this.site.mobileView}}
+                {{#if this.currentUser.staff}}
+                  <li><a href={{this.model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
+                {{/if}}
+              {{/unless}}
               <PluginOutlet @name="user-profile-controls" @connectorTagName="li" @args={{hash model=this.model}} />
 
               {{#if this.canExpandProfile}}
                 <li>
                   <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
+                </li>
+              {{/if}}
+
+              {{#if this.site.mobileView}}
+                <li>                
+                  <DButton @class="btn-default toggle-mobile-user-menu" @action={{action "toggleMobileMenu" }} @icon="bars" @label="hamburger_menu" />
                 </li>
               {{/if}}
             </ul>
@@ -220,15 +228,22 @@
     </section>
     <div class='user-content-wrapper'>
       <section class="user-primary-navigation">
-        <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
+
+      
+        <ul class="main-nav nav nav-pills user-nav">
           {{#unless this.model.profile_hidden}}
-            <li class="summary user-primary-navigation_item"><LinkTo @route="user.summary">{{i18n 'user.summary.title'}}</LinkTo></li>
+            {{#if this.site.mobileView}}
+              {{#if this.currentUser.staff}}
+                <li class="user-primary-navigation_item"><a href={{this.model.adminPath}}>{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
+              {{/if}}
+            {{/if}}
+            <li class="summary user-primary-navigation_item"><LinkTo @route="user.summary">{{d-icon "info-circle"}}{{i18n 'user.summary.title'}}</LinkTo></li>
             <li class="activity user-primary-navigation_item-parent" onclick={{action 'toggleSubmenu'}}>
               <a class={{if (eq currentRouteParent "userActivity") "active" }}>
-                {{i18n 'user.activity_stream'}}{{d-icon "chevron-down"}}
+                {{d-icon "list-ul"}}{{i18n 'user.activity_stream'}}{{d-icon "chevron-down"}}
               </a>
              
-                <MobileNav @class="user-primary-navigation_submenu activity-nav" @desktopClass="">
+                <ul class="user-primary-navigation_submenu activity-nav">
                   <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
                   <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
                   <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
@@ -252,13 +267,12 @@
                   {{/if}}
 
                   <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
-                  {{log this}}
                   {{#if this.user.showBookmarks}}
                     <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
                   {{/if}}
 
                   <PluginOutlet @name="user-activity-bottom" @tagName="" @connectorTagName="" @args={{hash model=this.model}} />
-                </MobileNav>
+                </ul>
              
             </li>
           {{/unless}}
@@ -268,7 +282,7 @@
               {{d-icon "comment" class="glyph"}}{{i18n 'user.notifications'}}{{d-icon "chevron-down"}}
               </a> 
           
-                <MobileNav @class="user-primary-navigation_submenu notifications-nav" @desktopClass="">
+                <ul class="user-primary-navigation_submenu notifications-nav" >
                   <li>
                     <LinkTo @route="userNotifications.index">
                       {{i18n "user.filters.all"}}
@@ -297,7 +311,7 @@
                     </LinkTo>
                   </li>
                   <PluginOutlet @name="user-notifications-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
-                </MobileNav>
+                </ul>
     
             </li>
           {{/if}}
@@ -316,11 +330,11 @@
            
              
                 {{#if (or this.viewingSelf this.currentUser.staff)}}
-                  <MobileNav @class="invites-nav" @desktopClass="user-primary-navigation_submenu">
-                    <NavItem @route="userInvited.show" @routeParam="pending" @i18nLabel={{this.pendingLabel}} />
-                    <NavItem @route="userInvited.show" @routeParam="expired" @i18nLabel={{this.expiredLabel}} />
-                    <NavItem @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{this.redeemedLabel}} />
-                  </MobileNav>
+                  <ul class="invites-nav user-primary-navigation_submenu" >
+                    <NavItem  @route="userInvited.show" @routeParam="pending" @i18nLabel={{this.pendingLabel}} />
+                    <NavItem  @route="userInvited.show" @routeParam="expired" @i18nLabel={{this.expiredLabel}} />
+                    <NavItem  @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{this.redeemedLabel}} />
+                  </ul>
                 {{/if}}
             
             </li>
@@ -335,59 +349,59 @@
                 {{d-icon "cog"}}{{i18n 'user.preferences'}}{{d-icon "chevron-down"}}
               </a> 
              
-                <MobileNav @class="user-primary-navigation_submenu preferences-nav" @desktopClass="">
-                  <li class="nav-account">
+                <ul class="user-primary-navigation_submenu preferences-nav">
+                  <li class="user-primary-navigation_submenu-link nav-account">
                     <LinkTo @route="preferences.account">
                       {{i18n "user.preferences_nav.account"}}
                     </LinkTo>
                   </li>
-                  <li class="nav-security">
+                  <li class="user-primary-navigation_submenu-link nav-security">
                     <LinkTo @route="preferences.security">
                       {{i18n "user.preferences_nav.security"}}
                     </LinkTo>
                   </li>
-                  <li class="nav-profile">
+                  <li class="user-primary-navigation_submenu-link nav-profile">
                     <LinkTo @route="preferences.profile">
                       {{i18n "user.preferences_nav.profile"}}
                     </LinkTo>
                   </li>
-                  <li class="nav-emails">
+                  <li class="user-primary-navigation_submenu-link nav-emails">
                     <LinkTo @route="preferences.emails">
                       {{i18n "user.preferences_nav.emails"}}
                     </LinkTo>
                   </li>
-                  <li class="nav-notifications">
+                  <li class="user-primary-navigation_submenu-link nav-notifications">
                     <LinkTo @route="preferences.notifications">
                       {{i18n "user.preferences_nav.notifications"}}
                     </LinkTo>
                   </li>
                   {{#if this.model.can_change_tracking_preferences}}
-                    <li class="indent nav-categories">
+                    <li class="indent user-primary-navigation_submenu-link  nav-categories">
                       <LinkTo @route="preferences.categories">
                         {{i18n "user.preferences_nav.categories"}}
                       </LinkTo>
                     </li>
                   {{/if}}
-                  <li class="indent nav-users">
+                  <li class="indent user-primary-navigation_submenu-link  nav-users">
                     <LinkTo @route="preferences.users">
                       {{i18n "user.preferences_nav.users"}}
                     </LinkTo>
                   </li>
                   {{#if (and this.model.can_change_tracking_preferences this.siteSettings.tagging_enabled)}}
-                    <li class="indent nav-tags">
+                    <li class="indent user-primary-navigation_submenu-link  nav-tags">
                       <LinkTo @route="preferences.tags">
                         {{i18n "user.preferences_nav.tags"}}
                       </LinkTo>
                     </li>
                   {{/if}}
-                  <li class="nav-interface">
+                  <li class="user-primary-navigation_submenu-link nav-interface">
                     <LinkTo @route="preferences.interface">
                       {{i18n "user.preferences_nav.interface"}}
                     </LinkTo>
                   </li>
 
                   {{#if this.siteSettings.enable_experimental_sidebar}}
-                    <li class="indent nav-sidebar">
+                    <li class="indent user-primary-navigation_submenu-link  nav-sidebar">
                       <LinkTo @route="preferences.sidebar">
                         {{i18n "user.preferences_nav.sidebar"}}
                       </LinkTo>
@@ -397,18 +411,18 @@
                   <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
                   {{#if this.model.userApiKeys}}
-                    <li class="nav-apps">
+                    <li class="user-primary-navigation_submenu-link  nav-apps">
                       <LinkTo @route="preferences.apps">
                         {{i18n "user.preferences_nav.apps"}}
                       </LinkTo>
                     </li>
                   {{/if}}
                   <PluginOutlet @name="user-preferences-nav" @tagName="li" @args={{hash model=this.model}} />
-                </MobileNav>
+                </ul>
               
             </li>
           {{/if}}
-        </MobileNav>
+        </ul>
       </section>
     {{outlet}}
   </div>
