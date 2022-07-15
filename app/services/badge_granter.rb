@@ -446,6 +446,8 @@ class BadgeGranter
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
 
+      DiscourseEvent.trigger(:user_badge_granted, badge.id, row.user_id)
+
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
         notification_id: notification.id,
