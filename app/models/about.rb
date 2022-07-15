@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
 class About
-  cattr_reader :plugin_stat_groups, :displayed_plugin_stat_groups
+  cattr_reader :plugin_stat_groups
 
   def self.add_plugin_stat_group(prefix, show_in_ui: false, &block)
-    if !@@displayed_plugin_stat_groups.include?(prefix) && show_in_ui
-      @@displayed_plugin_stat_groups << prefix
-    end
-    @@plugin_stat_groups[prefix] = { block: block }
+    @@displayed_plugin_stat_groups << prefix if show_in_ui
+    @@plugin_stat_groups[prefix] = block
   end
 
   def self.clear_plugin_stat_groups
-    @@displayed_plugin_stat_groups = []
+    @@displayed_plugin_stat_groups = Set.new
     @@plugin_stat_groups = {}
+  end
+
+  def self.displayed_plugin_stat_groups
+    @@displayed_plugin_stat_groups.to_a
   end
 
   clear_plugin_stat_groups
@@ -105,7 +107,7 @@ class About
     final_plugin_stats = {}
     @@plugin_stat_groups.each do |plugin_stat_group_name, stat_group|
       begin
-        stats = stat_group[:block].call
+        stats = stat_group.call
       rescue StandardError => err
         Discourse.warn_exception(err, message: "Unexpected error when collecting #{plugin_stat_group_name} About stats.")
         next
