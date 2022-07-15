@@ -12,7 +12,7 @@
         <div class="top-tabs tabs-list">
           {{#each this.topTabs as |tab|}}
             <button
-              class={{if (eq tab.id this.currentTabId) "btn btn-flat btn-icon no-text active" "btn btn-flat btn-icon no-text"}}
+              class={{concat "btn btn-flat btn-icon no-text" (if (eq tab.id this.currentTabId) " active")}}
               type="button"
               role="tab"
               id={{concat "user-menu-button-" tab.id}}
