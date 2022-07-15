@@ -10,14 +10,13 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
       trigger: DiscourseAutomation::Triggerable::USER_BADGE_GRANTED
     )
   }
+  fab!(:tracked_badge) { Fabricate(:badge, multiple_grant: true) }
 
   before do
     SiteSetting.discourse_automation_enabled = true
   end
 
   context 'badge is not tracked' do
-    fab!(:tracked_badge) { Fabricate(:badge) }
-
     it 'doesn’t trigger the automation' do
       output = capture_stdout do
         described_class.handle(automation, tracked_badge.id, user.id)
@@ -27,8 +26,6 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
   end
 
   context 'badge is tracked' do
-    fab!(:tracked_badge) { Fabricate(:badge) }
-
     before do
       automation.upsert_field!('badge', 'choices', { value: tracked_badge.id }, target: 'trigger')
     end
@@ -38,10 +35,9 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
         automation.upsert_field!('only_first_grant', 'boolean', { value: true }, target: 'trigger')
       end
 
-      context 'badge has been granted already' do
-        fab!(:tracked_badge) { Fabricate(:badge) }
-
+      context 'badge has been granted two times' do
         before do
+          BadgeGranter.grant(tracked_badge, user)
           BadgeGranter.grant(tracked_badge, user)
         end
 
@@ -54,8 +50,6 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
       end
 
       context 'badge has not been granted already' do
-        fab!(:tracked_badge) { Fabricate(:badge, grant_count: 1) }
-
         it 'triggers the automation' do
           output = JSON.parse(capture_stdout do
             described_class.handle(automation, tracked_badge.id, user.id)
@@ -65,8 +59,6 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
       end
 
       context 'user doesn’t exist' do
-        fab!(:tracked_badge) { Fabricate(:badge, grant_count: 1) }
-
         it 'raises an error' do
           expect {
             described_class.handle(automation, tracked_badge.id, -999)
