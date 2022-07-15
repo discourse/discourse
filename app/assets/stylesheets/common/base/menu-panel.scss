@@ -147,11 +147,9 @@
     justify-content: space-between;
     box-sizing: border-box;
 
-    li {
-      span.double-user,
-      span.multi-user {
-        white-space: unset;
-      }
+    .double-user,
+    .multi-user {
+      white-space: unset;
     }
   }
 }
