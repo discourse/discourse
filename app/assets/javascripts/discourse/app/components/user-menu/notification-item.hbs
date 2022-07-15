@@ -18,7 +18,7 @@
       {{#if this.description}}
         <span
           class={{if this.descriptionElementClasses this.descriptionElementClasses}}
-          data-topic-id={{if this.topicId this.topicId}}
+          data-topic-id={{this.topicId}}
         >
           {{#if this.descriptionHtmlSafe}}
             {{html-safe this.description}}
