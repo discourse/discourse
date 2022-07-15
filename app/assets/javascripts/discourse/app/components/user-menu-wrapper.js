@@ -6,6 +6,7 @@ export default Component.extend({
   tagName: "",
 
   didInsertElement() {
+    this._super(...arguments);
     this.appEvents.trigger("user-menu:rendered");
   },
 });
