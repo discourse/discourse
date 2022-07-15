@@ -22,7 +22,7 @@ export default ComboBoxComponent.extend({
     let groups = [];
     groups.push(I18n.t("user.messages.inbox"));
 
-    let hasMessages = this.groups.filter((group) => group.hasMessages);
+    let hasMessages = this.groups.filter((group) => group.has_messages);
     hasMessages.forEach((group) => {
       groups.push(group.name);
     });

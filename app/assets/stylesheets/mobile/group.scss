@@ -3,6 +3,18 @@
   padding-bottom: 3em;
 }
 
+.group.container {
+  .user-content-wrapper {
+    gap: 1em;
+    .user-primary-navigation {
+      grid-column-end: 2;
+    }
+    .user-secondary-navigation {
+      grid-column-start: 2;
+    }
+  }
+}
+
 .group-name {
   margin: 5px 0 0 0;
 }

@@ -1,3 +1,21 @@
+.group.container {
+  .user-content-wrapper {
+    grid-template-columns: 1fr 5fr;
+  }
+  .user-secondary-navigation {
+    grid-column-end: 3;
+  }
+  .user-content {
+    grid-row-start: 2;
+    min-width: 100%;
+  }
+
+  .user-additional-controls + .user-content,
+  .user-secondary-navigation + .user-content {
+    grid-column-start: 2;
+  }
+}
+
 .group-activity-outlet,
 .group-messages-outlet,
 .group-manage-outlet {

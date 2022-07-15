@@ -238,13 +238,13 @@ export default Controller.extend(CanCheckEmails, {
 
   @bind
   userMenuOutside(e) {
-    const isClickWithinUserMenu = e.composedPath().some((element) => {
+    const isClickOnParent = e.composedPath().some((element) => {
       if (element?.classList?.contains("user-primary-navigation_item-parent")) {
         return true;
       }
     });
 
-    if (!isClickWithinUserMenu) {
+    if (!isClickOnParent) {
       document.querySelectorAll(".user-nav > li").forEach((navParent) => {
         navParent.classList.remove("show-children");
       });
@@ -274,6 +274,7 @@ export default Controller.extend(CanCheckEmails, {
     if (shouldcollapseProfileMenu || !allowedInsideClick) {
       scrollTop();
       this.set("showMobileUserMenu", false);
+      document.removeEventListener("click", this.collapseMobileProfileMenu);
     }
   },
 
@@ -326,6 +327,7 @@ export default Controller.extend(CanCheckEmails, {
         navParent.classList.remove("show-children");
       });
 
+      // auto-expand submenu of active nav section
       document
         .querySelector(".user-nav a.active")
         .closest("li")

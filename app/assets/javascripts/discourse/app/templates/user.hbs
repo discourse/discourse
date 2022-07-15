@@ -237,10 +237,10 @@
                 <li class="user-primary-navigation_item"><a href={{this.model.adminPath}}>{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
               {{/if}}
             {{/if}}
-            <li class="summary user-primary-navigation_item"><LinkTo @route="user.summary">{{d-icon "info-circle"}}{{i18n 'user.summary.title'}}</LinkTo></li>
+            <li class="summary user-primary-navigation_item"><LinkTo @route="user.summary">{{d-icon "user"}}{{i18n 'user.summary.title'}}</LinkTo></li>
             <li class="activity user-primary-navigation_item-parent" onclick={{action 'toggleSubmenu'}}>
               <a class={{if (eq currentRouteParent "userActivity") "active" }}>
-                {{d-icon "list-ul"}}{{i18n 'user.activity_stream'}}{{d-icon "chevron-down"}}
+                {{d-icon "stream"}}{{i18n 'user.activity_stream'}}{{d-icon "chevron-down"}}
               </a>
              
                 <ul class="user-primary-navigation_submenu activity-nav">

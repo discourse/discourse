@@ -39,7 +39,7 @@ export default Controller.extend({
   @discourseComputed()
   hasGroupMessages() {
     let groupsWithMessages = this.model.groups.filter(
-      (group) => group.hasMessages
+      (group) => group.has_messages
     );
 
     return groupsWithMessages.length;
