@@ -102,7 +102,7 @@ module Discourse
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
     config.active_record.legacy_connection_handling = true
-    config.active_record.yaml_column_permitted_classes = [Hash, HashWithIndifferentAccess, Time]
+    config.active_record.yaml_column_permitted_classes = [Hash, HashWithIndifferentAccess, Time, Symbol]
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the

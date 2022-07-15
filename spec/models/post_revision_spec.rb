@@ -23,4 +23,15 @@ describe PostRevision do
       }
     )
   end
+
+  it "can serialize and deserialize symbols" do
+    # Plugins may store symbolized values in this column
+    pr = Fabricate(:post_revision, modifications: { key: :value })
+    pr.reload
+    expect(pr.modifications).to eq(
+      {
+        key: :value
+      }
+    )
+  end
 end
