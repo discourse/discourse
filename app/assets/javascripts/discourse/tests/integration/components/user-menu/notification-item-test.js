@@ -72,12 +72,7 @@ module(
       );
       await settled();
 
-      item = query("li");
-      assert.strictEqual(
-        item.className,
-        "private-message",
-        "replaces underscores in type name with dashes"
-      );
+      assert.ok(exists("li.private-message"), "replaces underscores in type name with dashes");
     });
 
     test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {
