@@ -183,6 +183,10 @@ export default class ScreenTrack extends Service {
       },
     })
       .then(() => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
         this._ajaxFailures = 0;
         const topicController = this._topicController;
         if (topicController) {
