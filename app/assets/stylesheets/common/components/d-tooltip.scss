@@ -1,0 +1,6 @@
+.tippy-box[data-theme~="d-tooltip"] {
+  color: var(--primary);
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: shadow("menu-panel");
+}
