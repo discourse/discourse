@@ -32,7 +32,9 @@ export default class UserMenuItemsList extends GlimmerComponent {
 
   get dismissTitle() {}
 
-  get emptyStateComponent() {}
+  get emptyStateComponent() {
+    return "user-menu/items-list-empty-state";
+  }
 
   fetchItems() {
     throw new Error(

@@ -39,6 +39,8 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   get emptyStateComponent() {
     if (this.constructor === UserMenuNotificationsList) {
       return "user-menu/notifications-list-empty-state";
+    } else {
+      return super.emptyStateComponent;
     }
   }
 
