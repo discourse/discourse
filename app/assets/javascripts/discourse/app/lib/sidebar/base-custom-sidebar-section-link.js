@@ -75,6 +75,26 @@ export default class BaseCustomSidebarSectionLink {
    */
   get SuffixCSSClass() {}
 
+  /**
+   * @returns {string} Type of the hover button. Accepted value: icon
+   */
+  get hoverType() {}
+
+  /**
+   * @returns {string} Value for the hover button. Accepted value: icon name
+   */
+  get hoverValue() {}
+
+  /**
+   * @returns {Function} Action for hover button
+   */
+  get hoverAction() {}
+
+  /**
+   * @returns {string} Title attribute for the hover button
+   */
+  get hoverTitle() {}
+
   _notImplemented() {
     throw "not implemented";
   }

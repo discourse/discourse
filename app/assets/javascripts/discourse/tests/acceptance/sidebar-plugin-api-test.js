@@ -142,6 +142,18 @@ acceptance("Sidebar - section API", function (needs) {
                   get prefixValue() {
                     return "/test.png";
                   }
+                  get hoverType() {
+                    return "icon";
+                  }
+                  get hoverValue() {
+                    return "times";
+                  }
+                  get hoverAction() {
+                    return () => {};
+                  }
+                  get hoverTitle() {
+                    return "hover button title attribute";
+                  }
                 })(),
               ];
             }
@@ -257,6 +269,11 @@ acceptance("Sidebar - section API", function (needs) {
       $(links[2].children.item(0).children).attr("src"),
       "/test.png",
       "uses correct prefix image url"
+    );
+    assert.strictEqual(
+      query(".sidebar-section-link-hover button").title,
+      "hover button title attribute",
+      "displays hover button with correct title"
     );
   });
 

@@ -1780,6 +1780,18 @@ class PluginApi {
    *           get text() {
    *             return "random channel";
    *           }
+   *           get hoverType() {
+   *             return "icon";
+   *           }
+   *           get hoverValue() {
+   *             return "times";
+   *           }
+   *           get hoverAction() {
+   *             return () => {};
+   *           }
+   *           get hoverTitle() {
+   *             return "button title attribute"
+   *           }
    *         })()
    *       ];
    *     }
