@@ -36,9 +36,9 @@ acceptance("Topic list tracking", function (needs) {
     });
 
     server.get("/t/11557.json", () => {
-      const topicFixture = topicFixtures["/t/130.json"];
+      const topicFixture = cloneJSON(topicFixtures["/t/130.json"]);
       topicFixture.id = 11557;
-      return helper.response(cloneJSON(topicFixture));
+      return helper.response(topicFixture);
     });
   });
 
