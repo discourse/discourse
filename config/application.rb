@@ -246,7 +246,7 @@ module Discourse
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
-    config.active_record.yaml_column_permitted_classes = [Hash, HashWithIndifferentAccess, Time]
+    config.active_record.yaml_column_permitted_classes = [Hash, HashWithIndifferentAccess, Time, Symbol]
 
     # We use this in development-mode only (see development.rb)
     config.active_record.use_schema_cache_dump = false
