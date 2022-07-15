@@ -27,7 +27,38 @@ module Onebox
             twitter_data[m_property.to_sym] = m_content
           end
         end
+
+        begin
+          extract_twitter_data!(html, twitter_data)
+        rescue => e
+          Rails.logger.warn("Failed to extract Twitter data: #{e.message}\n#{e.backtrace.join("\n")}")
+        end
+
         twitter_data
+      end
+
+      def extract_twitter_data!(html, twitter_data)
+        tweet_html = html.css('[itemtype="https://schema.org/SocialMediaPosting"]')[0]
+        author_html = tweet_html.css('[itemprop="author"]')[0]
+        twitter_data[:title] = author_html.css('[itemprop="givenName"]')[0]['content']
+        twitter_data[:screen_name] = author_html.css('[itemprop="additionalName"]')[0]['content']
+        twitter_data[:timestamp] = tweet_html.css('[itemprop="datePublished"]')[0]['content']
+        tweet_html.children.each do |child|
+          if child['itemprop'] == 'interactionStatistic'
+            key = child.css('[itemprop="name"]')[0]['content']
+            value = child.css('[itemprop="userInteractionCount"]')[0]['content']
+
+            case key
+            when 'Likes'
+              twitter_data[:likes] = value
+            when 'Retweets'
+              twitter_data[:retweets] = value
+            end
+          end
+        end
+
+        tweet_html = tweet_html.css('[data-testid="tweet"]')[0]
+        twitter_data[:image] = tweet_html.css('[data-testid="Tweet-User-Avatar"] img')[0]['src']
       end
 
       def match
@@ -76,7 +107,7 @@ module Onebox
           offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
           date.new_offset(offset).strftime("%-l:%M %p - %-d %b %Y")
         else
-          attr_at_css(".tweet-timestamp", 'title')
+          twitter_data[:timestamp]&.to_datetime&.strftime("%-l:%M %p - %-d %b %Y")
         end
       end
 
@@ -84,7 +115,7 @@ module Onebox
         if twitter_api_credentials_present?
           access(:user, :name)
         else
-          attr_at_css('.tweet.permalink-tweet', 'data-name')
+          twitter_data[:title]
         end
       end
 
@@ -92,7 +123,7 @@ module Onebox
         if twitter_api_credentials_present?
           access(:user, :screen_name)
         else
-          attr_at_css('.tweet.permalink-tweet', 'data-screen-name')
+          twitter_data[:screen_name]
         end
       end
 
@@ -108,7 +139,7 @@ module Onebox
         if twitter_api_credentials_present?
           prettify_number(access(:favorite_count).to_i)
         else
-          attr_at_css(".request-favorited-popup", 'data-compact-localized-count')
+          prettify_number(twitter_data[:likes].to_i)
         end
       end
 
@@ -116,7 +147,7 @@ module Onebox
         if twitter_api_credentials_present?
           prettify_number(access(:retweet_count).to_i)
         else
-          attr_at_css(".request-retweeted-popup", 'data-compact-localized-count')
+          prettify_number(twitter_data[:retweets].to_i)
         end
       end
 
@@ -124,7 +155,7 @@ module Onebox
         if twitter_api_credentials_present?
           access(:quoted_status, :user, :name)
         else
-          raw.css('.QuoteTweet-fullname')[0]&.text
+          twitter_data[:quoted_full_name]
         end
       end
 
@@ -132,7 +163,7 @@ module Onebox
         if twitter_api_credentials_present?
           access(:quoted_status, :user, :screen_name)
         else
-          attr_at_css(".QuoteTweet-innerContainer", "data-screen-name")
+          twitter_data[:quoted_screen_name]
         end
       end
 
@@ -140,7 +171,7 @@ module Onebox
         if twitter_api_credentials_present?
           access(:quoted_status, :full_text)
         else
-          raw.css('.QuoteTweet-text')[0]&.text
+          twitter_data[:quote_text]
         end
       end
 
@@ -148,16 +179,12 @@ module Onebox
         if twitter_api_credentials_present?
           "https://twitter.com/#{quoted_screen_name}/status/#{access(:quoted_status, :id)}"
         else
-          "https://twitter.com#{attr_at_css(".QuoteTweet-innerContainer", "href")}"
+          "https://twitter.com#{twitter_data[:quote_url]}"
         end
       end
 
       def prettify_number(count)
         count > 0 ? client.prettify_number(count) : nil
-      end
-
-      def attr_at_css(css_property, attribute_name)
-        raw.at_css(css_property)&.attr(attribute_name)
       end
 
       def data
