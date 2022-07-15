@@ -281,49 +281,52 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const header = document.querySelector("header.d-header");
       this._itsatrap = new ItsATrap(header);
-      this._itsatrap.bind(["right", "left"], (e) => {
-        if (this.currentUser?.redesigned_user_menu_enabled) {
-          const activeTab = document.querySelector(
-            ".menu-tabs-container .btn.active"
+      this._itsatrap.bind(["right", "left"], (e) =>
+        this._handleArrowKeysNav(e)
+      );
+    },
+
+    _handleArrowKeysNav(event) {
+      if (this.currentUser?.redesigned_user_menu_enabled) {
+        const activeTab = document.querySelector(
+          ".menu-tabs-container .btn.active"
+        );
+        if (activeTab) {
+          let activeTabNumber = Number(
+            document.activeElement.dataset.tabNumber ||
+              activeTab.dataset.tabNumber
           );
-          if (activeTab) {
-            let activeTabNumber = document.activeElement.dataset.tabNumber;
-            if (!activeTabNumber) {
-              activeTabNumber = activeTab.dataset.tabNumber;
-            }
-            activeTabNumber = Number(activeTabNumber);
-            const maxTabNumber =
-              document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-            const isNext = e.key === "ArrowRight";
-            let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
-            if (isNext && nextTab > maxTabNumber) {
-              nextTab = 0;
-            }
-            if (!isNext && nextTab < 0) {
-              nextTab = maxTabNumber;
-            }
-            document
-              .querySelector(
-                `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
-              )
-              .focus();
+          const maxTabNumber =
+            document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+          const isNext = event.key === "ArrowRight";
+          let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+          if (isNext && nextTab > maxTabNumber) {
+            nextTab = 0;
           }
-        } else {
-          const activeTab = document.querySelector(".glyphs .menu-link.active");
-
-          if (activeTab) {
-            let focusedTab = document.activeElement;
-            if (!focusedTab.dataset.tabNumber) {
-              focusedTab = activeTab;
-            }
-
-            this.appEvents.trigger("user-menu:navigation", {
-              key: e.key,
-              tabNumber: Number(focusedTab.dataset.tabNumber),
-            });
+          if (!isNext && nextTab < 0) {
+            nextTab = maxTabNumber;
           }
+          document
+            .querySelector(
+              `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+            )
+            .focus();
         }
-      });
+      } else {
+        const activeTab = document.querySelector(".glyphs .menu-link.active");
+
+        if (activeTab) {
+          let focusedTab = document.activeElement;
+          if (!focusedTab.dataset.tabNumber) {
+            focusedTab = activeTab;
+          }
+
+          this.appEvents.trigger("user-menu:navigation", {
+            key: event.key,
+            tabNumber: Number(focusedTab.dataset.tabNumber),
+          });
+        }
+      }
     },
 
     _cleanDom() {
