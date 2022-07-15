@@ -3,11 +3,45 @@ import {
   previousTopicUrl,
   setTopicId,
 } from "discourse/lib/topic-list-tracker";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
+import topicFixtures from "discourse/tests/fixtures/topic";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
-acceptance("Topic list tracking", function () {
+acceptance("Topic list tracking", function (needs) {
+  let notificationLevel;
+
+  needs.hooks.afterEach(() => {
+    notificationLevel = null;
+  });
+
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/latest.json", () => {
+      const fixture = cloneJSON(discoveryFixtures["/latest.json"]);
+
+      if (notificationLevel) {
+        fixture["topic_list"]["topics"].find((t) => {
+          if (t.id === 11557) {
+            t.notification_level = notificationLevel;
+          }
+        });
+      }
+
+      return helper.response(cloneJSON(fixture));
+    });
+
+    server.get("/t/11557.json", () => {
+      const topicFixture = topicFixtures["/t/130.json"];
+      topicFixture.id = 11557;
+      return helper.response(cloneJSON(topicFixture));
+    });
+  });
+
   test("Navigation", async function (assert) {
     await visit("/");
     let url = await nextTopicUrl();
@@ -20,5 +54,35 @@ acceptance("Topic list tracking", function () {
 
     url = await previousTopicUrl();
     assert.strictEqual(url, "/t/error-after-upgrade-to-0-9-7-9/11557");
+  });
+
+  test("unread count is set on topic that user is tracking", async function (assert) {
+    notificationLevel = NotificationLevels.TRACKING;
+
+    await visit("/");
+
+    await click(".raw-topic-link[data-topic-id='11557']");
+
+    await visit("/");
+
+    assert.ok(
+      exists("tr[data-topic-id='11557'] .unread-posts"),
+      "unread count for topic is shown"
+    );
+  });
+
+  test("unread count is not set on topic that user is not tracking", async function (assert) {
+    notificationLevel = NotificationLevels.REGULAR;
+
+    await visit("/");
+
+    await click(".raw-topic-link[data-topic-id='11557']");
+
+    await visit("/");
+
+    assert.notOk(
+      exists("tr[data-topic-id='11557'] .unread-posts"),
+      "unread count for topic is not shown"
+    );
   });
 });

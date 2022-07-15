@@ -38,6 +38,7 @@ export default class ScreenTrack extends Service {
 
   start(topicId, topicController) {
     const currentTopicId = this._topicId;
+
     if (currentTopicId && currentTopicId !== topicId) {
       this.tick();
       this.flush();
@@ -277,9 +278,12 @@ export default class ScreenTrack extends Service {
     this.topicTrackingState.updateSeen(topicId, highestSeen);
 
     if (newTimingsKeys.length > 0) {
-      if (this.currentUser && !isTesting()) {
+      if (this.currentUser) {
         this.consolidateTimings(newTimings, this._topicTime, topicId);
-        this.sendNextConsolidatedTiming();
+
+        if (!isTesting()) {
+          this.sendNextConsolidatedTiming();
+        }
       } else if (this._anonCallback) {
         // Anonymous viewer - save to localStorage
         const storage = this.keyValueStore;
