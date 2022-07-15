@@ -3,6 +3,8 @@
 module Jobs
   class NotifyTagChange < ::Jobs::Base
     def execute(args)
+      return if SiteSetting.disable_tags_edit_notifications
+
       post = Post.find_by(id: args[:post_id])
 
       if post&.topic&.visible?
