@@ -1,20 +1,13 @@
 import GlimmerComponent from "discourse/components/glimmer";
-import { bind } from "discourse-common/utils/decorators";
-createWidget("timeline-last-read", {
-  tagName: "div.timeline-last-read",
+import { scrollareaHeight } from "discourse/components/topic-timeline/scroll-area";
 
-  buildAttributes(attrs) {
+const LAST_READ_HEIGHT = 20;
+
+export default class TopicTimelineLastRead extends GlimmerComponent {
+  style = `height: ${LAST_READ_HEIGHT}px; top: ${this.top}px`;
+
+  get top() {
     const bottom = scrollareaHeight() - LAST_READ_HEIGHT / 2;
-    const top = attrs.top > bottom ? bottom : attrs.top;
-    return { style: `height: ${LAST_READ_HEIGHT}px; top: ${top}px` };
-  },
-
-  html(attrs) {
-    const result = [iconNode("minus", { class: "progress" })];
-    if (attrs.showButton) {
-      result.push(attachBackButton(this));
-    }
-
-    return result;
-  },
-});
+    return this.args.top > bottom ? bottom : this.args.top;
+  }
+}

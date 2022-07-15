@@ -1,37 +1,106 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { bind } from "discourse-common/utils/decorators";
-createWidget("timeline-scrollarea", {
-  tagName: "div.timeline-scrollarea",
-  buildKey: (attrs) => `timeline-scrollarea-${attrs.topic.id}`,
+import { tracked } from "@glimmer/tracking";
+import discourseLater from "discourse-common/lib/later";
+import { action } from "@ember/object";
 
-  buildAttributes() {
-    return { style: `height: ${scrollareaHeight()}px` };
-  },
+export const SCROLLER_HEIGHT = 50;
+const MIN_SCROLLAREA_HEIGHT = 170;
+const MAX_SCROLLAREA_HEIGHT = 300;
 
-  defaultState(attrs) {
-    return {
-      percentage: this._percentFor(attrs.topic, attrs.enteredIndex + 1),
-      scrolledPost: 1,
-    };
-  },
+export default class TopicTimelineScrollArea extends GlimmerComponent {
+  @tracked showButton = false;
+  @tracked scrollPosition;
+  @tracked current;
+  @tracked percentage = this._percentFor(
+    this.args.topic,
+    this.args.enteredIndex
+  );
+  @tracked total;
+  @tracked date;
+  @tracked lastReadPercentage = null;
+  @tracked position;
 
-  position() {
-    const { attrs } = this;
-    const percentage = this.state.percentage;
-    const topic = attrs.topic;
+  style = `height: ${scrollareaHeight()}px`;
+  before = this.scrollareaRemaining() * this.percentage;
+  after = scrollareaHeight() - this.before - SCROLLER_HEIGHT;
+
+  get lastReadTop() {
+    return Math.round(this.lastReadPercentage * scrollareaHeight());
+  }
+
+  get showDockedButton() {
+    return !this.site.mobileView && this.hasBackPosition && !this.showButton;
+  }
+
+  get hasBackPosition() {
+    return (
+      this.lastRead &&
+      this.lastRead > 3 &&
+      this.lastRead > this.current &&
+      Math.abs(this.lastRead - this.current) > 3 &&
+      Math.abs(this.lastRead - this.total) > 1 &&
+      this.lastRead !== this.total
+    );
+  }
+
+  constructor() {
+    super(...arguments);
+
+    this.calculatePosition();
+    if (this.percentage === null) {
+      return;
+    }
+
+    this.before = this.scrollareaRemaining() * this.percentage;
+
+    if (this.hasBackPosition) {
+      this.lastReadTop = Math.round(
+        this.lastReadPercentage * scrollareaHeight()
+      );
+      showButton =
+        this.before + SCROLLER_HEIGHT - 5 < lastReadTop ||
+        this.before > this.lastReadTop + 25;
+      this.showButton = showButton;
+    }
+
+    if (this.hasBackPosition) {
+      this.lastReadTop = Math.round(
+        this.lastReadPercentage * scrollareaHeight()
+      );
+    }
+  }
+
+  @action goBack() {
+    this.args.jumpToIndex(this.lastRead);
+  }
+
+  @action
+  updatePercentage(y) {
+    const $area = $(".timeline-scrollarea");
+    const areaTop = $area.offset().top;
+
+    const percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
+
+    this.percentage = percentage;
+  }
+
+  @bind
+  calculatePosition() {
+    const topic = this.args.topic;
     const postStream = topic.get("postStream");
-    const total = postStream.get("filteredPostsCount");
+    this.total = postStream.get("filteredPostsCount");
 
-    const scrollPosition = clamp(Math.floor(total * percentage), 0, total) + 1;
-    const current = clamp(scrollPosition, 1, total);
+    this.scrollPosition =
+      this.clamp(Math.floor(this.total * this.percentage), 0, this.total) + 1;
+    this.current = this.clamp(this.scrollPosition, 1, this.total);
+    const daysAgo = postStream.closestDaysAgoFor(this.current);
 
-    const daysAgo = postStream.closestDaysAgoFor(current);
     let date;
-
     if (daysAgo === undefined) {
       const post = postStream
         .get("posts")
-        .findBy("id", postStream.get("stream")[current]);
+        .findBy("id", postStream.get("stream")[this.current]);
 
       if (post) {
         date = new Date(post.get("created_at"));
@@ -43,119 +112,104 @@ createWidget("timeline-scrollarea", {
       date = null;
     }
 
-    const result = {
-      current,
-      scrollPosition,
-      total,
-      date,
-      lastRead: null,
-      lastReadPercentage: null,
-    };
+    this.date = date;
 
     const lastReadId = topic.last_read_post_id;
     const lastReadNumber = topic.last_read_post_number;
 
     if (lastReadId && lastReadNumber) {
       const idx = postStream.get("stream").indexOf(lastReadId) + 1;
-      result.lastRead = idx;
-      result.lastReadPercentage = this._percentFor(topic, idx);
+      this.lastRead = idx;
+      this.lastReadPercentage = this._percentFor(topic, idx);
     }
 
-    if (this.state.position !== result.scrollPosition) {
-      this.state.position = result.scrollPosition;
-      this.sendWidgetAction("updatePosition", current);
+    if (this.position !== this.scrollPosition) {
+      this.updateScrollPosition(this.current);
     }
+  }
 
-    return result;
-  },
-
-  html(attrs, state) {
-    const position = this.position();
-
-    state.scrolledPost = position.current;
-    const percentage = state.percentage;
-    if (percentage === null) {
+  @bind
+  updateScrollPosition(scrollPosition) {
+    if (!this.args.fullscreen) {
       return;
     }
 
-    const before = scrollareaRemaining() * percentage;
-    const after = scrollareaHeight() - before - SCROLLER_HEIGHT;
+    this.position = scrollPosition;
+    this.excerpt = "";
 
-    let showButton = false;
-    const hasBackPosition =
-      position.lastRead &&
-      position.lastRead > 3 &&
-      position.lastRead > position.current &&
-      Math.abs(position.lastRead - position.current) > 3 &&
-      Math.abs(position.lastRead - position.total) > 1 &&
-      position.lastRead !== position.total;
+    const stream = this.args.topic.get("postStream");
 
-    if (hasBackPosition) {
-      const lastReadTop = Math.round(
-        position.lastReadPercentage * scrollareaHeight()
-      );
-      showButton =
-        before + SCROLLER_HEIGHT - 5 < lastReadTop || before > lastReadTop + 25;
-    }
+    // a little debounce to avoid flashing
+    discourseLater(() => {
+      if (!this.position === scrollPosition) {
+        return;
+      }
 
-    let scrollerAttrs = position;
-    scrollerAttrs.showDockedButton =
-      !attrs.mobileView && hasBackPosition && !showButton;
-    scrollerAttrs.fullScreen = attrs.fullScreen;
-    scrollerAttrs.topicId = attrs.topic.id;
+      // we have an off by one, stream is zero based,
+      stream.excerpt(scrollPosition - 1).then((info) => {
+        if (info && this.position === scrollPosition) {
+          let excerpt = "";
 
-    const result = [
-      this.attach("timeline-padding", { height: before }),
-      this.attach("timeline-scroller", scrollerAttrs),
-      this.attach("timeline-padding", { height: after }),
-    ];
+          if (info.username) {
+            excerpt = "<span class='username'>" + info.username + ":</span> ";
+          }
 
-    if (hasBackPosition) {
-      const lastReadTop = Math.round(
-        position.lastReadPercentage * scrollareaHeight()
-      );
-      result.push(
-        this.attach("timeline-last-read", {
-          top: lastReadTop,
-          lastRead: position.lastRead,
-          showButton,
-        })
-      );
-    }
+          if (info.excerpt) {
+            this.excerpt = excerpt + info.excerpt;
+          } else if (info.action_code) {
+            this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
+              info.action_code,
+              info.created_at,
+              info.username
+            )}`;
+          }
 
-    return result;
-  },
-
-  updatePercentage(y) {
-    const $area = $(".timeline-scrollarea");
-    const areaTop = $area.offset().top;
-
-    const percentage = clamp(parseFloat(y - areaTop) / $area.height());
-
-    this.state.percentage = percentage;
-  },
+          this.queueRerender();
+        }
+      });
+    }, 50);
+  }
 
   commit() {
-    const position = this.position();
-    this.state.scrolledPost = position.current;
+    this.calculatePosition();
 
-    if (position.current === position.scrollPosition) {
-      this.sendWidgetAction("jumpToIndex", position.current);
+    if (this.current === this.scrollPosition) {
+      this.sendWidgetAction("jumpToIndex", this.current);
     } else {
       this.sendWidgetAction("jumpEnd");
     }
-  },
+  }
 
   topicCurrentPostScrolled(event) {
     this.state.percentage = event.percent;
-  },
+  }
 
   _percentFor(topic, postIndex) {
     const total = topic.get("postStream.filteredPostsCount");
-    return clamp(parseFloat(postIndex - 1.0) / total);
-  },
+    return this.clamp(parseFloat(postIndex - 1.0) / total);
+  }
 
-  goBack() {
-    this.sendWidgetAction("jumpToIndex", this.position().lastRead);
-  },
-});
+  @bind
+  clamp(p, min = 0.0, max = 1.0) {
+    return Math.max(Math.min(p, max), min);
+  }
+
+  scrollareaRemaining() {
+    return scrollareaHeight() - SCROLLER_HEIGHT;
+  }
+}
+
+export function scrollareaHeight() {
+  const composerHeight =
+      document.getElementById("reply-control").offsetHeight || 0,
+    headerHeight = document.querySelectorAll(".d-header")[0].offsetHeight || 0;
+
+  // scrollarea takes up about half of the timeline's height
+  const availableHeight =
+    (window.innerHeight - composerHeight - headerHeight) / 2;
+
+  return Math.max(
+    MIN_SCROLLAREA_HEIGHT,
+    Math.min(availableHeight, MAX_SCROLLAREA_HEIGHT)
+  );
+}

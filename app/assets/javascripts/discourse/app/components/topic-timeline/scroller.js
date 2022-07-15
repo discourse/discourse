@@ -1,57 +1,38 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { bind } from "discourse-common/utils/decorators";
-createWidget("timeline-scroller", {
-  tagName: "div.timeline-scroller",
-  buildKey: (attrs) => `timeline-scroller-${attrs.topicId}`,
+import { tracked } from "@glimmer/tracking";
+import { SCROLLER_HEIGHT } from "discourse/components/topic-timeline/scroll-area";
+import { timelineDate } from "discourse/components/topic-timeline/date";
 
-  defaultState() {
-    return { dragging: false };
-  },
+export default class TopicTimelineScroller extends GlimmerComponent {
+  @tracked dragging = false;
 
-  buildAttributes() {
-    return { style: `height: ${SCROLLER_HEIGHT}px` };
-  },
+  style = `height: ${SCROLLER_HEIGHT}px`;
 
-  html(attrs, state) {
-    const { current, total, date } = attrs;
+  get repliesShort() {
+    const current = this.args.current;
+    const total = this.args.total;
+    return I18n.t(`topic.timeline.replies_short`, { current, total });
+  }
 
-    const contents = [
-      h(
-        "div.timeline-replies",
-        I18n.t(`topic.timeline.replies_short`, { current, total })
-      ),
-    ];
+  get timelineAgo() {
+    return timelineDate(this.args.date);
+  }
 
-    if (date) {
-      contents.push(h("div.timeline-ago", timelineDate(date)));
-    }
-
-    if (attrs.showDockedButton && !state.dragging) {
-      contents.push(attachBackButton(this));
-    }
-    let result = [
-      h("div.timeline-handle"),
-      h("div.timeline-scroller-content", contents),
-    ];
-
-    if (attrs.fullScreen) {
-      result = [result[1], result[0]];
-    }
-
-    return result;
-  },
-
+  @bind
   drag(e) {
-    this.state.dragging = true;
+    this.dragging = true;
+    // update to send value to parent
     this.sendWidgetAction("updatePercentage", e.pageY);
-  },
+  }
 
+  @bind
   dragEnd(e) {
-    this.state.dragging = false;
+    this.dragging = false;
     if ($(e.target).is("button")) {
       this.sendWidgetAction("goBack");
     } else {
       this.sendWidgetAction("commit");
     }
-  },
-});
+  }
+}

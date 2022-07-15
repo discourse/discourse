@@ -1,0 +1,33 @@
+<div style={{this.style}} class="timeline-scroller">
+  {{#if @fullscreen}}
+    <div class="timeline-scroller-content">
+      <div class="timeline-replies">
+        {{this.repliesShort}}
+      </div>
+      {{#if @date}}
+        <div class="timeline-ago">
+          {{this.timelineAgo}}
+        </div>
+      {{/if}}
+      {{#if (and @showDockedButton (not this.dragging)) }}
+        <TopicTimeline::BackButton @onClick={{@goBack}}/>
+      {{/if}}
+    </div>
+    <div class="timeline-handle" />
+  {{else}}
+    <div class="timeline-handle" />
+    <div class="timeline-scroller-content">
+      <div class="timeline-replies">
+        {{this.repliesShort}}
+      </div>
+      {{#if @date}}
+        <div class="timeline-ago">
+          {{this.timelineAgo}}
+        </div>
+      {{/if}}
+      {{#if (and @showDockedButton (not this.dragging)) }}
+        <TopicTimeline::BackButton @onClick={{@goBack}}/>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

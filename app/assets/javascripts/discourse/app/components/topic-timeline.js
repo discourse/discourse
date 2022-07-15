@@ -7,6 +7,9 @@ import Docking from "discourse/mixins/docking";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
+import RawHtml from "discourse/widgets/raw-html";
+import renderTags from "discourse/lib/render-tags";
+import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
 
 export default class TopicTimeline extends GlimmerComponent {
   @tracked prevEvent;
@@ -16,9 +19,125 @@ export default class TopicTimeline extends GlimmerComponent {
   dockAt = null;
   dockBottom = null;
   adminTools = optionalService();
+  position = null;
+  excerpt = null;
 
   constructor() {
     super(...arguments);
+  }
+
+  get class() {
+    let classes = [];
+    if (this.args.fullscreen) {
+      if (this.addShowClass) {
+        classes.push("timeline-fullscreen show");
+      } else {
+        classes.push("timeline-fullscreen");
+      }
+    }
+
+    if (this.args.dockAt) {
+      classes.push("timeline-docked");
+      if (this.args.dockBottom) {
+        classes.push("timeline-docked-bottom");
+      }
+    }
+
+    return classes.join(" ");
+  }
+
+  get addShowClass() {
+    this.args.fullscreen && !this.args.addShowClass ? true : false;
+  }
+
+  @bind
+  attachBackButton(widget) {
+    return widget.attach("button", {
+      className: "btn-primary btn-small back-button",
+      label: "topic.timeline.back",
+      title: "topic.timeline.back_description",
+      action: "goBack",
+    });
+  }
+
+  @bind
+  html(attrs) {
+    const { topic } = attrs;
+    const createdAt = new Date(topic.created_at);
+    const { currentUser } = this;
+    const { tagging_enabled, topic_featured_link_enabled } = this.siteSettings;
+
+    attrs["currentUser"] = currentUser;
+
+    let result = [];
+
+    if (attrs.fullScreen) {
+      let titleHTML = "";
+      if (attrs.mobileView) {
+        titleHTML = new RawHtml({
+          html: `<span>${topic.get("fancyTitle")}</span>`,
+        });
+      }
+
+      let elems = [
+        h(
+          "h2",
+          this.attach("link", {
+            contents: () => titleHTML,
+            className: "fancy-title",
+            action: "jumpTop",
+          })
+        ),
+      ];
+
+      // duplicate of the {{topic-category}} component
+      let category = [];
+
+      if (!topic.get("isPrivateMessage")) {
+        if (topic.category.parentCategory) {
+          category.push(
+            this.attach("category-link", {
+              category: topic.category.parentCategory,
+            })
+          );
+        }
+        category.push(
+          this.attach("category-link", { category: topic.category })
+        );
+      }
+
+      const showTags = tagging_enabled && topic.tags && topic.tags.length > 0;
+
+      if (showTags || topic_featured_link_enabled) {
+        let extras = [];
+        if (showTags) {
+          const tagsHtml = new RawHtml({
+            html: renderTags(topic, { mode: "list" }),
+          });
+          extras.push(h("div.list-tags", tagsHtml));
+        }
+        if (topic_featured_link_enabled) {
+          extras.push(new RawHtml({ html: renderTopicFeaturedLink(topic) }));
+        }
+        category.push(h("div.topic-header-extra", extras));
+      }
+
+      if (category.length > 0) {
+        elems.push(h("div.topic-category", category));
+      }
+
+      if (this.state.excerpt) {
+        elems.push(
+          new RawHtml({
+            html: `<div class='post-excerpt'>${this.state.excerpt}</div>`,
+          })
+        );
+      }
+
+      result.push(h("div.title", elems));
+    }
+
+    return result;
   }
 
   @action
@@ -104,14 +223,14 @@ export default class TopicTimeline extends GlimmerComponent {
   }
 
   willDestroy() {
-    if (!this.site.mobileView) {
-      this.appEvents.off("composer:opened", this, this.queueRerender);
-      this.appEvents.off("composer:resized", this, this.queueRerender);
-      this.appEvents.off("composer:closed", this, this.queueRerender);
-      if ("IntersectionObserver" in window) {
-        this.intersectionObserver?.disconnect();
-        this.intersectionObserver = null;
-      }
-    }
+    //if (!this.site.mobileView) {
+    // this.appEvents.off("composer:opened", this, this.queueRerender);
+    // this.appEvents.off("composer:resized", this, this.queueRerender);
+    // this.appEvents.off("composer:closed", this, this.queueRerender);
+    // if ("IntersectionObserver" in window) {
+    //  this.intersectionObserver?.disconnect();
+    // this.intersectionObserver = null;
+    //}
+    //}
   }
 }

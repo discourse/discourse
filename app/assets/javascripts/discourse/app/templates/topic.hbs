@@ -107,7 +107,31 @@
         <PluginOutlet @name="topic-navigation" @connectorTagName="div" @args={{hash topic=this.model}} />
 
         {{#if info.renderTimeline}}
-          <TopicTimeline @info={{info}} @model={{model}}/>
+          <TopicTimeline
+            @info={{info}}
+            @model={{this.model}}
+            @replyToPost={{action "replyToPost"}}
+            @showSummary={{action "showSummary"}}
+            @jumpToPostPrompt={{action "jumpToPostPrompt"}}
+            @enteredIndex={{this.enteredIndex}}
+            @jumpTop={{action "jumpTop"}}
+            @jumpBottom={{action "jumpBottom"}}
+            @jumpEnd={{action "jumpEnd"}}
+            @jumpToIndex={{action "jumpToIndex"}}
+            @toggleMultiSelect={{action "toggleMultiSelect"}}
+            @showTopicSlowModeUpdate={{route-action "showTopicSlowModeUpdate"}}
+            @deleteTopic={{action "deleteTopic"}}
+            @recoverTopic={{action "recoverTopic"}}
+            @toggleClosed={{action "toggleClosed"}}
+            @toggleArchived={{action "toggleArchived"}}
+            @toggleVisibility={{action "toggleVisibility"}}
+            @showTopicTimerModal={{route-action "showTopicTimerModal"}}
+            @showFeatureTopic={{route-action "showFeatureTopic"}}
+            @showChangeTimestamp={{route-action "showChangeTimestamp"}}
+            @resetBumpDate={{action "resetBumpDate"}}
+            @convertToPublicTopic={{action "convertToPublicTopic"}}
+            @convertToPrivateMessage={{action "convertToPrivateMessage"}}
+          />
         {{else}}
           <TopicProgress @prevEvent={{info.prevEvent}} @topic={{this.model}} @expanded={{info.topicProgressExpanded}} @jumpToPost={{action "jumpToPost"}}>
             <PluginOutlet @name="before-topic-progress" @tagName="span" @connectorTagName="div" @args={{hash model=this.model jumpToPost=(action "jumpToPost")}} />

@@ -1,0 +1,33 @@
+<div class="timeline-scrollarea-wrapper">
+  <TopicTimeline::Date
+    @topic={{@topic}}
+    @class="start-date"
+    @onClick={{@jumpTop}}
+  />
+  <div class="timeline-scrollarea">
+    <TopicTimeline::Padding @height={{this.before}} />
+    <TopicTimeline::Scroller
+      @current={{this.current}}
+      @total={{this.total}}
+      @goBack={{this.goBack}}
+      @fullscreen={{@fullscreen}}
+      @showDockedButton={{this.showDockedButton}}
+      @date={{this.date}}
+    />
+    <TopicTimeline::Padding @height={{this.after}} />
+
+    {{#if this.hasBackPosition}}
+      <TopicTimeline::LastRead
+        @top={{this.lastReadTop}}
+        @lastRead={{this.lastRead}}
+        @showButton={{this.showButton}}
+        @goBack={{this.goBack}}
+      />
+    {{/if}}
+  </div>
+  <TopicTimeline::Date
+    @topic={{@topic}}
+    @class="now-date"
+    @onClick={{@jumpBottom}}
+  />
+</div>
