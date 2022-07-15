@@ -1059,10 +1059,10 @@ class Plugin::Instance
   # But the JSON will be like this:
   #
   # {
-  #   "chat_messages_last_day": 2322,
-  #   "chat_messages_7_days": 2322,
-  #   "chat_messages_30_days": 2322,
-  #   "chat_messages_count": 2322,
+  #   "chat_messages_last_day": 1,
+  #   "chat_messages_7_days": 10,
+  #   "chat_messages_30_days": 100,
+  #   "chat_messages_count": 1000,
   # }
   #
   # The show_in_ui option (default false) is used to determine whether the

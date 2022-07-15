@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
 class About
-  cattr_reader :plugin_stat_groups
+  cattr_reader :plugin_stat_groups, :displayed_plugin_stat_groups
 
   def self.add_plugin_stat_group(prefix, show_in_ui: false, &block)
-    @@displayed_plugin_stat_groups = nil
-    @@plugin_stat_groups[prefix] = { block: block, show_in_ui: show_in_ui }
+    if !@@displayed_plugin_stat_groups.include?(prefix) && show_in_ui
+      @@displayed_plugin_stat_groups << prefix
+    end
+    @@plugin_stat_groups[prefix] = { block: block }
   end
 
   def self.clear_plugin_stat_groups
-    @@displayed_plugin_stat_groups = nil
+    @@displayed_plugin_stat_groups = []
     @@plugin_stat_groups = {}
-  end
-
-  def self.displayed_plugin_stat_groups
-    @@displayed_plugin_stat_groups ||= @@plugin_stat_groups.select { |key, value| value[:show_in_ui] }.keys
   end
 
   clear_plugin_stat_groups

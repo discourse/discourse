@@ -22,20 +22,14 @@ export default {
         likes_last_day: 120,
         likes_7_days: 3449,
         likes_30_days: 12313,
-        plugin_stats: {
-          chat_messages: {
-            last_day: 10,
-            "7_days": 100,
-            "30_days": 1000,
-            count: 10000
-          },
-          chat_users: {
-            last_day: 10,
-            "7_days": 100,
-            "30_days": 1000,
-            count: 10000
-          }
-        }
+        chat_messages_last_day: 10,
+        chat_messages_7_days: 100,
+        chat_messages_30_days: 1000,
+        chat_messages_count: 10000,
+        chat_users_last_day: 10,
+        chat_users_7_days: 100,
+        chat_users_30_days: 1000,
+        chat_users_count: 10000
       },
       description:
         "Discussion about the next-generation open source Discourse forum software",
