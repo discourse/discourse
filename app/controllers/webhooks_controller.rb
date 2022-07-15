@@ -67,7 +67,7 @@ class WebhooksController < ActionController::Base
   end
 
   def mandrill_head
-    # Mailchimp sends a HEAD request to validate the webhook before saving
+    # Mandrill sends a HEAD request to validate the webhook before saving
     # Rails interprets it as a GET request
     success
   end
