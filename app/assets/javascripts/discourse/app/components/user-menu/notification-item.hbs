@@ -1,6 +1,6 @@
 <li class={{this.className}}>
   <a
-    href={{this.url}}
+    href={{this.linkHref}}
     title={{this.linkTitle}}
     {{on "click" this.onClick}}
   >
@@ -20,11 +20,7 @@
           class={{this.descriptionElementClasses}}
           data-topic-id={{this.topicId}}
         >
-          {{#if this.descriptionHtmlSafe}}
-            {{html-safe this.description}}
-          {{else}}
-            {{this.description}}
-          {{/if}}
+          {{this.description}}
         </span>
       {{/if}}
     </div>

@@ -4,6 +4,7 @@ import { userPath } from "discourse/lib/url";
 import { setTransientHeader } from "discourse/lib/ajax";
 import { action } from "@ember/object";
 import { emojiUnescape } from "discourse/lib/text";
+import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
 import cookie from "discourse/lib/cookie";
 import I18n from "I18n";
@@ -23,7 +24,7 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
     return classes.join(" ");
   }
 
-  get url() {
+  get linkHref() {
     if (this.topicId) {
       return postUrl(
         this.notification.slug,
@@ -63,9 +64,13 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
   }
 
   get description() {
-    return (
-      emojiUnescape(this.notification.fancy_title) || this.data.topic_title
-    );
+    const description =
+      emojiUnescape(this.notification.fancy_title) || this.data.topic_title;
+    if (this.descriptionHtmlSafe) {
+      return htmlSafe(description);
+    } else {
+      return description;
+    }
   }
 
   get descriptionElementClasses() {}
