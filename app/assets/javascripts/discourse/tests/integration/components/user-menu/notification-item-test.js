@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { render, settled } from "@ember/test-helpers";
 import { deepMerge } from "discourse-common/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
@@ -124,22 +124,22 @@ module(
       assert.strictEqual(link.title, I18n.t("notifications.titles.mentioned"));
     });
 
-    test("has 2 spans: one for label and one for description", async function (assert) {
+    test("has elements for label and description", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
-      const spans = queryAll("li a span");
-      assert.strictEqual(spans.length, 2);
+      const label = query("li a .notification-label");
+      const description = query("li a .notification-description");
 
       assert.strictEqual(
-        spans[0].textContent.trim(),
+        label.textContent.trim(),
         "osama",
-        "the first span (label) defaults to username"
+        "the label's content is the username by default"
       );
 
       assert.strictEqual(
-        spans[1].textContent.trim(),
+        description.textContent.trim(),
         "This is fancy title <a>!",
-        "the second span (description) defaults to the fancy_title"
+        "the description defaults to the fancy_title"
       );
     });
 
@@ -151,10 +151,10 @@ module(
         })
       );
       await render(template);
-      const span = query("li a span:nth-of-type(2)");
+      const description = query("li a .notification-description");
 
       assert.strictEqual(
-        span.textContent.trim(),
+        description.textContent.trim(),
         "this is title before it becomes fancy <a>!",
         "topic_title from data is rendered safely"
       );
@@ -169,7 +169,7 @@ module(
       );
       await render(template);
       assert.ok(
-        exists("li a span:nth-of-type(2) img.emoji"),
+        exists("li a .notification-description img.emoji"),
         "emojis are unescaped when fancy_title is used for description"
       );
     });
@@ -185,14 +185,14 @@ module(
         })
       );
       await render(template);
-      const span = query("li a span:nth-of-type(2)");
+      const description = query("li a .notification-description");
 
       assert.strictEqual(
-        span.textContent.trim(),
+        description.textContent.trim(),
         "unsafe title with unescaped emoji :phone:",
         "emojis aren't unescaped when topic title is not safe"
       );
-      assert.strictEqual(queryAll("img").length, 0);
+      assert.ok(!query("img"), "no <img> exists");
     });
   }
 );

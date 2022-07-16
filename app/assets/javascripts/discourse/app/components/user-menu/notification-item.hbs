@@ -8,7 +8,7 @@
     <div>
       {{#if this.label}}
         {{#if this.wrapLabel}}
-          <span class={{this.labelWrapperClasses}}>
+          <span class={{concat "notification-label " this.labelWrapperClasses}}>
             {{this.label}}
           </span>
         {{else}}
@@ -17,7 +17,7 @@
       {{/if}}
       {{#if this.description}}
         <span
-          class={{this.descriptionElementClasses}}
+          class={{concat "notification-description " this.descriptionElementClasses}}
           data-topic-id={{this.topicId}}
         >
           {{this.description}}
