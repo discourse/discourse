@@ -5,7 +5,6 @@ import {
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   selectText,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -50,7 +49,7 @@ acceptance("Topic", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
       "it fills composer with the ring string"
     );
@@ -69,7 +68,7 @@ acceptance("Topic", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
       "it fills composer with the ring string"
     );
@@ -117,12 +116,12 @@ acceptance("Topic", function (needs) {
     await click("#topic-title .submit-edit");
 
     assert.strictEqual(
-      queryAll("#topic-title .badge-category").text(),
+      query("#topic-title .badge-category").innerText,
       "faq",
       "it displays the new category"
     );
     assert.strictEqual(
-      queryAll(".fancy-title").text().trim(),
+      query(".fancy-title").innerText.trim(),
       "this is the new title",
       "it displays the new title"
     );
@@ -144,7 +143,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/12");
 
     assert.strictEqual(
-      queryAll(".fancy-title").text().trim(),
+      query(".fancy-title").innerText.trim(),
       "PM for testing",
       "it routes to the right topic"
     );
@@ -152,7 +151,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/280/20");
 
     assert.strictEqual(
-      queryAll(".fancy-title").text().trim(),
+      query(".fancy-title").innerText.trim(),
       "Internationalization / localization",
       "it routes to the right topic"
     );
@@ -167,7 +166,7 @@ acceptance("Topic", function (needs) {
     await click("#topic-title .submit-edit");
 
     assert.ok(
-      queryAll(".fancy-title").html().trim().indexOf("bike.png") !== -1,
+      query(".fancy-title").innerHTML.trim().includes("bike.png"),
       "it displays the new title with emojis"
     );
   });
@@ -181,7 +180,7 @@ acceptance("Topic", function (needs) {
     await click("#topic-title .submit-edit");
 
     assert.ok(
-      queryAll(".fancy-title").html().trim().indexOf("man_farmer.png") !== -1,
+      query(".fancy-title").innerHTML.trim().includes("man_farmer.png"),
       "it displays the new title with emojis"
     );
   });
@@ -196,10 +195,9 @@ acceptance("Topic", function (needs) {
     await click("#topic-title .submit-edit");
 
     assert.ok(
-      queryAll(".fancy-title")
-        .html()
-        .trim()
-        .indexOf("slightly_smiling_face.png") !== -1,
+      query(".fancy-title")
+        .innerHTML.trim()
+        .includes("slightly_smiling_face.png"),
       "it displays the new title with emojis"
     );
   });
@@ -208,7 +206,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.strictEqual(
-      queryAll("#suggested-topics .suggested-topics-title").text().trim(),
+      query("#suggested-topics .suggested-topics-title").innerText.trim(),
       I18n.t("suggested_topics.title")
     );
   });
@@ -272,9 +270,9 @@ acceptance("Topic featured links", function (needs) {
   test("remove nofollow attribute", async function (assert) {
     await visit("/t/-/299/1");
 
-    const link = queryAll(".title-wrapper .topic-featured-link");
-    assert.strictEqual(link.text(), " example.com");
-    assert.strictEqual(link.attr("rel"), "ugc");
+    const link = query(".title-wrapper .topic-featured-link");
+    assert.strictEqual(link.innerText, " example.com");
+    assert.strictEqual(link.getAttribute("rel"), "ugc");
   });
 
   test("remove featured link", async function (assert) {
@@ -355,18 +353,18 @@ acceptance("Topic featured links", function (needs) {
     await click("#post_3 .select-below");
 
     assert.ok(
-      queryAll(".selected-posts")
-        .html()
-        .includes(I18n.t("topic.multi_select.description", { count: 18 })),
+      query(".selected-posts").innerHTML.includes(
+        I18n.t("topic.multi_select.description", { count: 18 })
+      ),
       "it should select the right number of posts"
     );
 
     await click("#post_2 .select-below");
 
     assert.ok(
-      queryAll(".selected-posts")
-        .html()
-        .includes(I18n.t("topic.multi_select.description", { count: 19 })),
+      query(".selected-posts").innerHTML.includes(
+        I18n.t("topic.multi_select.description", { count: 19 })
+      ),
       "it should select the right number of posts"
     );
   });
@@ -386,9 +384,9 @@ acceptance("Topic featured links", function (needs) {
       await click(".quote-button .insert-quote");
 
       assert.ok(
-        queryAll(".d-editor-input")
-          .val()
-          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+        query(".d-editor-input").value.includes(
+          'quote="codinghorror said, post:3, topic:280"'
+        )
       );
     }
   );
@@ -401,11 +399,9 @@ acceptance("Topic featured links", function (needs) {
       await click(".quote-button .insert-quote");
 
       assert.ok(
-        queryAll(".d-editor-input")
-          .val()
-          .indexOf(
-            'quote="A new topic with a link to another topic, post:3, topic:62"'
-          ) !== -1
+        query(".d-editor-input").value.includes(
+          'quote="A new topic with a link to another topic, post:3, topic:62"'
+        )
       );
     }
   );
@@ -418,9 +414,9 @@ acceptance("Topic featured links", function (needs) {
       await click(".reply");
 
       assert.ok(
-        queryAll(".d-editor-input")
-          .val()
-          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+        query(".d-editor-input").value.includes(
+          'quote="codinghorror said, post:3, topic:280"'
+        )
       );
     }
   );
@@ -435,9 +431,9 @@ acceptance("Topic featured links", function (needs) {
       await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
 
       assert.ok(
-        queryAll(".d-editor-input")
-          .val()
-          .indexOf('quote="codinghorror said, post:3, topic:280"') !== -1
+        query(".d-editor-input").value.includes(
+          'quote="codinghorror said, post:3, topic:280"'
+        )
       );
     }
   );
@@ -448,9 +444,9 @@ acceptance("Topic featured links", function (needs) {
     await click(".quote-button .insert-quote");
 
     assert.ok(
-      queryAll(".d-editor-input")
-        .val()
-        .indexOf('quote="pekka, post:5, topic:280, full:true"') !== -1
+      query(".d-editor-input").value.includes(
+        'quote="pekka, post:5, topic:280, full:true"'
+      )
     );
   });
 });
