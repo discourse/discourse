@@ -665,70 +665,73 @@ const User = RestModel.extend({
     return this.stats.rejectBy("isPM");
   },
 
-  findDetails(options) {
+  async findDetails(options) {
     const user = this;
 
-    return PreloadStore.getAndRemove(`user_${user.get("username")}`, () => {
-      if (options && options.existingRequest) {
-        // Existing ajax request has been passed, use it
-        return options.existingRequest;
-      }
-
-      const useCardRoute = options && options.forCard;
-      if (options) {
-        delete options.forCard;
-      }
-
-      const path = useCardRoute
-        ? `${user.get("username")}/card.json`
-        : `${user.get("username")}.json`;
-
-      return ajax(userPath(path), { data: options });
-    }).then((json) => {
-      if (!isEmpty(json.user.stats)) {
-        json.user.stats = User.groupStats(
-          json.user.stats.map((s) => {
-            if (s.count) {
-              s.count = parseInt(s.count, 10);
-            }
-            return UserActionStat.create(s);
-          })
-        );
-      }
-
-      if (!isEmpty(json.user.groups) && !isEmpty(json.user.group_users)) {
-        const groups = [];
-
-        for (let i = 0; i < json.user.groups.length; i++) {
-          const group = Group.create(json.user.groups[i]);
-          group.group_user = json.user.group_users[i];
-          groups.push(group);
+    const json = await PreloadStore.getAndRemove(
+      `user_${user.get("username")}`,
+      () => {
+        if (options?.existingRequest) {
+          // Existing ajax request has been passed, use it
+          return options.existingRequest;
         }
 
-        json.user.groups = groups;
+        const useCardRoute = options?.forCard;
+        if (options) {
+          delete options.forCard;
+        }
+
+        const path = useCardRoute
+          ? `${user.get("username")}/card.json`
+          : `${user.get("username")}.json`;
+
+        return ajax(userPath(path), { data: options });
+      }
+    );
+
+    if (!isEmpty(json.user.stats)) {
+      json.user.stats = User.groupStats(
+        json.user.stats.map((s) => {
+          if (s.count) {
+            s.count = parseInt(s.count, 10);
+          }
+          return UserActionStat.create(s);
+        })
+      );
+    }
+
+    if (!isEmpty(json.user.groups) && !isEmpty(json.user.group_users)) {
+      const groups = [];
+
+      for (let i = 0; i < json.user.groups.length; i++) {
+        const group = Group.create(json.user.groups[i]);
+        group.group_user = json.user.group_users[i];
+        groups.push(group);
       }
 
-      if (json.user.invited_by) {
-        json.user.invited_by = User.create(json.user.invited_by);
-      }
+      json.user.groups = groups;
+    }
 
-      if (!isEmpty(json.user.featured_user_badge_ids)) {
-        const userBadgesMap = {};
-        UserBadge.createFromJson(json).forEach((userBadge) => {
-          userBadgesMap[userBadge.get("id")] = userBadge;
-        });
-        json.user.featured_user_badges = json.user.featured_user_badge_ids.map(
-          (id) => userBadgesMap[id]
-        );
-      }
+    if (json.user.invited_by) {
+      json.user.invited_by = User.create(json.user.invited_by);
+    }
 
-      if (json.user.card_badge) {
-        json.user.card_badge = Badge.create(json.user.card_badge);
-      }
+    if (!isEmpty(json.user.featured_user_badge_ids)) {
+      const userBadgesMap = {};
+      UserBadge.createFromJson(json).forEach((userBadge) => {
+        userBadgesMap[userBadge.get("id")] = userBadge;
+      });
+      json.user.featured_user_badges = json.user.featured_user_badge_ids.map(
+        (id) => userBadgesMap[id]
+      );
+    }
 
-      user.setProperties(json.user);
-      return user;
-    });
+    if (json.user.card_badge) {
+      json.user.card_badge = Badge.create(json.user.card_badge);
+    }
+
+    user.setProperties(json.user);
+    return user;
   },
 
   findStaffInfo() {

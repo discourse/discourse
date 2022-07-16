@@ -110,17 +110,16 @@ CategoryList.reopenClass({
     });
   },
 
-  list(store) {
-    const getCategories = () => ajax("/categories.json");
-    return PreloadStore.getAndRemove("categories_list", getCategories).then(
-      (result) => {
-        return CategoryList.create({
-          categories: this.categoriesFrom(store, result),
-          can_create_category: result.category_list.can_create_category,
-          can_create_topic: result.category_list.can_create_topic,
-        });
-      }
+  async list(store) {
+    const result = await PreloadStore.getAndRemove("categories_list", () =>
+      ajax("/categories.json")
     );
+
+    return CategoryList.create({
+      categories: this.categoriesFrom(store, result),
+      can_create_category: result.category_list.can_create_category,
+      can_create_topic: result.category_list.can_create_topic,
+    });
   },
 });
 

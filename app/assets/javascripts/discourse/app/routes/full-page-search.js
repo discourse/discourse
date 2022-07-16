@@ -29,7 +29,7 @@ export default DiscourseRoute.extend({
     });
   },
 
-  model(params) {
+  async model(params) {
     const cached = getTransient("lastSearch");
     let args = { q: params.q };
     if (params.context_id && !args.skip_context) {
@@ -47,22 +47,21 @@ export default DiscourseRoute.extend({
       return cached.data.model;
     }
 
-    return PreloadStore.getAndRemove("search", () => {
+    const results = await PreloadStore.getAndRemove("search", () => {
       if (isValidSearchTerm(params.q, this.siteSettings)) {
         return ajax("/search", { data: args });
       } else {
         return null;
       }
-    }).then(async (results) => {
-      const grouped_search_result = results
-        ? results.grouped_search_result
-        : {};
-      const model = (results && (await translateResults(results))) || {
-        grouped_search_result,
-      };
-      setTransient("lastSearch", { searchKey, model }, 5);
-      return model;
     });
+
+    const grouped_search_result = results ? results.grouped_search_result : {};
+
+    let model = results && (await translateResults(results));
+    model ||= { grouped_search_result };
+
+    setTransient("lastSearch", { searchKey, model }, 5);
+    return model;
   },
 
   @action

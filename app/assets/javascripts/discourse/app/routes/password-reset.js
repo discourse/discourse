@@ -10,11 +10,10 @@ export default DiscourseRoute.extend({
     return I18n.t("login.reset_password");
   },
 
-  model(params) {
+  async model(params) {
     if (PreloadStore.get("password_reset")) {
-      return PreloadStore.getAndRemove("password_reset").then((json) =>
-        deepMerge(params, json)
-      );
+      const json = await PreloadStore.getAndRemove("password_reset");
+      return deepMerge(params, json);
     }
   },
 

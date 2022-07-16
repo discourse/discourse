@@ -52,16 +52,16 @@ export default DiscourseRoute.extend({
     });
   },
 
-  model() {
-    return PreloadStore.getAndRemove("operations_status", () =>
+  async model() {
+    const status = await PreloadStore.getAndRemove("operations_status", () =>
       ajax("/admin/backups/status.json")
-    ).then((status) =>
-      BackupStatus.create({
-        isOperationRunning: status.is_operation_running,
-        canRollback: status.can_rollback,
-        allowRestore: status.allow_restore,
-      })
     );
+
+    return BackupStatus.create({
+      isOperationRunning: status.is_operation_running,
+      canRollback: status.can_rollback,
+      allowRestore: status.allow_restore,
+    });
   },
 
   deactivate() {

@@ -6,13 +6,12 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
-  model() {
+  async model() {
     if (PreloadStore.get("badges")) {
-      return PreloadStore.getAndRemove("badges").then((json) =>
-        Badge.createFromJson(json)
-      );
+      const json = await PreloadStore.getAndRemove("badges");
+      return Badge.createFromJson(json);
     } else {
-      return Badge.findAll({ onlyListable: true });
+      return await Badge.findAll({ onlyListable: true });
     }
   },
 

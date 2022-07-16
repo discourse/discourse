@@ -8,11 +8,10 @@ export default DiscourseRoute.extend({
     return I18n.t("invites.accept_title");
   },
 
-  model(params) {
+  async model(params) {
     if (PreloadStore.get("invite_info")) {
-      return PreloadStore.getAndRemove("invite_info").then((json) =>
-        deepMerge(params, json)
-      );
+      const json = await PreloadStore.getAndRemove("invite_info");
+      return deepMerge(params, json);
     } else {
       return {};
     }
