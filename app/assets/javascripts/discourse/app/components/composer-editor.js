@@ -22,7 +22,8 @@ import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
-import { later, next, schedule, throttle } from "@ember/runloop";
+import { next, schedule, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
@@ -519,7 +520,7 @@ export default Component.extend(ComposerUploadUppy, {
         if (found.indexOf(name) === -1) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
-          later(
+          discourseLater(
             this,
             () => {
               if (
@@ -545,7 +546,7 @@ export default Component.extend(ComposerUploadUppy, {
       return;
     }
 
-    later(
+    discourseLater(
       this,
       () => {
         this.hereMention(hereCount);
@@ -699,7 +700,7 @@ export default Component.extend(ComposerUploadUppy, {
     this.appEvents.trigger("composer:will-close");
     next(() => {
       // need to wait a bit for the "slide down" transition of the composer
-      later(
+      discourseLater(
         () => this.appEvents.trigger("composer:closed"),
         isTesting() ? 0 : 400
       );

@@ -5,7 +5,7 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 export default Component.extend({
   tagName: null,
@@ -48,7 +48,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    later(() => {
+    discourseLater(() => {
       if (this.element) {
         const textArea = this.element.querySelector(".topic-share-url");
         textArea.style.height = textArea.scrollHeight + "px";

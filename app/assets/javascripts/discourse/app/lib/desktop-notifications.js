@@ -5,7 +5,7 @@ import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { formatUsername } from "discourse/lib/utilities";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -94,7 +94,7 @@ function confirmNotification(siteSettings) {
   const clickEventHandler = () => notification.close();
 
   notification.addEventListener("click", clickEventHandler);
-  later(() => {
+  discourseLater(() => {
     notification.close();
     notification.removeEventListener("click", clickEventHandler);
   }, 10 * 1000);

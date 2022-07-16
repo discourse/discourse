@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
@@ -22,7 +23,7 @@ function searchTags(term, categories, limit) {
   return new Promise((resolve) => {
     let clearPromise = isTesting()
       ? null
-      : later(() => {
+      : discourseLater(() => {
           resolve(CANCELLED_STATUS);
         }, 5000);
 

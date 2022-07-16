@@ -1,6 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { later, run, throttle } from "@ember/runloop";
+import { run, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -308,7 +309,7 @@ export default {
 
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    later(() => $(".d-editor .quote").click(), 500);
+    discourseLater(() => $(".d-editor .quote").click(), 500);
 
     return false;
   },
