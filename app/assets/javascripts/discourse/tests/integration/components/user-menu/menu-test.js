@@ -26,7 +26,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(activeTab.getAttribute("aria-selected"), "true");
   });
 
-  test("core top tabs", async function (assert) {
+  test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
@@ -43,7 +43,7 @@ module("Integration | Component | user-menu", function (hooks) {
     });
   });
 
-  test("core bottom tabs", async function (assert) {
+  test("the menu has a group of tabs at the bottom", async function (assert) {
     await render(template);
     const tabs = queryAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
