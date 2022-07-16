@@ -281,9 +281,10 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const header = document.querySelector("header.d-header");
       this._itsatrap = new ItsATrap(header);
-      this._itsatrap.bind(["right", "left"], (e) =>
-        this._handleArrowKeysNav(e)
-      );
+      const dirs = this.currentUser?.redesigned_user_menu_enabled
+        ? ["up", "down"]
+        : ["right", "left"];
+      this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
     },
 
     _handleArrowKeysNav(event) {
@@ -298,7 +299,7 @@ const SiteHeaderComponent = MountWidget.extend(
           );
           const maxTabNumber =
             document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-          const isNext = event.key === "ArrowRight";
+          const isNext = event.key === "ArrowDown";
           let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
           if (isNext && nextTab > maxTabNumber) {
             nextTab = 0;
@@ -306,6 +307,7 @@ const SiteHeaderComponent = MountWidget.extend(
           if (!isNext && nextTab < 0) {
             nextTab = maxTabNumber;
           }
+          event.preventDefault();
           document
             .querySelector(
               `.menu-tabs-container .btn[data-tab-number='${nextTab}']`

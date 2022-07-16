@@ -8,7 +8,7 @@
         aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
         <this.currentPanelComponent/>
       </div>
-      <div class="menu-tabs-container" role="tablist" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
+      <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
         <div class="top-tabs tabs-list">
           {{#each this.topTabs as |tab|}}
             <button
