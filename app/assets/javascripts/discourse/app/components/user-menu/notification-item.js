@@ -32,8 +32,10 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
         this.notification.post_number
       );
     }
-    if (this.data.group_id) {
-      return userPath(`${this.data.username}/messages/${this.data.group_name}`);
+    if (this.notification.data.group_id) {
+      return userPath(
+        `${this.notification.data.username}/messages/${this.notification.data.group_name}`
+      );
     }
   }
 
@@ -60,12 +62,14 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
   get labelWrapperClasses() {}
 
   get username() {
-    return formatUsername(this.data.display_username);
+    return formatUsername(this.notification.data.display_username);
   }
 
   get description() {
     const description =
-      emojiUnescape(this.notification.fancy_title) || this.data.topic_title;
+      emojiUnescape(this.notification.fancy_title) ||
+      this.notification.data.topic_title;
+
     if (this.descriptionHtmlSafe) {
       return htmlSafe(description);
     } else {
@@ -86,10 +90,6 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
 
   get topicId() {
     return this.notification.topic_id;
-  }
-
-  get data() {
-    return this.notification.data;
   }
 
   get notificationName() {
