@@ -25,5 +25,6 @@ div.profiler-results.profiler-top {
 
   &.profiler-right .profiler-button {
     border-left: 1px solid var(--header_primary-low);
+    padding-right: 10px; // Make space for scrollbar
   }
 }
