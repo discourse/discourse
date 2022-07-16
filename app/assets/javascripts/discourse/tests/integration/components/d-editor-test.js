@@ -13,17 +13,12 @@ import {
 } from "discourse/tests/helpers/textarea-selection-helper";
 import { hbs } from "ember-cli-htmlbars";
 import I18n from "I18n";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
-
-  hooks.afterEach(function () {
-    clearToolbarCallbacks();
-  });
 
   test("preview updates with markdown", async function (assert) {
     await render(hbs`<DEditor @value={{this.value}} />`);
