@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { caretPosition, setCaretPosition } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Site from "discourse/models/site";
@@ -113,7 +114,7 @@ export default function (options) {
   let inputSelectedItems = [];
 
   function handlePaste() {
-    later(() => me.trigger("keydown"), 50);
+    discourseLater(() => me.trigger("keydown"), 50);
   }
 
   function closeAutocomplete() {
@@ -531,7 +532,7 @@ export default function (options) {
       // saves us wiring up a change event as well
 
       cancel(inputTimeout);
-      inputTimeout = later(function () {
+      inputTimeout = discourseLater(function () {
         if (inputSelectedItems.length === 0) {
           inputSelectedItems.push("");
         }

@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -253,7 +254,7 @@ export default function userSearch(options) {
 
     let clearPromise;
     if (!isTesting()) {
-      clearPromise = later(() => resolve(CANCELLED_STATUS), 5000);
+      clearPromise = discourseLater(() => resolve(CANCELLED_STATUS), 5000);
     }
 
     if (skipSearch(term, options.allowEmails, options.lastSeenUsers)) {

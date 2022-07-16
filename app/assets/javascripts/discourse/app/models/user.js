@@ -32,7 +32,8 @@ import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
 import Evented from "@ember/object/evented";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
@@ -1220,7 +1221,11 @@ User.reopen(Evented, {
 
     const utcNow = moment.utc();
     const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
-    this._clearStatusTimerId = later(this, "_autoClearStatus", remaining);
+    this._clearStatusTimerId = discourseLater(
+      this,
+      "_autoClearStatus",
+      remaining
+    );
   },
 
   _unscheduleStatusClearing() {

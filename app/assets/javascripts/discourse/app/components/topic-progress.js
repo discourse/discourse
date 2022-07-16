@@ -1,7 +1,8 @@
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
-import { later, scheduleOnce } from "@ember/runloop";
+import { scheduleOnce } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -77,7 +78,7 @@ export default Component.extend({
 
     // start CSS transitions a tiny bit later
     // to avoid jumpiness on initial topic load
-    later(this._addCssTransitions, CSS_TRANSITION_DELAY);
+    discourseLater(this._addCssTransitions, CSS_TRANSITION_DELAY);
   },
 
   willDestroyElement() {

@@ -3,7 +3,8 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
 import { action, set, setProperties } from "@ember/object";
-import { later, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 export default Component.extend({
   classNameBindings: [":value-list", ":emoji-list"],
@@ -104,7 +105,7 @@ export default Component.extend({
       }
 
       this.set("isEditorFocused", true);
-      later(() => {
+      discourseLater(() => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
           this.set("emojiPickerIsActive", true);
         }

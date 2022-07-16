@@ -2,7 +2,8 @@ import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import { cancel, later, schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
@@ -42,7 +43,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      this._scheduledRemoveAnimate = later(() => {
+      this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
       }, 200);
@@ -60,7 +61,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const offsetDirection = menuOrigin === "left" ? -1 : 1;
       panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
       headerCloak.style.setProperty("--opacity", 0);
-      this._scheduledRemoveAnimate = later(() => {
+      this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
         schedule("afterRender", () => {

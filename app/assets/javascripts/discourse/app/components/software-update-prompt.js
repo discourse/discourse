@@ -1,5 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { action } from "@ember/object";
@@ -34,7 +35,7 @@ export default Component.extend({
         } else {
           // Since we can do this transparently for people browsing the forum
           // hold back the message 24 hours.
-          this._timeoutHandler = later(() => {
+          this._timeoutHandler = discourseLater(() => {
             this.updatePromptState(true);
           }, 1000 * 60 * 24 * 60);
         }
@@ -52,7 +53,7 @@ export default Component.extend({
     if (isTesting()) {
       this.set(secondProp, value);
     } else {
-      later(() => {
+      discourseLater(() => {
         this.set(secondProp, value);
       }, 500);
     }

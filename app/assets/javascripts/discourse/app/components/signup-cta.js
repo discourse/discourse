@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { on } from "@ember/object/evented";
 
 export default Component.extend({
@@ -13,7 +13,7 @@ export default Component.extend({
     hideForSession() {
       this.session.set("hideSignupCta", true);
       this.keyValueStore.setItem("anon-cta-hidden", Date.now());
-      later(() => this.session.set("showSignupCta", false), 20 * 1000);
+      discourseLater(() => this.session.set("showSignupCta", false), 20 * 1000);
     },
   },
 
