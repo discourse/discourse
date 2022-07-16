@@ -69,6 +69,7 @@ import {
   clearTagDecorateCallbacks,
   clearTextDecorateCallbacks,
 } from "discourse/lib/to-markdown";
+import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -193,6 +194,7 @@ export function testCleanup(container, app) {
   clearTextDecorateCallbacks();
   clearResolverOptions();
   clearLegacyResolverOptions();
+  clearTagsHtmlCallbacks();
 }
 
 export function discourseModule(name, options) {
