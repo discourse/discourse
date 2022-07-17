@@ -15,6 +15,7 @@
   flex: 1;
   flex-direction: column;
   max-width: 100%;
+  min-width: 0;
 }
 
 .d-editor-textarea-wrapper {
@@ -298,6 +299,8 @@
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
+  overflow-x: auto;
+  flex-shrink: 0;
 
   .d-editor-spacer {
     height: 1em;
