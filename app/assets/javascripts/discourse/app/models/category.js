@@ -602,7 +602,7 @@ Category.reopenClass({
             category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
           validCategoryParent(category)
         ) {
-          if (data.indexOf(category) === -1) {
+          if (!data.includes(category)) {
             data.push(category);
           }
         }

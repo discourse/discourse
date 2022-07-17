@@ -509,7 +509,7 @@ export default createWidget("post-menu", {
         if (
           (attrs.yours && button.attrs && button.attrs.alwaysShowYours) ||
           (attrs.reviewableId && i === "flag") ||
-          hiddenButtons.indexOf(i) === -1
+          !hiddenButtons.includes(i)
         ) {
           visibleButtons.push(button);
         }

@@ -488,7 +488,7 @@ export default Component.extend(ComposerUploadUppy, {
         }
 
         let name = mention.dataset.name;
-        if (found.indexOf(name) === -1) {
+        if (!found.includes(name)) {
           this.groupsMentioned([
             {
               name,
@@ -517,7 +517,7 @@ export default Component.extend(ComposerUploadUppy, {
       preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
         let name = mention.dataset.name;
 
-        if (found.indexOf(name) === -1) {
+        if (!found.includes(name)) {
           // add a delay to allow for typing, so you don't open the warning right away
           // previously we would warn after @bob even if you were about to mention @bob2
           discourseLater(

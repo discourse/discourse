@@ -602,7 +602,7 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   _applyList(sel, head, exampleKey, opts) {
-    if (sel.value.indexOf("\n") !== -1) {
+    if (sel.value.includes("\n")) {
       this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
@@ -739,7 +739,7 @@ export default Component.extend(TextareaTextManipulation, {
 
       const sel = this.getSelected("", { lineVal: true });
       const selValue = sel.value;
-      const hasNewLine = selValue.indexOf("\n") !== -1;
+      const hasNewLine = selValue.includes("\n");
       const isBlankLine = sel.lineVal.trim().length === 0;
       const isFourSpacesIndent =
         this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;

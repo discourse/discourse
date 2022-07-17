@@ -483,7 +483,7 @@ export default function (options) {
   }
 
   function performAutocomplete(e) {
-    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) {
+    if ([keys.esc, keys.enter].includes(e.which)) {
       return true;
     }
 

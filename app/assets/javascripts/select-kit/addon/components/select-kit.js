@@ -232,7 +232,7 @@ export default Component.extend(
 
         if (
           typeof value === "string" &&
-          value.indexOf(".") < 0 &&
+          !value.includes(".") &&
           value in this
         ) {
           const computedValue = get(this, value);
@@ -593,7 +593,7 @@ export default Component.extend(
         filter = this._normalize(filter);
         content = content.filter((c) => {
           const name = this._normalize(this.getName(c));
-          return name && name.indexOf(filter) > -1;
+          return name?.includes(filter);
         });
       }
       return content;

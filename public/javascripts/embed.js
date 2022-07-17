@@ -81,7 +81,7 @@
     if (!e) {
       return;
     }
-    if (normalizeUrl(DE.discourseUrl).indexOf(normalizeUrl(e.origin)) === -1) {
+    if (!normalizeUrl(DE.discourseUrl).includes(normalizeUrl(e.origin))) {
       return;
     }
 

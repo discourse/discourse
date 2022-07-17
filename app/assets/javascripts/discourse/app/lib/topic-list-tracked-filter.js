@@ -53,7 +53,7 @@ export function isTrackedTopic(topic) {
     const tags = User.current().trackedTags;
 
     for (const tag of tags) {
-      if (topic.tags.indexOf(tag) > -1) {
+      if (topic.tags.includes(tag)) {
         return true;
       }
     }

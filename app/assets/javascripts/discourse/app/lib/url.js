@@ -490,7 +490,7 @@ export function setURLContainer(container) {
 }
 
 export function prefixProtocol(url) {
-  return url.indexOf("://") === -1 && !url.startsWith("mailto:")
+  return !url.includes("://") && !url.startsWith("mailto:")
     ? "https://" + url
     : url;
 }

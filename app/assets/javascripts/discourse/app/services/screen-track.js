@@ -204,7 +204,7 @@ export default class ScreenTrack extends Service {
         this.appEvents.trigger("topic:timings-sent", data);
       })
       .catch((e) => {
-        if (e.jqXHR && ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) > -1) {
+        if (e.jqXHR && ALLOWED_AJAX_FAILURES.includes(e.jqXHR.status)) {
           const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
           this._ajaxFailures += 1;
 
@@ -305,7 +305,7 @@ export default class ScreenTrack extends Service {
         }
 
         if (
-          topicIds.indexOf(topicId) === -1 &&
+          !topicIds.includes(topicId) &&
           topicIds.length < ANON_MAX_TOPIC_IDS
         ) {
           topicIds.push(topicId);
