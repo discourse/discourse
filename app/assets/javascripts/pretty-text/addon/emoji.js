@@ -209,7 +209,7 @@ export function emojiSearch(term, options) {
 
   // if term matches from beginning
   for (const item of toSearch) {
-    if (item.indexOf(term) === 0) {
+    if (item.startsWith(term)) {
       addResult(item);
     }
   }

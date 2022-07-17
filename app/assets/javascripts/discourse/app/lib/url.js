@@ -44,7 +44,7 @@ export function rewritePath(path) {
 
   let result = params[0];
   rewrites.forEach((rw) => {
-    if ((rw.opts.exceptions || []).some((ex) => path.indexOf(ex) === 0)) {
+    if ((rw.opts.exceptions || []).some((ex) => path.startsWith(ex))) {
       return;
     }
     result = result.replace(rw.regexp, rw.replacement);
@@ -248,7 +248,7 @@ const DiscourseURL = EmberObject.extend({
     // Rewrite /my/* urls
     let myPath = getURL("/my");
     const fullPath = getURL(path);
-    if (fullPath.indexOf(myPath) === 0) {
+    if (fullPath.startsWith(myPath)) {
       const currentUser = User.current();
       if (currentUser) {
         path = fullPath.replace(
@@ -261,7 +261,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     // handle prefixes
-    if (path.indexOf("/") === 0) {
+    if (path.startsWith("/")) {
       path = withoutPrefix(path);
     }
 
@@ -318,22 +318,22 @@ const DiscourseURL = EmberObject.extend({
   // Determines whether a URL is internal or not
   isInternal(url) {
     if (url && url.length) {
-      if (url.indexOf("//") === 0) {
+      if (url.startsWith("//")) {
         url = "http:" + url;
       }
-      if (url.indexOf("#") === 0) {
+      if (url.startsWith("#")) {
         return true;
       }
-      if (url.indexOf("/") === 0) {
+      if (url.startsWith("/")) {
         return true;
       }
-      if (url.indexOf(this.origin()) === 0) {
+      if (url.startsWith(this.origin())) {
         return true;
       }
-      if (url.replace(/^http/, "https").indexOf(this.origin()) === 0) {
+      if (url.replace(/^http/, "https").startsWith(this.origin())) {
         return true;
       }
-      if (url.replace(/^https/, "http").indexOf(this.origin()) === 0) {
+      if (url.replace(/^https/, "http").startsWith(this.origin())) {
         return true;
       }
     }
@@ -490,7 +490,7 @@ export function setURLContainer(container) {
 }
 
 export function prefixProtocol(url) {
-  return url.indexOf("://") === -1 && url.indexOf("mailto:") !== 0
+  return url.indexOf("://") === -1 && !url.startsWith("mailto:")
     ? "https://" + url
     : url;
 }

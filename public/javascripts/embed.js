@@ -17,7 +17,7 @@
   var queryParams = {};
 
   if (DE.discourseEmbedUrl) {
-    if (DE.discourseEmbedUrl.indexOf("/") === 0) {
+    if (DE.discourseEmbedUrl.startsWith("/")) {
       console.error(
         "discourseEmbedUrl must be a full URL, not a relative path"
       );
