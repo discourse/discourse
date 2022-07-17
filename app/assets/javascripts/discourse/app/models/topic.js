@@ -164,7 +164,7 @@ const Topic = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.indexOf(tag.toLowerCase()) === -1) {
+      if (!title.includes(tag.toLowerCase())) {
         newTags.push(tag);
       }
     });

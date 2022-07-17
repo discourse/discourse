@@ -305,7 +305,7 @@ export default class ScreenTrack extends Service {
         }
 
         if (
-          topicIds.indexOf(topicId) === -1 &&
+          !topicIds.includes(topicId) &&
           topicIds.length < ANON_MAX_TOPIC_IDS
         ) {
           topicIds.push(topicId);

@@ -940,7 +940,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _addIncoming(topicId) {
-    if (this.newIncoming.indexOf(topicId) === -1) {
+    if (!this.newIncoming.includes(topicId)) {
       this.newIncoming.push(topicId);
     }
   },

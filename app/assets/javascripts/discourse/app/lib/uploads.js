@@ -135,7 +135,7 @@ function extensionsToArray(exts) {
     .toLowerCase()
     .replace(/[\s\.]+/g, "")
     .split("|")
-    .filter((ext) => ext.indexOf("*") === -1);
+    .filter((ext) => !ext.includes("*"));
 }
 
 function extensions(siteSettings) {

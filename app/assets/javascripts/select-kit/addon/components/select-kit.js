@@ -232,7 +232,7 @@ export default Component.extend(
 
         if (
           typeof value === "string" &&
-          value.indexOf(".") < 0 &&
+          !value.includes(".") &&
           value in this
         ) {
           const computedValue = get(this, value);

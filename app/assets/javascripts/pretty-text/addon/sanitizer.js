@@ -120,7 +120,7 @@ export function sanitize(text, allowLister) {
         if (
           (forAttr &&
             (forAttr.indexOf("*") !== -1 || forAttr.indexOf(value) !== -1)) ||
-          (name.indexOf("data-html-") === -1 &&
+          (!name.includes("data-html-") &&
             name.indexOf("data-") === 0 &&
             (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
           (tag === "a" &&
