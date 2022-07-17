@@ -427,8 +427,8 @@ acceptance("Topic featured links", function (needs) {
     async function (assert) {
       await visit("/t/internationalization-localization/280");
       await selectText("#post_5 blockquote");
-      await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
-      await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "J");
+      await triggerKeyEvent(document, "keypress", "T");
 
       assert.ok(
         query(".d-editor-input").value.includes(

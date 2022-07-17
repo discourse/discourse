@@ -611,10 +611,9 @@ export default Component.extend(TextareaTextManipulation, {
       }
 
       const trimmedPre = sel.pre.trim();
-      const number =
-        sel.value.indexOf(hval) === 0
-          ? sel.value.slice(hlen)
-          : `${hval}${sel.value}`;
+      const number = sel.value.startsWith(hval)
+        ? sel.value.slice(hlen)
+        : `${hval}${sel.value}`;
       const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
 
       const trimmedPost = sel.post.trim();

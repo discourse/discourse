@@ -120,7 +120,7 @@ export function sanitize(text, allowLister) {
         if (
           (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
           (!name.includes("data-html-") &&
-            name.indexOf("data-") === 0 &&
+            name.startsWith("data-") &&
             (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
           (tag === "a" &&
             name === "href" &&
@@ -128,7 +128,7 @@ export function sanitize(text, allowLister) {
           (tag === "iframe" &&
             name === "src" &&
             allowedIframes.some((i) => {
-              return value.toLowerCase().indexOf((i || "").toLowerCase()) === 0;
+              return value.toLowerCase().startsWith((i || "").toLowerCase());
             }))
         ) {
           return attr(name, value);
