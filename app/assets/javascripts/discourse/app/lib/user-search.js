@@ -207,7 +207,7 @@ export function skipSearch(term, allowEmails, lastSeenUsers = false) {
   if (lastSeenUsers) {
     return false;
   }
-  if (term.indexOf("@") > -1 && !allowEmails) {
+  if (term.includes("@") && !allowEmails) {
     return true;
   }
 
