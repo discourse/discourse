@@ -28,16 +28,16 @@ export function isValidLink($link) {
   }
 
   if (link.closest(".onebox-result, .onebox-body")) {
-    const a = link.closest(".onebox").querySelector("header a");
+    const a = link.closest(".onebox")?.querySelector("header a");
 
-    if (a?.href === link.href) {
+    if (a && a.href === link.href) {
       return true;
     }
   }
 
   return (
     link.classList.contains("track-link") ||
-    !!link.closest(".hashtag, .badge-category, .onebox-result, .onebox-body")
+    !link.closest(".hashtag, .badge-category, .onebox-result, .onebox-body")
   );
 }
 
@@ -131,7 +131,7 @@ export default {
       document.querySelector("#topic")?.dataset?.topicId ||
       article.dataset.topicId;
     const userId = link.dataset.userId || article.dataset.userId;
-    const ownLink = userId && userId === User.currentProp("id");
+    const ownLink = userId && parseInt(userId, 10) === User.currentProp("id");
 
     // Update badge clicks unless it's our own.
     if (tracking && !ownLink) {
