@@ -47,10 +47,12 @@ export function setup(helper) {
 
     if (md.options.discourse.watchedWordsReplace) {
       Object.entries(md.options.discourse.watchedWordsReplace).map(
-        ([word, replacement]) => {
+        ([word, options]) => {
+          let caseFlag = options.case_sensitive ? "" : "i";
+
           matchers.push({
-            pattern: new RegExp(word, "gi"),
-            replacement,
+            pattern: new RegExp(word, `${caseFlag}g`),
+            replacement: options.replacement,
             link: false,
           });
         }
@@ -59,10 +61,12 @@ export function setup(helper) {
 
     if (md.options.discourse.watchedWordsLink) {
       Object.entries(md.options.discourse.watchedWordsLink).map(
-        ([word, replacement]) => {
+        ([word, options]) => {
+          let caseFlag = options.case_sensitive ? "" : "i";
+
           matchers.push({
-            pattern: new RegExp(word, "gi"),
-            replacement,
+            pattern: new RegExp(word, `${caseFlag}g`),
+            replacement: options.replacement,
             link: true,
           });
         }

@@ -24,12 +24,16 @@ export default {
       },
     ],
     compiled_regular_expressions: {
-      block: '(?:\\W|^)(liquorice|anise|<img\\ src="x">)(?=\\W|$)',
-      censor: null,
-      require_approval: "(?:\\W|^)(coupon)(?=\\W|$)",
-      flag: "(?:\\W|^)(pyramid|scheme)(?=\\W|$)",
-      replace: "(?:\\W|^)(hi)(?=\\W|$)",
-      tag: "(?:\\W|^)(hello)(?=\\W|$)",
+      block: [
+        { '(?:\\W|^)(liquorice|anise|<img\\ src="x">)(?=\\W|$)': { case_sensitive: false }, },
+      ],
+      censor: [],
+      require_approval: [
+        { "(?:\\W|^)(coupon)(?=\\W|$)": { case_sensitive: false }, },
+      ],
+      flag: [{ "(?:\\W|^)(pyramid|scheme)(?=\\W|$)": {case_sensitive: false }, },],
+      replace: [{ "(?:\\W|^)(hi)(?=\\W|$)": { case_sensitive: false }},],
+      tag: [{ "(?:\\W|^)(hello)(?=\\W|$)": { case_sensitive: false }, },],
     },
   },
 };

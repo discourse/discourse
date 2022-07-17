@@ -41,6 +41,10 @@ class WordWatcher
     end
   end
 
+  def self.serializable_word_matcher_regexp(action)
+    word_matcher_regexp(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
+  end
+
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
@@ -74,12 +78,12 @@ class WordWatcher
       .map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
   rescue RegexpError
     raise if raise_errors
-    nil # Admin will be alerted via admin_dashboard_data.rb
+    [] # Admin will be alerted via admin_dashboard_data.rb
   end
 
   def self.word_matcher_regexps(action)
     if words = get_cached_words(action)
-      words.map { |w, attrs| [word_to_regexp(w, whole: true), attrs] }.to_h
+      words.map { |w, opts| [word_to_regexp(w, whole: true), opts] }.to_h
     end
   end
 
@@ -114,6 +118,7 @@ class WordWatcher
         node.content = censor_text_with_regexp(node.content, regexp) if node.text?
       end
     end
+
     doc.to_s
   end
 

@@ -1,15 +1,21 @@
-export function censorFn(regexpString, replacementLetter) {
-  if (regexpString) {
-    let censorRegexp = new RegExp(regexpString, "ig");
+export function censorFn(regexpList, replacementLetter) {
+  if (regexpList.length) {
     replacementLetter = replacementLetter || "&#9632;";
+    let censorRegexps = regexpList.map((regexp) => {
+      let [[regexpString, options]] = Object.entries(regexp);
+      let caseFlag = options.case_sensitive ? "" : "i";
+      return new RegExp(regexpString, `${caseFlag}g`);
+    });
 
     return function (text) {
-      text = text.replace(censorRegexp, (fullMatch, ...groupMatches) => {
-        const stringMatch = groupMatches.find((g) => typeof g === "string");
-        return fullMatch.replace(
-          stringMatch,
-          new Array(stringMatch.length + 1).join(replacementLetter)
-        );
+      censorRegexps.forEach((censorRegexp) => {
+        text = text.replace(censorRegexp, (fullMatch, ...groupMatches) => {
+          const stringMatch = groupMatches.find((g) => typeof g === "string");
+          return fullMatch.replace(
+            stringMatch,
+            new Array(stringMatch.length + 1).join(replacementLetter)
+          );
+        });
       });
 
       return text;
