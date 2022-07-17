@@ -584,8 +584,8 @@ Category.reopenClass({
       if (
         ((emptyTerm && !category.get("parent_category_id")) ||
           (!emptyTerm &&
-            (category.get("name").toLowerCase().indexOf(term) === 0 ||
-              category.get("slug").toLowerCase().indexOf(slugTerm) === 0))) &&
+            (category.get("name").toLowerCase().startsWith(term) ||
+              category.get("slug").toLowerCase().startsWith(slugTerm)))) &&
         validCategoryParent(category)
       ) {
         data.push(category);
