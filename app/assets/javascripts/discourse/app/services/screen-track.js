@@ -7,6 +7,7 @@ import {
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
+import { run } from "@ember/runloop";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -46,8 +47,10 @@ export default class ScreenTrack extends Service {
 
     // Create an interval timer if we don't have one.
     if (!this._interval) {
-      this._interval = setInterval(() => this.tick(), 1000);
-      $(window).on("scroll.screentrack", this.scrolled);
+      this._interval = setInterval(() => {
+        run(() => this.tick());
+      }, 1000);
+      window.addEventListener("scroll", this.scrolled);
     }
 
     this._topicId = topicId;
@@ -60,7 +63,7 @@ export default class ScreenTrack extends Service {
       return;
     }
 
-    $(window).off("scroll.screentrack", this.scrolled);
+    window.removeEventListener("scroll", this.scrolled);
 
     this.tick();
     this.flush();
