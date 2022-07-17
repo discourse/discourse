@@ -42,7 +42,7 @@ class Admin::WatchedWordsController < Admin::AdminController
               word: row[0],
               replacement: has_replacement ? row[1] : nil,
               action_key: action_key,
-              case_sensitive: cast_to_boolean(row[2])
+              case_sensitive: "true" == row[2]&.strip&.downcase
             )
             if watched_word.valid?
               StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
@@ -98,14 +98,4 @@ class Admin::WatchedWordsController < Admin::AdminController
   def watched_words_params
     params.permit(:id, :word, :replacement, :action_key, :case_sensitive)
   end
-
-  def cast_to_boolean(str)
-    boolean_values = %w(false true)
-
-    return false unless str.present?
-    return false unless boolean_values.include?(str.downcase)
-
-    str.downcase == 'true'
-  end
-
 end
