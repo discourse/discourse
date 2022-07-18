@@ -113,7 +113,7 @@ class BaseBookmarkable
     if notification_data[:data].blank? ||
         notification_data[:data][:bookmarkable_url].blank? ||
         notification_data[:data][:title].blank?
-      raise InvalidParameters.new("A `data` key must be present with at least `bookmarkable_url` and `title` entries.")
+      raise Discourse::InvalidParameters.new("A `data` key must be present with at least `bookmarkable_url` and `title` entries.")
     end
 
     notification_data[:data] = (notification_data[:data] || {}).merge(
