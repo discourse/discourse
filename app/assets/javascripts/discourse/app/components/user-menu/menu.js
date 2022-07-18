@@ -1,5 +1,5 @@
 import GlimmerComponent from "discourse/components/glimmer";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 
 const DEFAULT_TAB_ID = "all-notifications";
@@ -9,7 +9,6 @@ export default class UserMenu extends GlimmerComponent {
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
 
-  @cached
   get topTabs() {
     const tabs = this._coreTopTabs;
     return tabs.map((tab, index) => {
@@ -18,7 +17,6 @@ export default class UserMenu extends GlimmerComponent {
     });
   }
 
-  @cached
   get bottomTabs() {
     const topTabsLength = this.topTabs.length;
     return this._coreBottomTabs.map((tab, index) => {
