@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layout,
-  classNames: ["category-drop-header"],
+  classNames: ["btn", "category-drop-header"],
   classNameBindings: ["categoryStyleClass"],
   categoryStyleClass: readOnly("site.category_style"),
 

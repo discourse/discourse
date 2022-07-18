@@ -65,7 +65,6 @@
   }
 
   .select-kit-header {
-    @include form-item-sizing;
     font-weight: 500;
     overflow: hidden;
     transition: all 0.25s;
