@@ -16,6 +16,12 @@ export default class SidebarSection extends GlimmerComponent {
         : false;
   }
 
+  willDestroy() {
+    if (this.args.willDestroy) {
+      this.args.willDestroy();
+    }
+  }
+
   @action
   toggleSectionDisplay() {
     this.displaySection = !this.displaySection;

@@ -18,7 +18,8 @@
         @headerLinkText={{customSection.text}}
         @headerLinkTitle={{customSection.title}}
         @headerActionsIcon={{customSection.actionsIcon}}
-        @headerActions={{customSection.actions}}>
+        @headerActions={{customSection.actions}}
+        @willDestroy={{customSection.willDestroy}}>
 
         {{#each customSection.links as |link|}}
           <Sidebar::SectionLink
