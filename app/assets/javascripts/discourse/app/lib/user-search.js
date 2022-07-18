@@ -159,7 +159,7 @@ function organizeResults(r, options) {
 
   if (r.users) {
     r.users.every(function (u) {
-      if (exclude.indexOf(u.username) === -1) {
+      if (!exclude.includes(u.username)) {
         users.push(u);
         results.push(u);
       }
@@ -179,7 +179,7 @@ function organizeResults(r, options) {
         options.term.toLowerCase() === g.name.toLowerCase() ||
         results.length < limit
       ) {
-        if (exclude.indexOf(g.name) === -1) {
+        if (!exclude.includes(g.name)) {
           groups.push(g);
           results.push(g);
         }
@@ -207,7 +207,7 @@ export function skipSearch(term, allowEmails, lastSeenUsers = false) {
   if (lastSeenUsers) {
     return false;
   }
-  if (term.indexOf("@") > -1 && !allowEmails) {
+  if (term.includes("@") && !allowEmails) {
     return true;
   }
 

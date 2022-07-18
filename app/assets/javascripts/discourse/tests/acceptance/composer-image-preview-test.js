@@ -182,8 +182,8 @@ acceptance("Composer - Image Preview", function (needs) {
       "correct alt text in input"
     );
 
-    await triggerKeyEvent(altTextInput, "keypress", "[".charCodeAt(0));
-    await triggerKeyEvent(altTextInput, "keypress", "]".charCodeAt(0));
+    await triggerKeyEvent(altTextInput, "keypress", "[");
+    await triggerKeyEvent(altTextInput, "keypress", "]");
     assert.equal(query(altTextInput).value, "zorro", "does not input [ ] keys");
 
     await fillIn(altTextInput, "steak");
@@ -298,7 +298,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
       query(".d-editor-input").value,
@@ -320,7 +320,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
       query(".d-editor-input").value,
@@ -332,7 +332,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
       query(".d-editor-input").value,
