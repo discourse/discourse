@@ -51,7 +51,6 @@
   flex-wrap: wrap;
   margin: 0;
   margin-bottom: var(--nav-space);
-  margin-right: auto;
 }
 
 .navigation-controls {
@@ -59,6 +58,7 @@
   flex-wrap: wrap;
   align-items: stretch;
   margin-bottom: var(--nav-space);
+  margin-left: auto;
   gap: var(--nav-space) 0; // used if the buttons wrap
   > * {
     white-space: nowrap;

@@ -15,49 +15,52 @@ export default Component.extend(FilterModeMixin, {
   },
 
   didInsertElement() {
-    // we want to reorder these elements based on their width, which can change on resize
-    // can move to container queries instead once they have browser support
+    if (!this.site.mobileView) {
+      // we want to reorder these elements based on their width, which can vary based on settings and viewport
 
-    if ("ResizeObserver" in window) {
-      let navElements = {};
+      if ("ResizeObserver" in window) {
+        let navElements = {};
 
-      navElements["navWrap"] = document.querySelector(".navigation-container");
-      navElements["navBread"] = document.querySelector(".category-breadcrumb");
-      navElements["navPills"] = document.querySelector(".nav-pills");
-      navElements["navControls"] = document.querySelector(
-        ".navigation-controls"
-      );
+        navElements["navWrap"] = document.querySelector(
+          ".navigation-container"
+        );
+        navElements["navBread"] = document.querySelector(
+          ".category-breadcrumb"
+        );
+        navElements["navPills"] = document.querySelector(".nav-pills");
+        navElements["navControls"] = document.querySelector(
+          ".navigation-controls"
+        );
 
-      this._resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
-          if (entry.contentRect && entry.contentRect.width) {
-            for (const [key, value] of Object.entries(navElements)) {
-              if (value === entry.target) {
-                navElements[key]["width"] = entry.contentRect.width;
+        this._resizeObserver = new ResizeObserver((entries) => {
+          for (let entry of entries) {
+            if (entry.contentRect && entry.contentRect.width) {
+              for (const [key, value] of Object.entries(navElements)) {
+                if (value === entry.target) {
+                  navElements[key]["width"] = entry.contentRect.width;
+                }
               }
             }
           }
-        }
 
-        let childrenWidth =
-          navElements["navPills"]["width"] +
-          navElements["navBread"]["width"] +
-          navElements["navControls"]["width"];
+          let childrenWidth =
+            navElements["navPills"]["width"] +
+            navElements["navBread"]["width"] +
+            navElements["navControls"]["width"];
 
-        let wrapWidth = navElements["navWrap"]["width"];
+          let wrapWidth = navElements["navWrap"]["width"];
 
-        if (wrapWidth < childrenWidth) {
-          navElements["navPills"].style.order = "3";
-          navElements["navControls"].style.marginLeft = "auto";
-        } else {
-          navElements["navPills"].style.order = "unset";
-          navElements["navControls"].style.marginLeft = "auto";
-        }
-      });
+          if (wrapWidth < childrenWidth) {
+            navElements["navPills"].style.order = "3";
+          } else {
+            navElements["navPills"].style.order = "unset";
+          }
+        });
 
-      Object.values(navElements).forEach((element) => {
-        this._resizeObserver.observe(element);
-      });
+        Object.values(navElements).forEach((element) => {
+          this._resizeObserver.observe(element);
+        });
+      }
     }
   },
 
