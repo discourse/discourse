@@ -48,17 +48,17 @@ export default Mixin.create({
 
   @discourseComputed("valid_values")
   validValues(validValues) {
-    const vals = [],
-      translateNames = this.translate_names;
+    const values = [];
+    const translateNames = this.translate_names;
 
     (validValues || []).forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
-        vals.addObject({ name: I18n.t(v.name), value: v.value });
+        values.addObject({ name: I18n.t(v.name), value: v.value });
       } else {
-        vals.addObject(v);
+        values.addObject(v);
       }
     });
-    return vals;
+    return values;
   },
 
   @discourseComputed("valid_values")
