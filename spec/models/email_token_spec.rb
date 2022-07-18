@@ -113,8 +113,8 @@ describe EmailToken do
 
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
-      let!(:user_email_token) { Fabricate(:email_token, user: invited_user) }
-      let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }
+      let!(:user_email_token) { Fabricate(:email_token, user: invited_user, scope: EmailToken.scopes[:signup]) }
+      let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token, scope: EmailToken.scopes[:signup]) }
 
       it "returns the correct user" do
         expect(confirmed_invited_user).to eq invited_user
