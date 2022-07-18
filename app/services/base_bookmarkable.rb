@@ -116,7 +116,7 @@ class BaseBookmarkable
       raise Discourse::InvalidParameters.new("A `data` key must be present with at least `bookmarkable_url` and `title` entries.")
     end
 
-    notification_data[:data] = (notification_data[:data] || {}).merge(
+    notification_data[:data] = notification_data[:data].merge(
       display_username: bookmark.user.username,
       bookmark_name: bookmark.name,
       bookmark_id: bookmark.id
