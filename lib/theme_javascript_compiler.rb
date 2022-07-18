@@ -17,7 +17,8 @@ class ThemeJavascriptCompiler
             node.params.unshift({
               type: "NumberLiteral",
               value: #{@theme_id},
-              original: #{@theme_id}
+              original: #{@theme_id},
+              loc: { start: {}, end: {} }
             })
           }
         }
@@ -58,7 +59,7 @@ class ThemeJavascriptCompiler
 
     def discourse_extension
       <<~JS
-        Ember.HTMLBars.registerPlugin('ast', function() {
+        module.exports.registerPlugin('ast', function() {
           return {
             name: 'theme-template-manipulator',
             visitor: {
