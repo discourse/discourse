@@ -138,7 +138,7 @@ export default class PostCooked {
         }
 
         // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
-        if (valid && isValidLink($link)) {
+        if (valid && isValidLink($link[0])) {
           const $onebox = $link.closest(".onebox");
           if (
             $onebox.length === 0 ||

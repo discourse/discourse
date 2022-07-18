@@ -102,7 +102,7 @@ export default {
     }
 
     const link = e.currentTarget;
-    const tracking = isValidLink($(link));
+    const tracking = isValidLink(link);
 
     // Return early for mentions and group mentions
     if (
