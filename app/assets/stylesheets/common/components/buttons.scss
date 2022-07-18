@@ -52,9 +52,6 @@
       color: $hover-icon-color;
     }
   }
-  &[href] {
-    color: $text-color;
-  }
   &:active,
   &.btn-active {
     @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
