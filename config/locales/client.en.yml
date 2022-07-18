@@ -3696,7 +3696,7 @@ en:
         today: "Today"
         other_periods: "see top:"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, log in and reply.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
       full: "Create / Reply / See"

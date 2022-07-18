@@ -191,6 +191,6 @@ export default ComboBoxComponent.extend({
   },
 
   _matchCategory(filter, categoryName) {
-    return this._normalize(categoryName).indexOf(filter) > -1;
+    return this._normalize(categoryName).includes(filter);
   },
 });

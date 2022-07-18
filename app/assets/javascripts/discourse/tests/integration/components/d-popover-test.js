@@ -96,7 +96,7 @@ module("Integration | Component | d-popover", function (hooks) {
     await click(".btn");
     assert.ok(exists(".d-popover.is-expanded"));
 
-    await triggerKeyEvent(document, "keydown", 27);
+    await triggerKeyEvent(document, "keydown", "Escape");
     assert.notOk(exists(".d-popover.is-expanded"));
   });
 });

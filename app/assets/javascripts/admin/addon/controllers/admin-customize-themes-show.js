@@ -69,7 +69,7 @@ export default Controller.extend({
     if (available) {
       const themes = !childThemes
         ? available
-        : available.filter((theme) => childThemes.indexOf(theme) === -1);
+        : available.filter((theme) => !childThemes.includes(theme));
       return themes.length === 0 ? null : themes;
     }
   },

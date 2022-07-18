@@ -6,7 +6,7 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 56
+  BASE_COMPILER_VERSION = 57
 
   attr_accessor :child_components
 

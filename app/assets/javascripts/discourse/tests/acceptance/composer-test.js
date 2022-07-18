@@ -754,7 +754,6 @@ acceptance("Composer", function (needs) {
     } finally {
       toggleCheckDraftPopup(false);
     }
-    sinon.restore();
   });
 
   test("Loading draft also replaces the recipients", async function (assert) {

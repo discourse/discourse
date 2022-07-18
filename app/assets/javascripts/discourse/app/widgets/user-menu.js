@@ -1,4 +1,4 @@
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
@@ -295,7 +295,7 @@ export default createWidget("user-menu", {
       const headerCloak = document.querySelector(".header-cloak");
       headerCloak.classList.add("animate");
       headerCloak.style.setProperty("--opacity", 0);
-      later(() => this.sendWidgetAction("toggleUserMenu"), 200);
+      discourseLater(() => this.sendWidgetAction("toggleUserMenu"), 200);
     }
   },
 

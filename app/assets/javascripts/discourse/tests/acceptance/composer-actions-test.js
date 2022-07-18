@@ -145,7 +145,6 @@ acceptance("Composer Actions", function (needs) {
       I18n.t("topic.create_long")
     );
     assert.ok(query(".d-editor-input").value.includes(quote));
-    sinon.restore();
   });
 
   test("reply_as_new_topic without a new_topic draft", async function (assert) {
@@ -471,7 +470,6 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     } finally {
       toggleCheckDraftPopup(false);
     }
-    sinon.restore();
   });
 
   test("reply_as_new_topic with new_topic draft", async function (assert) {
@@ -486,7 +484,6 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
     await click(".modal-footer .btn.btn-default");
-    sinon.restore();
   });
 });
 

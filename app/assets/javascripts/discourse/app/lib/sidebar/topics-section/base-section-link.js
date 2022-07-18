@@ -61,7 +61,7 @@ export default class BaseSectionLink {
   /**
    * @returns {string} Text for the badge within the link
    */
-  get badgeCount() {}
+  get badgeText() {}
 
   _notImplemented() {
     throw "not implemented";

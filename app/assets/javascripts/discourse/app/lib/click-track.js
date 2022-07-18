@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
@@ -59,7 +59,7 @@ export function openLinkInNewTab(link) {
     link.dataset.autoRoute = true;
     link.removeAttribute("href");
 
-    later(() => {
+    discourseLater(() => {
       if (link) {
         link.classList.remove("no-href");
         link.setAttribute("href", link.dataset.href);

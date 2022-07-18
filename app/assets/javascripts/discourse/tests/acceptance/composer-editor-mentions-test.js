@@ -3,8 +3,6 @@ import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { setCaretPosition } from "discourse/lib/utilities";
 
-const BACKSPACE_KEYCODE = 8;
-
 acceptance("Composer - editor mentions", function (needs) {
   needs.user();
   needs.settings({ enable_mentions: true });
@@ -37,15 +35,15 @@ acceptance("Composer - editor mentions", function (needs) {
     // Emulate user pressing backspace in the editor
     const editor = query(".d-editor-input");
 
-    await triggerKeyEvent(".d-editor-input", "keydown", "@".charCodeAt(0));
+    await triggerKeyEvent(".d-editor-input", "keydown", "@");
     await fillIn(".d-editor-input", "abc @");
     await setCaretPosition(editor, 5);
-    await triggerKeyEvent(".d-editor-input", "keyup", "@".charCodeAt(0));
+    await triggerKeyEvent(".d-editor-input", "keyup", "@");
 
-    await triggerKeyEvent(".d-editor-input", "keydown", "u".charCodeAt(0));
+    await triggerKeyEvent(".d-editor-input", "keydown", "U");
     await fillIn(".d-editor-input", "abc @u");
     await setCaretPosition(editor, 6);
-    await triggerKeyEvent(".d-editor-input", "keyup", "u".charCodeAt(0));
+    await triggerKeyEvent(".d-editor-input", "keyup", "U");
 
     await click(".autocomplete.ac-user .selected");
 
@@ -62,13 +60,13 @@ acceptance("Composer - editor mentions", function (needs) {
     await fillIn(".d-editor-input", "abc @user a");
 
     // Emulate user typing `@` and `u` in the editor
-    await triggerKeyEvent(".d-editor-input", "keydown", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
     await fillIn(".d-editor-input", "abc @user ");
-    await triggerKeyEvent(".d-editor-input", "keyup", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
 
-    await triggerKeyEvent(".d-editor-input", "keydown", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
     await fillIn(".d-editor-input", "abc @user");
-    await triggerKeyEvent(".d-editor-input", "keyup", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
 
     await click(".autocomplete.ac-user .selected");
 
@@ -88,14 +86,14 @@ acceptance("Composer - editor mentions", function (needs) {
     await fillIn(".d-editor-input", "abc @user 123");
     await setCaretPosition(editor, 9);
 
-    await triggerKeyEvent(".d-editor-input", "keydown", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
     await fillIn(".d-editor-input", "abc @use 123");
-    await triggerKeyEvent(".d-editor-input", "keyup", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
     await setCaretPosition(editor, 8);
 
-    await triggerKeyEvent(".d-editor-input", "keydown", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
     await fillIn(".d-editor-input", "abc @us 123");
-    await triggerKeyEvent(".d-editor-input", "keyup", BACKSPACE_KEYCODE);
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
     await setCaretPosition(editor, 7);
 
     await click(".autocomplete.ac-user .selected");

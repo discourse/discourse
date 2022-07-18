@@ -22,12 +22,12 @@ const rule = {
 
       let i;
       for (i = 1; i < split.length; i++) {
-        if (split[i].indexOf("post:") === 0) {
+        if (split[i].startsWith("post:")) {
           postNumber = parseInt(split[i].slice(5), 10);
           continue;
         }
 
-        if (split[i].indexOf("topic:") === 0) {
+        if (split[i].startsWith("topic:")) {
           topicId = parseInt(split[i].slice(6), 10);
           continue;
         }
@@ -39,7 +39,7 @@ const rule = {
 
         // if we have the additional attribute of username: because we are prioritizing full name
         // then assign the name to be the displayName
-        if (split[i].indexOf("username:") === 0) {
+        if (split[i].startsWith("username:")) {
           // return users name by selecting all values from the first index to the post
           // this protects us from when a user has a `,` in their name
           displayName = split.slice(0, split.indexOf(`post:${postNumber}`));
