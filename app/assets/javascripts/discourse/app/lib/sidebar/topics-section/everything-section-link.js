@@ -52,11 +52,15 @@ export default class EverythingSectionLink extends BaseSectionLink {
     return "discovery.latest discovery.new discovery.unread discovery.top";
   }
 
-  get badgeCount() {
+  get badgeText() {
     if (this.totalUnread > 0) {
-      return this.totalUnread;
+      return I18n.t("sidebar.unread_count", {
+        count: this.totalUnread,
+      });
     } else if (this.totalNew > 0) {
-      return this.totalNew;
+      return I18n.t("sidebar.new_count", {
+        count: this.totalNew,
+      });
     } else {
       return;
     }

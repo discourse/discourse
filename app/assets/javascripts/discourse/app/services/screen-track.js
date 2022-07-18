@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
@@ -7,6 +7,7 @@ import {
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
+import { run } from "@ember/runloop";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -17,8 +18,6 @@ const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
 const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
 export default class ScreenTrack extends Service {
-  @service appEvents;
-
   _consolidatedTimings = [];
   _lastTick = null;
   _lastScrolled = null;
@@ -48,8 +47,10 @@ export default class ScreenTrack extends Service {
 
     // Create an interval timer if we don't have one.
     if (!this._interval) {
-      this._interval = setInterval(() => this.tick(), 1000);
-      $(window).on("scroll.screentrack", this.scrolled);
+      this._interval = setInterval(() => {
+        run(() => this.tick());
+      }, 1000);
+      window.addEventListener("scroll", this.scrolled);
     }
 
     this._topicId = topicId;
@@ -62,7 +63,7 @@ export default class ScreenTrack extends Service {
       return;
     }
 
-    $(window).off("scroll.screentrack", this.scrolled);
+    window.removeEventListener("scroll", this.scrolled);
 
     this.tick();
     this.flush();
@@ -174,7 +175,7 @@ export default class ScreenTrack extends Service {
 
     this._inProgress = true;
 
-    ajax("/topics/timings", {
+    return ajax("/topics/timings", {
       data,
       type: "POST",
       headers: {
@@ -201,6 +202,7 @@ export default class ScreenTrack extends Service {
             resetHighestReadCache(topicId);
           }
         }
+
         this.appEvents.trigger("topic:timings-sent", data);
       })
       .catch((e) => {

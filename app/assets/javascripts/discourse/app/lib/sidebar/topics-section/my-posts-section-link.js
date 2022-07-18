@@ -51,9 +51,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     return I18n.t("sidebar.sections.topics.links.my_posts.content");
   }
 
-  get badgeCount() {
+  get badgeText() {
     if (this._hasDraft) {
-      return this.draftCount;
+      return I18n.t("sidebar.sections.topics.links.my_posts.draft_count", {
+        count: this.draftCount,
+      });
     }
   }
 

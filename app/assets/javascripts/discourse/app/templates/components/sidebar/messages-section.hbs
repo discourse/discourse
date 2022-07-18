@@ -2,8 +2,8 @@
   @sectionName="messages"
   @headerRoute="userPrivateMessages.index"
   @headerModel={{this.currentUser}}
-  @headerAction={{fn (route-action "composePrivateMessage") null null}}
   @headerActionIcon="plus"
+  @headerActions={{array (hash action=(fn (route-action "composePrivateMessage") null null))}}
   @headerLinkText={{i18n "sidebar.sections.messages.header_link_text"}}
   @headerLinkTitle={{i18n "sidebar.sections.messages.header_link_title"}} >
 

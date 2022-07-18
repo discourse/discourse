@@ -1,4 +1,3 @@
-import { settled } from "@ember/test-helpers";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
@@ -19,10 +18,7 @@ discourseModule("Unit | Service | screen-track", function () {
       "expecting consolidated timings to match correctly"
     );
 
-    tracker.sendNextConsolidatedTiming();
-
-    // Wait for the requests to finish
-    await settled();
+    await tracker.sendNextConsolidatedTiming();
 
     assert.equal(
       tracker.highestReadFromCache(2),
