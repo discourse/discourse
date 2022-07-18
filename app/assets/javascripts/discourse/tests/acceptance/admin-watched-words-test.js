@@ -68,7 +68,23 @@ acceptance("Admin - Watched Words", function (needs) {
         found.push(true);
       }
     });
+
     assert.strictEqual(found.length, 1);
+    assert.strictEqual(count(".watched-words-list .case-sensitive"), 0);
+  });
+
+  test("add case-sensitve words", async function (assert) {
+    await visit("/admin/customize/watched_words/action/block");
+
+    click(".show-words-checkbox");
+    fillIn(".watched-word-form input", "Discourse");
+    click(".case-sensitivity-checkbox");
+
+    await click(".watched-word-form button");
+
+    assert
+      .dom(".watched-words-list .watched-word")
+      .hasText("Discourse (case-sensitive)");
   });
 
   test("remove words", async function (assert) {

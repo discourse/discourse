@@ -16,16 +16,18 @@ export default Controller.extend(ModalFunctionality, {
     "isTag",
     "isLink"
   )
-  matches(value, regexpString, words, isReplace, isTag, isLink) {
-    if (!value || !regexpString) {
+  matches(value, regexpList, words, isReplace, isTag, isLink) {
+    if (!value || !regexpList.length) {
       return [];
     }
 
     if (isReplace || isLink) {
       const matches = [];
       words.forEach((word) => {
-        const regexp = new RegExp(word.regexp, "gi");
+        const caseFlag = word.case_sensitive ? "" : "i";
+        const regexp = new RegExp(word.regexp, `${caseFlag}g`);
         let match;
+
         while ((match = regexp.exec(value)) !== null) {
           matches.push({
             match: match[1],
@@ -37,8 +39,10 @@ export default Controller.extend(ModalFunctionality, {
     } else if (isTag) {
       const matches = {};
       words.forEach((word) => {
-        const regexp = new RegExp(word.regexp, "gi");
+        const caseFlag = word.case_sensitive ? "" : "i";
+        const regexp = new RegExp(word.regexp, `${caseFlag}g`);
         let match;
+
         while ((match = regexp.exec(value)) !== null) {
           if (!matches[match[1]]) {
             matches[match[1]] = new Set();
@@ -56,7 +60,17 @@ export default Controller.extend(ModalFunctionality, {
         tags: Array.from(entry[1]),
       }));
     } else {
-      return value.match(new RegExp(regexpString, "ig")) || [];
+      let matches = [];
+      regexpList.forEach((regexp) => {
+        let [[regexpString, opts]] = Object.entries(regexp);
+        const caseFlag = opts.case_sensitive ? "" : "i";
+
+        matches.push(
+          ...(value.match(new RegExp(regexpString, `${caseFlag}g`)) || [])
+        );
+      });
+
+      return matches;
     }
   },
 });
