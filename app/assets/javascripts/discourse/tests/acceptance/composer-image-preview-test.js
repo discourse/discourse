@@ -340,4 +340,39 @@ acceptance("Composer - Image Preview", function (needs) {
       "alt text updated"
     );
   });
+
+  test("Image delete button", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    let uploads = [
+      "![image_example_0|666x500](upload://q4iRxcuSAzfnbUaCsbjMXcGrpaK.jpeg)",
+      "![image_example_1|481x480](upload://p1ijebM2iyQcUswBffKwMny3gxu.jpeg)",
+    ];
+
+    await fillIn(".d-editor-input", uploads.join("\n"));
+
+    uploads[0] = ""; // delete the first image.
+
+    //click on the remove button of the first image
+    await click(".button-wrapper[data-image-index='0'] .delete-image-button");
+
+    assert.strictEqual(
+      query(".d-editor-input").value,
+      uploads.join("\n"),
+      "Image should be removed from the editor"
+    );
+
+    assert.equal(
+      query(".d-editor-input").value.includes("image_example_0"),
+      false,
+      "It shouldn't have the first image"
+    );
+
+    assert.equal(
+      query(".d-editor-input").value.includes("image_example_1"),
+      true,
+      "It should have the second image"
+    );
+  });
 });
