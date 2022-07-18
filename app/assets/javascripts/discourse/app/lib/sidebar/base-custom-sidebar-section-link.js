@@ -22,6 +22,11 @@ export default class BaseCustomSidebarSectionLink {
   get model() {}
 
   /**
+   * @returns {boolean} Used to determine when this LinkComponent is active
+   */
+  get currentWhen() {}
+
+  /**
    * @returns {string} Title for the link
    */
   get title() {

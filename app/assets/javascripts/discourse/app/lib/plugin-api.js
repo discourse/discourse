@@ -1774,6 +1774,9 @@ class PluginApi {
    *               channelTitle: "random channel"
    *             };
    *           }
+   *           get currentWhen() {
+   *             return true;
+   *           }
    *           get title() {
    *             return "random channel";
    *           }
