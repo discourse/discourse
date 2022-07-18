@@ -3,7 +3,7 @@ import { module, skip, test } from "qunit";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import pretender from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
 import { setPrefix } from "discourse-common/lib/get-url";
@@ -203,7 +203,7 @@ module("Unit | Utility | click-track", function (hooks) {
     assert.timeout(75);
 
     const done = assert.async();
-    later(() => {
+    discourseLater(() => {
       assert.strictEqual(
         fixture("a").getAttribute("href"),
         "http://www.google.com"

@@ -59,7 +59,7 @@ acceptance("User Directory", function () {
     const secondHeading =
       ".users-directory table th:nth-child(2) .header-contents";
 
-    await triggerKeyEvent(secondHeading, "keypress", 13);
+    await triggerKeyEvent(secondHeading, "keypress", "Enter");
 
     assert.ok(
       query(`${secondHeading} .d-icon-chevron-up`),

@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import copyText from "discourse/lib/copy-text";
 import discourseComputed from "discourse-common/utils/decorators";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 export default Component.extend({
   classNames: ["ip-lookup"],
@@ -83,7 +83,7 @@ export default Component.extend({
       $(document.body).append($copyRange);
       if (copyText(text, $copyRange[0])) {
         this.set("copied", true);
-        later(() => this.set("copied", false), 2000);
+        discourseLater(() => this.set("copied", false), 2000);
       }
       $copyRange.remove();
     },

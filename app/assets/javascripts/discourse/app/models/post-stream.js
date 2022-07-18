@@ -714,7 +714,7 @@ export default RestModel.extend({
     let missingIds = [];
 
     postIds.forEach((postId) => {
-      if (postId && this.stream.indexOf(postId) === -1) {
+      if (postId && !this.stream.includes(postId)) {
         missingIds.push(postId);
       }
     });
@@ -725,7 +725,7 @@ export default RestModel.extend({
 
     if (loadedAllPosts) {
       missingIds.forEach((postId) => {
-        if (this._loadingPostIds.indexOf(postId) === -1) {
+        if (!this._loadingPostIds.includes(postId)) {
           this._loadingPostIds.push(postId);
         }
       });

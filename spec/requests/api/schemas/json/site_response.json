@@ -470,6 +470,9 @@
     "markdown_additional_options" : {
       "type": "object"
     },
+    "displayed_about_plugin_stat_groups" : {
+      "type": "array"
+    },
     "categories": {
       "type": "array",
       "items":

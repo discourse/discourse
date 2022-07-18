@@ -124,6 +124,34 @@ describe PostRevisor do
     end
   end
 
+  context 'editing tags' do
+    fab!(:post) { Fabricate(:post) }
+
+    subject { PostRevisor.new(post) }
+
+    before do
+      Jobs.run_immediately!
+
+      TopicUser.change(
+        newuser.id,
+        post.topic_id,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+    end
+
+    it 'creates notifications' do
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .to change { Notification.count }.by(1)
+    end
+
+    it 'skips notifications if disable_tags_edit_notifications' do
+      SiteSetting.disable_tags_edit_notifications = true
+
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .to change { Notification.count }.by(0)
+    end
+  end
+
   context 'revise wiki' do
 
     before do

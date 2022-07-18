@@ -1,6 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import { isDevelopment } from "discourse-common/config/environment";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -73,6 +73,6 @@ export default {
     const reloaded = node.cloneNode(true);
     reloaded.href = newHref;
     node.insertAdjacentElement("afterend", reloaded);
-    later(() => node?.parentNode?.removeChild(node), 500);
+    discourseLater(() => node?.parentNode?.removeChild(node), 500);
   },
 };

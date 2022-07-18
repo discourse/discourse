@@ -311,8 +311,10 @@ export default function setupTests(config) {
     let testing = document.getElementById("ember-testing");
     testing.removeAttribute("class");
     testing.removeAttribute("style");
-    let testContainer = document.getElementById("ember-testing-container");
+
+    const testContainer = document.getElementById("ember-testing-container");
     testContainer.scrollTop = 0;
+    testContainer.scrollLeft = 0;
 
     flushMap();
 

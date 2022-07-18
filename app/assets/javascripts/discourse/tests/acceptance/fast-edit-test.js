@@ -47,7 +47,7 @@ acceptance("Fast Edit", function (needs) {
     const textNode = query("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
-    await triggerKeyEvent(document, "keypress", "e".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "E");
 
     assert.ok(exists("#fast-edit-input"), "fast editor is open");
     assert.strictEqual(

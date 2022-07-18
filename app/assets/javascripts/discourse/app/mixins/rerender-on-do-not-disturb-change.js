@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Mixin from "@ember/object/mixin";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -10,7 +11,7 @@ export default Mixin.create({
       this.queueRerender();
     } else {
       cancel(this._listenToDoNotDisturbLoop);
-      this._listenToDoNotDisturbLoop = later(
+      this._listenToDoNotDisturbLoop = discourseLater(
         this,
         () => {
           this.listenForDoNotDisturbChanges();

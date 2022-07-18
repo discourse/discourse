@@ -27,10 +27,9 @@
       {{@content}}
     </span>
 
-    {{! TODO move badge count to suffixType="text", suffixValue="3" like prefix}}
-    {{#if @badgeCount}}
+    {{#if @badgeText}}
       <span class="sidebar-section-link-content-badge">
-        {{@badgeCount}}
+        {{@badgeText}}
       </span>
     {{/if}}
 

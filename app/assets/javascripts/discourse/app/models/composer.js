@@ -303,7 +303,7 @@ const Composer = RestModel.extend({
     if (
       !categoryId &&
       categoryIds &&
-      (categoryIds.indexOf(this.site.uncategorized_category_id) !== -1 ||
+      (categoryIds.includes(this.site.uncategorized_category_id) ||
         !this.siteSettings.allow_uncategorized_topics)
     ) {
       return true;
@@ -311,7 +311,7 @@ const Composer = RestModel.extend({
     return (
       categoryIds === undefined ||
       !categoryIds.length ||
-      categoryIds.indexOf(categoryId) !== -1
+      categoryIds.includes(categoryId)
     );
   },
 
