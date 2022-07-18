@@ -17,8 +17,8 @@ export default class SidebarSection extends GlimmerComponent {
   }
 
   willDestroy() {
-    if (this.args.customSectionWillDestroy) {
-      this.args.customSectionWillDestroy();
+    if (this.args.willDestroy) {
+      this.args.willDestroy();
     }
   }
 
