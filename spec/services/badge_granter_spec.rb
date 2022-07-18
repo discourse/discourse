@@ -488,8 +488,8 @@ describe BadgeGranter do
       events = DiscourseEvent.track_events do
         BadgeGranter.process_queue!
       end
-      badge_granted_event = events.find do |x|
-        x[:event_name] == :user_badge_granted && x[:params] == [Badge::Welcome, user.id]
+      badge_granted_event = events.find do |event|
+        event[:event_name] == :user_badge_granted && event[:params] == [Badge::Welcome, user.id]
       end
 
       expect(badge_granted_event).to be_present
