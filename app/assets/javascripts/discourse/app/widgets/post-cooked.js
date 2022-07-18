@@ -129,7 +129,7 @@ export default class PostCooked {
 
         // this might be an attachment
         if (lc.internal && /^\/uploads\//.test(lc.url)) {
-          valid = href.indexOf(lc.url) >= 0;
+          valid = href.includes(lc.url);
         }
 
         // Match server-side behaviour for internal links with query params

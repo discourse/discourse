@@ -63,7 +63,7 @@ export default Mixin.create({
 
   @discourseComputed("valid_values")
   allowsNone(validValues) {
-    if (validValues && validValues.indexOf("") >= 0) {
+    if (validValues?.includes("")) {
       return "admin.settings.none";
     }
   },
