@@ -37,7 +37,6 @@ export default class Sidebar extends GlimmerComponent {
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }
-    this.customSections.forEach((customSection) => customSection.teardown());
   }
 
   @cached
