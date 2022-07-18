@@ -201,7 +201,8 @@
     }
 
     .sidebar-section-link-content-badge {
-      width: 30%;
+      @include ellipsis;
+      margin-left: 0.5em;
       text-align: right;
     }
 
