@@ -27,7 +27,22 @@ export default class SidebarSection extends GlimmerComponent {
     }
   }
 
+  @action
+  handleMultipleHeaderActions(id) {
+    this.args.headerActions
+      .find((headerAction) => headerAction.id === id)
+      .action();
+  }
+
   get headerCaretIcon() {
     return this.displaySection ? "angle-down" : "angle-right";
+  }
+
+  get isSingleHeaderAction() {
+    return this.args.headerActions?.length === 1;
+  }
+
+  get isMultipleHeaderActions() {
+    return this.args.headerActions?.length > 1;
   }
 }

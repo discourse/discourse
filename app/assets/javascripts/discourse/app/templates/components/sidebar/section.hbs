@@ -1,23 +1,58 @@
 <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
   <div class="sidebar-section-header">
-    <button type="button" class="sidebar-section-header-caret" title={{i18n "sidebar.toggle_section"}} {{on "click" this.toggleSectionDisplay}}>
+    <button
+      type="button"
+      class="sidebar-section-header-caret"
+      title="toggle section"
+      {{on "click" this.toggleSectionDisplay}}
+    >
       {{d-icon this.headerCaretIcon}}
     </button>
 
-    <LinkTo
-      @route={{@headerRoute}}
-      @query={{@headerQuery}}
-      @models={{if @headerModel (array @headerModel) (if @headerModels @headerModels (array))}}
-      class="sidebar-section-header-link"
-      title={{@headerLinkTitle}}>
+    {{#if @headerRoute}}
+      <LinkTo
+        @route={{@headerRoute}}
+        @query={{@headerQuery}}
+        @models={{if
+          @headerModel
+          (array @headerModel)
+          (if @headerModels @headerModels (array))
+        }}
+        class="sidebar-section-header-link"
+        title={{@headerLinkTitle}}
+      >
 
-      {{@headerLinkText}}
-    </LinkTo>
+        {{@headerLinkText}}
+      </LinkTo>
+    {{else}}
+      <span
+        title={{@headerLinkTitle}}
+        class="sidebar-section-header-text"
+      >
+        {{@headerLinkText}}
+      </span>
+    {{/if}}
 
-    {{#if @headerAction}}
-      <button type="button" class="sidebar-section-header-button" {{on "click" @headerAction}} title={{@headerActionTitle}}>
-        {{d-icon @headerActionIcon}}
-      </button>
+    {{#if this.isSingleHeaderAction}}
+      {{#each @headerActions as |headerAction|}}
+        <button
+          type="button"
+          class="sidebar-section-header-button"
+          {{on "click" headerAction.action}}
+          title={{headerAction.title}}
+        >
+          {{d-icon @headerActionsIcon}}
+        </button>
+      {{/each}}
+    {{/if}}
+
+    {{#if this.isMultipleHeaderActions}}
+      <DropdownSelectBox
+        @options={{hash icon=@headerActionsIcon placementStrategy="absolute"}}
+        @content={{@headerActions}}
+        @onChange={{action "handleMultipleHeaderActions"}}
+        @class="edit-channels-dropdown"
+      />
     {{/if}}
   </div>
 

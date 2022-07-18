@@ -1,5 +1,7 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { bind } from "discourse-common/utils/decorators";
+import { customSections as sidebarCustomSections } from "discourse/lib/sidebar/custom-sections";
+import { cached } from "@glimmer/tracking";
 
 export default class Sidebar extends GlimmerComponent {
   constructor() {
@@ -35,5 +37,13 @@ export default class Sidebar extends GlimmerComponent {
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }
+    this.customSections.forEach((customSection) => customSection.teardown());
+  }
+
+  @cached
+  get customSections() {
+    return sidebarCustomSections.map((customSection) => {
+      return new customSection({ sidebar: this });
+    });
   }
 }

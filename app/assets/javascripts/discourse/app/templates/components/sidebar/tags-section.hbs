@@ -3,9 +3,8 @@
   @headerRoute="tags"
   @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
   @headerLinkTitle={{i18n "sidebar.sections.tags.header_link_title"}}
-  @headerAction={{this.editTracked}}
-  @headerActionTitle={{i18n "sidebar.sections.tags.header_action_title"}}
-  @headerActionIcon="pencil-alt" >
+  @headerActions={{array (hash action=this.editTracked title=(i18n "sidebar.sections.tags.header_action_title"))}}
+  @headerActionsIcon="pencil-alt" >
 
   {{#if (gt this.sectionLinks.length 0)}}
     {{#each this.sectionLinks as |sectionLink|}}

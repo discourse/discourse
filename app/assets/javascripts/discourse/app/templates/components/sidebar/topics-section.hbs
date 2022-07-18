@@ -4,9 +4,8 @@
   @headerQuery={{hash f=undefined}}
   @headerLinkText={{i18n "sidebar.sections.topics.header_link_text"}}
   @headerLinkTitle={{i18n "sidebar.sections.topics.header_link_title"}}
-  @headerActionIcon="plus"
-  @headerAction={{this.composeTopic}}
-  @headerActionTitle={{i18n "sidebar.sections.topics.header_action_title"}}>
+  @headerActionsIcon="plus"
+  @headerActions={{array (hash action=this.composeTopic title=(i18n "sidebar.sections.topics.header_action_title"))}}>
 
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink

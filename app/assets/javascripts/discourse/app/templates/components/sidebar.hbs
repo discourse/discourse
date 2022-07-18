@@ -11,6 +11,39 @@
       <Sidebar::MessagesSection />
     {{/if}}
 
+    {{#each this.customSections as |customSection|}}
+      <Sidebar::Section
+        @sectionName={{customSection.name}}
+        @headerRoute={{customSection.route}}
+        @headerLinkText={{customSection.text}}
+        @headerLinkTitle={{customSection.title}}
+        @headerActionsIcon={{customSection.actionsIcon}}
+        @headerActions={{customSection.actions}}>
+
+        {{#each customSection.links as |link|}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @route={{link.route}}
+            @model={{link.model}}
+            @title={{link.title}}
+            @prefixColor={{link.prefixColor}}
+            @prefixBadge={{link.prefixBadge}}
+            @prefixType={{link.prefixType}}
+            @prefixValue={{link.prefixValue}}
+            @prefixCSSClass={{link.prefixCSSClass}}
+            @suffixType={{link.suffixType}}
+            @suffixValue={{link.suffixValue}}
+            @suffixCSSClass={{link.suffixCSSClass}}
+            @hoverType={{link.hoverType}}
+            @hoverValue={{link.hoverValue}}
+            @hoverAction={{link.hoverAction}}
+            @hoverTitle={{link.hoverTitle}}
+            @currentWhen={{link.currentWhen}}
+            @content={{link.text}} />
+        {{/each}}
+      </Sidebar::Section>
+    {{/each}}
+
     {{!-- DO NOT USE, this outlet is temporary and will be removed. --}}
     {{!-- Outlet will be replaced with sidebar API. --}}
     <PluginOutlet @name="after-sidebar" />
