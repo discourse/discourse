@@ -29,15 +29,14 @@
               <th class="bulk-select-buttons">
                 <span class="bulk-select-buttons-wrap">
                   {{#if this.bulkSelection}}
-                    <GroupMemberDropdown @bulkSelection={{this.bulkSelection}} @canAdminGroup={{this.model.can_admin_group}} @onChange={{action "actOnSelection" this.bulkSelection}} />
+                    <BulkGroupMemberDropdown @bulkSelection={{this.bulkSelection}} @canAdminGroup={{this.model.can_admin_group}} @onChange={{action "actOnSelection" this.bulkSelection}} />
                   {{/if}}
                   <DButton @action={{action "bulkSelectAll"}} @label="topics.bulk.select_all" />
                   <DButton @action={{action "bulkClearAll"}} @label="topics.bulk.clear_all" />
                 </span>
               </th>
             {{/if}}
-            <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="username_lower" @labelKey="username" @class="username" @automatic={{true}} />
-            <th class="group-owner"></th>
+            <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="username_lower" @labelKey="username" @class="username" @automatic={{true}} @colspan="2" />
             <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="added_at" @labelKey="groups.member_added" @automatic={{true}} />
             <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="last_posted_at" @labelKey="last_post" @automatic={{true}} />
             <TableHeaderToggle @order={{this.order}} @asc={{this.asc}} @field="last_seen_at" @labelKey="last_seen" @automatic={{true}} />
