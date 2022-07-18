@@ -116,6 +116,23 @@
     font-size: 1em;
     font-weight: bold;
     align-items: stretch;
+
+    .select-kit {
+      .btn {
+        background: transparent;
+        &:hover {
+          background: var(--primary-low);
+        }
+      }
+      .d-icon {
+        font-size: var(--font-down-1);
+        color: var(--primary-medium);
+        margin-right: 0;
+      }
+      summary {
+        padding: 0.25em 0.5em;
+      }
+    }
   }
 
   .sidebar-section-header-link,
@@ -134,23 +151,6 @@
 
     &:hover {
       background: var(--primary-low);
-    }
-  }
-
-  .select-kit {
-    .btn {
-      background: transparent;
-      &:hover {
-        background: var(--primary-low);
-      }
-    }
-    .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--primary-medium);
-      margin-right: 0;
-    }
-    summary {
-      padding: 0.25em 0.5em;
     }
   }
 
