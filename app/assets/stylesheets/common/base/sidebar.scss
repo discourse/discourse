@@ -170,6 +170,11 @@
       font-weight: bold;
     }
 
+    .sidebar-section-link-content-badge {
+      width: 30%;
+      text-align: right;
+    }
+
     .sidebar-section-link-content-text {
       @include ellipsis;
 
@@ -198,11 +203,10 @@
   }
 
   .sidebar-section-link-content-badge {
-    font-size: var(--font-down-1);
     color: var(--tertiary);
-    margin-left: auto;
+    font-size: var(--font-down-1);
     font-weight: normal;
-    margin-right: 0.4em;
+    margin-left: auto;
   }
 
   .sidebar-section-header-caret {
