@@ -16,7 +16,7 @@ module("Integration | Helper | emoji", function (hooks) {
     const title = "custom title";
     this.set("title", title);
 
-    await render(hbs`{{emoji "tada" title=title}}`);
+    await render(hbs`{{emoji "tada" title=this.title}}`);
 
     assert.ok(exists(`.emoji[title="${title}"]`));
   });
