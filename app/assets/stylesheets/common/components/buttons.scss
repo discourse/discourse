@@ -24,7 +24,7 @@
   cursor: pointer;
   transition: all 0.25s;
   .d-icon {
-    color: $icon-color;
+    color: inherit; //$icon-color; //technically not the same colour as def before, but easier for theming, should it even be a diff colour?
     margin-right: 0.45em;
     transition: color 0.25s;
   }
@@ -41,7 +41,7 @@
     background: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
-      color: $hover-icon-color;
+      color: inherit;
     }
   }
   &:focus {
