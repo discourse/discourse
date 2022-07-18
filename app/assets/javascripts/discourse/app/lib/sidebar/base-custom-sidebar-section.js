@@ -7,11 +7,6 @@ export default class BaseCustomSidebarSection {
   }
 
   /**
-   * Called when sidebar component is torn down.
-   */
-  teardown() {}
-
-  /**
    * @returns {string} The name of the section header. Needs to be dasherized and lowercase.
    */
   get name() {
