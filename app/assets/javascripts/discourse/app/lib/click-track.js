@@ -9,9 +9,18 @@ import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import deprecated from "discourse-common/lib/deprecated";
 
-export function isValidLink($link) {
-  const link = $link[0];
+export function isValidLink(link) {
+  // eslint-disable-next-line no-undef
+  if (link instanceof jQuery) {
+    link = link[0];
+
+    deprecated("isValidLink now expects an Element, not a jQuery object", {
+      since: "2.9.0.beta7",
+      dropFrom: "2.10.0.beta1",
+    });
+  }
 
   // .hashtag == category/tag link
   // .back == quote back ^ button
@@ -23,7 +32,8 @@ export function isValidLink($link) {
     return false;
   }
 
-  if ($link.parents("aside.quote, .elided, .expanded-embed").length !== 0) {
+  const closest = link.closest("aside.quote, .elided, .expanded-embed");
+  if (closest && closest !== link) {
     return false;
   }
 
