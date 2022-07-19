@@ -500,15 +500,11 @@ const TopicTrackingState = EmberObject.extend({
         return false;
       }
 
-      if (tagId && !(topic.tags && topic.tags.indexOf(tagId) > -1)) {
+      if (tagId && !topic.tags?.includes(tagId)) {
         return false;
       }
 
-      if (
-        type === "new" &&
-        mutedCategoryIds &&
-        mutedCategoryIds.indexOf(topic.category_id) !== -1
-      ) {
+      if (type === "new" && mutedCategoryIds?.includes(topic.category_id)) {
         return false;
       }
 
@@ -588,7 +584,7 @@ const TopicTrackingState = EmberObject.extend({
       (topic, newTopic, unreadTopic) => {
         if (topic.tags && topic.tags.length > 0) {
           tags.forEach((tag) => {
-            if (topic.tags.indexOf(tag) > -1) {
+            if (topic.tags.includes(tag)) {
               if (unreadTopic) {
                 counts[tag].unreadCount++;
               }
@@ -615,7 +611,7 @@ const TopicTrackingState = EmberObject.extend({
       if (
         topic.category_id === category_id &&
         !topic.deleted &&
-        (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1))
+        (!tagId || topic.tags?.includes(tagId))
       ) {
         sum +=
           topic.last_read_post_number === null ||
@@ -940,7 +936,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _addIncoming(topicId) {
-    if (this.newIncoming.indexOf(topicId) === -1) {
+    if (!this.newIncoming.includes(topicId)) {
       this.newIncoming.push(topicId);
     }
   },
@@ -960,7 +956,7 @@ const TopicTrackingState = EmberObject.extend({
   _stateKey(topicOrId) {
     if (typeof topicOrId === "number") {
       return `t${topicOrId}`;
-    } else if (typeof topicOrId === "string" && topicOrId.indexOf("t") > -1) {
+    } else if (typeof topicOrId === "string" && topicOrId.includes("t")) {
       return topicOrId;
     } else {
       return `t${topicOrId.topic_id}`;

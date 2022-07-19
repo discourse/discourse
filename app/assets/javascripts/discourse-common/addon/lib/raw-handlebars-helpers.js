@@ -25,7 +25,7 @@ export function registerRawHelpers(hbs, handlebarsClass) {
     let firstContext = options.contexts[0];
     let val = firstContext[context];
 
-    if (context.toString().indexOf("controller.") === 0) {
+    if (context.toString().startsWith("controller.")) {
       context = context.slice(context.indexOf(".") + 1);
     }
 

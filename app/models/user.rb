@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
-  validates :public_user_field_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email, message: -> (_, user_email) { user_email[:value]&.errors[:email]&.first }
 
   after_initialize :add_trust_level
@@ -1273,8 +1273,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def public_user_field_values
-    public_user_fields.values.join(" ")
+  def validatable_user_fields_values
+    validatable_user_fields.values.join(" ")
   end
 
   def set_user_field(field_id, value)
@@ -1282,13 +1282,15 @@ class User < ActiveRecord::Base
   end
 
   def apply_watched_words
-    public_user_fields.each do |id, value|
+    validatable_user_fields.each do |id, value|
       set_user_field(id, PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1"))
     end
   end
 
-  def public_user_fields
-    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
+  def validatable_user_fields
+    # ignore multiselect fields since they are admin-set and thus not user generated content
+    @public_user_field_ids ||= UserField.public_fields.where.not(field_type: 'multiselect').pluck(:id)
+
     user_fields(@public_user_field_ids)
   end
 

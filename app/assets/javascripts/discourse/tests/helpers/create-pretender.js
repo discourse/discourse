@@ -902,7 +902,7 @@ export function applyDefaultHandlers(pretender) {
       ];
     }
 
-    if (request.queryParams.url.indexOf("/internal-page.html") > -1) {
+    if (request.queryParams.url.includes("/internal-page.html")) {
       return [
         200,
         { "Content-Type": "application/html" },

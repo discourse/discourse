@@ -7,7 +7,7 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 module("Integration | Component | software-update-prompt", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,7 +23,7 @@ module("Integration | Component | software-update-prompt", function (hooks) {
     publishToMessageBus("/global/asset-version", "somenewversion");
 
     const done = assert.async();
-    later(() => {
+    discourseLater(() => {
       assert.strictEqual(
         count("div.software-update-prompt.require-software-refresh"),
         1,

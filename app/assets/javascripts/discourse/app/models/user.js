@@ -32,7 +32,8 @@ import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
 import Evented from "@ember/object/evented";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -367,13 +368,13 @@ const User = RestModel.extend({
 
   save(fields) {
     const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
+      userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
     let filteredUserOptionFields = [];
     if (fields) {
-      filteredUserOptionFields = userOptionFields.filter(
-        (uo) => fields.indexOf(uo) !== -1
+      filteredUserOptionFields = userOptionFields.filter((uo) =>
+        fields.includes(uo)
       );
     } else {
       filteredUserOptionFields = userOptionFields;
@@ -1229,7 +1230,11 @@ User.reopen(Evented, {
 
     const utcNow = moment.utc();
     const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
-    this._clearStatusTimerId = later(this, "_autoClearStatus", remaining);
+    this._clearStatusTimerId = discourseLater(
+      this,
+      "_autoClearStatus",
+      remaining
+    );
   },
 
   _unscheduleStatusClearing() {

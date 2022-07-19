@@ -1,7 +1,7 @@
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { helperContext } from "discourse-common/lib/helpers";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 let workaroundActive = false;
 
@@ -93,7 +93,7 @@ function positioningWorkaround(fixedElement) {
 
     let delay = caps.isIpadOS ? 350 : 150;
 
-    later(() => {
+    discourseLater(() => {
       if (caps.isIpadOS) {
         // disable hacks when using a hardware keyboard
         // by default, a hardware keyboard will show the keyboard accessory bar

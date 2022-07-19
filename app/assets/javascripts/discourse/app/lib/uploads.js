@@ -135,7 +135,7 @@ function extensionsToArray(exts) {
     .toLowerCase()
     .replace(/[\s\.]+/g, "")
     .split("|")
-    .filter((ext) => ext.indexOf("*") === -1);
+    .filter((ext) => !ext.includes("*"));
 }
 
 function extensions(siteSettings) {
@@ -198,8 +198,8 @@ function authorizedImagesExtensions(staff, siteSettings) {
 
 export function authorizesAllExtensions(staff, siteSettings) {
   return (
-    siteSettings.authorized_extensions.indexOf("*") >= 0 ||
-    (siteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 && staff)
+    siteSettings.authorized_extensions.includes("*") ||
+    (siteSettings.authorized_extensions_for_staff.includes("*") && staff)
   );
 }
 

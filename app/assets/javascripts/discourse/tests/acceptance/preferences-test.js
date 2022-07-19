@@ -78,6 +78,7 @@ function preferencesPretender(server, helper) {
 acceptance("User Preferences", function (needs) {
   needs.user();
   needs.pretender(preferencesPretender);
+
   test("update some fields", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
@@ -326,6 +327,7 @@ acceptance(
     });
   }
 );
+
 acceptance(
   "Avatar selector when selectable avatars allows staff to upload",
   function (needs) {
@@ -341,7 +343,7 @@ acceptance(
     });
 
     test("allows staff to upload", async function (assert) {
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 3,
         moderator: true,
         admin: false,
@@ -358,9 +360,10 @@ acceptance(
         )
       );
     });
+
     test("disallow non-staff", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 3,
         moderator: false,
         admin: false,
@@ -394,7 +397,7 @@ acceptance(
 
     test("with a tl3 user", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 3,
         moderator: false,
         admin: false,
@@ -410,9 +413,10 @@ acceptance(
         )
       );
     });
+
     test("with a tl2 user", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 2,
         moderator: false,
         admin: false,
@@ -428,9 +432,10 @@ acceptance(
         )
       );
     });
+
     test("always allow staff to upload", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 2,
         moderator: true,
         admin: false,
@@ -592,7 +597,7 @@ acceptance("Ignored users", function (needs) {
 
   test("when trust level < min level to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    await updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
+    updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
 
     assert.ok(
       !exists(".user-ignore"),
@@ -602,13 +607,13 @@ acceptance("Ignored users", function (needs) {
 
   test("when trust level >= min level to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    await updateCurrentUser({ trust_level: 1 });
+    updateCurrentUser({ trust_level: 1 });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 
   test("staff can always see ignored users", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    await updateCurrentUser({ moderator: true });
+    updateCurrentUser({ moderator: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 });

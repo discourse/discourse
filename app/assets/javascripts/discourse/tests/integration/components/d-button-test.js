@@ -220,10 +220,10 @@ module("Integration | Component | d-button", function (hooks) {
       hbs`<DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />`
     );
 
-    await triggerKeyEvent(".btn", "keydown", 32);
+    await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, "bar");
 
-    await triggerKeyEvent(".btn", "keydown", 13);
+    await triggerKeyEvent(".btn", "keydown", "Enter");
     assert.strictEqual(this.foo, "bar");
   });
 
@@ -235,10 +235,10 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @action={{this.action}} />`);
 
-    await triggerKeyEvent(".btn", "keydown", 32);
+    await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, null);
 
-    await triggerKeyEvent(".btn", "keydown", 13);
+    await triggerKeyEvent(".btn", "keydown", "Enter");
     assert.strictEqual(this.foo, "bar");
   });
 });

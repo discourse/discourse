@@ -1,4 +1,5 @@
-import { cancel, later, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import discourseComputed, {
   bind,
   observes,
@@ -10,7 +11,6 @@ import afterTransition from "discourse/lib/after-transition";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import positioningWorkaround from "discourse/lib/safari-hacks";
-import { isTesting } from "discourse-common/config/environment";
 
 const START_DRAG_EVENTS = ["touchstart", "mousedown"];
 const DRAG_EVENTS = ["touchmove", "mousemove"];
@@ -63,15 +63,12 @@ export default Component.extend(KeyEnterEscape, {
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
     cancel(this._lastKeyTimeout);
-    this._lastKeyTimeout = later(
-      () => {
-        if (lastKeyUp !== this._lastKeyUp) {
-          return;
-        }
-        this.appEvents.trigger("composer:find-similar");
-      },
-      isTesting() ? 50 : 1000
-    );
+    this._lastKeyTimeout = discourseLater(() => {
+      if (lastKeyUp !== this._lastKeyUp) {
+        return;
+      }
+      this.appEvents.trigger("composer:find-similar");
+    }, 1000);
   },
 
   @observes("composeState")

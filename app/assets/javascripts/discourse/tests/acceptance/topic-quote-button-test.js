@@ -132,7 +132,7 @@ acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
   test("Can use keyboard shortcut to quote selected text", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .cooked");
-    await triggerKeyEvent(document, "keypress", "q".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "Q");
     assert.ok(exists(".d-editor-input"), "the editor is open");
 
     assert.ok(

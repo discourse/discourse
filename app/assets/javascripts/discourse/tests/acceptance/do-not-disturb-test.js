@@ -62,7 +62,11 @@ acceptance("Do not disturb", function (needs) {
       "There are 4 duration choices"
     );
 
-    await triggerKeyEvent(".do-not-disturb-tile:nth-child(1)", "keydown", 13);
+    await triggerKeyEvent(
+      ".do-not-disturb-tile:nth-child(1)",
+      "keydown",
+      "Enter"
+    );
 
     assert.ok(
       query(".do-not-disturb-modal.hidden"),

@@ -16,6 +16,12 @@ export default class SidebarSection extends GlimmerComponent {
         : false;
   }
 
+  willDestroy() {
+    if (this.args.willDestroy) {
+      this.args.willDestroy();
+    }
+  }
+
   @action
   toggleSectionDisplay() {
     this.displaySection = !this.displaySection;
@@ -27,7 +33,22 @@ export default class SidebarSection extends GlimmerComponent {
     }
   }
 
+  @action
+  handleMultipleHeaderActions(id) {
+    this.args.headerActions
+      .find((headerAction) => headerAction.id === id)
+      .action();
+  }
+
   get headerCaretIcon() {
     return this.displaySection ? "angle-down" : "angle-right";
+  }
+
+  get isSingleHeaderAction() {
+    return this.args.headerActions?.length === 1;
+  }
+
+  get isMultipleHeaderActions() {
+    return this.args.headerActions?.length > 1;
   }
 }

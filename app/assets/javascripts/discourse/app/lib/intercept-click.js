@@ -39,7 +39,7 @@ export default function interceptClick(e) {
       !currentTarget.dataset.userCard &&
       currentTarget.classList.contains("ember-view")) ||
     currentTarget.classList.contains("lightbox") ||
-    href.indexOf("mailto:") === 0 ||
+    href.startsWith("mailto:") ||
     (href.match(/^http[s]?:\/\//i) &&
       !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))
   ) {

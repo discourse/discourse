@@ -10,7 +10,8 @@ import {
 } from "pretty-text/emoji";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { later, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
 import { htmlSafe } from "@ember/template";
@@ -140,7 +141,7 @@ export default Component.extend({
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
-      later(() => {
+      discourseLater(() => {
         schedule("afterRender", () => {
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");

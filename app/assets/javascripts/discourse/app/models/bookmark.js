@@ -116,7 +116,7 @@ const Bookmark = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.toLowerCase().indexOf(tag) === -1) {
+      if (!title.toLowerCase().includes(tag)) {
         newTags.push(tag);
       }
     });

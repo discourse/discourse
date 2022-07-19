@@ -77,6 +77,7 @@ class Plugin::Metadata
     "discourse-steam-login",
     "discourse-subscriptions",
     "discourse-teambuild",
+    "discourse-templates",
     "discourse-tooltips",
     "discourse-translator",
     "discourse-user-card-badges",
