@@ -484,11 +484,13 @@ export function exists(selector) {
   return count(selector) > 0;
 }
 
-export function publishToMessageBus(channelPath, ...args) {
+export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .forEach((c) => c.func(...args));
+
+  await settled();
 }
 
 export async function selectText(selector, endOffset = null) {
