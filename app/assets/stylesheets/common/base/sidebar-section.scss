@@ -1,0 +1,126 @@
+.sidebar-section-wrapper {
+  margin-bottom: 1em;
+
+  .sidebar-section-header {
+    display: flex;
+    text-transform: uppercase;
+    font-size: 1em;
+    font-weight: bold;
+    align-items: stretch;
+
+    .select-kit {
+      .btn {
+        background: transparent;
+        &:hover {
+          background: var(--primary-low);
+        }
+      }
+      .d-icon {
+        font-size: var(--font-down-1);
+        color: var(--primary-medium);
+        margin-right: 0;
+      }
+      summary {
+        padding: 0.25em 0.5em;
+      }
+    }
+  }
+
+  .sidebar-section-header-link,
+  .sidebar-section-header-text {
+    @include ellipsis;
+    flex: 1 1 auto;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    padding: 0.25em 0.5em;
+  }
+
+  .sidebar-section-header-link {
+    &:visited {
+      color: var(--primary);
+    }
+
+    &:hover {
+      background: var(--primary-low);
+    }
+  }
+
+  .sidebar-section-header-button {
+    background: none;
+    border: none;
+    padding: 0.25em 0.5em;
+
+    .d-icon {
+      font-size: $font-down-1;
+      color: var(--primary-medium);
+    }
+
+    &:hover {
+      background: var(--primary-low);
+    }
+  }
+  .select-kit-collection {
+    .texts {
+      font-size: var(--font-0);
+      text-transform: none;
+      line-height: var(--line-height-medium);
+      .name {
+        font-size: var(--font-0);
+      }
+    }
+  }
+
+  .sidebar-section-message-wrapper {
+    display: flex;
+  }
+
+  .sidebar-section-message {
+    padding: 0.25em 0.5em;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  .sidebar-section-header-caret {
+    flex: 0 0 auto;
+    width: 1.5em;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border: none;
+    background: transparent;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+    transition-delay: 0.5s;
+    .discourse-no-touch & {
+      &:hover {
+        svg {
+          color: var(--primary-high);
+        }
+      }
+    }
+
+    svg {
+      display: block;
+      flex: 0 0 auto;
+      transition: color 0.25s;
+    }
+
+    .d-icon {
+      font-size: $font-down-1;
+      color: var(--primary-medium);
+    }
+  }
+
+  .sidebar-section-content {
+    hr {
+      margin: 0em 1.5em;
+    }
+  }
+}
+
+#main-outlet-wrapper .sidebar-section-wrapper {
+  .sidebar-section-message-wrapper {
+    margin-left: 1.5em;
+  }
+}

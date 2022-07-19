@@ -205,6 +205,7 @@ module SvgSprite
     "unlock-alt",
     "upload",
     "user",
+    "user-cog",
     "user-edit",
     "user-friends",
     "user-plus",
