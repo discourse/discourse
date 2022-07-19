@@ -18,7 +18,6 @@ export function isValidLink(link) {
 
     deprecated("isValidLink now expects an Element, not a jQuery object", {
       since: "2.9.0.beta7",
-      dropFrom: "2.10.0.beta1",
     });
   }
 
