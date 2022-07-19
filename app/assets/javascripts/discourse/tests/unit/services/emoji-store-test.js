@@ -1,7 +1,7 @@
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
-discourseModule("Unit | Utility | emoji-emojiStore", function (hooks) {
+discourseModule("Unit | Service | emoji-store", function (hooks) {
   hooks.beforeEach(function () {
     this.emojiStore = this.container.lookup("service:emoji-store");
     this.emojiStore.reset();
@@ -29,6 +29,7 @@ discourseModule("Unit | Utility | emoji-emojiStore", function (hooks) {
   test("track", function (assert) {
     this.emojiStore.track("woman:t4");
     assert.deepEqual(this.emojiStore.favorites, ["woman:t4"]);
+
     this.emojiStore.track("otter");
     this.emojiStore.track(":otter:");
     assert.deepEqual(this.emojiStore.favorites, ["otter", "woman:t4"]);

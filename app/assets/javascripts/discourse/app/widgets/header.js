@@ -11,6 +11,7 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import ComponentConnector from "discourse/widgets/component-connector";
 
 const _extraHeaderIcons = [];
 
@@ -330,6 +331,24 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
+createWidget("revamped-user-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new ComponentConnector(this, "user-menu-wrapper", {}, [], {
+        applyStyle: false,
+      }),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleUserMenu");
+  },
+});
+
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
@@ -383,7 +402,11 @@ export default createWidget("header", {
       } else if (state.hamburgerVisible) {
         panels.push(this.attach("hamburger-menu"));
       } else if (state.userVisible) {
-        panels.push(this.attach("user-menu"));
+        if (this.currentUser.redesigned_user_menu_enabled) {
+          panels.push(this.attach("revamped-user-menu-wrapper", {}));
+        } else {
+          panels.push(this.attach("user-menu"));
+        }
       }
 
       additionalPanels.map((panel) => {

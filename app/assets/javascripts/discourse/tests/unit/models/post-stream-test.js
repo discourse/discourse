@@ -11,7 +11,7 @@ import sinon from "sinon";
 function buildStream(id, stream) {
   const store = createStore();
   const topic = store.createRecord("topic", { id, chunk_size: 5 });
-  const ps = topic.get("postStream");
+  const ps = topic.postStream;
   if (stream) {
     ps.set("stream", stream);
   }
@@ -32,10 +32,7 @@ module("Unit | Model | post-stream", function () {
 
   test("defaults", function (assert) {
     const postStream = buildStream(1234);
-    assert.blank(
-      postStream.get("posts"),
-      "there are no posts in a stream by default"
-    );
+    assert.blank(postStream.posts, "there are no posts in a stream by default");
     assert.ok(!postStream.get("loaded"), "it has never loaded");
     assert.present(postStream.get("topic"));
   });
@@ -206,7 +203,7 @@ module("Unit | Model | post-stream", function () {
       1,
       "it loaded the posts"
     );
-    assert.containsInstance(postStream.get("posts"), Post);
+    assert.containsInstance(postStream.posts, Post);
 
     assert.strictEqual(postStream.get("extra_property"), 12);
   });
@@ -617,7 +614,7 @@ module("Unit | Model | post-stream", function () {
     );
 
     assert.strictEqual(
-      postStream.get("posts").length,
+      postStream.posts.length,
       6,
       "it adds the right posts into the stream"
     );
@@ -640,7 +637,7 @@ module("Unit | Model | post-stream", function () {
     );
 
     assert.strictEqual(
-      postStream.get("posts").length,
+      postStream.posts.length,
       6,
       "it adds the right posts into the stream"
     );
@@ -723,7 +720,7 @@ module("Unit | Model | post-stream", function () {
       "it is assigned a created date"
     );
     assert.ok(
-      postStream.get("posts").includes(stagedPost),
+      postStream.posts.includes(stagedPost),
       "the post is added to the stream"
     );
     assert.strictEqual(
@@ -752,7 +749,7 @@ module("Unit | Model | post-stream", function () {
       "it retains the filteredPostsCount"
     );
     assert.ok(
-      !postStream.get("posts").includes(stagedPost),
+      !postStream.posts.includes(stagedPost),
       "the post is removed from the stream"
     );
     assert.strictEqual(
@@ -815,7 +812,7 @@ module("Unit | Model | post-stream", function () {
 
     postStream.commitPost(stagedPost);
     assert.ok(
-      postStream.get("posts").includes(stagedPost),
+      postStream.posts.includes(stagedPost),
       "the post is still in the stream"
     );
     assert.ok(!postStream.get("loading"), "it is no longer loading");
@@ -828,7 +825,10 @@ module("Unit | Model | post-stream", function () {
 
     const found = postStream.findLoadedPost(stagedPost.get("id"));
     assert.present(found, "the post is in the identity map");
-    assert.ok(postStream.indexOf(stagedPost) > -1, "the post is in the stream");
+    assert.ok(
+      postStream.posts.includes(stagedPost),
+      "the post is in the stream"
+    );
     assert.strictEqual(
       found.get("raw"),
       "different raw value",

@@ -61,9 +61,7 @@ const Topic = RestModel.extend({
   @discourseComputed("posters.[]")
   lastPoster(posters) {
     if (posters && posters.length > 0) {
-      const latest = posters.filter(
-        (p) => p.extras && p.extras.indexOf("latest") >= 0
-      )[0];
+      const latest = posters.filter((p) => p.extras?.includes("latest"))[0];
       return latest || posters.firstObject;
     }
   },
@@ -164,7 +162,7 @@ const Topic = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.indexOf(tag.toLowerCase()) === -1) {
+      if (!title.includes(tag.toLowerCase())) {
         newTags.push(tag);
       }
     });

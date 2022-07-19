@@ -129,7 +129,7 @@ export default class PostCooked {
 
         // this might be an attachment
         if (lc.internal && /^\/uploads\//.test(lc.url)) {
-          valid = href.indexOf(lc.url) >= 0;
+          valid = href.includes(lc.url);
         }
 
         // Match server-side behaviour for internal links with query params
@@ -138,7 +138,7 @@ export default class PostCooked {
         }
 
         // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
-        if (valid && isValidLink($link)) {
+        if (valid && isValidLink($link[0])) {
           const $onebox = $link.closest(".onebox");
           if (
             $onebox.length === 0 ||

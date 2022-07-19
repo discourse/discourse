@@ -194,7 +194,7 @@ export default Controller.extend({
 
   @discourseComputed("q")
   showLikeCount(q) {
-    return q && q.indexOf("order:likes") > -1;
+    return q?.includes("order:likes");
   },
 
   @observes("q")
@@ -211,11 +211,11 @@ export default Controller.extend({
     return (
       q &&
       this.currentUser &&
-      (q.indexOf("in:messages") > -1 ||
-        q.indexOf("in:personal") > -1 ||
-        q.indexOf(
+      (q.includes("in:messages") ||
+        q.includes("in:personal") ||
+        q.includes(
           `personal_messages:${this.currentUser.get("username_lower")}`
-        ) > -1)
+        ))
     );
   },
 
@@ -394,7 +394,7 @@ export default Controller.extend({
   actions: {
     createTopic(searchTerm) {
       let topicCategory;
-      if (searchTerm.indexOf("category:") !== -1) {
+      if (searchTerm.includes("category:")) {
         const match = searchTerm.match(/category:(\S*)/);
         if (match && match[1]) {
           topicCategory = match[1];

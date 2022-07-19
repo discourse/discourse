@@ -90,6 +90,70 @@
   }
 }
 
+.user-menu.revamped {
+  right: 0;
+  width: 320px;
+  padding: 0;
+
+  .panel-body-bottom {
+    flex: 0;
+  }
+
+  .menu-tabs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 1px solid var(--primary-low);
+  }
+
+  .tabs-list {
+    display: flex;
+    flex-direction: column;
+
+    .btn {
+      display: flex;
+      padding: 0.857em;
+      position: relative;
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+
+      .badge-notification {
+        background-color: var(--tertiary-med-or-tertiary);
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        font-size: var(--font-down-3);
+      }
+
+      &.active {
+        background-color: var(--tertiary-low);
+      }
+      &:hover {
+        background-color: var(--highlight-medium);
+      }
+    }
+  }
+
+  .panel-body-contents {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .quick-access-panel {
+    width: 320px;
+    padding: 0.75em;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    .double-user,
+    .multi-user {
+      white-space: unset;
+    }
+  }
+}
+
 .hamburger-panel {
   a.widget-link {
     width: 100%;
@@ -351,7 +415,8 @@
         color: var(--danger);
       }
     }
-    .read {
+    .read,
+    .reviewed {
       background-color: var(--secondary);
     }
     .none {

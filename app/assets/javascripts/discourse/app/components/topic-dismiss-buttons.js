@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
@@ -73,7 +73,7 @@ export default Component.extend({
   // viewport, or if too many topics fill the page
   @on("didInsertElement")
   _determineOtherDismissVisibility() {
-    later(() => {
+    discourseLater(() => {
       if (this.position === "top") {
         this.set(
           "isOtherDismissUnreadButtonVisible",

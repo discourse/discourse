@@ -263,7 +263,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag1 section link`
     );
 
@@ -271,7 +271,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag2 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag2 section link`
     );
 
@@ -295,7 +295,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for tag1 section link`
     );
 

@@ -5,7 +5,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const flatten = (array) => [].concat.apply([], array);
@@ -385,7 +385,7 @@ export default createWidget("hamburger-menu", {
       const headerCloak = document.querySelector(".header-cloak");
       headerCloak.classList.add("animate");
       headerCloak.style.setProperty("--opacity", 0);
-      later(() => this.sendWidgetAction("toggleHamburger"), 200);
+      discourseLater(() => this.sendWidgetAction("toggleHamburger"), 200);
     }
   },
 

@@ -174,6 +174,15 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.normalize_url_for_output('linear-gradient(310.77deg, #29AA9F 0%, #098EA6 100%)')).to eq("") }
   end
 
+  describe '.get_absolute_image_url' do
+    it { expect(described_class.get_absolute_image_url('//meta.discourse.org/favicon.ico', 'https://meta.discourse.org')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('http://meta.discourse.org/favicon.ico', 'https://meta.discourse.org')).to eq('http://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('https://meta.discourse.org/favicon.ico', 'https://meta.discourse.org')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('/favicon.ico', 'https://meta.discourse.org')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('/favicon.ico', 'https://meta.discourse.org/forum/subdir')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('../favicon.ico', 'https://meta.discourse.org/forum/subdir/')).to eq('https://meta.discourse.org/forum/favicon.ico') }
+  end
+
   describe '.uri_encode' do
     it { expect(described_class.uri_encode('http://example.com/f"o&o?[b"ar]')).to eq("http://example.com/f%22o&o?%5Bb%22ar%5D") }
     it { expect(described_class.uri_encode("http://example.com/f.o~o;?<ba'r>")).to eq("http://example.com/f.o~o;?%3Cba%27r%3E") }
