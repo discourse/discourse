@@ -3065,8 +3065,14 @@ bs_BA:
     user_activity:
       no_replies_others: "Nema odgovora."
     sidebar:
-      unread_count: "%{count} nepročitana"
-      new_count: "%{count} novi"
+      unread_count:
+        one: "%{count} nepročitana"
+        few: "%{count} nepročitane"
+        other: "%{count} nepročitanih"
+      new_count:
+        one: "%{count} novi"
+        few: "%{count} nova"
+        other: "%{count} novih"
       sections:
         messages:
           header_link_text: "Poruke"

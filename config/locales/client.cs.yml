@@ -2871,8 +2871,16 @@ cs:
     user_activity:
       no_replies_others: "Žádné odpovědi."
     sidebar:
-      unread_count: "%{count} nepřečtené"
-      new_count: "%{count} nové"
+      unread_count:
+        one: "%{count} nepřečtené"
+        few: "%{count} nepřečtených"
+        many: "%{count} nepřečtené"
+        other: "%{count} nepřečtené"
+      new_count:
+        one: "%{count} nové"
+        few: "%{count} nová"
+        many: "%{count} nových"
+        other: "%{count} nové"
       sections:
         messages:
           header_link_text: "Zprávy"

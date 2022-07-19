@@ -2532,8 +2532,12 @@ et:
       no_replies_others: "Vastuseid pole."
       no_likes_others: "Meeldimisega postitusi veel pole."
     sidebar:
-      unread_count: "%{count} lugemata"
-      new_count: "%{count} uus"
+      unread_count:
+        one: "%{count} lugemata"
+        other: "%{count} lugemata"
+      new_count:
+        one: "%{count} uus"
+        other: "%{count} uut"
       sections:
         messages:
           header_link_text: "Sõnumid"

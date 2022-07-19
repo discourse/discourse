@@ -3088,7 +3088,6 @@ sl:
         this_month: "Mesec"
         this_week: "Teden"
         today: "Danes"
-    browser_update: 'Na žalost je <a href="https://www.discourse.org/faq/#browser">vaš brskalnik prestar za uporabo te spletne strani</a>. Če si želite ogledati obogateno vsebino, se prijaviti in odgovarjati., prosim <a href="https://browsehappy.com">nadgradite svoj brskalnik</a>.'
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
@@ -3373,8 +3372,16 @@ sl:
         regular: "redni uporabnik"
         leader: "vodja"
     sidebar:
-      unread_count: "%{count} neprebrana"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} neprebrana"
+        two: "%{count} neprebrani"
+        few: "%{count} neprebrane"
+        other: "%{count} neprebranih"
+      new_count:
+        one: "%{count} nova"
+        two: "%{count} novi"
+        few: "%{count} nove"
+        other: "%{count} novih"
       sections:
         messages:
           header_link_text: "Sporočila"

@@ -3902,7 +3902,6 @@ ar:
         this_week: "الأسبوع"
         today: "اليوم"
         other_periods: "رؤية الأكثر نشاطًا:"
-    browser_update: 'للأسف، <a href="https://www.discourse.org/faq/#browser">متصفحك قديم جدًا على أن يعمل عليه هذا الموقع</a>. يُرجى <a href="https://browsehappy.com">تحديث متصفحك</a> لعرض المحتوى الغني وتسجيل الدخول والرد.'
     permission_types:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
@@ -4274,8 +4273,20 @@ ar:
     second_factor_auth:
       redirect_after_success: "مصادقة العامل الثاني ناجحة. إعادة التوجيه إلى الصفحة السابقة…"
     sidebar:
-      unread_count: "%{count} غير مقروء"
-      new_count: "%{count} جديد"
+      unread_count:
+        zero: "%{count} غير مقروء"
+        one: "%{count} غير مقروء"
+        two: "%{count} غير مقروءين"
+        few: "%{count} غير مقروءة"
+        many: "%{count} غير مقروءة"
+        other: "%{count} غير مقروء"
+      new_count:
+        zero: "%{count} جديد"
+        one: "%{count} جديد"
+        two: "%{count} جديدان"
+        few: "%{count} جديد"
+        many: "%{count} جديدًا"
+        other: "%{count} جديدة"
       sections:
         messages:
           header_link_text: "الرسائل"

@@ -1789,7 +1789,8 @@ id:
         regular: "umum"
         leader: "pemimpin"
     sidebar:
-      new_count: "%{count} baru"
+      new_count:
+        other: "%{count} baru"
       sections:
         messages:
           header_link_text: "Pesan-pesan"

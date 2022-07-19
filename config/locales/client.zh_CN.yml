@@ -235,7 +235,7 @@ zh_CN:
     character_count:
       other: "%{count} 个字符"
     period_chooser:
-      aria_label: "按时间间隔过滤"
+      aria_label: "按时间间隔筛选"
     related_messages:
       title: "相关消息"
       see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a>…'
@@ -1577,6 +1577,7 @@ zh_CN:
       set_custom_status: "设置自定义状态"
       what_are_you_doing: "你在做什么？"
       remove_status: "移除状态"
+      until: "直到："
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -1926,7 +1927,7 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
-      users_placeholder: "添加用户或组"
+      users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "编辑原因"
@@ -2235,6 +2236,10 @@ zh_CN:
     not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"
     current_user: "转到您的用户页面"
     view_all: "查看所有%{tab}"
+    user_menu:
+      generic_no_items: "此列表中没有内容。"
+      sr_menu_tabs: "菜单选项卡"
+      view_all_notifications: "查看所有通知"
     topics:
       new_messages_marker: "上次访问"
       bulk:
@@ -3239,7 +3244,7 @@ zh_CN:
         this_week: "周"
         today: "今天"
         other_periods: "查看热门："
-    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器太旧了，无法在本站点上运行</a>。请<a href="https://browsehappy.com">升级您的浏览器</a>以浏览丰富的内容，登录和回复。'
+    browser_update: '很抱歉， <a href="https://www.discourse.org/faq/#browser">你的浏览器不受支持</a>。请 <a href="https://browsehappy.com">切换到支持的浏览器</a> 查看丰富的内容、登录和回复。'
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"
@@ -3558,8 +3563,11 @@ zh_CN:
     second_factor_auth:
       redirect_after_success: "双重认证验证成功。重定向到之前的页面…"
     sidebar:
-      unread_count: "%{count} 未读"
-      new_count: "%{count} 新"
+      unread_count:
+        other: "%{count} 未读"
+      new_count:
+        other: "%{count} 新"
+      toggle_section: "切换部分"
       sections:
         messages:
           header_link_title: "个人消息"

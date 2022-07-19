@@ -3106,7 +3106,6 @@ ja:
         this_week: "今週"
         today: "今日"
         other_periods: "人気を参照:"
-    browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザは古すぎるため、このサイトを処理できません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">ブラウザをアップグレード</a>してからログインして、返信してください。'
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -3396,8 +3395,10 @@ ja:
       no_replies_others: "返信はありません。"
       no_likes_others: "「いいね！」した投稿はありません。"
     sidebar:
-      unread_count: "未読 %{count}"
-      new_count: "新規 %{count}"
+      unread_count:
+        other: "未読 %{count}"
+      new_count:
+        other: "新規 %{count}"
       sections:
         messages:
           header_link_text: "メッセージ"

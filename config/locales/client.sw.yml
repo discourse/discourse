@@ -2253,8 +2253,12 @@ sw:
       no_replies_others: "Hakuna majibu."
       no_likes_others: "Hakuna machapisho yaliyopendwa."
     sidebar:
-      unread_count: "%{count} haijasomwa"
-      new_count: "Mada mpya %{count}"
+      unread_count:
+        one: "%{count} haijasomwa"
+        other: "%{count} haijasomwa"
+      new_count:
+        one: "Mada mpya %{count}"
+        other: "Mada mpya %{count} "
       sections:
         messages:
           header_link_text: "Ujumbe"

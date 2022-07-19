@@ -1649,6 +1649,7 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
+      until: "T.o.m.:"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -3396,7 +3397,6 @@ sv:
         this_week: "Vecka"
         today: "Idag"
         other_periods: "se toppen för:"
-    browser_update: 'Tyvärr <a href="https://www.discourse.org/faq/#browser">är din webbläsare för gammal för att fungera på den här sidan</a>. Vi ber dig <a href="https://browsehappy.com">uppgradera din webbläsare</a> för att visa formaterat innehåll, logga in eller svara.'
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3728,8 +3728,13 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
-      unread_count: "%{count} oläst"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} oläst"
+        other: "%{count} olästa"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nya"
+      toggle_section: "växla avsnitt"
       sections:
         messages:
           header_link_title: "personliga meddelanden"

@@ -3309,7 +3309,6 @@ ur:
         this_week: "ہفتہ"
         today: "آج"
         other_periods: "اوپر دیکھیں:"
-    browser_update: 'بدقسمتی سے، <a href="https://www.discourse.org/faq/#browser">آپ کا براؤزر اس سائٹ پر کام کرنے کے لیے بہت پرانا ہے</a>۔ براہ کرم <a href="https://browsehappy.com">اپنے براؤزر کو اپ گریڈ کریں</a> بھرپور مواد دیکھنے کے لیے، لاگ ان کریں اور جواب دیں۔'
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
@@ -3635,8 +3634,12 @@ ur:
     second_factor_auth:
       redirect_after_success: "دو فیکٹر کی توثیق کامیاب ہے۔ پچھلے صفحہ…پر ری ڈائریکٹ کیا جا رہا ہے۔"
     sidebar:
-      unread_count: "%{count} بغیر پڑھا ہوا"
-      new_count: "%{count} نیا"
+      unread_count:
+        one: "%{count} بغیر پڑھا ہوا"
+        other: "%{count} بغیر پڑھے ہوئے"
+      new_count:
+        one: "%{count} نیا"
+        other: "%{count} نئے"
       sections:
         messages:
           header_link_text: "پیغامات"

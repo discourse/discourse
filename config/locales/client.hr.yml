@@ -3542,7 +3542,6 @@ hr:
         this_week: "Tjedan"
         today: "Danas"
         other_periods: "vidi vrh:"
-    browser_update: 'Nažalost, <a href="https://www.discourse.org/faq/#browser">vaš preglednik je prestar za rad na ovoj stranici</a>. Molimo <a href="https://browsehappy.com">nadogradite svoj preglednik</a> kako biste vidjeli bogat sadržaj, prijavili se i odgovorili.'
     permission_types:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
@@ -3886,8 +3885,14 @@ hr:
     second_factor_auth:
       redirect_after_success: "Provjera autentičnosti drugog faktora je uspješna. Preusmjeravanje na prethodnu stranicu…"
     sidebar:
-      unread_count: "%{count} nepročitano"
-      new_count: "%{count} novi"
+      unread_count:
+        one: "%{count} nepročitano"
+        few: "%{count} nepročitano"
+        other: "%{count} nepročitano"
+      new_count:
+        one: "%{count} novi"
+        few: "%{count} novih"
+        other: "%{count} novi"
       sections:
         messages:
           header_link_text: "Poruke"

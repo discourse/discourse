@@ -3421,8 +3421,12 @@ pt:
     user_activity:
       no_likes_others: "Sem publicações gostadas."
     sidebar:
-      unread_count: "%{count} não lido"
-      new_count: "%{count} novo"
+      unread_count:
+        one: "%{count} não lido"
+        other: "%{count} não lidos"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
       sections:
         messages:
           header_link_text: "Mensagens"

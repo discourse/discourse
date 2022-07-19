@@ -1649,6 +1649,7 @@ de:
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du da?"
       remove_status: "Status entfernen"
+      until: "Bis:"
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -2332,6 +2333,10 @@ de:
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
     current_user: "zu deiner Benutzerseite gehen"
     view_all: "Alle %{tab} anzeigen"
+    user_menu:
+      generic_no_items: "Es gibt keine Einträge in dieser Liste."
+      sr_menu_tabs: "Menü-Registerkarten"
+      view_all_notifications: "Alle Benachrichtigungen anzeigen"
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
@@ -3396,7 +3401,7 @@ de:
         this_week: "Woche"
         today: "Heute"
         other_periods: "angesagte Themen ansehen:"
-    browser_update: 'Leider ist <a href="https://www.discourse.org/faq/#browser">dein Browser zu alt, um auf dieser Website zu funktionieren</a>. Bitte <a href="https://browsehappy.com">aktualisiere deinen Browser</a>, um Inhalte korrekt anzuzeigen, dich anzumelden und zu antworten.'
+    browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a> , um die Inhalte zu sehen, dich anzumelden und zu antworten.'
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
       create_post: "Antworten/Ansehen"
@@ -3728,8 +3733,13 @@ de:
     second_factor_auth:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung ist erfolgreich. Weiterleitung zur vorherigen Seite…"
     sidebar:
-      unread_count: "%{count} ungelesenes"
-      new_count: "%{count} neues"
+      unread_count:
+        one: "%{count} ungelesenes"
+        other: "%{count} ungelesene"
+      new_count:
+        one: "%{count} neues"
+        other: "%{count} neue"
+      toggle_section: "Abschnitt umschalten"
       sections:
         messages:
           header_link_title: "Persönliche Nachrichten"
