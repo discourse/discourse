@@ -16,7 +16,7 @@ import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -75,7 +75,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    later(() => {
+    discourseLater(() => {
       if (this.site.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
       }

@@ -1,4 +1,4 @@
-import EmberObject, { set } from "@ember/object";
+import { set } from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   alertChannel,
@@ -12,6 +12,7 @@ import {
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
+import Notification from "discourse/models/notification";
 
 export default {
   name: "subscribe-user-notifications",
@@ -88,7 +89,7 @@ export default {
 
               oldNotifications.insertAt(
                 insertPosition,
-                EmberObject.create(lastNotification)
+                Notification.create(lastNotification)
               );
             }
 

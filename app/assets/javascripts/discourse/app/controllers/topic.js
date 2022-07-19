@@ -4,7 +4,8 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
-import { later, next, schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
@@ -1545,7 +1546,7 @@ export default Controller.extend(bufferedProperty("model"), {
     }
 
     if (this._retryInProgress) {
-      later(() => {
+      discourseLater(() => {
         this.retryOnRateLimit(times, promise, topicId);
       }, 100);
       return;
@@ -1570,7 +1571,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
           this._retryRateLimited = true;
 
-          later(() => {
+          discourseLater(() => {
             this._retryRateLimited = false;
             this.retryOnRateLimit(times - 1, promise, topicId);
           }, waitSeconds * 1000);

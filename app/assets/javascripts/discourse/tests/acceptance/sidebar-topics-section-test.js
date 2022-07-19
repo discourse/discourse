@@ -335,7 +335,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       query(
         ".sidebar-section-link-everything .sidebar-section-link-content-badge"
       ).textContent.trim(),
-      "3",
+      "3 unread",
       "it displays the right unread count"
     );
 
@@ -361,7 +361,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       query(
         ".sidebar-section-link-everything .sidebar-section-link-content-badge"
       ).textContent.trim(),
-      "2",
+      "2 unread",
       "it updates the unread count"
     );
 
@@ -393,7 +393,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       query(
         ".sidebar-section-link-everything .sidebar-section-link-content-badge"
       ).textContent.trim(),
-      "1",
+      "1 new",
       "it displays the new count once there are no unread topics"
     );
 
@@ -549,7 +549,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       query(
         ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
       ).textContent.trim(),
-      "3",
+      "3 unread",
       "it displays the right unread count"
     );
 
@@ -574,7 +574,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       query(
         ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
       ).textContent.trim(),
-      "2",
+      "2 unread",
       "it updates the unread count"
     );
 
@@ -602,7 +602,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       query(
         ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
       ).textContent.trim(),
-      "1",
+      "1 new",
       "it displays the new count once there are no tracked unread topics"
     );
 

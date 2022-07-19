@@ -50,12 +50,12 @@ acceptance("Emoji", function (needs) {
     await click("#topic-footer-buttons .btn.create");
 
     await fillIn(".d-editor-input", ":s");
-    await triggerKeyEvent(".d-editor-input", "keyup", 40); // ensures a keyup is triggered
+    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowDown"); // ensures a keyup is triggered
 
     assert.notOk(exists(".autocomplete.ac-emoji"));
 
     await fillIn(".d-editor-input", ":sw");
-    await triggerKeyEvent(".d-editor-input", "keyup", 40); // ensures a keyup is triggered
+    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowDown"); // ensures a keyup is triggered
 
     assert.ok(exists(".autocomplete.ac-emoji"));
   });

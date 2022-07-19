@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { test } from "qunit";
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import {
@@ -317,7 +318,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category1.slug} section link`
     );
 
@@ -325,7 +326,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "2",
+      I18n.t("sidebar.unread_count", { count: 2 }),
       `displays 2 unread count for ${category2.slug} section link`
     );
 
@@ -344,7 +345,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for ${category1.slug} section link`
     );
 
@@ -381,7 +382,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category2.slug} section link`
     );
   });

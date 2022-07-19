@@ -1,5 +1,6 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { later, next } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
@@ -508,7 +509,7 @@ export default createWidget("post-menu", {
         if (
           (attrs.yours && button.attrs && button.attrs.alwaysShowYours) ||
           (attrs.reviewableId && i === "flag") ||
-          hiddenButtons.indexOf(i) === -1
+          !hiddenButtons.includes(i)
         ) {
           visibleButtons.push(button);
         }
@@ -737,7 +738,7 @@ export default createWidget("post-menu", {
     heart.classList.add("heart-animation");
 
     return new Promise((resolve) => {
-      later(() => {
+      discourseLater(() => {
         this.sendWidgetAction("toggleLike").then(() => resolve());
       }, 400);
     });

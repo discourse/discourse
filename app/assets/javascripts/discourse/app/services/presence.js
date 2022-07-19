@@ -1,15 +1,8 @@
 import Service from "@ember/service";
 import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import {
-  cancel,
-  debounce,
-  later,
-  next,
-  once,
-  run,
-  throttle,
-} from "@ember/runloop";
+import { cancel, debounce, next, once, run, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
@@ -324,7 +317,7 @@ export default class PresenceService extends Service {
     try {
       result = await this._initialDataAjax;
     } catch (e) {
-      later(this, this._makeInitialDataRequest, PRESENCE_GET_RETRY_MS);
+      discourseLater(this, this._makeInitialDataRequest, PRESENCE_GET_RETRY_MS);
       throw e;
     } finally {
       this._initialDataAjax = null;
@@ -595,7 +588,7 @@ export default class PresenceService extends Service {
       this._presentChannels.length > 0 &&
       !isTesting()
     ) {
-      this._nextUpdateTimer = later(
+      this._nextUpdateTimer = discourseLater(
         this,
         this._throttledUpdateServer,
         PRESENCE_INTERVAL_S * 1000

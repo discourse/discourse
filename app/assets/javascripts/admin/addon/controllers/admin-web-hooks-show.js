@@ -42,7 +42,7 @@ export default Controller.extend({
   @discourseComputed("model.secret")
   secretValidation(secret) {
     if (!isEmpty(secret)) {
-      if (secret.indexOf(" ") !== -1) {
+      if (secret.includes(" ")) {
         return EmberObject.create({
           failed: true,
           reason: I18n.t("admin.web_hooks.secret_invalid"),
