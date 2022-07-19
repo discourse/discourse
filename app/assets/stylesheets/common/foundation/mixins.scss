@@ -16,9 +16,20 @@ $breakpoints: (
   extra-large: 1140px,
 );
 
-@mixin breakpoint($bp, $rule: max-width, $type: screen) {
+@mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: true) {
   @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
     @content;
+  }
+
+  // if you don't want to consider the sidebar in your breakpoint
+  // you can pass in $sidebar: false
+  @if $sidebar {
+    // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
+    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
+      .has-sidebar-page {
+        @content;
+      }
+    }
   }
 }
 
