@@ -148,7 +148,7 @@ describe PostRevisor do
       SiteSetting.disable_tags_edit_notifications = true
 
       expect { subject.revise!(admin, tags: ['new-tag']) }
-        .to change { Notification.count }.by(0)
+        .not_to change { Notification.count }
     end
   end
 
@@ -1278,8 +1278,8 @@ describe PostRevisor do
             { title: "updated title for my topic" },
             keep_existing_draft: true
           )
-        }.to change { Draft.where(user: user, draft_key: draft_key).first.sequence }.by(0)
-          .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(0)
+        }.to not_change { Draft.where(user: user, draft_key: draft_key).first.sequence }
+          .and not_change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }
 
         expect {
           PostRevisor.new(post).revise!(
@@ -1307,7 +1307,7 @@ describe PostRevisor do
     it 'does nothing when a staff member edits a post' do
       admin = Fabricate(:admin)
 
-      expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
+      expect { revisor.revise!(admin, { raw: 'updated body' }) }.not_to change(ReviewablePost, :count)
     end
 
     it 'skips grace period edits' do
@@ -1315,7 +1315,7 @@ describe PostRevisor do
 
       expect {
         revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
-      }.to change(ReviewablePost, :count).by(0)
+      }.not_to change(ReviewablePost, :count)
     end
   end
 end

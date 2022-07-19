@@ -42,8 +42,8 @@ describe SeedData::Categories do
 
       it "does not create another category" do
         expect { create_category }
-          .to change { Category.count }.by(0)
-          .and change { Topic.count }.by(0)
+          .to not_change { Category.count }
+          .and not_change { Topic.count }
       end
 
       it "creates a missing 'About Category' topic" do
@@ -51,7 +51,7 @@ describe SeedData::Categories do
         Topic.delete(category.topic_id)
 
         expect { create_category }
-          .to change { Category.count }.by(0)
+          .to not_change { Category.count }
           .and change { Topic.count }.by(1)
 
         category.reload
@@ -103,7 +103,7 @@ describe SeedData::Categories do
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
 
       expect { create_category("lounge_category_id") }
-        .to change { CategoryGroup.count }.by(0)
+        .not_to change { CategoryGroup.count }
 
       category.reload
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))

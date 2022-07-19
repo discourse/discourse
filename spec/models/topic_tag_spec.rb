@@ -19,7 +19,7 @@ describe TopicTag do
 
       expect {
         topic_tag
-      }.to change(tag, :topic_count).by(0)
+      }.not_to change(tag, :topic_count)
     end
 
   end
@@ -39,7 +39,7 @@ describe TopicTag do
 
       expect {
         topic_tag.destroy
-      }.to change(tag, :topic_count).by(0)
+      }.not_to change(tag, :topic_count)
     end
 
   end
