@@ -1,13 +1,13 @@
 <div class="sidebar-sections">
-  <Sidebar::TopicsSection />
-  <Sidebar::CategoriesSection />
+  <Sidebar::TopicsSection @collapsable={{@collapsableSections}}/>
+  <Sidebar::CategoriesSection @collapsable={{@collapsableSections}}/>
 
   {{#if this.siteSettings.tagging_enabled}}
-    <Sidebar::TagsSection />
+    <Sidebar::TagsSection @collapsable={{@collapsableSections}}/>
   {{/if}}
 
   {{#if this.siteSettings.enable_personal_messages}}
-    <Sidebar::MessagesSection />
+    <Sidebar::MessagesSection @collapsable={{@collapsableSections}}/>
   {{/if}}
 
   {{#each this.customSections as |customSection|}}
@@ -18,7 +18,8 @@
       @headerLinkTitle={{customSection.title}}
       @headerActionsIcon={{customSection.actionsIcon}}
       @headerActions={{customSection.actions}}
-      @willDestroy={{customSection.willDestroy}}>
+      @willDestroy={{customSection.willDestroy}}
+      @collapsable={{@collapsableSections}}>
 
       {{#each customSection.links as |link|}}
         <Sidebar::SectionLink

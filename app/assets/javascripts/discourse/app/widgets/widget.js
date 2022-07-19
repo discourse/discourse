@@ -416,9 +416,11 @@ export default class Widget {
     if (this.clickOutside) {
       properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
     }
+
     if (this.click) {
       properties["widget-click"] = new WidgetClickHook(this);
     }
+
     if (this.doubleClick) {
       properties["widget-double-click"] = new WidgetDoubleClickHook(this);
     }

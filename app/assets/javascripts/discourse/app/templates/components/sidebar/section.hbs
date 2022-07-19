@@ -1,13 +1,15 @@
 <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
   <div class="sidebar-section-header">
-    <button
-      type="button"
-      class="sidebar-section-header-caret"
-      title="toggle section"
-      {{on "click" this.toggleSectionDisplay}}
-    >
-      {{d-icon this.headerCaretIcon}}
-    </button>
+    {{#if @collapsable}}
+      <button
+        type="button"
+        class="sidebar-section-header-caret"
+        title="toggle section"
+        {{on "click" this.toggleSectionDisplay}}
+      >
+        {{d-icon this.headerCaretIcon}}
+      </button>
+    {{/if}}
 
     {{#if @headerRoute}}
       <LinkTo
