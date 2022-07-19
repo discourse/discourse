@@ -8,7 +8,7 @@ describe Jobs::RemoveBanner do
     it 'doesn’t enqueue a future job to remove it' do
       expect do
         topic.make_banner!(user)
-      end.to change { Jobs::RemoveBanner.jobs.size }.by(0)
+      end.not_to change { Jobs::RemoveBanner.jobs.size }
     end
   end
 
@@ -42,7 +42,7 @@ describe Jobs::RemoveBanner do
           expect do
             topic.make_banner!(user, 'xxx')
           end.to raise_error(Discourse::InvalidParameters)
-        end.to change { Jobs::RemoveBanner.jobs.size }.by(0)
+        end.not_to change { Jobs::RemoveBanner.jobs.size }
       end
     end
   end

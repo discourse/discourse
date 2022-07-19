@@ -102,7 +102,7 @@ describe Jobs::ExportUserArchive do
         Jobs::ExportUserArchive.new.execute(
           user_id: user.id,
         )
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
 
       system_message = user.topics_allowed.last
       expect(system_message.title).to eq(I18n.t("system_messages.csv_export_failed.subject_template"))

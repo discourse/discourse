@@ -319,7 +319,7 @@ RSpec.describe User do
       user.update(admin: true)
       expect {
         user.grant_admin!
-      }.to change { Jobs::SendSystemMessage.jobs.count }.by 0
+      }.not_to change { Jobs::SendSystemMessage.jobs.count }
     end
   end
 
@@ -2681,7 +2681,7 @@ RSpec.describe User do
 
         expect do
           user.update_ip_address!('0.0.0.1')
-        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(0)
+        end.not_to change { UserIpAddressHistory.where(user_id: user.id).count }
 
         expect(
           UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)

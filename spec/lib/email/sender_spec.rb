@@ -778,12 +778,12 @@ describe Email::Sender do
           expect(message.header[header]).to eq(nil)
           expect(post_reply_key.user_id).to eq(user.id)
           expect(post_reply_key.post_id).to eq(post.id)
-          expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
+          expect { email_sender.send }.not_to change { PostReplyKey.count }
         end
 
         it 'should find existing key' do
           existing_post_reply_key = PostReplyKey.create(post_id: post.id, user_id: user.id)
-          expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
+          expect { email_sender.send }.not_to change { PostReplyKey.count }
           post_reply_key = PostReplyKey.last
           expect(post_reply_key).to eq(existing_post_reply_key)
         end

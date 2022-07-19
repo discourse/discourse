@@ -31,7 +31,7 @@ RSpec.describe UploadCreator do
 
         expect do
           UploadCreator.new(file, "utf-8\n.txt").create_for(user2.id)
-        end.to change { Upload.count }.by(0)
+        end.not_to change { Upload.count }
 
         expect(user.user_uploads.count).to eq(1)
         expect(user2.user_uploads.count).to eq(1)

@@ -806,7 +806,7 @@ describe Topic do
 
           expect { topic.invite(user, user1.username) }
             .to change { Notification.count }.by(1)
-            .and change { Post.where(post_type: Post.types[:small_action]).count }.by(0)
+            .and not_change { Post.where(post_type: Post.types[:small_action]).count }
         end
 
         context "from a muted user" do
@@ -1787,7 +1787,7 @@ describe Topic do
 
             expect do
               topic.change_category_to_id(new_category.id)
-            end.to change { Notification.count }.by(0)
+            end.not_to change { Notification.count }
 
             expect(topic.category_id).to eq(new_category.id)
           end
@@ -1823,7 +1823,7 @@ describe Topic do
 
             expect do
               topic.change_category_to_id(new_category.id)
-            end.to change { Notification.count }.by(0)
+            end.not_to change { Notification.count }
           end
         end
 
@@ -1856,7 +1856,7 @@ describe Topic do
 
             it 'should not set a topic timer' do
               expect { topic.change_category_to_id(new_category.id) }
-                .to change { TopicTimer.with_deleted.count }.by(0)
+                .not_to change { TopicTimer.with_deleted.count }
 
               expect(topic.closed).to eq(true)
               expect(topic.reload.category).to eq(new_category)

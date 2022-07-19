@@ -63,7 +63,7 @@ describe Jobs::CleanUpUploads do
     it 'does not delete uploads skipped by an unused callback' do
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
     end
@@ -97,7 +97,7 @@ describe Jobs::CleanUpUploads do
     it 'does not delete uploads that are in use by callback' do
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
     end

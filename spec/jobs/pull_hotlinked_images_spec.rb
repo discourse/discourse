@@ -43,7 +43,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
     end
 
     it 'does nothing if there are no large images to pull' do
@@ -59,10 +59,9 @@ describe Jobs::PullHotlinkedImages do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
       stub_image_size
 
-      expect do
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(1) &
-             change { UserHistory.count }.by(0) # Should not add to the staff log
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+        .and not_change { UserHistory.count } # Should not add to the staff log
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -110,7 +109,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         post.rebake!
-      end.to change { Upload.count }.by(0) # We alread have the upload
+      end.not_to change { Upload.count } # We alread have the upload
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -278,7 +277,7 @@ describe Jobs::PullHotlinkedImages do
             .to change { Upload.count }.by(1)
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-            .to change { Upload.count }.by(0)
+            .not_to change { Upload.count }
         end
       end
     end
