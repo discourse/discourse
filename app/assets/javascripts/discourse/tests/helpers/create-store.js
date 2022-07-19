@@ -6,9 +6,30 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import Site from "discourse/models/site";
+import RestModel from "discourse/models/rest";
 
 const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",
+});
+
+const CachedCatAdapter = RestAdapter.extend({
+  primaryKey: "cat_id",
+  cache: true,
+  apiNameFor() {
+    return "cat";
+  },
+});
+
+const CachedCat = RestModel.extend({
+  init(...args) {
+    // Simulate an implicit injection
+    Object.defineProperty(this, "injectedProperty", {
+      writable: false,
+      enumerable: true,
+      value: "hello world",
+    });
+    this._super(...args);
+  },
 });
 
 export default function (customLookup = () => {}) {
@@ -27,6 +48,11 @@ export default function (customLookup = () => {}) {
           this._catAdapter =
             this._catAdapter || CatAdapter.create({ owner: this });
           return this._catAdapter;
+        }
+        if (type === "adapter:cached-cat") {
+          this._cachedCatAdapter =
+            this._cachedCatAdapter || CachedCatAdapter.create({ owner: this });
+          return this._cachedCatAdapter;
         }
         if (type === "adapter:rest") {
           if (!this._restAdapter) {
@@ -56,6 +82,9 @@ export default function (customLookup = () => {}) {
 
       lookupFactory(type) {
         const split = type.split(":");
+        if (type === "model:cached-cat") {
+          return CachedCat;
+        }
         return resolver.resolveOther({
           type: split[0],
           fullNameWithoutType: split[1],
