@@ -1108,10 +1108,12 @@ class UsersController < ApplicationController
     RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
 
     if params[:username].present?
+      RateLimiter.new(nil, "activate-edit-email-hr-username-#{params[:username]}", 5, 1.hour).performed!
       @user = User.find_by_username_or_email(params[:username])
       raise Discourse::InvalidAccess.new unless @user.present?
       raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
     elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
+      RateLimiter.new(nil, "activate-edit-email-hr-user-key-#{user_key}", 5, 1.hour).performed!
       @user = User.where(id: user_key.to_i).first
     end
 
