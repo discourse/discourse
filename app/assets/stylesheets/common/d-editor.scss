@@ -294,12 +294,12 @@
 
 // d-editor bar button sizing
 .d-editor-button-bar {
-  // we can't hide the overflow of this element because it contains select-kit dropdowns
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
+  overflow-x: auto;
   flex-shrink: 0;
 
   .d-editor-spacer {
