@@ -2521,6 +2521,9 @@ pl_PL:
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
     current_user: "idź do swojej strony użytkowanika"
     view_all: "zobacz wszystkie %{tab}"
+    user_menu:
+      sr_menu_tabs: "Zakładki menu"
+      view_all_notifications: "zobacz wszystkie powiadomienia"
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
@@ -3698,7 +3701,7 @@ pl_PL:
         this_week: "Tydzień"
         today: "Dzisiaj"
         other_periods: "Zobacz najczęściej dyskutowane:"
-    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">Twoja przeglądarka jest za stara, aby pracować na tej stronie</a>. Proszę <a href="https://browsehappy.com">uaktualnić przeglądarkę</a> , aby wyświetlić bogatą zawartość, zalogować się i odpowiedzieć.'
+    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -4055,8 +4058,17 @@ pl_PL:
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
-      unread_count: "%{count} nieprzeczytany"
-      new_count: "%{count} nowy"
+      unread_count:
+        one: "%{count} nieprzeczytany"
+        few: "%{count} nieprzeczytane"
+        many: "%{count} nieprzeczytanych"
+        other: "%{count} nieprzeczytany"
+      new_count:
+        one: "%{count} nowy"
+        few: "%{count} nowe"
+        many: "%{count} nowych"
+        other: "%{count} nowy"
+      toggle_section: "przełącz sekcję"
       sections:
         messages:
           header_link_title: "osobiste wiadomości"

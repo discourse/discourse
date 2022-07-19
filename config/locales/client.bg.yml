@@ -2987,8 +2987,12 @@ bg:
         regular: "редовен"
         leader: "лидер"
     sidebar:
-      unread_count: "%{count} непрочетен"
-      new_count: "%{count} нов"
+      unread_count:
+        one: "%{count} непрочетен"
+        other: "%{count} непрочетени"
+      new_count:
+        one: "%{count} нов"
+        other: "%{count} нови"
       sections:
         messages:
           header_link_text: "Съобщения"

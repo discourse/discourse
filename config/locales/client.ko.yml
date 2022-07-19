@@ -3133,7 +3133,6 @@ ko:
         this_week: "주"
         today: "오늘"
         other_periods: "상단 참조 :"
-    browser_update: '안타깝게도 <a href="https://www.discourse.org/faq/#browser">브라우저가 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 여러 내용을 읽고 댓글도 작성해보세요.'
     permission_types:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
@@ -3439,8 +3438,10 @@ ko:
     fullscreen_table:
       expand_btn: "테이블 확장"
     sidebar:
-      unread_count: "%{count} unread"
-      new_count: "%{count} new"
+      unread_count:
+        other: "%{count} unread"
+      new_count:
+        other: "%{count} new"
       sections:
         messages:
           header_link_text: "메시지"

@@ -3083,7 +3083,6 @@ gl:
         this_week: "Semana"
         today: "Hoxe"
         other_periods: "ver arriba:"
-    browser_update: 'Desafortunadamente, <a href="https://www.discourse.org/faq/#browser"> o seu navegador é demasiado vello para traballar neste sitio</a>. Por favor, <a href="https://browsehappy.com">actualice o seu navegador</a> para ver contido enriquecido, iniciar sesión e responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3352,8 +3351,12 @@ gl:
       no_replies_others: "Sen respostas."
       no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
-      unread_count: "%{count} pendente de lectura"
-      new_count: "%{count} novo"
+      unread_count:
+        one: "%{count} pendente de lectura"
+        other: "%{count} pendentes de lectura"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
       sections:
         messages:
           header_link_text: "Mensaxes"

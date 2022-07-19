@@ -251,6 +251,16 @@ ro:
       one: "o postare"
       few: "%{count} postări"
       other: "%{count} de postări"
+    "new-topic": |
+      Bine ai venit la %{site_name} &mdash; **mulțumim pentru începerea unei noi conversații! *
+
+      - Titlul sună interesant dacă îl citești cu voce tare? Este un rezumat bun?
+
+      - Cine ar fi interesat de acest lucru? De ce contează? Ce fel de răspunsuri vrei?
+
+      - Include cuvinte folosite în mod obișnuit în subiectul tău astfel încât ceilalți să le poată *găsi*. Pentru a grupa subiectul cu subiecte conexe, selectaţi o categorie (sau etichetă).
+
+      Pentru mai multe, [a se vedea instrucțiuni ale comunității](%{base_path}/orientări). Acest panou va apărea numai pentru prima ta %{education_posts_text}.
     avatar: |
       ### Ce zici de o poză atașată contului tău?
 
@@ -310,6 +320,7 @@ ro:
             execute_at:
               in_the_past: "trebuie să fie în viitor."
       <<: *errors
+  uncategorized_category_name: "Necategorisit"
   vip_category_name: "Sufragerie"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
   meta_category_name: "Feedback la site"
@@ -1108,6 +1119,7 @@ ro:
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
+    default_other_skip_new_user_tips: "Omiteți sfaturile și insignele de înscriere pentru utilizatori noi."
     default_other_like_notification_frequency: "Implicit, notifică utilizatorul la primirea de aprecieri."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
     default_categories_watching: "Implicit, listează categoriile care sunt urmărite în mod activ."

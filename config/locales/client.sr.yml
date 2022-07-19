@@ -1800,8 +1800,14 @@ sr:
         regular: "stalni član"
         leader: "vođa"
     sidebar:
-      unread_count: "%{count} nepročitana"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} nepročitana"
+        few: "%{count} nepročitanih"
+        other: "%{count} nepročitana"
+      new_count:
+        one: "%{count} nova"
+        few: "%{count} novih"
+        other: "%{count} nova"
       sections:
         messages:
           header_link_text: "Poruke"

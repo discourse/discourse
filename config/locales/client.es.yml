@@ -3396,7 +3396,6 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver arriba:"
-    browser_update: 'Lamentablemente, <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor, <a href="https://browsehappy.com">actualiza tu navegador</a> para ver el contenido enriquecido, iniciar sesión y responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3728,8 +3727,12 @@ es:
     second_factor_auth:
       redirect_after_success: "La autenticación de segundo factor se ha realizado con éxito. Redirigiendo a la página anterior…"
     sidebar:
-      unread_count: "%{count} sin leer"
-      new_count: "%{count} nuevo"
+      unread_count:
+        one: "%{count} sin leer"
+        other: "%{count} sin leer"
+      new_count:
+        one: "%{count} nuevo"
+        other: "%{count} nuevos"
       sections:
         messages:
           header_link_title: "mensajes personales"

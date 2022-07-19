@@ -3302,7 +3302,6 @@ pt_BR:
         this_week: "Semana"
         today: "Hoje"
         other_periods: "ver melhores:"
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador é muito antigo para funcionar neste site</a>. <a href="https://browsehappy.com">Atualize seu navegador</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     permission_types:
       full: "Criar/Responder/Ver"
       create_post: "Responder/Ver"
@@ -3621,8 +3620,12 @@ pt_BR:
     fullscreen_table:
       expand_btn: "Expandir tabela"
     sidebar:
-      unread_count: "%{count} não lido"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} não lido"
+        other: "%{count} não lidos"
+      new_count:
+        one: "%{count} nova"
+        other: "%{count} novas"
       sections:
         messages:
           header_link_text: "Mensagens"

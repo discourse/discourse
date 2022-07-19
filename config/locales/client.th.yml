@@ -2427,8 +2427,10 @@ th:
         member: "สมาชิก"
         regular: "ทั่วไป"
     sidebar:
-      unread_count: "%{count} ยังไม่อ่าน"
-      new_count: "%{count} ใหม่"
+      unread_count:
+        other: "%{count} ยังไม่อ่าน"
+      new_count:
+        other: "%{count} ใหม่"
       sections:
         messages:
           header_link_text: "ข้อความ"

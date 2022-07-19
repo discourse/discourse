@@ -3483,8 +3483,16 @@ lt:
     second_factor_auth:
       redirect_after_success: "Antrojo veiksnio autentifikavimas sėkmingas. Peradresavimas į ankstesnį puslapį…"
     sidebar:
-      unread_count: "%{count} neperskaitytas"
-      new_count: "%{count} nauja"
+      unread_count:
+        one: "%{count} neperskaitytas"
+        few: "%{count} neperskaitytų"
+        many: "%{count} neperskaitytas"
+        other: "%{count} neperskaitytas"
+      new_count:
+        one: "%{count} nauja"
+        few: "%{count} nauji"
+        many: "%{count} nauja"
+        other: "%{count} nauja"
       sections:
         messages:
           header_link_text: "Žinutės"

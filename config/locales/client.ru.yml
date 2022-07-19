@@ -356,7 +356,7 @@ ru:
       user_count: "Пользователи"
       active_user_count: "Активные пользователи"
       contact: "Контакты"
-      contact_info: "В случае возникновения критической ошибки или срочного дела, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
+      contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
     bookmarked:
       title: "Закладки"
       edit_bookmark: "Изменить закладку"
@@ -1791,6 +1791,7 @@ ru:
       set_custom_status: "Поменять статус"
       what_are_you_doing: "Что вы сейчас делаете?"
       remove_status: "Удалить статус"
+      until: "До:"
     loading: "Загрузка..."
     errors:
       prev_page: "при попытке загрузки"
@@ -2524,6 +2525,10 @@ ru:
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
     current_user: "перейти на вашу страницу пользователя"
     view_all: "Просмотреть все %{tab}"
+    user_menu:
+      generic_no_items: "Нет элементов в списке."
+      sr_menu_tabs: "Вкладки меню"
+      view_all_notifications: "Просмотреть все уведомления"
     topics:
       new_messages_marker: "последний визит"
       bulk:
@@ -4066,8 +4071,17 @@ ru:
     second_factor_auth:
       redirect_after_success: "Проверка подлинности второго фактора прошла успешно. Перенаправление на предыдущую страницу…"
     sidebar:
-      unread_count: "%{count} непрочитанных"
-      new_count: "%{count} новых"
+      unread_count:
+        one: "%{count} непрочитанная"
+        few: "%{count} непрочитанных"
+        many: "%{count} непрочитанная"
+        other: "%{count} непрочитанная"
+      new_count:
+        one: "%{count} новая"
+        few: "%{count} новых"
+        many: "%{count} новых"
+        other: "%{count} новая"
+      toggle_section: "Переключить секцию"
       sections:
         messages:
           header_link_title: "Личные сообщения"

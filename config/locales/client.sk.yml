@@ -2270,8 +2270,16 @@ sk:
     user_activity:
       no_activity_others: "Žiadna aktivita"
     sidebar:
-      unread_count: "%{count} neprečítaná"
-      new_count: "%{count} nová"
+      unread_count:
+        one: "%{count} neprečítaná"
+        few: "%{count} neprečítané"
+        many: "%{count} neprečítaných"
+        other: "%{count} neprečítaná"
+      new_count:
+        one: "%{count} nová"
+        few: "%{count} nové"
+        many: "%{count} nových"
+        other: "%{count} nových"
       sections:
         messages:
           header_link_text: "Správy"

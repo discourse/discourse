@@ -3699,7 +3699,6 @@ uk:
         this_week: "Тиждень"
         today: "Today"
         other_periods: "дивитися TOP:"
-    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер занадто старий для цього сайту</a>. Будь ласка, <a href="https://browsehappy.com">оновіть браузер</a> для повноцінної роботи з сайтом.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
@@ -4057,8 +4056,16 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      unread_count: "%{count} непрочитана"
-      new_count: "%{count} нова"
+      unread_count:
+        one: "%{count} непрочитана"
+        few: "%{count} непрочитаних"
+        many: "%{count} непрочитаних"
+        other: "%{count} непрочитана"
+      new_count:
+        one: "%{count} нова"
+        few: "%{count} нових"
+        many: "%{count} нова"
+        other: "%{count} нова"
       sections:
         messages:
           header_link_title: "особисті повідомлення"

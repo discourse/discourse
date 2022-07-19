@@ -2882,8 +2882,12 @@ ca:
       no_replies_others: "No hi ha respostes."
       no_likes_others: "Publicacions sense 'm'agrada'."
     sidebar:
-      unread_count: "%{count} no llegit"
-      new_count: "%{count} nou"
+      unread_count:
+        one: "%{count} no llegit"
+        other: "%{count} no llegits"
+      new_count:
+        one: "%{count} nou"
+        other: "%{count} nous"
       sections:
         messages:
           header_link_text: "Missatges"
