@@ -1247,7 +1247,9 @@ User.reopen(Evented, {
   },
 
   _updateStatus(statuses) {
-    this.set("status", statuses[this.id]);
+    if (statuses.hasOwnProperty(this.id)) {
+      this.set("status", statuses[this.id]);
+    }
   },
 });
 
