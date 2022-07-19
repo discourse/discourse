@@ -121,7 +121,7 @@ export function setIconList(iconList) {
 }
 
 export function isExistingIconId(id) {
-  return _iconList.includes(id);
+  return _iconList?.includes(id);
 }
 
 function warnIfMissing(id) {
