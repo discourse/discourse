@@ -41,7 +41,7 @@ class UserBadge < ActiveRecord::Base
     Badge.increment_counter 'grant_count', self.badge_id
     UserStat.update_distinct_badge_count self.user_id
     UserBadge.update_featured_ranks! self.user_id
-    DiscourseEvent.trigger(:user_badge_granted, self.badge_id, self.user_id)
+    self.badge.trigger_badge_granted_event(self.user_id)
   end
 
   after_destroy do
