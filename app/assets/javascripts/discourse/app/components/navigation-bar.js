@@ -59,9 +59,7 @@ export default Component.extend(FilterModeMixin, {
           });
 
           Object.values(navElements).forEach((element) => {
-            window.requestAnimationFrame(() => {
-              this._resizeObserver.observe(element);
-            });
+            this._resizeObserver.observe(element);
           });
         }
       }
