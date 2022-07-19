@@ -111,4 +111,39 @@ module("Unit | Model | user", function (hooks) {
 
     assert.ok(spyMomentGuess.notCalled);
   });
+
+  test("clears statuses of several users correctly when receiving status updates via appEvents", function (assert) {
+    const status1 = {
+      description: "user1 status",
+      emoji: "mega",
+    };
+    const status2 = {
+      description: "user2 status",
+      emoji: "speech_balloon",
+    };
+    const user1 = User.create({
+      id: 1,
+      status: status1,
+    });
+    const user2 = User.create({ id: 2, status: status2 });
+    const appEvents = user1.appEvents;
+
+    try {
+      user1.trackStatus();
+      user2.trackStatus();
+      assert.equal(user1.status, status1);
+      assert.equal(user2.status, status2);
+
+      appEvents.trigger("user-status:changed", { [user1.id]: null });
+      assert.equal(user1.status, null);
+      assert.equal(user2.status, status2);
+
+      appEvents.trigger("user-status:changed", { [user2.id]: null });
+      assert.equal(user1.status, null);
+      assert.equal(user2.status, null);
+    } finally {
+      user1.stopTrackingStatus();
+      user2.stopTrackingStatus();
+    }
+  });
 });
