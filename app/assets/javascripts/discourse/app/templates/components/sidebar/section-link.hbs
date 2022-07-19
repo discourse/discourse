@@ -12,17 +12,21 @@
         {{#if (eq @prefixType "image")}}
           <img src={{@prefixValue}} class="prefix-image">
         {{/if}}
+
         {{#if (eq @prefixType "text")}}
           {{@prefixValue}}
         {{/if}}
+
         {{#if (eq @prefixType "icon")}}
           {{d-icon @prefixValue class="prefix-icon"}}
         {{/if}}
+
         {{#if @prefixBadge}}
           {{d-icon @prefixBadge class="prefix-badge"}}
         {{/if}}
       </span>
     {{/if}}
+
     <span class="sidebar-section-link-content-text">
       {{@content}}
     </span>
@@ -41,6 +45,7 @@
       </span>
     {{/if}}
   </Sidebar::SectionLinkTo>
+
   {{#if @hoverValue}}
     <span class="sidebar-section-link-hover">
       <button

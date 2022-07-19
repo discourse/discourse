@@ -6,7 +6,7 @@ import { setting } from "discourse/lib/computed";
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["categories-admin-dropdown"],
   classNames: ["categories-admin-dropdown"],
-  fixedCateoryPositions: setting("fixed_category_positions"),
+  fixedCategoryPositions: setting("fixed_category_positions"),
 
   selectKitOptions: {
     icons: ["wrench", "caret-down"],
@@ -26,7 +26,7 @@ export default DropdownSelectBoxComponent.extend({
       },
     ];
 
-    if (this.fixedCateoryPositions) {
+    if (this.fixedCategoryPositions) {
       items.push({
         id: "reorder",
         name: I18n.t("categories.reorder.title"),
