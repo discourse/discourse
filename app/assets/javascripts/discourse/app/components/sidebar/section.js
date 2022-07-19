@@ -10,10 +10,15 @@ export default class SidebarSection extends GlimmerComponent {
   constructor() {
     super(...arguments);
 
-    this.displaySection =
-      this.keyValueStore.getItem(this.collapsedSidebarSectionKey) === undefined
-        ? true
-        : false;
+    if (this.args.collapsable) {
+      this.displaySection =
+        this.keyValueStore.getItem(this.collapsedSidebarSectionKey) ===
+        undefined
+          ? true
+          : false;
+    } else {
+      this.displaySection = true;
+    }
   }
 
   willDestroy() {
