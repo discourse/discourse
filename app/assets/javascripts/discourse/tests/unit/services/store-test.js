@@ -99,11 +99,11 @@ module("Unit | Service | store", function () {
   test("rehydrating stale results with implicit injections", async function (assert) {
     const store = createStore();
 
-    const cat = (await store.find("cachedcat", { name: "souna" })).content[0];
+    const cat = (await store.find("cached-cat", { name: "souna" })).content[0];
 
     assert.strictEqual(cat.name, "souna");
 
-    const stale = store.findStale("cachedcat", { name: "souna" });
+    const stale = store.findStale("cached-cat", { name: "souna" });
     const refreshed = await stale.refresh();
 
     assert.strictEqual(refreshed.content[0].name, "souna");

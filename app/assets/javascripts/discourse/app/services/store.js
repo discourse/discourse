@@ -141,17 +141,13 @@ export default Service.extend({
       hydrated.get("content").map((item) => {
         let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
-          const hydrateData = { ...item };
-
           for (const [key, value] of Object.entries(
             Object.getOwnPropertyDescriptors(staleItem)
           )) {
-            if (!value.writable) {
-              delete hydrateData[key];
+            if (value.writable && value.enumerable) {
+              staleItem.set(key, value.value);
             }
           }
-
-          staleItem.setProperties(hydrateData);
         } else {
           staleItem = item;
         }

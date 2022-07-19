@@ -12,7 +12,7 @@ const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",
 });
 
-const CachedcatAdapter = RestAdapter.extend({
+const CachedCatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",
   cache: true,
   apiNameFor() {
@@ -20,7 +20,7 @@ const CachedcatAdapter = RestAdapter.extend({
   },
 });
 
-const Cachedcat = RestModel.extend({
+const CachedCat = RestModel.extend({
   init(...args) {
     // Simulate an implicit injection
     Object.defineProperty(this, "injectedProperty", {
@@ -49,10 +49,10 @@ export default function (customLookup = () => {}) {
             this._catAdapter || CatAdapter.create({ owner: this });
           return this._catAdapter;
         }
-        if (type === "adapter:cachedcat") {
-          this._cachedcatAdapter =
-            this._cachedcatAdapter || CachedcatAdapter.create({ owner: this });
-          return this._cachedcatAdapter;
+        if (type === "adapter:cached-cat") {
+          this._cachedCatAdapter =
+            this._cachedCatAdapter || CachedCatAdapter.create({ owner: this });
+          return this._cachedCatAdapter;
         }
         if (type === "adapter:rest") {
           if (!this._restAdapter) {
@@ -82,8 +82,8 @@ export default function (customLookup = () => {}) {
 
       lookupFactory(type) {
         const split = type.split(":");
-        if (type === "model:cachedcat") {
-          return Cachedcat;
+        if (type === "model:cached-cat") {
+          return CachedCat;
         }
         return resolver.resolveOther({
           type: split[0],
