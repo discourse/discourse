@@ -1,0 +1,50 @@
+<div class="user-menu revamped menu-panel drop-down" data-max-width="320">
+  <div class="panel-body">
+    <div class="panel-body-contents">
+      <div
+        id={{concat "quick-access-" this.currentTabId}}
+        class="quick-access-panel"
+        tabindex="-1"
+        aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
+        <this.currentPanelComponent/>
+      </div>
+      <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
+        <div class="top-tabs tabs-list">
+          {{#each this.topTabs as |tab|}}
+            <button
+              class={{concat "btn btn-flat btn-icon no-text" (if (eq tab.id this.currentTabId) " active")}}
+              type="button"
+              role="tab"
+              id={{concat "user-menu-button-" tab.id}}
+              tabindex={{if (eq tab.id this.currentTabId) "0" "-1"}}
+              aria-selected={{if (eq tab.id this.currentTabId) "true" "false"}}
+              aria-controls={{concat "quick-access-" tab.id}}
+              data-tab-number={{tab.position}}
+              {{on "click" (fn this.changeTab tab)}}
+              {{!-- template-lint-disable require-context-role --}}
+            >
+              {{d-icon tab.icon}}
+              {{#if tab.count}}
+                <span class="badge-notification">{{tab.count}}</span>
+              {{/if}}
+            </button>
+          {{/each}}
+        </div>
+        <div class="bottom-tabs tabs-list">
+          {{#each this.bottomTabs as |tab|}}
+            <a
+              class="btn btn-flat btn-icon no-text"
+              role="tab"
+              tabindex="-1"
+              href={{tab.href}}
+              data-tab-number={{tab.position}}
+              {{!-- template-lint-disable require-context-role --}}
+            >
+              {{d-icon tab.icon}}
+            </a>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
