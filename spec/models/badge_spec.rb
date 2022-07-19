@@ -236,7 +236,7 @@ describe Badge do
   end
 
   context "#trigger_badge_granted_event" do
-    it "triggers a 'user_badge_badge_granted' event" do
+    it "triggers a 'user_badge_granted' event" do
       badge = Fabricate(:badge)
       user = Fabricate(:user)
       event = DiscourseEvent.track(:user_badge_granted) do
