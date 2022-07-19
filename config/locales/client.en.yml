@@ -4056,8 +4056,12 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
-      unread_count: "%{count} unread"
-      new_count: "%{count} new"
+      unread_count:
+        one: "%{count} unread"
+        other: "%{count} unread"
+      new_count:
+        one: "%{count} new"
+        other: "%{count} new"
       toggle_section: "toggle section"
       sections:
         messages:
