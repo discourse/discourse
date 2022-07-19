@@ -296,7 +296,7 @@ module PostGuardian
   end
 
   def can_view_raw_email?(post)
-    post && (is_staff? || post.user_id == @user.id)
+    post && is_staff?
   end
 
   def can_unhide?(post)
