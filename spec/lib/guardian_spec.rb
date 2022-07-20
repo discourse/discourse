@@ -2789,8 +2789,8 @@ describe Guardian do
 
       context 'with no posts' do
         include_examples "staff can always change usernames"
-        it "is true for the user to change their own username" do
-          expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_truthy
+        it "is false for the user to change their own username" do
+          expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_falsey
         end
       end
 
