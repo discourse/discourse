@@ -28,6 +28,7 @@ class WatchedWord < ActiveRecord::Base
   validates :action, presence: true
 
   validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
+  validate :replacement_is_tag_list, if: -> { action == WatchedWord.actions[:tag] }
 
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
@@ -47,6 +48,14 @@ class WatchedWord < ActiveRecord::Base
   def replacement_is_url
     if !(replacement =~ URI::regexp)
       errors.add(:base, :invalid_url)
+    end
+  end
+
+  def replacement_is_tag_list
+    tag_list = replacement&.split(',')
+    tags = Tag.where(name: tag_list)
+    if (tag_list.blank? || tags.empty? || tag_list.size != tags.size)
+      errors.add(:base, :invalid_tag_list)
     end
   end
 

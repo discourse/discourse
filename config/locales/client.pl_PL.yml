@@ -99,6 +99,11 @@ pl_PL:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "mniej niż %{count} minutę"
+          few: "mniej niż %{count} minuty"
+          many: "mniej niż %{count} minut"
+          other: "mniej niż %{count} minut"
         x_minutes:
           one: "%{count} minuta"
           few: "%{count} minuty"
@@ -109,11 +114,36 @@ pl_PL:
           few: "%{count} godziny"
           many: "%{count} godzin"
           other: "%{count} godzin"
+        about_x_hours:
+          one: "około %{count} godzina"
+          few: "około %{count} godziny"
+          many: "około %{count} godzin"
+          other: "około %{count} godzin"
         x_days:
           one: "%{count} dzień"
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
+        x_months:
+          one: "%{count} miesiąc"
+          few: "%{count} miesiące"
+          many: "%{count} miesięcy"
+          other: "%{count} miesięcy"
+        about_x_years:
+          one: "około %{count} rok"
+          few: "około %{count} lata"
+          many: "około %{count} lat"
+          other: "około %{count} lat"
+        over_x_years:
+          one: "ponad %{count} rok"
+          few: "ponad %{count} lata"
+          many: "ponad %{count} lat"
+          other: "ponad %{count} lat"
+        almost_x_years:
+          one: "prawie %{count} rok"
+          few: "prawie %{count} lata"
+          many: "prawie %{count} lat"
+          other: "prawie %{count} lat"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -164,6 +194,7 @@ pl_PL:
       to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
+      post: "post #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
@@ -206,6 +237,7 @@ pl_PL:
     skip_to_main_content: "Przejdź do głównej zawartości"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
+    emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
       dismiss: "Odrzuć"
@@ -337,9 +369,13 @@ pl_PL:
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
+      created_generic: "Dodałeś to do zakładek. %{name}"
+      create: "Utwórz zakładkę"
+      edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
+      created_with_reminder_generic: "Dodałeś to do zakładek z przypomnieniem %{date}. %{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
       confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
@@ -350,7 +386,11 @@ pl_PL:
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       no_user_bookmarks: "Nie masz żadnych postów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych postów."
       auto_delete_preference:
+        label: "Po otrzymaniu powiadomienia"
+        never: "Zachowaj zakładkę"
         when_reminder_sent: "Usuń zakładkę"
+        on_owner_reply: "Usuń zakładkę, gdy odpowiem"
+        clear_reminder: "Zachowaj zakładkę i wyczyść przypomnienie"
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
@@ -360,6 +400,8 @@ pl_PL:
         existing_reminder: "Masz ustawione przypomnienie dla tej zakładki, które zostanie wysłane %{at_date_time}"
     copy_codeblock:
       copied: "skopiowane!"
+      copy: "skopiuj kod do schowka"
+      fullscreen: "pokaż kod na pełnym ekranie"
     drafts:
       label: "Szkice"
       label_with_count: "Szkice (%{count})"
@@ -406,6 +448,7 @@ pl_PL:
     saved: "Zapisano!"
     upload: "Prześlij"
     uploading: "Przesyłanie..."
+    processing: "Przetwarzanie..."
     uploading_filename: "Przesyłanie: %{filename}..."
     processing_filename: "Przetwarzanie: %{filename}..."
     clipboard: "schowek"
@@ -642,7 +685,9 @@ pl_PL:
         other: "lat"
       relative: "Względny"
     time_shortcut:
+      now: "Teraz"
       later_today: "Później dzisiaj"
+      two_days: "Dwa dni"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
       post_local_date: "Data w poście"
@@ -650,13 +695,21 @@ pl_PL:
       this_weekend: "W ten weekend"
       start_of_next_business_week: "Poniedziałek"
       start_of_next_business_week_alt: "Następny poniedziałek"
+      next_week: "Następny tydzień"
       two_weeks: "Dwa tygodnie"
       next_month: "Następny miesiąc"
+      two_months: "Dwa miesiące"
+      three_months: "Trzy miesiące"
+      four_months: "Cztery miesiące"
       six_months: "Sześć miesięcy"
-      custom: "Niestandardowa data i godzina"
+      one_year: "Rok"
+      forever: "Zawsze"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
+      never: "Nigdy"
       last_custom: "Ostatnia niestandardowa data i godzina"
+      custom: "Niestandardowa data i godzina"
+      select_timeframe: "Wybierz przedział czasowy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
       you_posted_topic: "<a href='%{userUrl}'>Dodajesz</a> <a href='%{topicUrl}'>temat</a>"
@@ -779,6 +832,7 @@ pl_PL:
             allow_unknown_sender_topic_replies: "Zezwalaj na odpowiedzi od nieznanego nadawcy w temacie."
             allow_unknown_sender_topic_replies_hint: "Umożliwia nieznanym nadawcom odpowiadanie na tematy grupy. Jeśli ta opcja nie jest włączona, odpowiedzi z adresów e-mail, które nie zostały jeszcze zaproszone do tematu, utworzą nowy temat."
             from_alias: "Z aliasu"
+            from_alias_hint: "Alias używany jako adres nadawcy podczas wysyłania grupowych wiadomości e-mail SMTP. Pamiętaj, że może to nie być obsługiwane przez wszystkich dostawców poczty, zapoznaj się z dokumentacją dostawcy poczty."
           mailboxes:
             synchronized: "Zsynchronizowana skrzynka pocztowa"
             none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
@@ -1148,6 +1202,13 @@ pl_PL:
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
+      experimental_sidebar:
+        enable: "Włącz eksperymentalny pasek boczny"
+        options: "Opcje"
+        categories_section: "Sekcja kategorii"
+        categories_section_instruction: "Wybrane kategorie będą wyświetlane w sekcji kategorii paska bocznego."
+        tags_section: "Sekcja tagów"
+        tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1188,7 +1249,7 @@ pl_PL:
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       muted_categories_instructions_dont_hide: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. "
-      regular_categories: "Stały bywalec"
+      regular_categories: "Normalny"
       regular_categories_instructions: "Te kategorie będą widoczne na listach tematów „Najnowsze” i „Najpopularniejsze”."
       no_category_access: "Jako moderator masz limitowany dostęp do kategorii, możliwość zapisu jest wyłączona."
       delete_account: "Usuń moje konto"
@@ -1263,6 +1324,7 @@ pl_PL:
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
+        sidebar: "Pasek boczny"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -1371,6 +1433,7 @@ pl_PL:
         upload_title: "Wyślij swoją grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
         logo_small: "Małe logo witryny. Używane domyślnie."
+        use_custom: "Lub prześlij własny awatar:"
       change_profile_background:
         title: "Nagłówek profilu"
         instructions: "Nagłówki profilu zostaną wyśrodkowane i będą miały domyślną szerokość 1110 pikseli."
@@ -1587,8 +1650,6 @@ pl_PL:
           title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
           error: "Wystąpił błąd podczas generowania linku do zaproszenia"
-          max_redemptions_allowed_label: "Ile osób może zarejestrować się za pomocą tego linku?"
-          expires_at: "Kiedy ten link z zaproszeniem wygaśnie?"
         invite:
           new_title: "Utwórz zaproszenie"
           edit_title: "Edytuj zaproszenie"
@@ -1634,7 +1695,9 @@ pl_PL:
         title: "Podsumowanie"
         stats: "Statystyki"
         time_read: "czas odczytu"
+        time_read_title: "%{duration} (cały czas)"
         recent_time_read: "czas ostatniego czytania"
+        recent_time_read_title: "%{duration} (w ciągu ostatnich 60 dni)"
         topic_count:
           one: "utworzono temat"
           few: "utworzono tematów"
@@ -1720,6 +1783,11 @@ pl_PL:
         sent_by: "Wysłane przez"
         private_message: "wiadomość"
         the_topic: "temat"
+    user_status:
+      save: "Zapisz"
+      set_custom_status: "Ustaw własny status"
+      what_are_you_doing: "Co robisz?"
+      remove_status: "Usuń status"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -1903,27 +1971,27 @@ pl_PL:
       not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł/mogła się zalogować."
       google_oauth2:
         name: "Google"
-        title: "przez Google"
+        title: "Zaloguj się przez Google"
         sr_title: "Zaloguj się przez Google"
       twitter:
         name: "Twitter"
-        title: "przez Twitter"
+        title: "Zaloguj się przez Twitter"
         sr_title: "Zaloguj się przez Twitter"
       instagram:
         name: "Instagram"
-        title: "z Instagramem"
+        title: "Zaloguj się przez Instagram"
         sr_title: "Zaloguj się przez Instagram"
       facebook:
         name: "Facebook"
-        title: "przez Facebook"
-        sr_title: "Zaloguj się przez facebook"
+        title: "Zaloguj się przez Facebook"
+        sr_title: "Zaloguj się przez Facebook"
       github:
         name: "GitHub"
-        title: "przez GitHub"
+        title: "Zaloguj się przez GitHub"
         sr_title: "Zaloguj się przez GitHub"
       discord:
         name: "Discord"
-        title: "z Discordem"
+        title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
@@ -1956,6 +2024,7 @@ pl_PL:
       categories_and_top_topics: "Kategorie i najlepsze tematy"
       categories_boxes: "Pudełka z podkategoriami"
       categories_boxes_with_topics: "Pudełka z polecanymi tematami"
+      subcategories_with_featured_topics: "Podkategorie z polecanymi tematami"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2116,7 +2185,7 @@ pl_PL:
       create_shared_draft: "Utwórz udostępniony projekt"
       edit_shared_draft: "Edytuj udostępniony projekt"
       title: "Lub naciśnij %{modifier}Enter"
-      users_placeholder: "Dodaj osobę"
+      users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Wprowadź tytuł, lub wklej tutaj link"
       edit_reason_placeholder: "powód edycji?"
@@ -2186,9 +2255,6 @@ pl_PL:
         reply_as_new_group_message:
           label: Odpowiedz jako nowa wiadomość grupowa
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
-        reply_as_private_message:
-          label: Nowa wiadomość
-          desc: Utwórz nową osobistą wiadomość
         reply_to_topic:
           label: Odpowiedz na temat
           desc: Odpowiedz na temat, a nie żaden konkretny wpis
@@ -2359,6 +2425,8 @@ pl_PL:
       in: "w"
       in_this_topic: "w tym temacie"
       in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
+      in_messages: "w wiadomościach"
+      in_messages_tooltip: "przełącz się na wyszukiwanie regularnych tematów"
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
       in_posts_by: "w postach %{username}"
@@ -2453,6 +2521,9 @@ pl_PL:
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
     current_user: "idź do swojej strony użytkowanika"
     view_all: "zobacz wszystkie %{tab}"
+    user_menu:
+      sr_menu_tabs: "Zakładki menu"
+      view_all_notifications: "zobacz wszystkie powiadomienia"
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
@@ -2460,6 +2531,7 @@ pl_PL:
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
         relist_topics: "Odśwież listę tematów"
+        reset_bump_dates: "Zresetuj daty ważności"
         defer: "Zignoruj"
         delete: "Usuń tematy"
         dismiss: "Wyczyść"
@@ -2647,24 +2719,6 @@ pl_PL:
         min_duration: "Czas trwania musi być większy niż 0"
         max_duration: "Czas trwania musi być krótszy niż 20 lat"
         duration: "Czas trwania"
-      auto_update_input:
-        none: "Wybierz przedział czasowy"
-        now: "Teraz"
-        later_today: "Później dzisiaj"
-        tomorrow: "Jutro"
-        later_this_week: "Później w tym tygodniu"
-        this_weekend: "W ten weekend"
-        next_week: "Następny tydzień"
-        two_weeks: "Dwa tygodnie"
-        next_month: "Następny miesiąc"
-        two_months: "Dwa miesiące"
-        three_months: "Trzy miesiące"
-        four_months: "Cztery miesiące"
-        six_months: "Sześć miesięcy"
-        one_year: "Rok"
-        forever: "Zawsze"
-        pick_date_and_time: "Wybierz datę i czas"
-        set_based_on_last_post: "Zamknij na podstawie ostatniego wpisu"
       publish_to_category:
         title: "Zaplanuj publikację"
       temp_open:
@@ -2782,8 +2836,8 @@ pl_PL:
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
-        invisible: "Ustaw jako niewidoczny"
-        visible: "Ustaw jako widoczny"
+        invisible: "Ukryj temat"
+        visible: "Pokaż temat"
         reset_read: "Zresetuj przeczytane dane"
         make_public: "Utwórz temat publiczny..."
         make_private: "Utwórz osobistą wiadomość"
@@ -3000,6 +3054,7 @@ pl_PL:
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post:
+      confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
       quote_reply_shortcut: "Lub naciśnij q"
       quote_edit: "Edytuj"
@@ -3018,6 +3073,8 @@ pl_PL:
       show_hidden: "Wyświetl ignorowaną treść."
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
+      sr_collapse_replies: "Zwiń osadzone odpowiedzi"
+      sr_date: "Data wysłania"
       expand_collapse: "rozwiń/zwiń"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
       gap:
@@ -3047,6 +3104,16 @@ pl_PL:
         few: "ty i %{count} inne osoby polubiły ten wpis"
         many: "ty i %{count} innych osób polubiło ten wpis"
         other: "ty i %{count} innych osób polubiło ten wpis"
+      sr_post_like_count_button:
+        one: "%{count} osoba polubiła ten post. Kliknij, aby zobaczyć"
+        few: "%{count} osoby polubiły ten post. Kliknij, aby zobaczyć"
+        many: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
+        other: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
+      sr_post_read_count_button:
+        one: "%{count} osoba przeczytała ten post. Kliknij, aby wyświetlić"
+        few: "%{count} osoby przeczytały ten post. Kliknij, aby wyświetlić"
+        many: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
+        other: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
       filtered_replies_hint:
         one: "Zobacz ten post i jego odpowiedź"
         few: "Zobacz ten post i jego %{count} odpowiedzi"
@@ -3064,6 +3131,7 @@ pl_PL:
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
+        file_size_zero: "Przepraszamy, wygląda na to, że coś poszło nie tak. Plik, który próbujesz przesłać, ma 0 bajtów. Spróbuj przesłać go ponownie."
         file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files:
@@ -3167,6 +3235,8 @@ pl_PL:
             few: "i %{count} innych przeczytało to"
             many: "i %{count} innych przeczytało to"
             other: "i %{count} innych przeczytało to"
+          sr_post_likers_list_description: "użytkownicy, którzy polubili ten post"
+          sr_post_readers_list_description: "użytkownicy, którzy przeczytali ten post"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -3236,6 +3306,9 @@ pl_PL:
           edit_bookmark:
             name: "Edytuj zakładkę"
             description: "Edytuj nazwę zakładki lub zmień datę i godzinę przypomnienia"
+          clear_bookmark_reminder:
+            name: "Wyczyść przypomnienie"
+            description: "Wyczyść datę i godzinę przypomnienia"
           pin_bookmark:
             name: "Przypnij zakładkę"
             description: "Przypnij zakładkę. To sprawi, że pojawi się na górze listy zakładek."
@@ -3248,6 +3321,9 @@ pl_PL:
         viewing_summary: "Przeglądanie podsumowania tego tematu"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Pokaż wszystkie"
+      share:
+        title: "Udostępnij post #%{post_number}"
+        instructions: "Udostępnij link do tego posta:"
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -3267,10 +3343,11 @@ pl_PL:
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
       manage_tag_groups_link: "Zarządzaj grupami tagów"
       allow_global_tags_label: "Zezwól dodatkowo na inne tagi"
-      tag_group_selector_placeholder: "(Opcjonalnie) Grupa znaczników"
-      required_tag_group_description: "Wymagaj, aby nowe tematy miały znaczniki z grupy znaczników:"
-      min_tags_from_required_group_label: "Liczba tagów:"
-      required_tag_group_label: "Grupa tagów:"
+      required_tag_group:
+        description: "Wymagaj, aby nowe tematy miały tagi z grup tagów:"
+        delete: "Usuń"
+        add: "Dodaj wymaganą grupę tagów"
+        placeholder: "wybierz grupę tagów..."
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
       create: "Nowa kategoria"
@@ -3502,19 +3579,24 @@ pl_PL:
         other {}}
     original_post: "Oryginalny wpis"
     views: "Odsłony"
+    sr_views: "Sortuj według wyświetleń"
     views_lowercase:
       one: "odsłona"
       few: "odsłony"
       many: "odsłon"
       other: "odsłon"
     replies: "Odpowiedzi"
+    sr_replies: "Sortuj według odpowiedzi"
     views_long:
       one: "ten temat był przeglądany %{count} raz"
       few: "ten temat był przeglądany %{number} razy"
       many: "ten temat był przeglądany %{number} razy"
       other: "ten temat był przeglądany %{number} razy"
     activity: "Aktywność"
+    sr_activity: "Sortuj według aktywności"
     likes: "Polubienia"
+    sr_likes: "Sortuj według polubień"
+    sr_op_likes: "Sortuj według polubień oryginalnego postu"
     likes_lowercase:
       one: "polubienie"
       few: "polubienia"
@@ -3619,11 +3701,12 @@ pl_PL:
         this_week: "Tydzień"
         today: "Dzisiaj"
         other_periods: "Zobacz najczęściej dyskutowane:"
-    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">Twoja przeglądarka jest za stara, aby pracować na tej stronie</a>. Proszę <a href="https://browsehappy.com">uaktualnić przeglądarkę</a> , aby wyświetlić bogatą zawartość, zalogować się i odpowiedzieć.'
+    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
       readonly: "przeglądać"
+    preloader_text: "Ładowanie"
     lightbox:
       download: "pobierz"
       open: "oryginalny obraz"
@@ -3708,7 +3791,6 @@ pl_PL:
         edit: "%{shortcut} Edytuj wpis"
         delete: "%{shortcut} Usuń wpis"
         mark_muted: "%{shortcut} Wycisz temat"
-        mark_regular: "%{shortcut} Zwykły (domyślny) temat"
         mark_tracking: "%{shortcut} śledź temat"
         mark_watching: "%{shortcut} Obserwuj temat"
         print: "%{shortcut} Drukuj temat"
@@ -3787,6 +3869,11 @@ pl_PL:
         few: "wybierz co najmniej %{count} tagi..."
         many: "wybierz co najmniej %{count} tagów..."
         other: "wybierz co najmniej %{count} tagów..."
+      choose_for_topic_required_group:
+        one: "wybierz %{count} tag z '%{name}'..."
+        few: "wybierz %{count} tagi z '%{name}'..."
+        many: "wybierz %{count} tagów z '%{name}'..."
+        other: "wybierz %{count} tagów z '%{name}'..."
       info: "Informacje"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
@@ -3875,6 +3962,7 @@ pl_PL:
           title: "Wyciszony"
           description: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów z tym tagiem i nie pojawią się na liście aktualnych."
       groups:
+        back_btn: "Powrót do wszystkich tagów"
         title: "Tagi grup"
         about_heading: "Wybierz grupę tagów lub utwórz nową"
         about_heading_empty: "Aby rozpocząć, utwórz nową grupę tagów"
@@ -3948,6 +4036,7 @@ pl_PL:
       unsupported_file_picked: "Wybrałeś nieobsługiwany plik. Obsługiwane typy plików – %{types}."
     user_activity:
       no_activity_title: "Brak aktywności"
+      no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy(-a) i nie uczestniczyłeś(-aś) jeszcze w żadnych dyskusjach. Jako pierwszy krok, odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i po prostu zacznij czytać! Kliknij w %{heartIcon} przy postach, które lubisz lub chcesz dowiedzieć się więcej. Gdy bierzesz udział w dyskusji, Twoja aktywność zostanie wymieniona tutaj."
       no_activity_others: "Brak aktywności"
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
       no_replies_others: "Brak odpowiedzi."
@@ -3957,13 +4046,76 @@ pl_PL:
       no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
       no_likes_others: "Brak polubionych wpisów."
       no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
+      no_topics_title_others: "%{username} nie utworzył jeszcze żadnego tematu"
       no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
+    topic_entrance:
+      sr_jump_top_button: "Przejdź do pierwszego posta"
+      sr_jump_bottom_button: "Przejdź do ostatniego posta"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
+    sidebar:
+      unread_count:
+        one: "%{count} nieprzeczytany"
+        few: "%{count} nieprzeczytane"
+        many: "%{count} nieprzeczytanych"
+        other: "%{count} nieprzeczytany"
+      new_count:
+        one: "%{count} nowy"
+        few: "%{count} nowe"
+        many: "%{count} nowych"
+        other: "%{count} nowy"
+      toggle_section: "przełącz sekcję"
+      sections:
+        messages:
+          header_link_title: "osobiste wiadomości"
+          header_link_text: "Wiadomości"
+          header_action_title: "utwórz osobistą wiadomość"
+          links:
+            inbox: "Skrzynka odbiorcza"
+            sent: "Wysłane"
+            new: "Nowe"
+            new_with_count: "Nowe (%{count})"
+            unread: "Nieprzeczytane"
+            unread_with_count: "Nieprzeczytane (%{count})"
+            archive: "Archiwum"
+        tags:
+          none: "Nie dodałeś żadnych tagów."
+          click_to_get_started: "Kliknij tutaj, aby rozpocząć."
+          header_link_title: "wszystkie tagi"
+          header_link_text: "Etykiety"
+          header_action_title: "edytuj tagi paska bocznego"
+        categories:
+          none: "Nie dodałeś żadnych kategorii."
+          click_to_get_started: "Kliknij tutaj, aby rozpocząć."
+          header_link_title: "wszystkie kategorie"
+          header_link_text: "Kategorie"
+          header_action_title: "edytuj kategorie paska bocznego"
+        topics:
+          header_link_title: "strona główna"
+          header_link_text: "Tematy"
+          header_action_title: "utwórz nowy temat"
+          links:
+            everything:
+              content: "Wszystko"
+              title: "Wszystkie tematy"
+            tracked:
+              content: "Śledzone"
+              title: "Wszystkie śledzone tematy"
+            bookmarked:
+              content: "Zakładki"
+              title: "Wszystkie tematy dodane do zakładek"
+            my_posts:
+              content: "Wysłane"
+              title: "Moje posty"
+              draft_count:
+                one: "%{count} szkic"
+                few: "%{count} szkice"
+                many: "%{count} szkice"
+                other: "%{count} szkice"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4196,9 +4348,11 @@ pl_PL:
               write: Utwórz nowy temat lub post w istniejącym.
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
-              wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             posts:
               edit: Edytuj dowolny post lub konkretny.
+            categories:
+              list: Uzyskaj listę kategorii.
+              show: Uzyskaj pojedynczą kategorię według identyfikatora.
             uploads:
               create: Prześlij nowy plik lub zainicjuj pojedyncze lub wieloczęściowe bezpośrednie wysyłanie do zewnętrznego magazynu.
             users:
@@ -4221,6 +4375,11 @@ pl_PL:
               list_user_badges: Lista odznak użytkownika.
               assign_badge_to_user: Przypisz odznakę użytkownikowi.
               revoke_badge_from_user: Odbierz odznakę użytkownikowi.
+            wordpress:
+              publishing: Niezbędne do funkcji publikowania wtyczki WP Discourse (wymagane).
+              commenting: Niezbędne do funkcji komentowania wtyczki WP Discourse.
+              discourse_connect: Niezbędne dla funkcji DiscourseConnect wtyczki WP Discourse.
+              utilities: Niezbędne, jeśli korzystasz z Utilities wtyczki WP Discourse.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -4421,6 +4580,7 @@ pl_PL:
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         color: "Kolor"
         opacity: "Widoczność"
+        copy: "Powiel"
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
@@ -4694,6 +4854,7 @@ pl_PL:
         time: "Czas"
         user: "Użytkownik"
         email_type: "Typ emaila"
+        details_title: "Pokaż szczegóły e-maila"
         to_address: "Na adres"
         test_email_address: "adres email do testu"
         send_test: "Wyślij email testowy"

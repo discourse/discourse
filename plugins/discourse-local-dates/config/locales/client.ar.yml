@@ -31,6 +31,7 @@ ar:
           format_title: تنسيق التاريخ
           timezone: المنطقة الزمنية
           until: حتّى...
+          current_timezone: "المنطقة الزمنية الحالية:"
           recurring:
             every_day: "كل يوم"
             every_week: "كل أسبوع"
@@ -40,3 +41,4 @@ ar:
             every_three_months: "كل ثلاثة أشهر"
             every_six_months: "كل ستة أشهر"
             every_year: "كل سنة"
+      default_title: "%{site_name} حدث"

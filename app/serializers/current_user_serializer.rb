@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CurrentUserSerializer < BasicUserSerializer
+  include UserTagNotificationsMixin
 
   attributes :name,
              :unread_notifications,
@@ -11,6 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :notification_channel_position,
              :moderator?,
              :staff?,
+             :whisperer?,
              :title,
              :any_posts,
              :enable_quoting,
@@ -33,7 +35,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :tracked_category_ids,
              :watched_first_post_category_ids,
              :watched_category_ids,
-             :muted_tag_ids,
              :watched_tags,
              :watching_first_post_tags,
              :tracked_tags,
@@ -69,7 +70,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :draft_count,
              :default_calendar,
              :bookmark_auto_delete_preference,
-             :pending_posts_count
+             :pending_posts_count,
+             :experimental_sidebar_enabled,
+             :status,
+             :sidebar_category_ids,
+             :sidebar_tag_names,
+             :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -228,32 +234,6 @@ class CurrentUserSerializer < BasicUserSerializer
     categories_with_notification_level(:watching_first_post)
   end
 
-  # this is a weird outlier that is used for topic tracking state which
-  # needs the actual ids, which is why it is duplicated with muted_tags
-  def muted_tag_ids
-    TagUser.lookup(object, :muted).pluck(:tag_id)
-  end
-
-  def muted_tags
-    tags_with_notification_level(:muted)
-  end
-
-  def tracked_tags
-    tags_with_notification_level(:tracking)
-  end
-
-  def watching_first_post_tags
-    tags_with_notification_level(:watching_first_post)
-  end
-
-  def watched_tags
-    tags_with_notification_level(:watching)
-  end
-
-  def regular_tags
-    tags_with_notification_level(:regular)
-  end
-
   def ignored_users
     IgnoredUser.where(user: object.id).joins(:ignored_user).pluck(:username)
   end
@@ -326,5 +306,44 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_has_topic_draft?
     Draft.has_topic_draft(object)
+  end
+
+  def experimental_sidebar_enabled
+    object.user_option.enable_experimental_sidebar
+  end
+
+  def include_experimental_sidebar_enabled?
+    SiteSetting.enable_experimental_sidebar
+  end
+
+  def sidebar_category_ids
+    object.category_sidebar_section_links.pluck(:linkable_id)
+  end
+
+  def include_sidebar_category_ids?
+    include_experimental_sidebar_enabled? && object.user_option.enable_experimental_sidebar
+  end
+
+  def sidebar_tag_names
+    object.sidebar_tags.pluck(:name)
+  end
+
+  def include_sidebar_tag_names?
+    include_sidebar_category_ids? && SiteSetting.tagging_enabled
+  end
+
+  def include_status?
+    SiteSetting.enable_user_status && object.has_status?
+  end
+
+  def status
+    UserStatusSerializer.new(object.user_status, root: false)
+  end
+
+  def redesigned_user_menu_enabled
+    if defined?(@redesigned_user_menu_enabled)
+      return @redesigned_user_menu_enabled
+    end
+    @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
   end
 end

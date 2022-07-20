@@ -535,12 +535,16 @@ ca:
       this_weekend: "Aquest cap de setmana"
       start_of_next_business_week: "Dilluns"
       start_of_next_business_week_alt: "Dilluns vinent"
+      next_week: "La setmana que ve"
       two_weeks: "Dues setmanes"
       next_month: "El mes que ve"
       six_months: "Sis mesos"
-      custom: "Data i hora personalitzades"
+      forever: "Sempre"
       relative: "Temps relatiu"
       none: "No cal cap"
+      never: "Mai"
+      custom: "Data i hora personalitzades"
+      select_timeframe: "Seleccioneu un període de temps"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha publicat <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vós</a> heu publicat <a href='%{topicUrl}'>el tema</a>"
@@ -908,6 +912,8 @@ ca:
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
       enable_quoting: "Permet citar la resposta en el text destacat"
       enable_defer: "Habilita l'ajornament per a marcar temes no llegits"
+      experimental_sidebar:
+        options: "Opcions"
       change: "canvia"
       featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"
@@ -949,7 +955,7 @@ ca:
       muted_categories: "Silenciat"
       muted_categories_instructions: "No us notificarem res sobre temes nous en aquestes categories, i no apareixeran en les pàgines de categories o de més recents."
       muted_categories_instructions_dont_hide: "No sereu notificat de res sobre temes nous en aquestes categories."
-      regular_categories: "Habitual"
+      regular_categories: "Normal"
       regular_categories_instructions: "Veureu aquestes categories en les llistes de temes \"Darrers\" i \"Principals\"."
       no_category_access: "Com a moderador teniu accés limitat a la categoria. Desar està inhabilitat."
       delete_account: "Suprimeix el meu compte"
@@ -1335,6 +1341,8 @@ ca:
         sent_by: "Enviat per"
         private_message: "missatge"
         the_topic: "el tema"
+    user_status:
+      save: "Desa"
     loading: "Carregant..."
     errors:
       prev_page: "mentre es prova de carregar"
@@ -1481,22 +1489,16 @@ ca:
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
-        title: "amb Google"
       twitter:
         name: "Twitter"
-        title: "amb Twitter"
       instagram:
         name: "Instagram"
-        title: "amb Instagram"
       facebook:
         name: "Facebook"
-        title: "amb Facebook"
       github:
         name: "GitHub"
-        title: "amb GitHub"
       discord:
         name: "Discord"
-        title: "amb Discord"
       second_factor_toggle:
         totp: "Utilitzeu una aplicació d'autenticació en comptes d'això"
         backup_code: "Utilitzeu un codi de còpia de seguretat en comptes d'això"
@@ -1610,7 +1612,6 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
-      users_placeholder: "Afegeix un usuari"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "per què ho editeu?"
@@ -1669,9 +1670,6 @@ ca:
         reply_as_new_topic:
           label: Respon com a tema enllaçat
           desc: Crea un tema nou enllaçat a aquest tema
-        reply_as_private_message:
-          label: Missatge nou
-          desc: Crea un missatge personal nou 
         reply_to_topic:
           label: Respon al tema
           desc: Respon al tema, no a cap publicació específica
@@ -1969,17 +1967,6 @@ ca:
         when: "Quan:"
         time_frame_required: "Seleccioneu un període de temps"
         duration: "Duració"
-      auto_update_input:
-        none: "Seleccioneu un període de temps"
-        later_today: "Més tard avui"
-        tomorrow: "Demà"
-        later_this_week: "Més avant aquesta setmana"
-        this_weekend: "Aquest cap de setmana"
-        next_week: "La setmana que ve"
-        next_month: "El mes que ve"
-        forever: "Sempre"
-        pick_date_and_time: "Trieu data i hora"
-        set_based_on_last_post: "Tanca d'acord amb la darrera publicació"
       publish_to_category:
         title: "Programa la publicació"
       temp_open:
@@ -2073,8 +2060,6 @@ ca:
         unpin: "Desafixa el tema"
         unarchive: "Desarxiva tema"
         archive: "Arxiva tema"
-        invisible: "Fes invisible"
-        visible: "Fes visible"
         reset_read: "Restableix data de lectura"
         make_private: "Converteix en missatge personal"
         reset_bump_date: "Restableix la data d'elevació"
@@ -2401,10 +2386,8 @@ ca:
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       allow_global_tags_label: "Permet també altres etiquetes"
-      tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
-      required_tag_group_description: "Requereix que els temes nous tinguin etiquetes d’un grup d’etiquetes:"
-      min_tags_from_required_group_label: "Etiquetes num.:"
-      required_tag_group_label: "Grup d'etiquetes:"
+      required_tag_group:
+        delete: "Suprimeix"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       delete: "Suprimeix categoria"
       create: "Nova categoria"
@@ -2691,6 +2674,7 @@ ca:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
       readonly: "Mira"
+    preloader_text: "Carregant"
     lightbox:
       download: "descarrega"
       previous: "Anterior (tecla de fletxa esquerra)"
@@ -2757,7 +2741,6 @@ ca:
         edit: "%{shortcut} Edita la publicació"
         delete: "%{shortcut} Suprimeix la publicació"
         mark_muted: "%{shortcut} Silencia el tema"
-        mark_regular: "%{shortcut} Tema normal (per defecte)"
         mark_tracking: "%{shortcut} Segueix el tema"
         mark_watching: "%{shortcut} Vigila el tema"
         print: "%{shortcut} Imprimeix el tema"
@@ -2845,7 +2828,7 @@ ca:
           title: "Seguint"
           description: "Seguireu automàticament tots els temes amb aquesta etiqueta. A la vora del tema apareixerà un recompte de publicacions no llegides i noves."
         regular:
-          title: "Habitual"
+          title: "Normal"
           description: "Rebreu alertes si una persona menciona el vostre @nom o respon a la vostra publicació."
         muted:
           title: "Silenciat"
@@ -2898,6 +2881,38 @@ ca:
       no_activity_others: "No hi ha activitat."
       no_replies_others: "No hi ha respostes."
       no_likes_others: "Publicacions sense 'm'agrada'."
+    sidebar:
+      unread_count:
+        one: "%{count} no llegit"
+        other: "%{count} no llegits"
+      new_count:
+        one: "%{count} nou"
+        other: "%{count} nous"
+      sections:
+        messages:
+          header_link_text: "Missatges"
+          links:
+            inbox: "Safata d'entrada"
+            sent: "Enviat"
+            new: "Nous"
+            new_with_count: "Nou (%{count})"
+            unread: "No llegits"
+            unread_with_count: "No llegit (%{count})"
+            archive: "Arxiva"
+        tags:
+          header_link_title: "totes les etiquetes"
+          header_link_text: "Etiquetes"
+        categories:
+          header_link_title: "totes les categories"
+          header_link_text: "Categories"
+        topics:
+          header_link_title: "pàgina principal"
+          header_link_text: "Temes"
+          links:
+            tracked:
+              content: "Seguit"
+            my_posts:
+              content: "Les meves publicacions"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:

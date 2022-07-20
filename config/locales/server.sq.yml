@@ -96,7 +96,6 @@ sq:
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
   invite:
-    user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
     disabled_errors:
       invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   backup:
@@ -621,7 +620,6 @@ sq:
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
-    download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
@@ -1180,6 +1178,7 @@ sq:
 
         Nëse nuk arrini të klikoni në linkun më siper, provoni ta kopjoni dhe ta ngjisni në shfletuesin tuaj.
   page_not_found:
+    page_title: "Faqja nuk u gjet"
     popular_topics: "Popullore"
     recent_topics: "Më të fundit"
     see_more: "Më shumë"

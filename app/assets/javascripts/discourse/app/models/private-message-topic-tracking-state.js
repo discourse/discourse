@@ -1,3 +1,5 @@
+import { Promise } from "rsvp";
+
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { bind, on } from "discourse-common/utils/decorators";
@@ -25,16 +27,20 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     this.statesModificationCounter = 0;
     this.isTracking = false;
     this.newIncoming = [];
-    this.stateChangeCallbacks = {};
+    this.stateChangeCallbacks = new Map();
   },
 
-  onStateChange(name, callback) {
-    this.stateChangeCallbacks[name] = callback;
+  onStateChange(key, callback) {
+    this.stateChangeCallbacks.set(key, callback);
+  },
+
+  offStateChange(key) {
+    this.stateChangeCallbacks.delete(key);
   },
 
   startTracking() {
     if (this.isTracking) {
-      return;
+      return Promise.resolve();
     }
 
     this._establishChannels();
@@ -46,13 +52,13 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   _establishChannels() {
     this.messageBus.subscribe(
-      this._userChannel(),
+      this.userChannel(),
       this._processMessage.bind(this)
     );
 
     this.currentUser.groupsWithMessages?.forEach((group) => {
       this.messageBus.subscribe(
-        this._groupChannel(group.id),
+        this.groupChannel(group.id),
         this._processMessage.bind(this)
       );
     });
@@ -107,11 +113,15 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
     this._afterStateChange();
   },
 
-  _userChannel() {
+  findState(topicId) {
+    return this.states.get(topicId);
+  },
+
+  userChannel() {
     return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
   },
 
-  _groupChannel(groupId) {
+  groupChannel(groupId) {
     return `${this.CHANNEL_PREFIX}/group/${groupId}`;
   },
 
@@ -159,13 +169,14 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   _processMessage(message) {
     switch (message.message_type) {
       case "new_topic":
-        this._modifyState(message.topic_id, message.payload);
-
-        if (
-          [NEW_FILTER, INBOX_FILTER].includes(this.filter) &&
-          this._shouldDisplayMessageForInbox(message)
-        ) {
-          this._notifyIncoming(message.topic_id);
+        if (message.payload.created_by_user_id !== this.currentUser.id) {
+          this._modifyState(message.topic_id, message.payload);
+          if (
+            [NEW_FILTER, INBOX_FILTER].includes(this.filter) &&
+            this._shouldDisplayMessageForInbox(message)
+          ) {
+            this._notifyIncoming(message.topic_id);
+          }
         }
 
         break;
@@ -174,6 +185,13 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
         break;
       case "unread":
+        // Note: At some point we may want to make the same performance optimisation
+        // here as we did with the other topic tracking state, where we only send
+        // one 'unread' update to all users, not a more accurate unread update to
+        // each individual user with their own read state. In this case, we need to
+        // ignore unread updates which are triggered by the current user.
+        //
+        // cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
         this._modifyState(message.topic_id, message.payload);
 
         if (
@@ -235,7 +253,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
   },
 
   _modifyState(topicId, data, opts = {}) {
-    const oldState = this.states.get(topicId);
+    const oldState = this.findState(topicId);
     let newState = data;
 
     if (oldState && !deepEqual(oldState, newState)) {
@@ -251,7 +269,7 @@ const PrivateMessageTopicTrackingState = EmberObject.extend({
 
   _afterStateChange() {
     this.incrementProperty("statesModificationCounter");
-    Object.values(this.stateChangeCallbacks).forEach((callback) => callback());
+    this.stateChangeCallbacks.forEach((callback) => callback());
   },
 });
 

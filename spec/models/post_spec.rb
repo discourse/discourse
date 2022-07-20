@@ -1228,6 +1228,52 @@ describe Post do
       post.reload
       post.rebake!
     end
+
+    it "uses inline onebox cache by default" do
+      Jobs.run_immediately!
+      stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is Testonebox!</title>
+        </head></html>
+      HTML
+      post = create_post(raw: <<~POST).reload
+        hello inline onebox http://testonebox.com/vvf
+      POST
+      expect(post.cooked).to include("hello this is Testonebox!")
+
+      stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is updated Testonebox!</title>
+        </head></html>
+      HTML
+      post.rebake!
+      expect(post.reload.cooked).to include("hello this is Testonebox!")
+    ensure
+      InlineOneboxer.invalidate("http://testonebox.com/vvf")
+    end
+
+    it "passing invalidate_oneboxes: true ignores inline onebox cache" do
+      Jobs.run_immediately!
+      stub_request(:get, "http://testonebox.com/vvf22").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is Testonebox!</title>
+        </head></html>
+      HTML
+      post = create_post(raw: <<~POST).reload
+        hello inline onebox http://testonebox.com/vvf22
+      POST
+      expect(post.cooked).to include("hello this is Testonebox!")
+
+      stub_request(:get, "http://testonebox.com/vvf22").to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <title>hello this is updated Testonebox!</title>
+        </head></html>
+      HTML
+      post.rebake!(invalidate_oneboxes: true)
+      expect(post.reload.cooked).to include("hello this is updated Testonebox!")
+    ensure
+      InlineOneboxer.invalidate("http://testonebox.com/vvf22")
+    end
   end
 
   describe "#set_owner" do
@@ -1439,22 +1485,17 @@ describe Post do
       post.link_post_uploads
 
       post.trash!
-      expect(PostUpload.count).to eq(6)
+      expect(UploadReference.count).to eq(6)
 
       post.destroy!
-      expect(PostUpload.count).to eq(0)
+      expect(UploadReference.count).to eq(0)
     end
 
     context "#link_post_uploads" do
       it "finds all the uploads in the post" do
-        post.custom_fields[Post::DOWNLOADED_IMAGES] = {
-          "/#{upload_path}/original/1X/1/1234567890123456.csv": attachment_upload.id
-        }
-
-        post.save_custom_fields
         post.link_post_uploads
 
-        expect(PostUpload.where(post: post).pluck(:upload_id)).to contain_exactly(
+        expect(UploadReference.where(target: post).pluck(:upload_id)).to contain_exactly(
           video_upload.id,
           image_upload.id,
           audio_upload.id,
@@ -1467,13 +1508,11 @@ describe Post do
       it "cleans the reverse index up for the current post" do
         post.link_post_uploads
 
-        post_uploads_ids = post.post_uploads.pluck(:id)
+        post_uploads_ids = post.upload_references.pluck(:id)
 
         post.link_post_uploads
 
-        expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
-          post_uploads_ids
-        )
+        expect(post.reload.upload_references.pluck(:id)).to_not contain_exactly(post_uploads_ids)
       end
 
       context "when secure media is enabled" do
@@ -1537,7 +1576,7 @@ describe Post do
         post.link_post_uploads
         post.update_uploads_secure_status(source: "test")
 
-        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        expect(UploadReference.where(target: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
           [image_upload.id, true]
         )
@@ -1549,7 +1588,7 @@ describe Post do
         post.link_post_uploads
         post.update_uploads_secure_status(source: "test")
 
-        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        expect(UploadReference.where(target: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
           [image_upload.id, false]
         )
@@ -1562,7 +1601,7 @@ describe Post do
         post.link_post_uploads
         post.update_uploads_secure_status(source: "test")
 
-        expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        expect(UploadReference.where(target: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
           [image_upload.id, true]
         )
@@ -1577,7 +1616,7 @@ describe Post do
         pm.link_post_uploads
         pm.update_uploads_secure_status(source: "test")
 
-        expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
+        expect(UploadReference.where(target: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
           [image_upload.id, false]
         )
@@ -1787,10 +1826,41 @@ describe Post do
         version: post.version
       }
 
-      MessageBus.expects(:publish).once.with("/topic/#{topic.id}", message, is_a(Hash)) do |_, _, options|
-        options[:user_ids].sort == [user1.id, user2.id, user3.id].sort
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        post.publish_change_to_clients!(:created)
       end
-      post.publish_change_to_clients!(:created)
+
+      created_message = messages.select { |msg| msg.data[:type] == :created }.first
+      expect(created_message).to be_present
+      expect(created_message.data).to eq(message)
+      expect(created_message.user_ids.sort).to eq([user1.id, user2.id, user3.id].sort)
+
+      stats_message = messages.select { |msg| msg.data[:type] == :created }.first
+      expect(stats_message).to be_present
+      expect(stats_message.user_ids.sort).to eq([user1.id, user2.id, user3.id].sort)
+    end
+
+    it 'also publishes topic stats' do
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        post.publish_change_to_clients!(:created)
+      end
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+    end
+
+    it 'skips publishing topic stats when requested' do
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        post.publish_change_to_clients!(:anything, { skip_topic_stats: true })
+      end
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_blank
+
+      # ensure that :skip_topic_stats did not get merged with the message
+      other_message = messages.select { |msg| msg.data[:type] == :anything }.first
+      expect(other_message).to be_present
+      expect(other_message.data.key?(:skip_topic_stats)).to be_falsey
     end
   end
 

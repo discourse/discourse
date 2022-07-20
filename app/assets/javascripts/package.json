@@ -4,10 +4,12 @@
     "discourse",
     "admin",
     "discourse-common",
+    "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-widget-hbs",
     "pretty-text",
     "select-kit",
-    "truth-helpers"
+    "truth-helpers",
+    "wizard"
   ]
 }

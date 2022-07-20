@@ -165,7 +165,6 @@ zh_TW:
       s3_bucket_reused: "不能把同一個 Amazon bucket 同時使用 ‘s3_upload_bucket’ 及 ‘s3_backup_bucket’。請選擇不同的 bucket 或指定將每個 bucket 設定不同的路徑。"
     conflicting_google_user_id: '此 Google 帳戶 ID 出於安全原因已更改，請聯絡管理人員並將其<br><a href="https://meta.discourse.org/t/76575">指向 https://meta.discourse.org/t/76575 </a>'
   invite:
-    user_exists: "無需邀請 <b>%{email}</b>，他 <a href='%{base_path}/u/%{username}/summary'>已經有帳號了</a>！"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
     disabled_errors:
       invalid_access: "你不允許查看所請求的資源。"
@@ -1106,7 +1105,6 @@ zh_TW:
     site_description: "用一句話描述這個網站，用於 meta description 標籤。"
     short_site_description: "簡短描述，用於網頁標題。"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
-    download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"
@@ -1137,7 +1135,6 @@ zh_TW:
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
     apple_touch_icon: "Icon 用於Apple觸控裝置的圖示，將自動調整為180x180。 如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
-    twitter_summary_large_image: "Twitter卡 摘要大尺寸圖片卡（寬度至少應為280，高度至少為150）。 如果留空，則使用opengraph_image以生成卡片（metadata）。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1190,7 +1187,6 @@ zh_TW:
     send_tl1_welcome_message: "向新使用者（信任級別1）發送歡迎消息。"
     suppress_reply_directly_below: "當貼文只有一個回覆時，不顯示貼文的回覆數量。"
     suppress_reply_directly_above: "當貼文只有一個回覆時，不顯示回覆到該帖的回覆。"
-    remove_full_quote: "直接引用將自動刪除內容的全部引號"
     suppress_reply_when_quoting: "當貼文引用回覆時，不顯示可展開的回覆到某帖的標記。"
     max_reply_history: "擴展回覆到某帖時顯示的最大回覆數量"
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
@@ -1549,6 +1545,7 @@ zh_TW:
     default_categories_tracking: "分類列表預設追蹤。"
     default_categories_muted: "分類列表預設不顯示。"
     default_categories_watching_first_post: "預設監看這些分類中每個新主題的第一貼"
+    default_categories_normal: "類別沒有預設靜音的清單，當`預設所有類別靜音`網站設定啟用時很有用。"
     default_text_size: "預設選定的文字大小"
     default_title_count_mode: "頁面標題計數器的預設模式"
     retain_web_hook_events_period_days: "保留Web hook事件記錄的天數。"
@@ -1567,7 +1564,6 @@ zh_TW:
     tags_sort_alphabetically: "按照字母順序顯示標籤。預設按流行度顯示。"
     tags_listed_by_group: "按<a href='%{base_path}/tags' target='_blank'>標籤頁面</a>上的標籤群組列出標籤（Tags）。"
     tag_style: "標籤的視覺樣式。"
-    allow_staff_to_tag_pms: "允許工作人員（具有管理員權限）標記任何的個人訊息"
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     force_lowercase_tags: "強制所有新標籤完全小寫"
@@ -2572,10 +2568,10 @@ zh_TW:
     suspicious_login:
       title: "新登入提醒"
       subject_template: "[%{site_name}] 新登入來自%{location}"
-      text_body_template: "您好，\n\n我們注意到您從未知的第三方設備登入。\n\n這是你嗎？ \n- 位置：%{location}（%{client_ip}） \n- 瀏覽器：%{browser} \n- 設備：%{device} - %{os}\n\n如果這是你，太棒了！你不需要做任何其他事情。如果這不是您，請[查看帳號個人檔案](%{base_url}/my /preferences/account)，並考慮更改您的密碼。\n"
     post_approved:
       title: "你的貼文已通過"
   page_not_found:
+    page_title: "找不到頁面"
     title: "抱歉！這個頁面不存在或者是私密的。"
     popular_topics: "熱門"
     recent_topics: "最近"
@@ -3116,10 +3112,6 @@ zh_TW:
                 label: "分類和最新話題"
               categories_and_top_topics:
                 label: "分類與熱門話題"
-              categories_boxes:
-                label: "分類框"
-              categories_boxes_with_topics:
-                label: "分類框與討論話題"
       logos:
         title: "標誌"
         fields:

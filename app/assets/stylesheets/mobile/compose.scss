@@ -203,7 +203,7 @@
       }
     }
 
-    .formated-selection {
+    .formatted-selection {
       font-size: var(--font-down-1);
     }
   }
@@ -234,4 +234,9 @@
   .whisper {
     margin-right: 6px;
   }
+}
+
+.d-editor-button-bar {
+  // can't hide overflow here because it hides the cog menu dropdown
+  overflow: unset;
 }

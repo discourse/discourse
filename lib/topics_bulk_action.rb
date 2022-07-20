@@ -14,7 +14,7 @@ class TopicsBulkAction
     @operations ||= %w(change_category close archive change_notification_level
                        destroy_post_timing dismiss_posts delete unlist archive_messages
                        move_messages_to_inbox change_tags append_tags remove_tags
-                       relist dismiss_topics)
+                       relist dismiss_topics reset_bump_dates)
   end
 
   def self.register_operation(name, &block)
@@ -69,7 +69,7 @@ class TopicsBulkAction
   end
 
   def dismiss_posts
-    highest_number_source_column = @user.staff? ? 'highest_staff_post_number' : 'highest_post_number'
+    highest_number_source_column = @user.whisperer? ? 'highest_staff_post_number' : 'highest_post_number'
     sql = <<~SQL
       UPDATE topic_users tu
       SET last_read_post_number = t.#{highest_number_source_column}
@@ -161,6 +161,15 @@ class TopicsBulkAction
     topics.each do |t|
       if guardian.can_moderate?(t)
         t.update_status('visible', true, @user)
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def reset_bump_dates
+    if guardian.can_update_bumped_at?
+      topics.each do |t|
+        t.reset_bumped_at
         @changed_ids << t.id
       end
     end

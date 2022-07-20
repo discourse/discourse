@@ -59,13 +59,12 @@ describe UserAction do
         log_test_action
         log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
         log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
-        log_test_action(action_type: UserAction::BOOKMARK)
 
         Jobs.run_immediately!
         PostActionNotifier.enable
 
         mystats = stats_for_user(user)
-        expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
+        expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE].sort
         expect(mystats).to eq(expecting)
 
         expect(stream(user).map(&:action_type))
@@ -278,72 +277,6 @@ describe UserAction do
       end
 
     end
-  end
-
-  describe 'when user bookmarks' do
-    before do
-      @post = Fabricate(:post)
-      @user = @post.user
-      PostActionCreator.create(@user, @post, :bookmark)
-      @action = @user.user_actions.find_by(action_type: UserAction::BOOKMARK)
-    end
-
-    it 'creates the bookmark, and removes it properly' do
-      expect(@action.action_type).to eq(UserAction::BOOKMARK)
-      expect(@action.target_post_id).to eq(@post.id)
-      expect(@action.acting_user_id).to eq(@user.id)
-      expect(@action.user_id).to eq(@user.id)
-
-      PostActionDestroyer.destroy(@user, @post, :bookmark)
-      expect(@user.user_actions.find_by(action_type: UserAction::BOOKMARK)).to eq(nil)
-    end
-  end
-
-  describe 'secures private messages' do
-
-    fab!(:user) do
-      Fabricate(:user)
-    end
-
-    fab!(:user2) do
-      Fabricate(:user)
-    end
-
-    let(:private_message) do
-      PostCreator.create(user,
-                          raw: 'this is a private message',
-                          title: 'this is the pm title',
-                          target_usernames: user2.username,
-                          archetype: Archetype::private_message
-                        )
-    end
-
-    def count_bookmarks
-      UserAction.stream(
-        user_id: user.id,
-        action_types: [UserAction::BOOKMARK],
-        ignore_private_messages: false,
-        guardian: Guardian.new(user)
-      ).count
-    end
-
-    it 'correctly secures stream' do
-      PostActionCreator.create(user, private_message, :bookmark)
-
-      expect(count_bookmarks).to eq(1)
-
-      private_message.topic.topic_allowed_users.where(user_id: user.id).destroy_all
-
-      expect(count_bookmarks).to eq(0)
-
-      group = Fabricate(:group)
-      group.add(user)
-      private_message.topic.topic_allowed_groups.create(group_id: group.id)
-
-      expect(count_bookmarks).to eq(1)
-
-    end
-
   end
 
   describe 'synchronize_target_topic_ids' do

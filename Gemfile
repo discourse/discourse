@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = '6.1.4.7'
+  rails_version = '7.0.3.1'
   gem 'actionmailer', rails_version
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
@@ -41,7 +41,7 @@ gem 'actionview_precompiler', require: false
 
 gem 'seed-fu'
 
-gem 'mail', git: 'https://github.com/discourse/mail.git', require: false
+gem 'mail', git: 'https://github.com/discourse/mail.git'
 gem 'mini_mime'
 gem 'mini_suffix'
 
@@ -68,7 +68,7 @@ gem 'http_accept_language', require: false
 gem 'discourse-ember-rails', '0.18.6', require: 'ember-rails'
 gem 'discourse-ember-source', '~> 3.12.2'
 gem 'ember-handlebars-template', '0.8.0'
-gem 'discourse-fonts'
+gem 'discourse-fonts', require: 'discourse_fonts'
 
 gem 'barber'
 
@@ -105,7 +105,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# pending: https://github.com/ohler55/oj/issues/789
+gem 'oj', '3.13.14'
 
 gem 'pg'
 gem 'mini_sql'
@@ -145,7 +146,6 @@ end
 # Allow everywhere for now cause we are allowing asset debugging in production
 group :assets do
   gem 'uglifier'
-  gem 'rtlit', require: false # for css rtling
 end
 
 group :test do
@@ -170,7 +170,7 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem "rubocop-discourse", require: false
+  gem 'rubocop-discourse', require: false, github: 'discourse/rubocop-discourse'
   gem 'parallel_tests'
 
   gem 'rswag-specs'
@@ -190,7 +190,7 @@ if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem 'discourse_dev_assets'
   gem 'faker', "~> 2.16"
 else
-  group :development do
+  group :development, :test do
     gem 'discourse_dev_assets'
     gem 'faker', "~> 2.16"
   end
@@ -268,3 +268,7 @@ gem 'colored2', require: false
 gem 'maxminddb'
 
 gem 'rails_failover', require: false
+
+# workaround for faraday-net_http, see
+# https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
+gem 'net-http'

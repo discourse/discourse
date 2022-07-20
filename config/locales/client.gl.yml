@@ -266,6 +266,8 @@ gl:
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
+      create: "Crear marcador"
+      edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
       remove: "Retirar marcador"
@@ -529,6 +531,7 @@ gl:
         other: "anos"
       relative: "Relativo"
     time_shortcut:
+      now: "Agora"
       later_today: "Hoxe, máis tarde"
       next_business_day: "O vindeiro día laborábel"
       tomorrow: "Mañá"
@@ -537,12 +540,20 @@ gl:
       this_weekend: "Esta fin de semana"
       start_of_next_business_week: "Luns"
       start_of_next_business_week_alt: "O vindeiro luns"
+      next_week: "A vindeira semana"
       two_weeks: "Dúas semanas"
       next_month: "O vindeiro mes"
+      two_months: "Dous meses"
+      three_months: "Tres meses"
+      four_months: "Catro meses"
       six_months: "Seis meses"
-      custom: "Personalizar data e hora"
+      one_year: "Un ano"
+      forever: "Sempre"
       relative: "Tempo relativo"
       none: "Non se necesita"
+      never: "Nunca"
+      custom: "Personalizar data e hora"
+      select_timeframe: "Seleccione un marco temporal"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vostede</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -975,6 +986,8 @@ gl:
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
+      experimental_sidebar:
+        options: "Opcións"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -1391,8 +1404,6 @@ gl:
           title: "Ligazón do convite"
           success: "A ligazón do convite xerouse correctamente!"
           error: "Produciuse un erro ao xerar esta ligazón de convite"
-          max_redemptions_allowed_label: "Cantas persoas poden rexistrarse con esta ligazón?"
-          expires_at: "Cando caduca a ligazón deste convite?"
         invite:
           new_title: "Crear convite"
           edit_title: "Editar convite"
@@ -1495,6 +1506,8 @@ gl:
         sent_by: "Enviada por"
         private_message: "mensaxe"
         the_topic: "o tema"
+    user_status:
+      save: "Gardar"
     loading: "Cargando..."
     errors:
       prev_page: "ao tentar cargar"
@@ -1667,22 +1680,16 @@ gl:
       not_approved: "A súa conta non foi aínda aprobada. Notificaráselle por correo electrónico cando poida iniciar a sesión."
       google_oauth2:
         name: "Google"
-        title: "con Google"
       twitter:
         name: "Twitter"
-        title: "co Twitter"
       instagram:
         name: "Instagram"
-        title: "con Instagram"
       facebook:
         name: "Facebook"
-        title: "co Facebook"
       github:
         name: "GitHub"
-        title: "con GitHub"
       discord:
         name: "Discord"
-        title: "con Discord"
       second_factor_toggle:
         totp: "Usar unha app autenticadora no seu lugar"
         backup_code: "Usar no seu lugar un código de copia de seguranza"
@@ -1831,7 +1838,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1896,9 +1902,6 @@ gl:
           confirm: Ten gardado un borrador do novo tema, que se sobrescribirá se crea un tema ligado a este.
         reply_as_new_group_message:
           label: Responder como nova mensaxe de grupo
-        reply_as_private_message:
-          label: Nova mensaxe
-          desc: Crear unha nova mensaxe privada
         reply_to_topic:
           label: Responder ao tema
           desc: Responder ao tema, non a ningunha publicación específica
@@ -2258,24 +2261,6 @@ gl:
         min_duration: "A duración debe ser superior a 0"
         max_duration: "A duración debe de ser menor de 20 anos"
         duration: "Duración"
-      auto_update_input:
-        none: "Seleccione un marco temporal"
-        now: "Agora"
-        later_today: "Hoxe, máis tarde"
-        tomorrow: "Mañá"
-        later_this_week: "Máis tarde esta semana"
-        this_weekend: "Esta fin de semana"
-        next_week: "A vindeira semana"
-        two_weeks: "Dúas semanas"
-        next_month: "O vindeiro mes"
-        two_months: "Dous meses"
-        three_months: "Tres meses"
-        four_months: "Catro meses"
-        six_months: "Seis meses"
-        one_year: "Un ano"
-        forever: "Sempre"
-        pick_date_and_time: "Escolla unha data e hora"
-        set_based_on_last_post: "Peche baseado na última publicación"
       publish_to_category:
         title: "Programar publicación"
       temp_open:
@@ -2381,8 +2366,6 @@ gl:
         unpin: "Desprender tema…"
         unarchive: "Desarquivar tema"
         archive: "Arquivar tema"
-        invisible: "Retirar da listaxe"
-        visible: "Engadir á listaxe"
         reset_read: "Restabelecer datos de lecturas"
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
@@ -2790,10 +2773,8 @@ gl:
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
       manage_tag_groups_link: "Xestionar grupos de etiquetas"
       allow_global_tags_label: "Permitir tamén outras etiquetas"
-      tag_group_selector_placeholder: "Grupo de etiquetas (opcional)"
-      required_tag_group_description: "Requirir que os novos temas teñan etiquetas dun grupo de etiquetas:"
-      min_tags_from_required_group_label: "Número de etiquetas:"
-      required_tag_group_label: "Grupo de etiquetas:"
+      required_tag_group:
+        delete: "Eliminar"
       topic_featured_link_allowed: "Permitir ligazóns de actualidade nesta categoría"
       delete: "Eliminar categoría"
       create: "Nova categoría"
@@ -3102,11 +3083,11 @@ gl:
         this_week: "Semana"
         today: "Hoxe"
         other_periods: "ver arriba:"
-    browser_update: 'Desafortunadamente, <a href="https://www.discourse.org/faq/#browser"> o seu navegador é demasiado vello para traballar neste sitio</a>. Por favor, <a href="https://browsehappy.com">actualice o seu navegador</a> para ver contido enriquecido, iniciar sesión e responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "Cargando"
     lightbox:
       download: "descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
@@ -3188,7 +3169,6 @@ gl:
         edit: "%{shortcut} Editar a publicación"
         delete: "%{shortcut} Eliminar a publicación"
         mark_muted: "%{shortcut} Silenciar o tema"
-        mark_regular: "%{shortcut} Tema normal (predeterminado)"
         mark_tracking: "%{shortcut} Seguir o tema"
         mark_watching: "%{shortcut} Ver o tema"
         print: "%{shortcut} Imprimir o tema"
@@ -3370,6 +3350,38 @@ gl:
       no_activity_others: "Sen actividade."
       no_replies_others: "Sen respostas."
       no_likes_others: "Ningún Gústame en publicacións."
+    sidebar:
+      unread_count:
+        one: "%{count} pendente de lectura"
+        other: "%{count} pendentes de lectura"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
+      sections:
+        messages:
+          header_link_text: "Mensaxes"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            new_with_count: "(%{count}) novo"
+            unread: "Sen ler"
+            unread_with_count: "(%{count}) pendente de ler"
+            archive: "Arquivo"
+        tags:
+          header_link_title: "todas as etiquetas"
+          header_link_text: "Etiquetas"
+        categories:
+          header_link_title: "todas as categorías"
+          header_link_text: "Categorías"
+        topics:
+          header_link_title: "inicio"
+          header_link_text: "Temas"
+          links:
+            tracked:
+              content: "Seguido"
+            my_posts:
+              content: "As miñas publicacións"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3585,7 +3597,6 @@ gl:
               read: Ler un tema ou unha publicación específica nel. O RSS tamén é compatíbel.
               write: Crear un tema novo ou publicalo nun xa existente.
               read_lists: Ler listaxes de temas como importantes, novos, últimos, etc. Tamén se admite RSS.
-              wordpress: Necesario para que funcione o complemento wp-discourse de WordPress.
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
               sync_sso: Sincronizar un usuario usando SSO.

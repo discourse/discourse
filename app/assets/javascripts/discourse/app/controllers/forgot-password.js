@@ -20,7 +20,7 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     if (this.siteSettings.hide_email_address_taken) {
-      return (accountEmailOrUsername || "").indexOf("@") === -1;
+      return !(accountEmailOrUsername || "").includes("@");
     } else {
       return isEmpty((accountEmailOrUsername || "").trim());
     }

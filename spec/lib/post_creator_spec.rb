@@ -142,15 +142,19 @@ describe PostCreator do
 
         admin = Fabricate(:user)
         admin.grant_admin!
+        other_admin = Fabricate(:user)
+        other_admin.grant_admin!
 
         cat = Fabricate(:category)
         cat.set_permissions(admins: :full)
         cat.save
 
         created_post = nil
+        other_user_tracking_topic = nil
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
+          Fabricate(:topic_user_tracking, topic: created_post.topic, user: other_admin)
           _reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id, advance_draft: true).create
         end
 
@@ -158,7 +162,7 @@ describe PostCreator do
 
         channels = messages.map { |m| m.channel }.sort
 
-        # 2 for topic, one to notify of new topic another for tracking state
+        # 3 for topic, one to notify of new topic, one for topic stats and another for tracking state
         expect(channels).to eq(
           [
             "/new",
@@ -170,14 +174,15 @@ describe PostCreator do
             "/latest",
             "/topic/#{created_post.topic_id}",
             "/topic/#{created_post.topic_id}",
-            "/user",
-            "/user",
-            "/user"
+            "/topic/#{created_post.topic_id}",
+            "/user-drafts/#{admin.id}",
+            "/user-drafts/#{admin.id}",
+            "/user-drafts/#{admin.id}",
           ].sort
         )
 
         admin_ids = [Group[:admins].id]
-        expect(messages.any? { |m| m.group_ids != admin_ids && m.user_ids != [admin.id] }).to eq(false)
+        expect(messages.any? { |m| m.group_ids != admin_ids && (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id)) }).to eq(false)
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -201,8 +206,11 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        draft_count = messages.find { |m| m.channel == "/user" }
+        draft_count = messages.find { |m| m.channel == "/user-drafts/#{p.user_id}" }
         expect(draft_count).not_to eq(nil)
+
+        topics_stats = messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
+        expect(topics_stats).to eq(nil)
 
         expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
       end
@@ -525,11 +533,15 @@ describe PostCreator do
             before do
               SiteSetting.min_trust_to_create_tag = 0
               SiteSetting.min_trust_level_to_tag_topics = 0
+              Fabricate(:tag, name: 'greetings')
+              Fabricate(:tag, name: 'hey')
+              Fabricate(:tag, name: 'about-art')
+              Fabricate(:tag, name: 'about-artists')
             end
 
             context "without regular expressions" do
               it "works with many tags" do
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "HELLO", replacement: "greetings,hey")
 
                 @post = creator.create
                 expect(@post.topic.tags.map(&:name)).to match_array(['greetings', 'hey'])
@@ -544,7 +556,7 @@ describe PostCreator do
               end
 
               it "does not treat as regular expressions" do
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings,hey")
 
                 @post = creator_with_tags.create
                 expect(@post.topic.tags.map(&:name)).to match_array(tag_names)
@@ -554,7 +566,7 @@ describe PostCreator do
             context "with regular expressions" do
               it "works" do
                 SiteSetting.watched_words_regular_expressions = true
-                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings , hey")
+                Fabricate(:watched_word, action: WatchedWord.actions[:tag], word: "he(llo|y)", replacement: "greetings,hey")
 
                 @post = creator_with_tags.create
                 expect(@post.topic.tags.map(&:name)).to match_array(tag_names + ['greetings', 'hey'])
@@ -803,13 +815,13 @@ describe PostCreator do
 
     context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
       before do
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-        Fabricate(:bookmark, user: user, post: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: topic), auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         TopicUser.create!(topic: topic, user: user, bookmarked: true)
       end
 
       it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
-        Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user)
+        Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
         Fabricate(:bookmark, user: user)
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)
@@ -841,6 +853,26 @@ describe PostCreator do
         expect(topic.last_posted_at).to eq_time(post.created_at)
         expect(topic.last_post_user_id).to eq(post.user_id)
         expect(topic.word_count).to eq(6)
+      end
+
+      it "publishes updates to topic stats" do
+        reply_timestamp = 1.day.from_now.round
+
+        # tests if messages of type :stats are published and the relevant data is fetched from the topic
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          PostCreator.new(
+            evil_trout,
+            raw: 'other post in topic',
+            topic_id: topic.id,
+            created_at: reply_timestamp
+          ).create
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:posts_count]).to eq(2)
+        expect(stats_message.data[:last_posted_at]).to eq(reply_timestamp.as_json)
+        expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(evil_trout, root: false).as_json)
       end
 
       it "updates topic stats even when topic fails validation" do

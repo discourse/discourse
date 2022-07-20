@@ -63,8 +63,8 @@ acceptance("Admin - Watched Words", function (needs) {
     await click(".watched-word-form button");
 
     let found = [];
-    $.each(queryAll(".watched-words-list .watched-word"), (index, elem) => {
-      if ($(elem).text().trim() === "poutine") {
+    [...queryAll(".watched-words-list .watched-word")].forEach((elem) => {
+      if (elem.innerText.trim() === "poutine") {
         found.push(true);
       }
     });
@@ -75,15 +75,15 @@ acceptance("Admin - Watched Words", function (needs) {
     await visit("/admin/customize/watched_words/action/block");
     await click(".show-words-checkbox");
 
-    let word = null;
+    let wordId = null;
 
-    $.each(queryAll(".watched-words-list .watched-word"), (index, elem) => {
-      if ($(elem).text().trim() === "anise") {
-        word = elem;
+    [...queryAll(".watched-words-list .watched-word")].forEach((elem) => {
+      if (elem.innerText.trim() === "anise") {
+        wordId = elem.getAttribute("id");
       }
     });
 
-    await click(`#${$(word).attr("id")} .delete-word-record`);
+    await click(`#${wordId} .delete-word-record`);
 
     assert.strictEqual(count(".watched-words-list .watched-word"), 2);
   });

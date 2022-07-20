@@ -3,6 +3,7 @@ import attributeHook from "discourse-common/lib/attribute-hook";
 import { h } from "virtual-dom";
 import { isDevelopment } from "discourse-common/config/environment";
 import escape from "discourse-common/lib/escape";
+import deprecated from "discourse-common/lib/deprecated";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -102,7 +103,7 @@ export function registerIconRenderer(renderer) {
 function iconClasses(icon, params) {
   // "notification." is invalid syntax for classes, use replacement instead
   const dClass =
-    icon.replacementId && icon.id.indexOf("notification.") > -1
+    icon.replacementId && icon.id.includes("notification.")
       ? icon.replacementId
       : icon.id;
 
@@ -120,7 +121,7 @@ export function setIconList(iconList) {
 }
 
 export function isExistingIconId(id) {
-  return _iconList && _iconList.indexOf(id) >= 0;
+  return _iconList?.includes(id);
 }
 
 function warnIfMissing(id) {
@@ -159,9 +160,18 @@ registerIconRenderer({
         I18n.t(params.title)
       )}'>${html}</span>`;
     }
+
     if (params.translatedtitle) {
+      deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
+        since: "2.9.0.beta6",
+        dropFrom: "2.10.0.beta1",
+      });
+      params.translatedTitle = params.translatedtitle;
+    }
+
+    if (params.translatedTitle) {
       html = `<span class="svg-icon-title" title='${escape(
-        params.translatedtitle
+        params.translatedTitle
       )}'>${html}</span>`;
     }
     return html;

@@ -59,7 +59,7 @@ class TopicUploadSecurityManager
         post.topic = @topic
 
         secure_status_did_change = post.uploads.any? do |upload|
-          first_post_upload_appeared_in = upload.post_uploads.first.post
+          first_post_upload_appeared_in = upload.upload_references.where(target_type: 'Post').first.target
           if first_post_upload_appeared_in == post
             upload.update(access_control_post: post)
             upload.update_secure_status(source: "topic upload security")
@@ -85,8 +85,8 @@ class TopicUploadSecurityManager
   def posts_with_unowned_uploads
     Post
       .where(topic_id: @topic.id)
-      .joins('INNER JOIN post_uploads ON post_uploads.post_id = posts.id')
-      .joins('INNER JOIN uploads ON post_uploads.upload_id = uploads.id')
+      .joins("INNER JOIN upload_references ON upload_references.target_type = 'Post' AND upload_references.target_id = posts.id")
+      .joins('INNER JOIN uploads ON upload_references.upload_id = uploads.id')
       .where('uploads.access_control_post_id IS NULL')
       .includes(:uploads)
   end

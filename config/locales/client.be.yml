@@ -249,6 +249,7 @@ be:
         other: "дзён"
     time_shortcut:
       tomorrow: "заўтра"
+      never: "ніколі"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'> %{user} <"
       you_posted_topic: "<a href='%{userUrl}'> Вы <"
@@ -460,13 +461,14 @@ be:
       color_schemes:
         undo: "скінуць"
         regular: "звычайны"
+      experimental_sidebar:
+        options: "Налады"
       tag_settings: "Цэтлікі"
       watched_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе новыя тэмы па гэтых цэтліках. Таксама вам будуць прыходзіць паведамленні пра новыя пасты і тэмы, а падлік непрачытаных і новых пастоў адлюструюцца побач з тэмамі."
       tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы па гэтых цэтліках. Падлік непрачытаных і новых пастоў побач адлюструюцца побач з тэмамі."
       muted_tags: "ігнаруемай"
       muted_tags_instructions: "Вы ня будзеце атрымоўваць паведамленні аб новых тэмах па гэтых цэтліках і яны не адлюструюцца ў спісе апошніх тэмаў."
       muted_categories: "ігнаруемай"
-      regular_categories: "звычайны"
       unread_message_count: "Паведамленні"
       admin_delete: "Выдаліць"
       users: "Карыстальнікі"
@@ -674,6 +676,8 @@ be:
         sent_by: "адпраўлена"
         private_message: "паведамленне"
         the_topic: "тэма"
+    user_status:
+      save: "Захаваць"
     loading: "Загрузка ..."
     errors:
       reasons:
@@ -762,16 +766,8 @@ be:
       not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
         name: "Google"
-        title: "з Google"
       twitter:
         name: "Twitter"
-        title: "праз Twitter"
-      instagram:
-        title: "праз Instagram"
-      facebook:
-        title: "праз Facebook"
-      github:
-        title: "праз GitHub"
       second_factor_toggle:
         totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
         backup_code: "Выкарыстоўваць рэзервовы код замест"
@@ -816,7 +812,6 @@ be:
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
       create_pm: "паведамленне"
-      users_placeholder: "дадаць карыстальніка"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
       edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
@@ -852,9 +847,6 @@ be:
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
-        reply_as_private_message:
-          label: Новае паведамленне
-          desc: Напісаць новае асабістае паведамленне
         create_topic:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
@@ -981,8 +973,6 @@ be:
         remove: "Адключыць"
       topic_status_update:
         when: "калі:"
-      auto_update_input:
-        tomorrow: "заўтра"
       auto_close:
         title: "Аўтаматычнае закрыццё тэмы"
         error: "Калі ласка, увядзіце карэктнае значэнне."
@@ -1028,7 +1018,6 @@ be:
         unpin: "Адмацаваць тэму ..."
         unarchive: "Разархіваваць тэму"
         archive: "Заархіваваць тэму"
-        invisible: "Выдаліць са спісу"
         reset_read: "Скінуць дадзеныя аб прочитанисть"
         make_private: "Стварыць асабістае паведамленне"
         reset_bump_date: "Скінуць Dump дату"
@@ -1120,6 +1109,8 @@ be:
       general: "Агульныя"
       settings: "Налады"
       tags: "Тэгі"
+      required_tag_group:
+        delete: "Выдаліць"
       delete: "выдаліць катэгорыю"
       create: "Новая катэгорыя"
       create_long: "стварыць катэгорыю"
@@ -1263,6 +1254,7 @@ be:
       full: "ствараць"
       create_post: "адказваць"
       readonly: "бачыць"
+    preloader_text: "загрузка"
     lightbox:
       download: "загрузіць"
     keyboard_shortcuts_help:
@@ -1318,8 +1310,6 @@ be:
           title: "Сачыць"
         tracking:
           title: "Сачыць"
-        regular:
-          title: "звычайны"
         muted:
           title: "ігнараваць"
       groups:
@@ -1349,6 +1339,27 @@ be:
       no_activity_others: "Няма актыўнасці."
       no_replies_others: "Няма адказаў."
       no_likes_others: "Не спадабалася паведамленні."
+    sidebar:
+      sections:
+        messages:
+          header_link_text: "Паведамленні"
+          links:
+            inbox: "ўваходныя"
+            sent: "адпраўлена"
+            new: "Новая"
+            unread: "Непрачытаныя"
+            archive: "архіў"
+        tags:
+          header_link_text: "тэгі"
+        categories:
+          header_link_title: "усе катэгорыі"
+          header_link_text: "катэгорыі"
+        topics:
+          header_link_title: "дома"
+          header_link_text: "Тэмы"
+          links:
+            my_posts:
+              content: "мае паведамленні"
   admin_js:
     admin:
       moderator: "Мадэратар"

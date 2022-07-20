@@ -16,12 +16,17 @@ describe SecondFactor::AuthManager do
     SecondFactor::AuthManager.new(guardian, action)
   end
 
-  def create_action
-    TestSecondFactorAction.new(guardian)
+  def create_action(request = nil)
+    request ||= create_request
+    TestSecondFactorAction.new(guardian, request)
   end
 
   def stage_challenge(successful:)
-    action = create_action
+    request = create_request(
+      request_method: "POST",
+      path: "/abc/xyz"
+    )
+    action = create_action(request)
     action.expects(:no_second_factors_enabled!).never
     action
       .expects(:second_factor_auth_required!)
@@ -29,23 +34,21 @@ describe SecondFactor::AuthManager do
       .returns({ callback_params: { call_me_back: 4314 } })
       .once
     manager = create_manager(action)
-    request = create_request(
-      request_method: "POST",
-      path: "/abc/xyz"
-    )
     secure_session = {}
-    begin
+    expect {
       manager.run!(request, { random_param: 'hello' }, secure_session)
-    rescue SecondFactor::AuthManager::SecondFactorRequired
-      # expected
+    }.to raise_error(SecondFactor::AuthManager::SecondFactorRequired) do |ex|
+      expect(ex.nonce).to be_present
     end
 
     challenge = JSON
       .parse(secure_session["current_second_factor_auth_challenge"])
       .deep_symbolize_keys
 
-    challenge[:successful] = successful
-    secure_session["current_second_factor_auth_challenge"] = challenge.to_json
+    if successful
+      challenge[:successful] = true
+      secure_session["current_second_factor_auth_challenge"] = challenge.to_json
+    end
     [challenge[:nonce], secure_session]
   end
 
@@ -76,32 +79,26 @@ describe SecondFactor::AuthManager do
         manager = create_manager(action)
         manager.run!(create_request, { hello_world: 331 }, {})
       end
-
-      it 'calls the no_second_factors_enabled! method of the action even if a nonce is present in the params' do
-        action = create_action
-        params = { second_factor_nonce: SecureRandom.hex }
-        action.expects(:no_second_factors_enabled!).with(params).once
-        action.expects(:second_factor_auth_required!).never
-        action.expects(:second_factor_auth_completed!).never
-        manager = create_manager(action)
-        manager.run!(create_request, params, {})
-      end
     end
 
     it "initiates the 2FA process and stages a challenge in secure session when there is no nonce in params" do
-      action = create_action
-      action.expects(:no_second_factors_enabled!).never
-      action
-        .expects(:second_factor_auth_required!)
-        .with({ expect_me: 131 })
-        .returns({ callback_params: { call_me_back: 4314 }, redirect_path: "/gg", description: "hello world!" })
-        .once
-      action.expects(:second_factor_auth_completed!).never
-      manager = create_manager(action)
       request = create_request(
         request_method: "POST",
         path: "/abc/xyz"
       )
+      action = create_action(request)
+      action.expects(:no_second_factors_enabled!).never
+      action
+        .expects(:second_factor_auth_required!)
+        .with({ expect_me: 131 })
+        .returns(
+          callback_params: { call_me_back: 4314 },
+          redirect_url: "/gg",
+          description: "hello world!"
+        )
+        .once
+      action.expects(:second_factor_auth_completed!).never
+      manager = create_manager(action)
       secure_session = {}
       expect {
         manager.run!(request, { expect_me: 131 }, secure_session)
@@ -111,61 +108,46 @@ describe SecondFactor::AuthManager do
       expect(challenge[:nonce]).to be_present
       expect(challenge[:callback_method]).to eq("POST")
       expect(challenge[:callback_path]).to eq("/abc/xyz")
-      expect(challenge[:redirect_path]).to eq("/gg")
+      expect(challenge[:redirect_url]).to eq("/gg")
       expect(challenge[:allowed_methods]).to eq(manager.allowed_methods.to_a)
       expect(challenge[:callback_params]).to eq({ call_me_back: 4314 })
       expect(challenge[:description]).to eq("hello world!")
     end
 
-    it "sets the redirect_path to the root path if second_factor_auth_required! doesn't specify a redirect_path" do
-      action = create_action
-      action.expects(:no_second_factors_enabled!).never
-      action
-        .expects(:second_factor_auth_required!)
-        .with({ expect_me: 131 })
-        .returns({ callback_params: { call_me_back: 4314 } })
-        .once
-      action.expects(:second_factor_auth_completed!).never
-      manager = create_manager(action)
+    it "prefers callback_method and callback_path from the output of the action's second_factor_auth_required! method if they're present" do
       request = create_request(
         request_method: "POST",
         path: "/abc/xyz"
       )
-      secure_session = {}
-      expect {
-        manager.run!(request, { expect_me: 131 }, secure_session)
-      }.to raise_error(SecondFactor::AuthManager::SecondFactorRequired)
-      json = secure_session["current_second_factor_auth_challenge"]
-      challenge = JSON.parse(json).deep_symbolize_keys
-      expect(challenge[:redirect_path]).to eq("/")
-
-      set_subfolder("/community")
-      action = create_action
-      action.expects(:no_second_factors_enabled!).never
+      action = create_action(request)
       action
         .expects(:second_factor_auth_required!)
-        .with({ expect_me: 131 })
-        .returns({ callback_params: { call_me_back: 4314 } })
+        .with({})
+        .returns(
+          callback_params: { call_me_back: 4314 },
+          callback_method: "PUT",
+          callback_path: "/test/443"
+        )
         .once
-      action.expects(:second_factor_auth_completed!).never
       manager = create_manager(action)
-      request = create_request(
-        request_method: "POST",
-        path: "/abc/xyz"
-      )
       secure_session = {}
       expect {
-        manager.run!(request, { expect_me: 131 }, secure_session)
+        manager.run!(request, {}, secure_session)
       }.to raise_error(SecondFactor::AuthManager::SecondFactorRequired)
       json = secure_session["current_second_factor_auth_challenge"]
       challenge = JSON.parse(json).deep_symbolize_keys
-      expect(challenge[:redirect_path]).to eq("/community")
+      expect(challenge[:callback_method]).to eq("PUT")
+      expect(challenge[:callback_path]).to eq("/test/443")
     end
 
     it "calls the second_factor_auth_completed! method of the action if the challenge is successful and not expired" do
       nonce, secure_session = stage_challenge(successful: true)
 
-      action = create_action
+      request = create_request(
+        request_method: "POST",
+        path: "/abc/xyz"
+      )
+      action = create_action(request)
 
       action.expects(:no_second_factors_enabled!).never
       action.expects(:second_factor_auth_required!).never
@@ -174,25 +156,21 @@ describe SecondFactor::AuthManager do
         .with({ call_me_back: 4314 })
         .once
       manager = create_manager(action)
-      request = create_request(
-        request_method: "POST",
-        path: "/abc/xyz"
-      )
       manager.run!(request, { second_factor_nonce: nonce }, secure_session)
     end
 
     it "does not call the second_factor_auth_completed! method of the action if the challenge is not marked successful" do
       nonce, secure_session = stage_challenge(successful: false)
 
-      action = create_action
-      action.expects(:no_second_factors_enabled!).never
-      action.expects(:second_factor_auth_required!).never
-      action.expects(:second_factor_auth_completed!).never
-      manager = create_manager(action)
       request = create_request(
         request_method: "POST",
         path: "/abc/xyz"
       )
+      action = create_action(request)
+      action.expects(:no_second_factors_enabled!).never
+      action.expects(:second_factor_auth_required!).never
+      action.expects(:second_factor_auth_completed!).never
+      manager = create_manager(action)
       expect {
         manager.run!(request, { second_factor_nonce: nonce }, secure_session)
       }.to raise_error(SecondFactor::BadChallenge) do |ex|
@@ -203,21 +181,85 @@ describe SecondFactor::AuthManager do
     it "does not call the second_factor_auth_completed! method of the action if the challenge is expired" do
       nonce, secure_session = stage_challenge(successful: true)
 
-      action = create_action
-      action.expects(:no_second_factors_enabled!).never
-      action.expects(:second_factor_auth_required!).never
-      action.expects(:second_factor_auth_completed!).never
-      manager = create_manager(action)
       request = create_request(
         request_method: "POST",
         path: "/abc/xyz"
       )
+      action = create_action(request)
+      action.expects(:no_second_factors_enabled!).never
+      action.expects(:second_factor_auth_required!).never
+      action.expects(:second_factor_auth_completed!).never
+      manager = create_manager(action)
 
       freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 1.minute).from_now
       expect {
         manager.run!(request, { second_factor_nonce: nonce }, secure_session)
       }.to raise_error(SecondFactor::BadChallenge) do |ex|
         expect(ex.error_translation_key).to eq("second_factor_auth.challenge_expired")
+      end
+    end
+
+    it "calls second_factor_auth_skipped! if skip_second_factor_auth? return true" do
+      action = create_action
+      params = { a: 1 }
+      action.expects(:skip_second_factor_auth?).with(params).returns(true).once
+      action.expects(:second_factor_auth_skipped!).with(params).once
+      action.expects(:no_second_factors_enabled!).never
+      action.expects(:second_factor_auth_required!).never
+      action.expects(:second_factor_auth_completed!).never
+      manager = create_manager(action)
+      manager.run!(action.request, params, {})
+    end
+
+    it "doesn't call second_factor_auth_skipped! if skip_second_factor_auth? return false" do
+      action = create_action
+      params = { a: 1 }
+      action.expects(:skip_second_factor_auth?).with(params).returns(false).once
+      action.expects(:second_factor_auth_skipped!).never
+      action.expects(:no_second_factors_enabled!).never
+      action.expects(:second_factor_auth_required!).with(params).returns({}).once
+      action.expects(:second_factor_auth_completed!).never
+      manager = create_manager(action)
+      expect {
+        manager.run!(action.request, params, {})
+      }.to raise_error(SecondFactor::AuthManager::SecondFactorRequired) do |ex|
+        expect(ex.nonce).to be_present
+      end
+    end
+
+    context "returned results object" do
+      it "has the correct status and contains the return value of the action hook that's called" do
+        action = create_action
+        action.expects(:skip_second_factor_auth?).with({}).returns(true).once
+        action.expects(:second_factor_auth_skipped!).with({}).returns("yeah whatever").once
+        manager = create_manager(action)
+        results = manager.run!(action.request, {}, {})
+        expect(results.data).to eq("yeah whatever")
+        expect(results.second_factor_auth_skipped?).to eq(true)
+
+        nonce, secure_session = stage_challenge(successful: true)
+        request = create_request(
+          request_method: "POST",
+          path: "/abc/xyz"
+        )
+        action = create_action(request)
+        action
+          .expects(:second_factor_auth_completed!)
+          .with({ call_me_back: 4314 })
+          .returns({ eviltrout: "goodbye :(" })
+          .once
+        manager = create_manager(action)
+        results = manager.run!(request, { second_factor_nonce: nonce }, secure_session)
+        expect(results.data).to eq({ eviltrout: "goodbye :(" })
+        expect(results.second_factor_auth_completed?).to eq(true)
+
+        user_totp.destroy!
+        action = create_action
+        action.expects(:no_second_factors_enabled!).with({}).returns("NOTHING WORKS").once
+        manager = create_manager(action)
+        results = manager.run!(action.request, {}, {})
+        expect(results.data).to eq("NOTHING WORKS")
+        expect(results.no_second_factors_enabled?).to eq(true)
       end
     end
   end

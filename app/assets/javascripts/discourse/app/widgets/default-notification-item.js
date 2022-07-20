@@ -29,9 +29,9 @@ export const DefaultNotificationItem = createWidget(
       if (attrs.is_warning) {
         classNames.push("is-warning");
       }
-      const notificationType = attrs.notification_type;
-      const lookup = this.site.get("notificationLookup");
-      const notificationName = lookup[notificationType];
+      const notificationName = this.lookupNotificationName(
+        attrs.notification_type
+      );
       if (notificationName) {
         classNames.push(notificationName.replace(/_/g, "-"));
       }
@@ -64,6 +64,10 @@ export const DefaultNotificationItem = createWidget(
       if (data.group_id) {
         return userPath(data.username + "/messages/group/" + data.group_name);
       }
+
+      if (data.bookmarkable_url) {
+        return getURL(data.bookmarkable_url);
+      }
     },
 
     description(data) {
@@ -90,7 +94,7 @@ export const DefaultNotificationItem = createWidget(
         return this.attrs.fancy_title;
       }
 
-      const description = data.topic_title;
+      const description = data.topic_title || data.title;
 
       return isEmpty(description) ? "" : escapeExpression(description);
     },
@@ -126,11 +130,15 @@ export const DefaultNotificationItem = createWidget(
       }
     },
 
-    html(attrs) {
-      const notificationType = attrs.notification_type;
+    lookupNotificationName(notificationType) {
       const lookup = this.site.get("notificationLookup");
-      const notificationName = lookup[notificationType];
+      return lookup[notificationType];
+    },
 
+    html(attrs) {
+      const notificationName = this.lookupNotificationName(
+        attrs.notification_type
+      );
       let { data } = attrs;
       let text = emojiUnescape(this.text(notificationName, data));
       let icon = this.icon(notificationName, data);

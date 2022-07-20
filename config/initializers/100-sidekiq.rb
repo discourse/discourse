@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sidekiq/pausable"
+require 'sidekiq_logster_reporter'
 
 Sidekiq.configure_client do |config|
   config.redis = Discourse.sidekiq_redis_config
@@ -26,10 +27,10 @@ if Sidekiq.server?
     end
   end
 
-  # defer queue should simply run in sidekiq
-  Scheduler::Defer.async = false
-
   Rails.application.config.after_initialize do
+    # defer queue should simply run in sidekiq
+    Scheduler::Defer.async = false
+
     # warm up AR
     RailsMultisite::ConnectionManagement.safe_each_connection do
       (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
@@ -48,44 +49,16 @@ if Sidekiq.server?
       end
     end
   end
-end
-
-# Sidekiq#logger= applies patches to whichever logger we pass it.
-# Therefore something like Sidekiq.logger = Rails.logger will break
-# all logging in the application.
-#
-# Instead, this patch adds a dedicated logger instance and patches
-# the #add method to forward messages to Rails.logger.
-Sidekiq.logger = Logger.new(nil)
-Sidekiq.logger.define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
-  Rails.logger.add(severity, message, progname, &blk)
-end
-
-class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
-  def call(ex, context = {})
-
-    return if Jobs::HandledExceptionWrapper === ex
-    Discourse.reset_active_record_cache_if_needed(ex)
-
-    # Pass context to Logster
-    fake_env = {}
-    context.each do |key, value|
-      Logster.add_to_env(fake_env, key, value)
-    end
-
-    text = "Job exception: #{ex}\n"
-    if ex.backtrace
-      Logster.add_to_env(fake_env, :backtrace, ex.backtrace)
-    end
-
-    Logster.add_to_env(fake_env, :current_hostname, Discourse.current_hostname)
-
-    Thread.current[Logster::Logger::LOGSTER_ENV] = fake_env
-    Logster.logger.error(text)
-  rescue => e
-    Logster.logger.fatal("Failed to log exception #{ex} #{hash}\nReason: #{e.class} #{e}\n#{e.backtrace.join("\n")}")
-  ensure
-    Thread.current[Logster::Logger::LOGSTER_ENV] = nil
+else
+  # Sidekiq#logger= applies patches to whichever logger we pass it.
+  # Therefore something like Sidekiq.logger = Rails.logger will break
+  # all logging in the application.
+  #
+  # Instead, this patch adds a dedicated logger instance and patches
+  # the #add method to forward messages to Rails.logger.
+  Sidekiq.logger = Logger.new(nil)
+  Sidekiq.logger.define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
+    Rails.logger.add(severity, message, progname, &blk)
   end
 end
 

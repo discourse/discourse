@@ -77,11 +77,12 @@
     <%end%>
   <% end%>
 
+  <%= preload_script "vendor" %>
   <%= preload_script "locales/#{I18n.locale}" %>
   <%- if ExtraLocalesController.client_overrides_exist? %>
     <%= preload_script_url ExtraLocalesController.url('overrides') %>
   <%- end %>
-  <%= preload_script 'ember_jquery' %>
+  <% # TODO: move all this logic into the ember app %>
   <%= preload_script "discourse/app/lib/webauthn" %>
   <%= preload_script "confirm-new-email/confirm-new-email" %>
   <%= preload_script "confirm-new-email/bootstrap" %>

@@ -3,6 +3,8 @@ import { Promise } from "rsvp";
 import QuickAccessItem from "discourse/widgets/quick-access-item";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
+import showModal from "discourse/lib/show-modal";
+import { dateNode } from "discourse/helpers/node";
 
 const _extraItems = [];
 
@@ -16,10 +18,52 @@ createWidgetFrom(QuickAccessItem, "logout-item", {
   html() {
     return this.attach("flat-button", {
       action: "logout",
-      content: I18n.t("user.log_out"),
       icon: "sign-out-alt",
       label: "user.log_out",
     });
+  },
+});
+
+createWidgetFrom(QuickAccessItem, "user-status-item", {
+  tagName: "li.user-status",
+
+  html() {
+    const status = this.currentUser.status;
+    if (status) {
+      return this._editStatusButton(status);
+    } else {
+      return this._setStatusButton();
+    }
+  },
+
+  hideMenuAndSetStatus() {
+    this.sendWidgetAction("toggleUserMenu");
+    showModal("user-status", {
+      title: "user_status.set_custom_status",
+      modalClass: "user-status",
+    });
+  },
+
+  _setStatusButton() {
+    return this.attach("flat-button", {
+      action: "hideMenuAndSetStatus",
+      icon: "plus-circle",
+      label: "user_status.set_custom_status",
+    });
+  },
+
+  _editStatusButton(status) {
+    const menuButton = {
+      action: "hideMenuAndSetStatus",
+      emoji: status.emoji,
+      translatedLabel: status.description,
+    };
+
+    if (status.ends_at) {
+      menuButton.contents = dateNode(status.ends_at);
+    }
+
+    return this.attach("flat-button", menuButton);
   },
 });
 
@@ -43,11 +87,16 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   _getItems() {
-    let items = this._getDefaultItems();
+    const items = [];
+
+    if (this.siteSettings.enable_user_status) {
+      items.push({ widget: "user-status-item" });
+    }
+    items.push(...this._getDefaultItems());
     if (this._showToggleAnonymousButton()) {
       items.push(this._toggleAnonymousButton());
     }
-    items = items.concat(_extraItems);
+    items.push(..._extraItems);
 
     if (this.attrs.showLogoutButton) {
       items.push({ widget: "logout-item" });

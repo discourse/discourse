@@ -176,10 +176,9 @@
   }
 }
 
-button.dismiss-read {
-  float: right;
-  margin-bottom: 5px;
-  margin-left: 10px;
+.dismiss-container-top {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .category-breadcrumb {
@@ -197,7 +196,7 @@ button.dismiss-read {
 
 /* Tablet (portrait) ----------- */
 
-@include breakpoint(medium) {
+@include breakpoint(medium, $sidebar: true) {
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {

@@ -6,6 +6,7 @@ import PermissionType from "discourse/models/permission-type";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { isNone } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
+import { htmlSafe } from "@ember/template";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-chooser"],
@@ -33,9 +34,9 @@ export default ComboBoxComponent.extend({
       const isString = typeof none === "string";
       return this.defaultItem(
         null,
-        I18n.t(
-          isString ? this.selectKit.options.none : "category.none"
-        ).htmlSafe()
+        htmlSafe(
+          I18n.t(isString ? this.selectKit.options.none : "category.none")
+        )
       );
     } else if (
       this.allowUncategorizedTopics ||
@@ -43,7 +44,7 @@ export default ComboBoxComponent.extend({
     ) {
       return Category.findUncategorized();
     } else {
-      return this.defaultItem(null, I18n.t("category.choose").htmlSafe());
+      return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
     }
   },
 
@@ -54,12 +55,14 @@ export default ComboBoxComponent.extend({
       set(
         content,
         "label",
-        categoryBadgeHTML(category, {
-          link: false,
-          hideParent: category ? !!category.parent_category_id : true,
-          allowUncategorized: true,
-          recursive: true,
-        }).htmlSafe()
+        htmlSafe(
+          categoryBadgeHTML(category, {
+            link: false,
+            hideParent: category ? !!category.parent_category_id : true,
+            allowUncategorized: true,
+            recursive: true,
+          })
+        )
       );
     }
 
@@ -94,10 +97,8 @@ export default ComboBoxComponent.extend({
     "selectKit.options.prioritizedCategoryId",
     function () {
       if (!this.selectKit.filter) {
-        let {
-          scopedCategoryId,
-          prioritizedCategoryId,
-        } = this.selectKit.options;
+        let { scopedCategoryId, prioritizedCategoryId } =
+          this.selectKit.options;
 
         if (scopedCategoryId) {
           return this.categoriesByScope({ scopedCategoryId });
@@ -190,6 +191,6 @@ export default ComboBoxComponent.extend({
   },
 
   _matchCategory(filter, categoryName) {
-    return this._normalize(categoryName).indexOf(filter) > -1;
+    return this._normalize(categoryName).includes(filter);
   },
 });

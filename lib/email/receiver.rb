@@ -471,7 +471,9 @@ module Email
     def extract_from_mozilla(doc)
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
-      elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
+      elided = doc.css("*[class^='moz-cite'], *[class^='moz-cite'] ~ *, " \
+                       "*[class^='moz-signature'], *[class^='moz-signature'] ~ *, " \
+                       "*[class^='moz-forward'], *[class^='moz-forward'] ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 

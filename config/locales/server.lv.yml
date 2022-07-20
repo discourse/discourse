@@ -406,6 +406,7 @@ lv:
     set_password:
       title: "Iestatīt paroli"
   page_not_found:
+    page_title: "Lapa nav atrasta"
     popular_topics: "Populāri"
     recent_topics: "Neseni"
     see_more: "Vairāk"

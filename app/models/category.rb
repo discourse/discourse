@@ -45,6 +45,7 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
   has_many :topic_timers, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
 
   has_and_belongs_to_many :web_hooks
 
@@ -80,6 +81,13 @@ class Category < ActiveRecord::Base
   after_save :clear_url_cache
   after_save :update_reviewables
 
+  after_save do
+    if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_background_id?
+      upload_ids = [self.uploaded_logo_id, self.uploaded_background_id]
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+    end
+  end
+
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
   after_destroy :remove_site_settings
@@ -105,6 +113,7 @@ class Category < ActiveRecord::Base
   has_many :tag_groups, through: :category_tag_groups
 
   has_many :category_required_tag_groups, -> { order(order: :asc) }, dependent: :destroy
+  has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
 
   belongs_to :reviewable_by_group, class_name: 'Group'
 

@@ -178,7 +178,7 @@ export default {
       skip_new_user_tips: false,
       enable_quoting: true,
       muted_category_ids: [],
-      regular_category_ids: [],
+      regular_category_ids: [4],
       tracked_category_ids: [],
       watched_category_ids: [3],
       watched_first_post_category_ids: [],
@@ -295,7 +295,7 @@ export default {
         day_6_end_time: 1020,
       },
       timezone: "Australia/Brisbane",
-      has_topic_draft: true
+      has_topic_draft: true,
     },
   },
   "/u/eviltrout/card.json": {
@@ -421,16 +421,23 @@ export default {
     user_bookmark_list: {
       bookmarks: [
         {
-          excerpt: "Here this is my new topic where I yell.",
-          tags: [],
           id: 576,
           created_at: "2020-04-07T05:30:40.446Z",
-          topic_id: 119,
-          linked_post_number: 1,
-          post_id: 281,
+          updated_at: "2020-04-07T05:30:40.446Z",
           name: "test",
           reminder_at: null,
+          reminder_at_ics_start: null,
+          reminder_at_ics_end: null,
+          pinned: false,
           title: "Yelling topic title :/",
+          fancy_title: "Yelling topic title :/",
+          excerpt: "Here this is my new topic where I yell.",
+          bookmarkable_id: 281,
+          bookmarkable_type: "Post",
+          bookmarkable_url: "http://localhost:4200/t/yelling-topic-title/119",
+          tags: [],
+          topic_id: 119,
+          linked_post_number: 1,
           deleted: false,
           hidden: false,
           category_id: 1,
@@ -438,12 +445,38 @@ export default {
           archived: false,
           archetype: "regular",
           highest_post_number: 5,
+          last_read_post_number: 3,
           bumped_at: "2020-04-06T05:20:00.172Z",
           slug: "yelling-topic-title",
-          post_user_username: "someguy",
-          post_user_name: "Some Guy",
-          post_user_avatar_template:
-            "/letter_avatar/someguy/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+          user: {
+            id: 1,
+            username: "someguy",
+            name: "Some Guy",
+            avatar_template: "/user_avatar/127.0.0.1/someguy/{size}/918_2.png",
+          },
+        },
+        {
+          id: 4857,
+          created_at: "2022-05-07T05:30:40.446Z",
+          updated_at: "2022-05-27T05:30:40.446Z",
+          name: "test",
+          reminder_at: "2022-05-29T22:00:00.000Z",
+          reminder_at_ics_start: "20220529T220000Z",
+          reminder_at_ics_end: "20220529T230000Z",
+          pinned: false,
+          title: "Channel Name",
+          fancy_title: "Channel Name",
+          excerpt: "some excerpt",
+          bookmarkable_id: 2437,
+          bookmarkable_type: "ChatMessage",
+          bookmarkable_url: "http://localhost:4200/chat/message/2437",
+          user: {
+            id: 4343,
+            username: "otherperson",
+            name: "Other Person",
+            avatar_template:
+              "/user_avatar/127.0.0.1/otherperson/{size}/918_2.png",
+          },
         },
       ],
     },
@@ -487,8 +520,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
-        slug:
-          "users-activate-account-pulling-blank-logo-instead-of-defaulting-to-h2",
+        slug: "users-activate-account-pulling-blank-logo-instead-of-defaulting-to-h2",
         topic_id: 10911,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -517,8 +549,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "users-activate-account-pulling-blank-logo-instead-of-defaulting-to-h2",
+        slug: "users-activate-account-pulling-blank-logo-instead-of-defaulting-to-h2",
         topic_id: 10911,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -545,8 +576,7 @@ export default {
           "OK - i see what you mean. From the piwik code I should add: \n\n_paq.push([&quot;setDocumentTitle&quot;, document.domain + &quot;/&quot; + document.title]);\n\n? \n\nUnfortunately I have had to give up on Piwik for now because I have switched the forum to SSL on a free cert and have used up the free subdomain for the forum. &hellip;",
         avatar_template: "/images/avatar.png",
         acting_avatar_template: "/images/avatar.png",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -911,8 +941,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -994,8 +1023,7 @@ export default {
           "Thanks <a class='mention' href='/users/eviltrout'>@eviltrout</a> , the code in the &#39;bottom of pages&#39; now reads: \n\n&lt;script type=&quot;text/javascript&quot;&gt;\nDiscourse.PageTracker.current().on(&#39;change&#39;, function() {\n  console.log(&#39;tracked!&#39;)\n  _paq.push([&#39;trackPageView&#39;]);\n});\n&lt;/script&gt;\n\nThe console is logging &#39;tracked!&#39; and piwik is logging for each page c&hellip;",
         avatar_template: "/images/avatar.png",
         acting_avatar_template: "/images/avatar.png",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1080,8 +1108,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
-        slug:
-          "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
+        slug: "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
         topic_id: 7965,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1138,8 +1165,7 @@ export default {
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
-        slug:
-          "ruby-question-about-use-of-klass-self-in-the-site-customization-rb",
+        slug: "ruby-question-about-use-of-klass-self-in-the-site-customization-rb",
         topic_id: 11889,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1168,8 +1194,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1225,8 +1250,7 @@ export default {
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template: "/images/avatar.png",
-        slug:
-          "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
+        slug: "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
         topic_id: 7965,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1255,8 +1279,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1285,8 +1308,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1343,8 +1365,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
-        slug:
-          "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
+        slug: "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
         topic_id: 7965,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1373,8 +1394,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
-        slug:
-          "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
+        slug: "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
         topic_id: 7965,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1403,8 +1423,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "ruby-question-about-use-of-klass-self-in-the-site-customization-rb",
+        slug: "ruby-question-about-use-of-klass-self-in-the-site-customization-rb",
         topic_id: 11889,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1433,8 +1452,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
+        slug: "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
         topic_id: 7965,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1489,8 +1507,7 @@ export default {
           "I&#39;d love to see API support. <a class='mention' href='/users/sam'>@sam</a> and <a class='mention' href='/users/eviltrout'>@eviltrout</a>, I can facilitate an intro to the piwik guys if you want—I&#39;ve written about them before and they&#39;re typically super-responsive. Because I know you guys are totally hunting for new stuff to do [wink]",
         avatar_template: "/images/avatar.png",
         acting_avatar_template: "/images/avatar.png",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1519,8 +1536,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1549,8 +1565,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "focus-events-track-which-window-is-the-last-active-instance-of-a-forum-edit",
+        slug: "focus-events-track-which-window-is-the-last-active-instance-of-a-forum-edit",
         topic_id: 11872,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1579,8 +1594,7 @@ export default {
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1693,8 +1707,7 @@ export default {
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
-        slug:
-          "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
+        slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1723,8 +1736,7 @@ export default {
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
-        slug:
-          "focus-events-track-which-window-is-the-last-active-instance-of-a-forum-edit",
+        slug: "focus-events-track-which-window-is-the-last-active-instance-of-a-forum-edit",
         topic_id: 11872,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -1891,8 +1903,7 @@ export default {
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
-        slug:
-          "quote-post-button-should-be-disabled-or-raise-an-error-when-creating-a-new-topic",
+        slug: "quote-post-button-should-be-disabled-or-raise-an-error-when-creating-a-new-topic",
         topic_id: 834,
         target_user_id: 19,
         target_name: "Robin Ward",
@@ -2793,6 +2804,85 @@ export default {
       featured_user_badge_ids: [17],
     },
   },
+  "/u/shade/card.json": {
+    user_badges: [
+      {
+        id: 17,
+        granted_at: "2019-03-06T19:08:28.230Z",
+        count: 1,
+        badge_id: 3,
+        user_id: 5,
+        granted_by_id: -1,
+      },
+    ],
+    badges: [
+      {
+        id: 3,
+        name: "Regular",
+        description:
+          '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes',
+        grant_count: 3,
+        allow_title: true,
+        multiple_grant: false,
+        icon: "fa-user",
+        image: null,
+        listable: true,
+        enabled: true,
+        badge_grouping_id: 4,
+        system: true,
+        slug: "regular",
+        manually_grantable: false,
+        badge_type_id: 2,
+      },
+    ],
+    badge_types: [{ id: 2, name: "Silver", sort_order: 8 }],
+    users: [
+      {
+        id: 10,
+        username: "shade",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v3/letter/s/d6d6ee/{size}.png",
+        moderator: false,
+        admin: false,
+      },
+      {
+        id: -1,
+        username: "system",
+        name: "system",
+        avatar_template: "/user_avatar/localhost/system/{size}/2_2.png",
+        moderator: true,
+        admin: true,
+      },
+    ],
+    user: {
+      id: 10,
+      username: "shade",
+      name: null,
+      avatar_template: "/letter_avatar_proxy/v3/letter/s/d6d6ee/{size}.png",
+      last_posted_at: null,
+      last_seen_at: null,
+      created_at: "2019-03-06T19:06:20.340Z",
+      ignored: false,
+      can_ignore_user: false,
+      can_send_private_messages: true,
+      can_send_private_message_to_user: true,
+      trust_level: 3,
+      moderator: false,
+      admin: false,
+      title: null,
+      badge_count: 3,
+      custom_fields: {},
+      time_read: 0,
+      recent_time_read: 0,
+      primary_group_name: null,
+      flair_name: null,
+      flair_url: null,
+      flair_bg_color: null,
+      flair_color: null,
+      staged: false,
+      featured_user_badge_ids: [17],
+    },
+  },
   "/u/charlie/summary.json": {
     topics: [],
     badges: [
@@ -3476,9 +3566,6 @@ export default {
   },
   "/u/recent-searches": {
     success: "OK",
-    recent_searches: [
-      "yellow",
-      "blue"
-    ]
-  }
+    recent_searches: ["yellow", "blue"],
+  },
 };

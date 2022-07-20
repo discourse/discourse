@@ -214,7 +214,6 @@ pt:
       <p>Se você se lembrar da sua senha, você pode <a href="%{base_url}/login">Efetuar Login</a>.</p>
 
       <p>Caso contrário, <a href="%{base_url}/password-reset">Redefinir senha</a>.</p>
-    user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já têm uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>."
     invalid_email: "%{email} não é um endereço de email válido."
     rate_limit:
@@ -987,7 +986,6 @@ pt:
     title: "O nome deste sítio, tal como usado na etiqueta do título."
     site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
-    download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto evita imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
@@ -1838,6 +1836,7 @@ pt:
     post_approved:
       title: "A sua publicação foi aprovada"
   page_not_found:
+    page_title: "Página Não Encontrada"
     title: "Oops! Essa página não existe or é privada."
     popular_topics: "Popular"
     recent_topics: "Recente"

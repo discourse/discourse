@@ -211,4 +211,37 @@ describe DiscoursePoll::Poll do
       expect(messages.count).to eq(0)
     end
   end
+
+  describe '.extract' do
+    it "skips the polls inside quote" do
+      raw = <<~RAW
+      [quote="username, post:1, topic:2"]
+        [poll type=regular result=always]
+        * 1
+        * 2
+        [/poll]
+      [/quote]
+
+      [poll type=regular result=always]
+      * 3
+      * 4
+      [/poll]
+
+      Post with a poll and a quoted poll.
+      RAW
+
+      expect(DiscoursePoll::Poll.extract(raw, 2)).to contain_exactly({
+        "name" => "poll",
+        "options" => [{
+          "html" => "3",
+          "id" => "68b434ff88aeae7054e42cd05a4d9056"
+        }, {
+          "html" => "4",
+          "id" => "aa2393b424f2f395abb63bf785760a3b"
+        }],
+        "status" => "open",
+        "type" => "regular"
+      })
+    end
+  end
 end

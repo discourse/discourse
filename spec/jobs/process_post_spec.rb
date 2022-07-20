@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 describe Jobs::ProcessPost do
-
   it "returns when the post cannot be found" do
     expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end
 
   context 'with a post' do
-
     fab!(:post) { Fabricate(:post) }
 
     it 'does not erase posts when CookedPostProcessor malfunctions' do
@@ -91,4 +89,34 @@ describe Jobs::ProcessPost do
     end
   end
 
+  context "#enqueue_pull_hotlinked_images" do
+    fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
+    let(:job) { Jobs::ProcessPost.new }
+
+    it "runs even when download_remote_images_to_local is disabled" do
+      # We want to run it to pull hotlinked optimized images
+      SiteSetting.download_remote_images_to_local = false
+      expect_enqueued_with(job: :pull_hotlinked_images, args: { post_id: post.id }) do
+        job.execute({ post_id: post.id })
+      end
+    end
+
+    context "when download_remote_images_to_local? is enabled" do
+      before do
+        SiteSetting.download_remote_images_to_local = true
+      end
+
+      it "enqueues" do
+        expect_enqueued_with(job: :pull_hotlinked_images, args: { post_id: post.id }) do
+          job.execute({ post_id: post.id })
+        end
+      end
+
+      it "does not run when requested to skip" do
+        job.execute({ post_id: post.id, skip_pull_hotlinked_images: true })
+        expect(Jobs::PullHotlinkedImages.jobs.size).to eq(0)
+      end
+    end
+
+  end
 end

@@ -1,7 +1,3 @@
-{{#d-section bodyClass="navigation-topics" class="navigation-container" scrollTop=false}}
-  {{d-navigation
-    filterMode=filterMode
-    canCreateTopic=canCreateTopic
-    hasDraft=currentUser.has_topic_draft
-    createTopic=(route-action "createTopic")}}
-{{/d-section}}
+<DSection @bodyClass="navigation-topics" @class="navigation-container" @scrollTop={{false}}>
+  <DNavigation @filterMode={{this.filterMode}} @canCreateTopic={{this.canCreateTopic}} @hasDraft={{this.currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} @skipCategoriesNavItem={{this.skipCategoriesNavItem}} />
+</DSection>

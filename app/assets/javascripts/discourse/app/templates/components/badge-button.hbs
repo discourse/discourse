@@ -1,3 +1,5 @@
-{{icon-or-image badge}}
-<span class="badge-display-name">{{badge.name}}</span>
-{{yield}}
+<span class="user-badge {{this.badge.badgeTypeClassName}} {{unless this.badge.enabled "disabled"}}" title={{this.title}} data-badge-name={{this.badge.name}}>
+  {{icon-or-image this.badge}}
+  <span class="badge-display-name">{{this.badge.name}}</span>
+  {{yield}}
+</span>

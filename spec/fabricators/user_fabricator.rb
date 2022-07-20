@@ -51,6 +51,10 @@ Fabricator(:moderator, from: :user) do
   username { sequence(:username) { |i| "moderator#{i}" } }
   email { sequence(:email) { |i| "moderator#{i}@discourse.org" } }
   moderator true
+
+  after_create do |user|
+    user.group_users << Fabricate(:group_user, user: user, group: Group[:moderators])
+  end
 end
 
 Fabricator(:admin, from: :user) do
@@ -58,6 +62,10 @@ Fabricator(:admin, from: :user) do
   username { sequence(:username) { |i| "anne#{i}" } }
   email { sequence(:email) { |i| "anne#{i}@discourse.org" } }
   admin true
+
+  after_create do |user|
+    user.group_users << Fabricate(:group_user, user: user, group: Group[:admins])
+  end
 end
 
 Fabricator(:newuser, from: :user) do

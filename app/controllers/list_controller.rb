@@ -245,8 +245,8 @@ class ListController < ApplicationController
     ensure_can_see_profile!(target_user)
 
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_topics", username: target_user.username)}"
-    @link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics"
-    @atom_link = "#{Discourse.base_url}/u/#{target_user.username}/activity/topics.rss"
+    @link = "#{target_user.full_url}/activity/topics"
+    @atom_link = "#{target_user.full_url}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
 
     @topic_list = TopicQuery
@@ -424,12 +424,21 @@ class ListController < ApplicationController
       end
 
     opts = opts.dup
+
     if SiteSetting.unicode_usernames && opts[:group_name]
       opts[:group_name] = UrlHelper.encode_component(opts[:group_name])
     end
+
     opts.delete(:category) if page_params.include?(:category_slug_path_with_id)
 
-    public_send(method, opts.merge(page_params)).sub('.json?', '?')
+    url = public_send(method, opts.merge(page_params)).sub('.json?', '?')
+
+    # Unicode usernames need to be encoded when calling Rails' path helper. However, it means that the already
+    # encoded username are encoded again which we do not want. As such, we unencode the url once when unicode usernames
+    # have been enabled.
+    url = UrlHelper.unencode(url) if SiteSetting.unicode_usernames
+
+    url
   end
 
   def ensure_can_see_profile!(target_user = nil)

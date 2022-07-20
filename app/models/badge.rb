@@ -108,6 +108,7 @@ class Badge < ActiveRecord::Base
   belongs_to :image_upload, class_name: 'Upload'
 
   has_many :user_badges, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
   validates :badge_type, presence: true
@@ -118,6 +119,12 @@ class Badge < ActiveRecord::Base
 
   before_create :ensure_not_system
   before_save :sanitize_description
+
+  after_save do
+    if saved_change_to_image_upload_id?
+      UploadReference.ensure_exist!(upload_ids: [self.image_upload_id], target: self)
+    end
+  end
 
   after_commit do
     SvgSprite.expire_cache
@@ -309,6 +316,10 @@ class Badge < ActiveRecord::Base
 
   def for_beginners?
     id == Welcome || (badge_grouping_id == BadgeGrouping::GettingStarted && id != NewUserOfTheMonth)
+  end
+
+  def trigger_badge_granted_event(user_id)
+    DiscourseEvent.trigger(:user_badge_granted, self.id, user_id)
   end
 
   protected

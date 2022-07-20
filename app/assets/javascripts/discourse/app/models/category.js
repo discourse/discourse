@@ -187,6 +187,11 @@ const Category = RestModel.extend({
     return seconds ? seconds / 60 : null;
   },
 
+  @discourseComputed("notification_level")
+  isTracked(notificationLevel) {
+    return notificationLevel >= NotificationLevels.TRACKING;
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
@@ -216,16 +221,10 @@ const Category = RestModel.extend({
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
         all_topics_wiki: this.all_topics_wiki,
-        allow_unlimited_owner_edits_on_first_post: this
-          .allow_unlimited_owner_edits_on_first_post,
-        allowed_tags:
-          this.allowed_tags && this.allowed_tags.length > 0
-            ? this.allowed_tags
-            : null,
-        allowed_tag_groups:
-          this.allowed_tag_groups && this.allowed_tag_groups.length > 0
-            ? this.allowed_tag_groups
-            : null,
+        allow_unlimited_owner_edits_on_first_post:
+          this.allow_unlimited_owner_edits_on_first_post,
+        allowed_tags: this.allowed_tags,
+        allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,
         required_tag_groups: this.required_tag_groups,
         sort_order: this.sort_order,
@@ -304,12 +303,12 @@ const Category = RestModel.extend({
 
   @discourseComputed("id", "topicTrackingState.messageCount")
   unreadTopics(id) {
-    return this.topicTrackingState.countUnread(id);
+    return this.topicTrackingState.countUnread({ categoryId: id });
   },
 
   @discourseComputed("id", "topicTrackingState.messageCount")
   newTopics(id) {
-    return this.topicTrackingState.countNew(id);
+    return this.topicTrackingState.countNew({ categoryId: id });
   },
 
   setNotification(notification_level) {
@@ -585,8 +584,8 @@ Category.reopenClass({
       if (
         ((emptyTerm && !category.get("parent_category_id")) ||
           (!emptyTerm &&
-            (category.get("name").toLowerCase().indexOf(term) === 0 ||
-              category.get("slug").toLowerCase().indexOf(slugTerm) === 0))) &&
+            (category.get("name").toLowerCase().startsWith(term) ||
+              category.get("slug").toLowerCase().startsWith(slugTerm)))) &&
         validCategoryParent(category)
       ) {
         data.push(category);
@@ -603,7 +602,7 @@ Category.reopenClass({
             category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
           validCategoryParent(category)
         ) {
-          if (data.indexOf(category) === -1) {
+          if (!data.includes(category)) {
             data.push(category);
           }
         }

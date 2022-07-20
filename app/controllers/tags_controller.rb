@@ -246,9 +246,10 @@ class TagsController < ::ApplicationController
       filter_params[:order_popularity] = true
     end
 
-    tags_with_counts = DiscourseTagging.filter_allowed_tags(
+    tags_with_counts, filter_result_context = DiscourseTagging.filter_allowed_tags(
       guardian,
-      filter_params
+      **filter_params,
+      with_context: true
     )
 
     tags = self.class.tag_counts_json(tags_with_counts, show_pm_tags: guardian.can_tag_pms?)
@@ -281,6 +282,10 @@ class TagsController < ::ApplicationController
       end
     end
 
+    if required_tag_group = filter_result_context[:required_tag_group]
+      json_response[:required_tag_group] = required_tag_group
+    end
+
     render json: json_response
   end
 
@@ -296,7 +301,7 @@ class TagsController < ::ApplicationController
     raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
-    render json: { notification_level: level, tag_id: tag.id }
+    render_serialized(current_user, UserTagNotificationsSerializer, root: false)
   end
 
   def personal_messages

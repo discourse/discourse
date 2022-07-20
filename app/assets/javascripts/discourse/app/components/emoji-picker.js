@@ -1,5 +1,8 @@
 import { action, computed } from "@ember/object";
-import { bind, observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import {
   emojiSearch,
   extendedEmojiList,
@@ -7,7 +10,8 @@ import {
 } from "pretty-text/emoji";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { later, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
 import { htmlSafe } from "@ember/template";
@@ -31,18 +35,17 @@ export default Component.extend({
   emojiStore: service("emoji-store"),
   tagName: "",
   customEmojis: null,
-  selectedDiversity: null,
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
   usePopper: true,
+  placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
   initialFilter: "",
 
   init() {
     this._super(...arguments);
 
     this.set("customEmojis", customEmojis());
-    this.set("selectedDiversity", this.emojiStore.diversity);
 
     if ("IntersectionObserver" in window) {
       this._sectionObserver = this._setupSectionObserver();
@@ -53,6 +56,13 @@ export default Component.extend({
     this._super(...arguments);
 
     this.appEvents.on("emoji-picker:close", this, "onClose");
+  },
+
+  // `readOnly` may seem like a better choice here, but the computed property
+  // provides caching (emojiStore.diversity is a simple getter)
+  @discourseComputed("emojiStore.diversity")
+  selectedDiversity(diversity) {
+    return diversity;
   },
 
   // didReceiveAttrs would be a better choice here, but this is sadly causing
@@ -88,11 +98,9 @@ export default Component.extend({
         return;
       }
 
-      const textareaWrapper = document.querySelector(
-        ".d-editor-textarea-wrapper"
-      );
+      const popperAnchor = this._getPopperAnchor();
 
-      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+      if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
           {
             name: "preventOverflow",
@@ -105,7 +113,10 @@ export default Component.extend({
           },
         ];
 
-        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+        if (
+          this.placement === "auto" &&
+          window.innerWidth < popperAnchor.clientWidth * 2
+        ) {
           modifiers.push({
             name: "computeStyles",
             enabled: true,
@@ -123,15 +134,14 @@ export default Component.extend({
           });
         }
 
-        this._popper = createPopper(textareaWrapper, emojiPicker, {
-          placement: "auto",
-          modifiers,
+        this._popper = createPopper(popperAnchor, emojiPicker, {
+          placement: this.placement,
         });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
-      later(() => {
+      discourseLater(() => {
         schedule("afterRender", () => {
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
@@ -177,7 +187,7 @@ export default Component.extend({
   }),
 
   @action
-  onClearRecents() {
+  onClearRecent() {
     this.emojiStore.favorites = [];
     this.set("recentEmojis", []);
   },
@@ -186,7 +196,6 @@ export default Component.extend({
   onDiversitySelection(index) {
     const scale = index + 1;
     this.emojiStore.diversity = scale;
-    this.set("selectedDiversity", scale);
 
     this._applyDiversity(scale);
   },
@@ -254,7 +263,6 @@ export default Component.extend({
 
     if (filter) {
       results.innerHTML = emojiSearch(filter.toLowerCase(), {
-        maxResults: 20,
         diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
@@ -328,6 +336,15 @@ export default Component.extend({
         });
       },
       { threshold: 1 }
+    );
+  },
+
+  _getPopperAnchor() {
+    // .d-editor-textarea-wrapper is only for backward compatibility here
+    // in new code use .emoji-picker-anchor
+    return (
+      document.querySelector(".emoji-picker-anchor") ??
+      document.querySelector(".d-editor-textarea-wrapper")
     );
   },
 

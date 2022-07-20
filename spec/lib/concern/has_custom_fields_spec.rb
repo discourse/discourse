@@ -307,6 +307,35 @@ describe HasCustomFields do
       expect(test_item.reload.custom_fields).to eq(expected)
     end
 
+    it 'determines clean state correctly for mutable fields' do
+      json_field = "json_field"
+      array_field = "array_field"
+      CustomFieldsTestItem.register_custom_field_type(json_field, :json)
+      CustomFieldsTestItem.register_custom_field_type(array_field, :array)
+
+      item_with_array = CustomFieldsTestItem.new
+      expect(item_with_array.custom_fields_clean?).to eq(true)
+      item_with_array.custom_fields[array_field] = [1]
+      expect(item_with_array.custom_fields_clean?).to eq(false)
+      item_with_array.save!
+      expect(item_with_array.custom_fields_clean?).to eq(true)
+      item_with_array.custom_fields[array_field] << 2
+      expect(item_with_array.custom_fields_clean?).to eq(false)
+      item_with_array.save!
+      expect(item_with_array.custom_fields_clean?).to eq(true)
+
+      item_with_json = CustomFieldsTestItem.new
+      expect(item_with_json.custom_fields_clean?).to eq(true)
+      item_with_json.custom_fields[json_field] = { "hello" => "world" }
+      expect(item_with_json.custom_fields_clean?).to eq(false)
+      item_with_json.save!
+      expect(item_with_json.custom_fields_clean?).to eq(true)
+      item_with_json.custom_fields[json_field]["hello"] = "world2"
+      expect(item_with_json.custom_fields_clean?).to eq(false)
+      item_with_json.save!
+      expect(item_with_json.custom_fields_clean?).to eq(true)
+    end
+
     describe "create_singular" do
       it "creates new records" do
         item = CustomFieldsTestItem.create!

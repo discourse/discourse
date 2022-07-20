@@ -72,7 +72,7 @@ export default Controller.extend({
       } else if (backupCodesAvailable) {
         return BACKUP_CODE;
       } else {
-        throw new Error("unpexected state of user 2fa settings!");
+        throw new Error("unexpected state of user 2fa settings!");
       }
     }
   },
@@ -194,7 +194,11 @@ export default Controller.extend({
           type: response.callback_method,
           data: { second_factor_nonce: this.nonce },
         })
-          .then(() => DiscourseURL.routeTo(response.redirect_path))
+          .then((callbackResponse) => {
+            const redirectUrl =
+              callbackResponse.redirect_url || response.redirect_url;
+            DiscourseURL.routeTo(redirectUrl);
+          })
           .catch((error) => this.displayError(extractError(error)));
       })
       .catch((error) => {

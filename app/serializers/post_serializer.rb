@@ -86,7 +86,8 @@ class PostSerializer < BasicPostSerializer
              :excerpt,
              :reviewable_id,
              :reviewable_score_count,
-             :reviewable_score_pending_count
+             :reviewable_score_pending_count,
+             :user_suspended
 
   def initialize(object, opts)
     super(object, opts)
@@ -256,6 +257,7 @@ class PostSerializer < BasicPostSerializer
   def reply_to_user
     {
       username: object.reply_to_user.username,
+      name: object.reply_to_user.name,
       avatar_template: object.reply_to_user.avatar_template
     }
   end
@@ -280,7 +282,7 @@ class PostSerializer < BasicPostSerializer
     result = []
     can_see_post = scope.can_see_post?(object)
 
-    PostActionType.types.except(:bookmark).each do |sym, id|
+    PostActionType.types.each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
@@ -367,18 +369,10 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
-    if SiteSetting.use_polymorphic_bookmarks
-      if @topic_view.present?
-        @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
-      else
-        @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
-      end
+    if @topic_view.present?
+      @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
     else
-      if @topic_view.present?
-        @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.post_id == object.id && !bookmark.for_topic }
-      else
-        @post_bookmark ||= object.bookmarks.find_by(user: scope.user, for_topic: false)
-      end
+      @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
     end
   end
 
@@ -547,6 +541,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_reviewable_score_pending_count?
     can_review_topic?
+  end
+
+  def user_suspended
+    true
+  end
+
+  def include_user_suspended?
+    object.user&.suspended?
   end
 
 private

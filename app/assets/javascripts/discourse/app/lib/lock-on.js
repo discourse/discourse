@@ -1,7 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
 
-// Dear traveller, you are entering a zone where we are at war with the browser.
+// Dear traveler, you are entering a zone where we are at war with the browser.
 // The browser is insisting on positioning scrollTop per the location it was in
 // the past, we are insisting on it being where we want it to be.
 // The hack is just to keep trying over and over to position the scrollbar (up to 1 second).

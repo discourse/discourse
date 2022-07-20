@@ -1,11 +1,17 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { later, next } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
 import I18n from "I18n";
+import {
+  NO_REMINDER_ICON,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
+import { isTesting } from "discourse-common/config/environment";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -340,7 +346,7 @@ registerButton(
       if (attrs.bookmarkReminderAt) {
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
-          currentUser.resolvedTimezone(currentUser)
+          currentUser.timezone
         );
         title = "bookmarks.created_with_reminder";
         titleOptions.date = formattedReminder;
@@ -355,13 +361,11 @@ registerButton(
 
     return {
       id: attrs.bookmarked ? "unbookmark" : "bookmark",
-      action: siteSettings.use_polymorphic_bookmarks
-        ? "toggleBookmarkPolymorphic"
-        : "toggleBookmark",
+      action: "toggleBookmark",
       title,
       titleOptions,
       className: classNames.join(" "),
-      icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark",
+      icon: attrs.bookmarkReminderAt ? WITH_REMINDER_ICON : NO_REMINDER_ICON,
     };
   }
 );
@@ -505,7 +509,7 @@ export default createWidget("post-menu", {
         if (
           (attrs.yours && button.attrs && button.attrs.alwaysShowYours) ||
           (attrs.reviewableId && i === "flag") ||
-          hiddenButtons.indexOf(i) === -1
+          !hiddenButtons.includes(i)
         ) {
           visibleButtons.push(button);
         }
@@ -719,7 +723,7 @@ export default createWidget("post-menu", {
       return this.sendWidgetAction("showLogin");
     }
 
-    if (this.capabilities.canVibrate) {
+    if (this.capabilities.canVibrate && !isTesting()) {
       navigator.vibrate(VIBRATE_DURATION);
     }
 
@@ -734,7 +738,7 @@ export default createWidget("post-menu", {
     heart.classList.add("heart-animation");
 
     return new Promise((resolve) => {
-      later(() => {
+      discourseLater(() => {
         this.sendWidgetAction("toggleLike").then(() => resolve());
       }, 400);
     });

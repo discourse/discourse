@@ -1,4 +1,4 @@
-{{#d-modal-body title="poll.breakdown.title"}}
+<DModalBody @title="poll.breakdown.title">
   <div class="poll-breakdown-sidebar">
     <p class="poll-breakdown-title">
       {{this.title}}
@@ -8,16 +8,7 @@
 
     <ul class="poll-breakdown-options">
       {{#each this.model.poll.options as |option index|}}
-        {{poll-breakdown-option
-          option=option
-          index=index
-          totalVotes=this.totalVotes
-          optionsCount=this.model.poll.options.length
-          displayMode=this.displayMode
-          highlightedOption=this.highlightedOption
-          onMouseOver=(fn (mut this.highlightedOption) index)
-          onMouseOut=(fn (mut this.highlightedOption) null)
-        }}
+        <PollBreakdownOption @option={{option}} @index={{index}} @totalVotes={{this.totalVotes}} @optionsCount={{this.model.poll.options.length}} @displayMode={{this.displayMode}} @highlightedOption={{this.highlightedOption}} @onMouseOver={{fn (mut this.highlightedOption) index}} @onMouseOut={{fn (mut this.highlightedOption) null}} />
       {{/each}}
     </ul>
   </div>
@@ -26,25 +17,13 @@
     <div class="poll-breakdown-body-header">
       <label class="poll-breakdown-body-header-label">{{i18n "poll.breakdown.breakdown"}}</label>
 
-      {{combo-box
-        content=this.groupableUserFields
-        value=this.groupedBy
-        nameProperty="label"
-        class="poll-breakdown-dropdown"
-        onChange=(action this.setGrouping)
-      }}
+      <ComboBox @content={{this.groupableUserFields}} @value={{this.groupedBy}} @nameProperty="label" @class="poll-breakdown-dropdown" @onChange={{action this.setGrouping}} />
     </div>
 
     <div class="poll-breakdown-charts">
       {{#each this.charts as |chart|}}
-        {{poll-breakdown-chart
-          group=(get chart "group")
-          options=(get chart "options")
-          displayMode=this.displayMode
-          highlightedOption=this.highlightedOption
-          setHighlightedOption=(fn (mut this.highlightedOption))
-        }}
+        <PollBreakdownChart @group={{get chart "group"}} @options={{get chart "options"}} @displayMode={{this.displayMode}} @highlightedOption={{this.highlightedOption}} @setHighlightedOption={{fn (mut this.highlightedOption)}} />
       {{/each}}
     </div>
   </div>
-{{/d-modal-body}}
+</DModalBody>

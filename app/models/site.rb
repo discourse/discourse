@@ -5,7 +5,11 @@ class Site
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_category_custom_fields
-  self.preloaded_category_custom_fields = Set.new
+
+  def self.reset_preloaded_category_custom_fields
+    self.preloaded_category_custom_fields = Set.new
+  end
+  reset_preloaded_category_custom_fields
 
   ##
   # Sometimes plugins need to have additional data or options available
@@ -181,10 +185,10 @@ class Site
     json = MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
 
     if guardian.anonymous?
-      Discourse.redis.multi do
-        Discourse.redis.setex 'site_json', 1800, json
-        Discourse.redis.set 'site_json_seq', seq
-        Discourse.redis.set 'site_json_version', Discourse.git_version
+      Discourse.redis.multi do |transaction|
+        transaction.setex 'site_json', 1800, json
+        transaction.set 'site_json_seq', seq
+        transaction.set 'site_json_version', Discourse.git_version
       end
     end
 

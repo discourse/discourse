@@ -18,7 +18,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def initialize
     db_password = ENV["DB_PASS"] || 'import_password'
-    local_db = ActiveRecord::Base.connection_config
+    local_db = ActiveRecord::Base.connection_db_config.configuration_hash
     @raw_connection = PG.connect(dbname: local_db[:database], host: 'localhost', port: local_db[:port], user: 'postgres', password: db_password)
 
     @source_db_config = {

@@ -30,6 +30,9 @@ RSpec.describe Admin::WatchedWordsController do
     context 'logged in as admin' do
       before do
         sign_in(admin)
+        Fabricate(:tag, name: 'tag1')
+        Fabricate(:tag, name: 'tag2')
+        Fabricate(:tag, name: 'tag3')
       end
 
       it 'creates the words from the file' do
@@ -80,6 +83,9 @@ RSpec.describe Admin::WatchedWordsController do
     context 'logged in as admin' do
       before do
         sign_in(admin)
+        Fabricate(:tag, name: 'tag1')
+        Fabricate(:tag, name: 'tag2')
+        Fabricate(:tag, name: 'tag3')
       end
 
       it "words of different actions are downloaded separately" do

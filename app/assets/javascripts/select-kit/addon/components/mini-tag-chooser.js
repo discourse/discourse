@@ -96,6 +96,18 @@ export default MultiSelectComponent.extend(TagsMixin, {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
+    if (json.required_tag_group) {
+      context.set(
+        "selectKit.options.translatedFilterPlaceholder",
+        I18n.t("tagging.choose_for_topic_required_group", {
+          count: json.required_tag_group.min_count,
+          name: json.required_tag_group.name,
+        })
+      );
+    } else {
+      context.set("selectKit.options.translatedFilterPlaceholder", null);
+    }
+
     return results.filter((r) => !makeArray(context.tags).includes(r.id));
   },
 });

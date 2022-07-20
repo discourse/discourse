@@ -12,6 +12,7 @@ import Invite from "discourse/models/invite";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { sanitize } from "discourse/lib/text";
+import { timeShortcuts } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -122,6 +123,10 @@ export default Controller.extend(
       return this.invite
         .save(data)
         .then(() => {
+          if (!this.invite.id) {
+            return;
+          }
+
           this.rollbackBuffer();
 
           if (
@@ -175,6 +180,24 @@ export default Controller.extend(
     @discourseComputed("currentUser.staff", "currentUser.groups")
     canInviteToGroup(staff, groups) {
       return staff || groups.any((g) => g.owner);
+    },
+
+    @discourseComputed
+    timeShortcuts() {
+      const timezone = this.currentUser.timezone;
+      const shortcuts = timeShortcuts(timezone);
+      return [
+        shortcuts.laterToday(),
+        shortcuts.tomorrow(),
+        shortcuts.laterThisWeek(),
+        shortcuts.monday(),
+        shortcuts.twoWeeks(),
+        shortcuts.nextMonth(),
+        shortcuts.twoMonths(),
+        shortcuts.threeMonths(),
+        shortcuts.fourMonths(),
+        shortcuts.sixMonths(),
+      ];
     },
 
     @action

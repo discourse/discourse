@@ -52,7 +52,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     // and date picker and time picker wouldn't be rendered)
     assert.strictEqual(
       query("div.enabled-until span.name").innerText,
-      I18n.t("topic.auto_update_input.pick_date_and_time"),
+      I18n.t("time_shortcut.custom"),
       "enabled until combobox is switched to the option Pick Date and Time"
     );
 

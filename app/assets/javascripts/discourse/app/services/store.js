@@ -141,7 +141,13 @@ export default Service.extend({
       hydrated.get("content").map((item) => {
         let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
-          staleItem.setProperties(item);
+          for (const [key, value] of Object.entries(
+            Object.getOwnPropertyDescriptors(staleItem)
+          )) {
+            if (value.writable && value.enumerable) {
+              staleItem.set(key, value.value);
+            }
+          }
         } else {
           staleItem = item;
         }

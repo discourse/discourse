@@ -57,4 +57,29 @@ module("Unit | Model | nav-item", function (hooks) {
       "it updates when a new message arrives"
     );
   });
+
+  test("displayName", function (assert) {
+    const navItem = createStore().createRecord("nav-item", {
+      name: "something",
+    });
+
+    assert.strictEqual(
+      navItem.displayName,
+      "[en.filters.something.title count=0]"
+    );
+
+    navItem.set("displayName", "Extra Item");
+    assert.strictEqual(navItem.displayName, "Extra Item");
+  });
+
+  test("title", function (assert) {
+    const navItem = createStore().createRecord("nav-item", {
+      name: "something",
+    });
+
+    assert.strictEqual(navItem.title, "[en.filters.something.help]");
+
+    navItem.set("title", "Extra Item");
+    assert.strictEqual(navItem.title, "Extra Item");
+  });
 });

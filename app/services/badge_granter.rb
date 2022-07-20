@@ -445,6 +445,7 @@ class BadgeGranter
       next if row.staff && badge.awarded_for_trust_level?
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
+      badge.trigger_badge_granted_event(row.user_id)
 
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
@@ -495,7 +496,7 @@ class BadgeGranter
   end
 
   def self.send_notification(user_id, username, locale, badge)
-    notification = I18n.with_locale(notification_locale(locale)) do
+    I18n.with_locale(notification_locale(locale)) do
       Notification.create!(
         user_id: user_id,
         notification_type: Notification.types[:granted_badge],
@@ -508,10 +509,6 @@ class BadgeGranter
         }.to_json
       )
     end
-
-    DiscourseEvent.trigger(:user_badge_granted, badge, user_id)
-
-    notification
   end
 
   def self.suppress_notification?(badge, granted_at, skip_new_user_tips)

@@ -1,30 +1,16 @@
-{{#d-modal-body title="user.user_notifications.ignore_duration_title" autoFocus="false"}}
+<DModalBody @title="user.user_notifications.ignore_duration_title" @autoFocus="false">
   <div class="controls tracking-controls">
     <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n "user.user_notifications.ignore_duration_username"}}</label>
-    {{email-group-user-chooser
-      value=ignoredUsername
-      onChange=(action "updateIgnoredUsername")
-      options=(hash
+    <EmailGroupUserChooser @value={{this.ignoredUsername}} @onChange={{action "updateIgnoredUsername"}} @options={{hash
         excludeCurrentUser=true
         maximum=1
-      )
-    }}
+      }} />
   </div>
-  {{future-date-input
-    label="user.user_notifications.ignore_duration_when"
-    input=(readonly ignoredUntil)
-    includeWeekend=true
-    includeDateTime=false
-    includeFarFuture=true
-    onChangeInput=(action (mut ignoredUntil))
-  }}
+  <FutureDateInput @label="user.user_notifications.ignore_duration_when" @input={{readonly this.ignoredUntil}} @customShortcuts={{this.timeShortcuts}} @includeDateTime={{false}} @onChangeInput={{action (mut this.ignoredUntil)}} />
   <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
-{{/d-modal-body}}
+</DModalBody>
 
 <div class="modal-footer">
-  {{d-button class="btn-primary"
-             disabled=saveDisabled
-             label="user.user_notifications.ignore_duration_save"
-             action=(action "ignore")}}
-  {{conditional-loading-spinner size="small" condition=loading}}
+  <DButton @class="btn-primary" @disabled={{this.saveDisabled}} @label="user.user_notifications.ignore_duration_save" @action={{action "ignore"}} />
+  <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
 </div>

@@ -22,7 +22,6 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -47,6 +46,7 @@ import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
+import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
@@ -63,8 +63,14 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
-
-const LEGACY_ENV = !setupApplicationTest;
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import {
+  clearBlockDecorateCallbacks,
+  clearTagDecorateCallbacks,
+  clearTextDecorateCallbacks,
+} from "discourse/lib/to-markdown";
+import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -134,7 +140,7 @@ export function applyPretender(name, server, helper) {
 }
 
 // Add clean up code here to run after every test
-function testCleanup(container, app) {
+export function testCleanup(container, app) {
   if (_initialized.has(QUnit.config.current.testId)) {
     if (!app) {
       app = getApplication();
@@ -148,7 +154,6 @@ function testCleanup(container, app) {
     });
   }
 
-  flushMap();
   localStorage.clear();
   User.resetCurrent();
   resetExtraClasses();
@@ -182,10 +187,16 @@ function testCleanup(container, app) {
   resetLastEditNotificationClick();
   clearAuthMethods();
   setTestPresence(true);
-  if (!LEGACY_ENV) {
-    clearPresenceCallbacks();
-  }
+  clearPresenceCallbacks();
   restoreBaseUri();
+  resetTopicsSectionLinks();
+  clearTagDecorateCallbacks();
+  clearBlockDecorateCallbacks();
+  clearTextDecorateCallbacks();
+  clearResolverOptions();
+  clearLegacyResolverOptions();
+  clearTagsHtmlCallbacks();
+  clearToolbarCallbacks();
 }
 
 export function discourseModule(name, options) {
@@ -201,15 +212,13 @@ export function discourseModule(name, options) {
         this.registry = this.container.registry;
         this.owner = this.container;
         this.siteSettings = currentSettings();
-        clearResolverOptions();
       });
+
       hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
-        if (!LEGACY_ENV) {
-          controller.application = {};
-        }
+        controller.application = {};
         controller.siteSettings = this.siteSettings;
         if (properties) {
           controller.setProperties(properties);
@@ -219,6 +228,7 @@ export function discourseModule(name, options) {
 
       this.moduleName = name;
 
+      hooks.usingDiscourseModule = true;
       options.call(this, hooks);
     });
 
@@ -241,7 +251,6 @@ export function discourseModule(name, options) {
 export function addPretenderCallback(name, fn) {
   if (name && fn) {
     if (_pretenderCallbacks[name]) {
-      // eslint-disable-next-line no-console
       throw `There is already a pretender callback with module name (${name}).`;
     }
 
@@ -286,6 +295,9 @@ export function acceptance(name, optionsOrCallback) {
         if (userChanges) {
           updateCurrentUser(userChanges);
         }
+
+        User.current().appEvents = getOwner(this).lookup("service:appEvents");
+        User.current().trackStatus();
       }
 
       if (settingChanges) {
@@ -293,21 +305,9 @@ export function acceptance(name, optionsOrCallback) {
       }
       this.siteSettings = currentSettings();
 
-      clearOutletCache();
-      clearHTMLCache();
-
       resetSite(currentSettings(), siteChanges);
 
-      if (LEGACY_ENV) {
-        getApplication().__registeredObjects__ = false;
-        getApplication().reset();
-      }
       this.container = getOwner(this);
-      if (LEGACY_ENV && loggedIn) {
-        updateCurrentUser({
-          appEvents: this.container.lookup("service:app-events"),
-        });
-      }
 
       if (!this.owner) {
         this.owner = this.container;
@@ -322,12 +322,10 @@ export function acceptance(name, optionsOrCallback) {
       resetMobile();
       let app = getApplication();
       options?.afterEach?.call(this);
-      testCleanup(this.container, app);
-
-      if (LEGACY_ENV) {
-        app.__registeredObjects__ = false;
-        app.reset();
+      if (loggedIn) {
+        User.current().stopTrackingStatus();
       }
+      testCleanup(this.container, app);
 
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
@@ -374,18 +372,16 @@ export function acceptance(name, optionsOrCallback) {
       hooks.afterEach(setup.afterEach);
       callback(needs);
 
-      if (!LEGACY_ENV && getContext) {
-        setupApplicationTest(hooks);
+      setupApplicationTest(hooks);
 
-        hooks.beforeEach(function () {
-          // This hack seems necessary to allow `DiscourseURL` to use the testing router
-          let ctx = getContext();
-          this.container.registry.unregister("router:main");
-          this.container.registry.register("router:main", ctx.owner.router, {
-            instantiate: false,
-          });
+      hooks.beforeEach(function () {
+        // This hack seems necessary to allow `DiscourseURL` to use the testing router
+        let ctx = getContext();
+        this.container.registry.unregister("router:main");
+        this.container.registry.register("router:main", ctx.owner.router, {
+          instantiate: false,
         });
-      }
+      });
     });
   } else {
     // Old way
@@ -488,11 +484,13 @@ export function exists(selector) {
   return count(selector) > 0;
 }
 
-export function publishToMessageBus(channelPath, ...args) {
+export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .forEach((c) => c.func(...args));
+
+  await settled();
 }
 
 export async function selectText(selector, endOffset = null) {
@@ -517,25 +515,7 @@ export async function selectText(selector, endOffset = null) {
     selection.addRange(range);
   };
 
-  if (LEGACY_ENV) {
-    // In the Ember CLI environment, the settled() helper seems to take care of waiting
-    // for this event to fire. In legacy, we need to do it manually.
-    let callback;
-    const selectEventFiredPromise = new Promise((resolve) => {
-      callback = resolve;
-      document.addEventListener("selectionchange", callback);
-    });
-
-    performSelection();
-
-    try {
-      await selectEventFiredPromise;
-    } finally {
-      document.removeEventListener("selectionchange", callback);
-    }
-  } else {
-    performSelection();
-  }
+  performSelection();
 
   await settled();
 }
@@ -575,7 +555,7 @@ export async function paste(element, text, otherClipboardData = {}) {
   return e;
 }
 
-// The order of attributes can vary in diffferent browsers. When comparing
+// The order of attributes can vary in different browsers. When comparing
 // HTML strings from the DOM, this function helps to normalize them to make
 // comparison work cross-browser
 export function normalizeHtml(html) {

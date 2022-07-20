@@ -30,8 +30,7 @@ class ApiKeyScope < ActiveRecord::Base
           read_lists: {
             actions: list_actions, params: %i[category_id],
             aliases: { category_id: :category_slug_path_with_id }
-          },
-          wordpress: { actions: %w[topics#wordpress], params: %i[topic_id] }
+          }
         },
         posts: {
           edit: { actions: %w[posts#update], params: %i[id] }
@@ -65,7 +64,7 @@ class ApiKeyScope < ActiveRecord::Base
           list: { actions: %w[admin/users#index] },
         },
         email: {
-          receive_emails: { actions: %w[admin/email#handle_mail] }
+          receive_emails: { actions: %w[admin/email#handle_mail admin/email#smtp_should_reject] }
         },
         badges: {
           create: { actions: %w[admin/badges#create] },
@@ -75,6 +74,12 @@ class ApiKeyScope < ActiveRecord::Base
           list_user_badges: { actions: %w[user_badges#username], params: %i[username] },
           assign_badge_to_user: { actions: %w[user_badges#create], params: %i[username] },
           revoke_badge_from_user: { actions: %w[user_badges#destroy] },
+        },
+        wordpress: {
+          publishing: { actions: %w[site#site posts#create topics#update topics#status topics#show] },
+          commenting: { actions: %w[topics#wordpress] },
+          discourse_connect: { actions: %w[admin/users#sync_sso admin/users#log_out admin/users#index users#show] },
+          utilities: { actions: %w[users#create groups#index] }
         }
       }
 

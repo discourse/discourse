@@ -256,6 +256,8 @@ hy:
         bookmark: "Սեղմեք՝ այս թեմայի առաջին գրառումն էջանշելու համար"
         unbookmark: "Սեղմեք՝ այս թեմայի բոլոր էջանշանները ջնջելու համար"
     bookmarks:
+      create: "Ստեղծել էջանշան"
+      edit: "Խմբագրել էջանշանը"
       not_bookmarked: "Էջանշել այս գրառումը"
       remove: "Հեռացնել էջանշանը"
       delete: "Ջնջել Էջանշանը"
@@ -479,8 +481,12 @@ hy:
       later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
       this_weekend: "Այս շաբաթ-կիրակի"
       start_of_next_business_week_alt: "Հաջորդ Երկուշաբթի: "
+      next_week: "Հաջորդ շաբաթ"
       next_month: "Հաջորդ ամիս"
+      forever: "Ընդմիշտ"
+      never: "Երբեք"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
+      select_timeframe: "Ընտրել ժամանակահատված"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>-ը հրապարակել է <a href='%{topicUrl}'>այս թեման</a>"
       you_posted_topic: "<a href='%{userUrl}'>Դուք</a> հրապարակել եք <a href='%{topicUrl}'>այս թեման</a>"
@@ -828,6 +834,8 @@ hy:
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
+      experimental_sidebar:
+        options: "Տարբերակներ"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -1259,6 +1267,8 @@ hy:
         sent_by: "Ուղարկվել է՝"
         private_message: "հաղորդագրություն"
         the_topic: "թեման"
+    user_status:
+      save: "Պահպանել"
     loading: "Բեռնվում է..."
     errors:
       prev_page: "բեռնման ընթացքում"
@@ -1404,22 +1414,16 @@ hy:
       not_approved: "Ձեր հաշիվը դեռևս չի հաստատվել: Դուք կստանաք ծանուցում էլ. նամակի միջոցով, երբ այն հաստատվի:"
       google_oauth2:
         name: "Google"
-        title: "Google-ով"
       twitter:
         name: "Twitter"
-        title: "Twitter-ով"
       instagram:
         name: "Instagram"
-        title: "Instagram-ով"
       facebook:
         name: "Facebook"
-        title: "Facebook-ով"
       github:
         name: "GitHub"
-        title: "GitHub-ով"
       discord:
         name: "Discord"
-        title: "Discord-ով"
       second_factor_toggle:
         totp: "Փոխարենը օգտագործել նույնականացման հավելվածը"
         backup_code: "Փոխարենը օգտագործել պահուստային կոդը"
@@ -1534,7 +1538,6 @@ hy:
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
-      users_placeholder: "Ավելացնել օգտատեր"
       title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
@@ -1594,9 +1597,6 @@ hy:
           label: Պատասխանել որպես կապված թեմա
           desc: Ստեղծել այս թեմային հղված նոր թեմա
           confirm: 'Ձեզ մոտ պահպանված է նոր թեմայի սևագիրը, որը կվերագրվի, եթե դրա հետ կապված թեմա ստեղծեք: '
-        reply_as_private_message:
-          label: Նոր հաղորդագրություն
-          desc: Գրել նոր անձնական նամակ
         reply_to_topic:
           label: Պատասխանել թեմային
           desc: Պատասխանել թեմային, այլ ոչ թե որոշակի գրառման
@@ -1900,17 +1900,6 @@ hy:
         publish_to: "Հրատարակել."
         when: "Երբ."
         time_frame_required: "Խնդրում ենք ընտրել ժամանակահատված"
-      auto_update_input:
-        none: "Ընտրել ժամանակահատված"
-        later_today: "Այսօր, մի փոքր ուշ"
-        tomorrow: "Վաղը"
-        later_this_week: "Այս շաբաթ, մի փոքր ավելի ուշ"
-        this_weekend: "Այս շաբաթ-կիրակի"
-        next_week: "Հաջորդ շաբաթ"
-        next_month: "Հաջորդ ամիս"
-        forever: "Ընդմիշտ"
-        pick_date_and_time: "Ընտրել ամսաթիվ և ժամ"
-        set_based_on_last_post: "Փակել՝ կախված վերջին գրառումից"
       publish_to_category:
         title: "Պլանավորել Հրատարակումը"
       temp_open:
@@ -2007,8 +1996,6 @@ hy:
         unpin: "Ապակցել Թեման..."
         unarchive: "Ապարխիվացնել Թեման"
         archive: "Արխիվացնել Թեման"
-        invisible: "Դարձնել Չցուցակագրված"
-        visible: "Դարձնել Ցուցակագրված"
         reset_read: "Զրոյացնել Կարդացած Տվյալները"
         make_private: "Ստեղծել Անձնական Նամակ"
         reset_bump_date: "Վերահաստատել Բարձրացման Ամսաթիվը"
@@ -2358,10 +2345,8 @@ hy:
       tags_tab_description: "Այստեղ սահմանված թեգերը և թեգերի խմբերը հասանելի կլինեն միայն այս կատեգորիայում և այլ կատեգորիաներում, որոնք նույնպես սահմանում են դրանք: Դրանք հասանելի չեն լինի օգտագործման համար այլ կատեգորիաներում:"
       tag_groups_placeholder: "(Ընտրովի) թույլատրված թեգերի խմբերի ցանկը"
       allow_global_tags_label: "Նաև թույլ տալ այլ տեգեր "
-      tag_group_selector_placeholder: "(Ընտրովի) Թեգերի խումբ"
-      required_tag_group_description: "Պահանջել, որ նոր թեմաների տեգերը լինեն տեգերի խմբից:"
-      min_tags_from_required_group_label: "Թեգի Համարը."
-      required_tag_group_label: "Թեգերի խումբ."
+      required_tag_group:
+        delete: "Ջնջել"
       topic_featured_link_allowed: "Թույլատրել հանրահայտ հղումները այս կատեգորիայում"
       delete: "Ջնջել Կատեգորիան"
       create: "Նոր Կատեգորիա"
@@ -2649,6 +2634,7 @@ hy:
       full: "Ստեղծել/Պատասխանել/Դիտել"
       create_post: "Պատասխանել/Դիտել"
       readonly: "Դիտել"
+    preloader_text: "Բեռնում"
     lightbox:
       download: "ներբեռնել"
       previous: "Նախորդ (սլաքի Ձախ ստեղնը)"
@@ -2728,7 +2714,6 @@ hy:
         edit: "%{shortcut} Խմբագրել գրառումը"
         delete: "%{shortcut} Ջնջել գրառումը"
         mark_muted: "%{shortcut} Խլացնել թեման"
-        mark_regular: "%{shortcut} Սովորական (լռելյայն) թեմա"
         mark_tracking: "%{shortcut} Հետևել թեմային"
         mark_watching: "%{shortcut} Դիտել թեման"
         print: "%{shortcut} Տպել թեման"
@@ -2885,6 +2870,38 @@ hy:
       no_activity_others: "Ակտիվություն չկա:"
       no_replies_others: "Պատասխան չկա:"
       no_likes_others: "Հավանած գրառումներ չկան:"
+    sidebar:
+      unread_count:
+        one: "%{count} չկարդացած"
+        other: "%{count} չկարդացած"
+      new_count:
+        one: "%{count} նոր"
+        other: "%{count} նոր"
+      sections:
+        messages:
+          header_link_text: "Հաղորդագրություններ"
+          links:
+            inbox: "Մուտքի արկղ"
+            sent: "Ուղարկված"
+            new: "Նոր"
+            new_with_count: "Նոր (%{count})"
+            unread: "Չկարդացած"
+            unread_with_count: "Չկարդացած (%{count})"
+            archive: "Արխիվ"
+        tags:
+          header_link_title: "բոլոր թեգերը"
+          header_link_text: "Թեգեր"
+        categories:
+          header_link_title: "բոլոր կատեգորիաները"
+          header_link_text: "Կատեգորիաներ"
+        topics:
+          header_link_title: "գլխավոր էջ"
+          header_link_text: "Թեմաներ"
+          links:
+            tracked:
+              content: "Հետևած"
+            my_posts:
+              content: "Իմ Գրառումները"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

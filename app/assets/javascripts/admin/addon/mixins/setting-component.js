@@ -86,7 +86,7 @@ export default Mixin.create({
 
   @discourseComputed("type")
   componentType(type) {
-    return CUSTOM_TYPES.indexOf(type) !== -1 ? type : "string";
+    return CUSTOM_TYPES.includes(type) ? type : "string";
   },
 
   @discourseComputed("setting")
@@ -150,7 +150,7 @@ export default Mixin.create({
       "default_categories_tracking",
       "default_categories_muted",
       "default_categories_watching_first_post",
-      "default_categories_regular",
+      "default_categories_normal",
       "default_tags_watching",
       "default_tags_tracking",
       "default_tags_muted",

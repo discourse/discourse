@@ -129,7 +129,7 @@ export default class PostCooked {
 
         // this might be an attachment
         if (lc.internal && /^\/uploads\//.test(lc.url)) {
-          valid = href.indexOf(lc.url) >= 0;
+          valid = href.includes(lc.url);
         }
 
         // Match server-side behaviour for internal links with query params
@@ -138,7 +138,7 @@ export default class PostCooked {
         }
 
         // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
-        if (valid && isValidLink($link)) {
+        if (valid && isValidLink($link[0])) {
           const $onebox = $link.closest(".onebox");
           if (
             $onebox.length === 0 ||
@@ -281,6 +281,11 @@ export default class PostCooked {
 
         this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
+
+        // If post/topic is not found then display username, skip controls
+        if (e.classList.contains("quote-post-not-found")) {
+          return (e.querySelector(".title").innerHTML = e.dataset.username);
+        }
 
         // Unless it's a full quote, allow click to expand
         if (!($aside.data("full") || $title.data("has-quote-controls"))) {

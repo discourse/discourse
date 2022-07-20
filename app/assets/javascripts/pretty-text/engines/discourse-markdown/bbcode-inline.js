@@ -85,7 +85,6 @@ function processBBCode(state, silent) {
   let i,
     startDelim,
     endDelim,
-    token,
     tagInfo,
     delimiters = state.delimiters,
     max = delimiters.length;
@@ -108,8 +107,10 @@ function processBBCode(state, silent) {
 
     endDelim = delimiters[startDelim.end];
 
-    token = state.tokens[startDelim.token];
     let tag, className;
+
+    const startToken = state.tokens[startDelim.token];
+    const endToken = state.tokens[endDelim.token];
 
     if (typeof tagInfo.rule.wrap === "function") {
       let content = "";
@@ -119,7 +120,7 @@ function processBBCode(state, silent) {
           content += inner.content;
         }
       }
-      tagInfo.rule.wrap(token, state.tokens[endDelim.token], tagInfo, content);
+      tagInfo.rule.wrap(startToken, endToken, tagInfo, content, state);
       continue;
     } else {
       let split = tagInfo.rule.wrap.split(".");
@@ -127,21 +128,20 @@ function processBBCode(state, silent) {
       className = split.slice(1).join(" ");
     }
 
-    token.type = "bbcode_" + tagInfo.tag + "_open";
-    token.tag = tag;
+    startToken.type = "bbcode_" + tagInfo.tag + "_open";
+    startToken.tag = tag;
     if (className) {
-      token.attrs = [["class", className]];
+      startToken.attrs = [["class", className]];
     }
-    token.nesting = 1;
-    token.markup = token.content;
-    token.content = "";
+    startToken.nesting = 1;
+    startToken.markup = startToken.content;
+    startToken.content = "";
 
-    token = state.tokens[endDelim.token];
-    token.type = "bbcode_" + tagInfo.tag + "_close";
-    token.tag = tag;
-    token.nesting = -1;
-    token.markup = token.content;
-    token.content = "";
+    endToken.type = "bbcode_" + tagInfo.tag + "_close";
+    endToken.tag = tag;
+    endToken.nesting = -1;
+    endToken.markup = startToken.content;
+    endToken.content = "";
   }
   return false;
 }
@@ -164,7 +164,7 @@ export function setup(helper) {
     md.inline.ruler.push("bbcode-inline", (state, silent) =>
       tokenizeBBCode(state, silent, ruler)
     );
-    md.inline.ruler2.before("text_collapse", "bbcode-inline", processBBCode);
+    md.inline.ruler2.before("fragments_join", "bbcode-inline", processBBCode);
 
     ruler.push("code", {
       tag: "code",
@@ -176,13 +176,35 @@ export function setup(helper) {
       },
     });
 
-    const simpleUrlRegex = /^http[s]?:\/\//;
+    const simpleUrlRegex = /^https?:\/\//;
     ruler.push("url", {
       tag: "url",
-      wrap(startToken, endToken, tagInfo, content) {
+      wrap(startToken, endToken, tagInfo, content, state) {
         const url = (tagInfo.attrs["_default"] || content).trim();
+        let linkifyFound = false;
 
-        if (simpleUrlRegex.test(url)) {
+        if (state.md.options.linkify) {
+          const tokens = state.tokens;
+          const startIndex = tokens.indexOf(startToken);
+          const endIndex = tokens.indexOf(endToken);
+
+          // reuse existing tokens from linkify if they exist
+          for (let index = startIndex + 1; index < endIndex; index++) {
+            const token = tokens[index];
+
+            if (
+              token.markup === "linkify" &&
+              token.info === "auto" &&
+              token.type === "link_open"
+            ) {
+              linkifyFound = true;
+              token.attrs.push(["data-bbcode", "true"]);
+              break;
+            }
+          }
+        }
+
+        if (!linkifyFound && simpleUrlRegex.test(url)) {
           startToken.type = "link_open";
           startToken.tag = "a";
           startToken.attrs = [
@@ -214,7 +236,7 @@ export function setup(helper) {
       tag: "email",
       replace(state, tagInfo, content) {
         let token;
-        let email = tagInfo.attrs["_default"] || content;
+        const email = tagInfo.attrs["_default"] || content;
 
         token = state.push("link_open", "a", 1);
         token.attrs = [

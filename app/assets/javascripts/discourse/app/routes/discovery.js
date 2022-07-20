@@ -24,7 +24,7 @@ export default DiscourseRoute.extend(OpenComposer, {
     let matches;
     if (
       (url === "/" || url === "/latest" || url === "/categories") &&
-      transition.targetName.indexOf("discovery.top") === -1 &&
+      !transition.targetName.includes("discovery.top") &&
       User.currentProp("should_be_redirected_to_top")
     ) {
       User.currentProp("should_be_redirected_to_top", false);

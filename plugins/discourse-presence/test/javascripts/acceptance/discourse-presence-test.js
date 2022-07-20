@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -15,7 +15,7 @@ import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Discourse Presence Plugin", function (needs) {
-  needs.user();
+  needs.user({ whisperer: true });
   needs.settings({ enable_whispers: true });
 
   test("Doesn't break topic creation", async function (assert) {
@@ -116,8 +116,8 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
-      queryAll(".topic-post:nth-of-type(1) .cooked > p").text(),
+      query(".d-editor-input").value,
+      query(".topic-post:nth-of-type(1) .cooked > p").innerText,
       "composer has contents of post to be edited"
     );
 
@@ -161,16 +161,16 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername",
+      avatar_template: "/images/avatar.png",
+      username: "my-username",
     });
 
     assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername2",
+      avatar_template: "/images/avatar.png",
+      username: "my-username2",
     });
 
     assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
@@ -198,16 +198,16 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername",
+      avatar_template: "/images/avatar.png",
+      username: "my-username",
     });
 
     assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
-      avatar_template: "/a/b/c.jpg",
-      username: "myusername2",
+      avatar_template: "/images/avatar.png",
+      username: "my-username2",
     });
 
     assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");

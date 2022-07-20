@@ -61,7 +61,7 @@ class PrivateMessageTopicTrackingState
         SQL
 
         <<~SQL
-        #{TopicTrackingState.unread_filter_sql(staff: user.staff?)}
+        #{TopicTrackingState.unread_filter_sql(whisperer: user.whisperer?)}
         #{first_unread_pm_at ? "AND topics.updated_at > '#{first_unread_pm_at}'" : ""}
         SQL
       end
@@ -79,7 +79,7 @@ class PrivateMessageTopicTrackingState
         u.id AS user_id,
         last_read_post_number,
         tu.notification_level,
-        #{TopicTrackingState.highest_post_number_column_select(user.staff?)},
+        #{TopicTrackingState.highest_post_number_column_select(user.whisperer?)},
         ARRAY(SELECT group_id FROM topic_allowed_groups WHERE topic_allowed_groups.topic_id = topics.id) AS group_ids
       FROM topics
       JOIN users u on u.id = #{user.id.to_i}
@@ -120,6 +120,12 @@ class PrivateMessageTopicTrackingState
         .where("gu.group_id IN (?)", group_ids)
     end
 
+    # Note: At some point we may want to make the same peformance optimisation
+    # here as we did with the other topic tracking state, where we only send
+    # one 'unread' update to all users, not a more accurate unread update to
+    # each individual user with their own read state.
+    #
+    # cf. f6c852bf8e7f4dea519425ba87a114f22f52a8f4
     scope
       .select([:user_id, :last_read_post_number, :notification_level])
       .each do |tu|
@@ -137,7 +143,8 @@ class PrivateMessageTopicTrackingState
           last_read_post_number: tu.last_read_post_number,
           highest_post_number: post.post_number,
           notification_level: tu.notification_level,
-          group_ids: allowed_group_ids
+          group_ids: allowed_group_ids,
+          created_by_user_id: post.user_id
         }
       }
 
@@ -156,7 +163,8 @@ class PrivateMessageTopicTrackingState
       payload: {
         last_read_post_number: nil,
         highest_post_number: 1,
-        group_ids: topic.allowed_groups.pluck(:id)
+        group_ids: topic.allowed_groups.pluck(:id),
+        created_by_user_id: topic.user_id,
       }
     }.as_json
 

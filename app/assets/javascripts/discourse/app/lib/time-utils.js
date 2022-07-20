@@ -5,6 +5,8 @@ export const LATER_TODAY_CUTOFF_HOUR = 17;
 export const LATER_TODAY_MAX_HOUR = 18;
 export const MOMENT_SUNDAY = 0;
 export const MOMENT_MONDAY = 1;
+export const MOMENT_TUESDAY = 2;
+export const MOMENT_WEDNESDAY = 3;
 export const MOMENT_THURSDAY = 4;
 export const MOMENT_FRIDAY = 5;
 export const MOMENT_SATURDAY = 6;
@@ -15,6 +17,14 @@ export function now(timezone) {
 
 export function startOfDay(momentDate, startOfDayHour = START_OF_DAY_HOUR) {
   return momentDate.hour(startOfDayHour).startOf("hour");
+}
+
+export function oneHour(timezone) {
+  return now(timezone).add(1, "hours");
+}
+
+export function twoHours(timezone) {
+  return now(timezone).add(2, "hours");
 }
 
 export function tomorrow(timezone) {
@@ -35,8 +45,12 @@ export function laterToday(timezone) {
     : later.add(30, "minutes").startOf("hour");
 }
 
-export function laterThisWeek(timezone) {
+export function twoDays(timezone) {
   return startOfDay(now(timezone).add(2, "days"));
+}
+
+export function laterThisWeek(timezone) {
+  return twoDays(timezone);
 }
 
 export function nextMonth(timezone) {
@@ -47,8 +61,28 @@ export function twoWeeks(timezone) {
   return startOfDay(now(timezone).add(2, "weeks").day(MOMENT_MONDAY));
 }
 
+export function twoMonths(timezone) {
+  return startOfDay(now(timezone).add(2, "months").startOf("month"));
+}
+
+export function threeMonths(timezone) {
+  return startOfDay(now(timezone).add(3, "months").startOf("month"));
+}
+
+export function fourMonths(timezone) {
+  return startOfDay(now(timezone).add(4, "months").startOf("month"));
+}
+
 export function sixMonths(timezone) {
   return startOfDay(now(timezone).add(6, "months").startOf("month"));
+}
+
+export function oneYear(timezone) {
+  return startOfDay(now(timezone).add(1, "years").startOf("month"));
+}
+
+export function thousandYears(timezone) {
+  return startOfDay(now(timezone).add(1000, "years").startOf("month"));
 }
 
 export function nextBusinessWeekStart(timezone) {

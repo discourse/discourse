@@ -17,7 +17,10 @@ import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import {
+  prioritizeNameFallback,
+  prioritizeNameInUx,
+} from "discourse/lib/settings";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
@@ -140,16 +143,20 @@ createWidget("reply-to-tab", {
 
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
+    const name = prioritizeNameFallback(
+      attrs.replyToName,
+      attrs.replyToUsername
+    );
 
     return [
       icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
-        username: attrs.replyToUsername,
+        username: name,
       }),
       " ",
-      h("span", formatUsername(attrs.replyToUsername)),
+      h("span", formatUsername(name)),
     ];
   },
 
@@ -352,18 +359,26 @@ createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
   html(attrs) {
-    const attributes = { class: "post-date" };
-    let date;
+    let date,
+      linkClassName = "post-date";
+
     if (attrs.wiki && attrs.lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
+      linkClassName += " last-wiki-edit";
       date = new Date(attrs.lastWikiEdit);
     } else {
       date = new Date(attrs.created_at);
     }
-    return h("a", { attributes }, dateNode(date));
+    return this.attach("link", {
+      rawLabel: dateNode(date),
+      className: linkClassName,
+      omitSpan: true,
+      title: "post.sr_date",
+      href: attrs.shareUrl,
+      action: "showShareModal",
+    });
   },
 
-  click() {
+  showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
     const controller = showModal("share-topic", { model: topic.category });
@@ -421,8 +436,11 @@ createWidget("post-contents", {
     if (this.siteSettings.enable_filtered_replies_view) {
       const topicController = this.register.lookup("controller:topic");
 
-      defaultState.filteredRepliesShown =
-        topicController.replies_to_post_number === attrs.post_number.toString();
+      if (attrs.post_number) {
+        defaultState.filteredRepliesShown =
+          topicController.replies_to_post_number ===
+          attrs.post_number.toString();
+      }
     }
 
     return defaultState;
@@ -848,6 +866,9 @@ export default createWidget("post", {
       classNames.push("moderator");
     } else {
       classNames.push("regular");
+    }
+    if (attrs.userSuspended) {
+      classNames.push("user-suspended");
     }
     if (addPostClassesCallbacks) {
       for (let i = 0; i < addPostClassesCallbacks.length; i++) {

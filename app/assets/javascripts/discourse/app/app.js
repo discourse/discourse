@@ -6,6 +6,8 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 const Discourse = Application.extend({
+  modulePrefix: "discourse",
+
   rootElement: "#main",
 
   customEvents: {
@@ -85,6 +87,12 @@ const Discourse = Application.extend({
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
+  },
+
+  ready() {
+    performance.mark("discourse-ready");
+    const event = new CustomEvent("discourse-ready");
+    document.dispatchEvent(event);
   },
 });
 

@@ -4,10 +4,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { userPath } from "discourse/lib/url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-export function normalize(name) {
-  return name.replace(/[\-\_ \.]/g, "").toLowerCase();
-}
-
 export default Component.extend({
   classNameBindings: [":user-info", "size"],
   attributeBindings: ["data-username"],
@@ -19,13 +15,6 @@ export default Component.extend({
   @discourseComputed("user.username")
   userPath(username) {
     return userPath(username);
-  },
-
-  @discourseComputed("user.name", "user.username")
-  name(name, username) {
-    if (name && normalize(username) !== normalize(name)) {
-      return name;
-    }
   },
 
   @discourseComputed("user.name")

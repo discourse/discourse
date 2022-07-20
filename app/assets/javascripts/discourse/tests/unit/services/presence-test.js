@@ -5,6 +5,7 @@ import {
 import { test } from "qunit";
 import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
+import sinon from "sinon";
 
 function usersFixture() {
   return [
@@ -59,12 +60,17 @@ acceptance("Presence - Subscribing", function (needs) {
   test("subscribing and receiving updates", async function (assert) {
     let presenceService = this.container.lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
+    let changes = 0;
+    const countChanges = () => changes++;
+    channel.on("change", countChanges);
+
     assert.strictEqual(channel.name, "/test/ch1");
 
     await channel.subscribe({
       users: usersFixture(),
       last_message_id: 1,
     });
+    assert.strictEqual(changes, 1);
 
     assert.strictEqual(channel.users.length, 3, "it starts with three users");
 
@@ -78,6 +84,7 @@ acceptance("Presence - Subscribing", function (needs) {
     );
 
     assert.strictEqual(channel.users.length, 2, "one user is removed");
+    assert.strictEqual(changes, 2);
 
     publishToMessageBus(
       "/presence/test/ch1",
@@ -89,6 +96,8 @@ acceptance("Presence - Subscribing", function (needs) {
     );
 
     assert.strictEqual(channel.users.length, 3, "one user is added");
+    assert.strictEqual(changes, 3);
+    channel.off("change", countChanges);
   });
 
   test("fetches data when no initial state", async function (assert) {
@@ -114,6 +123,12 @@ acceptance("Presence - Subscribing", function (needs) {
       "updates following messagebus message"
     );
 
+    const stub = sinon
+      .stub(console, "log")
+      .withArgs(
+        "PresenceChannel '/test/ch1' dropped message (received 99, expecting 3), resyncing..."
+      );
+
     publishToMessageBus(
       "/presence/test/ch1",
       {
@@ -125,6 +140,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
     await channel._presenceState._resubscribePromise;
 
+    sinon.assert.calledOnce(stub);
     assert.strictEqual(
       channel.users.length,
       3,
@@ -216,14 +232,14 @@ acceptance("Presence - Subscribing", function (needs) {
     assert.strictEqual(channel.subscribed, false, "channel can unsubscribe");
     assert.strictEqual(
       channelDup._presenceState,
-      channel._presenceState,
-      "state is maintained"
+      presenceService._presenceChannelStates.get(channel.name),
+      "state is maintained in the subscribed channel"
     );
 
     await channelDup.unsubscribe();
     assert.strictEqual(channel.subscribed, false, "channelDup can unsubscribe");
     assert.strictEqual(
-      channelDup._presenceState,
+      presenceService._presenceChannelStates.get(channel.name),
       undefined,
       "state is cleared"
     );

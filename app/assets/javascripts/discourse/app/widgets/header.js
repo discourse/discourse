@@ -11,6 +11,7 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import ComponentConnector from "discourse/widgets/component-connector";
 
 const _extraHeaderIcons = [];
 
@@ -67,6 +68,10 @@ createWidget("header-notifications", {
         )
       ),
     ];
+
+    if (this.currentUser.status) {
+      contents.push(this.attach("user-status-bubble", this.currentUser.status));
+    }
 
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
@@ -326,6 +331,24 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
+createWidget("revamped-user-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new ComponentConnector(this, "user-menu-wrapper", {}, [], {
+        applyStyle: false,
+      }),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleUserMenu");
+  },
+});
+
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
@@ -379,7 +402,11 @@ export default createWidget("header", {
       } else if (state.hamburgerVisible) {
         panels.push(this.attach("hamburger-menu"));
       } else if (state.userVisible) {
-        panels.push(this.attach("user-menu"));
+        if (this.currentUser.redesigned_user_menu_enabled) {
+          panels.push(this.attach("revamped-user-menu-wrapper", {}));
+        } else {
+          panels.push(this.attach("user-menu"));
+        }
       }
 
       additionalPanels.map((panel) => {
@@ -400,7 +427,12 @@ export default createWidget("header", {
       return panels;
     };
 
-    let contentsAttrs = { contents, minimized: !!attrs.topic };
+    const contentsAttrs = {
+      contents,
+      minimized: !!attrs.topic,
+      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
+    };
+
     return h(
       "div.wrap",
       this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
@@ -506,7 +538,7 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrollin on menu panels, except on overflow
+    // prevent all scrolling on menu panels, except on overflow
     const height = window.innerHeight ? window.innerHeight : $(window).height();
     if (
       !$(e.target).parents(".menu-panel").length ||

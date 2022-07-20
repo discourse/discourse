@@ -1,16 +1,16 @@
-{{#if category}}
+{{#if this.category}}
   <div class="category-status" aria-hidden="true">
-    {{#if hasParentCategory}}
-      {{#unless hideParentCategory}}
-        {{badgeForParentCategory}}
+    {{#if this.hasParentCategory}}
+      {{#unless this.hideParentCategory}}
+        {{this.badgeForParentCategory}}
       {{/unless}}
     {{/if}}
-    {{badgeForCategory}}
+    {{this.badgeForCategory}}
   </div>
 
-  {{#if shouldDisplayDescription}}
-    <div class="category-desc" aria-hidden="true">{{dir-span descriptionText  htmlSafe="true"}}</div>
+  {{#if this.shouldDisplayDescription}}
+    <div class="category-desc" aria-hidden="true">{{dir-span this.descriptionText  htmlSafe="true"}}</div>
   {{/if}}
 {{else}}
-  {{html-safe label}}
+  {{html-safe this.label}}
 {{/if}}

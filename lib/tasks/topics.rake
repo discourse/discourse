@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency "rake_helpers"
+require "rake_helpers"
 
 def close_old_topics(category)
   topics = Topic.where(closed: false, category_id: category.id)

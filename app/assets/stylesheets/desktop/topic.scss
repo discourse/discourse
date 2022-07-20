@@ -120,6 +120,10 @@
   left: 0;
 }
 
+.onscreen-post .row {
+  display: flex; // children should never wrap
+}
+
 @media all and (min-width: 400px) {
   #topic-footer-main-buttons {
     max-width: 70%;

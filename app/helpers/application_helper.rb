@@ -20,7 +20,7 @@ module ApplicationHelper
       modulePrefix: "discourse",
       environment: Rails.env,
       rootURL: Discourse.base_path,
-      locationType: "auto",
+      locationType: "history",
       historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {},
@@ -125,41 +125,30 @@ module ApplicationHelper
       path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
-    if Rails.env == "development"
-      if !path.include?("?")
-        # cache breaker for mobile iOS
-        path = path + "?#{Time.now.to_f}"
-      end
-    end
-
     path
   end
 
-  def preload_vendor_scripts
-    scripts = ["vendor"]
-
-    if ENV["EMBER_CLI_PROD_ASSETS"] != "0"
-      @@vendor_chunks ||= begin
-        all_assets = ActionController::Base.helpers.assets_manifest.assets
-        all_assets.keys.filter_map { |name| name[/\A(chunk\..*)\.js\z/, 1] }
-      end
-      scripts.push(*@@vendor_chunks)
-    end
-
-    scripts.map do |name|
-      preload_script(name)
-    end.join("\n").html_safe
+  def self.splash_screen_nonce
+    @splash_screen_nonce ||= SecureRandom.hex
   end
 
   def preload_script(script)
-    path = script_asset_path(script)
-    preload_script_url(path)
+    scripts = [script]
+
+    if chunks = EmberCli.script_chunks[script]
+      scripts.push(*chunks)
+    end
+
+    scripts.map do |name|
+      path = script_asset_path(name)
+      preload_script_url(path)
+    end.join("\n").html_safe
   end
 
   def preload_script_url(url)
     <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
+      <script defer src="#{url}"></script>
     HTML
   end
 
@@ -187,7 +176,7 @@ module ApplicationHelper
     result = ApplicationHelper.extra_body_classes.to_a
 
     if @category && @category.url.present?
-      result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+      result << "category-#{@category.slug_path.join('-')}"
     end
 
     if current_user.present? &&
@@ -295,15 +284,7 @@ module ApplicationHelper
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, property: 'og:type', content: 'website')
 
-    if opts[:twitter_summary_large_image].present?
-      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
-      result << tag(:meta, name: "twitter:image", content: opts[:twitter_summary_large_image])
-    elsif opts[:image].present?
-      result << tag(:meta, name: 'twitter:card', content: "summary")
-      result << tag(:meta, name: "twitter:image", content: opts[:image])
-    else
-      result << tag(:meta, name: 'twitter:card', content: "summary")
-    end
+    result = generate_twitter_card_metadata(opts, result)
     result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
 
     [:url, :title, :description].each do |property|
@@ -330,6 +311,29 @@ module ApplicationHelper
     end
 
     result.join("\n")
+  end
+
+  def generate_twitter_card_metadata(opts, result)
+    img_url = opts[:twitter_summary_large_image].present? ? \
+      opts[:twitter_summary_large_image] :
+      opts[:image]
+
+    # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
+    if img_url.ends_with?(".svg")
+      img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
+    end
+
+    if opts[:twitter_summary_large_image].present? && img_url.present?
+      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    elsif opts[:image].present? && img_url.present?
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+      result << tag(:meta, name: "twitter:image", content: img_url)
+    else
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+    end
+
+    result
   end
 
   def render_sitelinks_search_tag
@@ -422,6 +426,11 @@ module ApplicationHelper
       ", app-argument=discourse://new?siteUrl=#{Discourse.base_url}" : ""
   end
 
+  def include_splash_screen?
+    # A bit basic for now but will be expanded later
+    SiteSetting.splash_screen
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
@@ -455,17 +464,15 @@ module ApplicationHelper
     @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
   end
 
-  def server_plugin_outlet(name)
-
-    # Don't evaluate plugins in test
-    return "" if Rails.env.test?
+  def server_plugin_outlet(name, locals: {})
+    return "" if !GlobalSetting.load_plugins?
 
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
     result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb)) }
+    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
     result.html_safe
   end
 
@@ -556,6 +563,19 @@ module ApplicationHelper
     )
   end
 
+  def discourse_stylesheet_preload_tag(name, opts = {})
+    manager =
+      if opts.key?(:theme_id)
+        Stylesheet::Manager.new(
+          theme_id: customization_disabled? ? nil : opts[:theme_id]
+        )
+      else
+        stylesheet_manager
+      end
+
+    manager.stylesheet_preload_tag(name, 'all')
+  end
+
   def discourse_stylesheet_link_tag(name, opts = {})
     manager =
       if opts.key?(:theme_id)
@@ -567,6 +587,17 @@ module ApplicationHelper
       end
 
     manager.stylesheet_link_tag(name, 'all')
+  end
+
+  def discourse_preload_color_scheme_stylesheets
+    result = +""
+    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(scheme_id, 'all')
+
+    if dark_scheme_id != -1
+      result << stylesheet_manager.color_scheme_stylesheet_preload_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
+    end
+
+    result.html_safe
   end
 
   def discourse_color_scheme_stylesheets
@@ -658,13 +689,7 @@ module ApplicationHelper
   end
 
   def rss_creator(user)
-    if user
-      if SiteSetting.prioritize_username_in_ux
-        "#{user.username}"
-      else
-        "#{user.name.presence || user.username }"
-      end
-    end
+    user&.display_name
   end
 
   def authentication_data

@@ -301,7 +301,7 @@ protected
       self.class.append_custom_field(target, key, value)
     end
     @custom_fields_orig = target
-    @custom_fields = @custom_fields_orig.dup
+    @custom_fields = @custom_fields_orig.deep_dup
   end
 
 end

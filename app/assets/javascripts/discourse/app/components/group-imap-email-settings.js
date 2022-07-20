@@ -17,12 +17,9 @@ export default Component.extend({
     "form.imap_port"
   )
   missingSettings(email_username, email_password, imap_server, imap_port) {
-    return [
-      email_username,
-      email_password,
-      imap_server,
-      imap_port,
-    ].some((value) => isEmpty(value));
+    return [email_username, email_password, imap_server, imap_port].some(
+      (value) => isEmpty(value)
+    );
   },
 
   @discourseComputed("group.imap_mailboxes")

@@ -1,10 +1,10 @@
-{{#if collection.content.length}}
+{{#if this.collection.content.length}}
   <ul class="select-kit-collection" aria-live="polite" role="menu">
-    {{#each collection.content as |item|}}
-      {{component (component-for-row collection.identifier item selectKit)
+    {{#each this.collection.content as |item|}}
+      {{component (component-for-row this.collection.identifier item this.selectKit)
         item=item
-        value=value
-        selectKit=selectKit
+        value=this.value
+        selectKit=this.selectKit
       }}
     {{/each}}
   </ul>

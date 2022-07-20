@@ -139,18 +139,20 @@ export function highlightPost(postNumber) {
 
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-  const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
+  const re =
+    /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
   return re.test(email);
 }
 
 export function hostnameValid(hostname) {
   // see:  https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-  const re = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/;
+  const re =
+    /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/;
   return hostname && re.test(hostname);
 }
 
 export function extractDomainFromUrl(url) {
-  if (url.indexOf("://") > -1) {
+  if (url.includes("://")) {
     url = url.split("/")[2];
   } else {
     url = url.split("/")[0];
@@ -313,7 +315,7 @@ export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
   let caps = helperContext().capabilities;
-  return caps.isIOS && !navigator.userAgent.match(/Trident/g);
+  return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
 }
 
 let iPadDetected = undefined;
@@ -321,8 +323,8 @@ let iPadDetected = undefined;
 export function isiPad() {
   if (iPadDetected === undefined) {
     iPadDetected =
-      navigator.userAgent.match(/iPad/g) &&
-      !navigator.userAgent.match(/Trident/g);
+      window.navigator.userAgent.match(/iPad/g) &&
+      !window.navigator.userAgent.match(/Trident/g);
   }
   return iPadDetected;
 }
@@ -439,7 +441,7 @@ export function areCookiesEnabled() {
   // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
   try {
     document.cookie = "cookietest=1";
-    let ret = document.cookie.indexOf("cookietest=") !== -1;
+    let ret = document.cookie.includes("cookietest=");
     document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
     return ret;
   } catch (e) {
@@ -457,7 +459,8 @@ export function postRNWebviewMessage(prop, value) {
   }
 }
 
-const CODE_BLOCKS_REGEX = /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
+const CODE_BLOCKS_REGEX =
+  /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
 //                        |      ^     |   ^   |      ^      |           ^           |
 //                               |         |          |                  |
 //                               |         |          |       code blocks between [code]
@@ -512,8 +515,8 @@ export function translateModKey(string) {
 export function clipboardCopy(text) {
   // Use the Async Clipboard API when available.
   // Requires a secure browsing context (i.e. HTTPS)
-  if (navigator.clipboard) {
-    return navigator.clipboard.writeText(text).catch(function (err) {
+  if (window.navigator.clipboard) {
+    return window.navigator.clipboard.writeText(text).catch(function (err) {
       throw err !== undefined
         ? err
         : new DOMException("The request is not allowed", "NotAllowedError");
@@ -524,7 +527,7 @@ export function clipboardCopy(text) {
   return clipboardCopyFallback(text);
 }
 
-// Use this verison of clipboardCopy if you must use an AJAX call
+// Use this version of clipboardCopy if you must use an AJAX call
 // to retrieve/generate server-side text to copy to the clipboard,
 // otherwise this write function will error in certain browsers, because
 // the time taken from the user event to the clipboard text being copied
@@ -532,12 +535,29 @@ export function clipboardCopy(text) {
 //
 // Note that the promise passed in should return a Blob with type of
 // text/plain.
-export function clipboardCopyAsync(promise) {
+export function clipboardCopyAsync(functionReturningPromise) {
   // Use the Async Clipboard API when available.
   // Requires a secure browsing context (i.e. HTTPS)
-  if (navigator.clipboard) {
-    return navigator.clipboard
-      .write([new window.ClipboardItem({ "text/plain": promise() })])
+  if (window.navigator.clipboard) {
+    // Firefox does not support window.ClipboardItem yet (it is behind
+    // a flag (dom.events.asyncClipboard.clipboardItem) as at version 87.)
+    // so we need to fall back to the normal non-async clipboard copy, that
+    // works in every browser except Safari.
+    //
+    // TODO: (martin) Look at this on 2022-07-01 to see if support has
+    // changed.
+    if (!window.ClipboardItem) {
+      return functionReturningPromise().then((textBlob) => {
+        return textBlob.text().then((text) => {
+          return clipboardCopy(text);
+        });
+      });
+    }
+
+    return window.navigator.clipboard
+      .write([
+        new window.ClipboardItem({ "text/plain": functionReturningPromise() }),
+      ])
       .catch(function (err) {
         throw err !== undefined
           ? err
@@ -546,7 +566,7 @@ export function clipboardCopyAsync(promise) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
-  return promise().then((textBlob) => {
+  return functionReturningPromise().then((textBlob) => {
     textBlob.text().then((text) => {
       return clipboardCopyFallback(text);
     });

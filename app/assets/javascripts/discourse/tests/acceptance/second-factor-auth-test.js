@@ -87,7 +87,7 @@ acceptance("Second Factor Auth Page", function (needs) {
             ok: true,
             callback_method: "PUT",
             callback_path: "/callback-path",
-            redirect_path: "/",
+            redirect_url: "/",
           },
         ];
       }
@@ -291,7 +291,7 @@ acceptance("Second Factor Auth Page", function (needs) {
     assert.equal(
       currentURL(),
       "/",
-      "user has been redirected to the redirect_path"
+      "user has been redirected to the redirect_url"
     );
     assert.equal(callbackCount, 1, "callback request has been performed");
   });

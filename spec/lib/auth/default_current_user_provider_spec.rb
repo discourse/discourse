@@ -261,7 +261,7 @@ describe Auth::DefaultCurrentUserProvider do
     let(:cookie) do
       new_provider = provider('/')
       new_provider.log_on_user(user, {}, new_provider.cookie_jar)
-      new_provider.cookie_jar["_t"]
+      CGI.escape(new_provider.cookie_jar["_t"])
     end
 
     before do
@@ -309,6 +309,26 @@ describe Auth::DefaultCurrentUserProvider do
         u.reload
         expect(u.last_seen_at).to eq(nil)
       end
+    end
+
+    it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
+      SiteSetting.login_required = true
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
+      url = "/latest.rss?api_key=#{api_key.key}&api_username=#{user.username_lower}"
+      env = { ActionDispatch::Http::Parameters::PARAMETERS_KEY => nil }
+
+      provider = provider(url, env)
+      env = provider.env
+
+      expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_nil
+      expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to be_nil
+
+      u = provider.current_user
+
+      expect(u).to eq(user)
+      expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_blank
+      expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to eq(u)
     end
   end
 
@@ -367,6 +387,7 @@ describe Auth::DefaultCurrentUserProvider do
 
     cookie = @provider.cookie_jar["_t"]
     unhashed_token = decrypt_auth_cookie(cookie)[:token]
+    cookie = CGI.escape(cookie)
 
     token = UserAuthToken.find_by(user_id: user.id)
 
@@ -431,6 +452,7 @@ describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(user, {}, @provider.cookie_jar)
       cookie = @provider.cookie_jar["_t"]
       unhashed_token = decrypt_auth_cookie(cookie)[:token]
+      cookie = CGI.escape(cookie)
       freeze_time 20.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, provider2.cookie_jar)
@@ -442,6 +464,7 @@ describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(user, {}, @provider.cookie_jar)
       cookie = @provider.cookie_jar["_t"]
       unhashed_token = decrypt_auth_cookie(cookie)[:token]
+      cookie = CGI.escape(cookie)
       freeze_time 2.minutes.from_now
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       provider2.refresh_session(user, {}, provider2.cookie_jar)
@@ -737,5 +760,40 @@ describe Auth::DefaultCurrentUserProvider do
     ip = "10.0.0.1"
     env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
     expect(provider('/', env).current_user).to eq(nil)
+  end
+
+  it "copes with json-serialized auth cookies" do
+    # We're switching to :json during the Rails 7 upgrade, but we want a clean revert path
+    # back to Rails 6 if needed
+
+    @provider = provider('/', { # The upcoming default
+      ActionDispatch::Cookies::COOKIES_SERIALIZER => :json,
+      method: "GET",
+    })
+    @provider.log_on_user(user, {}, @provider.cookie_jar)
+    cookie = CGI.escape(@provider.cookie_jar["_t"])
+
+    ip = "10.0.0.1"
+    env = { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => ip }
+    provider2 = provider('/', env)
+    expect(provider2.current_user).to eq(user)
+    expect(provider2.cookie_jar.encrypted["_t"].keys).to include("user_id", "token") # (strings)
+  end
+
+  describe "#log_off_user" do
+    it "should work when the current user was cached by a different provider instance" do
+      user_provider = provider('/')
+      user_provider.log_on_user(user, {}, user_provider.cookie_jar)
+      cookie = CGI.escape(user_provider.cookie_jar["_t"])
+      env = create_request_env(path: "/").merge({ method: "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+
+      user_provider = TestProvider.new(env)
+      expect(user_provider.current_user).to eq(user)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_present
+
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
   end
 end

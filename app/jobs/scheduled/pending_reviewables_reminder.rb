@@ -3,7 +3,7 @@
 module Jobs
 
   class PendingReviewablesReminder < ::Jobs::Scheduled
-    every 1.hour
+    every 15.minutes
 
     attr_reader :sent_reminder
 
@@ -14,7 +14,7 @@ module Jobs
         reviewable_ids = Reviewable
           .pending
           .default_visible
-          .where('latest_score < ?', SiteSetting.notify_about_flags_after.to_i.hours.ago)
+          .where('latest_score < ?', SiteSetting.notify_about_flags_after.to_f.hours.ago)
           .order('id DESC')
           .pluck(:id)
 

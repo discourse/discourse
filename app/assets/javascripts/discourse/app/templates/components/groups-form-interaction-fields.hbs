@@ -1,19 +1,11 @@
-{{#if canAdminGroup}}
+{{#if this.canAdminGroup}}
   <div class="control-group">
     <label class="control-label">{{i18n "admin.groups.manage.interaction.visibility"}}</label>
     <label for="visiblity">{{i18n "admin.groups.manage.interaction.visibility_levels.title"}}</label>
 
-    {{combo-box
-      name="alias"
-      valueProperty="value"
-      value=model.visibility_level
-      content=visibilityLevelOptions
-      class="groups-form-visibility-level"
-      onChange=(action (mut model.visibility_level))
-      options=(hash
+    <ComboBox @name="alias" @valueProperty="value" @value={{this.model.visibility_level}} @content={{this.visibilityLevelOptions}} @class="groups-form-visibility-level" @onChange={{action (mut this.model.visibility_level)}} @options={{hash
         castInteger=true
-      )
-    }}
+      }} />
 
     <div class="control-instructions">
       {{i18n "admin.groups.manage.interaction.visibility_levels.description"}}
@@ -23,15 +15,9 @@
   <div class="control-group">
     <label for="visiblity">{{i18n "admin.groups.manage.interaction.members_visibility_levels.title"}}</label>
 
-    {{combo-box name="alias"
-      valueProperty="value"
-      value=membersVisibilityLevel
-      content=visibilityLevelOptions
-      class="groups-form-members-visibility-level"
-      onChange=(action (mut model.members_visibility_level))
-    }}
+    <ComboBox @name="alias" @valueProperty="value" @value={{this.membersVisibilityLevel}} @content={{this.visibilityLevelOptions}} @class="groups-form-members-visibility-level" @onChange={{action (mut this.model.members_visibility_level)}} />
 
-    {{#if membersVisibilityPrivate}}
+    {{#if this.membersVisibilityPrivate}}
       <div class="control-instructions">
         {{i18n "admin.groups.manage.interaction.members_visibility_levels.description"}}
       </div>
@@ -43,52 +29,33 @@
   <label class="control-label">{{i18n "groups.manage.interaction.posting"}}</label>
   <label for="alias">{{i18n "groups.alias_levels.mentionable"}}</label>
 
-  {{combo-box
-    name="alias"
-    valueProperty="value"
-    value=mentionableLevel
-    content=aliasLevelOptions
-    class="groups-form-mentionable-level"
-    onChange=(action (mut model.mentionable_level))
-  }}
+  <ComboBox @name="alias" @valueProperty="value" @value={{this.mentionableLevel}} @content={{this.aliasLevelOptions}} @class="groups-form-mentionable-level" @onChange={{action (mut this.model.mentionable_level)}} />
 </div>
 
 <div class="control-group">
   <label for="alias">{{i18n "groups.alias_levels.messageable"}}</label>
 
-  {{combo-box
-    name="alias"
-    valueProperty="value"
-    value=messageableLevel
-    content=aliasLevelOptions
-    class="groups-form-messageable-level"
-    onChange=(action (mut model.messageable_level))
-  }}
+  <ComboBox @name="alias" @valueProperty="value" @value={{this.messageableLevel}} @content={{this.aliasLevelOptions}} @class="groups-form-messageable-level" @onChange={{action (mut this.model.messageable_level)}} />
 </div>
 
-{{#if canAdminGroup}}
+{{#if this.canAdminGroup}}
   <div class="control-group">
     <label>
-      {{input type="checkbox"
-            checked=model.publish_read_state
-            class="groups-form-publish-read-state"}}
+      <Input @type="checkbox" @checked={{this.model.publish_read_state}} class="groups-form-publish-read-state" />
 
       {{i18n "admin.groups.manage.interaction.publish_read_state"}}
     </label>
   </div>
 {{/if}}
 
-{{#if showEmailSettings}}
+{{#if this.showEmailSettings}}
   <div class="control-group">
     <label class="control-label">{{i18n "admin.groups.manage.interaction.email"}}</label>
     <label for="incoming_email">{{i18n "admin.groups.manage.interaction.incoming_email"}}</label>
 
-    {{text-field name="incoming_email"
-        class="input-xxlarge groups-form-incoming-email"
-        value=model.incoming_email
-        placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"}}
+    <TextField @name="incoming_email" @class="input-xxlarge groups-form-incoming-email" @value={{this.model.incoming_email}} @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder" />
 
-    {{plugin-outlet name="group-email-in" tagName="span" connectorTagName="div" args=(hash model=model)}}
+    <PluginOutlet @name="group-email-in" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
   </div>
 {{/if}}
 
@@ -97,14 +64,9 @@
 <div class="control-group">
   <label>{{i18n "groups.notification_level"}}</label>
 
-  {{notifications-button
-    value=defaultNotificationLevel
-    class="groups-form-default-notification-level"
-    options=(hash
+  <NotificationsButton @value={{this.defaultNotificationLevel}} @class="groups-form-default-notification-level" @options={{hash
       i18nPrefix="groups.notifications"
-    )
-    onChange=(action (mut model.default_notification_level))
-  }}
+    }} @onChange={{action (mut this.model.default_notification_level)}} />
 </div>
 
-{{plugin-outlet name="groups-interaction-custom-options" tagName="span" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="groups-interaction-custom-options" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

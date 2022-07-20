@@ -7,7 +7,10 @@ if !Theme.exists?
   color_schemes = [
     { name: I18n.t("color_schemes.dark"), base_scheme_id: "Dark" },
     { name: I18n.t("color_schemes.wcag"), base_scheme_id: "WCAG" },
-    { name: I18n.t("color_schemes.wcag_dark"), base_scheme_id: "WCAG Dark" }
+    { name: I18n.t("color_schemes.wcag_dark"), base_scheme_id: "WCAG Dark" },
+    { name: I18n.t("color_schemes.dracula"), base_scheme_id: "Dracula" },
+    { name: I18n.t("color_schemes.solarized_light"), base_scheme_id: "Solarized Light" },
+    { name: I18n.t("color_schemes.solarized_dark"), base_scheme_id: "Solarized Dark" }
   ]
 
   color_schemes.each do |cs|

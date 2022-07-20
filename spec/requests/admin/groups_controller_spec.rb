@@ -274,6 +274,7 @@ RSpec.describe Admin::GroupsController do
 
       expect(history).to be_present
       expect(history.details).to include("name: #{group.name}")
+      expect(history.details).to include("id: #{group.id}")
     end
 
     it 'logs the grant_trust_level attribute' do

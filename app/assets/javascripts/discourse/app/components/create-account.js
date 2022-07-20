@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
+import { bind } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["create-account-body"],
@@ -21,6 +22,25 @@ export default Component.extend({
     }
   },
 
+  @bind
+  actionOnEnter(event) {
+    if (!this.disabled && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.action();
+      return false;
+    }
+  },
+
+  @bind
+  selectKitFocus(event) {
+    const target = document.getElementById(event.target.getAttribute("for"));
+    if (target?.classList.contains("select-kit")) {
+      event.preventDefault();
+      target.querySelector(".select-kit-header").click();
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -31,9 +51,8 @@ export default Component.extend({
     let userTextFields = document.getElementsByClassName("user-fields")[0];
 
     if (userTextFields) {
-      userTextFields = userTextFields.getElementsByClassName(
-        "ember-text-field"
-      );
+      userTextFields =
+        userTextFields.getElementsByClassName("ember-text-field");
     }
 
     if (userTextFields) {
@@ -43,38 +62,21 @@ export default Component.extend({
       }
     }
 
-    $(this.element).on("keydown.discourse-create-account", (e) => {
-      if (!this.disabled && e.key === "Enter") {
-        e.preventDefault();
-        e.stopPropagation();
-        this.action();
-        return false;
-      }
-    });
-
-    $(this.element).on("click.dropdown-user-field-label", "[for]", (event) => {
-      const $element = $(event.target);
-      const $target = $(`#${$element.attr("for")}`);
-
-      if ($target.is(".select-kit")) {
-        event.preventDefault();
-        $target.find(".select-kit-header").trigger("click");
-      }
-    });
+    this.element.addEventListener("keydown", this.actionOnEnter);
+    this.element.addEventListener("click", this.selectKitFocus);
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    $(this.element).off("keydown.discourse-create-account");
-    $(this.element).off("click.dropdown-user-field-label");
+    this.element.removeEventListener("keydown", this.actionOnEnter);
+    this.element.removeEventListener("click", this.selectKitFocus);
 
     let userTextFields = document.getElementsByClassName("user-fields")[0];
 
     if (userTextFields) {
-      userTextFields = userTextFields.getElementsByClassName(
-        "ember-text-field"
-      );
+      userTextFields =
+        userTextFields.getElementsByClassName("ember-text-field");
     }
 
     if (userTextFields) {

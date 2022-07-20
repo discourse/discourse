@@ -219,7 +219,6 @@ gl:
       <p>Se lembra o seu contrasinal, pode<a href="%{base_url}/login">iniciar sesión</a></p>
 
       <p>Se non, <a href="%{base_url}/password-reset">restableza o contrasinal</a></p>
-    user_exists: "Non necesita invitar a <b>%{email}</b>, pois <a href='%{base_path}/u/%{username}/summary'>xa teñen unha conta!</a>"
     confirm_email: "<p>Xa case está! Enviámoslle un correo de activación ao seu enderezo electrónico. Siga as instrucións para activar a súa conta.</p><p>Se non lle chegan, comprobe o cartafol de correo lixo.</p>"
     cant_invite_to_group: "Non ten permisos para convidar a usuarios a grupo(s) específico(s). Asegúrese de ser o propietario do(s) grupo(s) a que está tentando convidar."
     disabled_errors:
@@ -1345,7 +1344,6 @@ gl:
     site_description: "Describa o sitio nunha única frase, utilizada na etiqueta metadescrición."
     short_site_description: "Descrición curta, utilizada como o título da etiqueta na páxina principal."
     crawl_images: "Recuperar imaxes desde URL remotos para inserilas coas dimensións correctas de largura e altura."
-    download_remote_images_to_local: "Converter imaxes remotas en locais ao descargalas; isto prevén que haxa imaxes rotas."
     download_remote_images_threshold: "Espazo mínimo que cómpre no disco para descargar imaxes remotas de forma local (en porcentaxe)"
     disabled_image_download_domains: "As imaxes remotas procedentes destes dominios non serán descargadas. Listaxe delimitada por barras verticais."
     editing_grace_period: "Durante (n) segundos despois de publicar, pódese editar sen chegar a crear unha nova versión no historial."
@@ -1386,7 +1384,6 @@ gl:
     favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     apple_touch_icon: "Icona utilizada para dispositivos Apple. Redimensionarase automaticamente a 180x180. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
-    twitter_summary_large_image: "A «imaxe grande de resumo» da tarxeta de Twitter (debe ter polo menos 280 de largura e 150 de altura). Se se deixa en branco, xeraranse metadatos de tarxetas normais utilizando opengraph_image."
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1435,7 +1432,6 @@ gl:
     ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
     gtm_container_id: "Id do contedor de Google Tag Manager. Por exemplo: GTM-ABCDEF. <br/>Nota: pode ser que teñan que estar listados os scripts de terceiros cargados con GTM na «pantalla de script da política de seguridade de contido\"."
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir que os moderadores administren categorías e grupos"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese estabelecer como verdadeira para activar CORS."
     use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
     blocked_ip_blocks: "Unha listaxe de bloques IP privados que Discourse nunca debería rastrexar"
@@ -1462,7 +1458,6 @@ gl:
     send_tl2_promotion_message: "Envíe unha nova mensaxe aos usuarios de nivel 2 de confianza sobre a promoción."
     suppress_reply_directly_below: "Non mostrar o contador de respostas despregable cando hai unha única resposta xusto embaixo desta publicación."
     suppress_reply_directly_above: "Non mostrar o despregable en-resposta-a nunha publicación se unicamente hai unha resposta xusto enriba dela."
-    remove_full_quote: "Retirar automaticamente citas completas nas respostas directas."
     suppress_reply_when_quoting: "Non mostrar o despregable en-resposta-a nunha publicación cando esta cite a resposta."
     max_reply_history: "Número máximo de respostas que se mostran ao expandir en-resposta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se mostran no resumo de temas destacados."
@@ -1922,7 +1917,7 @@ gl:
     default_categories_tracking: "Listase de categorías que se seguen por defecto."
     default_categories_muted: "Listaxe de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Listaxe de categorías en que se verá por defecto a primeira publicación de cada novo tema."
-    default_categories_regular: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
+    default_categories_normal: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
     mute_all_categories_by_default: "Estableza o nivel de notificación predeterminado de todas as categorías como silenciado. Requírelles aos usuarios que opten por categorías para que aparezan nas páxinas «últimas» e «categorías». Se desexa modificar os valores predeterminados para usuarios anónimos, configure os axustes «default_categories_»."
     default_tags_watching: "Listaxe de etiquetas que se vixían por defecto."
     default_tags_tracking: "Listaxe de etiquetas seguidas por defecto."
@@ -1948,7 +1943,6 @@ gl:
     tags_sort_alphabetically: "Mostrar etiquetas en orde alfabética. Por defecto móstranse segundo a súa popularidade."
     tags_listed_by_group: "Listar etiquetas por grupos de etiquetas na <a href='%{base_path}/tags' target='_blank'>páxina de etiquetas</a>."
     tag_style: "Estilo visual para as insignias das etiquetas."
-    allow_staff_to_tag_pms: "Permitir que os membros do equipo etiqueten calquera mensaxe persoal"
     min_trust_level_to_tag_topics: "O nivel de confianza mínimo requirido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Se unha etiqueta coincide con palabras exactas do título dun tema, non se mostrará"
     remove_muted_tags_from_latest: "Non mostrar na listaxe de temas máis recentes aqueles etiquetados unicamente con etiquetas silenciadas."
@@ -2493,12 +2487,6 @@ gl:
         [preferencias]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Parabéns pola súa promoción a un novo nivel de confianza!"
-      text_body_template: |
-        Promocionámolo a outro [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Como usuario experimentado, debería valorar [esta listaxe de consellos e trucos](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Animámolo a que siga participando. Gústanos telo por aquí.
     backup_succeeded:
       title: "Copia de seguranza feita correctamente"
       subject_template: "A copia de seguranza completouse correctamente"
@@ -3346,23 +3334,12 @@ gl:
     suspicious_login:
       title: "Alerta de novo inicio de sesión"
       subject_template: "[%{site_name}] Novo inicio de sesión desde %{location}"
-      text_body_template: |
-        Ola,
-
-        Detectamos un inicio de sesión desde un dispositivo ou localización que non adoita utilizar. Foi vostede?
-
-         - Localización: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} – %{os}
-
-        Se foi vostede, perfecto! Non ten que facer máis nada.
-
-        Se non o foi, [revise a súa sesión actual](%{base_url}/my/preferences/account) e valore cambiar o de contrasinal.
     post_approved:
       title: "A súa publicación foi aprobada"
   page_forbidden:
     title: "Oopa! Esta páxina é privada."
   page_not_found:
+    page_title: "Páxina non atopada"
     title: "Oopa! Esta páxina non existe ou é privada."
     popular_topics: "Destacados"
     recent_topics: "Recentes"
@@ -4116,10 +4093,6 @@ gl:
                 label: "Categorías e últimos temas"
               categories_and_top_topics:
                 label: "Categorías e temas destacados"
-              categories_boxes:
-                label: "Caixas de categorías"
-              categories_boxes_with_topics:
-                label: "Caixas de categorías con temas"
       logos:
         title: "Logotipos"
         fields:

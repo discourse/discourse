@@ -118,7 +118,9 @@ function translateGroupedSearchResults(results, opts) {
       const name = pair[1];
       if (results[name].length > 0) {
         const componentName =
-          opts.searchContext && type === "topic" ? "post" : type;
+          opts.searchContext?.type === "topic" && type === "topic"
+            ? "post"
+            : type;
 
         const result = {
           results: results[name],

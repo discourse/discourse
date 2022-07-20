@@ -273,6 +273,8 @@ fi:
         unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset."
     bookmarks:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
+      create: "Luo kirjanmerkki"
+      edit: "Muokkaa kirjanmerkkiä"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
       created_with_reminder: "Olet kirjanmerkinnyt tämän viestin muistutuksen kera %{date}. %{name}"
       remove: "Poista kirjanmerkki"
@@ -537,6 +539,7 @@ fi:
         other: "vuotta"
       relative: "Suhteellinen"
     time_shortcut:
+      now: "Nyt"
       later_today: "Myöhemmin tänään"
       next_business_day: "Seuraavana arkipäivänä"
       tomorrow: "Huomenna"
@@ -545,13 +548,21 @@ fi:
       this_weekend: "Viikonloppuna"
       start_of_next_business_week: "Maanantaina"
       start_of_next_business_week_alt: "Seuraavana maanantaina"
+      next_week: "Ensi viikolla"
       two_weeks: "Kaksi viikkoa"
       next_month: "Ensi kuussa"
+      two_months: "Kaksi kuukautta"
+      three_months: "Kolme kuukautta"
+      four_months: "Neljä kuukautta"
       six_months: "Kuusi kuukautta"
-      custom: "Mukautettu päivämäärä ja aika"
+      one_year: "Yksi vuosi"
+      forever: "Ikuisesti"
       relative: "Suhteellinen aika"
       none: "Ei vaadittu"
+      never: "Ei koskaan"
       last_custom: "Viimeisin mukautettu päivämäärä"
+      custom: "Mukautettu päivämäärä ja aika"
+      select_timeframe: "Valitse ajanjakso"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> kirjoitti <a href='%{topicUrl}'>ketjuun</a>"
       you_posted_topic: "<a href='%{userUrl}'>Sinä</a> kirjoitit <a href='%{topicUrl}'>ketjuun</a>"
@@ -1021,6 +1032,8 @@ fi:
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_defer: "Ota käyttöön lykkäystoiminto, jolla voi merkitä ketjun lukemattomaksi"
+      experimental_sidebar:
+        options: "Asetukset"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
@@ -1062,7 +1075,7 @@ fi:
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa ilmoituksia näille alueille luoduista uusista ketjuista. Ketjut eivät näy alueissa eivätkä tuoreimmissa."
       muted_categories_instructions_dont_hide: "Et saa ilmoituksia mistään tämän alueen uusiin ketjuihin liittyvästä."
-      regular_categories: "Normaali"
+      regular_categories: "Tavallinen"
       regular_categories_instructions: "Näet nämä alueet Tuoreimmat- ja Suosituimmat-ketjuluetteloissa."
       no_category_access: "Valvojana sinulla on rajoitetut oikeudet alueisiin, et voi tallentaa."
       delete_account: "Poista tilini"
@@ -1440,8 +1453,6 @@ fi:
           title: "Kutsulinkki"
           success: "Kutsulinkki luotiin!"
           error: "Kutsulinkin luominen epäonnistui"
-          max_redemptions_allowed_label: "Kuinka moni saa rekisteröityä tällä linkillä?"
-          expires_at: "Koska tämä linkki vanhenee?"
         invite:
           new_title: "Luo kutsu"
           edit_title: "Muokkaa kutsua"
@@ -1551,6 +1562,8 @@ fi:
         sent_by: "Lähettänyt"
         private_message: "viesti"
         the_topic: "ketju"
+    user_status:
+      save: "Tallenna"
     loading: "Ladataan..."
     errors:
       prev_page: "yrittäessä ladata"
@@ -1726,22 +1739,16 @@ fi:
       not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
       google_oauth2:
         name: "Google"
-        title: "Googlella"
       twitter:
         name: "Twitter"
-        title: "Twitterillä"
       instagram:
         name: "Instagram"
-        title: "Instagramilla"
       facebook:
         name: "Facebook"
-        title: "Facebookilla"
       github:
         name: "GitHub"
-        title: "GitHubilla"
       discord:
         name: "Discord"
-        title: "Discordilla"
       second_factor_toggle:
         totp: "Käytä todentajasovellusta tämän sijaan"
         backup_code: "Käytä varakoodia tämän sijaan"
@@ -1892,7 +1899,6 @@ fi:
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
-      users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
@@ -1961,9 +1967,6 @@ fi:
           confirm: Sinulla on tallennettuna uusi ketjuluonnos, joka korvataan, jos luot liittyvän ketjun.
         reply_as_new_group_message:
           label: Vastaa uudessa ryhmäviestissä
-        reply_as_private_message:
-          label: Uusi viesti
-          desc: Luo uusi yksityisviesti
         reply_to_topic:
           label: Vastaa ketjuun
           desc: Vastaa ketjuun, muttei mihinkään tiettyyn viestiin
@@ -2339,24 +2342,6 @@ fi:
         min_duration: "Keston on oltava suurempi kuin 0"
         max_duration: "Keston on oltava alle 20 vuotta"
         duration: "Kesto"
-      auto_update_input:
-        none: "Valitse ajanjakso"
-        now: "Nyt"
-        later_today: "Myöhemmin tänään"
-        tomorrow: "Huomenna"
-        later_this_week: "Myöhemmin tällä viikolla"
-        this_weekend: "Viikonloppuna"
-        next_week: "Ensi viikolla"
-        two_weeks: "Kaksi viikkoa"
-        next_month: "Ensi kuussa"
-        two_months: "Kaksi kuukautta"
-        three_months: "Kolme kuukautta"
-        four_months: "Neljä kuukautta"
-        six_months: "Kuusi kuukautta"
-        one_year: "Yksi vuosi"
-        forever: "Ikuisesti"
-        pick_date_and_time: "Valitse päivämäärä ja kellonaika"
-        set_based_on_last_post: "Sulje viimeisimmän viestin mukaan"
       publish_to_category:
         title: "Julkaise määrättynä ajankohtana"
       temp_open:
@@ -2467,8 +2452,6 @@ fi:
         unpin: "Poista ketjun kiinnitys..."
         unarchive: "Peru ketjun arkistointi"
         archive: "Arkistoi ketju"
-        invisible: "Poista listauksista"
-        visible: "Näytä listauksissa"
         reset_read: "Nollaa tiedot lukemisista"
         make_private: "Muuta yksityisviestiksi"
         reset_bump_date: "Palauta ketjun päiväysleima"
@@ -2880,10 +2863,8 @@ fi:
       tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
       manage_tag_groups_link: "Hallitse tunnisteryhmiä"
       allow_global_tags_label: "Salli myös muut tunnisteet"
-      tag_group_selector_placeholder: "(Valinnainen) tunnisteryhmä"
-      required_tag_group_description: "Edellytä, että uudella ketjulla on tunnisteita tunnisteryhmästä:"
-      min_tags_from_required_group_label: "Tunnisteiden määrä:"
-      required_tag_group_label: "Tunnisteryhmä:"
+      required_tag_group:
+        delete: "Poista"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       delete: "Poista alue"
       create: "Uusi alue"
@@ -3194,11 +3175,11 @@ fi:
         this_week: "Viikko"
         today: "Tänään"
         other_periods: "katso suosituimmat:"
-    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaimesi on liian vanha eikä siksi toimi tällä sivustolla</a>. <a href="https://browsehappy.com">Päivitä selaimesi</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
       readonly: "Nähdä"
+    preloader_text: "Ladataan"
     lightbox:
       download: "lataa"
       previous: "Edellinen (vasen nuolinäppäin)"
@@ -3282,7 +3263,6 @@ fi:
         edit: "%{shortcut} Muokkaa viestiä"
         delete: "%{shortcut} Poista viesti"
         mark_muted: "%{shortcut} Vaimenna ketju"
-        mark_regular: "%{shortcut} Tavallinen (oletus) ketju"
         mark_tracking: "%{shortcut} Seuraa ketjua"
         mark_watching: "%{shortcut} Tarkkaile ketjua"
         print: "%{shortcut} Tulosta ketju"
@@ -3479,6 +3459,38 @@ fi:
       no_activity_others: "Ei toimintaa."
       no_replies_others: "Ei vastauksia."
       no_likes_others: "Ei tykättyjä viestejä."
+    sidebar:
+      unread_count:
+        one: "%{count} lukematta"
+        other: "%{count} lukematta"
+      new_count:
+        one: "%{count} uusi"
+        other: "%{count} uutta"
+      sections:
+        messages:
+          header_link_text: "Viestit"
+          links:
+            inbox: "Postilaatikko"
+            sent: "Lähetetyt"
+            new: "Uudet"
+            new_with_count: "Uudet (%{count})"
+            unread: "Lukemattomat"
+            unread_with_count: "Lukematta (%{count})"
+            archive: "Arkisto"
+        tags:
+          header_link_title: "kaikki tunnisteet"
+          header_link_text: "Tunnisteet"
+        categories:
+          header_link_title: "kaikki alueet"
+          header_link_text: "Alueet"
+        topics:
+          header_link_title: "aloitus"
+          header_link_text: "Ketjuja"
+          links:
+            tracked:
+              content: "Seuratut"
+            my_posts:
+              content: "Viestini"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:
@@ -3694,7 +3706,6 @@ fi:
               read: Lue ketjua tai tiettyä sen viestiä. RSS on myös tuettu.
               write: Aloita uusi ketju tai kirjoita olemassa olevaan.
               read_lists: Lue ketjuluetteloita, kuten suositut, uudet, tuoreimmat jne. RSS on myös tuettu.
-              wordpress: Tarvitaan, jotta WordPress wp-discourse -lisäosa toimii.
             posts:
               edit: Muokkaa mitä tahansa viestiä tai tiettyä viestiä.
             users:

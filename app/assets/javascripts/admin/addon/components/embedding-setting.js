@@ -1,12 +1,13 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { dasherize } from "@ember/string";
 
 export default Component.extend({
   classNames: ["embed-setting"],
 
   @discourseComputed("field")
   inputId(field) {
-    return field.dasherize();
+    return dasherize(field);
   },
 
   @discourseComputed("field")

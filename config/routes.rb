@@ -26,6 +26,13 @@ Discourse::Application.routes.draw do
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
 
+    scope path: nil, format: true, constraints: { format: :xml } do
+      resources :sitemap, only: [:index]
+      get "/sitemap_:page" => "sitemap#page", page: /[1-9][0-9]*/
+      get "/sitemap_recent" => "sitemap#recent"
+      get "/news" => "sitemap#news"
+    end
+
     scope path: nil, constraints: { format: /.*/ } do
       if Rails.env.development?
         mount Sidekiq::Web => "/sidekiq"
@@ -376,6 +383,7 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
 
     resources :static
@@ -480,6 +488,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/preferences/users" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/sidebar" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
       post "#{root_path}/:username/preferences/email" => "users_email#create", constraints: { username: RouteFormat.username }
       put "#{root_path}/:username/preferences/email" => "users_email#update", constraints: { username: RouteFormat.username }
@@ -816,7 +825,7 @@ Discourse::Application.routes.draw do
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
     get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
-    get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: true, constraints: { topic_id: /\d+/ }
+    get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: 'true', constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: { topic_id: /\d+/ }
@@ -993,10 +1002,6 @@ Discourse::Application.routes.draw do
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
-    unless Rails.env.production?
-      get "/qunit" => "qunit#index"
-      get "/wizard/qunit" => "wizard#qunit"
-    end
     get "/theme-qunit" => "qunit#theme"
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
@@ -1011,6 +1016,9 @@ Discourse::Application.routes.draw do
 
     post "/presence/update" => "presence#update"
     get "/presence/get" => "presence#get"
+
+    put "user-status" => "user_status#set"
+    delete "user-status" => "user_status#clear"
 
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end

@@ -1,4 +1,4 @@
-{{#each usersTemplates as |userTemplate|}}
+{{#each this.usersTemplates as |userTemplate|}}
   <div data-username={{userTemplate.username}} class="user-info small">
     <div class="user-image">
       <div class="user-image-inner">
@@ -15,9 +15,7 @@
           </a>
         </span>
         <span class="name">
-          {{#unless userTemplate.hideName}}
-            {{#if userTemplate.prioritizeName}}{{userTemplate.username}}{{else}}{{userTemplate.name}}{{/if}}
-          {{/unless}}
+          {{#if userTemplate.prioritizeName}}{{userTemplate.username}}{{else}}{{userTemplate.name}}{{/if}}
         </span>
       </div>
       <div class="title">{{userTemplate.title}}</div>

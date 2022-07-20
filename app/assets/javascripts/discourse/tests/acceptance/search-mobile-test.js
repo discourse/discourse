@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -42,7 +42,7 @@ acceptance("Search - Mobile", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      queryAll("input.full-page-search").val(),
+      query("input.full-page-search").value,
       "discourse",
       "it does not reset input when hitting search icon again"
     );

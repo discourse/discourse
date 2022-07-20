@@ -75,7 +75,7 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
     `<div class="scoped-area"><img data-orig-src="${imageSrcs[2].url}"></div>` +
     otherMediaSrcs
       .map((src) => {
-        if (src.short_url.indexOf("mp3") > -1) {
+        if (src.short_url.includes("mp3")) {
           return `<audio controls><source data-orig-src="${src.short_url}"></audio>`;
         } else {
           return `<video controls><source data-orig-src="${src.short_url}"></video>`;

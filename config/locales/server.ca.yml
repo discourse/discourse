@@ -179,7 +179,6 @@ ca:
   invite:
     not_found: "El testimoni d'invitació no és vàlid. <a href='%{base_url}/about'>Poseu-vos en contacte amb l'equip responsable</a>."
     not_found_json: "El testimoni d'invitació no és vàlid. Poseu-vos en contacte amb l'equip responsable."
-    user_exists: "No cal convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>ja tenen un compte!</a>"
     confirm_email: "<p>Gairebé heu acabat! Hem enviat un missatge d'activació a la vostra adreça de correu. Seguiu les instruccions en el missatge per a activar el compte.</p><p>Si no arriba, comproveu la carpeta de correu brossa.</p>"
     disabled_errors:
       invalid_access: "No teniu permís per a veure el recurs sol·licitat."
@@ -1210,7 +1209,6 @@ ca:
     site_description: "Descriviu el lloc web amb una frase per a la metaetiqueta de descripció."
     short_site_description: "Descripció breu per a l'etiqueta de títol de la pàgina d'inici."
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
-    download_remote_images_to_local: "Converteix les imatges remotes en imatges locals en descarregar-les. Això evita les imatges trencades."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"
     disabled_image_download_domains: "Les imatges remotes no es descarregaran mai des d'aquests dominis. Llista delimitada amb barres verticals."
     editing_grace_period: "Durant (n) segons després de publicar, l'edició no crearà una nova versió en l'historial de publicació."
@@ -1243,7 +1241,6 @@ ca:
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
     apple_touch_icon: "Icona utilitzada per als dispositius tàctils d'Apple. Es redimensionarà automàticament a 180x180. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
-    twitter_summary_large_image: "\"Resum d'imatge gran\" de la targeta Twitter (ha de tenir una amplada mínima de 280 i almenys 150 d'alçada). Si es deixa en blanc, es generen metadades habituals de targetes utilitzant opengraph_image."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
     email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
     email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1302,7 +1299,6 @@ ca:
     send_tl1_welcome_message: "Envieu als nous usuaris de nivell de confiança 1 un missatge de benvinguda."
     suppress_reply_directly_below: "No mostris el recompte de respostes desplegable en una publicació quan només hi hagi una resposta directa sota la publicació."
     suppress_reply_directly_above: "No mostris el desplegable \"en resposta a\" en una publicació quan només hi hagi una resposta directa per damunt d'aquesta publicació."
-    remove_full_quote: "Elimina automàticament les citacions completes en les respostes directes."
     suppress_reply_when_quoting: "No mostris el desplegable \"en resposta a\" en una publicació quan la publicació cita una resposta."
     max_reply_history: "Nombre màxim de respostes que cal expandir quan s'expandeix \"en resposta a\""
     topics_per_period_in_top_summary: "Nombre de temes principals en el resum per defecte de temes principals."
@@ -1707,7 +1703,6 @@ ca:
     tags_sort_alphabetically: "Mostra les etiquetes per ordre alfabètic. Per defecte es mostren ordenades per popularitat."
     tags_listed_by_group: "Llista les etiquetes per grups d'etiquetes en la <a href='%{base_path}/tags' target='_blank'>pàgina d'etiquetes</a>."
     tag_style: "Estil visual per a insígnies d'etiqueta."
-    allow_staff_to_tag_pms: "Permet als membres de l'equip responsable etiquetar qualsevol missatge personal"
     min_trust_level_to_tag_topics: "Nivell de confiança mínim necessari per a etiquetar temes"
     suppress_overlapping_tags_in_list: "Si les etiquetes coincideixen exactament amb paraules en els títols dels temes, no mostris l'etiqueta."
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."
@@ -2594,10 +2589,10 @@ ca:
     suspicious_login:
       title: "Notificació d'inici de sessió nou"
       subject_template: "[%{site_name}] Inici de sessió nou des de %{location}"
-      text_body_template: "Bon dia, \n\nHem notat un inici de sessió des d'un dispositiu o una ubicació que normalment no utilitzeu. Heu estat vós? \n\n- Ubicació: %{location} (%{client_ip}) \n- Navegador: %{browser} \n- Dispositiu: %{device} - %{os} \n\nSi heu estat vós, perfecte! No cal fer res més. \n\nSi no heu estat vós, [reviseu les vostres sessions existents](%{base_url}/my/preferences/account) i considereu canviar la contrasenya.\n"
     post_approved:
       title: "La vostra publicació ha estat aprovada"
   page_not_found:
+    page_title: "Pàgina no trobada"
     title: "Ai! Aquesta pàgina no existeix o és privada."
     popular_topics: "Populars"
     recent_topics: "Recents"
@@ -3069,10 +3064,6 @@ ca:
                 label: "Categories i temes més recents"
               categories_and_top_topics:
                 label: "Categories i temes principals"
-              categories_boxes:
-                label: "Quadres de categories"
-              categories_boxes_with_topics:
-                label: "Quadres de categories amb temes"
       logos:
         title: "Logos"
         fields:

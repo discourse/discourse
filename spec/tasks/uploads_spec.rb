@@ -26,11 +26,11 @@ RSpec.describe "tasks/uploads" do
     let!(:post3) { Fabricate(:post) }
 
     before do
-      PostUpload.create(post: post1, upload: multi_post_upload1)
-      PostUpload.create(post: post2, upload: multi_post_upload1)
-      PostUpload.create(post: post2, upload: upload1)
-      PostUpload.create(post: post3, upload: upload2)
-      PostUpload.create(post: post3, upload: upload3)
+      UploadReference.create(target: post1, upload: multi_post_upload1)
+      UploadReference.create(target: post2, upload: multi_post_upload1)
+      UploadReference.create(target: post2, upload: upload1)
+      UploadReference.create(target: post3, upload: upload2)
+      UploadReference.create(target: post3, upload: upload3)
     end
 
     def invoke_task
@@ -63,6 +63,24 @@ RSpec.describe "tasks/uploads" do
           expect(upload1.reload.access_control_post).to eq(post2)
           expect(upload2.reload.access_control_post).to eq(post3)
           expect(upload3.reload.access_control_post).to eq(post3)
+        end
+
+        it "sets everything attached to a post as secure and rebakes all those posts if login is required" do
+          SiteSetting.login_required = true
+          freeze_time
+
+          post1.update_columns(baked_at: 1.week.ago)
+          post2.update_columns(baked_at: 1.week.ago)
+          post3.update_columns(baked_at: 1.week.ago)
+
+          invoke_task
+
+          expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post3.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(upload2.reload.secure).to eq(true)
+          expect(upload1.reload.secure).to eq(true)
+          expect(upload3.reload.secure).to eq(true)
         end
 
         it "sets the uploads that are media and attachments in the read restricted topic category to secure" do
@@ -123,7 +141,7 @@ RSpec.describe "tasks/uploads" do
           it "changes the upload to not secure and updates the ACL" do
             upload_to_mark_not_secure = Fabricate(:upload_s3, secure: true)
             post_for_upload = Fabricate(:post)
-            PostUpload.create(post: post_for_upload, upload: upload_to_mark_not_secure)
+            UploadReference.create(target: post_for_upload, upload: upload_to_mark_not_secure)
 
             setup_s3
             uploads.each { |upload| stub_upload(upload) }
@@ -149,10 +167,10 @@ RSpec.describe "tasks/uploads" do
       uploads.each { |upload| stub_upload(upload) }
 
       SiteSetting.secure_media = true
-      PostUpload.create(post: post1, upload: upload1)
-      PostUpload.create(post: post1, upload: upload2)
-      PostUpload.create(post: post2, upload: upload3)
-      PostUpload.create(post: post2, upload: upload4)
+      UploadReference.create(target: post1, upload: upload1)
+      UploadReference.create(target: post1, upload: upload2)
+      UploadReference.create(target: post2, upload: upload3)
+      UploadReference.create(target: post2, upload: upload4)
     end
 
     let!(:uploads) do
@@ -192,8 +210,12 @@ RSpec.describe "tasks/uploads" do
     end
 
     it "updates the affected ACLs" do
-      FileStore::S3Store.any_instance.expects(:update_upload_ACL).times(4)
-      invoke_task
+      expect_enqueued_with(
+        job: :sync_acls_for_uploads,
+        args: { upload_ids: [upload1.id, upload2.id, upload3.id, upload4.id] },
+      ) do
+        invoke_task
+      end
     end
   end
 end

@@ -1,6 +1,7 @@
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "I18n";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { capitalize } from "@ember/string";
 
 export default (inboxType, filter) => {
   return createPMRoute(inboxType, "private-messages-groups", filter).extend({
@@ -10,7 +11,7 @@ export default (inboxType, filter) => {
       const groupName = this.groupName;
 
       if (groupName) {
-        let title = groupName.capitalize();
+        let title = capitalize(groupName);
 
         if (filter !== "inbox") {
           title = `${title} ${I18n.t("user.messages." + filter)}`;
