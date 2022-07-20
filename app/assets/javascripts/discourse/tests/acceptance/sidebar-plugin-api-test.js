@@ -10,6 +10,7 @@ import {
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import { bind } from "discourse-common/utils/decorators";
+import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 
 acceptance("Sidebar - section API", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
@@ -287,12 +288,15 @@ acceptance("Sidebar - section API", function (needs) {
       "hover button title attribute",
       "displays hover button with correct title"
     );
-    await click(".header-sidebar-toggle button");
+
+    await undockSidebar();
+
     assert.strictEqual(
       linkDestroy,
       "link test",
       "calls link willDestroy function"
     );
+
     assert.strictEqual(
       sectionDestroy,
       "section test",
