@@ -2070,6 +2070,10 @@ sidebar:
     choices:
       - "default"
       - "unread_new"
+  enable_glimmer_topic_timeline:
+    default: false
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:

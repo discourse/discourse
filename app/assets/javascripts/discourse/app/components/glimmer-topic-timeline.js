@@ -11,7 +11,7 @@ import RawHtml from "discourse/widgets/raw-html";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
 
-export default class TopicTimeline extends GlimmerComponent {
+export default class GlimmerTopicTimeline extends GlimmerComponent {
   @tracked prevEvent;
 
   mobileView = this.site.mobileView;
