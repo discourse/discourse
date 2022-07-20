@@ -16,9 +16,8 @@ acceptance("Sidebar - section API", function (needs) {
 
   needs.hooks.afterEach(() => {
     resetSidebarSection();
-    delete window.link_destroy;
-    delete window.section_destroy;
   });
+  let linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
@@ -59,7 +58,7 @@ acceptance("Sidebar - section API", function (needs) {
             }
             @bind
             willDestroy() {
-              window.section_destroy = "section test";
+              sectionDestroy = "section test";
             }
             get links() {
               return [
@@ -102,7 +101,7 @@ acceptance("Sidebar - section API", function (needs) {
                   }
                   @bind
                   willDestroy() {
-                    window.link_destroy = "link test";
+                    linkDestroy = "link test";
                   }
                 })(),
                 new (class extends BaseCustomSidebarSectionLink {
@@ -288,12 +287,12 @@ acceptance("Sidebar - section API", function (needs) {
     );
     await click(".header-sidebar-toggle button");
     assert.strictEqual(
-      window.link_destroy,
+      linkDestroy,
       "link test",
       "calls link willDestroy function"
     );
     assert.strictEqual(
-      window.section_destroy,
+      sectionDestroy,
       "section test",
       "calls section willDestroy function"
     );
