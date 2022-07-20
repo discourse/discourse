@@ -482,14 +482,17 @@ describe BadgeGranter do
       expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost)).to eq(nil)
     end
 
-    it 'calls user_badge_granted on backfilled badge' do
+    it "triggers the 'user_badge_granted' DiscourseEvent per badge when badges are backfilled" do
       post = create_post(user: user)
       action = PostActionCreator.like(liker, post).post_action
 
-      Badge.any_instance.expects(:trigger_badge_granted_event).with(user.id).once
-      Badge.any_instance.expects(:trigger_badge_granted_event).with(liker.id).once
+      events = DiscourseEvent.track_events(:user_badge_granted) do
+        BadgeGranter.process_queue!
+      end
 
-      BadgeGranter.process_queue!
+      expect(events.length).to eq(2)
+      expect(events[0][:params]).to eq([Badge::FirstLike, liker.id])
+      expect(events[1][:params]).to eq([Badge::Welcome, user.id])
     end
   end
 

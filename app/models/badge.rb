@@ -318,10 +318,6 @@ class Badge < ActiveRecord::Base
     id == Welcome || (badge_grouping_id == BadgeGrouping::GettingStarted && id != NewUserOfTheMonth)
   end
 
-  def trigger_badge_granted_event(user_id)
-    DiscourseEvent.trigger(:user_badge_granted, self.id, user_id)
-  end
-
   protected
 
   def ensure_not_system
