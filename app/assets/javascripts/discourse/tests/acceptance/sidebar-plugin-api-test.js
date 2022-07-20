@@ -16,6 +16,8 @@ acceptance("Sidebar - section API", function (needs) {
 
   needs.hooks.afterEach(() => {
     resetSidebarSection();
+    linkDestroy = undefined;
+    sectionDestroy = undefined;
   });
   let linkDestroy, sectionDestroy;
 
