@@ -299,6 +299,11 @@
   border: 0;
   padding: 0;
   color: var(--tertiary);
+
+  &:hover {
+    background-color: transparent;
+    color: var(--tertiary);
+  }
 }
 
 .btn-mini-toggle {
