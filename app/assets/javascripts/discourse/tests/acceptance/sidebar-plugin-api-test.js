@@ -9,13 +9,17 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - section API", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
 
   needs.hooks.afterEach(() => {
     resetSidebarSection();
+    linkDestroy = undefined;
+    sectionDestroy = undefined;
   });
+  let linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
@@ -53,6 +57,10 @@ acceptance("Sidebar - section API", function (needs) {
                   action: () => {},
                 },
               ];
+            }
+            @bind
+            willDestroy() {
+              sectionDestroy = "section test";
             }
             get links() {
               return [
@@ -92,6 +100,10 @@ acceptance("Sidebar - section API", function (needs) {
                   }
                   get suffixCSSClass() {
                     return "unread";
+                  }
+                  @bind
+                  willDestroy() {
+                    linkDestroy = "link test";
                   }
                 })(),
                 new (class extends BaseCustomSidebarSectionLink {
@@ -274,6 +286,17 @@ acceptance("Sidebar - section API", function (needs) {
       query(".sidebar-section-link-hover button").title,
       "hover button title attribute",
       "displays hover button with correct title"
+    );
+    await click(".header-sidebar-toggle button");
+    assert.strictEqual(
+      linkDestroy,
+      "link test",
+      "calls link willDestroy function"
+    );
+    assert.strictEqual(
+      sectionDestroy,
+      "section test",
+      "calls section willDestroy function"
     );
   });
 
