@@ -60,9 +60,4 @@
     // limit the wrapper width, so when the scrollbar is added the content doesn't shift
     max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
   }
-
-  .sidebar-toggle {
-    display: flex;
-    justify-content: flex-end;
-  }
 }

@@ -11,7 +11,7 @@
     @toggleMobileView={{route-action "toggleMobileView"}}
     @toggleAnonymous={{route-action "toggleAnonymous"}}
     @logout={{route-action "logout"}}
-    @sidebarDocked={{this.showSidebar}}
+    @sidebarDocked={{and this.currentUser.experimental_sidebar_enabled (and this.showSidebar this.site.desktopView)}}
     @toggleSidebar={{action "toggleSidebar"}} />
 
   <SoftwareUpdatePrompt />

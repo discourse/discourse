@@ -462,8 +462,6 @@ export default createWidget("header", {
     const contentsAttrs = {
       contents,
       minimized: !!attrs.topic,
-      sidebarEnabled:
-        this.currentUser?.experimental_sidebar_enabled && this.site.mobileView,
     };
 
     return h(
@@ -546,13 +544,20 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    this.state.hamburgerVisible = !this.state.hamburgerVisible;
-    this.toggleBodyScrolling(this.state.hamburgerVisible);
+    if (
+      this.currentUser?.experimental_sidebar_enabled &&
+      this.site.mobileView
+    ) {
+      this.sendWidgetAction("toggleSidebar");
+    } else {
+      this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      this.toggleBodyScrolling(this.state.hamburgerVisible);
 
-    // auto focus on first link in dropdown
-    schedule("afterRender", () => {
-      document.querySelector(".hamburger-panel .menu-links a")?.focus();
-    });
+      // auto focus on first link in dropdown
+      schedule("afterRender", () => {
+        document.querySelector(".hamburger-panel .menu-links a")?.focus();
+      });
+    }
   },
 
   toggleBodyScrolling(bool) {

@@ -1,8 +1,10 @@
 <div class="sidebar-footer-wrapper">
   <div class="sidebar-footer-container">
-    <DButton
-      @action={{@toggleSidebar}}
-      @icon="thumbtack"
-      @class="sidebar-footer-button sidebar-footer-button-dock-toggle"/>
+    {{#if this.site.desktopView}}
+      <DButton
+        @action={{@toggleSidebar}}
+        @icon="thumbtack"
+        @class="sidebar-footer-button sidebar-footer-button-dock-toggle"/>
+    {{/if}}
   </div>
 </div>
