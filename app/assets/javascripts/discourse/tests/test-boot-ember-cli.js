@@ -38,7 +38,7 @@ document.addEventListener("discourse-booted", () => {
   setupTests(config.APP);
   let loader = loadEmberExam();
 
-  if (loader.urlParams.size === 0 && !QUnit.config.seed) {
+  if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam
     // handle randomization.
     QUnit.config.seed = true;
