@@ -37,7 +37,7 @@ module(
 
     const template = hbs`<UserMenu::GroupMessageSummaryNotificationItem @item={{this.notification}}/>`;
 
-    test("the notification displays a simple i18n string", async function (assert) {
+    test("the notification displays the right content", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
       const notification = query("li");
