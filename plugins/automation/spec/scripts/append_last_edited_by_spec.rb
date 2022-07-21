@@ -17,23 +17,27 @@ describe 'AppendLastEditedBy' do
     cooked = automation.trigger!('post' => post, 'cooked' => post.cooked)
     updated_at = post.updated_at
     date_time = updated_at.strftime("%Y-%m-%dT%H:%M:%SZ")
-    [cooked, updated_at, date_time]
+    [cooked, updated_at]
   end
 
   context "#trigger!" do
     it 'works for newly created post' do
-      cooked, updated_at, date_time = trigger_automation(post)
-      expect(cooked.ends_with?("<blockquote>\n<p>Last edited by #{post.username} <span data-date=\"#{updated_at.to_date.to_s}\" data-time=\"#{updated_at.strftime("%H:%M:%S")}\" class=\"discourse-local-date\" data-timezone=\"UTC\" data-email-preview=\"#{date_time} UTC\">#{date_time}</span></p>\n</blockquote>\n</div>")).to be_truthy
+      freeze_time
+
+      cooked, updated_at = trigger_automation(post)
+      expect(cooked.include?(PrettyText.cook(">\n#{I18n.t("discourse_automation.scriptables.append_last_edited_by.text", username: post.user.username, date_time: "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]")}"))).to be_truthy
     end
 
     it 'works for existing post with last edited by detail' do
-      cooked, updated_at, date_time = trigger_automation(post)
-      expect(cooked.include?("<p>Last edited by #{post.username} <span data-date=\"#{updated_at.to_date.to_s}\" data-time=\"#{updated_at.strftime("%H:%M:%S")}\" class=\"discourse-local-date\" data-timezone=\"UTC\" data-email-preview=\"#{date_time} UTC\">#{date_time}</span></p>")).to be_truthy
+      freeze_time
+
+      cooked, updated_at = trigger_automation(post)
+      expect(cooked.include?(PrettyText.cook(">\n#{I18n.t("discourse_automation.scriptables.append_last_edited_by.text", username: post.user.username, date_time: "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]")}"))).to be_truthy
 
       PostRevisor.new(post).revise!(moderator, raw: 'this is a post with edit')
 
-      cooked, updated_at, date_time = trigger_automation(post.reload)
-      expect(cooked.include?("<p>Last edited by #{moderator.username} <span data-date=\"#{updated_at.to_date.to_s}\" data-time=\"#{updated_at.strftime("%H:%M:%S")}\" class=\"discourse-local-date\" data-timezone=\"UTC\" data-email-preview=\"#{date_time} UTC\">#{date_time}</span></p>")).to be_truthy
+      cooked, updated_at = trigger_automation(post.reload)
+      expect(cooked.include?(PrettyText.cook(">\n#{I18n.t("discourse_automation.scriptables.append_last_edited_by.text", username: moderator.username, date_time: "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]")}"))).to be_truthy
     end
   end
 end
