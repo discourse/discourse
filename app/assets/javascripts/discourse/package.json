@@ -59,6 +59,8 @@
     "ember-rfc176-data": "^0.3.17",
     "ember-source": "~3.28.8",
     "ember-test-selectors": "^6.0.0",
+    "ember-modifier": "^3.2.7",
+    "@ember/render-modifiers": "^2.0.4",
     "eslint": "^7.32.0",
     "eslint-plugin-qunit": "^6.2.0",
     "html-entities": "^2.3.3",

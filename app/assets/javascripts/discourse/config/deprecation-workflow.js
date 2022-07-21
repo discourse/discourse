@@ -23,5 +23,29 @@ globalThis.deprecationWorkflow.config = {
       handler: "silence",
       matchId: "ember.built-in-components.legacy-arguments",
     },
+    {
+      handler: "throw",
+      matchId: "ember-modifier.use-modify",
+    },
+    {
+      handler: "throw",
+      matchId: "ember-modifier.use-destroyables",
+    },
+    {
+      handler: "throw",
+      matchId: "ember-modifier.no-args-property",
+    },
+    {
+      handler: "throw",
+      matchId: "ember-modifier.no-element-property",
+    },
+    {
+      handler: "throw",
+      matchId: "ember-modifier.function-based-options",
+    },
+    {
+      handler: "throw",
+      matchId: "ember-modifier.function-based-options",
+    },
   ],
 };
