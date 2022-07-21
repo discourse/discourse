@@ -518,6 +518,9 @@ class FinalDestination
     end
 
     result
+  rescue Timeout::Error
+    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}") if @verbose
+    nil
   rescue StandardError
     unsafe_close ? [:ok, headers_subset] : raise
   end
