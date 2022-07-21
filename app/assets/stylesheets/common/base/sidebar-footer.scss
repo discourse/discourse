@@ -7,8 +7,11 @@
     display: flex;
   }
 
-  .sidebar-footer-button.btn {
+  .sidebar-footer-actions {
     margin-left: auto;
+  }
+
+  .sidebar-footer-actions-button.btn {
     background: transparent;
     border: none;
     padding: 0.25em 0.5em;

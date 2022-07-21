@@ -1,5 +1,5 @@
 import { test } from "qunit";
-import { click, visit } from "@ember/test-helpers";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 
@@ -35,6 +35,23 @@ acceptance("Sidebar - User with sidebar disabled", function (needs) {
 acceptance("Sidebar - User with sidebar enabled", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
 
+  test("navigating to about route using sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-footer-link-about");
+
+    assert.strictEqual(currentRouteName(), "about");
+  });
+
+  test("viewing keyboard shortcuts using sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-footer-link-keyboard-shortcuts");
+
+    assert.ok(
+      exists("#keyboard-shortcuts-help"),
+      "keyboard shortcuts help is displayed"
+    );
+  });
+
   test("undocking and docking sidebar", async function (assert) {
     await visit("/");
 
@@ -61,7 +78,7 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
       "displays the sidebar in hamburger dropdown"
     );
 
-    await click("button.sidebar-footer-button-dock-toggle");
+    await click("button.sidebar-footer-actions-dock-toggle");
 
     assert.ok(
       exists(".sidebar-container"),
