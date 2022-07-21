@@ -38,7 +38,7 @@ export default Component.extend({
     this._widgetClass =
       queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
 
-    if (this._widgetClass && this._widgetClass.class) {
+    if (this._widgetClass?.class) {
       this._widgetClass = this._widgetClass.class;
     }
 

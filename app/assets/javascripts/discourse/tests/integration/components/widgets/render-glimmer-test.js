@@ -168,7 +168,7 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     assert.deepEqual(
       DemoComponent.eventLog,
       ["init", "didReceiveAttrs", "didInsertElement"],
-      "component can be reinitialized again"
+      "component can be reinitialized"
     );
   });
 
