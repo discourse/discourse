@@ -45,7 +45,7 @@ module(
       assert.ok(link.href.endsWith("/badges/12/tough-guy?username=ossa"));
     });
 
-    test("the notification's only content is a i18n string", async function (assert) {
+    test("displays the right notification content", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
       const div = query("li div");
