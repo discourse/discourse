@@ -116,6 +116,23 @@ class WordWatcher
     censor_text_with_regexp(text, regexp)
   end
 
+  def self.apply_to_text(text)
+    if regexp = WordWatcher.word_matcher_regexp(:censor)
+      text = censor_text_with_regexp(text, regexp)
+    end
+
+    [:replace, :link].each do |type|
+      regexps = WordWatcher.word_matcher_regexps(type)
+      if regexps.present?
+        regexps.each do |word_regexp, replacement|
+          text = text.gsub(Regexp.new(word_regexp)) { |match| "#{match[0]}#{replacement}" }
+        end
+      end
+    end
+
+    text
+  end
+
   def self.clear_cache!
     WatchedWord.actions.each do |a, i|
       Discourse.cache.delete word_matcher_regexp_key(a)

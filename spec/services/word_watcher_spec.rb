@@ -178,4 +178,15 @@ describe WordWatcher do
     end
   end
 
+  describe "apply_to_text" do
+    fab!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+    fab!(:replaced_word) { Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace]) }
+    fab!(:link_word) { Fabricate(:watched_word, word: "https://notdiscourse.org", replacement: "https://discourse.org", action: WatchedWord.actions[:link]) }
+
+    it "replaces all types of words" do
+      text = "hello censored world to replace https://notdiscourse.org"
+      expected = "hello #{WordWatcher::REPLACEMENT_LETTER * 8} world replaced https://discourse.org"
+      expect(WordWatcher.apply_to_text(text)).to eq(expected)
+    end
+  end
 end

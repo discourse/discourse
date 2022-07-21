@@ -224,6 +224,16 @@ RSpec.describe User do
         it { is_expected.to be_valid }
       end
 
+      context "when user fields contain URL" do
+        let(:value) { "https://discourse.org" }
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        it "is not cooked" do
+          user.save!
+          expect(user_field_value).to eq "https://discourse.org"
+        end
+      end
+
       context "with a multiselect user field" do
         fab!(:user_field) do
           Fabricate(:user_field, field_type: 'multiselect', show_on_profile: true) do

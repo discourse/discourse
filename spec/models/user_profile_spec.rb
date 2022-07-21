@@ -45,6 +45,11 @@ RSpec.describe UserProfile do
       context "when it does not contain watched words" do
         it { is_expected.to be_valid }
       end
+
+      it "is not cooked" do
+        profile.location = "https://discourse.org"
+        expect { profile.save! }.not_to change { profile.location }
+      end
     end
 
     describe "#bio_raw" do
