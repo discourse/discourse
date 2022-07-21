@@ -52,6 +52,16 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
     );
   });
 
+  test("viewing keyboard shortcuts using sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-footer-link-keyboard-shortcuts");
+
+    assert.ok(
+      exists("#keyboard-shortcuts-help"),
+      "keyboard shortcuts help is displayed"
+    );
+  });
+
   test("undocking and docking sidebar", async function (assert) {
     await visit("/");
 
