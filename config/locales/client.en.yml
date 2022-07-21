@@ -2322,6 +2322,8 @@ en:
       empty: "No notifications found."
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
+      watching_first_post_label: "New Topic"
+      user_moved_post: "%{username} moved"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2334,6 +2336,10 @@ en:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} and %{count} others"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -2342,6 +2348,7 @@ en:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> accepted your invitation"
+      invitee_accepted_your_invitation: "accepted your invitation"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Earned '%{description}'"
