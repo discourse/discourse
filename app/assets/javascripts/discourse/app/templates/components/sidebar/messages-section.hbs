@@ -22,8 +22,6 @@
   {{/each}}
 
   {{#if (gt this.groupMessagesSectionLinks.length 0)}}
-    <hr>
-
     {{#each this.groupMessagesSectionLinks as |groupMessageSectionLink|}}
       {{#if groupMessageSectionLink.shouldDisplay}}
         <Sidebar::SectionLink
