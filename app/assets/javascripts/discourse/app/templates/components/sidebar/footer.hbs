@@ -1,10 +1,18 @@
 <div class="sidebar-footer-wrapper">
   <div class="sidebar-footer-container">
-    {{#if this.site.desktopView}}
+    <div class="sidebar-footer-actions">
       <DButton
-        @action={{@toggleSidebar}}
-        @icon="thumbtack"
-        @class="sidebar-footer-button sidebar-footer-button-dock-toggle"/>
-    {{/if}}
+        @route="adminSiteSettings"
+        @title="admin.site_settings.title"
+        @icon="cog"
+        @class="sidebar-footer-actions-button sidebar-footer-actions-site-settings" />
+
+      {{#if this.site.desktopView}}
+        <DButton
+          @action={{@toggleSidebar}}
+          @icon="thumbtack"
+          @class="sidebar-footer-actions-button sidebar-footer-actions-dock-toggle"/>
+      {{/if}}
+    </div>
   </div>
 </div>
