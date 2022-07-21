@@ -11,7 +11,8 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
-import ComponentConnector from "discourse/widgets/component-connector";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { hbs } from "ember-cli-htmlbars";
 
 const _extraHeaderIcons = [];
 
@@ -338,9 +339,11 @@ createWidget("revamped-user-menu-wrapper", {
 
   html() {
     return [
-      new ComponentConnector(this, "user-menu-wrapper", {}, [], {
-        applyStyle: false,
-      }),
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<UserMenu::Menu />`
+      ),
     ];
   },
 
