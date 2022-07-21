@@ -1124,6 +1124,15 @@ describe Group do
       expect(GroupCategoryNotificationDefault.lookup(new_group, :watching).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
     end
 
+    it "can set category notifications" do
+      SiteSetting.default_categories_muted = category1.id.to_s
+      group.watching_category_ids = [category1.id]
+      group.save!
+
+      group.add(user)
+      expect(CategoryUser.find_by(user_id: user.id, category_id: category1.id).notification_level).to eq(NotificationLevels.all[:watching])
+    end
+
     it "can remove categories" do
       [category1, category2].each do |category|
         GroupCategoryNotificationDefault.create!(
