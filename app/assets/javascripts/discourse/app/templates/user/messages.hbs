@@ -105,8 +105,8 @@
       {{#if this.showNewPM}}
         <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
       {{/if}}
-      {{#if (or this.viewingSelf this.currentUser.admin)}}
-        {{bulk-select-toggle parentController="user-topics-list"}}
+      {{#if this.currentUser.admin}}
+        <BulkSelectToggle @parentController={{"user-topics-list"}} @tagName=""/>
       {{/if}}
     {{/if}}
   </div>

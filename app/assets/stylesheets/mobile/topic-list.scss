@@ -473,33 +473,47 @@ td .main-link {
   margin-left: 0;
 }
 
-// work in progress for bulk select
-
-.sticky-header .topic-list-header {
-  z-index: 9;
-}
+// Bulk select
 
 .topic-list-header {
   display: none;
 }
 
-.sticky-header {
+.topic-list.sticky-header {
   .topic-list-header {
     display: table-header-group;
-  }
-  th {
-    display: none;
-  }
-  th.default {
-    display: flex;
-    span:not(.bulk-select-topics) {
+    position: sticky;
+    z-index: z("base") + 2;
+    top: var(--header-offset);
+    background: var(--secondary);
+    tr {
+      display: flex;
+      align-items: center;
+      border: none;
+    }
+
+    .topic-list-data {
       display: none;
+      &.bulk-select {
+        display: inline-block;
+      }
+      &.default {
+        display: flex;
+        span:not(.bulk-select-topics) {
+          display: none;
+        }
+      }
+    }
+
+    button.bulk-select {
+      padding-left: 0.85em; // visual alignment
     }
   }
 }
 
 .bulk-select-topics {
   display: flex;
+  padding-left: 0.85em;
   .btn {
     margin-right: 0.5em;
   }
@@ -507,6 +521,7 @@ td .main-link {
 
 .pull-left {
   label {
+    // bulk select checkbox
     display: flex;
     width: 45px;
     height: 45px;

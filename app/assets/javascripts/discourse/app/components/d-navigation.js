@@ -130,7 +130,7 @@ export default Component.extend(FilterModeMixin, {
   },
 
   @discourseComputed("filterType")
-  notCategories(filterType) {
+  notCategoriesRoute(filterType) {
     return filterType !== "categories";
   },
 
