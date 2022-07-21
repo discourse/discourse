@@ -1,3 +1,5 @@
+import { isTesting } from "discourse-common/config/environment";
+
 // A simple key value store that uses LocalStorage
 let safeLocalStorage;
 
@@ -10,7 +12,7 @@ try {
     safeLocalStorage["safeLocalStorage"] = true;
   }
 } catch (e) {
-  // cookies disabled, we don't care
+  // local storage disabled
   safeLocalStorage = null;
 }
 
@@ -18,7 +20,7 @@ export default class KeyValueStore {
   context = null;
 
   constructor(ctx) {
-    this.context = ctx;
+    this.context = isTesting() ? `test_${ctx}` : ctx;
   }
 
   abandonLocal() {
