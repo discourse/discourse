@@ -52,4 +52,9 @@ export default class UserMenu extends GlimmerComponent {
       this.currentPanelComponent = tab.panelComponent;
     }
   }
+
+  @action
+  triggerRenderedAppEvent() {
+    this.appEvents.trigger("user-menu:rendered");
+  }
 }
