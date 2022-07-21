@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { createWatchedWordRegExp } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 
@@ -17,15 +18,14 @@ export default Controller.extend(ModalFunctionality, {
     "isLink"
   )
   matches(value, regexpList, words, isReplace, isTag, isLink) {
-    if (!value || !regexpList.length) {
+    if (!value || regexpList.length === 0) {
       return [];
     }
 
     if (isReplace || isLink) {
       const matches = [];
       words.forEach((word) => {
-        const caseFlag = word.case_sensitive ? "" : "i";
-        const regexp = new RegExp(word.regexp, `${caseFlag}g`);
+        const regexp = createWatchedWordRegExp(word);
         let match;
 
         while ((match = regexp.exec(value)) !== null) {
@@ -39,8 +39,7 @@ export default Controller.extend(ModalFunctionality, {
     } else if (isTag) {
       const matches = {};
       words.forEach((word) => {
-        const caseFlag = word.case_sensitive ? "" : "i";
-        const regexp = new RegExp(word.regexp, `${caseFlag}g`);
+        const regexp = createWatchedWordRegExp(word);
         let match;
 
         while ((match = regexp.exec(value)) !== null) {
@@ -63,11 +62,12 @@ export default Controller.extend(ModalFunctionality, {
       let matches = [];
       regexpList.forEach((regexp) => {
         let [[regexpString, opts]] = Object.entries(regexp);
-        const caseFlag = opts.case_sensitive ? "" : "i";
+        const wordRegexp = createWatchedWordRegExp({
+          regexp: regexpString,
+          case_sensitive: opts.case_sensitive,
+        });
 
-        matches.push(
-          ...(value.match(new RegExp(regexpString, `${caseFlag}g`)) || [])
-        );
+        matches.push(...(value.match(wordRegexp) || []));
       });
 
       return matches;

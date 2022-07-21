@@ -5109,7 +5109,7 @@ en:
         show_words:
           one: "show %{count} word"
           other: "show %{count} words"
-        case_sensitive: "case-sensitive"
+        case_sensitive: "(case-sensitive)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"

@@ -7,6 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
@@ -84,7 +85,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
     assert
       .dom(".watched-words-list .watched-word")
-      .hasText("Discourse (case-sensitive)");
+      .hasText(`Discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
   });
 
   test("remove words", async function (assert) {

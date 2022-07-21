@@ -573,6 +573,11 @@ export function clipboardCopyAsync(functionReturningPromise) {
   });
 }
 
+export function createWatchedWordRegExp(word) {
+  const caseFlag = word.case_sensitive ? "" : "i";
+  return new RegExp(word.regexp, `${caseFlag}g`);
+}
+
 function clipboardCopyFallback(text) {
   // Put the text to copy into a <span>
   const span = document.createElement("span");

@@ -30,7 +30,7 @@ export function setup(helper) {
   helper.registerPlugin((md) => {
     const censoredRegexps = md.options.discourse.censoredRegexp;
 
-    if (Array.isArray(censoredRegexps) && censoredRegexps.length) {
+    if (Array.isArray(censoredRegexps) && censoredRegexps.length > 0) {
       const replacement = String.fromCharCode(9632);
       const censor = censorFn(censoredRegexps, replacement);
       md.core.ruler.push("censored", (state) => censorTree(state, censor));
