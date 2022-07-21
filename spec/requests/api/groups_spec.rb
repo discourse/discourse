@@ -15,62 +15,17 @@ describe 'groups' do
       tags 'Groups'
       operationId 'createGroup'
       consumes 'application/json'
-      parameter name: :group, in: :body, schema: {
-        type: :object,
-        properties: {
-          group: {
-            type: :object,
-            properties: {
-              name: { type: :string },
-            }, required: ['name']
-          }
-        }, required: ['group']
-      }
+      expected_request_schema = load_spec_schema('group_create_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
       response '200', 'group created' do
-        schema type: :object, properties: {
-            basic_group: {
-              type: :object,
-              properties: {
-                id: { type: :integer },
-                automatic: { type: :boolean },
-                name: { type: :string },
-                user_count: { type: :integer },
-                mentionable_level: { type: :integer },
-                messageable_level: { type: :integer },
-                visibility_level: { type: :integer },
-                automatic_membership_email_domains: { type: [:string, :null] },
-                automatic_membership_retroactive: { type: :boolean },
-                primary_group: { type: :boolean },
-                title: { type: [:string, :null] },
-                grant_trust_level: { type: [:string, :null] },
-                incoming_email: { type: [:string, :null] },
-                has_messages: { type: :boolean },
-                flair_url: { type: [:string, :null] },
-                flair_bg_color: { type: [:string, :null] },
-                flair_color: { type: [:string, :null] },
-                bio_raw: { type: [:string, :null] },
-                bio_cooked: { type: [:string, :null] },
-                bio_excerpt: { type: [:string, :null] },
-                public_admission: { type: :boolean },
-                public_exit: { type: :boolean },
-                allow_membership_requests: { type: :boolean },
-                full_name: { type: [:string, :null] },
-                default_notification_level: { type: :integer },
-                membership_request_template: { type: [:string, :null] },
-                membership_visibility_level: { type: :integer },
-                can_see_members: { type: :boolean },
-                publish_read_state: { type: :boolean },
-              },
-              required: ["id"]
-            }
-          }, required: ["basic_group"]
+        expected_response_schema = load_spec_schema('group_create_response')
 
-        let(:group) { { name: 'awesome' } }
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['basic_group']['name']).to eq("awesome")
+        let(:params) { { 'group' => { 'name' => 'awesome' } } }
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
         end
       end
     end
