@@ -182,6 +182,7 @@ TopicList.reopenClass({
   munge(json, store) {
     json.inserted = json.inserted || [];
     json.can_create_topic = json.topic_list.can_create_topic;
+    json.show_welcome_topic_banner = json.topic_list.show_welcome_topic_banner;
     json.more_topics_url = json.topic_list.more_topics_url;
     json.for_period = json.topic_list.for_period;
     json.loaded = true;

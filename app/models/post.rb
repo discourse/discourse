@@ -1127,6 +1127,10 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def self.show_welcome_topic_banner?
+    Post.find_by("topic_id = :topic_id AND post_number = 1 AND version = 1 AND created_at > :created_at", topic_id: SiteSetting.welcome_topic_id, created_at: 1.month.ago).present?
+  end
+
   private
 
   def parse_quote_into_arguments(quote)

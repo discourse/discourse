@@ -8,7 +8,8 @@ class TopicListSerializer < ApplicationSerializer
              :per_page,
              :top_tags,
              :tags,
-             :shared_drafts
+             :shared_drafts,
+             :show_welcome_topic_banner
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
   has_many :shared_drafts, serializer: TopicListItemSerializer, embed: :objects
@@ -36,5 +37,13 @@ class TopicListSerializer < ApplicationSerializer
 
   def include_tags?
     SiteSetting.tagging_enabled && object.tags.present?
+  end
+
+  def show_welcome_topic_banner
+    true
+  end
+
+  def include_show_welcome_topic_banner?
+    object.show_welcome_topic_banner
   end
 end

@@ -49,7 +49,8 @@ class TopicList
     :tags,
     :shared_drafts,
     :category,
-    :publish_read_state
+    :publish_read_state,
+    :show_welcome_topic_banner
   )
 
   def initialize(filter, current_user, topics, opts = nil)

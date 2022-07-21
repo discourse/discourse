@@ -24,6 +24,16 @@ const controllerOpts = {
   showTopicPostBadges: not("new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
+  @discourseComputed("model.filter", "model.show_welcome_topic_banner")
+  canEditWelcomeTopic(filter, showWelcomeTopicBanner) {
+    return (
+      this.currentUser &&
+      this.currentUser.staff &&
+      filter === "latest" &&
+      showWelcomeTopicBanner
+    );
+  },
+
   expandGloballyPinned: false,
   expandAllPinned: false,
 

@@ -2325,6 +2325,7 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
+    client: true
   lounge_welcome_topic_id:
     default: -1
     hidden: true

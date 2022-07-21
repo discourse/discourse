@@ -58,6 +58,10 @@ class ListController < ApplicationController
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
+      if params[:category].blank? && filter == :latest && guardian.is_staff?
+        list.show_welcome_topic_banner = Post.show_welcome_topic_banner?
+      end
+
       if guardian.can_create_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
           # On shared drafts, show the destination category
