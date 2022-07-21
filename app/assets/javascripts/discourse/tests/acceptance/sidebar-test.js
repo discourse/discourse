@@ -35,6 +35,13 @@ acceptance("Sidebar - User with sidebar disabled", function (needs) {
 acceptance("Sidebar - User with sidebar enabled", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
 
+  test("navigating to about route using sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-footer-link-about");
+
+    assert.strictEqual(currentRouteName(), "about");
+  });
+
   test("viewing keyboard shortcuts using sidebar", async function (assert) {
     await visit("/");
     await click(".sidebar-footer-link-keyboard-shortcuts");
