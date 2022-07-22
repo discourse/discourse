@@ -22,7 +22,7 @@
       {{#if this.site.desktopView}}
         <DButton
           @action={{@toggleSidebar}}
-          @icon="thumbtack"
+          @icon={{if @showSidebar "discourse-sidebar-close" "discourse-sidebar-plus"}}
           @class="sidebar-footer-actions-button sidebar-footer-actions-dock-toggle"/>
       {{/if}}
     </div>

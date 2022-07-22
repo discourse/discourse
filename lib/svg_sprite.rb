@@ -65,6 +65,8 @@ module SvgSprite
     "discourse-compress",
     "discourse-emojis",
     "discourse-expand",
+    "discourse-sidebar-plus",
+    "discourse-sidebar-close",
     "download",
     "ellipsis-h",
     "ellipsis-v",
