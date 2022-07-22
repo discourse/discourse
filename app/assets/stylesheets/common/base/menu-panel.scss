@@ -568,3 +568,33 @@ div.menu-links-header {
     color: var(--primary-med-or-secondary-med);
   }
 }
+
+// Sidebar-hamburger hybrid
+
+.hamburger-menu.revamped {
+  .sidebar-section-wrapper {
+    .sidebar-section-header-button {
+      opacity: 1;
+    }
+
+    .sidebar-section-link.active {
+      font-weight: normal;
+      color: var(--primary-high);
+      background: var(--tertiary-low);
+    }
+
+    .sidebar-section-header-link,
+    .sidebar-section-header-button,
+    .sidebar-section-link {
+      &:hover {
+        background: var(--highlight-medium);
+      }
+    }
+  }
+
+  .sidebar-footer-actions-button.btn {
+    &:hover {
+      background: var(--highlight-medium);
+    }
+  }
+}

@@ -15,7 +15,12 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
   test("clicking outside sidebar collapses it", async function (assert) {
     await visit("/");
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
+
+    assert.notOk(
+      exists(".sidebar-footer-actions-dock-toggle"),
+      "button to dock sidebar is not displayed"
+    );
 
     assert.ok(exists(".sidebar-container"), "sidebar is displayed");
 
@@ -27,7 +32,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
   test("clicking on a link or button in sidebar collapses it", async function (assert) {
     await visit("/");
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
     await click(".sidebar-section-link-tracked");
 
     assert.ok(
@@ -35,7 +40,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
       "sidebar is collapsed when a button in sidebar is clicked"
     );
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
     await click(".sidebar-section-header-link");
 
     assert.ok(
@@ -47,7 +52,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
   test("collapsing sidebar sections does not collapse sidebar", async function (assert) {
     await visit("/");
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
     await click(".sidebar-section-header-caret");
 
     assert.ok(

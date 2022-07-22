@@ -1,0 +1,30 @@
+<div class="sidebar-footer-wrapper">
+  <div class="sidebar-footer-container">
+    <div class="sidebar-footer-links">
+      <LinkTo @route="about" title={{i18n "about.simple_title"}} class="sidebar-footer-link sidebar-footer-link-about">
+        {{i18n "about.simple_title"}}
+      </LinkTo>
+
+      {{#if this.currentUser.admin}}
+        <LinkTo @route="adminSiteSettings" title={{i18n "admin.site_settings.title"}} class="sidebar-footer-link sidebar-footer-link-site-settings">
+          {{i18n "admin.site_settings.title"}}
+        </LinkTo>
+      {{/if}}
+    </div>
+
+    <div class="sidebar-footer-actions">
+      <DButton
+        @action={{route-action "showKeyboardShortcutsHelp"}}
+        @title={{i18n "keyboard_shortcuts_help.title"}}
+        @icon="keyboard"
+        @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
+
+      {{#if this.site.desktopView}}
+        <DButton
+          @action={{@toggleSidebar}}
+          @icon="thumbtack"
+          @class="sidebar-footer-actions-button sidebar-footer-actions-dock-toggle"/>
+      {{/if}}
+    </div>
+  </div>
+</div>

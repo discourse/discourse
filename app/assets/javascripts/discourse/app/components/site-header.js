@@ -231,8 +231,20 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
+
       if (this.currentUser?.redesigned_user_menu_enabled) {
         this.appEvents.on("user-menu:rendered", this, "_animateMenu");
+      }
+
+      if (
+        this.currentUser?.experimental_sidebar_enabled &&
+        !this.site.mobileView
+      ) {
+        this.appEvents.on(
+          "sidebar:docked-state-updated",
+          this,
+          "queueRerender"
+        );
       }
 
       this.dispatch("notifications:changed", "user-notifications");
@@ -351,6 +363,17 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.off("user-menu:rendered", this, "_animateMenu");
       }
 
+      if (
+        this.currentUser?.experimental_sidebar_enabled &&
+        !this.site.mobileView
+      ) {
+        this.appEvents.off(
+          "sidebar:docked-state-updated",
+          this,
+          "queueRerender"
+        );
+      }
+
       if (this.currentUser) {
         this.currentUser.off("status-changed", this, "queueRerender");
       }
@@ -367,6 +390,7 @@ const SiteHeaderComponent = MountWidget.extend(
       return {
         topic: this._topic,
         canSignUp: this.canSignUp,
+        sidebarDocked: this.sidebarDocked,
       };
     },
 

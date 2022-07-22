@@ -4,46 +4,6 @@
   --d-sidebar-animation-ease: ease-in-out;
 }
 
-.header-sidebar-toggle {
-  --toggle-padding: 0.5em;
-  margin-right: 0.75em;
-  // extending the toggle beyond the page when space allows
-  // for better logo alignment with content
-  @media screen and (min-width: 1380px) {
-    margin-left: -3.5em;
-  }
-
-  // align on icon, because button is transparent
-  @media screen and (max-width: 1480px) {
-    margin-left: calc(var(--toggle-padding) * -1.3);
-  }
-
-  // prevents toggle overflow on smaller screens
-  @media screen and (max-width: 1379px) {
-    :not(.mobile-view) .has-sidebar-page & {
-      margin-left: initial;
-    }
-  }
-
-  transition: margin var(--d-sidebar-animation-speed)
-    var(--d-sidebar-animation-ease);
-
-  button {
-    position: relative;
-    font-size: var(--font-up-2);
-    padding: var(--toggle-padding);
-
-    .discourse-no-touch & {
-      &:hover {
-        background: var(--primary-low);
-        .d-icon {
-          color: var(--primary-medium);
-        }
-      }
-    }
-  }
-}
-
 #main-outlet-wrapper {
   .sidebar-wrapper {
     grid-area: sidebar;
@@ -53,8 +13,8 @@
     align-self: start;
     overflow-y: auto;
     background-color: var(--primary-very-low);
-    .discourse-touch &,
     &:hover {
+      .sidebar-section-header-button,
       .sidebar-section-header-caret {
         opacity: 1;
         transition-delay: 0s;
@@ -63,10 +23,12 @@
   }
 
   .sidebar-container {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     height: 100%;
     width: var(--d-sidebar-width);
-    padding: 1em 0;
+    padding: 1em 0 0;
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -99,10 +61,13 @@
   .sidebar-scroll-wrap {
     // limit the wrapper width, so when the scrollbar is added the content doesn't shift
     max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
-  .sidebar-toggle {
-    display: flex;
-    justify-content: flex-end;
+  .sidebar-sections {
+    flex: 1;
   }
 }
