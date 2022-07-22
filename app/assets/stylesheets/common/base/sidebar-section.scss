@@ -49,9 +49,6 @@
     background: none;
     border: none;
     padding: 0.25em 0.5em;
-    opacity: 0;
-    transition: opacity 0.25s;
-    transition-delay: 0.5s;
 
     .d-icon {
       font-size: var(--font-down-1);
@@ -62,6 +59,7 @@
       background: var(--primary-low);
     }
   }
+
   .select-kit-collection {
     .texts {
       font-size: var(--font-0);
@@ -122,11 +120,5 @@
     hr {
       margin: 0em 1.5em;
     }
-  }
-}
-
-#main-outlet-wrapper .sidebar-section-wrapper {
-  .sidebar-section-message-wrapper {
-    margin-left: 1.5em;
   }
 }

@@ -13,13 +13,6 @@
     align-self: start;
     overflow-y: auto;
     background-color: var(--primary-very-low);
-    &:hover {
-      .sidebar-section-header-button,
-      .sidebar-section-header-caret {
-        opacity: 1;
-        transition-delay: 0s;
-      }
-    }
   }
 
   .sidebar-container {
