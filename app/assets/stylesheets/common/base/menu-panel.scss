@@ -572,6 +572,14 @@ div.menu-links-header {
 // Sidebar-hamburger hybrid
 
 .hamburger-menu.revamped {
+  .panel-body {
+    width: 100%;
+
+    .panel-body-content {
+      width: 100%;
+    }
+  }
+
   .sidebar-section-wrapper {
     .sidebar-section-header-button {
       opacity: 1;
