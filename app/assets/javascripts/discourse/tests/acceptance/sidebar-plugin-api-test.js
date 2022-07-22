@@ -11,7 +11,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import { bind } from "discourse-common/utils/decorators";
 
-acceptance("Sidebar - section API", function (needs) {
+acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
 
   needs.hooks.afterEach(() => {
@@ -19,6 +19,7 @@ acceptance("Sidebar - section API", function (needs) {
     linkDestroy = undefined;
     sectionDestroy = undefined;
   });
+
   let linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
@@ -29,21 +30,23 @@ acceptance("Sidebar - section API", function (needs) {
             get name() {
               return "test-chat-channels";
             }
+
             get route() {
               return "discovery.latest";
             }
-            get model() {
-              return false;
-            }
+
             get title() {
               return "chat channels title";
             }
+
             get text() {
               return "chat channels text";
             }
+
             get actionsIcon() {
               return "cog";
             }
+
             get actions() {
               return [
                 {
@@ -58,49 +61,63 @@ acceptance("Sidebar - section API", function (needs) {
                 },
               ];
             }
+
             @bind
             willDestroy() {
               sectionDestroy = "section test";
             }
+
             get links() {
               return [
                 new (class extends BaseCustomSidebarSectionLink {
                   get name() {
-                    "random-channel";
+                    return "random-channel";
                   }
+
                   get route() {
-                    return "discovery.latest";
+                    return "topic";
                   }
-                  get model() {
-                    return false;
+
+                  get models() {
+                    return ["some-slug", 1];
                   }
+
                   get title() {
                     return "random channel title";
                   }
+
                   get text() {
                     return "random channel text";
                   }
+
                   get prefixType() {
                     return "icon";
                   }
+
                   get prefixValue() {
                     return "hashtag";
                   }
+
                   get prefixColor() {
                     return "FF0000";
                   }
+
                   get prefixBadge() {
                     return "lock";
                   }
+
                   get suffixType() {
                     return "icon";
                   }
+
                   get suffixValue() {
                     return "circle";
                   }
+
                   get suffixCSSClass() {
                     return "unread";
                   }
+
                   @bind
                   willDestroy() {
                     linkDestroy = "link test";
@@ -108,61 +125,70 @@ acceptance("Sidebar - section API", function (needs) {
                 })(),
                 new (class extends BaseCustomSidebarSectionLink {
                   get name() {
-                    "dev-channel";
+                    return "dev-channel";
                   }
+
                   get route() {
                     return "discovery.latest";
                   }
-                  get model() {
-                    return false;
-                  }
+
                   get title() {
                     return "dev channel title";
                   }
+
                   get text() {
                     return "dev channel text";
                   }
+
                   get prefixColor() {
                     return "alert";
                   }
+
                   get prefixType() {
                     return "text";
                   }
+
                   get prefixValue() {
                     return "test text";
                   }
                 })(),
                 new (class extends BaseCustomSidebarSectionLink {
                   get name() {
-                    "fun-channel";
+                    return "fun-channel";
                   }
+
                   get route() {
                     return "discovery.latest";
                   }
-                  get model() {
-                    return false;
-                  }
+
                   get title() {
                     return "fun channel title";
                   }
+
                   get text() {
                     return "fun channel text";
                   }
+
                   get prefixType() {
                     return "image";
                   }
+
                   get prefixValue() {
                     return "/test.png";
                   }
+
                   get hoverType() {
                     return "icon";
                   }
+
                   get hoverValue() {
                     return "times";
                   }
+
                   get hoverAction() {
                     return () => {};
                   }
+
                   get hoverTitle() {
                     return "hover button title attribute";
                   }
@@ -175,22 +201,26 @@ acceptance("Sidebar - section API", function (needs) {
     });
 
     await visit("/");
+
     assert.strictEqual(
-      query(".sidebar-section-test-chat-channels .sidebar-section-header a")
+      query(".sidebar-section-test-chat-channels .sidebar-section-header-link")
         .title,
       "chat channels title",
       "displays header with correct title attribute"
     );
+
     assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header a"
+        ".sidebar-section-test-chat-channels .sidebar-section-header-link"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
     );
+
     await click(
       ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown summary"
     );
+
     assert.strictEqual(
       queryAll(
         ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown .select-kit-collection li"
@@ -198,14 +228,17 @@ acceptance("Sidebar - section API", function (needs) {
       2,
       "displays two actions"
     );
+
     const actions = queryAll(
       ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown .select-kit-collection li"
     );
+
     assert.strictEqual(
       actions[0].textContent.trim(),
       "Browse channels",
       "displays first header action with correct text"
     );
+
     assert.strictEqual(
       actions[1].textContent.trim(),
       "Settings",
@@ -213,33 +246,44 @@ acceptance("Sidebar - section API", function (needs) {
     );
 
     const links = queryAll(
-      ".sidebar-section-test-chat-channels .sidebar-section-content a"
+      ".sidebar-section-test-chat-channels .sidebar-section-link"
     );
+
     assert.strictEqual(
       links[0].textContent.trim(),
       "random channel text",
       "displays first link with correct text"
     );
+
     assert.strictEqual(
       links[0].title,
       "random channel title",
       "displays first link with correct title attribute"
     );
+
+    assert.ok(
+      links[0].href.endsWith("/some-slug/1"),
+      "link has the correct href attribute"
+    );
+
     assert.strictEqual(
       links[0].children.item(0).style.color,
       "rgb(255, 0, 0)",
       "has correct prefix color"
     );
+
     assert.strictEqual(
       $(links[0].children.item(0).children.item(0)).hasClass("d-icon-hashtag"),
       true,
       "displays prefix icon"
     );
+
     assert.strictEqual(
       $(links[0].children.item(0).children.item(1)).hasClass("d-icon-lock"),
       true,
       "displays prefix icon badge"
     );
+
     assert.strictEqual(
       $(links[0].children.item(2).children.item(0)).hasClass("d-icon-circle"),
       true,
@@ -251,16 +295,19 @@ acceptance("Sidebar - section API", function (needs) {
       "dev channel text",
       "displays second link with correct text"
     );
+
     assert.strictEqual(
       links[1].title,
       "dev channel title",
       "displays second link with correct title attribute"
     );
+
     assert.strictEqual(
       links[1].children.item(0).style.color,
       "",
       "has no color style when value is invalid"
     );
+
     assert.strictEqual(
       $(links[1].children)[0].textContent.trim(),
       "test text",
@@ -272,27 +319,33 @@ acceptance("Sidebar - section API", function (needs) {
       "fun channel text",
       "displays third link with correct text"
     );
+
     assert.strictEqual(
       links[2].title,
       "fun channel title",
       "displays third link with correct title attribute"
     );
+
     assert.strictEqual(
       $(links[2].children.item(0).children).attr("src"),
       "/test.png",
       "uses correct prefix image url"
     );
+
     assert.strictEqual(
       query(".sidebar-section-link-hover button").title,
       "hover button title attribute",
       "displays hover button with correct title"
     );
+
     await click(".header-sidebar-toggle button");
+
     assert.strictEqual(
       linkDestroy,
       "link test",
       "calls link willDestroy function"
     );
+
     assert.strictEqual(
       sectionDestroy,
       "section test",
@@ -307,21 +360,23 @@ acceptance("Sidebar - section API", function (needs) {
           get name() {
             return "test-chat-channels";
           }
+
           get route() {
             return "discovery.latest";
           }
-          get model() {
-            return false;
-          }
+
           get title() {
             return "chat channels title";
           }
+
           get text() {
             return "chat channels text";
           }
+
           get actionsIcon() {
             return "cog";
           }
+
           get actions() {
             return [
               {
@@ -331,6 +386,7 @@ acceptance("Sidebar - section API", function (needs) {
               },
             ];
           }
+
           get links() {
             return [];
           }
@@ -339,17 +395,20 @@ acceptance("Sidebar - section API", function (needs) {
     });
 
     await visit("/");
+
     assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header a"
+        ".sidebar-section-test-chat-channels .sidebar-section-header-link"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
     );
+
     assert.ok(
       exists("button.sidebar-section-header-button"),
       "displays single header action button"
     );
+
     assert.ok(
       !exists(".sidebar-section-test-chat-channels .sidebar-section-content a"),
       "displays no links"

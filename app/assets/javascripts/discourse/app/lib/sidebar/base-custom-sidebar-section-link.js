@@ -10,31 +10,36 @@ export default class BaseCustomSidebarSectionLink {
   }
 
   /**
-   * @returns {string} Ember route
+   * @returns {string} The Ember route which the section link should link to.
    */
   get route() {
     this._notImplemented();
   }
 
   /**
-   * @returns {Object} Model for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {Object} `model` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
    */
   get model() {}
 
   /**
-   * @returns {boolean} Used to determine when this LinkComponent is active
+   * @returns {Object[]} `models` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
+   */
+  get models() {}
+
+  /**
+   * @returns {boolean} `current-when` argument for the <LinkTo> component. See See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
    */
   get currentWhen() {}
 
   /**
-   * @returns {string} Title for the link
+   * @returns {string} Title for the section link
    */
   get title() {
     this._notImplemented();
   }
 
   /**
-   * @returns {string} Text for the link
+   * @returns {string} Text for the section link
    */
   get text() {
     this._notImplemented();

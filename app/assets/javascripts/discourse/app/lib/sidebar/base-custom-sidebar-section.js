@@ -14,6 +14,11 @@ export default class BaseCustomSidebarSection {
   }
 
   /**
+   * @returns {string} The Ember route which the section header link should link to.
+   */
+  get route() {}
+
+  /**
    * @returns {string} Title for the header
    */
   get title() {
@@ -33,7 +38,7 @@ export default class BaseCustomSidebarSection {
   get actions() {}
 
   /**
-   * @returns {string} Icon for header options button
+   * @returns {string} Icon for dropdown header options button
    */
   get actionsIcon() {}
 
