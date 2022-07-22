@@ -74,7 +74,7 @@ class ImportScripts::MyBB < ImportScripts::Base
       next if all_records_exist? :users, results.map { |u| u["id"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
-        avatar_url = user['avatar'].match(/^http/) ? user['avatar'].gsub(/\?.*/,"") : nil
+        avatar_url = user['avatar'].match(/^http/) ? user['avatar'].gsub(/\?.*/, "") : nil
         { id: user['id'],
           email: user['email'],
           username: user['username'],
@@ -84,9 +84,9 @@ class ImportScripts::MyBB < ImportScripts::Base
           avatar_url: avatar_url,
           post_create_action: proc do |newuser|
             if !user["avatar"].blank?
-              avatar=user["avatar"].gsub(/\?.*/,"")
+              avatar = user["avatar"].gsub(/\?.*/, "")
               if avatar.match(/^http.*/)
-                UserAvatar.import_url_for_user(avatar,newuser)
+                UserAvatar.import_url_for_user(avatar, newuser)
               else
                 filename = File.join(UPLOADS_DIR, avatar)
                 @uploader.create_avatar(newuser, filename) if File.exists?(filename)
@@ -97,7 +97,6 @@ class ImportScripts::MyBB < ImportScripts::Base
       end
     end
   end
-
 
   def import_categories
     results = mysql_query("
