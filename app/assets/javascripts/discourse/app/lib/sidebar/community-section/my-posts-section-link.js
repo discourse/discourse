@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 
-import BaseSectionLink from "discourse/lib/sidebar/topics-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/community-section/base-section-link";
 
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
@@ -44,16 +44,16 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.topics.links.my_posts.title");
+    return I18n.t("sidebar.sections.community.links.my_posts.title");
   }
 
   get text() {
-    return I18n.t("sidebar.sections.topics.links.my_posts.content");
+    return I18n.t("sidebar.sections.community.links.my_posts.content");
   }
 
   get badgeText() {
     if (this._hasDraft) {
-      return I18n.t("sidebar.sections.topics.links.my_posts.draft_count", {
+      return I18n.t("sidebar.sections.community.links.my_posts.draft_count", {
         count: this.draftCount,
       });
     }

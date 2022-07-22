@@ -63,7 +63,7 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,

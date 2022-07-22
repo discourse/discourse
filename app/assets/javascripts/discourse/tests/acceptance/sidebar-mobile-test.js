@@ -56,7 +56,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     await click(".sidebar-section-header-caret");
 
     assert.ok(
-      !exists(".sidebar-section-topics .sidebar-section-content"),
+      !exists(".sidebar-section-community .sidebar-section-content"),
       "topics section is collapsed"
     );
 
