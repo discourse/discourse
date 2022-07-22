@@ -49,9 +49,6 @@
     background: none;
     border: none;
     padding: 0.25em 0.5em;
-    opacity: 0;
-    transition: opacity 0.25s;
-    transition-delay: 0.5s;
 
     .d-icon {
       font-size: var(--font-down-1);
@@ -92,12 +89,11 @@
     border: none;
     background: transparent;
     padding: 0;
-    opacity: 0;
-    transition: opacity 0.25s;
-    transition-delay: 0.5s;
+
     .d-icon {
       top: -0.1em; // visual alignment
     }
+
     .discourse-no-touch & {
       &:hover {
         svg {
