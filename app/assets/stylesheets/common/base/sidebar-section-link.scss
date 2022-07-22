@@ -34,6 +34,11 @@
     .sidebar-section-link-content-text {
       @include ellipsis;
 
+      .emoji {
+        width: 15px;
+        height: 15px;
+      }
+
       .badge-wrapper {
         font-size: 100%;
         width: 100%;
