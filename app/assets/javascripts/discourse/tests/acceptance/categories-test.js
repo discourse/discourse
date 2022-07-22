@@ -33,10 +33,6 @@ acceptance("Categories - 'categories_and_latest_topics'", function (needs) {
       exists("div.latest-topic-list div[data-topic-id=8]"),
       "shows the topic list"
     );
-    assert.ok(
-      query(".more-topics a").href.endsWith("/latest"),
-      "the load more button doesn't add the order param if desktop_category_page_sort_order is not set"
-    );
     assert.notOk(
       query(".more-topics a").href.endsWith("?order=created"),
       "the load more button doesn't include the order=created param"
