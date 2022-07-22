@@ -158,6 +158,50 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
   });
 
+  test("clicking on users link", async function (assert) {
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-users");
+
+    assert.strictEqual(
+      currentURL(),
+      "/u?order=likes_received",
+      "it should transition to the users url"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-users.active"),
+      "the users link is marked as active"
+    );
+  });
+
+  test("clicking on groups link", async function (assert) {
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-groups");
+
+    assert.strictEqual(
+      currentURL(),
+      "/g",
+      "it should transition to the groups url"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-groups.active"),
+      "the groups link is marked as active"
+    );
+  });
+
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-my-posts");

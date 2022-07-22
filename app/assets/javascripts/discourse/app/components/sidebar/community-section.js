@@ -6,6 +6,8 @@ import { customSectionLinks } from "discourse/lib/sidebar/custom-community-secti
 import EverythingSectionLink from "discourse/lib/sidebar/community-section/everything-section-link";
 import TrackedSectionLink from "discourse/lib/sidebar/community-section/tracked-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/community-section/my-posts-section-link";
+import GroupsSectionLink from "discourse/lib/sidebar/community-section/groups-section-link";
+import UsersSectionLink from "discourse/lib/sidebar/community-section/users-section-link";
 
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -13,6 +15,8 @@ import { next } from "@ember/runloop";
 const DEFAULT_SECTION_LINKS = [
   EverythingSectionLink,
   TrackedSectionLink,
+  GroupsSectionLink,
+  UsersSectionLink,
   MyPostsSectionLink,
 ];
 
