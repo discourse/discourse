@@ -4096,9 +4096,9 @@ en:
           header_link_title: "all categories"
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
-        topics:
+        community:
           header_link_title: "home"
-          header_link_text: "Topics"
+          header_link_text: "Community"
           header_action_title: "create a new topic"
           links:
             everything:

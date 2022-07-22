@@ -94,7 +94,7 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
+import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 
 // If you add any methods to the API ensure you bump up the version number
@@ -1628,7 +1628,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a link under Sidebar topics section by returning a class which extends from the BaseSectionLink
-   * class interface. See `lib/sidebar/topics-section/base-section-link.js` for documentation on the BaseSectionLink class
+   * class interface. See `lib/sidebar/community-section/base-section-link.js` for documentation on the BaseSectionLink class
    * interface.
    *
    * ```

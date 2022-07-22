@@ -17,7 +17,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
-acceptance("Sidebar - Topics Section", function (needs) {
+acceptance("Sidebar - Community Section", function (needs) {
   needs.user({
     experimental_sidebar_enabled: true,
     tracked_tags: ["tag1"],
@@ -41,14 +41,14 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
-    await click(".sidebar-section-topics .sidebar-section-header-button");
+    await click(".sidebar-section-community .sidebar-section-header-button");
 
     assert.ok(exists("#reply-control"), "it opens the composer");
   });
 
   test("clicking on section header button while viewing a category", async function (assert) {
     await visit("/c/bug");
-    await click(".sidebar-section-topics .sidebar-section-header-button");
+    await click(".sidebar-section-community .sidebar-section-header-button");
 
     assert.ok(exists("#reply-control"), "it opens the composer");
 
@@ -63,34 +63,34 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-content"),
+      exists(".sidebar-section-community .sidebar-section-content"),
       "shows content section"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-topics .sidebar-section-header-caret").title,
+      query(".sidebar-section-community .sidebar-section-header-caret").title,
       I18n.t("sidebar.toggle_section"),
       "caret has the right title"
     );
 
-    await click(".sidebar-section-topics .sidebar-section-header-caret");
+    await click(".sidebar-section-community .sidebar-section-header-caret");
 
     assert.ok(
-      !exists(".sidebar-section-topics .sidebar-section-content"),
+      !exists(".sidebar-section-community .sidebar-section-content"),
       "hides content section"
     );
 
-    await click(".sidebar-section-topics .sidebar-section-header-caret");
+    await click(".sidebar-section-community .sidebar-section-header-caret");
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-content"),
+      exists(".sidebar-section-community .sidebar-section-content"),
       "shows content section"
     );
   });
 
   test("clicking on section header link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-header-link");
+    await click(".sidebar-section-community .sidebar-section-header-link");
 
     assert.strictEqual(
       currentURL(),
@@ -99,20 +99,22 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
 
   test("clicking on everything link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-everything");
+    await click(".sidebar-section-community .sidebar-section-link-everything");
 
     assert.strictEqual(
       currentURL(),
@@ -121,20 +123,22 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
 
   test("clicking on tracked link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-tracked");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
 
     assert.strictEqual(
       currentURL(),
@@ -143,20 +147,20 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
 
   test("clicking on bookmarked link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-bookmarked");
+    await click(".sidebar-section-community .sidebar-section-link-bookmarked");
 
     assert.strictEqual(
       currentURL(),
@@ -165,20 +169,22 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-bookmarked.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-bookmarked.active"
+      ),
       "the bookmarked link is marked as active"
     );
   });
 
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-my-posts");
+    await click(".sidebar-section-community .sidebar-section-link-my-posts");
 
     assert.strictEqual(
       currentURL(),
@@ -187,20 +193,24 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is marked as active"
     );
 
     await visit(`/u/${loggedInUser().username}/activity/drafts`);
 
     assert.notOk(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
     );
   });
@@ -214,7 +224,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
     await settled();
 
-    await click(".sidebar-section-topics .sidebar-section-link-my-posts");
+    await click(".sidebar-section-community .sidebar-section-link-my-posts");
 
     assert.strictEqual(
       currentURL(),
@@ -223,20 +233,24 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is marked as active"
     );
 
     await visit(`/u/${loggedInUser().username}/activity`);
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is marked as active"
     );
   });
@@ -245,13 +259,15 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/top");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
@@ -260,13 +276,15 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/unread");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
@@ -275,13 +293,15 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/new");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
@@ -432,13 +452,13 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/top?f=tracked");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
@@ -447,13 +467,13 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/unread?f=tracked");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
@@ -462,13 +482,13 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/new?f=tracked");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
