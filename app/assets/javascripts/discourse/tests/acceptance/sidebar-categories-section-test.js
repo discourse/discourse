@@ -390,7 +390,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("clean up topic tracking state state changed callbacks when Sidebar is collpased", async function (assert) {
+  test("clean up topic tracking state state changed callbacks when Sidebar is collapsed", async function (assert) {
     setupUserSidebarCategories();
 
     await visit("/");
