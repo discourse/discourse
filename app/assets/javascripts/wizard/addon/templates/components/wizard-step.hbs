@@ -26,12 +26,12 @@
     {{/if}}
     {{#if (or this.bannerImage this.step.description)}}
       <div class={{this.bannerAndDescriptionClass}}>
-        {{#if this.bannerImage}}
-          <img src={{this.bannerImage}} class="wizard-container__step-banner-image">
-        {{/if}}
-
         {{#if this.step.description}}
           <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
+        {{/if}}
+
+        {{#if this.bannerImage}}
+          <img src={{this.bannerImage}} class="wizard-container__step-banner-image">
         {{/if}}
       </div>
     {{/if}}
@@ -40,32 +40,36 @@
 
 <div class="wizard-container__step-footer">
 
-  <div class="wizard-container__step-progress">
-    <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}} </span><span>{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
-  </div>
-
   <div class="wizard-container__buttons">
-    {{#if this.showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-container__button finish">
-        {{i18n "wizard.finish"}}
+
+    {{#if this.showDoneButton}}
+      <button {{action "quit"}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+        {{i18n "wizard.done"}}
       </button>
     {{/if}}
 
-    {{#if this.showBackButton}}
-      <a href {{action "backStep"}} tabindex="11" class="wizard-container__link back">{{i18n "wizard.back"}}</a>
-    {{/if}}
-
     {{#if this.showNextButton}}
-      <button {{action "nextStep"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+      <button {{action "nextStep"}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
         {{i18n this.nextButtonLabel}}
       </button>
     {{/if}}
 
-    {{#if this.showDoneButton}}
-      <button {{action "quit"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-container__button jump-in">
-        {{i18n "wizard.done"}}
+    {{#if this.showFinishButton}}
+      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button finish">
+        {{i18n "wizard.finish"}}
       </button>
     {{/if}}
+
+  </div>
+
+  <div class="wizard-container__step-progress">
+    <a href {{action "backStep"}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
+
+    <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
+    <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
+
+    <a href {{action "nextStep"}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
+
   </div>
 
 </div>

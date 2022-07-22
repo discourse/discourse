@@ -11,7 +11,7 @@ class Wizard
       return @wizard unless SiteSetting.wizard_enabled? && @wizard.user.try(:staff?)
 
       @wizard.append_step('introduction') do |step|
-        step.banner = "welcome-illustration.png"
+        step.banner = "welcome-illustration.svg"
 
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: false, value: SiteSetting.site_description)
@@ -48,7 +48,7 @@ class Wizard
       end
 
       @wizard.append_step('privacy') do |step|
-        step.banner = "members-illusration.png"
+        step.banner = "members-illustration.svg"
         step.add_field(id: 'login_required',
                        type: 'checkbox',
                        icon: 'unlock',
@@ -73,7 +73,7 @@ class Wizard
 
       @wizard.append_step('ready') do |step|
         # no form on this page, just info.
-        step.banner = "finished-illustration.png"
+        step.banner = "finished-illustration.svg"
       end
 
       @wizard.append_step('styling') do |step|

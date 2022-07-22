@@ -5692,7 +5692,7 @@ en:
   wizard_js:
     wizard:
       done: "Jump in!"
-      finish: "Back to site"
+      finish: "Exit setup"
       back: "Back"
       next: "Next"
       configure_more: "Configure More..."

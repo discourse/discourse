@@ -36,11 +36,10 @@ $wizard-mobile-bg: svg-uri(
 
 body.wizard {
   background: $wizard-bg;
-  background-size: cover;
+  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
+  background-repeat: no-repeat;
   background-position: bottom;
   color: var(--primary-very-high);
-  line-height: var(--line-height-large);
-  font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
@@ -50,17 +49,32 @@ body.wizard {
     align-items: center;
   }
 
-  .discourse-logo svg {
-    height: 70px;
-    width: auto;
-    @media only screen and (max-device-width: 568px) {
-      height: 50px;
+  @media screen and (max-height: 900px) {
+    .desktop-view & {
+      #main-outlet {
+        padding-top: 0;
+      }
     }
   }
 
-  /* fix wizard for mobile -- iPhone 5 default width */
-  @media only screen and (max-device-width: 568px) {
+  .discourse-logo svg {
+    height: 70px;
+    width: auto;
+    @include breakpoint("mobile-extra-large") {
+      height: 50px;
+    }
+    @media screen and (max-height: 900px) {
+      .desktop-view & {
+        display: none;
+      }
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
     background: $wizard-mobile-bg;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
   }
 }
 
@@ -80,47 +94,61 @@ body.wizard {
   border-radius: 8px;
   padding: 2em 3em;
 
-  @media only screen and (max-device-width: 568px) {
-    padding: 1em;
-    max-width: 98%;
+  @media screen and (max-height: 800px) {
+    .desktop-view & {
+      margin: 1em auto;
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    padding: 2em 1.5em;
+    max-width: 99%;
     margin: 1.5em auto;
   }
 
   &__fields {
     width: 100%;
     padding-right: 20%;
-    @media only screen and (max-device-width: 568px) {
+    @include breakpoint("large") {
       padding-right: 0;
+    }
+  }
+
+  &__step-banner {
+    @include breakpoint("large") {
+      display: none;
     }
   }
 
   &__step.branding .wizard-container__fields {
     padding-right: 0;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-column-gap: 2em;
-    width: calc(100% - 2em);
-    @media only screen and (max-device-width: 568px) {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2em;
+
+    .wizard-container__field {
+      flex: 1 1 45%;
+      @include breakpoint("large") {
+        flex: 1 1 100%;
+      }
     }
   }
 
   &__step.branding .wizard-container__field {
-    @media only screen and (max-device-width: 568px) {
+    @include breakpoint("mobile-extra-large") {
       max-width: 100%;
     }
   }
 
   &__step.branding .wizard-container__description {
-    @media only screen and (max-device-width: 568px) {
+    max-width: 25em;
+    @include breakpoint("mobile-extra-large") {
       display: none;
     }
   }
 
   &__step.branding .wizard-container__preview canvas {
-    @media only screen and (max-device-width: 568px) {
+    @include breakpoint("mobile-extra-large") {
       max-width: 100%;
       height: auto;
     }
@@ -128,11 +156,10 @@ body.wizard {
 
   &__step.corporate .wizard-container__fields {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: repeat(2, calc(50% - 1em));
     grid-column-gap: 2em;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: repeat(3, auto);
     padding-right: 0;
-    width: calc(100% - 2em);
     @media only screen and (max-device-width: 568px) {
       display: flex;
       flex-wrap: wrap;
@@ -144,7 +171,7 @@ body.wizard {
   }
 
   &__field.checkbox-field {
-    margin-bottom: 3em;
+    margin-bottom: 3.5em;
     @media only screen and (max-device-width: 568px) {
       margin-bottom: 1em;
     }
@@ -176,19 +203,20 @@ body.wizard {
   }
 
   &__step-form {
-    max-height: 500px;
     display: flex;
   }
 
   &__sidebar {
     width: 170px;
     box-sizing: border-box;
-    padding: 15px 0px 15px 15px;
-    background: var(--primary-very-low);
+    margin-right: 1em;
+
     + .wizard-container__fields {
-      padding: 15px;
+      padding: 1em;
       background: var(--primary-very-low);
       width: calc(100% - 170px);
+      border-radius: 0.5em;
+      margin-top: -1em;
     }
   }
 
@@ -211,7 +239,6 @@ body.wizard {
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
         color: var(--tertiary);
-        border: 1px dashed var(--tertiary-low);
         border-top: none;
       }
     }
@@ -223,7 +250,6 @@ body.wizard {
     width: 100%;
     overflow: hidden;
     background: var(--secondary);
-    border: 1px dashed var(--tertiary-low);
     border-radius: 10px;
     cursor: grab;
     user-select: none;
@@ -243,17 +269,13 @@ body.wizard {
   }
 
   &__step-title {
-    text-align: center;
-    font-size: 3em;
+    font-size: 2.75em;
     color: var(--primary);
-    margin: 0 0 1em 0;
-    @media only screen and (max-device-width: 568px) {
-      font-size: var(--font-up-2);
+    line-height: $line-height-medium;
+    margin: 0 0 1.5em 0;
+    @include breakpoint("medium") {
+      font-size: var(--font-up-5);
     }
-  }
-
-  &__step.styling .wizard-container__step-title {
-    margin-bottom: 0.25em;
   }
 
   &__step-container {
@@ -264,7 +286,7 @@ body.wizard {
   }
 
   &__step-contents {
-    height: 500px;
+    min-height: 37em;
     margin-bottom: 2em;
   }
 
@@ -286,32 +308,30 @@ body.wizard {
     flex: 0 1 40%;
   }
 
-  &__step.ready .wizard-container__step-banner {
-    flex: 1 1 40%;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    align-items: center;
-    @media only screen and (max-device-width: 568px) {
-      flex-direction: column;
-    }
-  }
-
   &__step-banner-image {
     width: 100%;
   }
 
-  &__step.ready .wizard-container__step-banner-image {
-    width: 40%;
-  }
-
-  &__step.ready .wizard-container__step-description {
-    width: 50%;
-    font-size: var(--font-up-3);
-    @media only screen and (max-device-width: 568px) {
-      font-size: var(--font-up-2);
-      width: 100%;
-      text-align: center;
+  &__step.ready {
+    .wizard-container__step-banner {
+      display: flex;
+      flex: 1 0 100%;
+      gap: 2em;
+    }
+    .wizard-container__step-description {
+      font-size: var(--font-up-3);
+      flex: 1 0 40%;
+      @include breakpoint("tablet") {
+        font-size: var(--font-up-2);
+      }
+    }
+    .wizard-container__step-banner-image {
+      padding-top: 2em;
+      flex: 0 1 40%;
+      margin-left: 2em;
+      @include breakpoint("large") {
+        display: none;
+      }
     }
   }
 
@@ -320,21 +340,39 @@ body.wizard {
   }
 
   &__step-progress {
+    display: flex;
+    align-items: center;
     font-weight: bold;
-    @media only screen and (max-device-width: 568px) {
+    margin-right: -1.5em;
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
+
+    @include breakpoint("mobile-extra-large") {
       margin-bottom: 1em;
+    }
+    .wizard-container__link {
+      color: var(--primary-400);
+      margin: 0 1em;
+      &.inactive {
+        // disabling instead of removing, to hold space
+        pointer-events: none;
+        opacity: 0;
+      }
     }
   }
 
   &__step-text {
     display: inline;
+    margin-right: 0.25em;
     @media only screen and (max-device-width: 568px) {
       display: none;
     }
   }
 
-  a:visited {
-    color: var(--primary-high);
+  &__step-count {
+    min-width: 3.2em;
+    text-align: center;
   }
 
   .preloaded-font-styles {
@@ -349,7 +387,7 @@ body.wizard {
   }
 
   &__link:hover {
-    color: var(--primary) !important;
+    color: var(--tertiary-hover);
   }
 
   &__button {
@@ -358,7 +396,6 @@ body.wizard {
     border: 0;
     padding: 0.5em;
     transition: background-color 0.3s;
-    margin-right: 0.5em;
     text-decoration: none;
     background-color: var(--secondary);
     color: var(--primary-very-high);
@@ -412,22 +449,26 @@ body.wizard {
   }
 
   &__button.configure-more {
-    background-color: var(--primary-300);
+    background-color: var(--primary-200);
     color: var(--primary);
   }
 
   &__button.configure-more:hover {
-    background-color: var(--primary-500);
+    background-color: var(--primary-300);
     color: var(--primary);
   }
 
   &__button.jump-in {
     background-color: var(--success);
     color: var(--secondary);
+    &:hover {
+      background-color: var(--success-hover);
+    }
   }
 
   &__button.finish {
     color: var(--tertiary);
+    padding: 0;
   }
 
   &__button.finish:hover {
@@ -485,7 +526,6 @@ body.wizard {
 
   &__step-footer {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     @media only screen and (max-device-width: 568px) {
@@ -494,15 +534,18 @@ body.wizard {
     }
   }
 
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: center;
+  }
+
   &__image-upload {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: baseline;
-  }
-
-  &__description {
-    margin-top: 0.5em;
   }
 
   &__label {
@@ -523,9 +566,14 @@ body.wizard {
   }
 
   &__description {
-    color: var(--primary-medium);
+    color: var(--primary-high);
     font-size: var(--font-down-1);
-    margin: 0.5em 0;
+    margin: 0.25em 0 0.5em 0;
+
+    a {
+      margin: 0;
+    }
+
     @media only screen and (max-device-width: 568px) {
       font-size: var(--font-0);
     }
@@ -534,7 +582,8 @@ body.wizard {
   &__description.extra {
     color: var(--primary-high);
     font-size: var(--font-up-1);
-    margin: 0.5em 0;
+    margin: 0.25em 0 0.5em 0;
+    max-width: 400px;
   }
 
   &__text-input {
