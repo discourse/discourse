@@ -512,8 +512,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
   # find the uploaded file information from the db
   def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filename filename,
-                  a.filedata filedata, a.extension extension
+    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filename filename
              FROM #{TABLE_PREFIX}attachment a
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
