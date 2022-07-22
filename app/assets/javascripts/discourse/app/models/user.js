@@ -42,6 +42,13 @@ export const SECOND_FACTOR_METHODS = {
   SECURITY_KEY: 3,
 };
 
+export const LIKE_NOTIFICATION_FREQUENCY_TYPE = {
+  always: 0,
+  first_time_and_daily: 1,
+  first_time: 2,
+  never: 3,
+};
+
 const isForever = (dt) => moment().diff(dt, "years") < -100;
 
 let userFields = [

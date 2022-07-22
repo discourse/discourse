@@ -18,24 +18,48 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
+    if notification_types = params[:filter_by_types]&.split(",")&.map(&:to_sym).presence
+      notification_types.map! do |type|
+        if !Notification.types.key?(type)
+          raise Discourse::InvalidParameters.new("invalid notification type: #{type}")
+        end
+        Notification.types[type]
+      end
+    end
+
     if params[:recent].present?
       limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
-      notifications = Notification.recent_report(current_user, limit)
-      changed = false
+      if notification_types
+        notifications = Notification
+          .visible
+          .includes(:topic)
+          .recent(limit)
+          .where(notification_type: notification_types)
+          .where(user_id: current_user.id)
+          .to_a
+        render_json_dump(
+          notifications: serialize_data(notifications, NotificationSerializer)
+        )
+      else
+        notifications = Notification.recent_report(current_user, limit)
+        changed = false
 
-      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
-        # ordering can be off due to PMs
-        max_id = notifications.map(&:id).max
-        changed = current_user.saw_notification_id(max_id)
+        if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
+          # ordering can be off due to PMs
+          max_id = notifications.map(&:id).max
+          changed = current_user.saw_notification_id(max_id)
+        end
+
+        current_user.reload
+        current_user.publish_notifications_state if changed
+
+        render_json_dump(
+          notifications: serialize_data(notifications, NotificationSerializer),
+          seen_notification_id: current_user.seen_notification_id
+        )
       end
-
-      user.reload
-      user.publish_notifications_state if changed
-
-      render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
-                       seen_notification_id: current_user.seen_notification_id)
     else
       offset = params[:offset].to_i
 

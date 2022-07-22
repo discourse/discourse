@@ -111,6 +111,40 @@ describe NotificationsController do
           expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
         end
 
+        it "can filter notifications by type" do
+          liked1 = Fabricate(
+            :notification,
+            user: user,
+            notification_type: Notification.types[:liked]
+          )
+          liked2 = Fabricate(
+            :notification,
+            user: user,
+            notification_type: Notification.types[:liked]
+          )
+          replied = Fabricate(
+            :notification,
+            user: user,
+            notification_type: Notification.types[:replied]
+          )
+          Fabricate(
+            :notification,
+            user: user,
+            notification_type: Notification.types[:mentioned]
+          )
+          get "/notifications.json", params: { recent: true, filter_by_types: "liked,replied" }
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body["notifications"].map { |n| n["id"] }
+          ).to contain_exactly(liked1.id, liked2.id, replied.id)
+
+          get "/notifications.json", params: { recent: true, filter_by_types: "replied" }
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body["notifications"].map { |n| n["id"] }
+          ).to contain_exactly(replied.id)
+        end
+
         context 'when username params is not valid' do
           it 'should raise the right error' do
             get "/notifications.json", params: { username: 'somedude' }

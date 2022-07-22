@@ -29,9 +29,9 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   get itemsCacheKey() {
     let key = "recent-notifications";
-    const types = this.filterByTypes?.toString();
-    if (types) {
-      key += `-type-${types}`;
+    const types = this.filterByTypes;
+    if (types?.length > 0) {
+      key += `-type-${types.join(",")}`;
     }
     return key;
   }
@@ -52,9 +52,9 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       silent: this.currentUser.enforcedSecondFactor,
     };
 
-    const types = this.filterByTypes?.toString();
-    if (types) {
-      params.filter_by_types = types;
+    const types = this.filterByTypes;
+    if (types?.length > 0) {
+      params.filter_by_types = types.join(",");
     }
     return this.store
       .findStale("notification", params)
