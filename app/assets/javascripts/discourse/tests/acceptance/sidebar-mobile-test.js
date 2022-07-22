@@ -49,20 +49,10 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     );
   });
 
-  test("collapsing sidebar sections does not collapse sidebar", async function (assert) {
+  test("sidebar sections are not collapsible on mobile", async function (assert) {
     await visit("/");
-
     await click(".hamburger-dropdown");
-    await click(".sidebar-section-header-caret");
 
-    assert.ok(
-      !exists(".sidebar-section-topics .sidebar-section-content"),
-      "topics section is collapsed"
-    );
-
-    assert.ok(
-      exists(".sidebar-container"),
-      "sidebar is not collapsed when clicking on caret to collapse a section in sidebar"
-    );
+    assert.notOk(exists(".sidebar-section-header-caret"));
   });
 });
