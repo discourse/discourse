@@ -1,10 +1,13 @@
+import {
+  createWatchedWordRegExp,
+  toWatchedWord,
+} from "discourse-common/utils/watched-words";
+
 export function censorFn(regexpList, replacementLetter) {
   if (regexpList.length) {
     replacementLetter = replacementLetter || "&#9632;";
     let censorRegexps = regexpList.map((regexp) => {
-      let [[regexpString, options]] = Object.entries(regexp);
-      let caseFlag = options.case_sensitive ? "" : "i";
-      return new RegExp(regexpString, `${caseFlag}g`);
+      return createWatchedWordRegExp(toWatchedWord(regexp));
     });
 
     return function (text) {

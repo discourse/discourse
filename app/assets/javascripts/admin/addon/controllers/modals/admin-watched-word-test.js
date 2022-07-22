@@ -1,8 +1,11 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { createWatchedWordRegExp } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
+import {
+  createWatchedWordRegExp,
+  toWatchedWord,
+} from "discourse-common/utils/watched-words";
 
 export default Controller.extend(ModalFunctionality, {
   isReplace: equal("model.nameKey", "replace"),
@@ -61,11 +64,7 @@ export default Controller.extend(ModalFunctionality, {
     } else {
       let matches = [];
       regexpList.forEach((regexp) => {
-        let [[regexpString, opts]] = Object.entries(regexp);
-        const wordRegexp = createWatchedWordRegExp({
-          regexp: regexpString,
-          case_sensitive: opts.case_sensitive,
-        });
+        const wordRegexp = createWatchedWordRegExp(toWatchedWord(regexp));
 
         matches.push(...(value.match(wordRegexp) || []));
       });
