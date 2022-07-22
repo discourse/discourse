@@ -13,8 +13,8 @@
     align-self: start;
     overflow-y: auto;
     background-color: var(--primary-very-low);
-    .discourse-touch &,
     &:hover {
+      .sidebar-section-header-button,
       .sidebar-section-header-caret {
         opacity: 1;
         transition-delay: 0s;
@@ -23,10 +23,12 @@
   }
 
   .sidebar-container {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     height: 100%;
     width: var(--d-sidebar-width);
-    padding: 1em 0;
+    padding: 1em 0 0;
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -59,5 +61,13 @@
   .sidebar-scroll-wrap {
     // limit the wrapper width, so when the scrollbar is added the content doesn't shift
     max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-sections {
+    flex: 1;
   }
 }
