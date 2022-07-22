@@ -254,6 +254,47 @@ describe ReviewablesController do
       end
     end
 
+    describe "#lightweight_index" do
+      it "returns JSON containing basic information of reviewables" do
+        reviewable1 = Fabricate(:reviewable)
+        reviewable2 = Fabricate(:reviewable, status: Reviewable.statuses[:approved])
+        get "/review/lightweight-list", xhr: true
+        expect(response.status).to eq(200)
+        reviewables = response.parsed_body["reviewables"]
+        expect(reviewables.size).to eq(2)
+        expect(reviewables[0]["flagger_username"]).to eq(reviewable1.created_by.username)
+        expect(reviewables[0]["id"]).to eq(reviewable1.id)
+        expect(reviewables[0]["type"]).to eq(reviewable1.type)
+        expect(reviewables[0]["pending"]).to eq(true)
+
+        expect(reviewables[1]["flagger_username"]).to eq(reviewable2.created_by.username)
+        expect(reviewables[1]["id"]).to eq(reviewable2.id)
+        expect(reviewables[1]["type"]).to eq(reviewable2.type)
+        expect(reviewables[1]["pending"]).to eq(false)
+      end
+
+      it "puts pending reviewables on top" do
+        approved1 = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:approved]
+        )
+        pending = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:pending]
+        )
+        approved2 = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:approved]
+        )
+        get "/review/lightweight-list", xhr: true
+        expect(response.status).to eq(200)
+        reviewables = response.parsed_body["reviewables"]
+        expect(reviewables.size).to eq(3)
+        expect(reviewables[0]["id"]).to eq(pending.id)
+        expect(reviewables[1..-1].map { |r| r["id"] }).to contain_exactly(approved1.id, approved2.id)
+      end
+    end
+
     describe "#show" do
       context "basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }

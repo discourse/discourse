@@ -2555,6 +2555,14 @@ en:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "Menu tabs"
       view_all_notifications: "view all notifications"
+      reviewable:
+        view_all: "view all review items"
+        queue: "Queue"
+        deleted_user: "(deleted user)"
+        post_number_with_topic_title: "post #%{post_number} - %{title}"
+        new_post_in_topic: "new post in %{title}"
+        suspicious_user: "suspicious user %{username}"
+        default_item: "reviewable item #%{reviewable_id}"
 
     topics:
       new_messages_marker: "last visit"

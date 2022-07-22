@@ -244,6 +244,55 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  context ".recent_list_with_pending_first" do
+    fab!(:pending_reviewable1) { Fabricate(:reviewable, score: 150) }
+    fab!(:pending_reviewable2) { Fabricate(:reviewable, score: 100) }
+    fab!(:approved_reviewable1) { Fabricate(:reviewable, score: 300) }
+    fab!(:approved_reviewable2) { Fabricate(:reviewable, score: 200) }
+
+    fab!(:admin) { Fabricate(:admin) }
+
+    it "returns a list of reviewables with pending items first" do
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list).to contain_exactly(
+        pending_reviewable1,
+        pending_reviewable2,
+        approved_reviewable1,
+        approved_reviewable2,
+      )
+
+      pending_reviewable1.update!(status: Reviewable.statuses[:rejected])
+
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list).to contain_exactly(
+        pending_reviewable2,
+        approved_reviewable1,
+        approved_reviewable2,
+        pending_reviewable1,
+      )
+    end
+
+    it "only includes reviewables whose score is above the minimum or are froced for review" do
+      SiteSetting.reviewable_default_visibility = 'high'
+      Reviewable.set_priorities({ high: 200 })
+
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list).to contain_exactly(
+        approved_reviewable1,
+        approved_reviewable2,
+      )
+
+      pending_reviewable1.update!(force_review: true)
+
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list).to contain_exactly(
+        pending_reviewable1,
+        approved_reviewable1,
+        approved_reviewable2,
+      )
+    end
+  end
+
   it "valid_types returns the appropriate types" do
     expect(Reviewable.valid_type?('ReviewableUser')).to eq(true)
     expect(Reviewable.valid_type?('ReviewableQueuedPost')).to eq(true)
