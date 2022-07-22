@@ -7,7 +7,7 @@ require "htmlentities"
 
 class BulkImport::VBulletin < BulkImport::Base
 
-  TABLE_PREFIX = "vb_"
+  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "vb_"
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
   ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/shared/import/data/attachments'
   AVATAR_DIR ||= ENV['AVATAR_DIR'] || '/shared/import/data/customavatars'
