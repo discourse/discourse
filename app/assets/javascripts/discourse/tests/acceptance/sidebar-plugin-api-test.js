@@ -75,7 +75,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   get route() {
-                    return "discovery.latest";
+                    return "topic";
+                  }
+
+                  get models() {
+                    return ["some-slug", 1];
                   }
 
                   get title() {
@@ -255,6 +259,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
       links[0].title,
       "random channel title",
       "displays first link with correct title attribute"
+    );
+
+    assert.ok(
+      links[0].href.endsWith("/some-slug/1"),
+      "link has the correct href attribute"
     );
 
     assert.strictEqual(

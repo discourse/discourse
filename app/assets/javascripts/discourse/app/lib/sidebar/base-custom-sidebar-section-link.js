@@ -22,6 +22,11 @@ export default class BaseCustomSidebarSectionLink {
   get model() {}
 
   /**
+   * @returns {Object[]} `models` argument for the <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
+   */
+  get models() {}
+
+  /**
    * @returns {boolean} `current-when` argument for the <LinkTo> component. See See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo.
    */
   get currentWhen() {}
