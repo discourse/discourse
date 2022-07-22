@@ -572,12 +572,10 @@ div.menu-links-header {
 // Sidebar-hamburger hybrid
 
 .hamburger-menu.revamped {
-  .panel-body {
-    width: 100%;
+  width: var(--d-sidebar-width);
 
-    .panel-body-content {
-      width: 100%;
-    }
+  .panel-body-content {
+    min-width: 0; // prevent content blowing out width
   }
 
   .sidebar-section-wrapper {
