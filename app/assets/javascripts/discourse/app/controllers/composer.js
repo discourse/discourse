@@ -722,6 +722,13 @@ export default Controller.extend({
       this.cancelComposer();
     },
 
+    saveDraft() {
+      this._saveDraft();
+      this.model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+    },
+
     save(ignore, event) {
       this.save(false, {
         jump:

@@ -89,12 +89,14 @@
 
         <div class="submit-panel">
           <PluginOutlet @name="composer-fields-below" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-
           <div class="save-or-cancel">
             {{#unless this.model.viewFullscreen}}
               <ComposerSaveButton @action={{action "save"}} @icon={{this.saveIcon}} @label={{this.saveLabel}} @forwardEvent={{true}} @disableSubmit={{this.disableSubmit}} />
 
               {{#if this.site.mobileView}}
+                {{#if this.model.canSaveDraft}}
+                  <DButton @class="btn-flat save-draft" @action={{action "saveDraft"}} @icon="far-save"/>
+                {{/if}}
                 <a href {{action "cancel"}} title={{i18n "cancel"}} class="cancel">
                   {{#if this.canEdit}}
                     {{d-icon "times"}}
@@ -103,6 +105,9 @@
                   {{/if}}
                 </a>
               {{else}}
+                {{#if this.model.canSaveDraft}}
+                  <DButton @label="post.cancel_composer.save_draft" @class="btn-default save-draft" @action={{action "saveDraft"}} />
+                {{/if}}
                 <a href {{action "cancel"}} class="cancel" >{{i18n "cancel"}}</a>
               {{/if}}
             {{/unless}}

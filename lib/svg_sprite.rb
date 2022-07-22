@@ -111,6 +111,7 @@ module SvgSprite
     "far-list-alt",
     "far-meh",
     "far-moon",
+    "far-save",
     "far-smile",
     "far-square",
     "far-star",
