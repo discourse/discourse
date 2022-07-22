@@ -158,30 +158,6 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
   });
 
-  test("clicking on bookmarked link", async function (assert) {
-    await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-link-bookmarked");
-
-    assert.strictEqual(
-      currentURL(),
-      `/u/${loggedInUser().username}/activity/bookmarks`,
-      "it should transition to the bookmarked url"
-    );
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-
-    assert.ok(
-      exists(
-        ".sidebar-section-community .sidebar-section-link-bookmarked.active"
-      ),
-      "the bookmarked link is marked as active"
-    );
-  });
-
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-my-posts");

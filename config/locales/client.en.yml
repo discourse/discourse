@@ -4107,9 +4107,6 @@ en:
             tracked:
               content: "Tracked"
               title: "All tracked topics"
-            bookmarked:
-              content: "Bookmarked"
-              title: "All bookmarked topics"
             my_posts:
               content: "My Posts"
               title: "My posts"
