@@ -15,11 +15,13 @@
     </div>
 
     <div class="sidebar-footer-actions">
-      <DButton
-        @route="adminSiteSettings"
-        @title="admin.site_settings.title"
-        @icon="cog"
-        @class="sidebar-footer-actions-button sidebar-footer-actions-site-settings" />
+      {{#if this.currentUser.admin}}
+        <DButton
+          @route="adminSiteSettings"
+          @title="admin.site_settings.title"
+          @icon="cog"
+          @class="sidebar-footer-actions-button sidebar-footer-actions-site-settings" />
+      {{/if}}
 
       {{#if this.site.desktopView}}
         <DButton

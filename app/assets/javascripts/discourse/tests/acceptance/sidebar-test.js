@@ -1,6 +1,10 @@
 import { test } from "qunit";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 
 acceptance("Sidebar - Anon User", function () {
@@ -57,6 +61,14 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
     await click(".sidebar-footer-actions-site-settings");
 
     assert.strictEqual(currentRouteName(), "adminSiteSettingsCategory");
+  });
+
+  test("site setting link is not shown in sidebar for non-admin user", async function (assert) {
+    updateCurrentUser({ admin: false });
+
+    await visit("/");
+
+    assert.notOk(exists(".sidebar-footer-actions-site-settings"));
   });
 
   test("undocking and docking sidebar", async function (assert) {
