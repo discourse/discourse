@@ -445,7 +445,7 @@ class BadgeGranter
       next if row.staff && badge.awarded_for_trust_level?
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
-      badge.trigger_badge_granted_event(row.user_id)
+      UserBadge.trigger_user_badge_granted_event(badge.id, row.user_id)
 
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
