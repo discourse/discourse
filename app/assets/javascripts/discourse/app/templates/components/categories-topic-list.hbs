@@ -8,8 +8,8 @@
     <LatestTopicListItem @topic={{t}} />
   {{/each}}
   <div class="more-topics">
-    {{#if this.orderTopicsBy}}
-      <a href={{get-url (concat "/" this.filter "?order=" this.orderTopicsBy)}} class="btn btn-default pull-right">{{i18n "more"}}</a>
+    {{#if (eq this.siteSettings.desktop_category_page_style "categories_and_latest_topics_created_date") }}
+      <a href={{get-url (concat "/" this.filter "?order=created")}} class="btn btn-default pull-right">{{i18n "more"}}</a>
     {{else}}
       <a href={{get-url (concat "/" this.filter)}} class="btn btn-default pull-right">{{i18n "more"}}</a>
     {{/if}}

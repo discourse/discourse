@@ -239,20 +239,6 @@ basic:
       - twitter
       - facebook
       - email
-  desktop_category_page_sort_order:
-    client: true
-    type: enum
-    default: default
-    choices:
-      - default
-      - likes
-      - op_likes
-      - views
-      - posts
-      - activity
-      - posters
-      - category
-      - created
   desktop_category_page_style:
     client: true
     enum: "CategoryPageStyle"

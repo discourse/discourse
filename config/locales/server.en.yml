@@ -1950,7 +1950,6 @@ en:
 
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
 
-    desktop_category_page_sort_order: "Category page sort order."
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
@@ -5011,6 +5010,8 @@ en:
                 label: "Categories with Featured Topics"
               categories_and_latest_topics:
                 label: "Categories and Latest Topics"
+              categories_and_latest_topics_created_date:
+                label: "Categories and Latest Topics (sort by topic created date)"
               categories_and_top_topics:
                 label: "Categories and Top Topics"
               categories_boxes:

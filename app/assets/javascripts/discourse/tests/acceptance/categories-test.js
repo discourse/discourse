@@ -37,22 +37,25 @@ acceptance("Categories - 'categories_and_latest_topics'", function (needs) {
       query(".more-topics a").href.endsWith("/latest"),
       "the load more button doesn't add the order param if desktop_category_page_sort_order is not set"
     );
+    assert.notOk(
+      query(".more-topics a").href.endsWith("?order=created"),
+      "the load more button doesn't include the order=created param"
+    );
   });
 });
 
 acceptance(
-  "Categories - 'categories_and_latest_topics' - order by",
+  "Categories - 'categories_and_latest_topics' - order by created date",
   function (needs) {
     needs.settings({
-      desktop_category_page_style: "categories_and_latest_topics",
-      desktop_category_page_sort_order: "new_world_order",
+      desktop_category_page_style: "categories_and_latest_topics_created_date",
     });
     test("order topics by", async function (assert) {
       await visit("/categories");
 
       assert.ok(
-        query(".more-topics a").href.endsWith("?order=new_world_order"),
-        "the load more button matches the desktop_category_page_sort_order setting"
+        query(".more-topics a").href.endsWith("?order=created"),
+        "the load more button includes the order=created param"
       );
     });
   }

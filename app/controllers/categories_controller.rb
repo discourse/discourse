@@ -49,10 +49,13 @@ class CategoriesController < ApplicationController
         topic_options = {
           per_page: CategoriesController.topics_per_page,
           no_definitions: true,
-          order: SiteSetting.desktop_category_page_sort_order
         }
 
-        if style == "categories_and_latest_topics"
+        if style == "categories_and_latest_topics_created_date"
+          topic_options[:order] = 'created'
+          @topic_list = TopicQuery.new(current_user, topic_options).list_latest
+          @topic_list.more_topics_url = url_for(public_send("latest_path", sort: :created))
+        elsif style == "categories_and_latest_topics"
           @topic_list = TopicQuery.new(current_user, topic_options).list_latest
           @topic_list.more_topics_url = url_for(public_send("latest_path"))
         elsif style == "categories_and_top_topics"
@@ -286,8 +289,9 @@ class CategoriesController < ApplicationController
     topic_options = {
       per_page: CategoriesController.topics_per_page,
       no_definitions: true,
-      order: SiteSetting.desktop_category_page_sort_order
     }
+    style = SiteSetting.desktop_category_page_style
+    topic_options[:order] = 'created' if style == "categories_and_latest_topics_created_date"
 
     result = CategoryAndTopicLists.new
     result.category_list = CategoryList.new(guardian, category_options)
