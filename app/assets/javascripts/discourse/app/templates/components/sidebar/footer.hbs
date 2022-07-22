@@ -5,23 +5,19 @@
         {{i18n "about.simple_title"}}
       </LinkTo>
 
-      <a href
-        {{action (route-action "showKeyboardShortcutsHelp")}}
-        title={{i18n "keyboard_shortcuts_help.title"}}
-        class="sidebar-footer-link sidebar-footer-link-keyboard-shortcuts" >
-
-        {{i18n "keyboard_shortcuts_help.short_title"}}
-      </a>
+      {{#if this.currentUser.admin}}
+        <LinkTo @route="adminSiteSettings" title={{i18n "admin.site_settings.title"}} class="sidebar-footer-link sidebar-footer-link-site-settings">
+          {{i18n "admin.site_settings.title"}}
+        </LinkTo>
+      {{/if}}
     </div>
 
     <div class="sidebar-footer-actions">
-      {{#if this.currentUser.admin}}
-        <DButton
-          @route="adminSiteSettings"
-          @title="admin.site_settings.title"
-          @icon="cog"
-          @class="sidebar-footer-actions-button sidebar-footer-actions-site-settings" />
-      {{/if}}
+      <DButton
+        @action={{route-action "showKeyboardShortcutsHelp"}}
+        @title={{i18n "keyboard_shortcuts_help.title"}}
+        @icon="keyboard"
+        @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
 
       {{#if this.site.desktopView}}
         <DButton

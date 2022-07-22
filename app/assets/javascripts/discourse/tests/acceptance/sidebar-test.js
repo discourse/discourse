@@ -48,7 +48,7 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
 
   test("viewing keyboard shortcuts using sidebar", async function (assert) {
     await visit("/");
-    await click(".sidebar-footer-link-keyboard-shortcuts");
+    await click(".sidebar-footer-actions-keyboard-shortcuts");
 
     assert.ok(
       exists("#keyboard-shortcuts-help"),
@@ -58,7 +58,7 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
 
   test("navigating to site setting route using sidebar", async function (assert) {
     await visit("/");
-    await click(".sidebar-footer-actions-site-settings");
+    await click(".sidebar-footer-link-site-settings");
 
     assert.strictEqual(currentRouteName(), "adminSiteSettingsCategory");
   });
@@ -68,7 +68,7 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
 
     await visit("/");
 
-    assert.notOk(exists(".sidebar-footer-actions-site-settings"));
+    assert.notOk(exists(".sidebar-footer-link-site-settings"));
   });
 
   test("undocking and docking sidebar", async function (assert) {
