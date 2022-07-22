@@ -189,17 +189,17 @@ acceptance("Sidebar - section API", function (needs) {
       "displays header with correct text"
     );
     await click(
-      ".sidebar-section-test-chat-channels .edit-channels-dropdown summary"
+      ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown summary"
     );
     assert.strictEqual(
       queryAll(
-        ".sidebar-section-test-chat-channels .edit-channels-dropdown .select-kit-collection li"
+        ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown .select-kit-collection li"
       ).length,
       2,
       "displays two actions"
     );
     const actions = queryAll(
-      ".sidebar-section-test-chat-channels .edit-channels-dropdown .select-kit-collection li"
+      ".sidebar-section-test-chat-channels .sidebar-section-header-dropdown .select-kit-collection li"
     );
     assert.strictEqual(
       actions[0].textContent.trim(),
