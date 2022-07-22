@@ -341,9 +341,11 @@ createWidget("revamped-hamburger-menu-wrapper", {
 
   html() {
     return [
-      new ComponentConnector(this, "hamburger-menu-wrapper", {}, [], {
-        applyStyle: false,
-      }),
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<Sidebar::HamburgerDropdown />`
+      ),
     ];
   },
 
