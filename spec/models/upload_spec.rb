@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Upload do
+RSpec.describe Upload do
   let(:upload) { build(:upload) }
   let(:user_id) { 1 }
 

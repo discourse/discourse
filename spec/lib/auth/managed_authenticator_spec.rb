@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::ManagedAuthenticator do
+RSpec.describe Auth::ManagedAuthenticator do
   let(:authenticator) {
     Class.new(described_class) do
       def name

@@ -2,7 +2,7 @@
 
 require "import_export"
 
-describe ImportExport::CategoryExporter do
+RSpec.describe ImportExport::CategoryExporter do
 
   fab!(:category) { Fabricate(:category) }
   fab!(:group) { Fabricate(:group) }

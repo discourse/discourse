@@ -2,7 +2,7 @@
 
 require "import_export"
 
-describe ImportExport::Importer do
+RSpec.describe ImportExport::Importer do
 
   before do
     STDOUT.stubs(:write)

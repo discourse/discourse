@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Jobs::Base do
+RSpec.describe ::Jobs::Base do
   class GoodJob < ::Jobs::Base
     attr_accessor :count
     def execute(args)

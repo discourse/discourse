@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StylesheetsController do
+RSpec.describe StylesheetsController do
   it 'can survive cache miss' do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)

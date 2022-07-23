@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicTag do
+RSpec.describe TopicTag do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:tag) { Fabricate(:tag) }

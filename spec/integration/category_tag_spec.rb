@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe "category tag restrictions" do
+RSpec.describe "category tag restrictions" do
 
   def filter_allowed_tags(opts = {})
     DiscourseTagging.filter_allowed_tags(Guardian.new(user), opts)
@@ -427,7 +427,7 @@ describe "category tag restrictions" do
   end
 end
 
-describe "tag topic counts per category" do
+RSpec.describe "tag topic counts per category" do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:category) { Fabricate(:category) }
   fab!(:category2) { Fabricate(:category) }

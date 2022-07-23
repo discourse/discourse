@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ExtraLocalesController do
+RSpec.describe ExtraLocalesController do
   context 'show' do
 
     it "won't work with a weird parameter" do

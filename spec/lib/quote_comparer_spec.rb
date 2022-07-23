@@ -2,7 +2,7 @@
 
 require 'quote_comparer'
 
-describe QuoteComparer do
+RSpec.describe QuoteComparer do
 
   describe "#missing?" do
     fab!(:post) { Fabricate(:post, raw: "This has **text** we _are_ matching") }

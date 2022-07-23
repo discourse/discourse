@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Site do
+RSpec.describe Site do
   after do
     Site.clear_cache
   end

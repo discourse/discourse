@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReviewableQueuedPostSerializer do
+RSpec.describe ReviewableQueuedPostSerializer do
   fab!(:admin) { Fabricate(:admin) }
 
   context "new topic" do

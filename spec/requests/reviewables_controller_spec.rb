@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReviewablesController do
+RSpec.describe ReviewablesController do
 
   context "anonymous" do
     it "denies listing" do

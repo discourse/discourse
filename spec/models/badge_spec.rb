@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Badge do
+RSpec.describe Badge do
 
   it 'has a valid system attribute for new badges' do
     expect(Badge.create!(name: "test", badge_type_id: 1).system?).to be false

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RandomTopicSelector do
+RSpec.describe RandomTopicSelector do
 
   it 'can correctly use cache' do
     key = RandomTopicSelector.cache_key

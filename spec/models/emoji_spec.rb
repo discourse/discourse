@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Emoji do
+RSpec.describe Emoji do
 
   it "returns the correct codepoints" do
     expect(Emoji.replacement_code('1f47d').codepoints).to eq([128125])

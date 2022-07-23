@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::FacebookAuthenticator do
+RSpec.describe Auth::FacebookAuthenticator do
   let(:hash) {
     {
       provider: "facebook",

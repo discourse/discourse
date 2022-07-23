@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PollMailbox do
+RSpec.describe Jobs::PollMailbox do
 
   let(:poller) { Jobs::PollMailbox.new }
 

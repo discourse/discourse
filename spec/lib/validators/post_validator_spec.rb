@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostValidator do
+RSpec.describe PostValidator do
   fab!(:topic) { Fabricate(:topic) }
   let(:post) { build(:post, topic: topic) }
   let(:validator) { PostValidator.new({}) }

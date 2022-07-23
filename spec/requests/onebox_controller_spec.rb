@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe OneboxController do
+RSpec.describe OneboxController do
 
   before do
     Discourse.cache.delete(Oneboxer.onebox_failed_cache_key(url))

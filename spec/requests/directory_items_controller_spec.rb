@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DirectoryItemsController do
+RSpec.describe DirectoryItemsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:walter_white) { Fabricate(:walter_white) }

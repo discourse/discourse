@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }

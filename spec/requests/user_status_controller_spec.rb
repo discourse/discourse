@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserStatusController do
+RSpec.describe UserStatusController do
   describe '#set' do
     it 'requires user to be logged in' do
       put "/user-status.json", params: { description: "off to dentist" }

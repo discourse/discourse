@@ -2,7 +2,7 @@
 
 require 'theme_settings_manager'
 
-describe ThemeSettingsManager do
+RSpec.describe ThemeSettingsManager do
 
   let!(:theme) { Fabricate(:theme) }
   let(:theme_settings) do

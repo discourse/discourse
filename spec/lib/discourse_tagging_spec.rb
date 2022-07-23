@@ -5,7 +5,7 @@ require 'discourse_tagging'
 
 # More tests are found in the category_tag_spec integration specs
 
-describe DiscourseTagging do
+RSpec.describe DiscourseTagging do
 
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user)  { Fabricate(:user) }

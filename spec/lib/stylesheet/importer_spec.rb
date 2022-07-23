@@ -2,7 +2,7 @@
 
 require 'stylesheet/importer'
 
-describe Stylesheet::Importer do
+RSpec.describe Stylesheet::Importer do
 
   def compile_css(name)
     Stylesheet::Compiler.compile_asset(name)[0]

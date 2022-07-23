@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe TopicBookmarkable do
+RSpec.describe TopicBookmarkable do
   fab!(:user) { Fabricate(:user) }
   fab!(:guardian) { Guardian.new(user) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }

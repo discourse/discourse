@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAvatar do
+RSpec.describe UserAvatar do
   fab!(:user) { Fabricate(:user) }
   let(:avatar) { user.create_user_avatar! }
 

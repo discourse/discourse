@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserApiKey do
+RSpec.describe UserApiKey do
   context "#allow?" do
     def request_env(method, path, **path_parameters)
       ActionDispatch::TestRequest.create.tap do |request|

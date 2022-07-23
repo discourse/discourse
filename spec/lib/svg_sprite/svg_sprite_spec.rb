@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SvgSprite do
+RSpec.describe SvgSprite do
   fab!(:theme) { Fabricate(:theme) }
 
   before do

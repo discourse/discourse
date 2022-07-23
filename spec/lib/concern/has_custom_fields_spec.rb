@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HasCustomFields do
+RSpec.describe HasCustomFields do
   context "custom_fields" do
     before do
       DB.exec("create temporary table custom_fields_test_items(id SERIAL primary key)")

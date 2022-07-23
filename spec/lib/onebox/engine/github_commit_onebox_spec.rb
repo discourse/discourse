@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubCommitOnebox do
+RSpec.describe Onebox::Engine::GithubCommitOnebox do
   describe "regular commit url" do
     before do
       @link = "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"

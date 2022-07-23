@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Theme do
+RSpec.describe Theme do
   after do
     Theme.clear_cache!
   end

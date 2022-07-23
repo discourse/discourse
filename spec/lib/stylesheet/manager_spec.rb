@@ -2,7 +2,7 @@
 
 require 'stylesheet/compiler'
 
-describe Stylesheet::Manager do
+RSpec.describe Stylesheet::Manager do
   def manager(theme_id = nil)
     Stylesheet::Manager.new(theme_id: theme_id)
   end

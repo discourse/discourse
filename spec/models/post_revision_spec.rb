@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostRevision do
+RSpec.describe PostRevision do
   it "can deserialize old YAML" do
     # Date objects are stored in core post_revisions prior
     # to https://github.com/discourse/discourse/commit/e7f251c105

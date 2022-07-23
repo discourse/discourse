@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe Category do
+RSpec.describe Category do
   fab!(:user) { Fabricate(:user) }
 
   it { is_expected.to validate_presence_of :user_id }

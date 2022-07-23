@@ -2,7 +2,7 @@
 
 require 'cache'
 
-describe "Redis Store" do
+RSpec.describe "Redis Store" do
 
   let :cache do
     Cache.new(namespace: 'foo')

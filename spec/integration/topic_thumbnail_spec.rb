@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "Topic Thumbnails" do
+RSpec.describe "Topic Thumbnails" do
   before do
     SiteSetting.create_thumbnails = true
     ImageSizer.stubs(:resize).returns([9, 9])

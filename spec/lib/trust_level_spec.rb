@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TrustLevel do
+RSpec.describe TrustLevel do
   describe 'levels' do
     context "verify enum sequence" do
       before do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UserEmail do
+RSpec.describe Jobs::UserEmail do
 
   before do
     SiteSetting.email_time_window_mins = 10

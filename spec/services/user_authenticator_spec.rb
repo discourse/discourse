@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAuthenticator do
+RSpec.describe UserAuthenticator do
   def github_auth(email_valid)
     {
       email: "user53@discourse.org",

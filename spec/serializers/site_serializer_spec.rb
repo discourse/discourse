@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSerializer do
+RSpec.describe SiteSerializer do
   let(:guardian) { Guardian.new }
   let(:category) { Fabricate(:category) }
 

@@ -2,7 +2,7 @@
 
 require 'seed_data/topics'
 
-describe SeedData::Topics do
+RSpec.describe SeedData::Topics do
   subject { SeedData::Topics.with_default_locale }
 
   def create_topic(name = "welcome_topic_id")

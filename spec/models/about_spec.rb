@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe About do
+RSpec.describe About do
 
   describe 'stats cache' do
     include_examples 'stats cacheable'

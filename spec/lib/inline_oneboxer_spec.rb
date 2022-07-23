@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InlineOneboxer do
+RSpec.describe InlineOneboxer do
 
   it "should return nothing with empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Sitemap do
+RSpec.describe Sitemap do
   describe '.regenerate_sitemaps' do
     fab!(:topic) { Fabricate(:topic) }
 

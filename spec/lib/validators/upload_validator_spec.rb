@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UploadValidator do
+RSpec.describe UploadValidator do
   subject(:validator) { described_class.new }
 
   describe 'validate' do

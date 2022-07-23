@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "CommonMark" do
+RSpec.describe "CommonMark" do
   it 'passes spec' do
 
     SiteSetting.traditional_markdown_linebreaks = true

@@ -2,7 +2,7 @@
 
 require "import_export/category_structure_exporter"
 
-describe ImportExport::CategoryStructureExporter do
+RSpec.describe ImportExport::CategoryStructureExporter do
 
   before do
     STDOUT.stubs(:write)

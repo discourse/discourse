@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionNotifier do
+RSpec.describe PostActionNotifier do
 
   before do
     PostActionNotifier.enable

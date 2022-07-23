@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe QunitController do
+RSpec.describe QunitController do
   describe "#theme" do
     let(:theme) { Fabricate(:theme, name: 'main-theme') }
     let(:component) { Fabricate(:theme, component: true, name: 'enabled-component') }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserDestroyer do
+RSpec.describe UserDestroyer do
 
   fab!(:user) { Fabricate(:user_with_secondary_email) }
   fab!(:admin) { Fabricate(:admin) }

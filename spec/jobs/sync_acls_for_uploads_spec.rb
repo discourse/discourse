@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Jobs::SyncAclsForUploads do
+RSpec.describe Jobs::SyncAclsForUploads do
   let(:upload1) { Fabricate(:upload) }
   let(:upload2) { Fabricate(:upload) }
   let(:upload3) { Fabricate(:secure_upload) }

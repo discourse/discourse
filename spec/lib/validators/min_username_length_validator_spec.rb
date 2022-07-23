@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe MinUsernameLengthValidator do
+RSpec.describe MinUsernameLengthValidator do
   it "checks for maximum range" do
     SiteSetting.max_username_length = 10
 

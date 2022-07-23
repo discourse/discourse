@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Oneboxer do
+RSpec.describe Oneboxer do
   def response(file)
     file = File.join("spec", "fixtures", "onebox", "#{file}.response")
     File.exist?(file) ? File.read(file) : ""

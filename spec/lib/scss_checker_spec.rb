@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Stylesheet::Manager::ScssChecker do
+RSpec.describe Stylesheet::Manager::ScssChecker do
   fab!(:theme) { Fabricate(:theme) }
 
   describe '#has_scss' do

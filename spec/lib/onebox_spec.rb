@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox do
+RSpec.describe Onebox do
   before do
     stub_request(:get, "https://www.amazon.com/product")
       .to_return(status: 200, body: onebox_response("amazon"))

@@ -2,7 +2,7 @@
 
 require 'score_calculator'
 
-describe ScoreCalculator do
+RSpec.describe ScoreCalculator do
 
   fab!(:post) { Fabricate(:post, reads: 111) }
   fab!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostReply do
+RSpec.describe PostReply do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:other_post) { Fabricate(:post, topic: topic) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserOption do
+RSpec.describe UserOption do
 
   describe "#ensure_consistency!" do
     it "recreates missing user option records" do

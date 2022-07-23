@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SpamRule::FlagSockpuppets do
+RSpec.describe SpamRule::FlagSockpuppets do
 
   fab!(:user1) { Fabricate(:user, ip_address: '182.189.119.174') }
   fab!(:post1) { Fabricate(:post, user: user1, topic: Fabricate(:topic, user: user1)) }

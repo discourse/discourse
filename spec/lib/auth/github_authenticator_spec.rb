@@ -20,7 +20,7 @@ def auth_token_for(user)
   }
 end
 
-describe Auth::GithubAuthenticator do
+RSpec.describe Auth::GithubAuthenticator do
   let(:authenticator) { described_class.new }
   fab!(:user) { Fabricate(:user) }
 

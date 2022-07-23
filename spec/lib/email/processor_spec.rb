@@ -2,7 +2,7 @@
 
 require "email/processor"
 
-describe Email::Processor do
+RSpec.describe Email::Processor do
   after do
     Discourse.redis.flushdb
   end

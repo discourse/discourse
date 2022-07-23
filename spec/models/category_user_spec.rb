@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe CategoryUser do
+RSpec.describe CategoryUser do
   fab!(:user) { Fabricate(:user) }
 
   def tracking

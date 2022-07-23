@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "list/list.erb" do
+RSpec.describe "list/list.erb" do
   fab!(:category) { Fabricate(:category) }
 
   it "add nofollow to RSS alternate link for category" do

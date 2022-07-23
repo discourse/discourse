@@ -3,7 +3,7 @@
 
 require 'text_sentinel'
 
-describe TextSentinel do
+RSpec.describe TextSentinel do
 
   it "allows utf-8 chars" do
     expect(TextSentinel.new("йȝîûηыეமிᚉ⠛").text).to eq("йȝîûηыეமிᚉ⠛")

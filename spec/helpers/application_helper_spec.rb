@@ -1,7 +1,7 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-describe ApplicationHelper do
+RSpec.describe ApplicationHelper do
 
   describe "preload_script" do
     def preload_link(url)

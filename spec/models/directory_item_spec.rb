@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DirectoryItem do
+RSpec.describe DirectoryItem do
 
   describe '#period_types' do
     context "verify enum sequence" do

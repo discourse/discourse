@@ -2,7 +2,7 @@
 
 require_relative 'shared_context_for_backup_restore'
 
-describe BackupRestore::MetaDataHandler do
+RSpec.describe BackupRestore::MetaDataHandler do
   include_context "shared stuff"
 
   let!(:backup_filename) { 'discourse-2019-11-18-143242-v20191108000414.tar.gz' }

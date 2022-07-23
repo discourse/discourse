@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionType do
+RSpec.describe PostActionType do
 
   context "callbacks" do
     describe '#expiry_cache' do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::DashboardController do
+RSpec.describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)

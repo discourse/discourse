@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ScreenedEmail do
+RSpec.describe ScreenedEmail do
 
   let(:email) { 'block@spamfromhome.org' }
   let(:similar_email) { 'bl0ck@spamfromhome.org' }

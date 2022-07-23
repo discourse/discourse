@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RetrieveTitle do
+RSpec.describe RetrieveTitle do
 
   context "extract_title" do
 

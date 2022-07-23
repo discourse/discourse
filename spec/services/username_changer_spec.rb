@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UsernameChanger do
+RSpec.describe UsernameChanger do
   before do
     Jobs.run_immediately!
   end

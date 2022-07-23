@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicUser do
+RSpec.describe TopicUser do
   let :watching do
     TopicUser.notification_levels[:watching]
   end

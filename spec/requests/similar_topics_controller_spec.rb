@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SimilarTopicsController do
+RSpec.describe SimilarTopicsController do
   context 'similar_to' do
     let(:title) { 'this title is long enough to search for' }
     let(:raw) { 'this body is long enough to search for' }

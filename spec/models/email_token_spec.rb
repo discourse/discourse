@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailToken do
+RSpec.describe EmailToken do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :email }
   it { is_expected.to belong_to :user }

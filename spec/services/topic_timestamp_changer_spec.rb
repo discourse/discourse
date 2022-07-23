@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicTimestampChanger do
+RSpec.describe TopicTimestampChanger do
   describe "change!" do
     let(:old_timestamp) { Time.zone.now }
     let(:topic) { Fabricate(:topic, created_at: old_timestamp) }

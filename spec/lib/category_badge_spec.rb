@@ -2,7 +2,7 @@
 
 require 'category_badge'
 
-describe CategoryBadge do
+RSpec.describe CategoryBadge do
   it "escapes HTML in category names / descriptions" do
     c = Fabricate(:category, name: '<b>name</b>', description: '<b>title</b>')
 

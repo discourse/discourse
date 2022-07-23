@@ -2,7 +2,7 @@
 
 require 'topic_view'
 
-describe TopicQuery do
+RSpec.describe TopicQuery do
 
   # TODO:
   #   This fab! here has impact on all tests.

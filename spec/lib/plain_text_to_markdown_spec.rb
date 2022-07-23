@@ -2,7 +2,7 @@
 
 require 'plain_text_to_markdown'
 
-describe PlainTextToMarkdown do
+RSpec.describe PlainTextToMarkdown do
   def to_markdown(text, opts = {})
     PlainTextToMarkdown.new(text, opts).to_markdown
   end

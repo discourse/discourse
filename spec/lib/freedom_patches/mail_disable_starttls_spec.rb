@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FreedomPatches::MailDisableStarttls do
+RSpec.describe FreedomPatches::MailDisableStarttls do
   subject(:smtp_session) { smtp.build_smtp_session }
 
   let(:smtp) { Mail::SMTP.new(options) }

@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe UsersController do
+RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }

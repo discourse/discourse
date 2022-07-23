@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailController do
+RSpec.describe EmailController do
   fab!(:user) { Fabricate(:user) }
 
   describe '#perform_unsubscribe' do

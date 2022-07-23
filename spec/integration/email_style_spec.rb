@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailStyle do
+RSpec.describe EmailStyle do
 
   context "ERB evaluation" do
     it "does not evaluate ERB outside of the email itself" do

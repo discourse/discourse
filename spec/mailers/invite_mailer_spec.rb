@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InviteMailer do
+RSpec.describe InviteMailer do
 
   describe "send_invite" do
 

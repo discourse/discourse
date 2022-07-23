@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseNarrativeBot::Store do
+RSpec.describe DiscourseNarrativeBot::Store do
   describe '.set' do
     it 'should set the right value in the plugin store' do
       key = 'somekey'

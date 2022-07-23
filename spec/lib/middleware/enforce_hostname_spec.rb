@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Middleware::EnforceHostname do
+RSpec.describe Middleware::EnforceHostname do
 
   before do
     RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(['primary.example.com', 'secondary.example.com'])

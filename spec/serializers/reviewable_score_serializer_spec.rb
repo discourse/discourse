@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReviewableScoreSerializer do
+RSpec.describe ReviewableScoreSerializer do
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
   fab!(:admin) { Fabricate(:admin) }
 

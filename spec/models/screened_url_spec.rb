@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ScreenedUrl do
+RSpec.describe ScreenedUrl do
 
   let(:url)    { 'http://shopppping.com/bad/drugz' }
   let(:domain) { 'shopppping.com' }

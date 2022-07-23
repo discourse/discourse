@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HasSearchData do
+RSpec.describe HasSearchData do
   context "belongs to its model" do
     before do
       DB.exec("create temporary table model_items(id SERIAL primary key)")

@@ -2,7 +2,7 @@
 
 require 'stringio'
 
-describe TopicEmbed do
+RSpec.describe TopicEmbed do
 
   it { is_expected.to belong_to :topic }
   it { is_expected.to belong_to :post }

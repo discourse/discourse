@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserStat do
+RSpec.describe UserStat do
 
   it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)

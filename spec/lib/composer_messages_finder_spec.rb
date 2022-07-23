@@ -3,7 +3,7 @@
 
 require 'composer_messages_finder'
 
-describe ComposerMessagesFinder do
+RSpec.describe ComposerMessagesFinder do
 
   context "delegates work" do
     let(:user) { Fabricate.build(:user) }

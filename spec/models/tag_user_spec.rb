@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe TagUser do
+RSpec.describe TagUser do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_to_create_tag = 0
