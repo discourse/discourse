@@ -114,13 +114,14 @@
   <style>
     html {
       overflow-y: hidden !important;
+      background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
     }
 
     #d-splash {
       display: grid;
       place-items: center;
       backface-visibility: hidden;
-      background: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
+      background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
       position: absolute;
       left: 0;
       top: 0;
@@ -183,8 +184,11 @@
     }
 
     @media (prefers-color-scheme: dark) {
+      html {
+        background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
+      }
       #d-splash {
-        background: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
+        background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
       }
       #d-splash .preloader-text-wrapper {
         color: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
