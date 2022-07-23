@@ -253,6 +253,10 @@ protected
   end
 
   def find_reviewable
+    unless Reviewable.exists?(params[:reviewable_id])
+      raise Discourse::NotFound.new(custom_message: "reviewables.user_does_not_exist")
+    end
+
     reviewable = Reviewable.viewable_by(current_user).where(id: params[:reviewable_id]).first
     raise Discourse::NotFound.new if reviewable.blank?
     reviewable

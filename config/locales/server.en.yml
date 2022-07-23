@@ -5086,6 +5086,7 @@ en:
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
+    user_does_not_exist: "User is already deleted and blocked."
     priorities:
       low: "Low"
       medium: "Medium"
