@@ -117,6 +117,7 @@ after_initialize do
     '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/triggers/topic',
     '../app/lib/discourse_automation/triggers/api_call',
+    '../app/controllers/discourse_automation/append_last_checked_by_controller',
     '../app/controllers/discourse_automation/automations_controller',
     '../app/controllers/discourse_automation/user_global_notices_controller',
     '../app/controllers/admin/discourse_automation/admin_discourse_automation_controller',
@@ -139,6 +140,7 @@ after_initialize do
     '../app/jobs/scheduled/stalled_topic_tracker',
     '../app/lib/discourse_automation/triggers/recurring',
     '../app/lib/discourse_automation/triggers/user_promoted',
+    '../app/lib/discourse_automation/scripts/append_last_checked_by',
     '../app/lib/discourse_automation/scripts/append_last_edited_by',
     '../app/lib/discourse_automation/scripts/auto_responder',
     '../app/lib/discourse_automation/scripts/banner_topic',
@@ -155,6 +157,8 @@ after_initialize do
 
   module ::DiscourseAutomation
     CUSTOM_FIELD ||= 'discourse_automation_ids'
+    TOPIC_LAST_CHECKED_BY ||= 'discourse_automation_last_checked_by'
+    TOPIC_LAST_CHECKED_AT ||= 'discourse_automation_last_checked_at'
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -181,6 +185,7 @@ after_initialize do
 
     scope format: :json do
       delete '/user-global-notices/:id' => 'user_global_notices#destroy'
+      put '/append-last-checked-by/:post_id' => 'append_last_checked_by#post_checked'
     end
 
     scope '/admin/plugins/discourse-automation', as: 'admin_discourse_automation', constraints: AdminConstraint.new do

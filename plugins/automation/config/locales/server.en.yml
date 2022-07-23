@@ -90,5 +90,12 @@ en:
         description: Closes a topic with an optional closing message
       append_last_edited_by:
         title: Append last edited by
-        description: Adds the last edited by details of the post to cooked content's bottom.
-        text: "> Last edited by %{username} %{date_time}"
+        description: Adds the 'last edited by' details of the post to cooked content's bottom.
+        text: "Last edited by @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Append last checked by
+        description: Adds the 'last checked by' details of the post cooked content's bottom.
+        text: "Last checked by @%{username} %{date_time}"
+        summary: Check document
+        details: "Perform check on document: "
+        button_text: Done

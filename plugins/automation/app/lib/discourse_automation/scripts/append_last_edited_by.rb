@@ -15,11 +15,17 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::APPEND_LAST
 
     cooked = context['cooked']
     doc = Loofah.fragment(cooked)
-    node = doc.document.create_element("div")
+
+    node = doc.css("blockquote.discourse-automation").first
+    if node.blank?
+      node = doc.document.create_element("blockquote")
+      node['class'] = 'discourse-automation'
+      doc.add_child(node)
+    end
+
     date_time = "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]"
-    node.inner_html = PrettyText.cook(I18n.t("discourse_automation.scriptables.append_last_edited_by.text", username: username, date_time: date_time)).html_safe
-    node.inner_html = "<p></p>" + node.inner_html
-    doc.add_child(node)
+    node.inner_html += PrettyText.cook(I18n.t("discourse_automation.scriptables.append_last_edited_by.text", username: username, date_time: date_time)).html_safe
+
     doc.try(:to_html)
   end
 end
