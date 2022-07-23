@@ -9,6 +9,11 @@
       <style>
         :root {
           --animation-state: paused;
+        }
+
+        /* user picked a theme where the "regular" scheme is dark */
+        <%- if dark_color_scheme? %>
+        :root {
           --primary: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
           --secondary: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
           --tertiary: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
@@ -16,30 +21,33 @@
           --highlight: #<%= ColorScheme.hex_for_name("highlight", scheme_id) %>;
           --success: #<%= ColorScheme.hex_for_name("success", scheme_id) %>;
         }
+        <%- else %>
+        /* user picked a theme a light scheme and also enabled a dark scheme */
 
+        /* deal with light scheme first */
+        @media (prefers-color-scheme: light) {
+          :root {
+            --primary: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
+            --secondary: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
+            --tertiary: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
+            --quaternary: #<%= ColorScheme.hex_for_name("quaternary", scheme_id) %>;
+            --highlight: #<%= ColorScheme.hex_for_name("highlight", scheme_id) %>;
+            --success: #<%= ColorScheme.hex_for_name("success", scheme_id) %>;
+          }
+        }
+
+        /* then deal with dark scheme */
         @media (prefers-color-scheme: dark) {
           :root {
-            --animation-state: paused;
             --primary: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
-            --secondary: #<%= ColorScheme.hex_for_name(
-                "secondary",
-                dark_scheme_id
-              ) %>;
-            --tertiary: #<%= ColorScheme.hex_for_name(
-                "tertiary",
-                dark_scheme_id
-              ) %>;
-            --quaternary: #<%= ColorScheme.hex_for_name(
-                "quaternary",
-                dark_scheme_id
-              ) %>;
-            --highlight: #<%= ColorScheme.hex_for_name(
-                "highlight",
-                dark_scheme_id
-              ) %>;
+            --secondary: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
+            --tertiary: #<%= ColorScheme.hex_for_name("tertiary", dark_scheme_id) %>;
+            --quaternary: #<%= ColorScheme.hex_for_name("quaternary", dark_scheme_id) %>;
+            --highlight: #<%= ColorScheme.hex_for_name("highlight", dark_scheme_id) %>;
             --success: #<%= ColorScheme.hex_for_name("success", dark_scheme_id) %>;
           }
         }
+        <%- end %>
 
         /* these styles need to live here because the SVG has a different scope */
         .dots {
@@ -114,14 +122,47 @@
   <style>
     html {
       overflow-y: hidden !important;
+    }
+
+    /* user picked a theme where the "regular" scheme is dark */
+    <%- if dark_color_scheme? %>
+    html {
       background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
     }
+
+    #d-splash .preloader-text-wrapper {
+      color: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
+    }
+    <%- else %>
+    /* user picked a theme a light scheme and also enabled a dark scheme */
+
+    /* deal with light scheme first */
+    @media (prefers-color-scheme: light) {
+      html {
+        background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
+      }
+
+      #d-splash .preloader-text-wrapper {
+        color: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
+      }
+    }
+
+    /* then deal with dark scheme */
+    @media (prefers-color-scheme: dark) {
+      html {
+        background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
+      }
+
+      #d-splash .preloader-text-wrapper {
+        color: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
+      }
+    }
+    <%- end %>
 
     #d-splash {
       display: grid;
       place-items: center;
       backface-visibility: hidden;
-      background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
       position: absolute;
       left: 0;
       top: 0;
@@ -142,7 +183,6 @@
       animation-delay: 1s;
       animation-fill-mode: forwards;
       animation-play-state: var(--animation-state);
-      color: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
       margin-bottom: -4em;
     }
 
@@ -180,18 +220,6 @@
       }
       75% {
         content: "...";
-      }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      html {
-        background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
-      }
-      #d-splash {
-        background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
-      }
-      #d-splash .preloader-text-wrapper {
-        color: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
       }
     }
   </style>
