@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
-    "@embroider/test-setup": "^0.48.1",
+    "@embroider/test-setup": "^1.8.3",
     "@glimmer/component": "^1.1.2",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.28.5",
