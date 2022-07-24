@@ -5,7 +5,7 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { next } from "@ember/runloop";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { settled } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -594,13 +594,9 @@ discourseModule("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectReplies", async function (assert) {
-    pretender.get("/posts/1/reply-ids.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        [{ id: 2, level: 1 }],
-      ];
-    });
+    pretender.get("/posts/1/reply-ids.json", () =>
+      response([{ id: 2, level: 1 }])
+    );
 
     let model = topicWithStream({
       posts: [{ id: 1 }, { id: 2 }],
@@ -656,9 +652,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
   });
 
   test("deletePost - no modal is shown if post does not have replies", function (assert) {
-    pretender.get("/posts/2/reply-ids.json", () => {
-      return [200, { "Content-Type": "application/json" }, []];
-    });
+    pretender.get("/posts/2/reply-ids.json", () => response([]));
 
     let destroyed;
     const post = EmberObject.create({
