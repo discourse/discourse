@@ -58,13 +58,13 @@ discourseModule(
   function (hooks) {
     let pmTopicTrackingState;
 
-    hooks.beforeEach(function () {
+    hooks.beforeEach(async function () {
       setupPretender();
       pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
         messageBus: MessageBus,
         currentUser: User.create({ id: 77889, username: "test" }),
       });
-      pmTopicTrackingState.startTracking();
+      await pmTopicTrackingState.startTracking();
     });
 
     test("modifies the topic state only if the topic was not created by the current user", async function (assert) {
@@ -116,13 +116,13 @@ discourseModule(
   function (hooks) {
     let pmTopicTrackingState;
 
-    hooks.beforeEach(function () {
+    hooks.beforeEach(async function () {
       setupPretender();
       pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
         messageBus: MessageBus,
         currentUser: User.create({ id: 77889, username: "test" }),
       });
-      pmTopicTrackingState.startTracking();
+      await pmTopicTrackingState.startTracking();
     });
 
     test("modifies the last_read_post_number and highest_post_number", async function (assert) {
