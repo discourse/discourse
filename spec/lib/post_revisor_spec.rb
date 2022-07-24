@@ -361,7 +361,7 @@ describe PostRevisor do
 
       it "resets the edit_reason attribute in post model" do
         freeze_time
-        SiteSetting.editing_grace_period = 5
+        SiteSetting.editing_grace_period = 5.seconds
         post = Fabricate(:post, raw: 'hello world')
         revisor = PostRevisor.new(post)
         revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
