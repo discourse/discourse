@@ -29,15 +29,15 @@ acceptance("User Status", function (needs) {
   needs.user({ id: userId, timezone: userTimezone });
 
   needs.pretender((server, helper) => {
-    server.put("/user-status.json", () => {
-      publishToMessageBus(`/user-status/${userId}`, {
+    server.put("/user-status.json", async () => {
+      await publishToMessageBus(`/user-status/${userId}`, {
         description: userStatus,
         emoji: userStatusEmoji,
       });
       return helper.response({ success: true });
     });
-    server.delete("/user-status.json", () => {
-      publishToMessageBus(`/user-status/${userId}`, null);
+    server.delete("/user-status.json", async () => {
+      await publishToMessageBus(`/user-status/${userId}`, null);
       return helper.response({ success: true });
     });
   });

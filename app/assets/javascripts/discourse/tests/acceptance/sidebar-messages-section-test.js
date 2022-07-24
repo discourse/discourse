@@ -1,6 +1,6 @@
 import { test } from "qunit";
 import I18n from "I18n";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -367,7 +367,7 @@ acceptance(
         "pm-topic-tracking-state:main"
       );
 
-      publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
+      await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 1,
         message_type: "unread",
         payload: {
@@ -378,7 +378,7 @@ acceptance(
         },
       });
 
-      publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
+      await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 2,
         message_type: "new_topic",
         payload: {
@@ -413,7 +413,7 @@ acceptance(
         "displays 1 count for group1 new inbox filter link"
       );
 
-      publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
+      await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 2,
         message_type: "read",
         payload: {
@@ -423,8 +423,6 @@ acceptance(
           group_ids: [1],
         },
       });
-
-      await settled();
 
       assert.strictEqual(
         query(
@@ -442,7 +440,7 @@ acceptance(
         "pm-topic-tracking-state:main"
       );
 
-      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+      await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 1,
         message_type: "unread",
         payload: {
@@ -452,8 +450,6 @@ acceptance(
           group_ids: [],
         },
       });
-
-      await settled();
 
       await click(
         ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
@@ -469,7 +465,7 @@ acceptance(
         "displays 1 count for the unread inbox filter link"
       );
 
-      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+      await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 2,
         message_type: "unread",
         payload: {
@@ -479,8 +475,6 @@ acceptance(
           group_ids: [],
         },
       });
-
-      await settled();
 
       assert.strictEqual(
         query(
@@ -492,7 +486,7 @@ acceptance(
         "displays 2 count for the unread inbox filter link"
       );
 
-      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+      await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 3,
         message_type: "new_topic",
         payload: {
@@ -502,8 +496,6 @@ acceptance(
           group_ids: [],
         },
       });
-
-      await settled();
 
       assert.strictEqual(
         query(
@@ -515,7 +507,7 @@ acceptance(
         "displays 1 count for the new inbox filter link"
       );
 
-      publishToMessageBus(pmTopicTrackingState.userChannel(), {
+      await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 3,
         message_type: "read",
         payload: {
@@ -525,8 +517,6 @@ acceptance(
           group_ids: [],
         },
       });
-
-      await settled();
 
       assert.strictEqual(
         query(

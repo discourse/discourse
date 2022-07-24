@@ -67,18 +67,21 @@ discourseModule(
       pmTopicTrackingState.startTracking();
     });
 
-    test("modifies the topic state only if the topic was not created by the current user", function (assert) {
+    test("modifies the topic state only if the topic was not created by the current user", async function (assert) {
       let payload = {
         last_read_post_number: null,
         highest_post_number: 1,
         group_ids: [],
         created_by_user_id: 5,
       };
-      publishToMessageBus("/private-message-topic-tracking-state/user/77889", {
-        message_type: "new_topic",
-        topic_id: 4398,
-        payload,
-      });
+      await publishToMessageBus(
+        "/private-message-topic-tracking-state/user/77889",
+        {
+          message_type: "new_topic",
+          topic_id: 4398,
+          payload,
+        }
+      );
       assert.deepEqual(
         pmTopicTrackingState.findState(4398),
         payload,
@@ -91,11 +94,14 @@ discourseModule(
         group_ids: [],
         created_by_user_id: 77889,
       };
-      publishToMessageBus("/private-message-topic-tracking-state/user/77889", {
-        message_type: "new_topic",
-        topic_id: 4400,
-        payload,
-      });
+      await publishToMessageBus(
+        "/private-message-topic-tracking-state/user/77889",
+        {
+          message_type: "new_topic",
+          topic_id: 4400,
+          payload,
+        }
+      );
       assert.deepEqual(
         pmTopicTrackingState.findState(4400),
         undefined,
@@ -119,7 +125,7 @@ discourseModule(
       pmTopicTrackingState.startTracking();
     });
 
-    test("modifies the last_read_post_number and highest_post_number", function (assert) {
+    test("modifies the last_read_post_number and highest_post_number", async function (assert) {
       let payload = {
         last_read_post_number: 12,
         highest_post_number: 13,
@@ -127,11 +133,14 @@ discourseModule(
         group_ids: [],
         created_by_user_id: 5,
       };
-      publishToMessageBus("/private-message-topic-tracking-state/user/77889", {
-        message_type: "unread",
-        topic_id: 123,
-        payload,
-      });
+      await publishToMessageBus(
+        "/private-message-topic-tracking-state/user/77889",
+        {
+          message_type: "unread",
+          topic_id: 123,
+          payload,
+        }
+      );
 
       let state = pmTopicTrackingState.findState(123);
       assert.deepEqual(
@@ -152,11 +161,14 @@ discourseModule(
         group_ids: [],
         created_by_user_id: 77889,
       };
-      publishToMessageBus("/private-message-topic-tracking-state/user/77889", {
-        message_type: "unread",
-        topic_id: 123,
-        payload,
-      });
+      await publishToMessageBus(
+        "/private-message-topic-tracking-state/user/77889",
+        {
+          message_type: "unread",
+          topic_id: 123,
+          payload,
+        }
+      );
 
       state = pmTopicTrackingState.findState(123);
       assert.deepEqual(

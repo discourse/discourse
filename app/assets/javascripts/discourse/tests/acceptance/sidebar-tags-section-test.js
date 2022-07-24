@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -9,9 +9,7 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-
 import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
-
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -283,7 +281,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       "does not display any badge for tag3 section link"
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -291,8 +289,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         highest_post_number: 12,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -302,7 +298,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       `displays 1 new count for tag1 section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -310,8 +306,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         highest_post_number: 1,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(`.sidebar-section-link-tag1 .sidebar-section-link-content-badge`),
