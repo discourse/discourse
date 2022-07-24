@@ -12,7 +12,6 @@ import {
   click,
   currentURL,
   fillIn,
-  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -664,9 +663,8 @@ acceptance("Topic stats update automatically", function () {
     };
 
     // simulate the topic like_count being changed
-    publishToMessageBus("/topic/280", likesChangedFixture);
+    await publishToMessageBus("/topic/280", likesChangedFixture);
 
-    await settled();
     const newLikes = likesDisplay.textContent;
 
     assert.notEqual(
@@ -701,9 +699,8 @@ acceptance("Topic stats update automatically", function () {
     const oldReplies = repliesDisplay.textContent;
 
     // simulate the topic posts_count being changed
-    publishToMessageBus("/topic/280", postsChangedFixture);
+    await publishToMessageBus("/topic/280", postsChangedFixture);
 
-    await settled();
     const newLikes = repliesDisplay.textContent;
 
     assert.notEqual(
@@ -726,9 +723,7 @@ acceptance("Topic stats update automatically", function () {
     const oldAvatarSrc = avatarImg.src;
 
     // simulate the topic posts_count being changed
-    publishToMessageBus("/topic/280", postsChangedFixture);
-
-    await settled();
+    await publishToMessageBus("/topic/280", postsChangedFixture);
 
     const newAvatarTitle = avatarImg.title;
     const newAvatarSrc = avatarImg.src;
@@ -764,9 +759,7 @@ acceptance("Topic stats update automatically", function () {
     const oldTime = lastRepliedAtDisplay.dataset.time;
 
     // simulate the topic posts_count being changed
-    publishToMessageBus("/topic/280", postsChangedFixture);
-
-    await settled();
+    await publishToMessageBus("/topic/280", postsChangedFixture);
 
     const newTime = lastRepliedAtDisplay.dataset.time;
 

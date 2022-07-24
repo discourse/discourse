@@ -1,7 +1,6 @@
 import I18n from "I18n";
-
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -238,11 +237,9 @@ acceptance("Sidebar - Community Section", function (needs) {
   test("clicking on my posts link when user has a draft", async function (assert) {
     await visit("/t/280");
 
-    publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
       draft_count: 1,
     });
-
-    await settled();
 
     await click(".sidebar-section-community .sidebar-section-link-my-posts");
 
@@ -386,7 +383,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
 
     // simulate reading topic 2
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -395,8 +392,6 @@ acceptance("Sidebar - Community Section", function (needs) {
         notification_level: 2,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -407,7 +402,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
 
     // simulate reading topic 3
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -418,7 +413,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     });
 
     // simulate reading topic 4
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 4,
       message_type: "read",
       payload: {
@@ -427,8 +422,6 @@ acceptance("Sidebar - Community Section", function (needs) {
         notification_level: 2,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -443,7 +436,7 @@ acceptance("Sidebar - Community Section", function (needs) {
       "it links to new filter"
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -452,8 +445,6 @@ acceptance("Sidebar - Community Section", function (needs) {
         notification_level: 2,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(
@@ -600,7 +591,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
 
     // simulate reading topic id 2
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -608,8 +599,6 @@ acceptance("Sidebar - Community Section", function (needs) {
         highest_post_number: 12,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -620,7 +609,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
 
     // simulate reading topic id 3
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -630,7 +619,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     });
 
     // simulate reading topic id 6
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 6,
       message_type: "read",
       payload: {
@@ -653,7 +642,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
 
     // simulate reading topic id 1
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -661,8 +650,6 @@ acceptance("Sidebar - Community Section", function (needs) {
         highest_post_number: 1,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(

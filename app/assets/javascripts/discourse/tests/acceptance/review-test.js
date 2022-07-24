@@ -221,14 +221,12 @@ acceptance("Review", function (needs) {
     );
     assert.ok(!exists(".stale-help"));
 
-    publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus("/reviewable_counts", {
       review_count: 1,
       updates: {
         1234: { last_performing_username: "foo", status: 1 },
       },
     });
-
-    await visit("/review"); // wait for re-render
 
     assert.ok(reviewable.className.includes("reviewable-stale"));
     assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);
