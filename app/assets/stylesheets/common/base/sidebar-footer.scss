@@ -76,8 +76,8 @@
         pointer-events: none;
         background: linear-gradient(
           to bottom,
-          transparent 0%,
-          rgba(var(--primary-very-low-rgb), 100%)
+          transparent,
+          rgba(var(--primary-very-low-rgb), 1)
         );
       }
     }
@@ -92,8 +92,8 @@
         // fade to make scroll more apparent
         background: linear-gradient(
           to bottom,
-          transparent 0%,
-          rgba(var(--secondary-rgb), 100%)
+          transparent,
+          rgba(var(--secondary-rgb), 1)
         );
       }
     }
