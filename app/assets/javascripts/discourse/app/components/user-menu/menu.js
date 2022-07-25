@@ -7,7 +7,7 @@ import UserMenuTab from "discourse/lib/user-menu/tab";
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
 
-const coreTopTabs = [
+const CORE_TOP_TABS = [
   class extends UserMenuTab {
     get id() {
       return DEFAULT_TAB_ID;
@@ -84,7 +84,7 @@ export default class UserMenu extends GlimmerComponent {
 
   get _topTabs() {
     const tabs = [];
-    coreTopTabs.forEach((tabClass) => {
+    CORE_TOP_TABS.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
         tabs.push(tab);
