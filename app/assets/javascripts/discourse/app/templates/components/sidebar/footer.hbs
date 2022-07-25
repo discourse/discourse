@@ -19,7 +19,7 @@
         @icon="keyboard"
         @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
 
-      {{#if this.site.desktopView}}
+      {{#if (and this.site.desktopView (not @sidebarDocked))}}
         <DButton
           @action={{@toggleSidebar}}
           @icon="thumbtack"

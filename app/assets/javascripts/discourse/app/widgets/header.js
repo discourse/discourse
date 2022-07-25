@@ -244,34 +244,32 @@ createWidget("header-icons", {
 
     icons.push(search);
 
-    if (!attrs.sidebarDocked) {
-      const hamburger = this.attach("header-dropdown", {
-        title: "hamburger_menu",
-        icon: "bars",
-        iconId: "toggle-hamburger-menu",
-        active: attrs.hamburgerVisible,
-        action: "toggleHamburger",
-        href: "",
-        classNames: ["hamburger-dropdown"],
+    const hamburger = this.attach("header-dropdown", {
+      title: "hamburger_menu",
+      icon: "bars",
+      iconId: "toggle-hamburger-menu",
+      active: attrs.hamburgerVisible,
+      action: "toggleHamburger",
+      href: "",
+      classNames: ["hamburger-dropdown"],
 
-        contents() {
-          let { currentUser } = this;
-          if (currentUser && currentUser.reviewable_count) {
-            return h(
-              "div.badge-notification.reviewables",
-              {
-                attributes: {
-                  title: I18n.t("notifications.reviewable_items"),
-                },
+      contents() {
+        let { currentUser } = this;
+        if (currentUser && currentUser.reviewable_count) {
+          return h(
+            "div.badge-notification.reviewables",
+            {
+              attributes: {
+                title: I18n.t("notifications.reviewable_items"),
               },
-              this.currentUser.reviewable_count
-            );
-          }
-        },
-      });
+            },
+            this.currentUser.reviewable_count
+          );
+        }
+      },
+    });
 
-      icons.push(hamburger);
-    }
+    icons.push(hamburger);
 
     if (attrs.user) {
       icons.push(
@@ -339,12 +337,15 @@ createWidget("revamped-hamburger-menu-wrapper", {
     return { "data-click-outside": true };
   },
 
-  html() {
+  html(attrs) {
     return [
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<Sidebar::HamburgerDropdown />`
+        hbs`<Sidebar::HamburgerDropdown @sidebarDocked={{@data.sidebarDocked}} />`,
+        {
+          sidebarDocked: attrs.sidebarDocked,
+        }
       ),
     ];
   },
@@ -402,10 +403,6 @@ export default createWidget("header", {
       inTopicRoute = this.router.currentRouteName.startsWith("topic.");
     }
 
-    if (attrs.sidebarDocked) {
-      state.hamburgerVisible = false;
-    }
-
     let contents = () => {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
@@ -413,7 +410,6 @@ export default createWidget("header", {
         searchVisible: state.searchVisible,
         ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
-        sidebarDocked: attrs.sidebarDocked,
         user: this.currentUser,
       });
 
@@ -431,7 +427,11 @@ export default createWidget("header", {
         );
       } else if (state.hamburgerVisible) {
         if (this.currentUser?.experimental_sidebar_enabled) {
-          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
+          panels.push(
+            this.attach("revamped-hamburger-menu-wrapper", {
+              sidebarDocked: attrs.sidebarDocked,
+            })
+          );
         } else {
           panels.push(this.attach("hamburger-menu"));
         }

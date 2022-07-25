@@ -236,17 +236,6 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.on("user-menu:rendered", this, "_animateMenu");
       }
 
-      if (
-        this.currentUser?.experimental_sidebar_enabled &&
-        !this.site.mobileView
-      ) {
-        this.appEvents.on(
-          "sidebar:docked-state-updated",
-          this,
-          "queueRerender"
-        );
-      }
-
       this.dispatch("notifications:changed", "user-notifications");
       this.dispatch("header:keyboard-trigger", "header");
       this.dispatch("user-menu:navigation", "user-menu");
@@ -361,17 +350,6 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("dom:clean", this, "_cleanDom");
       if (this.currentUser?.redesigned_user_menu_enabled) {
         this.appEvents.off("user-menu:rendered", this, "_animateMenu");
-      }
-
-      if (
-        this.currentUser?.experimental_sidebar_enabled &&
-        !this.site.mobileView
-      ) {
-        this.appEvents.off(
-          "sidebar:docked-state-updated",
-          this,
-          "queueRerender"
-        );
       }
 
       if (this.currentUser) {
