@@ -19,10 +19,11 @@
         @icon="keyboard"
         @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
 
-      {{#if (and this.site.desktopView (not @sidebarDocked))}}
+      {{#if (and this.site.desktopView @displayDockToggle)}}
         <DButton
           @action={{@toggleSidebar}}
           @icon="thumbtack"
+          @title={{concat "sidebar." (if @sidebarDocked "unpin" "pin")}}
           @class="sidebar-footer-actions-button sidebar-footer-actions-dock-toggle"/>
       {{/if}}
     </div>

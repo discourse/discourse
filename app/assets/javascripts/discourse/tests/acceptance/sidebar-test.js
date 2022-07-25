@@ -1,5 +1,9 @@
+import I18n from "I18n";
+import I18n from "I18n";
 import { test } from "qunit";
+
 import { click, currentRouteName, visit } from "@ember/test-helpers";
+
 import {
   acceptance,
   exists,
@@ -95,7 +99,11 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
       "displays the sidebar in hamburger dropdown automatically after undocking"
     );
 
-    await click("button.sidebar-footer-actions-dock-toggle");
+    await click(
+      `button.sidebar-footer-actions-dock-toggle[title="${I18n.t(
+        "sidebar.pin"
+      )}"]`
+    );
 
     assert.ok(
       exists(".sidebar-container"),
