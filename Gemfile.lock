@@ -143,7 +143,7 @@ GEM
     excon (0.92.4)
     execjs (2.8.1)
     exifr (1.3.9)
-    fabrication (2.29.0)
+    fabrication (2.30.0)
     faker (2.21.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
