@@ -326,9 +326,9 @@ acceptance("Sidebar - Tags section", function (needs) {
 
     await undockSidebar();
 
-    assert.ok(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length <
-        initialCallbackCount
+    assert.strictEqual(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length,
+      initialCallbackCount
     );
   });
 });

@@ -90,11 +90,9 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
 
     assert.ok(!exists(".sidebar-container"), "hides the sidebar");
 
-    await click(".hamburger-dropdown");
-
     assert.ok(
       exists(".sidebar-hamburger-dropdown"),
-      "displays the sidebar in hamburger dropdown"
+      "displays the sidebar in hamburger dropdown automatically after undocking"
     );
 
     await click("button.sidebar-footer-actions-dock-toggle");
@@ -102,6 +100,23 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
     assert.ok(
       exists(".sidebar-container"),
       "displays the sidebar after docking"
+    );
+
+    assert.notOk(
+      exists(".sidebar-hamburger-dropdown"),
+      "hides the sidebar in hamburger dropdown automatically after docking"
+    );
+
+    await click(".hamburger-dropdown");
+
+    assert.ok(
+      exists(".sidebar-hamburger-dropdown"),
+      "displays the sidebar in hamburger dropdown even when sidebar is docked"
+    );
+
+    assert.notOk(
+      exists(".sidebar-hamburger-dropdown .sidebar-footer-actions-dock-toggle"),
+      "does not display sidebar dock toggle in hamburger dropdown when sidebar is docked"
     );
   });
 });

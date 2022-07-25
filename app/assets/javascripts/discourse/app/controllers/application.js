@@ -50,9 +50,12 @@ export default Controller.extend({
     discourseDebounce(this, this._mainOutletAnimate, 250);
 
     this.toggleProperty("showSidebar");
-    this.appEvents.trigger("sidebar:docked-state-updated");
 
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
+      this.appEvents.trigger("header:keyboard-trigger", {
+        type: "hamburger",
+      });
+
       if (this.showSidebar) {
         this.keyValueStore.removeItem(this.hideSidebarKey);
       } else {
