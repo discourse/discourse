@@ -63,7 +63,7 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return !this.currentUser.no_likes_notifications;
+      return !this.currentUser.likes_notifications_disabled;
     }
   },
 ];

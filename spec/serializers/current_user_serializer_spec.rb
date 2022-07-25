@@ -299,19 +299,19 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  describe "#no_likes_notifications" do
+  describe "#likes_notifications_disabled" do
     it "is true if the user disables likes notifications" do
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:never])
-      expect(serializer.as_json[:no_likes_notifications]).to eq(true)
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(true)
     end
 
     it "is false if the user doesn't disable likes notifications" do
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:always])
-      expect(serializer.as_json[:no_likes_notifications]).to eq(false)
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time_and_daily])
-      expect(serializer.as_json[:no_likes_notifications]).to eq(false)
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time])
-      expect(serializer.as_json[:no_likes_notifications]).to eq(false)
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
     end
   end
 end

@@ -200,7 +200,7 @@ class UserOption < ActiveRecord::Base
       email_messages_level == UserOption.email_level_types[:never]
   end
 
-  def no_likes_notifications?
+  def likes_notifications_disabled?
     like_notification_frequency == UserOption.like_notification_frequency_type[:never]
   end
 

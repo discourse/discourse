@@ -75,7 +75,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
-    this.currentUser.set("no_likes_notifications", true);
+    this.currentUser.set("likes_notifications_disabled", true);
     await render(template);
     assert.ok(!exists("#user-menu-button-likes"));
 

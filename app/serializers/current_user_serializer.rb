@@ -75,7 +75,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :status,
              :sidebar_category_ids,
              :sidebar_tag_names,
-             :no_likes_notifications,
+             :likes_notifications_disabled,
              :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
@@ -348,7 +348,7 @@ class CurrentUserSerializer < BasicUserSerializer
     @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
   end
 
-  def no_likes_notifications
-    object.user_option&.no_likes_notifications?
+  def likes_notifications_disabled
+    object.user_option&.likes_notifications_disabled?
   end
 end
