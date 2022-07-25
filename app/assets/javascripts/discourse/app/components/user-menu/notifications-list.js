@@ -55,6 +55,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     const types = this.filterByTypes;
     if (types?.length > 0) {
       params.filter_by_types = types.join(",");
+      params.silent = true;
     }
     return this.store
       .findStale("notification", params)

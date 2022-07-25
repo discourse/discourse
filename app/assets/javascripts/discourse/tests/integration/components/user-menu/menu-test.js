@@ -201,6 +201,7 @@ module("Integration | Component | user-menu", function (hooks) {
       "mentioned",
       "request params has filter_by_types set to `mentioned`"
     );
+    assert.strictEqual(queryParams.silent, "true");
     let activeTabs = queryAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(
@@ -217,6 +218,7 @@ module("Integration | Component | user-menu", function (hooks) {
       "liked,liked_consolidated",
       "request params has filter_by_types set to `liked` and `liked_consolidated"
     );
+    assert.strictEqual(queryParams.silent, "true");
     activeTabs = queryAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(

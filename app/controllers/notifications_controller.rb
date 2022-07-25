@@ -30,29 +30,24 @@ class NotificationsController < ApplicationController
       limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
-      if notification_types
-        notifications = Notification.recent_report(current_user, limit, notification_types)
-        render_json_dump(
-          notifications: serialize_data(notifications, NotificationSerializer)
-        )
-      else
-        notifications = Notification.recent_report(current_user, limit)
-        changed = false
+      notifications = Notification.recent_report(current_user, limit, notification_types)
+      changed = false
 
-        if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
-          # ordering can be off due to PMs
-          max_id = notifications.map(&:id).max
-          changed = current_user.saw_notification_id(max_id)
-        end
-
-        current_user.reload
-        current_user.publish_notifications_state if changed
-
-        render_json_dump(
-          notifications: serialize_data(notifications, NotificationSerializer),
-          seen_notification_id: current_user.seen_notification_id
-        )
+      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
+        # ordering can be off due to PMs
+        max_id = notifications.map(&:id).max
+        changed = current_user.saw_notification_id(max_id)
       end
+
+      if changed
+        current_user.reload
+        current_user.publish_notifications_state
+      end
+
+      render_json_dump(
+        notifications: serialize_data(notifications, NotificationSerializer),
+        seen_notification_id: current_user.seen_notification_id
+      )
     else
       offset = params[:offset].to_i
 
