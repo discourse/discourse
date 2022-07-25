@@ -42,14 +42,14 @@ class WordWatcher
   end
 
   def self.serializable_word_matcher_regexp(action)
-    word_matcher_regexp(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
+    word_matcher_regexp_list(action)
+      .map { |r| { r.source => { case_sensitive: !r.casefold? } } }
   end
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
-  # TODO(2022-07-16): Rename to word_matcher_regexp_list
-  def self.word_matcher_regexp(action, raise_errors: false)
+  def self.word_matcher_regexp_list(action, raise_errors: false)
     words = get_cached_words(action)
     return [] if words.blank?
 
@@ -109,7 +109,7 @@ class WordWatcher
   end
 
   def self.censor(html)
-    regexps = WordWatcher.word_matcher_regexp(:censor)
+    regexps = WordWatcher.word_matcher_regexp_list(:censor)
     return html if regexps.blank?
 
     doc = Nokogiri::HTML5::fragment(html)
@@ -123,7 +123,7 @@ class WordWatcher
   end
 
   def self.censor_text(text)
-    regexps = WordWatcher.word_matcher_regexp(:censor)
+    regexps = WordWatcher.word_matcher_regexp_list(:censor)
     return text if regexps.blank?
 
     regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
@@ -164,7 +164,7 @@ class WordWatcher
   end
 
   def word_matches_for_action?(action, all_matches: false)
-    regexps = self.class.word_matcher_regexp(action)
+    regexps = self.class.word_matcher_regexp_list(action)
     return if regexps.blank?
 
     match_list = []

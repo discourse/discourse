@@ -44,7 +44,7 @@ describe WordWatcher do
     end
   end
 
-  describe ".word_matcher_regexp" do
+  describe ".word_matcher_regexp_list" do
     let!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
     let!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
     let!(:word3) { Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word }
@@ -53,7 +53,7 @@ describe WordWatcher do
     context "format of the result regexp" do
       it "is correct when watched_words_regular_expressions = true" do
         SiteSetting.watched_words_regular_expressions = true
-        regexps = WordWatcher.word_matcher_regexp(:block)
+        regexps = WordWatcher.word_matcher_regexp_list(:block)
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly("/(#{word1})|(#{word2})/i", "/(#{word3})|(#{word4})/")
@@ -61,14 +61,14 @@ describe WordWatcher do
 
       it "is correct when watched_words_regular_expressions = false" do
         SiteSetting.watched_words_regular_expressions = false
-        regexps = WordWatcher.word_matcher_regexp(:block)
+        regexps = WordWatcher.word_matcher_regexp_list(:block)
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly("/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i", "/(?:\\W|^)(#{word3}|#{word4})(?=\\W|$)/")
       end
 
       it "is empty for an action without watched words" do
-        regexps = WordWatcher.word_matcher_regexp(:censor)
+        regexps = WordWatcher.word_matcher_regexp_list(:censor)
 
         expect(regexps).to be_an(Array)
         expect(regexps).to be_empty
@@ -82,11 +82,11 @@ describe WordWatcher do
       end
 
       it "does not raise an exception by default" do
-        expect { WordWatcher.word_matcher_regexp(:block) }.not_to raise_error
+        expect { WordWatcher.word_matcher_regexp_list(:block) }.not_to raise_error
       end
 
       it "raises an exception with raise_errors set to true" do
-        expect { WordWatcher.word_matcher_regexp(:block, raise_errors: true) }.to raise_error(RegexpError)
+        expect { WordWatcher.word_matcher_regexp_list(:block, raise_errors: true) }.to raise_error(RegexpError)
       end
     end
   end
