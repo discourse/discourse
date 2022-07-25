@@ -32,13 +32,7 @@ class NotificationsController < ApplicationController
       limit = 50 if limit > 50
 
       if notification_types
-        notifications = Notification
-          .visible
-          .includes(:topic)
-          .recent(limit)
-          .where(notification_type: notification_types)
-          .where(user_id: current_user.id)
-          .to_a
+        notifications = Notification.recent_report(current_user, limit, notification_types)
         render_json_dump(
           notifications: serialize_data(notifications, NotificationSerializer)
         )
