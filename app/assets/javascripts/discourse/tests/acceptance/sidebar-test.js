@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 import { test } from "qunit";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import {
@@ -48,7 +50,11 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
 
   test("viewing keyboard shortcuts using sidebar", async function (assert) {
     await visit("/");
-    await click(".sidebar-footer-actions-keyboard-shortcuts");
+    await click(
+      `.sidebar-footer-actions-keyboard-shortcuts[title="${I18n.t(
+        "keyboard_shortcuts_help.title"
+      )}"]`
+    );
 
     assert.ok(
       exists("#keyboard-shortcuts-help"),
