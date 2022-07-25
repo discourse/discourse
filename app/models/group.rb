@@ -152,7 +152,7 @@ class Group < ActiveRecord::Base
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self
     groups = groups.order(order) if order
-    groups = groups.order("groups.name ASC") unless order.include?("name")
+    groups = groups.order("groups.name ASC") unless order&.include?("name")
 
     if !opts || !opts[:include_everyone]
       groups = groups.where("groups.id > 0")
