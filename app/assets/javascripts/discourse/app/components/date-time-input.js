@@ -28,16 +28,19 @@ export default Component.extend({
         ? this.date
         : this.relativeDate
         ? this.relativeDate
-        : moment();
+        : moment.tz(this.resolvedTimezone);
 
       this.onChange(
-        moment({
-          year: date.year(),
-          month: date.month(),
-          day: date.date(),
-          hours: time.hours,
-          minutes: time.minutes,
-        })
+        moment.tz(
+          {
+            year: date.year(),
+            month: date.month(),
+            day: date.date(),
+            hours: time.hours,
+            minutes: time.minutes,
+          },
+          this.resolvedTimezone
+        )
       );
     }
   },
@@ -51,13 +54,25 @@ export default Component.extend({
 
     this.onChange &&
       this.onChange(
-        moment({
-          year: date.year(),
-          month: date.month(),
-          day: date.date(),
-          hours: this.hours || 0,
-          minutes: this.minutes || 0,
-        })
+        moment.tz(
+          {
+            year: date.year(),
+            month: date.month(),
+            day: date.date(),
+            hours: this.hours || 0,
+            minutes: this.minutes || 0,
+          },
+          this.resolvedTimezone
+        )
       );
+  },
+
+  @computed
+  get resolvedTimezone() {
+    if (this.timezone) {
+      return this.timezone;
+    } else {
+      return moment.tz.guess();
+    }
   },
 });
