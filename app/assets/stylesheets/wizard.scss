@@ -329,6 +329,7 @@ body.wizard {
       padding-top: 2em;
       flex: 0 1 40%;
       margin-left: 2em;
+      max-height: 300px;
       @include breakpoint("large") {
         display: none;
       }
