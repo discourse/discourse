@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | site-header", function (hooks) {
@@ -43,7 +43,7 @@ module("Integration | Component | site-header", function (hooks) {
 
     pretender.get("/notifications", () => {
       assert.ok(false, "it should not try to refresh notifications");
-      return [403, { "Content-Type": "application/json" }, {}];
+      return response(403, {});
     });
 
     // Click anywhere

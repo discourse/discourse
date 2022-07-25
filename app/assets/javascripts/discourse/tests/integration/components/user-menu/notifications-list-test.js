@@ -5,7 +5,7 @@ import { render } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import I18n from "I18n";
 
 function getNotificationsData() {
@@ -22,16 +22,12 @@ module(
     hooks.beforeEach(() => {
       pretender.get("/notifications", (request) => {
         queryParams = request.queryParams;
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          { notifications: notificationsData },
-        ];
+        return response({ notifications: notificationsData });
       });
 
-      pretender.put("/notifications/mark-read", () => {
-        return [200, { "Content-Type": "application/json" }, { success: true }];
-      });
+      pretender.put("/notifications/mark-read", () =>
+        response({ success: true })
+      );
     });
 
     hooks.afterEach(() => {

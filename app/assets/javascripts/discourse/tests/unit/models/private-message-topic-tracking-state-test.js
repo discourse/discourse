@@ -1,5 +1,5 @@
 import { test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   discourseModule,
   publishToMessageBus,
@@ -10,19 +10,15 @@ import User from "discourse/models/user";
 
 function setupPretender() {
   pretender.get(`/u/test/private-message-topic-tracking-state`, () => {
-    return [
-      200,
-      { "Content-Type": "application/json" },
-      [
-        {
-          topic_id: 123,
-          highest_post_number: 12,
-          last_read_post_number: 12,
-          notification_level: 3,
-          group_ids: [],
-        },
-      ],
-    ];
+    return response([
+      {
+        topic_id: 123,
+        highest_post_number: 12,
+        last_read_post_number: 12,
+        notification_level: 3,
+        group_ids: [],
+      },
+    ]);
   });
 }
 
