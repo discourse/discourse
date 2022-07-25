@@ -111,41 +111,73 @@ describe NotificationsController do
           expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
         end
 
-        it "can filter notifications by type" do
-          liked1 = Fabricate(
-            :notification,
-            user: user,
-            notification_type: Notification.types[:liked],
-            created_at: 2.minutes.ago
-          )
-          liked2 = Fabricate(
-            :notification,
-            user: user,
-            notification_type: Notification.types[:liked],
-            created_at: 10.minutes.ago
-          )
-          replied = Fabricate(
-            :notification,
-            user: user,
-            notification_type: Notification.types[:replied],
-            created_at: 7.minutes.ago
-          )
-          Fabricate(
-            :notification,
-            user: user,
-            notification_type: Notification.types[:mentioned]
-          )
-          get "/notifications.json", params: { recent: true, filter_by_types: "liked,replied" }
-          expect(response.status).to eq(200)
-          expect(
-            response.parsed_body["notifications"].map { |n| n["id"] }
-          ).to eq([liked1.id, replied.id, liked2.id])
+        context "when filter_by_types param is present" do
+          fab!(:liked1) do
+            Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:liked],
+              created_at: 2.minutes.ago
+            )
+          end
+          fab!(:liked2) do
+            Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:liked],
+              created_at: 10.minutes.ago
+            )
+          end
+          fab!(:replied) do
+            Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:replied],
+              created_at: 7.minutes.ago
+            )
+          end
+          fab!(:mentioned) do
+            Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:mentioned]
+            )
+          end
 
-          get "/notifications.json", params: { recent: true, filter_by_types: "replied" }
-          expect(response.status).to eq(200)
-          expect(
-            response.parsed_body["notifications"].map { |n| n["id"] }
-          ).to eq([replied.id])
+          it "correctly filters notifications to the type(s) given" do
+            get "/notifications.json", params: { recent: true, filter_by_types: "liked,replied" }
+            expect(response.status).to eq(200)
+            expect(
+              response.parsed_body["notifications"].map { |n| n["id"] }
+            ).to eq([liked1.id, replied.id, liked2.id])
+
+            get "/notifications.json", params: { recent: true, filter_by_types: "replied" }
+            expect(response.status).to eq(200)
+            expect(
+              response.parsed_body["notifications"].map { |n| n["id"] }
+            ).to eq([replied.id])
+          end
+
+          it "doesn't include notifications from other users" do
+            Fabricate(
+              :notification,
+              user: Fabricate(:user),
+              notification_type: Notification.types[:liked]
+            )
+            get "/notifications.json", params: { recent: true, filter_by_types: "liked" }
+            expect(response.status).to eq(200)
+            expect(
+              response.parsed_body["notifications"].map { |n| n["id"] }
+            ).to eq([liked1.id, liked2.id])
+          end
+
+          it "limits the number of returned notifications according to the limit param" do
+            get "/notifications.json", params: { recent: true, filter_by_types: "liked", limit: 1 }
+            expect(response.status).to eq(200)
+            expect(
+              response.parsed_body["notifications"].map { |n| n["id"] }
+            ).to eq([liked1.id])
+          end
         end
 
         context 'when username params is not valid' do
