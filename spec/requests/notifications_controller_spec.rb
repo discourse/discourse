@@ -115,17 +115,20 @@ describe NotificationsController do
           liked1 = Fabricate(
             :notification,
             user: user,
-            notification_type: Notification.types[:liked]
+            notification_type: Notification.types[:liked],
+            created_at: 2.minutes.ago
           )
           liked2 = Fabricate(
             :notification,
             user: user,
-            notification_type: Notification.types[:liked]
+            notification_type: Notification.types[:liked],
+            created_at: 10.minutes.ago
           )
           replied = Fabricate(
             :notification,
             user: user,
-            notification_type: Notification.types[:replied]
+            notification_type: Notification.types[:replied],
+            created_at: 7.minutes.ago
           )
           Fabricate(
             :notification,
@@ -136,13 +139,13 @@ describe NotificationsController do
           expect(response.status).to eq(200)
           expect(
             response.parsed_body["notifications"].map { |n| n["id"] }
-          ).to contain_exactly(liked1.id, liked2.id, replied.id)
+          ).to eq([liked1.id, replied.id, liked2.id])
 
           get "/notifications.json", params: { recent: true, filter_by_types: "replied" }
           expect(response.status).to eq(200)
           expect(
             response.parsed_body["notifications"].map { |n| n["id"] }
-          ).to contain_exactly(replied.id)
+          ).to eq([replied.id])
         end
 
         context 'when username params is not valid' do
