@@ -14,16 +14,28 @@ module ImportScripts
 
       configure_database
       create_category_table
+      create_upload_table
       create_like_table
       create_user_table
       create_topic_table
       create_post_table
+      create_pm_topic_table
+      create_pm_post_table
     end
 
     def insert_category(category)
       @db.execute(<<-SQL, prepare(category))
         INSERT OR REPLACE INTO category (id, name, description, position, url)
         VALUES (:id, :name, :description, :position, :url)
+      SQL
+    end
+
+    def insert_upload(upload)
+      @db.execute(<<-SQL, prepare(upload))
+        INSERT OR REPLACE INTO upload (id, user_id, original_filename,
+        filename, description, url)
+        VALUES (:id, :user_id, :original_filename,
+        :filename, :description, :url)
       SQL
     end
 
@@ -69,6 +81,19 @@ module ImportScripts
       end
     end
 
+    def insert_pm_topic(topic)
+      like_user_ids = topic.delete(:like_user_ids)
+      attachments = topic.delete(:attachments)
+      topic[:upload_count] = attachments&.size || 0
+
+      @db.transaction do
+        @db.execute(<<-SQL, prepare(topic))
+          INSERT OR REPLACE INTO pm_topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count, target_users)
+          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count, :target_users)
+          SQL
+      end
+    end
+
     def insert_post(post)
       like_user_ids = post.delete(:like_user_ids)
       attachments = post.delete(:attachments)
@@ -93,6 +118,19 @@ module ImportScripts
             VALUES (:post_id, :user_id)
           SQL
         end
+      end
+    end
+
+    def insert_pm_post(post)
+      like_user_ids = post.delete(:like_user_ids)
+      attachments = post.delete(:attachments)
+      post[:upload_count] = attachments&.size || 0
+
+      @db.transaction do
+        @db.execute(<<-SQL, prepare(post))
+          INSERT OR REPLACE INTO post (id, raw, topic_id, user_id, created_at, reply_to_post_id, url, upload_count)
+          VALUES (:id, :raw, :topic_id, :user_id, :created_at, :reply_to_post_id, :url, :upload_count)
+        SQL
       end
     end
 
@@ -164,10 +202,29 @@ module ImportScripts
       SQL
     end
 
+    def count_pm_topics
+      @db.get_first_value(<<-SQL)
+        SELECT COUNT(*)
+        FROM pm_topic
+      SQL
+    end
+
     def fetch_topics(last_id)
       rows = @db.execute(<<-SQL, last_id)
         SELECT *
         FROM topic
+        WHERE id > :last_id
+        ORDER BY id
+        LIMIT #{@batch_size}
+      SQL
+
+      add_last_column_value(rows, 'id')
+    end
+
+    def fetch_pm_topics(last_id)
+      rows = @db.execute(<<-SQL, last_id)
+        SELECT *
+        FROM pm_topic
         WHERE id > :last_id
         ORDER BY id
         LIMIT #{@batch_size}
@@ -191,6 +248,21 @@ module ImportScripts
       SQL
     end
 
+    def count_pm_posts
+      @db.get_first_value(<<-SQL)
+        SELECT COUNT(*)
+        FROM pm_post
+      SQL
+    end
+
+    def fetch_upload(id)
+      @db.execute(<<-SQL, id)
+        SELECT *
+        FROM upload
+        WHERE id = :id
+      SQL
+    end
+
     def fetch_posts(last_row_id)
       rows = @db.execute(<<-SQL, last_row_id)
         SELECT ROWID AS rowid, *
@@ -203,10 +275,35 @@ module ImportScripts
       add_last_column_value(rows, 'rowid')
     end
 
+    def fetch_pm_posts(last_row_id)
+      rows = @db.execute(<<-SQL, last_row_id)
+        SELECT ROWID AS rowid, *
+        FROM pm_post
+        WHERE ROWID > :last_row_id
+        ORDER BY ROWID
+        LIMIT #{@batch_size}
+      SQL
+
+      add_last_column_value(rows, 'rowid')
+    end
+
     def fetch_sorted_posts(last_row_id)
       rows = @db.execute(<<-SQL, last_row_id)
         SELECT o.ROWID AS rowid, p.*
         FROM post p
+          JOIN post_order o ON (p.id = o.post_id)
+        WHERE o.ROWID > :last_row_id
+        ORDER BY o.ROWID
+        LIMIT #{@batch_size}
+      SQL
+
+      add_last_column_value(rows, 'rowid')
+    end
+
+    def fetch_sorted_pm_posts(last_row_id)
+      rows = @db.execute(<<-SQL, last_row_id)
+        SELECT o.ROWID AS rowid, p.*
+        FROM pm_post p
           JOIN post_order o ON (p.id = o.post_id)
         WHERE o.ROWID > :last_row_id
         ORDER BY o.ROWID
@@ -274,6 +371,19 @@ module ImportScripts
       SQL
     end
 
+    def create_upload_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS upload (
+          id #{key_data_type} NOT NULL PRIMARY KEY,
+          user_id INTEGER,
+          original_filename TEXT,
+          filename TEXT,
+          description TEXT,
+          url TEXT
+        )
+      SQL
+    end
+
     def create_like_table
       @db.execute <<-SQL
         CREATE TABLE IF NOT EXISTS like (
@@ -329,9 +439,60 @@ module ImportScripts
       @db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)'
     end
 
+    def create_pm_topic_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS pm_topic (
+          id #{key_data_type} NOT NULL PRIMARY KEY,
+          title TEXT,
+          raw TEXT,
+          category_id #{key_data_type},
+          closed BOOLEAN NOT NULL DEFAULT false,
+          user_id #{key_data_type} NOT NULL,
+          target_users TEXT,
+          created_at DATETIME,
+          url TEXT,
+          upload_count INTEGER DEFAULT 0
+        )
+      SQL
+
+      @db.execute 'CREATE INDEX IF NOT EXISTS topic_by_user_id ON topic (user_id)'
+
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS topic_upload (
+          topic_id #{key_data_type} NOT NULL,
+          path TEXT NOT NULL
+        )
+      SQL
+
+      @db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)'
+    end
+
     def create_post_table
       @db.execute <<-SQL
         CREATE TABLE IF NOT EXISTS post (
+          id #{key_data_type} NOT NULL PRIMARY KEY,
+          raw TEXT,
+          topic_id #{key_data_type} NOT NULL,
+          user_id #{key_data_type} NOT NULL,
+          created_at DATETIME,
+          reply_to_post_id #{key_data_type},
+          url TEXT,
+          upload_count INTEGER DEFAULT 0
+        )
+      SQL
+
+      @db.execute 'CREATE INDEX IF NOT EXISTS post_by_user_id ON post (user_id)'
+
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS post_order (
+          post_id #{key_data_type} NOT NULL PRIMARY KEY
+        )
+      SQL
+    end
+
+    def create_pm_post_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS pm_post (
           id #{key_data_type} NOT NULL PRIMARY KEY,
           raw TEXT,
           topic_id #{key_data_type} NOT NULL,
