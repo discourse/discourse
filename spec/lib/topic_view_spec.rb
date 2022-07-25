@@ -1012,7 +1012,7 @@ RSpec.describe TopicView do
     context "when queue is enabled globally" do
       let(:queue_enabled) { true }
 
-      it { is_expected.to be_queued_posts_enabled }
+      it { expect(topic_view.queued_posts_enabled?).to be(true) }
     end
 
     context "when queue is not enabled globally" do
@@ -1023,11 +1023,11 @@ RSpec.describe TopicView do
           category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
         end
 
-        it { is_expected.to be_queued_posts_enabled }
+        it { expect(topic_view.queued_posts_enabled?).to be(true) }
       end
 
       context "when category is not moderated" do
-        it { is_expected.not_to be_queued_posts_enabled }
+        it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
     end
   end

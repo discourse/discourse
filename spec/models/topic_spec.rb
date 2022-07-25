@@ -2353,16 +2353,16 @@ RSpec.describe Topic do
 
     it "is true if the category is secure" do
       category.stubs(:read_restricted).returns(true)
-      expect(Topic.new(category: category)).to be_read_restricted_category
+      expect(Topic.new(category: category).read_restricted_category?).to eq(true)
     end
 
     it "is false if the category is not secure" do
       category.stubs(:read_restricted).returns(false)
-      expect(Topic.new(category: category)).not_to be_read_restricted_category
+      expect(Topic.new(category: category).read_restricted_category?).to eq(false)
     end
 
-    it "is false if there is no category" do
-      expect(Topic.new(category: nil)).not_to be_read_restricted_category
+    it "is falsey if there is no category" do
+      expect(Topic.new(category: nil).read_restricted_category?).to eq(nil)
     end
   end
 
