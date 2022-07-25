@@ -195,8 +195,7 @@ module("Integration | Component | user-menu", function (hooks) {
     });
 
     await click("#user-menu-button-mentions");
-    let panel = query(".quick-access-panel");
-    assert.strictEqual(panel.id, "quick-access-mentions");
+    assert.ok(exists("#quick-access-mentions.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
       "mentioned",
@@ -209,12 +208,10 @@ module("Integration | Component | user-menu", function (hooks) {
       "user-menu-button-mentions",
       "active tab is now the mentions tab"
     );
-    let notifications = panel.querySelectorAll("ul li");
-    assert.strictEqual(notifications.length, 1);
+    assert.strictEqual(queryAll("#quick-access-mentions ul li").length, 1);
 
     await click("#user-menu-button-likes");
-    panel = query(".quick-access-panel");
-    assert.strictEqual(panel.id, "quick-access-likes");
+    assert.ok(exists("#quick-access-likes.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
       "liked,liked_consolidated",
@@ -227,7 +224,6 @@ module("Integration | Component | user-menu", function (hooks) {
       "user-menu-button-likes",
       "active tab is now the likes tab"
     );
-    notifications = panel.querySelectorAll("ul li");
-    assert.strictEqual(notifications.length, 3);
+    assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
   });
 });
