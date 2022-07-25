@@ -196,7 +196,7 @@
 
 /* Tablet (portrait) ----------- */
 
-@include breakpoint(medium) {
+@include breakpoint(medium, $sidebar: true) {
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {

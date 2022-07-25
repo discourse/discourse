@@ -1143,4 +1143,5 @@ export function resetPretender() {
   instance.handledRequests = [];
   instance.unhandledRequests = [];
   instance.passthroughRequests = [];
+  instance.hosts.registries = {};
 }

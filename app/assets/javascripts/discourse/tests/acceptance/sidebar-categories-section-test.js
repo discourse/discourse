@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -9,6 +9,9 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+
+import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
+
 import Site from "discourse/models/site";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
@@ -330,7 +333,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       `displays 2 unread count for ${category2.slug} section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -338,8 +341,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
         highest_post_number: 12,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -349,7 +350,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       `displays 1 new count for ${category1.slug} section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -358,8 +359,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
       },
     });
 
-    await settled();
-
     assert.ok(
       !exists(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
@@ -367,7 +366,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       `does not display any badge ${category1.slug} section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -375,8 +374,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
         highest_post_number: 15,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -387,7 +384,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("clean up topic tracking state state changed callbacks when section is destroyed", async function (assert) {
+  test("clean up topic tracking state state changed callbacks when Sidebar is collapsed", async function (assert) {
     setupUserSidebarCategories();
 
     await visit("/");
@@ -400,8 +397,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".header-sidebar-toggle .btn");
-    await click(".header-sidebar-toggle .btn");
+    await undockSidebar();
 
     assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,

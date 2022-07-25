@@ -3130,7 +3130,6 @@ nb_NO:
         this_week: "Den siste uken"
         today: "I dag"
         other_periods: "se toppen:"
-    browser_update: 'Dessverre er <a href="https://www.discourse.org/faq/#browser">nettleseren din for gammel for å fungere på denne siden</a>. Vennligst <a href="https://browsehappy.com">oppgrader nettleseren din</a> for å se rik innhold, logge inn og svar.'
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -3419,8 +3418,12 @@ nb_NO:
     fullscreen_table:
       expand_btn: "Utvid tabell"
     sidebar:
-      unread_count: "%{count} ulest"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulest"
+        other: "%{count} uleste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
       sections:
         messages:
           header_link_text: "Meldinger"

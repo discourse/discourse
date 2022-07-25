@@ -1,3 +1,4 @@
+import { inject as service } from "@ember/service";
 import { empty, equal, notEmpty } from "@ember/object/computed";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
@@ -22,6 +23,7 @@ export default Component.extend({
   forwardEvent: false,
   preventFocus: false,
   onKeyDown: null,
+  router: service(),
 
   isLoading: computed({
     set(key, value) {
@@ -147,6 +149,10 @@ export default Component.extend({
           action(this.actionParam);
         }
       }
+    }
+
+    if (this.route) {
+      this.router.transitionTo(this.route);
     }
 
     if (this.href && this.href.length) {

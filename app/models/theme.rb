@@ -151,9 +151,6 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
-    ColorScheme.hex_cache.clear
-    CSP::Extension.clear_theme_extensions_cache!
-    SvgSprite.expire_cache
   end
 
   def self.compiler_version
@@ -217,6 +214,8 @@ class Theme < ActiveRecord::Base
     clear_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")
     ColorScheme.hex_cache.clear
+    CSP::Extension.clear_theme_extensions_cache!
+    SvgSprite.expire_cache
   end
 
   def self.clear_default!

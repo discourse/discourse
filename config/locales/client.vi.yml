@@ -3160,7 +3160,6 @@ vi:
         this_week: "Tuần"
         today: "Ngày"
         other_periods: "xem đầu trang:"
-    browser_update: 'Rất tiếc, <a href="https://www.discourse.org/faq/#browser">trình duyệt của bạn quá cũ để hoạt động trên trang web này</a>. Vui lòng <a href="https://browsehappy.com">nâng cấp trình duyệt của bạn</a> để xem nội dung phong phú, đăng nhập và trả lời.'
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
@@ -3456,8 +3455,10 @@ vi:
     second_factor_auth:
       redirect_after_success: "Xác thực yếu tố thứ hai thành công. Chuyển hướng về trang trước…"
     sidebar:
-      unread_count: "%{count} chưa đọc"
-      new_count: "%{count} mới"
+      unread_count:
+        other: "%{count} chưa đọc"
+      new_count:
+        other: "%{count} mới"
       sections:
         messages:
           header_link_text: "Tin nhắn"

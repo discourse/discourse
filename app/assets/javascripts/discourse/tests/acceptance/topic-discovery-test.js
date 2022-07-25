@@ -110,7 +110,7 @@ acceptance("Topic Discovery", function (needs) {
       "shows the topic unread"
     );
 
-    publishToMessageBus("/latest", {
+    await publishToMessageBus("/latest", {
       message_type: "read",
       topic_id: 11995,
       payload: {
@@ -120,8 +120,6 @@ acceptance("Topic Discovery", function (needs) {
         topic_id: 11995,
       },
     });
-
-    await visit("/"); // We're already there, but use this to wait for re-render
 
     assert.ok(
       exists(".topic-list-item.visited a[data-topic-id='11995']"),

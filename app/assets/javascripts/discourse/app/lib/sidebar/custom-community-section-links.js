@@ -1,4 +1,4 @@
-import BaseSectionLink from "discourse/lib/sidebar/topics-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/community-section/base-section-link";
 
 export let customSectionLinks = [];
 
@@ -8,7 +8,7 @@ export let customSectionLinks = [];
  * @param {BaseSectionLink} baseSectionLink Factory class to inherit from.
  * @returns {BaseSectionLink} A class that extends BaseSectionLink.
  *
- * @param {(addTopicsSectionLinkCallback|Object)} arg - A callback function or an Object.
+ * @param {(addSectionLinkCallback|Object)} arg - A callback function or an Object.
  * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
  * @param {string} arg.route - The Ember route of the link.
  * @param {string} arg.title - The title attribute for the link.

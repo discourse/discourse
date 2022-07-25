@@ -1618,6 +1618,7 @@ tr_TR:
       set_custom_status: "Özel bir durum ayarla"
       what_are_you_doing: "Ne yapıyorsun?"
       remove_status: "Durumu kaldır"
+      until: "Şuna kadar:"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"
@@ -2290,6 +2291,10 @@ tr_TR:
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
     current_user: "kendi kullanıcı sayfana git"
     view_all: "tümünü görüntüle %{tab}"
+    user_menu:
+      generic_no_items: "Bu listede hiç öğe yok."
+      sr_menu_tabs: "Menü sekmeleri"
+      view_all_notifications: "tüm bildirimleri görüntüle"
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
@@ -3346,7 +3351,6 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
         other_periods: "en çok ilgi görenlere bak:"
-    browser_update: 'Maalesef <a href="https://www.discourse.org/faq/#browser">tarayıcınız bu siteyi çalıştırmak için çok eski</a>. Zengin içeriği görüntüleyebilmek, oturum açabilmek ve gönderileri yanıtlayabilmek için lütfen <a href="https://browsehappy.com">tarayıcınızı yükseltin</a>'
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -3666,8 +3670,13 @@ tr_TR:
     fullscreen_table:
       expand_btn: "Tabloyu Genişlet"
     sidebar:
-      unread_count: "%{count} okunmamış"
-      new_count: "%{count} yeni"
+      unread_count:
+        one: "%{count} okunmamış"
+        other: "%{count} okunmamış"
+      new_count:
+        one: "%{count} yeni"
+        other: "%{count} yeni"
+      toggle_section: "bölümü değiştir"
       sections:
         messages:
           header_link_title: "kişisel mesajlar"

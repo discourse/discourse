@@ -1,0 +1,101 @@
+.sidebar-wrapper {
+  .sidebar-footer-wrapper {
+    .sidebar-footer-container {
+      margin-left: 1.5em;
+      margin-right: 0.15em;
+    }
+  }
+}
+
+.sidebar-footer-wrapper {
+  border-top: 1.5px solid var(--primary-low);
+  padding: 0.5em 0 0.5em 0.33em;
+
+  .sidebar-footer-container {
+    display: flex;
+  }
+
+  .sidebar-footer-link {
+    display: inline-block;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    padding: 0.25em 0;
+    height: 100%;
+
+    &:not(:first-child):before {
+      content: "•";
+      padding: 0 0.25em;
+    }
+  }
+
+  .sidebar-footer-actions {
+    margin-left: auto;
+  }
+
+  .sidebar-footer-actions-button.btn {
+    background: transparent;
+    border: none;
+    padding: 0.25em 0.4em;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+
+    &:hover {
+      background: var(--primary-low);
+    }
+  }
+}
+
+.has-sidebar-page {
+  .sidebar-footer-actions-dock-toggle {
+    .d-icon {
+      transform: rotate(180deg);
+      top: -0.1em; // optical alignment
+    }
+  }
+}
+
+.sidebar-footer-wrapper {
+  background: var(--primary-very-low);
+  .desktop-view & {
+    position: sticky;
+    bottom: 0;
+    .sidebar-footer-container {
+      position: relative;
+      &:before {
+        // fade to make scroll more apparent
+        position: absolute;
+        content: "";
+        display: block;
+        height: 1.5em;
+        top: calc(-2em - 1px);
+        left: -0.5em;
+        right: -0.5em;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(var(--primary-very-low-rgb), 100%)
+        );
+      }
+    }
+  }
+}
+
+.hamburger-menu.revamped {
+  .sidebar-footer-wrapper {
+    background: var(--secondary);
+    .sidebar-footer-container {
+      &:before {
+        // fade to make scroll more apparent
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(var(--secondary-rgb), 100%)
+        );
+      }
+    }
+  }
+}

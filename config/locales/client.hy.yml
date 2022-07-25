@@ -2871,8 +2871,12 @@ hy:
       no_replies_others: "Պատասխան չկա:"
       no_likes_others: "Հավանած գրառումներ չկան:"
     sidebar:
-      unread_count: "%{count} չկարդացած"
-      new_count: "%{count} նոր"
+      unread_count:
+        one: "%{count} չկարդացած"
+        other: "%{count} չկարդացած"
+      new_count:
+        one: "%{count} նոր"
+        other: "%{count} նոր"
       sections:
         messages:
           header_link_text: "Հաղորդագրություններ"

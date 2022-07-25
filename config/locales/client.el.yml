@@ -3063,8 +3063,12 @@ el:
       no_replies_others: "Χωρίς απαντήσεις."
       no_likes_others: "Καμία αρεστή ανάρτηση."
     sidebar:
-      unread_count: "%{count} μη αναγνωσμένο"
-      new_count: "%{count} νέο"
+      unread_count:
+        one: "%{count} μη αναγνωσμένο"
+        other: "%{count} αδιάβαστα"
+      new_count:
+        one: "%{count} νέο"
+        other: "%{count} νέα"
       sections:
         messages:
           header_link_text: "Μηνύματα"

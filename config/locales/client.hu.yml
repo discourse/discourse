@@ -3299,8 +3299,12 @@ hu:
     fullscreen_table:
       expand_btn: "Táblázat kibontása"
     sidebar:
-      unread_count: "%{count} olvasatlan"
-      new_count: "%{count} új"
+      unread_count:
+        one: "%{count} olvasatlan"
+        other: "%{count} olvasatlan"
+      new_count:
+        one: "%{count} új"
+        other: "%{count} új"
       sections:
         messages:
           header_link_text: "Üzenetek"

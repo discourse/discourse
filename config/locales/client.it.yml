@@ -1628,6 +1628,7 @@ it:
       set_custom_status: "Imposta stato personalizzato"
       what_are_you_doing: "Cosa fai?"
       remove_status: "Rimuovi lo stato"
+      until: "Fino a:"
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"
@@ -2308,6 +2309,10 @@ it:
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
     view_all: "visualizza tutto in %{tab}"
+    user_menu:
+      generic_no_items: "Non ci sono elementi in questo elenco."
+      sr_menu_tabs: "Schede del menu"
+      view_all_notifications: "visualizza tutte le notifiche"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -3362,7 +3367,6 @@ it:
         this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti popolari:"
-    browser_update: 'Sfortunatamente <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare su questo sito</a>. <a href="https://browsehappy.com">Aggiorna il tuo browser</a> per visualizzare contenuti multimediali, accedere e rispondere.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -3687,8 +3691,13 @@ it:
     second_factor_auth:
       redirect_after_success: "Autenticazione a due fattori riuscita. Reindirizzamento alla pagina precedente…"
     sidebar:
-      unread_count: "%{count} non letti"
-      new_count: "%{count} nuovi"
+      unread_count:
+        one: "%{count} non letto"
+        other: "%{count} non letti"
+      new_count:
+        one: "%{count} nuovo"
+        other: "%{count} nuovi"
+      toggle_section: "inverti sezione"
       sections:
         messages:
           header_link_title: "messaggi personali"

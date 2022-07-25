@@ -30,3 +30,17 @@ ro:
         "18": "My sources say no"
         "19": "Outlook not so good"
         "20": "Very doubtful"
+    new_user_narrative:
+      hello:
+        title: "Salutari!"
+        message: |-
+          Mulțumim că te-ai alăturat %{title}, și bine ai venit!
+
+          - Eu sunt doar robot, dar [personalul nostru prietenos](%{base_uri}/despre) te poate îndruma pe mai departe.
+
+          - Din motive de securitate, limităm temporar ceea ce pot face noii utilizatori. Vei câștiga [noi abilități](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (și [badges](%{base_uri}/badges)) daca îți petreci mai mult timp pe acest sit.
+
+          - Noi credem în [comportamentul comunitar civilizat](%{base_uri}/orientări) în orice moment.
+      bookmark:
+        instructions: |-
+          Dacă vrei să afli mai multe, selectează <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mai jos şi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marcați cu semn de carte acest mesaj**. Dacă o faceți, ar putea fi un :gift: în viitor!

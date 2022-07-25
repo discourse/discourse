@@ -2803,8 +2803,10 @@ zh_TW:
       no_replies_others: "沒有回覆。"
       no_likes_others: "沒有被讚的貼文。"
     sidebar:
-      unread_count: "%{count} 個未讀"
-      new_count: "%{count} 近期"
+      unread_count:
+        other: "%{count} 個未讀"
+      new_count:
+        other: "%{count} 近期"
       sections:
         messages:
           header_link_text: "訊息"

@@ -1348,8 +1348,12 @@ te:
         regular: "రెగ్యులర్"
         leader: "లీడర్"
     sidebar:
-      unread_count: "%{count} చదవనవి"
-      new_count: "%{count} కొత్త"
+      unread_count:
+        one: "%{count} చదవనవి"
+        other: "%{count} చదవనవి"
+      new_count:
+        one: "%{count} కొత్త"
+        other: "%{count} కొత్త"
       sections:
         messages:
           header_link_text: "సందేశాలు"

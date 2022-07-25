@@ -3244,7 +3244,6 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top:"
-    browser_update: 'Desværre, <a href="https://www.discourse.org/faq/#browser">din browser er for gammel til at virke korrekt på dette websted</a>. <a href="https://browsehappy.com">Opgradere venligst din browser</a> for at se vore gode indhold, log ind og svar.'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -3555,8 +3554,12 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      unread_count: "%{count} ulæst"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulæst"
+        other: "%{count} ulæste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
       sections:
         messages:
           header_link_text: "Beskeder"

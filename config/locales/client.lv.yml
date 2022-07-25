@@ -2804,8 +2804,14 @@ lv:
         member: "biedrs"
         regular: "regulārs"
     sidebar:
-      unread_count: "%{count} nelasīta"
-      new_count: "%{count} jauna"
+      unread_count:
+        zero: "%{count} nelasītas"
+        one: "%{count} nelasīta"
+        other: "%{count} nelasīta"
+      new_count:
+        zero: "%{count} jaunas"
+        one: "%{count} jauna"
+        other: "%{count} jauna"
       sections:
         messages:
           header_link_text: "Ziņas"

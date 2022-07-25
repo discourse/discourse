@@ -3175,7 +3175,6 @@ fi:
         this_week: "Viikko"
         today: "Tänään"
         other_periods: "katso suosituimmat:"
-    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaimesi on liian vanha eikä siksi toimi tällä sivustolla</a>. <a href="https://browsehappy.com">Päivitä selaimesi</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -3461,8 +3460,12 @@ fi:
       no_replies_others: "Ei vastauksia."
       no_likes_others: "Ei tykättyjä viestejä."
     sidebar:
-      unread_count: "%{count} lukematta"
-      new_count: "%{count} uusi"
+      unread_count:
+        one: "%{count} lukematta"
+        other: "%{count} lukematta"
+      new_count:
+        one: "%{count} uusi"
+        other: "%{count} uutta"
       sections:
         messages:
           header_link_text: "Viestit"

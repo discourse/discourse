@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "required": [
+    "group"
+  ]
+}

@@ -1,5 +1,6 @@
 <DSection @pageClass="has-sidebar" @class="sidebar-container" @scrollTop={{false}}>
   <div class="sidebar-scroll-wrap">
-    <Sidebar::Sections />
+    <Sidebar::Sections @collapsableSections={{true}}/>
+    <Sidebar::Footer @toggleSidebar={{@toggleSidebar}} @tagName=""/>
   </div>
 </DSection>

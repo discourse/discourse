@@ -910,6 +910,9 @@ ro:
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
+        title: "Programul pentru notificări"
+        label: "Activați programul de notificări personalizat"
+        tip: "În afara acestor ore veţi fi pus în mod automat „nu deranjaţi”."
         none: "Nimeni"
         monday: "Luni"
         tuesday: "Marţi"
@@ -948,13 +951,21 @@ ro:
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
         disable: "Dezactivează notificări"
         enable: "Activează notificările"
+        each_browser_note: 'Notă: trebuie să modificați această setare în fiecare browser pe care îl utilizați. Toate notificările vor fi dezactivate când se află în „nu deranja”, indiferent de această setare.'
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
       dismiss: "Înlătură"
       dismiss_notifications: "Elimină tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
       no_messages_title: "Nu ai niciun mesaj"
+      no_messages_body: >
+        Ai nevoie să ai o conversație personală directă cu cineva, în afara fluxului conversațional normal? Trimite-le un mesaj selectându-şi avatarul şi utilizând butonul de mesaj %{icon}.<br><br> Dacă ai nevoie de ajutor, poți <a href='%{aboutUrl}'>trimite mesaje unui membru al personalului</a>.
+      no_bookmarks_title: "Nu ai nici un semn de carte încă"
+      no_bookmarks_body: >
+        Începeți să folosiți semnele de carte cu butonul %{icon} si acestea vor fi listate aici. Puteți programa și un memento!
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
+      dynamic_favicon: "Afișați contoare pe pictograma browser"
       skip_new_user_tips:
+        description: "Omiteți sfaturile și insignele de înscriere pentru utilizatori noi"
         skip_link: "Sări peste aceste sfaturi"
       theme_default_on_all_devices: "Faceți ca aceasta să fie tema implicită pe toate dispozitivele mele"
       color_scheme_default_on_all_devices: "Setează schema (schemele) de culori implicite pe toate dispozitivele mele"
@@ -962,6 +973,7 @@ ro:
       color_schemes:
         default_description: "Tema implicită"
         disable_dark_scheme: "La fel ca de obicei"
+        dark_instructions: "Puteți previzualiza schema de culori a modului întunecat prin comutarea în modul întunecat al dispozitivului."
         undo: "Resetare"
         regular: "Utilizator frecvent"
         dark: "Mod întunecat"
@@ -969,6 +981,7 @@ ro:
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
+      enable_defer: "Activează afișarea subiectelor necitite"
       experimental_sidebar:
         options: "Opțiuni"
       change: "Schimbă"
@@ -1009,6 +1022,8 @@ ro:
       watched_first_post_tags: "Urmărire activă prima postare"
       watched_first_post_tags_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect cu aceste etichete."
       muted_categories: "Setat pe silențios"
+      muted_categories_instructions: "Nu vei fi niciodată notificat cu privire la nimic legat de noile subiecte din aceste categorii și ele nu vor apărea în listă."
+      muted_categories_instructions_dont_hide: "Nu veți fi anunțat cu privire la subiecte noi din aceste categorii."
       regular_categories: "Normal"
       no_category_access: "În calitate de moderator ai acces limitat la categorii, salvarea este dezactivată."
       delete_account: "Șterge-mi contul"
@@ -1018,6 +1033,9 @@ ro:
       admin_delete: "Șterge"
       users: "Utilizatori"
       muted_users: "Silențios"
+      muted_users_instructions: "Suprimă toate mesajele, notificările și mesajele directe de la acești utilizatori."
+      allowed_pm_users_instructions: "Permiteți mesaje private doar de la acești utilizatori."
+      allow_private_messages_from_specific_users: "Permite doar anumitor utilizatori să îmi trimită mesaje personale"
       ignored_users: "Ignorat"
       ignored_users_instructions: "Suprimă toate mesajele, notificările și mesajele directe de la acești utilizatori."
       tracked_topics_link: "Arată"
@@ -1211,6 +1229,7 @@ ro:
       location: "Locație"
       website: "Website"
       email_settings: "Email"
+      hide_profile_and_presence: "Ascundeți caracteristicile profilului meu public și ale prezenței mele"
       text_size:
         title: "Dimensiune text"
         smallest: "Cel mai mic"
@@ -1220,6 +1239,8 @@ ro:
         largest: "Cel mai mare"
       title_count_mode:
         title: "Titlul paginii în fundal afișează numărul de:"
+        notifications: "Notificări noi"
+        contextual: "Conținut nou al paginii"
       like_notification_frequency:
         title: "Notificare atunci când se primește apreciere"
         always: "Întotdeauna"
@@ -1232,6 +1253,7 @@ ro:
         always: "întotdeauna"
         never: "niciodată"
       email_digests:
+        title: "Când nu vizitez sit-ul, trimite-mi un rezumat prin e-mail cu subiecte populare și răspunsuri"
         every_30_minutes: "La fiecare 30 de minute "
         every_hour: "În fiecare oră"
         daily: "Zilnic"
@@ -1239,8 +1261,11 @@ ro:
         every_month: "în fiecare lună"
         every_six_months: "la fiecare șase luni"
       email_level:
+        title: "Trimiteți-mi un e-mail când sunt citat, mi se răspunde la subiecte, @numele meu de utilizator este menționat sau când există activitate nouă în categoriile, etichetele sau subiectele mele urmărite"
         always: "întotdeauna"
+        only_when_away: "numai atunci când nu sunt activ"
         never: "niciodată"
+      email_messages_level: "Trimiteți-mi un e-mail când primesc un mesaj personal"
       include_tl0_in_digests: "Include conținut de la utilizatori noi în rezumatul de pe email."
       email_in_reply_to: "Include un fragment din răspunsurile la postare în emailuri"
       other_settings: "Altele"
@@ -1269,6 +1294,8 @@ ro:
         title: "Invitații"
         pending_tab: "În așteptare"
         pending_tab_with_count: "În așteptare: (%{count})"
+        expired_tab: "Expirate"
+        expired_tab_with_count: "Expirate (%{count})"
         redeemed_tab: "Acceptate"
         redeemed_tab_with_count: "(%{count}) Acceptate"
         invited_via: "Initație"
@@ -1299,6 +1326,8 @@ ro:
         invite_link:
           success: "Link de invitare generat cu succes!"
         bulk_invite:
+          none: "Nu există invitații de afișat pe această pagină."
+          text: "Invitație în masă"
           error: "Scuze, fișierul trebuie să fie în format CSV."
       password:
         title: "Parolă"
@@ -1360,6 +1389,7 @@ ro:
         most_liked_users: "Cele mai apreciate"
         most_replied_to_users: "Cele mai multe răspunsuri pentru"
         no_likes: "Nicio apreciere încă."
+        top_categories: "Top Categorii"
         topics: "Discuții"
         replies: "Răspunsuri"
       ip_address:
@@ -1733,6 +1763,8 @@ ro:
       select_all: "Selectează tot"
       clear_all: "Șterge tot"
       too_short: "Termenul căutat este prea scurt."
+      open_advanced: "Deschideți căutarea avansată"
+      clear_search: "Ștergeți căutarea"
       title: "Caută"
       full_page_title: "Caută"
       no_results: "Nici un rezultat."
@@ -1745,6 +1777,8 @@ ro:
       search_button: "Caută"
       categories: "Categorii"
       tags: "Etichete"
+      in_topics_posts: "în toate subiectele și postările"
+      enter_hint: "sau apăsați Enter"
       type:
         users: "Utilizatori"
         categories: "Categorii"
@@ -2694,6 +2728,7 @@ ro:
           name: Altele
         posting:
           name: Care postează
+      favorite_count: "%{count}/%{max} insigne marcate ca favorite"
     download_calendar:
       download: "Descărcare"
     tagging:
@@ -2769,6 +2804,8 @@ ro:
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
     do_not_disturb:
+      title: "Nu deranja pentru..."
+      label: "Nu deranja"
       remaining: "a mai rămas %{remaining} ..."
       options:
         custom: "Personalizat"
@@ -2780,10 +2817,22 @@ ro:
         regular: "utilizator frecvent"
         leader: "lider"
     user_activity:
+      no_activity_title: "Nicio activitate încă"
+      no_replies_title: "Nu ai citit nici un subiect până acum"
+      no_drafts_title: "Nu ai început nicio ciornă"
+      no_drafts_body: "Nu ești gata să postezi? Vom salva automat o schiță nouă și o vom afișa aici ori de câte ori începi să compui un subiect, un răspuns sau un mesaj personal. Selectați butonul de anulare pentru a renunța sau a salva ciorna pentru a continua mai târziu."
+      no_likes_title: "Încă nu ți-a plăcut niciun subiect"
+      no_likes_body: "O modalitate excelentă de a intra și de a începe să contribui este să începi să citești conversațiile care au avut deja loc și să selectezi %{heartIcon} din postările care îți plac!"
       no_likes_others: "Nu există postări apreciate."
     sidebar:
-      unread_count: "%{count} necitit"
-      new_count: "%{count} nou"
+      unread_count:
+        one: "%{count} necitit"
+        few: "%{count} necitite"
+        other: "%{count} necitit"
+      new_count:
+        one: "%{count} nou"
+        few: "%{count} noi"
+        other: "%{count} nou"
       sections:
         messages:
           header_link_text: "Mesaje"

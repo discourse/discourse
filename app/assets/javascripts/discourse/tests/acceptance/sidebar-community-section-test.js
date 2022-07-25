@@ -1,7 +1,6 @@
 import I18n from "I18n";
-
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -10,13 +9,14 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
+import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
-acceptance("Sidebar - Topics Section", function (needs) {
+acceptance("Sidebar - Community Section", function (needs) {
   needs.user({
     experimental_sidebar_enabled: true,
     tracked_tags: ["tag1"],
@@ -40,14 +40,14 @@ acceptance("Sidebar - Topics Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
-    await click(".sidebar-section-topics .sidebar-section-header-button");
+    await click(".sidebar-section-community .sidebar-section-header-button");
 
     assert.ok(exists("#reply-control"), "it opens the composer");
   });
 
   test("clicking on section header button while viewing a category", async function (assert) {
     await visit("/c/bug");
-    await click(".sidebar-section-topics .sidebar-section-header-button");
+    await click(".sidebar-section-community .sidebar-section-header-button");
 
     assert.ok(exists("#reply-control"), "it opens the composer");
 
@@ -62,34 +62,34 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-content"),
+      exists(".sidebar-section-community .sidebar-section-content"),
       "shows content section"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-topics .sidebar-section-header-caret").title,
+      query(".sidebar-section-community .sidebar-section-header-caret").title,
       I18n.t("sidebar.toggle_section"),
       "caret has the right title"
     );
 
-    await click(".sidebar-section-topics .sidebar-section-header-caret");
+    await click(".sidebar-section-community .sidebar-section-header-caret");
 
     assert.ok(
-      !exists(".sidebar-section-topics .sidebar-section-content"),
+      !exists(".sidebar-section-community .sidebar-section-content"),
       "hides content section"
     );
 
-    await click(".sidebar-section-topics .sidebar-section-header-caret");
+    await click(".sidebar-section-community .sidebar-section-header-caret");
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-content"),
+      exists(".sidebar-section-community .sidebar-section-content"),
       "shows content section"
     );
   });
 
   test("clicking on section header link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-header-link");
+    await click(".sidebar-section-community .sidebar-section-header-link");
 
     assert.strictEqual(
       currentURL(),
@@ -98,20 +98,22 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
 
   test("clicking on everything link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-everything");
+    await click(".sidebar-section-community .sidebar-section-link-everything");
 
     assert.strictEqual(
       currentURL(),
@@ -120,20 +122,22 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
 
   test("clicking on tracked link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-tracked");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
 
     assert.strictEqual(
       currentURL(),
@@ -142,42 +146,64 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
 
-  test("clicking on bookmarked link", async function (assert) {
+  test("clicking on users link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-bookmarked");
+    await click(".sidebar-section-community .sidebar-section-link-users");
 
     assert.strictEqual(
       currentURL(),
-      `/u/${loggedInUser().username}/activity/bookmarks`,
-      "it should transition to the bookmarked url"
+      "/u?order=likes_received",
+      "it should transition to the users url"
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-bookmarked.active"),
-      "the bookmarked link is marked as active"
+      exists(".sidebar-section-community .sidebar-section-link-users.active"),
+      "the users link is marked as active"
+    );
+  });
+
+  test("clicking on groups link", async function (assert) {
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-groups");
+
+    assert.strictEqual(
+      currentURL(),
+      "/g",
+      "it should transition to the groups url"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-groups.active"),
+      "the groups link is marked as active"
     );
   });
 
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-topics .sidebar-section-link-my-posts");
+    await click(".sidebar-section-community .sidebar-section-link-my-posts");
 
     assert.strictEqual(
       currentURL(),
@@ -186,20 +212,24 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is marked as active"
     );
 
     await visit(`/u/${loggedInUser().username}/activity/drafts`);
 
     assert.notOk(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
     );
   });
@@ -207,13 +237,11 @@ acceptance("Sidebar - Topics Section", function (needs) {
   test("clicking on my posts link when user has a draft", async function (assert) {
     await visit("/t/280");
 
-    publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
       draft_count: 1,
     });
 
-    await settled();
-
-    await click(".sidebar-section-topics .sidebar-section-link-my-posts");
+    await click(".sidebar-section-community .sidebar-section-link-my-posts");
 
     assert.strictEqual(
       currentURL(),
@@ -222,20 +250,24 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is marked as active"
     );
 
     await visit(`/u/${loggedInUser().username}/activity`);
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-my-posts.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-posts.active"
+      ),
       "the my posts link is marked as active"
     );
   });
@@ -244,13 +276,15 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/top");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
@@ -259,13 +293,15 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/unread");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
@@ -274,13 +310,15 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/new");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-everything.active"),
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
       "the everything link is marked as active"
     );
   });
@@ -345,7 +383,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     // simulate reading topic 2
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -354,8 +392,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         notification_level: 2,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -366,7 +402,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     // simulate reading topic 3
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -377,7 +413,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     });
 
     // simulate reading topic 4
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 4,
       message_type: "read",
       payload: {
@@ -386,8 +422,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         notification_level: 2,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -402,7 +436,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       "it links to new filter"
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -411,8 +445,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         notification_level: 2,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(
@@ -431,13 +463,13 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/top?f=tracked");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
@@ -446,13 +478,13 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/unread?f=tracked");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
@@ -461,13 +493,13 @@ acceptance("Sidebar - Topics Section", function (needs) {
     await visit("/new?f=tracked");
 
     assert.strictEqual(
-      count(".sidebar-section-topics .sidebar-section-link.active"),
+      count(".sidebar-section-community .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
 
     assert.ok(
-      exists(".sidebar-section-topics .sidebar-section-link-tracked.active"),
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
     );
   });
@@ -559,7 +591,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     // simulate reading topic id 2
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -567,8 +599,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         highest_post_number: 12,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query(
@@ -579,7 +609,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     // simulate reading topic id 3
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -589,7 +619,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     });
 
     // simulate reading topic id 6
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 6,
       message_type: "read",
       payload: {
@@ -612,7 +642,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
     );
 
     // simulate reading topic id 1
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -620,8 +650,6 @@ acceptance("Sidebar - Topics Section", function (needs) {
         highest_post_number: 1,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(
@@ -725,8 +753,7 @@ acceptance("Sidebar - Topics Section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".header-sidebar-toggle .btn");
-    await click(".header-sidebar-toggle .btn");
+    await undockSidebar();
 
     assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,

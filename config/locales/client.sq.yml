@@ -1931,8 +1931,12 @@ sq:
         regular: "i zakonshëm"
         leader: "udhëheqës"
     sidebar:
-      unread_count: "%{count} e palexuar"
-      new_count: "%{count} e re"
+      unread_count:
+        one: "%{count} e palexuar"
+        other: "%{count} të palexuara"
+      new_count:
+        one: "%{count} e re"
+        other: "%{count} të reja"
       sections:
         messages:
           header_link_text: "Mesazhet"
