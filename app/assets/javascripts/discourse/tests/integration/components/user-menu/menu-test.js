@@ -52,10 +52,7 @@ module("Integration | Component | user-menu", function (hooks) {
     ["all-notifications", "replies", "mentions", "likes"].forEach(
       (tab, index) => {
         assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
-        assert.strictEqual(
-          tabs[index].getAttribute("data-tab-number"),
-          index.toString()
-        );
+        assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
         assert.strictEqual(
           tabs[index].getAttribute("aria-controls"),
           `quick-access-${tab}`
@@ -70,7 +67,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const preferencesTab = tabs[0];
     assert.ok(preferencesTab.href.endsWith("/u/eviltrout/preferences"));
-    assert.strictEqual(preferencesTab.getAttribute("data-tab-number"), "4");
+    assert.strictEqual(preferencesTab.dataset.tabNumber, "4");
     assert.strictEqual(preferencesTab.getAttribute("tabindex"), "-1");
   });
 
@@ -83,7 +80,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 4);
 
     assert.deepEqual(
-      tabs.map((t) => t.getAttribute("data-tab-number")),
+      tabs.map((t) => t.dataset.tabNumber),
       [...Array(4).keys()].map((n) => n.toString()),
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
