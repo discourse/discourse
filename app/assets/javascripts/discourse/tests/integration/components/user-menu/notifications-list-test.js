@@ -53,6 +53,11 @@ module(
       );
     });
 
+    test("doesn't request the full notifications list in silent mode", async function (assert) {
+      await render(template);
+      assert.strictEqual(queryParams.silent, undefined);
+    });
+
     test("displays a show all button that takes to the notifications page of the current user", async function (assert) {
       await render(template);
       const showAllBtn = query(".panel-body-bottom .btn.show-all");
