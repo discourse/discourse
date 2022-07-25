@@ -34,6 +34,7 @@ import { htmlSafe } from "@ember/template";
 import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
+import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -1224,6 +1225,10 @@ User.reopen(Evented, {
   },
 
   _scheduleStatusClearing(endsAt) {
+    if (isTesting()) {
+      return;
+    }
+
     if (this._clearStatusTimerId) {
       this._unscheduleStatusClearing();
     }
