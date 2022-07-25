@@ -1586,10 +1586,6 @@ class User < ActiveRecord::Base
     Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
   end
 
-  def no_likes_notifications?
-    user_option&.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
-  end
-
   protected
 
   def badge_grant
