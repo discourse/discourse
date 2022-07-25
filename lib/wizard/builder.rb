@@ -49,20 +49,26 @@ class Wizard
 
       @wizard.append_step('privacy') do |step|
         step.banner = "members-illustration.svg"
-        step.add_field(id: 'login_required',
-                       type: 'checkbox',
-                       icon: 'unlock',
-                       value: SiteSetting.login_required)
+        step.add_field(
+          id: 'login_required',
+          type: 'checkbox',
+          icon: 'unlock',
+          value: SiteSetting.login_required
+        )
 
-        step.add_field(id: 'invite_only',
-                       type: 'checkbox',
-                       icon: 'user-plus',
-                       value: SiteSetting.invite_only)
+        step.add_field(
+          id: 'invite_only',
+          type: 'checkbox',
+          icon: 'user-plus',
+          value: SiteSetting.invite_only
+        )
 
-        step.add_field(id: 'must_approve_users',
-                       type: 'checkbox',
-                       icon: 'user-shield',
-                       value: SiteSetting.must_approve_users)
+        step.add_field(
+          id: 'must_approve_users',
+          type: 'checkbox',
+          icon: 'user-shield',
+          value: SiteSetting.must_approve_users
+        )
 
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:login_required])

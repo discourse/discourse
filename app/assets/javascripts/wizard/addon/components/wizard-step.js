@@ -18,33 +18,37 @@ export default Component.extend({
   },
 
   @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showNextButton: (current, total) => current < total,
+  showNextButton(current, total) {
+    return current < total;
+  },
 
   @discourseComputed("step.id", "step.displayIndex", "wizard.totalSteps")
-  showDoneButton: (step, current, total) => {
+  showDoneButton(step, current, total) {
     return step === "ready" || current === total;
   },
 
   @discourseComputed("step.id")
-  showFinishButton: (step) => {
+  showFinishButton(step) {
     return step === "styling" || step === "branding";
   },
 
   @discourseComputed("step.index")
-  showBackButton: (index) => index > 0,
+  showBackButton(index) {
+    return index > 0;
+  },
 
   @discourseComputed("step.id")
-  nextButtonLabel: (step) => {
+  nextButtonLabel(step) {
     return `wizard.${step === "ready" ? "configure_more" : "next"}`;
   },
 
   @discourseComputed("step.id")
-  nextButtonClass: (step) => {
+  nextButtonClass(step) {
     return step === "ready" ? "configure-more" : "next";
   },
 
   @discourseComputed("step.id")
-  stepClass: (step) => {
+  stepClass(step) {
     return step;
   },
 

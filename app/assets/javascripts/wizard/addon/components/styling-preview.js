@@ -150,9 +150,10 @@ export default createPreviewComponent(642, 322, {
 
     ctx.beginPath();
     ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.1);
-    ctx.fillStyle = colors.primary_low // accounts for hard-set color variables in solarized themes
-      ? colors.primary_low
-      : darkLightDiff(colors.primary, colors.secondary, 90, 65);
+    // accounts for hard-set color variables in solarized themes
+    ctx.fillStyle =
+      colors.primary_low ||
+      darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(

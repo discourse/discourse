@@ -359,9 +359,10 @@ export default createPreviewComponent(342, 322, {
 
   renderLatest(ctx, colors, font, width, height) {
     const rowHeight = height / 6.6;
-    const textColor = colors.primary_medium // accounts for hard-set color variables in solarized themes
-      ? colors.primary_medium
-      : darkLightDiff(colors.primary, colors.secondary, 50, 50);
+    // accounts for hard-set color variables in solarized themes
+    const textColor =
+      colors.primary_medium ||
+      darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const bodyFontSize = height / 440.0;
 
     ctx.font = `${bodyFontSize}em '${font}'`;
@@ -370,9 +371,10 @@ export default createPreviewComponent(342, 322, {
 
     const drawLine = (y) => {
       ctx.beginPath();
-      ctx.strokeStyle = colors.primary_low // accounts for hard-set color variables in solarized themes
-        ? colors.primary_low
-        : darkLightDiff(colors.primary, colors.secondary, 90, -75);
+      // accounts for hard-set color variables in solarized themes
+      ctx.strokeStyle =
+        colors.primary_low ||
+        darkLightDiff(colors.primary, colors.secondary, 90, -75);
       ctx.moveTo(margin, y);
       ctx.lineTo(width - margin, y);
       ctx.stroke();
