@@ -781,6 +781,7 @@ export default {
       case "categories_with_featured_topics":
         return $(".latest .featured-topic");
       case "categories_and_latest_topics":
+      case "categories_and_latest_topics_created_date":
         return $(".latest-topic-list .latest-topic-list-item");
       case "categories_and_top_topics":
         return $(".top-topic-list .latest-topic-list-item");
