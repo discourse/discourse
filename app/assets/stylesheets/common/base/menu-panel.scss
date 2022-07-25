@@ -575,6 +575,7 @@ div.menu-links-header {
   width: var(--d-sidebar-width);
 
   .panel-body-content {
+    width: 100%;
     min-width: 0; // prevent content blowing out width
   }
 
