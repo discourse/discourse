@@ -74,7 +74,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(preferencesTab.getAttribute("tabindex"), "-1");
   });
 
-  test("likes tab is hidden if currentUser's like notifications frequency is 'never'", async function (assert) {
+  test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
     this.currentUser.set("no_likes_notifications", true);
     await render(template);
     assert.ok(!exists("#user-menu-button-likes"));
