@@ -478,7 +478,7 @@ GEM
     strscan (3.0.4)
     test-prof (1.0.9)
     thor (1.2.1)
-    tilt (2.0.10)
+    tilt (2.0.11)
     timeout (0.3.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
