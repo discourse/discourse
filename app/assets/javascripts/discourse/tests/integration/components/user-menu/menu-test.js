@@ -3,7 +3,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, render } from "@ember/test-helpers";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import { LIKE_NOTIFICATION_FREQUENCY_TYPE } from "discourse/models/user";
 import { hbs } from "ember-cli-htmlbars";
 import pretender from "discourse/tests/helpers/create-pretender";
 
@@ -76,10 +75,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("likes tab is hidden if currentUser's like notifications frequency is 'never'", async function (assert) {
-    this.currentUser.set(
-      "like_notification_frequency",
-      LIKE_NOTIFICATION_FREQUENCY_TYPE.never
-    );
+    this.currentUser.set("no_likes_notifications", true);
     await render(template);
     assert.ok(!exists("#user-menu-button-likes"));
 

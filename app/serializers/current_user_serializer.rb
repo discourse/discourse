@@ -75,7 +75,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :status,
              :sidebar_category_ids,
              :sidebar_tag_names,
-             :like_notification_frequency,
+             :no_likes_notifications?,
              :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
@@ -152,10 +152,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def bookmark_auto_delete_preference
     object.user_option.bookmark_auto_delete_preference
-  end
-
-  def like_notification_frequency
-    object.user_option.like_notification_frequency
   end
 
   def can_send_private_email_messages

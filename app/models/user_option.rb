@@ -31,7 +31,6 @@ class UserOption < ActiveRecord::Base
     @previous_replies_type ||= Enum.new(always: 0, unless_emailed: 1, never: 2)
   end
 
-  # if you change this enum, remember to change it in models/user.js as well
   def self.like_notification_frequency_type
     @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
   end

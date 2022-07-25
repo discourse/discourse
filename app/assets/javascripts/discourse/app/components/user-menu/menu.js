@@ -1,7 +1,6 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { LIKE_NOTIFICATION_FREQUENCY_TYPE } from "discourse/models/user";
 import UserMenuTab from "discourse/lib/user-menu/tab";
 
 const DEFAULT_TAB_ID = "all-notifications";
@@ -64,10 +63,7 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return (
-        this.currentUser.like_notification_frequency !==
-        LIKE_NOTIFICATION_FREQUENCY_TYPE.never
-      );
+      return !this.currentUser.no_likes_notifications;
     }
   },
 ];
