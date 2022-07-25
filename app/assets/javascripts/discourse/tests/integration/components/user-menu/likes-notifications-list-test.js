@@ -15,7 +15,6 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    let notificationsData = getNotificationsData();
     let queryParams = null;
     hooks.beforeEach(() => {
       pretender.get("/notifications", (request) => {
@@ -23,13 +22,12 @@ module(
         return [
           200,
           { "Content-Type": "application/json" },
-          { notifications: notificationsData },
+          { notifications: getNotificationsData() },
         ];
       });
     });
 
     hooks.afterEach(() => {
-      notificationsData = getNotificationsData();
       queryParams = null;
     });
 
