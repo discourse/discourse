@@ -86,7 +86,9 @@
             </div>
           {{/if}}
 
-          {{#if this.model.remote_theme.commits_behind}}
+          {{#if this.finishInstall}}
+            <DButton @action={{action "updateToLatest"}} @icon="download" @class="btn-primary finish-install" @label="admin.customize.theme.finish_install" />
+          {{else if this.model.remote_theme.commits_behind}}
             <DButton @action={{action "updateToLatest"}} @icon="download" @class="btn-primary" @label="admin.customize.theme.update_to_latest" />
           {{else}}
             <DButton @action={{action "checkForThemeUpdates"}} @icon="sync" @class="btn-default" @label="admin.customize.theme.check_for_updates" />
@@ -107,6 +109,8 @@
                     {{i18n "admin.customize.theme.compare_commits"}}
                   </a>
                 {{/if}}
+              {{else if this.finishInstall}}
+                {{i18n "admin.customize.theme.last_attempt"}} {{format-date this.model.remote_theme.updated_at leaveAgo="true"}}
               {{else}}
                 {{#unless this.showRemoteError}}
                   {{i18n "admin.customize.theme.up_to_date"}} {{format-date this.model.remote_theme.updated_at leaveAgo="true"}}
