@@ -8,4 +8,8 @@ describe DeleteRejectedEmailAfterDaysValidator do
     expect { SiteSetting.delete_rejected_email_after_days = 89 }.to raise_error(Discourse::InvalidParameters)
   end
 
+  it 'cannot be too large' do
+    expect { SiteSetting.delete_rejected_email_after_days = DeleteRejectedEmailAfterDaysValidator::MAX + 1 }.to raise_error(Discourse::InvalidParameters)
+  end
+
 end

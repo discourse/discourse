@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class DeleteRejectedEmailAfterDaysValidator
+  MAX = 36500.freeze
+
   def initialize(opts = {})
     @opts = opts
   end
 
   def valid_value?(value)
-    @valid = value.to_i >= SiteSetting.delete_email_logs_after_days && value.to_i <= 36500
+    @valid = value.to_i >= SiteSetting.delete_email_logs_after_days && value.to_i <= MAX
   end
 
   def error_message
