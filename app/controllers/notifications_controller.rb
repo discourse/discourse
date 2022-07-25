@@ -18,12 +18,11 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
-    if notification_types = params[:filter_by_types]&.split(",")&.map(&:to_sym).presence
+    if notification_types = params[:filter_by_types]&.split(",").presence
       notification_types.map! do |type|
-        if !Notification.types.key?(type)
+        Notification.types[type.to_sym] || (
           raise Discourse::InvalidParameters.new("invalid notification type: #{type}")
-        end
-        Notification.types[type]
+        )
       end
     end
 
