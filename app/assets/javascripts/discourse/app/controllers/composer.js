@@ -1361,10 +1361,7 @@ export default Controller.extend({
               });
           },
           onSaveDraft: () => {
-            this._saveDraft();
-            this.model.clearState();
-            this.close();
-            this.appEvents.trigger("composer:cancelled");
+            this.saveDraft();
             resolve();
           },
           // needed to resume saving drafts if composer stays open
