@@ -457,11 +457,12 @@ describe FinalDestination do
       subject(:get) { fd.get {} }
 
       before do
+        described_class.clear_https_cache!("wikipedia.com")
         fd.stubs(:safe_session).raises(Timeout::Error)
       end
 
       it "logs the exception" do
-        Rails.logger.expects(:warn).with("default: FinalDestination could not resolve URL (timeout): https://wikipedia.com")
+        Rails.logger.expects(:warn).with("default: FinalDestination could not resolve URL (timeout): http://wikipedia.com")
         get
       end
 
