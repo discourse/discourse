@@ -437,6 +437,10 @@ describe FinalDestination do
           to_return(status: 200, body: "<html><head>" , headers: {})
       end
 
+      after do
+        WebMock.reset!
+      end
+
       it "correctly streams" do
         chunk = nil
         result = fd.get do |resp, c|
