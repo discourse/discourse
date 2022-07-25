@@ -175,9 +175,9 @@ acceptance("User Notifications", function (needs) {
 
     assert.strictEqual(count("#quick-access-notifications li"), 8);
     const texts = [];
-    queryAll("#quick-access-notifications li").each((_, el) =>
-      texts.push(el.innerText.trim())
-    );
+    [...queryAll("#quick-access-notifications li")].forEach((element) => {
+      texts.push(element.innerText.trim());
+    });
     assert.deepEqual(texts, [
       "foo First notification",
       "foo Third notification",
