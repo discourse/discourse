@@ -64,6 +64,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   dismissWarningModal() {
     // TODO: add warning modal when there are unread high pri notifications
+    // TODO: review child components and override if necessary
     return null;
   }
 

@@ -4,8 +4,4 @@ export default class UserMenuLikesNotificationsList extends UserMenuNotification
   get filterByTypes() {
     return ["liked", "liked_consolidated"];
   }
-
-  dismissWarningModal() {
-    return null;
-  }
 }
