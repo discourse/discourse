@@ -32,6 +32,29 @@ describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
+  context 'privacy step' do
+    let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
+
+    it 'should set the right default value for the fields' do
+      SiteSetting.login_required = true
+      SiteSetting.invite_only = false
+      SiteSetting.must_approve_users = true
+
+      fields = privacy_step.fields
+      login_required_field = fields.first
+      invite_only_field = fields.second
+      must_approve_users_field = fields.last
+
+      expect(fields.length).to eq(3)
+      expect(login_required_field.id).to eq('login_required')
+      expect(login_required_field.value).to eq(true)
+      expect(invite_only_field.id).to eq('invite_only')
+      expect(invite_only_field.value).to eq(false)
+      expect(must_approve_users_field.id).to eq('must_approve_users')
+      expect(must_approve_users_field.value).to eq(true)
+    end
+  end
+
   context 'styling' do
     let(:styling_step) { wizard.steps.find { |s| s.id == 'styling' } }
     let(:font_field) { styling_step.fields[1] }
@@ -113,5 +136,4 @@ describe Wizard::Builder do
       expect(logo_small_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end
-
 end
