@@ -5,9 +5,9 @@
         {{i18n "about.simple_title"}}
       </LinkTo>
 
-      {{#if this.currentUser.admin}}
-        <LinkTo @route="adminSiteSettings" title={{i18n "admin.site_settings.title"}} class="sidebar-footer-link sidebar-footer-link-site-settings">
-          {{i18n "admin.site_settings.title"}}
+      {{#if this.currentUser.staff}}
+        <LinkTo @route="admin" title={{i18n "admin_title"}} class="sidebar-footer-link sidebar-footer-link-admin">
+          {{i18n "admin_title"}}
         </LinkTo>
       {{/if}}
     </div>
