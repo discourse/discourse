@@ -99,7 +99,7 @@ class WordWatcher
   end
 
   def self.censor(html)
-    regexp = WordWatcher.word_matcher_regexp(:censor)
+    regexp = word_matcher_regexp(:censor)
     return html if regexp.blank?
 
     doc = Nokogiri::HTML5::fragment(html)
@@ -110,27 +110,22 @@ class WordWatcher
   end
 
   def self.censor_text(text)
-    regexp = WordWatcher.word_matcher_regexp(:censor)
+    regexp = word_matcher_regexp(:censor)
     return text if regexp.blank?
 
     censor_text_with_regexp(text, regexp)
   end
 
   def self.apply_to_text(text)
-    if regexp = WordWatcher.word_matcher_regexp(:censor)
+    if regexp = word_matcher_regexp(:censor)
       text = censor_text_with_regexp(text, regexp)
     end
 
-    [:replace, :link].each do |type|
-      regexps = WordWatcher.word_matcher_regexps(type)
-      if regexps.present?
-        regexps.each do |word_regexp, replacement|
-          text = text.gsub(Regexp.new(word_regexp)) { |match| "#{match[0]}#{replacement}" }
-        end
+    %i[replace link]
+      .flat_map { |type| word_matcher_regexps(type).to_a }
+      .reduce(text) do |t, (word_regexp, replacement)|
+        t.gsub(Regexp.new(word_regexp)) { |match| "#{match[0]}#{replacement}" }
       end
-    end
-
-    text
   end
 
   def self.clear_cache!
