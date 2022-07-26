@@ -53,17 +53,17 @@ export default Component.extend({
     }
 
     this.onChange?.(
-        moment.tz(
-          {
-            year: date.year(),
-            month: date.month(),
-            day: date.date(),
-            hours: this.hours || 0,
-            minutes: this.minutes || 0,
-          },
-          this.resolvedTimezone
-        )
-      );
+      moment.tz(
+        {
+          year: date.year(),
+          month: date.month(),
+          day: date.date(),
+          hours: this.hours || 0,
+          minutes: this.minutes || 0,
+        },
+        this.resolvedTimezone
+      )
+    );
   },
 
   @computed
