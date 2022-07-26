@@ -311,9 +311,7 @@ describe ReviewablesController do
         get "/review/user-menu-list.json"
         expect(response.status).to eq(200)
         reviewables = response.parsed_body["reviewables"]
-        expect(reviewables.size).to eq(3)
-        expect(reviewables[0]["id"]).to eq(pending.id)
-        expect(reviewables[1..-1].map { |r| r["id"] }).to contain_exactly(approved1.id, approved2.id)
+        expect(reviewables.map { |r| r["id"] }).to eq([pending.id, approved2.id, approved1.id])
       end
     end
 
