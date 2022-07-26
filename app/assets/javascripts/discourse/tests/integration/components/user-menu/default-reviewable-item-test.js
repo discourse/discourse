@@ -58,11 +58,11 @@ module(
         I18n.t("user_menu.reviewable.default_item", {
           reviewable_id: this.item.id,
         }),
-        "the description is a generic I18n string"
+        "displays the description for the reviewable"
       );
     });
 
-    test("the item's label is an I18n string if flagger_username is absent", async function (assert) {
+    test("the item's label is a placeholder that indicates deleted user if flagger_username is absent", async function (assert) {
       this.set("item", getReviewable({ flagger_username: null }));
       await render(template);
       const label = query("li .reviewable-label");
