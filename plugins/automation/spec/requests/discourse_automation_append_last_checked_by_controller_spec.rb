@@ -8,6 +8,7 @@ describe DiscourseAutomation::AppendLastCheckedByController do
     fab!(:topic) { post.topic }
 
     it 'updates the topic custom fields' do
+      freeze_time
       admin = Fabricate(:admin)
       sign_in(admin)
 
