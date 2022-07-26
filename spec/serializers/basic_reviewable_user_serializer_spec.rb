@@ -19,7 +19,7 @@ describe BasicReviewableUserSerializer do
 
   subject { described_class.new(reviewable, root: false).as_json }
 
-  include_examples "common basic reviewable serializer"
+  include_examples "basic reviewable attributes"
 
   context "#username" do
     it "equals the username in the reviewable's payload" do

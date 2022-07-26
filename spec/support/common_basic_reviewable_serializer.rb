@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples "common basic reviewable serializer" do
+shared_examples "basic reviewable attributes" do
   context "#id" do
     it "equals the reviewable's id" do
       expect(subject[:id]).to eq(reviewable.id)

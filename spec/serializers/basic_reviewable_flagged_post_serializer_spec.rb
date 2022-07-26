@@ -10,7 +10,7 @@ describe BasicReviewableFlaggedPostSerializer do
 
   subject { described_class.new(reviewable, root: false).as_json }
 
-  include_examples "common basic reviewable serializer"
+  include_examples "basic reviewable attributes"
 
   context "#post_number" do
     it "equals the post_number of the post" do

@@ -12,7 +12,7 @@ describe BasicReviewableQueuedPostSerializer do
 
   subject { described_class.new(reviewable, root: false).as_json }
 
-  include_examples "common basic reviewable serializer"
+  include_examples "basic reviewable attributes"
 
   context "#topic_title" do
     it "equals the topic's fancy_title" do
