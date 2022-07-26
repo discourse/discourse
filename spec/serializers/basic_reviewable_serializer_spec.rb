@@ -3,30 +3,44 @@
 describe BasicReviewableSerializer do
   fab!(:reviewable) { Fabricate(:reviewable) }
 
-  def get_json
-    described_class.new(reviewable, root: false).as_json
+  subject { described_class.new(reviewable, root: false).as_json }
+
+  context "#id" do
+    it "equals the reviewable's id" do
+      expect(subject[:id]).to eq(reviewable.id)
+    end
   end
 
-  it "includes reviewable id" do
-    expect(get_json[:id]).to eq(reviewable.id)
+  context "#type" do
+    it "is the reviewable's type" do
+      reviewable.update!(type: "ReviewableFlaggedPost")
+      expect(subject[:type]).to eq("ReviewableFlaggedPost")
+    end
   end
 
-  it "includes reviewable type" do
-    reviewable.update!(type: "ReviewableFlaggedPost")
-    expect(get_json[:type]).to eq("ReviewableFlaggedPost")
+  context "#pending" do
+    it "is false if the reviewable is approved" do
+      reviewable.update!(status: Reviewable.statuses[:approved])
+      expect(subject[:pending]).to eq(false)
+    end
+
+    it "is false if the reviewable is rejected" do
+      reviewable.update!(status: Reviewable.statuses[:rejected])
+      expect(subject[:pending]).to eq(false)
+    end
+
+    it "is true if the reviewable is pending" do
+      reviewable.update!(status: Reviewable.statuses[:pending])
+      expect(subject[:pending]).to eq(true)
+    end
   end
 
-  it "includes a boolean that indicates whether the reviewable pending is pending or not" do
-    reviewable.update!(status: Reviewable.statuses[:approved])
-    expect(get_json[:pending]).to eq(false)
-    reviewable.update!(status: Reviewable.statuses[:pending])
-    expect(get_json[:pending]).to eq(true)
-  end
-
-  it "includes reviewable flagger_username" do
-    reviewable.update!(
-      created_by: Fabricate(:user, username: "gg.osama")
-    )
-    expect(get_json[:flagger_username]).to eq("gg.osama")
+  context "#flagger_username" do
+    it "equals to the username of the user who created the reviewable" do
+      reviewable.update!(
+        created_by: Fabricate(:user, username: "gg.osama")
+      )
+      expect(subject[:flagger_username]).to eq("gg.osama")
+    end
   end
 end
