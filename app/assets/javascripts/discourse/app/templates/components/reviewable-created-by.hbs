@@ -1,6 +1,6 @@
 <div class="created-by">
-  {{#if user}}
-    {{#user-link user=user}}{{avatar user imageSize="large"}}{{/user-link}}
+  {{#if this.user}}
+    <UserLink @user={{this.user}}>{{avatar this.user imageSize="large"}}</UserLink>
   {{else}}
     {{d-icon "far-trash-alt" class="deleted-user-avatar"}}
   {{/if}}

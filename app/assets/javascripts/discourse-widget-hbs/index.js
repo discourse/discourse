@@ -1,7 +1,7 @@
 "use strict";
 
-const WidgetHbsCompiler = require("../../../../lib/javascripts/widget-hbs-compiler")
-  .WidgetHbsCompiler;
+const WidgetHbsCompiler =
+  require("../../../../lib/javascripts/widget-hbs-compiler").WidgetHbsCompiler;
 
 const glimmer = require("@glimmer/syntax");
 

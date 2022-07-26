@@ -49,7 +49,7 @@ describe TopicsBulkAction do
       Fabricate(:topic_user, user: user, topic: topic3, last_read_post_number: 1)
       expect do
         TopicsBulkAction.new(user, [Topic.all.pluck(:id)], type: "dismiss_topics").perform!
-      end.to change { DismissedTopicUser.count }.by(0)
+      end.not_to change { DismissedTopicUser.count }
     end
 
     it 'dismisses when topic user without last_read_post_number' do
@@ -95,6 +95,7 @@ describe TopicsBulkAction do
 
       context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
+          SiteSetting.enable_whispers = true
           post1 = create_post(user: user)
           p = create_post(topic_id: post1.topic_id)
           create_post(topic_id: post1.topic_id)

@@ -182,7 +182,7 @@ describe Auth::ManagedAuthenticator do
       it "schedules the job upon update correctly" do
         # No image supplied, do not schedule
         expect { result = authenticator.after_authenticate(hash) }
-          .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
+          .not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
 
         # Image supplied, schedule
         expect { result = authenticator.after_authenticate(hash.deep_merge(info: { image: "https://some.domain/image.jpg" })) }
@@ -192,7 +192,7 @@ describe Auth::ManagedAuthenticator do
         user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
         user.save!
         expect { result = authenticator.after_authenticate(hash.deep_merge(info: { image: "https://some.domain/image.jpg" })) }
-          .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
+          .not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
       end
     end
 
@@ -226,7 +226,7 @@ describe Auth::ManagedAuthenticator do
 
       it "doesn't schedule with no image" do
         expect { result = authenticator.after_create_account(user, create_auth_result(extra_data: create_hash)) }
-          .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
+          .not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
       end
 
       it "schedules with image" do

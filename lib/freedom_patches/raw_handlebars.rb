@@ -4,7 +4,7 @@
 
 class Barber::Precompiler
   def sources
-    [File.open("#{Rails.root}/vendor/assets/javascripts/handlebars.js"),
+    [File.open("#{Rails.root}/app/assets/javascripts/node_modules/handlebars/dist/handlebars.js"),
      precompiler]
   end
 

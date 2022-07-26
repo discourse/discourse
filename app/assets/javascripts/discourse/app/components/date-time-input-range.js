@@ -23,7 +23,7 @@ export default Component.extend({
       const diff = {};
 
       if (options.prop === "from") {
-        if (value && value.isAfter(this.to)) {
+        if (this.to && value?.isAfter(this.to)) {
           diff[options.prop] = value;
           diff["to"] = value.clone().add(1, "hour");
         } else {

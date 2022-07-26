@@ -583,6 +583,7 @@ ur:
       forever: "ہمیشہ کیلئے"
       relative: "وابستہ وقت"
       none: "کسی کی ضرورت نہیں"
+      never: "کبھی نہیں"
       last_custom: "آخری نظامی تاریخ وقت"
       custom: "حسب ضرورت تاریخ اور وقت"
       select_timeframe: "ایک ٹائم فریم منتخب کریں"
@@ -1064,6 +1065,8 @@ ur:
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
       enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
+      experimental_sidebar:
+        options: "اختیارات"
       change: "بدلیں"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"
@@ -1950,7 +1953,6 @@ ur:
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
       title: "یا %{modifier} دبائیں۔"
-      users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
@@ -3307,11 +3309,11 @@ ur:
         this_week: "ہفتہ"
         today: "آج"
         other_periods: "اوپر دیکھیں:"
-    browser_update: 'بدقسمتی سے، <a href="https://www.discourse.org/faq/#browser">آپ کا براؤزر اس سائٹ پر کام کرنے کے لیے بہت پرانا ہے</a>۔ براہ کرم <a href="https://browsehappy.com">اپنے براؤزر کو اپ گریڈ کریں</a> بھرپور مواد دیکھنے کے لیے، لاگ ان کریں اور جواب دیں۔'
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
       readonly: "ملاحظہ کریں"
+    preloader_text: "لوڈ ہو رہا ہے"
     lightbox:
       download: "ڈاؤن لوڈ"
       open: "اصل تصویر"
@@ -3632,8 +3634,12 @@ ur:
     second_factor_auth:
       redirect_after_success: "دو فیکٹر کی توثیق کامیاب ہے۔ پچھلے صفحہ…پر ری ڈائریکٹ کیا جا رہا ہے۔"
     sidebar:
-      unread_count: "%{count} بغیر پڑھا ہوا"
-      new_count: "%{count} نیا"
+      unread_count:
+        one: "%{count} بغیر پڑھا ہوا"
+        other: "%{count} بغیر پڑھے ہوئے"
+      new_count:
+        one: "%{count} نیا"
+        other: "%{count} نئے"
       sections:
         messages:
           header_link_text: "پیغامات"
@@ -3641,7 +3647,9 @@ ur:
             inbox: "اِن باکس"
             sent: "بھیجا جا چکا"
             new: "نیا"
+            new_with_count: "نیا (%{count})"
             unread: "بغیر پڑھے"
+            unread_with_count: "بغیر پڑھا (%{count})"
             archive: "آر کائیو"
         tags:
           header_link_title: "تمام ٹیگز"

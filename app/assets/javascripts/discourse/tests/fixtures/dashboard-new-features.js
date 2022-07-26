@@ -24,7 +24,7 @@ export default {
         link: "",
         created_at: "2021-01-19T19:20:09.757Z",
         updated_at: "2021-01-19T19:20:09.757Z",
-      }
+      },
     ],
     release_notes_link:
       "https://meta.discourse.org/c/feature/announcements?tags=release-notes\u0026before=0",

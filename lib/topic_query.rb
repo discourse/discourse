@@ -336,8 +336,8 @@ class TopicQuery
       .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def self.unread_filter(list, staff: false)
-    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+  def self.unread_filter(list, whisperer: false)
+    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
 
     list
       .where("tu.last_read_post_number < topics.#{col_name}")
@@ -474,7 +474,7 @@ class TopicQuery
 
   def unseen_results(options = {})
     result = default_results(options)
-    result = unseen_filter(result, @user.first_seen_at, @user.staff?) if @user
+    result = unseen_filter(result, @user.first_seen_at, @user.whisperer?) if @user
     result = remove_muted(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
@@ -489,7 +489,7 @@ class TopicQuery
   def unread_results(options = {})
     result = TopicQuery.unread_filter(
         default_results(options.reverse_merge(unordered: true)),
-        staff: @user&.staff?)
+        whisperer: @user&.whisperer?)
       .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
     if @user
@@ -948,7 +948,7 @@ class TopicQuery
   def unread_messages(params)
     query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
-      staff: @user.staff?
+      whisperer: @user.whisperer?
     )
 
     first_unread_pm_at =
@@ -1084,10 +1084,10 @@ class TopicQuery
 
   private
 
-  def unseen_filter(list, user_first_seen_at, staff)
+  def unseen_filter(list, user_first_seen_at, whisperer)
     list = list.where("topics.bumped_at >= ?", user_first_seen_at)
 
-    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
     list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
   end
 end

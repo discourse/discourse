@@ -12,6 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :notification_channel_position,
              :moderator?,
              :staff?,
+             :whisperer?,
              :title,
              :any_posts,
              :enable_quoting,
@@ -71,7 +72,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :bookmark_auto_delete_preference,
              :pending_posts_count,
              :experimental_sidebar_enabled,
-             :status
+             :status,
+             :sidebar_category_ids,
+             :sidebar_tag_names,
+             :likes_notifications_disabled,
+             :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -312,11 +317,38 @@ class CurrentUserSerializer < BasicUserSerializer
     SiteSetting.enable_experimental_sidebar
   end
 
+  def sidebar_category_ids
+    object.category_sidebar_section_links.pluck(:linkable_id)
+  end
+
+  def include_sidebar_category_ids?
+    include_experimental_sidebar_enabled? && object.user_option.enable_experimental_sidebar
+  end
+
+  def sidebar_tag_names
+    object.sidebar_tags.pluck(:name)
+  end
+
+  def include_sidebar_tag_names?
+    include_sidebar_category_ids? && SiteSetting.tagging_enabled
+  end
+
   def include_status?
-    SiteSetting.enable_user_status
+    SiteSetting.enable_user_status && object.has_status?
   end
 
   def status
     UserStatusSerializer.new(object.user_status, root: false)
+  end
+
+  def redesigned_user_menu_enabled
+    if defined?(@redesigned_user_menu_enabled)
+      return @redesigned_user_menu_enabled
+    end
+    @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
+  end
+
+  def likes_notifications_disabled
+    object.user_option&.likes_notifications_disabled?
   end
 end

@@ -686,6 +686,8 @@ he:
       relative: "יחסי"
     time_shortcut:
       now: "כעת"
+      in_one_hour: "תוך שעה"
+      in_two_hours: "תוך שעתיים"
       later_today: "בהמשך היום"
       two_days: "יומיים"
       next_business_day: "יום העסקים הבא"
@@ -706,6 +708,7 @@ he:
       forever: "לנצח"
       relative: "זמן יחסי"
       none: "אין צורך"
+      never: "לעולם לא"
       last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
       custom: "תאריך ושעה מותאמים אישית"
       select_timeframe: "נא לבחור טווח זמן"
@@ -1201,7 +1204,13 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
-      enable_experimental_sidebar: "הפעלת סרגל צד ניסיוני"
+      experimental_sidebar:
+        enable: "הפעלת סרגל צד ניסיוני"
+        options: "אפשרויות"
+        categories_section: "סעיף קטגוריות"
+        categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד."
+        tags_section: "סעיף תגיות"
+        tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד."
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -1316,6 +1325,7 @@ he:
         tags: "תגיות"
         interface: "מנשק"
         apps: "יישומים"
+        sidebar: "סרגל צד"
       change_password:
         success: "(דוא״ל נשלח)"
         in_progress: "(דוא״ל בשליחה)"
@@ -1780,6 +1790,8 @@ he:
       save: "שמירה"
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
+      remove_status: "הסרת מצב"
+      until: "עד:"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -2177,7 +2189,7 @@ he:
       create_shared_draft: "צור טיוטה משותפת"
       edit_shared_draft: "עריכת טיוטה משותפת"
       title: "או ללחוץ %{modifier}Enter"
-      users_placeholder: "הוספת משתמש"
+      users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
@@ -3694,11 +3706,11 @@ he:
         this_week: "שבוע"
         today: "היום"
         other_periods: "להציג את המובילים:"
-    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך מיושן מכדי להפעיל אתר זה</a>. נא <a href="https://browsehappy.com">לשדרג את דפדפנך</a> כדי לצפות בתוכן עשיר, להיכנס למערכת ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
       readonly: "צפה"
+    preloader_text: "בטעינה"
     lightbox:
       download: "הורדה"
       open: "תמונה מקורית"
@@ -4051,8 +4063,16 @@ he:
     second_factor_auth:
       redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
     sidebar:
-      unread_count: "לא נקרא (%{count})"
-      new_count: "חדש (%{count})"
+      unread_count:
+        one: "לא נקרא (%{count})"
+        two: "לא-נקראו %{count} "
+        many: "לא נקרא (%{count})"
+        other: "לא נקרא (%{count})"
+      new_count:
+        one: "חדש (%{count})"
+        two: "%{count} חדשים"
+        many: "חדש (%{count})"
+        other: "חדש (%{count})"
       sections:
         messages:
           header_link_title: "הודעות פרטיות"
@@ -4062,16 +4082,22 @@ he:
             inbox: "דואר נכנס"
             sent: "נשלח"
             new: "חדש"
+            new_with_count: "חדש (%{count})"
             unread: "לא-נקראו"
+            unread_with_count: "לא נקראה (%{count})"
             archive: "ארכיון"
         tags:
-          no_tracked_tags: "אין לך אף תגית במעקב."
+          none: "עדיין לא הוספת תגיות."
+          click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_title: "כל התגיות"
           header_link_text: "תגיות"
+          header_action_title: "לערוך את תגיות סרגל הצד שלך"
         categories:
-          no_tracked_categories: "אין לך אף קטגוריה במעקב."
+          none: "עדיין לא הוספת קטגוריות."
+          click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
+          header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
         topics:
           header_link_title: "בית"
           header_link_text: "נושאים"

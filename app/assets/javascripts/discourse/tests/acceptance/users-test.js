@@ -10,7 +10,10 @@ import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
     await visit("/u");
-    assert.ok($("body.users-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("users-page"),
+      "has the body class"
+    );
     assert.ok(exists(".directory table tr"), "has a list of users");
   });
 
@@ -21,13 +24,19 @@ acceptance("User Directory", function () {
 
   test("Visit Without Usernames", async function (assert) {
     await visit("/u?exclude_usernames=system");
-    assert.ok($("body.users-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("users-page"),
+      "has the body class"
+    );
     assert.ok(exists(".directory table tr"), "has a list of users");
   });
 
   test("Visit With Group Filter", async function (assert) {
     await visit("/u?group=trust_level_0");
-    assert.ok($("body.users-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("users-page"),
+      "has the body class"
+    );
     assert.ok(exists(".directory table tr"), "has a list of users");
   });
 
@@ -50,7 +59,7 @@ acceptance("User Directory", function () {
     const secondHeading =
       ".users-directory table th:nth-child(2) .header-contents";
 
-    await triggerKeyEvent(secondHeading, "keypress", 13);
+    await triggerKeyEvent(secondHeading, "keypress", "Enter");
 
     assert.ok(
       query(`${secondHeading} .d-icon-chevron-up`),
@@ -114,9 +123,8 @@ acceptance("User directory - Editing columns", function (needs) {
       "Replies Posted"
     );
 
-    const moveUserFieldColumnUpBtn = columns[columns.length - 1].querySelector(
-      ".move-column-up"
-    );
+    const moveUserFieldColumnUpBtn =
+      columns[columns.length - 1].querySelector(".move-column-up");
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);

@@ -29,7 +29,7 @@ describe BackupRestore::Backuper do
 
         expect { backuper.send(:notify_user) }
           .to change { Topic.private_messages.count }.by(1)
-          .and change { Upload.count }.by(0)
+          .and not_change { Upload.count }
       end
 
       expect(Topic.last.first_post.raw).to include("```text\n[2010-01-01 12:00:00] Notifying 'system' of the end of the backup...\n```")
@@ -63,7 +63,7 @@ describe BackupRestore::Backuper do
 
         expect { backuper.send(:notify_user) }
           .to change { Topic.private_messages.count }.by(1)
-          .and change { Upload.count }.by(0)
+          .and not_change { Upload.count }
       end
 
       expect(Topic.last.first_post.raw).to include("```text\n...\n[2010-01-01 12:00:00] Line 10\n[2010-01-01 12:00:00] Notifying 'system' of the end of the backup...\n```")

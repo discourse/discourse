@@ -783,12 +783,12 @@ describe Stylesheet::Manager do
       # Ensure we force compile each theme only once
       expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(16) # (3 themes * 2 targets) + 10 color schemes (2 themes * 5 color schemes (4 defaults + 1 theme scheme))
+      expect(results.size).to eq(22) # (3 themes * 2 targets) + 16 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme))
 
       # themes + core
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
+      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
 
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
@@ -801,7 +801,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       Stylesheet::Manager.precompile_theme_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
+      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include("color_definitions_#{scheme2.name}_#{scheme2.id}_#{default_theme.id}")

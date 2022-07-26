@@ -564,6 +564,11 @@ zh_CN:
               too_many: "该操作的关注词过多"
             base:
               invalid_url: "替换 URL 无效"
+              invalid_tag_list: "替换标签名单无效"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -1533,6 +1538,7 @@ zh_CN:
     enable_badges: "启用徽章系统"
     max_favorite_badges: "用户可以选择的最大徽章数"
     enable_whispers: "允许管理人员在话题中进行不公开交流。"
+    whispers_allowed_groups: "允许指定组的成员在话题内进行私人交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
@@ -2068,6 +2074,7 @@ zh_CN:
     use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名字的建议。请注意，这使得公众更容易猜到完整的用户电子邮件地址(因为很大一部分人共享共同的服务，如`gmail.com')。"
     use_name_for_username_suggestions: "在建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末(周六和周日) (如果你仅在工作日，周一至周五使用 Discourse，请禁用此选项)。"
+    splash_screen: "在加载站点资产时显示临时负载屏幕"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -3662,6 +3669,12 @@ zh_CN:
     dark_rose: "黑红"
     wcag: "WCAG 亮"
     wcag_theme_name: "WCAG 亮"
+    dracula: "德拉库拉"
+    dracula_theme_name: "德拉库拉"
+    solarized_light: "Solarized 亮色"
+    solarized_light_theme_name: "Solarized 亮色"
+    solarized_dark: "Solarized 暗色"
+    solarized_dark_theme_name: "Solarized 暗色"
     wcag_dark: "WCAG 暗"
     wcag_dark_theme_name: "WCAG 暗"
     default_theme_name: "默认"

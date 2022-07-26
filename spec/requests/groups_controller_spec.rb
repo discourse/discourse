@@ -1352,7 +1352,7 @@ describe GroupsController do
       it "does not notify users when the param is not present" do
         expect {
           put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
-        }.to change { Topic.where(archetype: "private_message").count }.by(0)
+        }.not_to change { Topic.where(archetype: "private_message").count }
 
         expect(response.status).to eq(200)
       end
@@ -1453,7 +1453,7 @@ describe GroupsController do
           expect do
             put "/groups/#{group.id}/members.json",
               params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
-          end.to change { group.users.count }.by(0)
+          end.not_to change { group.users.count }
 
           expect(response.status).to eq(422)
 
@@ -1469,7 +1469,7 @@ describe GroupsController do
             expect do
               put "/groups/#{group.id}/members.json",
                 params: { user_emails: [user1.email, user2.email].join(",") }
-            end.to change { group.reload.users.count }.by(0)
+            end.not_to change { group.reload.users.count }
 
             expect(response.status).to eq(422)
 

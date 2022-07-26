@@ -206,9 +206,8 @@ export default Controller.extend(ModalFunctionality, {
           } else {
             this.set("loggedIn", true);
             // Trigger the browser's password manager using the hidden static login form:
-            const hiddenLoginForm = document.getElementById(
-              "hidden-login-form"
-            );
+            const hiddenLoginForm =
+              document.getElementById("hidden-login-form");
             const applyHiddenFormInputValue = (value, key) => {
               if (!hiddenLoginForm) {
                 return;

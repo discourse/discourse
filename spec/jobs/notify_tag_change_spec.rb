@@ -25,6 +25,22 @@ describe ::Jobs::NotifyTagChange do
     expect(notification.notification_type).to eq(Notification.types[:posted])
   end
 
+  it "doesn't create notifications if tags edit notifications are disabled" do
+    SiteSetting.disable_tags_edit_notifications = true
+
+    TagUser.create!(
+      user_id: user.id,
+      tag_id: tag.id,
+      notification_level: NotificationLevels.topic_levels[:watching]
+    )
+    TopicTag.create!(
+      topic_id: post.topic.id,
+      tag_id: tag.id
+    )
+
+    expect { described_class.new.execute(post_id: post.id, notified_user_ids: [regular_user.id]) }.not_to change { Notification.count }
+  end
+
   it 'doesnt create notification for user watching category' do
     CategoryUser.create!(
       user_id: user.id,

@@ -323,6 +323,13 @@ basic:
   enable_whispers:
     client: true
     default: false
+  whispers_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -535,14 +542,10 @@ users:
   min_username_length:
     client: true
     default: 3
-    min: 1
-    max: 60
     validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
-    min: 8
-    max: 60
     validator: "MaxUsernameLengthValidator"
   unicode_usernames:
     default: false
@@ -834,6 +837,7 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+    max: 876000
   notify_users_after_responses_deleted_on_flagged_post:
     default: false
   traditional_markdown_linebreaks:
@@ -2425,8 +2429,7 @@ uncategorized:
     hidden: true
 
   splash_screen:
-    default: false
-    hidden: true
+    default: true
 
   suggest_weekends_in_date_pickers:
     client: true

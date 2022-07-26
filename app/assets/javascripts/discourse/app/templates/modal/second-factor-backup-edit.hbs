@@ -1,60 +1,42 @@
-{{#d-modal-body}}
-  <section class="user-preferences solo-preference  second-factor-backup-preferences">
+<DModalBody>
+  <section class="user-preferences solo-preference second-factor-backup-preferences">
     <form class="form-horizontal">
-      {{#if successMessage}}
+      {{#if this.successMessage}}
         <div class="alert alert-success">
-          {{successMessage}}
+          {{this.successMessage}}
         </div>
       {{/if}}
 
-      {{#if errorMessage}}
+      {{#if this.errorMessage}}
         <div class="alert alert-error">
-          {{errorMessage}}
+          {{this.errorMessage}}
         </div>
       {{/if}}
 
-      {{#if backupEnabled}}
-        {{html-safe (i18n "user.second_factor_backup.remaining_codes" count=remainingCodes)}}
+      {{#if this.backupEnabled}}
+        {{html-safe (i18n "user.second_factor_backup.remaining_codes" count=this.remainingCodes)}}
       {{/if}}
 
       <div class="actions">
-        {{#if backupEnabled}}
-          {{d-button
-            class="btn-primary"
-            icon="redo"
-            action=(action "generateSecondFactorCodes")
-            type="submit"
-            isLoading=loading
-            label="user.second_factor_backup.regenerate"}}
-          {{d-button
-            class="btn-danger"
-            icon="ban"
-            action=(action "disableSecondFactorBackup")
-            disabled=loading
-            label="user.second_factor_backup.disable"}}
+        {{#if this.backupEnabled}}
+          <DButton @class="btn-primary" @icon="redo" @action={{action "generateSecondFactorCodes"}} @type="submit" @isLoading={{this.loading}} @label="user.second_factor_backup.regenerate" />
+          <DButton @class="btn-danger" @icon="ban" @action={{action "disableSecondFactorBackup"}} @disabled={{this.loading}} @label="user.second_factor_backup.disable" />
         {{else}}
-          {{d-button
-            class="btn-primary"
-            action=(action "generateSecondFactorCodes")
-            type="submit"
-            disabled=loading
-            label="user.second_factor_backup.enable"}}
+          <DButton @class="btn-primary" @action={{action "generateSecondFactorCodes"}} @type="submit" @disabled={{this.loading}} @label="user.second_factor_backup.enable" />
         {{/if}}
       </div>
 
-      {{#conditional-loading-section isLoading=loading}}
-        {{#if backupCodes}}
+      <ConditionalLoadingSection @isLoading={{this.loading}}>
+        {{#if this.backupCodes}}
           <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
 
           <p>
             {{i18n "user.second_factor_backup.codes.description"}}
           </p>
 
-          {{backup-codes
-            copyBackupCode=(action "copyBackupCode")
-            backupCodes=backupCodes}}
+          <BackupCodes @copyBackupCode={{action "copyBackupCode"}} @backupCodes={{this.backupCodes}} />
         {{/if}}
-      {{/conditional-loading-section}}
+      </ConditionalLoadingSection>
     </form>
   </section>
-{{/d-modal-body}}
+</DModalBody>

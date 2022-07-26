@@ -43,12 +43,18 @@ acceptance("User Routes", function (needs) {
 
   test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    assert.ok($("body.user-invites-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-invites-page"),
+      "has the body class"
+    );
   });
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
-    assert.ok($("body.user-notifications-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-notifications-page"),
+      "has the body class"
+    );
 
     const $links = queryAll(".item.notification a");
 
@@ -75,7 +81,10 @@ acceptance("User Routes", function (needs) {
 
   test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok($("body.user-activity-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-activity-page"),
+      "has the body class"
+    );
     assert.strictEqual(
       currentRouteName(),
       "userActivity.index",
@@ -209,8 +218,11 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 
   test("Messages - Warnings", async function (assert) {
     await visit("/u/eviltrout/messages/warnings");
-    assert.ok($("body.user-messages-page").length, "has the body class");
-    assert.ok($("div.alert-info").length, "has the permissions alert");
+    assert.ok(
+      document.body.classList.contains("user-messages-page"),
+      "has the body class"
+    );
+    assert.ok(exists("div.alert-info"), "has the permissions alert");
   });
 });
 

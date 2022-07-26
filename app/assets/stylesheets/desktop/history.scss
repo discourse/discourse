@@ -2,7 +2,7 @@
 
 .modal.history-modal {
   .modal-inner-container {
-    max-width: $large-width;
+    max-width: var(--d-max-width);
   }
   .modal-body {
     height: 70vh;

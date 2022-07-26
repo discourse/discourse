@@ -69,7 +69,7 @@ describe "Topic Thumbnails" do
         # Request again
         expect do
           topic_json = get_topic
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
+        end.not_to change { Jobs::GenerateTopicThumbnails.jobs.size }
 
         thumbnails = topic_json["thumbnails"]
 
@@ -110,7 +110,7 @@ describe "Topic Thumbnails" do
         # Request again
         expect do
           topic_json = get_topic
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
+        end.not_to change { Jobs::GenerateTopicThumbnails.jobs.size }
 
         thumbnails = topic_json["thumbnails"]
 

@@ -548,6 +548,7 @@ bs_BA:
       next_week: "Sljedeće sedmice"
       next_month: "Sljedeći mjesec"
       forever: "Zauvijek"
+      never: "Nikad"
       custom: "Precizirano vrijeme i datum"
       select_timeframe: "Označi vremenski period"
     user_action:
@@ -942,6 +943,8 @@ bs_BA:
       external_links_in_new_tab: "Otvori sve eksterne linkove u novom tab-u"
       enable_quoting: "Uključi \"citiran odgovor\" za označen tekst"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
+      experimental_sidebar:
+        options: "Opcije"
       change: "promjeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -1690,7 +1693,6 @@ bs_BA:
       create_whisper: "Šapat"
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
-      users_placeholder: "Dodaj člana"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "zašto pravite izmjenu?"
@@ -2804,6 +2806,7 @@ bs_BA:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
+    preloader_text: "Učitava"
     lightbox:
       download: "skini"
       previous: "Prošlo (Tipka sa strelicom lijevo)"
@@ -3062,8 +3065,14 @@ bs_BA:
     user_activity:
       no_replies_others: "Nema odgovora."
     sidebar:
-      unread_count: "%{count} nepročitana"
-      new_count: "%{count} novi"
+      unread_count:
+        one: "%{count} nepročitana"
+        few: "%{count} nepročitane"
+        other: "%{count} nepročitanih"
+      new_count:
+        one: "%{count} novi"
+        few: "%{count} nova"
+        other: "%{count} novih"
       sections:
         messages:
           header_link_text: "Poruke"
@@ -3071,7 +3080,9 @@ bs_BA:
             inbox: "Inbox"
             sent: "Poslano"
             new: "Novo"
+            new_with_count: "Novo (%{count})"
             unread: "Nepročitano"
+            unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
           header_link_title: "sve oznake"

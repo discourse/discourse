@@ -3,8 +3,8 @@ require 'swagger_helper'
 
 describe 'badges' do
 
-  let(:admin) { Fabricate(:admin) }
-  let(:badge) { Fabricate(:badge) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:badge) { Fabricate(:badge) }
 
   before do
     Jobs.run_immediately!

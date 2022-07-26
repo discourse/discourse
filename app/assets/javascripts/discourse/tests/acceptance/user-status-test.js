@@ -24,8 +24,9 @@ acceptance("User Status", function (needs) {
   const userStatus = "off to dentist";
   const userStatusEmoji = "tooth";
   const userId = 1;
+  const userTimezone = "UTC";
 
-  needs.user({ id: userId });
+  needs.user({ id: userId, timezone: userTimezone });
 
   needs.pretender((server, helper) => {
     server.put("/user-status.json", () => {
@@ -102,7 +103,11 @@ acceptance("User Status", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     updateCurrentUser({
-      status: { description: userStatus, emoji: userStatusEmoji },
+      status: {
+        description: userStatus,
+        emoji: userStatusEmoji,
+        ends_at: "2100-02-01T09:35:00.000Z",
+      },
     });
 
     await visit("/");
@@ -117,6 +122,16 @@ acceptance("User Status", function (needs) {
       query(".user-status-description").value,
       userStatus,
       "status description is shown"
+    );
+    assert.equal(
+      query(".date-picker").value,
+      "2100-02-01",
+      "date of auto removing of status is shown"
+    );
+    assert.equal(
+      query(".time-input").value,
+      "09:35",
+      "time of auto removing of status is shown"
     );
   });
 
@@ -213,6 +228,28 @@ acceptance("User Status", function (needs) {
     assert.notOk(exists(".header-dropdown-toggle .user-status-background"));
   });
 
+  test("setting user status with auto removing timer", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    await visit("/");
+    await openUserStatusModal();
+
+    await fillIn(".user-status-description", userStatus);
+    await pickEmoji(userStatusEmoji);
+    await click("#tap_tile_one_hour");
+    await click(".btn-primary"); // save
+
+    await click(".header-dropdown-toggle.current-user");
+    await click(".menu-links-row .user-preferences-link");
+
+    assert.equal(
+      query("div.quick-access-panel li.user-status span.relative-date")
+        .innerText,
+      "1h",
+      "shows user status timer on the menu"
+    );
+  });
+
   test("it's impossible to set status without description", async function (assert) {
     this.siteSettings.enable_user_status = true;
 
@@ -237,7 +274,7 @@ acceptance("User Status", function (needs) {
     );
   });
 
-  test("shows actual status on the modal after canceling the modal", async function (assert) {
+  test("shows actual status on the modal after canceling the modal and opening it again", async function (assert) {
     this.siteSettings.enable_user_status = true;
 
     updateCurrentUser({

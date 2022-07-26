@@ -11,6 +11,15 @@ RSpec.describe User do
 
   it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
 
+  context 'associations' do
+    it 'should delete sidebar_section_links when a user is destroyed' do
+      Fabricate(:category_sidebar_section_link, user: user)
+      Fabricate(:tag_sidebar_section_link, user: user)
+
+      expect { user.destroy! }.to change { SidebarSectionLink.where(user: user).count }.from(2).to(0)
+    end
+  end
+
   context 'validations' do
     describe '#username' do
       it { is_expected.to validate_presence_of :username }
@@ -144,20 +153,68 @@ RSpec.describe User do
       before { user.set_user_field(user_field.id, value) }
 
       context "when user fields contain watched words" do
-        let(:value) { "bad user field value" }
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
-        context "when user field is public" do
-          it "is not valid" do
-            user.valid?
-            expect(user.errors[:base].size).to eq(1)
-            expect(user.errors.messages[:base]).to include(/you can't post the word/)
+        context "when watched words are of type 'Block'" do
+          let(:value) { "bad user field value" }
+
+          context "when user field is public" do
+            it "is not valid" do
+              user.valid?
+              expect(user.errors[:base].size).to eq(1)
+              expect(user.errors.messages[:base]).to include(/you can't post the word/)
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it { is_expected.to be_valid }
           end
         end
 
-        context "when user field is private" do
-          before { user_field.update(show_on_profile: false) }
+        context "when watched words are of type 'Censor'" do
+          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let(:value) { "censored word" }
 
-          it { is_expected.to be_valid }
+          context "when user field is public" do
+            it "censors the words upon saving" do
+              user.save!
+              expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it "does not censor anything" do
+              user.save!
+              expect(user_field_value).to eq "censored word"
+            end
+          end
+        end
+
+        context "when watched words are of type 'Replace'" do
+          let(:value) { "word to replace" }
+          let!(:replace_word) do
+            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+          end
+
+          context "when user field is public" do
+            it "replaces the words upon saving" do
+              user.save!
+              expect(user_field_value).to eq "word replaced"
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it "does not replace anything" do
+              user.save!
+              expect(user_field_value).to eq "word to replace"
+            end
+          end
         end
       end
 
@@ -165,6 +222,51 @@ RSpec.describe User do
         let(:value) { "good user field value" }
 
         it { is_expected.to be_valid }
+      end
+
+      context "when user fields contain URL" do
+        let(:value) { "https://discourse.org" }
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        it "is not cooked" do
+          user.save!
+          expect(user_field_value).to eq "https://discourse.org"
+        end
+      end
+
+      context "with a multiselect user field" do
+        fab!(:user_field) do
+          Fabricate(:user_field, field_type: 'multiselect', show_on_profile: true) do
+            user_field_options do
+              [
+                Fabricate(:user_field_option, value: 'Axe'),
+                Fabricate(:user_field_option, value: 'Sword')
+              ]
+            end
+          end
+        end
+
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        context "with a blocked word" do
+          let(:value) { %w{ Axe bad Sword } }
+
+          it "does not block the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
+        context "with a censored word" do
+          let(:value) { %w{ Axe bad Sword } }
+          before { watched_word.action = WatchedWord.actions[:censor] }
+
+          it "does not censor the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
       end
     end
   end
@@ -227,7 +329,7 @@ RSpec.describe User do
       user.update(admin: true)
       expect {
         user.grant_admin!
-      }.to change { Jobs::SendSystemMessage.jobs.count }.by 0
+      }.not_to change { Jobs::SendSystemMessage.jobs.count }
     end
   end
 
@@ -2589,7 +2691,7 @@ RSpec.describe User do
 
         expect do
           user.update_ip_address!('0.0.0.1')
-        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(0)
+        end.not_to change { UserIpAddressHistory.where(user_id: user.id).count }
 
         expect(
           UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
@@ -2643,6 +2745,39 @@ RSpec.describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe "#whisperer?" do
+    before do
+      SiteSetting.enable_whispers = true
+    end
+
+    it 'returns true for an admin user' do
+      admin = Fabricate.create(:admin)
+      expect(admin.whisperer?).to eq(true)
+    end
+
+    it 'returns false for an admin user when whispers are not enabled' do
+      SiteSetting.enable_whispers = false
+
+      admin = Fabricate.create(:admin)
+      expect(admin.whisperer?).to eq(false)
+    end
+
+    it 'returns true for user belonging to whisperers groups' do
+      group = Fabricate(:group)
+      whisperer = Fabricate(:user)
+      user = Fabricate(:user)
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+
+      expect(whisperer.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
+
+      group.add(whisperer)
+
+      expect(whisperer.whisperer?).to eq(true)
+      expect(user.whisperer?).to eq(false)
     end
   end
 end

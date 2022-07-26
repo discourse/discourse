@@ -655,6 +655,7 @@ hr:
       forever: "Zauvijek"
       relative: "Relativno vrijeme"
       none: "Nijedna nije potrebna"
+      never: "Nikad"
       last_custom: "Posljednji prilagođeni datum"
       custom: "Prilagođeni datum i vrijeme"
       select_timeframe: "Odabir vremenskog okvira"
@@ -1143,7 +1144,9 @@ hr:
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
       enable_quoting: "Omogući citirani odgovor označenoj teksta"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
-      enable_experimental_sidebar: "Omogući eksperimentalnu bočnu traku"
+      experimental_sidebar:
+        enable: "Omogući eksperimentalnu bočnu traku"
+        options: "Mogućnosti"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -2089,7 +2092,6 @@ hr:
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
       title: "Ili pritisnite %{modifier}Enter"
-      users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "zašto izmjenjujete?"
@@ -3540,11 +3542,11 @@ hr:
         this_week: "Tjedan"
         today: "Danas"
         other_periods: "vidi vrh:"
-    browser_update: 'Nažalost, <a href="https://www.discourse.org/faq/#browser">vaš preglednik je prestar za rad na ovoj stranici</a>. Molimo <a href="https://browsehappy.com">nadogradite svoj preglednik</a> kako biste vidjeli bogat sadržaj, prijavili se i odgovorili.'
     permission_types:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
       readonly: "Vidjeti"
+    preloader_text: "Učitavanje"
     lightbox:
       download: "preuzmi"
       open: "izvorna slika"
@@ -3883,8 +3885,14 @@ hr:
     second_factor_auth:
       redirect_after_success: "Provjera autentičnosti drugog faktora je uspješna. Preusmjeravanje na prethodnu stranicu…"
     sidebar:
-      unread_count: "%{count} nepročitano"
-      new_count: "%{count} novi"
+      unread_count:
+        one: "%{count} nepročitano"
+        few: "%{count} nepročitano"
+        other: "%{count} nepročitano"
+      new_count:
+        one: "%{count} novi"
+        few: "%{count} novih"
+        other: "%{count} novi"
       sections:
         messages:
           header_link_text: "Poruke"
@@ -3892,7 +3900,9 @@ hr:
             inbox: "Primljeno"
             sent: "Poslano"
             new: "Novo"
+            new_with_count: "Novi (%{count})"
             unread: "Nepročitano"
+            unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
           header_link_title: "sve oznake"

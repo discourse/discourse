@@ -1,9 +1,9 @@
-{{#d-modal-body}}
-  {{#conditional-loading-spinner condition=loading}}
-    {{#if errorMessage}}
+<DModalBody>
+  <ConditionalLoadingSpinner @condition={{this.loading}}>
+    {{#if this.errorMessage}}
       <div class="control-group">
         <div class="controls">
-          <div class="alert alert-error">{{errorMessage}}</div>
+          <div class="alert alert-error">{{this.errorMessage}}</div>
         </div>
       </div>
     {{/if}}
@@ -16,19 +16,16 @@
 
     <div class="control-group">
       <div class="controls">
-        {{input value=securityKeyName id="security-key-name" placeholder="security key name"}}
+        <Input @value={{this.securityKeyName}} id="security-key-name" placeholder="security key name" />
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        {{#unless webauthnUnsupported}}
-          {{d-button
-            class="btn-primary add-security-key"
-            action=(action "registerSecurityKey")
-            label="user.second_factor.security_key.register"}}
+        {{#unless this.webauthnUnsupported}}
+          <DButton @class="btn-primary add-security-key" @action={{action "registerSecurityKey"}} @label="user.second_factor.security_key.register" />
         {{/unless}}
       </div>
     </div>
-  {{/conditional-loading-spinner}}
-{{/d-modal-body}}
+  </ConditionalLoadingSpinner>
+</DModalBody>

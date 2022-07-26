@@ -15,7 +15,6 @@ import {
   exists,
   invisible,
   query,
-  queryAll,
   updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -26,8 +25,14 @@ import { Promise } from "rsvp";
 import sinon from "sinon";
 
 acceptance("Composer", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.user({
+    id: 5,
+    username: "kris",
+    whisperer: true,
+  });
+  needs.settings({
+    enable_whispers: true,
+  });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -94,7 +99,7 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "this is the *content* of a post");
     assert.strictEqual(
-      queryAll(".d-editor-preview").html().trim(),
+      query(".d-editor-preview").innerHTML.trim(),
       "<p>this is the <em>content</em> of a post</p>",
       "it previews content"
     );
@@ -120,7 +125,7 @@ acceptance("Composer", function (needs) {
 
     const example = I18n.t(`composer.bold_text`);
     assert.strictEqual(
-      queryAll("#reply-control .d-editor-input").val().trim(),
+      query("#reply-control .d-editor-input").value.trim(),
       `this is the *content* of a post**${example}**`,
       "it supports keyboard shortcuts"
     );
@@ -180,7 +185,7 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "custom message");
     await click("#reply-control button.create");
     assert.strictEqual(
-      queryAll(".bootbox .modal-body").text(),
+      query(".bootbox .modal-body").innerText,
       "This is a custom response"
     );
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
@@ -211,7 +216,7 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of my reply");
     await click("#reply-control button.create");
     assert.strictEqual(
-      queryAll(".cooked:last p").text(),
+      query(".topic-post:last-of-type .cooked p").innerText,
       "this is the content of my reply"
     );
   });
@@ -228,7 +233,7 @@ acceptance("Composer", function (needs) {
     await click(".modal-footer button.keep-editing");
     assert.ok(invisible(".discard-draft-modal.modal"));
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "this is the content of my reply",
       "composer does not switch when using Keep Editing button"
     );
@@ -238,8 +243,8 @@ acceptance("Composer", function (needs) {
     assert.ok(invisible(".discard-draft-modal.modal"));
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
-      queryAll(".topic-post:nth-of-type(1) .cooked > p").text(),
+      query(".d-editor-input").value,
+      query(".topic-post:nth-of-type(1) .cooked > p").innerText,
       "composer has contents of post to be edited"
     );
   });
@@ -262,7 +267,7 @@ acceptance("Composer", function (needs) {
 
     await click(".btn-reply-here");
     assert.strictEqual(
-      queryAll(".cooked:last p").text(),
+      query(".topic-post:last-of-type .cooked p").innerText,
       "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
     );
   });
@@ -292,7 +297,7 @@ acceptance("Composer", function (needs) {
     await click(".modal-footer button.discard-draft");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "",
       "discards draft and reset composer textarea"
     );
@@ -313,7 +318,8 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "enqueue this content please");
     await click("#reply-control button.create");
     assert.ok(
-      queryAll(".cooked:last p").text() !== "enqueue this content please",
+      query(".topic-post:last-of-type .cooked p").innerText !==
+        "enqueue this content please",
       "it doesn't insert the post"
     );
 
@@ -335,9 +341,8 @@ acceptance("Composer", function (needs) {
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("Any plans to support"),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("Any plans to support"),
       "it populates the input with the post text"
     );
 
@@ -350,15 +355,15 @@ acceptance("Composer", function (needs) {
       "it has the edits icon"
     );
     assert.ok(
-      queryAll("#topic-title h1")
-        .text()
-        .indexOf("This is the new text for the title") !== -1,
+      query("#topic-title h1").innerText.includes(
+        "This is the new text for the title"
+      ),
       "it shows the new title"
     );
     assert.ok(
-      queryAll(".topic-post:nth-of-type(1) .cooked")
-        .text()
-        .indexOf("This is the new text for the post") !== -1,
+      query(".topic-post:nth-of-type(1) .cooked").innerText.includes(
+        "This is the new text for the post"
+      ),
       "it updates the post"
     );
   });
@@ -400,15 +405,13 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
     await click(".topic-post:nth-of-type(2) button.edit");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the second post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
     );
   });
@@ -425,9 +428,8 @@ acceptance("Composer", function (needs) {
     );
 
     await click(".modal-footer button.discard-draft");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the second post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
     );
   });
@@ -436,26 +438,24 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
     await click(".topic-post:nth-of-type(1) button.reply");
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "",
       "it clears the input"
     );
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
   });
 
-  test("Composer can toggle whispers", async function (assert) {
+  test("Composer can toggle whispers when whisperer user", async function (assert) {
     const menu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/t/this-is-a-test-topic/9");
@@ -621,9 +621,8 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     await click(".modal-footer button.discard-draft");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the first post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the first post."),
       "it populates the input with the post text"
     );
   });
@@ -640,19 +639,18 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.strictEqual(
-      queryAll(".modal-footer button.save-draft").text().trim(),
+      query(".modal-footer button.save-draft").innerText.trim(),
       I18n.t("post.cancel_composer.save_draft"),
       "has save draft button"
     );
     assert.strictEqual(
-      queryAll(".modal-footer button.keep-editing").text().trim(),
+      query(".modal-footer button.keep-editing").innerText.trim(),
       I18n.t("post.cancel_composer.keep_editing"),
       "has keep editing button"
     );
     await click(".modal-footer button.save-draft");
-    assert.strictEqual(
-      queryAll(".d-editor-input").val().indexOf("This is the second post."),
-      0,
+    assert.ok(
+      query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
     );
   });
@@ -671,18 +669,18 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.strictEqual(
-      queryAll(".modal-footer button.save-draft").text().trim(),
+      query(".modal-footer button.save-draft").innerText.trim(),
       I18n.t("post.cancel_composer.save_draft"),
       "has save draft button"
     );
     assert.strictEqual(
-      queryAll(".modal-footer button.keep-editing").text().trim(),
+      query(".modal-footer button.keep-editing").innerText.trim(),
       I18n.t("post.cancel_composer.keep_editing"),
       "has keep editing button"
     );
     await click(".modal-footer button.save-draft");
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "",
       "it clears the composer input"
     );
@@ -698,7 +696,7 @@ acceptance("Composer", function (needs) {
       await click(".topic-post:nth-of-type(1) button.edit");
 
       assert.strictEqual(
-        queryAll(".modal-body").text(),
+        query(".modal-body").innerText,
         I18n.t("drafts.abandon.confirm")
       );
 
@@ -743,7 +741,7 @@ acceptance("Composer", function (needs) {
       assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
 
       assert.ok(
-        queryAll(".d-editor-input").val().includes(longText),
+        query(".d-editor-input").value.includes(longText),
         "entered text should still be there"
       );
 
@@ -756,7 +754,6 @@ acceptance("Composer", function (needs) {
     } finally {
       toggleCheckDraftPopup(false);
     }
-    sinon.restore();
   });
 
   test("Loading draft also replaces the recipients", async function (assert) {
@@ -796,7 +793,7 @@ acceptance("Composer", function (needs) {
 
     await visit("/latest");
     assert.strictEqual(
-      queryAll("#create-topic").text().trim(),
+      query("#create-topic").innerText.trim(),
       I18n.t("topic.open_draft")
     );
 
@@ -812,13 +809,11 @@ acceptance("Composer", function (needs) {
     await visit("/t/34");
 
     await click("#post_1 .d-icon-ellipsis-h");
-
     await click("#post_1 .d-icon-pencil-alt");
-
     await fillIn(".d-editor-input", "");
 
     assert.strictEqual(
-      queryAll(".d-editor-container textarea").attr("placeholder"),
+      query(".d-editor-container textarea").getAttribute("placeholder"),
       I18n.t("composer.reply_placeholder"),
       "it should not block because of missing category"
     );
@@ -828,7 +823,7 @@ acceptance("Composer", function (needs) {
     await visit("/t/34");
     await click("article#post_3 button.reply");
     assert.strictEqual(
-      queryAll(".save-or-cancel button.create").text().trim(),
+      query(".save-or-cancel button.create").innerText.trim(),
       I18n.t("composer.create_pm"),
       "reply button says Message"
     );
@@ -845,7 +840,7 @@ acceptance("Composer", function (needs) {
     await click("article#post_3 button.edit");
 
     assert.strictEqual(
-      queryAll(".save-or-cancel button.create").text().trim(),
+      query(".save-or-cancel button.create").innerText.trim(),
       I18n.t("composer.save_edit"),
       "save button says Save Edit"
     );
@@ -906,6 +901,16 @@ acceptance("Composer", function (needs) {
     await click(".save-or-cancel .cancel");
     assert.notOk(exists(".discard-draft-modal .save-draft"));
   });
+
+  test("Saves drafts that only contain quotes", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+
+    await fillIn(".d-editor-input", "[quote]some quote[/quote]");
+
+    await click(".save-or-cancel .cancel");
+    assert.ok(exists(".discard-draft-modal .save-draft"));
+  });
 });
 
 acceptance("Composer - Customizations", function (needs) {
@@ -914,7 +919,7 @@ acceptance("Composer - Customizations", function (needs) {
 
   function customComposerAction(composer) {
     return (
-      (composer.tags || []).indexOf("monkey") !== -1 &&
+      (composer.tags || []).includes("monkey") &&
       composer.action === CREATE_TOPIC
     );
   }

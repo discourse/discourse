@@ -8,10 +8,23 @@ module Onebox
 
       matches_regexp(/^https?:\/\/www\.mixcloud\.com\//)
       always_https
+      requires_iframe_origins "https://www.mixcloud.com"
 
       def placeholder_html
         oembed = get_oembed
-        "<img src='#{oembed.image}' height='#{oembed.height}' #{oembed.title_attr}>"
+
+        <<-HTML
+          <aside class="onebox mixcloud-preview">
+            <article class="onebox-body">
+              <img src="#{oembed.image}">
+              <div class="video-icon"></div>
+              <div class="mixcloud-text">
+                <h3><a href="#{oembed.url}" target="_blank" rel="nofollow ugc noopener">#{oembed.title}</a></h3>
+                <h4>#{oembed.author_name}</h4>
+              </div>
+            </article>
+          </aside>
+        HTML
       end
 
       def to_html

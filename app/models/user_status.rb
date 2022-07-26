@@ -6,6 +6,10 @@ class UserStatus < ActiveRecord::Base
   validate :ends_at_greater_than_set_at,
            if: Proc.new { |t| t.will_save_change_to_set_at? || t.will_save_change_to_ends_at? }
 
+  def expired?
+    ends_at && ends_at < Time.zone.now
+  end
+
   def ends_at_greater_than_set_at
     if ends_at && set_at > ends_at
       errors.add(:ends_at, I18n.t("user_status.errors.ends_at_should_be_greater_than_set_at"))

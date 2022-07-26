@@ -56,10 +56,10 @@ describe Jobs::OldKeysReminder do
   end
 
   it 'does not send message when send_old_credential_reminder_days is set to 0 or no old keys' do
-    expect { described_class.new.execute({}) }.to change { Post.count }.by(0)
+    expect { described_class.new.execute({}) }.not_to change { Post.count }
     SiteSetting.send_old_credential_reminder_days = '0'
     freeze_time 2.years.from_now
-    expect { described_class.new.execute({}) }.to change { Post.count }.by(0)
+    expect { described_class.new.execute({}) }.not_to change { Post.count }
   end
 
   it 'does not send a message if already exists' do
@@ -67,9 +67,9 @@ describe Jobs::OldKeysReminder do
     freeze_time 2.years.from_now
     expect { described_class.new.execute({}) }.to change { Post.count }.by(1)
     Topic.last.trash!
-    expect { described_class.new.execute({}) }.to change { Post.count }.by(0)
+    expect { described_class.new.execute({}) }.not_to change { Post.count }
     freeze_time 1.years.from_now
-    expect { described_class.new.execute({}) }.to change { Post.count }.by(0)
+    expect { described_class.new.execute({}) }.not_to change { Post.count }
     freeze_time 3.days.from_now
     expect { described_class.new.execute({}) }.to change { Post.count }.by(1)
   end

@@ -133,7 +133,7 @@ describe Site do
 
       expect(categories.last[:custom_fields]["enable_marketplace"]).to eq('f')
     ensure
-      Site.preloaded_category_custom_fields.clear
+      Site.reset_preloaded_category_custom_fields
     end
 
     it 'sets the can_edit field for categories correctly' do

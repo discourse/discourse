@@ -519,6 +519,7 @@ lv:
       six_months: "Seši mēneši"
       relative: "Relatīvais laiks"
       none: "Neviens nav vajadzīgs"
+      never: "Nekad"
       last_custom: "Pēdējais pielāgotais datuma laiks"
       custom: "Pielāgots datums un laiks"
     user_action:
@@ -972,6 +973,8 @@ lv:
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
       enable_quoting: "Ieslēgt atbildi ar iezīmētā teksta citēšanu"
       enable_defer: "Iespējot atlikšanu, lai atzīmētu tēmas kā nelasītas"
+      experimental_sidebar:
+        options: "Iespējas"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -1729,7 +1732,6 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       create_pm: "Ziņa"
-      users_placeholder: "Pievienot lietotāju"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
@@ -2643,6 +2645,7 @@ lv:
       full: "Izveidot / Atbildēt / Skatīt"
       create_post: "Atbildēt / Skatīt"
       readonly: "Skatīt"
+    preloader_text: "Ielāde"
     lightbox:
       download: "lejuplādēt"
       counter: "%curr% no %total%"
@@ -2801,8 +2804,14 @@ lv:
         member: "biedrs"
         regular: "regulārs"
     sidebar:
-      unread_count: "%{count} nelasīta"
-      new_count: "%{count} jauna"
+      unread_count:
+        zero: "%{count} nelasītas"
+        one: "%{count} nelasīta"
+        other: "%{count} nelasīta"
+      new_count:
+        zero: "%{count} jaunas"
+        one: "%{count} jauna"
+        other: "%{count} jauna"
       sections:
         messages:
           header_link_text: "Ziņas"
@@ -2810,7 +2819,9 @@ lv:
             inbox: "Iesūtne"
             sent: "Nosūtne"
             new: "Jaunie"
+            new_with_count: "Jauns (%{count})"
             unread: "Nelasīts"
+            unread_with_count: "Nelasīts (%{count})"
             archive: "Arhīvs"
         tags:
           header_link_title: "visi tagi"

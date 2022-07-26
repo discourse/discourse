@@ -432,6 +432,7 @@ et:
       forever: "Igavesti"
       relative: "Suhteline aeg"
       none: "Pole vaja"
+      never: "Mitte kunagi"
       custom: "Vali kuupäev ja kellaaeg"
       select_timeframe: "Vali ajavahemik"
     user_action:
@@ -782,6 +783,8 @@ et:
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
       enable_quoting: "Luba esiletõstetud tekstile tsitaadiga vastata"
+      experimental_sidebar:
+        options: "Võimalused"
       change: "muuda"
       featured_topic: "Esile tõstetud teema"
       moderator: "%{user} on moderaator"
@@ -1365,7 +1368,6 @@ et:
       create_whisper: "Sosistamine"
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
-      users_placeholder: "Lisa kasutaja"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "miks sa seda muudad?"
@@ -2363,6 +2365,7 @@ et:
       full: "Loo / Vasta / Vaata"
       create_post: "Vasta / Vaata"
       readonly: "Vaata"
+    preloader_text: "Laetakse"
     lightbox:
       download: "lae alla"
       counter: "%curr% %total%st"
@@ -2529,8 +2532,12 @@ et:
       no_replies_others: "Vastuseid pole."
       no_likes_others: "Meeldimisega postitusi veel pole."
     sidebar:
-      unread_count: "%{count} lugemata"
-      new_count: "%{count} uus"
+      unread_count:
+        one: "%{count} lugemata"
+        other: "%{count} lugemata"
+      new_count:
+        one: "%{count} uus"
+        other: "%{count} uut"
       sections:
         messages:
           header_link_text: "Sõnumid"
@@ -2538,7 +2545,9 @@ et:
             inbox: "Postkast"
             sent: "Saadetud"
             new: "Uus"
+            new_with_count: "Uus (%{count})"
             unread: "Lugemata"
+            unread_with_count: "Lugemata (%{count})"
             archive: "Arhiiv"
         tags:
           header_link_title: "kõik sildid"

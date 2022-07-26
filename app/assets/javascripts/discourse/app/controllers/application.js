@@ -1,16 +1,22 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 export default Controller.extend({
   showTop: true,
   showFooter: false,
   router: service(),
-  showSidebar: true,
+  showSidebar: null,
+  hideSidebarKey: "sidebar-hidden",
 
-  @discourseComputed("showSidebar", "currentUser.experimental_sidebar_enabled")
-  mainOutletWrapperClasses(showSidebar, experimentalSidebarEnabled) {
-    return showSidebar && experimentalSidebarEnabled ? "has-sidebar" : "";
+  init() {
+    this._super(...arguments);
+
+    this.showSidebar = this.site.mobileView
+      ? false
+      : this.currentUser && !this.keyValueStore.getItem(this.hideSidebarKey);
   },
 
   @discourseComputed
@@ -30,5 +36,31 @@ export default Controller.extend({
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
+  },
+
+  _mainOutletAnimate() {
+    document.querySelector("body").classList.remove("sidebar-animate");
+  },
+
+  @action
+  toggleSidebar() {
+    // enables CSS transitions, but not on did-insert
+    document.querySelector("body").classList.add("sidebar-animate");
+
+    discourseDebounce(this, this._mainOutletAnimate, 250);
+
+    this.toggleProperty("showSidebar");
+
+    if (this.site.desktopView) {
+      this.appEvents.trigger("header:keyboard-trigger", {
+        type: "hamburger",
+      });
+
+      if (this.showSidebar) {
+        this.keyValueStore.removeItem(this.hideSidebarKey);
+      } else {
+        this.keyValueStore.setItem(this.hideSidebarKey);
+      }
+    }
   },
 });

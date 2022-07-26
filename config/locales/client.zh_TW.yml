@@ -543,6 +543,7 @@ zh_TW:
       forever: "永久"
       relative: "相對時間"
       none: "不需要"
+      never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
       select_timeframe: "選擇有效時間範圍"
@@ -948,6 +949,8 @@ zh_TW:
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
+      experimental_sidebar:
+        options: "選項"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"
@@ -1607,7 +1610,6 @@ zh_TW:
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
-      users_placeholder: "新增使用者"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
@@ -2602,6 +2604,7 @@ zh_TW:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
       readonly: "觀看"
+    preloader_text: "載入中"
     lightbox:
       download: "下載"
       previous: "上一個（左箭頭鍵）"
@@ -2800,8 +2803,10 @@ zh_TW:
       no_replies_others: "沒有回覆。"
       no_likes_others: "沒有被讚的貼文。"
     sidebar:
-      unread_count: "%{count} 個未讀"
-      new_count: "%{count} 近期"
+      unread_count:
+        other: "%{count} 個未讀"
+      new_count:
+        other: "%{count} 近期"
       sections:
         messages:
           header_link_text: "訊息"
@@ -2809,7 +2814,9 @@ zh_TW:
             inbox: "收件匣"
             sent: "送出"
             new: "新的"
+            new_with_count: "近期 (%{count})"
             unread: "未讀"
+            unread_with_count: "未讀 (%{count})"
             archive: "封存"
         tags:
           header_link_title: "所有標籤"

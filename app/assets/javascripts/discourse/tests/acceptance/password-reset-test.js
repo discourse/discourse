@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
@@ -73,9 +73,9 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "123");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      queryAll(".password-reset .tip.bad")
-        .html()
-        .indexOf(I18n.t("user.password.too_short")) > -1,
+      query(".password-reset .tip.bad").innerHTML.includes(
+        I18n.t("user.password.too_short")
+      ),
       "password too short"
     );
 
@@ -83,9 +83,9 @@ acceptance("Password Reset", function (needs) {
     await click(".password-reset form button");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      queryAll(".password-reset .tip.bad")
-        .html()
-        .indexOf("is the name of your cat") > -1,
+      query(".password-reset .tip.bad").innerHTML.includes(
+        "is the name of your cat"
+      ),
       "server validation error message shows"
     );
 
@@ -112,7 +112,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(exists(".alert-error"), "shows 2 factor error");
 
     assert.ok(
-      queryAll(".alert-error").html().indexOf("invalid token") > -1,
+      query(".alert-error").innerHTML.includes("invalid token"),
       "shows server validation error message"
     );
 

@@ -22,4 +22,10 @@ app/assets/javascripts/discourse/tests/fixtures
 spec/
 node_modules/
 dist/
+tmp/
+
 **/*.rb
+**/*.hbs
+**/*.html
+**/*.json
+**/*.md

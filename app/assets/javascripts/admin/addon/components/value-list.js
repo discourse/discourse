@@ -29,7 +29,7 @@ export default Component.extend({
 
   @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
-    return makeArray(choices).filter((i) => collection.indexOf(i) < 0);
+    return makeArray(choices).filter((i) => !collection.includes(i));
   },
 
   keyDown(event) {
@@ -39,8 +39,8 @@ export default Component.extend({
   },
 
   actions: {
-    changeValue(index, newValue) {
-      this._replaceValue(index, newValue);
+    changeValue(index, event) {
+      this._replaceValue(index, event.target.value);
     },
 
     addValue(newValue) {

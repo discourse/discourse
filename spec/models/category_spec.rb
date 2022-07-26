@@ -30,6 +30,17 @@ describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
+  context 'associations' do
+    it 'should delete associated sidebar_section_links when category is destroyed' do
+      category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
+      category_sidebar_section_link_2 = Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
+      tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
+
+      expect { category_sidebar_section_link.linkable.destroy! }.to change { SidebarSectionLink.count }.from(3).to(1)
+      expect(SidebarSectionLink.first).to eq(tag_sidebar_section_link)
+    end
+  end
+
   describe "slug" do
     it "converts to lower" do
       category = Category.create!(name: "Hello World", slug: "Hello-World", user: user)

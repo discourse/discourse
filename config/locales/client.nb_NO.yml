@@ -563,6 +563,7 @@ nb_NO:
       forever: "For alltid"
       relative: "Relativ tid"
       none: "Ingen behov"
+      never: "Aldri"
       last_custom: "Siste egendefinerte datotid"
       custom: "Egendefinert dato og tid"
       select_timeframe: "Velg et tidsrom"
@@ -1023,6 +1024,8 @@ nb_NO:
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       enable_defer: "Aktiver utsettelse for å merke emner ulest"
+      experimental_sidebar:
+        options: "Alternativer"
       change: "Endre"
       featured_topic: "Utvalgte emne"
       moderator: "%{user} er en moderator"
@@ -1867,7 +1870,6 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
-      users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "hvorfor endrer du?"
@@ -3128,11 +3130,11 @@ nb_NO:
         this_week: "Den siste uken"
         today: "I dag"
         other_periods: "se toppen:"
-    browser_update: 'Dessverre er <a href="https://www.discourse.org/faq/#browser">nettleseren din for gammel for å fungere på denne siden</a>. Vennligst <a href="https://browsehappy.com">oppgrader nettleseren din</a> for å se rik innhold, logge inn og svar.'
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
       readonly: "Se"
+    preloader_text: "Laster"
     lightbox:
       download: "last ned"
       previous: "Forrige (Venstre pil-nøkkel)"
@@ -3416,8 +3418,12 @@ nb_NO:
     fullscreen_table:
       expand_btn: "Utvid tabell"
     sidebar:
-      unread_count: "%{count} ulest"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulest"
+        other: "%{count} uleste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
       sections:
         messages:
           header_link_text: "Meldinger"
@@ -3425,7 +3431,9 @@ nb_NO:
             inbox: "Innboks"
             sent: "Sendt"
             new: "Nye"
+            new_with_count: "Nye (%{count})"
             unread: "Uleste"
+            unread_with_count: "Ulest (%{count})"
             archive: "Arkiver"
         tags:
           header_link_title: "alle stikkord"

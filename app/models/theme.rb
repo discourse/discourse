@@ -6,9 +6,11 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
+  BASE_COMPILER_VERSION = 58
+
   attr_accessor :child_components
 
-  @cache = DistributedCache.new('theme')
+  @cache = DistributedCache.new("theme:compiler#{BASE_COMPILER_VERSION}")
 
   belongs_to :user
   belongs_to :color_scheme
@@ -149,12 +151,8 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
-    ColorScheme.hex_cache.clear
-    CSP::Extension.clear_theme_extensions_cache!
-    SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 56
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -216,6 +214,8 @@ class Theme < ActiveRecord::Base
     clear_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")
     ColorScheme.hex_cache.clear
+    CSP::Extension.clear_theme_extensions_cache!
+    SvgSprite.expire_cache
   end
 
   def self.clear_default!

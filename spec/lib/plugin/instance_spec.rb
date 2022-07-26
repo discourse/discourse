@@ -499,11 +499,11 @@ describe Plugin::Instance do
   describe '#register_reviewable_types' do
     it 'Overrides the existing Reviewable types adding new ones' do
       current_types = Reviewable.types
-       new_type_class = Class
+      new_type_class = Class
 
-       Plugin::Instance.new.register_reviewable_type new_type_class
+      Plugin::Instance.new.register_reviewable_type new_type_class
 
-       expect(Reviewable.types).to match_array(current_types << new_type_class.name)
+      expect(Reviewable.types).to match_array(current_types << new_type_class.name)
     end
   end
 
@@ -740,6 +740,37 @@ describe Plugin::Instance do
       plugin.register_email_unsubscriber(new_unsubscriber_type, CustomUnsubscriber)
 
       expect(UnsubscribeKey.get_unsubscribe_strategy_for(key).class).to eq(CustomUnsubscriber)
+    end
+  end
+
+  describe "#register_about_stat_group" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      About.clear_plugin_stat_groups
+    end
+
+    it "registers an about stat group correctly" do
+      stats = { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000 }
+      plugin.register_about_stat_group("some_group", show_in_ui: true) do
+        stats
+      end
+      expect(About.new.plugin_stats.with_indifferent_access).to match(
+        hash_including(
+          some_group_last_day: 1,
+          some_group_7_days: 10,
+          some_group_30_days: 100,
+          some_group_count: 1000,
+        )
+      )
+    end
+
+    it "hides the stat group from the UI by default" do
+      stats = { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000 }
+      plugin.register_about_stat_group("some_group") do
+        stats
+      end
+      expect(About.displayed_plugin_stat_groups).to eq([])
     end
   end
 end

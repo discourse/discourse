@@ -551,6 +551,7 @@ gl:
       forever: "Sempre"
       relative: "Tempo relativo"
       none: "Non se necesita"
+      never: "Nunca"
       custom: "Personalizar data e hora"
       select_timeframe: "Seleccione un marco temporal"
     user_action:
@@ -985,6 +986,8 @@ gl:
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
+      experimental_sidebar:
+        options: "Opcións"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -1835,7 +1838,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -3081,11 +3083,11 @@ gl:
         this_week: "Semana"
         today: "Hoxe"
         other_periods: "ver arriba:"
-    browser_update: 'Desafortunadamente, <a href="https://www.discourse.org/faq/#browser"> o seu navegador é demasiado vello para traballar neste sitio</a>. Por favor, <a href="https://browsehappy.com">actualice o seu navegador</a> para ver contido enriquecido, iniciar sesión e responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "Cargando"
     lightbox:
       download: "descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
@@ -3349,8 +3351,12 @@ gl:
       no_replies_others: "Sen respostas."
       no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
-      unread_count: "%{count} pendente de lectura"
-      new_count: "%{count} novo"
+      unread_count:
+        one: "%{count} pendente de lectura"
+        other: "%{count} pendentes de lectura"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
       sections:
         messages:
           header_link_text: "Mensaxes"
@@ -3358,7 +3364,9 @@ gl:
             inbox: "Caixa de entrada"
             sent: "Enviadas"
             new: "Novo"
+            new_with_count: "(%{count}) novo"
             unread: "Sen ler"
+            unread_with_count: "(%{count}) pendente de ler"
             archive: "Arquivo"
         tags:
           header_link_title: "todas as etiquetas"

@@ -1,37 +1,19 @@
-{{add-category-tag-classes category=category}}
+<AddCategoryTagClasses @category={{this.category}} />
 
 <section class="category-heading">
-  {{#if category.uploaded_logo.url}}
-    {{cdn-img
-      src=category.uploaded_logo.url
-      class="category-logo"
-      width=category.uploaded_logo.width
-      height=category.uploaded_logo.height
-      alt=""
-    }}
+  {{#if this.category.uploaded_logo.url}}
+    <CdnImg @src={{this.category.uploaded_logo.url}} @class="category-logo" @width={{this.category.uploaded_logo.width}} @height={{this.category.uploaded_logo.height}} @alt="" />
 
-    {{#if category.description}}
-      <p>{{dir-span category.description htmlSafe="true"}}</p>
+    {{#if this.category.description}}
+      <p>{{dir-span this.category.description htmlSafe="true"}}</p>
     {{/if}}
   {{/if}}
 
-  {{plugin-outlet name="category-heading" tagName="span" connectorTagName="div" args=(hash category=category)}}
+  <PluginOutlet @name="category-heading" @tagName="span" @connectorTagName="div" @args={{hash category=this.category}} />
 </section>
 
-{{#d-section class="navigation-container category-navigation"}}
-  {{d-navigation
-    category=category
-    filterMode=filterMode
-    noSubcategories=noSubcategories
-    canCreateTopic=canCreateTopic
-    createTopic=(route-action "createTopic")
-    createTopicDisabled=cannotCreateTopicOnCategory
-    hasDraft=currentUser.has_topic_draft
-    editCategory=(route-action "editCategory" category)
-  }}
+<DSection @class="navigation-container category-navigation">
+  <DNavigation @category={{this.category}} @filterMode={{this.filterMode}} @noSubcategories={{this.noSubcategories}} @canCreateTopic={{this.canCreateTopic}} @createTopic={{route-action "createTopic"}} @createTopicDisabled={{this.cannotCreateTopicOnCategory}} @hasDraft={{this.currentUser.has_topic_draft}} @editCategory={{route-action "editCategory" this.category}} />
 
-  {{plugin-outlet
-    name="category-navigation" connectorTagName="div"
-    args=(hash category=category)
-  }}
-{{/d-section}}
+  <PluginOutlet @name="category-navigation" @connectorTagName="div" @args={{hash category=this.category}} />
+</DSection>

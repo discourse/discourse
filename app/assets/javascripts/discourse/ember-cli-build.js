@@ -7,11 +7,27 @@ const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
+const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
+
+const SILENCED_WARN_PREFIXES = [
+  "Setting the `jquery-integration` optional feature flag",
+  "The Ember Classic edition has been deprecated",
+  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
+];
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+
+  // Silence the warnings listed in SILENCED_WARN_PREFIXES
+  const ui = defaults.project.ui;
+  const oldWriteWarning = ui.writeWarnLine.bind(ui);
+  ui.writeWarnLine = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldWriteWarning(message, ...args);
+    }
+  };
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -106,7 +122,7 @@ module.exports = function (defaults) {
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import(vendorJs + "bootstrap-modal.js");
+  app.import("node_modules/bootstrap/js/modal.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
@@ -138,5 +154,6 @@ module.exports = function (defaults) {
       headerFiles: [`start-app.js`],
       inputFiles: [`discourse-boot.js`],
     }),
+    generateScriptsTree(app),
   ]);
 };

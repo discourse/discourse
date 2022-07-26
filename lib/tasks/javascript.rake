@@ -64,9 +64,6 @@ end
 def dependencies
   [
     {
-      source: 'bootstrap/js/modal.js',
-      destination: 'bootstrap-modal.js'
-    }, {
       source: 'ace-builds/src-min-noconflict/ace.js',
       destination: 'ace.js',
       public: true
@@ -89,10 +86,6 @@ def dependencies
     }, {
       source: 'pikaday/pikaday.js',
       public: true
-    }, {
-      source: 'handlebars/dist/handlebars.js'
-    }, {
-      source: 'handlebars/dist/handlebars.runtime.js'
     }, {
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'

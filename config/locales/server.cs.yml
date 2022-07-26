@@ -49,10 +49,21 @@ cs:
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  redirect_warning: "Nepodařilo se nám ověřit, že vámi vybraný odkaz byl skutečně zveřejněn na fóru. Pokud přesto chcete pokračovat, vyberte odkaz níže."
+  on_another_topic: "V jiném tématu"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   themes:
+    bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
+    ember_selector_error: "Omlouváme se – použití selektorů CSS #ember nebo .ember-view není povoleno, protože tyto názvy jsou dynamicky generovány za běhu a časem se budou měnit, což nakonec povede k nefunkčnímu CSS. Zkuste jiný selektor."
+    compile_error:
+      unrecognized_extension: "Nerozpoznaná přípona souboru: %{extension}"
+    import_error:
+      generic: Při importu tohoto motivu došlo k chybě
+      upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
+      about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"

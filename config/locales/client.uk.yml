@@ -706,6 +706,7 @@ uk:
       forever: "Назавжди"
       relative: "Через вказаний час"
       none: "Нічого не потрібно"
+      never: "Ніколи"
       last_custom: "Використовувати раніше встановлені дату та час"
       custom: "Вибрати дату та час"
       select_timeframe: "Вибір таймфрейма"
@@ -1201,7 +1202,9 @@ uk:
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_defer: "Увімкнути відкладання позначення тем непрочитаними"
-      enable_experimental_sidebar: "Увімкнути експериментальну бічну панель"
+      experimental_sidebar:
+        enable: "Увімкнути експериментальну бічну панель"
+        options: "Налаштування"
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -2177,7 +2180,6 @@ uk:
       create_shared_draft: "Створити Загальний проект"
       edit_shared_draft: "Редагувати загальну чернетку"
       title: "Або натисніть %{modifier}Enter"
-      users_placeholder: "Додати користувача"
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
@@ -3100,6 +3102,16 @@ uk:
         few: "Вам та ще %{count} людям сподобалося це повідомлення"
         many: "Вам та ще %{count} людям сподобалося це повідомлення"
         other: "Вам та ще %{count} людям сподобалося це повідомлення"
+      sr_post_like_count_button:
+        one: "%{count} користувачу сподобався цей пост. Натисніть, щоб переглянути"
+        few: "%{count} користувачам сподобався цей пост. Натисніть, щоб переглянути"
+        many: "%{count} користувачам сподобався цей пост. Натисніть, щоб переглянути"
+        other: "%{count} користувачам сподобався цей пост. Натисніть, щоб переглянути"
+      sr_post_read_count_button:
+        one: "%{count} користувач прочитали цей пост. Натисніть, щоб переглянути"
+        few: "%{count} користувачів прочитали цей пост. Натисніть, щоб переглянути"
+        many: "%{count} користувачів прочитали цей пост. Натисніть, щоб переглянути"
+        other: "%{count} користувачів прочитали цей пост. Натисніть, щоб переглянути"
       filtered_replies_hint:
         one: "Переглянути цей допис і його відповідь"
         few: "Переглянути цей допис і його %{count} відповіді"
@@ -3687,11 +3699,11 @@ uk:
         this_week: "Тиждень"
         today: "Today"
         other_periods: "дивитися TOP:"
-    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер занадто старий для цього сайту</a>. Будь ласка, <a href="https://browsehappy.com">оновіть браузер</a> для повноцінної роботи з сайтом.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
       readonly: "Бачити"
+    preloader_text: "Завантаження"
     lightbox:
       download: "завантажити"
       open: "оригінальне зображення"
@@ -4044,8 +4056,16 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      unread_count: "%{count} непрочитана"
-      new_count: "%{count} нова"
+      unread_count:
+        one: "%{count} непрочитана"
+        few: "%{count} непрочитаних"
+        many: "%{count} непрочитаних"
+        other: "%{count} непрочитана"
+      new_count:
+        one: "%{count} нова"
+        few: "%{count} нових"
+        many: "%{count} нова"
+        other: "%{count} нова"
       sections:
         messages:
           header_link_title: "особисті повідомлення"
@@ -4055,14 +4075,14 @@ uk:
             inbox: "Вхідні"
             sent: "Надіслано"
             new: "Новий"
+            new_with_count: "Нові (%{count})"
             unread: "Непрочитані"
+            unread_with_count: "Непрочитані (%{count})"
             archive: "Архів"
         tags:
-          no_tracked_tags: "Ви не відстежуєте жоден тег."
           header_link_title: "усі мітки"
           header_link_text: "Теги"
         categories:
-          no_tracked_categories: "Ви не відстежуєте жодної категорії."
           header_link_title: "усі розділи"
           header_link_text: "Категорії"
         topics:
@@ -4082,6 +4102,11 @@ uk:
             my_posts:
               content: "Мої дописи"
               title: "Мої дописи"
+              draft_count:
+                one: "%{count} чернетка"
+                few: "%{count} чернетки"
+                many: "%{count} чернетки"
+                other: "%{count} чернетки"
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати..."
     admin:

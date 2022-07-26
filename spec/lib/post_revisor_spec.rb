@@ -124,6 +124,34 @@ describe PostRevisor do
     end
   end
 
+  context 'editing tags' do
+    fab!(:post) { Fabricate(:post) }
+
+    subject { PostRevisor.new(post) }
+
+    before do
+      Jobs.run_immediately!
+
+      TopicUser.change(
+        newuser.id,
+        post.topic_id,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+    end
+
+    it 'creates notifications' do
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .to change { Notification.count }.by(1)
+    end
+
+    it 'skips notifications if disable_tags_edit_notifications' do
+      SiteSetting.disable_tags_edit_notifications = true
+
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .not_to change { Notification.count }
+    end
+  end
+
   context 'revise wiki' do
 
     before do
@@ -333,7 +361,7 @@ describe PostRevisor do
 
       it "resets the edit_reason attribute in post model" do
         freeze_time
-        SiteSetting.editing_grace_period = 5
+        SiteSetting.editing_grace_period = 5.seconds
         post = Fabricate(:post, raw: 'hello world')
         revisor = PostRevisor.new(post)
         revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
@@ -1250,8 +1278,8 @@ describe PostRevisor do
             { title: "updated title for my topic" },
             keep_existing_draft: true
           )
-        }.to change { Draft.where(user: user, draft_key: draft_key).first.sequence }.by(0)
-          .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(0)
+        }.to not_change { Draft.where(user: user, draft_key: draft_key).first.sequence }
+          .and not_change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }
 
         expect {
           PostRevisor.new(post).revise!(
@@ -1279,7 +1307,7 @@ describe PostRevisor do
     it 'does nothing when a staff member edits a post' do
       admin = Fabricate(:admin)
 
-      expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
+      expect { revisor.revise!(admin, { raw: 'updated body' }) }.not_to change(ReviewablePost, :count)
     end
 
     it 'skips grace period edits' do
@@ -1287,7 +1315,7 @@ describe PostRevisor do
 
       expect {
         revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
-      }.to change(ReviewablePost, :count).by(0)
+      }.not_to change(ReviewablePost, :count)
     end
   end
 end

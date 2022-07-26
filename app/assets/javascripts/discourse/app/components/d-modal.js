@@ -200,9 +200,8 @@ export default Component.extend({
     }
 
     focusableElements = focusableElements + ", button:enabled";
-    const firstFocusableElement = innerContainer.querySelectorAll(
-      focusableElements
-    )?.[0];
+    const firstFocusableElement =
+      innerContainer.querySelectorAll(focusableElements)?.[0];
     const focusableContent = innerContainer.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1];
 

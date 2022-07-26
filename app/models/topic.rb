@@ -404,7 +404,7 @@ class Topic < ActiveRecord::Base
     types = Post.types
     result = [types[:regular]]
     result += [types[:moderator_action], types[:small_action]] if include_moderator_actions
-    result << types[:whisper] if viewed_by&.staff?
+    result << types[:whisper] if viewed_by&.whisperer?
     result
   end
 
@@ -783,7 +783,7 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
-  # If a post is deleted we have to update our highest post counters
+  # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
     archetype = Topic.where(id: topic_id).pluck_first(:archetype)
 
@@ -818,7 +818,16 @@ class Topic < ActiveRecord::Base
                 deleted_at IS NULL AND
                 post_type <> 4
                 #{post_type}
-        )
+        ),
+        last_post_user_id = COALESCE((
+          SELECT user_id FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
+                post_type <> 4
+                #{post_type}
+          ORDER BY created_at desc
+          LIMIT 1
+        ), last_post_user_id)
       WHERE id = :topic_id
       RETURNING highest_post_number
     SQL
@@ -1031,7 +1040,10 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      ensure_can_invite!(target_user, invited_by)
+      comm_screener = UserCommScreener.new(acting_user: invited_by, target_user_ids: target_user.id)
+      if comm_screener.ignoring_or_muting_actor?(target_user.id)
+        raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+      end
 
       if TopicUser
           .where(topic: self,
@@ -1041,15 +1053,11 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.muted_topic"))
       end
 
-      if !target_user.staff? &&
-         target_user&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: target_user, allowed_pm_user: invited_by).exists?
+      if comm_screener.disallowing_pms_from_actor?(target_user.id)
         raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_pm"))
       end
 
-      if !target_user.staff? &&
-         invited_by&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: invited_by, allowed_pm_user: target_user).exists?
+      if UserCommScreener.new(acting_user: target_user, target_user_ids: invited_by.id).disallowing_pms_from_actor?(invited_by.id)
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
@@ -1066,22 +1074,6 @@ class Topic < ActiveRecord::Base
         custom_message: custom_message,
         invite_to_topic: true
       )
-    end
-  end
-
-  def ensure_can_invite!(target_user, invited_by)
-    if MutedUser
-        .where(user: target_user, muted_user: invited_by)
-        .joins(:muted_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
-      raise NotAllowed
-    elsif IgnoredUser
-        .where(user: target_user, ignored_user: invited_by)
-        .joins(:ignored_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
-      raise NotAllowed
     end
   end
 
@@ -1766,9 +1758,10 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
-  def create_invite_notification!(target_user, notification_type, username, post_number: 1)
-    invited_by = User.find_by_username(username)
-    ensure_can_invite!(target_user, invited_by)
+  def create_invite_notification!(target_user, notification_type, invited_by, post_number: 1)
+    if UserCommScreener.new(acting_user: invited_by, target_user_ids: target_user.id).ignoring_or_muting_actor?(target_user.id)
+      raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+    end
 
     target_user.notifications.create!(
       notification_type: notification_type,
@@ -1776,7 +1769,7 @@ class Topic < ActiveRecord::Base
       post_number: post_number,
       data: {
         topic_title: self.title,
-        display_username: username,
+        display_username: invited_by.username,
         original_user_id: user.id,
         original_username: user.username
       }.to_json
@@ -1805,6 +1798,49 @@ class Topic < ActiveRecord::Base
     self.allowed_groups.where(smtp_enabled: true).first
   end
 
+  def secure_audience_publish_messages
+    target_audience = {}
+
+    if private_message?
+      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
+      target_audience[:user_ids] |= allowed_users.pluck(:id)
+      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+    else
+      target_audience[:group_ids] = secure_group_ids
+    end
+
+    target_audience
+  end
+
+  def self.publish_stats_to_clients!(topic_id, type, opts = {})
+    topic = Topic.find_by(id: topic_id)
+    return unless topic.present?
+
+    case type
+    when :liked, :unliked
+      stats = { like_count: topic.like_count }
+    when :created, :destroyed, :deleted, :recovered
+      stats = { posts_count: topic.posts_count,
+                last_posted_at: topic.last_posted_at.as_json,
+                last_poster: BasicUserSerializer.new(topic.last_poster, root: false).as_json }
+    else
+      stats = nil
+    end
+
+    if stats
+      secure_audience = topic.secure_audience_publish_messages
+
+      if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+        message = stats.merge({
+                                id: topic_id,
+                                updated_at: Time.now,
+                                type: :stats,
+                              })
+        MessageBus.publish("/topic/#{topic_id}", message, opts.merge(secure_audience))
+      end
+    end
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1824,7 +1860,7 @@ class Topic < ActiveRecord::Base
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_private_message],
-        invited_by.username
+        invited_by
       )
     end
   end
@@ -1852,7 +1888,7 @@ class Topic < ActiveRecord::Base
         create_invite_notification!(
           target_user,
           Notification.types[:invited_to_topic],
-          invited_by.username
+          invited_by
         )
       end
     end

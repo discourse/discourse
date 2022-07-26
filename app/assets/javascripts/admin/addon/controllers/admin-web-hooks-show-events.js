@@ -38,7 +38,7 @@ export default Controller.extend({
   _addIncoming(eventId) {
     const incomingEventIds = this.incomingEventIds;
 
-    if (incomingEventIds.indexOf(eventId) === -1) {
+    if (!incomingEventIds.includes(eventId)) {
       incomingEventIds.pushObject(eventId);
     }
   },

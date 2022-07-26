@@ -568,6 +568,8 @@ it:
       relative: "Relativo"
     time_shortcut:
       now: "Adesso"
+      in_one_hour: "Entro un'ora"
+      in_two_hours: "Entro due ore"
       later_today: "Più tardi oggi"
       two_days: "Due giorni"
       next_business_day: "Il prossimo giorno lavorativo"
@@ -588,6 +590,7 @@ it:
       forever: "Per sempre"
       relative: "Tempo relativo"
       none: "Nessun orario richiesto"
+      never: "Mai"
       last_custom: "Ultima data e ora personalizzata"
       custom: "Data e ora personalizzate"
       select_timeframe: "Seleziona un intervallo di tempo"
@@ -1069,7 +1072,12 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_defer: "Abilita opzione di contrassegnare gli argomenti da leggere in seguito"
-      enable_experimental_sidebar: "Abilita la barra laterale sperimentale"
+      experimental_sidebar:
+        enable: "Abilita la barra laterale sperimentale"
+        options: "Opzioni"
+        categories_section: "Sezione Categorie"
+        categories_section_instruction: "Le categorie selezionate saranno visualizzate nella sezione Categorie della barra laterale."
+        tags_section: "Sezione Tag"
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -1180,6 +1188,7 @@ it:
         tags: "Etichette"
         interface: "Interfaccia"
         apps: "App"
+        sidebar: "Barra laterale"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -1618,6 +1627,8 @@ it:
       save: "Salva"
       set_custom_status: "Imposta stato personalizzato"
       what_are_you_doing: "Cosa fai?"
+      remove_status: "Rimuovi lo stato"
+      until: "Fino a:"
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"
@@ -1983,7 +1994,7 @@ it:
       create_shared_draft: "Crea Bozza condivisa"
       edit_shared_draft: "Modifica Bozza condivisa"
       title: "Oppure premi %{modifier}Invio"
-      users_placeholder: "Aggiunti un utente"
+      users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "perché stai scrivendo?"
@@ -2298,6 +2309,10 @@ it:
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
     current_user: "vai alla pagina utente"
     view_all: "visualizza tutto in %{tab}"
+    user_menu:
+      generic_no_items: "Non ci sono elementi in questo elenco."
+      sr_menu_tabs: "Schede del menu"
+      view_all_notifications: "visualizza tutte le notifiche"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -3352,11 +3367,11 @@ it:
         this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti popolari:"
-    browser_update: 'Sfortunatamente <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare su questo sito</a>. <a href="https://browsehappy.com">Aggiorna il tuo browser</a> per visualizzare contenuti multimediali, accedere e rispondere.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
       readonly: "Visualizza"
+    preloader_text: "Caricamento"
     lightbox:
       download: "scarica"
       open: "immagine originale"
@@ -3676,8 +3691,13 @@ it:
     second_factor_auth:
       redirect_after_success: "Autenticazione a due fattori riuscita. Reindirizzamento alla pagina precedente…"
     sidebar:
-      unread_count: "%{count} non letti"
-      new_count: "%{count} nuovi"
+      unread_count:
+        one: "%{count} non letto"
+        other: "%{count} non letti"
+      new_count:
+        one: "%{count} nuovo"
+        other: "%{count} nuovi"
+      toggle_section: "inverti sezione"
       sections:
         messages:
           header_link_title: "messaggi personali"
@@ -3687,14 +3707,14 @@ it:
             inbox: "Posta in arrivo"
             sent: "Inviati"
             new: "Nuovi"
+            new_with_count: "Nuovo (%{count})"
             unread: "Non letti"
+            unread_with_count: "Non letto (%{count})"
             archive: "Archiviati"
         tags:
-          no_tracked_tags: "Non stai seguendo alcuna etichetteta."
           header_link_title: "tutte le etichette"
           header_link_text: "Etichette"
         categories:
-          no_tracked_categories: "Non stai monitorando nessuna categoria."
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
         topics:

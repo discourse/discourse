@@ -570,6 +570,7 @@ sl:
       forever: "Za vedno"
       relative: "Relativni čas"
       none: "Brez opomnika"
+      never: "Nikoli"
       custom: "Izberi datum in čas"
       select_timeframe: "Izberi časovni okvir"
     user_action:
@@ -1015,6 +1016,8 @@ sl:
       external_links_in_new_tab: "Odpri vse zunanje povezave v novem zavihku"
       enable_quoting: "Omogoči odgovarjanje s citiranjem za poudarjen tekst"
       enable_defer: "Omogoči preloži za označiti teme kot neprebrane"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "spremeni"
       featured_topic: "Izpostavljena tema"
       moderator: "%{user} je moderator"
@@ -1840,7 +1843,6 @@ sl:
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
-      users_placeholder: "Dodaj uporabnika"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "zakaj spreminjate prispevek?"
@@ -3086,11 +3088,11 @@ sl:
         this_month: "Mesec"
         this_week: "Teden"
         today: "Danes"
-    browser_update: 'Na žalost je <a href="https://www.discourse.org/faq/#browser">vaš brskalnik prestar za uporabo te spletne strani</a>. Če si želite ogledati obogateno vsebino, se prijaviti in odgovarjati., prosim <a href="https://browsehappy.com">nadgradite svoj brskalnik</a>.'
     permission_types:
       full: "Ustvari / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"
       readonly: "Vidi"
+    preloader_text: "Nalagam"
     lightbox:
       download: "prenesi"
       previous: "Predhodna (leva puščična tipka)"
@@ -3370,8 +3372,16 @@ sl:
         regular: "redni uporabnik"
         leader: "vodja"
     sidebar:
-      unread_count: "%{count} neprebrana"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} neprebrana"
+        two: "%{count} neprebrani"
+        few: "%{count} neprebrane"
+        other: "%{count} neprebranih"
+      new_count:
+        one: "%{count} nova"
+        two: "%{count} novi"
+        few: "%{count} nove"
+        other: "%{count} novih"
       sections:
         messages:
           header_link_text: "Sporočila"
@@ -3379,7 +3389,9 @@ sl:
             inbox: "Prejeto"
             sent: "Poslano"
             new: "Nove"
+            new_with_count: "Nova (%{count})"
             unread: "Neprebrane"
+            unread_with_count: "Neprebrana (%{count})"
             archive: "Arhiv"
         tags:
           header_link_title: "vse oznake"

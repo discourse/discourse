@@ -1112,7 +1112,7 @@ describe Email::Receiver do
       end
 
       it "creates the reply when the sender and referenced messsage id are known" do
-        expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
       end
     end
 
@@ -1266,7 +1266,7 @@ describe Email::Receiver do
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
         expect do
           Email::Receiver.new(reply_email).process!
-        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+        end.to not_change { Topic.count }.and change { Post.count }.by(1)
 
         reply_post = Post.last
         expect(reply_post.reply_to_user).to eq(user_in_group)
@@ -1294,7 +1294,7 @@ describe Email::Receiver do
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
         expect do
           Email::Receiver.new(reply_email).process!
-        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+        end.to not_change { Topic.count }.and change { Post.count }.by(1)
 
         reply_post = Post.last
         expect(reply_post.topic_id).to eq(original_inbound_email_topic.id)
@@ -1333,24 +1333,24 @@ describe Email::Receiver do
       end
 
       it "creates a reply when the sender and referenced message id are known" do
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
       end
 
       it "creates a new topic when the sender is not known and the group does not allow unknown senders to reply to topics" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
         group.update(allow_unknown_sender_topic_replies: false)
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+        expect { process(:email_reply_2) }.to not_change { topic.posts.count }.and change { Topic.count }.by(1)
       end
 
       it "creates a new topic when the referenced message id is not known" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+        expect { process(:email_reply_2) }.to not_change { topic.posts.count }.and change { Topic.count }.by(1)
       end
 
       it "includes the sender on the topic when the message id is known, the sender is not known, and the group allows unknown senders to reply to topics" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
         group.update(allow_unknown_sender_topic_replies: true)
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
       end
 
       context "when the sender is not in the topic allowed users" do
@@ -1362,7 +1362,7 @@ describe Email::Receiver do
         it "adds them to the topic at the same time" do
           IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
           group.update(allow_unknown_sender_topic_replies: true)
-          expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+          expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
         end
       end
     end
@@ -2097,8 +2097,8 @@ describe Email::Receiver do
 
     it "makes all posts in same topic" do
       expect { receive(email_1) }.to change { Topic.count }.by(1).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
-      expect { post_2 }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
-      expect { receive(email_3) }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+      expect { post_2 }.to not_change { Topic.count }.and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+      expect { receive(email_3) }.to not_change { Topic.count }.and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
     end
   end
 

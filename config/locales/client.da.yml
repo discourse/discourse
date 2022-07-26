@@ -578,6 +578,7 @@ da:
       forever: "Forevigt"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
+      never: "Aldrig"
       last_custom: "Sidste brugerdefineret dato"
       custom: "Brugerdefineret dato og tid"
       select_timeframe: "Vælg en tidsramme"
@@ -1049,6 +1050,8 @@ da:
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       enable_defer: "Aktivér 'udsæt' for at markere emner som ulæste"
+      experimental_sidebar:
+        options: "Indstillinger"
       change: "skift"
       featured_topic: "Fremhævet emne"
       moderator: "%{user} er en moderator"
@@ -1934,7 +1937,6 @@ da:
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
-      users_placeholder: "Tilføj en bruger"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "hvorfor redigerer du?"
@@ -3242,11 +3244,11 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top:"
-    browser_update: 'Desværre, <a href="https://www.discourse.org/faq/#browser">din browser er for gammel til at virke korrekt på dette websted</a>. <a href="https://browsehappy.com">Opgradere venligst din browser</a> for at se vore gode indhold, log ind og svar.'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
       readonly: "Se"
+    preloader_text: "Indlæser"
     lightbox:
       download: "hent"
       previous: "Forrige (Venstre piletast)"
@@ -3552,8 +3554,12 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      unread_count: "%{count} ulæst"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulæst"
+        other: "%{count} ulæste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
       sections:
         messages:
           header_link_text: "Beskeder"
@@ -3561,7 +3567,9 @@ da:
             inbox: "Indbakke"
             sent: "Sendt"
             new: "Nye"
+            new_with_count: "Nye (%{count})"
             unread: "Ulæste"
+            unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
           header_link_title: "alle mærker"

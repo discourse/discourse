@@ -338,6 +338,7 @@ sw:
       next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
       forever: "Milele"
+      never: "Kamwe"
       select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
@@ -638,6 +639,8 @@ sw:
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
+      experimental_sidebar:
+        options: "Chaguo"
       change: "badilisha"
       moderator: "%{mtumiaji} ni msimamizi"
       admin: "%{mtumiaji} ni kiongozi"
@@ -1217,7 +1220,6 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      users_placeholder: "Ongeza mtumiaji"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "kwa nini unahariri?"
@@ -2089,6 +2091,7 @@ sw:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
       readonly: "Angalia"
+    preloader_text: "Inapakuliwa"
     lightbox:
       download: "pakua"
       counter: "%curr% chini ya %total%"
@@ -2250,8 +2253,12 @@ sw:
       no_replies_others: "Hakuna majibu."
       no_likes_others: "Hakuna machapisho yaliyopendwa."
     sidebar:
-      unread_count: "%{count} haijasomwa"
-      new_count: "Mada mpya %{count}"
+      unread_count:
+        one: "%{count} haijasomwa"
+        other: "%{count} haijasomwa"
+      new_count:
+        one: "Mada mpya %{count}"
+        other: "Mada mpya %{count} "
       sections:
         messages:
           header_link_text: "Ujumbe"
@@ -2260,6 +2267,7 @@ sw:
             sent: "Imetumwa"
             new: "Mpya"
             unread: "Haijasomwa"
+            unread_with_count: "Haijasomwa (%{count})"
             archive: "Hifadhi"
         tags:
           header_link_title: "lebo zote"

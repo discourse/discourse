@@ -606,6 +606,7 @@ fr:
       forever: "Pour toujours"
       relative: "Me le rappeler d'ici"
       none: "Ne pas me le rappeler"
+      never: "Jamais"
       last_custom: "Date et heure personnalisées précédentes"
       custom: "Date et heure personnalisées"
       select_timeframe: "Sélectionner un intervalle de temps"
@@ -1087,7 +1088,9 @@ fr:
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
-      enable_experimental_sidebar: "Activer la barre latérale expérimentale"
+      experimental_sidebar:
+        enable: "Activer la barre latérale expérimentale"
+        options: "Options"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -2002,7 +2005,6 @@ fr:
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
       title: "Ou appuyez sur %{modifier}Entrée"
-      users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
@@ -3383,11 +3385,11 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top :"
-    browser_update: 'Malheureusement <a href="https://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour ce site</a>. Veuillez <a href="https://browsehappy.com">mettre à jour votre navigateur</a> afin de voir le contenu enrichi, vous connecter et répondre.'
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
       readonly: "Voir"
+    preloader_text: "Chargement"
     lightbox:
       download: "télécharger"
       open: "image originale"
@@ -3713,8 +3715,12 @@ fr:
     second_factor_auth:
       redirect_after_success: "L'authentification avec deuxième facteur est réussie. Redirection vers la page précédente…"
     sidebar:
-      unread_count: "%{count} non lu"
-      new_count: "%{count} nouveau"
+      unread_count:
+        one: "%{count} non lu"
+        other: "%{count} non lus"
+      new_count:
+        one: "%{count} nouveau"
+        other: "%{count} nouveaux"
       sections:
         messages:
           header_link_text: "Messages"
@@ -3722,7 +3728,9 @@ fr:
             inbox: "Boîte de réception"
             sent: "Envoyés"
             new: "Nouveau"
+            new_with_count: "Nouveau (%{count})"
             unread: "Non lues"
+            unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
           header_link_title: "toutes les étiquettes"

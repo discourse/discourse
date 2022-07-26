@@ -5,7 +5,8 @@ describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
@@ -167,6 +168,11 @@ describe Topic do
   context '#visible_post_types' do
     let(:types) { Post.types }
 
+    before do
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+    end
+
     it "returns the appropriate types for anonymous users" do
       post_types = Topic.visible_post_types
 
@@ -186,7 +192,16 @@ describe Topic do
     end
 
     it "returns the appropriate types for staff users" do
-      post_types = Topic.visible_post_types(Fabricate.build(:moderator))
+      post_types = Topic.visible_post_types(moderator)
+
+      expect(post_types).to include(types[:regular])
+      expect(post_types).to include(types[:moderator_action])
+      expect(post_types).to include(types[:small_action])
+      expect(post_types).to include(types[:whisper])
+    end
+
+    it "returns the appropriate types for whisperer users" do
+      post_types = Topic.visible_post_types(user2)
 
       expect(post_types).to include(types[:regular])
       expect(post_types).to include(types[:moderator_action])
@@ -791,7 +806,7 @@ describe Topic do
 
           expect { topic.invite(user, user1.username) }
             .to change { Notification.count }.by(1)
-            .and change { Post.where(post_type: Post.types[:small_action]).count }.by(0)
+            .and not_change { Post.where(post_type: Post.types[:small_action]).count }
         end
 
         context "from a muted user" do
@@ -1772,7 +1787,7 @@ describe Topic do
 
             expect do
               topic.change_category_to_id(new_category.id)
-            end.to change { Notification.count }.by(0)
+            end.not_to change { Notification.count }
 
             expect(topic.category_id).to eq(new_category.id)
           end
@@ -1808,7 +1823,7 @@ describe Topic do
 
             expect do
               topic.change_category_to_id(new_category.id)
-            end.to change { Notification.count }.by(0)
+            end.not_to change { Notification.count }
           end
         end
 
@@ -1841,7 +1856,7 @@ describe Topic do
 
             it 'should not set a topic timer' do
               expect { topic.change_category_to_id(new_category.id) }
-                .to change { TopicTimer.with_deleted.count }.by(0)
+                .not_to change { TopicTimer.with_deleted.count }
 
               expect(topic.closed).to eq(true)
               expect(topic.reload.category).to eq(new_category)
@@ -3051,4 +3066,53 @@ describe Topic do
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(nil)
     end
   end
+
+  describe "#publish_stats_to_clients!" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: user1) }
+    fab!(:post1) { Fabricate(:post, topic: topic, user: user1) }
+    fab!(:post2) { Fabricate(:post, topic: topic, user: user2) }
+    fab!(:like1) { Fabricate(:like, post: post1, user: user2) }
+
+    it "it is triggered when a post publishes a message of type :liked or :unliked" do
+      [:liked, :unliked].each do |action|
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:like_count]).to eq(topic.like_count)
+      end
+    end
+
+    it "it is triggered when a post publishes a message of type :created, :destroyed, :deleted, :recovered" do
+      freeze_time Date.today
+
+      [:created, :destroyed, :deleted, :recovered].each do |action|
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_present
+        expect(stats_message.data[:posts_count]).to eq(topic.posts_count)
+        expect(stats_message.data[:last_posted_at]).to eq(topic.last_posted_at.as_json)
+        expect(stats_message.data[:last_poster]).to eq(BasicUserSerializer.new(topic.last_poster, root: false).as_json)
+      end
+    end
+
+    it "it is not triggered when a post publishes an unhandled kind of message" do
+      [:unhandled, :unknown, :dont_care].each do |action|
+        messages = MessageBus.track_publish("/topic/#{topic.id}") do
+          post1.publish_change_to_clients!(action)
+        end
+
+        stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+        expect(stats_message).to be_blank
+      end
+    end
+  end
+
 end

@@ -1,15 +1,25 @@
-import { test } from "qunit";
+import I18n from "I18n";
 
-import { click, visit } from "@ember/test-helpers";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
+import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 
 acceptance("Sidebar - Anon User", function () {
   // Don't show sidebar for anon user until we know what we want to display
   test("sidebar is not displayed", async function (assert) {
     await visit("/");
 
-    assert.ok(!exists("#main-outlet-wrapper.has-sidebar"));
-    assert.ok(!exists(".sidebar-wrapper"));
+    assert.ok(
+      !document.body.classList.contains("has-sidebar-page"),
+      "does not add sidebar utility class to body"
+    );
+
+    assert.ok(!exists(".sidebar-container"));
   });
 });
 
@@ -19,35 +29,100 @@ acceptance("Sidebar - User with sidebar disabled", function (needs) {
   test("sidebar is not displayed", async function (assert) {
     await visit("/");
 
-    assert.ok(!exists("#main-outlet-wrapper.has-sidebar"));
-    assert.ok(!exists(".sidebar-wrapper"));
+    assert.ok(
+      !document.body.classList.contains("has-sidebar-page"),
+      "does not add sidebar utility class to body"
+    );
+
+    assert.ok(!exists(".sidebar-container"));
   });
 });
 
 acceptance("Sidebar - User with sidebar enabled", function (needs) {
   needs.user({ experimental_sidebar_enabled: true });
 
-  test("hiding and displaying sidebar", async function (assert) {
+  test("navigating to about route using sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-footer-link-about");
+
+    assert.strictEqual(currentRouteName(), "about");
+  });
+
+  test("viewing keyboard shortcuts using sidebar", async function (assert) {
+    await visit("/");
+    await click(
+      `.sidebar-footer-actions-keyboard-shortcuts[title="${I18n.t(
+        "keyboard_shortcuts_help.title"
+      )}"]`
+    );
+
+    assert.ok(
+      exists("#keyboard-shortcuts-help"),
+      "keyboard shortcuts help is displayed"
+    );
+  });
+
+  test("navigating to admin route using sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-footer-link-admin");
+
+    assert.strictEqual(currentRouteName(), "admin.dashboard.general");
+  });
+
+  test("admin link is not shown in sidebar for non-admin user", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
+
+    await visit("/");
+
+    assert.notOk(exists(".sidebar-footer-link-admin"));
+  });
+
+  test("undocking and docking sidebar", async function (assert) {
     await visit("/");
 
     assert.ok(
-      exists("#main-outlet-wrapper.has-sidebar"),
-      "adds sidebar utility class on main outlet wrapper"
+      document.body.classList.contains("has-sidebar-page"),
+      "adds sidebar utility class to body"
     );
 
-    assert.ok(exists(".sidebar-wrapper"), "displays the sidebar by default");
+    assert.ok(exists(".sidebar-container"), "displays the sidebar by default");
 
-    await click(".header-sidebar-toggle .btn");
+    await undockSidebar();
 
     assert.ok(
-      !exists("#main-outlet-wrapper.has-sidebar"),
-      "removes sidebar utility class from main outlet wrapper"
+      !document.body.classList.contains("has-sidebar-page"),
+      "removes sidebar utility class from body"
     );
 
-    assert.ok(!exists(".sidebar-wrapper"), "hides the sidebar");
+    assert.ok(!exists(".sidebar-container"), "hides the sidebar");
 
-    await click(".header-sidebar-toggle .btn");
+    assert.ok(
+      exists(".sidebar-hamburger-dropdown"),
+      "displays the sidebar in hamburger dropdown automatically after undocking"
+    );
 
-    assert.ok(exists(".sidebar-wrapper"), "displays the sidebar");
+    await click("button.sidebar-footer-actions-dock-toggle");
+
+    assert.ok(
+      exists(".sidebar-container"),
+      "displays the sidebar after docking"
+    );
+
+    assert.notOk(
+      exists(".sidebar-hamburger-dropdown"),
+      "hides the sidebar in hamburger dropdown automatically after docking"
+    );
+
+    await click(".hamburger-dropdown");
+
+    assert.ok(
+      exists(".sidebar-hamburger-dropdown"),
+      "displays the sidebar in hamburger dropdown even when sidebar is docked"
+    );
+
+    assert.notOk(
+      exists(".sidebar-hamburger-dropdown .sidebar-footer-actions-dock-toggle"),
+      "does not display sidebar dock toggle in hamburger dropdown when sidebar is docked"
+    );
   });
 });

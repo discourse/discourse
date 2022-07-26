@@ -171,6 +171,7 @@ export const DEFAULT_LIST = [
   "iframe[marginwidth]",
   "iframe[width]",
   "iframe[allowfullscreen]",
+  "iframe[allow]",
   "img[alt]",
   "img[height]",
   "img[title]",

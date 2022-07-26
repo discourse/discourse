@@ -552,6 +552,7 @@ vi:
       forever: "Mãi mãi"
       relative: "Thời gian tương đối"
       none: "Không cần thiết"
+      never: "Không bao giờ"
       last_custom: "Ngày giờ tùy chỉnh cuối cùng"
       custom: "Ngày giờ tùy chỉnh"
       select_timeframe: "Chọn khung thời gian"
@@ -1022,7 +1023,9 @@ vi:
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
-      enable_experimental_sidebar: "Bật thanh bên thử nghiệm"
+      experimental_sidebar:
+        enable: "Bật thanh bên thử nghiệm"
+        options: "Lựa chọn"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1891,7 +1894,6 @@ vi:
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
       title: "Hoặc nhấn %{modifier}Enter"
-      users_placeholder: "Thêm thành viên "
       title_placeholder: "Tóm tắt lại thảo luận này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán đường dẫn vào đây"
       edit_reason_placeholder: "Tại sao bạn sửa"
@@ -3158,11 +3160,11 @@ vi:
         this_week: "Tuần"
         today: "Ngày"
         other_periods: "xem đầu trang:"
-    browser_update: 'Rất tiếc, <a href="https://www.discourse.org/faq/#browser">trình duyệt của bạn quá cũ để hoạt động trên trang web này</a>. Vui lòng <a href="https://browsehappy.com">nâng cấp trình duyệt của bạn</a> để xem nội dung phong phú, đăng nhập và trả lời.'
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
       readonly: "Xem"
+    preloader_text: "Đang tải"
     lightbox:
       download: "tải về"
       open: "ảnh gốc"
@@ -3453,8 +3455,10 @@ vi:
     second_factor_auth:
       redirect_after_success: "Xác thực yếu tố thứ hai thành công. Chuyển hướng về trang trước…"
     sidebar:
-      unread_count: "%{count} chưa đọc"
-      new_count: "%{count} mới"
+      unread_count:
+        other: "%{count} chưa đọc"
+      new_count:
+        other: "%{count} mới"
       sections:
         messages:
           header_link_text: "Tin nhắn"
@@ -3462,7 +3466,9 @@ vi:
             inbox: "Hộp thư"
             sent: "Đã gửi"
             new: "Mới"
+            new_with_count: "Mới (%{count})"
             unread: "Chưa đọc"
+            unread_with_count: "Chưa đọc (%{count})"
             archive: "Lưu Trữ"
         tags:
           header_link_title: "tất cả thẻ"

@@ -43,7 +43,7 @@ export function cookAsync(text, options) {
 }
 
 // Warm up pretty text with a set of options and return a function
-// which can be used to cook without rebuilding prettytext every time
+// which can be used to cook without rebuilding pretty-text every time
 export function generateCookFunction(options) {
   return loadMarkdownIt().then(() => {
     const prettyText = createPrettyText(options);

@@ -43,7 +43,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
     end
 
     it 'does nothing if there are no large images to pull' do
@@ -59,10 +59,9 @@ describe Jobs::PullHotlinkedImages do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
       stub_image_size
 
-      expect do
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(1) &
-             change { UserHistory.count }.by(0) # Should not add to the staff log
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+        .and not_change { UserHistory.count } # Should not add to the staff log
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -110,7 +109,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         post.rebake!
-      end.to change { Upload.count }.by(0) # We alread have the upload
+      end.not_to change { Upload.count } # We alread have the upload
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -278,7 +277,7 @@ describe Jobs::PullHotlinkedImages do
             .to change { Upload.count }.by(1)
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-            .to change { Upload.count }.by(0)
+            .not_to change { Upload.count }
         end
       end
     end
@@ -350,6 +349,7 @@ describe Jobs::PullHotlinkedImages do
       before do
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
+        stub_request(:head, image_url)
 
         stub_request(:get, api_url).to_return(body: "{
           \"query\": {
@@ -399,6 +399,7 @@ describe Jobs::PullHotlinkedImages do
         #{url}
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        #{image_url}
         MD
         stub_image_size
 
@@ -413,12 +414,32 @@ describe Jobs::PullHotlinkedImages do
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
         expect(post.cooked).to match(/<span class="broken-image/)
         expect(post.cooked).to match(/<div class="large-image-placeholder">/)
+      end
+
+      it 'rewrites a lone onebox' do
+        post = Fabricate(:post, raw: <<~MD)
+        Onebox here:
+        #{image_url}
+        MD
+        stub_image_size
+
+        post.rebake!
+
+        post.reload
+
+        expect(post.raw).to eq(<<~MD.chomp)
+        Onebox here:
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        MD
+
+        expect(post.cooked).to match(/<img src=.*\/uploads/)
       end
     end
   end

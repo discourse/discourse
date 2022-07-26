@@ -542,6 +542,7 @@ ca:
       forever: "Sempre"
       relative: "Temps relatiu"
       none: "No cal cap"
+      never: "Mai"
       custom: "Data i hora personalitzades"
       select_timeframe: "Seleccioneu un període de temps"
     user_action:
@@ -911,6 +912,8 @@ ca:
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
       enable_quoting: "Permet citar la resposta en el text destacat"
       enable_defer: "Habilita l'ajornament per a marcar temes no llegits"
+      experimental_sidebar:
+        options: "Opcions"
       change: "canvia"
       featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"
@@ -1609,7 +1612,6 @@ ca:
       create_whisper: "Xiuxiueig"
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
-      users_placeholder: "Afegeix un usuari"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "per què ho editeu?"
@@ -2672,6 +2674,7 @@ ca:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
       readonly: "Mira"
+    preloader_text: "Carregant"
     lightbox:
       download: "descarrega"
       previous: "Anterior (tecla de fletxa esquerra)"
@@ -2879,8 +2882,12 @@ ca:
       no_replies_others: "No hi ha respostes."
       no_likes_others: "Publicacions sense 'm'agrada'."
     sidebar:
-      unread_count: "%{count} no llegit"
-      new_count: "%{count} nou"
+      unread_count:
+        one: "%{count} no llegit"
+        other: "%{count} no llegits"
+      new_count:
+        one: "%{count} nou"
+        other: "%{count} nous"
       sections:
         messages:
           header_link_text: "Missatges"
@@ -2888,7 +2895,9 @@ ca:
             inbox: "Safata d'entrada"
             sent: "Enviat"
             new: "Nous"
+            new_with_count: "Nou (%{count})"
             unread: "No llegits"
+            unread_with_count: "No llegit (%{count})"
             archive: "Arxiva"
         tags:
           header_link_title: "totes les etiquetes"

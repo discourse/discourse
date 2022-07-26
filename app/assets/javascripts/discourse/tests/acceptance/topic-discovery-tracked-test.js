@@ -1,7 +1,6 @@
-import { settled, visit } from "@ember/test-helpers";
+import { visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
-
 import {
   acceptance,
   exists,
@@ -49,7 +48,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 1,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -60,7 +58,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 2,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
     ]);
@@ -116,7 +113,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: category.id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -127,7 +123,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: category.subcategories[0].id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -138,7 +133,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: category.subcategories[0].subcategories[0].id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -149,7 +143,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 3,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -160,7 +153,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 3,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -171,7 +163,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 1234,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag3"],
       },
@@ -206,7 +197,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     );
 
     // simulate reading topic id 1
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -216,7 +207,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     });
 
     // simulate reading topic id 3
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -224,8 +215,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         highest_post_number: 12,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query("#navigation-bar li.unread").textContent.trim(),
@@ -250,13 +239,12 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 1,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["someothertag"],
+        tags: ["some-other-tag"],
       },
     ]);
 
-    await visit("/tag/someothertag");
+    await visit("/tag/some-other-tag");
 
     assert.strictEqual(
       query("#navigation-bar li.unread").textContent.trim(),
@@ -270,7 +258,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
       "displays the right content on new link"
     );
 
-    await visit("/tag/someothertag?f=tracked");
+    await visit("/tag/some-other-tag?f=tracked");
 
     assert.strictEqual(
       query("#navigation-bar li.unread").textContent.trim(),
@@ -299,7 +287,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: category.id,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -310,7 +297,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: category.id,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -321,7 +307,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 3,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
       },
       {
@@ -332,7 +317,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         category_id: 1234,
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag3"],
       },

@@ -1,4 +1,5 @@
-import { cancel, later, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import discourseComputed, {
   bind,
   observes,
@@ -62,7 +63,7 @@ export default Component.extend(KeyEnterEscape, {
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
     cancel(this._lastKeyTimeout);
-    this._lastKeyTimeout = later(() => {
+    this._lastKeyTimeout = discourseLater(() => {
       if (lastKeyUp !== this._lastKeyUp) {
         return;
       }
@@ -215,7 +216,8 @@ export default Component.extend(KeyEnterEscape, {
     afterTransition($(this.element), () => {
       triggerOpen();
     });
-    positioningWorkaround($(this.element));
+
+    positioningWorkaround(this.element);
   },
 
   willDestroyElement() {

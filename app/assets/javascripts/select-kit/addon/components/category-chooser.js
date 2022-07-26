@@ -97,10 +97,8 @@ export default ComboBoxComponent.extend({
     "selectKit.options.prioritizedCategoryId",
     function () {
       if (!this.selectKit.filter) {
-        let {
-          scopedCategoryId,
-          prioritizedCategoryId,
-        } = this.selectKit.options;
+        let { scopedCategoryId, prioritizedCategoryId } =
+          this.selectKit.options;
 
         if (scopedCategoryId) {
           return this.categoriesByScope({ scopedCategoryId });
@@ -193,6 +191,6 @@ export default ComboBoxComponent.extend({
   },
 
   _matchCategory(filter, categoryName) {
-    return this._normalize(categoryName).indexOf(filter) > -1;
+    return this._normalize(categoryName).includes(filter);
   },
 });
