@@ -23,7 +23,7 @@ describe Jobs::PullUserProfileHotlinkedImages do
     end
 
     it 'handles nil bio' do
-      expect { Jobs::PullUserProfileHotlinkedImages.new.execute(user_id: user.id) }.to change { Upload.count }.by(0)
+      expect { Jobs::PullUserProfileHotlinkedImages.new.execute(user_id: user.id) }.not_to change { Upload.count }
       expect(user.user_profile.reload.bio_cooked).to eq(nil)
     end
   end

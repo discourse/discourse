@@ -600,7 +600,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-15T11:16:36Z",
         excerpt:
-          "<a class='mention' href='/users/eviltrout'>@eviltrout</a> recently added support for multiple API keys [wink] \n\n<a href='//meta.discourse.org/uploads/default/2905/4c8decfac1518ff6.png' target='_blank'>[]</a>",
+          "<a class='mention' href='/u/eviltrout'>@eviltrout</a> recently added support for multiple API keys [wink] \n\n<a href='//meta.discourse.org/uploads/default/2905/4c8decfac1518ff6.png' target='_blank'>[]</a>",
         avatar_template:
           "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -628,7 +628,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-15T10:58:46Z",
         excerpt:
-          "<a class='mention' href='/users/eviltrout'>@eviltrout</a> added a tooltip when you click on the user&#39;s avatar which allows you to show the posts made by that user \n\n[image]",
+          "<a class='mention' href='/u/eviltrout'>@eviltrout</a> added a tooltip when you click on the user&#39;s avatar which allows you to show the posts made by that user \n\n[image]",
         avatar_template:
           "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -656,7 +656,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-15T10:36:15Z",
         excerpt:
-          "<a class='mention' href='/users/eviltrout'>@eviltrout</a>  implemented per-user API key a while ago [wink] \n\n  <a href='//meta-discourse.r.worldssl.net/uploads/default/2905/4c8decfac1518ff6.png' class='lightbox' title='Topics_-_Discourse_Meta-5.png'>[image]\nTopics_-_Discourse_Meta-5.png884x339 29.6 KB\n</a>",
+          "<a class='mention' href='/u/eviltrout'>@eviltrout</a>  implemented per-user API key a while ago [wink] \n\n  <a href='//meta-discourse.r.worldssl.net/uploads/default/2905/4c8decfac1518ff6.png' class='lightbox' title='Topics_-_Discourse_Meta-5.png'>[image]\nTopics_-_Discourse_Meta-5.png884x339 29.6 KB\n</a>",
         avatar_template:
           "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -684,7 +684,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-15T09:55:17Z",
         excerpt:
-          "<a class='mention' href='/users/eviltrout'>@eviltrout</a> has recently introduced this feature and has even blogged about it: \n\n \n    \n      \n        <a href='http://eviltrout.com/2014/01/04/hiding-offscreen-ember.html' class='track-link' target='_blank'>\n          eviltrout.com\n        </a>\n      \n    \n  \n    \n    <a href='http://eviltrout.com/2014/01/04/hiding-offscreen-ember.html' target='_blank'>Hiding Offscreen Content in Ember.js - Evil Trout&#39;s Blog</a>",
+          "<a class='mention' href='/u/eviltrout'>@eviltrout</a> has recently introduced this feature and has even blogged about it: \n\n \n    \n      \n        <a href='http://eviltrout.com/2014/01/04/hiding-offscreen-ember.html' class='track-link' target='_blank'>\n          eviltrout.com\n        </a>\n      \n    \n  \n    \n    <a href='http://eviltrout.com/2014/01/04/hiding-offscreen-ember.html' target='_blank'>Hiding Offscreen Content in Ember.js - Evil Trout&#39;s Blog</a>",
         avatar_template:
           "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -768,7 +768,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-14T21:46:50Z",
         excerpt:
-          "Okay I&#39;ve fixed the https [point_right] http links on the server side and in the Javascript click tracking as <a class='mention' href='/users/bhaelochon'>@BhaelOchon</a> pointed out. \n\nLet me know if you find anything else broken.",
+          "Okay I&#39;ve fixed the https [point_right] http links on the server side and in the Javascript click tracking as <a class='mention' href='/u/bhaelochon'>@BhaelOchon</a> pointed out. \n\nLet me know if you find anything else broken.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -796,7 +796,7 @@ export default {
         action_type: 6,
         created_at: "2014-01-14T21:43:28Z",
         excerpt:
-          "Thanks for your help <a class='mention' href='/users/eviltrout'>@eviltrout</a>! I will consider making that change and sending a pull request. I may not get to it for a while. \n\nI am embedding Discourse on another site and it is mostly going well. I have indeed been using your blog for inspiration.",
+          "Thanks for your help <a class='mention' href='/u/eviltrout'>@eviltrout</a>! I will consider making that change and sending a pull request. I may not get to it for a while. \n\nI am embedding Discourse on another site and it is mostly going well. I have indeed been using your blog for inspiration.",
         avatar_template:
           "//www.gravatar.com/avatar/9cfd2536afac32d209335b092094c12c.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -824,7 +824,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-14T21:21:52Z",
         excerpt:
-          "Okay I&#39;ve fixed the https [point_right] http links on the server side and in the Javascript click tracking as <a class='mention' href='/users/bhaelochon'>@BhaelOchon</a> pointed out. \n\nLet me know if you find anything else broken.",
+          "Okay I&#39;ve fixed the https [point_right] http links on the server side and in the Javascript click tracking as <a class='mention' href='/u/bhaelochon'>@BhaelOchon</a> pointed out. \n\nLet me know if you find anything else broken.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -852,7 +852,7 @@ export default {
         action_type: 5,
         created_at: "2014-01-14T21:03:07Z",
         excerpt:
-          "Okay I&#39;ve fixed the https [point_right] http links on the server side and in the Javascript click tracking as <a class='mention' href='/users/bhaelochon'>@BhaelOchon</a> pointed out. \n\nLet me know if you find anything else broken.",
+          "Okay I&#39;ve fixed the https [point_right] http links on the server side and in the Javascript click tracking as <a class='mention' href='/u/bhaelochon'>@BhaelOchon</a> pointed out. \n\nLet me know if you find anything else broken.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1020,7 +1020,7 @@ export default {
         action_type: 6,
         created_at: "2014-01-14T16:04:28Z",
         excerpt:
-          "Thanks <a class='mention' href='/users/eviltrout'>@eviltrout</a> , the code in the &#39;bottom of pages&#39; now reads: \n\n&lt;script type=&quot;text/javascript&quot;&gt;\nDiscourse.PageTracker.current().on(&#39;change&#39;, function() {\n  console.log(&#39;tracked!&#39;)\n  _paq.push([&#39;trackPageView&#39;]);\n});\n&lt;/script&gt;\n\nThe console is logging &#39;tracked!&#39; and piwik is logging for each page c&hellip;",
+          "Thanks <a class='mention' href='/u/eviltrout'>@eviltrout</a> , the code in the &#39;bottom of pages&#39; now reads: \n\n&lt;script type=&quot;text/javascript&quot;&gt;\nDiscourse.PageTracker.current().on(&#39;change&#39;, function() {\n  console.log(&#39;tracked!&#39;)\n  _paq.push([&#39;trackPageView&#39;]);\n});\n&lt;/script&gt;\n\nThe console is logging &#39;tracked!&#39; and piwik is logging for each page c&hellip;",
         avatar_template: "/images/avatar.png",
         acting_avatar_template: "/images/avatar.png",
         slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
@@ -1132,7 +1132,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-14T00:21:26Z",
         excerpt:
-          "In <a href='https://github.com/discourse/discourse/pull/1821' rel='nofollow'>pull request 1821</a>, <a class='mention' href='/users/eviltrout'>@eviltrout</a> asked: \n\n &quot;About rails s: I wouldn&#39;t be against adding it but at what point do we stop holding their hand and expect them to know how rails works? I&#39;m sure rails documentation could do a better job than us. Actually maybe we should just link to that? \n\nWhat point to &hellip;",
+          "In <a href='https://github.com/discourse/discourse/pull/1821' rel='nofollow'>pull request 1821</a>, <a class='mention' href='/u/eviltrout'>@eviltrout</a> asked: \n\n &quot;About rails s: I wouldn&#39;t be against adding it but at what point do we stop holding their hand and expect them to know how rails works? I&#39;m sure rails documentation could do a better job than us. Actually maybe we should just link to that? \n\nWhat point to &hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/035d12bad251759d8fbc9fb10574d1f6.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1332,7 +1332,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-13T19:52:04Z",
         excerpt:
-          "<a class='mention' href='/users/sam'>@Sam</a> do you have any idea why only some people are getting this issue? I dont&#39; mind the proposed fix but I&#39;d prefer to know why it happens in the first place.",
+          "<a class='mention' href='/u/sam'>@Sam</a> do you have any idea why only some people are getting this issue? I dont&#39; mind the proposed fix but I&#39;d prefer to know why it happens in the first place.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1418,7 +1418,7 @@ export default {
         action_type: 5,
         created_at: "2014-01-13T18:47:33Z",
         excerpt:
-          "I am pretty sure that the denizens of SO are correct and the variable is unneeded. <a class='mention' href='/users/sam'>@sam</a> can confirm but it seems like it was once needed for something that has since been removed and the variable declaration was left intact.",
+          "I am pretty sure that the denizens of SO are correct and the variable is unneeded. <a class='mention' href='/u/sam'>@sam</a> can confirm but it seems like it was once needed for something that has since been removed and the variable declaration was left intact.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1476,7 +1476,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-13T17:19:08Z",
         excerpt:
-          "<a class='mention' href='/users/sam'>@Sam</a> do you have any idea why only some people are getting this issue? I dont&#39; mind the proposed fix but I&#39;d prefer to know why it happens in the first place.",
+          "<a class='mention' href='/u/sam'>@Sam</a> do you have any idea why only some people are getting this issue? I dont&#39; mind the proposed fix but I&#39;d prefer to know why it happens in the first place.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1504,7 +1504,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-13T16:41:31Z",
         excerpt:
-          "I&#39;d love to see API support. <a class='mention' href='/users/sam'>@sam</a> and <a class='mention' href='/users/eviltrout'>@eviltrout</a>, I can facilitate an intro to the piwik guys if you want—I&#39;ve written about them before and they&#39;re typically super-responsive. Because I know you guys are totally hunting for new stuff to do [wink]",
+          "I&#39;d love to see API support. <a class='mention' href='/u/sam'>@sam</a> and <a class='mention' href='/u/eviltrout'>@eviltrout</a>, I can facilitate an intro to the piwik guys if you want—I&#39;ve written about them before and they&#39;re typically super-responsive. Because I know you guys are totally hunting for new stuff to do [wink]",
         avatar_template: "/images/avatar.png",
         acting_avatar_template: "/images/avatar.png",
         slug: "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
@@ -1618,7 +1618,7 @@ export default {
         action_type: 5,
         created_at: "2014-01-13T14:53:13Z",
         excerpt:
-          "<a class='mention' href='/users/sam'>@Sam</a> do you have any idea why only some people are getting this issue? I dont&#39; mind the proposed fix but I&#39;d prefer to know why it happens in the first place.",
+          "<a class='mention' href='/u/sam'>@Sam</a> do you have any idea why only some people are getting this issue? I dont&#39; mind the proposed fix but I&#39;d prefer to know why it happens in the first place.",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1646,7 +1646,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-13T06:27:26Z",
         excerpt:
-          "Can this be archived <a class='mention' href='/users/eviltrout'>@eviltrout</a>?",
+          "Can this be archived <a class='mention' href='/u/eviltrout'>@eviltrout</a>?",
         avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1674,7 +1674,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-13T05:32:46Z",
         excerpt:
-          "When you navigate to another topic using the &quot;suggested topics&quot; area we are not registering a page view with Google.  \n\n<a class='mention' href='/users/eviltrout'>@eviltrout</a> perhaps we should do this from discourse location instead of  application controller?",
+          "When you navigate to another topic using the &quot;suggested topics&quot; area we are not registering a page view with Google.  \n\n<a class='mention' href='/u/eviltrout'>@eviltrout</a> perhaps we should do this from discourse location instead of  application controller?",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1702,7 +1702,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-13T02:50:25Z",
         excerpt:
-          "<a class='mention' href='/users/eviltrout'>@eviltrout</a> any ideas here, the code seems correct",
+          "<a class='mention' href='/u/eviltrout'>@eviltrout</a> any ideas here, the code seems correct",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1731,7 +1731,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-12T22:31:35Z",
         excerpt:
-          "This is an interesting approach an an interesting feature. <a class='mention' href='/users/eviltrout'>@eviltrout</a> your thoughts. Essentially allows us to have notifications cross tabs.",
+          "This is an interesting approach an an interesting feature. <a class='mention' href='/u/eviltrout'>@eviltrout</a> your thoughts. Essentially allows us to have notifications cross tabs.",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1760,7 +1760,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-12T18:01:04Z",
         excerpt:
-          "This was the link  \n\n<a href='https://github.com/metricfu/metric_fu/blob/b1bf8feb921916fc265f041efa3157a6a6530a9b/lib/metric_fu/logging/mf_debugger.rb#L24' rel='nofollow'>metric_fu</a> \n\n[metric_fu](https://github.com/metricfu/metric_fu/blob/b1bf8feb921916fc265f041efa3157a6a6530a9b/lib/metric_fu/logging/mf_debugger.rb#L24)\n\nSeems to work fine now that <a class='mention' href='/users/eviltrout'>@eviltrout</a> worked so hard to get us MDTest 1.1 compliant.",
+          "This was the link  \n\n<a href='https://github.com/metricfu/metric_fu/blob/b1bf8feb921916fc265f041efa3157a6a6530a9b/lib/metric_fu/logging/mf_debugger.rb#L24' rel='nofollow'>metric_fu</a> \n\n[metric_fu](https://github.com/metricfu/metric_fu/blob/b1bf8feb921916fc265f041efa3157a6a6530a9b/lib/metric_fu/logging/mf_debugger.rb#L24)\n\nSeems to work fine now that <a class='mention' href='/u/eviltrout'>@eviltrout</a> worked so hard to get us MDTest 1.1 compliant.",
         avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1814,7 +1814,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-11T23:36:11Z",
         excerpt:
-          "A few things,  \n\n<a class='mention' href='/users/eviltrout'>@eviltrout</a> myself and many others have discourse_docker hosted on DigitalOcean, my user cpu is usually around 2% I have plenty of capacity.  \n\nI know that stonehearth and other larger scale discourse work on DigitalOcean fine. Officially we strongly recommend a 2GB instance, thoug&hellip;",
+          "A few things,  \n\n<a class='mention' href='/u/eviltrout'>@eviltrout</a> myself and many others have discourse_docker hosted on DigitalOcean, my user cpu is usually around 2% I have plenty of capacity.  \n\nI know that stonehearth and other larger scale discourse work on DigitalOcean fine. Officially we strongly recommend a 2GB instance, thoug&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1842,7 +1842,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-11T00:58:23Z",
         excerpt:
-          "Confirmed on try.discourse.org, this is still an issue. \n\n<a class='mention' href='/users/eviltrout'>@eviltrout</a> can you add that to your list -- unless you are a staff member you should not be able to delete (your own) posts from an archived topic.",
+          "Confirmed on try.discourse.org, this is still an issue. \n\n<a class='mention' href='/u/eviltrout'>@eviltrout</a> can you add that to your list -- unless you are a staff member you should not be able to delete (your own) posts from an archived topic.",
         avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1870,7 +1870,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-11T00:35:38Z",
         excerpt:
-          "Agree, <a class='mention' href='/users/eviltrout'>@eviltrout</a> can you make sure the usercard is using the same logic as the user page in displaying profile info?",
+          "Agree, <a class='mention' href='/u/eviltrout'>@eviltrout</a> can you make sure the usercard is using the same logic as the user page in displaying profile info?",
         avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1898,7 +1898,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-11T00:34:06Z",
         excerpt:
-          "<a class='mention' href='/users/eviltrout'>@eviltrout</a> can you make sure the &quot;import post&quot; button is suppressed on the user page when editing &quot;about me&quot;?  \n\n(I agree it is like a &quot;lose all my work&quot; button on that page if you happen to press it..) \n\nThen I can archive this.",
+          "<a class='mention' href='/u/eviltrout'>@eviltrout</a> can you make sure the &quot;import post&quot; button is suppressed on the user page when editing &quot;about me&quot;?  \n\n(I agree it is like a &quot;lose all my work&quot; button on that page if you happen to press it..) \n\nThen I can archive this.",
         avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1927,7 +1927,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-10T21:00:11Z",
         excerpt:
-          "&gt;\n\nLooks good now. Thanks for these fixes <a class='mention' href='/users/eviltrout'>@eviltrout</a>, we (and markdown-js) are now MDTest 1.1 compliant!",
+          "&gt;\n\nLooks good now. Thanks for these fixes <a class='mention' href='/u/eviltrout'>@eviltrout</a>, we (and markdown-js) are now MDTest 1.1 compliant!",
         avatar_template:
           "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:

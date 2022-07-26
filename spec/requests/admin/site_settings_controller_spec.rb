@@ -84,7 +84,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_email_in_reply_to.json", params: {
               default_email_in_reply_to: false
             }
-          }.to change { UserOption.where(email_in_reply_to: false).count }.by(0)
+          }.not_to change { UserOption.where(email_in_reply_to: false).count }
         end
 
         it 'should update `email_digests` column in existing user options' do
@@ -153,7 +153,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_categories_watching.json", params: {
               default_categories_watching: category_ids.last(2).join("|")
             }
-          }.to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }.by(0)
+          }.not_to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }
 
           expect(response.status).to eq(200)
           expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(0)
@@ -204,7 +204,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_tags_watching.json", params: {
               default_tags_watching: tags.last(2).pluck(:name).join("|")
             }
-          }.to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }.by(0)
+          }.not_to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }
 
           expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
         end

@@ -2,7 +2,18 @@
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
   <PluginOutlet @name="above-site-header" @connectorTagName="div" />
-  <SiteHeader @canSignUp={{this.canSignUp}} @showCreateAccount={{route-action "showCreateAccount"}} @showLogin={{route-action "showLogin"}} @showKeyboard={{route-action "showKeyboardShortcutsHelp"}} @toggleMobileView={{route-action "toggleMobileView"}} @toggleAnonymous={{route-action "toggleAnonymous"}} @logout={{route-action "logout"}} @toggleSidebar={{action "toggleSidebar"}} />
+
+  <SiteHeader
+    @canSignUp={{this.canSignUp}}
+    @showCreateAccount={{route-action "showCreateAccount"}}
+    @showLogin={{route-action "showLogin"}}
+    @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+    @toggleMobileView={{route-action "toggleMobileView"}}
+    @toggleAnonymous={{route-action "toggleAnonymous"}}
+    @logout={{route-action "logout"}}
+    @sidebarDocked={{and this.currentUser.experimental_sidebar_enabled this.showSidebar this.site.desktopView}}
+    @toggleSidebar={{action "toggleSidebar"}} />
+
   <SoftwareUpdatePrompt />
 
   <PluginOutlet @name="below-site-header" @connectorTagName="div" @args={{hash currentPath=this.router._router.currentPath}} />

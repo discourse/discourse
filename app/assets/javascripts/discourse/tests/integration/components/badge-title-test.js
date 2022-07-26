@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import EmberObject from "@ember/object";
 
@@ -23,11 +23,7 @@ module("Integration | Component | badge-title", function (hooks) {
       }),
     ]);
 
-    pretender.put("/u/eviltrout/preferences/badge_title", () => [
-      200,
-      { "Content-Type": "application/json" },
-      {},
-    ]);
+    pretender.put("/u/eviltrout/preferences/badge_title", () => response({}));
 
     await render(hbs`
       <BadgeTitle @selectableUserBadges={{this.selectableUserBadges}} />

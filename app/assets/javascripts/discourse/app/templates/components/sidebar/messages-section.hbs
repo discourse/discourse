@@ -6,7 +6,8 @@
   @headerActions={{array (hash action=(fn (route-action "composePrivateMessage") null null))}}
   @headerActionsIcon="plus"
   @headerLinkText={{i18n "sidebar.sections.messages.header_link_text"}}
-  @headerLinkTitle={{i18n "sidebar.sections.messages.header_link_title"}} >
+  @headerLinkTitle={{i18n "sidebar.sections.messages.header_link_title"}}
+  @collapsable={{@collapsable}}>
 
   {{#each this.personalMessagesSectionLinks as |personalMessageSectionLink|}}
     {{#if personalMessageSectionLink.shouldDisplay}}
@@ -21,8 +22,6 @@
   {{/each}}
 
   {{#if (gt this.groupMessagesSectionLinks.length 0)}}
-    <hr>
-
     {{#each this.groupMessagesSectionLinks as |groupMessageSectionLink|}}
       {{#if groupMessageSectionLink.shouldDisplay}}
         <Sidebar::SectionLink

@@ -5,7 +5,7 @@ import Post from "discourse/models/post";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import createStore from "discourse/tests/helpers/create-store";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
 
 function buildStream(id, stream) {
@@ -872,10 +872,6 @@ module("Unit | Model | post-stream", function () {
         store.createRecord("post", { id, post_number: id })
       );
     });
-
-    const response = (object) => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
 
     pretender.get("/posts/4", () => {
       return response({ id: 4, post_number: 4 });

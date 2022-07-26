@@ -571,7 +571,7 @@ acceptance("Poll results", function (needs) {
       0
     );
 
-    publishToMessageBus("/polls/134", {
+    await publishToMessageBus("/polls/134", {
       post_id: "156",
       polls: [
         {
@@ -619,7 +619,6 @@ acceptance("Poll results", function (needs) {
         },
       ],
     });
-    await visit("/t/-/load-more-poll-voters");
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),

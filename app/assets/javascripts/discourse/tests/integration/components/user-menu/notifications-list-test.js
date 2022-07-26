@@ -5,7 +5,7 @@ import { render } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import I18n from "I18n";
 
 function getNotificationsData() {
@@ -22,16 +22,12 @@ module(
     hooks.beforeEach(() => {
       pretender.get("/notifications", (request) => {
         queryParams = request.queryParams;
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          { notifications: notificationsData },
-        ];
+        return response({ notifications: notificationsData });
       });
 
-      pretender.put("/notifications/mark-read", () => {
-        return [200, { "Content-Type": "application/json" }, { success: true }];
-      });
+      pretender.put("/notifications/mark-read", () =>
+        response({ success: true })
+      );
     });
 
     hooks.afterEach(() => {
@@ -55,6 +51,11 @@ module(
         undefined,
         "filter_by_types param is absent"
       );
+    });
+
+    test("doesn't request the full notifications list in silent mode", async function (assert) {
+      await render(template);
+      assert.strictEqual(queryParams.silent, undefined);
     });
 
     test("displays a show all button that takes to the notifications page of the current user", async function (assert) {

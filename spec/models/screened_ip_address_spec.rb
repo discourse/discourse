@@ -340,7 +340,7 @@ describe ScreenedIpAddress do
       expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("1.1.1.1", "1.1.1.2", "1.1.1.3")
 
       # expect roll up to be stable
-      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
     end
 
     it 'rolls up IPv6 addresses' do
@@ -358,10 +358,10 @@ describe ScreenedIpAddress do
       expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("2001:db8:3333:4441:5555:6666:7777:8888", "2001:db8:3333:4441:5555:6666:7777:8889", "2001:db8:3333:4441:5555:6666:7777:888a")
 
       # expect roll up to be stable
-      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
 
       Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4442::/64")
-      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
 
       Fabricate(:screened_ip_address, ip_address: "2001:db8:3333:4443::/64")
       expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(-2)
@@ -369,7 +369,7 @@ describe ScreenedIpAddress do
       expect(ScreenedIpAddress.pluck(:ip_address)).not_to include("2001:db8:3333:4441::/64", "2001:db8:3333:4442::/64", "2001:db8:3333:4443::/64")
 
       # expect roll up to be stable
-      expect { ScreenedIpAddress.roll_up }.to change { ScreenedIpAddress.count }.by(0)
+      expect { ScreenedIpAddress.roll_up }.not_to change { ScreenedIpAddress.count }
     end
   end
 end

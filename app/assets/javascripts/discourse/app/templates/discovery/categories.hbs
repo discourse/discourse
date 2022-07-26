@@ -9,9 +9,14 @@
     </div>
   {{/if}}
 
-  {{component this.categoryPageStyle
-              categories=this.model.categories
-              topics=this.model.topics}}
+  {{#if (eq this.categoryPageStyle "categories-and-latest-topics-created-date")}}
+    <CategoriesAndLatestTopics @categories={{this.model.categories}} @topics={{this.model.topics}} />
+  {{else}}
+    {{component this.categoryPageStyle
+                categories=this.model.categories
+                topics=this.model.topics}}
+  {{/if}}
+
 </DiscoveryCategories>
 
 <PluginOutlet @name="below-discovery-categories" @connectorTagName="div" @args={{hash categories=this.model.categories categoryPageStyle=this.categoryPageStyle topics=this.model.topics}} />

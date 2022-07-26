@@ -5010,6 +5010,8 @@ en:
                 label: "Categories with Featured Topics"
               categories_and_latest_topics:
                 label: "Categories and Latest Topics"
+              categories_and_latest_topics_created_date:
+                label: "Categories and Latest Topics (sort by topic created date)"
               categories_and_top_topics:
                 label: "Categories and Top Topics"
               categories_boxes:

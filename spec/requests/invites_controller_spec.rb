@@ -124,7 +124,7 @@ describe InvitesController do
         user.update!(email: "someguy@discourse.com")
         invite.update!(email: nil, domain: 'discourse.org')
 
-        expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
 
         expect(response).to redirect_to("/")
       end
@@ -132,7 +132,7 @@ describe InvitesController do
       it "redirects to root if a tries to view an invite meant for a specific email that is not the user's" do
         invite.update_columns(email: "notuseremail@discourse.org")
 
-        expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
 
         expect(response).to redirect_to("/")
       end
@@ -773,7 +773,7 @@ describe InvitesController do
             it 'does not activate user if email token is missing' do
               expect do
                 put "/invites/show/#{invite.invite_key}.json", params: { password: 'verystrongpassword' }
-              end.to change { UserAuthToken.count }.by(0)
+              end.not_to change { UserAuthToken.count }
 
               expect(response.status).to eq(200)
 

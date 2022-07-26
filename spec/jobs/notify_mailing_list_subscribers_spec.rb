@@ -220,7 +220,7 @@ describe Jobs::NotifyMailingListSubscribers do
             Jobs::NotifyMailingListSubscribers.new.execute(
               post_id: post.id
             )
-          end.to change { SkippedEmailLog.count }.by(0)
+          end.not_to change { SkippedEmailLog.count }
         end
       end
 

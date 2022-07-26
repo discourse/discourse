@@ -490,7 +490,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           post.update!(raw: 'thanks @discobot!')
 
           expect { described_class.new(:reply, user, post_id: post.id).select }
-            .to change { PostAction.count }.by(0)
+            .not_to change { PostAction.count }
 
           new_post = Post.last
           expect(new_post.raw).to eq(random_mention_reply)

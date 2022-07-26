@@ -11,7 +11,8 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
-import ComponentConnector from "discourse/widgets/component-connector";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { hbs } from "ember-cli-htmlbars";
 
 const _extraHeaderIcons = [];
 
@@ -331,6 +332,29 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
+createWidget("revamped-hamburger-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html(attrs) {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<Sidebar::HamburgerDropdown @sidebarDocked={{@data.sidebarDocked}} />`,
+        {
+          sidebarDocked: attrs.sidebarDocked,
+        }
+      ),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleHamburger");
+  },
+});
+
 createWidget("revamped-user-menu-wrapper", {
   buildAttributes() {
     return { "data-click-outside": true };
@@ -338,9 +362,11 @@ createWidget("revamped-user-menu-wrapper", {
 
   html() {
     return [
-      new ComponentConnector(this, "user-menu-wrapper", {}, [], {
-        applyStyle: false,
-      }),
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<UserMenu::Menu />`
+      ),
     ];
   },
 
@@ -400,7 +426,15 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        panels.push(this.attach("hamburger-menu"));
+        if (this.currentUser?.experimental_sidebar_enabled) {
+          panels.push(
+            this.attach("revamped-hamburger-menu-wrapper", {
+              sidebarDocked: attrs.sidebarDocked,
+            })
+          );
+        } else {
+          panels.push(this.attach("hamburger-menu"));
+        }
       } else if (state.userVisible) {
         if (this.currentUser.redesigned_user_menu_enabled) {
           panels.push(this.attach("revamped-user-menu-wrapper", {}));
@@ -430,7 +464,6 @@ export default createWidget("header", {
     const contentsAttrs = {
       contents,
       minimized: !!attrs.topic,
-      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
     };
 
     return h(
@@ -513,13 +546,20 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    this.state.hamburgerVisible = !this.state.hamburgerVisible;
-    this.toggleBodyScrolling(this.state.hamburgerVisible);
+    if (
+      this.currentUser?.experimental_sidebar_enabled &&
+      this.site.mobileView
+    ) {
+      this.sendWidgetAction("toggleSidebar");
+    } else {
+      this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      this.toggleBodyScrolling(this.state.hamburgerVisible);
 
-    // auto focus on first link in dropdown
-    schedule("afterRender", () => {
-      document.querySelector(".hamburger-panel .menu-links a")?.focus();
-    });
+      // auto focus on first link in dropdown
+      schedule("afterRender", () => {
+        document.querySelector(".hamburger-panel .menu-links a")?.focus();
+      });
+    }
   },
 
   toggleBodyScrolling(bool) {

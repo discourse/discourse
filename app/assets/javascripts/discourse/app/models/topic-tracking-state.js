@@ -245,8 +245,10 @@ const TopicTrackingState = EmberObject.extend({
       filter === "categories" &&
       data.message_type === "latest" &&
       !Site.current().mobileView &&
-      this.siteSettings.desktop_category_page_style ===
-        "categories_and_latest_topics"
+      (this.siteSettings.desktop_category_page_style ===
+        "categories_and_latest_topics" ||
+        this.siteSettings.desktop_category_page_style ===
+          "categories_and_latest_topics_created_date")
     ) {
       this._addIncoming(data.topic_id);
     }

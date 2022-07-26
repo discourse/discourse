@@ -3,6 +3,7 @@
   align-items: center;
 
   .sidebar-section-link {
+    box-sizing: border-box;
     display: inline-flex;
     width: 100%;
     align-items: center;
@@ -32,6 +33,11 @@
 
     .sidebar-section-link-content-text {
       @include ellipsis;
+
+      .emoji {
+        width: 15px;
+        height: 15px;
+      }
 
       .badge-wrapper {
         font-size: 100%;

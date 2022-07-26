@@ -9,7 +9,7 @@ export default class BaseSectionLink {
   }
 
   /**
-   * Called when topics-section component is torn down.
+   * Called when community-section component is torn down.
    */
   teardown() {}
 
