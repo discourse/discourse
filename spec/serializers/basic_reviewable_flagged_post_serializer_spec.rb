@@ -23,14 +23,14 @@ describe BasicReviewableFlaggedPostSerializer do
     end
   end
 
-  context "#topic_title" do
+  context "#topic_fancy_title" do
     it "equals the fancy_title of the topic" do
-      expect(subject[:topic_title]).to eq("Safe title &lt;a&gt; hello world")
+      expect(subject[:topic_fancy_title]).to eq("Safe title &lt;a&gt; hello world")
     end
 
     it "is not included if the reviewable is associated with no topic" do
       reviewable.update!(topic: nil)
-      expect(subject.key?(:topic_title)).to eq(false)
+      expect(subject.key?(:topic_fancy_title)).to eq(false)
     end
   end
 end

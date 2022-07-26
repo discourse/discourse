@@ -8,11 +8,26 @@ export default class UserMenuReviewableQueuedPostItem extends UserMenuDefaultRev
   }
 
   get description() {
-    const title = this.reviewable.topic_title;
+    const fancyTitle = this.reviewable.topic_fancy_title;
+    const payloadTitle = this.reviewable.payload_title;
     if (this.reviewable.is_new_topic) {
-      return htmlSafe(title);
+      if (fancyTitle) {
+        return htmlSafe(fancyTitle);
+      } else {
+        return payloadTitle;
+      }
     } else {
-      return I18n.t("user_menu.reviewable.new_post_in_topic", { title });
+      if (fancyTitle) {
+        return htmlSafe(
+          I18n.t("user_menu.reviewable.new_post_in_topic", {
+            title: fancyTitle,
+          })
+        );
+      } else {
+        return I18n.t("user_menu.reviewable.new_post_in_topic", {
+          title: payloadTitle,
+        });
+      }
     }
   }
 

@@ -267,11 +267,17 @@ describe ReviewablesController do
 
         reviewable_queued_post_json = reviewables.find { |r| r["id"] == reviewable_queued_post.id }
         expect(reviewable_queued_post_json["is_new_topic"]).to eq(false)
-        expect(reviewable_queued_post_json["topic_title"]).to eq(reviewable_queued_post.topic.fancy_title)
+        expect(reviewable_queued_post_json["topic_fancy_title"]).to eq(
+          reviewable_queued_post.topic.fancy_title
+        )
 
         reviewable_flagged_post_json = reviewables.find { |r| r["id"] == reviewable_flagged_post.id }
-        expect(reviewable_flagged_post_json["post_number"]).to eq(reviewable_flagged_post.post.post_number)
-        expect(reviewable_flagged_post_json["topic_title"]).to eq(reviewable_flagged_post.topic.fancy_title)
+        expect(reviewable_flagged_post_json["post_number"]).to eq(
+          reviewable_flagged_post.post.post_number
+        )
+        expect(reviewable_flagged_post_json["topic_fancy_title"]).to eq(
+          reviewable_flagged_post.topic.fancy_title
+        )
 
         reviewable_user_json = reviewables.find { |r| r["id"] == reviewable_user.id }
         expect(reviewable_user_json["username"]).to eq("someb0dy")

@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 
 export default class UserMenuReviewableFlaggedPostItem extends UserMenuDefaultReviewableItem {
   get description() {
-    const title = this.reviewable.topic_title;
+    const title = this.reviewable.topic_fancy_title;
     const postNumber = this.reviewable.post_number;
     if (title && postNumber) {
       return htmlSafe(

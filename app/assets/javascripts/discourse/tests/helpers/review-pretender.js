@@ -151,7 +151,7 @@ export default function (helpers) {
           type: "ReviewableFlaggedPost",
           pending: true,
           post_number: 3,
-          topic_title:
+          topic_fancy_title:
             "Emotion clustering crisis struggling sallyport eagled ask",
         },
         {
@@ -160,7 +160,7 @@ export default function (helpers) {
           type: "ReviewableFlaggedPost",
           pending: true,
           post_number: 5,
-          topic_title:
+          topic_fancy_title:
             "Emotion clustering crisis struggling sallyport eagled ask",
         },
         {
@@ -176,7 +176,7 @@ export default function (helpers) {
           type: "ReviewableFlaggedPost",
           pending: false,
           post_number: 2,
-          topic_title:
+          topic_fancy_title:
             "Emotion clustering crisis struggling sallyport eagled ask",
         },
         {
@@ -185,7 +185,7 @@ export default function (helpers) {
           type: "ReviewableFlaggedPost",
           pending: false,
           post_number: 4,
-          topic_title:
+          topic_fancy_title:
             "Emotion clustering crisis struggling sallyport eagled ask",
         },
         {
@@ -194,7 +194,7 @@ export default function (helpers) {
           type: "ReviewableFlaggedPost",
           pending: false,
           post_number: 9,
-          topic_title:
+          topic_fancy_title:
             "Emotion clustering crisis struggling sallyport eagled ask",
         },
         {
@@ -202,7 +202,7 @@ export default function (helpers) {
           id: 1,
           type: "ReviewableQueuedPost",
           pending: false,
-          topic_title: "Hello this is a test topic",
+          payload_title: "Hello this is a test topic",
           is_new_topic: true,
         },
         {
@@ -210,7 +210,7 @@ export default function (helpers) {
           id: 100,
           type: "ReviewableQueuedPost",
           pending: false,
-          topic_title: "Hello this is a test topic",
+          topic_fancy_title: "Hello this is a test topic",
           is_new_topic: false,
         },
       ],

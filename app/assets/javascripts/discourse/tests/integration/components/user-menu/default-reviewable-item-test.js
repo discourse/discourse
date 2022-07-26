@@ -14,7 +14,7 @@ function getReviewable(overrides = {}) {
         id: 17,
         pending: false,
         post_number: 3,
-        topic_title: "anything hello world",
+        topic_fancy_title: "anything hello world",
         type: "ReviewableFlaggedPost",
       },
       overrides
