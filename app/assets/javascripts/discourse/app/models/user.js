@@ -1178,6 +1178,32 @@ User.reopenClass(Singleton, {
   },
 });
 
+User.reopenClass({
+  create(args) {
+    args = args || {};
+    this.deleteStatusTrackingFields(args);
+    return this._super(args);
+  },
+
+  deleteStatusTrackingFields(args) {
+    // every user instance has to have it's own tracking fields
+    // when creating a new user model
+    // its _subscribersCount and _clearStatusTimerId fields
+    // should be equal to 0 and null
+    // here we makes sure that even if these fields
+    // will be passed in args they won't be set anyway
+    //
+    // this is something that could be implemented by making these fields private,
+    // but EmberObject doesn't support private fields
+    if (args.hasOwnProperty("_subscribersCount")) {
+      delete args._subscribersCount;
+    }
+    if (args.hasOwnProperty("_clearStatusTimerId")) {
+      delete args._clearStatusTimerId;
+    }
+  },
+});
+
 // user status tracking
 User.reopen(Evented, {
   _subscribersCount: 0,

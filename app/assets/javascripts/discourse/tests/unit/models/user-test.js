@@ -163,4 +163,20 @@ module("Unit | Model | user", function () {
       user2.stopTrackingStatus();
     }
   });
+
+  test("create() doesn't set internal status tracking fields", function (assert) {
+    const user = User.create({
+      _subscribersCount: 10,
+      _clearStatusTimerId: 100,
+    });
+
+    assert.notOk(
+      user.hasOwnProperty("_subscribersCount"),
+      "_subscribersCount wasn't set"
+    );
+    assert.notOk(
+      user.hasOwnProperty("_clearStatusTimerId"),
+      "_clearStatusTimerId wasn't set"
+    );
+  });
 });
