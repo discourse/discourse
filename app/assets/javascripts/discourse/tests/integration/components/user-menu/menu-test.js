@@ -81,7 +81,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      [...Array(4).keys()].map((n) => n.toString()),
+      ["0", "1", "2", "3"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -97,7 +97,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      [...Array(6).keys()].map((n) => n.toString()),
+      ["0", "1", "2", "3", "4", "5"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
   });
