@@ -9,7 +9,6 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -752,8 +751,6 @@ acceptance("Sidebar - Community Section", function (needs) {
     const initialCallbackCount = Object.keys(
       topicTrackingState.stateChangeCallbacks
     ).length;
-
-    await undockSidebar();
 
     assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,

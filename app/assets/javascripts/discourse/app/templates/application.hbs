@@ -23,7 +23,7 @@
     <div class="sidebar-wrapper">
       {{!-- empty div allows for animation --}}
       {{#if (and this.currentUser.experimental_sidebar_enabled this.showSidebar)}}
-        <Sidebar/>
+        <Sidebar @toggleSidebar={{action "toggleSidebar"}}/>
       {{/if}}
     </div>
 

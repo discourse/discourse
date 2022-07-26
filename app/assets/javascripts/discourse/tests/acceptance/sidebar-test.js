@@ -7,7 +7,6 @@ import {
   exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 
 acceptance("Sidebar - Anon User", function () {
   // Don't show sidebar for anon user until we know what we want to display
@@ -75,54 +74,5 @@ acceptance("Sidebar - User with sidebar enabled", function (needs) {
     await visit("/");
 
     assert.notOk(exists(".sidebar-footer-link-admin"));
-  });
-
-  test("undocking and docking sidebar", async function (assert) {
-    await visit("/");
-
-    assert.ok(
-      document.body.classList.contains("has-sidebar-page"),
-      "adds sidebar utility class to body"
-    );
-
-    assert.ok(exists(".sidebar-container"), "displays the sidebar by default");
-
-    await undockSidebar();
-
-    assert.ok(
-      !document.body.classList.contains("has-sidebar-page"),
-      "removes sidebar utility class from body"
-    );
-
-    assert.ok(!exists(".sidebar-container"), "hides the sidebar");
-
-    assert.ok(
-      exists(".sidebar-hamburger-dropdown"),
-      "displays the sidebar in hamburger dropdown automatically after undocking"
-    );
-
-    await click("button.sidebar-footer-actions-dock-toggle");
-
-    assert.ok(
-      exists(".sidebar-container"),
-      "displays the sidebar after docking"
-    );
-
-    assert.notOk(
-      exists(".sidebar-hamburger-dropdown"),
-      "hides the sidebar in hamburger dropdown automatically after docking"
-    );
-
-    await click(".hamburger-dropdown");
-
-    assert.ok(
-      exists(".sidebar-hamburger-dropdown"),
-      "displays the sidebar in hamburger dropdown even when sidebar is docked"
-    );
-
-    assert.notOk(
-      exists(".sidebar-hamburger-dropdown .sidebar-footer-actions-dock-toggle"),
-      "does not display sidebar dock toggle in hamburger dropdown when sidebar is docked"
-    );
   });
 });

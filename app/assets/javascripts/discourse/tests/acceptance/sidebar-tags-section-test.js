@@ -9,7 +9,6 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -323,8 +322,6 @@ acceptance("Sidebar - Tags section", function (needs) {
     const initialCallbackCount = Object.keys(
       topicTrackingState.stateChangeCallbacks
     ).length;
-
-    await undockSidebar();
 
     assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,

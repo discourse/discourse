@@ -10,8 +10,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
-
 import Site from "discourse/models/site";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
@@ -396,8 +394,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
     const initialCallbackCount = Object.keys(
       topicTrackingState.stateChangeCallbacks
     ).length;
-
-    await undockSidebar();
 
     assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,
