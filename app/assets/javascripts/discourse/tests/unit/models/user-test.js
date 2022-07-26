@@ -5,13 +5,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
 
-module("Unit | Model | user", function (hooks) {
-  hooks.afterEach(function () {
-    if (this.clock) {
-      this.clock.restore();
-    }
-  });
-
+module("Unit | Model | user", function () {
   test("staff", function (assert) {
     let user = User.create({ id: 1, username: "eviltrout" });
 
@@ -110,6 +104,29 @@ module("Unit | Model | user", function (hooks) {
     User.createCurrent();
 
     assert.ok(spyMomentGuess.notCalled);
+  });
+
+  test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
+    const user = User.create();
+    assert.equal(user._subscribersCount, 0);
+
+    user.trackStatus();
+    assert.equal(user._subscribersCount, 1);
+
+    user.trackStatus();
+    assert.equal(user._subscribersCount, 2);
+
+    user.stopTrackingStatus();
+    assert.equal(user._subscribersCount, 1);
+
+    user.stopTrackingStatus();
+    assert.equal(user._subscribersCount, 0);
+  });
+
+  test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
+    const user = User.create();
+    user.stopTrackingStatus();
+    assert.ok(true);
   });
 
   test("clears statuses of several users correctly when receiving status updates via appEvents", function (assert) {
