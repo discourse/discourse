@@ -71,7 +71,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :default_calendar,
              :bookmark_auto_delete_preference,
              :pending_posts_count,
-             :experimental_sidebar_enabled,
              :status,
              :sidebar_category_ids,
              :sidebar_tag_names,
@@ -309,20 +308,12 @@ class CurrentUserSerializer < BasicUserSerializer
     Draft.has_topic_draft(object)
   end
 
-  def experimental_sidebar_enabled
-    object.user_option.enable_experimental_sidebar
-  end
-
-  def include_experimental_sidebar_enabled?
-    SiteSetting.enable_experimental_sidebar
-  end
-
   def sidebar_category_ids
     object.category_sidebar_section_links.pluck(:linkable_id)
   end
 
   def include_sidebar_category_ids?
-    include_experimental_sidebar_enabled? && object.user_option.enable_experimental_sidebar
+    SiteSetting.enable_experimental_sidebar_hamburger
   end
 
   def sidebar_tag_names

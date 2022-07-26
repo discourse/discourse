@@ -1824,7 +1824,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if current_user&.user_option&.enable_experimental_sidebar
+    if SiteSetting.enable_experimental_sidebar_hamburger
       if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
         params[:sidebar_category_ids] = []
       end

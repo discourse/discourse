@@ -10,8 +10,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
-
 import Site from "discourse/models/site";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
@@ -22,9 +20,11 @@ acceptance(
   function (needs) {
     needs.settings({
       suppress_uncategorized_badge: true,
+      enable_experimental_sidebar_hamburger: true,
+      enable_sidebar: true,
     });
 
-    needs.user({ experimental_sidebar_enabled: true });
+    needs.user();
 
     test("uncategorized category is not shown", async function (assert) {
       const categories = Site.current().categories;
@@ -56,12 +56,13 @@ acceptance(
 
 acceptance("Sidebar - Categories Section", function (needs) {
   needs.user({
-    experimental_sidebar_enabled: true,
     sidebar_category_ids: [],
     sidebar_tag_names: [],
   });
 
   needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
     suppress_uncategorized_badge: false,
   });
 
@@ -397,11 +398,11 @@ acceptance("Sidebar - Categories Section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await undockSidebar();
+    await click(".hamburger-dropdown");
 
-    assert.strictEqual(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount
+    assert.ok(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length <
+        initialCallbackCount
     );
   });
 });

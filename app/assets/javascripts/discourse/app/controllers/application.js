@@ -52,10 +52,6 @@ export default Controller.extend({
     this.toggleProperty("showSidebar");
 
     if (this.site.desktopView) {
-      this.appEvents.trigger("header:keyboard-trigger", {
-        type: "hamburger",
-      });
-
       if (this.showSidebar) {
         this.keyValueStore.removeItem(this.hideSidebarKey);
       } else {

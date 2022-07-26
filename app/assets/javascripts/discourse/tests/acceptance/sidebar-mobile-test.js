@@ -3,7 +3,13 @@ import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user();
+
+  needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
+  });
+
   needs.mobileView();
 
   test("hidden by default", async function (assert) {
@@ -16,11 +22,6 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     await visit("/");
 
     await click(".hamburger-dropdown");
-
-    assert.notOk(
-      exists(".sidebar-footer-actions-dock-toggle"),
-      "button to dock sidebar is not displayed"
-    );
 
     assert.ok(exists(".sidebar-container"), "sidebar is displayed");
 
