@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DeleteRejectedEmailAfterDaysValidator
-  MAX = 36500.freeze
+  MAX = 36500
 
   def initialize(opts = {})
     @opts = opts
@@ -12,6 +12,6 @@ class DeleteRejectedEmailAfterDaysValidator
   end
 
   def error_message
-    I18n.t("site_settings.errors.delete_rejected_email_after_days") if !@valid
+    I18n.t("site_settings.errors.delete_rejected_email_after_days", max: MAX) if !@valid
   end
 end
