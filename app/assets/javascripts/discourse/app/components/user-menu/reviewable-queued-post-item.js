@@ -1,6 +1,8 @@
 import UserMenuDefaultReviewableItem from "discourse/components/user-menu/default-reviewable-item";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
+import { escapeExpression } from "discourse/lib/utilities";
+import { emojiUnescape } from "discourse/lib/text";
 
 export default class UserMenuReviewableQueuedPostItem extends UserMenuDefaultReviewableItem {
   get actor() {
@@ -8,26 +10,19 @@ export default class UserMenuReviewableQueuedPostItem extends UserMenuDefaultRev
   }
 
   get description() {
-    const fancyTitle = this.reviewable.topic_fancy_title;
-    const payloadTitle = this.reviewable.payload_title;
+    let title = this.reviewable.topic_fancy_title;
+    if (!title) {
+      title = escapeExpression(this.reviewable.payload_title);
+    }
+    title = emojiUnescape(title);
     if (this.reviewable.is_new_topic) {
-      if (fancyTitle) {
-        return htmlSafe(fancyTitle);
-      } else {
-        return payloadTitle;
-      }
+      return htmlSafe(title);
     } else {
-      if (fancyTitle) {
-        return htmlSafe(
-          I18n.t("user_menu.reviewable.new_post_in_topic", {
-            title: fancyTitle,
-          })
-        );
-      } else {
-        return I18n.t("user_menu.reviewable.new_post_in_topic", {
-          title: payloadTitle,
-        });
-      }
+      return htmlSafe(
+        I18n.t("user_menu.reviewable.new_post_in_topic", {
+          title,
+        })
+      );
     }
   }
 
