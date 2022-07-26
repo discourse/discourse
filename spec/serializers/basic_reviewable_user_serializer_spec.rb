@@ -17,15 +17,13 @@ describe BasicReviewableUserSerializer do
     )
   end
 
-  def get_json
-    described_class.new(reviewable, root: false).as_json
-  end
+  subject { described_class.new(reviewable, root: false).as_json }
 
-  it "includes username" do
-    expect(get_json[:username]).to eq(user.username)
-  end
+  include_examples "common basic reviewable serializer"
 
-  it "is a subclass of BasicReviewableSerializer" do
-    expect(described_class).to be < BasicReviewableSerializer
+  context "#username" do
+    it "equals the username in the reviewable's payload" do
+      expect(subject[:username]).to eq(user.username)
+    end
   end
 end
