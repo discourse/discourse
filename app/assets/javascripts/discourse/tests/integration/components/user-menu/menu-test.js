@@ -86,7 +86,7 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  test("reviewables tab is shown if currentUser can review", async function (assert) {
+  test("reviewables tab is shown if current user can review", async function (assert) {
     this.currentUser.set("can_review", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
