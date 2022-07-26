@@ -1283,7 +1283,7 @@ class User < ActiveRecord::Base
 
   def apply_watched_words
     validatable_user_fields.each do |id, value|
-      set_user_field(id, PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1"))
+      set_user_field(id, WordWatcher.apply_to_text(value))
     end
   end
 
