@@ -2,6 +2,11 @@ import GlimmerComponent from "discourse/components/glimmer";
 import I18n from "I18n";
 
 export default class UserMenuReviewableItem extends GlimmerComponent {
+  constructor() {
+    super(...arguments);
+    this.reviewable = this.args.item;
+  }
+
   get actor() {
     const flagger = this.reviewable.flagger_username;
     if (flagger) {
@@ -19,9 +24,5 @@ export default class UserMenuReviewableItem extends GlimmerComponent {
 
   get icon() {
     return "flag";
-  }
-
-  get reviewable() {
-    return this.args.item;
   }
 }
