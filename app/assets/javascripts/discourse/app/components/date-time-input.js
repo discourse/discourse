@@ -52,8 +52,7 @@ export default Component.extend({
       return;
     }
 
-    this.onChange &&
-      this.onChange(
+    this.onChange?.(
         moment.tz(
           {
             year: date.year(),
@@ -69,10 +68,6 @@ export default Component.extend({
 
   @computed
   get resolvedTimezone() {
-    if (this.timezone) {
-      return this.timezone;
-    } else {
-      return moment.tz.guess();
-    }
+    return this.timezone || moment.tz.guess();
   },
 });
