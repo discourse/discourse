@@ -51,12 +51,6 @@ module(
       assert.strictEqual(
         label.textContent.trim(),
         "sayo2",
-        "the label contains flagger_username"
-      );
-
-      assert.strictEqual(
-        label.textContent.trim(),
-        "sayo2",
         "the label is the flagger_username"
       );
       assert.strictEqual(
