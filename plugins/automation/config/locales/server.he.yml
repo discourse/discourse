@@ -47,7 +47,10 @@ he:
         description: הפיכת נושא לכרזה
       gift_exchange:
         title: החלפת מתנות
+      suspend_user_by_email:
+        title: השהיית משתמש לפי דוא״ל
       topic_required_words:
+        title: מילים שנחוצות לנושא
         errors:
           must_include_word: "הפוסט חייב לכלול לפחות אחת מהמילים האלו: %{words}"
       close_topic:
@@ -56,4 +59,11 @@ he:
       append_last_edited_by:
         title: הוספת נערך לאחרונה על ידי
         description: מוסיף את פרטי העריכה האחרונה של הפוסט לתחתית התוכן המבושל.
-        text: "> נערך לאחרונה על ידי %{username} %{date_time}"
+        text: "נערך לאחרונה על ידי ‎@%{username} ב־%{date_time}"
+      append_last_checked_by:
+        title: הוספת נבדק לאחרונה על ידי
+        description: מוסיף את פרטי הבדיקה האחרונה של הפוסט לתחתית התוכן המבושל.
+        text: "נבדק לאחרונה על ידי ‎@%{username} ב־%{date_time}"
+        summary: בדיקת מסמך
+        details: "ביצוע בדיקה על המסמך: "
+        button_text: בוצע

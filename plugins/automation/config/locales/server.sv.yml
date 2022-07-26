@@ -16,5 +16,3 @@ sv:
       close_topic:
         title: Stäng ämne
         description: Stänger ett ämne med ett valfritt avslutningsmeddelande
-      append_last_edited_by:
-        text: "> Senast redigerad av %{username} %{date_time}"

@@ -11,3 +11,8 @@ fa_IR:
         title: نشان کاربر اعطا شده
       topic:
         title: موضوع
+    scriptables:
+      append_last_edited_by:
+        text: "آخرین ویرایش توسط @%{username} %{date_time}"
+      append_last_checked_by:
+        text: "آخرین بررسی توسط @%{username} %{date_time}"

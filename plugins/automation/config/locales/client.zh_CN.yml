@@ -5,3 +5,42 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  js:
+    discourse_automation:
+      title: 自动化
+      create: "新建\n、"
+      update: 更新
+      select_script: 选择一个脚本
+      select_trigger: 选择一个触发器
+      confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，您要继续吗？
+      confirm_automation_trigger: 此操作将触发自动化，您要继续吗？
+      no_automation_yet: 您尚未创建任何自动化流程。
+      edit_automation:
+        trigger_section:
+          forced: 此触发器由脚本强制执行。
+          next_pending_automation: "下一次自动化将在以下时间运行： %{date}"
+          trigger_now: "立即运行"
+        fields_section:
+          title: 脚本选项
+      destroy_automation:
+        confirm: "您确定要删除`%{name}吗？"
+      fields:
+        key_value:
+          label: 配置
+        user:
+          label: 用户
+        pm:
+          title:
+            label: 标题
+        pms:
+          confirm_remove_pm: "您确定要删除此 PM 吗？"
+          placeholder_title: PM 标题
+          add_pm: 添加PM
+          title:
+            label: 标题
+          raw:
+            label: 正文内容
+          delay:
+            label: 延迟（分钟）
+        group:
+          label: 群组
