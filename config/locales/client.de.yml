@@ -1709,11 +1709,11 @@ de:
       other: Antworten
     signup_cta:
       sign_up: "Registrieren"
-      hide_session: "Erinnere mich morgen"
+      hide_session: "Vielleicht später"
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber du hast bislang noch kein Konto angelegt."
-      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem „Gefällt mir“ versehen und diese Freude mit allen teilen. :heartpulse:"
+      value_prop: "Hast du es satt, dich durch die gleichen Beiträge zu scrollen? Wenn du ein Konto erstellst, kommst du immer wieder dorthin zurück, wo du aufgehört hast. Mit einem Konto kannst du auch über neue Antworten benachrichtigt werden, Lesezeichen speichern und anderen mit Likes danken. Wir können alle zusammenarbeiten, um diese Gemeinschaft großartig zu machen. :heart:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description:
@@ -1918,9 +1918,6 @@ de:
       min_content_not_reached:
         one: "Wähle mindestens %{count} Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
-      invalid_selection_length:
-        one: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
-        other: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
       components:
         tag_drop:
           filter_for_more: Filtern nach mehr …
@@ -2119,6 +2116,8 @@ de:
       empty: "Keine Benachrichtigungen gefunden."
       post_approved: "Dein Beitrag wurde genehmigt."
       reviewable_items: "Elemente, die eine Überprüfung benötigen"
+      watching_first_post_label: "Neues Thema"
+      user_moved_post: "%{username} verschoben"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2131,6 +2130,10 @@ de:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} und %{count} anderer</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} und %{count} andere</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} und jemand anderes"
+        other: "%{username}, %{username2} und %{count} andere"
       liked_consolidated_description:
         one: "gefällt %{count} deiner Beiträge"
         other: "gefallen %{count} deiner Beiträge"
@@ -2139,6 +2142,7 @@ de:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> hat deine Einladung angenommen"
+      invitee_accepted_your_invitation: "hat deine Einladung angenommen"
       moved_post: "<span>%{username}</span> hat %{description} verschoben"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Du hast „%{description}“ verliehen bekommen"
@@ -3424,6 +3428,7 @@ de:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastenkombinationen"
+      short_title: "Verknüpfungen"
       jump_to:
         title: "Springe zu"
         home: "%{shortcut} Startseite"
@@ -3734,10 +3739,10 @@ de:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung ist erfolgreich. Weiterleitung zur vorherigen Seite…"
     sidebar:
       unread_count:
-        one: "%{count} ungelesenes"
+        one: "%{count} ungelesene"
         other: "%{count} ungelesene"
       new_count:
-        one: "%{count} neues"
+        one: "%{count} neue"
         other: "%{count} neue"
       toggle_section: "Abschnitt umschalten"
       sections:
@@ -3765,9 +3770,9 @@ de:
           header_link_title: "alle Kategorien"
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
-        topics:
+        community:
           header_link_title: "Startseite"
-          header_link_text: "Themen"
+          header_link_text: "Community"
           header_action_title: "ein neues Thema erstellen"
           links:
             everything:
@@ -3776,9 +3781,12 @@ de:
             tracked:
               content: "Verfolgt"
               title: "Alle verfolgten Themen"
-            bookmarked:
-              content: "Lesezeichen"
-              title: "Alle mit Lesezeichen versehenen Themen"
+            groups:
+              content: "Gruppen"
+              title: "Alle Gruppen"
+            users:
+              content: "Benutzer"
+              title: "Alle Benutzer"
             my_posts:
               content: "Meine Beiträge"
               title: "Meine Beiträge"

@@ -1579,11 +1579,9 @@ bg:
       other: отговори
     signup_cta:
       sign_up: "Регистрирай се"
-      hide_session: "Напомни ми утре"
       hide_forever: "не благодаря"
       hidden_for_session: "Добре, ще те попитаме утре. Винаги можете да използвате „Вход“ и за създаване на акаунт."
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
-      value_prop: "Когато създадете профил, ще отбелязваме това, което сте чели, така че да можете да продължите от там, откъдето сте спрели. Можете също така да получавате известия тук и по електронната поща, когато има нови мнения. Също така ще може да маркирате любимите си публикации."
     summary:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
       description_time_MF: "Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>."
@@ -1770,9 +1768,6 @@ bg:
       min_content_not_reached:
         one: "Изберете поне %{count} елемент."
         other: "Изберете поне %{count} елемента."
-      invalid_selection_length:
-        one: "Изборът трябва да съдържа поне %{count} знак."
-        other: "Изборът трябва да съдържа поне %{count} знака."
       components:
         tag_drop:
           filter_for_more: Филтрирайте за повече...
@@ -1925,6 +1920,7 @@ bg:
       none: "В момента не могат да бъдат заредени уведомленията."
       empty: "Няма намерени нотификации."
       reviewable_items: "точки, изискващи преглед"
+      watching_first_post_label: "Нова тема"
       dismiss_confirmation:
         dismiss: "Отмени"
         cancel: "Отмени"
@@ -3010,12 +3006,17 @@ bg:
         categories:
           header_link_title: "всички категории"
           header_link_text: "Категории"
-        topics:
+        community:
           header_link_title: "начало"
-          header_link_text: "Теми"
+          header_link_text: "Общност "
           links:
             tracked:
               content: "Следени"
+            groups:
+              content: "Групи"
+              title: "Всички групи"
+            users:
+              content: "Потребители"
             my_posts:
               content: "Моите публикации"
   admin_js:

@@ -1520,7 +1520,6 @@ lv:
       other: atbildes
     signup_cta:
       sign_up: "Pierakstīties"
-      hide_session: "Atgādināt man rīt"
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
@@ -1780,6 +1779,7 @@ lv:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
+      watching_first_post_label: "Jauna tēma"
       dismiss_confirmation:
         dismiss: "Nerādīt"
         cancel: "Atcelt"
@@ -2829,12 +2829,17 @@ lv:
         categories:
           header_link_title: "visas sadaļas"
           header_link_text: "Sadaļas"
-        topics:
+        community:
           header_link_title: "mājas"
-          header_link_text: "Tēmas"
+          header_link_text: "Kopiena"
           links:
             tracked:
               content: "Sekots"
+            groups:
+              content: "Grupas"
+              title: "Visas grupas"
+            users:
+              content: "Lietotāji"
             my_posts:
               content: "Mani ieraksti"
   admin_js:

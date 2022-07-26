@@ -1849,11 +1849,9 @@ pl_PL:
       other: odpowiedzi
     signup_cta:
       sign_up: "Rejestracja"
-      hide_session: "Przypomnij mi jutro"
       hide_forever: "nie, dziękuję"
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
-      value_prop: "Jeśli założysz konto, będziemy pamiętać dokładnie to, co przeczytałeś/łaś, więc zawsze wrócisz tam, gdzie ostatnio opuściłeś/łaś temat. Otrzymasz również powiadomienia, tutaj i za pośrednictwem poczty email, gdy ktoś Ci odpowie. Możesz również polubić wpisy, aby dzielić się miłością. :heartpulse:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
@@ -2072,11 +2070,6 @@ pl_PL:
         few: "Wybierz co najmniej %{count} elementy."
         many: "Wybierz co najmniej %{count} elementów."
         other: "Wybierz co najmniej %{count} elementów."
-      invalid_selection_length:
-        one: "Zaznaczenie musi zawierać co najmniej %{count} znak."
-        few: "Zaznaczenie musi zawierać co najmniej %{count} znaki."
-        many: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
-        other: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
       components:
         tag_drop:
           filter_for_more: Filtruj po więcej...
@@ -2295,6 +2288,7 @@ pl_PL:
       empty: "Nie znaleziono powiadomień."
       post_approved: "Twój wpis został zatwierdzony"
       reviewable_items: "przedmioty wymagające przeglądu"
+      watching_first_post_label: "Nowy temat"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2309,6 +2303,12 @@ pl_PL:
         few: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} i %{count} inna osoba"
+        few: "%{username}, %{username2} i %{count} inne osoby"
+        many: "%{username}, %{username2} i %{count} innych osób"
+        other: "%{username}, %{username2} oraz %{count} innych"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"
@@ -4094,9 +4094,9 @@ pl_PL:
           header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"
           header_action_title: "edytuj kategorie paska bocznego"
-        topics:
+        community:
           header_link_title: "strona główna"
-          header_link_text: "Tematy"
+          header_link_text: "Społeczność"
           header_action_title: "utwórz nowy temat"
           links:
             everything:
@@ -4105,9 +4105,11 @@ pl_PL:
             tracked:
               content: "Śledzone"
               title: "Wszystkie śledzone tematy"
-            bookmarked:
-              content: "Zakładki"
-              title: "Wszystkie tematy dodane do zakładek"
+            groups:
+              content: "Grupy"
+              title: "Wszystkie grupy"
+            users:
+              content: "Użytkownicy"
             my_posts:
               content: "Wysłane"
               title: "Moje posty"

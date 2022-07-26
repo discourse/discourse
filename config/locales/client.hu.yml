@@ -1689,11 +1689,9 @@ hu:
       other: válasz
     signup_cta:
       sign_up: "Regisztráció"
-      hide_session: "Emlékeztessen holnap"
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
       intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
-      value_prop: "Ha létrehoz egy fiókot, akkor a rendszer emlékezni fog arra, hogy mit olvasott, így mindig oda térhet vissza, ahol korábban abbahagyta. Értesítéseket is fog kapni, itt is és e-mailben is, valahányszor valaki válaszol Önnek. A bejegyzéseket pedig kedvelheti is. :heartpulse:"
     summary:
       enabled_description: "A téma összefoglalását látja: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description:
@@ -1888,9 +1886,6 @@ hu:
       min_content_not_reached:
         one: "Válasszon legalább %{count} elemet."
         other: "Válasszon legalább %{count} elemet."
-      invalid_selection_length:
-        one: "A címnek legalább %{count} karakteresnek kell lennie"
-        other: "A címnek legalább %{count} karakteresnek kell lennie"
       components:
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
@@ -2083,6 +2078,7 @@ hu:
       empty: "Nem található értesítés."
       post_approved: "A bejegyzését jóváhagyták"
       reviewable_items: "felülvizsgálatot igénylő elemek"
+      watching_first_post_label: "Új téma"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2095,6 +2091,10 @@ hu:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} és még %{count} felhasználó</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} és még %{count} felhasználó</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} %{count} más"
+        other: "%{username}, %{username2} és %{count} mások"
       liked_consolidated_description:
         one: "kedvelte %{count} bejegyzését"
         other: "kedvelte %{count} bejegyzését"
@@ -3322,12 +3322,17 @@ hu:
         categories:
           header_link_title: "összes kategória"
           header_link_text: "Kategóriák"
-        topics:
+        community:
           header_link_title: "kezdőlap"
-          header_link_text: "Téma"
+          header_link_text: "Közösség"
           links:
             tracked:
               content: "Követett"
+            groups:
+              content: "Csoportok"
+              title: "Összes csoport"
+            users:
+              content: "Felhasználók"
             my_posts:
               content: "Saját bejegyzéseim"
   admin_js:

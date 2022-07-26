@@ -1208,7 +1208,6 @@ et:
       other: vastuseid
     signup_cta:
       sign_up: "Liitu"
-      hide_session: "Tuleta mulle homme meelde"
       hide_forever: "tänan, ei"
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
@@ -1430,6 +1429,7 @@ et:
       title: "teavitused @name mainimiste, oma postitustele ja teemadele vastamiste, sõnumite, jne kohta"
       none: "Hetkel ei saa teavitusi laadida."
       empty: "Teavitusi ei leitud."
+      watching_first_post_label: "Uus teema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1439,6 +1439,7 @@ et:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2555,12 +2556,17 @@ et:
         categories:
           header_link_title: "kõik foorumid"
           header_link_text: "Liigid"
-        topics:
+        community:
           header_link_title: "avaleht"
-          header_link_text: "Teemad"
+          header_link_text: "Kogukond"
           links:
             tracked:
               content: "Jälgitud"
+            groups:
+              content: "Grupid"
+              title: "Kõik grupid"
+            users:
+              content: "Kasutajad"
             my_posts:
               content: "Minu"
   admin_js:

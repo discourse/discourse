@@ -1615,11 +1615,9 @@ lt:
       other: Atsakymai
     signup_cta:
       sign_up: "Registruotis"
-      hide_session: "Priminti rytoj"
       hide_forever: "Ačiū ne!"
       hidden_for_session: "Gerai, paklausime rytoj. Jūs taip pat visada galite naudoti „Prisijungti“, kad sukurtumėte paskyrą."
       intro: "Sveiki! Panašu, kad jums patinka diskusija, tačiau dar nesate prisiregistravę prie paskyros."
-      value_prop: "Kai sukuriate paskyrą, mes tiksliai prisimename tai, ką perskaitėte, todėl visada grįšite ten, kur baigėte. Taip pat gausite pranešimus čia ir el. paštu, kai kas nors jums atsakys. Ir jūs galite pamėgti įrašus, kad pasidalytumėte meile. :heartpulse:"
     summary:
       enabled_description: "Tu šiuo metu žiūri temos aprašymą: pačius įdomiausius įrašus, kuriuos išrinko bendruomenė."
       enable: "Apibendrinkite šią Temą"
@@ -1972,6 +1970,7 @@ lt:
       empty: "Pranešimų nėra"
       post_approved: "Jūsų įrašas buvo patvirtintas"
       reviewable_items: "elementus, kuriuos reikia peržiūrėti"
+      watching_first_post_label: "Nauja tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1986,6 +1985,12 @@ lt:
         few: "<span class='multi-user'>%{username}, %{username2}ir %{count} kiti</span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} ir dar %{count}"
+        few: "%{username}, %{username2}ir %{count} kiti"
+        many: "%{username}, %{username2} ir %{count}kitų"
+        other: "%{username}, %{username2} ir %{count}kitų"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -3510,9 +3515,9 @@ lt:
         categories:
           header_link_title: "visos kategorijos"
           header_link_text: "Kategorijos"
-        topics:
+        community:
           header_link_title: "pradinis"
-          header_link_text: "Temos"
+          header_link_text: "Bendruomenė"
           header_action_title: "sukurti naują temą"
           links:
             everything:
@@ -3521,8 +3526,11 @@ lt:
             tracked:
               content: "Sekami"
               title: "Visos stebimos temos"
-            bookmarked:
-              content: "Pažymėta"
+            groups:
+              content: "Grupės"
+              title: "Visos grupės"
+            users:
+              content: "Vartotojai"
             my_posts:
               content: "Mano Įrašai"
   admin_js:

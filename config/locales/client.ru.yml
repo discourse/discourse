@@ -1853,11 +1853,11 @@ ru:
       other: ответов
     signup_cta:
       sign_up: "Зарегистрироваться"
-      hide_session: "Напомнить мне завтра"
+      hide_session: "Может быть позже"
       hide_forever: "Нет, спасибо"
       hidden_for_session: "Хорошо, напомним завтра. Кстати, зарегистрироваться можно также и с помощью кнопки \"Войти\"."
       intro: "Здравствуйте! Похоже, вам нравится обсуждение, но вы ещё не зарегистрировали аккаунт."
-      value_prop: "Когда вы создаёте учётную запись, мы точно помним, что вы прочитали, поэтому вы всегда возвращаетесь туда, где остановились. Вы также получаете уведомления, здесь и по электронной почте, когда кто-то отвечает вам. И вы можете в сообщениях поставить отметку 'Мне нравится'. :heartpulse:"
+      value_prop: "Устали листать одни и те же темы? Когда вы создаете учётную запись, вы всегда будете возвращаться туда, где остановились. С учётной записью вы также можете получать уведомления о новых ответах, сохранять закладки и использовать симпатии, чтобы благодарить других участников. Мы все можем работать вместе, чтобы сделать это сообщество необычным и интересным. :heart:"
     summary:
       enabled_description: "Вы просматриваете выдержку из темы - только самые интересные сообщения по мнению сообщества."
       description:
@@ -2025,6 +2025,7 @@ ru:
       categories_only: "Только разделы"
       categories_with_featured_topics: "Разделы с избранными темами"
       categories_and_latest_topics: "Разделы и список последних тем форума"
+      categories_and_latest_topics_created_date: "Разделы и последние темы (сортировка по дате создания темы)"
       categories_and_top_topics: "Разделы и популярные темы"
       categories_boxes: "Блоки с подразделами"
       categories_boxes_with_topics: "Блоки с избранными темами"
@@ -2076,11 +2077,6 @@ ru:
         few: "Выберите хотя бы %{count} элемента."
         many: "Выберите хотя бы %{count} элементов."
         other: "Выберите хотя бы %{count} элементов."
-      invalid_selection_length:
-        one: "Необходимо выбрать не менее %{count} символа."
-        few: "Необходимо выбрать не менее %{count} символов."
-        many: "Необходимо выбрать не менее %{count} символов."
-        other: "Необходимо выбрать не менее %{count} символов."
       components:
         tag_drop:
           filter_for_more: Больше тегов...
@@ -2121,7 +2117,7 @@ ru:
       options: "Настройки"
       whisper: "скрытое сообщение"
       unlist: "Тема скрыта"
-      add_warning: "Это официальное предупреждение."
+      add_warning: "Официальное предупреждение"
       toggle_whisper: "Скрытое сообщение"
       toggle_unlisted: "Скрыть"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
@@ -2299,6 +2295,7 @@ ru:
       empty: "Уведомления не найдены."
       post_approved: "Ваше сообщение было одобрено"
       reviewable_items: "Сообщения, требующие рассмотрения"
+      watching_first_post_label: "Новая тема"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2313,6 +2310,12 @@ ru:
         few: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователя</span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} и %{count} другой"
+        few: "%{username}, %{username2} и %{count} другие"
+        many: "%{username}, %{username2} и %{count} других"
+        other: "%{username}, %{username2} и %{count} других"
       liked_consolidated_description:
         one: "Понравилось %{count} ваше сообщение"
         few: "Понравилось %{count} ваших сообщения"
@@ -4074,13 +4077,13 @@ ru:
       unread_count:
         one: "%{count} непрочитанная"
         few: "%{count} непрочитанных"
-        many: "%{count} непрочитанная"
-        other: "%{count} непрочитанная"
+        many: "%{count} непрочитанных"
+        other: "%{count} непрочитанных"
       new_count:
         one: "%{count} новая"
         few: "%{count} новых"
         many: "%{count} новых"
-        other: "%{count} новая"
+        other: "%{count} непрочитанных"
       toggle_section: "Переключить секцию"
       sections:
         messages:
@@ -4107,20 +4110,23 @@ ru:
           header_link_title: "Все разделы"
           header_link_text: "Разделы"
           header_action_title: "Редактировать разделы боковой панели"
-        topics:
+        community:
           header_link_title: "Темы"
-          header_link_text: "Темы"
+          header_link_text: "Сообщество"
           header_action_title: "Cоздать новую тему"
           links:
             everything:
               content: "Все"
               title: "Все темы"
             tracked:
-              content: "Отслеживаемые"
+              content: "Следящие"
               title: "Все отслеживаемые темы"
-            bookmarked:
-              content: "В закладках"
-              title: "Все темы с закладками"
+            groups:
+              content: "Группы"
+              title: "Все группы"
+            users:
+              content: "Пользователи"
+              title: "Все пользователи"
             my_posts:
               content: "Мои сообщения"
               title: "Мои сообщения"

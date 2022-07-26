@@ -88,6 +88,7 @@ ro:
       inclusion: nu este inclus in listă
       invalid: nu este valid
       is_invalid: "pare neclar, e completă propoziția?"
+      is_invalid_meaningful: "pare neclar, majoritatea cuvintelor conţin aceleaşi litere de mai multe ori?"
       less_than: trebuie să fie mai mic decât %{count}
       less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
@@ -124,6 +125,7 @@ ro:
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
   invite:
     expired: "Codul tău de invitație a expirat. Te rugăm <a href='%{base_url}/about'>contactezi personalul</a> forumului."
+    confirm_email: "<p>Ești aproape gata! Am trimis un e-mail de activare la adresa ta de e-mail. Te rugăm să urmezi instrucţiunile din mail pentru a-ţi activa contul.</p><p>Dacă nu ajunge, verifică folderul spam.</p>"
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
   bulk_invite:
@@ -320,7 +322,7 @@ ro:
             execute_at:
               in_the_past: "trebuie să fie în viitor."
       <<: *errors
-  uncategorized_category_name: "Necategorisit"
+  uncategorized_category_name: "Necategorisite"
   vip_category_name: "Sufragerie"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
   meta_category_name: "Feedback la site"
@@ -1119,7 +1121,7 @@ ro:
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
-    default_other_skip_new_user_tips: "Omiteți sfaturile și insignele de înscriere pentru utilizatori noi."
+    default_other_skip_new_user_tips: "Omitete sfaturile și insignele de înscriere pentru utilizatori noi."
     default_other_like_notification_frequency: "Implicit, notifică utilizatorul la primirea de aprecieri."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
     default_categories_watching: "Implicit, listează categoriile care sunt urmărite în mod activ."
@@ -1235,6 +1237,7 @@ ro:
     incorrect_username_email_or_password: "Nume de utilizator, email sau parolă incorecte"
     wait_approval: "Îți mulțumim pentru autentificare. Te vom anunța când contul dumneavoastră a fost aprobat."
     active: "Contul tău a fost activat și e gata să fie folosit."
+    activate_email: "<p>Ești aproape gata! Am trimis un e-mail de activare către <b>%{email}</b>. Te rugăm să urmezi instrucțiunile din e-mail pentru a-ți activa contul.</p><p>Dacă nu ajunge, verifică dosarul spam.</p>"
     not_activated: "Nu te poți încă autentifica. Ți-am trimis un email de autentificare. Te rugăm să urmezi instrucțiunile din email pentru a-ți activa contul."
     not_allowed_from_ip_address: "Nu te poți conecta ca %{username} de la această adresa de IP."
     admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator de la această adresa de IP."
@@ -1613,10 +1616,30 @@ ro:
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:
       title: "Parolă uitată"
+      subject_template: "[%{email_prefix}] Resetare parolă"
+      text_body_template: |
+        Cineva a cerut resetarea parolei pe [%{site_name}] (%{base_url}).
+
+        Dacă nu ai fost tu, poți ignora în siguranță acest e-mail.
+
+        Faceţi clic pe următorul link pentru a alege o nouă parolă:
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "Setează parola"
+      text_body_template: |
+        Cineva a cerut să adauge o parolă în contul tău pe [%{site_name}](%{base_url}). Alternativ, te poți conecta folosind orice serviciu online suportat (Google, Facebook, etc) care este asociat cu această adresă de e-mail validată.
+
+        Dacă nu ați făcut această solicitare, puteți ignora în siguranță acest e-mail.
+
+        Faceți clic pe următorul link pentru a alege o parolă:
+        %{base_url}/u/parolă-reset/%{email_token}
     account_created:
       subject_template: "[%{email_prefix}] Noul tău cont"
+      text_body_template: |
+        Un nou cont a fost creat pentru tine la %{site_name}
+
+        Apasă pe următorul link pentru a alege o parolă pentru noul tău cont:
+        %{base_url}/u/parolă-reset/%{email_token}
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.
@@ -1626,6 +1649,25 @@ ro:
         %{new_email}
     signup_after_approval:
       subject_template: "Contul tă pe site-ul %{site_name} a fost aprobat!"
+    signup:
+      subject_template: "[%{email_prefix}] Confirmă noul cont"
+      text_body_template: |
+        Bine ai venit la %{site_name}!
+
+        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        %{base_url}/u/cont activat/%{email_token}
+
+        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
+    activation_reminder:
+      text_body_template: |
+        Bine ai venit la %{site_name}!
+
+        Acesta este un memento prietenos să îți activezi contul.
+
+        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        %{base_url}/u/cont activat/%{email_token}
+
+        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."

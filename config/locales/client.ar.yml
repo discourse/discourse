@@ -1927,11 +1927,9 @@ ar:
       other: ردود
     signup_cta:
       sign_up: "الاشتراك"
-      hide_session: "تذكيري غدًا"
       hide_forever: "لا، شكرًا"
       hidden_for_session: "حسنًا، سنسألك غدًا. يمكنك دائمًا استخدام \"تسجيل الدخول\" لإنشاء حساب أيضًا."
       intro: "مرحبًا! يبدو أنك تستمتع بالمناقشة، لكنك لم تشترك للحصول على حساب حتى الآن."
-      value_prop: "عند إنشاء حساب، فإننا نتذكَّر ما قرأته بالضبط؛ حتى تتمكن دائمًا من العودة والمتابعة من حيث توقفت. ستتلقى أيضًا الإشعارات هنا وعبر البريد الإلكتروني كلما ردَّ أحد عليك. ويمكنك تسجيل إعجابك بالمنشورات لمشاركة مشاعر الود. :heartpulse:"
     summary:
       enabled_description: "أنت تعرض ملخصًا لهذا الموضوع: المنشورات الأكثر إثارة للاهتمام وفقًا للمجتمع."
       description:
@@ -2157,13 +2155,6 @@ ar:
         few: "حدِّد %{count} عناصر على الأقل."
         many: "حدِّد %{count} عنصرًا على الأقل."
         other: "حدِّد %{count} عنصر على الأقل."
-      invalid_selection_length:
-        zero: "يجب ألا يقل التحديد عن %{count} حرف على الأقل."
-        one: "يجب ألا يقل التحديد عن حرف واحد (%{count}) على الأقل."
-        two: "يجب ألا يقل التحديد عن حرفين (%{count}) على الأقل."
-        few: "يجب ألا يقل التحديد عن %{count} أحرف على الأقل."
-        many: "يجب ألا يقل التحديد عن %{count} حرفًا على الأقل."
-        other: "يجب ألا يقل التحديد عن %{count} حرف على الأقل."
       components:
         tag_drop:
           filter_for_more: تحسين البحث للمزيد...
@@ -2401,6 +2392,7 @@ ar:
       empty: "لم يتم العثور على إشعارات."
       post_approved: "تمت الموافقة على منشورك"
       reviewable_items: "عناصر تتطلب المراجعة"
+      watching_first_post_label: "موضوع جديد"
       mentioned: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       group_mentioned: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       quoted: "‏<span>⁨%{username}⁩</span> ‏%{description}"
@@ -2417,6 +2409,14 @@ ar:
         few: "<span class='multi-user'>%{username} و%{username2} و%{count} مستخدمين آخرين</span> %{description}"
         many: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدمًا آخر</span> ‏%{description}"
         other: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدم آخر</span> ‏%{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        zero: "%{username} و%{username2} و%{count} مستخدمين آخرين"
+        one: "%{username} و%{username2} ومستخدم واحد (%{count}) آخر"
+        two: "%{username} و%{username2} ومستخدمان (%{count}) آخران"
+        few: "%{username} و%{username2} و%{count} مستخدمين آخرين"
+        many: "%{username} و%{username2} و%{count} مستخدمين آخرين"
+        other: "%{username} و%{username2} و%{count} مستخدمين آخرين"
       liked_consolidated_description:
         zero: "سجَّل إعجابه على %{count} من منشوراتك"
         one: "سجَّل إعجابه على واحد (%{count}) من منشوراتك"
@@ -4304,9 +4304,9 @@ ar:
         categories:
           header_link_title: "كل الفئات"
           header_link_text: "الفئات"
-        topics:
+        community:
           header_link_title: "الصفحة الرئيسية"
-          header_link_text: "الموضوعات"
+          header_link_text: "المجتمع"
           header_action_title: "إنشاء موضوع جديد"
           links:
             everything:
@@ -4315,9 +4315,11 @@ ar:
             tracked:
               content: "المتتبَّعة"
               title: "جميع المواضيع المُتَعَقبة"
-            bookmarked:
-              content: "وضع إشارة مرجعية"
-              title: "جميع المواضيع المؤشر عليها"
+            groups:
+              content: "المجموعات"
+              title: "كل المجموعات"
+            users:
+              content: "المستخدمون"
             my_posts:
               content: "منشوراتي"
   admin_js:

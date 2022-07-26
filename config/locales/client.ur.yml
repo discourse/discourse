@@ -1659,11 +1659,9 @@ ur:
       other: جوابات
     signup_cta:
       sign_up: "سائن اپ"
-      hide_session: "مجھے کل یاد دلائیں"
       hide_forever: "نہیں شکریہ"
       hidden_for_session: "ٹھیک ہے ، ہم کل آپ سے پوچھیں گے۔ آپ ہمیشہ بھی ایک اکاؤنٹ بنانے کے لئے 'لاگ ان' کا استعمال کرسکتے ہیں۔"
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
-      value_prop: "جب آپ ایک اکاؤنٹ بناتے ہیں، ہم بالکل یاد رکھتے ہیں کہ آپ نے کیا پڑھا ہے، تاکہ جہاں سے آپ نے پڑھنا چھوڑا ہو بلکل وہاں ہی پر آپ کو ہمیشہ واپس پہنچایا جا سکے۔ جب بھی کوئی آپ کو جواب دیتا ہے، آپ کو یہاں اور اِی میل پر اطلاع بھی دے دی جاتی ہے۔ اور آپ محبت کو بانٹںے کیلئے پوسٹ لائیک کر سکتے ہیں۔ :heartpulse:"
     summary:
       enabled_description: "آپ اس ٹاپک کا خلاصہ ملاحظہ کررہے ہیں: سب سے دلچسپ پوسٹ کمیونٹی کی طرف سے متعین کی جاتی ہیں۔"
       description:
@@ -1856,9 +1854,6 @@ ur:
       min_content_not_reached:
         one: "کم از کم %{count} چیز منتخب کریں۔"
         other: "کم از کم %{count} اشیاء منتخب کریں۔"
-      invalid_selection_length:
-        one: "انتخاب کم از کم %{count} حرف ہونا چاہئے۔"
-        other: "انتخاب کم از کم %{count} حروف کا ہونا چاہئے۔"
       components:
         tag_drop:
           filter_for_more: مزید کے لئے فلٹر کریں ...
@@ -2056,6 +2051,7 @@ ur:
       empty: "کوئی اطلاعات نہیں ملیں۔"
       post_approved: "آپ کی پوسٹ منظور ہو گئی تھی"
       reviewable_items: "اشیاء جن کا جائزہ لینے کی ضرورت ہے"
+      watching_first_post_label: "نیا ٹاپک"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2068,6 +2064,10 @@ ur:
       liked_many:
         one: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
         other: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username2}، %{username} اور %{count} مزید"
+        other: "%{username2}، %{username} اور %{count} مزید"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
@@ -3657,12 +3657,17 @@ ur:
         categories:
           header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
-        topics:
+        community:
           header_link_title: "ہَوم"
-          header_link_text: "ٹاپک"
+          header_link_text: "کمیونٹی"
           links:
             tracked:
               content: "ٹریک کیا ہوا"
+            groups:
+              content: "گروپس"
+              title: "تمام گروپس"
+            users:
+              content: "صارفین"
             my_posts:
               content: "میری پوسٹ"
   admin_js:

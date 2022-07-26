@@ -1483,6 +1483,7 @@ zh_CN:
           expires_at: "过期时间"
           custom_message: "可选个人信息"
           send_invite_email: "保存并发送电子邮件"
+          send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请邮件"
           save_invite: "保存邀请"
           invite_saved: "邀请已保存。"
         bulk_invite:
@@ -1636,11 +1637,11 @@ zh_CN:
       other: 回复
     signup_cta:
       sign_up: "注册"
-      hide_session: "明天提醒我"
+      hide_session: "稍后再说"
       hide_forever: "不，谢谢"
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
-      value_prop: "当您创建帐户时，我们会准确记住您阅读过的内容，因此您总可以从上次停止的地方返回。每当有人回复您时，您还会在此处和通过电子邮件收到通知。您可以为帖子点赞来分享爱。:heartpulse:"
+      value_prop: "厌倦了滚动浏览相同的帖子？当您创建一个帐户后，您总是可以回到您离开的地方。使用帐户，您还可以收到新回复通知、保存书签以及使用“赞”来感谢他人。我们可以共同努力使这个社区变得更好。 :heart:"
     summary:
       enabled_description: "您正在查看此话题的摘要：社区确定的最有趣的帖子。"
       description:
@@ -1805,6 +1806,7 @@ zh_CN:
       categories_only: "仅类别"
       categories_with_featured_topics: "包含精选话题的类别"
       categories_and_latest_topics: "类别和最新话题"
+      categories_and_latest_topics_created_date: "类别和最新话题(按话题创建日期排序)"
       categories_and_top_topics: "类别和热门话题"
       categories_boxes: "带子类别的框"
       categories_boxes_with_topics: "带精选话题的框"
@@ -1838,8 +1840,6 @@ zh_CN:
         other: "您只能选择 %{count} 个条目。"
       min_content_not_reached:
         other: "至少选择 %{count} 个条目。"
-      invalid_selection_length:
-        other: "至少选择 %{count} 个字符。"
       components:
         tag_drop:
           filter_for_more: 筛选更多…
@@ -2028,6 +2028,8 @@ zh_CN:
       empty: "找不到通知。"
       post_approved: "您的帖子已被批准"
       reviewable_items: "需要审核的条目"
+      watching_first_post_label: "新建话题"
+      user_moved_post: "%{username} 移动了"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2039,6 +2041,9 @@ zh_CN:
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
       liked_many:
         other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 人</span> %{description}"
+      liked_by_2_users: "%{username}、%{username2}"
+      liked_by_multiple_users:
+        other: "%{username}和%{username2}还有其余%{count}人"
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2046,6 +2051,7 @@ zh_CN:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> 已接受您的邀请"
+      invitee_accepted_your_invitation: "接受了你的邀请"
       moved_post: "<span>%{username}</span> 移动了%{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "获得了 '%{description}'"
@@ -3267,6 +3273,7 @@ zh_CN:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "键盘快捷键"
+      short_title: "快捷键"
       jump_to:
         title: "跳转到"
         home: "%{shortcut} 首页"
@@ -3570,7 +3577,7 @@ zh_CN:
       toggle_section: "切换部分"
       sections:
         messages:
-          header_link_title: "个人消息"
+          header_link_title: "私信"
           header_link_text: "消息"
           header_action_title: "创建个人消息"
           links:
@@ -3593,9 +3600,9 @@ zh_CN:
           header_link_title: "所有类别"
           header_link_text: "类别"
           header_action_title: "编辑你的侧边栏类别"
-        topics:
+        community:
           header_link_title: "首页"
-          header_link_text: "话题"
+          header_link_text: "社区"
           header_action_title: "创建新话题"
           links:
             everything:
@@ -3604,9 +3611,12 @@ zh_CN:
             tracked:
               content: "已跟踪"
               title: "所有跟踪的话题"
-            bookmarked:
-              content: "已加入书签"
-              title: "所有被列入书签的主题"
+            groups:
+              content: "群组"
+              title: "所有群组"
+            users:
+              content: "用户"
+              title: "所有用户"
             my_posts:
               content: "我的帖子"
               title: "我的帖子"

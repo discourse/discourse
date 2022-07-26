@@ -1678,11 +1678,11 @@ tr_TR:
       other: yanıtlar
     signup_cta:
       sign_up: "Kayıt Ol"
-      hide_session: "Yarın bana hatırlat"
+      hide_session: "Belki sonra"
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, sana yarın yeniden soracağız. \"Giriş Yap\" bağlantısını kullanarak da hesap oluşturabilirsin."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap için kaydolmadınız."
-      value_prop: "Bir hesap oluşturduğunuzda, ne okuduğunuzu kaydediyoruz, böylece her zaman kaldığınız yerden okumayı sürdürebiliyorsunuz. Ayrıca, burada ve e-posta yoluyla, biri size yanıt verdiğinde bildirim alıyorsunuz ve sevdiğinizi paylaşmak için gönderileri beğenebiliyorsunuz. :heartpulse:"
+      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Bir hesap oluşturursanız, kaldığınız yere geri dönebilirsiniz. Ayrıca bir hesabınız olursa yeni yanıtlardan haberdar olabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz. :heart:"
     summary:
       enabled_description: "Bu konunun özetini görüntülüyorsun: Okuyucularımızın en çok ilgisini çeken gönderiler"
       description:
@@ -1846,6 +1846,7 @@ tr_TR:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Öne çıkan konulardaki kategoriler"
       categories_and_latest_topics: "Kategoriler ve Son Konular"
+      categories_and_latest_topics_created_date: "Kategoriler ve Son Konular (konu oluşturulma tarihine göre sırala)"
       categories_and_top_topics: "Kategoriler ve Popüler Konular"
       categories_boxes: "Alt Kategorili Kutular"
       categories_boxes_with_topics: "Sunulan Konuları içeren Kutular"
@@ -1884,9 +1885,6 @@ tr_TR:
       min_content_not_reached:
         one: "En azından %{count} konu seçiniz"
         other: "En azından %{count}konuları seçiniz"
-      invalid_selection_length:
-        one: "Seçim en az %{count} karakter olmalıdır."
-        other: "Seçim en az %{count} karakter olmalıdır."
       components:
         tag_drop:
           filter_for_more: Daha fazlası için filtreleyin...
@@ -2077,6 +2075,8 @@ tr_TR:
       empty: "Bildirim yok."
       post_approved: "Gönderiniz onaylandı"
       reviewable_items: "inceleme gerektiren öğeler"
+      watching_first_post_label: "Yeni Konu"
+      user_moved_post: "%{username} taşındı"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2089,6 +2089,10 @@ tr_TR:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} ve %{count} diğer</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} ve %{count} diğerleri</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} ve %{count} diğer"
+        other: "%{username}, %{username2} ve %{count} diğer"
       liked_consolidated_description:
         one: "gönderilerinizden %{count} tanesi beğenildi"
         other: "gönderilerinizden %{count} tanesi beğenildi"
@@ -2097,6 +2101,7 @@ tr_TR:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> davetinizi kabul etti"
+      invitee_accepted_your_invitation: "davetinizi kabul etti"
       moved_post: "<span>%{username}</span> %{description} taşıdı"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "'%{description}' kazanıldı"
@@ -3373,6 +3378,7 @@ tr_TR:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Klavye Kısayolları"
+      short_title: "Kısayollar"
       jump_to:
         title: "Şuraya git"
         home: "%{shortcut} Anasayfa"
@@ -3696,15 +3702,29 @@ tr_TR:
         categories:
           header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
-        topics:
+        community:
           header_link_title: "anasayfa"
-          header_link_text: "Konular"
+          header_link_text: "Topluluk"
+          header_action_title: "yeni konu oluştur"
           links:
+            everything:
+              content: "Her şey"
+              title: "Tüm konular"
             tracked:
               content: "Takipte"
+              title: "Tüm izlenen konular"
+            groups:
+              content: "Gruplar"
+              title: "Tüm gruplar"
+            users:
+              content: "Kullanıcılar"
+              title: "Tüm kullanıcılar"
             my_posts:
               content: "Gönderilerim"
               title: "Gönderilerim"
+              draft_count:
+                one: "%{count} taslak"
+                other: "%{count} taslak"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:

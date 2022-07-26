@@ -1612,11 +1612,9 @@ vi:
       other: trả lời
     signup_cta:
       sign_up: "Đăng ký"
-      hide_session: "Nhắc vào ngày mai"
       hide_forever: "không, cảm ơn"
       hidden_for_session: "OK, chúng tôi sẽ hỏi bạn vào ngày mai. Bạn cũng có thể sử dụng 'Đăng nhập' để tạo tài khoản."
       intro: "Xin chào! Có vẻ như bạn đang quan tâm chủ đề này, nhưng bạn chưa đăng ký tài khoản."
-      value_prop: "Khi bạn tạo tài khoản, chúng tôi nhớ chính xác những gì bạn đã đọc, vì vậy bạn luôn quay lại ngay nơi bạn đã dừng lại. Bạn cũng nhận được thông báo, tại đây và qua email, bất cứ khi nào ai đó trả lời bạn. Và bạn có thể thích bài viết để chia sẻ. :heartpulse:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
       description:
@@ -1805,8 +1803,6 @@ vi:
         other: "Bạn chỉ có thể chọn %{count} mục."
       min_content_not_reached:
         other: "Chọn ít nhất %{count} mục."
-      invalid_selection_length:
-        other: "Lựa chọn phải có ít nhất %{count} ký tự."
       components:
         tag_drop:
           filter_for_more: Lọc để biết thêm...
@@ -1994,6 +1990,7 @@ vi:
       empty: "Không có thông báo"
       post_approved: "Bài đăng của bạn đã được phê duyệt"
       reviewable_items: "các mục yêu cầu kiểm duyệt"
+      watching_first_post_label: "Chủ đề Mới"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2005,6 +2002,9 @@ vi:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
         other: "<span class='multi-user'>%{username}, %{username2} và %{count} người khác</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        other: "%{username}, %{username2} và %{count} người khác"
       liked_consolidated_description:
         other: "đã thích %{count} bài viết của bạn"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -3476,12 +3476,17 @@ vi:
         categories:
           header_link_title: "tất cả chuyên mục"
           header_link_text: "Thư mục"
-        topics:
+        community:
           header_link_title: "trang chủ"
-          header_link_text: "Các chủ đề"
+          header_link_text: "Cộng đồng"
           links:
             tracked:
               content: "Theo dõi"
+            groups:
+              content: "Nhóm"
+              title: "Các nhóm"
+            users:
+              content: "Người dùng"
             my_posts:
               content: "Bài viết của tôi"
               draft_count:

@@ -4454,6 +4454,8 @@ zh_CN:
                 label: "包含精选话题的类别"
               categories_and_latest_topics:
                 label: "类别和最新话题"
+              categories_and_latest_topics_created_date:
+                label: "类别和最新话题(按话题创建日期排序)"
               categories_and_top_topics:
                 label: "类别和热门话题"
               categories_boxes:

@@ -1183,7 +1183,6 @@ th:
       other: ตอบ
     signup_cta:
       sign_up: "สมัครสมาชิก"
-      hide_session: "เตือนฉันพรุ่งนี้"
       hide_forever: "ไม่เป็นไร"
     summary:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
@@ -1315,8 +1314,6 @@ th:
         other: "คุณสามารถเลือกได้ %{count} รายการเท่านั้น"
       min_content_not_reached:
         other: "เลือกอย่างน้อย %{count} รายการ"
-      invalid_selection_length:
-        other: "การเลือกต้องมีอย่างน้อย %{count} ตัวอักษร"
     date_time_picker:
       from: จาก
       to: ถึง
@@ -1452,6 +1449,7 @@ th:
       none: "ไม่สามารถโหลดการแจ้งเตือนได้ในขณะนี้"
       empty: "ไม่พบการแจ้งเตือน"
       post_approved: "โพสต์ของคุณได้รับการอนุมัติ"
+      watching_first_post_label: "กระทู้ใหม่"
       mentioned: "<span>%{username}</span>%{description}"
       group_mentioned: "<span>%{username}</span>%{description}"
       quoted: "<span>%{username}</span>%{description}"
@@ -2448,12 +2446,17 @@ th:
         categories:
           header_link_title: "ทุกหมวดหมู่"
           header_link_text: "หมวดหมู่"
-        topics:
+        community:
           header_link_title: "หน้าแรก"
-          header_link_text: "กระทู้"
+          header_link_text: "ชุมชน"
           links:
             tracked:
               content: "ติดตาม"
+            groups:
+              content: "กลุ่ม"
+              title: "กลุ่มทั้งหมด"
+            users:
+              content: "ผู้ใช้"
             my_posts:
               content: "โพสต์ของฉัน"
               draft_count:

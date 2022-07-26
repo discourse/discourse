@@ -1316,10 +1316,8 @@ hy:
       other: պատասխան
     signup_cta:
       sign_up: "Գրանցվել"
-      hide_session: "Հիշեցնել ինձ վաղը"
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
-      value_prop: "Երբ Դուք ստեղծում եք հաշիվ, մենք հստակ հիշում ենք, թե Դուք ինչ եք կադացել, այսպիսով՝ Դուք միշտ վերադառնում եք ճիշտ այնտեղ, որտեղ կանգնել էիք: Դուք նաև ստանում եք ծանուցումներ այստեղ և էլ. փոստով, երբ որևէ մեկը պատասխանում է Ձեզ: Եվ Դուք կարող եք հավանել գրառումներ՝ կիսվելով սիրով: :heartpulse:"
     summary:
       enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
       enable: "Ամփոփել Այս Թեման"
@@ -1624,6 +1622,7 @@ hy:
       empty: "Ծանուցումներ չեն գտնվել:"
       post_approved: "Ձեր գրառումը հաստատված է"
       reviewable_items: "վերանայում պահանջող կետեր"
+      watching_first_post_label: "Նոր Թեմա"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1636,6 +1635,10 @@ hy:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} և ևս %{count}-ը"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"
@@ -2894,12 +2897,17 @@ hy:
         categories:
           header_link_title: "բոլոր կատեգորիաները"
           header_link_text: "Կատեգորիաներ"
-        topics:
+        community:
           header_link_title: "գլխավոր էջ"
-          header_link_text: "Թեմաներ"
+          header_link_text: "Համայնք"
           links:
             tracked:
               content: "Հետևած"
+            groups:
+              content: "Խմբեր"
+              title: "Բոլոր խմբերը"
+            users:
+              content: "Օգտատերեր"
             my_posts:
               content: "Իմ Գրառումները"
   admin_js:

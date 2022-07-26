@@ -1468,10 +1468,8 @@ bs_BA:
       other: odgovora
     signup_cta:
       sign_up: "Učlani se"
-      hide_session: "Podsjeti me sutra"
       hide_forever: "ne hvala"
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
-      value_prop: "Kada stvorite račun, sjećamo se točno onoga što ste pročitali, pa se uvijek vraćate na mjesto gdje ste stali. Također dobivate obavijesti, ovdje i putem e-pošte, kad god vam netko odgovara. I možete lajkati :heartpulse: tuđe postove i reagirati na iste reakcijama."
     summary:
       enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
       enable: "Napravi sažetak ove teme"
@@ -1779,6 +1777,7 @@ bs_BA:
       empty: "Nema obavještenja."
       post_approved: "Vaš post je odobren"
       reviewable_items: "stvari koje zahtijevaju pregled"
+      watching_first_post_label: "Nova tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1792,6 +1791,11 @@ bs_BA:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} ostali</span> %{description}"
         few: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count}</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count} </span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} ostali"
+        few: "%{username}, %{username2} i ostalih %{count}"
+        other: "%{username}, %{username2} i ostalih %{count}"
       liked_consolidated_description:
         one: "vam se svidio %{count} vaših postova"
         few: "vam se svidio %{count} vaših postova"
@@ -3090,12 +3094,17 @@ bs_BA:
         categories:
           header_link_title: "Sve kategorije"
           header_link_text: "Kategorije"
-        topics:
+        community:
           header_link_title: "naslovnica"
-          header_link_text: "Tema"
+          header_link_text: "Zajednica"
           links:
             tracked:
               content: "Praćeno"
+            groups:
+              content: "Grupe"
+              title: "Sve grupe"
+            users:
+              content: "Users"
             my_posts:
               content: "Moje objave"
   admin_js:
