@@ -291,6 +291,10 @@ RSpec.describe Reviewable, type: :model do
         approved_reviewable2,
       )
     end
+
+    it "accepts a limit argument to limit the number of returned records" do
+      expect(Reviewable.recent_list_with_pending_first(admin, limit: 2).size).to eq(2)
+    end
   end
 
   it "valid_types returns the appropriate types" do

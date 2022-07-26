@@ -535,7 +535,7 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  def self.recent_list_with_pending_first(user)
+  def self.recent_list_with_pending_first(user, limit: 30)
     order_clause = DB.sql_fragment(<<~SQL, pending: statuses[:pending])
       CASE WHEN reviewables.status = :pending THEN 0 ELSE 1 END,
       CASE WHEN reviewables.status = :pending THEN reviewables.score END DESC,
@@ -546,7 +546,7 @@ class Reviewable < ActiveRecord::Base
       .viewable_by(user, preload: false)
       .except(:order)
       .order(order_clause)
-      .limit(30)
+      .limit(limit)
 
     min_score = Reviewable.min_score_for_priority
     if min_score > 0
