@@ -353,6 +353,7 @@ export function buildResolver(baseName) {
         resolved =
           // Built-in
           this.findTemplate(adminParsedName, "admin/templates/") ||
+          this.findTemplate(parsedName, "admin/templates/") ||
           // Plugin
           this.findTemplate(adminParsedName, "javascripts/admin/");
       }
