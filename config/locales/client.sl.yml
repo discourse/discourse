@@ -1577,10 +1577,8 @@ sl:
       other: odgovorov
     signup_cta:
       sign_up: "Registracija"
-      hide_session: "Spomni me jutri"
       hide_forever: "ne, hvala"
       intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
-      value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila vsakič, ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
     summary:
       enabled_description: "Ogledujete si povzetek teme: najbolj zanimive prispevke, kot jih je določila skupnost."
       description:
@@ -1936,6 +1934,7 @@ sl:
       empty: "Ni obvestil."
       post_approved: "Vaš prispevek je bil odobren"
       reviewable_items: "čakajo na pregled"
+      watching_first_post_label: "Nova tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1950,6 +1949,12 @@ sl:
         two: "<span class='multi-user'>%{username}, %{username2} in %{count} druga</span> %{description}"
         few: "<span class='multi-user'>%{username}, %{username2} in %{count} drugi</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} in %{count} drugih</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} in %{count} drug"
+        two: "%{username}, %{username2} in %{count} druga"
+        few: "%{username}, %{username2} in %{count} drugi"
+        other: "%{username}, %{username2} in %{count} drugih"
       liked_consolidated_description:
         one: "je všečkal %{count} vaš prispevek"
         two: "je všečkal %{count} vaša prispevka"
@@ -3399,12 +3404,17 @@ sl:
         categories:
           header_link_title: "vse kategorije"
           header_link_text: "Kategorije"
-        topics:
+        community:
           header_link_title: "domov"
-          header_link_text: "Teme"
+          header_link_text: "Skupnost"
           links:
             tracked:
               content: "Sledim"
+            groups:
+              content: "Skupine"
+              title: "Vse skupine"
+            users:
+              content: "Uporabniki"
             my_posts:
               content: "Moji prispevki"
               title: "Moji prispevki"

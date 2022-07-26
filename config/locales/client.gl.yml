@@ -1567,10 +1567,8 @@ gl:
       other: respostas
     signup_cta:
       sign_up: "Rexistrarse"
-      hide_session: "Lémbremo mañá"
       hide_forever: "non grazas"
       intro: "Ola! Todo indica que goza coa discusión pero aínda non solicitou inscrición dunha conta."
-      value_prop: "Cando crea unha conta, lembramos exactamente o que ten lido, polo que sempre volve onde o deixou. Tamén recibe notificacións, desde aquí e por correo electrónico cando alguén lle responde. E pode amosarlle aprecio ás publicacións para compartir o amor. :heartpulse:"
     summary:
       enabled_description: "Está vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade."
       description:
@@ -1752,9 +1750,6 @@ gl:
       min_content_not_reached:
         one: "Seleccione como mínimo %{count} elemento."
         other: "Seleccione como mínimo %{count} elementos."
-      invalid_selection_length:
-        one: "A selección debe ter cando menos %{count} carácter."
-        other: "A selección debe ter cando menos %{count} caracteres."
       components:
         categories_admin_dropdown:
           title: "Xestionar categorías"
@@ -1934,6 +1929,7 @@ gl:
       empty: "Non se atoparon notificacións."
       post_approved: "A súa publicación foi aprobada"
       reviewable_items: "elementos que requiren revisión"
+      watching_first_post_label: "Novo tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1946,6 +1942,10 @@ gl:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} máis"
+        other: "%{username}, %{username2} e %{count} máis"
       liked_consolidated_description:
         one: "gustoulles %{count} das súas publicacións"
         other: "gustáronlles %{count} das súas publicacións"
@@ -3374,12 +3374,17 @@ gl:
         categories:
           header_link_title: "todas as categorías"
           header_link_text: "Categorías"
-        topics:
+        community:
           header_link_title: "inicio"
-          header_link_text: "Temas"
+          header_link_text: "Comunidade"
           links:
             tracked:
               content: "Seguido"
+            groups:
+              content: "Grupos"
+              title: "Todos os grupos"
+            users:
+              content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
   admin_js:

@@ -1688,11 +1688,9 @@ it:
       other: risposte
     signup_cta:
       sign_up: "Iscriviti"
-      hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
       hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
-      value_prop: "Quando crei un account, potremo ricordare esattamente cosa hai letto, in modo che tu possa riprendere esattamente da dove hai lasciato. Riceverai inoltre notifiche, qui o via email, quando qualcuno ti risponde. Potrai anche mettere \"Mi piace\" per mostrare il tuo apprezzamento :heartpulse:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description:
@@ -1897,9 +1895,6 @@ it:
       min_content_not_reached:
         one: "Seleziona almeno %{count} elemento."
         other: "Seleziona almeno %{count} elementi."
-      invalid_selection_length:
-        one: "La selezione deve contenere almeno %{count} carattere."
-        other: "La selezione deve contenere almeno %{count} caratteri."
       components:
         tag_drop:
           filter_for_more: Filtra per altri risultati...
@@ -2098,6 +2093,7 @@ it:
       empty: "Nessuna notifica trovata."
       post_approved: "Il tuo messaggio è stato approvato"
       reviewable_items: "elementi in attesa di revisione"
+      watching_first_post_label: "Nuovo Argomento"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2110,6 +2106,10 @@ it:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} altro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e altri %{count}</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} altri"
+        other: "%{username}, %{username2} e %{count} altri"
       liked_consolidated_description:
         one: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
@@ -3717,22 +3717,25 @@ it:
         categories:
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
-        topics:
+        community:
           header_link_title: "home"
-          header_link_text: "Argomenti"
+          header_link_text: "Comunità"
           header_action_title: "crea un nuovo argomento"
           links:
             everything:
               content: "Tutti"
               title: "Tutti gli argomenti"
             tracked:
-              content: "Seguiti"
+              content: "Seguite"
               title: "Tutti gli argomenti seguiti"
-            bookmarked:
-              content: "Aggiunti ai segnalibri"
-              title: "Tutti gli argomenti aggiunti ai segnalibri"
+            groups:
+              content: "Gruppi"
+              title: "Tutti i gruppi"
+            users:
+              content: "Utenti"
+              title: "Tutti gli utenti"
             my_posts:
-              content: "I miei messaggi"
+              content: "I miei Messaggi"
               title: "I miei messaggi"
               draft_count:
                 one: "%{count} bozza"

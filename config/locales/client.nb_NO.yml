@@ -1612,11 +1612,9 @@ nb_NO:
       other: svar
     signup_cta:
       sign_up: "Registrer deg"
-      hide_session: "Spør meg igjen i morgen"
       hide_forever: "nei takk"
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke \"Logg Inn\" for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
-      value_prop: "Når du oppretter en konto, husker vi nøyaktig det du har lest, så du kommer alltid tilbake der du slapp av. Du får også varslinger, her og via e-post, når noen svarer på deg. Du kan like innlegg for å dele kjærligheten. :heartpulse:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       description_time_MF: "Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>."
@@ -1797,9 +1795,6 @@ nb_NO:
       min_content_not_reached:
         one: "Velg minst %{count} element."
         other: "Velg minst %{count} elementer."
-      invalid_selection_length:
-        one: "Utvalg må være minst %{count} tegn."
-        other: "Valg må være minst %{count} tegn."
       components:
         tag_drop:
           filter_for_more: Filter for mer...
@@ -1971,6 +1966,7 @@ nb_NO:
       empty: "Ingen varsler funnet."
       post_approved: "Ditt innlegg ble godkjent"
       reviewable_items: "elementer som krever gjennomgang"
+      watching_first_post_label: "Nytt emne"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1983,6 +1979,10 @@ nb_NO:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} og én annen</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} og én annen"
+        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "likte %{count} av dine innlegg"
         other: "likte %{count} av dine innlegg"
@@ -3441,12 +3441,17 @@ nb_NO:
         categories:
           header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
-        topics:
+        community:
           header_link_title: "hjem"
-          header_link_text: "Emner"
+          header_link_text: "Gemenskap"
           links:
             tracked:
               content: "Overvåkes"
+            groups:
+              content: "Grupper"
+              title: "Alle grupper"
+            users:
+              content: "Brukere"
             my_posts:
               content: "Mine innlegg"
   admin_js:

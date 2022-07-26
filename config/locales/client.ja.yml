@@ -1594,11 +1594,9 @@ ja:
       other: 返信
     signup_cta:
       sign_up: "アカウントを登録"
-      hide_session: "明日リマインダーを通知する"
       hide_forever: "いいえ、結構です"
       hidden_for_session: "了解です。明日お尋ねします。'ログイン' からでもアカウントを作成できます。"
       intro: "こんにちは！ ディスカッションを楽しんでいるようですね。ですが、アカウント登録はまだのようです。"
-      value_prop: "アカウントを作成した後、今読んでいるページへ戻ります。また、新しい投稿があった場合はそのことをメールでお知らせします。 「いいね！」を使って気に入った投稿をみんなに教えましょう。:heartpulse:"
     summary:
       enabled_description: "このトピックの要約を閲覧しています。コミュニティが最も面白いとした投稿のまとめです。"
       description:
@@ -1790,8 +1788,6 @@ ja:
         other: "%{count} 項目まで選択できます。"
       min_content_not_reached:
         other: "少なくとも %{count} 項目を選択してください。"
-      invalid_selection_length:
-        other: "選択は %{count} 文字以上である必要があります。"
       components:
         tag_drop:
           filter_for_more: もっとフィルタ…
@@ -1978,6 +1974,7 @@ ja:
       empty: "通知はありません。"
       post_approved: "あなたの投稿が承認されました"
       reviewable_items: "レビューが必要な項目"
+      watching_first_post_label: "新規トピック"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1989,6 +1986,9 @@ ja:
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
       liked_many:
         other: "<span class='multi-user'>%{username}、%{username2}、他 %{count} 人</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        other: "%{username}, %{username2} 、他 %{count} 人"
       liked_consolidated_description:
         other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -3416,12 +3416,17 @@ ja:
         categories:
           header_link_title: "すべてのカテゴリ"
           header_link_text: "カテゴリ"
-        topics:
+        community:
           header_link_title: "ホーム"
-          header_link_text: "トピック"
+          header_link_text: "コミュニティ"
           links:
             tracked:
               content: "追跡中"
+            groups:
+              content: "グループ"
+              title: "すべてのグループ"
+            users:
+              content: "ユーザー"
             my_posts:
               content: "自分の投稿"
               draft_count:

@@ -1286,7 +1286,6 @@ id:
       other: balas
     signup_cta:
       sign_up: "Mendaftar"
-      hide_session: "Ingat saya besok"
       hide_forever: "tidak, terima kasih"
     summary:
       description:
@@ -1477,6 +1476,7 @@ id:
       title: "pemberitahuan penyebutan @nama, balasan ke artikel dan topik Anda, pesan, dll"
       empty: "Tidak ada pemberitahuan."
       post_approved: "Tulisan Anda telah disetujui"
+      watching_first_post_label: "Topik Baru"
       liked_consolidated_description:
         other: "menyukai %{count} dari tulisan Anda"
       invitee_accepted: "<span>%{username}</span> menerima undangan Anda"
@@ -1806,12 +1806,15 @@ id:
         categories:
           header_link_title: "Semua kategori"
           header_link_text: "Kategori"
-        topics:
+        community:
           header_link_title: "beranda"
-          header_link_text: "Topik"
           links:
             tracked:
               content: "Dilacak"
+            groups:
+              content: "Grup"
+            users:
+              content: "Pengguna"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

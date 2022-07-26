@@ -686,6 +686,8 @@ uk:
       relative: "Відносна"
     time_shortcut:
       now: "Зараз"
+      in_one_hour: "За одну годину"
+      in_two_hours: "Через дві години"
       later_today: "Пізніше сьогодні"
       two_days: "Два дні"
       next_business_day: "Наступний робочий день"
@@ -1205,6 +1207,10 @@ uk:
       experimental_sidebar:
         enable: "Увімкнути експериментальну бічну панель"
         options: "Налаштування"
+        categories_section: "Розділ категорій"
+        categories_section_instruction: "Вибрані категорії будуть відображатися у списку категорій бічної панелі."
+        tags_section: "Розділ Теги"
+        tags_section_instruction: "Вибрані теги відображатимуться в розділі тегів бічної панелі."
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -1321,6 +1327,7 @@ uk:
         tags: "Мітки"
         interface: "Інтерфейс"
         apps: "Програми"
+        sidebar: "Бічна панель"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -1783,6 +1790,8 @@ uk:
       save: "Зберегти"
       set_custom_status: "Встановити власний статус"
       what_are_you_doing: "Що ви робите?"
+      remove_status: "Видалити статус"
+      until: "До:"
     loading: "Завантаження..."
     errors:
       prev_page: "при спробі завантаження"
@@ -1844,11 +1853,9 @@ uk:
       other: відповідь
     signup_cta:
       sign_up: "Зареєструватись"
-      hide_session: "Нагадати мені завтра"
       hide_forever: "ні дякую"
       hidden_for_session: "Гаразд, ми запитаємо вас завтра. Ви завжди можете використати 'Увійти', щоб створити обліковий запис теж."
       intro: "Вітаємо! Схоже, вам подобається обговорення, але ви ще не зареєстрували акаунт."
-      value_prop: "Коли ви створюєте обліковий запис, ми точно пам’ятаємо, що ви прочитали, тому ви завжди повертаєтеся туди, де зупинилися. Ви також отримуєте повідомлення, тут та електронною поштою, коли хтось відповідає вам. І ви можете, в повідомленнях, поставити - мені подобається. :heartpulse:"
     summary:
       enabled_description: "Ви переглядаєте витяг з теми - тільки найцікавіші повідомлення на думку спільноти."
       description:
@@ -2067,11 +2074,6 @@ uk:
         few: "Введіть хоча б %{count} елементів."
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елемент."
-      invalid_selection_length:
-        one: "Виділення має бути не менше %{count} символа."
-        few: "Виділення має бути не менше %{count} символів."
-        many: "Виділення має бути не менше %{count} символів."
-        other: "Виділення має бути не менше %{count} символів."
       components:
         tag_drop:
           filter_for_more: Шукати більше...
@@ -2180,6 +2182,7 @@ uk:
       create_shared_draft: "Створити Загальний проект"
       edit_shared_draft: "Редагувати загальну чернетку"
       title: "Або натисніть %{modifier}Enter"
+      users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
@@ -2289,6 +2292,8 @@ uk:
       empty: "Повідомлення не знайдені."
       post_approved: "Ваш пост був схвалений"
       reviewable_items: "пункти, що вимагають розгляду"
+      watching_first_post_label: "Нова тема"
+      user_moved_post: "%{username} переміщено"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2303,6 +2308,12 @@ uk:
         few: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span> , %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span> , %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span> , %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} та %{count} інший"
+        few: "%{username}, %{username2} та %{count} інші"
+        many: "%{username}, %{username2} та %{count} інші"
+        other: "%{username}, %{username2} та %{count} інші"
       liked_consolidated_description:
         one: "Сподобався %{count} ваш пост"
         few: "Сподобалося %{count} ваших поста"
@@ -2313,6 +2324,7 @@ uk:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> принял ваше приглашение"
+      invitee_accepted_your_invitation: "прийняв ваше запрошення"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Заслужив(а) '%{description}'"
@@ -2515,6 +2527,10 @@ uk:
     not_logged_in_user: "сторінка користувача з підсумком поточної діяльності та налаштуваннями"
     current_user: "перейти до Вашої сторінки користувача"
     view_all: "Переглянути всі %{tab}"
+    user_menu:
+      generic_no_items: "Немає записів у цьому списку."
+      sr_menu_tabs: "Вкладки меню"
+      view_all_notifications: "Переглянути всі сповіщення"
     topics:
       new_messages_marker: "останнє відвідування"
       bulk:
@@ -3699,6 +3715,7 @@ uk:
         this_week: "Тиждень"
         today: "Today"
         other_periods: "дивитися TOP:"
+    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
@@ -3721,6 +3738,7 @@ uk:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Поєднання клавіш"
+      short_title: "Гарячі клавіші"
       jump_to:
         title: "Перейти до"
         home: "%{shortcut} Головна"
@@ -4066,6 +4084,7 @@ uk:
         few: "%{count} нових"
         many: "%{count} нова"
         other: "%{count} нова"
+      toggle_section: "Переключити розділ"
       sections:
         messages:
           header_link_title: "особисті повідомлення"
@@ -4080,14 +4099,20 @@ uk:
             unread_with_count: "Непрочитані (%{count})"
             archive: "Архів"
         tags:
+          none: "Ви не додали жодного тегу."
+          click_to_get_started: "Натисніть тут, щоб почати."
           header_link_title: "усі мітки"
           header_link_text: "Теги"
+          header_action_title: "Редагувати теги бічної панелі"
         categories:
+          none: "Ви не додали жодної категорії."
+          click_to_get_started: "Натисніть тут, щоб почати."
           header_link_title: "усі розділи"
           header_link_text: "Категорії"
-        topics:
+          header_action_title: "редагувати категорії бічної панелі"
+        community:
           header_link_title: "головна"
-          header_link_text: "Теми"
+          header_link_text: "Спільнота"
           header_action_title: "створити нову тему"
           links:
             everything:
@@ -4096,9 +4121,11 @@ uk:
             tracked:
               content: "Відстежувані"
               title: "Усі відстежувані теми"
-            bookmarked:
-              content: "В закладках"
-              title: "Всі теми з закладками"
+            groups:
+              content: "Групи"
+              title: "Усі групи"
+            users:
+              content: "Користувачі"
             my_posts:
               content: "Мої дописи"
               title: "Мої дописи"

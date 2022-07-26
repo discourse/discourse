@@ -1591,11 +1591,9 @@ ko:
       other: 댓글
     signup_cta:
       sign_up: "회원가입"
-      hide_session: "내일 알려주세요"
       hide_forever: "사양합니다."
       hidden_for_session: "알겠습니다. 내일 다시 물어볼께요. 언제든지 '로그인'을 통해서도 계정을 만들 수 있습니다."
       intro: "사이트에 관심이 있지만 아직 계정을 만들지 않은 것 같습니다."
-      value_prop: "계정을 만들면 사이트내 읽은 글과 읽지 않은 글을 기억해 보다 편한 이용을 도와 줍니다. 또한 누군가가 댓글을 달거나 질문을 할 경우 이메일을 통해 알림을 받을 수 있습니다. :heartpulse:"
     summary:
       enabled_description: "이 글에 대한 요약: 현재 커뮤니티의 주요 글 요약본을 보고 있습니다"
       description:
@@ -1779,8 +1777,6 @@ ko:
         other: "%{count}개 항목만 선택할 수 있습니다."
       min_content_not_reached:
         other: "항목을 %{count}개 이상 선택하세요."
-      invalid_selection_length:
-        other: "선택은 %{count}글자 이상이어야 합니다."
       components:
         tag_drop:
           filter_for_more: 추가 필터링...
@@ -1961,6 +1957,7 @@ ko:
       empty: "알림이 없습니다."
       post_approved: "사용자님의 게시물이 승인되었습니다"
       reviewable_items: "검토가 필요한 항목"
+      watching_first_post_label: "새 글"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1972,6 +1969,9 @@ ko:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
         other: "<span class='multi-user'>%{username}, %{username2} 그리고 %{count} 그외 </span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        other: "%{username}, %{username2} 외 %{count} 명의 사용자가"
       liked_consolidated_description:
         other: "내 게시물 중 %{count}개를 좋아합니다."
       liked_consolidated: "<span>%{username}</span> %{description} "
@@ -3459,12 +3459,17 @@ ko:
         categories:
           header_link_title: "모든 카테고리"
           header_link_text: "카테고리"
-        topics:
+        community:
           header_link_title: "홈"
-          header_link_text: "글"
+          header_link_text: "커뮤니티"
           links:
             tracked:
               content: "팔로우중"
+            groups:
+              content: "그룹"
+              title: "모든 그룹"
+            users:
+              content: "사용자들"
             my_posts:
               content: "내 글"
               draft_count:

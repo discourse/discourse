@@ -768,6 +768,7 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      watching_first_post_label: "కొత్త విషయం"
       dismiss_confirmation:
         cancel: "రద్దుచేయి"
       titles:
@@ -1367,11 +1368,15 @@ te:
         categories:
           header_link_title: "అన్ని వర్గాలు"
           header_link_text: "వర్గాలు"
-        topics:
-          header_link_text: "విషయాలు"
+        community:
+          header_link_text: "కమ్యునిటీ"
           links:
             tracked:
               content: "గమనించారు"
+            groups:
+              content: "గుంపులు"
+            users:
+              content: "సభ్యులు"
             my_posts:
               content: "నా టపాలు"
   admin_js:

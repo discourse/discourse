@@ -1649,6 +1649,7 @@ es:
       set_custom_status: "Escribir estado personalizado"
       what_are_you_doing: "¿Qué estás haciendo?"
       remove_status: "Quitar estado"
+      until: "Hasta:"
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -1708,11 +1709,9 @@ es:
       other: respuestas
     signup_cta:
       sign_up: "Registrarse"
-      hide_session: "Recúerdamelo mañana"
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
-      value_prop: "Cuando creas una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: las publicaciones más interesantes de acuerdo a la comunidad."
       description:
@@ -1917,9 +1916,6 @@ es:
       min_content_not_reached:
         one: "Selecciona al menos %{count} elemento."
         other: "Selecciona al menos %{count} elementos."
-      invalid_selection_length:
-        one: "Selecciona al menos %{count} carácter."
-        other: "Selecciona al menos %{count} caracteres."
       components:
         tag_drop:
           filter_for_more: Filtrar para más...
@@ -2118,6 +2114,7 @@ es:
       empty: "No se encontraron notificaciones."
       post_approved: "Tu publicación ha sido aprobada"
       reviewable_items: "elementos que requieren revisión"
+      watching_first_post_label: "Nuevo tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2130,6 +2127,10 @@ es:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} y %{count} más</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} y %{count} más</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} mas"
+        other: "%{username}, %{username2} y %{count} más"
       liked_consolidated_description:
         one: "le ha dado me gusta a %{count} de tus publicaciones"
         other: "le ha dado me gusta a %{count} de tus publicaciones"
@@ -2332,6 +2333,10 @@ es:
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
     current_user: "ir a tu página de usuario"
     view_all: "ver todos %{tab}"
+    user_menu:
+      generic_no_items: "No hay elementos en esta lista."
+      sr_menu_tabs: "Pestañas del menú"
+      view_all_notifications: "ver todas las notificaciones"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3396,6 +3401,7 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver arriba:"
+    browser_update: 'Por desgracia, <a href="https://www.discourse.org/faq/#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3733,6 +3739,7 @@ es:
       new_count:
         one: "%{count} nuevo"
         other: "%{count} nuevos"
+      toggle_section: "mostrar/ocultar sección"
       sections:
         messages:
           header_link_title: "mensajes personales"
@@ -3758,9 +3765,9 @@ es:
           header_link_title: "todas las categorías"
           header_link_text: "Categorías"
           header_action_title: "editar las categorías de tu barra lateral"
-        topics:
+        community:
           header_link_title: "inicio"
-          header_link_text: "Temas"
+          header_link_text: "Comunidad"
           header_action_title: "crear un nuevo tema"
           links:
             everything:
@@ -3769,9 +3776,11 @@ es:
             tracked:
               content: "Siguiendo"
               title: "Todos los temas seguidos"
-            bookmarked:
-              content: "Añadidos a marcadores"
-              title: "Todos los temas en marcadores"
+            groups:
+              content: "Grupos"
+              title: "Todos los grupos"
+            users:
+              content: "Usuarios"
             my_posts:
               content: "Mis publicaciones"
               title: "Mis publicaciones"

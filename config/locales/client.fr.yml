@@ -1699,11 +1699,9 @@ fr:
       other: réponses
     signup_cta:
       sign_up: "S'inscrire"
-      hide_session: "Me le rappeler demain"
       hide_forever: "non merci"
       hidden_for_session: "Très bien, nous vous le demanderons demain. Vous pouvez aussi utiliser le bouton « Se connecter » pour vous créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
-      value_prop: "Quand vous créez un compte, nous retenons ce que vous lisez pour vous permettre de reprendre là où vous en étiez à votre retour. Vous recevez aussi des notifications, ici et par courriel, dès que quelqu'un vous répond. Et vous pouvez attribuer un « J'aime » aux messages pour partager vos coups de cœurs. :heartpulse:"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description:
@@ -1908,9 +1906,6 @@ fr:
       min_content_not_reached:
         one: "Sélectionnez au moins %{count} élément."
         other: "Sélectionnez au moins %{count} éléments."
-      invalid_selection_length:
-        one: "La sélection doit contenir au minimum %{count} caractère."
-        other: "La sélection doit contenir au minimum %{count} caractères."
       components:
         tag_drop:
           filter_for_more: et plus encore…
@@ -2108,6 +2103,7 @@ fr:
       empty: "Aucune notification trouvée."
       post_approved: "Votre message a été approuvé"
       reviewable_items: "éléments en attente d'examen"
+      watching_first_post_label: "Nouveau sujet"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2120,6 +2116,10 @@ fr:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} et %{count} autre</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} et %{count} autres</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} et %{count} autre"
+        other: "%{username}, %{username2} et %{count} autres"
       liked_consolidated_description:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"
@@ -3738,9 +3738,9 @@ fr:
         categories:
           header_link_title: "toutes les catégories"
           header_link_text: "Catégories"
-        topics:
+        community:
           header_link_title: "accueil"
-          header_link_text: "Sujets"
+          header_link_text: "Communauté"
           header_action_title: "créer un nouveau sujet"
           links:
             everything:
@@ -3749,9 +3749,11 @@ fr:
             tracked:
               content: "Suivies"
               title: "Tous les sujets suivis"
-            bookmarked:
-              content: "Ajouté aux signets"
-              title: "Tous les sujets marqués d'un signet"
+            groups:
+              content: "Groupes"
+              title: "Tous les groupes"
+            users:
+              content: "Utilisateurs"
             my_posts:
               content: "Mes messages"
               title: "Mes publications"

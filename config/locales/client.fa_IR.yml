@@ -1224,6 +1224,8 @@ fa_IR:
         primary: "آدرس ایمیل اصلی"
         secondary: "آدرس ایمیل ثانویه"
         primary_label: "اصلی"
+        resending_label: "در حال ارسال..."
+        resent_label: "ایمیل ارسال شد"
         update_email: "تغییر ایمیل"
         add_email: "افزودن ایمیل جایگزین"
         auth_override_instructions: "ایمیل را از طریق ارائه دهنده احراز هویت می‌توانید به‌روزرسانی کنید."
@@ -1581,10 +1583,9 @@ fa_IR:
       other: پاسخ‌ها
     signup_cta:
       sign_up: "ثبت نام"
-      hide_session: "فردا به من یادآوری کن"
+      hide_session: "شاید بعدا"
       hide_forever: "نه ممنون"
       intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
-      value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
       description:
@@ -1744,6 +1745,7 @@ fa_IR:
       categories_only: "فقط دسته‌بندی‌ها"
       categories_with_featured_topics: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
       categories_and_latest_topics: "دسته‌بندی‌ها و آخرین موضوعات"
+      categories_and_latest_topics_created_date: "دسته‌بندی‌ها و آخرین موضوعات «مرتب‌سازی بر اساس تاریخ ایجاد موضوع»"
       categories_and_top_topics: "دسته‌بندی‌ها و موضوعات برتر"
       categories_boxes: "باکس هایی با زیر دسته بندی ها"
       categories_boxes_with_topics: "باکس هایی با مباحث ویژه"
@@ -1776,9 +1778,6 @@ fa_IR:
       min_content_not_reached:
         one: "لطفا حداقل %{count} ایتم را انتخاب کنید"
         other: "لطفا حداقل %{count}ایتم را انتخاب کنید"
-      invalid_selection_length:
-        one: "انتخاب باید حداقل %{count} حرفی باشد."
-        other: "انتخاب باید حداقل %{count} حرفی باشد."
       components:
         tag_drop:
           filter_for_more: فیلتر بیشتر
@@ -1946,6 +1945,8 @@ fa_IR:
       empty: "اعلانی پیدا نشد."
       post_approved: "نوشته ی شما تایید شد"
       reviewable_items: "موارد نیازمند بازبینی است"
+      watching_first_post_label: "موضوع جدید"
+      user_moved_post: "%{username} منتقل شد"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1958,6 +1959,10 @@ fa_IR:
       liked_many:
         one: "<span class='multi-user'>%{username}، %{username2} و %{count} دیگر</span> %{description}"
         other: "<span class='multi-user'>%{username}، %{username2} و %{count} دیگر</span> %{description}"
+      liked_by_2_users: "%{username}، %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}، %{username2} و %{count} دیگر"
+        other: "%{username}، %{username2} و %{count} دیگر"
       liked_consolidated_description:
         one: "%{count}نوشته ی شما را پسندید"
         other: "%{count}نوشته ی شما را پسندید"
@@ -1966,6 +1971,7 @@ fa_IR:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> دعوت شما را پذیرفت"
+      invitee_accepted_your_invitation: "دعوت شما را پذیرفت"
       moved_post: "<span>%{username}</span> منتقل کرد %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "به دست آوردید '%{description}'"
@@ -3006,6 +3012,7 @@ fa_IR:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "میانبر‌های صفحه‌کلید"
+      short_title: "میانبرها"
       jump_to:
         title: "برو به"
         home: "%{shortcut} خانه"
@@ -3261,9 +3268,9 @@ fa_IR:
           header_link_title: "همه‌ی دسته‌بندی‌ها"
           header_link_text: "دسته‌بندی‌ها"
           header_action_title: "دسته‌بندی‌های نوار کناری خود را ویرایش کنید"
-        topics:
+        community:
           header_link_title: "خانه"
-          header_link_text: "موضوعات"
+          header_link_text: "انجمن"
           header_action_title: "ایجاد موضوع جدید"
           links:
             everything:
@@ -3272,9 +3279,12 @@ fa_IR:
             tracked:
               content: "پی‌گیری شده"
               title: "همه موضوعات پیگیری شده"
-            bookmarked:
-              content: "نشانک گذاری شده"
-              title: "همه موضوعات نشانک گذاری شده"
+            groups:
+              content: "گروه‌ها"
+              title: "همه گروه‌ها"
+            users:
+              content: "کاربران"
+              title: "همه کاربران"
             my_posts:
               content: "نوشته‌های من"
               title: "نوشته‌های من"

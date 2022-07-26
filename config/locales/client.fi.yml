@@ -1623,11 +1623,9 @@ fi:
       other: vastausta
     signup_cta:
       sign_up: "Rekisteröidy"
-      hide_session: "Muistuta huomenna"
       hide_forever: "ei kiitos"
       hidden_for_session: "OK, kysymme sinulta huomenna. Voit myös aina käyttää 'Kirjaudu sisään' -linkkiä tilin luomiseen."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
-      value_prop: "Kun luot tilin, muistamme mitä olet lukenut, jotta voit aina palata keskusteluissa takaisin oikeaan kohtaan. Saat myös ilmoituksia – palstalla näkyviä ja sähköpostiisi saapuvia – kun joku vastaa sinulle. Ja voit myös tykätä viesteistä. :heartpulse:"
     summary:
       enabled_description: "Tarkastelet yhteenvetoa tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description:
@@ -1811,9 +1809,6 @@ fi:
       min_content_not_reached:
         one: "Valitse ainakin %{count} kohde."
         other: "Valitse ainakin %{count} kohdetta."
-      invalid_selection_length:
-        one: "Täytyy valita ainakin %{count} merkki."
-        other: "Täytyy valita ainakin %{count} merkkiä."
       components:
         tag_drop:
           filter_for_more: Näytä lisää...
@@ -1999,6 +1994,7 @@ fi:
       empty: "Ilmoituksia ei löytynyt."
       post_approved: "Viestisi hyväksyttiin"
       reviewable_items: "käsittelyä odottavaa kohdetta"
+      watching_first_post_label: "Uusi ketju"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2011,6 +2007,10 @@ fi:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} ja %{count} muu</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} ja %{count} muuta</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} ja %{count} muu"
+        other: "%{username}, %{username2} ja %{count} muuta"
       liked_consolidated_description:
         one: "tykkäsi %{count} viestistäsi"
         other: "tykkäsi %{count} viestistäsi"
@@ -3483,12 +3483,17 @@ fi:
         categories:
           header_link_title: "kaikki alueet"
           header_link_text: "Alueet"
-        topics:
+        community:
           header_link_title: "aloitus"
-          header_link_text: "Ketjuja"
+          header_link_text: "Yhteisö"
           links:
             tracked:
               content: "Seuratut"
+            groups:
+              content: "Ryhmät"
+              title: "Kaikki ryhmät"
+            users:
+              content: "Käyttäjät"
             my_posts:
               content: "Viestini"
   admin_js:

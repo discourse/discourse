@@ -908,7 +908,6 @@ sq:
       other: përgjigje
     signup_cta:
       sign_up: "Regjistrohu"
-      hide_session: "Më rikujto nesër"
       hide_forever: "jo faleminderit"
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
@@ -1082,6 +1081,7 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
+      watching_first_post_label: "Temë e re"
       dismiss_confirmation:
         dismiss: "Hiqe"
         cancel: "Anulo"
@@ -1954,12 +1954,17 @@ sq:
         categories:
           header_link_title: "kategoritë"
           header_link_text: "Categories"
-        topics:
+        community:
           header_link_title: "kryefaqja"
-          header_link_text: "Tema"
+          header_link_text: "Komuniteti"
           links:
             tracked:
               content: "Gjurmuar"
+            groups:
+              content: "Grupet"
+              title: "Të gjitha grupet"
+            users:
+              content: "Users"
             my_posts:
               content: "Postimet e mia"
   admin_js:

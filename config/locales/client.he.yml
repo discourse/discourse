@@ -1853,11 +1853,9 @@ he:
       other: תגובות
     signup_cta:
       sign_up: "הרשמה"
-      hide_session: "הזכר לי מחר"
       hide_forever: "לא תודה"
       hidden_for_session: "סבבה, השאלה תופיע מחר. תמיד ניתן להשתמש ב‚כניסה’ גם כדי ליצור חשבון."
       intro: "שלום! נראה שאתם נהנים מהדיון, אבל לא נרשמתם לחשבון עדיין."
-      value_prop: "בעת יצירת החשבון, אנו זוכרים במדויק מה קראת, לכן תמיד יתאפשר לך לחזור להיכן שהפסקת. נוסף על כך, יישלחו אליך התראות, כאן ודרך דוא״ל כשמתקבלת תגובה על משהו שכתבת. יש לך גם אפשרות לסמן לייק פוסטים שאהבת כדי להוסיף ולהפיץ אהבה. :heartpulse:"
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description:
@@ -2025,6 +2023,7 @@ he:
       categories_only: "קטגוריות בלבד"
       categories_with_featured_topics: "קטגוריות עם נושאים מומלצים"
       categories_and_latest_topics: "קטגוריות ונושאים אחרונים"
+      categories_and_latest_topics_created_date: "קטגוריות ונושאים עדכניים (מיון לפי תאריך יצירת הנושא)"
       categories_and_top_topics: "קטגוריות ונושאים מובילים"
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
@@ -2076,11 +2075,6 @@ he:
         two: "נא לבחור ב־%{count} פריטים לפחות."
         many: "נא לבחור ב־%{count} פריטים לפחות."
         other: "נא לבחור ב־%{count} פריטים לפחות."
-      invalid_selection_length:
-        one: "אורך הבחירה חייב להיות תו %{count} לפחות."
-        two: "אורך הבחירה חייב להיות %{count} תווים לפחות."
-        many: "אורך הבחירה חייב להיות %{count} תווים לפחות."
-        other: "אורך הבחירה חייב להיות %{count} תווים לפחות."
       components:
         tag_drop:
           filter_for_more: לסנן לעוד…
@@ -2299,6 +2293,8 @@ he:
       empty: "לא נמצאו התראות."
       post_approved: "הפוסט שלך אושר"
       reviewable_items: "פריטים שדורשים סקירה"
+      watching_first_post_label: "נושא חדש"
+      user_moved_post: "%{username} הועבר"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2313,6 +2309,12 @@ he:
         two: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} ועוד %{count}"
+        two: "%{username}, %{username2} ו־%{count} נוספים"
+        many: "%{username}, %{username2} ו־%{count} נוספים"
+        other: "%{username}, %{username2} ו־%{count} נוספים"
       liked_consolidated_description:
         one: "אהבו פוסט %{count} שלך"
         two: "אהבו %{count} מהפוסטים שלך"
@@ -2323,6 +2325,7 @@ he:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> אישר/ה את ההזמנה שלך"
+      invitee_accepted_your_invitation: "הזמנתך התקבלה"
       moved_post: "<span>%{username}</span> עבר %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "הרווחת את ‚%{description}’"
@@ -2525,6 +2528,10 @@ he:
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"
     current_user: "לך לעמוד המשתמש שלך"
     view_all: "להציג את כל %{tab}"
+    user_menu:
+      generic_no_items: "אין פריטים ברשימה זו."
+      sr_menu_tabs: "לשוניות תפריט"
+      view_all_notifications: "הצגת כל ההתראות"
     topics:
       new_messages_marker: "ביקור אחרון"
       bulk:
@@ -3706,6 +3713,7 @@ he:
         this_week: "שבוע"
         today: "היום"
         other_periods: "להציג את המובילים:"
+    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
@@ -4073,6 +4081,7 @@ he:
         two: "%{count} חדשים"
         many: "חדש (%{count})"
         other: "חדש (%{count})"
+      toggle_section: "החלפת מצב הצגת סעיף"
       sections:
         messages:
           header_link_title: "הודעות פרטיות"
@@ -4098,9 +4107,9 @@ he:
           header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
-        topics:
+        community:
           header_link_title: "בית"
-          header_link_text: "נושאים"
+          header_link_text: "קהילה"
           header_action_title: "יצירת נושא חדש"
           links:
             everything:
@@ -4109,9 +4118,11 @@ he:
             tracked:
               content: "במעקב"
               title: "כל הנושאים במעקב"
-            bookmarked:
-              content: "מסומן"
-              title: "כל הנושאים שסומנו"
+            groups:
+              content: "קבוצות"
+              title: "כל הקבוצות"
+            users:
+              content: "משתמשים"
             my_posts:
               content: "הפוסטים שלי"
               title: "הפוסטים שלי"

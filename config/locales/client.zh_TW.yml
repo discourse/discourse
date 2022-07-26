@@ -1399,10 +1399,8 @@ zh_TW:
       other: 回覆
     signup_cta:
       sign_up: "註冊"
-      hide_session: "明天提醒我"
       hide_forever: "不了"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊帳號。"
-      value_prop: "當你註冊帳號後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次造訪時回到你上次閲讀到的地方。你也可以選擇接受新貼文的網頁和郵件通知，也可以按任何貼文讚來分享你的感謝。:heartbeat:"
     summary:
       enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
       description:
@@ -1691,6 +1689,7 @@ zh_TW:
       empty: "未找到任何通知。"
       post_approved: "你的貼文已通過"
       reviewable_items: "需要審查的項目"
+      watching_first_post_label: "新增話題"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1702,6 +1701,9 @@ zh_TW:
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
       liked_many:
         other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 個人都</span> %{description}"
+      liked_by_2_users: "%{username}、%{username2}"
+      liked_by_multiple_users:
+        other: "%{username}、%{username2} 和其他 %{count} 個人都"
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2824,12 +2826,17 @@ zh_TW:
         categories:
           header_link_title: "所有分類"
           header_link_text: "分類"
-        topics:
+        community:
           header_link_title: "主頁"
-          header_link_text: "話題"
+          header_link_text: "社區"
           links:
             tracked:
               content: "已追蹤"
+            groups:
+              content: "群組"
+              title: "所有群組"
+            users:
+              content: "使用者數量"
             my_posts:
               content: "我的貼文"
               draft_count:

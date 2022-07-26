@@ -1140,6 +1140,7 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      watching_first_post_label: "Nova Tema"
       dismiss_confirmation:
         dismiss: "Одбаци"
         cancel: "Odustani"
@@ -1822,12 +1823,16 @@ sr:
         categories:
           header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
-        topics:
+        community:
           header_link_title: "home"
-          header_link_text: "Teme"
+          header_link_text: "Zajednica"
           links:
             tracked:
               content: "Praćeno"
+            groups:
+              content: "Grupe"
+            users:
+              content: "Korisnici"
             my_posts:
               content: "Moje poruke"
   admin_js:

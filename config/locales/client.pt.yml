@@ -1625,11 +1625,9 @@ pt:
       other: respostas
     signup_cta:
       sign_up: "Inscrever-se"
-      hide_session: "Lembrar-me amanhã"
       hide_forever: "não, obrigado"
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
-      value_prop: "Quando cria uma conta, nós lembramo-nos exatamente o que já leu, por isso volta sempre ao sítio onde parou. Também recebe notificações, aqui e por email, cada vez que alguém lhe responde. E pode gostar das publicações para interagir com outros utilizadores. :heartpulse:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
       enable: "Resumir Este Tópico"
@@ -1811,9 +1809,6 @@ pt:
       min_content_not_reached:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
-      invalid_selection_length:
-        one: "A seleção deve ter pelo menos %{count} caracter."
-        other: "A seleção deve ter pelo menos %{count} caracteres."
       components:
         tag_drop:
           filter_for_more: Filtrar por mais...
@@ -1991,6 +1986,7 @@ pt:
       empty: "Não foram encontradas notificações."
       post_approved: "A sua publicação foi aprovada"
       reviewable_items: "itens que requerem revisão"
+      watching_first_post_label: "Novo Tópico"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2003,6 +1999,10 @@ pt:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} outro"
+        other: "%{username}, %{username2} e %{count} outros"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
@@ -3444,12 +3444,17 @@ pt:
         categories:
           header_link_title: "todas as categorias"
           header_link_text: "Categorias"
-        topics:
+        community:
           header_link_title: "início"
-          header_link_text: "Tópicos"
+          header_link_text: "Comunidade"
           links:
             tracked:
               content: "Seguido"
+            groups:
+              content: "Grupos"
+              title: "Todos os grupos"
+            users:
+              content: "Utilizadores"
             my_posts:
               content: "As Minhas publicações"
   admin_js:

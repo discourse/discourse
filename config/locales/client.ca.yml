@@ -1393,10 +1393,8 @@ ca:
       other: respostes
     signup_cta:
       sign_up: "Registre"
-      hide_session: "Recorda-m'ho demà"
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
-      value_prop: "Quan creeu un compte, recordem exactament el que heu llegit, de manera que sempre torneu allà on ho vau deixar. També rebreu notificacions, ací i via correu, quan algú us respon. I podeu dir que us agraden les publicacions per a compartir l'amor. :heartpulse:"
     summary:
       enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
       enable: "Resumeix aquest tema"
@@ -1697,6 +1695,7 @@ ca:
       empty: "No hi ha notificacions."
       post_approved: "La vostra publicació ha estat aprovada"
       reviewable_items: "elements que requereixen revisió"
+      watching_first_post_label: "Tema nou"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1709,6 +1708,10 @@ ca:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} i %{count} altre</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} i %{count} altres</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} i %{count} altre"
+        other: "%{username}, %{username2} i %{count} altres"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -2905,12 +2908,17 @@ ca:
         categories:
           header_link_title: "totes les categories"
           header_link_text: "Categories"
-        topics:
+        community:
           header_link_title: "pàgina principal"
-          header_link_text: "Temes"
+          header_link_text: "Comunitat"
           links:
             tracked:
               content: "Seguit"
+            groups:
+              content: "Grups"
+              title: "Tots els grups"
+            users:
+              content: "Usuaris"
             my_posts:
               content: "Les meves publicacions"
   admin_js:

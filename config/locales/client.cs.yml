@@ -1421,10 +1421,8 @@ cs:
       other: odpovědí
     signup_cta:
       sign_up: "Registrovat se"
-      hide_session: "Připomenout mi zítra"
       hide_forever: "děkuji, ne"
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
-      value_prop: "Pokud si založíš účet, budeme si přesně pamatovat, co jsi četl, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění zde a přes e-mail, kdykoli ti někdo odpoví. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartpulse:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
       enable: "Přepnout na \"nejlepší příspěvky\""
@@ -1700,6 +1698,7 @@ cs:
       title: "oznámení o zmínkách pomocí @name, odpovědi na vaše příspěvky a témata, zprávy, atd."
       none: "Notifikace nebylo možné načíst."
       empty: "Žádné upozornění nenalezeny."
+      watching_first_post_label: "Nové téma"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1714,6 +1713,12 @@ cs:
         few: "<span class='multi-user'>%{username}, %{username2} a %{count} další</span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} a %{count} dalších</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} a %{count} dalších</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} a %{count} další"
+        few: "%{username}, %{username2} a %{count} další"
+        many: "%{username}, %{username2} a %{count} dalších"
+        other: "%{username}, %{username2} a %{count} dalších"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2897,12 +2902,17 @@ cs:
         categories:
           header_link_title: "všechny kategorie"
           header_link_text: "Kategorie"
-        topics:
+        community:
           header_link_title: "domů"
-          header_link_text: "Témata"
+          header_link_text: "Komunita"
           links:
             tracked:
               content: "Sledované"
+            groups:
+              content: "Skupiny"
+              title: "Všechny skupiny"
+            users:
+              content: "Uživatelé"
             my_posts:
               content: "Mé příspěvky"
   admin_js:

@@ -1156,7 +1156,6 @@ sk:
       other: odpovedí
     signup_cta:
       sign_up: "Registrovať sa"
-      hide_session: "Pripomenúť zajtra"
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
@@ -1334,6 +1333,7 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
+      watching_first_post_label: "Nová téma"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -2297,12 +2297,17 @@ sk:
         categories:
           header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
-        topics:
+        community:
           header_link_title: "domov"
-          header_link_text: "Témy"
+          header_link_text: "Komunita"
           links:
             tracked:
               content: "Pozorované"
+            groups:
+              content: "Skupiny"
+              title: "Všetky skupiny"
+            users:
+              content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
   admin_js:
