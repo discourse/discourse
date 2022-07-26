@@ -119,8 +119,12 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("selection")
-  submitLabel(selection) {
+  @discourseComputed("selection", "themeCannotBeInstalled")
+  submitLabel(selection, themeCannotBeInstalled) {
+    if (themeCannotBeInstalled) {
+      return "admin.customize.theme.create_placeholder";
+    }
+
     return `admin.customize.theme.${
       selection === "create" ? "create" : "install"
     }`;
@@ -238,7 +242,7 @@ export default Controller.extend(ModalFunctionality, {
           this.setProperties({ privateKey: null, publicKey: null });
         })
         .catch((error) => {
-          if (this.themeCannotBeInstalled) {
+          if (!this.privateKey || this.themeCannotBeInstalled) {
             return popupAjaxError(error);
           }
 

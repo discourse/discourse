@@ -201,7 +201,7 @@ acceptance("Theme", function (needs) {
       "Git warning is displayed"
     );
 
-    await click(".admin-install-theme-modal .modal-footer .btn-primary");
+    await click(".admin-install-theme-modal .modal-footer .btn-danger");
 
     assert.notOk(
       exists(".admin-install-theme-modal:visible"),
@@ -214,7 +214,7 @@ acceptance("Theme", function (needs) {
 
     await click(".themes-list-container .themes-list-item");
     assert.ok(
-      query(".metadata.control-unit").innerText.includes(
+      query(".control-unit .status-message").innerText.includes(
         I18n.t("admin.customize.theme.last_attempt")
       ),
       "it says that theme is not completely installed"
