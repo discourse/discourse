@@ -255,6 +255,28 @@ describe ReviewablesController do
     end
 
     describe "#user_menu_list" do
+      it "renders each reviewable with its basic serializers" do
+        reviewable_user = Fabricate(:reviewable_user, payload: { username: "someb0dy" })
+        reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
+        reviewable_queued_post = Fabricate(:reviewable_queued_post)
+
+        get "/review/user-menu-list.json"
+        expect(response.status).to eq(200)
+
+        reviewables = response.parsed_body["reviewables"]
+
+        reviewable_queued_post_json = reviewables.find { |r| r["id"] == reviewable_queued_post.id }
+        expect(reviewable_queued_post_json["is_new_topic"]).to eq(false)
+        expect(reviewable_queued_post_json["topic_title"]).to eq(reviewable_queued_post.topic.fancy_title)
+
+        reviewable_flagged_post_json = reviewables.find { |r| r["id"] == reviewable_flagged_post.id }
+        expect(reviewable_flagged_post_json["post_number"]).to eq(reviewable_flagged_post.post.post_number)
+        expect(reviewable_flagged_post_json["topic_title"]).to eq(reviewable_flagged_post.topic.fancy_title)
+
+        reviewable_user_json = reviewables.find { |r| r["id"] == reviewable_user.id }
+        expect(reviewable_user_json["username"]).to eq("someb0dy")
+      end
+
       it "returns JSON containing basic information of reviewables" do
         reviewable1 = Fabricate(:reviewable)
         reviewable2 = Fabricate(:reviewable, status: Reviewable.statuses[:approved])

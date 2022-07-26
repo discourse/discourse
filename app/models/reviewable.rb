@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Reviewable < ActiveRecord::Base
+  TYPE_TO_BASIC_SERIALIZER = {
+    ReviewableFlaggedPost: BasicReviewableFlaggedPostSerializer,
+    ReviewableQueuedPost: BasicReviewableQueuedPostSerializer,
+    ReviewableUser: BasicReviewableUserSerializer
+  }
+
   class UpdateConflict < StandardError; end
 
   class InvalidAction < StandardError
@@ -562,7 +568,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def basic_serializer
-    self.class.basic_serializer_for(self)
+    TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
   end
 
   def self.lookup_serializer_for(type)
@@ -571,22 +577,10 @@ class Reviewable < ActiveRecord::Base
     ReviewableSerializer
   end
 
-  def self.lookup_basic_serializer_for(type)
-    "Basic#{type}Serializer".constantize
-  rescue NameError
-    BasicReviewableSerializer
-  end
-
   def self.serializer_for(reviewable)
     type = reviewable.type
     @@serializers ||= {}
     @@serializers[type] ||= lookup_serializer_for(type)
-  end
-
-  def self.basic_serializer_for(reviewable)
-    type = reviewable.type
-    @@basic_serializers ||= {}
-    @@basic_serializers[type] ||= lookup_basic_serializer_for(type)
   end
 
   def create_result(status, transition_to = nil)
