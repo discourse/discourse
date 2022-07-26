@@ -9,7 +9,7 @@ describe DeleteRejectedEmailAfterDaysValidator do
   end
 
   it "is not valid if value is greater than #{DeleteRejectedEmailAfterDaysValidator::MAX}" do
-    expect { SiteSetting.delete_rejected_email_after_days = DeleteRejectedEmailAfterDaysValidator::MAX + 1 }.to raise_error(Discourse::InvalidParameters, I18n.t("site_settings.errors.delete_rejected_email_after_days"))
+    expect { SiteSetting.delete_rejected_email_after_days = DeleteRejectedEmailAfterDaysValidator::MAX + 1 }.to raise_error(Discourse::InvalidParameters)
   end
 
 end
