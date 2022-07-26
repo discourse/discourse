@@ -82,6 +82,40 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
+  test("should handle placeholders correctly even if the OS rewrites ellipses", async function (assert) {
+    const execCommand = document.execCommand;
+    sinon.stub(document, "execCommand").callsFake(function (...args) {
+      if (args[0] === "insertText") {
+        args[2] = args[2].replace("...", "…");
+      }
+      return execCommand.call(document, ...args);
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n[Uploading: avatar.png…]()\n"
+      );
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
   test("should error if too many files are added at once", async function (assert) {
     await visit("/");
     await click("#create-topic");
