@@ -424,7 +424,7 @@ export default createWidget("header", {
         );
       } else if (state.hamburgerVisible) {
         if (this.siteSettings.enable_experimental_sidebar_hamburger) {
-          if (!this.siteSettings.enable_sidebar) {
+          if (!attrs.sidebarEnabled) {
             panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
           }
         } else {
@@ -543,7 +543,7 @@ export default createWidget("header", {
   toggleHamburger() {
     if (
       this.siteSettings.enable_experimental_sidebar_hamburger &&
-      (this.siteSettings.enable_sidebar || this.site.mobileView)
+      (this.attrs.sidebarEnabled || this.site.mobileView)
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {
