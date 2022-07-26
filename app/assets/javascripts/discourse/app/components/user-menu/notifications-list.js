@@ -7,10 +7,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return null;
   }
 
-  get showAll() {
-    return true;
-  }
-
   get showAllHref() {
     return `${this.currentUser.path}/notifications`;
   }

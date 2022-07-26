@@ -5,10 +5,6 @@ import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
-  get showAll() {
-    return true;
-  }
-
   get showAllHref() {
     return getUrl("/review");
   }
