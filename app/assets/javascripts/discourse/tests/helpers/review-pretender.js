@@ -142,7 +142,7 @@ export default function (helpers) {
 
   this.put("/review/settings", () => response(200, {}));
 
-  this.get("/review/lightweight-list", () => {
+  this.get("/review/user-menu-list", () => {
     return response({
       reviewables: [
         {

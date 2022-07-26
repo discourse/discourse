@@ -254,11 +254,11 @@ describe ReviewablesController do
       end
     end
 
-    describe "#lightweight_index" do
+    describe "#user_menu_list" do
       it "returns JSON containing basic information of reviewables" do
         reviewable1 = Fabricate(:reviewable)
         reviewable2 = Fabricate(:reviewable, status: Reviewable.statuses[:approved])
-        get "/review/lightweight-list", xhr: true
+        get "/review/user-menu-list", xhr: true
         expect(response.status).to eq(200)
         reviewables = response.parsed_body["reviewables"]
         expect(reviewables.size).to eq(2)
@@ -286,7 +286,7 @@ describe ReviewablesController do
           :reviewable,
           status: Reviewable.statuses[:approved]
         )
-        get "/review/lightweight-list", xhr: true
+        get "/review/user-menu-list", xhr: true
         expect(response.status).to eq(200)
         reviewables = response.parsed_body["reviewables"]
         expect(reviewables.size).to eq(3)

@@ -18,7 +18,7 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
   }
 
   fetchItems() {
-    return ajax("/review/lightweight-list").then((data) => {
+    return ajax("/review/user-menu-list").then((data) => {
       return data.reviewables.map((item) => {
         return UserMenuReviewable.create(item);
       });

@@ -69,7 +69,7 @@ class ReviewablesController < ApplicationController
     render_json_dump(json, rest_serializer: true)
   end
 
-  def lightweight_index
+  def user_menu_list
     reviewables = Reviewable.recent_list_with_pending_first(current_user).to_a
     json = {
       reviewables: reviewables.map! { |r| r.basic_serializer.new(r, scope: guardian, root: nil).as_json }
