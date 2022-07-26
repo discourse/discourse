@@ -2563,33 +2563,49 @@ RSpec.describe User do
   describe 'Granting admin or moderator status' do
     fab!(:reviewable_user) { Fabricate(:reviewable_user) }
 
-    it 'approves the associated reviewable when granting admin status' do
-      reviewable_user.target.grant_admin!
+    context "when there is an associated reviewable" do
+      it "approves the associated reviewable when granting admin status" do
+        reviewable_user.target.grant_admin!
 
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+        expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+      end
+
+      it "does nothing when the user is already approved" do
+        reviewable_user = Fabricate(:reviewable_user)
+        reviewable_user.perform(Discourse.system_user, :approve_user)
+
+        reviewable_user.target.grant_admin!
+
+        expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+      end
+
+      it "approves the associated reviewable when granting moderator status" do
+        reviewable_user.target.grant_moderation!
+
+        expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+      end
     end
 
-    it 'does nothing when the user is already approved' do
-      reviewable_user = Fabricate(:reviewable_user)
-      reviewable_user.perform(Discourse.system_user, :approve_user)
+    context "when there is no associated reviewable" do
+      let!(:user) { Fabricate(:user, approved: false) }
 
-      reviewable_user.target.grant_admin!
+      it "approves the user" do
+        user.grant_admin!
 
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
-    end
+        expect(user.approved).to eq(true)
+      end
 
-    it 'approves the associated reviewable when granting moderator status' do
-      reviewable_user.target.grant_moderation!
+      it "triggers a staff_granted event when granted_admin" do
+        events = DiscourseEvent.track_events { user.grant_admin! }
 
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
-    end
+        expect(events).to include(event_name: :staff_granted, params: [user, :admin])
+      end
 
-    it 'approves the user if there is no reviewable' do
-      user = Fabricate(:user, approved: false)
+      it "triggers a staff_granted event when granted_admin" do
+        events = DiscourseEvent.track_events { user.grant_moderation! }
 
-      user.grant_admin!
-
-      expect(user.approved).to eq(true)
+        expect(events).to include(event_name: :staff_granted, params: [user, :moderator])
+      end
     end
   end
 
