@@ -1,6 +1,6 @@
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
-import { MiniReviewable } from "discourse/models/reviewable";
+import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
 
@@ -20,7 +20,7 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
   fetchItems() {
     return ajax("/review/lightweight-list").then((data) => {
       return data.reviewables.map((item) => {
-        return MiniReviewable.create(item);
+        return UserMenuReviewable.create(item);
       });
     });
   }

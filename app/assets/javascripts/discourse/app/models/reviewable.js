@@ -1,5 +1,4 @@
 import categoryFromId from "discourse-common/utils/category-macro";
-import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
@@ -12,25 +11,6 @@ export const APPROVED = 1;
 export const REJECTED = 2;
 export const IGNORED = 3;
 export const DELETED = 4;
-
-const DEFAULT_COMPONENT = "user-menu/default-reviewable-item";
-function defaultItemComponents() {
-  return {
-    ReviewableFlaggedPost: "user-menu/reviewable-flagged-post-item",
-    ReviewableQueuedPost: "user-menu/reviewable-queued-post-item",
-    ReviewableUser: "user-menu/reviewable-user-item",
-  };
-}
-
-let _itemComponents = defaultItemComponents();
-
-export class MiniReviewable extends RestModel {
-  @tracked pending;
-
-  get userMenuComponent() {
-    return _itemComponents[this.type] || DEFAULT_COMPONENT;
-  }
-}
 
 const Reviewable = RestModel.extend({
   @discourseComputed("type", "topic")

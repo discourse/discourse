@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { MiniReviewable } from "discourse/models/reviewable";
+import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import I18n from "I18n";
 
 function getReviewable(overrides = {}) {
-  return MiniReviewable.create(
+  return UserMenuReviewable.create(
     Object.assign(
       {
         flagger_username: "sayo2",
