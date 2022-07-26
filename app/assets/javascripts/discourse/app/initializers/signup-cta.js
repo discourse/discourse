@@ -12,7 +12,7 @@ export default {
     const screenTrack = container.lookup("service:screen-track");
     const session = Session.current();
     const siteSettings = container.lookup("site-settings:main");
-    const keyValueStore = container.lookup("key-value-store:main");
+    const keyValueStore = container.lookup("service:key-value-store");
     const user = container.lookup("current-user:main");
     const appEvents = container.lookup("service:app-events");
 

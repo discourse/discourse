@@ -185,7 +185,7 @@ export default Controller.extend({
 
   showToolbar: computed({
     get() {
-      const keyValueStore = getOwner(this).lookup("key-value-store:main");
+      const keyValueStore = getOwner(this).lookup("service:key-value-store");
       const storedVal = keyValueStore.get("toolbar-enabled");
       if (this._toolbarEnabled === undefined && storedVal === undefined) {
         // iPhone 6 is 375, anything narrower and toolbar should
@@ -197,7 +197,7 @@ export default Controller.extend({
       return this._toolbarEnabled || storedVal === "true";
     },
     set(key, val) {
-      const keyValueStore = getOwner(this).lookup("key-value-store:main");
+      const keyValueStore = getOwner(this).lookup("service:key-value-store");
       this._toolbarEnabled = val;
       keyValueStore.set({
         key: "toolbar-enabled",
