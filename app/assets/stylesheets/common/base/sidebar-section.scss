@@ -11,8 +11,9 @@
     .select-kit {
       .btn {
         background: transparent;
+        &:focus,
         &:hover {
-          background: var(--primary-low);
+          background: var(--d-sidebar-highlight-color);
         }
       }
       .d-icon {
@@ -39,9 +40,9 @@
     &:visited {
       color: var(--primary);
     }
-
+    &:focus,
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sidebar-highlight-color);
     }
   }
 
@@ -55,8 +56,9 @@
       color: var(--primary-medium);
     }
 
+    &:focus,
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sidebar-highlight-color);
     }
   }
   .select-kit-collection {

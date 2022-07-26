@@ -6,6 +6,8 @@
 
 #main-outlet-wrapper {
   .sidebar-wrapper {
+    --d-sidebar-highlight-color: var(--primary-low);
+
     grid-area: sidebar;
     position: sticky;
     top: var(--header-offset);

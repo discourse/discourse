@@ -12,8 +12,9 @@
     font-size: var(--font-down-1);
     transition: background-color 0.25s;
 
+    &:focus,
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sidebar-highlight-color);
     }
 
     &.active {

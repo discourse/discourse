@@ -6,6 +6,7 @@
       </LinkTo>
 
       {{#if this.currentUser.staff}}
+        <span class="sidebar-footer-links-separator">&bull;</span>
         <LinkTo @route="admin" title={{i18n "admin_title"}} class="sidebar-footer-link sidebar-footer-link-admin">
           {{i18n "admin_title"}}
         </LinkTo>
@@ -18,13 +19,6 @@
         @title="keyboard_shortcuts_help.title"
         @icon="keyboard"
         @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
-
-      {{#if (and this.site.desktopView (not @sidebarDocked))}}
-        <DButton
-          @action={{@toggleSidebar}}
-          @icon="thumbtack"
-          @class="sidebar-footer-actions-button sidebar-footer-actions-dock-toggle"/>
-      {{/if}}
     </div>
   </div>
 </div>
