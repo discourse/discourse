@@ -572,6 +572,7 @@ div.menu-links-header {
 // Sidebar-hamburger hybrid
 
 .hamburger-menu.revamped {
+  --d-sidebar-highlight-color: var(--highlight-medium);
   width: var(--d-sidebar-width);
 
   .panel-body-content {
@@ -589,19 +590,9 @@ div.menu-links-header {
       color: var(--primary-high);
       background: var(--tertiary-low);
     }
-
-    .sidebar-section-header-link,
-    .sidebar-section-header-button,
-    .sidebar-section-link {
-      &:hover {
-        background: var(--highlight-medium);
-      }
-    }
   }
 
-  .sidebar-footer-actions-button.btn {
-    &:hover {
-      background: var(--highlight-medium);
-    }
+  .sidebar-footer-wrapper {
+    padding: 0.5em 0 0;
   }
 }

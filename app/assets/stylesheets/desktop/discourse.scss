@@ -192,9 +192,7 @@ body.has-sidebar-page {
     // increase page max-width to accommodate sidebar width
     max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
   }
-  .d-header .wrap {
-    padding-left: 1.85em;
-  }
+
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
     gap: 0 2em;

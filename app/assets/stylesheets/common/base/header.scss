@@ -17,12 +17,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    @media (prefers-reduced-motion: no-preference) {
-      .sidebar-animate & {
-        transition: padding-left var(--d-sidebar-animation-time)
-          var(--d-sidebar-animation-ease) !important; // only works with an important... :/
-      }
-    }
+
     .contents {
       display: flex;
       align-items: center;
