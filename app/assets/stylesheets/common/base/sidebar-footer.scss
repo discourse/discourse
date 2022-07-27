@@ -1,8 +1,8 @@
 .sidebar-wrapper {
   .sidebar-footer-wrapper {
     .sidebar-footer-container {
-      margin-left: 1.5em;
       margin-right: 0.15em;
+      margin-left: 1em;
     }
   }
 }
@@ -13,19 +13,24 @@
 
   .sidebar-footer-container {
     display: flex;
+    align-items: stretch;
   }
 
   .sidebar-footer-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
     font-size: var(--font-down-1);
     color: var(--primary-high);
-    padding: 0.25em 0;
-    height: 100%;
-
-    &:not(:first-child):before {
-      content: "•";
-      padding: 0 0.25em;
+    padding: 0 0.5em;
+    &:hover,
+    &:focus {
+      background: var(--d-sidebar-highlight-color);
     }
+  }
+
+  .sidebar-footer-links-separator {
+    color: var(--primary-low-mid);
   }
 
   .sidebar-footer-actions {
@@ -41,9 +46,9 @@
       font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
-
+    &:focus,
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sidebar-highlight-color);
     }
   }
 }
