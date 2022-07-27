@@ -21,7 +21,7 @@ describe WordWatcher do
       word1 = Fabricate(:watched_word, action: WatchedWord.actions[:block]).word
       word2 = Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word
 
-      expect(WordWatcher.words_for_action(:block)).to include(
+      expect(described_class.words_for_action(:block)).to include(
         word1 => { case_sensitive: false },
         word2 => { case_sensitive: true }
       )
@@ -34,13 +34,13 @@ describe WordWatcher do
         replacement: "http://test.localhost/"
       ).word
 
-      expect(WordWatcher.words_for_action(:link)).to include(
+      expect(described_class.words_for_action(:link)).to include(
         word => { case_sensitive: false, replacement: "http://test.localhost/" }
       )
     end
 
     it "returns an empty hash when no words are present" do
-      expect(WordWatcher.words_for_action(:tag)).to eq({})
+      expect(described_class.words_for_action(:tag)).to eq({})
     end
   end
 
@@ -53,7 +53,7 @@ describe WordWatcher do
     context "format of the result regexp" do
       it "is correct when watched_words_regular_expressions = true" do
         SiteSetting.watched_words_regular_expressions = true
-        regexps = WordWatcher.word_matcher_regexp_list(:block)
+        regexps = described_class.word_matcher_regexp_list(:block)
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly("/(#{word1})|(#{word2})/i", "/(#{word3})|(#{word4})/")
@@ -61,14 +61,14 @@ describe WordWatcher do
 
       it "is correct when watched_words_regular_expressions = false" do
         SiteSetting.watched_words_regular_expressions = false
-        regexps = WordWatcher.word_matcher_regexp_list(:block)
+        regexps = described_class.word_matcher_regexp_list(:block)
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly("/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i", "/(?:\\W|^)(#{word3}|#{word4})(?=\\W|$)/")
       end
 
       it "is empty for an action without watched words" do
-        regexps = WordWatcher.word_matcher_regexp_list(:censor)
+        regexps = described_class.word_matcher_regexp_list(:censor)
 
         expect(regexps).to be_an(Array)
         expect(regexps).to be_empty
@@ -82,11 +82,11 @@ describe WordWatcher do
       end
 
       it "does not raise an exception by default" do
-        expect { WordWatcher.word_matcher_regexp_list(:block) }.not_to raise_error
+        expect { described_class.word_matcher_regexp_list(:block) }.not_to raise_error
       end
 
       it "raises an exception with raise_errors set to true" do
-        expect { WordWatcher.word_matcher_regexp_list(:block, raise_errors: true) }.to raise_error(RegexpError)
+        expect { described_class.word_matcher_regexp_list(:block, raise_errors: true) }.to raise_error(RegexpError)
       end
     end
   end
@@ -267,7 +267,7 @@ describe WordWatcher do
             SiteSetting.watched_words_regular_expressions = true
             Fabricate(:watched_word, word: "p(rivate|ublic)", action: WatchedWord.actions[:block])
 
-            matches = WordWatcher
+            matches = described_class
               .new("PUBLIC: Discourse is great for public discourse")
               .word_matches_for_action?(:block, all_matches: true)
             expect(matches).to contain_exactly("PUBLIC", "Discourse", "public")
@@ -279,7 +279,7 @@ describe WordWatcher do
             SiteSetting.watched_words_regular_expressions = false
             Fabricate(:watched_word, word: "private", action: WatchedWord.actions[:block])
 
-            matches = WordWatcher
+            matches = described_class
               .new("PRIVATE: Discourse is also great private discourse")
               .word_matches_for_action?(:block, all_matches: true)
 
@@ -299,6 +299,32 @@ describe WordWatcher do
       text = "hello censored world to replace https://notdiscourse.org"
       expected = "hello #{described_class::REPLACEMENT_LETTER * 8} world replaced https://discourse.org"
       expect(described_class.apply_to_text(text)).to eq(expected)
+    end
+
+    context "when watched_words_regular_expressions = true" do
+      it "replaces captured non-word prefix" do
+        SiteSetting.watched_words_regular_expressions = true
+        Fabricate(
+          :watched_word,
+          word: "\\Wplaceholder",
+          replacement: "replacement",
+          action: WatchedWord.actions[:replace]
+        )
+
+        text = "is \tplaceholder in https://notdiscourse.org"
+        expected = "is replacement in https://discourse.org"
+        expect(described_class.apply_to_text(text)).to eq(expected)
+      end
+    end
+
+    context "when watched_words_regular_expressions = false" do
+      it "maintains non-word character prefix" do
+        SiteSetting.watched_words_regular_expressions = false
+
+        text = "to replace and\thttps://notdiscourse.org"
+        expected = "replaced and\thttps://discourse.org"
+        expect(described_class.apply_to_text(text)).to eq(expected)
+      end
     end
   end
 end

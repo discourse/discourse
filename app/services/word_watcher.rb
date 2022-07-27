@@ -109,7 +109,7 @@ class WordWatcher
   end
 
   def self.censor(html)
-    regexps = WordWatcher.word_matcher_regexp_list(:censor)
+    regexps = word_matcher_regexp_list(:censor)
     return html if regexps.blank?
 
     doc = Nokogiri::HTML5::fragment(html)
@@ -123,21 +123,20 @@ class WordWatcher
   end
 
   def self.censor_text(text)
-    regexps = WordWatcher.word_matcher_regexp_list(:censor)
+    regexps = word_matcher_regexp_list(:censor)
     return text if regexps.blank?
 
     regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
   end
 
   def self.apply_to_text(text)
-    if regexp = word_matcher_regexp(:censor)
-      text = censor_text_with_regexp(text, regexp)
-    end
+    text = censor_text(text)
 
     %i[replace link]
       .flat_map { |type| word_matcher_regexps(type).to_a }
-      .reduce(text) do |t, (word_regexp, replacement)|
-        t.gsub(Regexp.new(word_regexp)) { |match| "#{match[0]}#{replacement}" }
+      .reduce(text) do |t, (word_regexp, attrs)|
+        case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
+        replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
       end
   end
 
@@ -210,6 +209,21 @@ class WordWatcher
       .new(WordWatcher.word_to_regexp(word, whole: true), case_sensitive ? nil : Regexp::IGNORECASE)
       .match?(@raw)
   end
+
+  def self.replace_text_with_regexp(text, regexp, replacement)
+    text.gsub(regexp) do |match|
+      prefix = ""
+      # match may be prefixed with a non-word character from the non-capturing group
+      # Ensure this isn't replaced if watched words regular expression is disabled.
+      if !SiteSetting.watched_words_regular_expressions? && (match[0] =~ /\W/) != nil
+        prefix = "#{match[0]}"
+      end
+
+      "#{prefix}#{replacement}"
+    end
+  end
+
+  private_class_method :replace_text_with_regexp
 
   def self.censor_text_with_regexp(text, regexp)
     text.gsub(regexp) do |match|
