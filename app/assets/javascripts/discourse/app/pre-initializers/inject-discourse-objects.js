@@ -1,7 +1,6 @@
 import TopicTrackingState, {
   startTracking,
 } from "discourse/models/topic-tracking-state";
-import PrivateMessageTopicTrackingState from "discourse/models/private-message-topic-tracking-state";
 import DiscourseLocation from "discourse/lib/discourse-location";
 import MessageBus from "message-bus-client";
 import Session from "discourse/models/session";
@@ -90,6 +89,15 @@ export default {
       dropFrom: "3.0.0",
     });
 
+    deprecateRegistration({
+      app,
+      container,
+      oldName: "pm-topic-tracking-state:main",
+      newName: "service:pm-topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    });
+
     let siteSettings = container.lookup("site-settings:main");
 
     const currentUser = User.current();
@@ -106,15 +114,6 @@ export default {
       instantiate: false,
     });
 
-    const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-      messageBus: MessageBus,
-      currentUser,
-    });
-
-    app.register("pm-topic-tracking-state:main", pmTopicTrackingState, {
-      instantiate: false,
-    });
-
     const site = Site.current();
     app.register("site:main", site, { instantiate: false });
 
@@ -125,7 +124,7 @@ export default {
 
     ALL_TARGETS.forEach((t) => {
       app.inject(t, "appEvents", "service:app-events");
-      app.inject(t, "pmTopicTrackingState", "pm-topic-tracking-state:main");
+      app.inject(t, "pmTopicTrackingState", "service:pm-topic-tracking-state");
       app.inject(t, "store", "service:store");
       app.inject(t, "site", "site:main");
       app.inject(t, "searchService", "service:search");

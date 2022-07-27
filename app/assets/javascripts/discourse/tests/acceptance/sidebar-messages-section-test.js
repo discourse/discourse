@@ -367,7 +367,7 @@ acceptance(
       await visit("/");
 
       const pmTopicTrackingState = this.container.lookup(
-        "pm-topic-tracking-state:main"
+        "service:pm-topic-tracking-state"
       );
 
       await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
@@ -440,7 +440,7 @@ acceptance(
       await visit("/");
 
       const pmTopicTrackingState = this.container.lookup(
-        "pm-topic-tracking-state:main"
+        "service:pm-topic-tracking-state"
       );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
