@@ -1,74 +1,75 @@
-<div class="wizard-step-contents">
+<div class="wizard-container__step-contents">
   {{#if this.step.title}}
-    <h1 class="wizard-step-title">{{this.step.title}}</h1>
+    <h1 class="wizard-container__step-title">{{this.step.title}}</h1>
   {{/if}}
 
-  <div class={{this.bannerAndDescriptionClass}}>
-    {{#if this.bannerImage}}
-      <img src={{this.bannerImage}} class="wizard-step-banner">
+  <div class="wizard-container__step-container">
+    {{#if this.step.fields}}
+      <WizardStepForm @step={{this.step}}>
+        {{#if this.includeSidebar}}
+          <div class="wizard-container__sidebar">
+            {{#each this.step.fields as |field|}}
+              {{#if field.show_in_sidebar}}
+                <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
+              {{/if}}
+            {{/each}}
+          </div>
+        {{/if}}
+        <div class="wizard-container__fields">
+          {{#each this.step.fields as |field|}}
+            {{#unless field.show_in_sidebar}}
+              <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
+            {{/unless}}
+          {{/each}}
+        </div>
+      </WizardStepForm>
     {{/if}}
+    {{#if (or this.bannerImage this.step.description)}}
+      <div class={{this.bannerAndDescriptionClass}}>
+        {{#if this.step.description}}
+          <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
+        {{/if}}
 
-    {{#if this.step.description}}
-      <p class="wizard-step-description">{{html-safe this.step.description}}</p>
-    {{/if}}
-  </div>
-
-  <WizardStepForm @step={{this.step}}>
-    {{#if this.includeSidebar}}
-      <div class="wizard-fields-sidebar">
-        {{#each this.step.fields as |field|}}
-          {{#if field.show_in_sidebar}}
-            <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
-          {{/if}}
-        {{/each}}
+        {{#if this.bannerImage}}
+          <img src={{this.bannerImage}} class="wizard-container__step-banner-image">
+        {{/if}}
       </div>
     {{/if}}
-    <div class="wizard-fields-main">
-      {{#each this.step.fields as |field|}}
-        {{#unless field.show_in_sidebar}}
-          <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
-        {{/unless}}
-      {{/each}}
-    </div>
-  </WizardStepForm>
+  </div>
 </div>
 
-<div class="wizard-step-footer">
+<div class="wizard-container__step-footer">
 
-  <div class="wizard-progress">
-    <div class="white"></div>
-    <div style={{this.barStyle}} class="black"></div>
-    <div class="screen"></div>
-    <span>{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
-  </div>
+  <div class="wizard-container__buttons">
 
-  <div class="wizard-buttons">
-    {{#if this.showQuitButton}}
-      <a href {{action "quit"}} tabindex="11" class="action-link quit">{{i18n "wizard.quit"}}</a>
+    {{#if this.showDoneButton}}
+      <button {{action "quit"}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+        {{i18n "wizard.done"}}
+      </button>
+    {{/if}}
+
+    {{#if this.showNextButton}}
+      <button {{action "nextStep"}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+        {{i18n this.nextButtonLabel}}
+      </button>
     {{/if}}
 
     {{#if this.showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-btn finish">
+      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button finish">
         {{i18n "wizard.finish"}}
       </button>
     {{/if}}
 
-    {{#if this.showBackButton}}
-      <a href {{action "backStep"}} tabindex="11" class="action-link back">{{i18n "wizard.back"}}</a>
-    {{/if}}
+  </div>
 
-    {{#if this.showNextButton}}
-      <button {{action "nextStep"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-btn next primary">
-        {{i18n "wizard.next"}}
-        {{d-icon "chevron-right"}}
-      </button>
-    {{/if}}
+  <div class="wizard-container__step-progress">
+    <a href {{action "backStep"}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
 
-    {{#if this.showDoneButton}}
-      <button {{action "quit"}} disabled={{this.saving}} tabindex="10" type="button" class="wizard-btn done">
-        {{i18n "wizard.done"}}
-      </button>
-    {{/if}}
+    <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
+    <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
+
+    <a href {{action "nextStep"}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
+
   </div>
 
 </div>

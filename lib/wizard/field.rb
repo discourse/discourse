@@ -16,7 +16,7 @@ class Wizard
   end
 
   class Field
-    attr_reader :id, :type, :required, :value, :choices, :show_in_sidebar
+    attr_reader :id, :type, :required, :value, :icon, :choices, :show_in_sidebar
     attr_accessor :step
 
     def initialize(attrs)
@@ -26,6 +26,7 @@ class Wizard
       @type = attrs[:type]
       @required = !!attrs[:required]
       @value = attrs[:value]
+      @icon = attrs[:icon]
       @choices = []
       @show_in_sidebar = attrs[:show_in_sidebar]
     end

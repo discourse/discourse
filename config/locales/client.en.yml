@@ -5709,15 +5709,16 @@ en:
 
   wizard_js:
     wizard:
-      done: "Done"
-      finish: "Finish"
+      done: "Jump in!"
+      finish: "Exit setup"
       back: "Back"
       next: "Next"
+      configure_more: "Configure More..."
+      step-text: "Step"
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
-      quit: "Maybe Later"
 
       staff_count:
         one: "Your community has %{count} staff (you)."

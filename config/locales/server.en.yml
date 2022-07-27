@@ -4891,105 +4891,43 @@ en:
   wizard:
     title: "Discourse Setup"
     step:
-      locale:
-        title: "Welcome to your Discourse!"
-        fields:
-          default_locale:
-            description: "What’s the default language for your community?"
-
-      forum_title:
-        title: "Name"
-        description: "Your name is a sign visible in the distance, the <i>first</i> thing potential visitors will notice about your community. What does your name and title say about your community?"
+      introduction:
+        title: "Tell us about your community"
 
         fields:
           title:
-            label: "Your community’s name"
+            label: "Community name"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "Describe your community in one short sentence (used in search results and social media)"
+            label: "Describe your community in a sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
-          short_site_description:
-            label: "Describe your community in few words (used for the homepage title)"
-            placeholder: "Best community ever"
-
-      introduction:
-        title: "Introduction"
-        disabled:
-          "<p>We couldn’t find any topic with the title “%{topic_title}”.</p>
-          <ul>
-          <li>If you have changed the title, edit that topic to modify your site’s introductory text.</li>
-          <li>If you have deleted this topic, create another topic with “%{topic_title}” as the title. The content of the first post is your site’s introductory text.</li>
-          </ul>"
-
-        fields:
-          welcome:
-            label: "Welcome Topic"
-            description:
-              "<p>How would you describe your community to a stranger on an elevator in about 1 minute?</p>
-              <ul>
-              <li>Who are these discussions for?</li>
-              <li>What can I find here?</li>
-              <li>Why should I visit?</li>
-              </ul>
-              <p>Your welcome topic is the first thing new arrivals will read. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
-            one_paragraph: "Please restrict your welcome message to one paragraph."
-            extra_description: "If you are not sure, you can skip this step and edit your welcome topic later."
+          contact_email:
+            label: "Point of contact"
+            placeholder: "example@user.com"
+            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
+          default_locale:
+            label: "Language"
 
       privacy:
-        title: "Access"
-        description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>"
+        title: "Member Experience"
 
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Public"
-                description: "Anyone can access this community"
-              restricted:
-                label: "Private"
-                description: "Only logged in users can access this community"
-          privacy_options:
-            description: "How do new users sign up for an account?"
-            choices:
-              open:
-                label: "Users can sign up on their own."
-              invite_only:
-                label: "Users must be invited by trusted users or staff before they can sign up."
-              must_approve:
-                label: "Users can sign up on their own, but must be approved by staff."
+          login_required:
+            placeholder: "Private"
+            extra_description: "Only logged in users can access this community"
+          invite_only:
+            placeholder: "Invite Only"
+            extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
+          must_approve_users:
+            placeholder: "Require Approval"
+            extra_description: "Users must be approved by staff"
 
-      contact:
-        title: "Contact"
-        fields:
-          contact_email:
-            label: "Mail"
-            placeholder: "name@example.com"
-            description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent community contact."
-          contact_url:
-            label: "Web Page"
-            placeholder: "https://www.example.com/contact-us"
-            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
-          site_contact:
-            label: "Automated Messages"
-            description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
-
-      corporate:
-        title: "Organization"
-        description: "This information will be entered in your <a href='%{base_path}/tos' target='blank'>Terms of Service</a>, which is a topic you can edit in the Staff category. If you don’t have a company, feel free to skip this step for now."
-
-        fields:
-          company_name:
-            label: "Company Name"
-            placeholder: "Example Organization"
-          governing_law:
-            label: "Governing Law"
-            placeholder: "California law"
-          city_for_disputes:
-            label: "City for Disputes"
-            placeholder: "San Francisco, California"
+      ready:
+        title: "Your Discourse is Ready!"
+        description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
 
       styling:
-        title: "Styling"
+        title: "Look & Feel"
         fields:
           color_scheme:
             label: "Color scheme"
@@ -5021,25 +4959,45 @@ en:
               subcategories_with_featured_topics:
                 label: "Subcategories with Featured Topics"
 
-      logos:
-        title: "Logos"
+      branding:
+        title: "Community Branding"
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
           logo_small:
             label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left of your site when scrolling down, in the browser, and when sharing on social platforms. Ideally larger than 512x512."
-
-      icons:
-        title: "Icons"
-        fields:
+            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
           favicon:
             label: "Browser Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes. Recommended image extensions are PNG or JPG. We'll use the square logo by default."
+            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is recommended. Square logo is used by default."
           large_icon:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
+            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
+
+      corporate:
+        title: "Contact & Org"
+
+        fields:
+          company_name:
+            label: "Company Name"
+            placeholder: "Example Organization"
+            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+          governing_law:
+            label: "Governing Law"
+            placeholder: "California law"
+            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+          contact_url:
+            label: "Web Page"
+            placeholder: "https://www.example.com/contact-us"
+            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
+          city_for_disputes:
+            label: "City for Disputes"
+            placeholder: "San Francisco, California"
+            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+          site_contact:
+            label: "Automated Messages"
+            description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
 
       invites:
         title: "Invite Staff"
