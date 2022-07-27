@@ -542,25 +542,25 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.recent_list_with_pending_first(user, limit: 30)
-    order_clause = DB.sql_fragment(<<~SQL, pending: statuses[:pending])
-      CASE WHEN reviewables.status = :pending THEN 0 ELSE 1 END,
-      CASE WHEN reviewables.status = :pending THEN reviewables.score END DESC,
-      reviewables.created_at DESC
-    SQL
+    min_score = Reviewable.min_score_for_priority
+
     query = Reviewable
       .includes(:created_by, :topic, :target)
       .viewable_by(user, preload: false)
       .except(:order)
-      .order(order_clause)
+      .order(score: :desc, created_at: :desc)
       .limit(limit)
 
-    min_score = Reviewable.min_score_for_priority
     if min_score > 0
       query = query.where(<<~SQL, min_score: min_score)
         reviewables.score >= :min_score OR reviewables.force_review
       SQL
     end
-    query
+    records = query.where(status: Reviewable.statuses[:pending]).to_a
+    if records.size < limit
+      records += query.where.not(status: Reviewable.statuses[:pending]).to_a
+    end
+    records
   end
 
   def serializer
@@ -786,6 +786,7 @@ end
 #
 # Indexes
 #
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
