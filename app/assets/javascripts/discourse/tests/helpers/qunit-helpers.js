@@ -107,6 +107,7 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   return sinon.useFakeTimers({
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
+    shouldClearNativeTimers: true,
   });
 }
 
