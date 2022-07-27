@@ -2000,10 +2000,17 @@ describe PostsController do
       expect(response).to be_redirect
     end
 
-    it "returns a 403 when access is denied" do
+    it "returns a 403 when access is denied for JSON format" do
       post = Fabricate(:private_message_post)
       get "/p/#{post.id}.json"
       expect(response).to be_forbidden
+    end
+
+    it "returns a 403 when access is denied for HTML format" do
+      post = Fabricate(:private_message_post)
+      get "/p/#{post.id}"
+      expect(response).to be_forbidden
+      expect(response.body).to have_tag("body.no-ember")
     end
 
     it "renders a 404 page" do
