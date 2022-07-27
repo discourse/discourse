@@ -1,18 +1,9 @@
 import Service from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 
-const PROXIED_METHODS = [
-  "abandonLocal",
-  "remove",
-  "set",
-  "setObject",
-  "get",
-  "getInt",
-  "getObject",
-  "getItem",
-  "removeItem",
-  "setItem",
-];
+const PROXIED_METHODS = Object.getOwnPropertyNames(
+  KeyValueStore.prototype
+).reject((p) => p === "constructor");
 
 /**
  * This is the global key-value-store which is injectable as a service.
@@ -20,10 +11,10 @@ const PROXIED_METHODS = [
  * to create their own namespaced store.
  * */
 export default class KeyValueStoreService extends Service {
-  init() {
-    super.init(...arguments);
+  _keyValueStore = new KeyValueStore("discourse_");
 
-    this._keyValueStore = new KeyValueStore("discourse_");
+  constructor() {
+    super(...arguments);
 
     for (const name of PROXIED_METHODS) {
       this[name] = this._keyValueStore[name].bind(this._keyValueStore);
