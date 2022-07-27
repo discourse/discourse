@@ -109,10 +109,26 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
 
   context "without twitter client" do
     let(:link) { "https://twitter.com/discourse/status/1428031057186627589" }
+    let(:html) { described_class.new(link).to_html }
 
     it "does not match the url" do
       onebox = Onebox::Matcher.new(link, { allowed_iframe_regexes: [/.*/] }).oneboxed
       expect(onebox).not_to be(described_class)
+    end
+
+    it "logs a warn message if rate limited" do
+      SiteSetting.twitter_consumer_key = 'twitter_consumer_key'
+      SiteSetting.twitter_consumer_secret = 'twitter_consumer_secret'
+
+      stub_request(:post, "https://api.twitter.com/oauth2/token")
+        .to_return(status: 200, body: "{\"access_token\":\"token\"}", headers: {})
+
+      stub_request(:get, "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended")
+        .to_return(status: 429, body: "{}", headers: {})
+
+      Rails.logger.expects(:warn).with(regexp_matches(/rate limit/)).at_least_once
+
+      expect(html).to eq('')
     end
   end
 

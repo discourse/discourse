@@ -18,6 +18,10 @@ module Onebox
         { 'User-Agent' => 'DiscourseBot/1.0' }
       end
 
+      def to_html
+        raw.present? ? super : ''
+      end
+
       private
 
       def match
@@ -34,7 +38,7 @@ module Onebox
 
       def raw
         if twitter_api_credentials_present?
-          @raw ||= OpenStruct.new(client.status(match[:id]).to_hash)
+          @raw ||= client.status(match[:id]).to_hash
         end
       end
 
