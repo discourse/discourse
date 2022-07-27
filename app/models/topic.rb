@@ -1802,12 +1802,12 @@ class Topic < ActiveRecord::Base
   end
 
   def cannot_permanently_delete_reason(user)
-    deleted_posts_count = Post.with_deleted
+    all_posts_count = Post.with_deleted
       .where(topic_id: self.id)
       .where(post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]])
       .count
 
-    if posts_count > 0 || deleted_posts_count > 1
+    if posts_count > 0 || all_posts_count > 1
       I18n.t('post.cannot_permanently_delete.many_posts')
     elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)

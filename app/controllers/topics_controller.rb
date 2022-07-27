@@ -621,8 +621,9 @@ class TopicsController < ApplicationController
 
   def destroy
     topic = Topic.with_deleted.find_by(id: params[:id])
+    force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
-    if params[:force_destroy].present?
+    if force_destroy
       if !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
@@ -634,7 +635,7 @@ class TopicsController < ApplicationController
       current_user,
       topic.ordered_posts.with_deleted.first,
       context: params[:context],
-      force_destroy: params[:force_destroy].present?
+      force_destroy: force_destroy
     ).destroy
 
     render body: nil
