@@ -35,7 +35,6 @@ module Roleable
     auto_approve_user
     enqueue_staff_welcome_message(:moderator)
     set_default_notification_levels(:moderators)
-    DiscourseEvent.trigger(:staff_granted, self, :moderator)
   end
 
   def revoke_moderation!
@@ -48,7 +47,6 @@ module Roleable
     auto_approve_user
     enqueue_staff_welcome_message(:admin)
     set_default_notification_levels(:admins)
-    DiscourseEvent.trigger(:staff_granted, self, :admin)
   end
 
   def revoke_admin!

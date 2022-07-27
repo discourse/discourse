@@ -12,7 +12,7 @@ describe CategoryUser do
     CategoryUser.notification_levels[:regular]
   end
 
-  context '#batch_set' do
+  describe '#batch_set' do
     fab!(:category) { Fabricate(:category) }
 
     def category_ids_at_level(level)

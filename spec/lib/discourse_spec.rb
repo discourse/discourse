@@ -177,7 +177,7 @@ describe Discourse do
     end
   end
 
-  context '#site_contact_user' do
+  describe '#site_contact_user' do
 
     fab!(:admin) { Fabricate(:admin) }
     fab!(:another_admin) { Fabricate(:admin) }
@@ -194,13 +194,13 @@ describe Discourse do
 
   end
 
-  context '#system_user' do
+  describe '#system_user' do
     it 'returns the system user' do
       expect(Discourse.system_user.id).to eq(-1)
     end
   end
 
-  context "#store" do
+  describe "#store" do
 
     it "returns LocalStore by default" do
       expect(Discourse.store).to be_a(FileStore::LocalStore)
@@ -319,7 +319,7 @@ describe Discourse do
     end
   end
 
-  context "#handle_exception" do
+  describe "#handle_exception" do
 
     class TempSidekiqLogger
       attr_accessor :exception, :context
@@ -363,7 +363,7 @@ describe Discourse do
     end
   end
 
-  context '#deprecate' do
+  describe '#deprecate' do
     def old_method(m)
       Discourse.deprecate(m)
     end
@@ -472,7 +472,7 @@ describe Discourse do
     end
   end
 
-  context ".clear_all_theme_cache!" do
+  describe ".clear_all_theme_cache!" do
     before do
       setup_s3
       SiteSetting.s3_cdn_url = "https://s3.cdn.com/gg"

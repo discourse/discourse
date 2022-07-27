@@ -4,7 +4,7 @@ describe ComposerMessagesController do
   fab!(:topic) { Fabricate(:topic, created_at: 10.years.ago, last_posted_at: 10.years.ago) }
   fab!(:post) { Fabricate(:post, topic: topic, post_number: 1, created_at: 10.years.ago) }
 
-  context '#index' do
+  describe '#index' do
     it 'requires you to be logged in' do
       get "/composer_messages.json"
       expect(response.status).to eq(403)

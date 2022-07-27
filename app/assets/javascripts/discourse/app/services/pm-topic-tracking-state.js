@@ -1,6 +1,6 @@
 import { Promise } from "rsvp";
 
-import EmberObject from "@ember/object";
+import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind, on } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -14,7 +14,7 @@ import {
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 // See private_message_topic_tracking_state.rb for documentation
-const PrivateMessageTopicTrackingState = EmberObject.extend({
+const PrivateMessageTopicTrackingState = Service.extend({
   CHANNEL_PREFIX: "/private-message-topic-tracking-state",
 
   inbox: null,

@@ -3379,6 +3379,22 @@ describe Guardian do
         end
       end
     end
+
+    context "tagging PMs" do
+      it "pm_tags_allowed_for_groups contains everyone" do
+        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+
+        expect(Guardian.new(user).can_tag_pms?).to be_truthy
+      end
+
+      it "pm_tags_allowed_for_groups contains a group" do
+        SiteSetting.pm_tags_allowed_for_groups = "#{group.id}"
+        group.add(member)
+
+        expect(Guardian.new(user).can_tag_pms?).to be_falsey
+        expect(Guardian.new(member).can_tag_pms?).to be_truthy
+      end
+    end
   end
 
   describe(:can_see_group) do

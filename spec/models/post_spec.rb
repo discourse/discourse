@@ -1491,7 +1491,7 @@ describe Post do
       expect(UploadReference.count).to eq(0)
     end
 
-    context "#link_post_uploads" do
+    describe "#link_post_uploads" do
       it "finds all the uploads in the post" do
         post.link_post_uploads
 
@@ -1547,7 +1547,7 @@ describe Post do
       end
     end
 
-    context '#update_uploads_secure_status' do
+    describe '#update_uploads_secure_status' do
       fab!(:user) { Fabricate(:user, trust_level: 0) }
 
       let(:raw) do

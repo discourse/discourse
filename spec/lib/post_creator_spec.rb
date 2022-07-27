@@ -1793,7 +1793,7 @@ describe PostCreator do
     end
   end
 
-  context "#create_post_notice" do
+  describe "#create_post_notice" do
     fab!(:user) { Fabricate(:user) }
     fab!(:staged) { Fabricate(:staged) }
     fab!(:anonymous) { Fabricate(:anonymous) }

@@ -337,15 +337,12 @@ createWidget("revamped-hamburger-menu-wrapper", {
     return { "data-click-outside": true };
   },
 
-  html(attrs) {
+  html() {
     return [
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<Sidebar::HamburgerDropdown @sidebarDocked={{@data.sidebarDocked}} />`,
-        {
-          sidebarDocked: attrs.sidebarDocked,
-        }
+        hbs`<Sidebar::HamburgerDropdown />`
       ),
     ];
   },
@@ -426,12 +423,10 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        if (this.currentUser?.experimental_sidebar_enabled) {
-          panels.push(
-            this.attach("revamped-hamburger-menu-wrapper", {
-              sidebarDocked: attrs.sidebarDocked,
-            })
-          );
+        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+          if (!attrs.sidebarEnabled) {
+            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
+          }
         } else {
           panels.push(this.attach("hamburger-menu"));
         }
@@ -547,8 +542,8 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (
-      this.currentUser?.experimental_sidebar_enabled &&
-      this.site.mobileView
+      this.siteSettings.enable_experimental_sidebar_hamburger &&
+      (this.attrs.sidebarEnabled || this.site.mobileView)
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {

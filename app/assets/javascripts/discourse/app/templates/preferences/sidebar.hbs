@@ -1,49 +1,38 @@
-<div class="control-group preferences-sidebar-options">
-  <legend class="control-label">{{i18n "user.experimental_sidebar.options"}}</legend>
+<div class="control-group preferences-sidebar-categories">
+  <legend class="control-label">{{i18n "user.experimental_sidebar.categories_section"}}</legend>
 
-  <PreferenceCheckbox
-    @labelKey="user.experimental_sidebar.enable"
-    @checked={{this.model.user_option.enable_experimental_sidebar}}
-    @class="preferences-sidebar-enable-checkbox" />
+  <div class="controls">
+    <CategorySelector
+        @categories={{this.selectedSidebarCategories}}
+        @onChange={{action (mut this.selectedSidebarCategories)}}
+        @options={{hash
+          allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
+          displayCategoryDescription=true
+        }}
+    />
+  </div>
+
+  <div class="instructions">{{i18n "user.experimental_sidebar.categories_section_instruction"}}</div>
 </div>
 
-{{#if this.model.experimental_sidebar_enabled}}
-  <div class="control-group preferences-sidebar-categories">
-    <legend class="control-label">{{i18n "user.experimental_sidebar.categories_section"}}</legend>
+{{#if this.siteSettings.tagging_enabled}}
+  <div class="control-group preferences-sidebar-tags">
+    <legend class="control-label">{{i18n "user.experimental_sidebar.tags_section"}}</legend>
 
     <div class="controls">
-      <CategorySelector
-          @categories={{this.selectedSidebarCategories}}
-          @onChange={{action (mut this.selectedSidebarCategories)}}
-          @options={{hash
-            allowUncategorized=(not this.siteSettings.suppress_uncategorized_badge)
-            displayCategoryDescription=true
-          }}
+      <TagChooser
+        @tags={{this.selectedSidebarTagNames}}
+        @everyTag={{true}}
+        @unlimitedTagCount={{true}}
+        @onChange={{action (mut this.selectedSidebarTagNames)}}
+        @options={{hash
+          allowAny=false
+        }}
       />
     </div>
 
-    <div class="instructions">{{i18n "user.experimental_sidebar.categories_section_instruction"}}</div>
+    <div class="instructions">{{i18n "user.experimental_sidebar.tags_section_instruction"}}</div>
   </div>
-
-  {{#if this.siteSettings.tagging_enabled}}
-    <div class="control-group preferences-sidebar-tags">
-      <legend class="control-label">{{i18n "user.experimental_sidebar.tags_section"}}</legend>
-
-      <div class="controls">
-        <TagChooser
-          @tags={{this.selectedSidebarTagNames}}
-          @everyTag={{true}}
-          @unlimitedTagCount={{true}}
-          @onChange={{action (mut this.selectedSidebarTagNames)}}
-          @options={{hash
-            allowAny=false
-          }}
-        />
-      </div>
-
-      <div class="instructions">{{i18n "user.experimental_sidebar.tags_section_instruction"}}</div>
-    </div>
-  {{/if}}
 {{/if}}
 
 <SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />

@@ -8,7 +8,7 @@ describe Stylesheet::Importer do
     Stylesheet::Compiler.compile_asset(name)[0]
   end
 
-  context "#category_backgrounds" do
+  describe "#category_backgrounds" do
     it "applies CDN to background category images" do
       expect(compile_css("color_definitions")).to_not include("body.category-")
 
@@ -37,7 +37,7 @@ describe Stylesheet::Importer do
 
   end
 
-  context "#font" do
+  describe "#font" do
     it "includes font variable" do
       default_font = ":root{--font-family: Arial, sans-serif}"
       expect(compile_css("color_definitions")).to include(default_font)
@@ -76,7 +76,7 @@ describe Stylesheet::Importer do
     end
   end
 
-  context "#import_color_definitions" do
+  describe "#import_color_definitions" do
     let(:scss) { ":root{--custom-color: green}" }
     let(:scss_child) { "$navy: #000080; :root{--custom-color: red; --custom-color-rgb: \#{hexToRGB($navy)}}" }
 
@@ -115,7 +115,7 @@ describe Stylesheet::Importer do
     end
   end
 
-  context "#import_wcag_overrides" do
+  describe "#import_wcag_overrides" do
     it "should do nothing on a regular scheme" do
       scheme = ColorScheme.create_from_base(name: 'Regular')
       expect(Stylesheet::Importer.new({ color_scheme_id: scheme.id }).import_wcag_overrides).to eq("")

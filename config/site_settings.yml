@@ -1266,7 +1266,7 @@ email:
   raw_rejected_email_max_length: 4000
   delete_rejected_email_after_days:
     default: 90
-    max: 36500
+    validator: "DeleteRejectedEmailAfterDaysValidator"
   enable_secondary_emails:
     client: true
     default: true
@@ -1985,7 +1985,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar:
+  enable_experimental_sidebar_hamburger:
+    default: false
+    client: true
+    hidden: true
+  enable_sidebar:
     default: false
     client: true
     hidden: true

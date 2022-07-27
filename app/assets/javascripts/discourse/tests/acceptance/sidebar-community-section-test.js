@@ -9,7 +9,6 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -18,10 +17,14 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Sidebar - Community Section", function (needs) {
   needs.user({
-    experimental_sidebar_enabled: true,
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],
     watching_first_post_tags: ["tag3"],
+  });
+
+  needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
   needs.pretender((server, helper) => {
@@ -753,11 +756,11 @@ acceptance("Sidebar - Community Section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await undockSidebar();
+    await click(".hamburger-dropdown");
 
-    assert.strictEqual(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount
+    assert.ok(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length <
+        initialCallbackCount
     );
   });
 });

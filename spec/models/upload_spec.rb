@@ -43,7 +43,7 @@ describe Upload do
     end
   end
 
-  context ".create_thumbnail!" do
+  describe ".create_thumbnail!" do
     it "does not create a thumbnail when disabled" do
       SiteSetting.create_thumbnails = false
       OptimizedImage.expects(:create_for).never
@@ -118,7 +118,7 @@ describe Upload do
     expect(created_upload.valid?).to eq(false)
   end
 
-  context ".extract_url" do
+  describe ".extract_url" do
     let(:url) { 'https://example.com/uploads/default/original/1X/d1c2d40ab994e8410c.png' }
 
     it 'should return the right part of url' do
@@ -126,7 +126,7 @@ describe Upload do
     end
   end
 
-  context ".get_from_url" do
+  describe ".get_from_url" do
     let(:sha1) { "10f73034616a796dfd70177dc54b6def44c4ba6f" }
     let(:upload) { Fabricate(:upload, sha1: sha1) }
 
@@ -258,7 +258,7 @@ describe Upload do
     end
   end
 
-  context ".get_from_urls" do
+  describe ".get_from_urls" do
     let(:upload) { Fabricate(:upload, sha1: "10f73034616a796dfd70177dc54b6def44c4ba6f") }
     let(:upload2) { Fabricate(:upload, sha1: "2a7081e615f9075befd87a9a6d273935c0262cd5") }
 
@@ -549,7 +549,7 @@ describe Upload do
     stub_upload(upload)
   end
 
-  context '.destroy' do
+  describe '.destroy' do
     it "can correctly clear information when destroying an upload" do
       upload = Fabricate(:upload)
       user = Fabricate(:user)
@@ -568,7 +568,7 @@ describe Upload do
     end
   end
 
-  context ".signed_url_from_secure_media_url" do
+  describe ".signed_url_from_secure_media_url" do
     before do
       # must be done so signed_url_for_path exists
       enable_secure_media
@@ -589,7 +589,7 @@ describe Upload do
     end
   end
 
-  context ".secure_media_url_from_upload_url" do
+  describe ".secure_media_url_from_upload_url" do
     before do
       # must be done so signed_url_for_path exists
       enable_secure_media
@@ -603,7 +603,7 @@ describe Upload do
     end
   end
 
-  context ".secure_media_url?" do
+  describe ".secure_media_url?" do
     it "works for a secure media url with or without schema + host" do
       url = "//localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
       expect(Upload.secure_media_url?(url)).to eq(true)

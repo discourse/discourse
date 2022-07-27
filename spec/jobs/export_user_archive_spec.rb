@@ -36,7 +36,7 @@ describe Jobs::ExportUserArchive do
     JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
   end
 
-  context '#execute' do
+  describe '#execute' do
     before do
       _ = post
       user.user_profile.website = 'https://doe.example.com/john'

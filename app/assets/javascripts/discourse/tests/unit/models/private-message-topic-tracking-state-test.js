@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
-import PrivateMessageTopicTrackingState from "discourse/models/private-message-topic-tracking-state";
+import PrivateMessageTopicTrackingState from "discourse/services/pm-topic-tracking-state";
 import User from "discourse/models/user";
 
 function setupPretender() {

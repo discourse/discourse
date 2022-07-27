@@ -6,7 +6,7 @@ require 'theme_store/git_importer'
 
 describe ThemeStore::GitImporter do
 
-  context "#import" do
+  describe "#import" do
 
     let(:url) { "https://github.com/example/example.git" }
     let(:trailing_slash_url) { "https://github.com/example/example/" }

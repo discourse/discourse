@@ -205,7 +205,7 @@ describe SearchController do
     end
   end
 
-  context "#query" do
+  describe "#query" do
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search/query.json", params: { term: 'wookie' }
@@ -317,7 +317,7 @@ describe SearchController do
     end
   end
 
-  context "#show" do
+  describe "#show" do
     it "doesn't raise an error when search term not specified" do
       get "/search"
       expect(response.status).to eq(200)
@@ -601,7 +601,7 @@ describe SearchController do
     end
   end
 
-  context "#click" do
+  describe "#click" do
     after do
       SearchLog.clear_debounce_cache!
     end

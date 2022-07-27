@@ -4,7 +4,7 @@ describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
-  context '#show' do
+  describe '#show' do
     fab!(:invite) { Fabricate(:invite) }
 
     it 'shows the accept invite page' do
@@ -178,7 +178,7 @@ describe InvitesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it 'requires to be logged in' do
       post '/invites.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -407,7 +407,7 @@ describe InvitesController do
     end
   end
 
-  context '#retrieve' do
+  describe '#retrieve' do
     it 'requires to be logged in' do
       get '/invites/retrieve.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -437,7 +437,7 @@ describe InvitesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     fab!(:invite) { Fabricate(:invite, invited_by: admin, email: 'test@example.com') }
 
     it 'requires to be logged in' do
@@ -519,7 +519,7 @@ describe InvitesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it 'requires to be logged in' do
       delete '/invites.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -555,7 +555,7 @@ describe InvitesController do
     end
   end
 
-  context '#perform_accept_invitation' do
+  describe '#perform_accept_invitation' do
     context 'with an invalid invite' do
       it 'redirects to the root' do
         put '/invites/show/doesntexist.json'
@@ -721,7 +721,7 @@ describe InvitesController do
         end
       end
 
-      context '.post_process_invite' do
+      describe '.post_process_invite' do
         it 'sends a welcome message if set' do
           SiteSetting.send_welcome_message = true
           user.send_welcome_message = true
@@ -971,7 +971,7 @@ describe InvitesController do
     end
   end
 
-  context '#destroy_all_expired' do
+  describe '#destroy_all_expired' do
     it 'removes all expired invites sent by a user' do
       SiteSetting.invite_expiry_days = 1
 
@@ -991,7 +991,7 @@ describe InvitesController do
     end
   end
 
-  context '#resend_invite' do
+  describe '#resend_invite' do
     it 'requires to be logged in' do
       post '/invites/reinvite.json', params: { email: 'first_name@example.com' }
       expect(response.status).to eq(403)
@@ -1025,7 +1025,7 @@ describe InvitesController do
     end
   end
 
-  context '#resend_all_invites' do
+  describe '#resend_all_invites' do
     let(:admin) { Fabricate(:admin) }
 
     before do
@@ -1067,7 +1067,7 @@ describe InvitesController do
     end
   end
 
-  context '#upload_csv' do
+  describe '#upload_csv' do
     it 'requires to be logged in' do
       post '/invites/upload_csv.json'
       expect(response.status).to eq(403)
