@@ -10,10 +10,14 @@ import {
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import { bind } from "discourse-common/utils/decorators";
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 
 acceptance("Sidebar - Plugin API", function (needs) {
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user();
+
+  needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
+  });
 
   needs.hooks.afterEach(() => {
     resetSidebarSection();
@@ -339,7 +343,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays hover button with correct title"
     );
 
-    await undockSidebar();
+    await click(".hamburger-dropdown");
 
     assert.strictEqual(
       linkDestroy,

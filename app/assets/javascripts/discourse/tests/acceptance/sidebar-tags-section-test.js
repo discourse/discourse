@@ -9,16 +9,17 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { undockSidebar } from "discourse/tests/helpers/sidebar-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
   needs.settings({
     tagging_enabled: false,
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user();
 
   test("tags section is not shown", async function (assert) {
     await visit("/");
@@ -33,10 +34,11 @@ acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
 acceptance("Sidebar - Tags section", function (needs) {
   needs.settings({
     tagging_enabled: true,
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
   needs.user({
-    experimental_sidebar_enabled: true,
     tracked_tags: ["tag1"],
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
@@ -324,11 +326,11 @@ acceptance("Sidebar - Tags section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await undockSidebar();
+    await click(".hamburger-dropdown");
 
-    assert.strictEqual(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount
+    assert.ok(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length <
+        initialCallbackCount
     );
   });
 });

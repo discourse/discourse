@@ -1985,7 +1985,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar:
+  enable_experimental_sidebar_hamburger:
+    default: false
+    client: true
+    hidden: true
+  enable_sidebar:
     default: false
     client: true
     hidden: true

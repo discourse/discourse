@@ -53,15 +53,6 @@
   }
 }
 
-.has-sidebar-page {
-  .sidebar-footer-actions-dock-toggle {
-    .d-icon {
-      transform: rotate(180deg);
-      top: -0.1em; // optical alignment
-    }
-  }
-}
-
 .sidebar-footer-wrapper {
   background: var(--primary-very-low);
   .desktop-view & {

@@ -18,13 +18,6 @@
         @title="keyboard_shortcuts_help.title"
         @icon="keyboard"
         @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
-
-      {{#if (and this.site.desktopView (not @sidebarDocked))}}
-        <DButton
-          @action={{@toggleSidebar}}
-          @icon="thumbtack"
-          @class="sidebar-footer-actions-button sidebar-footer-actions-dock-toggle"/>
-      {{/if}}
     </div>
   </div>
 </div>

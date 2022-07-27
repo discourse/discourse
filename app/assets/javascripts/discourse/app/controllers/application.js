@@ -5,11 +5,14 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
 export default Controller.extend({
+  queryParams: ["enable_sidebar"],
+
   showTop: true,
   showFooter: false,
   router: service(),
   showSidebar: null,
   hideSidebarKey: "sidebar-hidden",
+  enable_sidebar: null,
 
   init() {
     this._super(...arguments);
@@ -42,6 +45,19 @@ export default Controller.extend({
     document.querySelector("body").classList.remove("sidebar-animate");
   },
 
+  @discourseComputed("enable_sidebar", "siteSettings.enable_sidebar")
+  sidebarEnabled(sidebarQueryParamOverride, enableSidebar) {
+    if (sidebarQueryParamOverride === "1") {
+      return true;
+    }
+
+    if (sidebarQueryParamOverride === "0") {
+      return false;
+    }
+
+    return enableSidebar;
+  },
+
   @action
   toggleSidebar() {
     // enables CSS transitions, but not on did-insert
@@ -52,10 +68,6 @@ export default Controller.extend({
     this.toggleProperty("showSidebar");
 
     if (this.site.desktopView) {
-      this.appEvents.trigger("header:keyboard-trigger", {
-        type: "hamburger",
-      });
-
       if (this.showSidebar) {
         this.keyValueStore.removeItem(this.hideSidebarKey);
       } else {

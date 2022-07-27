@@ -224,8 +224,8 @@ RSpec.describe CurrentUserSerializer do
     fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user) }
     fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user) }
 
-    it "is not included when SiteSeting.enable_experimental_sidebar is false" do
-      SiteSetting.enable_experimental_sidebar = false
+    it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
 
@@ -233,7 +233,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "is not included when SiteSeting.tagging_enabled is false" do
-      SiteSetting.enable_experimental_sidebar = true
+      SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = false
 
       json = serializer.as_json
@@ -241,20 +241,18 @@ RSpec.describe CurrentUserSerializer do
       expect(json[:sidebar_tag_names]).to eq(nil)
     end
 
-    it "is not included when experimental sidebar has not been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
+    it "is not included when experimental sidebar has not been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
       SiteSetting.tagging_enabled = true
-      user.user_option.update!(enable_experimental_sidebar: false)
 
       json = serializer.as_json
 
       expect(json[:sidebar_tag_names]).to eq(nil)
     end
 
-    it "is present when experimental sidebar has been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
+    it "is present when experimental sidebar has been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = true
-      user.user_option.update!(enable_experimental_sidebar: true)
 
       json = serializer.as_json
 
@@ -269,26 +267,24 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
     fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user) }
 
-    it "is not included when SiteSeting.enable_experimental_sidebar is false" do
-      SiteSetting.enable_experimental_sidebar = false
+    it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
 
       expect(json[:sidebar_category_ids]).to eq(nil)
     end
 
-    it "is not included when experimental sidebar has not been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
-      user.user_option.update!(enable_experimental_sidebar: false)
+    it "is not included when experimental sidebar has not been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
 
       expect(json[:sidebar_category_ids]).to eq(nil)
     end
 
-    it "is present when experimental sidebar has been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
-      user.user_option.update!(enable_experimental_sidebar: true)
+    it "is present when experimental sidebar has been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
 
       json = serializer.as_json
 

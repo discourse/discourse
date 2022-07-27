@@ -11,7 +11,7 @@
     @toggleMobileView={{route-action "toggleMobileView"}}
     @toggleAnonymous={{route-action "toggleAnonymous"}}
     @logout={{route-action "logout"}}
-    @sidebarDocked={{and this.currentUser.experimental_sidebar_enabled this.showSidebar this.site.desktopView}}
+    @sidebarEnabled={{this.sidebarEnabled}}
     @toggleSidebar={{action "toggleSidebar"}} />
 
   <SoftwareUpdatePrompt />
@@ -22,7 +22,7 @@
 
     <div class="sidebar-wrapper">
       {{!-- empty div allows for animation --}}
-      {{#if (and this.currentUser.experimental_sidebar_enabled this.showSidebar)}}
+      {{#if (and this.siteSettings.enable_experimental_sidebar_hamburger this.sidebarEnabled this.showSidebar)}}
         <Sidebar @toggleSidebar={{action "toggleSidebar"}}/>
       {{/if}}
     </div>

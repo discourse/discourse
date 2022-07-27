@@ -14,11 +14,11 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 acceptance(
   "Sidebar - Messages Section - enable_personal_messages disabled",
   function (needs) {
-    needs.user({
-      experimental_sidebar_enabled: true,
-    });
+    needs.user();
 
     needs.settings({
+      enable_experimental_sidebar_hamburger: true,
+      enable_sidebar: true,
       enable_personal_messages: false,
     });
 
@@ -36,8 +36,11 @@ acceptance(
 acceptance(
   "Sidebar - Messages Section - enable_personal_messages enabled",
   function (needs) {
-    needs.user({
-      experimental_sidebar_enabled: true,
+    needs.user();
+
+    needs.settings({
+      enable_experimental_sidebar_hamburger: true,
+      enable_sidebar: true,
     });
 
     needs.pretender((server, helper) => {
