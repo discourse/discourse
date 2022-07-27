@@ -4,7 +4,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const messageBus = container.lookup("message-bus:main");
+    const messageBus = container.lookup("service:message-bus");
     if (!messageBus) {
       return;
     }
