@@ -11,7 +11,6 @@ import {
   discourseModule,
   fakeTime,
 } from "discourse/tests/helpers/qunit-helpers";
-import sinon from "sinon";
 import { test } from "qunit";
 import domFromString from "discourse-common/lib/dom-from-string";
 
