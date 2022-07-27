@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SvgSpriteController do
-
-  context 'show' do
+  describe '#show' do
     before do
       SvgSprite.expire_cache
     end
@@ -36,7 +35,7 @@ RSpec.describe SvgSpriteController do
     end
   end
 
-  context 'search' do
+  describe '#search' do
     it "should not work for anons" do
       get "/svg-sprite/search/fa-bolt"
       expect(response.status).to eq(404)
@@ -76,7 +75,7 @@ RSpec.describe SvgSpriteController do
     end
   end
 
-  context 'icon_picker_search' do
+  describe '#icon_picker_search' do
     it 'should work with no filter and max out at 200 results' do
       user = sign_in(Fabricate(:user))
       get '/svg-sprite/picker-search'
@@ -101,7 +100,7 @@ RSpec.describe SvgSpriteController do
     end
   end
 
-  context 'svg_icon' do
+  describe '#svg_icon' do
     it "requires .svg extension" do
       get "/svg-sprite/#{Discourse.current_hostname}/icon/bolt"
       expect(response.status).to eq(404)

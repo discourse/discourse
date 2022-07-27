@@ -4,7 +4,7 @@ RSpec.describe Jobs::RemoveBanner do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { topic.user }
 
-  context 'topic is not bannered until' do
+  context 'when topic is not bannered until' do
     it 'doesn’t enqueue a future job to remove it' do
       expect do
         topic.make_banner!(user)
@@ -12,8 +12,8 @@ RSpec.describe Jobs::RemoveBanner do
     end
   end
 
-  context 'topic is bannered until' do
-    context 'bannered_until is a valid date' do
+  context 'when topic is bannered until' do
+    context 'when bannered_until is a valid date' do
       it 'enqueues a future job to remove it' do
         bannered_until = 5.days.from_now
 
@@ -36,7 +36,7 @@ RSpec.describe Jobs::RemoveBanner do
       end
     end
 
-    context 'bannered_until is an invalid date' do
+    context 'when bannered_until is an invalid date' do
       it 'doesn’t enqueue a future job to remove it' do
         expect do
           expect do

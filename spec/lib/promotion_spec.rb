@@ -3,7 +3,6 @@
 require 'promotion'
 
 RSpec.describe Promotion do
-
   describe "review" do
     it "skips regular users" do
       # Reviewing users at higher trust levels is expensive, so trigger those reviews in a background job.
@@ -14,8 +13,7 @@ RSpec.describe Promotion do
     end
   end
 
-  context "newuser" do
-
+  describe "newuser" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 2.days.ago) }
     let(:promotion) { Promotion.new(user) }
 
@@ -23,7 +21,7 @@ RSpec.describe Promotion do
       expect { Promotion.new(nil).review }.not_to raise_error
     end
 
-    context 'that has done nothing' do
+    context 'when user has done nothing' do
       let!(:result) { promotion.review }
 
       it "returns false" do
@@ -35,8 +33,7 @@ RSpec.describe Promotion do
       end
     end
 
-    context "that has done the requisite things" do
-
+    context "when user has done the requisite things" do
       before do
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
@@ -54,7 +51,7 @@ RSpec.describe Promotion do
       end
     end
 
-    context "that has not done the requisite things" do
+    context "when user has not done the requisite things" do
       it "does not promote the user" do
         user.created_at = 1.minute.ago
         stat = user.user_stat
@@ -67,7 +64,7 @@ RSpec.describe Promotion do
       end
     end
 
-    context "may send tl1 promotion messages" do
+    context "when may send tl1 promotion messages" do
       before do
         stat = user.user_stat
         stat.topics_entered = SiteSetting.tl1_requires_topics_entered
@@ -112,7 +109,7 @@ RSpec.describe Promotion do
       end
     end
 
-    context "may send tl2 promotion messages" do
+    context "when may send tl2 promotion messages" do
       fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1], created_at: (SiteSetting.tl2_requires_time_spent_mins * 60).minutes.ago) }
 
       before do
@@ -142,12 +139,11 @@ RSpec.describe Promotion do
     end
   end
 
-  context "basic" do
-
+  describe "basic" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1], created_at: 2.days.ago) }
     let(:promotion) { Promotion.new(user) }
 
-    context 'that has done nothing' do
+    context 'when has done nothing' do
       let!(:result) { promotion.review }
 
       it "returns false" do
@@ -159,8 +155,7 @@ RSpec.describe Promotion do
       end
     end
 
-    context "that has done the requisite things" do
-
+    context "when has done the requisite things" do
       before do
         SiteSetting.tl2_requires_topic_reply_count = 3
 
@@ -213,11 +208,11 @@ RSpec.describe Promotion do
 
   end
 
-  context "regular" do
+  describe "regular" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
     let(:promotion) { Promotion.new(user) }
 
-    context "doesn't qualify for promotion" do
+    context "when doesn't qualify for promotion" do
       before do
         TrustLevel3Requirements.any_instance.expects(:requirements_met?).at_least_once.returns(false)
       end
@@ -241,7 +236,7 @@ RSpec.describe Promotion do
       end
     end
 
-    context "qualifies for promotion" do
+    context "when qualifies for promotion" do
       before do
         TrustLevel3Requirements.any_instance.expects(:requirements_met?).at_least_once.returns(true)
       end
@@ -262,5 +257,4 @@ RSpec.describe Promotion do
       end
     end
   end
-
 end

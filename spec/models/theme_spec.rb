@@ -222,7 +222,7 @@ HTML
     end
   end
 
-  context "plugin api" do
+  describe "plugin api" do
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.ensure_baked!
@@ -267,7 +267,7 @@ HTML
     end
   end
 
-  context 'theme upload vars' do
+  describe 'theme upload vars' do
     let :image do
       file_from_fixtures("logo.png")
     end
@@ -298,7 +298,7 @@ HTML
     end
   end
 
-  context "theme settings" do
+  describe "theme settings" do
     it "allows values to be used in scss" do
       theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
       theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')

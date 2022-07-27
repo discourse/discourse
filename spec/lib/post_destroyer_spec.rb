@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe PostDestroyer do
-
   before do
     UserActionManager.enable
   end
@@ -12,7 +11,6 @@ RSpec.describe PostDestroyer do
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
-
     it "destroys posts that have been hidden for 30 days" do
       now = Time.now
 
@@ -44,7 +42,6 @@ RSpec.describe PostDestroyer do
       expect(reply3.deleted_at).to eq(nil)
       expect(reply4.deleted_at).to eq(nil)
     end
-
   end
 
   describe 'destroy_old_stubs' do
@@ -214,8 +211,7 @@ RSpec.describe PostDestroyer do
         expect(recovered_topic.deleted_by_id).to be_nil
       end
 
-      context "recover" do
-
+      context "with recover" do
         it "doesn't raise an error when the raw doesn't change" do
           PostRevisor.new(@reply).revise!(
             @user,
@@ -256,7 +252,7 @@ RSpec.describe PostDestroyer do
         end
       end
 
-      context "recovered by admin" do
+      context "when recovered by admin" do
         it "should set user_deleted to false" do
           PostDestroyer.new(@user, @reply).destroy
           expect(@reply.reload.user_deleted).to eq(true)
@@ -286,7 +282,7 @@ RSpec.describe PostDestroyer do
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
         end
 
-        context "recovered by user with access to moderate topic category" do
+        context "when recovered by user with access to moderate topic category" do
           fab!(:review_user) { Fabricate(:user) }
 
           before do
@@ -530,7 +526,7 @@ RSpec.describe PostDestroyer do
       end
     end
 
-    context "deleted by user with access to moderate topic category" do
+    context "when deleted by user with access to moderate topic category" do
       fab!(:review_user) { Fabricate(:user) }
 
       before do
@@ -606,7 +602,7 @@ RSpec.describe PostDestroyer do
 
   end
 
-  context 'private message' do
+  describe 'private message' do
     fab!(:author) { Fabricate(:user) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) }
     fab!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
@@ -665,8 +661,7 @@ RSpec.describe PostDestroyer do
     end
   end
 
-  context 'deleting the second post in a topic' do
-
+  describe 'deleting the second post in a topic' do
     fab!(:user) { Fabricate(:user) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
@@ -690,8 +685,7 @@ RSpec.describe PostDestroyer do
       expect(topic.highest_post_number).to eq(post.post_number)
     end
 
-    context 'topic_user' do
-
+    context 'with topic_user' do
       let(:topic_user) { second_user.topic_users.find_by(topic_id: topic.id) }
 
       it 'clears the posted flag for the second user' do
@@ -704,7 +698,7 @@ RSpec.describe PostDestroyer do
     end
   end
 
-  context "deleting a post belonging to a deleted topic" do
+  describe "deleting a post belonging to a deleted topic" do
     let!(:topic) { post.topic }
     let(:author) { post.user }
 
@@ -747,7 +741,7 @@ RSpec.describe PostDestroyer do
     end
   end
 
-  context "deleting a reply belonging to a deleted topic" do
+  describe "deleting a reply belonging to a deleted topic" do
     let!(:topic) { post.topic }
     let!(:reply) { create_post(topic_id: topic.id, user: post.user) }
     let(:author) { reply.user }
@@ -802,7 +796,6 @@ RSpec.describe PostDestroyer do
   end
 
   describe 'after delete' do
-
     fab!(:coding_horror) { coding_horror }
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
@@ -834,8 +827,7 @@ RSpec.describe PostDestroyer do
       end
     end
 
-    describe 'with a reply' do
-
+    context 'with a reply' do
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
       let!(:post_reply) { PostReply.create(post_id: post.id, reply_post_id: reply.id) }
 
@@ -858,12 +850,10 @@ RSpec.describe PostDestroyer do
         p = Fabricate(:post, user: post.user, topic: post.topic)
         expect(p.post_number).to eq(3)
       end
-
     end
-
   end
 
-  context '@mentions' do
+  describe '@mentions' do
     it 'removes notifications when deleted' do
       Jobs.run_immediately!
       user = Fabricate(:evil_trout)

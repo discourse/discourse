@@ -76,7 +76,7 @@ RSpec.describe "translate accelerator" do
     end
   end
 
-  context "plugins" do
+  describe "plugins" do
     before do
       DiscoursePluginRegistry.register_locale(
         'foo',
@@ -236,7 +236,7 @@ RSpec.describe "translate accelerator" do
     end
   end
 
-  context "translation precedence" do
+  describe "translation precedence" do
     def translation_should_equal(key, expected_value)
       I18n.locale = :en
       expect(I18n.t(key, locale: :de)).to eq(expected_value)

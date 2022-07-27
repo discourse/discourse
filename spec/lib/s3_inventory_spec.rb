@@ -174,7 +174,7 @@ RSpec.describe "S3Inventory" do
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
   end
 
-  context "s3 inventory configuration" do
+  describe "s3 inventory configuration" do
     let(:bucket_name) { "s3-upload-bucket" }
     let(:subfolder_path) { "subfolder" }
     before do

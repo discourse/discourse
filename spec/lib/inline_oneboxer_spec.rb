@@ -20,7 +20,7 @@ RSpec.describe InlineOneboxer do
     expect(results).to be_blank
   end
 
-  context "caching" do
+  describe "caching" do
     fab!(:topic) { Fabricate(:topic) }
 
     before do
@@ -351,7 +351,7 @@ RSpec.describe InlineOneboxer do
     end
   end
 
-  context "register_local_handler" do
+  describe ".register_local_handler" do
     it "calls registered local handler" do
       InlineOneboxer.register_local_handler('wizard') do |url, route|
         { url: url, title: 'Custom Onebox for Wizard' }

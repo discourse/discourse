@@ -9,7 +9,7 @@ RSpec.describe PlainTextToMarkdown do
 
   let(:nbsp) { "&nbsp;" }
 
-  context "quotes" do
+  describe "quotes" do
     it "uses the correct quote level" do
       expect(to_markdown("> foo")).to eq("> foo")
       expect(to_markdown(">>> foo")).to eq(">>> foo")
@@ -47,7 +47,7 @@ RSpec.describe PlainTextToMarkdown do
     end
   end
 
-  context "special characters" do
+  describe "special characters" do
     it "escapes special Markdown characters" do
       expect(to_markdown('\ backslash')).to eq('\\\\ backslash')
       expect(to_markdown('` backtick')).to eq('\` backtick')
@@ -77,7 +77,7 @@ RSpec.describe PlainTextToMarkdown do
     end
   end
 
-  context "indentation" do
+  describe "indentation" do
     it "does not replace one leading whitespace" do
       expect(to_markdown(" foo")).to eq(" foo")
     end
@@ -106,7 +106,7 @@ RSpec.describe PlainTextToMarkdown do
     end
   end
 
-  context "format=flowed" do
+  describe "format=flowed" do
     it "concats lines ending with a space" do
       text = "Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Quasi vero, inquit, \nperpetua oratio rhetorum solum, non \netiam philosophorum sit."
       markdown = "Lorem ipsum dolor sit amet, consectetur adipiscing elit\\. Quasi vero, inquit, perpetua oratio rhetorum solum, non etiam philosophorum sit\\."
@@ -157,7 +157,7 @@ RSpec.describe PlainTextToMarkdown do
     end
   end
 
-  context "links" do
+  describe "links" do
     it "removes duplicate links" do
       expect(to_markdown("foo https://www.example.com/foo.html?a=1 <https://www.example.com/foo.html?a=1> bar"))
         .to eq("foo https://www.example.com/foo.html?a=1 bar")
@@ -186,7 +186,7 @@ RSpec.describe PlainTextToMarkdown do
     end
   end
 
-  context "code" do
+  describe "code" do
     it "detects matching Markdown code block within backticks" do
       expect(to_markdown("foo\n```\n<this is code>\n```")).to eq("foo\n```\n<this is code>\n```")
     end

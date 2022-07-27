@@ -13,7 +13,7 @@ RSpec.describe PostReadersController do
       @post = Fabricate(:post, topic: @group_message, post_number: 3)
     end
 
-    context 'When the user has access to readers data' do
+    context 'when the user has access to readers data' do
       before do
         @group.update!(publish_read_state: true)
         @group.add(admin)

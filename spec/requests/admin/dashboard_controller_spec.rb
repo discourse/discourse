@@ -27,7 +27,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     describe '#index' do
-      context 'version checking is enabled' do
+      context 'when version checking is enabled' do
         before do
           SiteSetting.version_checks = true
         end
@@ -40,7 +40,7 @@ RSpec.describe Admin::DashboardController do
         end
       end
 
-      context 'version checking is disabled' do
+      context 'when version checking is disabled' do
         before do
           SiteSetting.version_checks = false
         end

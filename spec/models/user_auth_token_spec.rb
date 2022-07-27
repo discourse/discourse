@@ -6,7 +6,6 @@ RSpec.describe UserAuthToken do
   fab!(:user) { Fabricate(:user) }
 
   it "can remove old expired tokens" do
-
     SiteSetting.verbose_auth_token_logging = true
 
     freeze_time Time.zone.now
@@ -265,7 +264,7 @@ RSpec.describe UserAuthToken do
     expect(lookup.auth_token_seen).to eq(true)
   end
 
-  context "suspicious login" do
+  context "with suspicious login" do
     fab!(:admin) { Fabricate(:admin) }
 
     it "is not checked when generated for non-staff" do
@@ -285,7 +284,5 @@ RSpec.describe UserAuthToken do
 
       expect(Jobs::SuspiciousLogin.jobs.size).to eq(0)
     end
-
   end
-
 end

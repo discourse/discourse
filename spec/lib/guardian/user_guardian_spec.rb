@@ -45,7 +45,7 @@ RSpec.describe UserGuardian do
       Guardian.new(user)
     end
 
-    context 'anon user' do
+    context 'with anon user' do
       let(:guardian) { Guardian.new }
 
       it "should return the right value" do
@@ -53,7 +53,7 @@ RSpec.describe UserGuardian do
       end
     end
 
-    context 'current user' do
+    context 'with current user' do
       it "can not set uploads not owned by current user" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(true)
         expect(guardian.can_pick_avatar?(user_avatar, already_uploaded)).to eq(true)
@@ -78,8 +78,7 @@ RSpec.describe UserGuardian do
       end
     end
 
-    context 'moderator' do
-
+    context 'with moderator' do
       let :guardian do
         Guardian.new(moderator)
       end
@@ -93,7 +92,7 @@ RSpec.describe UserGuardian do
       end
     end
 
-    context 'admin' do
+    context 'with admin' do
       let :guardian do
         Guardian.new(admin)
       end
@@ -106,7 +105,6 @@ RSpec.describe UserGuardian do
   end
 
   describe "#can_see_profile?" do
-
     it "is false for no user" do
       expect(Guardian.new.can_see_profile?(nil)).to eq(false)
     end
@@ -115,7 +113,7 @@ RSpec.describe UserGuardian do
       expect(Guardian.new.can_see_profile?(user)).to eq(true)
     end
 
-    context "hidden profile" do
+    context "with hidden profile" do
       # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
       fab!(:user) { Fabricate(:user) }
 
@@ -229,7 +227,7 @@ RSpec.describe UserGuardian do
       end
     end
 
-    context "delete myself" do
+    context "when deleting myself" do
       let(:guardian) { Guardian.new(user) }
 
       include_examples "can_delete_user examples"
@@ -469,7 +467,7 @@ RSpec.describe UserGuardian do
       expect(Guardian.new(admin_user).can_change_tracking_preferences?(admin_user)).to eq(true)
     end
 
-    context "allow_changing_staged_user_tracking is false" do
+    context "when allow_changing_staged_user_tracking is false" do
       before { SiteSetting.allow_changing_staged_user_tracking = false }
 
       it "is false to staged user" do
@@ -481,7 +479,7 @@ RSpec.describe UserGuardian do
       end
     end
 
-    context "allow_changing_staged_user_tracking is true" do
+    context "when allow_changing_staged_user_tracking is true" do
       before { SiteSetting.allow_changing_staged_user_tracking = true }
 
       it "is true to staged user" do

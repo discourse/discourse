@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableUser, type: :model do
-
   fab!(:moderator) { Fabricate(:moderator) }
   let(:user) do
     user = Fabricate(:user)
@@ -10,8 +9,9 @@ RSpec.describe ReviewableUser, type: :model do
   end
   fab!(:admin) { Fabricate(:admin) }
 
-  context "actions_for" do
+  describe "#actions_for" do
     fab!(:reviewable) { Fabricate(:reviewable) }
+
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(true)
@@ -77,9 +77,10 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
-  context "perform" do
+  describe "#perform" do
     fab!(:reviewable) { Fabricate(:reviewable) }
-    context "approve" do
+
+    context "when approving" do
       it "allows us to approve a user" do
         result = reviewable.perform(moderator, :approve_user)
         expect(result.success?).to eq(true)
@@ -185,7 +186,7 @@ RSpec.describe ReviewableUser, type: :model do
       expect(@reviewable.reviewable_by_moderator).to eq(true)
     end
 
-    context "email jobs" do
+    context "with email jobs" do
       it "enqueues a 'signup after approval' email if must_approve_users is true" do
         expect_enqueued_with(job: :critical_user_email, args: { type: :signup_after_approval }) do
           @reviewable.perform(admin, :approve_user)
@@ -221,5 +222,4 @@ RSpec.describe ReviewableUser, type: :model do
       expect(event[:params].first).to eq(user)
     end
   end
-
 end

@@ -69,10 +69,10 @@ RSpec.describe UserUpdater do
       ).count).to eq(1)
     end
 
-    context "staged user" do
+    context "with a staged user" do
       let(:staged_user) { Fabricate(:staged) }
 
-      context "allow_changing_staged_user_tracking is false" do
+      context "when allow_changing_staged_user_tracking is false" do
         before { SiteSetting.allow_changing_staged_user_tracking = false }
 
         it "doesn't update muted categories and watched tags" do
@@ -83,7 +83,7 @@ RSpec.describe UserUpdater do
         end
       end
 
-      context "allow_changing_staged_user_tracking is true" do
+      context "when allow_changing_staged_user_tracking is true" do
         before { SiteSetting.allow_changing_staged_user_tracking = true }
 
         it "updates muted categories and watched tags" do
@@ -424,11 +424,11 @@ RSpec.describe UserUpdater do
       end
     end
 
-    context 'title is from a badge' do
+    context 'when title is from a badge' do
       fab!(:user) { Fabricate(:user, title: 'Emperor') }
       fab!(:badge) { Fabricate(:badge, name: 'Minion') }
 
-      context 'badge can be used as a title' do
+      context 'when badge can be used as a title' do
         before do
           badge.update(allow_title: true)
         end

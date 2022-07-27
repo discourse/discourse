@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Searchable do
-  context "has search data" do
+  describe "has search data" do
     before do
       DB.exec("create temporary table searchable_records(id SERIAL primary key)")
       DB.exec("create temporary table searchable_record_search_data(searchable_record_id int primary key, search_data tsvector, raw_data text, locale text)")

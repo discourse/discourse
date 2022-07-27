@@ -3,7 +3,7 @@
 RSpec.describe PushNotificationController do
   fab!(:user) { Fabricate(:user) }
 
-  context "logged out" do
+  context "when logged out" do
     it "should not allow subscribe" do
       post '/push_notifications/subscribe.json', params: {
         username: "test",
@@ -21,7 +21,7 @@ RSpec.describe PushNotificationController do
     end
   end
 
-  context "logged in" do
+  context "when logged in" do
     before { sign_in(user) }
 
     it "should subscribe" do
@@ -108,5 +108,4 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions).to eq([])
     end
   end
-
 end

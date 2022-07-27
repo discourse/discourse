@@ -446,7 +446,7 @@ RSpec.describe ListController do
   end
 
   describe 'category' do
-    context 'in a category' do
+    context 'when in a category' do
       let(:category) { Fabricate(:category_with_definition) }
       let(:group) { Fabricate(:group) }
       let(:private_category) { Fabricate(:private_category, group: group) }
@@ -496,7 +496,7 @@ RSpec.describe ListController do
         end
       end
 
-      context 'another category exists with a number at the beginning of its name' do
+      context 'when another category exists with a number at the beginning of its name' do
         # One category has another category's id at the beginning of its name
         let!(:other_category) {
           # Our validations don't allow this to happen now, but did historically
@@ -514,7 +514,7 @@ RSpec.describe ListController do
         end
       end
 
-      context 'a child category' do
+      context 'with a child category' do
         let(:sub_category) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
         context 'when parent and child are requested' do
@@ -596,16 +596,20 @@ RSpec.describe ListController do
         end
       end
 
-      context "renders correct title" do
+      context "for category default view" do
         let!(:amazing_category) { Fabricate(:category_with_definition, name: "Amazing Category") }
 
-        it 'for category default view' do
+        it "renders correct title" do
           get "/c/#{amazing_category.slug}/#{amazing_category.id}"
 
           expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
+      end
 
-        it 'for category latest view' do
+      context "for category latest view" do
+        let!(:amazing_category) { Fabricate(:category_with_definition, name: "Amazing Category") }
+
+        it 'renders correct title' do
           SiteSetting.short_site_description = "Best community"
           get "/c/#{amazing_category.slug}/#{amazing_category.id}/l/latest"
 
@@ -638,7 +642,7 @@ RSpec.describe ListController do
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
-    context "unicode usernames" do
+    context "with unicode usernames" do
       before do
         SiteSetting.unicode_usernames = true
       end
@@ -872,16 +876,18 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
-    context "does not create a redirect loop" do
-      it "with encoded slugs" do
+    context "with encoded slugs" do
+      it "does not create a redirect loop" do
         category = Fabricate(:category)
         category.update_columns(slug: CGI.escape("systèmes"))
 
         get "/c/syst%C3%A8mes/#{category.id}"
         expect(response.status).to eq(200)
       end
+    end
 
-      it "with lowercase encoded slugs" do
+    context "with lowercase encoded slugs" do
+      it "does not create a redirect loop" do
         category = Fabricate(:category)
         category.update_columns(slug: CGI.escape("systèmes").downcase)
 

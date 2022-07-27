@@ -3,13 +3,12 @@
 require 'discourse_plugin_registry'
 
 RSpec.describe DiscoursePluginRegistry do
-
   class TestRegistry < DiscoursePluginRegistry; end
 
   let(:registry) { TestRegistry }
   let(:registry_instance) { registry.new }
 
-  context '::define_register' do
+  describe '.define_register' do
     let(:fresh_registry) { Class.new(TestRegistry) }
 
     let(:plugin_class) do
@@ -39,7 +38,7 @@ RSpec.describe DiscoursePluginRegistry do
       expect(fresh_registry.test_things[:test]).to eq(nil)
     end
 
-    context '::define_filtered_register' do
+    describe '.define_filtered_register' do
       it 'works' do
         fresh_registry.define_filtered_register(:test_things)
         expect(fresh_registry.test_things.length).to eq(0)
@@ -262,5 +261,4 @@ RSpec.describe DiscoursePluginRegistry do
       expect(registry.seed_data["admin_quick_start_filename"]).to eq(File.expand_path("../docs/BANANA-QUICK-START.md", __FILE__))
     end
   end
-
 end

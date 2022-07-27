@@ -3,11 +3,11 @@
 require_relative 'shared_context_for_backup_restore'
 
 RSpec.describe BackupRestore::SystemInterface do
-  include_context "shared stuff"
+  include_context "with shared stuff"
 
   subject { BackupRestore::SystemInterface.new(logger) }
 
-  context "readonly mode" do
+  describe "readonly mode" do
     after do
       Discourse::READONLY_KEYS.each { |key| Discourse.redis.del(key) }
     end
@@ -171,7 +171,7 @@ RSpec.describe BackupRestore::SystemInterface do
   end
 
   describe "#flush_redis" do
-    context "Sidekiq" do
+    context "with Sidekiq" do
       after { Sidekiq.unpause! }
 
       it "doesn't unpause Sidekiq" do

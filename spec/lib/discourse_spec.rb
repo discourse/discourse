@@ -3,24 +3,23 @@
 require 'discourse'
 
 RSpec.describe Discourse do
-
   before do
     RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('foo.com')
   end
 
-  context 'current_hostname' do
+  describe 'current_hostname' do
     it 'returns the hostname from the current db connection' do
       expect(Discourse.current_hostname).to eq('foo.com')
     end
   end
 
-  context 'avatar_sizes' do
+  describe 'avatar_sizes' do
     it 'returns a list of integers' do
       expect(Discourse.avatar_sizes).to contain_exactly(20, 25, 30, 32, 37, 40, 45, 48, 50, 60, 64, 67, 75, 90, 96, 120, 135, 180, 240, 360)
     end
   end
 
-  context 'running_in_rack' do
+  describe 'running_in_rack' do
     after do
       ENV.delete("DISCOURSE_RUNNING_IN_RACK")
     end
@@ -32,7 +31,7 @@ RSpec.describe Discourse do
     end
   end
 
-  context 'base_url' do
+  describe 'base_url' do
     context 'when https is off' do
       before do
         SiteSetting.force_https = false
@@ -64,7 +63,7 @@ RSpec.describe Discourse do
     end
   end
 
-  context "asset_filter_options" do
+  describe "asset_filter_options" do
     it "obmits path if request is missing" do
       opts = Discourse.asset_filter_options(:js, nil)
       expect(opts[:path]).to be_blank
@@ -77,7 +76,7 @@ RSpec.describe Discourse do
     end
   end
 
-  context 'plugins' do
+  describe 'plugins' do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
@@ -129,7 +128,7 @@ RSpec.describe Discourse do
 
   end
 
-  context 'authenticators' do
+  describe 'authenticators' do
     it 'returns inbuilt authenticators' do
       expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))
     end
@@ -167,7 +166,7 @@ RSpec.describe Discourse do
     end
   end
 
-  context 'enabled_authenticators' do
+  describe 'enabled_authenticators' do
     it 'only returns enabled authenticators' do
       expect(Discourse.enabled_authenticators.length).to be(0)
       expect { SiteSetting.enable_twitter_logins = true }
@@ -178,7 +177,6 @@ RSpec.describe Discourse do
   end
 
   describe '#site_contact_user' do
-
     fab!(:admin) { Fabricate(:admin) }
     fab!(:another_admin) { Fabricate(:admin) }
 
@@ -201,7 +199,6 @@ RSpec.describe Discourse do
   end
 
   describe "#store" do
-
     it "returns LocalStore by default" do
       expect(Discourse.store).to be_a(FileStore::LocalStore)
     end
@@ -213,10 +210,9 @@ RSpec.describe Discourse do
       SiteSetting.s3_secret_access_key = "s3_secret_access_key"
       expect(Discourse.store).to be_a(FileStore::S3Store)
     end
-
   end
 
-  context 'readonly mode' do
+  describe 'readonly mode' do
     let(:readonly_mode_key) { Discourse::READONLY_MODE_KEY }
     let(:readonly_mode_ttl) { Discourse::READONLY_MODE_KEY_TTL }
     let(:user_readonly_mode_key) { Discourse::USER_READONLY_MODE_KEY }
@@ -244,7 +240,7 @@ RSpec.describe Discourse do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
       end
 
-      context 'user enabled readonly mode' do
+      context 'when user enabled readonly mode' do
         it "adds a key in redis and publish a message through the message bus" do
           expect(Discourse.redis.get(user_readonly_mode_key)).to eq(nil)
         end
@@ -252,7 +248,7 @@ RSpec.describe Discourse do
     end
 
     describe ".disable_readonly_mode" do
-      context 'user disabled readonly mode' do
+      context 'when user disabled readonly mode' do
         it "removes readonly key in redis and publish a message through the message bus" do
           message = MessageBus.track_publish { Discourse.disable_readonly_mode(user_readonly_mode_key) }.first
           assert_readonly_mode_disabled(message, user_readonly_mode_key)
@@ -320,7 +316,6 @@ RSpec.describe Discourse do
   end
 
   describe "#handle_exception" do
-
     class TempSidekiqLogger
       attr_accessor :exception, :context
 
@@ -341,7 +336,6 @@ RSpec.describe Discourse do
     end
 
     describe "#job_exception_stats" do
-
       class FakeTestError < StandardError
       end
 

@@ -8,7 +8,7 @@ RSpec.describe UsernameChanger do
   describe '#change' do
     let(:user) { Fabricate(:user) }
 
-    context 'success' do
+    context 'when everything goes well' do
       let!(:old_username) { user.username }
 
       it 'should change the username' do
@@ -46,7 +46,7 @@ RSpec.describe UsernameChanger do
       end
     end
 
-    context 'failure' do
+    context 'when something goes wrong' do
       let(:wrong_username) { "" }
       let(:username_before_change) { user.username }
       let(:username_lower_before_change) { user.username_lower }
@@ -61,7 +61,7 @@ RSpec.describe UsernameChanger do
       end
     end
 
-    describe 'change the case of my username' do
+    context 'when changing the case of my username' do
       let!(:myself) { Fabricate(:user, username: 'hansolo') }
 
       it 'should change the username' do
@@ -107,7 +107,7 @@ RSpec.describe UsernameChanger do
       end
     end
 
-    context 'posts and revisions' do
+    context 'when there are posts and revisions' do
       let(:user) { Fabricate(:user, username: 'foo') }
       let(:topic) { Fabricate(:topic, user: user) }
 
@@ -130,7 +130,7 @@ RSpec.describe UsernameChanger do
         post.reload
       end
 
-      context 'mentions' do
+      context 'when there are mentions' do
         it 'rewrites cooked correctly' do
           post = create_post_and_change_username(raw: "Hello @foo")
           expect(post.cooked).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>))
@@ -296,7 +296,7 @@ RSpec.describe UsernameChanger do
           expect(post.cooked).to match_html('<p><a class="mention">@bar</a> and <a class="mention">@someuser</a></p>')
         end
 
-        context "Unicode usernames" do
+        context "when using Unicode usernames" do
           before { SiteSetting.unicode_usernames = true }
           let(:user) { Fabricate(:user, username: 'թռչուն') }
 
@@ -331,7 +331,7 @@ RSpec.describe UsernameChanger do
         end
       end
 
-      context 'quotes' do
+      context 'when there are quotes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
         let(:avatar_url) { user.avatar_template_url.gsub("{size}", "40") }
 
@@ -402,7 +402,7 @@ RSpec.describe UsernameChanger do
           HTML
         end
 
-        context 'simple quote' do
+        context 'when there is a simple quote' do
           let(:raw) do <<~RAW
               Lorem ipsum
 
@@ -447,7 +447,7 @@ RSpec.describe UsernameChanger do
         end
       end
 
-      context 'oneboxes' do
+      context 'when there are oneboxes' do
         let(:quoted_post) { create_post(user: user, topic: topic, post_number: 1, raw: "quoted post") }
         let(:avatar_url) { user_avatar_url(user) }
         let(:evil_trout) { Fabricate(:evil_trout) }
@@ -533,7 +533,7 @@ RSpec.describe UsernameChanger do
       end
     end
 
-    context 'notifications' do
+    context 'when there are notifications' do
       def create_notification(type, notified_user, post, data = {})
         Fabricate(
           :notification,
@@ -617,7 +617,7 @@ RSpec.describe UsernameChanger do
       ]
     ]
 
-    context "unicode_usernames is off" do
+    context "when unicode_usernames is off" do
       before do
         SiteSetting.unicode_usernames = false
       end
@@ -646,7 +646,7 @@ RSpec.describe UsernameChanger do
       end
     end
 
-    context "unicode_usernames is on" do
+    context "when unicode_usernames is on" do
       before do
         SiteSetting.unicode_usernames = true
       end
@@ -666,5 +666,4 @@ RSpec.describe UsernameChanger do
       end
     end
   end
-
 end

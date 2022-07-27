@@ -15,11 +15,11 @@ RSpec.describe Email::Sender do
     )
   end
 
-  context "disable_emails is enabled" do
+  context "when disable_emails is enabled" do
     fab!(:user) { Fabricate(:user) }
     fab!(:moderator) { Fabricate(:moderator) }
 
-    context "disable_emails is enabled for everyone" do
+    context "when disable_emails is enabled for everyone" do
       before { SiteSetting.disable_emails = "yes" }
 
       it "doesn't deliver mail when mails are disabled" do
@@ -44,7 +44,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "disable_emails is enabled for non-staff users" do
+    context "when disable_emails is enabled for non-staff users" do
       before { SiteSetting.disable_emails = "non-staff" }
 
       it "doesn't deliver mail to normal user" do
@@ -106,7 +106,7 @@ RSpec.describe Email::Sender do
     Email::Sender.new(message, :hello).send
   end
 
-  context "host_for" do
+  describe ".host_for" do
     it "defaults to localhost" do
       expect(Email::Sender.host_for(nil)).to eq("localhost")
     end
@@ -126,7 +126,6 @@ RSpec.describe Email::Sender do
   end
 
   context 'with a valid message' do
-
     let(:reply_key) { "abcd" * 8 }
 
     let(:message) do
@@ -145,7 +144,7 @@ RSpec.describe Email::Sender do
       email_sender.send
     end
 
-    context "doesn't add return_path when no plus addressing" do
+    context "when no plus addressing" do
       before { SiteSetting.reply_by_email_address = '%{reply_key}@test.com' }
 
       it 'should not set the return_path' do
@@ -154,7 +153,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "adds return_path with plus addressing" do
+    context "with plus addressing" do
       before { SiteSetting.reply_by_email_address = 'replies+%{reply_key}@test.com' }
 
       it 'should set the return_path' do
@@ -163,7 +162,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "adds a List-ID header to identify the forum" do
+    context "when topic id is present" do
       fab!(:category) { Fabricate(:category, name: 'Name With Space') }
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:post) { Fabricate(:post, topic: topic) }
@@ -181,8 +180,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "adds a Message-ID header even when topic id is not present" do
-
+    context "when topic id is not present" do
       it 'should add the right header' do
         email_sender.send
 
@@ -190,7 +188,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "replaces reply_key in custom headers" do
+    context "when reply_key is present" do
       fab!(:user) { Fabricate(:user) }
       let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
       let(:reply_key) { PostReplyKey.find_by!(post_id: post.id, user_id: user.id).reply_key }
@@ -227,7 +225,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "adds Precedence header" do
+    describe "adds Precedence header" do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -242,7 +240,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "removes custom Discourse headers from topic notification mails" do
+    describe "removes custom Discourse headers from topic notification mails" do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -259,7 +257,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "removes custom Discourse headers from digest/registration/other mails" do
+    describe "removes custom Discourse headers from digest/registration/other mails" do
       it 'should remove the right headers' do
         email_sender.send
         expect(message.header['X-Discourse-Topic-Id']).not_to be_present
@@ -268,7 +266,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "email threading" do
+    context "with email threading" do
       let(:random_message_id_suffix) { "5f1330cfd941f323d7f99b9e" }
       fab!(:topic) { Fabricate(:topic) }
 
@@ -369,7 +367,7 @@ RSpec.describe Email::Sender do
 
     end
 
-    context "merges custom mandrill header" do
+    describe "merges custom mandrill header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.mandrillapp.com"
         message.header['X-MC-Metadata'] = { foo: "bar" }.to_json
@@ -381,7 +379,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "merges custom sparkpost header" do
+    describe "merges custom sparkpost header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.sparkpostmail.com"
         message.header['X-MSYS-API'] = { foo: "bar" }.to_json
@@ -393,7 +391,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context 'email logs' do
+    context 'with email logs' do
       let(:email_log) { EmailLog.last }
 
       it 'should create the right log' do
@@ -457,7 +455,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "email log with a post id and topic id" do
+    context "with email log with a post id and topic id" do
       let(:topic) { post.topic }
 
       before do
@@ -475,7 +473,7 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context 'email parts' do
+    context 'with email parts' do
       it 'should contain the right message' do
         email_sender.send
 
@@ -686,7 +684,6 @@ RSpec.describe Email::Sender do
   end
 
   context 'with a deleted post' do
-
     it 'should skip sending the email' do
       post = Fabricate(:post, deleted_at: 1.day.ago)
 
@@ -705,7 +702,6 @@ RSpec.describe Email::Sender do
   end
 
   context 'with a deleted topic' do
-
     it 'should skip sending the email' do
       post = Fabricate(:post, topic: Fabricate(:topic, deleted_at: 1.day.ago))
 

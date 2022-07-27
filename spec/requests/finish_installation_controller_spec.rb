@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe FinishInstallationController do
-
   describe '#index' do
-    context "has_login_hint is false" do
+    context "when has_login_hint is false" do
       before do
         SiteSetting.has_login_hint = false
       end
@@ -14,7 +13,7 @@ RSpec.describe FinishInstallationController do
       end
     end
 
-    context "has_login_hint is true" do
+    context "when has_login_hint is true" do
       before do
         SiteSetting.has_login_hint = true
       end
@@ -27,7 +26,7 @@ RSpec.describe FinishInstallationController do
   end
 
   describe '#register' do
-    context "has_login_hint is false" do
+    context "when has_login_hint is false" do
       before do
         SiteSetting.has_login_hint = false
       end
@@ -38,7 +37,7 @@ RSpec.describe FinishInstallationController do
       end
     end
 
-    context "has_login_hint is true" do
+    context "when has_login_hint is true" do
       before do
         SiteSetting.has_login_hint = true
         GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
@@ -68,7 +67,7 @@ RSpec.describe FinishInstallationController do
         expect(response).not_to be_redirect
       end
 
-      context "working params" do
+      context "with working params" do
         let(:params) do
           {
             email: 'robin@example.com',
@@ -115,7 +114,7 @@ RSpec.describe FinishInstallationController do
   end
 
   describe '#confirm_email' do
-    context "has_login_hint is false" do
+    context "when has_login_hint is false" do
       before do
         SiteSetting.has_login_hint = false
       end

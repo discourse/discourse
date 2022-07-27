@@ -3,7 +3,7 @@
 RSpec.describe ReviewableQueuedPostSerializer do
   fab!(:admin) { Fabricate(:admin) }
 
-  context "new topic" do
+  describe "new topic" do
     fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
 
     it "allows us to edit category / title" do
@@ -37,7 +37,7 @@ RSpec.describe ReviewableQueuedPostSerializer do
     end
   end
 
-  context "reply to an existing topic" do
+  describe "reply to an existing topic" do
     fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
 
     it "includes correct user fields" do
@@ -64,5 +64,4 @@ RSpec.describe ReviewableQueuedPostSerializer do
       expect(raw_field[:type]).to eq(:editor)
     end
   end
-
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailChangeRequest do
-  context 'validations' do
+  describe 'Validations' do
     describe '#new_email' do
       describe 'when email is invalid' do
         it 'should not be valid' do

@@ -11,7 +11,7 @@ module OneboxHelpers
     preview.css(tag_name).first[attribute]
   end
 
-  RSpec.shared_context "engines" do
+  RSpec.shared_context "with engines" do
     before do
       fixture = defined?(@onebox_fixture) ? @onebox_fixture : described_class.onebox_name
       stub_request(:get, defined?(@uri) ? @uri : @link).to_return(status: 200, body: onebox_response(fixture))

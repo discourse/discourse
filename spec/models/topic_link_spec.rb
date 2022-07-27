@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicLink do
-
   it { is_expected.to validate_presence_of :url }
 
   def test_uri
@@ -74,11 +73,9 @@ RSpec.describe TopicLink do
 
       expect(new_ids).to contain_exactly(*old_ids)
     end
-
   end
 
   describe 'internal links' do
-
     it "extracts onebox" do
       other_topic = Fabricate(:topic, user: user)
       Fabricate(:post, topic: other_topic, user: user, raw: "some content for the first post")
@@ -99,8 +96,7 @@ RSpec.describe TopicLink do
       expect(link.url).to eq(url)
     end
 
-    context 'topic link' do
-
+    context 'with topic link' do
       fab!(:other_topic) do
         Fabricate(:topic, user: user)
       end
@@ -111,7 +107,6 @@ RSpec.describe TopicLink do
       end
 
       it 'works' do
-
         # ensure other_topic has a post
         post
 
@@ -237,7 +232,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "link to a user on discourse" do
+    context "with link to a user on discourse" do
       let(:post) { Fabricate(:post, topic: topic, user: user, raw: "<a href='/u/#{user.username_lower}'>user</a>") }
 
       before do
@@ -249,7 +244,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "link to a discourse resource like a FAQ" do
+    context "with link to a discourse resource like a FAQ" do
       let(:post) { Fabricate(:post, topic: topic, user: user, raw: "<a href='/faq'>faq link here</a>") }
       before do
         TopicLink.extract_from(post)
@@ -260,7 +255,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "mention links" do
+    context "with mention links" do
       let(:post) { Fabricate(:post, topic: topic, user: user, raw: "Hey #{user.username_lower}") }
 
       before do
@@ -272,7 +267,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "email address" do
+    context "with email address" do
       it "does not extract a link" do
         post = Fabricate(:post, topic: topic, user: user, raw: "Valid email: foo@bar.com\n\nInvalid email: rfc822;name@domain.com")
         TopicLink.extract_from(post)
@@ -280,7 +275,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "mail link" do
+    context "with mail link" do
       let(:post) { Fabricate(:post, topic: topic, user: user, raw: "[email]bar@example.com[/email]") }
 
       it 'does not extract a link' do
@@ -289,7 +284,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "quote links" do
+    context "with quote links" do
       it "sets quote correctly" do
         linked_post = Fabricate(:post, topic: topic, user: user, raw: "my test post")
         quoting_post = Fabricate(:post, raw: "[quote=\"#{user.username}, post: #{linked_post.post_number}, topic: #{topic.id}\"]\nquote\n[/quote]")
@@ -302,7 +297,7 @@ RSpec.describe TopicLink do
       end
     end
 
-    context "link to a local attachments" do
+    context "with link to a local attachments" do
       let(:post) { Fabricate(:post, topic: topic, user: user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb?foo=bar">ruby.rb</a>') }
 
       it "extracts the link" do
@@ -322,7 +317,7 @@ RSpec.describe TopicLink do
 
     end
 
-    context "link to an attachments uploaded on S3" do
+    context "with link to an attachments uploaded on S3" do
       let(:post) { Fabricate(:post, topic: topic, user: user, raw: '<a class="attachment" href="//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb">ruby.rb</a>') }
 
       it "extracts the link" do
@@ -519,5 +514,4 @@ RSpec.describe TopicLink do
       expect { TopicLink.extract_from(post) }.to_not raise_error
     end
   end
-
 end

@@ -8,7 +8,7 @@ RSpec.describe Wizard::StepUpdater do
   fab!(:user) { Fabricate(:admin) }
   let(:wizard) { Wizard::Builder.new(user).build }
 
-  context "introduction" do
+  describe "introduction" do
     it "updates the introduction step" do
       locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
       updater = wizard.create_updater('introduction',
@@ -42,7 +42,7 @@ RSpec.describe Wizard::StepUpdater do
     end
   end
 
-  context "privacy" do
+  describe "privacy" do
     it "updates to open correctly" do
       updater = wizard.create_updater('privacy', login_required: false, invite_only: false, must_approve_users: false)
       updater.update
@@ -64,7 +64,7 @@ RSpec.describe Wizard::StepUpdater do
     end
   end
 
-  context "styling" do
+  describe "styling" do
     it "updates fonts" do
       updater = wizard.create_updater('styling',
         body_font: 'open_sans',
@@ -78,7 +78,7 @@ RSpec.describe Wizard::StepUpdater do
       expect(SiteSetting.heading_font).to eq('oswald')
     end
 
-    context "colors" do
+    context "with colors" do
       context "with an existing color scheme" do
         fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
@@ -122,7 +122,7 @@ RSpec.describe Wizard::StepUpdater do
           Theme.delete_all
         end
 
-        context 'dark theme' do
+        context 'with dark theme' do
           it "creates the theme" do
             updater = wizard.create_updater('styling',
               color_scheme: 'Dark',
@@ -140,7 +140,7 @@ RSpec.describe Wizard::StepUpdater do
           end
         end
 
-        context 'light theme' do
+        context 'with light theme' do
           it "creates the theme" do
             updater = wizard.create_updater('styling',
               color_scheme: ColorScheme::LIGHT_THEME_ID,
@@ -184,7 +184,7 @@ RSpec.describe Wizard::StepUpdater do
         end
       end
 
-      context "auto dark mode" do
+      context "with auto dark mode" do
         before do
           dark_scheme = ColorScheme.where(name: "Dark").first
           SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
@@ -215,7 +215,7 @@ RSpec.describe Wizard::StepUpdater do
 
     end
 
-    context "homepage style" do
+    context "with homepage style" do
       it "updates the fields correctly" do
         SiteSetting.top_menu = "latest|categories|unread|top"
         updater = wizard.create_updater('styling',
@@ -265,7 +265,7 @@ RSpec.describe Wizard::StepUpdater do
     end
   end
 
-  context "branding" do
+  describe "branding" do
     it "updates the fields correctly" do
       upload = Fabricate(:upload)
       upload2 = Fabricate(:upload)
@@ -285,7 +285,7 @@ RSpec.describe Wizard::StepUpdater do
     end
   end
 
-  context "corporate" do
+  describe "corporate" do
     it "updates the fields properly" do
       p = Fabricate(:post, raw: 'company_name - governing_law - city_for_disputes template')
       SiteSetting.tos_topic_id = p.topic_id

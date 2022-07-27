@@ -3,7 +3,7 @@
 require 'version'
 
 RSpec.describe Discourse::VERSION do
-  context "has_needed_version?" do
+  describe ".has_needed_version?" do
     it "works for major comparisons" do
       expect(Discourse.has_needed_version?('1.0.0', '1.0.0')).to eq(true)
       expect(Discourse.has_needed_version?('2.0.0', '1.0.0')).to eq(true)
@@ -43,7 +43,7 @@ RSpec.describe Discourse::VERSION do
     end
   end
 
-  context "find_compatible_resource" do
+  describe ".find_compatible_resource" do
     shared_examples "test compatible resource" do
       it "returns nil when the current version is above all pinned versions" do
         expect(Discourse.find_compatible_resource(version_list, "2.6.0")).to be_nil
@@ -86,7 +86,7 @@ RSpec.describe Discourse::VERSION do
       include_examples "test compatible resource"
     end
 
-    context "handle a compatible resource out of order" do
+    context "when handling a compatible resource out of order" do
       let(:version_list) { <<~YML
         2.4.2.beta1: twofourtwobetaone
         2.5.0.beta4: twofivebetafour
@@ -99,7 +99,7 @@ RSpec.describe Discourse::VERSION do
     end
   end
 
-  context "find_compatible_git_resource" do
+  describe ".find_compatible_git_resource" do
     let!(:git_directory) do
       path = nil
 

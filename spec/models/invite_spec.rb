@@ -5,7 +5,7 @@ RSpec.describe Invite do
   let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }
   let(:escaped_email) { "&lt;b onmouseover=alert(&#39;wufff!&#39;)&gt;email&lt;/b&gt;&lt;script&gt;alert(&#39;test&#39;);&lt;/script&gt;@test.com" }
 
-  context 'validators' do
+  describe 'Validators' do
     it { is_expected.to validate_presence_of :invited_by_id }
     it { is_expected.to rate_limit }
 
@@ -49,7 +49,7 @@ RSpec.describe Invite do
     end
   end
 
-  context 'before_save' do
+  describe 'before_save' do
     it 'regenerates the email token when email is changed' do
       invite = Fabricate(:invite, email: 'test@example.com')
       token = invite.email_token
@@ -94,7 +94,7 @@ RSpec.describe Invite do
         )
     end
 
-    context 'via email' do
+    context 'with email' do
       it 'can be created and a job is enqueued to email the invite' do
         invite = Invite.generate(user, email: 'test@example.com')
         expect(invite.email).to eq('test@example.com')
@@ -116,7 +116,7 @@ RSpec.describe Invite do
       end
     end
 
-    context 'via link' do
+    context 'with link' do
       it 'does not enqueue a job to email the invite' do
         invite = Invite.generate(user, skip_email: true)
         expect(invite.emailed_status).to eq(Invite.emailed_status_types[:not_required])
@@ -178,7 +178,7 @@ RSpec.describe Invite do
       end
     end
 
-    context 'invite to a topic' do
+    context 'when inviting to a topic' do
       fab!(:topic) { Fabricate(:topic) }
       let(:invite) { Invite.generate(topic.user, email: 'test@example.com', topic: topic) }
 
@@ -287,7 +287,7 @@ RSpec.describe Invite do
       end
     end
 
-    context 'invite to a topic' do
+    context 'when inviting to a topic' do
       fab!(:topic) { Fabricate(:private_message_topic) }
       fab!(:another_topic) { Fabricate(:private_message_topic) }
 
@@ -319,7 +319,7 @@ RSpec.describe Invite do
     end
   end
 
-  context 'scopes' do
+  describe 'scopes' do
     fab!(:inviter) { Fabricate(:user) }
 
     fab!(:pending_invite) { Fabricate(:invite, invited_by: inviter, email: 'pending@example.com') }

@@ -14,7 +14,7 @@ RSpec.describe "Discobot welcome post" do
     end
   end
 
-  context 'When discourse_narrative_bot_welcome_post_delay is greater than 0' do
+  context 'when discourse_narrative_bot_welcome_post_delay is greater than 0' do
     before do
       SiteSetting.discourse_narrative_bot_welcome_post_delay = 5
     end

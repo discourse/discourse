@@ -10,7 +10,7 @@ RSpec.describe PublishedPagesController do
       SiteSetting.enable_page_publishing = true
     end
 
-    context "check slug availability" do
+    context "when checking slug availability" do
       it "returns true for a new slug" do
         get "/pub/check-slug.json?slug=cool-slug-man"
         expect(response).to be_successful
@@ -38,13 +38,13 @@ RSpec.describe PublishedPagesController do
       end
     end
 
-    context "show" do
+    describe "#show" do
       it "returns 404 for a missing article" do
         get "/pub/no-article-here-no-thx"
         expect(response.status).to eq(404)
       end
 
-      context "private topic" do
+      context "with private topic" do
         fab!(:group) { Fabricate(:group) }
         fab!(:private_category) { Fabricate(:private_category, group: group) }
 
@@ -57,7 +57,7 @@ RSpec.describe PublishedPagesController do
           expect(response.status).to eq(403)
         end
 
-        context "published page is public" do
+        context "when published page is public" do
           fab!(:public_published_page) {
             Fabricate(:published_page, public: true, slug: "a-public-page")
           }
@@ -85,7 +85,7 @@ RSpec.describe PublishedPagesController do
         expect(response.status).to eq(404)
       end
 
-      context "the article is valid" do
+      context "when the article is valid" do
         before do
           SiteSetting.tagging_enabled = true
           published_page.topic.tags = [Fabricate(:tag, name: "recipes")]
@@ -123,13 +123,13 @@ RSpec.describe PublishedPagesController do
           expect(response.body).to include("<body class=\"published-page #{published_page.slug} topic-#{published_page.topic_id} recipes uncategorized\">")
         end
 
-        context "login is required" do
+        context "when login is required" do
           before do
             SiteSetting.login_required = true
             SiteSetting.show_published_pages_login_required = false
           end
 
-          context "a user is connected" do
+          context "when a user is connected" do
             before do
               sign_in(user)
             end
@@ -140,12 +140,12 @@ RSpec.describe PublishedPagesController do
             end
           end
 
-          context "no user connected" do
+          context "with no user connected" do
             it "redirects to login page" do
               expect(get(published_page.path)).to redirect_to("/login")
             end
 
-            context "show public pages with login required is enabled" do
+            context "when login required is enabled" do
               before do
                 SiteSetting.show_published_pages_login_required = true
               end
@@ -160,7 +160,7 @@ RSpec.describe PublishedPagesController do
       end
     end
 
-    context "publishing" do
+    describe "publishing" do
       fab!(:topic) { Fabricate(:topic) }
 
       it "returns invalid access for non-staff" do
@@ -216,8 +216,7 @@ RSpec.describe PublishedPagesController do
       end
     end
 
-    context "destroy" do
-
+    describe "#destroy" do
       it "returns invalid access for non-staff" do
         sign_in(user)
         delete "/pub/by-topic/#{published_page.topic_id}.json"
@@ -256,5 +255,4 @@ RSpec.describe PublishedPagesController do
       expect(response.status).to eq(404)
     end
   end
-
 end

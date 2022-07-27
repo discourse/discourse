@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "category tag restrictions" do
-
   def filter_allowed_tags(opts = {})
     DiscourseTagging.filter_allowed_tags(Guardian.new(user), opts)
   end
@@ -22,7 +21,7 @@ RSpec.describe "category tag restrictions" do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
-  context "tags restricted to one category" do
+  context "with tags restricted to one category" do
     fab!(:category_with_tags) { Fabricate(:category) }
     fab!(:other_category)     { Fabricate(:category) }
 
@@ -94,7 +93,7 @@ RSpec.describe "category tag restrictions" do
       expect { other_category.update(allowed_tags: [tag1.name, 'tag-stuff', tag2.name, 'another-tag']) }.to change { Tag.count }.by(2)
     end
 
-    context 'required tags from tag group' do
+    context 'with required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
       before { category_with_tags.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
@@ -105,7 +104,7 @@ RSpec.describe "category tag restrictions" do
       end
     end
 
-    context 'category allows other tags to be used' do
+    context 'when category allows other tags to be used' do
       before do
         category_with_tags.update!(allow_global_tags: true)
       end
@@ -128,7 +127,7 @@ RSpec.describe "category tag restrictions" do
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag'), [tag4])
       end
 
-      context 'required tags from tag group' do
+      context 'with required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
         before { category_with_tags.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
@@ -141,7 +140,7 @@ RSpec.describe "category tag restrictions" do
     end
   end
 
-  context "tag groups restricted to a category" do
+  context "with tag groups restricted to a category" do
     fab!(:tag_group1)     { Fabricate(:tag_group) }
     fab!(:category)        { Fabricate(:category) }
     fab!(:other_category)  { Fabricate(:category) }
@@ -188,7 +187,7 @@ RSpec.describe "category tag restrictions" do
       expect_same_tag_names(filter_allowed_tags(for_input: true, term: 'with:c'), [tag_with_colon])
     end
 
-    context 'required tags from tag group' do
+    context 'with required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
       before { category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
@@ -199,7 +198,7 @@ RSpec.describe "category tag restrictions" do
       end
     end
 
-    context 'category allows other tags to be used' do
+    context 'when category allows other tags to be used' do
       before do
         category.update!(allow_global_tags: true)
       end
@@ -222,7 +221,7 @@ RSpec.describe "category tag restrictions" do
         expect_same_tag_names(filter_allowed_tags(for_input: true, category: other_category), [tag1])
       end
 
-      context 'required tags from tag group' do
+      context 'with required tags from tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag3]) }
         before { category.update!(category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
@@ -233,7 +232,7 @@ RSpec.describe "category tag restrictions" do
         end
       end
 
-      context 'another category has restricted tags using groups' do
+      context 'when another category has restricted tags using groups' do
         fab!(:category2) { Fabricate(:category) }
         fab!(:tag_group2) { Fabricate(:tag_group) }
 
@@ -260,7 +259,7 @@ RSpec.describe "category tag restrictions" do
         end
       end
 
-      context 'another category has restricted tags' do
+      context 'when another category has restricted tags' do
         fab!(:category2) { Fabricate(:category) }
 
         it "doesn't filter tags that are also restricted in another category" do
@@ -274,7 +273,7 @@ RSpec.describe "category tag restrictions" do
     end
   end
 
-  context "tag groups with parent tag" do
+  context "with tag groups with parent tag" do
     it "for input field, filter_allowed_tags returns results based on whether parent tag is present or not" do
       tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
       tag_group.tags = [tag3, tag4]
@@ -318,7 +317,7 @@ RSpec.describe "category tag restrictions" do
       expect_same_tag_names(filter_allowed_tags(for_input: true, selected_tags: [tag3.name]), [tag4, common])
     end
 
-    context 'required tags from tag group' do
+    context 'with required tags from tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
       fab!(:category) { Fabricate(:category, category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
@@ -331,7 +330,7 @@ RSpec.describe "category tag restrictions" do
       end
     end
 
-    context "and category restrictions" do
+    context "with category restrictions" do
       fab!(:car_category)    { Fabricate(:category) }
       fab!(:other_category)  { Fabricate(:category) }
       fab!(:makes)           { Fabricate(:tag_group, name: "Makes") }
@@ -395,7 +394,7 @@ RSpec.describe "category tag restrictions" do
         expect(post.topic.tags.map(&:name).sort).to eq(['ford', 'mustang'])
       end
 
-      context "limit one tag from each group" do
+      context "with limit one tag from each group" do
         before do
           makes.update(one_per_topic: true)
           honda_group.update(one_per_topic: true)
@@ -460,7 +459,7 @@ RSpec.describe "tag topic counts per category" do
     expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(1)
   end
 
-  context "topic with 2 tags" do
+  context "with topic with 2 tags" do
     fab!(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2]) }
     fab!(:post)  { Fabricate(:post, user: topic.user, topic: topic) }
 
@@ -492,7 +491,7 @@ RSpec.describe "tag topic counts per category" do
     end
   end
 
-  context "topic with one tag" do
+  context "with topic with one tag" do
     fab!(:topic) { Fabricate(:topic, tags: [tag1], category: category) }
     fab!(:post) { Fabricate(:post, user: topic.user, topic: topic) }
 

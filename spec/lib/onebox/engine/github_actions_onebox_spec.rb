@@ -12,7 +12,7 @@ RSpec.describe Onebox::Engine::GithubActionsOnebox do
         .to_return(status: 200, body: onebox_response("githubactions_pr_run"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do
@@ -34,7 +34,7 @@ RSpec.describe Onebox::Engine::GithubActionsOnebox do
         .to_return(status: 200, body: onebox_response("githubactions_actions_run"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do

@@ -20,7 +20,7 @@ RSpec.describe AssociatedGroup do
     expect(described_class.has_provider?).to eq(true)
   end
 
-  context "cleanup!" do
+  describe ".cleanup!" do
     before do
       associated_group.last_used = 8.days.ago
       associated_group.save

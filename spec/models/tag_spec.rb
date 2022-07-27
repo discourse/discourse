@@ -20,7 +20,7 @@ RSpec.describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
-  context 'associations' do
+  describe 'Associations' do
     it 'should delete associated sidebar_section_links when tag is destroyed' do
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
       tag_sidebar_section_link_2 = Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
@@ -185,7 +185,7 @@ RSpec.describe Tag do
     end
   end
 
-  context "topic counts" do
+  describe "topic counts" do
     it "should exclude private message topics" do
       topic
       Fabricate(:private_message_topic, tags: [tag])
@@ -195,7 +195,7 @@ RSpec.describe Tag do
     end
   end
 
-  context "unused tags scope" do
+  describe "unused tags scope" do
     let!(:tags) do
       [ Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
       Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
@@ -212,7 +212,7 @@ RSpec.describe Tag do
     end
   end
 
-  context "full_url" do
+  describe "full_url" do
     let(:tag) { Fabricate(:tag, name: "🚀") }
 
     it "percent encodes emojis" do
@@ -220,7 +220,7 @@ RSpec.describe Tag do
     end
   end
 
-  context "synonyms" do
+  describe "synonyms" do
     let(:synonym) { Fabricate(:tag, target_tag: tag) }
 
     it "can be a synonym for another tag" do

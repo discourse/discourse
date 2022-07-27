@@ -37,7 +37,7 @@ RSpec.describe Admin::GroupsController do
       expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
     end
 
-    context "custom_fields" do
+    context "with custom_fields" do
       before do
         plugin = Plugin::Instance.new
         plugin.register_editable_group_custom_field :test
@@ -355,7 +355,7 @@ RSpec.describe Admin::GroupsController do
       SiteSetting.moderators_manage_categories_and_groups = true
     end
 
-    context "the user is a moderator" do
+    context "when the user is a moderator" do
       before do
         user.update!(moderator: true)
         sign_in(user)
@@ -404,7 +404,7 @@ RSpec.describe Admin::GroupsController do
       end
     end
 
-    context "the user is not a moderator or admin" do
+    context "when the user is not a moderator or admin" do
       before do
         user.update!(moderator: false, admin: false)
         sign_in(user)

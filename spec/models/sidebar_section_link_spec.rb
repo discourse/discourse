@@ -3,7 +3,7 @@
 RSpec.describe SidebarSectionLink do
   fab!(:user) { Fabricate(:user) }
 
-  context "validations" do
+  describe "Validations" do
     it 'is not valid when linkable already exists for the current user' do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link, user: user)
 

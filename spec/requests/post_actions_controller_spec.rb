@@ -12,7 +12,7 @@ RSpec.describe PostActionsController do
       expect(response.status).to eq(403)
     end
 
-    context 'logged in' do
+    context 'when logged in' do
       before do
         sign_in(user)
       end

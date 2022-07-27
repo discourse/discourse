@@ -255,7 +255,7 @@ RSpec.describe Admin::SiteSettingsController do
           SiteSetting.setting(:default_tags_watching, "")
         end
 
-        context "user options" do
+        context "with user options" do
           def expect_user_count(site_setting_name:, user_setting_name:, current_site_setting_value:, new_site_setting_value:,
                                 current_user_setting_value: nil, new_user_setting_value: nil)
 

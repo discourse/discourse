@@ -20,8 +20,7 @@ RSpec.describe PostAction do
     expect(pa).not_to be_valid
   end
 
-  context "messaging" do
-
+  describe "messaging" do
     it "notifies moderators (integration test)" do
       post = create_post
       mod = moderator
@@ -88,7 +87,7 @@ RSpec.describe PostAction do
       expect(topic.message_archived?(mod)).to eq(true)
     end
 
-    context "category group moderators" do
+    context "with category group moderators" do
       fab!(:group_user) { Fabricate(:group_user) }
       let(:group) { group_user.group }
 
@@ -109,7 +108,6 @@ RSpec.describe PostAction do
         expect(readable_by_groups).to include(group.id)
       end
     end
-
   end
 
   describe "update_counters" do
@@ -679,7 +677,7 @@ RSpec.describe PostAction do
       expect(post.hidden).to eq(false)
     end
 
-    context "topic auto closing" do
+    context "with topic auto closing" do
       fab!(:topic) { Fabricate(:topic) }
       let(:post1) { create_post(topic: topic) }
       let(:post2) { create_post(topic: topic) }
@@ -735,7 +733,7 @@ RSpec.describe PostAction do
         expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
       end
 
-      context "on a staff post" do
+      context "when on a staff post" do
         fab!(:staff_user) { Fabricate(:user, moderator: true) }
         fab!(:topic) { Fabricate(:topic, user: staff_user) }
 
@@ -988,7 +986,7 @@ RSpec.describe PostAction do
       expect(event).to be_present
     end
 
-    context "resolving flags" do
+    context "when resolving flags" do
       let(:result) { PostActionCreator.spam(eviltrout, post) }
       let(:post_action) { result.post_action }
       let(:reviewable) { result.reviewable }

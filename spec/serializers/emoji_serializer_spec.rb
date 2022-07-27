@@ -21,7 +21,7 @@ RSpec.describe EmojiSerializer do
     end
   end
 
-  context "missing uploads" do
+  describe "missing uploads" do
     before do
       custom_emoji.upload.destroy!
     end
@@ -45,7 +45,5 @@ RSpec.describe EmojiSerializer do
 
       expect(result[:url]).to be_blank
     end
-
   end
-
 end
