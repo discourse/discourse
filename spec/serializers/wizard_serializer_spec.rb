@@ -7,7 +7,7 @@ RSpec.describe WizardSerializer do
     ColorScheme.hex_cache.clear
   end
 
-  context "color scheme" do
+  describe "color scheme" do
     it "works with base colors" do
       expect(Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme).to be_nil
 
@@ -35,7 +35,7 @@ RSpec.describe WizardSerializer do
     end
   end
 
-  context "steps" do
+  describe "steps" do
     let(:wizard) { Wizard::Builder.new(admin).build }
     let(:serializer) { WizardSerializer.new(wizard, scope: Guardian.new(admin)) }
 

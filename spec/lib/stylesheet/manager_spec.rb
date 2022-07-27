@@ -18,7 +18,7 @@ RSpec.describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
-  context "themes with components" do
+  describe "themes with components" do
     let(:child_theme) { Fabricate(:theme, component: true, name: "a component").tap { |c|
       c.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
       c.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -148,7 +148,7 @@ RSpec.describe Stylesheet::Manager do
       })
     end
 
-    context "stylesheet order" do
+    context "with stylesheet order" do
       let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|
           z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -607,7 +607,7 @@ RSpec.describe Stylesheet::Manager do
       expect(details1[:new_href]).not_to eq(details2[:new_href])
     end
 
-    context "theme colors" do
+    context "with theme colors" do
       let(:theme) { Fabricate(:theme).tap { |t|
         t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
         t.save!
@@ -696,7 +696,7 @@ RSpec.describe Stylesheet::Manager do
       end
     end
 
-    context 'encoded slugs' do
+    context 'with encoded slugs' do
       before { SiteSetting.slug_generation_method = 'encoded' }
       after { SiteSetting.slug_generation_method = 'ascii' }
 

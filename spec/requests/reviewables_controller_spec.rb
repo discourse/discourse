@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewablesController do
-
-  context "anonymous" do
+  context "when anonymous" do
     it "denies listing" do
       get "/review.json"
       expect(response.code).to eq("403")
@@ -29,7 +28,7 @@ RSpec.describe ReviewablesController do
     end
   end
 
-  context "regular user" do
+  context "when regular user" do
     before do
       sign_in(Fabricate(:user))
     end
@@ -192,7 +191,7 @@ RSpec.describe ReviewablesController do
         expect(json["errors"][0]).to eq(I18n.t("reviewables.already_handled_and_user_not_exist"))
       end
 
-      context "supports filtering by range" do
+      context "when filtering by range" do
         let(:from) { 3.days.ago.strftime('%F') }
         let(:to) { 1.day.ago.strftime('%F') }
 
@@ -323,7 +322,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#show" do
-      context "basics" do
+      context "with basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }
         before do
           sign_in(Fabricate(:moderator))
@@ -343,7 +342,7 @@ RSpec.describe ReviewablesController do
         end
       end
 
-      context "conversation" do
+      context "with conversation" do
         fab!(:post) { Fabricate(:post) }
         fab!(:user) { Fabricate(:user) }
         fab!(:admin) { Fabricate(:admin) }
@@ -389,7 +388,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#explain" do
-      context "basics" do
+      context "with basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }
 
         before do
@@ -483,7 +482,7 @@ RSpec.describe ReviewablesController do
         expect(job).to be_blank
       end
 
-      context "claims" do
+      context "with claims" do
         fab!(:qp) { Fabricate(:reviewable_queued_post) }
 
         it "fails when reviewables must be claimed" do

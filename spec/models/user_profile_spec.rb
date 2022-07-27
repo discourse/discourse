@@ -105,7 +105,7 @@ RSpec.describe UserProfile do
       expect(user_profile).not_to be_valid
     end
 
-    context "website validation" do
+    context "with website validation" do
       let(:user_profile) { Fabricate.build(:user_profile, user: Fabricate(:user)) }
 
       it "should not allow invalid URLs" do
@@ -222,7 +222,7 @@ RSpec.describe UserProfile do
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
-      context 'tl3_links_no_follow is false' do
+      context 'when tl3_links_no_follow is false' do
         before { SiteSetting.tl3_links_no_follow = false }
 
         it 'includes the link without nofollow if the user is trust level 3 or higher' do
@@ -248,7 +248,7 @@ RSpec.describe UserProfile do
         end
       end
 
-      context 'tl3_links_no_follow is true' do
+      context 'when tl3_links_no_follow is true' do
         before { SiteSetting.tl3_links_no_follow = true }
 
         it 'includes the link with nofollow if the user is trust level 3 or higher' do

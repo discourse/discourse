@@ -48,7 +48,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#show' do
-    context 'an existing user' do
+    context 'with an existing user' do
       it 'returns success' do
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
@@ -64,7 +64,7 @@ RSpec.describe Admin::UsersController do
       end
     end
 
-    context 'a non-existing user' do
+    context 'with a non-existing user' do
       it 'returns 404 error' do
         get "/admin/users/0.json"
         expect(response.status).to eq(404)
@@ -778,7 +778,7 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(403)
     end
 
-    context "user has post" do
+    context "when user has post" do
       let(:topic) { Fabricate(:topic, user: delete_me) }
       let!(:post) { Fabricate(:post, topic: topic, user: delete_me) }
 
@@ -803,7 +803,7 @@ RSpec.describe Admin::UsersController do
         expect(User.where(id: delete_me.id).count).to eq(0)
       end
 
-      context "user has reviewable flagged post which was handled" do
+      context "when user has reviewable flagged post which was handled" do
         let!(:reviewable) { Fabricate(:reviewable_flagged_post, created_by: admin, target_created_by: delete_me, target: post, topic: topic, status: 4) }
 
         it "deletes the user record" do
@@ -862,7 +862,7 @@ RSpec.describe Admin::UsersController do
       expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(false)
     end
 
-    context "param block_url" do
+    context "with param block_url" do
       before do
         @post = Fabricate(:post_with_external_links, user: delete_me)
         TopicLink.extract_from(@post)
@@ -1392,5 +1392,4 @@ RSpec.describe Admin::UsersController do
       expect(sl.reload.ip_address).to eq('127.0.0.2')
     end
   end
-
 end

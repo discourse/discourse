@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe UrlHelper do
-
   describe "#relaxed parse" do
-
     it "can handle double #" do
       url = UrlHelper.relaxed_parse("https://test.com#test#test")
       expect(url.to_s).to eq("https://test.com#test%23test")
     end
-
   end
 
   describe "#is_local" do
-
     it "is true when the file has been uploaded" do
       store = stub
       store.expects(:has_been_uploaded?).returns(true)
@@ -42,11 +38,9 @@ RSpec.describe UrlHelper do
       Discourse.stubs(:store).returns(store)
       expect(UrlHelper.is_local("/plugins/all.js")).to eq(true)
     end
-
   end
 
   describe "#absolute" do
-
     it "returns an absolute URL for CDN" do
       begin
         Rails.configuration.action_controller.asset_host = "//cdn.awesome.com"
@@ -74,26 +68,21 @@ RSpec.describe UrlHelper do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
       expect(UrlHelper.absolute("/path/to/file")).to eq("http://my.cdn.com/path/to/file")
     end
-
   end
 
   describe "#absolute_without_cdn" do
-
     it "changes a relative url to an absolute one using base url even when cdn is enabled" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
       expect(UrlHelper.absolute_without_cdn("/path/to/file")).to eq("http://test.localhost/path/to/file")
     end
-
   end
 
   describe "#schemaless" do
-
     it "removes http schemas only" do
       expect(UrlHelper.schemaless("http://www.discourse.org")).to eq("//www.discourse.org")
       expect(UrlHelper.schemaless("https://secure.discourse.org")).to eq("https://secure.discourse.org")
       expect(UrlHelper.schemaless("ftp://ftp.discourse.org")).to eq("ftp://ftp.discourse.org")
     end
-
   end
 
   describe "#escape_uri" do
@@ -185,7 +174,7 @@ RSpec.describe UrlHelper do
         )
       end
 
-      context "and secure_media setting is disabled" do
+      context "when secure_media setting is disabled" do
         before { SiteSetting.secure_media = false }
 
         it "returns the local_cdn_url" do

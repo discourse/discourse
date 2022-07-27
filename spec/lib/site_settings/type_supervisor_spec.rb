@@ -19,7 +19,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
   end
 
   describe '#types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       it "'string' should be at 1st position" do
         expect(SiteSettings::TypeSupervisor.types[:string]).to eq(1)
       end

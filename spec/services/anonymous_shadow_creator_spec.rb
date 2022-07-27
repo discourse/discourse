@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe AnonymousShadowCreator do
-
   it "returns no shadow by default" do
     expect(AnonymousShadowCreator.get(Fabricate.build(:user))).to eq(nil)
   end
 
-  context "Anonymous posting is enabled" do
+  context "when anonymous posting is enabled" do
+    fab!(:user) { Fabricate(:user, trust_level: 3) }
 
     before { SiteSetting.allow_anonymous_posting = true }
-
-    fab!(:user) { Fabricate(:user, trust_level: 3) }
 
     it "returns no shadow if trust level is not met" do
       expect(AnonymousShadowCreator.get(Fabricate.build(:user, trust_level: 0))).to eq(nil)

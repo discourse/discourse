@@ -31,7 +31,7 @@ RSpec.describe JsLocaleHelper do
 
   end
 
-  context "message format" do
+  describe "message format" do
     def message_format_filename(locale)
       Rails.root + "lib/javascripts/locale/#{locale}.js"
     end

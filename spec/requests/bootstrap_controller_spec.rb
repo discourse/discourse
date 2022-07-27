@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe BootstrapController do
-
   let(:theme) { Fabricate(:theme, enabled: true) }
 
   before do
@@ -80,7 +79,7 @@ RSpec.describe BootstrapController do
     expect(response.parsed_body).to be_present
   end
 
-  context "authentication data is present" do
+  context "when authentication data is present" do
     it "returns authentication data" do
       cookie_data = 'someauthenticationdata'
       cookies['authentication_data'] = cookie_data

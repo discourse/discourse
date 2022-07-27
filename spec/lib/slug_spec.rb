@@ -4,7 +4,6 @@
 require 'slug'
 
 RSpec.describe Slug do
-
   describe '#for' do
     let(:default_slug) { 'topic' }
 
@@ -32,7 +31,7 @@ RSpec.describe Slug do
       expect(Slug.for(":smile: To Infinity and beyond! 🚀 :woman:t5:")).to eq("to-infinity-and-beyond")
     end
 
-    context 'ascii generator' do
+    context 'with ascii generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
 
       it 'generates the slug' do
@@ -58,7 +57,7 @@ RSpec.describe Slug do
       end
     end
 
-    context 'encoded generator' do
+    context 'with encoded generator' do
       before { SiteSetting.slug_generation_method = 'encoded' }
       after { SiteSetting.slug_generation_method = 'ascii' }
 
@@ -91,7 +90,7 @@ RSpec.describe Slug do
       end
     end
 
-    context 'none generator' do
+    context 'with none generator' do
       before { SiteSetting.slug_generation_method = 'none' }
       after { SiteSetting.slug_generation_method = 'ascii' }
 

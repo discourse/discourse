@@ -3,8 +3,7 @@
 RSpec.describe Jobs::EnqueueDigestEmails do
 
   describe '#target_users' do
-
-    context 'disabled digests' do
+    context 'with disabled digests' do
       before { SiteSetting.default_email_digest_frequency = 0 }
       let!(:user_no_digests) { Fabricate(:active_user, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
@@ -13,8 +12,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'unapproved users' do
-
+    context 'with unapproved users' do
       before do
         SiteSetting.must_approve_users = true
       end
@@ -38,7 +36,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'staged users' do
+    context 'with staged users' do
       let!(:staged_user) { Fabricate(:active_user, staged: true, last_emailed_at: 1.year.ago, last_seen_at: 1.year.ago) }
 
       it "doesn't return staged users" do
@@ -46,16 +44,15 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'recently emailed' do
+    context 'when recently emailed' do
       let!(:user_emailed_recently) { Fabricate(:active_user, last_emailed_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_emailed_recently.id)).to eq(false)
       end
-
     end
 
-    context "inactive user" do
+    context "with inactive user" do
       let!(:inactive_user) { Fabricate(:user, active: false) }
 
       it "doesn't return users who have been emailed recently" do
@@ -63,7 +60,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context "suspended user" do
+    context "with suspended user" do
       let!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
 
       it "doesn't return users who are suspended" do
@@ -71,7 +68,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'visited the site this week' do
+    context 'when visited the site this week' do
       let(:user_visited_this_week) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
@@ -80,7 +77,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'visited the site a year ago' do
+    context 'when visited the site a year ago' do
       let!(:user_visited_a_year_ago) { Fabricate(:active_user, last_seen_at: 370.days.ago) }
 
       it "doesn't return the user who have not visited the site for more than 365 days" do
@@ -88,7 +85,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'regular users' do
+    context 'with regular users' do
       let!(:user) { Fabricate(:active_user, last_seen_at: (SiteSetting.suppress_digest_email_after_days - 1).days.ago) }
 
       it "returns the user" do
@@ -96,7 +93,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context 'too many bounces' do
+    context 'with too many bounces' do
       let!(:bounce_user) { Fabricate(:active_user, last_seen_at: 6.month.ago) }
 
       it "doesn't return users with too many bounces" do
@@ -105,7 +102,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context "no primary email" do
+    context "with no primary email" do
       let!(:user) { Fabricate(:active_user, last_seen_at: 2.months.ago) }
 
       it "doesn't return users with no primary emails" do
@@ -116,7 +113,6 @@ RSpec.describe Jobs::EnqueueDigestEmails do
   end
 
   describe '#execute' do
-
     let(:user) { Fabricate(:user) }
 
     it "limits jobs enqueued per max_digests_enqueued_per_30_mins_per_site" do
@@ -146,7 +142,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context "digest emails are enabled" do
+    context "when digest emails are enabled" do
       before do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
       end
@@ -160,7 +156,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context "private email" do
+    context "with private email" do
       before do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
         SiteSetting.private_email = true
@@ -173,7 +169,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
       end
     end
 
-    context "digest emails are disabled" do
+    context "when digest emails are disabled" do
       before do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
         SiteSetting.disable_digest_emails = true
@@ -185,7 +181,5 @@ RSpec.describe Jobs::EnqueueDigestEmails do
         end
       end
     end
-
   end
-
 end

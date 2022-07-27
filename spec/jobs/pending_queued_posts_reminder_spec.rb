@@ -3,7 +3,7 @@
 RSpec.describe Jobs::PendingQueuedPostsReminder do
   let(:job) { described_class.new }
 
-  context "notify_about_queued_posts_after is 0" do
+  context "when notify_about_queued_posts_after is 0" do
     before { SiteSetting.notify_about_queued_posts_after = 0 }
 
     it "never emails" do
@@ -14,7 +14,7 @@ RSpec.describe Jobs::PendingQueuedPostsReminder do
     end
   end
 
-  context "notify_about_queued_posts_after accepts a float" do
+  context "when notify_about_queued_posts_after accepts a float" do
     before do
       SiteSetting.notify_about_queued_posts_after = 0.25
       job.last_notified_id = nil
@@ -32,13 +32,12 @@ RSpec.describe Jobs::PendingQueuedPostsReminder do
     end
   end
 
-  context "notify_about_queued_posts_after is 24" do
+  context "when notify_about_queued_posts_after is 24" do
     before do
       SiteSetting.notify_about_queued_posts_after = 24
     end
 
     context "when we haven't been notified in a while" do
-
       before do
         job.last_notified_id = nil
       end

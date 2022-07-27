@@ -8,7 +8,7 @@ RSpec.describe Post do
   let(:upload_path) { Discourse.store.upload_path }
 
   describe '#hidden_reasons' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @hidden_reasons = Post.hidden_reasons
       end
@@ -24,7 +24,7 @@ RSpec.describe Post do
   end
 
   describe '#types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @types = Post.types
       end
@@ -40,7 +40,7 @@ RSpec.describe Post do
   end
 
   describe '#cook_methods' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @cook_methods = Post.cook_methods
       end
@@ -97,8 +97,7 @@ RSpec.describe Post do
   end
 
   describe "revisions and deleting/recovery" do
-
-    context 'a post without links' do
+    context 'with a post without links' do
       let(:post) { Fabricate(:post, post_args) }
 
       before do
@@ -122,7 +121,7 @@ RSpec.describe Post do
       end
     end
 
-    context 'a post with links' do
+    context 'with a post with links' do
       let(:post) { Fabricate(:post_with_external_links) }
       before do
         post.trash!
@@ -138,7 +137,7 @@ RSpec.describe Post do
     end
   end
 
-  context 'a post with notices' do
+  context 'with a post with notices' do
     let(:post) do
       post = Fabricate(:post, post_args)
       post.upsert_custom_fields(Post::NOTICE => { type: Post.notices[:returning_user], last_posted_at: 1.day.ago })
@@ -320,13 +319,12 @@ RSpec.describe Post do
       expect(post_with_two_embedded_media.embedded_media_count).to eq(2)
     end
 
-    context "validation" do
-
+    context "with validation" do
       before do
         SiteSetting.newuser_max_embedded_media = 1
       end
 
-      context 'newuser' do
+      context 'with newuser' do
         it "allows a new user to post below the limit" do
           expect(post_one_image).to be_valid
         end
@@ -353,9 +351,7 @@ RSpec.describe Post do
         post_two_images.user.trust_level = TrustLevel[1]
         expect(post_two_images).to be_valid
       end
-
     end
-
   end
 
   describe "maximum attachments" do
@@ -372,13 +368,12 @@ RSpec.describe Post do
       expect(post_two_attachments.attachment_count).to eq(2)
     end
 
-    context "validation" do
-
+    context "with validation" do
       before do
         SiteSetting.newuser_max_attachments = 1
       end
 
-      context 'newuser' do
+      context 'with newuser' do
         it "allows a new user to post below the limit" do
           expect(post_one_attachment).to be_valid
         end
@@ -401,12 +396,10 @@ RSpec.describe Post do
         post_two_attachments.user.trust_level = TrustLevel[1]
         expect(post_two_attachments).to be_valid
       end
-
     end
-
   end
 
-  context "links" do
+  describe "links" do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
@@ -446,7 +439,6 @@ RSpec.describe Post do
     end
 
     describe "total host usage" do
-
       it "has none for a regular post" do
         expect(no_links.total_hosts_usage).to be_blank
       end
@@ -463,11 +455,8 @@ RSpec.describe Post do
         it "contains the new post's links, PLUS the previous one" do
           expect(two_links.total_hosts_usage).to eq('disneyland.disney.go.com' => 2, 'reddit.com' => 1)
         end
-
       end
-
     end
-
   end
 
   describe "maximums" do
@@ -494,13 +483,12 @@ RSpec.describe Post do
       expect(post_two_links.link_count).to eq(2)
     end
 
-    context "validation" do
-
+    context "with validation" do
       before do
         SiteSetting.newuser_max_links = 1
       end
 
-      context 'newuser' do
+      context 'with newuser' do
         it "returns true when within the amount of links allowed" do
           expect(post_one_link).to be_valid
         end
@@ -515,7 +503,7 @@ RSpec.describe Post do
         expect(post_two_links).to be_valid
       end
 
-      context "min_trust_to_post_links" do
+      context "with min_trust_to_post_links" do
         it "considers oneboxes links" do
           SiteSetting.min_trust_to_post_links = 3
           post_onebox.user.trust_level = TrustLevel[2]
@@ -541,15 +529,11 @@ RSpec.describe Post do
           expect(post_one_link).to be_valid
         end
       end
-
     end
-
   end
 
   describe "@mentions" do
-
-    context 'raw_mentions' do
-
+    context 'with raw_mentions' do
       it "returns an empty array with no matches" do
         post = Fabricate.build(:post, post_args.merge(raw: "Hello Jake and Finn!"))
         expect(post.raw_mentions).to eq([])
@@ -591,16 +575,14 @@ RSpec.describe Post do
         post = Fabricate.build(:post, post_args.merge(raw: "@org-board"))
         expect(post.raw_mentions).to eq(['org-board'])
       end
-
     end
 
-    context "max mentions" do
-
+    context "with max mentions" do
       fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
       let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
       let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
 
-      context 'new user' do
+      context 'with new user' do
         before do
           SiteSetting.newuser_max_mentions_per_post = 1
           SiteSetting.max_mentions_per_post = 5
@@ -615,7 +597,7 @@ RSpec.describe Post do
         end
       end
 
-      context "not a new user" do
+      context "when not a new user" do
         before do
           SiteSetting.newuser_max_mentions_per_post = 0
           SiteSetting.max_mentions_per_post = 1
@@ -631,12 +613,10 @@ RSpec.describe Post do
           expect(post_with_two_mentions).not_to be_valid
         end
       end
-
     end
-
   end
 
-  context 'validation' do
+  describe 'validation' do
     it 'validates our default post' do
       expect(Fabricate.build(:post, post_args)).to be_valid
     end
@@ -646,8 +626,7 @@ RSpec.describe Post do
     end
   end
 
-  context "raw_hash" do
-
+  describe "raw_hash" do
     let(:raw) { "this is our test post body" }
     let(:post) { post_with_body(raw) }
 
@@ -673,8 +652,7 @@ RSpec.describe Post do
     end
   end
 
-  context 'revise' do
-
+  describe 'revise' do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
@@ -684,16 +662,13 @@ RSpec.describe Post do
       expect(post.revise(post.user, raw: post.raw)).to eq(false)
     end
 
-    describe 'with the same body' do
-
+    context 'with the same body' do
       it "doesn't change version" do
         expect { post.revise(post.user, raw: post.raw); post.reload }.not_to change(post, :version)
       end
-
     end
 
-    describe 'grace period editing & edit windows' do
-
+    context 'with grace period editing & edit windows' do
       before { SiteSetting.editing_grace_period = 1.minute.to_i }
 
       it 'works' do
@@ -732,10 +707,9 @@ RSpec.describe Post do
         expect(post.revisions.size).to eq(2)
         expect(post.last_version_at.to_i).to eq(new_revised_at.to_i)
       end
-
     end
 
-    describe 'rate limiter' do
+    context 'with rate limiter' do
       let(:changed_by) { coding_horror }
 
       it "triggers a rate limiter" do
@@ -744,7 +718,7 @@ RSpec.describe Post do
       end
     end
 
-    describe 'with a new body' do
+    context 'with a new body' do
       let(:changed_by) { coding_horror }
       let!(:result) { post.revise(changed_by, raw: 'updated body') }
 
@@ -758,8 +732,7 @@ RSpec.describe Post do
         expect(post.revisions.first.user).to be_present
       end
 
-      context 'second poster posts again quickly' do
-
+      context 'when second poster posts again quickly' do
         it 'is a grace period edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute.to_i
           post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
@@ -769,11 +742,8 @@ RSpec.describe Post do
           expect(post.public_version).to eq(2)
           expect(post.revisions.size).to eq(1)
         end
-
       end
-
     end
-
   end
 
   describe 'before save' do
@@ -793,7 +763,6 @@ RSpec.describe Post do
   end
 
   describe 'after save' do
-
     let(:post) { Fabricate(:post, post_args) }
 
     it "has correct info set" do
@@ -808,8 +777,7 @@ RSpec.describe Post do
       expect(post.replies).to be_blank
     end
 
-    describe 'extract_quoted_post_numbers' do
-
+    context 'with extract_quoted_post_numbers' do
       let!(:post) { Fabricate(:post, post_args) }
       let(:reply) { Fabricate.build(:post, post_args) }
 
@@ -833,8 +801,7 @@ RSpec.describe Post do
       end
     end
 
-    describe 'a new reply' do
-
+    context 'with a new reply' do
       fab!(:topic) { Fabricate(:topic) }
       let(:other_user) { coding_horror }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
@@ -870,8 +837,7 @@ RSpec.describe Post do
         expect(post.reply_count).to eq(1)
       end
 
-      context 'a multi-quote reply' do
-
+      context 'with a multi-quote reply' do
         let!(:multi_reply) do
           raw = "[quote=\"Evil Trout, post:1\"]post1 quote[/quote]\nAha!\n[quote=\"Evil Trout, post:2\"]post2 quote[/quote]\nNeat-o"
           PostCreator.new(other_user, raw: raw, topic_id: topic.id, reply_to_post_number: post.post_number).create
@@ -883,12 +849,10 @@ RSpec.describe Post do
           expect(reply.replies.include?(multi_reply)).to eq(true)
         end
       end
-
     end
-
   end
 
-  context 'summary' do
+  describe 'summary' do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
@@ -901,9 +865,8 @@ RSpec.describe Post do
     end
   end
 
-  context 'sort_order' do
-    context 'regular topic' do
-
+  describe 'sort_order' do
+    context 'with a regular topic' do
       let!(:p1) { Fabricate(:post, post_args) }
       let!(:p2) { Fabricate(:post, post_args) }
       let!(:p3) { Fabricate(:post, post_args) }
@@ -914,8 +877,7 @@ RSpec.describe Post do
     end
   end
 
-  context "reply_history" do
-
+  describe "reply_history" do
     let!(:p1) { Fabricate(:post, post_args) }
     let!(:p2) { Fabricate(:post, post_args.merge(reply_to_post_number: p1.post_number)) }
     let!(:p3) { Fabricate(:post, post_args) }
@@ -930,8 +892,7 @@ RSpec.describe Post do
 
   end
 
-  context "reply_ids" do
-
+  describe "reply_ids" do
     fab!(:topic) { Fabricate(:topic) }
     let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
     let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
@@ -1624,7 +1585,7 @@ RSpec.describe Post do
     end
   end
 
-  context 'topic updated_at' do
+  describe 'topic updated_at' do
     let :topic do
       create_post.topic
     end
@@ -1657,7 +1618,7 @@ RSpec.describe Post do
     end
   end
 
-  context "have_uploads" do
+  describe "have_uploads" do
     it "should find all posts with the upload" do
       ids = []
       ids << Fabricate(:post, cooked: "A post with upload <img src='/#{upload_path}/1/defghijklmno.png'>").id

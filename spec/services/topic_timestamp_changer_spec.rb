@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTimestampChanger do
-  describe "change!" do
+  describe "#change!" do
     let(:old_timestamp) { Time.zone.now }
     let(:topic) { Fabricate(:topic, created_at: old_timestamp) }
     let!(:p1) { Fabricate(:post, topic: topic, created_at: old_timestamp) }
     let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }
 
-    context 'new timestamp is in the future' do
+    context 'when new timestamp is in the future' do
       let(:new_timestamp) { old_timestamp + 2.day }
 
       it 'should raise the right error' do
@@ -16,7 +16,7 @@ RSpec.describe TopicTimestampChanger do
       end
     end
 
-    context 'new timestamp is in the past' do
+    context 'when new timestamp is in the past' do
       let(:new_timestamp) { old_timestamp - 2.day }
 
       it 'changes the timestamp of the topic and opening post' do
@@ -40,7 +40,7 @@ RSpec.describe TopicTimestampChanger do
         expect(p2.updated_at).to eq_time(new_timestamp + 1.day)
       end
 
-      describe 'when posts have timestamps in the future' do
+      context 'when posts have timestamps in the future' do
         it 'should set the new timestamp as the default timestamp' do
           new_timestamp = freeze_time
 

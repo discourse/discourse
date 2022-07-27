@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PendingUsersReminder do
-
-  context 'must_approve_users is true' do
+  context 'when must_approve_users is true' do
     before do
       SiteSetting.must_approve_users = true
       Jobs::PendingUsersReminder.any_instance.stubs(:previous_newest_username).returns(nil)
@@ -13,7 +12,7 @@ RSpec.describe Jobs::PendingUsersReminder do
       Jobs::PendingUsersReminder.new.execute({})
     end
 
-    context "there are pending users" do
+    context "when there are pending users" do
       before do
         Fabricate(:moderator, approved: true, approved_by_id: -1, approved_at: 1.week.ago)
         Group.refresh_automatic_group!(:moderators)
@@ -49,7 +48,7 @@ RSpec.describe Jobs::PendingUsersReminder do
     end
   end
 
-  context 'must_approve_users is false' do
+  context 'when must_approve_users is false' do
     before do
       SiteSetting.must_approve_users = false
     end

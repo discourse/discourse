@@ -5,11 +5,11 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:category) { Fabricate(:category) }
   fab!(:moderator) { Fabricate(:moderator) }
 
-  context "creating a post" do
+  describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
 
-    context "create" do
+    context "when creating" do
       it "triggers queued_post_created" do
         event = DiscourseEvent.track(:queued_post_created) { reviewable.save! }
         expect(event).to be_present
@@ -33,9 +33,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
     end
 
-    context "actions" do
-
-      context "approve_post" do
+    describe "actions" do
+      context "with approve_post" do
         it 'triggers an extensibility event' do
           event = DiscourseEvent.track(:approved_post) { reviewable.perform(moderator, :approve_post) }
           expect(event).to be_present
@@ -96,7 +95,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       end
 
-      context "reject_post" do
+      context "with reject_post" do
         it 'triggers an extensibility event' do
           event = DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject_post) }
           expect(event).to be_present
@@ -115,7 +114,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         end
       end
 
-      context "delete_user" do
+      context "with delete_user" do
         it "deletes the user and rejects the post" do
           other_reviewable = Fabricate(:reviewable_queued_post, created_by: reviewable.created_by)
 
@@ -132,7 +131,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
   end
 
-  context "creating a topic" do
+  describe "creating a topic" do
     let(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
 
     before do
@@ -141,8 +140,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       SiteSetting.min_trust_level_to_tag_topics = 0
     end
 
-    context "editing" do
-
+    context "when editing" do
       it "is editable and returns the fields" do
         fields = reviewable.editable_for(Guardian.new(moderator))
         expect(fields.has?('category_id')).to eq(true)

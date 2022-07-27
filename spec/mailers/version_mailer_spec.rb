@@ -3,7 +3,7 @@
 RSpec.describe VersionMailer do
   subject { VersionMailer.send_notice }
 
-  context 'contact_email is blank' do
+  context 'when contact_email is blank' do
     before { SiteSetting.contact_email = '' }
 
     it "doesn't send the email" do
@@ -11,7 +11,7 @@ RSpec.describe VersionMailer do
     end
   end
 
-  context 'contact_email is set' do
+  context 'when contact_email is set' do
     before { SiteSetting.contact_email = 'me@example.com' }
 
     it "works" do
@@ -20,6 +20,5 @@ RSpec.describe VersionMailer do
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
     end
-
   end
 end

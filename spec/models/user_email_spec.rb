@@ -3,7 +3,7 @@
 RSpec.describe UserEmail do
   fab!(:user) { Fabricate(:user) }
 
-  context "validation" do
+  describe "Validations" do
     it "allows only one primary email" do
       expect {
         Fabricate(:secondary_email, user: user, primary: true)
@@ -50,7 +50,7 @@ RSpec.describe UserEmail do
     end
   end
 
-  context "indexes" do
+  describe "Indexes" do
     it "allows only one primary email" do
       expect {
         Fabricate.build(:secondary_email, user: user, primary: true).save(validate: false)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Reviewable, type: :model do
-
   describe ".create" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
@@ -136,7 +135,7 @@ RSpec.describe Reviewable, type: :model do
         expect(Reviewable.list_for(user, status: :pending)).to be_blank
       end
 
-      context 'Reviewing as an admin' do
+      context 'as an admin' do
         before { user.update_columns(moderator: false, admin: true) }
 
         it 'can filter by the target_created_by_id attribute' do
@@ -393,7 +392,7 @@ RSpec.describe Reviewable, type: :model do
     expect(Reviewable.valid_type?("User")).to eq(false)
   end
 
-  context "events" do
+  describe "events" do
     let!(:moderator) { Fabricate(:moderator) }
     let(:reviewable) { Fabricate(:reviewable) }
 
@@ -411,7 +410,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context "message bus notifications" do
+  describe "message bus notifications" do
     fab!(:moderator) { Fabricate(:moderator) }
     let(:post) { Fabricate(:post) }
 
@@ -596,7 +595,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context "priorities" do
+  describe "priorities" do
     it "returns 0 for unknown priorities" do
       expect(Reviewable.min_score_for_priority(:wat)).to eq(0.0)
     end
@@ -624,7 +623,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context "custom filters" do
+  describe "custom filters" do
     after do
       Reviewable.clear_custom_filters!
     end
@@ -684,7 +683,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context 'default actions' do
+  describe 'default actions' do
     let(:reviewable) { Reviewable.new }
     let(:actions) { Reviewable::Actions.new(reviewable, Guardian.new) }
 

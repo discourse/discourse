@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'topic_publisher'
-RSpec.describe TopicPublisher do
 
-  context "shared drafts" do
+RSpec.describe TopicPublisher do
+  describe "shared drafts" do
     fab!(:shared_drafts_category) { Fabricate(:category) }
     fab!(:category) { Fabricate(:category) }
 
@@ -11,7 +11,7 @@ RSpec.describe TopicPublisher do
       SiteSetting.shared_drafts_category = shared_drafts_category.id
     end
 
-    context "publishing" do
+    context "when publishing" do
       fab!(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
       fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
       fab!(:moderator) { Fabricate(:moderator) }
@@ -72,7 +72,5 @@ RSpec.describe TopicPublisher do
         expect(topic.tags).to contain_exactly(tag)
       end
     end
-
   end
-
 end

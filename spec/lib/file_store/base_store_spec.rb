@@ -8,7 +8,7 @@ RSpec.describe FileStore::BaseStore do
       expect(described_class.new.get_path_for_upload(upload)).to eq(expected_path)
     end
 
-    context "empty URL" do
+    context "with empty URL" do
       before do
         upload.update!(url: "")
       end
@@ -32,8 +32,8 @@ RSpec.describe FileStore::BaseStore do
       end
     end
 
-    context "existing URL" do
-      context "regular site" do
+    context "with existing URL" do
+      context "with regular site" do
         it "returns the correct path for files stored on local storage" do
           upload.update!(url: "/uploads/default/original/1X/63b76551662ccea1a594e161c37dd35188d77657.jpeg")
           expect_correct_path("original/1X/63b76551662ccea1a594e161c37dd35188d77657.jpeg")
@@ -51,7 +51,7 @@ RSpec.describe FileStore::BaseStore do
         end
       end
 
-      context "multisite" do
+      context "with multisite" do
         it "returns the correct path for files stored on local storage" do
           upload.update!(url: "/uploads/foo/original/1X/63b76551662ccea1a594e161c37dd35188d77657.jpeg")
           expect_correct_path("original/1X/63b76551662ccea1a594e161c37dd35188d77657.jpeg")
@@ -83,7 +83,7 @@ RSpec.describe FileStore::BaseStore do
     let!(:upload) { Fabricate.build(:upload, id: 100) }
     let!(:optimized_path) { "optimized/1X/#{upload.sha1}_1_100x200.png" }
 
-    context "empty URL" do
+    context "with empty URL" do
       it 'should return the right path' do
         optimized = Fabricate.build(:optimized_image, upload: upload, version: 1)
         expect(FileStore::BaseStore.new.get_path_for_optimized_image(optimized)).to eq(optimized_path)
@@ -95,7 +95,7 @@ RSpec.describe FileStore::BaseStore do
       end
     end
 
-    context "existing URL" do
+    context "with existing URL" do
       let!(:optimized) { Fabricate.build(:optimized_image, upload: upload, version: 1) }
       let!(:optimized_path) { "optimized/1X/#{upload.sha1}_1_100x200.jpg" }
 
@@ -103,7 +103,7 @@ RSpec.describe FileStore::BaseStore do
         expect(described_class.new.get_path_for_optimized_image(optimized)).to eq(optimized_path)
       end
 
-      context "regular site" do
+      context "with regular site" do
         it "returns the correct path for files stored on local storage" do
           optimized.update!(url: "/uploads/default/optimized/1X/#{upload.sha1}_1_100x200.jpg")
           expect_correct_optimized_path
@@ -115,7 +115,7 @@ RSpec.describe FileStore::BaseStore do
         end
       end
 
-      context "multisite" do
+      context "with multisite" do
         it "returns the correct path for files stored on local storage" do
           optimized.update!(url: "/uploads/foo/optimized/1X/#{upload.sha1}_1_100x200.jpg")
           expect_correct_optimized_path

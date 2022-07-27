@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WordWatcher do
+RSpec.describe WordWatcher do
   let(:raw) do
     <<~RAW.strip
       Do you like liquorice?
@@ -50,16 +50,18 @@ describe WordWatcher do
     let!(:word3) { Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word }
     let!(:word4) { Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word }
 
-    context "format of the result regexp" do
-      it "is correct when watched_words_regular_expressions = true" do
+    context "when watched_words_regular_expressions = true" do
+      it "returns the proper regexp" do
         SiteSetting.watched_words_regular_expressions = true
         regexps = described_class.word_matcher_regexp_list(:block)
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly("/(#{word1})|(#{word2})/i", "/(#{word3})|(#{word4})/")
       end
+    end
 
-      it "is correct when watched_words_regular_expressions = false" do
+    context "when watched_words_regular_expressions = false" do
+      it "returns the proper regexp" do
         SiteSetting.watched_words_regular_expressions = false
         regexps = described_class.word_matcher_regexp_list(:block)
 
@@ -133,20 +135,18 @@ describe WordWatcher do
         expect(matches[1]).to eq("acknowledge")
       end
 
-      context "word boundary" do
-        it "handles word boundary" do
-          Fabricate(:watched_word, word: "love", action: WatchedWord.actions[:require_approval])
-          expect(described_class.new("I Love, bananas.").word_matches_for_action?(:require_approval)[1]).to eq("Love")
-          expect(described_class.new("I LOVE; apples.").word_matches_for_action?(:require_approval)[1]).to eq("LOVE")
-          expect(described_class.new("love: is a thing.").word_matches_for_action?(:require_approval)[1]).to eq("love")
-          expect(described_class.new("I love. oranges").word_matches_for_action?(:require_approval)[1]).to eq("love")
-          expect(described_class.new("I :love. pineapples").word_matches_for_action?(:require_approval)[1]).to eq("love")
-          expect(described_class.new("peace ,love and understanding.").word_matches_for_action?(:require_approval)[1]).to eq("love")
-        end
+      it "handles word boundary" do
+        Fabricate(:watched_word, word: "love", action: WatchedWord.actions[:require_approval])
+        expect(described_class.new("I Love, bananas.").word_matches_for_action?(:require_approval)[1]).to eq("Love")
+        expect(described_class.new("I LOVE; apples.").word_matches_for_action?(:require_approval)[1]).to eq("LOVE")
+        expect(described_class.new("love: is a thing.").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        expect(described_class.new("I love. oranges").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        expect(described_class.new("I :love. pineapples").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        expect(described_class.new("peace ,love and understanding.").word_matches_for_action?(:require_approval)[1]).to eq("love")
       end
 
-      context 'multiple matches' do
-        context 'non regexp words' do
+      context 'when there are multiple matches' do
+        context 'with non regexp words' do
           it 'lists all matching words' do
             %w{bananas hate hates}.each do |word|
               Fabricate(:watched_word, word: word, action: WatchedWord.actions[:block])
@@ -160,7 +160,7 @@ describe WordWatcher do
           end
         end
 
-        context 'regexp words' do
+        context 'with regexp words' do
           before do
             SiteSetting.watched_words_regular_expressions = true
           end
@@ -178,7 +178,7 @@ describe WordWatcher do
         end
       end
 
-      context "emojis" do
+      context "when word is an emoji" do
         it "handles emoji" do
           Fabricate(:watched_word, word: ":joy:", action: WatchedWord.actions[:require_approval])
 
@@ -201,7 +201,7 @@ describe WordWatcher do
         end
       end
 
-      context "regular expressions" do
+      context "when word is a regular expression" do
         before do
           SiteSetting.watched_words_regular_expressions = true
         end

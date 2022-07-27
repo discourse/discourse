@@ -3,7 +3,6 @@
 require 'rotp'
 
 RSpec.describe UsersEmailController do
-
   fab!(:user) { Fabricate(:user) }
   let!(:email_token) { Fabricate(:email_token, user: user) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -77,7 +76,7 @@ RSpec.describe UsersEmailController do
         expect(user.email).to eq('bubblegum@adventuretime.ooo')
       end
 
-      context 'second factor required' do
+      context 'when second factor is required' do
         fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         fab!(:backup_code) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -118,7 +117,7 @@ RSpec.describe UsersEmailController do
           expect(user.reload.email).to eq('bubblegum@adventuretime.ooo')
         end
 
-        context "rate limiting" do
+        context "with rate limiting" do
           before { RateLimiter.clear_all!; RateLimiter.enable }
 
           it "rate limits by IP" do
@@ -169,7 +168,7 @@ RSpec.describe UsersEmailController do
         end
       end
 
-      context "security key required" do
+      context "when security key is required" do
         fab!(:user_security_key) do
           Fabricate(
             :user_security_key,
@@ -273,7 +272,7 @@ RSpec.describe UsersEmailController do
       expect(body).to include("alert-error")
     end
 
-    context 'valid old token' do
+    context 'with valid old token' do
       it 'confirms with a correct token' do
         sign_in(moderator)
         updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
@@ -341,7 +340,7 @@ RSpec.describe UsersEmailController do
       context 'when the new email address is taken' do
         fab!(:other_user) { Fabricate(:coding_horror) }
 
-        context 'hide_email_address_taken is disabled' do
+        context 'when hide_email_address_taken is disabled' do
           before do
             SiteSetting.hide_email_address_taken = false
           end
@@ -357,7 +356,7 @@ RSpec.describe UsersEmailController do
           end
         end
 
-        context 'hide_email_address_taken is enabled' do
+        context 'when hide_email_address_taken is enabled' do
           before do
             SiteSetting.hide_email_address_taken = true
           end
@@ -392,7 +391,7 @@ RSpec.describe UsersEmailController do
         expect(response).to_not be_successful
       end
 
-      context 'success' do
+      context 'with success' do
         it 'has an email token' do
           expect do
             put "/u/#{user.username}/preferences/email.json", params: { email: 'bubblegum@adventuretime.ooo' }

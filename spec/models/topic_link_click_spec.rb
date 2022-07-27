@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicLinkClick do
-
   it { is_expected.to belong_to :topic_link }
   it { is_expected.to belong_to :user }
   it { is_expected.to validate_presence_of :topic_link_id }
@@ -10,7 +9,7 @@ RSpec.describe TopicLinkClick do
     URI.parse('http://test.host')
   end
 
-  context 'topic_links' do
+  describe 'topic_links' do
     before do
       @topic = Fabricate(:topic)
       @post = Fabricate(:post_with_external_links, user: @topic.user, topic: @topic)
@@ -22,7 +21,7 @@ RSpec.describe TopicLinkClick do
       expect(@topic_link.clicks).to eq(0)
     end
 
-    context 'create' do
+    describe '.create' do
       before do
         TopicLinkClick.create(topic_link: @topic_link, ip_address: '192.168.1.1')
       end
@@ -37,10 +36,8 @@ RSpec.describe TopicLinkClick do
       end
     end
 
-    context 'create_from' do
-
+    describe '.create_from' do
       it "works correctly" do
-
         # returns nil to prevent exploits
         click = TopicLinkClick.create_from(url: "http://url-that-doesnt-exist.com", post_id: @post.id, ip: '127.0.0.1')
         expect(click).to eq(nil)
@@ -93,7 +90,7 @@ RSpec.describe TopicLinkClick do
 
       end
 
-      context "relative urls" do
+      context "with relative urls" do
         let(:host) { URI.parse(Discourse.base_url).host }
 
         it 'returns the url' do
@@ -113,8 +110,7 @@ RSpec.describe TopicLinkClick do
           expect(redirect).to eq(url)
         end
 
-        context "cdn links" do
-
+        context "with cdn links" do
           before do
             Rails.configuration.action_controller.asset_host = "https://cdn.discourse.org/stuff"
           end
@@ -161,8 +157,7 @@ RSpec.describe TopicLinkClick do
 
         end
 
-        context "s3 cdns" do
-
+        context "with s3 cdns" do
           it "works with s3 urls" do
             setup_s3
             SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
@@ -236,7 +231,7 @@ RSpec.describe TopicLinkClick do
         end
       end
 
-      context 'same base URL with different query' do
+      context 'with same base URL with different query' do
         it 'are handled differently' do
           post = Fabricate(:post, raw: <<~RAW)
             no query param: http://example.com/a
@@ -282,11 +277,7 @@ RSpec.describe TopicLinkClick do
           expect(@click.topic_link).to eq(@topic_link)
           expect(@url).to eq(@topic_link.url)
         end
-
       end
-
     end
-
   end
-
 end

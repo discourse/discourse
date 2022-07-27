@@ -18,8 +18,7 @@ RSpec.describe DirectoryItemsController do
   end
 
   context "without data" do
-
-    context "and a logged in user" do
+    context "with a logged in user" do
       before { sign_in(user) }
 
       it "succeeds" do

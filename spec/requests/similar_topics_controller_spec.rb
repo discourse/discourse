@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SimilarTopicsController do
-  context 'similar_to' do
+  describe 'similar_to' do
     let(:title) { 'this title is long enough to search for' }
     let(:raw) { 'this body is long enough to search for' }
 
@@ -40,7 +40,7 @@ RSpec.describe SimilarTopicsController do
         SiteSetting.minimum_topics_similar = 30
       end
 
-      describe "With enough topics" do
+      context "with enough topics" do
         it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
           Topic.stubs(:count).returns(50)
           post
@@ -54,7 +54,7 @@ RSpec.describe SimilarTopicsController do
           expect(similar_topics.first["topic_id"]).to eq(topic.id)
         end
 
-        describe "with a logged in user" do
+        context "with a logged in user" do
           before do
             private_post; post
             reindex_posts

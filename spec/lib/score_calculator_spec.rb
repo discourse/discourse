@@ -3,7 +3,6 @@
 require 'score_calculator'
 
 RSpec.describe ScoreCalculator do
-
   fab!(:post) { Fabricate(:post, reads: 111) }
   fab!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
   let(:topic) { post.topic }
@@ -28,11 +27,9 @@ RSpec.describe ScoreCalculator do
     it "gives the topic a score" do
       expect(topic.score).to be_present
     end
-
   end
 
-  context 'summary' do
-
+  describe 'summary' do
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
@@ -68,7 +65,5 @@ RSpec.describe ScoreCalculator do
       topic.reload
       expect(topic.has_summary).to eq(true)
     end
-
   end
-
 end

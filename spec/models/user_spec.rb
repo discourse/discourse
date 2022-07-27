@@ -11,7 +11,7 @@ RSpec.describe User do
 
   it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
 
-  context 'associations' do
+  describe 'Associations' do
     it 'should delete sidebar_section_links when a user is destroyed' do
       Fabricate(:category_sidebar_section_link, user: user)
       Fabricate(:tag_sidebar_section_link, user: user)
@@ -20,7 +20,7 @@ RSpec.describe User do
     end
   end
 
-  context 'validations' do
+  describe 'Validations' do
     describe '#username' do
       it { is_expected.to validate_presence_of :username }
 
@@ -309,7 +309,7 @@ RSpec.describe User do
     end
   end
 
-  context 'enqueue_staff_welcome_message' do
+  describe 'enqueue_staff_welcome_message' do
     fab!(:first_admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
@@ -465,7 +465,7 @@ RSpec.describe User do
       expect(event[:params].first).to eq(subject)
     end
 
-    context 'after_save' do
+    context 'with after_save' do
       before { subject.save! }
 
       it "has correct settings" do
@@ -1157,7 +1157,7 @@ RSpec.describe User do
         expect(user.user_visits.first.visited_at).to eq_time(date.to_date)
       end
 
-      context "called twice" do
+      context "when called twice" do
         it "doesn't increase days_visited twice" do
           freeze_time
           user.update_last_seen!
@@ -2091,7 +2091,7 @@ RSpec.describe User do
       expect(Fabricate(:user, silenced_till: 1.month.from_now)).to be_silenced
     end
 
-    context "finders" do
+    context "with finders" do
       let!(:user0) { Fabricate(:user, silenced_till: 1.month.ago) }
       let!(:user1) { Fabricate(:user, silenced_till: 1.month.from_now) }
 
@@ -2429,7 +2429,7 @@ RSpec.describe User do
   describe 'check_site_contact_username' do
     before { SiteSetting.site_contact_username = contact_user.username }
 
-    context 'admin' do
+    context 'when admin' do
       let(:contact_user) { Fabricate(:admin) }
 
       it 'clears site_contact_username site setting when admin privilege is revoked' do
@@ -2438,7 +2438,7 @@ RSpec.describe User do
       end
     end
 
-    context 'moderator' do
+    context 'when moderator' do
       let(:contact_user) { Fabricate(:moderator) }
 
       it 'clears site_contact_username site setting when moderator privilege is revoked' do
@@ -2447,7 +2447,7 @@ RSpec.describe User do
       end
     end
 
-    context 'admin and moderator' do
+    context 'when admin and moderator' do
       let(:contact_user) { Fabricate(:moderator, admin: true) }
 
       it 'does not change site_contact_username site setting when admin privilege is revoked' do
@@ -2493,7 +2493,7 @@ RSpec.describe User do
     end
   end
 
-  context "human?" do
+  describe "#human?" do
     it "returns true for a regular user" do
       expect(Fabricate(:user)).to be_human
     end
@@ -2503,7 +2503,7 @@ RSpec.describe User do
     end
   end
 
-  context "Unicode username" do
+  describe "Unicode username" do
     before { SiteSetting.unicode_usernames = true }
 
     let(:user) { Fabricate(:user, username: "Lo\u0308we") } # NFD

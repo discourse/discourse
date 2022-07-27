@@ -22,7 +22,7 @@ RSpec.shared_examples 'finding and showing post' do
     expect(response.status).to eq(404)
   end
 
-  context "deleted post" do
+  context "with deleted post" do
     before do
       post.trash!(user)
     end
@@ -50,7 +50,7 @@ RSpec.shared_examples 'finding and showing post' do
       expect(response.status).to eq(200)
     end
 
-    context "category group moderator" do
+    context "with category group moderator" do
       fab!(:group_user) { Fabricate(:group_user) }
       let(:user_gm) { group_user.user }
       let(:group) { group_user.group }
@@ -251,7 +251,7 @@ RSpec.describe PostsController do
         delete "/posts/#{post.id}.json"
       end
 
-      context "permanently destroy" do
+      context "with permanently destroy" do
         let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
 
         before do
@@ -364,7 +364,7 @@ RSpec.describe PostsController do
         end
       end
 
-      context "deleting flagged posts" do
+      context "when deleting flagged posts" do
         before do
           sign_in(moderator)
           PostActionCreator.off_topic(moderator, post1)
@@ -809,7 +809,7 @@ RSpec.describe PostsController do
       SiteSetting.enable_whispers = true
     end
 
-    context 'api' do
+    context 'with api' do
       it 'memoizes duplicate requests' do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
@@ -932,7 +932,7 @@ RSpec.describe PostsController do
         sign_in(user)
       end
 
-      context "fast typing" do
+      context "when fast typing" do
         before do
           SiteSetting.min_first_post_typing_time = 3000
           SiteSetting.auto_silence_fast_typers_max_trust_level = 1
@@ -1358,7 +1358,7 @@ RSpec.describe PostsController do
         end
       end
 
-      context "errors" do
+      context "with errors" do
         it "does not succeed" do
           post "/posts.json", params: { raw: 'test' }
           expect(response).not_to be_successful
@@ -1378,7 +1378,7 @@ RSpec.describe PostsController do
           expect(response.parsed_body["errors"]).to include(I18n.t(:spamming_host))
         end
 
-        context "allow_uncategorized_topics is false" do
+        context "when allow_uncategorized_topics is false" do
           before do
             SiteSetting.allow_uncategorized_topics = false
           end
@@ -1523,7 +1523,7 @@ RSpec.describe PostsController do
       end
     end
 
-    context "topic bump" do
+    context "with topic bump" do
       shared_examples "it works" do
         it "should be able to skip topic bumping" do
           original_bumped_at = 1.day.ago
@@ -1550,7 +1550,7 @@ RSpec.describe PostsController do
         end
       end
 
-      context "admins" do
+      context "with admins" do
         before do
           sign_in(admin)
         end
@@ -1558,7 +1558,7 @@ RSpec.describe PostsController do
         include_examples "it works"
       end
 
-      context "moderators" do
+      context "with moderators" do
         before do
           sign_in(moderator)
         end
@@ -1566,7 +1566,7 @@ RSpec.describe PostsController do
         include_examples "it works"
       end
 
-      context "TL4 users" do
+      context "with TL4 users" do
         fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
         before do
@@ -1576,7 +1576,7 @@ RSpec.describe PostsController do
         include_examples "it works"
       end
 
-      context "users" do
+      context "with users" do
         fab!(:topic) { Fabricate(:topic) }
 
         [:user].each do |user|
@@ -1593,7 +1593,7 @@ RSpec.describe PostsController do
       end
     end
 
-    describe "featured links" do
+    context "with featured links" do
       it "allows to create topics with featured links" do
         sign_in(user_trust_level_1)
 
@@ -1724,7 +1724,7 @@ RSpec.describe PostsController do
       end
     end
 
-    context "deleted post" do
+    context "with deleted post" do
       fab!(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
       fab!(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
@@ -1737,7 +1737,7 @@ RSpec.describe PostsController do
       end
     end
 
-    context "deleted topic" do
+    context "with deleted topic" do
       fab!(:deleted_topic) { Fabricate(:topic, user: admin) }
       fab!(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
       fab!(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
@@ -2072,7 +2072,7 @@ RSpec.describe PostsController do
   end
 
   describe '#latest' do
-    context 'private posts' do
+    context 'with private posts' do
       describe 'when not logged in' do
         it 'should return the right response' do
           Fabricate(:post)
@@ -2118,7 +2118,7 @@ RSpec.describe PostsController do
       end
     end
 
-    context 'public posts' do
+    context 'with public posts' do
       it 'returns public posts with topic rss feed' do
         public_post
         private_post

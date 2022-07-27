@@ -79,7 +79,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
   end
 
-  context 'Google Oauth2' do
+  describe 'Google Oauth2' do
     before do
       SiteSetting.enable_google_oauth2_logins = true
     end
@@ -157,7 +157,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
-    context "in readonly mode" do
+    context "when in readonly mode" do
       use_redis_snapshotting
 
       it "should return a 503" do
@@ -168,7 +168,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
     end
 
-    context "in staff writes only mode" do
+    context "when in staff writes only mode" do
       use_redis_snapshotting
 
       before do
@@ -785,7 +785,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["username"]).to eq(fixed_username)
       end
 
-      context "groups are enabled" do
+      context "when groups are enabled" do
         let(:strategy_class) { Auth::OmniAuthStrategies::DiscourseGoogleOauth2 }
         let(:groups_url) { "#{strategy_class::GROUPS_DOMAIN}#{strategy_class::GROUPS_PATH}" }
         let(:groups_scope) { strategy_class::DEFAULT_SCOPE + strategy_class::GROUPS_SCOPE }

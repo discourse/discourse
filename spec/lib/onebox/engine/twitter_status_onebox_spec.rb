@@ -40,7 +40,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     end
   end
 
-  shared_context "standard tweet info" do
+  shared_context "with standard tweet info" do
     before do
       @link = "https://twitter.com/vyki_e/status/363116819147538433"
       @onebox_fixture = "twitterstatus"
@@ -55,7 +55,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     let(:retweets_count) { "0" }
   end
 
-  shared_context "quoted tweet info" do
+  shared_context "with quoted tweet info" do
     before do
       @link = "https://twitter.com/metallica/status/1128068672289890305"
       @onebox_fixture = "twitterstatus_quoted"
@@ -72,7 +72,7 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     let(:retweets_count) { "201" }
   end
 
-  shared_context "featured image info" do
+  shared_context "with featured image info" do
     before do
       @link = "https://twitter.com/codinghorror/status/1409351083177046020"
       @onebox_fixture = "twitterstatus_featured_image"
@@ -111,8 +111,8 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     context "with a standard tweet" do
       let(:tweet_content) { "I'm a sucker for pledges." }
 
-      include_context "standard tweet info"
-      include_context "engines"
+      include_context "with standard tweet info"
+      include_context "with engines"
 
       it_behaves_like "an engine"
       it_behaves_like "#to_html"
@@ -123,8 +123,8 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
         "Thank you to everyone who came out for #MetInParis last night for helping us support @EMMAUSolidarite &amp;"
       end
 
-      include_context "quoted tweet info"
-      include_context "engines"
+      include_context "with quoted tweet info"
+      include_context "with engines"
 
       it_behaves_like "an engine"
       it_behaves_like '#to_html'
@@ -136,8 +136,8 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
         "My first text message from my child! A moment that shall live on in infamy!"
       end
 
-      include_context "featured image info"
-      include_context "engines"
+      include_context "with featured image info"
+      include_context "with engines"
 
       it_behaves_like "an engine"
       it_behaves_like '#to_html'
@@ -289,8 +289,8 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
         }
       end
 
-      include_context "standard tweet info"
-      include_context "engines"
+      include_context "with standard tweet info"
+      include_context "with engines"
 
       it_behaves_like "an engine"
       it_behaves_like "#to_html"
@@ -674,8 +674,8 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
         }
       end
 
-      include_context "quoted tweet info"
-      include_context "engines"
+      include_context "with quoted tweet info"
+      include_context "with engines"
 
       it_behaves_like "an engine"
       it_behaves_like '#to_html'

@@ -32,7 +32,7 @@ RSpec.describe User do
     end
 
     describe 'welcome post' do
-      context 'disabled' do
+      context 'when disabled' do
         before do
           SiteSetting.disable_discourse_narrative_bot_welcome_post = true
         end
@@ -57,7 +57,7 @@ RSpec.describe User do
         end
       end
 
-      context 'enabled' do
+      context 'when enabled' do
         before do
           SiteSetting.disable_discourse_narrative_bot_welcome_post = false
         end

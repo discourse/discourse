@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe AboutSerializer do
-
   fab!(:user) { Fabricate(:user) }
 
-  context "login_required is enabled" do
+  context "when login_required is enabled" do
     before do
       SiteSetting.login_required = true
       SiteSetting.contact_url = "https://example.com/contact"
@@ -24,7 +23,7 @@ RSpec.describe AboutSerializer do
     end
   end
 
-  context "login_required is disabled" do
+  context "when login_required is disabled" do
     before do
       SiteSetting.login_required = false
       SiteSetting.contact_url = "https://example.com/contact"

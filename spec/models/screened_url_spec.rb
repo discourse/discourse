@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ScreenedUrl do
-
   let(:url)    { 'http://shopppping.com/bad/drugz' }
   let(:domain) { 'shopppping.com' }
 
@@ -103,7 +102,7 @@ RSpec.describe ScreenedUrl do
   end
 
   describe '#watch' do
-    context 'url is not being blocked' do
+    context 'when url is not being blocked' do
       it 'creates a new record with default action of :do_nothing' do
         record = described_class.watch(url, domain)
         expect(record).not_to be_new_record
@@ -117,7 +116,7 @@ RSpec.describe ScreenedUrl do
       end
     end
 
-    context 'url is already being blocked' do
+    context 'when url is already being blocked' do
       let!(:existing) { Fabricate(:screened_url, url: url, domain: domain) }
 
       it "doesn't create a new record" do

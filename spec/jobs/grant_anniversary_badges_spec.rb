@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::GrantAnniversaryBadges do
-
   let(:granter) { described_class.new }
 
   it "doesn't award to a user who is less than a year old" do
@@ -86,7 +85,7 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
     expect(badge.count).to eq(1)
   end
 
-  context "repeated grants" do
+  context "with repeated grants" do
     it "won't award twice in the same year" do
       user = Fabricate(:user, created_at: 400.days.ago)
       Fabricate(:post, user: user, created_at: 1.week.ago)
@@ -132,5 +131,4 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(2)
     end
   end
-
 end

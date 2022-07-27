@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Positionable do
-
   def positions
     TestItem.order('position asc, id asc').pluck(:id)
   end
 
-  context "move_to" do
+  describe "move_to" do
     before do
       class TestItem < ActiveRecord::Base
         include Positionable

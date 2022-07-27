@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::Tl3Promotions do
-
   def create_qualifying_stats(user)
     user.create_user_stat if user.user_stat.nil?
     user.user_stat.update!(
@@ -44,7 +43,7 @@ RSpec.describe Jobs::Tl3Promotions do
     run_job
   end
 
-  context "tl3 user who doesn't qualify for tl3 anymore" do
+  context "with tl3 user who doesn't qualify for tl3 anymore" do
     def create_leader_user
       user = Fabricate(:user, trust_level: TrustLevel[2])
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(true)

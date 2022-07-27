@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
 
@@ -27,7 +28,7 @@ RSpec.describe Admin::WatchedWordsController do
   end
 
   describe '#create' do
-    context 'logged in as admin' do
+    context 'when logged in as admin' do
       before do
         sign_in(admin)
       end
@@ -58,7 +59,7 @@ RSpec.describe Admin::WatchedWordsController do
   end
 
   describe '#upload' do
-    context 'logged in as admin' do
+    context 'when logged in as admin' do
       before do
         sign_in(admin)
         Fabricate(:tag, name: 'tag1')
@@ -119,14 +120,14 @@ RSpec.describe Admin::WatchedWordsController do
   end
 
   describe '#download' do
-    context 'not logged in as admin' do
+    context 'when not logged in as admin' do
       it "doesn't allow performing #download" do
         get "/admin/customize/watched_words/action/block/download"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'logged in as admin' do
+    context 'when logged in as admin' do
       before do
         sign_in(admin)
         Fabricate(:tag, name: 'tag1')
@@ -163,7 +164,7 @@ RSpec.describe Admin::WatchedWordsController do
   end
 
   describe '#clear_all' do
-    context 'non admins' do
+    context 'with non admins' do
       it "doesn't allow them to perform #clear_all" do
         word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         delete "/admin/customize/watched_words/action/block"
@@ -172,7 +173,7 @@ RSpec.describe Admin::WatchedWordsController do
       end
     end
 
-    context 'admins' do
+    context 'with admins' do
       before do
         sign_in(admin)
       end

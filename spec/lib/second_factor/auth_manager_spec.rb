@@ -227,7 +227,7 @@ RSpec.describe SecondFactor::AuthManager do
       end
     end
 
-    context "returned results object" do
+    context "with returned results object" do
       it "has the correct status and contains the return value of the action hook that's called" do
         action = create_action
         action.expects(:skip_second_factor_auth?).with({}).returns(true).once

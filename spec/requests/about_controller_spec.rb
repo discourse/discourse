@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AboutController do
-
-  describe '.index' do
-
+  describe '#index' do
     it "should display the about page for anonymous user when login_required is false" do
       SiteSetting.login_required = false
       get "/about"
@@ -27,7 +25,7 @@ RSpec.describe AboutController do
       expect(response.status).to eq(200)
     end
 
-    context "crawler view" do
+    context "with crawler view" do
       it "should include correct title" do
         get '/about', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
         expect(response.status).to eq(200)

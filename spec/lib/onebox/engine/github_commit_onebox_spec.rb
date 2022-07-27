@@ -9,7 +9,7 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
       stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubcommit"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do
@@ -64,7 +64,7 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
         .to_return(status: 200, body: onebox_response("githubcommit"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     # TODO: fix test to make sure it's not failing when matching object
     # it_behaves_like "an engine"
 
