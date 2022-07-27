@@ -172,8 +172,8 @@ describe BackupRestore::UploadsRestorer do
           store_class.any_instance.expects(:copy_from).with(path).once
 
           expect { subject.restore(directory) }
-            .to change { OptimizedImage.count }.by(0)
-            .and change { Jobs::CreateAvatarThumbnails.jobs.size }.by(0)
+            .to not_change { OptimizedImage.count }
+            .and not_change { Jobs::CreateAvatarThumbnails.jobs.size }
             .and change { Post.where(baked_version: nil).count }.by(1)
         end
       end

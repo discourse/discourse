@@ -16,6 +16,8 @@ describe TopicPublisher do
       fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
       fab!(:moderator) { Fabricate(:moderator) }
       fab!(:op) { Fabricate(:post, topic: topic) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:tag) { Fabricate(:tag) }
 
       before do
         # Create a revision
@@ -50,6 +52,24 @@ describe TopicPublisher do
           expect(op.updated_at).to eq_time(published_at)
           expect(op.last_version_at).to eq_time(published_at)
         end
+      end
+
+      it "will notify users watching tag" do
+        Jobs.run_immediately!
+
+        TagUser.create!(
+          user_id: user.id,
+          tag_id: tag.id,
+          notification_level: NotificationLevels.topic_levels[:watching]
+        )
+
+        topic.update!(tags: [tag])
+
+        expect { TopicPublisher.new(topic, moderator, shared_draft.category_id).publish! }
+          .to change { Notification.count }.by(1)
+
+        topic.reload
+        expect(topic.tags).to contain_exactly(tag)
       end
     end
 

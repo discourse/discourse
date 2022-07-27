@@ -33,6 +33,7 @@ export default {
       timezone: "Australia/Brisbane",
       skip_new_user_tips: false,
       can_review: true,
+      ignored_users: []
     },
   },
 };

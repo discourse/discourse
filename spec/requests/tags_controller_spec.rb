@@ -965,7 +965,7 @@ describe TagsController do
     end
   end
 
-  context '#upload_csv' do
+  describe '#upload_csv' do
     it 'requires you to be logged in' do
       post "/tags/upload.json"
       expect(response.status).to eq(403)

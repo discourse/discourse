@@ -36,7 +36,7 @@ describe Jobs::ExportUserArchive do
     JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
   end
 
-  context '#execute' do
+  describe '#execute' do
     before do
       _ = post
       user.user_profile.website = 'https://doe.example.com/john'
@@ -102,7 +102,7 @@ describe Jobs::ExportUserArchive do
         Jobs::ExportUserArchive.new.execute(
           user_id: user.id,
         )
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
 
       system_message = user.topics_allowed.last
       expect(system_message.title).to eq(I18n.t("system_messages.csv_export_failed.subject_template"))

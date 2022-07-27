@@ -9,7 +9,7 @@ describe Search do
     Jobs.run_immediately!
   end
 
-  context "#ts_config" do
+  describe "#ts_config" do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")
       expect(Search.ts_config("en")).to eq("english")
@@ -20,7 +20,7 @@ describe Search do
     end
   end
 
-  context "#GroupedSearchResults.blurb_for" do
+  describe "#GroupedSearchResults.blurb_for" do
     it "strips audio and video URLs from search blurb" do
       cooked = <<~RAW
         link to an external page: https://google.com/?u=bar
@@ -55,7 +55,7 @@ describe Search do
     end
   end
 
-  context "#execute" do
+  describe "#execute" do
     before do
       SiteSetting.tagging_enabled = true
     end
@@ -2030,7 +2030,7 @@ describe Search do
     end
   end
 
-  context '#ts_query' do
+  describe '#ts_query' do
     it 'can parse complex strings using ts_query helper' do
       str = +" grigio:babel deprecated? "
       str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
@@ -2052,7 +2052,7 @@ describe Search do
     end
   end
 
-  context '#word_to_date' do
+  describe '#word_to_date' do
     it 'parses relative dates correctly' do
       time = Time.zone.parse('2001-02-20 2:55')
       freeze_time(time)
@@ -2080,7 +2080,7 @@ describe Search do
     end
   end
 
-  context "#min_post_id" do
+  describe "#min_post_id" do
     it "returns 0 when prefer_recent_posts is disabled" do
       SiteSetting.search_prefer_recent_posts = false
       expect(Search.min_post_id_no_cache).to eq(0)

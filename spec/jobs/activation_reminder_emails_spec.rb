@@ -14,7 +14,7 @@ describe Jobs::ActivationReminderEmails do
       .and change { user.email_tokens.count }.by(1)
 
     expect(user.custom_fields['activation_reminder']).to eq("t")
-    expect { described_class.new.execute({}) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    expect { described_class.new.execute({}) }.not_to change { ActionMailer::Base.deliveries.size }
 
     user.activate
     expect(user.reload.custom_fields['activation_reminder']).to eq(nil)
@@ -24,15 +24,15 @@ describe Jobs::ActivationReminderEmails do
     user = Fabricate(:user, active: true, created_at: created_at)
 
     expect { described_class.new.execute({}) }
-      .to change { ActionMailer::Base.deliveries.size }.by(0)
-      .and change { user.email_tokens.count }.by(0)
+      .to not_change { ActionMailer::Base.deliveries.size }
+      .and not_change { user.email_tokens.count }
   end
 
   it 'should not email staged users' do
     user = Fabricate(:user, active: false, staged: true, created_at: created_at)
 
     expect { described_class.new.execute({}) }
-      .to change { ActionMailer::Base.deliveries.size }.by(0)
-      .and change { user.email_tokens.count }.by(0)
+      .to not_change { ActionMailer::Base.deliveries.size }
+      .and not_change { user.email_tokens.count }
   end
 end

@@ -1089,13 +1089,13 @@ describe Category do
         SQL
       end
 
-      context "#depth_of_descendants" do
+      describe "#depth_of_descendants" do
         it "should produce max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
-      context "#height_of_ancestors" do
+      describe "#height_of_ancestors" do
         it "should produce max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
@@ -1107,13 +1107,13 @@ describe Category do
         category.parent_category_id = category.id
       end
 
-      context "#depth_of_descendants" do
+      describe "#depth_of_descendants" do
         it "should produce max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
-      context "#height_of_ancestors" do
+      describe "#height_of_ancestors" do
         it "should produce max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
@@ -1125,20 +1125,20 @@ describe Category do
         category.parent_category_id = subcategory.id
       end
 
-      context "#depth_of_descendants" do
+      describe "#depth_of_descendants" do
         it "should produce max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
-      context "#height_of_ancestors" do
+      describe "#height_of_ancestors" do
         it "should produce max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
       end
     end
 
-    context "#depth_of_descendants" do
+    describe "#depth_of_descendants" do
       it "should be 0 when the category has no descendants" do
         expect(subcategory.depth_of_descendants).to eq(0)
       end
@@ -1148,7 +1148,7 @@ describe Category do
       end
     end
 
-    context "#height_of_ancestors" do
+    describe "#height_of_ancestors" do
       it "should be 0 when the category has no ancestors" do
         expect(category.height_of_ancestors).to eq(0)
       end

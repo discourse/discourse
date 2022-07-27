@@ -1583,7 +1583,7 @@ RSpec.describe TopicsController do
               put "/t/#{topic.slug}/#{topic.id}.json", params: {
                 tags: [tag.name]
               }
-            end.to change { topic.reload.first_post.revisions.count }.by(0)
+            end.not_to change { topic.reload.first_post.revisions.count }
 
             expect(response.status).to eq(200)
           end

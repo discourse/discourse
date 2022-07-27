@@ -1,4 +1,8 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  query,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -28,8 +32,9 @@ http://www.example.com/has-title.html
         `
     );
 
+    assert.ok(visible(".d-editor-preview"));
     assert.strictEqual(
-      queryAll(".d-editor-preview:visible").html().trim(),
+      query(".d-editor-preview").innerHTML.trim(),
       `
 <p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside><br>
 This is another test <a href=\"http://www.example.com/has-title.html\" class=\"inline-onebox\" tabindex=\"-1\">This is a great title</a></p>
@@ -68,14 +73,14 @@ acceptance("Composer - Inline Onebox", function (needs) {
     await fillIn(".d-editor-input", `Test www.example.com/page`);
     assert.strictEqual(requestsCount, 1);
     assert.strictEqual(
-      queryAll(".d-editor-preview").html().trim(),
+      query(".d-editor-preview").innerHTML.trim(),
       '<p>Test <a href="http://www.example.com/page" class="inline-onebox-loading" tabindex="-1">www.example.com/page</a></p>'
     );
 
     await fillIn(".d-editor-input", `Test www.example.com/page Test`);
     assert.strictEqual(requestsCount, 1);
     assert.strictEqual(
-      queryAll(".d-editor-preview").html().trim(),
+      query(".d-editor-preview").innerHTML.trim(),
       '<p>Test <a href="http://www.example.com/page" tabindex="-1">www.example.com/page</a> Test</p>'
     );
   });

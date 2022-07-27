@@ -38,9 +38,6 @@ jobs:
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-        include:
-          - build_type: frontend
-            target: core-plugins
 
     steps:
       - uses: actions/checkout@v3
@@ -154,7 +151,7 @@ jobs:
         run: bin/rake plugin:spec
 
       - name: Plugin QUnit
-        if: matrix.build_type == 'frontend' && (matrix.target == 'plugins' || matrix.target == 'core-plugins')
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 

@@ -78,9 +78,10 @@ describe TopicBookmarkable do
       expect(notif.data).to eq(
         {
           title: bookmark1.bookmarkable.title,
+          bookmarkable_url: bookmark1.bookmarkable.first_post.url,
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
-          bookmarkable_url: bookmark1.bookmarkable.first_post.url
+          bookmark_id: bookmark1.id
         }.to_json
       )
     end

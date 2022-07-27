@@ -101,8 +101,13 @@
 
 <section class="user-content">
   <div class="list-actions">
-    {{#if (and this.site.mobileView this.showNewPM)}}
-      <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+    {{#if this.site.mobileView}}
+      {{#if this.showNewPM}}
+        <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+      {{/if}}
+      {{#if this.currentUser.admin}}
+        <BulkSelectToggle @parentController={{"user-topics-list"}} @tagName=""/>
+      {{/if}}
     {{/if}}
   </div>
 

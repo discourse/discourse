@@ -13,17 +13,12 @@ import {
 } from "discourse/tests/helpers/textarea-selection-helper";
 import { hbs } from "ember-cli-htmlbars";
 import I18n from "I18n";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
-
-  hooks.afterEach(function () {
-    clearToolbarCallbacks();
-  });
 
   test("preview updates with markdown", async function (assert) {
     await render(hbs`<DEditor @value={{this.value}} />`);
@@ -656,18 +651,14 @@ third line`
   testCase(
     `doesn't jump to bottom with long text`,
     async function (assert, textarea) {
-      let longText = "hello world.";
-      for (let i = 0; i < 8; i++) {
-        longText = longText + longText;
-      }
-      this.set("value", longText);
+      this.set("value", "hello world.".repeat(8));
 
-      $(textarea).scrollTop(0);
+      textarea.scrollTop = 0;
       textarea.selectionStart = 3;
       textarea.selectionEnd = 3;
 
       await click("button.bold");
-      assert.strictEqual($(textarea).scrollTop(), 0, "it stays scrolled up");
+      assert.strictEqual(textarea.scrollTop, 0, "it stays scrolled up");
     }
   );
 
@@ -1021,7 +1012,7 @@ third line`
     for (let i = 0; i < CASES.length; i++) {
       const CASE = CASES[i];
       // prettier-ignore
-      composerTestCase(`replace-text event: ${CASE.description}`, async function( // eslint-disable-line no-loop-func
+      composerTestCase(`replace-text event: ${CASE.description}`, async function(
         assert,
         textarea
       ) {

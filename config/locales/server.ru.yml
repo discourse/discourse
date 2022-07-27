@@ -4609,6 +4609,8 @@ ru:
                 label: "Разделы с избранными темами"
               categories_and_latest_topics:
                 label: "Разделы и список последних тем форума"
+              categories_and_latest_topics_created_date:
+                label: "Разделы и последние темы (сортировка по дате создания темы)"
               categories_and_top_topics:
                 label: "Разделы и популярные темы"
               categories_boxes:

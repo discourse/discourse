@@ -113,8 +113,9 @@ class PostCreator
 
       # Make sure none of the users have muted or ignored the creator or prevented
       # PMs from being sent to them
-      UserCommScreener.new(acting_user: @user, target_usernames: names).preventing_actor_communication.each do |username|
-        errors.add(:base, I18n.t(:not_accepting_pms, username: username))
+      target_users = User.where(username_lower: names.map(&:downcase)).pluck(:id, :username).to_h
+      UserCommScreener.new(acting_user: @user, target_user_ids: target_users.keys).preventing_actor_communication.each do |user_id|
+        errors.add(:base, I18n.t(:not_accepting_pms, username: target_users[user_id]))
       end
 
       return false if errors[:base].present?

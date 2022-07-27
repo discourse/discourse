@@ -89,7 +89,7 @@ describe Jobs::ProcessPost do
     end
   end
 
-  context "#enqueue_pull_hotlinked_images" do
+  describe "#enqueue_pull_hotlinked_images" do
     fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
     let(:job) { Jobs::ProcessPost.new }
 

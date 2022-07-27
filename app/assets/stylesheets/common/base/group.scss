@@ -122,7 +122,6 @@ table.group-manage-logs {
 
 table.group-members {
   width: 100%;
-  table-layout: fixed;
 
   th {
     text-align: center;
@@ -134,26 +133,20 @@ table.group-members {
 
     &.bulk-select-buttons {
       text-align: left;
-      width: 20%;
+      white-space: nowrap;
+      width: 1%;
+
       .bulk-select-buttons-wrap {
-        display: inline-flex;
-        .btn {
-          margin-right: 0.5em;
-        }
+        display: flex;
+      }
+
+      .btn {
+        margin-right: 0.25em;
       }
     }
 
     &.username {
       text-align: left;
-      width: 30%;
-    }
-
-    &.bulk-select-buttons + .username {
-      width: 10%;
-    }
-
-    &.group-members-actions {
-      width: 5%;
     }
   }
 

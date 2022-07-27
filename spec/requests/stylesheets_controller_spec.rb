@@ -59,7 +59,7 @@ describe StylesheetsController do
     expect(response.status).to eq(200)
   end
 
-  context "#color_scheme" do
+  describe "#color_scheme" do
     it 'works as expected' do
       scheme = ColorScheme.last
       get "/color-scheme-stylesheet/#{scheme.id}.json"

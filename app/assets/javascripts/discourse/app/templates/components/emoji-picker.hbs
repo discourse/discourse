@@ -33,7 +33,7 @@
             <div class="section recent" data-section="recent">
               <div class="section-header">
                 <span class="title">{{i18n "emoji_picker.recent"}}</span>
-                <DButton @icon="trash-alt" @action={{action "onClearRecents"}} @class="trash-recent" />
+                <DButton @icon="trash-alt" @action={{action "onClearRecent"}} @class="trash-recent" />
               </div>
               <div class="section-group">
                 {{#each this.recentEmojis as |emoji|}}

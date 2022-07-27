@@ -14,7 +14,7 @@ module ImportScripts::PhpBB3
       @database = database
       @smiley_processor = smiley_processor
       @he = HTMLEntities.new
-      @use_xml_to_markdown = phpbb_config[:phpbb_version].start_with?('3.2')
+      @use_xml_to_markdown = phpbb_config[:phpbb_version].start_with?('3.2') || phpbb_config[:phpbb_version].start_with?('3.3')
 
       @settings = settings
       @new_site_prefix = settings.new_site_prefix

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe UserBadge do
+  fab!(:badge) { Fabricate(:badge) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'validations' do
-    fab!(:badge) { Fabricate(:badge) }
-    fab!(:user) { Fabricate(:user) }
     let(:subject) { BadgeGranter.grant(badge, user) }
 
     it { is_expected.to validate_presence_of(:badge_id) }
@@ -12,6 +12,18 @@ describe UserBadge do
     it { is_expected.to validate_presence_of(:granted_at) }
     it { is_expected.to validate_presence_of(:granted_by) }
     it { is_expected.to validate_uniqueness_of(:badge_id).scoped_to(:user_id) }
+  end
+
+  describe '#save' do
+    it "triggers the 'user_badge_granted' DiscourseEvent" do
+      user_badge = UserBadge.new(badge: badge, user: user, granted_at: Time.zone.now, granted_by: Discourse.system_user)
+
+      event = DiscourseEvent.track(:user_badge_granted, args: [badge.id, user.id]) do
+        user_badge.save!
+      end
+
+      expect(event).to be_present
+    end
   end
 
   describe "featured rank" do

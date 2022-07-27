@@ -1,7 +1,4 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
@@ -11,6 +8,7 @@ import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 
 export default Component.extend({
+  tagName: "form",
   classNames: ["watched-word-form"],
   formSubmitted: false,
   actionKey: null,
@@ -95,33 +93,23 @@ export default Component.extend({
             });
             this.action(WatchedWord.create(result));
             schedule("afterRender", () =>
-              this.element.querySelector(".watched-word-input").focus()
+              this.element.querySelector("input").focus()
             );
           })
           .catch((e) => {
             this.set("formSubmitted", false);
-            const msg =
-              e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors
-                ? I18n.t("generic_error_with_reason", {
-                    error: e.jqXHR.responseJSON.errors.join(". "),
-                  })
-                : I18n.t("generic_error");
+            const msg = e.jqXHR.responseJSON?.errors
+              ? I18n.t("generic_error_with_reason", {
+                  error: e.jqXHR.responseJSON.errors.join(". "),
+                })
+              : I18n.t("generic_error");
             bootbox.alert(msg, () =>
-              this.element.querySelector(".watched-word-input").focus()
+              schedule("afterRender", () =>
+                this.element.querySelector("input").focus()
+              )
             );
           });
       }
     },
-  },
-
-  @on("didInsertElement")
-  _init() {
-    schedule("afterRender", () => {
-      $(this.element.querySelector(".watched-word-input")).keydown((e) => {
-        if (e.key === "Enter") {
-          this.send("submit");
-        }
-      });
-    });
   },
 });

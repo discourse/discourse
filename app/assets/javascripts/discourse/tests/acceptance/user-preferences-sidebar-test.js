@@ -9,31 +9,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("User Preferences - Sidebar - Tagging Disabled", function (needs) {
-  needs.settings({
-    tagging_enabled: false,
-  });
-
-  needs.user({
-    experimental_sidebar_enabled: true,
-    sidebar_category_ids: [],
-  });
-
-  test("user should not see tag chooser", async function (assert) {
-    await visit("/u/eviltrout/preferences/sidebar");
-
-    assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
-  });
-});
-
 acceptance("User Preferences - Sidebar", function (needs) {
   needs.user({
-    experimental_sidebar_enabled: true,
     sidebar_category_ids: [],
     sidebar_tag_names: [],
   });
 
   needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
     tagging_enabled: true,
   });
 
@@ -58,6 +42,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
         return helper.response({ user: {} });
       }
     });
+  });
+
+  test("user should not see tag chooser when tagging is disabled", async function (assert) {
+    this.siteSettings.tagging_enabled = false;
+
+    await visit("/u/eviltrout/preferences/sidebar");
+
+    assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
   });
 
   test("user encountering error when adding categories to sidebar", async function (assert) {

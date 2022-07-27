@@ -14,7 +14,24 @@
   {{/if}}
 
   {{#if this.hasTopics}}
-    <TopicList @highlightLastVisited={{true}} @showPosters={{true}} @hideCategory={{this.model.hideCategory}} @order={{this.order}} @ascending={{this.ascending}} @topics={{this.model.topics}} @expandGloballyPinned={{this.expandGloballyPinned}} @expandAllPinned={{this.expandAllPinned}} @scrollOnLoad={{true}} @onScroll={{discoveryTopicList.saveScrollPosition}} @category={{this.category}} />
+    <TopicList
+      @ascending={{this.ascending}}
+      @highlightLastVisited={{true}}
+      @showPosters={{true}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @toggleBulkSelect={{action "toggleBulkSelect"}}
+      @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}}
+      @hideCategory={{this.model.hideCategory}}
+      @order={{this.order}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @bulkSelectAction={{action "refresh"}}
+      @selected={{this.selected}}
+      @expandGloballyPinned={{this.expandGloballyPinned}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @category={{this.category}}
+      @topics={{this.model.topics}}
+      @scrollOnLoad={{true}}
+      @onScroll={{discoveryTopicList.saveScrollPosition}}/>
   {{/if}}
 </DiscoveryTopicsList>
 

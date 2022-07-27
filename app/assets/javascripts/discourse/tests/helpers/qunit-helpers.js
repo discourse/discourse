@@ -63,12 +63,14 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,
   clearTextDecorateCallbacks,
 } from "discourse/lib/to-markdown";
+import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -193,6 +195,8 @@ export function testCleanup(container, app) {
   clearTextDecorateCallbacks();
   clearResolverOptions();
   clearLegacyResolverOptions();
+  clearTagsHtmlCallbacks();
+  clearToolbarCallbacks();
 }
 
 export function discourseModule(name, options) {
@@ -480,11 +484,13 @@ export function exists(selector) {
   return count(selector) > 0;
 }
 
-export function publishToMessageBus(channelPath, ...args) {
+export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
   MessageBus.callbacks
     .filterBy("channel", channelPath)
     .forEach((c) => c.func(...args));
+
+  await settled();
 }
 
 export async function selectText(selector, endOffset = null) {

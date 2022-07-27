@@ -65,6 +65,13 @@ export default Component.extend(FilterModeMixin, {
       }
     }
 
+    if (
+      this.siteSettings.desktop_category_page_style ===
+      "categories_and_latest_topics_created_date"
+    ) {
+      queryParams.push("order=created");
+    }
+
     if (queryParams.length) {
       href += `?${queryParams.join("&")}`;
     }

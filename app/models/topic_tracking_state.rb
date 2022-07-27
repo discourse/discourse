@@ -171,7 +171,6 @@ class TopicTrackingState
       created_at: post.created_at,
       category_id: post.topic.category_id,
       archetype: post.topic.archetype,
-      unread_not_too_old: true
     }
 
     if tags
@@ -278,7 +277,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.enable_experimental_sidebar)
+    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.enable_experimental_sidebar_hamburger)
   end
 
   def self.include_tags_in_report=(v)

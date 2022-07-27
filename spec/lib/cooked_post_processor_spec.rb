@@ -7,7 +7,7 @@ describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
   let(:upload_path) { Discourse.store.upload_path }
 
-  context "#post_process" do
+  describe "#post_process" do
     fab!(:post) do
       Fabricate(:post, raw: <<~RAW)
       <img src="#{upload.url}">
@@ -837,7 +837,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#extract_images" do
+  describe "#extract_images" do
 
     let(:post) { build(:post_with_plenty_of_images) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -848,7 +848,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#get_size_from_attributes" do
+  describe "#get_size_from_attributes" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -882,7 +882,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#get_size_from_image_sizes" do
+  describe "#get_size_from_image_sizes" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -894,7 +894,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#get_size" do
+  describe "#get_size" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -916,7 +916,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#is_valid_image_url?" do
+  describe "#is_valid_image_url?" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -939,7 +939,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#get_filename" do
+  describe "#get_filename" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -960,7 +960,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#convert_to_link" do
+  describe "#convert_to_link" do
     fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
 
     before do
@@ -1051,7 +1051,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#post_process_oneboxes" do
+  describe "#post_process_oneboxes" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
@@ -1161,7 +1161,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
+  describe "#post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
@@ -1179,7 +1179,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#post_process_oneboxes removes nofollow if user is tl3" do
+  describe "#post_process_oneboxes removes nofollow if user is tl3" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
@@ -1200,7 +1200,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#post_process_oneboxes with oneboxed image" do
+  describe "#post_process_oneboxes with oneboxed image" do
     let(:post) { build(:post_with_youtube, id: 123) }
     let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
 
@@ -1225,7 +1225,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#post_process_oneboxes with square image" do
+  describe "#post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do
       url = 'https://square-image.com/onebox'
@@ -1259,7 +1259,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#optimize_urls" do
+  describe "#optimize_urls" do
 
     let(:post) { build(:post_with_uploads_and_links) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -1515,7 +1515,7 @@ describe CookedPostProcessor do
 
   end
 
-  context "#remove_user_ids" do
+  describe "#remove_user_ids" do
     let(:topic) { Fabricate(:topic) }
 
     let(:post) do
@@ -1542,7 +1542,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#is_a_hyperlink?" do
+  describe "#is_a_hyperlink?" do
 
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
@@ -1958,7 +1958,7 @@ describe CookedPostProcessor do
     end
   end
 
-  context "#html" do
+  describe "#html" do
     it "escapes attributes" do
       post = Fabricate(:post, raw: '<img alt="<something>">')
       expect(post.cook(post.raw)).to eq('<p><img alt="&lt;something&gt;"></p>')

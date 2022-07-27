@@ -120,7 +120,7 @@ describe Jobs::EmitWebHookEvent do
             web_hook_id: post_hook.id,
             event_type: described_class::PING_EVENT
           )
-        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+        end.not_to change { Jobs::EmitWebHookEvent.jobs.size }
       end
 
       it 'properly logs error on rescue' do

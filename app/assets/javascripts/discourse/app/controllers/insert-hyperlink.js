@@ -102,7 +102,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   triggerSearch() {
-    if (this.linkUrl.length > 3 && this.linkUrl.indexOf("http") === -1) {
+    if (this.linkUrl.length > 3 && !this.linkUrl.startsWith("http")) {
       this.set("searchLoading", true);
       this._activeSearch = searchForTerm(this.linkUrl, {
         typeFilter: "topic",

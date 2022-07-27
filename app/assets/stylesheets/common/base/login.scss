@@ -309,11 +309,13 @@
   .invite-success {
     border-radius: 10px;
     margin-top: 25px;
+    border-top: 6px solid var(--tertiary);
   }
 
   .invite-form {
     margin-bottom: 50px;
     max-width: 33em;
+    border-top: 6px solid var(--tertiary);
     .tip {
       display: block;
     }

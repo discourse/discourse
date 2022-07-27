@@ -607,7 +607,7 @@ describe Jobs::UserEmail do
               notification_id: notification.id,
               post_id: post.id
             )
-          end.to change { SkippedEmailLog.count }.by(0)
+          end.not_to change { SkippedEmailLog.count }
         end
 
         it "sends critical email" do

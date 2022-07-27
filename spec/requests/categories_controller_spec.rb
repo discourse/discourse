@@ -140,6 +140,37 @@ describe CategoriesController do
       expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
     end
 
+    describe 'categories and latest topics - ordered by created date' do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:topic1) { Fabricate(:topic, category: category, created_at: 5.days.ago, updated_at: Time.now, bumped_at: Time.now) }
+      fab!(:topic2) { Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago) }
+      fab!(:topic3) { Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago) }
+
+      context 'when order is not set to created date' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+        end
+
+        it 'sorts topics by the default bump date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic1.id, topic3.id, topic2.id])
+        end
+      end
+
+      context 'when order is set to created' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics_created_date"
+        end
+
+        it 'sorts topics by crated at date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic3.id, topic2.id, topic1.id])
+        end
+      end
+    end
+
     it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
       SiteSetting.max_category_nesting = 3
       subcategory = Fabricate(:category, user: admin, parent_category: category)
@@ -228,7 +259,7 @@ describe CategoriesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
@@ -320,7 +351,7 @@ describe CategoriesController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       category.set_permissions(admins: :full)
       category.save!
@@ -347,7 +378,7 @@ describe CategoriesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
       expect(response.status).to eq(403)
@@ -376,7 +407,7 @@ describe CategoriesController do
     end
   end
 
-  context '#reorder' do
+  describe '#reorder' do
     it "reorders the categories" do
       sign_in(admin)
 
@@ -413,7 +444,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     before do
       Jobs.run_immediately!
     end
@@ -616,7 +647,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update_slug' do
+  describe '#update_slug' do
     it 'requires the user to be logged in' do
       put "/category/category/slug.json"
       expect(response.status).to eq(403)
@@ -664,7 +695,7 @@ describe CategoriesController do
     end
   end
 
-  context '#categories_and_topics' do
+  describe '#categories_and_topics' do
     before do
       10.times.each { Fabricate(:topic) }
     end

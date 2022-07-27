@@ -5,7 +5,6 @@ import {
   acceptance,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
@@ -45,9 +44,9 @@ acceptance("Share and Invite modal", function (needs) {
     );
 
     assert.ok(
-      queryAll("input.invite-link")
-        .val()
-        .includes("/t/internationalization-localization/280?u=eviltrout"),
+      query("input.invite-link").value.includes(
+        "/t/internationalization-localization/280?u=eviltrout"
+      ),
       "it shows the topic sharing url"
     );
 
@@ -135,7 +134,7 @@ acceptance("Share url with badges disabled - desktop", function (needs) {
     await click("#topic-footer-button-share-and-invite");
 
     assert.notOk(
-      queryAll("input.invite-link").val().includes("?u=eviltrout"),
+      query("input.invite-link").value.includes("?u=eviltrout"),
       "it doesn't add the username param when badges are disabled"
     );
   });

@@ -3,7 +3,7 @@
 describe StaticController do
   fab!(:upload) { Fabricate(:upload) }
 
-  context '#favicon' do
+  describe '#favicon' do
     let(:filename) { 'smallest.png' }
     let(:file) { file_from_fixtures(filename) }
 
@@ -66,7 +66,7 @@ describe StaticController do
     end
   end
 
-  context '#brotli_asset' do
+  describe '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
       get "/brotli_asset/missing.js"
 
@@ -133,7 +133,7 @@ describe StaticController do
     end
   end
 
-  context '#cdn_asset' do
+  describe '#cdn_asset' do
     let (:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it 'can serve assets' do
@@ -155,7 +155,7 @@ describe StaticController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       post = create_post
       SiteSetting.tos_topic_id = post.topic.id

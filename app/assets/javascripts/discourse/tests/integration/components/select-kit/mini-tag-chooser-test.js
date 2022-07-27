@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -91,6 +91,38 @@ module(
       assert.strictEqual(
         query("input[name=filter-input-search]").placeholder,
         I18n.t("select_kit.filter_placeholder")
+      );
+    });
+
+    test("creating a tag using invalid character", async function (assert) {
+      await render(hbs`<MiniTagChooser @options={{hash allowAny=true}} />`);
+      await this.subject.expand();
+      await this.subject.fillInFilter("#");
+
+      assert.notOk(exists(".select-kit-error"), "it doesn’t show any error");
+      assert.notOk(
+        exists(".select-kit-row[data-value='#']"),
+        "it doesn’t allow to create this tag"
+      );
+
+      await this.subject.fillInFilter("test");
+
+      assert.equal(this.subject.filter().value(), "#test");
+      assert.ok(
+        exists(".select-kit-row[data-value='test']"),
+        "it filters out the invalid char from the suggested tag"
+      );
+    });
+
+    test("creating a tag over the length limit", async function (assert) {
+      this.siteSettings.max_tag_length = 1;
+      await render(hbs`<MiniTagChooser @options={{hash allowAny=true}} />`);
+      await this.subject.expand();
+      await this.subject.fillInFilter("foo");
+
+      assert.ok(
+        exists(".select-kit-row[data-value='f']"),
+        "it forces the max length of the tag"
       );
     });
   }

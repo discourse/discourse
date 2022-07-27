@@ -42,7 +42,8 @@ describe UserSerializer do
                              id: 1,
                              user_profile: Fabricate.build(:user_profile),
                              user_option: UserOption.new(dynamic_favicon: true, skip_new_user_tips: true),
-                             user_stat: UserStat.new
+                             user_stat: UserStat.new,
+                             created_at: Time.zone.now
                             )
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json

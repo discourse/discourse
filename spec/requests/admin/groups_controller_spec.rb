@@ -260,7 +260,7 @@ RSpec.describe Admin::GroupsController do
     end
   end
 
-  context "#destroy" do
+  describe "#destroy" do
     it 'should return the right response for an invalid group_id' do
       max_id = Group.maximum(:id).to_i
       delete "/admin/groups/#{max_id + 1}.json"

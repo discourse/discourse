@@ -7,7 +7,6 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { later } from "@ember/runloop";
 
 module("Integration | Component | software-update-prompt", function (hooks) {
   setupRenderingTest(hooks);
@@ -20,16 +19,12 @@ module("Integration | Component | software-update-prompt", function (hooks) {
       "it does not have the class to show the prompt"
     );
 
-    publishToMessageBus("/global/asset-version", "somenewversion");
+    await publishToMessageBus("/global/asset-version", "somenewversion");
 
-    const done = assert.async();
-    later(() => {
-      assert.strictEqual(
-        count("div.software-update-prompt.require-software-refresh"),
-        1,
-        "it does have the class to show the prompt"
-      );
-      done();
-    }, 10);
+    assert.strictEqual(
+      count("div.software-update-prompt.require-software-refresh"),
+      1,
+      "it does have the class to show the prompt"
+    );
   });
 });

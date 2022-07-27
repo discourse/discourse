@@ -10,10 +10,21 @@ export default class SidebarSection extends GlimmerComponent {
   constructor() {
     super(...arguments);
 
-    this.displaySection =
-      this.keyValueStore.getItem(this.collapsedSidebarSectionKey) === undefined
-        ? true
-        : false;
+    if (this.args.collapsable) {
+      this.displaySection =
+        this.keyValueStore.getItem(this.collapsedSidebarSectionKey) ===
+        undefined
+          ? true
+          : false;
+    } else {
+      this.displaySection = true;
+    }
+  }
+
+  willDestroy() {
+    if (this.args.willDestroy) {
+      this.args.willDestroy();
+    }
   }
 
   @action
@@ -27,7 +38,22 @@ export default class SidebarSection extends GlimmerComponent {
     }
   }
 
+  @action
+  handleMultipleHeaderActions(id) {
+    this.args.headerActions
+      .find((headerAction) => headerAction.id === id)
+      .action();
+  }
+
   get headerCaretIcon() {
     return this.displaySection ? "angle-down" : "angle-right";
+  }
+
+  get isSingleHeaderAction() {
+    return this.args.headerActions?.length === 1;
+  }
+
+  get isMultipleHeaderActions() {
+    return this.args.headerActions?.length > 1;
   }
 }

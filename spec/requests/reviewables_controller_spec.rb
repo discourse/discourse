@@ -47,7 +47,7 @@ describe ReviewablesController do
       sign_in(admin)
     end
 
-    context "#index" do
+    describe "#index" do
       it "returns empty JSON when nothing to review" do
         get "/review.json"
         expect(response.code).to eq("200")
@@ -254,7 +254,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#show" do
+    describe "#show" do
       context "basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }
         before do
@@ -320,7 +320,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#explain" do
+    describe "#explain" do
       context "basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }
 
@@ -344,7 +344,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#perform" do
+    describe "#perform" do
       fab!(:reviewable) { Fabricate(:reviewable) }
       before do
         sign_in(Fabricate(:moderator))
@@ -490,7 +490,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#topics" do
+    describe "#topics" do
       fab!(:post0) { Fabricate(:post) }
       fab!(:post1) { Fabricate(:post, topic: post0.topic) }
       fab!(:post2) { Fabricate(:post) }
@@ -542,7 +542,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#settings" do
+    describe "#settings" do
       it "renders the settings as JSON" do
         get "/review/settings.json"
         expect(response.code).to eq("200")
@@ -572,7 +572,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#update" do
+    describe "#update" do
       fab!(:reviewable) { Fabricate(:reviewable) }
       fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
       fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
@@ -679,7 +679,7 @@ describe ReviewablesController do
 
     end
 
-    context "#destroy" do
+    describe "#destroy" do
       fab!(:user) { Fabricate(:user) }
 
       before do
@@ -705,7 +705,7 @@ describe ReviewablesController do
       end
     end
 
-    context "#count" do
+    describe "#count" do
       fab!(:admin) { Fabricate(:admin) }
 
       before do

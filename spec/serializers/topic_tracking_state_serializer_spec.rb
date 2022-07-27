@@ -14,7 +14,6 @@ describe TopicTrackingStateSerializer do
     expect(serialized[:created_at]).to be_present
     expect(serialized[:notification_level]).to eq(nil)
     expect(serialized[:created_in_new_period]).to eq(true)
-    expect(serialized[:unread_not_too_old]).to eq(true)
     expect(serialized[:treat_as_new_topic_start_date]).to be_present
     expect(serialized.has_key?(:tags)).to eq(false)
   end

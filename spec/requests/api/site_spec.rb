@@ -34,7 +34,7 @@ describe 'site' do
             let(:expected_request_schema) { expected_request_schema }
           end
         ensure
-          Site.preloaded_category_custom_fields = Set.new
+          Site.reset_preloaded_category_custom_fields
         end
       end
     end
