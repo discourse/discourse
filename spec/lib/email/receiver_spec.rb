@@ -1529,7 +1529,7 @@ describe Email::Receiver do
 
   end
 
-  context "#reply_by_email_address_regex" do
+  describe "#reply_by_email_address_regex" do
 
     before do
       SiteSetting.reply_by_email_address = nil
@@ -1863,7 +1863,7 @@ describe Email::Receiver do
     expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
   end
 
-  context "#select_body" do
+  describe "#select_body" do
 
     let(:email) {
       <<~EMAIL

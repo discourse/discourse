@@ -592,7 +592,7 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  context "#disable_if_low_on_disk_space" do
+  describe "#disable_if_low_on_disk_space" do
     fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
     let(:job) { Jobs::PullHotlinkedImages.new }
 

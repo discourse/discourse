@@ -44,7 +44,7 @@ describe InlineOneboxer do
     end
   end
 
-  context ".lookup" do
+  describe ".lookup" do
     let(:category) { Fabricate(:private_category, group: Group[:staff]) }
     let(:category2) { Fabricate(:private_category, group: Group[:staff]) }
 

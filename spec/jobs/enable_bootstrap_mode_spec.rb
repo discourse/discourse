@@ -2,7 +2,7 @@
 
 describe Jobs::EnableBootstrapMode do
 
-  context '.execute' do
+  describe '.execute' do
     fab!(:admin) { Fabricate(:admin) }
 
     before do

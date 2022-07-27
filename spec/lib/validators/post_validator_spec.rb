@@ -5,7 +5,7 @@ describe PostValidator do
   let(:post) { build(:post, topic: topic) }
   let(:validator) { PostValidator.new({}) }
 
-  context "#post_body_validator" do
+  describe "#post_body_validator" do
     it 'should not allow a post with an empty raw' do
       post.raw = ""
       validator.post_body_validator(post)

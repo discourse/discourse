@@ -5,7 +5,7 @@ describe EmailToken do
   it { is_expected.to validate_presence_of :email }
   it { is_expected.to belong_to :user }
 
-  context '#create' do
+  describe '#create' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
     let!(:email_token) { Fabricate(:email_token, user: user, email: 'bubblegum@adventuretime.ooo') }
@@ -41,7 +41,7 @@ describe EmailToken do
     end
   end
 
-  context '#confirm' do
+  describe '#confirm' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:email_token) { Fabricate(:email_token, user: user) }
 

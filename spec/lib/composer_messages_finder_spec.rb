@@ -22,7 +22,7 @@ describe ComposerMessagesFinder do
 
   end
 
-  context '.check_education_message' do
+  describe '.check_education_message' do
     let(:user) { Fabricate.build(:user) }
 
     context 'creating topic' do
@@ -82,7 +82,7 @@ describe ComposerMessagesFinder do
     end
   end
 
-  context '.check_new_user_many_replies' do
+  describe '.check_new_user_many_replies' do
     let(:user) { Fabricate.build(:user) }
 
     context 'replying' do
@@ -101,7 +101,7 @@ describe ComposerMessagesFinder do
 
   end
 
-  context '.check_avatar_notification' do
+  describe '.check_avatar_notification' do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
     fab!(:user) { Fabricate(:user) }
 
@@ -148,7 +148,7 @@ describe ComposerMessagesFinder do
     end
   end
 
-  context '.check_sequential_replies' do
+  describe '.check_sequential_replies' do
     fab!(:user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
 
@@ -223,7 +223,7 @@ describe ComposerMessagesFinder do
 
   end
 
-  context '.check_dominating_topic' do
+  describe '.check_dominating_topic' do
     fab!(:user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
 
@@ -308,7 +308,7 @@ describe ComposerMessagesFinder do
 
   end
 
-  context '.check_get_a_room' do
+  describe '.check_get_a_room' do
     fab!(:user) { Fabricate(:user) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:third_user) { Fabricate(:user) }
@@ -431,7 +431,7 @@ describe ComposerMessagesFinder do
 
   end
 
-  context '.check_reviving_old_topic' do
+  describe '.check_reviving_old_topic' do
     fab!(:user)  { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
 

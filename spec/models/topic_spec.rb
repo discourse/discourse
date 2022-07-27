@@ -17,7 +17,7 @@ describe Topic do
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
 
-    context "#featured_link" do
+    describe "#featured_link" do
       describe 'when featured_link contains more than a URL' do
         it 'should not be valid' do
           topic.featured_link = 'http://meta.discourse.org TEST'
@@ -33,7 +33,7 @@ describe Topic do
       end
     end
 
-    context "#external_id" do
+    describe "#external_id" do
       describe 'when external_id is too long' do
         it 'should not be valid' do
           topic.external_id = 'a' * (Topic::EXTERNAL_ID_MAX_LENGTH + 1)
@@ -78,7 +78,7 @@ describe Topic do
       end
     end
 
-    context "#title" do
+    describe "#title" do
       it { is_expected.to validate_presence_of :title }
 
       describe 'censored words' do
@@ -165,7 +165,7 @@ describe Topic do
 
   it { is_expected.to rate_limit }
 
-  context '#visible_post_types' do
+  describe '#visible_post_types' do
     let(:types) { Post.types }
 
     before do
@@ -260,7 +260,7 @@ describe Topic do
       end
     end
 
-    context '#ascii_generator' do
+    describe '#ascii_generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
 
       context 'with ascii letters' do
@@ -613,7 +613,7 @@ describe Topic do
     end
   end
 
-  context '.similar_to' do
+  describe '.similar_to' do
     fab!(:category) { Fabricate(:category_with_definition) }
 
     it 'returns an empty array with nil params' do

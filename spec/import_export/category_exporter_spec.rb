@@ -14,7 +14,7 @@ describe ImportExport::CategoryExporter do
     STDOUT.stubs(:write)
   end
 
-  context '.perform' do
+  describe '.perform' do
     it 'export the category when it is found' do
       data = ImportExport::CategoryExporter.new([category.id]).perform.export_data
 

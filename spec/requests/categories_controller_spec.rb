@@ -259,7 +259,7 @@ describe CategoriesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
@@ -351,7 +351,7 @@ describe CategoriesController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       category.set_permissions(admins: :full)
       category.save!
@@ -378,7 +378,7 @@ describe CategoriesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
       expect(response.status).to eq(403)
@@ -407,7 +407,7 @@ describe CategoriesController do
     end
   end
 
-  context '#reorder' do
+  describe '#reorder' do
     it "reorders the categories" do
       sign_in(admin)
 
@@ -444,7 +444,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     before do
       Jobs.run_immediately!
     end
@@ -647,7 +647,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update_slug' do
+  describe '#update_slug' do
     it 'requires the user to be logged in' do
       put "/category/category/slug.json"
       expect(response.status).to eq(403)
@@ -695,7 +695,7 @@ describe CategoriesController do
     end
   end
 
-  context '#categories_and_topics' do
+  describe '#categories_and_topics' do
     before do
       10.times.each { Fabricate(:topic) }
     end
