@@ -5,6 +5,7 @@ import Category from "discourse/models/category";
 import MessageBus from "message-bus-client";
 import {
   discourseModule,
+  fakeTime,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -16,7 +17,7 @@ import sinon from "sinon";
 
 discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   hooks.beforeEach(function () {
-    this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
+    this.clock = fakeTime("2012-12-31 12:00");
   });
 
   hooks.afterEach(function () {
