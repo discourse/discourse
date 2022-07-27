@@ -159,7 +159,7 @@
       <DButton @class="btn-primary" @action={{action "save"}} @type="submit" @disabled={{this.saving}} @label="admin.badges.save" />
       <span class="saving">{{this.savingStatus}}</span>
       {{#unless this.readOnly}}
-        <DButton @action={{action "destroy"}} @class="btn-danger" @label="admin.badges.delete" />
+        <DButton @action={{action "destroyBadge"}} @class="btn-danger" @label="admin.badges.delete" />
       {{/unless}}
     </div>
   </form>
