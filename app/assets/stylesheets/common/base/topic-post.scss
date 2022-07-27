@@ -1432,6 +1432,8 @@ a.mention-group {
   }
 }
 
+}
+
 .post-notice {
   align-items: center;
   background-color: var(--tertiary-low);
@@ -1439,6 +1441,17 @@ a.mention-group {
   display: flex;
   width: 100%;
   max-width: calc(
+    align-items: center;
+    display: flex;
+    margin-bottom: 1em;
+    border: none;
+    background: var(--primary-very-low);
+    border-radius: var(--border-radius);
+    margin-left: 1.5em;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1.5em 2em;
+    max-width: calc(
     #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
       (0.8em * 2)
   );
