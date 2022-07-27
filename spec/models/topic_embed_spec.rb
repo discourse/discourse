@@ -8,7 +8,7 @@ describe TopicEmbed do
   it { is_expected.to belong_to :post }
   it { is_expected.to validate_presence_of :embed_url }
 
-  context '.import' do
+  describe '.import' do
 
     fab!(:user) { Fabricate(:user) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
@@ -173,7 +173,7 @@ describe TopicEmbed do
     end
   end
 
-  context '.topic_id_for_embed' do
+  describe '.topic_id_for_embed' do
     it "returns correct topic id irrespective of url protocol" do
       topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248")
 
@@ -195,7 +195,7 @@ describe TopicEmbed do
   describe '.find_remote' do
     fab!(:embeddable_host) { Fabricate(:embeddable_host) }
 
-    context ".title_scrub" do
+    describe ".title_scrub" do
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "<title>Through the Looking Glass - Classic Books</title><body>some content here</body>" }
 

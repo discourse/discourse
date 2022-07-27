@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/discourse/rubocop-discourse.git
-  revision: e44784b759aef45306b0eaee29ddadd8ca5b40a6
+  revision: 5afeae107d3c003bf5bcf75457501ee7c1248fd2
   specs:
     rubocop-discourse (2.5.0)
       rubocop (>= 1.1.0)

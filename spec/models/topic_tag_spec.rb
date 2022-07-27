@@ -6,7 +6,7 @@ describe TopicTag do
   fab!(:tag) { Fabricate(:tag) }
   let(:topic_tag) { Fabricate(:topic_tag, topic: topic, tag: tag) }
 
-  context '#after_create' do
+  describe '#after_create' do
 
     it "tag topic_count should be increased" do
       expect {
@@ -24,7 +24,7 @@ describe TopicTag do
 
   end
 
-  context '#after_destroy' do
+  describe '#after_destroy' do
 
     it "tag topic_count should be decreased" do
       topic_tag

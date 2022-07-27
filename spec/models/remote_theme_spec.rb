@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe RemoteTheme do
-  context '#import_remote' do
+  describe '#import_remote' do
     def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
@@ -201,7 +201,7 @@ describe RemoteTheme do
     )
   end
 
-  context "#github_diff_link" do
+  describe "#github_diff_link" do
     it "is blank for non-github repos" do
       expect(gitlab_repo.github_diff_link).to be_blank
     end
@@ -218,7 +218,7 @@ describe RemoteTheme do
     end
   end
 
-  context ".joined_remotes" do
+  describe ".joined_remotes" do
     it "finds records that are associated with themes" do
       github_repo
       gitlab_repo
@@ -232,7 +232,7 @@ describe RemoteTheme do
     end
   end
 
-  context ".out_of_date_themes" do
+  describe ".out_of_date_themes" do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
     let!(:theme) { Fabricate(:theme, remote_theme: remote) }
 
@@ -252,7 +252,7 @@ describe RemoteTheme do
 
   end
 
-  context ".unreachable_themes" do
+  describe ".unreachable_themes" do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme", last_error_text: "can't contact this repo :(") }
     let!(:theme) { Fabricate(:theme, remote_theme: remote) }
 

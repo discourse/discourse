@@ -65,7 +65,7 @@ describe Invite do
     end
   end
 
-  context '.generate' do
+  describe '.generate' do
     it 'saves an invites' do
       invite = Invite.generate(user, email: 'TEST@EXAMPLE.COM')
       expect(invite.invite_key).to be_present
@@ -201,7 +201,7 @@ describe Invite do
     end
   end
 
-  context '#redeem' do
+  describe '#redeem' do
     fab!(:invite) { Fabricate(:invite) }
 
     it 'works' do

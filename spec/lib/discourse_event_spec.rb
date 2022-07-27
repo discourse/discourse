@@ -83,7 +83,7 @@ describe DiscourseEvent do
       end
     end
 
-    context '#all_off' do
+    describe '#all_off' do
 
       let(:event_handler_2) do
         Proc.new { |user| user.job = 'Supervillain' }

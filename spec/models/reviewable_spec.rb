@@ -2,7 +2,7 @@
 
 RSpec.describe Reviewable, type: :model do
 
-  context ".create" do
+  describe ".create" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
@@ -31,7 +31,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".needs_review!" do
+  describe ".needs_review!" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
@@ -86,7 +86,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".list_for" do
+  describe ".list_for" do
     fab!(:user) { Fabricate(:user) }
 
     it "returns an empty list for nil user" do
@@ -381,7 +381,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".score_required_to_hide_post" do
+  describe ".score_required_to_hide_post" do
 
     it "will return the default visibility if it's higher" do
       Reviewable.set_priorities(low: 40.0, high: 100.0)
@@ -411,7 +411,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".spam_score_to_silence_new_user" do
+  describe ".spam_score_to_silence_new_user" do
     it "returns a default value if we can't calculated any percentiles" do
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
       expect(Reviewable.spam_score_to_silence_new_user).to eq(7.5)
@@ -434,7 +434,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".score_to_auto_close_topic" do
+  describe ".score_to_auto_close_topic" do
 
     it "returns the default if we can't calculated any percentiles" do
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
