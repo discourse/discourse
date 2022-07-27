@@ -15,6 +15,7 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service appEvents;
   @service store;
   @service("search") searchService;
+  @service keyValueStore;
 
   @cached
   get siteSettings() {
@@ -62,11 +63,5 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   get session() {
     const applicationInstance = getOwner(this);
     return applicationInstance.lookup("session:main");
-  }
-
-  @cached
-  get keyValueStore() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("key-value-store:main");
   }
 }
