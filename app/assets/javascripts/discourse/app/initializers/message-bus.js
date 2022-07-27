@@ -40,7 +40,7 @@ export default {
       return;
     }
 
-    const messageBus = container.lookup("message-bus:main"),
+    const messageBus = container.lookup("service:message-bus"),
       user = container.lookup("current-user:main"),
       siteSettings = container.lookup("site-settings:main");
 

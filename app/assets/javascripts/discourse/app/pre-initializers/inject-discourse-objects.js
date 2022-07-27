@@ -2,7 +2,6 @@ import TopicTrackingState, {
   startTracking,
 } from "discourse/models/topic-tracking-state";
 import DiscourseLocation from "discourse/lib/discourse-location";
-import MessageBus from "message-bus-client";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -16,9 +15,6 @@ export function registerObjects(app) {
     return;
   }
   app.__registeredObjects__ = true;
-
-  // TODO: This should be included properly
-  app.register("message-bus:main", MessageBus, { instantiate: false });
 
   const siteSettings = app.SiteSettings;
   app.register("site-settings:main", siteSettings, { instantiate: false });
@@ -98,6 +94,15 @@ export default {
       dropFrom: "3.0.0",
     });
 
+    deprecateRegistration({
+      app,
+      container,
+      oldName: "message-bus:main",
+      newName: "service:message-bus",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    });
+
     let siteSettings = container.lookup("site-settings:main");
 
     const currentUser = User.current();
@@ -105,7 +110,7 @@ export default {
     app.currentUser = currentUser;
 
     const topicTrackingState = TopicTrackingState.create({
-      messageBus: MessageBus,
+      messageBus: container.lookup("service:message-bus"),
       siteSettings,
       currentUser,
     });
@@ -129,14 +134,19 @@ export default {
       app.inject(t, "site", "site:main");
       app.inject(t, "searchService", "service:search");
       app.inject(t, "session", "session:main");
-      app.inject(t, "messageBus", "message-bus:main");
+      app.inject(t, "messageBus", "service:message-bus");
       app.inject(t, "siteSettings", "site-settings:main");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
       app.inject(t, "keyValueStore", "service:key-value-store");
     });
 
     app.inject("service", "session", "session:main");
-    app.inject("service", "messageBus", "message-bus:main");
+    injectServiceIntoService({
+      container,
+      app,
+      property: "messageBus",
+      specifier: "service:message-bus",
+    });
     app.inject("service", "siteSettings", "site-settings:main");
     app.inject("service", "topicTrackingState", "topic-tracking-state:main");
     injectServiceIntoService({

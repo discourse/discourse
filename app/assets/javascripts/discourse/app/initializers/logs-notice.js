@@ -12,7 +12,7 @@ export default {
     }
 
     const siteSettings = container.lookup("site-settings:main");
-    const messageBus = container.lookup("message-bus:main");
+    const messageBus = container.lookup("service:message-bus");
     const keyValueStore = container.lookup("service:key-value-store");
     const currentUser = container.lookup("current-user:main");
     LogsNotice.reopenClass(Singleton, {
