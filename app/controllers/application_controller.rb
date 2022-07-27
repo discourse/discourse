@@ -339,7 +339,7 @@ class ApplicationController < ActionController::Base
         return render plain: message, status: status_code
       end
       with_resolved_locale do
-        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        error_page_opts[:layout] = (opts[:include_ember] && @preloaded) ? 'application' : 'no_ember'
         render html: build_not_found_page(error_page_opts)
       end
     end
