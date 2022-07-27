@@ -164,7 +164,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def apply_watched_words
-    self.location = PrettyText.cook(location).gsub(/^<p>(.*)<\/p>$/, "\\1")
+    self.location = WordWatcher.apply_to_text(location)
   end
 
   def website_domain_validator

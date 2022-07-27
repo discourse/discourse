@@ -3939,6 +3939,8 @@ tr_TR:
                 label: "Öne çıkan konulardaki kategoriler"
               categories_and_latest_topics:
                 label: "Kategoriler ve Son Konular"
+              categories_and_latest_topics_created_date:
+                label: "Kategoriler ve Son Konular (konu oluşturulma tarihine göre sırala)"
               categories_and_top_topics:
                 label: "Kategoriler ve Popüler Konular"
               categories_boxes:

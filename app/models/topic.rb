@@ -1357,11 +1357,11 @@ class Topic < ActiveRecord::Base
   end
 
   def public_topic_timer
-    @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
+    @public_topic_timer ||= topic_timers.find_by(public_type: true)
   end
 
   def slow_mode_topic_timer
-    @slow_mode_topic_timer ||= topic_timers.find_by(deleted_at: nil, status_type: TopicTimer.types[:clear_slow_mode])
+    @slow_mode_topic_timer ||= topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])
   end
 
   def delete_topic_timer(status_type, by_user: Discourse.system_user)

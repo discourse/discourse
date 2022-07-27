@@ -11,6 +11,8 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { hbs } from "ember-cli-htmlbars";
 
 const _extraHeaderIcons = [];
 
@@ -330,6 +332,46 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
+createWidget("revamped-hamburger-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<Sidebar::HamburgerDropdown />`
+      ),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleHamburger");
+  },
+});
+
+createWidget("revamped-user-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<UserMenu::Menu />`
+      ),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleUserMenu");
+  },
+});
+
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
@@ -381,9 +423,19 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        panels.push(this.attach("hamburger-menu"));
+        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+          if (!attrs.sidebarEnabled) {
+            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
+          }
+        } else {
+          panels.push(this.attach("hamburger-menu"));
+        }
       } else if (state.userVisible) {
-        panels.push(this.attach("user-menu"));
+        if (this.currentUser.redesigned_user_menu_enabled) {
+          panels.push(this.attach("revamped-user-menu-wrapper", {}));
+        } else {
+          panels.push(this.attach("user-menu"));
+        }
       }
 
       additionalPanels.map((panel) => {
@@ -407,7 +459,6 @@ export default createWidget("header", {
     const contentsAttrs = {
       contents,
       minimized: !!attrs.topic,
-      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
     };
 
     return h(
@@ -490,13 +541,20 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    this.state.hamburgerVisible = !this.state.hamburgerVisible;
-    this.toggleBodyScrolling(this.state.hamburgerVisible);
+    if (
+      this.siteSettings.enable_experimental_sidebar_hamburger &&
+      (this.attrs.sidebarEnabled || this.site.mobileView)
+    ) {
+      this.sendWidgetAction("toggleSidebar");
+    } else {
+      this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      this.toggleBodyScrolling(this.state.hamburgerVisible);
 
-    // auto focus on first link in dropdown
-    schedule("afterRender", () => {
-      document.querySelector(".hamburger-panel .menu-links a")?.focus();
-    });
+      // auto focus on first link in dropdown
+      schedule("afterRender", () => {
+        document.querySelector(".hamburger-panel .menu-links a")?.focus();
+      });
+    }
   },
 
   toggleBodyScrolling(bool) {

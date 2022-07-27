@@ -106,7 +106,7 @@ describe Notification do
         post_args[:topic].notify_muted!(user)
         expect {
           Fabricate(:post, user: user2, topic: post.topic, raw: 'hello @' + user.username)
-        }.to change(user.notifications, :count).by(0)
+        }.not_to change(user.notifications, :count)
       end
     end
 

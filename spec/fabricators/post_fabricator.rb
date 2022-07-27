@@ -7,7 +7,7 @@ Fabricator(:post) do
   post_type Post.types[:regular]
 
   # Fabrication bypasses PostCreator, for performance reasons, where the counts are updated so we have to handle this manually here.
-  after_save do |post, _transients|
+  after_create do |post, _transients|
     UserStatCountUpdater.increment!(post)
   end
 end

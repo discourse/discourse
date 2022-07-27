@@ -2300,20 +2300,7 @@ describe UsersController do
 
         context 'experimental sidebar' do
           before do
-            SiteSetting.enable_experimental_sidebar = true
-            user.user_option.update!(enable_experimental_sidebar: true)
-          end
-
-          it "should allow user to update UserOption#enable_experimental_sidebar" do
-            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'false' }
-
-            expect(response.status).to eq(200)
-            expect(user.reload.user_option.enable_experimental_sidebar).to eq(false)
-
-            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
-
-            expect(response.status).to eq(200)
-            expect(user.reload.user_option.enable_experimental_sidebar).to eq(true)
+            SiteSetting.enable_experimental_sidebar_hamburger = true
           end
 
           it 'does not remove category or tag sidebar section links when params are not present' do
@@ -3978,23 +3965,6 @@ describe UsersController do
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
           expect(topic_post_count[topic.id.to_s]).to eq(2)
         end
-      end
-
-      it "includes UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is true" do
-        SiteSetting.enable_experimental_sidebar = true
-        user1.user_option.update!(enable_experimental_sidebar: true)
-
-        get "/u/#{user1.username}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(true)
-      end
-
-      it "does not include UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is false" do
-        get "/u/#{user1.username}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(nil)
       end
     end
 

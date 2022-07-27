@@ -1616,11 +1616,9 @@ nl:
       other: antwoorden
     signup_cta:
       sign_up: "Registreren"
-      hide_session: "Mij morgen herinneren"
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, we vragen het u morgen. U kunt ook altijd 'Inloggen' gebruiken om een account aan te maken."
       intro: "Hallo! Zo te zien beleeft u plezier aan de discussie, maar hebt u zich nog niet voor een account geregistreerd."
-      value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u altijd kunt verdergaan waar u was gebleven. Ook ontvangt u meldingen bij nieuwe berichten zodra iemand antwoordt, hier en via e-mail, en kunt u berichten liken om uw passie te delen. :heartpulse:"
     summary:
       enabled_description: "U bekijkt een samenvatting van dit topic: de interessantste berichten volgens de gemeenschap."
       description:
@@ -1809,9 +1807,6 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens %{count} item."
         other: "Selecteer minstens %{count} items."
-      invalid_selection_length:
-        one: "Selectie moet minstens %{count} teken bevatten."
-        other: "Selectie moet minstens %{count} tekens bevatten."
       components:
         tag_drop:
           filter_for_more: Filteren voor meer...
@@ -2000,6 +1995,7 @@ nl:
       empty: "Geen meldingen gevonden."
       post_approved: "Uw bericht is goedgekeurd"
       reviewable_items: "items die beoordeling nodig hebben"
+      watching_first_post_label: "Nieuw topic"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2012,6 +2008,10 @@ nl:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} en %{count} ander</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} en %{count} anderen</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} en %{count} anderen"
+        other: "%{username}, %{username2} en %{count} anderen"
       liked_consolidated_description:
         one: "heeft %{count} van uw berichten geliket"
         other: "heeft %{count} van uw berichten geliket"
@@ -3196,7 +3196,6 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken:"
-    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -3489,8 +3488,12 @@ nl:
       no_likes_others: "Geen gelikete berichten."
       no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
     sidebar:
-      unread_count: "%{count} ongelezen"
-      new_count: "%{count} nieuw"
+      unread_count:
+        one: "%{count} ongelezen"
+        other: "%{count} ongelezen"
+      new_count:
+        one: "%{count} nieuw"
+        other: "%{count} nieuw"
       sections:
         messages:
           header_link_text: "Berichten"
@@ -3508,12 +3511,17 @@ nl:
         categories:
           header_link_title: "alle categorieën"
           header_link_text: "Categorieën"
-        topics:
+        community:
           header_link_title: "hoofdpagina"
-          header_link_text: "Topics"
+          header_link_text: "Gemeenschap"
           links:
             tracked:
               content: "Gevolgd"
+            groups:
+              content: "Groepen"
+              title: "Alle groepen"
+            users:
+              content: "Gebruikers"
             my_posts:
               content: "Mijn berichten"
   admin_js:

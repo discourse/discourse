@@ -9,7 +9,7 @@ import { action } from "@ember/object";
 const alreadyWarned = {};
 
 export default Component.extend({
-  classNames: ["wizard-step"],
+  classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
   didInsertElement() {
@@ -17,27 +17,40 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  @discourseComputed("step.index")
-  showQuitButton: (index) => index === 0,
-
   @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showNextButton: (current, total) => current < total,
+  showNextButton(current, total) {
+    return current < total;
+  },
 
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showDoneButton: (current, total) => current === total,
+  @discourseComputed("step.id", "step.displayIndex", "wizard.totalSteps")
+  showDoneButton(step, current, total) {
+    return step === "ready" || current === total;
+  },
 
-  @discourseComputed(
-    "step.index",
-    "step.displayIndex",
-    "wizard.totalSteps",
-    "wizard.completed"
-  )
-  showFinishButton: (index, displayIndex, total, completed) => {
-    return index !== 0 && displayIndex !== total && completed;
+  @discourseComputed("step.id")
+  showFinishButton(step) {
+    return step === "styling" || step === "branding";
   },
 
   @discourseComputed("step.index")
-  showBackButton: (index) => index > 0,
+  showBackButton(index) {
+    return index > 0;
+  },
+
+  @discourseComputed("step.id")
+  nextButtonLabel(step) {
+    return `wizard.${step === "ready" ? "configure_more" : "next"}`;
+  },
+
+  @discourseComputed("step.id")
+  nextButtonClass(step) {
+    return step === "ready" ? "configure-more" : "next";
+  },
+
+  @discourseComputed("step.id")
+  stepClass(step) {
+    return step;
+  },
 
   @discourseComputed("step.banner")
   bannerImage(src) {
@@ -47,9 +60,9 @@ export default Component.extend({
     return getUrl(`/images/wizard/${src}`);
   },
 
-  @discourseComputed("step.id")
-  bannerAndDescriptionClass(id) {
-    return `wizard-banner-and-description wizard-banner-and-description-${id}`;
+  @discourseComputed()
+  bannerAndDescriptionClass() {
+    return `wizard-container__step-banner`;
   },
 
   @observes("step.id")
@@ -89,7 +102,7 @@ export default Component.extend({
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
-        ".wizard-field.invalid:nth-of-type(1) .wizard-focusable"
+        ".wizard-container__input.invalid:nth-of-type(1) .wizard-focusable"
       );
 
       if ($invalid.length) {

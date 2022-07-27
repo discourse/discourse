@@ -714,7 +714,6 @@ be:
       other: адказы
     signup_cta:
       sign_up: "рэгістрацыя"
-      hide_session: "Нагадаць мне заўтра"
       hide_forever: "няма дзякуй"
     summary:
       enable: "Падсумаваць гэтую тэму"
@@ -851,6 +850,7 @@ be:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
     notifications:
+      watching_first_post_label: "Стварыць новую тэму"
       dismiss_confirmation:
         cancel: "Адмяніць"
       popup:
@@ -1354,10 +1354,15 @@ be:
         categories:
           header_link_title: "усе катэгорыі"
           header_link_text: "катэгорыі"
-        topics:
+        community:
           header_link_title: "дома"
-          header_link_text: "Тэмы"
+          header_link_text: "супольнасць"
           links:
+            groups:
+              content: "Групы"
+              title: "Усе групы"
+            users:
+              content: "карыстальнікаў"
             my_posts:
               content: "мае паведамленні"
   admin_js:

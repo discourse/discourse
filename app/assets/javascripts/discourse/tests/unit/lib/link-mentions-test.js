@@ -3,15 +3,13 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { module, test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Unit | Utility | link-mentions", function () {
   test("linkSeenMentions replaces users and groups", async function (assert) {
-    pretender.get("/u/is_local_username", () => [
-      200,
-      { "Content-Type": "application/json" },
-      {
+    pretender.get("/u/is_local_username", () =>
+      response({
         valid: ["valid_user"],
         valid_groups: ["valid_group"],
         mentionable_groups: [
@@ -22,8 +20,8 @@ module("Unit | Utility | link-mentions", function () {
         ],
         cannot_see: [],
         max_users_notified_per_group_mention: 100,
-      },
-    ]);
+      })
+    );
 
     await fetchUnseenMentions([
       "valid_user",

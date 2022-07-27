@@ -1257,7 +1257,7 @@ class User < ActiveRecord::Base
 
   USER_FIELD_PREFIX ||= "user_field_"
 
-  def user_fields(field_ids = nil, exclude_types: [])
+  def user_fields(field_ids = nil)
     if field_ids.nil?
       field_ids = (@all_user_field_ids ||= UserField.pluck(:id))
     end
@@ -1283,15 +1283,14 @@ class User < ActiveRecord::Base
 
   def apply_watched_words
     validatable_user_fields.each do |id, value|
-      set_user_field(id, PrettyText.cook(value).gsub(/^<p>(.*)<\/p>$/, "\\1"))
+      set_user_field(id, WordWatcher.apply_to_text(value))
     end
   end
 
   def validatable_user_fields
-    # ignore multiselect fields since they are admin-set and thus not UGC
-    relation = UserField.public_fields.where.not(field_type: 'multiselect')
+    # ignore multiselect fields since they are admin-set and thus not user generated content
+    @public_user_field_ids ||= UserField.public_fields.where.not(field_type: 'multiselect').pluck(:id)
 
-    @public_user_field_ids ||= relation.pluck(:id)
     user_fields(@public_user_field_ids)
   end
 

@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -15,9 +15,11 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
   needs.settings({
     tagging_enabled: false,
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user();
 
   test("tags section is not shown", async function (assert) {
     await visit("/");
@@ -32,10 +34,11 @@ acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
 acceptance("Sidebar - Tags section", function (needs) {
   needs.settings({
     tagging_enabled: true,
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
   needs.user({
-    experimental_sidebar_enabled: true,
     tracked_tags: ["tag1"],
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
@@ -263,7 +266,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag1 section link`
     );
 
@@ -271,7 +274,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag2 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag2 section link`
     );
 
@@ -280,7 +283,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       "does not display any badge for tag3 section link"
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -289,17 +292,15 @@ acceptance("Sidebar - Tags section", function (needs) {
       },
     });
 
-    await settled();
-
     assert.strictEqual(
       query(
         `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for tag1 section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -307,8 +308,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         highest_post_number: 1,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(`.sidebar-section-link-tag1 .sidebar-section-link-content-badge`),
@@ -327,12 +326,11 @@ acceptance("Sidebar - Tags section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".header-sidebar-toggle .btn");
-    await click(".header-sidebar-toggle .btn");
+    await click(".hamburger-dropdown");
 
-    assert.strictEqual(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount
+    assert.ok(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length <
+        initialCallbackCount
     );
   });
 });

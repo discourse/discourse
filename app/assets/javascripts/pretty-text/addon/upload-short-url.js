@@ -116,7 +116,7 @@ function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
   // in this case for permission checks
   if (
     siteSettings.secure_media &&
-    cachedUpload.url.indexOf("secure-media-uploads") > -1
+    cachedUpload.url.includes("secure-media-uploads")
   ) {
     return cachedUpload.url;
   }

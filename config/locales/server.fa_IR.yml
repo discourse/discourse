@@ -2316,6 +2316,8 @@ fa_IR:
                 label: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
               categories_and_latest_topics:
                 label: "دسته‌بندی‌ها و آخرین موضوعات"
+              categories_and_latest_topics_created_date:
+                label: "دسته‌بندی‌ها و آخرین موضوعات «مرتب‌سازی بر اساس تاریخ ایجاد موضوع»"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
       logos:

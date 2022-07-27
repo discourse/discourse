@@ -115,13 +115,13 @@ module ImportScripts::PhpBB3
     def fetch_poll_options(topic_id)
       query(<<-SQL)
         SELECT o.poll_option_id, o.poll_option_text, o.poll_option_total AS total_votes,
-          o.poll_option_total - (
+          GREATEST(CAST(o.poll_option_total AS SIGNED) - (
             SELECT COUNT(DISTINCT v.vote_user_id)
               FROM #{@table_prefix}poll_votes v
                 JOIN #{@table_prefix}users u ON (v.vote_user_id = u.user_id)
                 JOIN #{@table_prefix}topics t ON (v.topic_id = t.topic_id)
               WHERE v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id
-          ) AS anonymous_votes
+          ),0) AS anonymous_votes
         FROM #{@table_prefix}poll_options o
         WHERE o.topic_id = #{topic_id}
         ORDER BY o.poll_option_id

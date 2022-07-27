@@ -140,6 +140,37 @@ describe CategoriesController do
       expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
     end
 
+    describe 'categories and latest topics - ordered by created date' do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:topic1) { Fabricate(:topic, category: category, created_at: 5.days.ago, updated_at: Time.now, bumped_at: Time.now) }
+      fab!(:topic2) { Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago) }
+      fab!(:topic3) { Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago) }
+
+      context 'when order is not set to created date' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+        end
+
+        it 'sorts topics by the default bump date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic1.id, topic3.id, topic2.id])
+        end
+      end
+
+      context 'when order is set to created' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics_created_date"
+        end
+
+        it 'sorts topics by crated at date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic3.id, topic2.id, topic1.id])
+        end
+      end
+    end
+
     it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
       SiteSetting.max_category_nesting = 3
       subcategory = Fabricate(:category, user: admin, parent_category: category)

@@ -1,0 +1,20 @@
+#main-outlet-wrapper {
+  .sidebar-wrapper {
+    .sidebar-section-header-button,
+    .sidebar-section-header-caret,
+    .sidebar-section-header-dropdown {
+      opacity: 0;
+      transition: opacity 0.25s;
+      transition-delay: 0.5s;
+    }
+
+    &:hover {
+      .sidebar-section-header-button,
+      .sidebar-section-header-caret,
+      .sidebar-section-header-dropdown {
+        opacity: 1;
+        transition-delay: 0s;
+      }
+    }
+  }
+}

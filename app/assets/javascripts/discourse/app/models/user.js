@@ -32,7 +32,8 @@ import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
 import Evented from "@ember/object/evented";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
@@ -105,7 +106,6 @@ let userOptionFields = [
   "skip_new_user_tips",
   "default_calendar",
   "bookmark_auto_delete_preference",
-  "enable_experimental_sidebar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -368,13 +368,13 @@ const User = RestModel.extend({
 
   save(fields) {
     const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
+      userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
     let filteredUserOptionFields = [];
     if (fields) {
-      filteredUserOptionFields = userOptionFields.filter(
-        (uo) => fields.indexOf(uo) !== -1
+      filteredUserOptionFields = userOptionFields.filter((uo) =>
+        fields.includes(uo)
       );
     } else {
       filteredUserOptionFields = userOptionFields;
@@ -1177,25 +1177,65 @@ User.reopenClass(Singleton, {
   },
 });
 
+User.reopenClass({
+  create(args) {
+    args = args || {};
+    this.deleteStatusTrackingFields(args);
+    return this._super(args);
+  },
+
+  deleteStatusTrackingFields(args) {
+    // every user instance has to have it's own tracking fields
+    // when creating a new user model
+    // its _subscribersCount and _clearStatusTimerId fields
+    // should be equal to 0 and null
+    // here we makes sure that even if these fields
+    // will be passed in args they won't be set anyway
+    //
+    // this is something that could be implemented by making these fields private,
+    // but EmberObject doesn't support private fields
+    if (args.hasOwnProperty("_subscribersCount")) {
+      delete args._subscribersCount;
+    }
+    if (args.hasOwnProperty("_clearStatusTimerId")) {
+      delete args._clearStatusTimerId;
+    }
+  },
+});
+
 // user status tracking
 User.reopen(Evented, {
+  _subscribersCount: 0,
   _clearStatusTimerId: null,
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    this.addObserver("status", this, "_statusChanged");
+    if (this._subscribersCount === 0) {
+      this.addObserver("status", this, "_statusChanged");
 
-    this.appEvents.on("user-status:changed", this, this._updateStatus);
+      this.appEvents.on("user-status:changed", this, this._updateStatus);
 
-    if (this.status && this.status.ends_at) {
-      this._scheduleStatusClearing(this.status.ends_at);
+      if (this.status && this.status.ends_at) {
+        this._scheduleStatusClearing(this.status.ends_at);
+      }
     }
+
+    this._subscribersCount++;
   },
 
   stopTrackingStatus() {
-    this.removeObserver("status", this, "_statusChanged");
-    this.appEvents.off("user-status:changed", this, this._updateStatus);
-    this._unscheduleStatusClearing();
+    if (this._subscribersCount === 0) {
+      return;
+    }
+
+    if (this._subscribersCount === 1) {
+      // the last subscriber is unsubscribing
+      this.removeObserver("status", this, "_statusChanged");
+      this.appEvents.off("user-status:changed", this, this._updateStatus);
+      this._unscheduleStatusClearing();
+    }
+
+    this._subscribersCount--;
   },
 
   _statusChanged(sender, key) {
@@ -1220,7 +1260,11 @@ User.reopen(Evented, {
 
     const utcNow = moment.utc();
     const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
-    this._clearStatusTimerId = later(this, "_autoClearStatus", remaining);
+    this._clearStatusTimerId = discourseLater(
+      this,
+      "_autoClearStatus",
+      remaining
+    );
   },
 
   _unscheduleStatusClearing() {
@@ -1233,7 +1277,9 @@ User.reopen(Evented, {
   },
 
   _updateStatus(statuses) {
-    this.set("status", statuses[this.id]);
+    if (statuses.hasOwnProperty(this.id)) {
+      this.set("status", statuses[this.id]);
+    }
   },
 });
 

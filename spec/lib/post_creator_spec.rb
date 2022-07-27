@@ -323,7 +323,7 @@ describe PostCreator do
         creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: false))
         Draft.set(user, Draft::NEW_TOPIC, 0, 'test')
         expect(Draft.where(user: user).size).to eq(1)
-        expect { creator.create }.to change { Draft.count }.by(0)
+        expect { creator.create }.not_to change { Draft.count }
       end
 
       it "updates topic stats" do
@@ -487,7 +487,7 @@ describe PostCreator do
           end
 
           it "doesn't create tags" do
-            expect { @post = creator_with_tags.create }.to change { Tag.count }.by(0)
+            expect { @post = creator_with_tags.create }.not_to change { Tag.count }
             expect(@post.topic&.tags&.size).to eq(nil)
           end
         end
@@ -524,7 +524,7 @@ describe PostCreator do
 
             it "only uses existing tags" do
               existing_tag1 = Fabricate(:tag, name: tag_names[1])
-              expect { @post = creator_with_tags.create }.to change { Tag.count }.by(0)
+              expect { @post = creator_with_tags.create }.not_to change { Tag.count }
               expect(@post.topic.tags.map(&:name)).to eq([existing_tag1.name])
             end
           end
@@ -786,7 +786,7 @@ describe PostCreator do
       SiteSetting.review_every_post = true
       GroupMessage.stubs(:create)
 
-      expect { creator.create }.to change(ReviewablePost, :count).by(0)
+      expect { creator.create }.not_to change(ReviewablePost, :count)
     end
 
   end
@@ -1478,7 +1478,7 @@ describe PostCreator do
 
       expect {
         PostCreator.create!(user, raw: "", topic_id: topic.id, skip_validations: true)
-      }.to change { user2.notifications.count }.by(0)
+      }.not_to change { user2.notifications.count }
 
       expect {
         PostCreator.create!(user, raw: "hello world", topic_id: topic.id, skip_validations: true)
@@ -1864,7 +1864,7 @@ describe PostCreator do
     it 'does not create a reviewable post if the post is not valid' do
       post_creator = PostCreator.new(user, title: '', raw: '')
 
-      expect { post_creator.create }.to change(ReviewablePost, :count).by(0)
+      expect { post_creator.create }.not_to change(ReviewablePost, :count)
     end
   end
 end

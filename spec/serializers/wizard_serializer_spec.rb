@@ -40,17 +40,27 @@ describe WizardSerializer do
     let(:serializer) { WizardSerializer.new(wizard, scope: Guardian.new(admin)) }
 
     it "has expected steps" do
+      SiteSetting.login_required = true
+      SiteSetting.invite_only = true
+      SiteSetting.must_approve_users = true
+
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
       steps = json['wizard']['steps']
 
-      expect(steps.first['id']).to eq('locale')
-      expect(steps.last['id']).to eq('finished')
+      expect(steps.first['id']).to eq('introduction')
+      expect(steps.last['id']).to eq('corporate')
 
       privacy_step = steps.find { |s| s['id'] == 'privacy' }
       expect(privacy_step).to_not be_nil
 
-      privacy_field = privacy_step['fields'].find { |f| f['id'] == 'privacy' }
-      expect(privacy_field['choices'].find { |c| c['id'] == 'open' }).to_not be_nil
+      login_required_field = privacy_step['fields'].find { |f| f['id'] == 'login_required' }
+      expect(login_required_field['value']).to eq(true)
+
+      invite_only_field = privacy_step['fields'].find { |f| f['id'] == 'invite_only' }
+      expect(invite_only_field['value']).to eq(true)
+
+      must_approve_users_field = privacy_step['fields'].find { |f| f['id'] == 'must_approve_users' }
+      expect(must_approve_users_field['value']).to eq(true)
     end
   end
 end

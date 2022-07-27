@@ -2,12 +2,12 @@ import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import { cancel, later, schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { headerOffset } from "discourse/lib/offset-calculator";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -42,7 +42,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      this._scheduledRemoveAnimate = later(() => {
+      this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
       }, 200);
@@ -60,7 +60,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const offsetDirection = menuOrigin === "left" ? -1 : 1;
       panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
       headerCloak.style.setProperty("--opacity", 0);
-      this._scheduledRemoveAnimate = later(() => {
+      this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
         schedule("afterRender", () => {
@@ -183,19 +183,6 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const headerRect = header.getBoundingClientRect();
-      let headerOffsetCalc = headerRect.top + headerRect.height;
-
-      if (window.scrollY < 0) {
-        headerOffsetCalc += window.scrollY;
-      }
-
-      const newValue = `${headerOffsetCalc}px`;
-      if (newValue !== this.currentHeaderOffsetValue) {
-        this.currentHeaderOffsetValue = newValue;
-        document.documentElement.style.setProperty("--header-offset", newValue);
-      }
-
       const main = document.querySelector("#main");
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
@@ -231,6 +218,10 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
+
+      if (this.currentUser?.redesigned_user_menu_enabled) {
+        this.appEvents.on("user-menu:rendered", this, "_animateMenu");
+      }
 
       this.dispatch("notifications:changed", "user-notifications");
       this.dispatch("header:keyboard-trigger", "header");
@@ -279,7 +270,40 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const header = document.querySelector("header.d-header");
       this._itsatrap = new ItsATrap(header);
-      this._itsatrap.bind(["right", "left"], (e) => {
+      const dirs = this.currentUser?.redesigned_user_menu_enabled
+        ? ["up", "down"]
+        : ["right", "left"];
+      this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
+    },
+
+    _handleArrowKeysNav(event) {
+      if (this.currentUser?.redesigned_user_menu_enabled) {
+        const activeTab = document.querySelector(
+          ".menu-tabs-container .btn.active"
+        );
+        if (activeTab) {
+          let activeTabNumber = Number(
+            document.activeElement.dataset.tabNumber ||
+              activeTab.dataset.tabNumber
+          );
+          const maxTabNumber =
+            document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+          const isNext = event.key === "ArrowDown";
+          let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+          if (isNext && nextTab > maxTabNumber) {
+            nextTab = 0;
+          }
+          if (!isNext && nextTab < 0) {
+            nextTab = maxTabNumber;
+          }
+          event.preventDefault();
+          document
+            .querySelector(
+              `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+            )
+            .focus();
+        }
+      } else {
         const activeTab = document.querySelector(".glyphs .menu-link.active");
 
         if (activeTab) {
@@ -289,11 +313,11 @@ const SiteHeaderComponent = MountWidget.extend(
           }
 
           this.appEvents.trigger("user-menu:navigation", {
-            key: e.key,
+            key: event.key,
             tabNumber: Number(focusedTab.dataset.tabNumber),
           });
         }
-      });
+      }
     },
 
     _cleanDom() {
@@ -311,6 +335,9 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
+      if (this.currentUser?.redesigned_user_menu_enabled) {
+        this.appEvents.off("user-menu:rendered", this, "_animateMenu");
+      }
 
       if (this.currentUser) {
         this.currentUser.off("status-changed", this, "queueRerender");
@@ -328,6 +355,7 @@ const SiteHeaderComponent = MountWidget.extend(
       return {
         topic: this._topic,
         canSignUp: this.canSignUp,
+        sidebarEnabled: this.sidebarEnabled,
       };
     },
 
@@ -338,7 +366,10 @@ const SiteHeaderComponent = MountWidget.extend(
           cb(this._topic, headerTitle, "header-title")
         );
       }
+      this._animateMenu();
+    },
 
+    _animateMenu() {
       const menuPanels = document.querySelectorAll(".menu-panel");
       if (menuPanels.length === 0) {
         if (this.site.mobileView) {
@@ -382,7 +413,7 @@ const SiteHeaderComponent = MountWidget.extend(
         // We use a mutationObserver to check for style changes, so it's important
         // we don't set it if it doesn't change. Same goes for the panelBody!
 
-        if (viewMode === "drop-down") {
+        if (!this.site.mobileView) {
           const buttonPanel = document.querySelectorAll("header ul.icons");
           if (buttonPanel.length === 0) {
             return;
@@ -394,23 +425,18 @@ const SiteHeaderComponent = MountWidget.extend(
             panel.style.setProperty("top", "100%");
             panel.style.setProperty("height", "auto");
           }
-
-          document.body.classList.add("drop-down-mode");
         } else {
-          if (this.site.mobileView) {
-            headerCloak.style.display = "block";
-          }
+          headerCloak.style.display = "block";
 
-          const menuTop = this.site.mobileView ? headerTop() : headerOffset();
+          const menuTop = headerTop();
 
-          const winHeightOffset = 16;
+          const winHeightOffset = this.currentUser?.redesigned_user_menu_enabled
+            ? 0
+            : 16;
           let initialWinHeight = window.innerHeight;
           const winHeight = initialWinHeight - winHeightOffset;
 
-          let height;
-          if (this.site.mobileView) {
-            height = winHeight - menuTop;
-          }
+          let height = winHeight - menuTop;
 
           const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
             heightProp = isIPadApp ? "max-height" : "height",
@@ -433,10 +459,13 @@ const SiteHeaderComponent = MountWidget.extend(
               headerCloak.style.top = `${menuTop}px`;
             }
           }
-          document.body.classList.remove("drop-down-mode");
         }
 
-        panel.style.setProperty("width", `${width}px`);
+        // TODO: remove the if condition when redesigned_user_menu_enabled is
+        // removed
+        if (!panel.classList.contains("revamped")) {
+          panel.style.setProperty("width", `${width}px`);
+        }
         if (this._animate) {
           this._animateOpening(panel);
         }
@@ -448,6 +477,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
+  classNameBindings: ["site.mobileView::drop-down-mode"],
 
   init() {
     this._super(...arguments);

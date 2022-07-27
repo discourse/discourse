@@ -81,8 +81,25 @@ acceptance("Group Members", function (needs) {
     await click(queryAll("input.bulk-select")[0]);
     await click(queryAll("input.bulk-select")[1]);
 
-    const memberDropdown = selectKit(".group-member-dropdown");
+    const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();
     await memberDropdown.selectRowByValue("makeOwners");
+  });
+
+  test("Bulk actions - Menu, Select all and Clear all buttons", async function (assert) {
+    await visit("/g/discourse");
+
+    assert.ok(
+      !exists(".bulk-select-buttons-wrap details"),
+      "it does not show menu button if nothing is selected"
+    );
+
+    await click("button.bulk-select");
+    await click(".bulk-select-buttons button:nth-child(1)");
+
+    assert.ok(
+      exists(".bulk-select-buttons-wrap details"),
+      "it shows menu button if something is selected"
+    );
   });
 });

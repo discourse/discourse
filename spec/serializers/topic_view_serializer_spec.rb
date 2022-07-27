@@ -81,7 +81,7 @@ describe TopicViewSerializer do
 
         expect do
           json = serialize_topic(topic, user)
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
+        end.not_to change { Jobs::GenerateTopicThumbnails.jobs.size }
       end
     end
 

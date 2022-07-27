@@ -1,4 +1,4 @@
-import { alias, and, reads } from "@ember/object/computed";
+import { alias, and } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
@@ -33,8 +33,6 @@ export default Component.extend(LoadMore, {
   sortable() {
     return !!this.changeSort;
   },
-
-  skipHeader: reads("site.mobileView"),
 
   @discourseComputed("order")
   showLikes(order) {

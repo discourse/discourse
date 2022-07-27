@@ -1,5 +1,6 @@
+import I18n from "I18n";
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -8,6 +9,7 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+
 import Site from "discourse/models/site";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
@@ -18,9 +20,11 @@ acceptance(
   function (needs) {
     needs.settings({
       suppress_uncategorized_badge: true,
+      enable_experimental_sidebar_hamburger: true,
+      enable_sidebar: true,
     });
 
-    needs.user({ experimental_sidebar_enabled: true });
+    needs.user();
 
     test("uncategorized category is not shown", async function (assert) {
       const categories = Site.current().categories;
@@ -52,12 +56,13 @@ acceptance(
 
 acceptance("Sidebar - Categories Section", function (needs) {
   needs.user({
-    experimental_sidebar_enabled: true,
     sidebar_category_ids: [],
     sidebar_tag_names: [],
   });
 
   needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
     suppress_uncategorized_badge: false,
   });
 
@@ -317,7 +322,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category1.slug} section link`
     );
 
@@ -325,11 +330,11 @@ acceptance("Sidebar - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "2",
+      I18n.t("sidebar.unread_count", { count: 2 }),
       `displays 2 unread count for ${category2.slug} section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -338,17 +343,15 @@ acceptance("Sidebar - Categories Section", function (needs) {
       },
     });
 
-    await settled();
-
     assert.strictEqual(
       query(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for ${category1.slug} section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -357,8 +360,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
       },
     });
 
-    await settled();
-
     assert.ok(
       !exists(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-content-badge`
@@ -366,7 +367,7 @@ acceptance("Sidebar - Categories Section", function (needs) {
       `does not display any badge ${category1.slug} section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -375,18 +376,16 @@ acceptance("Sidebar - Categories Section", function (needs) {
       },
     });
 
-    await settled();
-
     assert.strictEqual(
       query(
         `.sidebar-section-link-${category2.slug} .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category2.slug} section link`
     );
   });
 
-  test("clean up topic tracking state state changed callbacks when section is destroyed", async function (assert) {
+  test("clean up topic tracking state state changed callbacks when Sidebar is collapsed", async function (assert) {
     setupUserSidebarCategories();
 
     await visit("/");
@@ -399,12 +398,11 @@ acceptance("Sidebar - Categories Section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".header-sidebar-toggle .btn");
-    await click(".header-sidebar-toggle .btn");
+    await click(".hamburger-dropdown");
 
-    assert.strictEqual(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount
+    assert.ok(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length <
+        initialCallbackCount
     );
   });
 });
