@@ -3717,6 +3717,23 @@ describe UsersController do
         token.reload
         expect(token.expired?).to eq(true)
       end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = post_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
 
     context "with a username and password" do
@@ -3790,6 +3807,25 @@ describe UsersController do
 
         token.reload
         expect(token.expired?).to eq(true)
+      end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = inactive_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            username: user.username,
+            password: 'qwerqwer123',
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
       end
     end
   end
