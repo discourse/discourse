@@ -427,9 +427,12 @@ describe FinalDestination do
   describe '#get' do
     let(:fd) { FinalDestination.new("http://wikipedia.com", opts.merge(verbose: true)) }
 
+    before do
+      described_class.clear_https_cache!("wikipedia.com")
+    end
+
     context "when there is a redirect" do
       before do
-        described_class.clear_https_cache!("wikipedia.com")
         stub_request(:get, "http://wikipedia.com/").
           to_return(status: 302, body: "" , headers: { "location" => "https://wikipedia.com/" })
         # webmock does not do chunks
@@ -457,12 +460,11 @@ describe FinalDestination do
       subject(:get) { fd.get {} }
 
       before do
-        described_class.clear_https_cache!("wikipedia.com")
         fd.stubs(:safe_session).raises(Timeout::Error)
       end
 
       it "logs the exception" do
-        Rails.logger.expects(:warn).with("default: FinalDestination could not resolve URL (timeout): http://wikipedia.com")
+        Rails.logger.expects(:warn).with(regexp_matches(/FinalDestination could not resolve URL \(timeout\)/))
         get
       end
 
