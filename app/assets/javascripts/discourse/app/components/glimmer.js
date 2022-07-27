@@ -16,6 +16,7 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service store;
   @service("search") searchService;
   @service keyValueStore;
+  @service pmTopicTrackingState;
 
   @cached
   get siteSettings() {
@@ -39,12 +40,6 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   get topicTrackingState() {
     const applicationInstance = getOwner(this);
     return applicationInstance.lookup("topic-tracking-state:main");
-  }
-
-  @cached
-  get pmTopicTrackingState() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("pm-topic-tracking-state:main");
   }
 
   @cached
