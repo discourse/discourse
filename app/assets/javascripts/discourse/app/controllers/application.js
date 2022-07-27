@@ -45,13 +45,21 @@ export default Controller.extend({
     document.querySelector("body").classList.remove("sidebar-animate");
   },
 
-  @discourseComputed("enable_sidebar", "siteSettings.enable_sidebar")
-  sidebarEnabled(sidebarQueryParamOverride, enableSidebar) {
+  @discourseComputed(
+    "enable_sidebar",
+    "siteSettings.enable_sidebar",
+    "router.currentRouteName"
+  )
+  sidebarEnabled(sidebarQueryParamOverride, enableSidebar, currentRouteName) {
     if (sidebarQueryParamOverride === "1") {
       return true;
     }
 
     if (sidebarQueryParamOverride === "0") {
+      return false;
+    }
+
+    if (currentRouteName.startsWith("wizard")) {
       return false;
     }
 
