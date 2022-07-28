@@ -4077,6 +4077,7 @@ en:
         one: "%{count} new"
         other: "%{count} new"
       toggle_section: "toggle section"
+      more_count: "%{count} more..."
       sections:
         messages:
           header_link_title: "personal messages"

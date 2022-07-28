@@ -134,6 +134,8 @@
   }
 }
 
-#main-outlet-wrapper .sidebar-section-link-wrapper {
+#main-outlet-wrapper
+  .sidebar-section-link-wrapper:not(.sidebar-more-section-links-details-content
+    .sidebar-section-link-wrapper) {
   margin-left: 1.5em;
 }

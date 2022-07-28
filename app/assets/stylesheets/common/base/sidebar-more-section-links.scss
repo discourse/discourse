@@ -1,0 +1,32 @@
+.sidebar-more-section-links-details {
+  margin-left: 1.5em;
+
+  .sidebar-more-section-links-details-summary {
+    padding: 0.35em 0.5em;
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+    transition: background-color 0.25s;
+
+    &:hover {
+      background: var(--d-sidebar-highlight-color);
+    }
+
+    list-style: none;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .sidebar-more-section-links-details-content {
+    position: absolute;
+    background-color: var(--secondary);
+    width: 100%;
+    box-shadow: shadow("dropdown");
+    z-index: z("base") + 1;
+
+    .sidebar-section-link-wrapper {
+      margin-left: none;
+    }
+  }
+}

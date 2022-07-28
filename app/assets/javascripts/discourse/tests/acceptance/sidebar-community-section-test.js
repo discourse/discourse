@@ -114,6 +114,45 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
   });
 
+  test("clicking on more... link", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-more-section-links-details-content"
+      ),
+      "additional section links are displayed"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.notOk(
+      exists(
+        ".sidebar-section-community .sidebar-more-section-links-details-content"
+      ),
+      "additional section links are hidden"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await click("#main-outlet");
+
+    assert.notOk(
+      exists(
+        ".sidebar-section-community .sidebar-more-section-links-details-content"
+      ),
+      "additional section links are hidden when clicking outside"
+    );
+  });
+
   test("clicking on everything link", async function (assert) {
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-everything");
@@ -162,6 +201,16 @@ acceptance("Sidebar - Community Section", function (needs) {
 
   test("clicking on users link", async function (assert) {
     await visit("/t/280");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-users"),
+      "users link is not displayed in sidebar when it is not the active route"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
     await click(".sidebar-section-community .sidebar-section-link-users");
 
     assert.strictEqual(
@@ -180,10 +229,35 @@ acceptance("Sidebar - Community Section", function (needs) {
       exists(".sidebar-section-community .sidebar-section-link-users.active"),
       "the users link is marked as active"
     );
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ).textContent.trim(),
+      I18n.t("sidebar.more_count", { count: 1 }),
+      "displays the right count as users link is currently active"
+    );
+
+    await visit("/u");
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-users.active"),
+      "users link is displayed in sidebar when it is the active route"
+    );
   });
 
   test("clicking on groups link", async function (assert) {
     await visit("/t/280");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-groups"),
+      "groups link is not displayed in sidebar when it is not the active route"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
     await click(".sidebar-section-community .sidebar-section-link-groups");
 
     assert.strictEqual(
@@ -201,6 +275,21 @@ acceptance("Sidebar - Community Section", function (needs) {
     assert.ok(
       exists(".sidebar-section-community .sidebar-section-link-groups.active"),
       "the groups link is marked as active"
+    );
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section-community .sidebar-more-section-links-details-summary"
+      ).textContent.trim(),
+      I18n.t("sidebar.more_count", { count: 1 }),
+      "displays the right count as groups link is currently active"
+    );
+
+    await visit("/g");
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-groups.active"),
+      "groups link is displayed in sidebar when it is the active route"
     );
   });
 
@@ -679,6 +768,10 @@ acceptance("Sidebar - Community Section", function (needs) {
 
     await visit("/");
 
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
     assert.strictEqual(
       query(".sidebar-section-link-unread").textContent.trim(),
       "unread topics",
@@ -724,6 +817,11 @@ acceptance("Sidebar - Community Section", function (needs) {
     });
 
     await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
     await click(".sidebar-section-link-user-summary");
 
     assert.strictEqual(
