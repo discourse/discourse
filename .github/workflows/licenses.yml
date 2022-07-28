@@ -17,9 +17,6 @@ jobs:
     container: discourse/discourse_test:slim
     timeout-minutes: 10
 
-    env:
-      BUNDLER_VERSION: "2.3.18"
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -38,10 +35,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gem-
 
-      # Workaround for https://github.com/github/licensed/issues/521
-      - name: Downgrade Bundler
-        run: gem install bundler --version '2.3.18'
-
       - name: Setup gems
         run: |
           bundle config --local path vendor/bundle
@@ -52,7 +45,10 @@ jobs:
 
       - name: Setup licensed
         run: |
-          gem install licensed
+          # gem install licensed
+          # Workaround for https://github.com/github/licensed/issues/521
+          gem install specific_install
+          gem specific_install https://github.com/CvX/licensed.git -b bundler-compat
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
