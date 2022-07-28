@@ -31,6 +31,12 @@ RSpec.describe UserCommScreener do
     expect(screener.allowing_actor_communication).to eq([target_user1.id])
   end
 
+  it "filters out the acting user from target_user_ids" do
+    acting_user = Fabricate(:user)
+    screener = described_class.new(acting_user: acting_user, target_user_ids: [target_user1.id, acting_user.id])
+    expect(screener.allowing_actor_communication).to eq([target_user1.id])
+  end
+
   context "when the actor is not staff" do
     fab!(:acting_user) { Fabricate(:user) }
     fab!(:muted_user) { Fabricate(:muted_user, user: target_user1, muted_user: acting_user) }
