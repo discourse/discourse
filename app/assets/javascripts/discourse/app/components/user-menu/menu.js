@@ -6,6 +6,8 @@ import UserMenuTab from "discourse/lib/user-menu/tab";
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
 
+const REVIEW_QUEUE_TAB_ID = "review-queue";
+
 const CORE_TOP_TABS = [
   class extends UserMenuTab {
     get id() {
@@ -64,6 +66,28 @@ const CORE_TOP_TABS = [
 
     get shouldDisplay() {
       return !this.currentUser.likes_notifications_disabled;
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
+      return REVIEW_QUEUE_TAB_ID;
+    }
+
+    get icon() {
+      return "flag";
+    }
+
+    get panelComponent() {
+      return "user-menu/reviewables-list";
+    }
+
+    get shouldDisplay() {
+      return this.currentUser.can_review;
+    }
+
+    get count() {
+      return this.currentUser.get("reviewable_count");
     }
   },
 ];

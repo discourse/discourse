@@ -14,15 +14,7 @@ export default class UserMenuItemsList extends GlimmerComponent {
 
   get itemsCacheKey() {}
 
-  get showAll() {
-    return false;
-  }
-
-  get showAllHref() {
-    throw new Error(
-      `the showAllHref getter must be implemented in ${this.constructor.name}`
-    );
-  }
+  get showAllHref() {}
 
   get showAllTitle() {}
 

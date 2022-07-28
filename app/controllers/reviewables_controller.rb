@@ -58,7 +58,7 @@ class ReviewablesController < ApplicationController
       end,
       meta: filters.merge(
         total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types,
-        reviewable_count: Reviewable.list_for(current_user).count
+        reviewable_count: current_user.reviewable_count
       )
     }
     if (offset + PER_PAGE) < total_rows
@@ -66,6 +66,14 @@ class ReviewablesController < ApplicationController
     end
     json.merge!(hash)
 
+    render_json_dump(json, rest_serializer: true)
+  end
+
+  def user_menu_list
+    reviewables = Reviewable.recent_list_with_pending_first(current_user).to_a
+    json = {
+      reviewables: reviewables.map! { |r| r.basic_serializer.new(r, scope: guardian, root: nil).as_json }
+    }
     render_json_dump(json, rest_serializer: true)
   end
 
