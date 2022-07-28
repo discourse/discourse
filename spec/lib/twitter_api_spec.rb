@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 RSpec.describe TwitterApi do
   describe '.link_handles_in' do
     it 'correctly replaces handles' do
