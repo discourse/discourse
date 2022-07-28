@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicsBulkAction do
+RSpec.describe TopicsBulkAction do
   fab!(:topic) { Fabricate(:topic) }
 
   describe "#dismiss_topics" do

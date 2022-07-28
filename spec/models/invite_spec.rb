@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Invite do
+RSpec.describe Invite do
   fab!(:user) { Fabricate(:user) }
   let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }
   let(:escaped_email) { "&lt;b onmouseover=alert(&#39;wufff!&#39;)&gt;email&lt;/b&gt;&lt;script&gt;alert(&#39;test&#39;);&lt;/script&gt;@test.com" }

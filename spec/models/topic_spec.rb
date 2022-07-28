@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
@@ -2353,16 +2353,16 @@ describe Topic do
 
     it "is true if the category is secure" do
       category.stubs(:read_restricted).returns(true)
-      expect(Topic.new(category: category)).to be_read_restricted_category
+      expect(Topic.new(category: category).read_restricted_category?).to eq(true)
     end
 
     it "is false if the category is not secure" do
       category.stubs(:read_restricted).returns(false)
-      expect(Topic.new(category: category)).not_to be_read_restricted_category
+      expect(Topic.new(category: category).read_restricted_category?).to eq(false)
     end
 
-    it "is false if there is no category" do
-      expect(Topic.new(category: nil)).not_to be_read_restricted_category
+    it "is falsey if there is no category" do
+      expect(Topic.new(category: nil).read_restricted_category?).to eq(nil)
     end
   end
 

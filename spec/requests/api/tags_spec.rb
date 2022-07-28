@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'tags' do
+RSpec.describe 'tags' do
 
   let(:admin) { Fabricate(:admin) }
   let!(:tag) { Fabricate(:tag, name: 'foo') }

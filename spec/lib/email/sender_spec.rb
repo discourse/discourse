@@ -2,7 +2,7 @@
 
 require 'email/sender'
 
-describe Email::Sender do
+RSpec.describe Email::Sender do
   before do
     SiteSetting.secure_media_allow_embed_images_in_emails = false
   end

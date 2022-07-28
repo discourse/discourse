@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WebhooksController do
+RSpec.describe WebhooksController do
   before { Discourse.redis.flushdb }
 
   let(:email) { "em@il.com" }

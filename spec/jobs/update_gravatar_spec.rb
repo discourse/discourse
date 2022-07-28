@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UpdateGravatar do
+RSpec.describe Jobs::UpdateGravatar do
   fab!(:user) { Fabricate(:user) }
   let(:temp) { Tempfile.new('test') }
   fab!(:upload) { Fabricate(:upload, user: user) }

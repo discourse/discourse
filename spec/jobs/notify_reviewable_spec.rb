@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::NotifyReviewable do
+RSpec.describe Jobs::NotifyReviewable do
   describe '.execute' do
     fab!(:admin) { Fabricate(:admin, moderator: true) }
     fab!(:moderator) { Fabricate(:moderator) }

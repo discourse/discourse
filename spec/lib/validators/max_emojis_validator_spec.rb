@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe MaxEmojisValidator do
+RSpec.describe MaxEmojisValidator do
 
   # simulate Rails behavior (singleton)
   def validate

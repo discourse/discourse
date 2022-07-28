@@ -2,7 +2,7 @@
 
 require 'discourse'
 
-describe Discourse do
+RSpec.describe Discourse do
 
   before do
     RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('foo.com')

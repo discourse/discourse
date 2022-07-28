@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Plugin::Instance do
+RSpec.describe Plugin::Instance do
 
   after do
     DiscoursePluginRegistry.reset!

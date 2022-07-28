@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmbedController do
+RSpec.describe EmbedController do
 
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }

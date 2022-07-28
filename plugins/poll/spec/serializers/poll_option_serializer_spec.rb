@@ -8,7 +8,7 @@ def serialize_option(option, user)
   )
 end
 
-describe PollOptionSerializer do
+RSpec.describe PollOptionSerializer do
   let(:voter) { Fabricate(:user) }
   let(:poll) { post.polls.first }
 

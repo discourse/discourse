@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Post do
+RSpec.describe Post do
 
   before do
     Jobs.run_immediately!

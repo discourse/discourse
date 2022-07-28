@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::StackExchangeOnebox do
+RSpec.describe Onebox::Engine::StackExchangeOnebox do
   describe 'domains' do
     [
       'stackoverflow.com', 'meta.stackoverflow.com',

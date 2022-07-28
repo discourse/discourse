@@ -8,7 +8,7 @@ class GlobalPathInstance
   extend GlobalPath
 end
 
-describe Wizard::Builder do
+RSpec.describe Wizard::Builder do
   let(:moderator) { Fabricate.build(:moderator) }
   let(:wizard) { Wizard::Builder.new(moderator).build }
 

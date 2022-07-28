@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubGistOnebox do
+RSpec.describe Onebox::Engine::GithubGistOnebox do
   before do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"
 

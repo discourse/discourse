@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'SiteSetting.styleguide_admin_only' do
+RSpec.describe 'SiteSetting.styleguide_admin_only' do
   before do
     SiteSetting.styleguide_enabled = true
   end
@@ -34,7 +34,7 @@ describe 'SiteSetting.styleguide_admin_only' do
   end
 end
 
-describe 'SiteSetting.styleguide_enabled' do
+RSpec.describe 'SiteSetting.styleguide_enabled' do
   before do
     sign_in(Fabricate(:admin))
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InvitesController do
+RSpec.describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 

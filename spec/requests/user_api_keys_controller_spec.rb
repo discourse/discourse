@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserApiKeysController do
+RSpec.describe UserApiKeysController do
 
   let :public_key do
     <<~TXT

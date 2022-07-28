@@ -3,7 +3,7 @@
 
 require_relative 'shared_context_for_backup_restore'
 
-describe BackupRestore::UploadsRestorer do
+RSpec.describe BackupRestore::UploadsRestorer do
   include_context "shared stuff"
 
   subject { BackupRestore::UploadsRestorer.new(logger) }

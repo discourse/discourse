@@ -2,7 +2,7 @@
 
 require 'image_sizer'
 
-describe ImageSizer do
+RSpec.describe ImageSizer do
 
   before do
     SiteSetting.max_image_width = 500

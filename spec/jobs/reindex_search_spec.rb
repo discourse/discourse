@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ReindexSearch do
+RSpec.describe Jobs::ReindexSearch do
   before do
     SearchIndexer.enable
     Jobs.run_immediately!

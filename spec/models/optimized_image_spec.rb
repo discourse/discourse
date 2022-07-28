@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe OptimizedImage do
+RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
 

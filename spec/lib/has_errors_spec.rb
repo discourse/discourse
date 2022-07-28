@@ -2,7 +2,7 @@
 
 require 'has_errors'
 
-describe HasErrors do
+RSpec.describe HasErrors do
 
   class ErrorTestClass
     include HasErrors

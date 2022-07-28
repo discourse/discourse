@@ -2,7 +2,7 @@
 
 require 'excon'
 
-describe Jobs::EmitWebHookEvent do
+RSpec.describe Jobs::EmitWebHookEvent do
   fab!(:post_hook) { Fabricate(:web_hook) }
   fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
   fab!(:post) { Fabricate(:post) }

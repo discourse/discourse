@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::WikipediaOnebox do
+RSpec.describe Onebox::Engine::WikipediaOnebox do
   before do
     @link = "http://en.wikipedia.org/wiki/Billy_Jack"
 

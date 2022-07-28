@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BaseBookmarkable do
+RSpec.describe BaseBookmarkable do
   fab!(:bookmark) { Fabricate(:bookmark, bookmarkable: Fabricate(:post)) }
 
   describe "#send_reminder_notification" do

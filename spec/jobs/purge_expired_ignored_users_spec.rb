@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PurgeExpiredIgnoredUsers do
+RSpec.describe Jobs::PurgeExpiredIgnoredUsers do
   subject { Jobs::PurgeExpiredIgnoredUsers.new.execute({}) }
 
   context "with no ignored users" do

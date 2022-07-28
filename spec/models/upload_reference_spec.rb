@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UploadReference do
+RSpec.describe UploadReference do
   context 'badge uploads' do
     fab!(:upload) { Fabricate(:upload) }
 

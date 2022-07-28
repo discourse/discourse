@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RejectionMailer do
+RSpec.describe RejectionMailer do
 
   describe "send_rejection" do
 

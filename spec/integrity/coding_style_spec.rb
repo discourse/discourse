@@ -17,7 +17,7 @@ def grep_file(file, regex)
   lines.count > 0 ? file : nil
 end
 
-describe 'Coding style' do
+RSpec.describe 'Coding style' do
   describe 'Javascript' do
     it 'prevents this.get("foo") pattern' do
       js_files = list_js_files('app/assets/javascripts')

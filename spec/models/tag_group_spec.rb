@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TagGroup do
+RSpec.describe TagGroup do
   describe '#visible' do
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }

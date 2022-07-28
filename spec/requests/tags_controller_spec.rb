@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TagsController do
+RSpec.describe TagsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }

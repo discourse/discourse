@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::NotifyMailingListSubscribers do
+RSpec.describe Jobs::NotifyMailingListSubscribers do
 
   fab!(:mailing_list_user) { Fabricate(:user) }
 

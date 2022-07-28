@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::TrelloOnebox do
+RSpec.describe Onebox::Engine::TrelloOnebox do
   context "Boards" do
     it "should onebox with SEF url corrrectly" do
       expect(Onebox.preview('https://trello.com/b/nC8QJJoZ/trello-development-roadmap').to_s).to match('iframe src="https://trello.com/b/nC8QJJoZ.html"')

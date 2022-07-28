@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SubscriptionMailer do
+RSpec.describe SubscriptionMailer do
   fab!(:user) { Fabricate(:user) }
 
   subject { SubscriptionMailer.confirm_unsubscribe(user) }

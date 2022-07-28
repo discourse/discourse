@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicPostSerializer do
+RSpec.describe BasicPostSerializer do
 
   context "name" do
     let(:user) { Fabricate.build(:user) }

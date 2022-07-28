@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe ContentSecurityPolicy do
+RSpec.describe ContentSecurityPolicy do
   after do
     DiscoursePluginRegistry.reset!
   end

@@ -3,7 +3,7 @@
 require "cooked_post_processor"
 require "file_store/s3_store"
 
-describe CookedPostProcessor do
+RSpec.describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
   let(:upload_path) { Discourse.store.upload_path }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupArchivedMessage do
+RSpec.describe GroupArchivedMessage do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
 

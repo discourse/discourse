@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::SiteSettingsController do
+RSpec.describe Admin::SiteSettingsController do
 
   it "is a subclass of AdminController" do
     expect(Admin::SiteSettingsController < Admin::AdminController).to eq(true)

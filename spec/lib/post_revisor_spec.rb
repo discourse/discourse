@@ -2,7 +2,7 @@
 
 require 'post_revisor'
 
-describe PostRevisor do
+RSpec.describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }

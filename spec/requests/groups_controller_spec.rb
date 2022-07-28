@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupsController do
+RSpec.describe GroupsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }

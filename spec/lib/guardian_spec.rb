@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Guardian do
+RSpec.describe Guardian do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }

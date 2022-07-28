@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Middleware::RequestTracker do
+RSpec.describe Middleware::RequestTracker do
   def env(opts = {})
     create_request_env.merge(
       "HTTP_HOST" => "http://test.com",

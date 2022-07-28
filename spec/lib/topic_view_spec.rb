@@ -751,12 +751,12 @@ RSpec.describe TopicView do
     context "uncategorized topic" do
       context "topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
-        it { should eq(topic.title) }
+        it { is_expected.to eq(topic.title) }
       end
 
       context "topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
-        it { should eq(topic.title) }
+        it { is_expected.to eq(topic.title) }
 
         context "tagged topic" do
           before { topic.tags << [tag1, tag2] }
@@ -764,17 +764,17 @@ RSpec.describe TopicView do
           context "tagging enabled" do
             before { SiteSetting.tagging_enabled = true }
 
-            it { should start_with(topic.title) }
-            it { should_not include(tag1.name) }
-            it { should end_with(tag2.name) } # tag2 has higher topic count
+            it { is_expected.to start_with(topic.title) }
+            it { is_expected.not_to include(tag1.name) }
+            it { is_expected.to end_with(tag2.name) } # tag2 has higher topic count
           end
 
           context "tagging disabled" do
             before { SiteSetting.tagging_enabled = false }
 
-            it { should start_with(topic.title) }
-            it { should_not include(tag1.name) }
-            it { should_not include(tag2.name) }
+            it { is_expected.to start_with(topic.title) }
+            it { is_expected.not_to include(tag1.name) }
+            it { is_expected.not_to include(tag2.name) }
           end
         end
       end
@@ -787,13 +787,13 @@ RSpec.describe TopicView do
 
       context "topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
-        it { should eq(topic.title) }
+        it { is_expected.to eq(topic.title) }
       end
 
       context "topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
-        it { should start_with(topic.title) }
-        it { should end_with(category.name) }
+        it { is_expected.to start_with(topic.title) }
+        it { is_expected.to end_with(category.name) }
 
         context "tagged topic" do
           before do
@@ -801,10 +801,10 @@ RSpec.describe TopicView do
             topic.tags << [tag1, tag2]
           end
 
-          it { should start_with(topic.title) }
-          it { should end_with(category.name) }
-          it { should_not include(tag1.name) }
-          it { should_not include(tag2.name) }
+          it { is_expected.to start_with(topic.title) }
+          it { is_expected.to end_with(category.name) }
+          it { is_expected.not_to include(tag1.name) }
+          it { is_expected.not_to include(tag2.name) }
         end
       end
     end
@@ -1012,7 +1012,7 @@ RSpec.describe TopicView do
     context "when queue is enabled globally" do
       let(:queue_enabled) { true }
 
-      it { is_expected.to be_queued_posts_enabled }
+      it { expect(topic_view.queued_posts_enabled?).to be(true) }
     end
 
     context "when queue is not enabled globally" do
@@ -1023,11 +1023,11 @@ RSpec.describe TopicView do
           category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
         end
 
-        it { is_expected.to be_queued_posts_enabled }
+        it { expect(topic_view.queued_posts_enabled?).to be(true) }
       end
 
       context "when category is not moderated" do
-        it { is_expected.not_to be_queued_posts_enabled }
+        it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
     end
   end

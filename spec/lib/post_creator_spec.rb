@@ -3,7 +3,7 @@
 require 'post_creator'
 require 'topic_subtype'
 
-describe PostCreator do
+RSpec.describe PostCreator do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }

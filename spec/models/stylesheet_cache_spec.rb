@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StylesheetCache do
+RSpec.describe StylesheetCache do
 
   describe ".add" do
     it "correctly cycles once MAX_TO_KEEP is hit" do

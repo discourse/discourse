@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicGroupSerializer do
+RSpec.describe BasicGroupSerializer do
   let(:guardian) { Guardian.new }
   fab!(:group) { Fabricate(:group) }
   subject { described_class.new(group, scope: guardian, root: false) }

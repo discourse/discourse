@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Hijack do
+RSpec.describe Hijack do
   class Hijack::Tester < ApplicationController
     attr_reader :io
 

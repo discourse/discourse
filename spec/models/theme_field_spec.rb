@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe ThemeField do
+RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
 
   describe "scope: find_by_theme_ids" do

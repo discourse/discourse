@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Search do
+RSpec.describe Search do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:topic) { Fabricate(:topic) }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Post do
+RSpec.describe Post do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   before { Oneboxer.stubs :onebox }

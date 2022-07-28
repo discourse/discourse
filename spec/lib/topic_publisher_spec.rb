@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'topic_publisher'
-describe TopicPublisher do
+RSpec.describe TopicPublisher do
 
   context "shared drafts" do
     fab!(:shared_drafts_category) { Fabricate(:category) }

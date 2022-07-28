@@ -2,7 +2,7 @@
 
 require 'csv'
 
-describe Jobs::ExportUserArchive do
+RSpec.describe Jobs::ExportUserArchive do
   fab!(:user) { Fabricate(:user, username: "john_doe") }
   fab!(:user2) { Fabricate(:user) }
   let(:extra) { {} }

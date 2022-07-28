@@ -2,7 +2,7 @@
 
 require 'final_destination'
 
-describe FinalDestination do
+RSpec.describe FinalDestination do
 
   let(:opts) do
     {

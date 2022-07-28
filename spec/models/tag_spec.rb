@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Tag do
+RSpec.describe Tag do
   def make_some_tags(count: 3, tag_a_topic: false)
     @tags = []
     if tag_a_topic

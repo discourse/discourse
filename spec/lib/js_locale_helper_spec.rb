@@ -2,7 +2,7 @@
 
 require 'mini_racer'
 
-describe JsLocaleHelper do
+RSpec.describe JsLocaleHelper do
 
   module StubLoadTranslations
     def set_translations(locale, translations)

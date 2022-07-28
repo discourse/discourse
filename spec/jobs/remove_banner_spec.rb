@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::RemoveBanner do
+RSpec.describe Jobs::RemoveBanner do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { topic.user }
 

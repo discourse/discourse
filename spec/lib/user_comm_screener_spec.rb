@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserCommScreener do
+RSpec.describe UserCommScreener do
   fab!(:target_user1) { Fabricate(:user, username: "bobscreen") }
   fab!(:target_user2) { Fabricate(:user, username: "hughscreen") }
   fab!(:target_user3) do

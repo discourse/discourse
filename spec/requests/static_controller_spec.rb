@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StaticController do
+RSpec.describe StaticController do
   fab!(:upload) { Fabricate(:upload) }
 
   describe '#favicon' do

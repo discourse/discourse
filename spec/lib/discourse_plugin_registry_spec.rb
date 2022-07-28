@@ -2,7 +2,7 @@
 
 require 'discourse_plugin_registry'
 
-describe DiscoursePluginRegistry do
+RSpec.describe DiscoursePluginRegistry do
 
   class TestRegistry < DiscoursePluginRegistry; end
 

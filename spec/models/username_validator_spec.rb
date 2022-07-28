@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UsernameValidator do
+RSpec.describe UsernameValidator do
   def expect_valid(*usernames)
     usernames.each do |username|
       validator = UsernameValidator.new(username)

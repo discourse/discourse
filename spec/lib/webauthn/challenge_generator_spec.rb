@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Webauthn::ChallengeGenerator do
+RSpec.describe Webauthn::ChallengeGenerator do
   it "generates a Webauthn::ChallengeGenerator::ChallengeSession with correct params" do
     session = Webauthn::ChallengeGenerator.generate
     expect(session).to be_a(Webauthn::ChallengeGenerator::ChallengeSession)

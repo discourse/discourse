@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubFolderOnebox do
+RSpec.describe Onebox::Engine::GithubFolderOnebox do
   context 'without fragments' do
     before do
       @link = "https://github.com/discourse/discourse/tree/main/spec/fixtures"

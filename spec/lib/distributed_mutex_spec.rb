@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DistributedMutex do
+RSpec.describe DistributedMutex do
   let(:key) { "test_mutex_key" }
 
   after do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WizardSerializer do
+RSpec.describe WizardSerializer do
   let(:admin) { Fabricate(:admin) }
 
   after do

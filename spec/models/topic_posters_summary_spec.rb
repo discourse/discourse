@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicPostersSummary do
+RSpec.describe TopicPostersSummary do
   describe '#summary' do
     let!(:topic_creator)  { Fabricate(:user) }
 

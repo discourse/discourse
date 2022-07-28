@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "users/omniauth_callbacks/failure.html.erb" do
+RSpec.describe "users/omniauth_callbacks/failure.html.erb" do
   before do
     flash[:error] = I18n.t("login.omniauth_error", strategy: 'test')
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::AllowlistedGenericOnebox do
+RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   describe ".===" do
     it "matches any domain" do
       expect(described_class === URI('http://foo.bar/resource')).to be(true)

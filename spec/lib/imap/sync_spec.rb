@@ -2,7 +2,7 @@
 
 require 'imap/sync'
 
-describe Imap::Sync do
+RSpec.describe Imap::Sync do
 
   before do
     SiteSetting.tagging_enabled = true

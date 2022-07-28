@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples 'finding and showing post' do
+RSpec.shared_examples 'finding and showing post' do
   let!(:post) { post_by_user }
 
   it "ensures the user can't see the post" do
@@ -74,14 +74,14 @@ shared_examples 'finding and showing post' do
   end
 end
 
-shared_examples 'action requires login' do |method, url, params = {}|
+RSpec.shared_examples 'action requires login' do |method, url, params = {}|
   it 'raises an exception when not logged in' do
     self.public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
 
-describe PostsController do
+RSpec.describe PostsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }

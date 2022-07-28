@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::InviteEmail do
+RSpec.describe Jobs::InviteEmail do
 
   describe '.execute' do
 

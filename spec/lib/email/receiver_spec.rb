@@ -2,7 +2,7 @@
 
 require "email/receiver"
 
-describe Email::Receiver do
+RSpec.describe Email::Receiver do
 
   before do
     SiteSetting.email_in = true

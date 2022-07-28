@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::TwitchVideoOnebox do
+RSpec.describe Onebox::Engine::TwitchVideoOnebox do
   let(:hostname) { 'www.example.com' }
   let(:options) { { hostname: hostname } }
 

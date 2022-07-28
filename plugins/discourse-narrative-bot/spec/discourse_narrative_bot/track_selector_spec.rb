@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseNarrativeBot::TrackSelector do
+RSpec.describe DiscourseNarrativeBot::TrackSelector do
   let(:user) { Fabricate(:user) }
   let(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
   let(:discobot_user) { narrative_bot.discobot_user }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe LocaleSiteSetting do
+RSpec.describe LocaleSiteSetting do
   def core_locales
     pattern = File.join(Rails.root, 'config', 'locales', 'client.*.yml')
     Dir.glob(pattern).map { |x| x.split('.')[-2] }

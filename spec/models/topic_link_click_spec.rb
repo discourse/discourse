@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicLinkClick do
+RSpec.describe TopicLinkClick do
 
   it { is_expected.to belong_to :topic_link }
   it { is_expected.to belong_to :user }

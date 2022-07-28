@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionCreator do
+RSpec.describe PostActionCreator do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::OldKeysReminder do
+RSpec.describe Jobs::OldKeysReminder do
   let!(:google_secret) { SiteSetting.create!(name: 'google_oauth2_client_secret', value: '123', data_type: 1) }
   let!(:github_secret) { SiteSetting.create!(name: 'github_client_secret', value: '123', data_type: 1) }
   let!(:api_key) { Fabricate(:api_key, description: 'api key description') }

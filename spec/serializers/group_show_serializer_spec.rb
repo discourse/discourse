@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupShowSerializer do
+RSpec.describe GroupShowSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
 

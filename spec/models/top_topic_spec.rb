@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopTopic do
+RSpec.describe TopTopic do
 
   describe '#sorted_periods' do
     context "verify enum sequence" do

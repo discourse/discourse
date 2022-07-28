@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PasswordValidator do
+RSpec.describe PasswordValidator do
 
   def password_error_message(key)
     I18n.t("activerecord.errors.models.user.attributes.password.#{key.to_s}")
