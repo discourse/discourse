@@ -17,6 +17,9 @@ jobs:
     container: discourse/discourse_test:slim
     timeout-minutes: 10
 
+    env:
+      BUNDLER_VERSION: "2.3.18"
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -37,9 +40,7 @@ jobs:
 
       # Workaround for https://github.com/github/licensed/issues/521
       - name: Downgrade Bundler
-        run: |
-          gem uninstall bundler
-          gem install bundler --version '2.3.18'
+        run: gem install bundler --version '2.3.18'
 
       - name: Setup gems
         run: |
