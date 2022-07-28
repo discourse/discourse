@@ -38,7 +38,12 @@ export default {
       preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
     }
 
-    Object.keys(preloaded).forEach(function (key) {
+    const keys = Object.keys(preloaded);
+    if (keys.length === 0) {
+      throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
+    }
+
+    keys.forEach(function (key) {
       PreloadStore.store(key, JSON.parse(preloaded[key]));
 
       if (setupData.debugPreloadedAppData === "true") {

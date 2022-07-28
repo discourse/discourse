@@ -5,7 +5,7 @@ require 'topic_subtype'
 
 RSpec.describe SystemMessage do
 
-  context '#create' do
+  describe '#create' do
 
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }

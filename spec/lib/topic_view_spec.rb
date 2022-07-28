@@ -341,7 +341,7 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.post_counts_by_user' do
+    describe '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
         SiteSetting.enable_whispers = true
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
@@ -361,13 +361,13 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.participants' do
+    describe '.participants' do
       it 'returns the two participants hashed by id' do
         expect(topic_view.participants.to_a).to match_array([[first_poster.id, first_poster], [evil_trout.id, evil_trout]])
       end
     end
 
-    context '.all_post_actions' do
+    describe '.all_post_actions' do
       it 'is blank at first' do
         expect(topic_view.all_post_actions).to be_blank
       end
@@ -378,7 +378,7 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.read?' do
+    describe '.read?' do
       it 'tracks correctly' do
         # anon is assumed to have read everything
         expect(TopicView.new(topic.id).read?(1)).to eq(true)
@@ -395,7 +395,7 @@ RSpec.describe TopicView do
       end
     end
 
-    context "#bookmarks" do
+    describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
       let!(:bookmark2) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
@@ -412,7 +412,7 @@ RSpec.describe TopicView do
       end
     end
 
-    context "#bookmarks" do
+    describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user) }
       let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.posts[1], user: user) }
@@ -452,13 +452,13 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.topic_user' do
+    describe '.topic_user' do
       it 'returns nil when there is no user' do
         expect(TopicView.new(topic.id, nil).topic_user).to be_blank
       end
     end
 
-    context '#recent_posts' do
+    describe '#recent_posts' do
       before do
         24.times do |t| # our let()s have already created 3
           Fabricate(:post, topic: topic, user: first_poster, created_at: t.seconds.from_now)
@@ -497,7 +497,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context '#posts' do
+  describe '#posts' do
 
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }

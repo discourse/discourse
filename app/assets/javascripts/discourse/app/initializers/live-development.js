@@ -7,7 +7,7 @@ export default {
   name: "live-development",
 
   initialize(container) {
-    const messageBus = container.lookup("message-bus:main");
+    const messageBus = container.lookup("service:message-bus");
     const session = container.lookup("session:main");
 
     // Preserve preview_theme_id=## and pp=async-flamegraph parameters across pages

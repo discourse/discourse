@@ -221,7 +221,7 @@ RSpec.describe Badge do
     end
   end
 
-  context "#seed" do
+  describe "#seed" do
 
     let(:regular_badge) do
       Badge.find(Badge::Regular)

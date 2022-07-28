@@ -29,7 +29,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#top_category_ids" do
+  describe "#top_category_ids" do
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
@@ -58,7 +58,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#muted_tag" do
+  describe "#muted_tag" do
     fab!(:tag) { Fabricate(:tag) }
 
     let!(:tag_user) do
@@ -75,7 +75,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#second_factor_enabled" do
+  describe "#second_factor_enabled" do
     let(:guardian) { Guardian.new(user) }
     let(:json) { serializer.as_json }
 
@@ -104,7 +104,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#groups" do
+  describe "#groups" do
     it "should only show visible groups" do
       Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
       hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
@@ -121,7 +121,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#has_topic_draft" do
+  describe "#has_topic_draft" do
     it "is not included by default" do
       payload = serializer.as_json
       expect(payload).not_to have_key(:has_topic_draft)
@@ -144,7 +144,7 @@ RSpec.describe CurrentUserSerializer do
 
   end
 
-  context "#can_review" do
+  describe "#can_review" do
     let(:guardian) { Guardian.new(user) }
     let(:payload) { serializer.as_json }
 
