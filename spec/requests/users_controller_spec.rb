@@ -4538,6 +4538,34 @@ RSpec.describe UsersController do
         expect(json["users"].size).to eq(limit)
       end
     end
+
+    context "user status" do
+      it "returns user status if enabled in site settings" do
+        SiteSetting.enable_user_status = true
+        emoji = "tooth"
+        description = "off to dentist"
+        user.set_status!(description, emoji)
+
+        get "/u/search/users.json", params: { term: user.name }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"][0]).to have_key("user_status")
+        expect(json["users"][0]["user_status"]["description"]).to eq(description)
+        expect(json["users"][0]["user_status"]["emoji"]).to eq(emoji)
+      end
+
+      it "doesn't return user status if disabled in site settings" do
+        SiteSetting.enable_user_status = false
+        user.set_status!("off to dentist", "tooth")
+
+        get "/u/search/users.json", params: { term: user.name }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"][0]).not_to have_key("user_status")
+      end
+    end
   end
 
   describe '#email_login' do
