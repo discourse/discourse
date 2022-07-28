@@ -30,14 +30,17 @@ const TITLE_COUNT_MODES = ["notifications", "contextual"];
 export default Controller.extend({
   currentThemeId: -1,
   previewingColorScheme: false,
-  selectedDarkColorSchemeId: null,
   preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
+  isCurrentUserProfile: true,
 
   init() {
     this._super(...arguments);
+  },
 
-    this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
+  @discourseComputed("model.id")
+  isCurrentUserProfile(userId) {
+    return this.currentUser.id === userId;
   },
 
   @discourseComputed("makeThemeDefault")
@@ -222,25 +225,38 @@ export default Controller.extend({
       return value;
     },
     get() {
-      if (!this.session.userColorSchemeId) {
+      const theme = this.userSelectableThemes?.findBy("id", this.themeId);
+      const colorSchemeId = theme?.color_scheme_id;
+      const userColorSchemeId = this.isCurrentUserProfile
+        ? this.session.userColorSchemeId
+        : this.get("model.user_option.color_scheme_id");
+
+      if (!userColorSchemeId) {
         return;
       }
-
-      const theme = this.userSelectableThemes?.findBy("id", this.themeId);
 
       // we don't want to display the numeric ID of a scheme
       // when it is set by the theme but not marked as user selectable
       if (
-        theme?.color_scheme_id === this.session.userColorSchemeId &&
-        !this.userSelectableColorSchemes.findBy(
-          "id",
-          this.session.userColorSchemeId
-        )
+        colorSchemeId === userColorSchemeId &&
+        !this.userSelectableColorSchemes.findBy("id", userColorSchemeId)
       ) {
         return;
       } else {
-        return this.session.userColorSchemeId;
+        return userColorSchemeId;
       }
+    },
+  }),
+
+  selectedDarkColorSchemeId: computed({
+    get() {
+      if (this.isCurrentUserProfile) {
+        return this.session.userDarkSchemeId;
+      }
+
+      return (
+        this.get("model.user_option.dark_scheme_id") || this.defaultDarkSchemeId
+      );
     },
   }),
 
