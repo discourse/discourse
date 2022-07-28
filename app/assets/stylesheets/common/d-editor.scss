@@ -299,7 +299,11 @@
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
-  overflow-x: auto;
+
+  html:not(.keyboard-visible) & {
+    overflow-x: auto; // hiding overflow breaks the cog menu on iPad and mobile
+  }
+
   flex-shrink: 0;
 
   .d-editor-spacer {
