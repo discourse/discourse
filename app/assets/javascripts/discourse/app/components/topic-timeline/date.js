@@ -1,7 +1,7 @@
 import GlimmerComponent from "discourse/components/glimmer";
-import { bind } from "discourse-common/utils/decorators";
 import { relativeAge } from "discourse/lib/formatter";
 import { tracked } from "@glimmer/tracking";
+import I18n from "I18n";
 
 export default class TopicTimelineDate extends GlimmerComponent {
   @tracked displayTimeLineScrollArea = true;
@@ -29,15 +29,10 @@ export default class TopicTimelineDate extends GlimmerComponent {
       if (streamLength === 1) {
         const postsWrapper = document.querySelector(".posts-wrapper");
         if (postsWrapper && postsWrapper.offsetHeight < 1000) {
-          this.updateDisplayTimeLineScrollArea(false);
+          this.displayTimeLineScrollArea = false;
         }
       }
     }
-  }
-
-  @bind
-  updateDisplayTimeLineScrollArea(arg) {
-    this.displayTimeLineScrollArea = arg;
   }
 }
 

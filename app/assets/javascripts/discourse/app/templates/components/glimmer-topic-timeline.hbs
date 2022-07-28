@@ -1,7 +1,6 @@
 <div class="timeline-container">
   <DSection
     @class={{concat "topic-timeline " this.class}}
-    @prevEvent={{@info.prevEvent}}
     @loading={{@model.postStream.loading}}
     @dockAt={{@dockAt}}
     @dockBottom={{@dockBottom}}
@@ -31,7 +30,7 @@
 
     <TopicTimeline::ScrollArea
       @topic={{@model}}
-      @enteredIndex={{@enteredIndex}}
+      @enteredIndex={{this.enteredIndex}}
       @jumpTop={{@jumpTop}}
       @jumpBottom={{@jumpBottom}}
       @jumpEnd={{@jumpEnd}}

@@ -14,20 +14,19 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked current;
   @tracked percentage = this._percentFor(
     this.args.topic,
-    this.args.enteredIndex
+    this.args.enteredIndex + 1
   );
   @tracked total;
   @tracked date;
   @tracked lastReadPercentage = null;
   @tracked position;
+  @tracked lastReadTop = Math.round(
+    this.lastReadPercentage * scrollareaHeight()
+  );
 
   style = `height: ${scrollareaHeight()}px`;
   before = this.scrollareaRemaining() * this.percentage;
   after = scrollareaHeight() - this.before - SCROLLER_HEIGHT;
-
-  get lastReadTop() {
-    return Math.round(this.lastReadPercentage * scrollareaHeight());
-  }
 
   get showDockedButton() {
     return !this.site.mobileView && this.hasBackPosition && !this.showButton;
@@ -58,10 +57,9 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
       this.lastReadTop = Math.round(
         this.lastReadPercentage * scrollareaHeight()
       );
-      showButton =
-        this.before + SCROLLER_HEIGHT - 5 < lastReadTop ||
+      this.showButton =
+        this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
         this.before > this.lastReadTop + 25;
-      this.showButton = showButton;
     }
 
     if (this.hasBackPosition) {
@@ -81,7 +79,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     const areaTop = $area.offset().top;
 
     const percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
-
     this.percentage = percentage;
   }
 
@@ -137,7 +134,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     this.position = scrollPosition;
     this.excerpt = "";
 
-    const stream = this.args.topic.get("postStream");
+    //const stream = this.args.topic.get("postStream");
 
     // a little debounce to avoid flashing
     discourseLater(() => {
@@ -146,44 +143,44 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
       }
 
       // we have an off by one, stream is zero based,
-      stream.excerpt(scrollPosition - 1).then((info) => {
-        if (info && this.position === scrollPosition) {
-          let excerpt = "";
+      // OLD WIDGET CODE
+      //stream.excerpt(scrollPosition - 1).then((info) => {
+      //if (info && this.position === scrollPosition) {
+      //let excerpt = "";
 
-          if (info.username) {
-            excerpt = "<span class='username'>" + info.username + ":</span> ";
-          }
+      //if (info.username) {
+      //excerpt = "<span class='username'>" + info.username + ":</span> ";
+      //}
 
-          if (info.excerpt) {
-            this.excerpt = excerpt + info.excerpt;
-          } else if (info.action_code) {
-            this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
-              info.action_code,
-              info.created_at,
-              info.username
-            )}`;
-          }
+      //if (info.excerpt) {
+      //this.excerpt = excerpt + info.excerpt;
+      //} else if (info.action_code) {
+      //this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
+      //info.action_code,
+      //info.created_at,
+      //info.username
+      //)}`;
+      //}
 
-          this.queueRerender();
-        }
-      });
+      //this.queueRerender();
+      //}
+      //});
     }, 50);
   }
 
+  @bind
   commit() {
     this.calculatePosition();
 
-    if (this.current === this.scrollPosition) {
-      this.sendWidgetAction("jumpToIndex", this.current);
-    } else {
-      this.sendWidgetAction("jumpEnd");
-    }
+    // old code from widget
+    //if (this.current === this.scrollPosition) {
+    //this.sendWidgetAction("jumpToIndex", this.current);
+    //} else {
+    //this.sendWidgetAction("jumpEnd");
+    //}
   }
 
-  topicCurrentPostScrolled(event) {
-    this.state.percentage = event.percent;
-  }
-
+  @bind
   _percentFor(topic, postIndex) {
     const total = topic.get("postStream.filteredPostsCount");
     return this.clamp(parseFloat(postIndex - 1.0) / total);
@@ -194,6 +191,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     return Math.max(Math.min(p, max), min);
   }
 
+  @bind
   scrollareaRemaining() {
     return scrollareaHeight() - SCROLLER_HEIGHT;
   }
