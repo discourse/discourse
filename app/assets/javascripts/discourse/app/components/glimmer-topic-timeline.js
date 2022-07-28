@@ -34,7 +34,11 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
   }
 
   get addShowClass() {
-    this.args.fullscreen && !this.args.addShowClass ? true : false;
+    return this.args.fullscreen && !this.args.addShowClass ? true : false;
+  }
+
+  get canCreatePost() {
+    return this.args.model.get("details.can_create_post");
   }
 
   constructor() {

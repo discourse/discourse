@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
 const MAX_SCROLLAREA_HEIGHT = 300;
+const LAST_READ_HEIGHT = 20;
 
 export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked showButton = false;
@@ -41,6 +42,23 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
       Math.abs(this.lastRead - this.total) > 1 &&
       this.lastRead !== this.total
     );
+  }
+
+  get beforePadding() {
+    return `height: ${this.before}px`;
+  }
+
+  get afterPadding() {
+    return `height: ${this.after}px`;
+  }
+
+  get lastReadStyle() {
+    return `height: ${LAST_READ_HEIGHT}px; top: ${this.topPosition}px`;
+  }
+
+  get topPosition() {
+    const bottom = scrollareaHeight() - LAST_READ_HEIGHT / 2;
+    return this.lastReadTop > bottom ? bottom : this.lastReadTop;
   }
 
   constructor() {
