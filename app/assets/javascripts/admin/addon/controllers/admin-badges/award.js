@@ -4,46 +4,43 @@ import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 
-export default Controller.extend({
-  saving: false,
-  replaceBadgeOwners: false,
-  grantExistingHolders: false,
-  fileSelected: false,
-  unmatchedEntries: null,
-  resultsMessage: null,
-  success: false,
-  unmatchedEntriesCount: 0,
+export default class AdminBadgesAwardController extends Controller {
+  @tracked saving = false;
+  @tracked replaceBadgeOwners = false;
+  @tracked grantExistingHolders = false;
+  @tracked fileSelected = false;
+  @tracked unmatchedEntries = null;
+  @tracked resultsMessage = null;
+  @tracked success = false;
+  @tracked unmatchedEntriesCount = 0;
 
   resetState() {
-    this.setProperties({
-      saving: false,
-      unmatchedEntries: null,
-      resultsMessage: null,
-      success: false,
-      unmatchedEntriesCount: 0,
-    });
-    this.send("updateFileSelected");
-  },
+    this.saving = false;
+    this.unmatchedEntries = null;
+    this.resultsMessage = null;
+    this.success = false;
+    this.unmatchedEntriesCount = 0;
 
-  @discourseComputed("fileSelected", "saving")
-  massAwardButtonDisabled(fileSelected, saving) {
-    return !fileSelected || saving;
-  },
+    this.updateFileSelected();
+  }
 
-  @discourseComputed("unmatchedEntriesCount", "unmatchedEntries.length")
-  unmatchedEntriesTruncated(unmatchedEntriesCount, length) {
-    return unmatchedEntriesCount && length && unmatchedEntriesCount > length;
-  },
+  get massAwardButtonDisabled() {
+    return !this.fileSelected || this.saving;
+  }
+
+  get unmatchedEntriesTruncated() {
+    let count = this.unmatchedEntriesCount;
+    let length = this.unmatchedEntries.length;
+    return count && length && count > length;
+  }
 
   @action
   updateFileSelected() {
-    this.set(
-      "fileSelected",
-      !!document.querySelector("#massAwardCSVUpload")?.files?.length
-    );
-  },
+    this.fileSelected = !!document.querySelector("#massAwardCSVUpload")?.files
+      ?.length;
+  }
 
   @action
   massAward() {
@@ -62,7 +59,7 @@ export default Controller.extend({
       options.data.append("grant_existing_holders", this.grantExistingHolders);
 
       this.resetState();
-      this.set("saving", true);
+      this.saving = true;
 
       ajax(`/admin/badges/award/${this.model.id}`, options)
         .then(
@@ -71,29 +68,23 @@ export default Controller.extend({
             unmatched_entries: unmatchedEntries,
             unmatched_entries_count: unmatchedEntriesCount,
           }) => {
-            this.setProperties({
-              resultsMessage: I18n.t("admin.badges.mass_award.success", {
-                count: matchedCount,
-              }),
-              success: true,
+            this.resultsMessage = I18n.t("admin.badges.mass_award.success", {
+              count: matchedCount,
             });
+            this.success = true;
             if (unmatchedEntries.length) {
-              this.setProperties({
-                unmatchedEntries,
-                unmatchedEntriesCount,
-              });
+              this.unmatchedEntries = unmatchedEntries;
+              this.unmatchedEntriesCount = unmatchedEntriesCount;
             }
           }
         )
         .catch((error) => {
-          this.setProperties({
-            resultsMessage: extractError(error),
-            success: false,
-          });
+          this.resultsMessage = extractError(error);
+          this.success = false;
         })
-        .finally(() => this.set("saving", false));
+        .finally(() => (this.saving = false));
     } else {
       bootbox.alert(I18n.t("admin.badges.mass_award.aborted"));
     }
-  },
-});
+  }
+}
