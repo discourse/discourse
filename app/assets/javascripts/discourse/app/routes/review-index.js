@@ -22,6 +22,12 @@ export default DiscourseRoute.extend({
     if (meta.reviewable_count !== undefined) {
       this.currentUser.set("reviewable_count", meta.reviewable_count);
     }
+    if (meta.unseen_reviewable_count !== undefined) {
+      this.currentUser.set(
+        "unseen_reviewable_count",
+        meta.unseen_reviewable_count
+      );
+    }
 
     controller.setProperties({
       reviewables: model,

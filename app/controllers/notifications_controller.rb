@@ -39,6 +39,10 @@ class NotificationsController < ApplicationController
         changed = current_user.saw_notification_id(max_id)
       end
 
+      if !params.has_key?(:silent) && !@readonly_mode && guardian.can_see_review_queue?
+        current_user.bump_last_seen_reviewable!
+      end
+
       if changed
         current_user.reload
         current_user.publish_notifications_state

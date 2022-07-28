@@ -487,6 +487,7 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications = nil
+    @all_unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
     @unread_bookmarks = nil
@@ -587,6 +588,29 @@ class User < ActiveRecord::Base
     end
   end
 
+  def all_unread_notifications
+    @all_unread_notifications ||= begin
+      sql = <<~SQL
+        SELECT COUNT(*) FROM (
+          SELECT 1 FROM
+          notifications n
+          LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL AND
+            n.user_id = :user_id AND
+            n.id > :seen_notification_id AND
+            NOT read
+          LIMIT :limit
+        ) AS X
+      SQL
+
+      DB.query_single(sql,
+        user_id: id,
+        seen_notification_id: seen_notification_id,
+        limit: User.max_unread_notifications
+      )[0].to_i
+    end
+  end
+
   def total_unread_notifications
     @unread_total_notifications ||= notifications.where("read = false").count
   end
@@ -595,12 +619,34 @@ class User < ActiveRecord::Base
     Reviewable.list_for(self).count
   end
 
+  def unseen_reviewable_count
+    Reviewable.unseen_list_for(self).count
+  end
+
   def saw_notification_id(notification_id)
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
       true
     else
       false
+    end
+  end
+
+  def bump_last_seen_reviewable!
+    max_reviewable_id = Reviewable
+      .unseen_list_for(self, preload: false, limit: 1)
+      .except(:order)
+      .order(id: :desc)
+      .pluck(:id)
+      .first
+
+    if max_reviewable_id && (!last_seen_reviewable_id || max_reviewable_id > last_seen_reviewable_id)
+      update!(last_seen_reviewable_id: max_reviewable_id)
+      MessageBus.publish(
+        "/reviewable_counts",
+        { unseen_reviewable_count: self.unseen_reviewable_count },
+        user_ids: [self.id]
+      )
     end
   end
 
@@ -662,6 +708,10 @@ class User < ActiveRecord::Base
       recent: recent,
       seen_notification_id: seen_notification_id,
     }
+
+    if self.redesigned_user_menu_enabled?
+      payload[:all_unread_notifications] = all_unread_notifications
+    end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end

@@ -87,6 +87,44 @@ RSpec.describe NotificationsController do
           Discourse.clear_redis_readonly!
         end
 
+        it "should not bump last seen reviewable in readonly mode" do
+          user.update!(admin: true)
+          Fabricate(:reviewable)
+          Discourse.received_redis_readonly!
+          expect {
+            get "/notifications.json", params: { recent: true }
+          }.not_to change { user.reload.last_seen_reviewable_id }
+        ensure
+          Discourse.clear_redis_readonly!
+        end
+
+        it "should not bump last seen reviewable if the user can't seen reviewables" do
+          Fabricate(:reviewable)
+          expect {
+            get "/notifications.json", params: { recent: true }
+          }.not_to change { user.reload.last_seen_reviewable_id }
+        end
+
+        it "should not bump last seen reviewable if the silent param is present" do
+          user.update!(admin: true)
+          Fabricate(:reviewable)
+          expect {
+            get "/notifications.json", params: { recent: true, silent: true }
+          }.not_to change { user.reload.last_seen_reviewable_id }
+        end
+
+        it "bumps last_seen_reviewable_id" do
+          user.update!(admin: true)
+          expect(user.last_seen_reviewable_id).to eq(nil)
+          reviewable = Fabricate(:reviewable)
+          get "/notifications.json", params: { recent: true }
+          expect(user.reload.last_seen_reviewable_id).to eq(reviewable.id)
+
+          reviewable2 = Fabricate(:reviewable)
+          get "/notifications.json", params: { recent: true }
+          expect(user.reload.last_seen_reviewable_id).to eq(reviewable2.id)
+        end
+
         it "get notifications with all filters" do
           notification = Fabricate(:notification, user: user)
           notification2 = Fabricate(:notification, user: user)
