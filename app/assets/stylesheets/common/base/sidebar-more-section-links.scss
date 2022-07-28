@@ -3,15 +3,22 @@
 
   .sidebar-more-section-links-details-summary {
     padding: 0.35em 0.5em;
-    color: var(--tertiary);
+    color: var(--primary-high);
     font-size: var(--font-down-1);
     transition: background-color 0.25s;
+    display: flex;
+    align-items: center;
+    list-style: none;
 
+    .d-icon {
+      margin-left: auto;
+      color: var(--primary-medium);
+    }
+
+    &:focus,
     &:hover {
       background: var(--d-sidebar-highlight-color);
     }
-
-    list-style: none;
 
     &::before {
       display: none;
