@@ -3,7 +3,7 @@
 
 require 'slug'
 
-describe Slug do
+RSpec.describe Slug do
 
   describe '#for' do
     let(:default_slug) { 'topic' }

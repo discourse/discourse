@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostOwnerChanger do
+RSpec.describe PostOwnerChanger do
   describe "change_owner!" do
     fab!(:editor) { Fabricate(:admin) }
     fab!(:user_a) { Fabricate(:user) }

@@ -2,7 +2,7 @@
 
 require 'email'
 
-describe Enum do
+RSpec.describe Enum do
   let(:array_enum) { Enum.new(:jake, :finn, :princess_bubblegum, :peppermint_butler) }
   let(:hash_enum) { Enum.new(jake: 1, finn: 2, princess_bubblegum: 3, peppermint_butler: 4) }
 

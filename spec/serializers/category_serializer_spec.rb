@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategorySerializer do
+RSpec.describe CategorySerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:group) { Fabricate(:group) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Middleware::AnonymousCache do
+RSpec.describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})

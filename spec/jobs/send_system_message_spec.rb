@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::SendSystemMessage do
+RSpec.describe Jobs::SendSystemMessage do
   it "raises an error without a user_id" do
     expect { Jobs::SendSystemMessage.new.execute(message_type: 'welcome_invite') }.to raise_error(Discourse::InvalidParameters)
   end

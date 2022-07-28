@@ -2,7 +2,7 @@
 
 require 'seed_data/categories'
 
-describe SeedData::Categories do
+RSpec.describe SeedData::Categories do
   subject { SeedData::Categories.with_default_locale }
 
   def create_category(name = "staff_category_id")

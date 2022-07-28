@@ -2,7 +2,7 @@
 
 require "s3_helper"
 
-describe "S3Helper" do
+RSpec.describe "S3Helper" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
 
   before do

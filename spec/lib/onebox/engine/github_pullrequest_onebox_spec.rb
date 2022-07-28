@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubPullRequestOnebox do
+RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
   before do
     @link = "https://github.com/discourse/discourse/pull/1253/"
     @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"

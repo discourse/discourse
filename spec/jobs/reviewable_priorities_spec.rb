@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ReviewablePriorities do
+RSpec.describe Jobs::ReviewablePriorities do
 
   it "needs returns 0s with no existing reviewables" do
     Jobs::ReviewablePriorities.new.execute({})

@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { hbs } from "ember-cli-htmlbars";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -81,12 +81,44 @@ module("Integration | Component | user-menu", function (hooks) {
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      [...Array(4).keys()].map((n) => n.toString()),
+      ["0", "1", "2", "3"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
 
+  test("reviewables tab is shown if current user can review", async function (assert) {
+    this.currentUser.set("can_review", true);
+    await render(template);
+    const tab = query("#user-menu-button-review-queue");
+    assert.strictEqual(tab.dataset.tabNumber, "4");
+
+    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
+    assert.strictEqual(tabs.length, 6);
+
+    assert.deepEqual(
+      tabs.map((t) => t.dataset.tabNumber),
+      ["0", "1", "2", "3", "4", "5"],
+      "data-tab-number of the tabs has no gaps when the reviewables tab is show"
+    );
+  });
+
+  test("reviewables count is shown on the reviewables tab", async function (assert) {
+    this.currentUser.set("can_review", true);
+    this.currentUser.set("reviewable_count", 4);
+    await render(template);
+    const countBadge = query(
+      "#user-menu-button-review-queue .badge-notification"
+    );
+    assert.strictEqual(countBadge.textContent, "4");
+
+    this.currentUser.set("reviewable_count", 0);
+    await settled();
+
+    assert.ok(!exists("#user-menu-button-review-queue .badge-notification"));
+  });
+
   test("changing tabs", async function (assert) {
+    this.currentUser.set("can_review", true);
     await render(template);
     let queryParams;
     pretender.get("/notifications", (request) => {
@@ -224,5 +256,16 @@ module("Integration | Component | user-menu", function (hooks) {
       "active tab is now the likes tab"
     );
     assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
+
+    await click("#user-menu-button-review-queue");
+    assert.ok(exists("#quick-access-review-queue.quick-access-panel"));
+    activeTabs = queryAll(".top-tabs .btn.active");
+    assert.strictEqual(activeTabs.length, 1);
+    assert.strictEqual(
+      activeTabs[0].id,
+      "user-menu-button-review-queue",
+      "active tab is now the reviewables tab"
+    );
+    assert.strictEqual(queryAll("#quick-access-review-queue ul li").length, 8);
   });
 });

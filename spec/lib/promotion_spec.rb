@@ -2,7 +2,7 @@
 
 require 'promotion'
 
-describe Promotion do
+RSpec.describe Promotion do
 
   describe "review" do
     it "skips regular users" do

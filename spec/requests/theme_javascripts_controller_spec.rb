@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe ThemeJavascriptsController do
+RSpec.describe ThemeJavascriptsController do
   include ActiveSupport::Testing::TimeHelpers
 
   def clear_disk_cache

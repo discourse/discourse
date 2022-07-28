@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SvgSprite do
+RSpec.describe SvgSprite do
   fab!(:theme) { Fabricate(:theme) }
 
   before do
@@ -254,7 +254,7 @@ describe SvgSprite do
       theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
       theme.save!
 
-      expect(Upload.where(id: upload.id)).to be_exist
+      expect(Upload.exists?(id: upload.id)).to eq(true)
       expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
     end
 
@@ -266,7 +266,7 @@ describe SvgSprite do
       theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
       theme.save!
 
-      expect(Upload.where(id: upload.id)).to be_exist
+      expect(Upload.exists?(id: upload.id)).to eq(true)
       expect(SvgSprite.bundle(theme.id)).to match(/arrow-down/)
     end
 
@@ -280,7 +280,7 @@ describe SvgSprite do
       child_theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
       child_theme.save!
 
-      expect(Upload.where(id: upload.id)).to be_exist
+      expect(Upload.exists?(id: upload.id)).to eq(true)
       expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
     end
 

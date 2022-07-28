@@ -55,7 +55,7 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
-  context "#update_fields" do
+  describe "#update_fields" do
     fab!(:moderator) { Fabricate(:moderator) }
     fab!(:reviewable) { Fabricate(:reviewable) }
 

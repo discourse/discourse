@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Plugin::Instance do
+RSpec.describe Plugin::Instance do
 
   after do
     DiscoursePluginRegistry.reset!
@@ -162,7 +162,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "#add_report" do
+  describe "#add_report" do
     it "adds a report" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.add_report("readers") {}

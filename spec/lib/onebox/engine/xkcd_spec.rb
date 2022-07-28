@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::XkcdOnebox do
+RSpec.describe Onebox::Engine::XkcdOnebox do
   let(:link) { "https://xkcd.com/327/" }
   let(:api_link) { "https://xkcd.com/327/info.0.json" }
   let(:html) { described_class.new(link).to_html }

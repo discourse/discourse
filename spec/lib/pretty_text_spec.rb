@@ -2,7 +2,7 @@
 
 require 'pretty_text'
 
-describe PrettyText do
+RSpec.describe PrettyText do
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HashtagsController do
+RSpec.describe HashtagsController do
   fab!(:category) { Fabricate(:category) }
   fab!(:tag) { Fabricate(:tag) }
 

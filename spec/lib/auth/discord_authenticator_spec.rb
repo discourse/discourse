@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::DiscordAuthenticator do
+RSpec.describe Auth::DiscordAuthenticator do
   let(:hash) {
     OmniAuth::AuthHash.new(
       provider: "facebook",

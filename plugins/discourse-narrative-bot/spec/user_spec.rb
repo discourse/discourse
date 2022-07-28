@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe User do
+RSpec.describe User do
   let(:user) { Fabricate(:user) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
 

@@ -289,7 +289,7 @@ RSpec.describe User do
     end
   end
 
-  context '.enqueue_welcome_message' do
+  describe '.enqueue_welcome_message' do
     fab!(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
@@ -333,7 +333,7 @@ RSpec.describe User do
     end
   end
 
-  context '.set_default_tags_preferences' do
+  describe '.set_default_tags_preferences' do
     let(:tag) { Fabricate(:tag) }
 
     it "should set default tag preferences when new user created" do
@@ -2450,7 +2450,7 @@ RSpec.describe User do
     end
   end
 
-  context "#destroy!" do
+  describe "#destroy!" do
     it 'clears up associated data on destroy!' do
       user = Fabricate(:user)
       post = Fabricate(:post)

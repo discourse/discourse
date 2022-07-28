@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserCommScreener do
+RSpec.describe UserCommScreener do
   fab!(:target_user1) { Fabricate(:user, username: "bobscreen") }
   fab!(:target_user2) { Fabricate(:user, username: "hughscreen") }
   fab!(:target_user3) do
@@ -28,6 +28,12 @@ describe UserCommScreener do
     screener = described_class.new(acting_user: acting_user, target_user_ids: [target_user1.id])
     expect(screener.allowing_actor_communication).to eq([target_user1.id])
     screener = described_class.new(acting_user_id: acting_user.id, target_user_ids: [target_user1.id])
+    expect(screener.allowing_actor_communication).to eq([target_user1.id])
+  end
+
+  it "filters out the acting user from target_user_ids" do
+    acting_user = Fabricate(:user)
+    screener = described_class.new(acting_user: acting_user, target_user_ids: [target_user1.id, acting_user.id])
     expect(screener.allowing_actor_communication).to eq([target_user1.id])
   end
 

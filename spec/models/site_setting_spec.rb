@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSetting do
+RSpec.describe SiteSetting do
 
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do

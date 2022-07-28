@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'site' do
+RSpec.describe 'site' do
 
   fab!(:admin) { Fabricate(:admin) }
   fab!(:category) { Fabricate(:category) }

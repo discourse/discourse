@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Draft do
+RSpec.describe Draft do
 
   fab!(:user) do
     Fabricate(:user)

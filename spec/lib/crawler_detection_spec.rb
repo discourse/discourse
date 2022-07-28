@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CrawlerDetection do
+RSpec.describe CrawlerDetection do
 
   def crawler!(user_agent, via = nil)
     if (!CrawlerDetection.crawler?(user_agent, via))

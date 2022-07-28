@@ -591,6 +591,10 @@ class User < ActiveRecord::Base
     @unread_total_notifications ||= notifications.where("read = false").count
   end
 
+  def reviewable_count
+    Reviewable.list_for(self).count
+  end
+
   def saw_notification_id(notification_id)
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)

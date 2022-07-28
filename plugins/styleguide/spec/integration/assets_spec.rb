@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Styleguide assets' do
+RSpec.describe 'Styleguide assets' do
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(Fabricate(:admin))

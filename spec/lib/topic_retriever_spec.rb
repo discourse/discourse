@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicRetriever do
+RSpec.describe TopicRetriever do
 
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:author_username) { "eviltrout" }

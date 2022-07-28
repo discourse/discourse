@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicTrackingState do
+RSpec.describe TopicTrackingState do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:whisperers_group) { Fabricate(:group) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BackupRestore::Backuper do
+RSpec.describe BackupRestore::Backuper do
   it 'returns a non-empty parameterized title when site title contains unicode' do
     SiteSetting.title = 'Ɣ'
     backuper = BackupRestore::Backuper.new(Discourse.system_user.id)

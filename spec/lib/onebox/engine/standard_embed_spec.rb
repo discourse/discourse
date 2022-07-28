@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::StandardEmbed do
+RSpec.describe Onebox::Engine::StandardEmbed do
   let(:host_class) do
     Class.new do
       include Onebox::Engine::StandardEmbed

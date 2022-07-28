@@ -2,7 +2,7 @@
 
 require "import_export"
 
-describe ImportExport::Importer do
+RSpec.describe ImportExport::Importer do
 
   before do
     STDOUT.stubs(:write)
@@ -17,7 +17,7 @@ describe ImportExport::Importer do
     ImportExport::Importer.new(data).perform
   end
 
-  context '.perform' do
+  describe '.perform' do
 
     it 'topics and users' do
       data = import_data.dup

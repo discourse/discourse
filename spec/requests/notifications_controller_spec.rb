@@ -28,7 +28,7 @@ def delete_notification(resp_code, matcher)
   expect(Notification.count).public_send(matcher, eq(notification_count))
 end
 
-describe NotificationsController do
+RSpec.describe NotificationsController do
   context 'when logged in' do
     context 'as normal user' do
       fab!(:user) { sign_in(Fabricate(:user)) }

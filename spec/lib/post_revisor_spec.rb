@@ -2,7 +2,7 @@
 
 require 'post_revisor'
 
-describe PostRevisor do
+RSpec.describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
@@ -758,7 +758,7 @@ describe PostRevisor do
       expect(post.post_revisions.last.modifications).to eq('tags' => [[], ['new-tag-3']])
     end
 
-    context "#publish_changes" do
+    describe "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
       it "should publish topic changes to clients" do

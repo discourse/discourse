@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ThemeJavascriptCompiler do
+RSpec.describe ThemeJavascriptCompiler do
 
   let(:theme_id) { 22 }
 

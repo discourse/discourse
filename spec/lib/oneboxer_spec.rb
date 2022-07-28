@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Oneboxer do
+RSpec.describe Oneboxer do
   def response(file)
     file = File.join("spec", "fixtures", "onebox", "#{file}.response")
     File.exist?(file) ? File.read(file) : ""
@@ -149,7 +149,7 @@ describe Oneboxer do
     end
   end
 
-  context ".onebox_raw" do
+  describe ".onebox_raw" do
     it "should escape the onebox URL before processing" do
       post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
@@ -158,7 +158,7 @@ describe Oneboxer do
     end
   end
 
-  context ".external_onebox" do
+  describe ".external_onebox" do
     html = <<~HTML
       <html>
       <head>

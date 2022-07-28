@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PullHotlinkedImages do
+RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
@@ -592,7 +592,7 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  context "#disable_if_low_on_disk_space" do
+  describe "#disable_if_low_on_disk_space" do
     fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
     let(:job) { Jobs::PullHotlinkedImages.new }
 

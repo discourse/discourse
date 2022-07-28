@@ -261,7 +261,7 @@ RSpec.describe UserProfile do
     end
   end
 
-  context '.import_url_for_user' do
+  describe '.import_url_for_user' do
     fab!(:user) { Fabricate(:user) }
 
     before do

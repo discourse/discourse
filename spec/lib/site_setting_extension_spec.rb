@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettingExtension do
+RSpec.describe SiteSettingExtension do
 
   # We disable message bus here to avoid a large amount
   # of unneeded messaging, tests are careful to call refresh

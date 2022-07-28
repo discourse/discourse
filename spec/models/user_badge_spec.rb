@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserBadge do
+RSpec.describe UserBadge do
   fab!(:badge) { Fabricate(:badge) }
   fab!(:user) { Fabricate(:user) }
 

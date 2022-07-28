@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UploadMarkdown do
+RSpec.describe UploadMarkdown do
   it "generates markdown for each different upload type (attachment, image, video, audio)" do
     SiteSetting.authorized_extensions = "mp4|mp3|pdf|jpg|mmmppp444"
     video = Fabricate(:upload, original_filename: "test_video.mp4", extension: "mp4")

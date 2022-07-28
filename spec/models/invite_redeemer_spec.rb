@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InviteRedeemer do
+RSpec.describe InviteRedeemer do
   fab!(:admin) { Fabricate(:admin) }
 
   describe '.create_user_from_invite' do

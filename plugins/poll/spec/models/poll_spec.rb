@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::DiscoursePoll::Poll do
+RSpec.describe ::DiscoursePoll::Poll do
   describe ".transform_for_user_field_override" do
     it "Transforms UserField name if a matching CustomUserField is present" do
       user_field_name = "Something Cool"

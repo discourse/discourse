@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TranslationOverride do
+RSpec.describe TranslationOverride do
   context 'validations' do
     describe '#value' do
       before do

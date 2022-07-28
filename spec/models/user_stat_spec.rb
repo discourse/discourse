@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserStat do
+RSpec.describe UserStat do
 
   it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)
@@ -10,7 +10,7 @@ describe UserStat do
     expect(user.user_stat.new_since).to be_present
   end
 
-  context '#update_view_counts' do
+  describe '#update_view_counts' do
 
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }

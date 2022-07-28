@@ -4,7 +4,7 @@
 # with mailer specific mailer specs like UserEmail, but sometimes we need
 # to test things along the whole outbound flow including the MessageBuilder
 # and the Sender.
-describe "Outbound Email" do
+RSpec.describe "Outbound Email" do
   def send_email(opts = {})
     message = TestMailer.send_test("test@test.com", opts)
     result = Email::Sender.new(message, :test_message).send

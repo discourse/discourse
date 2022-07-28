@@ -6,7 +6,7 @@ class GlobalPathInstance
   extend GlobalPath
 end
 
-describe GlobalPath do
+RSpec.describe GlobalPath do
 
   context 'cdn_relative_path' do
     def cdn_relative_path(p)

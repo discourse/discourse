@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CreateRecentPostSearchIndexes do
+RSpec.describe Jobs::CreateRecentPostSearchIndexes do
   subject { described_class.new }
 
   fab!(:post) do

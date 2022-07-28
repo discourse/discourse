@@ -3,7 +3,7 @@
 require 'post_creator'
 require 'topic_subtype'
 
-describe PostCreator do
+RSpec.describe PostCreator do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
@@ -1793,7 +1793,7 @@ describe PostCreator do
     end
   end
 
-  context "#create_post_notice" do
+  describe "#create_post_notice" do
     fab!(:user) { Fabricate(:user) }
     fab!(:staged) { Fabricate(:staged) }
     fab!(:anonymous) { Fabricate(:anonymous) }

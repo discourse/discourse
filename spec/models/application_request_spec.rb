@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ApplicationRequest do
+RSpec.describe ApplicationRequest do
   before do
     ApplicationRequest.enable
     CachedCounting.reset

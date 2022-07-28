@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TrustLevelSetting do
+RSpec.describe TrustLevelSetting do
   describe ".values" do
     after do
       I18n.reload!

@@ -2,7 +2,7 @@
 
 require 'email/message_builder'
 
-describe Email::MessageBuilder do
+RSpec.describe Email::MessageBuilder do
 
   let(:to_address) { "jake@adventuretime.ooo" }
   let(:subject) { "Tree Trunks has made some apple pie!" }

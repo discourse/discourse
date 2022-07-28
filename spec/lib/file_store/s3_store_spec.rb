@@ -3,7 +3,7 @@
 require 'file_store/s3_store'
 require 'file_store/local_store'
 
-describe FileStore::S3Store do
+RSpec.describe FileStore::S3Store do
   let(:store) { FileStore::S3Store.new }
   let(:s3_helper) { store.s3_helper }
   let(:client) { Aws::S3::Client.new(stub_responses: true) }

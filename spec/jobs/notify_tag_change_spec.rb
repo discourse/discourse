@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Jobs::NotifyTagChange do
+RSpec.describe ::Jobs::NotifyTagChange do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }

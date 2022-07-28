@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ActivationReminderEmails do
+RSpec.describe Jobs::ActivationReminderEmails do
   before { Jobs.run_immediately! }
 
   # should be between 2 and 3 days

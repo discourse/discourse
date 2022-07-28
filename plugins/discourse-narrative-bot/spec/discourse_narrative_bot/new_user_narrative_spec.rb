@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseNarrativeBot::NewUserNarrative do
+RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
   fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
   fab!(:discobot_user) { narrative_bot.discobot_user }

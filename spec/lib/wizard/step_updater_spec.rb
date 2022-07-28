@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Wizard::StepUpdater do
+RSpec.describe Wizard::StepUpdater do
   before do
     SiteSetting.wizard_enabled = true
   end

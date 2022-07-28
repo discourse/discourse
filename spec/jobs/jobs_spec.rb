@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs do
+RSpec.describe Jobs do
 
   describe 'enqueue' do
 

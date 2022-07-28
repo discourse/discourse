@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Theme do
+RSpec.describe Theme do
   after do
     Theme.clear_cache!
   end
@@ -282,7 +282,7 @@ HTML
       freeze_time (SiteSetting.clean_orphan_uploads_grace_period_hours + 1).hours.from_now
       Jobs::CleanUpUploads.new.execute(nil)
 
-      expect(Upload.where(id: upload.id)).to be_exist
+      expect(Upload.where(id: upload.id)).to be_exists
 
       # no error for theme field
       theme.reload

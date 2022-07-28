@@ -2,7 +2,7 @@
 
 require_relative 'shared_context_for_backup_restore'
 
-describe BackupRestore::DatabaseRestorer do
+RSpec.describe BackupRestore::DatabaseRestorer do
   include_context "shared stuff"
 
   let(:current_db) { RailsMultisite::ConnectionManagement.current_db }

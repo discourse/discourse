@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserUpdater do
+RSpec.describe UserUpdater do
   fab!(:user) { Fabricate(:user) }
   fab!(:u1) { Fabricate(:user) }
   fab!(:u2) { Fabricate(:user) }

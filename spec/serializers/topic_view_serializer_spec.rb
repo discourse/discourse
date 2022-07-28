@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicViewSerializer do
+RSpec.describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
     serializer = TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json

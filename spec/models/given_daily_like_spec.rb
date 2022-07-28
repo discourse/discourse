@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GivenDailyLike do
+RSpec.describe GivenDailyLike do
 
   it 'no errors without a user' do
     expect { GivenDailyLike.increment_for(nil) }.not_to raise_error

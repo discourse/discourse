@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::TwitterStatusOnebox do
+RSpec.describe Onebox::Engine::TwitterStatusOnebox do
   shared_examples_for "#to_html" do
     it "includes tweet" do
       expect(html).to include(tweet_content)

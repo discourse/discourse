@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CorrectMissingDualstackUrls do
+RSpec.describe Jobs::CorrectMissingDualstackUrls do
   it 'corrects the urls' do
     setup_s3
     SiteSetting.s3_region = "us-east-1"

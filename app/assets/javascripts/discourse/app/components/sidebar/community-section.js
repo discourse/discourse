@@ -12,18 +12,26 @@ import UsersSectionLink from "discourse/lib/sidebar/community-section/users-sect
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 
-const DEFAULT_SECTION_LINKS = [
+const MAIN_SECTION_LINKS = [
   EverythingSectionLink,
   TrackedSectionLink,
-  GroupsSectionLink,
-  UsersSectionLink,
   MyPostsSectionLink,
 ];
 
-export default class SidebarCommunitySection extends GlimmerComponent {
-  configuredSectionLinks = [...DEFAULT_SECTION_LINKS, ...customSectionLinks];
+const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
 
-  sectionLinks = this.configuredSectionLinks.map((sectionLinkClass) => {
+export default class SidebarCommunitySection extends GlimmerComponent {
+  moreSectionLinks = [...MORE_SECTION_LINKS, ...customSectionLinks].map(
+    (sectionLinkClass) => {
+      return new sectionLinkClass({
+        topicTrackingState: this.topicTrackingState,
+        currentUser: this.currentUser,
+        appEvents: this.appEvents,
+      });
+    }
+  );
+
+  sectionLinks = MAIN_SECTION_LINKS.map((sectionLinkClass) => {
     return new sectionLinkClass({
       topicTrackingState: this.topicTrackingState,
       currentUser: this.currentUser,

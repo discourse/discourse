@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoryHashtag do
+RSpec.describe CategoryHashtag do
   describe '#query_from_hashtag_slug' do
     fab!(:parent_category) { Fabricate(:category) }
     fab!(:child_category) { Fabricate(:category, parent_category: parent_category) }

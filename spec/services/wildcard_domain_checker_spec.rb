@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WildcardDomainChecker do
+RSpec.describe WildcardDomainChecker do
 
   describe 'check_domain' do
     context 'valid domain' do

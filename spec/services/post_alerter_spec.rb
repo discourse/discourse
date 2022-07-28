@@ -23,7 +23,7 @@ end
 
 RSpec::Matchers.define_negated_matcher :not_add_notification, :add_notification
 
-describe PostAlerter do
+RSpec.describe PostAlerter do
   fab!(:category) { Fabricate(:category) }
 
   fab!(:topic) { Fabricate(:topic) }

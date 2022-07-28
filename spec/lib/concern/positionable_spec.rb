@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Positionable do
+RSpec.describe Positionable do
 
   def positions
     TestItem.order('position asc, id asc').pluck(:id)

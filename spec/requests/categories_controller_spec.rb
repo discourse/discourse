@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoriesController do
+RSpec.describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user) { Fabricate(:user) }
@@ -259,7 +259,7 @@ describe CategoriesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
@@ -351,7 +351,7 @@ describe CategoriesController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       category.set_permissions(admins: :full)
       category.save!
@@ -378,7 +378,7 @@ describe CategoriesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
       expect(response.status).to eq(403)
@@ -407,7 +407,7 @@ describe CategoriesController do
     end
   end
 
-  context '#reorder' do
+  describe '#reorder' do
     it "reorders the categories" do
       sign_in(admin)
 
@@ -444,7 +444,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     before do
       Jobs.run_immediately!
     end
@@ -520,7 +520,8 @@ describe CategoriesController do
               "staff" => create_post
             },
             custom_fields: {
-              "dancing" => "frogs"
+              "dancing" => "frogs",
+              "running" => ["turtle", "salamander"]
             },
             minimum_required_tags: "",
             allow_global_tags: 'true',
@@ -539,7 +540,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-category")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
-          expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.custom_fields).to eq("dancing" => "frogs", "running" => ["turtle", "salamander"])
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
           expect(category.category_required_tag_groups.count).to eq(1)
@@ -647,7 +648,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update_slug' do
+  describe '#update_slug' do
     it 'requires the user to be logged in' do
       put "/category/category/slug.json"
       expect(response.status).to eq(403)
@@ -695,7 +696,7 @@ describe CategoriesController do
     end
   end
 
-  context '#categories_and_topics' do
+  describe '#categories_and_topics' do
     before do
       10.times.each { Fabricate(:topic) }
     end
