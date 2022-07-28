@@ -12,7 +12,7 @@ class JavascriptCache < ActiveRecord::Base
   end
 
   def local_url
-    "#{Discourse.base_url}#{path}"
+    "#{Discourse.base_path}/#{path}"
   end
 
   private
