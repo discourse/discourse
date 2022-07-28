@@ -1,0 +1,36 @@
+{{#if this.activeSectionLink}}
+  <Sidebar::SectionLink
+    @linkName={{this.activeSectionLink.name}}
+    @route={{this.activeSectionLink.route}}
+    @query={{this.activeSectionLink.query}}
+    @title={{this.activeSectionLink.title}}
+    @content={{this.activeSectionLink.text}}
+    @currentWhen={{this.activeSectionLink.currentWhen}}
+    @badgeText={{this.activeSectionLink.badgeText}}
+    @model={{this.activeSectionLink.model}} />
+{{/if}}
+
+<details class="sidebar-more-section-links-details" {{on "click" this.toggleSectionLinks}}>
+  <summary class="sidebar-more-section-links-details-summary" >
+    {{i18n "sidebar.more_count" (hash count=this.sectionLinks.length)}}
+  </summary>
+
+  {{#if this.shouldDisplaySectionLinks}}
+    <div class="sidebar-more-section-links-details-content"
+      {{did-insert this.registerClickListener}}
+      {{will-destroy this.unregisterClickListener}} >
+
+      {{#each this.sectionLinks as |sectionLink|}}
+        <Sidebar::SectionLink
+          @linkName={{sectionLink.name}}
+          @route={{sectionLink.route}}
+          @query={{sectionLink.query}}
+          @title={{sectionLink.title}}
+          @content={{sectionLink.text}}
+          @currentWhen={{sectionLink.currentWhen}}
+          @badgeText={{sectionLink.badgeText}}
+          @model={{sectionLink.model}} />
+      {{/each}}
+    </div>
+  {{/if}}
+</details>
