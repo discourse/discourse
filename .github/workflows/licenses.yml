@@ -35,6 +35,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gem-
 
+      # Workaround for https://github.com/github/licensed/issues/521
+      - name: Downgrade Bundler
+        run: |
+          gem uninstall bundler
+          gem install bundler --version '2.3.18'
+
       - name: Setup gems
         run: |
           bundle config --local path vendor/bundle
