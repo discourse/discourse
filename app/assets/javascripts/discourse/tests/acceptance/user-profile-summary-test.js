@@ -35,6 +35,25 @@ acceptance("User Profile - Summary", function (needs) {
   });
 });
 
+acceptance("User Profile - Summary - User Status", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/u/eviltrout.json", () => {
+      const response = cloneJSON(userFixtures["/u/eviltrout.json"]);
+      response.user.status = {
+        description: "off to dentist",
+        emoji: "tooth",
+      };
+      return helper.response(response);
+    });
+  });
+
+  test("Shows User Status", async function (assert) {
+    await visit("/u/eviltrout/summary");
+    assert.ok(exists(".user-status-message .emoji[alt='tooth']"));
+  });
+});
+
 acceptance("User Profile - Summary - Stats", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/u/eviltrout/summary.json", () => {
