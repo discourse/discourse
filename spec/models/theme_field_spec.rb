@@ -504,6 +504,7 @@ HTML
 
         expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
         expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
+        expect(val["theme_uploads_local"]["test_js"]).to start_with("/theme-javascripts/")
 
       end
 
