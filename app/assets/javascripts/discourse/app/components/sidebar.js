@@ -8,6 +8,7 @@ export default class Sidebar extends GlimmerComponent {
     if (this.site.mobileView) {
       document.addEventListener("click", this.collapseSidebar);
     }
+    this.appEvents.on("sidebar:scroll-to-element", this.scrollToElement);
   }
 
   @bind
@@ -30,10 +31,43 @@ export default class Sidebar extends GlimmerComponent {
       this.args.toggleSidebar();
     }
   }
+  @bind
+  scrollToElement(destinationElement) {
+    const topPadding = 10;
+    const sidebarContainerElement =
+      document.getElementsByClassName("sidebar-container")[0];
+    const sidebarSectionsElement =
+      document.getElementsByClassName("sidebar-sections")[0];
+    const allSections = document.getElementsByClassName(
+      "sidebar-section-wrapper"
+    );
+    const lastSectionElement = allSections[allSections.length - 1];
+    const distanceFromTop =
+      document.getElementsByClassName(destinationElement)[0].offsetTop -
+      topPadding;
+    const missingHeight =
+      sidebarContainerElement.clientHeight -
+      (sidebarSectionsElement.clientHeight - distanceFromTop);
+
+    if (missingHeight > 0) {
+      const headerOffset = parseInt(
+        document.documentElement.style.getPropertyValue("--header-offset"),
+        10
+      );
+      lastSectionElement.style.height = `${
+        lastSectionElement.clientHeight + missingHeight - headerOffset
+      }px`;
+    } else {
+      lastSectionElement.style.height = null;
+    }
+
+    sidebarContainerElement.scrollTop = distanceFromTop;
+  }
 
   willDestroy() {
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }
+    this.appEvents.off("sidebar:scroll-to-element", this.scrollToElement);
   }
 }
