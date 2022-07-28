@@ -244,7 +244,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".recent_list_with_pending_first" do
+  describe ".recent_list_with_pending_first" do
     fab!(:pending_reviewable1) do
       Fabricate(
         :reviewable,

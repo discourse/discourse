@@ -12,7 +12,7 @@ describe BasicReviewableFlaggedPostSerializer do
 
   include_examples "basic reviewable attributes"
 
-  context "#post_number" do
+  describe "#post_number" do
     it "equals the post_number of the post" do
       expect(subject[:post_number]).to eq(post.post_number)
     end
@@ -23,7 +23,7 @@ describe BasicReviewableFlaggedPostSerializer do
     end
   end
 
-  context "#topic_fancy_title" do
+  describe "#topic_fancy_title" do
     it "equals the fancy_title of the topic" do
       expect(subject[:topic_fancy_title]).to eq("Safe title &lt;a&gt; hello world")
     end

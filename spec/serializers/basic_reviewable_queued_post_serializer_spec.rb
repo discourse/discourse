@@ -14,7 +14,7 @@ describe BasicReviewableQueuedPostSerializer do
 
   include_examples "basic reviewable attributes"
 
-  context "#topic_fancy_title" do
+  describe "#topic_fancy_title" do
     it "equals the topic's fancy_title" do
       expect(subject[:topic_fancy_title]).to eq("Safe title &lt;a&gt; existing topic")
     end
@@ -25,7 +25,7 @@ describe BasicReviewableQueuedPostSerializer do
     end
   end
 
-  context "#is_new_topic" do
+  describe "#is_new_topic" do
     it "is true if the reviewable's payload has a title attribute" do
       expect(subject[:is_new_topic]).to eq(true)
     end
@@ -36,7 +36,7 @@ describe BasicReviewableQueuedPostSerializer do
     end
   end
 
-  context "#payload_title" do
+  describe "#payload_title" do
     it "equals the title in the reviewable's payload" do
       expect(subject[:payload_title]).to eq("unsafe title <a>")
     end

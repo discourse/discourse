@@ -21,7 +21,7 @@ describe BasicReviewableUserSerializer do
 
   include_examples "basic reviewable attributes"
 
-  context "#username" do
+  describe "#username" do
     it "equals the username in the reviewable's payload" do
       expect(subject[:username]).to eq(user.username)
     end

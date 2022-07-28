@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 shared_examples "basic reviewable attributes" do
-  context "#id" do
+  describe "#id" do
     it "equals the reviewable's id" do
       expect(subject[:id]).to eq(reviewable.id)
     end
   end
 
-  context "#type" do
+  describe "#type" do
     it "is the reviewable's type" do
       expect(subject[:type]).to eq(reviewable.type)
     end
   end
 
-  context "#pending" do
+  describe "#pending" do
     it "is false if the reviewable is approved" do
       reviewable.update!(status: Reviewable.statuses[:approved])
       expect(subject[:pending]).to eq(false)
@@ -30,7 +30,7 @@ shared_examples "basic reviewable attributes" do
     end
   end
 
-  context "#flagger_username" do
+  describe "#flagger_username" do
     it "equals to the username of the user who created the reviewable" do
       reviewable.update!(
         created_by: Fabricate(:user, username: "gg.osama")
