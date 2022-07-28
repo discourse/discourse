@@ -537,7 +537,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     upload = create_upload(post.user.id, filename, real_filename)
 
-    if upload.nil? || !upload.valid?
+    if upload.nil? || upload.errors.any?
       puts "Upload not valid :("
       puts upload.errors.inspect if upload
       return
