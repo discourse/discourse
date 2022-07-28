@@ -225,9 +225,9 @@ export default Controller.extend(
     @discourseComputed
     disclaimerHtml() {
       return I18n.t("create_account.disclaimer", {
-        tos_link: this.get("siteSettings.tos_url") || getUrl("/tos"),
+        tos_link: this.siteSettings.tos_url || getUrl("/tos"),
         privacy_link:
-          this.get("siteSettings.privacy_policy_url") || getUrl("/privacy"),
+          this.siteSettings.privacy_policy_url || getUrl("/privacy"),
       });
     },
 
