@@ -21,6 +21,7 @@ RSpec.describe 'groups' do
       produces 'application/json'
       response '200', 'group created' do
         expected_response_schema = load_spec_schema('group_create_response')
+        schema expected_response_schema
 
         let(:params) { { 'group' => { 'name' => 'awesome' } } }
         it_behaves_like "a JSON endpoint", 200 do
