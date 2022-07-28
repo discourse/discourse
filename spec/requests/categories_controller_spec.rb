@@ -520,7 +520,8 @@ describe CategoriesController do
               "staff" => create_post
             },
             custom_fields: {
-              "dancing" => "frogs"
+              "dancing" => "frogs",
+              "running" => ["turtle", "salamander"]
             },
             minimum_required_tags: "",
             allow_global_tags: 'true',
@@ -539,7 +540,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-category")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
-          expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.custom_fields).to eq("dancing" => "frogs", "running" => ["turtle", "salamander"])
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
           expect(category.category_required_tag_groups.count).to eq(1)

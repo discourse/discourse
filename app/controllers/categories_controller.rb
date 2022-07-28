@@ -371,7 +371,7 @@ class CategoriesController < ApplicationController
         :read_only_banner,
         :default_list_filter,
         :reviewable_by_group_id,
-        custom_fields: [params[:custom_fields].try(:keys)],
+        custom_fields: [custom_field_params],
         permissions: [*p.try(:keys)],
         allowed_tags: [],
         allowed_tag_groups: [],
@@ -383,6 +383,15 @@ class CategoriesController < ApplicationController
       end
 
       result
+    end
+  end
+
+  def custom_field_params
+    keys = params[:custom_fields].try(:keys)
+    return if keys.blank?
+
+    keys.map do |key|
+      params[:custom_fields][key].is_a?(Array) ? { key => [] } : key
     end
   end
 
