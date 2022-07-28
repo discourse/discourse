@@ -566,7 +566,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         await publishToMessageBus(`/unread`, unreadTopicPayload);
 
         assert.deepEqual(
-          [...trackingState.newIncoming],
+          trackingState.newIncoming,
           [111],
           "unread topic is incoming"
         );
@@ -588,12 +588,12 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         assert.strictEqual(trackingState.filterTag, "test");
         assert.strictEqual(trackingState.filter, "latest");
 
-        trackingState.trackIncoming("c/cat/sub-cat/6/l/latest");
+        trackingState.trackIncoming("c/cat/subcat/6/l/latest");
         assert.strictEqual(trackingState.filterCategory.id, 6);
         assert.strictEqual(trackingState.filterTag, undefined);
         assert.strictEqual(trackingState.filter, "latest");
 
-        trackingState.trackIncoming("tags/c/cat/sub-cat/6/test/l/latest");
+        trackingState.trackIncoming("tags/c/cat/subcat/6/test/l/latest");
         assert.strictEqual(trackingState.filterCategory.id, 6);
         assert.strictEqual(trackingState.filterTag, "test");
         assert.strictEqual(trackingState.filter, "latest");
@@ -632,7 +632,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           unreadCategoriesLatestTopicsPayload
         );
         assert.deepEqual(
-          [...trackingState.newIncoming],
+          trackingState.newIncoming,
           [111],
           "unread topic is incoming"
         );
@@ -814,7 +814,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         await publishToMessageBus("/new", newTopicPayload);
 
         assert.deepEqual(
-          [...trackingState.newIncoming],
+          trackingState.newIncoming,
           [222],
           "new topic is incoming"
         );
@@ -996,9 +996,9 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     sinon.stub(Category, "list").returns([foo, bar, baz]);
 
     const trackingState = TopicTrackingState.create();
-    assert.deepEqual([...trackingState.getSubCategoryIds(1)], [1, 2, 3]);
-    assert.deepEqual([...trackingState.getSubCategoryIds(2)], [2, 3]);
-    assert.deepEqual([...trackingState.getSubCategoryIds(3)], [3]);
+    assert.deepEqual(Array.from(trackingState.getSubCategoryIds(1)), [1, 2, 3]);
+    assert.deepEqual(Array.from(trackingState.getSubCategoryIds(2)), [2, 3]);
+    assert.deepEqual(Array.from(trackingState.getSubCategoryIds(3)), [3]);
   });
 
   test("countNew", function (assert) {
