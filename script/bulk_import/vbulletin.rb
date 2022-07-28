@@ -555,15 +555,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     RateLimiter.disable
     current_count = 0
-
-    total_count = mysql_query(<<-SQL
-      SELECT COUNT(p.postid) count
-        FROM #{TABLE_PREFIX}post p
-        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
-       WHERE t.firstpostid <> p.postid
-    SQL
-    ).first[0].to_i
-
+    total_count = Post.count
     success_count = 0
     fail_count = 0
 
