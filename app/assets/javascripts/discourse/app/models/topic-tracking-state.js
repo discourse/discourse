@@ -1,5 +1,5 @@
 import EmberObject, { get } from "@ember/object";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import DiscourseURL from "discourse/lib/url";
@@ -15,7 +15,7 @@ function isNew(topic) {
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
     topic.created_in_new_period &&
-    isUnseen(topic)
+    !topic.is_seen
   );
 }
 
@@ -25,10 +25,6 @@ function isUnread(topic) {
     topic.last_read_post_number < topic.highest_post_number &&
     topic.notification_level >= NotificationLevels.TRACKING
   );
-}
-
-function isUnseen(topic) {
-  return !topic.is_seen;
 }
 
 function hasMutedTags(topicTags, mutedTags, siteSettings) {
@@ -45,9 +41,12 @@ function hasMutedTags(topicTags, mutedTags, siteSettings) {
 
 const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
+  incomingCount: 0,
+  newIncoming: null,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.states = new Map();
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
@@ -176,7 +175,7 @@ const TopicTrackingState = EmberObject.extend({
    * incomingCount > 0).
    *
    * This will do nothing unless resetTracking or trackIncoming has been
-   * called; newIncoming will be null instead of an array. trackIncoming
+   * called; newIncoming will be null instead of a Set. trackIncoming
    * is called by various topic routes, as is resetTracking.
    *
    * @method notifyIncoming
@@ -254,7 +253,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     // hasIncoming relies on this count
-    this.set("incomingCount", this.newIncoming.length);
+    this.set("incomingCount", this.newIncoming.size);
   },
 
   /**
@@ -265,7 +264,7 @@ const TopicTrackingState = EmberObject.extend({
    * @method resetTracking
    */
   resetTracking() {
-    this.newIncoming = [];
+    this.newIncoming = new Set();
     this.set("incomingCount", 0);
   },
 
@@ -280,10 +279,10 @@ const TopicTrackingState = EmberObject.extend({
    * @param {String} filter - Valid values are all, categories, and any topic list
    *                          filters e.g. latest, unread, new. As well as this
    *                          specific category and tag URLs like tag/test/l/latest,
-   *                          c/cat/subcat/6/l/latest or tags/c/cat/subcat/6/test/l/latest.
+   *                          c/cat/sub-cat/6/l/latest or tags/c/cat/sub-cat/6/test/l/latest.
    */
   trackIncoming(filter) {
-    this.newIncoming = [];
+    this.newIncoming = new Set();
 
     let category, tag;
 
@@ -312,14 +311,14 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Used to determine whether toshow the message at the top of the topic list
+   * Used to determine whether to show the message at the top of the topic list
    * e.g. "see 1 new or updated topic"
    *
-   * @method incomingCount
+   * @method hasIncoming
    */
   @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
-    return incomingCount && incomingCount > 0;
+    return incomingCount > 0;
   },
 
   /**
@@ -395,7 +394,7 @@ const TopicTrackingState = EmberObject.extend({
           last_read_post_number: state.last_read_post_number,
           unread_posts: unread,
           is_seen: state.is_seen,
-          unseen: !state.last_read_post_number && isUnseen(state),
+          unseen: !state.last_read_post_number && !state.is_seen,
         });
       }
     });
@@ -466,10 +465,10 @@ const TopicTrackingState = EmberObject.extend({
     const result = [categoryId];
     const categories = Category.list();
 
-    for (let i = 0; i < result.length; ++i) {
-      for (let j = 0; j < categories.length; ++j) {
-        if (result[i] === categories[j].parent_category_id) {
-          result[result.length] = categories[j].id;
+    for (const currentCategoryId of result) {
+      for (const category of categories) {
+        if (currentCategoryId === category.parent_category_id) {
+          result.push(category.id);
         }
       }
     }
@@ -493,7 +492,7 @@ const TopicTrackingState = EmberObject.extend({
     );
     let filterFn = type === "new" ? isNew : isUnread;
 
-    return Array.from(this.states.values()).filter((topic) => {
+    return [...this.states.values()].filter((topic) => {
       if (!filterFn(topic)) {
         return false;
       }
@@ -938,13 +937,11 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   _addIncoming(topicId) {
-    if (!this.newIncoming.includes(topicId)) {
-      this.newIncoming.push(topicId);
-    }
+    this.newIncoming.add(topicId);
   },
 
   _trackedTopics(opts = {}) {
-    return Array.from(this.states.values())
+    return [...this.states.values()]
       .map((topic) => {
         let newTopic = isNew(topic);
         let unreadTopic = isUnread(topic);
