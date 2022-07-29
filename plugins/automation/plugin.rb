@@ -38,6 +38,34 @@ def handle_post_created_edited(post, action)
     end
 end
 
+def handle_pm_created(topic)
+  return if topic.user_id < 0
+
+  user = topic.user
+  target_usernames = topic.allowed_users.pluck(:username) - [user.username]
+  return unless target_usernames.count == 1
+
+  name = DiscourseAutomation::Triggerable::PM_CREATED
+
+  DiscourseAutomation::Automation
+    .where(trigger: name, enabled: true)
+    .find_each do |automation|
+
+      restricted_username = automation.trigger_field('restricted_user')['value']
+      next if restricted_username != target_usernames.first
+
+      ignore_staff = automation.trigger_field('ignore_staff')
+      next if ignore_staff['value'] && user.staff?
+
+      valid_trust_levels = automation.trigger_field('valid_trust_levels')
+      if valid_trust_levels['value']
+        next unless valid_trust_levels['value'].include?(user.trust_level)
+      end
+
+      automation.trigger!('kind' => name, 'post' => topic.first_post)
+    end
+end
+
 def handle_after_post_cook(post, cooked)
   return cooked if post.post_type != Post.types[:regular] || post.post_number > 1
 
@@ -113,6 +141,7 @@ after_initialize do
     '../app/lib/discourse_automation/triggers/stalled_topic',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
     '../app/lib/discourse_automation/triggers/user_badge_granted',
+    '../app/lib/discourse_automation/triggers/pm_created',
     '../app/lib/discourse_automation/triggers/point_in_time',
     '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/triggers/topic',
@@ -241,6 +270,10 @@ after_initialize do
   on(:user_promoted) do |payload|
     user_id, new_trust_level, old_trust_level = payload.values_at(:user_id, :new_trust_level, :old_trust_level)
     handle_user_promoted(user_id, new_trust_level, old_trust_level)
+  end
+
+  on(:topic_created) do |topic|
+    handle_pm_created(topic) if topic.private_message?
   end
 
   on(:post_created) do |post|

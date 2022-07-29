@@ -36,6 +36,9 @@ en:
       post_created_edited:
         title: Post created/edited
         description: When a valid post is edited or created the automation will be triggered
+      pm_created:
+        title: Personal message created
+        description: When a valid PM is created the automation will be triggered
       topic:
         title: Topic
         description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example

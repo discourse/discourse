@@ -8,7 +8,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
 
   version 1
 
-  triggerables [:post_created_edited]
+  triggerables [:post_created_edited, :pm_created]
 
   placeholder :sender_username
   placeholder :word
@@ -29,10 +29,16 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
     next if tuples.blank?
 
     tuples.each do |tuple|
+      if tuple['key'].blank?
+        answers.add(tuple)
+        next
+      end
+
       if post.is_first_post?
         if match = post.topic.title.match(/\b(#{tuple['key']})\b/i)
           tuple['key'] = match.captures.first
           answers.add(tuple)
+          next
         end
       end
 

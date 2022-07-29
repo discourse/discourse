@@ -12,6 +12,19 @@ describe 'AutoResponder' do
     )
   end
 
+  context 'without word filter' do
+    before do
+      automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: '', value: 'this is the reply' }].to_json })
+    end
+
+    it 'creates an answer' do
+      post = create_post(topic: topic, raw: 'this is a post')
+      automation.trigger!('post' => post)
+
+      expect(topic.reload.posts.last.raw).to eq('this is the reply')
+    end
+  end
+
   context 'present word_answer list' do
     before do
       automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: 'fooz?|bar', value: 'this is %%KEY%%' }, { key: 'bar', value: 'this is %%KEY%%' }].to_json })
