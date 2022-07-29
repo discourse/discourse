@@ -63,7 +63,8 @@
 
     .composer-open & {
       // allows sidebar to scroll to the bottom when the composer is open
-      margin-bottom: calc(var(--composer-height));
+      margin-bottom: var(--composer-height);
+      padding-bottom: var(--composer-ipad-padding);
     }
   }
 
