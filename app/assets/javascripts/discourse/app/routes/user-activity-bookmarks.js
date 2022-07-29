@@ -40,7 +40,8 @@ export default DiscourseRoute.extend({
         this.session.set("bookmarksModel", model);
         return model;
       })
-      .catch(() => controller.set("permissionDenied", true));
+      .catch(() => controller.set("permissionDenied", true))
+      .finally(() => controller.set("loading", false));
   },
 
   renderTemplate() {
@@ -51,15 +52,6 @@ export default DiscourseRoute.extend({
   didTransition() {
     this.controllerFor("user-activity")._showFooter();
     return true;
-  },
-
-  @action
-  loading(transition) {
-    let controller = this.controllerFor("user-activity-bookmarks");
-    controller.set("loading", true);
-    transition.promise.finally(function () {
-      controller.set("loading", false);
-    });
   },
 
   @action
