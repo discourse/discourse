@@ -36,32 +36,47 @@ export default class Sidebar extends GlimmerComponent {
     const topPadding = 10;
     const sidebarContainerElement =
       document.querySelector(".sidebar-container");
+    const distanceFromTop =
+      document.getElementsByClassName(destinationElement)[0].offsetTop -
+      topPadding;
 
-    const sidebarSectionsElement = document.querySelector(".sidebar-sections");
+    this.setMissingHeightForScroll(sidebarContainerElement, distanceFromTop);
+
+    sidebarContainerElement.scrollTop = distanceFromTop;
+  }
+
+  setMissingHeightForScroll(sidebarContainerElement, distanceFromTop) {
     const allSections = document.getElementsByClassName(
       "sidebar-section-wrapper"
     );
     const lastSectionElement = allSections[allSections.length - 1];
-    const distanceFromTop =
-      document.getElementsByClassName(destinationElement)[0].offsetTop -
-      topPadding;
-    const missingHeight =
-      sidebarContainerElement.clientHeight -
-      (sidebarSectionsElement.clientHeight - distanceFromTop);
+    const lastSectionBottomPadding = parseInt(
+      lastSectionElement.style.paddingBottom?.replace("px", "") || 0,
+      10
+    );
+    const headerOffset = parseInt(
+      document.documentElement.style.getPropertyValue("--header-offset"),
+      10
+    );
 
-    if (missingHeight > 0) {
-      const headerOffset = parseInt(
-        document.documentElement.style.getPropertyValue("--header-offset"),
-        10
-      );
-      lastSectionElement.style.height = `${
-        lastSectionElement.clientHeight + missingHeight - headerOffset
-      }px`;
-    } else {
-      lastSectionElement.style.height = null;
+    let allSectionsHeight = 0;
+    for (let section of allSections) {
+      allSectionsHeight +=
+        section.clientHeight +
+        parseInt(
+          window.getComputedStyle(section).marginBottom.replace("px", ""),
+          10
+        );
     }
 
-    sidebarContainerElement.scrollTop = distanceFromTop;
+    const missingHeight =
+      sidebarContainerElement.clientHeight -
+      headerOffset +
+      lastSectionBottomPadding -
+      (allSectionsHeight - distanceFromTop);
+
+    lastSectionElement.style.paddingBottom =
+      missingHeight > 0 ? `${missingHeight}px` : null;
   }
 
   willDestroy() {
