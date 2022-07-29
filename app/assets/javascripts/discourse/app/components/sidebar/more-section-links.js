@@ -41,8 +41,6 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
         document
           .querySelector(".sidebar-more-section-links-details")
           ?.removeAttribute("open");
-
-        this.toggleSectionLinks();
       }
     }
   }
