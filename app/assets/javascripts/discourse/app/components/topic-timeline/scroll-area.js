@@ -3,6 +3,9 @@ import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
+import { relativeAge } from "discourse/lib/formatter";
+import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -13,21 +16,23 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked showButton = false;
   @tracked scrollPosition;
   @tracked current;
-  @tracked percentage = this._percentFor(
-    this.args.topic,
-    this.args.enteredIndex + 1
-  );
+  @tracked percentage = this.scrollPercentage;
   @tracked total;
   @tracked date;
   @tracked lastReadPercentage = null;
   @tracked position;
-  @tracked lastReadTop = Math.round(
-    this.lastReadPercentage * scrollareaHeight()
-  );
+  @tracked lastReadTop = this.lastReadHeight;
+  @tracked displayTimeLineScrollArea = true;
 
-  style = `height: ${scrollareaHeight()}px`;
-  before = this.scrollareaRemaining() * this.percentage;
-  after = scrollareaHeight() - this.before - SCROLLER_HEIGHT;
+  get style() {
+    return htmlSafe(`height: ${scrollareaHeight()}px`);
+  }
+  get before() {
+    return this.scrollareaRemaining() * this.percentage;
+  }
+  get after() {
+    return scrollareaHeight() - this.before - SCROLLER_HEIGHT;
+  }
 
   get showDockedButton() {
     return !this.site.mobileView && this.hasBackPosition && !this.showButton;
@@ -45,15 +50,17 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   }
 
   get beforePadding() {
-    return `height: ${this.before}px`;
+    return htmlSafe(`height: ${this.before}px`);
   }
 
   get afterPadding() {
-    return `height: ${this.after}px`;
+    return htmlSafe(`height: ${this.after}px`);
   }
 
   get lastReadStyle() {
-    return `height: ${LAST_READ_HEIGHT}px; top: ${this.topPosition}px`;
+    return htmlSafe(
+      `height: ${LAST_READ_HEIGHT}px; top: ${this.topPosition}px`
+    );
   }
 
   get topPosition() {
@@ -61,8 +68,45 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     return this.lastReadTop > bottom ? bottom : this.lastReadTop;
   }
 
+  get bottomAge() {
+    return relativeAge(
+      new Date(this.args.topic.last_posted_at || this.args.topic.created_at),
+      {
+        addAgo: true,
+        defaultFormat: timelineDate,
+      }
+    );
+  }
+
+  get startDate() {
+    return timelineDate(this.args.topic.createdAt);
+  }
+
+  get nowDate() {
+    return this.bottomAge;
+  }
+
+  get scrollPercentage() {
+    return this._percentFor(this.args.topic, this.args.enteredIndex + 1);
+  }
+
+  get lastReadHeight() {
+    return Math.round(this.lastReadPercentage * scrollareaHeight());
+  }
+
   constructor() {
     super(...arguments);
+
+    if (!this.site.mobileView) {
+      const streamLength = this.args.topic.get("postStream.stream.length");
+
+      if (streamLength === 1) {
+        const postsWrapper = document.querySelector(".posts-wrapper");
+        if (postsWrapper && postsWrapper.offsetHeight < 1000) {
+          this.displayTimeLineScrollArea = false;
+        }
+      }
+    }
 
     this.calculatePosition();
     if (this.percentage === null) {
@@ -100,7 +144,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     this.percentage = percentage;
   }
 
-  @bind
   calculatePosition() {
     const topic = this.args.topic;
     const postStream = topic.get("postStream");
@@ -228,4 +271,12 @@ export function scrollareaHeight() {
     MIN_SCROLLAREA_HEIGHT,
     Math.min(availableHeight, MAX_SCROLLAREA_HEIGHT)
   );
+}
+
+export function timelineDate(date) {
+  const fmt =
+    date.getFullYear() === new Date().getFullYear()
+      ? "long_no_year_no_time"
+      : "timeline_date";
+  return moment(date).format(I18n.t(`dates.${fmt}`));
 }

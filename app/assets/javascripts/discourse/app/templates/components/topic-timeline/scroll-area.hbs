@@ -1,34 +1,40 @@
-<div class="timeline-scrollarea-wrapper">
-  <TopicTimeline::Date
-    @topic={{@topic}}
-    @class="start-date"
-    @onClick={{@jumpTop}}
-  />
-  <div class="timeline-scrollarea">
-    <div class="timeline-padding" style={{this.beforePadding}}></div>
-    <TopicTimeline::Scroller
-      @current={{this.current}}
-      @total={{this.total}}
-      @goBack={{this.goBack}}
-      @fullscreen={{@fullscreen}}
-      @showDockedButton={{this.showDockedButton}}
-      @date={{this.date}}
-    />
-    <div class="timeline-padding" style={{this.afterPadding}}></div>
+{{#if this.displayTimeLineScrollArea}}
+  <div class="timeline-scrollarea-wrapper">
+    <div class="timeline-date-wrapper">
+      <a class="start-date" onClick={{@jumpTop}} title={{this.startDate}}>
+        <span>
+          {{this.startDate}}
+        </span>
+      </a>
+    </div>
+    <div class="timeline-scrollarea">
+      <div class="timeline-padding" style={{this.beforePadding}}></div>
+      <TopicTimeline::Scroller
+        @current={{this.current}}
+        @total={{this.total}}
+        @goBack={{this.goBack}}
+        @fullscreen={{@fullscreen}}
+        @showDockedButton={{this.showDockedButton}}
+        @date={{this.date}}
+      />
+      <div class="timeline-padding" style={{this.afterPadding}}></div>
 
-    {{#if this.hasBackPosition}}
-      <div class="timeline-last-read" style={{this.lastReadStyle}}>
-        {{d-icon "minus" class="progress"}}
-        {{#if this.showButton}}
-          <TopicTimeline::BackButton @onClick={{this.goBack}}/>
-        {{/if}}
-      </div>
-    {{/if}}
+      {{#if this.hasBackPosition}}
+        <div class="timeline-last-read" style={{this.lastReadStyle}}>
+          {{d-icon "minus" class="progress"}}
+          {{#if this.showButton}}
+            <TopicTimeline::BackButton @onClick={{this.goBack}}/>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="timeline-date-wrapper">
+      <a class="now-date" onClick={{@jumpBottom}} title={{this.nowDate}}>
+        <span>
+          {{this.nowDate}}
+        </span>
+      </a>
+    </div>
   </div>
-
-  <TopicTimeline::Date
-    @topic={{@topic}}
-    @class="now-date"
-    @onClick={{@jumpBottom}}
-  />
-</div>
+{{/if}}

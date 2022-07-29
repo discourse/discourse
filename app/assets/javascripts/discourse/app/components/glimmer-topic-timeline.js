@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
 
 export default class GlimmerTopicTimeline extends GlimmerComponent {
-  @tracked intersectionObserver = null;
   @tracked dockAt = null;
   @tracked dockBottom = null;
   @tracked enteredIndex = this.args.enteredIndex;
@@ -11,7 +10,7 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
   mobileView = this.site.mobileView;
   adminTools = optionalService();
   excerpt = null;
-  createdAt = new Date(this.args.model.created_at);
+  intersectionObserver = null;
 
   get class() {
     let classes = [];
@@ -38,7 +37,11 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
   }
 
   get canCreatePost() {
-    return this.args.model.get("details.can_create_post");
+    return this.args.model.details?.can_create_post;
+  }
+
+  get createdAt() {
+    return new Date(this.args.model.created_at);
   }
 
   constructor() {

@@ -1,7 +1,9 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
-import { SCROLLER_HEIGHT } from "discourse/components/topic-timeline/scroll-area";
-import { timelineDate } from "discourse/components/topic-timeline/date";
+import {
+  SCROLLER_HEIGHT,
+  timelineDate,
+} from "discourse/components/topic-timeline/scroll-area";
 import I18n from "I18n";
 
 export default class TopicTimelineScroller extends GlimmerComponent {
