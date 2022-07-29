@@ -35,9 +35,10 @@ export default class Sidebar extends GlimmerComponent {
   scrollToElement(destinationElement) {
     const topPadding = 10;
     const sidebarContainerElement =
-      document.getElementsByClassName("sidebar-container")[0];
+      document.querySelector(".sidebar-container");
+
     const sidebarSectionsElement =
-      document.getElementsByClassName("sidebar-sections")[0];
+      document.querySelector(".sidebar-sections");
     const allSections = document.getElementsByClassName(
       "sidebar-section-wrapper"
     );
