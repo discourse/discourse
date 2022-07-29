@@ -15,7 +15,7 @@ export default Controller.extend({
 
   application: controller(),
   user: controller(),
-  loading: true,
+  loading: false,
   loadingMore: false,
   permissionDenied: false,
   inSearchMode: notEmpty("q"),

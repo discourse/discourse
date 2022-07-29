@@ -25,6 +25,8 @@ export default DiscourseRoute.extend({
       bookmarkListScrollPosition: null,
     });
 
+    controller.set("loading", true);
+
     return this._loadBookmarks(params)
       .then((response) => {
         if (!response.user_bookmark_list) {
