@@ -9,11 +9,6 @@ export default DiscourseRoute.extend({
     q: { refreshModel: true },
   },
 
-  setupController(controller) {
-    this._super(...arguments);
-    controller.set("loading", false);
-  },
-
   model(params, transition) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
@@ -43,6 +38,7 @@ export default DiscourseRoute.extend({
 
         const model = { bookmarks, loadMoreUrl };
         this.session.set("bookmarksModel", model);
+        controller.set("loading", false);
         return model;
       })
       .catch(() => controller.set("permissionDenied", true));
