@@ -9,6 +9,11 @@ export default DiscourseRoute.extend({
     q: { refreshModel: true },
   },
 
+  setupController(controller) {
+    this._super(...arguments);
+    controller.set("loading", false);
+  },
+
   model(params, transition) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
@@ -51,15 +56,6 @@ export default DiscourseRoute.extend({
   didTransition() {
     this.controllerFor("user-activity")._showFooter();
     return true;
-  },
-
-  @action
-  loading(transition) {
-    let controller = this.controllerFor("user-activity-bookmarks");
-    controller.set("loading", true);
-    transition.promise.finally(function () {
-      controller.set("loading", false);
-    });
   },
 
   @action
