@@ -37,8 +37,7 @@ export default class Sidebar extends GlimmerComponent {
     const sidebarContainerElement =
       document.querySelector(".sidebar-container");
 
-    const sidebarSectionsElement =
-      document.querySelector(".sidebar-sections");
+    const sidebarSectionsElement = document.querySelector(".sidebar-sections");
     const allSections = document.getElementsByClassName(
       "sidebar-section-wrapper"
     );
