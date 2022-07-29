@@ -38,10 +38,10 @@ export default DiscourseRoute.extend({
 
         const model = { bookmarks, loadMoreUrl };
         this.session.set("bookmarksModel", model);
-        controller.set("loading", false);
         return model;
       })
-      .catch(() => controller.set("permissionDenied", true));
+      .catch(() => controller.set("permissionDenied", true))
+      .finally(() => controller.set("loading", false));
   },
 
   renderTemplate() {
