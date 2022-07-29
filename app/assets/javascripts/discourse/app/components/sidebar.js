@@ -46,7 +46,7 @@ export default class Sidebar extends GlimmerComponent {
     sidebarContainerElement.scrollTop = distanceFromTop;
   }
 
-  setMissingHeightForScroll(sidebarContainerElement, distanceFromTop) {
+  #setMissingHeightForScroll(sidebarContainerElement, distanceFromTop) {
     const allSections = document.getElementsByClassName(
       "sidebar-section-wrapper"
     );
