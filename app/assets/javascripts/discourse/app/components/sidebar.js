@@ -49,18 +49,22 @@ export default class Sidebar extends GlimmerComponent {
     const allSections = document.getElementsByClassName(
       "sidebar-section-wrapper"
     );
+
     const lastSectionElement = allSections[allSections.length - 1];
+
     const lastSectionBottomPadding = parseInt(
       lastSectionElement.style.paddingBottom?.replace("px", "") || 0,
       10
     );
+
     const headerOffset = parseInt(
       document.documentElement.style.getPropertyValue("--header-offset"),
       10
     );
 
     let allSectionsHeight = 0;
-    for (let section of allSections) {
+
+    for (const section of allSections) {
       allSectionsHeight +=
         section.clientHeight +
         parseInt(
