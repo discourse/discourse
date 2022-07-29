@@ -1262,7 +1262,7 @@ export default Controller.extend({
 
       let defaultComposerHeight;
 
-      if (this.model.title == null) {
+      if (this.model.action === "reply") {
         defaultComposerHeight = "300px";
       } else {
         defaultComposerHeight = "400px";
