@@ -32,8 +32,7 @@ export default class Sidebar extends GlimmerComponent {
       this.args.toggleSidebar();
     }
   }
-  @bind
-  scrollToElement(destinationElement) {
+  #scrollToElement(destinationElement) {
     const topPadding = 10;
     const sidebarContainerElement =
       document.querySelector(".sidebar-container");
