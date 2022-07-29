@@ -70,7 +70,7 @@
               <a href {{action "editTopic"}} class="edit-topic" title={{i18n "edit"}}>{{d-icon "pencil-alt"}}</a>
             {{/if}}
 
-            <PluginOutlet @name="topic-title-icon" @tagName="" @connectorTagName="span" @args={{hash model=this.model}} />
+            <PluginOutlet @name="topic-title-suffix" @tagName="" @args={{hash model=this.model}} />
           </h1>
 
           <TopicCategory @topic={{this.model}} @class="topic-category" />
