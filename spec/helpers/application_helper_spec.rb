@@ -161,7 +161,7 @@ RSpec.describe ApplicationHelper do
 
     context "when dark theme is present" do
       before do
-        dark_theme = Theme.create(
+        _dark_theme = Theme.create(
           name: "Dark",
           user_id: -1,
           color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
@@ -418,6 +418,15 @@ RSpec.describe ApplicationHelper do
   end
 
   describe 'crawlable_meta_data' do
+
+    it 'Supports ASCII URLs with odd chars' do
+      result = helper.crawlable_meta_data(
+        url: (+"http://localhost/ión").force_encoding("ASCII-8BIT").freeze
+     )
+
+      expect(result).to include("ión")
+    end
+
     context "opengraph image" do
       it 'returns the correct image' do
         SiteSetting.opengraph_image = Fabricate(:upload,
