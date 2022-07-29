@@ -1259,6 +1259,19 @@ export default Controller.extend({
       if (opts.topicBody) {
         this.model.set("reply", opts.topicBody);
       }
+
+      let defaultComposerHeight;
+
+      if (this.model.title == null) {
+        defaultComposerHeight = "300px";
+      } else {
+        defaultComposerHeight = "400px";
+      }
+
+      document.documentElement.style.setProperty(
+        "--composer-height",
+        defaultComposerHeight
+      );
     });
 
     return promise;
