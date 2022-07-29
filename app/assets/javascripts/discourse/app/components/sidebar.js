@@ -8,7 +8,8 @@ export default class Sidebar extends GlimmerComponent {
     if (this.site.mobileView) {
       document.addEventListener("click", this.collapseSidebar);
     }
-    this.appEvents.on("sidebar:scroll-to-element", this.scrollToElement);
+    // This appEvent handler is experimental and should not be relied on as an extension point yet.
+    this.appEvents.on("sidebar:scroll-to-element", this, this.#scrollToElement);
   }
 
   @bind
