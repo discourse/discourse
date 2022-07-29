@@ -34,8 +34,25 @@ export default class Sidebar extends GlimmerComponent {
   }
   #scrollToElement(destinationElement) {
     const topPadding = 10;
+
     const sidebarContainerElement =
       document.querySelector(".sidebar-container");
+      
+    const distanceFromTop =
+      document.getElementsByClassName(destinationElement)[0].offsetTop -
+      topPadding;
+
+    this.#setMissingHeightForScroll(sidebarContainerElement, distanceFromTop);
+
+    sidebarContainerElement.scrollTop = distanceFromTop;
+  }
+``````suggestion
+  #scrollToElement(destinationElement) {
+    const topPadding = 10;
+
+    const sidebarContainerElement =
+      document.querySelector(".sidebar-container");
+      
     const distanceFromTop =
       document.getElementsByClassName(destinationElement)[0].offsetTop -
       topPadding;
