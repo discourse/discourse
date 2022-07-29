@@ -155,6 +155,14 @@ RSpec.describe WebhooksController do
     end
   end
 
+  context "mandrill_head" do
+    it "works" do
+      head "/webhooks/mandrill.json"
+
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "postmark" do
     it "works" do
       user = Fabricate(:user, email: email)
