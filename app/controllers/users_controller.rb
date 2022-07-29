@@ -1911,19 +1911,10 @@ class UsersController < ApplicationController
   end
 
   def serialize_found_users(users)
-    user_fields = [:username, :upload_avatar_template]
-    user_fields << :name if SiteSetting.enable_names?
+    each_serializer = SiteSetting.enable_user_status? ?
+      FoundUserWithStatusSerializer :
+      FoundUserSerializer
 
-    options = {
-      only: user_fields,
-      methods: [:avatar_template]
-    }
-
-    if SiteSetting.enable_user_status
-      user_status_fields = [:description, :emoji, :ends_at]
-      options[:include] = { user_status: { only: user_status_fields } }
-    end
-
-    { users: users.as_json(options) }
+    { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
   end
 end
