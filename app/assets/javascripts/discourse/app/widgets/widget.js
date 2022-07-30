@@ -141,7 +141,7 @@ export default class Widget {
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
     this.site = register.lookup("site:main");
-    this.siteSettings = register.lookup("site-settings:main");
+    this.siteSettings = register.lookup("service:site-settings");
     this.currentUser = register.lookup("current-user:main");
     this.capabilities = register.lookup("capabilities:main");
     this.store = register.lookup("service:store");

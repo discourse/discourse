@@ -6,7 +6,7 @@ export default {
   after: "inject-objects",
 
   isVerboseLocalizationEnabled(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.verbose_localization) {
       return true;
     }

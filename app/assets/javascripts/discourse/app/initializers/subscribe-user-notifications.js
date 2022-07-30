@@ -122,7 +122,7 @@ export default {
       });
 
       const site = container.lookup("site:main");
-      const siteSettings = container.lookup("site-settings:main");
+      const siteSettings = container.lookup("service:site-settings");
       const router = container.lookup("router:main");
 
       bus.subscribe("/categories", (data) => {

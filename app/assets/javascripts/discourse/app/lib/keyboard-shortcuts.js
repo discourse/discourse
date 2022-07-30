@@ -136,7 +136,7 @@ export default {
     this.searchService = this.container.lookup("service:search");
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
-    this.siteSettings = this.container.lookup("site-settings:main");
+    this.siteSettings = this.container.lookup("service:site-settings");
 
     // Disable the shortcut if private messages are disabled
     if (!this.siteSettings.enable_personal_messages) {

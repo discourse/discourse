@@ -6,7 +6,7 @@ export default {
   name: "enable-emoji",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (!siteSettings.enable_emoji) {
       return;
     }

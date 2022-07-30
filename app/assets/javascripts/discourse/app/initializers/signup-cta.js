@@ -11,7 +11,7 @@ export default {
   initialize(container) {
     const screenTrack = container.lookup("service:screen-track");
     const session = Session.current();
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     const keyValueStore = container.lookup("service:key-value-store");
     const user = container.lookup("current-user:main");
     const appEvents = container.lookup("service:app-events");

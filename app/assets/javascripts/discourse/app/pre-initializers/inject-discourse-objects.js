@@ -9,17 +9,6 @@ import deprecated from "discourse-common/lib/deprecated";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
-export function registerObjects(app) {
-  if (app.__registeredObjects__) {
-    // don't run registrations twice.
-    return;
-  }
-  app.__registeredObjects__ = true;
-
-  const siteSettings = app.SiteSettings;
-  app.register("site-settings:main", siteSettings, { instantiate: false });
-}
-
 function injectServiceIntoService({ container, app, property, specifier }) {
   // app.inject doesn't allow implicit injection of services into services.
   // However, we need to do it in order to convert our old service-like objects
@@ -56,8 +45,6 @@ export default {
   after: "discourse-bootstrap",
 
   initialize(container, app) {
-    registerObjects(app);
-
     deprecateRegistration({
       app,
       container,
@@ -103,7 +90,16 @@ export default {
       dropFrom: "3.0.0",
     });
 
-    let siteSettings = container.lookup("site-settings:main");
+    deprecateRegistration({
+      app,
+      container,
+      oldName: "site-settings:main",
+      newName: "service:site-settings",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    });
+
+    const siteSettings = container.lookup("service:site-settings");
 
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
@@ -135,7 +131,7 @@ export default {
       app.inject(t, "searchService", "service:search");
       app.inject(t, "session", "session:main");
       app.inject(t, "messageBus", "service:message-bus");
-      app.inject(t, "siteSettings", "site-settings:main");
+      app.inject(t, "siteSettings", "service:site-settings");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
       app.inject(t, "keyValueStore", "service:key-value-store");
     });
@@ -147,7 +143,12 @@ export default {
       property: "messageBus",
       specifier: "service:message-bus",
     });
-    app.inject("service", "siteSettings", "site-settings:main");
+    injectServiceIntoService({
+      container,
+      app,
+      property: "siteSettings",
+      specifier: "service:site-settings",
+    });
     app.inject("service", "topicTrackingState", "topic-tracking-state:main");
     injectServiceIntoService({
       container,

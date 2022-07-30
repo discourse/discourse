@@ -14,7 +14,7 @@ export default {
   name: "post-decorations",
   initialize(container) {
     withPluginApi("0.1", (api) => {
-      const siteSettings = container.lookup("site-settings:main");
+      const siteSettings = container.lookup("service:site-settings");
       const session = container.lookup("session:main");
       const site = container.lookup("site:main");
       api.decorateCookedElement(
