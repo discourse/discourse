@@ -37,7 +37,7 @@ export default class Sidebar extends GlimmerComponent {
 
     const sidebarContainerElement =
       document.querySelector(".sidebar-container");
-      
+
     const distanceFromTop =
       document.getElementsByClassName(destinationElement)[0].offsetTop -
       topPadding;
@@ -89,6 +89,10 @@ export default class Sidebar extends GlimmerComponent {
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }
-    this.appEvents.off("sidebar:scroll-to-element", this, this.#scrollToElement);
+    this.appEvents.off(
+      "sidebar:scroll-to-element",
+      this,
+      this.#scrollToElement
+    );
   }
 }
