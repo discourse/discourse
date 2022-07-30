@@ -32,7 +32,7 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("do not call authenticated endpoints as anonymous", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
 
     await render(hbs`<SiteHeader />`);
 

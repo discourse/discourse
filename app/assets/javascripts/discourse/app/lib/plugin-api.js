@@ -152,7 +152,7 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
-    return this._lookupContainer("current-user:main");
+    return this._lookupContainer("service:current-user");
   }
 
   _lookupContainer(path) {

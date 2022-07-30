@@ -8,7 +8,7 @@ import User from "discourse/models/user";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
-function injectServiceIntoService({ app, property, specifier }) {
+export function injectServiceIntoService({ app, property, specifier }) {
   // app.inject doesn't allow implicit injection of services into services.
   // However, we need to do it in order to convert our old service-like objects
   // into true services, without breaking existing implicit injections.
@@ -34,8 +34,10 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     const currentUser = User.current();
-    app.register("current-user:main", currentUser, { instantiate: false });
-    app.currentUser = currentUser;
+
+    // We can't use a 'real' service factory (i.e. services/current-user.js) because we need
+    // to register a null value for anon
+    app.register("service:current-user", currentUser, { instantiate: false });
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus: container.lookup("service:message-bus"),
@@ -87,8 +89,13 @@ export default {
     });
 
     if (currentUser) {
-      ["controller", "component", "route", "service"].forEach((t) => {
-        app.inject(t, "currentUser", "current-user:main");
+      ["controller", "component", "route"].forEach((t) => {
+        app.inject(t, "currentUser", "service:current-user");
+      });
+      injectServiceIntoService({
+        app,
+        property: "currentUser",
+        specifier: "service:current-user",
       });
     }
 
