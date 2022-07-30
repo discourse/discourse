@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'guardian'
-
-describe Guardian do
+RSpec.describe Guardian do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
@@ -433,7 +431,6 @@ describe Guardian do
       guardian = Guardian.new(user)
       expect(guardian.can_see_post_actors?(nil, PostActionType.types[:like])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:like])).to be_truthy
-      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
@@ -896,6 +893,8 @@ describe Guardian do
       end
 
       it 'respects whispers' do
+        SiteSetting.enable_whispers = true
+        SiteSetting.whispers_allowed_groups = "#{group.id}"
         regular_post = post
         whisper_post = Fabricate.build(:post, post_type: Post.types[:whisper])
 
@@ -919,6 +918,10 @@ describe Guardian do
         admin_guardian = Guardian.new(Fabricate.build(:admin))
         expect(admin_guardian.can_see?(regular_post)).to eq(true)
         expect(admin_guardian.can_see?(whisper_post)).to eq(true)
+
+        whisperer_guardian = Guardian.new(Fabricate(:user, groups: [group]))
+        expect(whisperer_guardian.can_see?(regular_post)).to eq(true)
+        expect(whisperer_guardian.can_see?(whisper_post)).to eq(true)
       end
     end
 
@@ -2015,21 +2018,6 @@ describe Guardian do
 
   end
 
-  context "can_delete_post_action?" do
-    fab!(:post) { Fabricate(:post) }
-
-    it "allows us to remove a bookmark" do
-      pa = PostActionCreator.bookmark(user, post).post_action
-      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
-    end
-
-    it "allows us to remove a very old bookmark" do
-      pa = PostActionCreator.bookmark(user, post).post_action
-      pa.update(created_at: 2.years.ago)
-      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
-    end
-  end
-
   context 'can_delete?' do
 
     it 'returns false with a nil object' do
@@ -2801,8 +2789,8 @@ describe Guardian do
 
       context 'with no posts' do
         include_examples "staff can always change usernames"
-        it "is true for the user to change their own username" do
-          expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_truthy
+        it "is false for the user to change their own username" do
+          expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_falsey
         end
       end
 
@@ -3389,6 +3377,22 @@ describe Guardian do
         it "returns true if admin" do
           expect(Guardian.new(admin).can_create_tag?).to be_truthy
         end
+      end
+    end
+
+    context "tagging PMs" do
+      it "pm_tags_allowed_for_groups contains everyone" do
+        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+
+        expect(Guardian.new(user).can_tag_pms?).to be_truthy
+      end
+
+      it "pm_tags_allowed_for_groups contains a group" do
+        SiteSetting.pm_tags_allowed_for_groups = "#{group.id}"
+        group.add(member)
+
+        expect(Guardian.new(user).can_tag_pms?).to be_falsey
+        expect(Guardian.new(member).can_tag_pms?).to be_truthy
       end
     end
   end

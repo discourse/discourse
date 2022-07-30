@@ -3,6 +3,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isPresent } from "@ember/utils";
 import { next } from "@ember/runloop";
+import { underscore } from "@ember/string";
 
 export default Controller.extend({
   queryParams: [
@@ -43,7 +44,7 @@ export default Controller.extend({
     return (this.reviewableTypes || []).map((type) => {
       return {
         id: type,
-        name: I18n.t(`review.types.${type.underscore()}.title`),
+        name: I18n.t(`review.types.${underscore(type)}.title`),
       };
     });
   },
@@ -105,7 +106,7 @@ export default Controller.extend({
       }
 
       let newList = this.reviewables.reject((reviewable) => {
-        return ids.indexOf(reviewable.id) !== -1;
+        return ids.includes(reviewable.id);
       });
 
       if (newList.length === 0) {

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Searchable do
+RSpec.describe Searchable do
   context "has search data" do
     before do
       DB.exec("create temporary table searchable_records(id SERIAL primary key)")

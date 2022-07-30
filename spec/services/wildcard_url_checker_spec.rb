@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WildcardUrlChecker do
+RSpec.describe WildcardUrlChecker do
 
   describe 'check_url' do
     context 'valid url' do

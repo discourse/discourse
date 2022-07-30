@@ -83,8 +83,15 @@ zh_CN:
       "10":
         quote: "人只要敢于梦想，并对此坚信不疑，就一定能达成目标。"
         author: "拿破仑·希尔"
+      "11":
+        quote: "家庭和谐，世界和平。"
+        author: "穆斯塔法·凯末尔·阿塔图尔克"
       "12":
         quote: "教育不是摆脱贫困的方式，而是与贫困作斗争的方式。"
+        author: "朱利叶斯·尼雷尔"
+      "13":
+        quote: "千里之行，始于足下。"
+        author: "老子"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

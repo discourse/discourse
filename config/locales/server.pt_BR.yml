@@ -230,7 +230,6 @@ pt_BR:
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
     not_found_template_link: |
       <p>Este convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
-    user_exists: "Não há necessidade de convidar <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
     rate_limit:
@@ -394,7 +393,6 @@ pt_BR:
       too_many: "Desculpe, não é possível adicionar mais de %{limit} favoritos, acesse <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favorito em uma data passada."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favorito mais de dez anos posteriormente."
-      time_must_be_provided: "a hora deve ser informada para todos os lembretes"
       for_topic_must_use_first_post: "Você só pode usar a primeira postagem para adicionar o tópico aos favoritos."
     reminders:
       at_desktop: "Da próxima vez que estiver em meu desktop"
@@ -1415,7 +1413,6 @@ pt_BR:
     contact_email: "Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também em <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     contact_url: "URL de contato deste site. Exibida na página <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
-    download_remote_images_to_local: "Transferira para converter imagens remotas em imagens locais. Isso evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
     disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
     editing_grace_period: "Durante (n) segundos após a publicação, as edições não criarão uma nova versão no histórico da postagem."
@@ -1457,7 +1454,6 @@ pt_BR:
     favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
     apple_touch_icon: "Ícone usado para dispositivos Apple touch, que será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
-    twitter_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
     email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1473,10 +1469,8 @@ pt_BR:
     summary_timeline_button: "Exibir um botão \"Resumir\" na linha do tempo"
     enable_personal_messages: "Permita que usuários(as) do nível de confiança 1 (configurável por meio do nível mínimo para enviar mensagens) criem e respondam a mensagens. Nove que a equipe sempre pode enviar mensagens."
     enable_system_message_replies: "Permite que os(as) usuários(as) respondam às mensagens do sistema, mesmo se as mensagens pessoais estiverem desativadas"
-    enable_long_polling: "O sistema de mensagens das notificações pode fazer sondagens longas."
     enable_chunked_encoding: "Ative respostas de codificação em bloco no servidor. Esse recurso funciona na maioria das configurações, mas alguns proxies podem ser armazenados em buffer, atrasando as respostas"
     long_polling_base_url: "URL de base utilizada para \"sondagem longa\" (auando um CDN for configurado, verifique se essa configuração é a padrão). Por exemplo: http://origin.site.com"
-    long_polling_interval: "Tempo que o servidor deve aguardar antes de responder aos clientes quando não houver dados para enviar (apenas usuários(as) que entraram com a conta)"
     polling_interval: "Frequência com que clientes devem entrar com a conta, em milisegundos, quando não fizerem sondagem longa"
     anon_polling_interval: "Frequência com que clientes anônimos(as) podem sondar o servidor em milisegundos"
     background_polling_interval: "Frequência com que clientes devem sondar o servidor em milisegundos (com a janela em segundo plano)"
@@ -1516,7 +1510,6 @@ pt_BR:
     ga_universal_auto_link_domains: "Ative o monitoramento de domínio cruzado do Google Universal Analytics. Os links de saída para estes domínios conterão a ID de cliente. Consulte <a href='https://support.google.com/analytics/answer/1034342?hl=pt-BR' target='_blank'>Guia de acompanhamento de vários domínios do Google.</a>"
     gtm_container_id: "ID do contêiner do Google Tag Manager. Por exemplo: GTM-ABCDEF. <br/>Observação: talvez os scripts de terceiros carregados pelo GTM precisem estar na lista de permissões no \"src de script de política de segurança de conteúdo\"."
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se um webcrawler não for encontrado. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir que moderadores(as) gerenciem grupos e categorias"
     moderators_change_post_ownership: "Permitirem que moderadores(as) alterem a propriedade da postagem"
     cors_origins: "Origens permitidas para pedidos de origem cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como verdadeira para ativar CORS."
     use_admin_ip_allowlist: "Administradores(as) só podem entrar com a conta se estiverem na lista de IPs filtrados (Administração > Registros > IPs filtrados)."
@@ -1545,7 +1538,6 @@ pt_BR:
     send_tl2_promotion_message: "Envie a usuários(as) de nível de confiança 2 uma mensagem sobre promoção."
     suppress_reply_directly_below: "Não exiba a contagem de respostas expansível em um postagem quando há apenas uma única resposta direto abaixo desta postagem."
     suppress_reply_directly_above: "Não exiba a \"em resposta a\" expansível em uma postagem quando há apenas uma única resposta direto acima desta postagem."
-    remove_full_quote: "Remova automaticamente citações completas nas respostas diretas."
     suppress_reply_when_quoting: "Não exiba a \"em resposta a\" expansível em uma postagem quando a postagem citar a resposta."
     max_reply_history: "Quantidade máxima de respostas para expandir ao expandir \"em resposta a\""
     topics_per_period_in_top_summary: "Quantidade de melhores tópicos exibidos no resumo de melhores tópicos padrão."
@@ -2036,7 +2028,7 @@ pt_BR:
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
     default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
-    default_categories_regular: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
+    default_categories_normal: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
     mute_all_categories_by_default: "Defina o nível de notificação padrão de todas as categorias para silenciado(a). É preciso que os(as) usuários(as) aceitem que suas categorias sejam exibidas nas páginas \"mais recentes\" e \"categorias\". Se quiser modificar os padrões para usuários(as) anônimos(as), defina as configurações \"default_categories_\"."
     default_tags_watching: "Lista de etiquetas que são acompanhadas por padrão."
     default_tags_tracking: "Lista de etiquetas que são monitoradas por padrão."
@@ -2062,7 +2054,6 @@ pt_BR:
     tags_sort_alphabetically: "Exiba as etiquetas em ordem alfabética. O padrão é mostrar em ordem de popularidade."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas na <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
     tag_style: "Estilo de visual para emblemas de etiquetas."
-    allow_staff_to_tag_pms: "Permitir que membros da equipe etiquetem qualquer mensagem pessoal"
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para etiquetar tópicos"
     suppress_overlapping_tags_in_list: "Se as etiquetas corresponderem a palavras exatas em títulos de tópicos, não mostrar a etiqueta"
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados apenas com etiquetas silenciadas na lista de tópicos mais recentes."
@@ -2688,12 +2679,6 @@ pt_BR:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Parabéns pela sua promoção de nível de confiança!"
-      text_body_template: |
-        Elaboramos outro [nível de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Sendo um(a) usuário(a) experiente, você pode gostar [desta lista de truques e dicas úteis](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Incentivamos ainda mais a sua participação, gostamos de você.
     backup_succeeded:
       title: "Backup realizado com êxito"
       subject_template: "Backup concluído com êxito"
@@ -3117,7 +3102,6 @@ pt_BR:
   subject_re: "Re:"
   subject_pm: "[PM]"
   email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{user_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -3561,17 +3545,6 @@ pt_BR:
     suspicious_login:
       title: "Alerta de nova entrada com conta"
       subject_template: "[%{site_name}] Nova entrada com conta em %{location}"
-      text_body_template: |
-        Olá,
-
-        Notamos que a sua conta foi usada para entrar em um dispositivo ou local que você não costuma usar. Foi você?
-
-         - Localização: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} -- %{os}
-
-        Se tiver sido você, ótimo! Não há mais nada que precise ser feito.
-        Caso contrário, [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
     post_approved:
       title: "Sua postagem foi aprovada"
       subject_template: "[%{site_name}] Sua postagem foi aprovada"
@@ -3583,6 +3556,7 @@ pt_BR:
     title: "Ops! Essa página é privada."
   site_setting_missing: "O site %{name} precisa ser configurado."
   page_not_found:
+    page_title: "Página não encontrada"
     title: "Oops! Essa página não existe ou é privada."
     popular_topics: "Mais acessados(as)"
     recent_topics: "Recente"
@@ -4455,10 +4429,6 @@ pt_BR:
                 label: "Categorias e últimos tópicos"
               categories_and_top_topics:
                 label: "Categorias e melhores tópicos"
-              categories_boxes:
-                label: "Caixas de categorias"
-              categories_boxes_with_topics:
-                label: "Caixas de categorias com tópicos"
       logos:
         title: "Logotipos"
         fields:

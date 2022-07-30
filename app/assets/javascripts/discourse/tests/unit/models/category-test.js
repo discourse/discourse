@@ -128,8 +128,6 @@ module("Unit | Model | category", function () {
       bah,
       "we can find a category with english slug whose parent slug is CJK"
     );
-
-    sinon.restore();
   });
 
   test("findSingleBySlug", function (assert) {
@@ -227,8 +225,7 @@ module("Unit | Model | category", function () {
     let foo = store.createRecord("category", {
       id: 1,
       slug: "foo",
-      required_tag_groups: ["bar"],
-      min_tags_from_required_group: 2,
+      required_tag_groups: [{ name: "bar", min_count: 2 }],
     });
 
     assert.equal(foo.minimumRequiredTags, 2);
@@ -259,7 +256,7 @@ module("Unit | Model | category", function () {
     foo = store.createRecord("category", {
       id: 5,
       slug: "foo",
-      min_tags_from_required_group: 2,
+      required_tag_groups: [],
     });
 
     assert.equal(foo.minimumRequiredTags, null);
@@ -369,8 +366,6 @@ module("Unit | Model | category", function () {
       [child_category1, category2, read_restricted_category],
       "prioritize non read_restricted with limit"
     );
-
-    sinon.restore();
   });
 
   test("search with category slug", function (assert) {

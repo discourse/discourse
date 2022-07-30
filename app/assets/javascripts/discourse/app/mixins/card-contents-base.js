@@ -345,11 +345,12 @@ export default Mixin.create({
   @bind
   _clickOutsideHandler(event) {
     if (this.visible) {
-      const $target = $(event.target);
       if (
-        $target.closest(`[data-${this.elementId}]`).data(this.elementId) ||
-        $target.closest(`a.${this.triggeringLinkClass}`).length > 0 ||
-        $target.closest(`#${this.elementId}`).length > 0
+        event.target
+          .closest(`[data-${this.elementId}]`)
+          ?.getAttribute(`data-${this.elementId}`) ||
+        event.target.closest(`a.${this.triggeringLinkClass}`) ||
+        event.target.closest(`#${this.elementId}`)
       ) {
         return;
       }

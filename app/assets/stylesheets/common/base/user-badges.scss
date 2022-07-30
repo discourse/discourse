@@ -208,7 +208,7 @@
     align-self: flex-start;
 
     @media screen and (min-width: 767px) {
-      max-width: calc(#{$large-width} / 2);
+      max-width: calc(var(--d-max-width) / 2);
       margin-right: 1.5em;
     }
 

@@ -1,12 +1,13 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import { SEPARATOR } from "discourse/lib/category-hashtags";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import discourseDebounce from "discourse-common/lib/debounce";
-import getURL from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
+import { ajax } from "discourse/lib/ajax";
 
 let cache = {};
 let cacheTime;
@@ -22,7 +23,7 @@ function searchTags(term, categories, limit) {
   return new Promise((resolve) => {
     let clearPromise = isTesting()
       ? null
-      : later(() => {
+      : discourseLater(() => {
           resolve(CANCELLED_STATUS);
         }, 5000);
 
@@ -30,8 +31,7 @@ function searchTags(term, categories, limit) {
       discourseDebounce(
         this,
         function () {
-          oldSearch = $.ajax(getURL("/tags/filter/search"), {
-            type: "GET",
+          oldSearch = ajax("/tags/filter/search", {
             data: { limit, q },
           });
 
@@ -50,7 +50,7 @@ function searchTags(term, categories, limit) {
 
               returnVal = cats.concat(tags);
             })
-            .always(() => {
+            .finally(() => {
               oldSearch = null;
               resultFunc(returnVal);
             });

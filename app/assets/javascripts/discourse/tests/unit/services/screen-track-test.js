@@ -2,7 +2,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 discourseModule("Unit | Service | screen-track", function () {
-  test("consolidateTimings", function (assert) {
+  test("consolidateTimings", async function (assert) {
     const tracker = this.container.lookup("service:screen-track");
 
     tracker.consolidateTimings({ 1: 10, 2: 5 }, 10, 1);
@@ -18,7 +18,8 @@ discourseModule("Unit | Service | screen-track", function () {
       "expecting consolidated timings to match correctly"
     );
 
-    tracker.sendNextConsolidatedTiming();
+    await tracker.sendNextConsolidatedTiming();
+
     assert.equal(
       tracker.highestReadFromCache(2),
       4,

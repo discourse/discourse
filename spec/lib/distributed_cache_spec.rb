@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DistributedCache extensions" do
+RSpec.describe "DistributedCache extensions" do
   let(:cache) { DistributedCache.new('mytest') }
 
   it "can defer_get_set" do

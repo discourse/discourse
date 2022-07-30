@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WebhooksController do
+RSpec.describe WebhooksController do
   before { Discourse.redis.flushdb }
 
   let(:email) { "em@il.com" }
@@ -15,6 +15,11 @@ describe WebhooksController do
 
     before do
       SiteSetting.mailgun_api_key = "key-8221462f0c915af3f6f2e2df7aa5a493"
+      ActionController::Base.allow_forgery_protection = true # Ensure the endpoint works, even with CSRF protection generally enabled
+    end
+
+    after do
+      ActionController::Base.allow_forgery_protection = false
     end
 
     it "works (deprecated)" do
@@ -147,6 +152,14 @@ describe WebhooksController do
       expect(email_log.bounced).to eq(true)
       expect(email_log.bounce_error_code).to eq("5.1.1")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+  end
+
+  context "mandrill_head" do
+    it "works" do
+      head "/webhooks/mandrill.json"
+
+      expect(response.status).to eq(200)
     end
   end
 

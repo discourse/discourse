@@ -6,7 +6,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 acceptance("Topic list plugin API", function () {
   function customLastUnreadUrl(context) {
-    return `${context.urlForPostNumber(1)}?overriden`;
+    return `${context.urlForPostNumber(1)}?overridden`;
   }
 
   test("Overrides lastUnreadUrl", async function (assert) {
@@ -20,7 +20,7 @@ acceptance("Topic list plugin API", function () {
         query(
           ".topic-list .topic-list-item:first-child a.raw-topic-link"
         ).getAttribute("href"),
-        "/t/error-after-upgrade-to-0-9-7-9/11557/1?overriden"
+        "/t/error-after-upgrade-to-0-9-7-9/11557/1?overridden"
       );
     } finally {
       clearCustomLastUnreadUrlCallbacks();

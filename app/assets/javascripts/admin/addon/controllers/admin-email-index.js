@@ -43,10 +43,10 @@ export default Controller.extend({
           this.set("sentTestEmailMessage", response.sent_test_email_message)
         )
         .catch((e) => {
-          if (e.responseJSON && e.responseJSON.errors) {
+          if (e.jqXHR.responseJSON?.errors) {
             bootbox.alert(
               I18n.t("admin.email.error", {
-                server_error: e.responseJSON.errors[0],
+                server_error: e.jqXHR.responseJSON.errors[0],
               })
             );
           } else {

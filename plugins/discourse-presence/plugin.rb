@@ -5,7 +5,6 @@
 # version: 2.0
 # authors: André Pereira, David Taylor, tgxworld
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-presence
-# transpile_js: true
 
 enabled_site_setting :presence_enabled
 hide_plugin if self.respond_to?(:hide_plugin)

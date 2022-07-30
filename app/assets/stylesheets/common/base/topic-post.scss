@@ -192,6 +192,11 @@ $quote-share-maxwidth: 150px;
   img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
     max-width: 100%;
     height: auto;
+
+    @supports not (aspect-ratio: 1) {
+      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
+      height: var(--calculated-height);
+    }
   }
 }
 
@@ -1141,6 +1146,10 @@ blockquote > *:last-child {
 
     button {
       align-self: flex-start;
+      font-size: var(--font-up-1);
+      .d-icon {
+        font-size: var(--font-down-1);
+      }
     }
 
     .custom-message {
@@ -1234,6 +1243,7 @@ span.mention {
 }
 
 a.mention-group {
+  display: inline-block;
   font-weight: bold;
   font-size: 0.93em;
   color: var(--primary);
@@ -1299,14 +1309,25 @@ a.mention-group {
   }
 }
 
-.broken-image {
+.broken-image,
+.blocked-hotlinked-placeholder {
+  &:not(a) {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
+
   display: inline-flex;
-  color: var(--primary-low-mid-or-secondary-high);
+  flex-direction: column;
   border: 1px solid var(--primary-low);
-  font-size: $font-up-5;
+  align-items: center;
+  justify-content: center;
 
   .d-icon {
     margin: 16px;
+    font-size: var(--font-up-5);
+  }
+
+  .notice {
+    margin: 0 0.5em 0.5em 0.5em;
   }
 }
 
@@ -1416,6 +1437,7 @@ a.mention-group {
   background-color: var(--tertiary-low);
   border-top: 1px solid var(--primary-low);
   display: flex;
+  width: 100%;
   max-width: calc(
     #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
       (0.8em * 2)

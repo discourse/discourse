@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::SiteSettingsController do
+RSpec.describe Admin::SiteSettingsController do
 
   it "is a subclass of AdminController" do
     expect(Admin::SiteSettingsController < Admin::AdminController).to eq(true)
@@ -84,7 +84,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_email_in_reply_to.json", params: {
               default_email_in_reply_to: false
             }
-          }.to change { UserOption.where(email_in_reply_to: false).count }.by(0)
+          }.not_to change { UserOption.where(email_in_reply_to: false).count }
         end
 
         it 'should update `email_digests` column in existing user options' do
@@ -102,7 +102,7 @@ describe Admin::SiteSettingsController do
               default_email_digest_frequency: 0,
               update_existing_user: true
             }
-          }.to change { UserOption.where(email_digests: false).count }.by(User.count)
+          }.to change { UserOption.where(email_digests: false).count }.by(User.human_users.count)
         end
       end
 
@@ -153,7 +153,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_categories_watching.json", params: {
               default_categories_watching: category_ids.last(2).join("|")
             }
-          }.to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }.by(0)
+          }.not_to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }
 
           expect(response.status).to eq(200)
           expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(0)
@@ -204,7 +204,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_tags_watching.json", params: {
               default_tags_watching: tags.last(2).pluck(:name).join("|")
             }
-          }.to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }.by(0)
+          }.not_to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }
 
           expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
         end
@@ -253,6 +253,70 @@ describe Admin::SiteSettingsController do
           expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
 
           SiteSetting.setting(:default_tags_watching, "")
+        end
+
+        context "user options" do
+          def expect_user_count(site_setting_name:, user_setting_name:, current_site_setting_value:, new_site_setting_value:,
+                                current_user_setting_value: nil, new_user_setting_value: nil)
+
+            current_user_setting_value ||= current_site_setting_value
+            new_user_setting_value ||= new_site_setting_value
+
+            SiteSetting.public_send("#{site_setting_name}=", current_site_setting_value)
+            UserOption.human_users.update_all(user_setting_name => current_user_setting_value)
+            user_count = User.human_users.count
+
+            # Correctly counts users when all of them have default value
+            put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
+              site_setting_name => new_site_setting_value
+            }
+            expect(response.parsed_body["user_count"]).to eq(user_count)
+
+            # Correctly counts users when one of them already has new value
+            user.user_option.update!(user_setting_name => new_user_setting_value)
+            put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
+              site_setting_name => new_site_setting_value
+            }
+            expect(response.parsed_body["user_count"]).to eq(user_count - 1)
+
+            # Correctly counts users when site setting value has been changed
+            SiteSetting.public_send("#{site_setting_name}=", new_site_setting_value)
+            put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
+              site_setting_name => current_site_setting_value
+            }
+            expect(response.parsed_body["user_count"]).to eq(1)
+          end
+
+          it "should return correct user count for boolean setting" do
+            expect_user_count(
+              site_setting_name: "default_other_external_links_in_new_tab",
+              user_setting_name: "external_links_in_new_tab",
+              current_site_setting_value: false,
+              new_site_setting_value: true
+            )
+          end
+
+          it "should return correct user count for 'text_size_key'" do
+            expect_user_count(
+              site_setting_name: "default_text_size",
+              user_setting_name: "text_size_key",
+              current_site_setting_value: "normal",
+              new_site_setting_value: "larger",
+              current_user_setting_value: UserOption.text_sizes[:normal],
+              new_user_setting_value: UserOption.text_sizes[:larger]
+            )
+          end
+
+          it "should return correct user count for 'title_count_mode_key'" do
+            expect_user_count(
+              site_setting_name: "default_title_count_mode",
+              user_setting_name: "title_count_mode_key",
+              current_site_setting_value: "notifications",
+              new_site_setting_value: "contextual",
+              current_user_setting_value: UserOption.title_count_modes[:notifications],
+              new_user_setting_value: UserOption.title_count_modes[:contextual]
+            )
+          end
         end
       end
 

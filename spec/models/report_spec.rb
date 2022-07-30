@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Report do
+RSpec.describe Report do
   let(:user) { Fabricate(:user) }
   let(:c0) { Fabricate(:category, user: user) }
   let(:c1) { Fabricate(:category, parent_category: c0, user: user) }  # id: 2
@@ -209,7 +209,7 @@ describe Report do
       end
 
       context "with #{request_type}" do
-        before(:each) do
+        before do
           freeze_time DateTime.parse('2017-03-01 12:00')
           application_requests = [
             { date: 35.days.ago.to_time, req_type: ApplicationRequest.req_types[request_type.to_s], count: 35 },
@@ -520,11 +520,12 @@ describe Report do
 
       before do
         freeze_time
-
-        PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: 'bad').perform
       end
 
       it "returns a report with data" do
+        result = PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: 'bad').perform
+
+        expect(result.success).to eq(true)
         expect(report.data).to be_present
 
         row = report.data[0]
@@ -893,7 +894,7 @@ describe Report do
 
       expect(report).to be_nil
 
-      expect(Rails.logger.errors).to eq([
+      expect(@fake_logger.errors).to eq([
         'Couldn’t create report `signups`: <ReportInitError x>'
       ])
     end

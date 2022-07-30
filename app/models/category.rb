@@ -5,10 +5,11 @@ class Category < ActiveRecord::Base
     'none'
   ]
 
-  # TODO(2020-11-18): remove
-  self.ignored_columns = %w{
-    suppress_from_latest
-  }
+  self.ignored_columns = [
+    :suppress_from_latest, # TODO(2020-11-18): remove
+    :required_tag_group_id, # TODO(2023-04-01): remove
+    :min_tags_from_required_group, # TODO(2023-04-01): remove
+  ]
 
   include Searchable
   include Positionable
@@ -44,6 +45,7 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
   has_many :topic_timers, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
 
   has_and_belongs_to_many :web_hooks
 
@@ -56,7 +58,6 @@ class Category < ActiveRecord::Base
 
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
-  validates :min_tags_from_required_group, numericality: { only_integer: true, greater_than: 0 }
 
   validate :parent_category_validator
   validate :email_in_validator
@@ -79,6 +80,13 @@ class Category < ActiveRecord::Base
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
   after_save :update_reviewables
+
+  after_save do
+    if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_background_id?
+      upload_ids = [self.uploaded_logo_id, self.uploaded_background_id]
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+    end
+  end
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
@@ -103,7 +111,9 @@ class Category < ActiveRecord::Base
   has_many :tags, through: :category_tags
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
-  belongs_to :required_tag_group, class_name: 'TagGroup'
+
+  has_many :category_required_tag_groups, -> { order(order: :asc) }, dependent: :destroy
+  has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
 
   belongs_to :reviewable_by_group, class_name: 'Group'
 
@@ -639,8 +649,14 @@ class Category < ActiveRecord::Base
     self.tag_groups = TagGroup.where(name: group_names).all.to_a
   end
 
-  def required_tag_group_name=(group_name)
-    self.required_tag_group = group_name.blank? ? nil : TagGroup.where(name: group_name).first
+  def required_tag_groups=(required_groups)
+    map = Array(required_groups).map.with_index { |rg, i| [rg["name"], { min_count: rg["min_count"].to_i, order: i }] }.to_h
+    tag_groups = TagGroup.where(name: map.keys)
+
+    self.category_required_tag_groups = tag_groups.map do |tag_group|
+      attrs = map[tag_group.name]
+      CategoryRequiredTagGroup.new(tag_group: tag_group, **attrs)
+    end.sort_by(&:order)
   end
 
   def downcase_email
@@ -1044,8 +1060,6 @@ end
 #  search_priority                           :integer          default(0)
 #  allow_global_tags                         :boolean          default(FALSE), not null
 #  reviewable_by_group_id                    :integer
-#  required_tag_group_id                     :integer
-#  min_tags_from_required_group              :integer          default(1), not null
 #  read_only_banner                          :string
 #  default_list_filter                       :string(20)       default("all")
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null

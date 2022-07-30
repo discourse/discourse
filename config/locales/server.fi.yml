@@ -225,7 +225,6 @@ fi:
       <p>Jos muistat salasanasi, voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
 
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
-    user_exists: "Osoitteeseen <b>%{email}</b> ei tarvitse lähettää kutsua, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tili!</a>"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
     invalid_email: "%{email} ei ole kelvollinen sähköpostiosoite."
     rate_limit:
@@ -387,7 +386,6 @@ fi:
       too_many: "Et voi lisätä enempää kuin %{limit} kirjanmerkkiä. Voit poistaa kirjanmerkkejä kohdassa <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>."
       cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
       cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
-      time_must_be_provided: "kaikkiin muistutuksiin on asetettava kellonaika"
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytälaitteellani"
       later_today: "Myöhemmin tänään"
@@ -1390,7 +1388,6 @@ fi:
     contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla kiireellisiä yhteydenottoja varten."
     contact_url: "URL-osoite sivuston yhteydenottoja varten. Näytetään <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
     crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
-    download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu luettelo."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin historiaan."
@@ -1431,7 +1428,6 @@ fi:
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
     apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
-    twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1444,10 +1440,8 @@ fi:
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
     enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
-    enable_long_polling: "Ilmoitusten käyttämä viestiväylä voi käyttää long pollingia"
     enable_chunked_encoding: "Ota käyttöön palvelimen joukkokoodausvastaukset. Tämä ominaisuus toimii useimmissa määrityksissä, mutta jotkin välityspalvelimet saattavat puskuroida, mikä aiheuttaa vastausten viivästymisen"
     long_polling_base_url: "Perus-URL, jota käytetään long pollingissa (kun CDN tarjoaa dynaamista sisältöä, varmista että tämä on asetettu noudoksi lähteestä) esim: http://lähde.sivusto.com"
-    long_polling_interval: "Kuinka kauan palvelimen pitäisi odottaa ennen vastaamista asiakkaalle, kun lähetettävää dataa ei ole (vain kirjautuneille käyttäjille)"
     polling_interval: "Kun long polling ei ole käytössä, kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa."
     anon_polling_interval: "Kuinka usein anonyymit käyttäjät pollaavat millisekunneissa"
     background_polling_interval: "Kuinka usein asiakkaat pollaavat, millisekunneissa (kun ikkuna ei ole aktiivisena)"
@@ -1487,7 +1481,6 @@ fi:
     ga_universal_auto_link_domains: "Ota käyttöön Google Universal Analyticsin verkkotunnusten välinen seuranta. Asiakastunniste liitetään näihin verkkotunnuksiin ulospäin suuntautuvissa linkeissä. Tutustu <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googlen Verkkotunnusten välisen seurannan määrittäminen ohjeeseen.</a>"
     gtm_container_id: "Google Tag Manager -säiliön tunnus, esim: GTM-ABCDEF. <br/>Huomautus: kolmansien osapuolien skriptit, joita GTM käyttää, voi joutua erikseen sallimaan asetuksessa \"content security policy script src\"."
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua APIa, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Salli valvojien hallita alueita ja ryhmiä"
     cors_origins: "Sallitut alkuperät eri alkuperät sisältäville pyynnöille (CORS). Jokaisen alkuperän täytyy sisältää http:// tai https://. DISCOURSE_ENABLE_CORS-ympäristömuuttuja täytyy olla asetettu todeksi CORSin käyttöönottamiseksi."
     use_admin_ip_allowlist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blocked_ip_blocks: "Luettelo yksityisistä IP-lohkoista, joita Discourse ei tulisi koskaan indeksoida"
@@ -1514,7 +1507,6 @@ fi:
     send_tl2_promotion_message: "Lähetä uusille luottamustason 2 käyttäjille viesti ylennyksestä."
     suppress_reply_directly_below: "Älä näytä vastausten lukumäärää viestissä,, jos viestin alapuolella on vain yksi vastaus."
     suppress_reply_directly_above: "Älä näytä vastauksena-merkintää viestissä, jos viestin yläpuolella on vain yksi vastaus."
-    remove_full_quote: "Poista koko viestin lainaukset suorista vastauksista automaattisesti."
     suppress_reply_when_quoting: "Älä näytä vastauksena-painiketta viestissä, kun viestissä on lainaus."
     max_reply_history: "Maksimimäärä laajennettavia vastauksia, kun \"vastauksena\" laajennetaan"
     topics_per_period_in_top_summary: "Ketjujen lukumäärä, joka näytetään oletuksena Suositut-listauksissa."
@@ -1987,7 +1979,7 @@ fi:
     default_categories_tracking: "Luettelo oletuksena seurattavista alueista."
     default_categories_muted: "Luettelo oletuksena vaimennetuista alueista."
     default_categories_watching_first_post: "Luettelo alueista, joiden ketjujen ensimmäisiä viestejä tarkkaillaan oletuksena."
-    default_categories_regular: "Luettelo alueista, joita ei ole vaimennettu oletuksena. Hyödyllinen, kun \"mute_all_categories_by_default\"-sivustoasetus on käytössä."
+    default_categories_normal: "Luettelo alueista, joita ei ole vaimennettu oletuksena. Hyödyllinen, kun \"mute_all_categories_by_default\"-sivustoasetus on käytössä."
     mute_all_categories_by_default: "Aseta kaikkien alueiden oletusilmoitustasoksi vaimennettu. Vaadi käyttäjää valitsemaan itse alueet, jotka näkyvät Tuoreimmat- ja Alueet-sivuilla. Jos haluat muuttaa oletusarvoja kirjautumattomille käyttäjille, säädä 'default_categories_' -asetuksia."
     default_tags_watching: "Luettelo tunnisteista, joita tarkkaillaan oletuksena."
     default_tags_tracking: "Luettelo tunnisteista, joita seurataan oletuksena."
@@ -2013,7 +2005,6 @@ fi:
     tags_sort_alphabetically: "Näytä tunnisteet aakkosjärjestyksessä. Oletusasetus on näyttäminen suosion mukaan."
     tags_listed_by_group: "Listaa tunnisteet tunnisteryhmittäin <a href='%{base_path}/tags' target='_blank'>Tunnisteet-sivulla</a>."
     tag_style: "Tunnistemerkkien visuaalinen tyyli."
-    allow_staff_to_tag_pms: "Salli henkilökunnan asettaa tunnisteitä mihin tahansa yksityisviestiin"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
@@ -2563,12 +2554,6 @@ fi:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Onnittelut luottamustason noususta!"
-      text_body_template: |
-        Olemme ylentäneet sinut toiselle [luottamustasolle](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
-
-        Kokeneena käyttäjänä saatat arvostaa [tätä hyödyllisten vinkkien luetteloa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-
-        Kutsumme sinut jatkamaan osallistumistasi – on mukavaa, että olet seurassamme.
     backup_succeeded:
       title: "Varmuuskopiointi onnistui"
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
@@ -3409,18 +3394,6 @@ fi:
     suspicious_login:
       title: "Varoitus uudesta kirjautumisesta"
       subject_template: "[%{site_name}] Uusi kirjautuminen paikasta %{location}"
-      text_body_template: |
-        Hei,
-
-        Huomasimme, että kirjauduit sinulle epätavalliselta laitteelta tai paikasta. Olitko se sinä?
-
-         – Paikka: %{location} (%{client_ip})
-         – Selain: %{browser}
-         – Laite: %{device} – %{os}
-
-        Jos se olit sinä, hyvä! Sinun ei tarvitse reagoida mitenkään.
-
-        Jollet se ollut sinä, [tarkastele käynnissä olevia istuntojasi](%{base_url}/my/preferences/account) ja harkitse salasanasi vaihtamista.
     post_approved:
       title: "Viestisi hyväksyttiin"
       subject_template: "[%{site_name}] Viestisi hyväksyttiin"
@@ -3432,6 +3405,7 @@ fi:
     title: "Hups! Tämä sivu on yksityinen."
   site_setting_missing: "Asetus \"%{name}\" on pakollinen."
   page_not_found:
+    page_title: "Sivua ei löytynyt"
     title: "Hups! Sivua ei ole tai se on yksityinen."
     popular_topics: "Suosittuja"
     recent_topics: "Tuoreimpia"
@@ -4284,10 +4258,6 @@ fi:
                 label: "Alueet ja tuoreimmat ketjut"
               categories_and_top_topics:
                 label: "Alueet ja suosittuja ketjuja"
-              categories_boxes:
-                label: "Alueet laatikoissa"
-              categories_boxes_with_topics:
-                label: "Alueet laatikoissa, joissa ketjuja"
       logos:
         title: "Logot"
         fields:

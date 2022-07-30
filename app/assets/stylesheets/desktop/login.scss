@@ -14,13 +14,16 @@
       color: rgba(var(--primary-rgb), 0.85);
     }
   }
+  h2.login-with {
+    color: var(--secondary);
+  }
   #login-buttons:not(.hidden) {
     display: flex;
     flex: 0 1 auto;
     flex-direction: column;
     align-items: stretch;
     min-height: 75px;
-    min-width: 160px;
+    min-width: 200px;
     order: 2;
 
     &:focus-within,
@@ -211,7 +214,7 @@
   }
   .has-alt-auth .create-account-form {
     display: grid;
-    grid-template-columns: 65% 35%;
+    grid-template-columns: 60% 40%;
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "header login-buttons"

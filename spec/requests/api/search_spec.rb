@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'groups' do
+RSpec.describe 'groups' do
 
   let(:admin) { Fabricate(:admin) }
 
@@ -30,9 +30,10 @@ describe 'groups' do
           - `after:`: `yyyy-mm-dd`
           - `order:`: `latest`, `likes`, `views`, `latest_topic`
           - `assigned:`: username (without `@`)
-          - `in:`: `title`, `likes`, `personal`, `seen`, `unseen`, `posted`, `created`, `watching`, `tracking`, `bookmarks`, `assigned`, `unassigned`, `first`, `pinned`, `wiki`
+          - `in:`: `title`, `likes`, `personal`, `messages`, `seen`, `unseen`, `posted`, `created`, `watching`, `tracking`, `bookmarks`, `assigned`, `unassigned`, `first`, `pinned`, `wiki`
           - `with:`: `images`
           - `status:`: `open`, `closed`, `public`, `archived`, `noreplies`, `single_user`, `solved`, `unsolved`
+          - `group_messages:`: groupname
           - `min_posts:`: 1
           - `max_posts:`: 10
           - `min_views:`: 1

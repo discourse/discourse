@@ -1,6 +1,6 @@
 import {
   acceptance,
-  queryAll,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -53,7 +53,7 @@ acceptance("Composer - Tags", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
     assert.strictEqual(
-      queryAll(".popup-tip.bad").text().trim(),
+      query(".popup-tip.bad").innerText.trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
     );
@@ -74,8 +74,7 @@ acceptance("Composer - Tags", function (needs) {
     await fillIn(".d-editor-input", "this is the *content* of a post");
 
     Category.findById(2).setProperties({
-      required_tag_groups: ["support tags"],
-      min_tags_from_required_group: 1,
+      required_tag_groups: [{ name: "support tags", min_count: 1 }],
     });
 
     const categoryChooser = selectKit(".category-chooser");
@@ -87,7 +86,7 @@ acceptance("Composer - Tags", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
     assert.strictEqual(
-      queryAll(".popup-tip.bad").text().trim(),
+      query(".popup-tip.bad").innerText.trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
     );

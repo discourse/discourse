@@ -18,6 +18,17 @@ module Roleable
     !staff?
   end
 
+  def whisperer?
+    @whisperer ||= begin
+      return false if !SiteSetting.enable_whispers?
+      return true if staff?
+      whispers_allowed_group_ids = SiteSetting.whispers_allowed_group_ids
+      return false if whispers_allowed_group_ids.blank?
+      return true if whispers_allowed_group_ids.include?(primary_group_id)
+      group_users&.exists?(group_id: whispers_allowed_group_ids)
+    end
+  end
+
   def grant_moderation!
     return if moderator
     set_permission('moderator', true)
@@ -59,6 +70,11 @@ module Roleable
     if group_name == :admins || group_name == :moderators
       Group.set_category_and_tag_default_notification_levels!(self, :staff)
     end
+  end
+
+  def reload(options = nil)
+    @whisperer = nil
+    super(options)
   end
 
   private

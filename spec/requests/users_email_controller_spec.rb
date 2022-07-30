@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe UsersEmailController do
+RSpec.describe UsersEmailController do
 
   fab!(:user) { Fabricate(:user) }
   let!(:email_token) { Fabricate(:email_token, user: user) }

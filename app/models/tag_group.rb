@@ -6,6 +6,7 @@ class TagGroup < ActiveRecord::Base
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
   has_many :category_tag_groups, dependent: :destroy
+  has_many :category_required_tag_groups, dependent: :destroy
   has_many :categories, through: :category_tag_groups
   has_many :tag_group_permissions, dependent: :destroy
 
@@ -94,10 +95,10 @@ class TagGroup < ActiveRecord::Base
           OR
           id NOT IN (SELECT tag_group_id FROM category_tag_groups)
         )
-        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
+        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id IN (?))
       SQL
 
-      TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])
+      TagGroup.where(filter_sql, guardian.allowed_category_ids, DiscourseTagging.permitted_group_ids(guardian))
     end
   end
 end

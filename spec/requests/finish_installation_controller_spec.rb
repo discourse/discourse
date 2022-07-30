@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FinishInstallationController do
+RSpec.describe FinishInstallationController do
 
   describe '#index' do
     context "has_login_hint is false" do

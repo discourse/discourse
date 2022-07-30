@@ -23,7 +23,7 @@ end
 
 RSpec::Matchers.define_negated_matcher :not_add_notification, :add_notification
 
-describe PostAlerter do
+RSpec.describe PostAlerter do
   fab!(:category) { Fabricate(:category) }
 
   fab!(:topic) { Fabricate(:topic) }
@@ -240,7 +240,7 @@ describe PostAlerter do
           create_post_with_alerts(
             raw: quote_raw, topic: pm, user: admin, post_type: Post.types[:whisper]
           )
-        }.to change(user2.notifications, :count).by(0)
+        }.not_to change(user2.notifications, :count)
       end
     end
   end
@@ -348,12 +348,12 @@ describe PostAlerter do
     fab!(:topic) { Fabricate(:topic, category: category) }
 
     it 'does not notify for muted users' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      post = Fabricate(:post, raw: '[quote="Eviltrout, post:1"]whatup[/quote]', topic: topic)
       MutedUser.create!(user_id: evil_trout.id, muted_user_id: post.user_id)
 
       expect {
         PostAlerter.post_created(post)
-      }.to change(evil_trout.notifications, :count).by(0)
+      }.not_to change(evil_trout.notifications, :count)
     end
 
     it 'does not notify for ignored users' do
@@ -362,11 +362,11 @@ describe PostAlerter do
 
       expect {
         PostAlerter.post_created(post)
-      }.to change(evil_trout.notifications, :count).by(0)
+      }.not_to change(evil_trout.notifications, :count)
     end
 
     it 'does not notify for users with new reply notification' do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
+      post = Fabricate(:post, raw: '[quote="eviltRout, post:1"]whatup[/quote]', topic: topic)
       notification = Notification.create!(topic: post.topic,
                                           post_number: post.post_number,
                                           read: false,
@@ -376,7 +376,7 @@ describe PostAlerter do
                                          )
       expect {
         PostAlerter.post_edited(post)
-      }.to change(evil_trout.notifications, :count).by(0)
+      }.not_to change(evil_trout.notifications, :count)
 
       notification.destroy
       expect {
@@ -388,7 +388,7 @@ describe PostAlerter do
       expect {
         2.times do
           create_post_with_alerts(
-            raw: '[quote="EvilTrout, post:1"]whatup[/quote]',
+            raw: '[quote="eviltrout, post:1"]whatup[/quote]',
             topic: topic
           )
         end
@@ -410,11 +410,76 @@ describe PostAlerter do
     end
 
     it "triggers :before_create_notifications_for_users" do
-      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      post = Fabricate(:post, raw: '[quote="eviltrout, post:1"]whatup[/quote]')
       events = DiscourseEvent.track_events do
         PostAlerter.post_created(post)
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], post])
+    end
+
+    context "notifications when prioritizing full names" do
+      before do
+        SiteSetting.prioritize_username_in_ux = false
+        SiteSetting.display_name_on_posts = true
+      end
+
+      it 'sends to correct user' do
+        quote = <<~MD
+          [quote="#{evil_trout.name}, post:1, username:#{evil_trout.username}"]whatup[/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(evil_trout.notifications, :count).by(1)
+      end
+
+      it 'sends to correct users when nested quotes with multiple users' do
+        quote = <<~MD
+          [quote="#{evil_trout.name}, post:1, username:#{evil_trout.username}"]this [quote="#{walterwhite.name}, post:2, username:#{walterwhite.username}"]whatup[/quote][/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(evil_trout.notifications, :count).by(1)
+          .and change(walterwhite.notifications, :count).by(1)
+      end
+
+      it 'sends to correct users when multiple quotes' do
+        user = Fabricate(:user)
+        quote = <<~MD
+          [quote="#{evil_trout.name}, post:1, username:#{evil_trout.username}"]"username:#{user.username}" [/quote]/n [quote="#{walterwhite.name}, post:2, username:#{walterwhite.username}"]whatup[/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(evil_trout.notifications, :count).by(1)
+          .and change(walterwhite.notifications, :count).by(1)
+          .and not_change(user.notifications, :count)
+      end
+
+      it "sends to correct user when user has a full name that matches another user's username" do
+        user_with_matching_full_name = Fabricate(:user, name: evil_trout.username)
+        quote = <<~MD
+          [quote="#{user_with_matching_full_name.name}, post:1, username:#{user_with_matching_full_name.username}"]this [/quote]
+        MD
+
+        expect {
+          create_post_with_alerts(
+            raw: quote,
+            topic: topic
+          )
+        }.to change(user_with_matching_full_name.notifications, :count).by(1)
+          .and not_change(evil_trout.notifications, :count)
+      end
     end
   end
 
@@ -485,12 +550,12 @@ describe PostAlerter do
     end
 
     it 'does not notify unrelated users' do
-      expect { post }.to change(evil_trout.notifications, :count).by(0)
+      expect { post }.not_to change(evil_trout.notifications, :count)
     end
 
     it 'does not work if user here exists' do
       Fabricate(:user, username: SiteSetting.here_mention)
-      expect { post }.to change(other_post.user.notifications, :count).by(0)
+      expect { post }.not_to change(other_post.user.notifications, :count)
     end
 
     it 'notifies users who replied' do
@@ -499,7 +564,7 @@ describe PostAlerter do
 
       expect { post }
         .to change(other_post.user.notifications, :count).by(1)
-        .and change(post2.user.notifications, :count).by(0)
+        .and not_change(post2.user.notifications, :count)
         .and change(post3.user.notifications, :count).by(1)
     end
 
@@ -539,14 +604,14 @@ describe PostAlerter do
 
       expect {
         create_post_with_alerts(raw: "Hello, @group-alt should not trigger a notification?")
-      }.to change(evil_trout.notifications, :count).by(0)
+      }.not_to change(evil_trout.notifications, :count)
 
       expect(GroupMention.count).to eq(2)
 
       group.update_columns(mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
       expect {
         create_post_with_alerts(raw: "Hello @group you are not mentionable")
-      }.to change(evil_trout.notifications, :count).by(0)
+      }.not_to change(evil_trout.notifications, :count)
 
       expect(GroupMention.count).to eq(3)
 
@@ -1251,7 +1316,7 @@ describe PostAlerter do
       reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
 
       NotificationEmailer.expects(:process_notification).never
-      expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(0)
+      expect { PostAlerter.post_created(reply) }.not_to change(user.notifications, :count)
 
       category.mailinglist_mirror = false
       NotificationEmailer.expects(:process_notification).once
@@ -1372,8 +1437,10 @@ describe PostAlerter do
         tag = Fabricate(:tag)
         topic = Fabricate(:topic, tags: [tag])
         post = Fabricate(:post, topic: topic)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        Fabricate(:tag_group_permission, tag_group: tag_group, group: group)
+
+        tag_group = TagGroup.new(name: 'Only visible to group', tag_names: [tag.name])
+        tag_group.permissions = [[group.id, TagGroupPermission.permission_types[:full]]]
+        tag_group.save!
 
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
 
@@ -1412,7 +1479,7 @@ describe PostAlerter do
         expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name]) }.to change { Notification.where(user_id: user.id).count }.by(1)
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
 
-        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name]) }.to change { Notification.count }.by(0)
+        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name]) }.not_to change { Notification.count }
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
       end
 
@@ -1436,7 +1503,7 @@ describe PostAlerter do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.allow_staff_to_tag_pms = true
+        SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
         Jobs.run_immediately!
         TopicUser.change(user.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
         TopicUser.change(staged.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
@@ -1674,7 +1741,7 @@ describe PostAlerter do
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to change { ActionMailer::Base.deliveries.size }
     end
 
     it "does not send a group smtp email if SiteSetting.enable_smtp is false" do
@@ -1682,14 +1749,14 @@ describe PostAlerter do
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to change { ActionMailer::Base.deliveries.size }
     end
 
     it "does not send group smtp emails for a whisper" do
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+      expect { PostAlerter.new.after_save_post(post, true) }.not_to change { ActionMailer::Base.deliveries.size }
     end
 
     it "sends the group smtp email job with a delay of personal_email_time_window_seconds" do
@@ -1708,6 +1775,16 @@ describe PostAlerter do
         },
         at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds
       )
+    end
+
+    it "does not send a group smtp email for anyone if the reply post originates from an incoming email that is auto generated" do
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+      post = Fabricate(:post, topic: topic)
+      Fabricate(:incoming_email, post: post, topic: topic, is_auto_generated: true)
+      expect_not_enqueued_with(job: :group_smtp_email) do
+        expect { PostAlerter.new.after_save_post(post, true) }.not_to change { ActionMailer::Base.deliveries.size }
+      end
     end
 
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
@@ -1897,12 +1974,12 @@ describe PostAlerter do
         User.count # the two new cc addresses have users created
       }.by(2).and change {
         TopicAllowedUser.where(topic: topic).count # and they are added as topic allowed users
-      }.by(2).and change {
+      }.by(2).and not_change {
         # but they are not sent emails because they were cc'd on an email.
         # no group smtp message is sent because the OP is not sent an email,
         # they made this post.
         ActionMailer::Base.deliveries.size
-      }.by(0).and change {
+      }.and change {
         Notification.count # and they are still sent their normal discourse notification
       }.by(2)
 

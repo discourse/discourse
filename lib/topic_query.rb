@@ -40,6 +40,7 @@ class TopicQuery
   end
 
   def self.public_valid_options
+    # For these to work in Ember, add them to `controllers/discovery-sortable.js`
     @public_valid_options ||=
       %i(page
          before
@@ -336,8 +337,8 @@ class TopicQuery
       .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
   end
 
-  def self.unread_filter(list, staff: false)
-    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+  def self.unread_filter(list, whisperer: false)
+    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
 
     list
       .where("tu.last_read_post_number < topics.#{col_name}")
@@ -345,17 +346,26 @@ class TopicQuery
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
+  # Any changes here will need to be reflected in `lib/topic-list-tracked-filter.js` for the `isTrackedTopic` function on
+  # the client side. The `f=tracked` query param is not heavily used so we do not want to be querying for a topic's
+  # tracked status by default. Instead, the client will handle the filtering when the `f=tracked` query params is present.
   def self.tracked_filter(list, user_id)
+    tracked_category_ids_sql = <<~SQL
+    SELECT cd.category_id FROM category_users cd
+    WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
+    SQL
+
+    has_sub_sub_categories = SiteSetting.max_category_nesting == 3
+
     sql = +<<~SQL
       topics.category_id IN (
-        SELECT cu.category_id FROM category_users cu
-        WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
-      )
-      OR topics.category_id IN (
-        SELECT c.id FROM categories c WHERE c.parent_category_id IN (
-          SELECT cd.category_id FROM category_users cd
-          WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
-        )
+        SELECT
+          c.id
+        FROM categories c
+        #{has_sub_sub_categories ? "LEFT JOIN categories parent_categories ON parent_categories.id = c.parent_category_id" : ""}
+        WHERE (c.id IN (#{tracked_category_ids_sql}))
+        OR c.parent_category_id IN (#{tracked_category_ids_sql})
+        #{has_sub_sub_categories ? "OR (parent_categories.id IS NOT NULL AND parent_categories.parent_category_id IN (#{tracked_category_ids_sql}))" : ""}
       )
     SQL
 
@@ -465,7 +475,7 @@ class TopicQuery
 
   def unseen_results(options = {})
     result = default_results(options)
-    result = unseen_filter(result, @user.first_seen_at, @user.staff?) if @user
+    result = unseen_filter(result, @user.first_seen_at, @user.whisperer?) if @user
     result = remove_muted(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
@@ -480,7 +490,7 @@ class TopicQuery
   def unread_results(options = {})
     result = TopicQuery.unread_filter(
         default_results(options.reverse_merge(unordered: true)),
-        staff: @user&.staff?)
+        whisperer: @user&.whisperer?)
       .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
     if @user
@@ -793,9 +803,7 @@ class TopicQuery
 
     if (filter = (options[:filter] || options[:f])) && @user
       action =
-        if filter == "bookmarked"
-          PostActionType.types[:bookmark]
-        elsif filter == "liked"
+        if filter == "liked"
           PostActionType.types[:like]
         end
       if action
@@ -859,7 +867,7 @@ class TopicQuery
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
         SiteSetting.default_categories_watching_first_post.split("|"),
-        SiteSetting.default_categories_regular.split("|")
+        SiteSetting.default_categories_normal.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
@@ -941,7 +949,7 @@ class TopicQuery
   def unread_messages(params)
     query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
-      staff: @user.staff?
+      whisperer: @user.whisperer?
     )
 
     first_unread_pm_at =
@@ -1077,10 +1085,10 @@ class TopicQuery
 
   private
 
-  def unseen_filter(list, user_first_seen_at, staff)
+  def unseen_filter(list, user_first_seen_at, whisperer)
     list = list.where("topics.bumped_at >= ?", user_first_seen_at)
 
-    col_name = staff ? "highest_staff_post_number" : "highest_post_number"
+    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
     list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
   end
 end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe Auth::Result do
+RSpec.describe Auth::Result do
   fab!(:initial_email) { "initialemail@example.org" }
   fab!(:initial_username) { "initialusername" }
   fab!(:initial_name) { "Initial Name" }
@@ -49,6 +49,15 @@ describe Auth::Result do
     expect(user.email).to eq(new_email)
     expect(user.username).to eq(new_username)
     expect(user.name).to eq(new_name)
+  end
+
+  it "overrides username with suggested value if missing" do
+    SiteSetting.auth_overrides_username = true
+
+    result.username = nil
+    result.apply_user_attributes!
+
+    expect(user.username).to eq("New_Name")
   end
 
   it "updates the user's email if currently invalid" do

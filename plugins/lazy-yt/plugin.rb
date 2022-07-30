@@ -5,7 +5,6 @@
 # version: 1.0.1
 # authors: Arpit Jalan
 # url: https://github.com/discourse/discourse/tree/main/plugins/lazy-yt
-# transpile_js: true
 
 hide_plugin if self.respond_to?(:hide_plugin)
 

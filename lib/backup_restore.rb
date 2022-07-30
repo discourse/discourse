@@ -103,6 +103,15 @@ module BackupRestore
           EXECUTE 'DROP VIEW IF EXISTS #{destination}.' || quote_ident(row.viewname) || ' CASCADE;';
           EXECUTE 'ALTER VIEW #{source}.' || quote_ident(row.viewname) || ' SET SCHEMA #{destination};';
         END LOOP;
+        -- move all <source> enums to <destination> enums
+        FOR row IN (
+          SELECT typname FROM pg_type t
+          LEFT JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace
+          WHERE typcategory = 'E' AND n.nspname = '#{source}' AND pg_catalog.pg_get_userbyid(typowner) = '#{owner}'
+        ) LOOP
+          EXECUTE 'DROP TYPE IF EXISTS #{destination}.' || quote_ident(row.typname) || ' CASCADE;';
+          EXECUTE 'ALTER TYPE #{source}.' || quote_ident(row.typname) || ' SET SCHEMA #{destination};';
+        END LOOP;
       END$$;
     SQL
   end

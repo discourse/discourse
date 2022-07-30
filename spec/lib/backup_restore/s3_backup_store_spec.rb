@@ -4,7 +4,7 @@ require 's3_helper'
 require 'backup_restore/s3_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
-describe BackupRestore::S3BackupStore do
+RSpec.describe BackupRestore::S3BackupStore do
   before do
     @s3_client = Aws::S3::Client.new(stub_responses: true)
     @s3_options = { client: @s3_client }
@@ -124,7 +124,7 @@ describe BackupRestore::S3BackupStore do
     bucket = Regexp.escape(SiteSetting.s3_backup_bucket)
     prefix = file_prefix(db_name, multisite)
     filename = Regexp.escape(filename)
-    expires = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+    expires = SiteSetting.s3_presigned_get_url_expires_after_seconds
 
     /\Ahttps:\/\/#{bucket}.*#{prefix}\/#{filename}\?.*X-Amz-Expires=#{expires}.*X-Amz-Signature=.*\z/
   end

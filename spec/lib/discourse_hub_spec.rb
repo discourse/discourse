@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseHub do
+RSpec.describe DiscourseHub do
   describe '.discourse_version_check' do
     it 'should return just return the json that the hub returns' do
       hub_response = { 'success' => 'OK', 'latest_version' => '0.8.1', 'critical_updates' => false }
@@ -91,11 +91,11 @@ describe DiscourseHub do
 
       DiscourseHub.collection_action(:get, '/test')
 
-      expect(Rails.logger.warnings).to eq([
+      expect(@fake_logger.warnings).to eq([
         DiscourseHub.response_status_log_message('/test', 500),
       ])
 
-      expect(Rails.logger.errors).to eq([
+      expect(@fake_logger.errors).to eq([
         DiscourseHub.response_body_log_message("")
       ])
     end

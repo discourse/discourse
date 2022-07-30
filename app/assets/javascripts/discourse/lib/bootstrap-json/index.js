@@ -8,6 +8,8 @@ const path = require("path");
 const { promises: fs } = require("fs");
 const { JSDOM } = require("jsdom");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
+const { Buffer } = require("node:buffer");
+const { cwd, env } = require("node:process");
 
 // via https://stackoverflow.com/a/6248722/165668
 function generateUID() {
@@ -64,6 +66,49 @@ function head(buffer, bootstrap, headers, baseURL) {
   });
   buffer.push(`<meta id="data-discourse-setup"${setupData} />`);
 
+  if (bootstrap.preloaded.currentUser) {
+    const user = JSON.parse(bootstrap.preloaded.currentUser);
+    let { admin, staff } = user;
+
+    if (staff) {
+      buffer.push(`<script defer src="${baseURL}assets/admin.js"></script>`);
+    }
+
+    if (admin) {
+      buffer.push(`<script defer src="${baseURL}assets/wizard.js"></script>`);
+    }
+  }
+
+  bootstrap.plugin_js.forEach((src) =>
+    buffer.push(`<script defer src="${src}"></script>`)
+  );
+
+  buffer.push(bootstrap.theme_html.translations);
+  buffer.push(bootstrap.theme_html.js);
+  buffer.push(bootstrap.theme_html.head_tag);
+  buffer.push(bootstrap.html.before_head_close);
+}
+
+function localeScript(buffer, bootstrap) {
+  buffer.push(`<script defer src="${bootstrap.locale_script}"></script>`);
+}
+
+function beforeScriptLoad(buffer, bootstrap) {
+  buffer.push(bootstrap.html.before_script_load);
+  localeScript(buffer, bootstrap);
+  (bootstrap.extra_locales || []).forEach((l) =>
+    buffer.push(`<script defer src="${l}"></script>`)
+  );
+}
+
+function discoursePreloadStylesheets(buffer, bootstrap) {
+  (bootstrap.stylesheets || []).forEach((s) => {
+    let link = `<link rel="preload" as="style" href="${s.href}">`;
+    buffer.push(link);
+  });
+}
+
+function discourseStylesheets(buffer, bootstrap) {
   (bootstrap.stylesheets || []).forEach((s) => {
     let attrs = [];
     if (s.media) {
@@ -83,34 +128,6 @@ function head(buffer, bootstrap, headers, baseURL) {
     }" ${attrs.join(" ")}>`;
     buffer.push(link);
   });
-
-  if (bootstrap.preloaded.currentUser) {
-    let staff = JSON.parse(bootstrap.preloaded.currentUser).staff;
-    if (staff) {
-      buffer.push(`<script src="${baseURL}assets/admin.js"></script>`);
-    }
-  }
-
-  bootstrap.plugin_js.forEach((src) =>
-    buffer.push(`<script src="${src}"></script>`)
-  );
-
-  buffer.push(bootstrap.theme_html.translations);
-  buffer.push(bootstrap.theme_html.js);
-  buffer.push(bootstrap.theme_html.head_tag);
-  buffer.push(bootstrap.html.before_head_close);
-}
-
-function localeScript(buffer, bootstrap) {
-  buffer.push(`<script src="${bootstrap.locale_script}"></script>`);
-}
-
-function beforeScriptLoad(buffer, bootstrap) {
-  buffer.push(bootstrap.html.before_script_load);
-  localeScript(buffer, bootstrap);
-  (bootstrap.extra_locales || []).forEach((l) =>
-    buffer.push(`<script src="${l}"></script>`)
-  );
 }
 
 function body(buffer, bootstrap) {
@@ -124,10 +141,30 @@ function bodyFooter(buffer, bootstrap, headers) {
 
   let v = generateUID();
   buffer.push(`
-		<script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=${v}" data-css-url="/mini-profiler-resources/includes.css?v=${v}" data-version="${v}" data-path="/mini-profiler-resources/" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="x" data-ids="${headers.get(
-    "x-miniprofiler-ids"
-  )}"></script>
-	`);
+    <script
+      async
+      type="text/javascript"
+      id="mini-profiler"
+      src="/mini-profiler-resources/includes.js?v=${v}"
+      data-css-url="/mini-profiler-resources/includes.css?v=${v}"
+      data-version="${v}"
+      data-path="/mini-profiler-resources/"
+      data-horizontal-position="right"
+      data-vertical-position="top"
+      data-trivial="false"
+      data-children="false"
+      data-max-traces="20"
+      data-controls="false"
+      data-total-sql-count="false"
+      data-authorized="true"
+      data-toggle-shortcut="alt+p"
+      data-start-hidden="false"
+      data-collapse-results="true"
+      data-html-container="body"
+      data-hidden-custom-fields="x"
+      data-ids="${headers.get("x-miniprofiler-ids")}"
+    ></script>
+  `);
 }
 
 function hiddenLoginForm(buffer, bootstrap) {
@@ -154,8 +191,10 @@ function preloaded(buffer, bootstrap) {
 const BUILDERS = {
   "html-tag": htmlTag,
   "before-script-load": beforeScriptLoad,
+  "discourse-preload-stylesheets": discoursePreloadStylesheets,
   head,
   body,
+  "discourse-stylesheets": discourseStylesheets,
   "hidden-login-form": hiddenLoginForm,
   preloaded,
   "body-footer": bodyFooter,
@@ -193,7 +232,7 @@ async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
 async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
   try {
     const template = await fs.readFile(
-      path.join(process.cwd(), "dist", "index.html"),
+      path.join(cwd(), "dist", "index.html"),
       "utf8"
     );
 
@@ -212,8 +251,23 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
 }
 
 async function handleRequest(proxy, baseURL, req, res) {
-  const originalHost = req.headers.host;
-  req.headers.host = new URL(proxy).host;
+  // x-forwarded-host is used in e.g. GitHub CodeSpaces
+  let originalHost = req.headers["x-forwarded-host"] || req.headers.host;
+
+  if (env["FORWARD_HOST"] === "true") {
+    if (/^localhost(\:|$)/.test(originalHost)) {
+      // Can't access default site in multisite via "localhost", redirect to 127.0.0.1
+      res.redirect(
+        307,
+        `http://${originalHost.replace("localhost", "127.0.0.1")}${req.path}`
+      );
+      return;
+    } else {
+      req.headers.host = originalHost;
+    }
+  } else {
+    req.headers.host = new URL(proxy).host;
+  }
 
   if (req.headers["Origin"]) {
     req.headers["Origin"] = req.headers["Origin"]
@@ -261,34 +315,39 @@ async function handleRequest(proxy, baseURL, req, res) {
       `http://${originalHost}/assets/`,
       `http://${originalHost}/ember-cli-live-reload.js`,
       `http://${originalHost}/_lr/`,
-    ];
+    ].join(" ");
+
     const newCSP = csp
-      .replace(new RegExp(proxy, "g"), `http://${originalHost}`)
-      .replace(
-        new RegExp("script-src ", "g"),
-        `script-src ${emberCliAdditions.join(" ")} `
-      );
+      .replaceAll(proxy, `http://${originalHost}`)
+      .replaceAll("script-src ", `script-src ${emberCliAdditions}`);
+
     res.set("content-security-policy", newCSP);
   }
 
   const contentType = response.headers.get("content-type");
-  const isHTML = contentType && contentType.startsWith("text/html");
-  const responseText = await response.text();
-  const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
+  const isHTML = contentType?.startsWith("text/html");
 
-  if (preloadJson) {
-    const html = await buildFromBootstrap(
-      proxy,
-      baseURL,
-      req,
-      response,
-      extractPreloadJson(responseText)
-    );
-    res.set("content-type", "text/html");
-    res.send(html);
+  res.status(response.status);
+
+  if (isHTML) {
+    const responseText = await response.text();
+    const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
+
+    if (preloadJson) {
+      const html = await buildFromBootstrap(
+        proxy,
+        baseURL,
+        req,
+        response,
+        extractPreloadJson(responseText)
+      );
+      res.set("content-type", "text/html");
+      res.send(html);
+    } else {
+      res.send(responseText);
+    }
   } else {
-    res.status(response.status);
-    res.send(responseText);
+    res.send(Buffer.from(await response.arrayBuffer()));
   }
 }
 
@@ -299,7 +358,7 @@ module.exports = {
     return true;
   },
 
-  contentFor: function (type, config) {
+  contentFor(type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       return `
         <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
@@ -330,8 +389,11 @@ to serve API requests. For example:
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {
-        if (this.shouldHandleRequest(req)) {
+        if (this.shouldForwardRequest(req)) {
           await handleRequest(proxy, baseURL, req, res);
+        } else {
+          // Fixes issues when using e.g. "localhost" instead of loopback IP address
+          req.headers.host = "127.0.0.1";
         }
       } catch (error) {
         res.send(`
@@ -348,28 +410,22 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(request) {
-    if (request.path === "/tests/index.html") {
-      return false;
-    }
-
-    if (request.get("Accept") && request.get("Accept").includes("text/html")) {
-      return true;
-    }
-
-    const contentType = request.get("Content-Type");
-    if (!contentType) {
-      return false;
-    }
-
+  shouldForwardRequest(request) {
     if (
-      contentType.includes("application/x-www-form-urlencoded") ||
-      contentType.includes("multipart/form-data") ||
-      contentType.includes("application/json")
+      [
+        "/tests/index.html",
+        "/ember-cli-live-reload.js",
+        "/testem.js",
+        "/assets/test-i18n.js",
+      ].includes(request.path)
     ) {
-      return true;
+      return false;
     }
 
-    return false;
+    if (request.path.startsWith("/_lr/")) {
+      return false;
+    }
+
+    return true;
   },
 };

@@ -29,11 +29,13 @@ export default Component.extend({
           schema: this.model.jsonSchema,
           disable_array_delete_all_rows: true,
           disable_array_delete_last_row: true,
-          disable_array_reorder: true,
-          disable_array_copy: true,
+          disable_array_reorder: false,
+          disable_array_copy: false,
+          enable_array_copy: true,
           disable_edit_json: true,
           disable_properties: true,
           disable_collapse: true,
+          remove_button_labels: true,
           show_errors: "never",
           startval: this.model.value ? JSON.parse(this.model.value) : null,
         });
@@ -70,8 +72,11 @@ export default Component.extend({
 class DiscourseJsonSchemaEditorIconlib {
   constructor() {
     this.mapping = {
-      delete: "times",
+      delete: "trash-alt",
       add: "plus",
+      moveup: "arrow-up",
+      movedown: "arrow-down",
+      copy: "copy",
     };
   }
 

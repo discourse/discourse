@@ -3,10 +3,6 @@
 class TopicTimer < ActiveRecord::Base
   MAX_DURATION_MINUTES = 20.years.to_i / 60
 
-  self.ignored_columns = [
-    "duration" # TODO(2021-06-01): remove
-  ]
-
   include Trashable
 
   belongs_to :user
@@ -116,6 +112,10 @@ class TopicTimer < ActiveRecord::Base
     true
   end
 
+  def publishing_to_category?
+    self.status_type.to_i == TopicTimer.types[:publish_to_category]
+  end
+
   private
 
   def duration_in_range?
@@ -140,10 +140,6 @@ class TopicTimer < ActiveRecord::Base
     errors.add(:execute_at, I18n.t(
       'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
     ))
-  end
-
-  def publishing_to_category?
-    self.status_type.to_i == TopicTimer.types[:publish_to_category]
   end
 
   def schedule_auto_delete_replies_job
@@ -200,5 +196,6 @@ end
 # Indexes
 #
 #  idx_topic_id_public_type_deleted_at  (topic_id) UNIQUE WHERE ((public_type = true) AND (deleted_at IS NULL))
+#  index_topic_timers_on_topic_id       (topic_id) WHERE (deleted_at IS NULL)
 #  index_topic_timers_on_user_id        (user_id)
 #

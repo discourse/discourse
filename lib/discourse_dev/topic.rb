@@ -6,8 +6,11 @@ require 'faker'
 module DiscourseDev
   class Topic < Record
 
-    def initialize
+    def initialize(private_messages: false, recipient: nil, ignore_current_count: false)
       @settings = DiscourseDev.config.topic
+      @private_messages = private_messages
+      @recipient = recipient
+      @ignore_current_count = ignore_current_count
       super(::Topic, @settings[:count])
     end
 
@@ -29,19 +32,29 @@ module DiscourseDev
         max_views = SiteSetting.topic_views_heat_high + SiteSetting.topic_views_heat_medium
       end
 
+      if @category
+        merge_attributes = {
+          category: @category.id,
+          tags: tags
+        }
+      else
+        merge_attributes = {
+          archetype: "private_message",
+          target_usernames: [@recipient]
+        }
+      end
+
       {
         title: title[0, SiteSetting.max_topic_title_length],
         raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
-        category: @category.id,
         created_at: Faker::Time.between(from: DiscourseDev.config.start_date, to: DateTime.now),
-        tags: tags,
         topic_opts: {
           import_mode: true,
           views: Faker::Number.between(from: 1, to: max_views),
           custom_fields: { dev_sample: true }
         },
         skip_validations: true
-      }
+      }.merge(merge_attributes)
     end
 
     def title
@@ -65,7 +78,13 @@ module DiscourseDev
     end
 
     def create!
-      @category = Category.random
+      if @private_messages && !::User.find_by_username(@recipient)
+        puts "Cannot create PMs for missing user with username: #{@recipient}"
+        exit 1
+      end
+
+      @category = @private_messages ? nil : Category.random
+
       user = self.user
       topic_data = Faker::DiscourseMarkdown.with_user(user.id) { data }
       post = PostCreator.new(user, topic_data).create!
@@ -82,12 +101,13 @@ module DiscourseDev
     end
 
     def populate!
-      topics = super
+      topics = super(ignore_current_count: @ignore_current_count)
       delete_unwanted_sidekiq_jobs
       topics
     end
 
     def user
+      return ::User.find_by_username(@recipient) if @private_messages
       return User.random if @category.groups.blank?
 
       group_ids = @category.groups.pluck(:id)

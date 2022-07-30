@@ -28,7 +28,7 @@ Fabricator(:private_category_with_definition, from: :private_category) do
 end
 
 Fabricator(:link_category, from: :category) do
-  before_validation { |category, transients| category.topic_featured_link_allowed = true }
+  before_create { |category, transients| category.topic_featured_link_allowed = true }
 end
 
 Fabricator(:mailinglist_mirror_category, from: :category) do

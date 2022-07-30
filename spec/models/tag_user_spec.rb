@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe TagUser do
+RSpec.describe TagUser do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_to_create_tag = 0
@@ -182,6 +182,11 @@ describe TagUser do
       end
 
       it "sets notification levels correctly" do
+
+        # define a wide open tag group to ensure it also works
+        group = TagGroup.new(name: 'Visible & usable by everyone', tag_names: [watched_tag.name])
+        group.permissions = [[Group::AUTO_GROUPS[:everyone], TagGroupPermission.permission_types[:full]]]
+        group.save!
 
         expect(Notification.where(user_id: user.id, topic_id: watched_post.topic_id).count).to eq 1
         expect(Notification.where(user_id: user.id, topic_id: tracked_post.topic_id).count).to eq 0

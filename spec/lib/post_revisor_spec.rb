@@ -2,7 +2,7 @@
 
 require 'post_revisor'
 
-describe PostRevisor do
+RSpec.describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
@@ -121,6 +121,34 @@ describe PostRevisor do
 
       post.revise(post.user, category_id: new_category.id, tags: ['test_tag'])
       expect(post.reload.topic.category_id).to eq(new_category.id)
+    end
+  end
+
+  context 'editing tags' do
+    fab!(:post) { Fabricate(:post) }
+
+    subject { PostRevisor.new(post) }
+
+    before do
+      Jobs.run_immediately!
+
+      TopicUser.change(
+        newuser.id,
+        post.topic_id,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+    end
+
+    it 'creates notifications' do
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .to change { Notification.count }.by(1)
+    end
+
+    it 'skips notifications if disable_tags_edit_notifications' do
+      SiteSetting.disable_tags_edit_notifications = true
+
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .not_to change { Notification.count }
     end
   end
 
@@ -333,7 +361,7 @@ describe PostRevisor do
 
       it "resets the edit_reason attribute in post model" do
         freeze_time
-        SiteSetting.editing_grace_period = 5
+        SiteSetting.editing_grace_period = 5.seconds
         post = Fabricate(:post, raw: 'hello world')
         revisor = PostRevisor.new(post)
         revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
@@ -730,7 +758,7 @@ describe PostRevisor do
       expect(post.post_revisions.last.modifications).to eq('tags' => [[], ['new-tag-3']])
     end
 
-    context "#publish_changes" do
+    describe "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
       it "should publish topic changes to clients" do
@@ -1123,7 +1151,7 @@ describe PostRevisor do
             fab!(:tag2) { Fabricate(:tag) }
             fab!(:tag3) { Fabricate(:tag) }
             fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
-            fab!(:category) { Fabricate(:category, name: "beta", required_tag_group: tag_group, min_tags_from_required_group: 1) }
+            fab!(:category) { Fabricate(:category, name: "beta", category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
             before do
               post.topic.update(category: category)
@@ -1189,7 +1217,7 @@ describe PostRevisor do
 
       it "updates linked post uploads" do
         post.link_post_uploads
-        expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
+        expect(post.upload_references.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
 
         subject.revise!(user, raw: <<~RAW)
             This is a post with multiple uploads
@@ -1198,7 +1226,7 @@ describe PostRevisor do
             ![image4](#{image4.short_url})
         RAW
 
-        expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
+        expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
 
       context "secure media uploads" do
@@ -1250,8 +1278,8 @@ describe PostRevisor do
             { title: "updated title for my topic" },
             keep_existing_draft: true
           )
-        }.to change { Draft.where(user: user, draft_key: draft_key).first.sequence }.by(0)
-          .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(0)
+        }.to not_change { Draft.where(user: user, draft_key: draft_key).first.sequence }
+          .and not_change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }
 
         expect {
           PostRevisor.new(post).revise!(
@@ -1279,7 +1307,7 @@ describe PostRevisor do
     it 'does nothing when a staff member edits a post' do
       admin = Fabricate(:admin)
 
-      expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
+      expect { revisor.revise!(admin, { raw: 'updated body' }) }.not_to change(ReviewablePost, :count)
     end
 
     it 'skips grace period edits' do
@@ -1287,7 +1315,7 @@ describe PostRevisor do
 
       expect {
         revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
-      }.to change(ReviewablePost, :count).by(0)
+      }.not_to change(ReviewablePost, :count)
     end
   end
 end

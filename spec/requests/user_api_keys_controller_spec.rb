@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserApiKeysController do
+RSpec.describe UserApiKeysController do
 
   let :public_key do
     <<~TXT
@@ -290,7 +290,7 @@ describe UserApiKeysController do
     end
   end
 
-  context '#create-one-time-password' do
+  describe '#create-one-time-password' do
     let :otp_args do
       {
         auth_redirect: 'http://somewhere.over.the/rainbow',

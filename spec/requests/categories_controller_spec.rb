@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoriesController do
+RSpec.describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user) { Fabricate(:user) }
@@ -140,6 +140,37 @@ describe CategoriesController do
       expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
     end
 
+    describe 'categories and latest topics - ordered by created date' do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:topic1) { Fabricate(:topic, category: category, created_at: 5.days.ago, updated_at: Time.now, bumped_at: Time.now) }
+      fab!(:topic2) { Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago) }
+      fab!(:topic3) { Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago) }
+
+      context 'when order is not set to created date' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+        end
+
+        it 'sorts topics by the default bump date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic1.id, topic3.id, topic2.id])
+        end
+      end
+
+      context 'when order is set to created' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics_created_date"
+        end
+
+        it 'sorts topics by crated at date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic3.id, topic2.id, topic1.id])
+        end
+      end
+    end
+
     it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
       SiteSetting.max_category_nesting = 3
       subcategory = Fabricate(:category, user: admin, parent_category: category)
@@ -228,7 +259,7 @@ describe CategoriesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
@@ -320,7 +351,7 @@ describe CategoriesController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       category.set_permissions(admins: :full)
       category.save!
@@ -333,7 +364,7 @@ describe CategoriesController do
 
     describe "logged in" do
       it "raises an exception if they don't have permission to see it" do
-        admin.update!(admin: false)
+        admin.update!(admin: false, group_users: [])
         sign_in(admin)
         get "/c/#{category.id}/show.json"
         expect(response.status).to eq(403)
@@ -347,7 +378,7 @@ describe CategoriesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
       expect(response.status).to eq(403)
@@ -376,7 +407,7 @@ describe CategoriesController do
     end
   end
 
-  context '#reorder' do
+  describe '#reorder' do
     it "reorders the categories" do
       sign_in(admin)
 
@@ -413,7 +444,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     before do
       Jobs.run_immediately!
     end
@@ -489,12 +520,15 @@ describe CategoriesController do
               "staff" => create_post
             },
             custom_fields: {
-              "dancing" => "frogs"
+              "dancing" => "frogs",
+              "running" => ["turtle", "salamander"]
             },
             minimum_required_tags: "",
             allow_global_tags: 'true',
-            required_tag_group_name: tag_group.name,
-            min_tags_from_required_group: 2
+            required_tag_groups: [{
+              name: tag_group.name,
+              min_count: 2
+            }]
           }
 
           expect(response.status).to eq(200)
@@ -506,11 +540,12 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-category")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
-          expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.custom_fields).to eq("dancing" => "frogs", "running" => ["turtle", "salamander"])
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
-          expect(category.required_tag_group_id).to eq(tag_group.id)
-          expect(category.min_tags_from_required_group).to eq(2)
+          expect(category.category_required_tag_groups.count).to eq(1)
+          expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
+          expect(category.category_required_tag_groups.first.min_count).to eq(2)
         end
 
         it 'logs the changes correctly' do
@@ -558,19 +593,19 @@ describe CategoriesController do
 
         it "can remove required tag group" do
           SiteSetting.tagging_enabled = true
-          category.update!(required_tag_group: Fabricate(:tag_group))
+          category.update!(category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: Fabricate(:tag_group)) ])
           put "/categories/#{category.id}.json", params: {
             name: category.name,
             color: category.color,
             text_color: category.text_color,
             allow_global_tags: 'false',
             min_tags_from_required_group: 1,
-            required_tag_group_name: ''
+            required_tag_groups: []
           }
 
           expect(response.status).to eq(200)
           category.reload
-          expect(category.required_tag_group).to be_nil
+          expect(category.category_required_tag_groups).to be_empty
         end
 
         it "does not update other fields" do
@@ -581,7 +616,7 @@ describe CategoriesController do
           category.update!(
             allowed_tags: ["hello", "world"],
             allowed_tag_groups: [tag_group_1.name],
-            required_tag_group_name: tag_group_2.name,
+            category_required_tag_groups: [ CategoryRequiredTagGroup.new(tag_group: tag_group_2) ],
             custom_fields: { field_1: 'hello', field_2: 'hello' }
           )
 
@@ -590,7 +625,7 @@ describe CategoriesController do
           category.reload
           expect(category.tags.pluck(:name)).to contain_exactly("hello", "world")
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
-          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
           expect(category.custom_fields).to eq({ 'field_1' => 'hello', 'field_2' => 'hello' })
 
           put "/categories/#{category.id}.json", params: { allowed_tags: [], custom_fields: { field_1: nil } }
@@ -598,22 +633,22 @@ describe CategoriesController do
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups.pluck(:name)).to contain_exactly(tag_group_1.name)
-          expect(category.required_tag_group).to eq(tag_group_2)
+          expect(category.category_required_tag_groups.first.tag_group).to eq(tag_group_2)
           expect(category.custom_fields).to eq({ 'field_2' => 'hello' })
 
-          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_group_name: nil, custom_fields: { field_1: 'hi', field_2: nil } }
+          put "/categories/#{category.id}.json", params: { allowed_tags: [], allowed_tag_groups: [], required_tag_groups: [], custom_fields: { field_1: 'hi', field_2: nil } }
           expect(response.status).to eq(200)
           category.reload
           expect(category.tags).to be_blank
           expect(category.tag_groups).to be_blank
-          expect(category.required_tag_group).to eq(nil)
+          expect(category.category_required_tag_groups).to eq([])
           expect(category.custom_fields).to eq({ 'field_1' => 'hi' })
         end
       end
     end
   end
 
-  context '#update_slug' do
+  describe '#update_slug' do
     it 'requires the user to be logged in' do
       put "/category/category/slug.json"
       expect(response.status).to eq(403)
@@ -661,7 +696,7 @@ describe CategoriesController do
     end
   end
 
-  context '#categories_and_topics' do
+  describe '#categories_and_topics' do
     before do
       10.times.each { Fabricate(:topic) }
     end
@@ -728,6 +763,80 @@ describe CategoriesController do
 
         expect(parsed_topic).to be_present
       end
+    end
+  end
+
+  describe '#visible_groups' do
+    fab!(:public_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:public], name: 'aaa') }
+    fab!(:private_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:staff], name: 'bbb') }
+    fab!(:user_only_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:members], name: 'ccc') }
+
+    it 'responds with 404 when id param is invalid' do
+      get "/c/-9999/visible_groups.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "responds with 403 when category is restricted to the current user" do
+      category.set_permissions(private_group.name => :full)
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the names of the groups that are visible to an admin" do
+      sign_in(admin)
+
+      category.set_permissions(
+        private_group.name => :full,
+        public_group.name => :full,
+        user_only_group.name => :full,
+      )
+
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["groups"]).to eq([public_group.name, private_group.name, user_only_group.name])
+    end
+
+    it "returns the names of the groups that are visible to a user and excludes the everyone group" do
+      private_group.add(user)
+      sign_in(user)
+
+      category.set_permissions(
+        private_group.name => :full,
+        public_group.name => :full,
+        user_only_group.name => :full,
+      )
+
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["groups"]).to eq([public_group.name])
+    end
+
+    it "returns no groups if everyone can see it" do
+      sign_in(user)
+
+      category.set_permissions(
+        "everyone" => :readonly,
+        private_group.name => :full,
+        public_group.name => :full,
+        user_only_group.name => :full,
+      )
+
+      category.save!
+
+      get "/c/#{category.id}/visible_groups.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["groups"]).to eq([])
     end
   end
 end

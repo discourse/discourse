@@ -2,8 +2,8 @@
 
 require "onebox/oembed"
 
-describe Onebox::Oembed do
-  it "excludes html tags" do
+RSpec.describe Onebox::Oembed do
+  it "excludes text tags" do
     json = '{"text": "<iframe src=\'https://ifram.es/foo/bar\'></iframe>"}'
     oembed = described_class.new(json)
     expect(oembed.text).to be_nil

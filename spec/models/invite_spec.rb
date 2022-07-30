@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Invite do
+RSpec.describe Invite do
   fab!(:user) { Fabricate(:user) }
   let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }
   let(:escaped_email) { "&lt;b onmouseover=alert(&#39;wufff!&#39;)&gt;email&lt;/b&gt;&lt;script&gt;alert(&#39;test&#39;);&lt;/script&gt;@test.com" }
@@ -65,7 +65,7 @@ describe Invite do
     end
   end
 
-  context '.generate' do
+  describe '.generate' do
     it 'saves an invites' do
       invite = Invite.generate(user, email: 'TEST@EXAMPLE.COM')
       expect(invite.invite_key).to be_present
@@ -90,10 +90,7 @@ describe Invite do
       expect { Invite.generate(user, email: user.email) }
         .to raise_error(
           Invite::UserExists,
-          I18n.t(
-            'invite.user_exists',
-            email: escaped_email, username: user.username, base_path: Discourse.base_path
-          )
+          I18n.t('invite.user_exists', email: escaped_email)
         )
     end
 
@@ -204,7 +201,7 @@ describe Invite do
     end
   end
 
-  context '#redeem' do
+  describe '#redeem' do
     fab!(:invite) { Fabricate(:invite) }
 
     it 'works' do
@@ -288,14 +285,6 @@ describe Invite do
         user = invite.redeem
         expect(user.groups).to contain_exactly(group)
       end
-    end
-
-    it 'activates user when must_approve_users? is enabled' do
-      SiteSetting.must_approve_users = true
-      invite.invited_by = Fabricate(:admin)
-
-      user = invite.redeem
-      expect(user.approved?).to eq(true)
     end
 
     context 'invite to a topic' do

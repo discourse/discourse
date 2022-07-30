@@ -1,4 +1,4 @@
-import { alias, notEmpty, or, readOnly } from "@ember/object/computed";
+import { alias, not, or, readOnly } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import EmberObject from "@ember/object";
@@ -33,7 +33,7 @@ export default Controller.extend(
     emailVerifiedByLink: alias("model.email_verified_by_link"),
     differentExternalEmail: alias("model.different_external_email"),
     accountUsername: alias("model.username"),
-    passwordRequired: notEmpty("accountPassword"),
+    passwordRequired: not("externalAuthsOnly"),
     successMessage: null,
     errorMessage: null,
     userFields: null,
@@ -221,6 +221,15 @@ export default Controller.extend(
 
     @discourseComputed
     ssoPath: () => getUrl("/session/sso"),
+
+    @discourseComputed
+    disclaimerHtml() {
+      return I18n.t("create_account.disclaimer", {
+        tos_link: this.siteSettings.tos_url || getUrl("/tos"),
+        privacy_link:
+          this.siteSettings.privacy_policy_url || getUrl("/privacy"),
+      });
+    },
 
     @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
     associateHtml(url, provider) {

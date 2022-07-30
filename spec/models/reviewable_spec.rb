@@ -2,7 +2,7 @@
 
 RSpec.describe Reviewable, type: :model do
 
-  context ".create" do
+  describe ".create" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
@@ -31,7 +31,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".needs_review!" do
+  describe ".needs_review!" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
@@ -86,7 +86,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".list_for" do
+  describe ".list_for" do
     fab!(:user) { Fabricate(:user) }
 
     it "returns an empty list for nil user" do
@@ -244,6 +244,87 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe ".recent_list_with_pending_first" do
+    fab!(:pending_reviewable1) do
+      Fabricate(
+        :reviewable,
+        score: 150,
+        created_at: 7.minutes.ago,
+        status: Reviewable.statuses[:pending]
+      )
+    end
+    fab!(:pending_reviewable2) do
+      Fabricate(
+        :reviewable,
+        score: 100,
+        status: Reviewable.statuses[:pending]
+      )
+    end
+    fab!(:approved_reviewable1) do
+      Fabricate(
+        :reviewable,
+        created_at: 1.minutes.ago,
+        score: 300,
+        status: Reviewable.statuses[:approved]
+      )
+    end
+    fab!(:approved_reviewable2) do
+      Fabricate(
+        :reviewable,
+        created_at: 5.minutes.ago,
+        score: 200,
+        status: Reviewable.statuses[:approved]
+      )
+    end
+
+    fab!(:admin) { Fabricate(:admin) }
+
+    it "returns a list of reviewables with pending items first" do
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list.map(&:id)).to eq([
+        pending_reviewable1.id,
+        pending_reviewable2.id,
+        approved_reviewable1.id,
+        approved_reviewable2.id
+      ])
+
+      pending_reviewable1.update!(status: Reviewable.statuses[:rejected])
+      rejected_reviewable = pending_reviewable1
+
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list.map(&:id)).to eq([
+        pending_reviewable2.id,
+        approved_reviewable1.id,
+        approved_reviewable2.id,
+        rejected_reviewable.id,
+      ])
+    end
+
+    it "only includes reviewables whose score is above the minimum or are forced for review" do
+      SiteSetting.reviewable_default_visibility = 'high'
+      Reviewable.set_priorities({ high: 200 })
+
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list.map(&:id)).to eq([
+        approved_reviewable1.id,
+        approved_reviewable2.id,
+      ])
+
+      pending_reviewable1.update!(force_review: true)
+
+      list = Reviewable.recent_list_with_pending_first(admin)
+      expect(list.map(&:id)).to eq([
+        pending_reviewable1.id,
+        approved_reviewable1.id,
+        approved_reviewable2.id,
+      ])
+    end
+
+    it "accepts a limit argument to limit the number of returned records" do
+      expect(Reviewable.recent_list_with_pending_first(admin, limit: 2).size).to eq(2)
+    end
+  end
+
   it "valid_types returns the appropriate types" do
     expect(Reviewable.valid_type?('ReviewableUser')).to eq(true)
     expect(Reviewable.valid_type?('ReviewableQueuedPost')).to eq(true)
@@ -381,7 +462,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".score_required_to_hide_post" do
+  describe ".score_required_to_hide_post" do
 
     it "will return the default visibility if it's higher" do
       Reviewable.set_priorities(low: 40.0, high: 100.0)
@@ -411,7 +492,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".spam_score_to_silence_new_user" do
+  describe ".spam_score_to_silence_new_user" do
     it "returns a default value if we can't calculated any percentiles" do
       SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
       expect(Reviewable.spam_score_to_silence_new_user).to eq(7.5)
@@ -434,7 +515,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context ".score_to_auto_close_topic" do
+  describe ".score_to_auto_close_topic" do
 
     it "returns the default if we can't calculated any percentiles" do
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]

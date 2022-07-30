@@ -152,7 +152,6 @@ sk:
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
     share:
-      post: "príspevok #%{postNumber}"
       close: "zatvoriť"
     action_codes:
       public_topic: "téma je verejná%{when}"
@@ -416,7 +415,10 @@ sk:
     time_shortcut:
       tomorrow: "Zajtra"
       this_weekend: "Tento víkend"
+      next_week: "Budúci týždeň"
       next_month: "Budúci mesiac"
+      forever: "Vždy"
+      never: "Nikdy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vy</a> ste založili <a href='%{topicUrl}'>tému</a>"
@@ -724,6 +726,8 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"
@@ -1106,6 +1110,8 @@ sk:
         sent_by: "Odoslané používateľom"
         private_message: "správa"
         the_topic: "téma"
+    user_status:
+      save: "Uložiť"
     loading: "Prebieha načítavanie..."
     errors:
       prev_page: "pri pokuse o načítanie"
@@ -1150,7 +1156,6 @@ sk:
       other: odpovedí
     signup_cta:
       sign_up: "Registrovať sa"
-      hide_session: "Pripomenúť zajtra"
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
@@ -1221,16 +1226,8 @@ sk:
       not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
       google_oauth2:
         name: "Google"
-        title: "pomocou Google"
       twitter:
         name: "Twitter"
-        title: "pomocou Twitter účtu"
-      instagram:
-        title: "so službou Instagram"
-      facebook:
-        title: "pomocou stránky Facebook"
-      github:
-        title: "pomocou GitHub"
       discord:
         name: "Discord"
     invites:
@@ -1240,7 +1237,6 @@ sk:
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
       password_label: "Heslo"
-      optional_description: "(nepovinné)"
     password_reset:
       continue: "Pokračujte na %{site_name}"
     emoji_set:
@@ -1293,7 +1289,6 @@ sk:
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
-      users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -1330,8 +1325,6 @@ sk:
       composer_actions:
         reply: Odpoveď
         edit: Upraviť
-        reply_as_private_message:
-          label: Nová správa
         reply_to_topic:
           label: Odpovedať na tému
         create_topic:
@@ -1340,6 +1333,7 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
+      watching_first_post_label: "Nová téma"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -1531,13 +1525,6 @@ sk:
       topic_status_update:
         num_of_hours: "Počet hodín:"
         when: "Kedy:"
-      auto_update_input:
-        tomorrow: "Zajtra"
-        this_weekend: "Tento víkend"
-        next_week: "Budúci týždeň"
-        next_month: "Budúci mesiac"
-        forever: "Vždy"
-        pick_date_and_time: "Vyberte dátum a čas"
       temp_close:
         title: "Dočasne zatvoriť"
       auto_close:
@@ -1611,8 +1598,6 @@ sk:
         unpin: "Odopni tému...."
         unarchive: "Zruš archiváciu témy"
         archive: "Archívuj tému"
-        invisible: "Skyť"
-        visible: "Zobraziť"
         reset_read: "Zrušiť načítané údaje"
       feature:
         pin: "Pripni tému"
@@ -1866,6 +1851,8 @@ sk:
       tags: "Štítky"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"
+      required_tag_group:
+        delete: "Odstrániť"
       delete: "Odstrániť kategóriu"
       create: "Nová kategória"
       create_long: "Vytvoriť novú kategóriu"
@@ -2129,6 +2116,7 @@ sk:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
       readonly: "Zobraz"
+    preloader_text: "Načítava sa"
     lightbox:
       download: "stiahnuť"
       counter: "%curr% z %total%"
@@ -2178,7 +2166,6 @@ sk:
         edit: "%{shortcut} Upraviť príspevok"
         delete: "%{shortcut} Zmazať príspevok"
         mark_muted: "%{shortcut} Umlčať tému"
-        mark_regular: "%{shortcut} Obyčajná (preddefinovaná) téma"
         mark_tracking: "%{shortcut} Pozorovať tému"
         mark_watching: "%{shortcut} Pozorovať tému"
     badges:
@@ -2282,6 +2269,47 @@ sk:
         leader: "vodca"
     user_activity:
       no_activity_others: "Žiadna aktivita"
+    sidebar:
+      unread_count:
+        one: "%{count} neprečítaná"
+        few: "%{count} neprečítané"
+        many: "%{count} neprečítaných"
+        other: "%{count} neprečítaná"
+      new_count:
+        one: "%{count} nová"
+        few: "%{count} nové"
+        many: "%{count} nových"
+        other: "%{count} nových"
+      sections:
+        messages:
+          header_link_text: "Správy"
+          links:
+            inbox: "Prijaté správy"
+            sent: "Odoslané"
+            new: "Nové"
+            new_with_count: "Nová (%{count})"
+            unread: "Neprečítané"
+            unread_with_count: "Neprečítaná (%{count})"
+            archive: "Archív"
+        tags:
+          header_link_title: "všetky štítky"
+          header_link_text: "Štítky"
+        categories:
+          header_link_title: "všetky kategórie"
+          header_link_text: "Kategórie"
+        community:
+          header_link_title: "domov"
+          header_link_text: "Komunita"
+          links:
+            tracked:
+              content: "Pozorované"
+            groups:
+              content: "Skupiny"
+              title: "Všetky skupiny"
+            users:
+              content: "Používatelia"
+            my_posts:
+              content: "Moje príspevky"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

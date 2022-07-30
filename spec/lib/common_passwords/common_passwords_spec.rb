@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CommonPasswords do
+RSpec.describe CommonPasswords do
   it "the passwords file should exist" do
     expect(File.exist?(described_class::PASSWORD_FILE)).to eq(true)
   end

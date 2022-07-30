@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UnsubscribeKey do
+RSpec.describe UnsubscribeKey do
 
   describe 'post unsubscribe key' do
     it 'can generate a correct url' do
@@ -20,7 +20,7 @@ describe UnsubscribeKey do
   describe 'key' do
 
     fab!(:user) { Fabricate(:user) }
-    let!(:key) { UnsubscribeKey.create_key_for(user, "digest") }
+    let!(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE) }
 
     it 'has a temporary key' do
       expect(key).to be_present

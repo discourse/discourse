@@ -126,28 +126,38 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-          },
-          "required": [
-
-          ]
-        },
-        "min_tags_from_required_group": {
-          "type": "integer"
+          }
         },
         "allowed_tags": {
-          "type": "array"
+          "type": "array",
+          "items": {}
         },
         "allowed_tag_groups": {
-          "type": "array"
+          "type": "array",
+          "items": {}
         },
         "allow_global_tags": {
           "type": "boolean"
         },
-        "required_tag_group_name": {
-          "type": [
-            "string",
-            "null"
-          ]
+        "required_tag_groups": {
+          "type": "array",
+          "items":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "min_count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "name",
+                "min_count"
+              ]
+            }
         },
         "read_only_banner": {
           "type": [
@@ -157,9 +167,9 @@
         },
         "available_groups": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "auto_close_hours": {
           "type": [
@@ -181,7 +191,7 @@
         },
         "group_permissions": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -198,7 +208,6 @@
                 "group_name"
               ]
             }
-          ]
         },
         "email_in": {
           "type": [
@@ -270,8 +279,7 @@
         "minimum_required_tags",
         "navigate_to_first_post_after_read",
         "custom_fields",
-        "min_tags_from_required_group",
-        "required_tag_group_name",
+        "required_tag_groups",
         "read_only_banner",
         "available_groups",
         "auto_close_hours",

@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe Category do
+RSpec.describe Category do
   fab!(:user) { Fabricate(:user) }
 
   it { is_expected.to validate_presence_of :user_id }
@@ -28,6 +28,17 @@ describe Category do
     cats = Fabricate.build(:category, name: "cats")
     expect(cats).to_not be_valid
     expect(cats.errors[:name]).to be_present
+  end
+
+  context 'associations' do
+    it 'should delete associated sidebar_section_links when category is destroyed' do
+      category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
+      category_sidebar_section_link_2 = Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
+      tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
+
+      expect { category_sidebar_section_link.linkable.destroy! }.to change { SidebarSectionLink.count }.from(3).to(1)
+      expect(SidebarSectionLink.first).to eq(tag_sidebar_section_link)
+    end
   end
 
   describe "slug" do
@@ -1078,13 +1089,13 @@ describe Category do
         SQL
       end
 
-      context "#depth_of_descendants" do
+      describe "#depth_of_descendants" do
         it "should produce max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
-      context "#height_of_ancestors" do
+      describe "#height_of_ancestors" do
         it "should produce max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
@@ -1096,13 +1107,13 @@ describe Category do
         category.parent_category_id = category.id
       end
 
-      context "#depth_of_descendants" do
+      describe "#depth_of_descendants" do
         it "should produce max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
-      context "#height_of_ancestors" do
+      describe "#height_of_ancestors" do
         it "should produce max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
@@ -1114,20 +1125,20 @@ describe Category do
         category.parent_category_id = subcategory.id
       end
 
-      context "#depth_of_descendants" do
+      describe "#depth_of_descendants" do
         it "should produce max_depth" do
           expect(category.depth_of_descendants(3)).to eq(3)
         end
       end
 
-      context "#height_of_ancestors" do
+      describe "#height_of_ancestors" do
         it "should produce max_height" do
           expect(category.height_of_ancestors(3)).to eq(3)
         end
       end
     end
 
-    context "#depth_of_descendants" do
+    describe "#depth_of_descendants" do
       it "should be 0 when the category has no descendants" do
         expect(subcategory.depth_of_descendants).to eq(0)
       end
@@ -1137,7 +1148,7 @@ describe Category do
       end
     end
 
-    context "#height_of_ancestors" do
+    describe "#height_of_ancestors" do
       it "should be 0 when the category has no ancestors" do
         expect(category.height_of_ancestors).to eq(0)
       end

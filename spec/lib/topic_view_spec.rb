@@ -341,8 +341,9 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.post_counts_by_user' do
+    describe '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
+        SiteSetting.enable_whispers = true
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
         # Should not be counted
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
@@ -360,13 +361,13 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.participants' do
+    describe '.participants' do
       it 'returns the two participants hashed by id' do
         expect(topic_view.participants.to_a).to match_array([[first_poster.id, first_poster], [evil_trout.id, evil_trout]])
       end
     end
 
-    context '.all_post_actions' do
+    describe '.all_post_actions' do
       it 'is blank at first' do
         expect(topic_view.all_post_actions).to be_blank
       end
@@ -377,7 +378,7 @@ RSpec.describe TopicView do
       end
     end
 
-    context '.read?' do
+    describe '.read?' do
       it 'tracks correctly' do
         # anon is assumed to have read everything
         expect(TopicView.new(topic.id).read?(1)).to eq(true)
@@ -394,11 +395,11 @@ RSpec.describe TopicView do
       end
     end
 
-    context "#bookmarks" do
+    describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
-      let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
-      let!(:bookmark3) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic)) }
+      let!(:bookmark1) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark3) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic)) }
 
       it "returns all the bookmarks in the topic for a user" do
         expect(TopicView.new(topic.id, user).bookmarks.pluck(:id)).to match_array(
@@ -411,27 +412,28 @@ RSpec.describe TopicView do
       end
     end
 
-    context "#bookmarks" do
+    describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
-      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, post: topic.posts[1], user: user) }
+      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.posts[1], user: user) }
 
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)
 
         first, second = topic_view.bookmarks.sort_by(&:id)
-        expect(first[:post_id]).to eq(bookmark1.post_id)
+        expect(first[:bookmarkable_id]).to eq(bookmark1.bookmarkable_id)
         expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
-        expect(second[:post_id]).to eq(bookmark2.post_id)
+        expect(second[:bookmarkable_id]).to eq(bookmark2.bookmarkable_id)
         expect(second[:reminder_at]).to eq_time(bookmark2.reminder_at)
       end
 
       context "when the topic is deleted" do
         it "returns []" do
           topic_view = TopicView.new(topic, user)
+          expect(topic_view.bookmarks).to match_array([bookmark1, bookmark2])
           PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
           topic.reload
-
+          topic_view.instance_variable_set(:@bookmarks, nil)
           expect(topic_view.bookmarks).to eq([])
         end
       end
@@ -444,19 +446,19 @@ RSpec.describe TopicView do
 
           expect(topic_view.bookmarks.length).to eq(1)
           first = topic_view.bookmarks.first
-          expect(first[:post_id]).to eq(bookmark1.post_id)
+          expect(first[:bookmarkable_id]).to eq(bookmark1.bookmarkable_id)
           expect(first[:reminder_at]).to eq_time(bookmark1.reminder_at)
         end
       end
     end
 
-    context '.topic_user' do
+    describe '.topic_user' do
       it 'returns nil when there is no user' do
         expect(TopicView.new(topic.id, nil).topic_user).to be_blank
       end
     end
 
-    context '#recent_posts' do
+    describe '#recent_posts' do
       before do
         24.times do |t| # our let()s have already created 3
           Fabricate(:post, topic: topic, user: first_poster, created_at: t.seconds.from_now)
@@ -479,6 +481,7 @@ RSpec.describe TopicView do
 
   context 'whispers' do
     it "handles their visibility properly" do
+      SiteSetting.enable_whispers = true
       p1 = Fabricate(:post, topic: topic, user: evil_trout)
       p2 = Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
       p3 = Fabricate(:post, topic: topic, user: evil_trout)
@@ -494,7 +497,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context '#posts' do
+  describe '#posts' do
 
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
@@ -748,12 +751,12 @@ RSpec.describe TopicView do
     context "uncategorized topic" do
       context "topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
-        it { should eq(topic.title) }
+        it { is_expected.to eq(topic.title) }
       end
 
       context "topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
-        it { should eq(topic.title) }
+        it { is_expected.to eq(topic.title) }
 
         context "tagged topic" do
           before { topic.tags << [tag1, tag2] }
@@ -761,17 +764,17 @@ RSpec.describe TopicView do
           context "tagging enabled" do
             before { SiteSetting.tagging_enabled = true }
 
-            it { should start_with(topic.title) }
-            it { should_not include(tag1.name) }
-            it { should end_with(tag2.name) } # tag2 has higher topic count
+            it { is_expected.to start_with(topic.title) }
+            it { is_expected.not_to include(tag1.name) }
+            it { is_expected.to end_with(tag2.name) } # tag2 has higher topic count
           end
 
           context "tagging disabled" do
             before { SiteSetting.tagging_enabled = false }
 
-            it { should start_with(topic.title) }
-            it { should_not include(tag1.name) }
-            it { should_not include(tag2.name) }
+            it { is_expected.to start_with(topic.title) }
+            it { is_expected.not_to include(tag1.name) }
+            it { is_expected.not_to include(tag2.name) }
           end
         end
       end
@@ -784,13 +787,13 @@ RSpec.describe TopicView do
 
       context "topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
-        it { should eq(topic.title) }
+        it { is_expected.to eq(topic.title) }
       end
 
       context "topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
-        it { should start_with(topic.title) }
-        it { should end_with(category.name) }
+        it { is_expected.to start_with(topic.title) }
+        it { is_expected.to end_with(category.name) }
 
         context "tagged topic" do
           before do
@@ -798,10 +801,10 @@ RSpec.describe TopicView do
             topic.tags << [tag1, tag2]
           end
 
-          it { should start_with(topic.title) }
-          it { should end_with(category.name) }
-          it { should_not include(tag1.name) }
-          it { should_not include(tag2.name) }
+          it { is_expected.to start_with(topic.title) }
+          it { is_expected.to end_with(category.name) }
+          it { is_expected.not_to include(tag1.name) }
+          it { is_expected.not_to include(tag2.name) }
         end
       end
     end
@@ -1009,7 +1012,7 @@ RSpec.describe TopicView do
     context "when queue is enabled globally" do
       let(:queue_enabled) { true }
 
-      it { is_expected.to be_queued_posts_enabled }
+      it { expect(topic_view.queued_posts_enabled?).to be(true) }
     end
 
     context "when queue is not enabled globally" do
@@ -1020,11 +1023,11 @@ RSpec.describe TopicView do
           category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
         end
 
-        it { is_expected.to be_queued_posts_enabled }
+        it { expect(topic_view.queued_posts_enabled?).to be(true) }
       end
 
       context "when category is not moderated" do
-        it { is_expected.not_to be_queued_posts_enabled }
+        it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
     end
   end

@@ -1,6 +1,74 @@
 # frozen_string_literal: true
 
-describe UserProfile do
+RSpec.describe UserProfile do
+  describe "Validations" do
+    subject(:profile) { user.user_profile }
+
+    fab!(:user) { Fabricate(:user) }
+    fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
+
+    describe "#location" do
+      context "when it contains watched words" do
+        before { profile.location = location }
+
+        context "when watched words are of type 'Block'" do
+          let(:location) { "bad location" }
+
+          it "is not valid" do
+            profile.valid?
+            expect(profile.errors[:base].size).to eq(1)
+            expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+          end
+        end
+
+        context "when watched words are of type 'Censor'" do
+          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let(:location) { "censored location" }
+
+          it "censors the words upon saving" do
+            expect { profile.save! }.to change { profile.location }.to eq "■■■■■■■■ location"
+          end
+        end
+
+        context "when watched words are of type 'Replace'" do
+          let(:location) { "word to replace" }
+          let!(:replace_word) do
+            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+          end
+
+          it "replaces the words upon saving" do
+            expect { profile.save! }.to change { profile.location }.to eq "word replaced"
+          end
+        end
+      end
+
+      context "when it does not contain watched words" do
+        it { is_expected.to be_valid }
+      end
+
+      it "is not cooked" do
+        profile.location = "https://discourse.org"
+        expect { profile.save! }.not_to change { profile.location }
+      end
+    end
+
+    describe "#bio_raw" do
+      context "when it contains watched words" do
+        before { profile.bio_raw = "bad bio" }
+
+        it "is not valid" do
+          profile.valid?
+          expect(profile.errors[:base].size).to eq(1)
+          expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+        end
+      end
+
+      context "when it does not contain watched words" do
+        it { is_expected.to be_valid }
+      end
+    end
+  end
+
   it 'is created automatically when a user is created' do
     user = Fabricate(:evil_trout)
     expect(user.user_profile).to be_present
@@ -193,7 +261,7 @@ describe UserProfile do
     end
   end
 
-  context '.import_url_for_user' do
+  describe '.import_url_for_user' do
     fab!(:user) { Fabricate(:user) }
 
     before do
@@ -224,7 +292,5 @@ describe UserProfile do
         expect(user.card_background_upload).to eq(nil)
       end
     end
-
   end
-
 end

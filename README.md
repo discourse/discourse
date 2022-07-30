@@ -40,8 +40,6 @@ If you want to set up a Discourse forum for production use, see our [**Discourse
 
 If you're looking for business class hosting, see [discourse.org/buy](https://www.discourse.org/buy/).
 
-If you're looking for our remote work solution, see [teams.discourse.com](https://teams.discourse.com/).
-
 ## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high.
@@ -54,6 +52,8 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 | Google Chrome         | Android      | Android      |
 | Microsoft Edge        |              |              |
 | Mozilla Firefox       |              |              |
+
+Additionally, we aim to support Safari on iOS 12.5+ until January 2023 (Discourse 3.0).
 
 ## Built With
 
@@ -108,6 +108,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Discourse logo and “Discourse Forum” ®, Civilized Discourse Construction Kit, Inc.
+
+## Accessibility
+
+To guide our ongoing effort to build accessible software we follow the [W3C’s Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/TR/WCAG21/). If you'd like to report an accessibility issue that makes it difficult for you to use Discourse, email accessibility@discourse.org. For more information visit [discourse.org/accessibility](https://discourse.org/accessibility). 
 
 ## Dedication
 

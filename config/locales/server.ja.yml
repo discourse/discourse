@@ -217,7 +217,6 @@ ja:
       <p>パスワードを覚えている場合は、<a href="%{base_url}/login">ログイン</a>してください。</p>
 
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
-    user_exists: "<b>%{email}</b> を招待する必要はありません。 <a href='%{base_path}/u/%{username}/summary'> のアカウントはすでに存在します！</a>"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
     rate_limit:
@@ -366,7 +365,6 @@ ja:
       too_many: "ブックマークを %{limit} 件以上追加できません。<a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>にアクセスして、いくつか削除してください。"
       cannot_set_past_reminder: "ブックマークリマインダーを過去の時間に設定できません。"
       cannot_set_reminder_in_distant_future: "ブックマークリマインダーは 10 年以上先の日時に設定できません。"
-      time_must_be_provided: "すべてのリマインダーには時間の指定が必要です。"
     reminders:
       at_desktop: "次にデスクトップに戻ったとき"
       later_today: "今日の後程"
@@ -1340,7 +1338,6 @@ ja:
     contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> にも表示されます。"
     contact_url: "このサイトの連絡先 URL。緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> ページに表示されます。"
     crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
-    download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。画像の破損を防止できます。"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
     disabled_image_download_domains: "これらのドメインのリモート画像をダウンロードしない (パイプ区切りのリスト)。"
     editing_grace_period: "投稿から (n) 秒間は、編集しても投稿履歴に新しいバージョンを作成しない。"
@@ -1381,7 +1378,6 @@ ja:
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。自動的に 180x180 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
-    twitter_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があります)。空のままにすると、opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダーのパイプ区切りのリスト"
     email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a> をご覧ください"
@@ -1394,10 +1390,8 @@ ja:
     summary_percent_filter: "「このトピックを要約」をクリックしたとき表示される上位投稿の割合%"
     summary_max_results: "'このトピックを要約' が返す最大投稿数"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
-    enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     enable_chunked_encoding: "サーバーによるチャンク形式エンコーディング応答を有効にする。この機能はほとんどのセットアップで動作しますが、一部のプロキシではバッファリングが生じ、応答が遅延する可能性があります。"
     long_polling_base_url: "ロングポーリングのベース URL (CDN が動的コンテンツを配信している場合、これを origin pull に指定してください) 例: http://origin.site.com"
-    long_polling_interval: "送信するデータが存在しない場合に、サーバーがクライアントに応答するまで待機する時間 (ログインユーザーのみ)"
     polling_interval: "ロングポーリングではないときの、ログイン済みクライアントのポーリング間隔 (ミリ秒)"
     anon_polling_interval: "匿名クライアントのポーリング間隔 (ミリ秒)"
     background_polling_interval: "ウィンドウがバックグラウンド時のクライアントのポーリング間隔 (ミリ秒)"
@@ -1437,7 +1431,6 @@ ja:
     ga_universal_auto_link_domains: "Google Universal Analytics クロスドメイントラッキングを有効にする。これらのドメインへの発信リンクにはクライアント ID が追加されます。<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google のクロスドメイントラッキングガイド</a>をご覧ください。"
     gtm_container_id: "Google Tag Manager コンテナ ID。例: GTM-ABCDEF。<br/>注意: GTM が読み込むサードパーティスクリプトは、'content security policy script src' のホワイトリストに追加されている必要がある場合があります。"
     enable_escaped_fragments: "ウェブクローラーが検出されない場合、Google の Ajax-Crawling API にフォールバックする。<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a> をご覧ください。"
-    moderators_manage_categories_and_groups: "モデレーターによるカテゴリとグループの管理を許可する"
     moderators_change_post_ownership: "モデレーターによる投稿の所有権の変更を許可する"
     cors_origins: "CORS を許可。オリジンは http:// か https:// を含む必要があります。CORS を有効にするには、環境変数　DISCOURSE_ENABLE_CORS に true を設定する必要があります。"
     use_admin_ip_allowlist: "管理者はスクリーン対象 IP リスト (管理者 > ログ > スクリーン対象 IP) に定義されている IP アドレスからのみログインできる。"
@@ -1465,7 +1458,6 @@ ja:
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
     suppress_reply_directly_below: "投稿に返信が 1 つしかない場合、投稿の展開可能な返信数を表示しない。"
     suppress_reply_directly_above: "投稿に返信が 1 つしかない場合、投稿の展開可能な in-reply-to を表示しない。"
-    remove_full_quote: "ダイレクト返信の完全な引用を自動的に削除します。"
     suppress_reply_when_quoting: "投稿が引用返信だった場合、投稿の展開可能な in-reply-to を表示しない。"
     max_reply_history: "in-reply-toを展開するときに展開する返信の最大数"
     topics_per_period_in_top_summary: "デフォルトの人気トピックの要約に表示される人気トピックの数"
@@ -1945,7 +1937,7 @@ ja:
     default_categories_tracking: "デフォルトで追跡されるカテゴリのリスト。"
     default_categories_muted: "デフォルトでミュートされるカテゴリのリスト。"
     default_categories_watching_first_post: "デフォルトで新規トピックの最初の投稿がウォッチされるカテゴリのリスト。"
-    default_categories_regular: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
+    default_categories_normal: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
     mute_all_categories_by_default: "すべてのカテゴリのデフォルトの通知レベルをミュートに設定する。カテゴリが '最新' と 'カテゴリ' ページに表示されるように、ユーザーがカテゴリを選択する必要があります。匿名ユーザーのデフォルトを変更する場合は、'default_categories_' 設定を設定してください。"
     default_tags_watching: "デフォルトでウォッチされるタグのリスト。"
     default_tags_tracking: "デフォルトで追跡されるタグのリスト。"
@@ -1971,7 +1963,6 @@ ja:
     tags_sort_alphabetically: "タグをアルファベット順に表示する。デフォルトでは人気順に表示されます。"
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
     tag_style: "タグバッジの視覚的スタイル"
-    allow_staff_to_tag_pms: "スタッフメンバーが個人メッセージにタグ付けすることを許可する"
     min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
@@ -2495,12 +2486,6 @@ ja:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "信頼レベルの昇格おめでとうございます！"
-      text_body_template: |
-        あなたの[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)をもう 1 つ昇格しました！
-
-        経験豊富なユーザーとして、[便利なヒントとコツ](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)が役に立つことと思います。
-
-        ぜひ参加し続けてください。あなたの投稿を楽しみにしています。
     backup_succeeded:
       title: "バックアップに成功しました"
       subject_template: "バックアップは正常に完了しました"
@@ -3328,18 +3313,6 @@ ja:
     suspicious_login:
       title: "新しいログインのアラート"
       subject_template: "[%{site_name}] %{location} からの新しいログイン"
-      text_body_template: |
-        こんにちは。
-
-        普段使用されていないデバイスまたは場所からログインがあったようです。これはあなたですか？
-
-         - 場所: %{location} (%{client_ip})
-         - ブラウザ: %{browser}
-         - デバイス: %{device} – %{os}
-
-        これがあなたであったなら良いことです！ほかに何もする必要はありません。
-
-        これがあなたでなかったなら、[既存のセッションをレビュー](%{base_url}/my/preferences/account)し、パスワードを変更することを検討してください。
     post_approved:
       title: "あなたの投稿は承認されました"
       subject_template: "[%{site_name}] あなたの投稿は承認されました"
@@ -3351,6 +3324,7 @@ ja:
     title: "おっとっと！そのページは非公開です。"
   site_setting_missing: "`%{name}` サイト設定は、設定されている必要があります。"
   page_not_found:
+    page_title: "ページが見つかりません"
     title: "おっとっと！ページが存在しないか非公開です。"
     popular_topics: "人気"
     recent_topics: "最近"
@@ -4201,10 +4175,6 @@ ja:
                 label: "カテゴリと最新トピック"
               categories_and_top_topics:
                 label: "カテゴリと人気トピック"
-              categories_boxes:
-                label: "カテゴリボックス"
-              categories_boxes_with_topics:
-                label: "トピック付きのカテゴリボックス"
       logos:
         title: "ロゴ"
         fields:

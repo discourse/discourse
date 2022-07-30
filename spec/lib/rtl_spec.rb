@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Rtl do
+RSpec.describe Rtl do
 
   let(:user) { Fabricate.build(:user) }
 

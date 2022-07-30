@@ -36,5 +36,15 @@ Rails.autoloaders.each do |autoloader|
     'onceoff' => 'Jobs',
     'regular' => 'Jobs',
     'scheduled' => 'Jobs',
+    'google_oauth2_authenticator' => 'GoogleOAuth2Authenticator',
+    'omniauth_strategies' => 'OmniAuthStrategies',
+    'csrf_token_verifier' => 'CSRFTokenVerifier',
+    'html' => 'HTML',
+    'json' => 'JSON'
   )
 end
+Rails.autoloaders.main.ignore("lib/tasks",
+                              "lib/generators",
+                              "lib/freedom_patches",
+                              "lib/i18n/backend",
+                              "lib/unicorn_logstash_patch.rb")

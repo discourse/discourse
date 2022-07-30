@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StringSettingValidator do
+RSpec.describe StringSettingValidator do
 
   describe '#valid_value?' do
     shared_examples "for all StringSettingValidator opts" do

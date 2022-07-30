@@ -458,7 +458,16 @@ class ImportScripts::Base
         .where("LOWER(name) = ?", opts[:name].downcase.strip)
         .first
 
-    return existing if existing
+    if existing
+      if import_id && existing.custom_fields["import_id"] != import_id
+        existing.custom_fields["import_id"] = import_id
+        existing.save!
+
+        add_category(import_id, existing)
+      end
+
+      return existing
+    end
 
     post_create_action = opts.delete(:post_create_action)
 
@@ -615,7 +624,7 @@ class ImportScripts::Base
         else
           begin
             manager = BookmarkManager.new(user)
-            bookmark = manager.create(post_id: post.id)
+            bookmark = manager.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post")
 
             created += 1 if manager.errors.none?
             skipped += 1 if manager.errors.any?

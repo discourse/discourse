@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicConverter do
+RSpec.describe TopicConverter do
 
   context 'convert_to_public_topic' do
     fab!(:admin) { Fabricate(:admin) }

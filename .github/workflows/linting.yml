@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -65,7 +65,7 @@ jobs:
 
       - name: Rubocop
         if: ${{ always() }}
-        run: bundle exec rubocop .
+        run: bundle exec rubocop --parallel .
 
       - name: ESLint (core)
         if: ${{ always() }}
@@ -79,7 +79,7 @@ jobs:
         if: ${{ always() }}
         run: |
           yarn prettier -v
-          yarn prettier --list-different \
+          yarn pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
@@ -89,8 +89,9 @@ jobs:
         if: ${{ always() }}
         run: |
           yarn ember-template-lint \
-            app/assets/javascripts \
-            plugins/**/assets/javascripts
+            --no-error-on-unmatched-pattern \
+            "app/assets/javascripts/**/*.hbs" \
+            "plugins/**/assets/javascripts/**/*.hbs"
 
       - name: English locale lint (core)
         if: ${{ always() }}

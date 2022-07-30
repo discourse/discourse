@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicsBulkAction do
+RSpec.describe TopicsBulkAction do
   fab!(:topic) { Fabricate(:topic) }
 
   describe "#dismiss_topics" do
@@ -49,7 +49,7 @@ describe TopicsBulkAction do
       Fabricate(:topic_user, user: user, topic: topic3, last_read_post_number: 1)
       expect do
         TopicsBulkAction.new(user, [Topic.all.pluck(:id)], type: "dismiss_topics").perform!
-      end.to change { DismissedTopicUser.count }.by(0)
+      end.not_to change { DismissedTopicUser.count }
     end
 
     it 'dismisses when topic user without last_read_post_number' do
@@ -95,6 +95,7 @@ describe TopicsBulkAction do
 
       context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
+          SiteSetting.enable_whispers = true
           post1 = create_post(user: user)
           p = create_post(topic_id: post1.topic_id)
           create_post(topic_id: post1.topic_id)
@@ -314,6 +315,34 @@ describe TopicsBulkAction do
         expect(topic_ids).to be_blank
         topic.reload
         expect(topic).to be_visible
+      end
+    end
+  end
+
+  describe "reset_bump_dates" do
+    context "when the user can update bumped at" do
+      it "does reset the topic bump date" do
+        post_created_at = 1.day.ago
+        create_post(topic_id: topic.id, created_at: post_created_at)
+        topic.update!(bumped_at: 1.hour.ago)
+        Guardian.any_instance.expects(:can_update_bumped_at?).returns(true)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_bump_dates')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.bumped_at).to eq_time(post_created_at)
+      end
+    end
+
+    context "when the user can't update bumped at" do
+      it "doesn't reset the topic bump date" do
+        create_post(topic_id: topic.id, created_at: 1.day.ago)
+        bumped_at = 1.hour.ago
+        topic.update!(bumped_at: bumped_at)
+        Guardian.any_instance.expects(:can_update_bumped_at?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_bump_dates')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([])
+        expect(topic.reload.bumped_at).to eq_time(bumped_at)
       end
     end
   end

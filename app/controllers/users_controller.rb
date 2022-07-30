@@ -51,6 +51,8 @@ class UsersController < ApplicationController
 
   after_action :add_noindex_header, only: [:show, :my_redirect]
 
+  allow_in_staff_writes_only_mode :admin_login
+
   MAX_RECENT_SEARCHES = 5
 
   def index
@@ -103,6 +105,7 @@ class UsersController < ApplicationController
     show(for_card: true)
   end
 
+  # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
@@ -116,7 +119,8 @@ class UsersController < ApplicationController
                                               :card_background_upload,
                                               :primary_group,
                                               :flair_group,
-                                              :primary_email
+                                              :primary_email,
+                                              :user_status
                                             )
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
@@ -1024,7 +1028,7 @@ class UsersController < ApplicationController
       if SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
       elsif destination_url = cookies.delete(:destination_url)
-        return redirect_to(destination_url)
+        return redirect_to(destination_url, allow_other_host: true)
       else
         return redirect_to(path('/'))
       end
@@ -1065,11 +1069,28 @@ class UsersController < ApplicationController
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
 
+        # invites#perform_accept_invitation already sets destination_url, but
+        # sometimes it is lost (user changes browser, uses incognito, etc)
+        #
+        # The code below checks if the user was invited and redirects them to
+        # the topic they were originally invited to.
+        destination_url = cookies.delete(:destination_url)
+        if destination_url.blank?
+          topic = Invite
+            .joins(:invited_users)
+            .find_by(invited_users: { user_id: @user.id })
+            &.topics
+            &.first
+
+          if @user.guardian.can_see?(topic)
+            destination_url = path(topic.relative_url)
+          end
+        end
+
         if Wizard.user_requires_completion?(@user)
           return redirect_to(wizard_path)
-        elsif destination_url = cookies[:destination_url]
-          cookies[:destination_url] = nil
-          return redirect_to(destination_url)
+        elsif destination_url.present?
+          return redirect_to(destination_url, allow_other_host: true)
         elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
           return redirect_to(session_sso_provider_url + "?" + payload)
         end
@@ -1087,10 +1108,12 @@ class UsersController < ApplicationController
     RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
 
     if params[:username].present?
+      RateLimiter.new(nil, "activate-edit-email-hr-username-#{params[:username]}", 5, 1.hour).performed!
       @user = User.find_by_username_or_email(params[:username])
       raise Discourse::InvalidAccess.new unless @user.present?
       raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
     elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
+      RateLimiter.new(nil, "activate-edit-email-hr-user-key-#{user_key}", 5, 1.hour).performed!
       @user = User.where(id: user_key.to_i).first
     end
 
@@ -1687,6 +1710,7 @@ class UsersController < ApplicationController
   def bookmarks
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+    user_guardian = Guardian.new(user)
 
     respond_to do |format|
       format.json do
@@ -1706,8 +1730,12 @@ class UsersController < ApplicationController
       format.ics do
         @bookmark_reminders = Bookmark.with_reminders
           .where(user_id: user.id)
-          .includes(:topic)
           .order(:reminder_at)
+          .map do |bookmark|
+          bookmark.registered_bookmarkable.serializer.new(
+            bookmark, scope: user_guardian, root: false
+          )
+        end
       end
     end
   end
@@ -1788,7 +1816,7 @@ class UsersController < ApplicationController
       :card_background_upload_url,
       :primary_group_id,
       :flair_group_id,
-      :featured_topic_id
+      :featured_topic_id,
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
@@ -1797,6 +1825,22 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
+
+    if SiteSetting.enable_experimental_sidebar_hamburger
+      if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
+        params[:sidebar_category_ids] = []
+      end
+
+      permitted << { sidebar_category_ids: [] }
+
+      if SiteSetting.tagging_enabled
+        if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
+          params[:sidebar_tag_names] = []
+        end
+
+        permitted << { sidebar_tag_names: [] }
+      end
+    end
 
     result = params
       .permit(permitted, theme_ids: [])

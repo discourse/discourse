@@ -31,7 +31,7 @@ RSpec.describe UploadCreator do
 
         expect do
           UploadCreator.new(file, "utf-8\n.txt").create_for(user2.id)
-        end.to change { Upload.count }.by(0)
+        end.not_to change { Upload.count }
 
         expect(user.user_uploads.count).to eq(1)
         expect(user2.user_uploads.count).to eq(1)
@@ -321,6 +321,15 @@ RSpec.describe UploadCreator do
         upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
         expect(upload.secure?).to eq(false)
+      end
+
+      it "sets a reason for the security" do
+        upload = UploadCreator.new(file, filename, opts).create_for(user.id)
+        stored_upload = Upload.last
+
+        expect(stored_upload.secure?).to eq(true)
+        expect(stored_upload.security_last_changed_at).not_to eq(nil)
+        expect(stored_upload.security_last_changed_reason).to eq("uploading via the composer | source: upload creator")
       end
     end
 

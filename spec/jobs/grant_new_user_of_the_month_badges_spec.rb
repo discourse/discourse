@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::GrantNewUserOfTheMonthBadges do
+RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
 
   let(:granter) { described_class.new }
 

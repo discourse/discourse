@@ -8,8 +8,8 @@
 }
 
 html.discourse-no-touch {
-  .btn-default,
-  .btn-icon {
+  .btn-default:not(.btn-flat),
+  .btn-icon:not(.btn-flat) {
     &.btn-default {
       .d-icon {
         color: var(--primary-medium);
@@ -34,6 +34,13 @@ html.discourse-no-touch {
   }
   .btn-flat.delete.d-hover {
     background: var(--danger);
+  }
+  .menu-links-header {
+    .btn-icon:hover {
+      .d-icon {
+        color: var(--primary);
+      }
+    }
   }
 }
 
@@ -99,37 +106,23 @@ html {
     background: var(--tertiary);
   }
 
+  .extra-info-wrapper {
+    --header_primary-high: var(--header_primary);
+  }
+
   // Topic list
 
   table th {
-    color: var(--primary-medium);
-  }
-
-  .coldmap {
-    &-high {
-      color: #6c77cc !important;
-    }
-
-    &-med {
-      color: #548eaa !important;
-    }
-
-    &-low {
-      color: #32a1a5 !important;
-    }
+    color: var(--primary-high);
   }
 
   .heatmap-high,
-  .heatmap-high a {
-    color: #dc3249 !important;
-  }
+  .heatmap-high a,
   .heatmap-med,
-  .heatmap-med a {
-    color: #ae5b54 !important;
-  }
+  .heatmap-med a,
   .heatmap-low,
   .heatmap-low a {
-    color: #8f6d5b !important;
+    color: var(--primary-medium) !important;
   }
 
   .badge-notification {
@@ -219,64 +212,9 @@ html {
 
   nav.post-controls {
     .actions {
-      .double-button {
-        &:hover {
-          button {
-            background: var(--primary-medium);
-            color: var(--secondary);
-            .d-icon {
-              color: var(--secondary);
-            }
-            &.has-like {
-              .d-icon {
-                color: var(--love-low);
-              }
-            }
-          }
-        }
-        button {
-          &.like {
-            // Like button with 0 likes
-            &.d-hover {
-              background: var(--love-low);
-              .d-icon {
-                color: var(--love-low);
-              }
-            }
-          }
-          &.has-like {
-            // Like button after I've liked
-            .d-icon {
-              color: var(--love);
-            }
-            &.d-hover {
-              background: var(--primary-medium);
-              .d-icon {
-                color: var(--secondary);
-              }
-            }
-          }
-
-          &.button-count {
-            &.d-hover {
-              background: var(--primary-medium);
-              color: var(--secondary);
-            }
-            + .toggle-like {
-              &.d-hover {
-                background: var(--primary-medium);
-                color: var(--secondary);
-              }
-            }
-          }
-        }
-      }
-      button.create {
+      button.create,
+      button.create .d-icon {
         color: var(--primary-high-or-secondary-low);
-
-        .d-icon {
-          color: var(--primary-high-or-secondary-low);
-        }
       }
       button {
         &.d-hover,
@@ -311,6 +249,16 @@ html {
           }
         }
       }
+      .double-button .button-count {
+        color: var(--primary-medium);
+      }
+      .double-button:hover {
+        button,
+        .d-icon,
+        button.has-like .d-icon {
+          color: var(--love);
+        }
+      }
     }
 
     .show-replies {
@@ -342,5 +290,10 @@ html {
       background: var(--primary-medium);
       color: var(--secondary);
     }
+  }
+
+  .cooked mark,
+  .d-editor-preview mark {
+    background-color: yellow; // resets to browser default
   }
 }

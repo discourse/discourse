@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseNarrativeBot::NewUserNarrative do
+RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
   fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
   fab!(:discobot_user) { narrative_bot.discobot_user }
@@ -248,7 +248,15 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      it 'should create the right reply when bookmarks with reminders are enabled' do
+      it 'adds an after commit model callback to bookmark' do
+        Jobs.run_later!
+        bookmark = Fabricate(:bookmark, bookmarkable: Fabricate(:post))
+        expect_job_enqueued(job: :bot_input, args: { user_id: bookmark.user_id, post_id: bookmark.bookmarkable_id, input: "bookmark" })
+        bookmark2 = Fabricate(:bookmark, bookmarkable: Fabricate(:topic))
+        expect_not_enqueued_with(job: :bot_input, args: { user_id: bookmark.user_id, post_id: kind_of(Integer), input: "bookmark" })
+      end
+
+      it 'should create the right reply when the bookmark is created' do
         post.update!(user: discobot_user)
         narrative.expects(:enqueue_timeout_job).with(user)
 

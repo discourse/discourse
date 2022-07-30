@@ -107,7 +107,6 @@ sw:
       next_month: "Mwezi Ujao"
       placeholder: tarehe
     share:
-      post: "taarifa #%{postNumber}"
       close: "funga"
     action_codes:
       public_topic: "ameifanya hii mada isiwe ya siri %{when}"
@@ -336,7 +335,11 @@ sw:
       tomorrow: "Kesho"
       later_this_week: "Baada ya mda ndani ya wiki hii"
       this_weekend: "Wikiendi hii"
+      next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
+      forever: "Milele"
+      never: "Kamwe"
+      select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ume</a> chapisha <a href='%{topicUrl}'>mada</a>"
@@ -636,6 +639,8 @@ sw:
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
+      experimental_sidebar:
+        options: "Chaguo"
       change: "badilisha"
       moderator: "%{mtumiaji} ni msimamizi"
       admin: "%{mtumiaji} ni kiongozi"
@@ -987,6 +992,8 @@ sw:
         sent_by: "Imetumwa na"
         private_message: "ujumbe"
         the_topic: "mada"
+    user_status:
+      save: "hifadhi"
     loading: "Inapakia..."
     errors:
       prev_page: "ikiwa inajaribu kupakia"
@@ -1032,7 +1039,6 @@ sw:
       other: Majibu
     signup_cta:
       sign_up: "Jiunge"
-      hide_session: "Nikumbushe kesho"
       hide_forever: "hapana asante"
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
@@ -1110,19 +1116,14 @@ sw:
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"
-        title: "na Google"
       twitter:
         name: "Twitter"
-        title: "na Twitter"
       instagram:
         name: "Instagram"
-        title: "na Instagram"
       facebook:
         name: "Facebook"
-        title: "na Facebook"
       github:
         name: "GitHub"
-        title: "na Github"
       discord:
         name: "Matatizo"
     invites:
@@ -1135,7 +1136,6 @@ sw:
       success: "Akaunti yako imetengenezwa na sasa unaweza kuingia."
       name_label: "Jina"
       password_label: "Nywila"
-      optional_description: "(sio muhimu)"
     password_reset:
       continue: "endelea kwenye %{site_name}"
     emoji_set:
@@ -1219,7 +1219,6 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      users_placeholder: "Ongeza mtumiaji"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "kwa nini unahariri?"
@@ -1272,9 +1271,6 @@ sw:
         reply_as_new_topic:
           label: Jibu kama mada iliyounganishwa
           desc: Tengeneza mada mpya itakayoungwa na hii mada
-        reply_as_private_message:
-          label: Ujumbe mpya
-          desc: Tengeneza ujumbe binafsi mpya
         reply_to_topic:
           label: Jibu mada
           desc: Jibu mada, sio chapisho lolote tu
@@ -1296,6 +1292,7 @@ sw:
       title: "taarifa za @jina lililotajwa, majibu ya machapisho na mada, ujumbe, na zingine"
       none: "Imeshindwa kupakia taarifa kwa mda huu."
       empty: "Hakuna taarifa zilizopatikana."
+      watching_first_post_label: "Mada Mpya"
       mentioned: "<span>%{jina la mtumiaji} </span>%{maelezo}"
       group_mentioned: "<span>%{jina la mtumiaji} </span>%{maelezo}"
       quoted: "<span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -1308,6 +1305,7 @@ sw:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} na %{count} mwingine </span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} na %{count} wengine</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       private_message: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       invited_to_private_message: "<p><span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -1534,17 +1532,6 @@ sw:
         remove: "Ondoa Kipima Mda"
         publish_to: "Chapisha kwenda Kwa:"
         when: "Lini:"
-      auto_update_input:
-        none: "Chagua fremu ya mda"
-        later_today: "Baada ya mda leo"
-        tomorrow: "Kesho"
-        later_this_week: "Baada ya mda ndani ya wiki hii"
-        this_weekend: "Wikiendi hii"
-        next_week: "Wiki Ijayo"
-        next_month: "Mwezi ujao"
-        forever: "Milele"
-        pick_date_and_time: "Chagua tarehe na mda"
-        set_based_on_last_post: "Funga kulingana na chapisho la mwisho"
       publish_to_category:
         title: "Panga Uchapishaji"
       temp_open:
@@ -1630,8 +1617,6 @@ sw:
         unpin: "Ondoa Mada..."
         unarchive: "Ondoa Mada kwenye Nyaraka"
         archive: "Weka Mada kwenye Nyaraka"
-        invisible: "Ondoa Orodha"
-        visible: "Tengeneza Orodha"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:
@@ -1881,6 +1866,8 @@ sw:
       tags: "Lebo"
       tags_placeholder: "(Sio muhimu) orodha ya lebo zilizoruhusiwa."
       tag_groups_placeholder: "(Sio muhimu) orodha ya vikundi vyenye lebo zilizoruhusiwa."
+      required_tag_group:
+        delete: "Futa"
       delete: "Futa Kategoria"
       create: "Kategoria Mpya"
       create_long: "Tengeneza kategoria mpya"
@@ -2105,6 +2092,7 @@ sw:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
       readonly: "Angalia"
+    preloader_text: "Inapakuliwa"
     lightbox:
       download: "pakua"
       counter: "%curr% chini ya %total%"
@@ -2158,7 +2146,6 @@ sw:
         edit: "%{shortcut} Hariri chapisho"
         delete: "%{shortcut} Futa chapisho"
         mark_muted: "%{shortcut} Nyamazisha mada"
-        mark_regular: "%{shortcut} Mada kawaida (chaguo-msingi) "
         mark_tracking: "%{shortcut} Fuatilia mada"
         mark_watching: "%{shortcut} Angalia mada"
         print: "%{shortcut} Chapisha mada:"
@@ -2266,6 +2253,42 @@ sw:
       no_activity_others: "Hakuna shughuli."
       no_replies_others: "Hakuna majibu."
       no_likes_others: "Hakuna machapisho yaliyopendwa."
+    sidebar:
+      unread_count:
+        one: "%{count} haijasomwa"
+        other: "%{count} haijasomwa"
+      new_count:
+        one: "Mada mpya %{count}"
+        other: "Mada mpya %{count} "
+      sections:
+        messages:
+          header_link_text: "Ujumbe"
+          links:
+            inbox: "kisanduku pokezi"
+            sent: "Imetumwa"
+            new: "Mpya"
+            unread: "Haijasomwa"
+            unread_with_count: "Haijasomwa (%{count})"
+            archive: "Hifadhi"
+        tags:
+          header_link_title: "lebo zote"
+          header_link_text: "Lebo"
+        categories:
+          header_link_title: "kategoria zote"
+          header_link_text: "Kategoria"
+        community:
+          header_link_title: "nyumbani"
+          header_link_text: "Jumuiya"
+          links:
+            tracked:
+              content: "Imefuatiliwa"
+            groups:
+              content: "Vikundi"
+              title: "Vikundi vyote"
+            users:
+              content: "Watumiaji"
+            my_posts:
+              content: "Machapisho Yangu"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:

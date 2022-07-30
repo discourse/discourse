@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::ThemesController do
+RSpec.describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
 
   it "is a subclass of AdminController" do
@@ -462,7 +462,7 @@ describe Admin::ThemesController do
       put "/admin/themes/#{theme.id}.json", params: {
         theme: {
           translations: {
-            "somegroup.somestring" => "overridenstring"
+            "somegroup.somestring" => "overriddenstring"
           }
         }
       }
@@ -470,7 +470,7 @@ describe Admin::ThemesController do
       # Response correct
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["theme"]["translations"][0]["value"]).to eq("overridenstring")
+      expect(json["theme"]["translations"][0]["value"]).to eq("overriddenstring")
 
       # Database correct
       theme.reload

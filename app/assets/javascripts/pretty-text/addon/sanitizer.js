@@ -41,6 +41,38 @@ export function hrefAllowed(href, extraHrefMatchers) {
   }
 }
 
+function sanitizeMediaSrc(tag, attrName, value, extraHrefMatchers) {
+  const srcAttrs = {
+    img: ["src"],
+    source: ["src", "srcset"],
+    track: ["src"],
+  };
+
+  if (!srcAttrs[tag]?.includes(attrName)) {
+    return;
+  }
+
+  if (value.startsWith("data:image")) {
+    return attr(attrName, value);
+  }
+
+  if (attrName === "srcset") {
+    const srcset = value.split(",").map((v) => v.split(" ", 2));
+    const sanitizedValue = srcset
+      .map((src) => {
+        const allowedSrc = hrefAllowed(src[0], extraHrefMatchers);
+        if (allowedSrc) {
+          return src[1] ? `${allowedSrc} ${src[1]}` : allowedSrc;
+        }
+      })
+      .join(",");
+    return attr(attrName, sanitizedValue);
+  } else {
+    const returnVal = hrefAllowed(value, extraHrefMatchers);
+    return attr(attrName, returnVal);
+  }
+}
+
 function testDataAttribute(forTag, name, value) {
   return Object.keys(forTag).find((k) => {
     const nameWithMatcher = `^${k.replace(/\*$/, "\\w+?")}`;
@@ -76,7 +108,7 @@ export function sanitize(text, allowLister) {
   }
 
   let result = xss(text, {
-    whiteList: allowList.tagList,
+    allowList: allowList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "table"],
 
@@ -86,25 +118,30 @@ export function sanitize(text, allowLister) {
         const forAttr = forTag[name];
 
         if (
-          (forAttr &&
-            (forAttr.indexOf("*") !== -1 || forAttr.indexOf(value) !== -1)) ||
-          (name.indexOf("data-html-") === -1 &&
-            name.indexOf("data-") === 0 &&
+          (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
+          (!name.includes("data-html-") &&
+            name.startsWith("data-") &&
             (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
           (tag === "a" &&
             name === "href" &&
             hrefAllowed(value, extraHrefMatchers)) ||
-          (tag === "img" &&
-            name === "src" &&
-            (/^data:image.*$/i.test(value) ||
-              hrefAllowed(value, extraHrefMatchers))) ||
           (tag === "iframe" &&
             name === "src" &&
             allowedIframes.some((i) => {
-              return value.toLowerCase().indexOf((i || "").toLowerCase()) === 0;
+              return value.toLowerCase().startsWith((i || "").toLowerCase());
             }))
         ) {
           return attr(name, value);
+        }
+
+        const sanitizedMediaSrc = sanitizeMediaSrc(
+          tag,
+          name,
+          value,
+          extraHrefMatchers
+        );
+        if (sanitizedMediaSrc) {
+          return sanitizedMediaSrc;
         }
 
         if (tag === "iframe" && name === "src") {
@@ -119,7 +156,7 @@ export function sanitize(text, allowLister) {
 
         // Heading ids must begin with `heading--`
         if (
-          ["h1", "h2", "h3", "h4", "h5", "h6"].indexOf(tag) !== -1 &&
+          ["h1", "h2", "h3", "h4", "h5", "h6"].includes(tag) &&
           value.match(/^heading\-\-[a-zA-Z0-9\-\_]+$/)
         ) {
           return attr(name, value);

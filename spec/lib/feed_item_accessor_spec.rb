@@ -2,7 +2,7 @@
 
 require 'rss'
 require 'feed_item_accessor'
-describe FeedItemAccessor do
+RSpec.describe FeedItemAccessor do
   context 'for ATOM feed' do
     let(:atom_feed) { RSS::Parser.parse(file_from_fixtures('feed.atom', 'feed'), false) }
     let(:atom_feed_item) { atom_feed.items.first }

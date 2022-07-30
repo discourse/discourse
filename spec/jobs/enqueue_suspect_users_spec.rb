@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::EnqueueSuspectUsers do
+RSpec.describe Jobs::EnqueueSuspectUsers do
   before { SiteSetting.approve_suspect_users = true }
 
   it 'does nothing when there are no suspect users' do

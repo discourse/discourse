@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AllowedIpAddressValidator do
+RSpec.describe AllowedIpAddressValidator do
 
   let(:record) { Fabricate.build(:user, trust_level: TrustLevel[0], ip_address: '99.232.23.123') }
   let(:validator) { described_class.new(attributes: :ip_address) }

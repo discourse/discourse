@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UnsilenceUsers do
+RSpec.describe Jobs::UnsilenceUsers do
   it "unsilence users" do
     user = Fabricate(:user)
     UserSilencer.silence(user, Discourse.system_user, silenced_till: 2.days.ago)

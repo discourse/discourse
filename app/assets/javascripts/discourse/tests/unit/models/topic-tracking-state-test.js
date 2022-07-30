@@ -5,6 +5,7 @@ import Category from "discourse/models/category";
 import MessageBus from "message-bus-client";
 import {
   discourseModule,
+  fakeTime,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -16,11 +17,28 @@ import sinon from "sinon";
 
 discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   hooks.beforeEach(function () {
-    this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
+    this.clock = fakeTime("2012-12-31 12:00");
   });
 
   hooks.afterEach(function () {
     this.clock.restore();
+  });
+
+  test("bulk loading states only calls onStateChange callback once", function (assert) {
+    const trackingState = TopicTrackingState.create();
+    let stateCallbackCalled = 0;
+
+    trackingState.onStateChange(() => {
+      stateCallbackCalled += 1;
+    });
+
+    trackingState.loadStates([
+      { topic_id: 1 },
+      { topic_id: 2 },
+      { topic_id: 3 },
+    ]);
+
+    assert.strictEqual(stateCallbackCalled, 1, "callback is only called once");
   });
 
   test("tag counts", function (assert) {
@@ -50,7 +68,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -58,7 +75,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -116,7 +132,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -124,7 +139,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         highest_post_number: 7,
         tags: ["bar", "pending"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -202,7 +216,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         category_id: 7,
         tags: ["bug"],
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 5,
@@ -211,7 +224,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         tags: ["bar", "bug"],
         category_id: 7,
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 6,
@@ -237,7 +249,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         }
       }
 
-      if (topic.tags && topic.tags.indexOf("random") > -1) {
+      if (topic.tags?.includes("random")) {
         if (isNew) {
           randomNew += 1;
         }
@@ -338,12 +350,53 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
   });
 
+  test("sync - no changes to state", function (assert) {
+    const trackingState = TopicTrackingState.create();
+
+    trackingState.loadStates([
+      { topic_id: 111, last_read_post_number: null },
+      { topic_id: 222, last_read_post_number: null },
+    ]);
+
+    let stateCallbackCalled = 0;
+
+    trackingState.onStateChange(() => {
+      stateCallbackCalled += 1;
+    });
+
+    const list = {
+      topics: [
+        Topic.create({
+          id: 111,
+          last_read_post_number: null,
+          unseen: true,
+        }),
+        Topic.create({
+          id: 222,
+          last_read_post_number: null,
+          unseen: true,
+        }),
+      ],
+    };
+
+    trackingState.sync(list, "unread");
+
+    assert.strictEqual(stateCallbackCalled, 0, "callback is not called");
+  });
+
   test("sync - updates state to match list topic for unseen and unread/new topics", function (assert) {
     const trackingState = TopicTrackingState.create();
+
     trackingState.loadStates([
       { topic_id: 111, last_read_post_number: 0 },
       { topic_id: 222, last_read_post_number: 1 },
     ]);
+
+    let stateCallbackCalled = 0;
+
+    trackingState.onStateChange(() => {
+      stateCallbackCalled += 1;
+    });
 
     const list = {
       topics: [
@@ -385,6 +438,8 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       17,
       "last_read_post_number is highest_post_number - (unread + new)"
     );
+
+    assert.strictEqual(stateCallbackCalled, 1, "callback is only called once");
   });
 
   test("sync - states missing from the topic list are updated based on the selected filter", function (assert) {
@@ -395,7 +450,6 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         last_read_post_number: 4,
         highest_post_number: 5,
         notification_level: NotificationLevels.TRACKING,
-        unread_not_too_old: true,
       },
       {
         topic_id: 222,
@@ -465,8 +519,8 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         ]);
       });
 
-      test("message count is incremented", function (assert) {
-        publishToMessageBus(`/unread`, unreadTopicPayload);
+      test("message count is incremented", async function (assert) {
+        await publishToMessageBus(`/unread`, unreadTopicPayload);
 
         assert.strictEqual(
           trackingState.messageCount,
@@ -475,12 +529,15 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("state is modified and callback is called", function (assert) {
-        let stateCallbackCalled = false;
+      test("state is modified and callback is called", async function (assert) {
+        let stateCallbackCalled = 0;
+
         trackingState.onStateChange(() => {
-          stateCallbackCalled = true;
+          stateCallbackCalled += 1;
         });
-        publishToMessageBus(`/unread`, unreadTopicPayload);
+
+        await publishToMessageBus(`/unread`, unreadTopicPayload);
+
         assert.deepEqual(
           trackingState.findState(111),
           {
@@ -496,16 +553,18 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           },
           "topic state updated"
         );
+
         assert.strictEqual(
           stateCallbackCalled,
-          true,
+          1,
           "state change callback called"
         );
       });
 
-      test("adds incoming so it is counted in topic lists", function (assert) {
+      test("adds incoming so it is counted in topic lists", async function (assert) {
         trackingState.trackIncoming("all");
-        publishToMessageBus(`/unread`, unreadTopicPayload);
+        await publishToMessageBus(`/unread`, unreadTopicPayload);
+
         assert.deepEqual(
           trackingState.newIncoming,
           [111],
@@ -540,8 +599,8 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         assert.strictEqual(trackingState.filter, "latest");
       });
 
-      test("correctly infers missing information", function (assert) {
-        publishToMessageBus(`/unread`, {
+      test("correctly infers missing information", async function (assert) {
+        await publishToMessageBus(`/unread`, {
           ...unreadTopicPayload,
           topic_id: 999,
         });
@@ -561,14 +620,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("adds incoming in the categories latest topics list", function (assert) {
+      test("adds incoming in the categories latest topics list", async function (assert) {
         trackingState.trackIncoming("categories");
         const unreadCategoriesLatestTopicsPayload = {
           ...unreadTopicPayload,
           message_type: "latest",
         };
 
-        publishToMessageBus(`/latest`, unreadCategoriesLatestTopicsPayload);
+        await publishToMessageBus(
+          `/latest`,
+          unreadCategoriesLatestTopicsPayload
+        );
         assert.deepEqual(
           trackingState.newIncoming,
           [111],
@@ -581,7 +643,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("dismisses new topic", function (assert) {
+      test("dismisses new topic", async function (assert) {
         trackingState.loadStates([
           {
             last_read_post_number: null,
@@ -593,14 +655,15 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           },
         ]);
 
-        publishToMessageBus(`/unread/${currentUser.id}`, {
+        await publishToMessageBus(`/unread/${currentUser.id}`, {
           message_type: "dismiss_new",
           payload: { topic_ids: [112] },
         });
+
         assert.strictEqual(trackingState.findState(112).is_seen, true);
       });
 
-      test("marks a topic as read", function (assert) {
+      test("marks a topic as read", async function (assert) {
         trackingState.loadStates([
           {
             last_read_post_number: null,
@@ -611,7 +674,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
             tags: ["foo"],
           },
         ]);
-        publishToMessageBus(`/unread/${currentUser.id}`, {
+        await publishToMessageBus(`/unread/${currentUser.id}`, {
           message_type: "read",
           topic_id: 112,
           payload: {
@@ -620,6 +683,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
             notification_level: NotificationLevels.TRACKING,
           },
         });
+
         assert.propEqual(
           getProperties(
             trackingState.findState(112),
@@ -671,9 +735,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         trackingState.establishChannels();
       });
 
-      test("topics in muted categories do not get added to the state", function (assert) {
+      test("topics in muted categories do not get added to the state", async function (assert) {
         trackingState.currentUser.set("muted_category_ids", [123]);
-        publishToMessageBus("/new", newTopicPayload);
+        await publishToMessageBus("/new", newTopicPayload);
+
         assert.strictEqual(
           trackingState.findState(222),
           undefined,
@@ -681,12 +746,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("topics in indirectly muted categories do not get added to the state", function (assert) {
+      test("topics in indirectly muted categories do not get added to the state", async function (assert) {
         trackingState.currentUser.setProperties({
           muted_category_ids: [],
           indirectly_muted_category_ids: [123],
         });
-        publishToMessageBus("/new", newTopicPayload);
+        await publishToMessageBus("/new", newTopicPayload);
+
         assert.strictEqual(
           trackingState.findState(222),
           undefined,
@@ -694,9 +760,11 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("topics in muted tags do not get added to the state", function (assert) {
-        trackingState.currentUser.set("muted_tag_ids", [44]);
-        publishToMessageBus("/new", newTopicPayload);
+      test("topics in muted tags do not get added to the state", async function (assert) {
+        trackingState.currentUser.set("muted_tags", ["pending"]);
+
+        await publishToMessageBus("/new", newTopicPayload);
+
         assert.strictEqual(
           trackingState.findState(222),
           undefined,
@@ -704,8 +772,8 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("message count is incremented", function (assert) {
-        publishToMessageBus("/new", newTopicPayload);
+      test("message count is incremented", async function (assert) {
+        await publishToMessageBus("/new", newTopicPayload);
 
         assert.strictEqual(
           trackingState.messageCount,
@@ -714,12 +782,13 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("state is modified and callback is called", function (assert) {
+      test("state is modified and callback is called", async function (assert) {
         let stateCallbackCalled = false;
         trackingState.onStateChange(() => {
           stateCallbackCalled = true;
         });
-        publishToMessageBus("/new", newTopicPayload);
+        await publishToMessageBus("/new", newTopicPayload);
+
         assert.deepEqual(
           trackingState.findState(222),
           {
@@ -740,9 +809,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
-      test("adds incoming so it is counted in topic lists", function (assert) {
+      test("adds incoming so it is counted in topic lists", async function (assert) {
         trackingState.trackIncoming("all");
-        publishToMessageBus("/new", newTopicPayload);
+        await publishToMessageBus("/new", newTopicPayload);
+
         assert.deepEqual(
           trackingState.newIncoming,
           [222],
@@ -757,7 +827,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     }
   );
 
-  test("establishChannels - /delete MessageBus channel payloads processed", function (assert) {
+  test("establishChannels - /delete MessageBus channel payloads processed", async function (assert) {
     const trackingState = TopicTrackingState.create({ messageBus: MessageBus });
     trackingState.establishChannels();
 
@@ -768,7 +838,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       },
     ]);
 
-    publishToMessageBus("/delete", { topic_id: 111 });
+    await publishToMessageBus("/delete", { topic_id: 111 });
 
     assert.strictEqual(
       trackingState.findState(111).deleted,
@@ -782,7 +852,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
   });
 
-  test("establishChannels - /recover MessageBus channel payloads processed", function (assert) {
+  test("establishChannels - /recover MessageBus channel payloads processed", async function (assert) {
     const trackingState = TopicTrackingState.create({ messageBus: MessageBus });
     trackingState.establishChannels();
 
@@ -793,7 +863,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       },
     ]);
 
-    publishToMessageBus("/recover", { topic_id: 111 });
+    await publishToMessageBus("/recover", { topic_id: 111 });
 
     assert.strictEqual(
       trackingState.findState(111).deleted,
@@ -807,7 +877,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     );
   });
 
-  test("establishChannels - /destroy MessageBus channel payloads processed", function (assert) {
+  test("establishChannels - /destroy MessageBus channel payloads processed", async function (assert) {
     sinon.stub(DiscourseURL, "router").value({
       currentRoute: { parent: { name: "topic", params: { id: 111 } } },
     });
@@ -822,7 +892,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       },
     ]);
 
-    publishToMessageBus("/destroy", { topic_id: 111 });
+    await publishToMessageBus("/destroy", { topic_id: 111 });
 
     assert.strictEqual(
       trackingState.messageCount,
@@ -960,9 +1030,9 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     const trackingState = TopicTrackingState.create({ currentUser });
 
-    assert.strictEqual(trackingState.countNew(1), 0);
-    assert.strictEqual(trackingState.countNew(2), 0);
-    assert.strictEqual(trackingState.countNew(3), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 0);
 
     trackingState.states.set("t112", {
       last_read_post_number: null,
@@ -972,11 +1042,18 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       created_in_new_period: true,
     });
 
-    assert.strictEqual(trackingState.countNew(1), 1);
-    assert.strictEqual(trackingState.countNew(1, undefined, true), 0);
-    assert.strictEqual(trackingState.countNew(1, "missing-tag"), 0);
-    assert.strictEqual(trackingState.countNew(2), 1);
-    assert.strictEqual(trackingState.countNew(3), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 1);
+
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1, noSubcategories: true }),
+      0
+    );
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1, tagId: "missing-tag" }),
+      0
+    );
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 1);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 0);
 
     trackingState.states.set("t113", {
       last_read_post_number: null,
@@ -987,11 +1064,23 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       created_in_new_period: true,
     });
 
-    assert.strictEqual(trackingState.countNew(1), 2);
-    assert.strictEqual(trackingState.countNew(2), 2);
-    assert.strictEqual(trackingState.countNew(3), 1);
-    assert.strictEqual(trackingState.countNew(3, "amazing"), 1);
-    assert.strictEqual(trackingState.countNew(3, "missing"), 0);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 2);
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 2);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 1);
+    assert.strictEqual(
+      trackingState.countNew({
+        categoryId: 3,
+        tagId: "amazing",
+      }),
+      1
+    );
+    assert.strictEqual(
+      trackingState.countNew({
+        categoryId: 3,
+        tagId: "missing",
+      }),
+      0
+    );
 
     trackingState.states.set("t111", {
       last_read_post_number: null,
@@ -1001,16 +1090,17 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       created_in_new_period: true,
     });
 
-    assert.strictEqual(trackingState.countNew(1), 3);
-    assert.strictEqual(trackingState.countNew(2), 2);
-    assert.strictEqual(trackingState.countNew(3), 1);
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 3);
+    assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 2);
+    assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 1);
 
     trackingState.states.set("t115", {
       last_read_post_number: null,
       id: 115,
       category_id: 4,
     });
-    assert.strictEqual(trackingState.countNew(4), 0);
+
+    assert.strictEqual(trackingState.countNew({ categoryId: 4 }), 0);
   });
 
   test("mute and unmute topic", function (assert) {

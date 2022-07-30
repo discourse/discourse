@@ -4,23 +4,28 @@
     <title>Theme QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
     <%- if !@suggested_themes %>
-      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
-      <%= discourse_stylesheet_link_tag(:test_helper, theme_id: nil) %>
       <%= preload_script "locales/#{I18n.locale}" %>
-      <%= vendor_theme_tests %>
-      <%= preload_script @app_bundle %>
+      <%= preload_script "vendor" %>
+      <%= preload_script "discourse" %>
       <%= preload_script "admin" %>
       <%= preload_script "discourse/tests/active-plugins" %>
       <%= preload_script "admin-plugins" %>
-      <%= support_bundles %>
+      <%= preload_script "test-support" %>
+      <%= preload_script "test-helpers" %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
+
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">
       <meta property="og:url" content="">
       <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
+
+      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+      <style>
+        <%= File.read("#{Rails.root}/app/assets/javascripts/node_modules/qunit/qunit/qunit.css") %>
+      </style>
     <%- else %>
       <style>
         html {
@@ -28,26 +33,28 @@
         }
       </style>
     <%- end %>
+
+    <%- if params['testem'] %>
+      <script defer src="/assets/testem.js"></script>
+    <%- end %>
   </head>
   <body>
-    <%- if !@suggested_themes %>
-      <%- if @legacy_ember %>
-        <div id="qunit"></div>
-        <div id="qunit-fixture"></div>
-      <%- end %>
-    <%- else %>
+    <%- if @suggested_themes %>
       <h2>Theme QUnit Test Runner</h2>
+
       <%- if @suggested_themes.size == 0 %>
         <p>Cannot find any theme tests.</p>
       <%- else %>
         <h3>Select a theme/component: </h3>
         <%- @suggested_themes.each do |(id, name)| %>
-          <h4><%= link_to name, theme_qunit_url(id: id) %></h4>
+          <h4><%= link_to name, theme_qunit_path(id: id) %></h4>
         <%- end %>
       <%- end %>
     <%- end %>
+
+    <%- if !@suggested_themes %>
+      <%= preload_script "scripts/discourse-test-listen-boot" %>
+      <%= preload_script "scripts/discourse-boot" %>
+    <%- end %>
   </body>
-  <%- if !@suggested_themes %>
-    <%= boot_bundles %>
-  <%- end %>
 </html>

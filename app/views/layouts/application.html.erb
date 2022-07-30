@@ -6,10 +6,10 @@
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
+
+    <%= render partial: "common/discourse_preload_stylesheet" %>
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
-
-    <%= render partial: "common/discourse_stylesheet" %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
@@ -29,14 +29,20 @@
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
-    <%= preload_vendor_scripts %>
-    <%= preload_script "application" %>
+    <%= preload_script "vendor" %>
+    <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>
     <%- end %>
+
     <%- if staff? %>
-      <%= preload_script_url ExtraLocalesController.url('admin') %>
+      <%= preload_script_url ExtraLocalesController.url("admin") %>
       <%= preload_script "admin" %>
+    <%- end %>
+
+    <%- if admin? %>
+      <%= preload_script_url ExtraLocalesController.url("wizard") %>
+      <%= preload_script "wizard" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
@@ -53,7 +59,6 @@
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
 
-
     <%= yield :head %>
 
     <%= build_plugin_html 'server:before-head-close' %>
@@ -67,31 +72,35 @@
   </head>
 
   <body class="<%= body_classes %>">
+    <%- if include_splash_screen? %>
+      <%= render partial: "common/discourse_splash" %>
+    <%- end %>
+
+    <discourse-assets>
+      <discourse-assets-stylesheets>
+        <%= render partial: "common/discourse_stylesheet" %>
+      </discourse-assets-stylesheets>
+      <discourse-assets-json>
+        <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+      </discourse-assets-json>
+      <discourse-assets-icons></discourse-assets-icons>
+    </discourse-assets>
+
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:after-body-open' %>
     <%- end -%>
 
     <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
-      <%= render partial: 'header' %>
+      <%= render partial: "layouts/noscript_header" %>
+
       <div id="main-outlet" class="wrap" role="main">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
-        <footer class="noscript-footer-nav">
-          <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
-            <a href='<%= path "/" %>'><%= t 'home_title' %></a>
-            <%= link_to t('js.filters.categories.title'), path("/categories") %>
-            <%= link_to t('guidelines_topic.title'), path("/guidelines") %>
-            <%= link_to t('tos_topic.title'), path("/tos") %>
-            <%= link_to t('privacy_topic.title'), path("/privacy") %>
-          </nav>
-        </footer>
       </div>
 
-      <footer id='noscript-footer'>
-        <p><%= t 'powered_by_html' %></p>
-      </footer>
+      <%= render partial: "layouts/noscript_footer" %>
     </noscript>
 
     <%- unless customization_disabled? %>
@@ -114,13 +123,11 @@
       </form>
     <% end %>
 
-    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
-
-    <script src="<%= script_asset_path "start-discourse" %>"></script>
+    <script defer src="<%= script_asset_path "start-discourse" %>"></script>
 
     <%= yield :data %>
 
-    <script src="<%= script_asset_path "browser-update" %>"></script>
+    <script defer src="<%= script_asset_path "browser-update" %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>

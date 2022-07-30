@@ -12,11 +12,11 @@ import {
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -42,8 +42,9 @@ export default Component.extend({
   model: null,
   afterSave: null,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.setProperties({
       errorMessage: null,
       selectedReminderType: TIME_SHORTCUT_TYPES.NONE,
@@ -55,7 +56,7 @@ export default Component.extend({
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
       prefilledDatetime: null,
-      userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
+      userTimezone: this.currentUser.timezone,
       showOptions: false,
       _itsatrap: new ItsATrap(),
       autoDeletePreference: this.model.autoDeletePreference || 0,
@@ -71,9 +72,10 @@ export default Component.extend({
     this._loadPostLocalDates();
   },
 
-  @on("didInsertElement")
-  _prepareUI() {
-    later(() => {
+  didInsertElement() {
+    this._super(...arguments);
+
+    discourseLater(() => {
       if (this.site.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
       }
@@ -83,6 +85,8 @@ export default Component.extend({
     // knows they have set these options previously.
     if (this.model.id) {
       this.set("showOptions", true);
+    } else {
+      document.getElementById("tap_tile_none").classList.add("active");
     }
   },
 
@@ -113,8 +117,12 @@ export default Component.extend({
   },
 
   _loadPostLocalDates() {
+    if (this.model.bookmarkableType !== "Post") {
+      return;
+    }
+
     let postEl = document.querySelector(
-      `[data-post-id="${this.model.postId}"]`
+      `[data-post-id="${this.model.bookmarkableId}"]`
     );
     let localDateEl;
     if (postEl) {
@@ -156,14 +164,8 @@ export default Component.extend({
       auto_delete_preference: this.autoDeletePreference,
     };
 
-    if (this.siteSettings.use_polymorphic_bookmarks) {
-      data.bookmarkable_id = this.model.bookmarkableId;
-      data.bookmarkable_type = this.model.bookmarkableType;
-    } else {
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      data.post_id = this.model.postId;
-      data.for_topic = this.model.forTopic;
-    }
+    data.bookmarkable_id = this.model.bookmarkableId;
+    data.bookmarkable_type = this.model.bookmarkableType;
 
     if (this.editingExistingBookmark) {
       return ajax(`/bookmarks/${this.model.id}`, {
@@ -191,15 +193,8 @@ export default Component.extend({
       name: this.model.name,
     };
 
-    if (this.siteSettings.use_polymorphic_bookmarks) {
-      data.bookmarkable_id = this.model.bookmarkableId;
-      data.bookmarkable_type = this.model.bookmarkableType;
-    } else {
-      // TODO (martin) [POLYBOOK] Not relevant once polymorphic bookmarks are implemented.
-      data.post_id = this.model.postId;
-      data.for_topic = this.model.forTopic;
-      data.topic_id = this.model.topicId;
-    }
+    data.bookmarkable_id = this.model.bookmarkableId;
+    data.bookmarkable_type = this.model.bookmarkableType;
 
     this.afterSave(data);
   },

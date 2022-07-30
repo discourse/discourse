@@ -196,21 +196,24 @@ class UploadCreator
           Upload.generate_digest(@file) != sha1_before_changes
         end
 
-      if @opts[:existing_external_upload_key] && Discourse.store.external?
+      store = Discourse.store
+
+      if @opts[:existing_external_upload_key] && store.external?
         should_move = external_upload_too_big || !upload_changed
       end
 
       if should_move
         # move the file in the store instead of reuploading
-        url = Discourse.store.move_existing_stored_upload(
+        url = store.move_existing_stored_upload(
           existing_external_upload_key: @opts[:existing_external_upload_key],
           upload: @upload
         )
       else
         # store the file and update its url
         File.open(@file.path) do |f|
-          url = Discourse.store.store_upload(f, @upload)
+          url = store.store_upload(f, @upload)
         end
+        store.delete_file(@opts[:existing_external_upload_key]) if @opts[:existing_external_upload_key]
       end
 
       if url.present?

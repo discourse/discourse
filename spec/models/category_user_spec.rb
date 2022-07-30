@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe CategoryUser do
+RSpec.describe CategoryUser do
   fab!(:user) { Fabricate(:user) }
 
   def tracking
@@ -12,7 +12,7 @@ describe CategoryUser do
     CategoryUser.notification_levels[:regular]
   end
 
-  context '#batch_set' do
+  describe '#batch_set' do
     fab!(:category) { Fabricate(:category) }
 
     def category_ids_at_level(level)
@@ -232,7 +232,7 @@ describe CategoryUser do
         SiteSetting.default_categories_watching = category1.id.to_s
         SiteSetting.default_categories_tracking = category2.id.to_s
         SiteSetting.default_categories_watching_first_post = category3.id.to_s
-        SiteSetting.default_categories_regular = category4.id.to_s
+        SiteSetting.default_categories_normal = category4.id.to_s
         SiteSetting.default_categories_muted = category5.id.to_s
       end
       it "every category from the default_categories_* site settings get overridden to regular, except for muted" do

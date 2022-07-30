@@ -12,7 +12,7 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
 
-    if guardian.can_approve?(target) || args[:approved_by_invite]
+    if guardian.can_approve?(target)
       actions.add(:approve_user) do |a|
         a.icon = 'user-plus'
         a.label = "reviewables.actions.approve_user.title"
@@ -126,6 +126,7 @@ end
 #
 # Indexes
 #
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

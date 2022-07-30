@@ -260,7 +260,7 @@ RSpec.describe Admin::GroupsController do
     end
   end
 
-  context "#destroy" do
+  describe "#destroy" do
     it 'should return the right response for an invalid group_id' do
       max_id = Group.maximum(:id).to_i
       delete "/admin/groups/#{max_id + 1}.json"
@@ -274,6 +274,7 @@ RSpec.describe Admin::GroupsController do
 
       expect(history).to be_present
       expect(history.details).to include("name: #{group.name}")
+      expect(history.details).to include("id: #{group.id}")
     end
 
     it 'logs the grant_trust_level attribute' do

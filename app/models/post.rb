@@ -42,14 +42,12 @@ class Post < ActiveRecord::Base
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
 
-  has_many :post_uploads, dependent: :delete_all
-  has_many :uploads, through: :post_uploads
+  has_many :upload_references, as: :target, dependent: :destroy
+  has_many :uploads, through: :upload_references
 
   has_one :post_stat
 
-  # When we are ready we can add as: :bookmarkable here to use the
-  # polymorphic association.
-  has_many :bookmarks
+  has_many :bookmarks, as: :bookmarkable
 
   has_one :incoming_email
 
@@ -62,6 +60,8 @@ class Post < ActiveRecord::Base
 
   belongs_to :image_upload, class_name: "Upload"
 
+  has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
+
   validates_with PostValidator, unless: :skip_validation
 
   after_commit :index_search
@@ -69,18 +69,11 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES            ||= "large_images"
-  BROKEN_IMAGES           ||= "broken_images"
-  DOWNLOADED_IMAGES       ||= "downloaded_images"
   MISSING_UPLOADS         ||= "missing uploads"
   MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
   NOTICE                  ||= "notice"
 
   SHORT_POST_CHARS ||= 1200
-
-  register_custom_field_type(LARGE_IMAGES, :json)
-  register_custom_field_type(BROKEN_IMAGES, :json)
-  register_custom_field_type(DOWNLOADED_IMAGES, :json)
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
@@ -205,6 +198,8 @@ class Post < ActiveRecord::Base
     # but message is safe to skip
     return unless topic
 
+    skip_topic_stats = opts.delete(:skip_topic_stats)
+
     message = {
       id: id,
       post_number: post_number,
@@ -216,19 +211,14 @@ class Post < ActiveRecord::Base
     }.merge(opts)
 
     publish_message!("/topic/#{topic_id}", message)
+    Topic.publish_stats_to_clients!(topic.id, type) unless skip_topic_stats
   end
 
   def publish_message!(channel, message, opts = {})
     return unless topic
 
     if Topic.visible_post_types.include?(post_type)
-      if topic.private_message?
-        opts[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
-        opts[:user_ids] |= topic.allowed_users.pluck(:id)
-        opts[:user_ids] |= topic.allowed_group_users.pluck(:id)
-      else
-        opts[:group_ids] = topic.secure_group_ids
-      end
+      opts.merge!(topic.secure_audience_publish_messages)
     else
       opts[:user_ids] = User.human_users
         .where("admin OR moderator OR id = ?", user_id)
@@ -258,7 +248,7 @@ class Post < ActiveRecord::Base
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
-    "unique-post-#{user_id}:#{raw_hash}"
+    "unique#{topic&.private_message? ? "-pm" : ""}-post-#{user_id}:#{raw_hash}"
   end
 
   def store_unique_post_key
@@ -623,7 +613,9 @@ class Post < ActiveRecord::Base
   end
 
   def unsubscribe_url(user)
-    "#{Discourse.base_url}/email/unsubscribe/#{UnsubscribeKey.create_key_for(user, self)}"
+    key_value = UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: self)
+
+    "#{Discourse.base_url}/email/unsubscribe/#{key_value}"
   end
 
   def self.url(slug, topic_id, post_number, opts = nil)
@@ -714,8 +706,8 @@ class Post < ActiveRecord::Base
     end
 
     if invalidate_broken_images
-      custom_fields.delete(BROKEN_IMAGES)
-      save_custom_fields
+      post_hotlinked_media.download_failed.destroy_all
+      post_hotlinked_media.upload_create_failed.destroy_all
     end
 
     # Extracts urls from the body
@@ -965,16 +957,19 @@ class Post < ActiveRecord::Base
       upload_ids << upload.id if upload.present?
     end
 
-    post_uploads = upload_ids.map do |upload_id|
-      { post_id: self.id, upload_id: upload_id }
+    upload_references = upload_ids.map do |upload_id|
+      {
+        target_id: self.id,
+        target_type: self.class.name,
+        upload_id: upload_id,
+        created_at: Time.zone.now,
+        updated_at: Time.zone.now
+      }
     end
 
-    PostUpload.transaction do
-      PostUpload.where(post_id: self.id).delete_all
-
-      if post_uploads.size > 0
-        PostUpload.insert_all(post_uploads)
-      end
+    UploadReference.transaction do
+      UploadReference.where(target: self).delete_all
+      UploadReference.insert_all(upload_references) if upload_references.size > 0
 
       if SiteSetting.secure_media?
         Upload.where(
@@ -1074,7 +1069,11 @@ class Post < ActiveRecord::Base
 
       query.find_in_batches do |posts|
         ids = posts.pluck(:id)
-        sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+        sha1s = Upload
+          .joins(:upload_references)
+          .where(upload_references: { target_type: "Post" })
+          .where("upload_references.target_id BETWEEN ? AND ?", ids.min, ids.max)
+          .pluck(:sha1)
 
         posts.each do |post|
           post.each_upload_url do |src, path, sha1|

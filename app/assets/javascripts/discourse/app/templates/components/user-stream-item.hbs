@@ -4,11 +4,11 @@
   {{#if @item.draftType}}
     <span class="draft-type">{{html-safe @item.draftType}}</span>
   {{else}}
-    {{expand-post item=@item}}
+    <ExpandPost @item={{@item}} />
   {{/if}}
   <div class="stream-topic-details">
     <div class="stream-topic-title">
-      {{topic-status topic=@item disableActions=true}}
+      <TopicStatus @topic={{@item}} @disableActions={{true}} />
       <span class="title">
         {{#if @item.postUrl}}
           <a href={{@item.postUrl}}>{{html-safe @item.title}}</a>
@@ -28,7 +28,7 @@
     </span>
   {{/if}}
 
-  {{plugin-outlet name="user-stream-item-header" tagName="span" connectorTagName="div" args=(hash item=@item)}}
+  <PluginOutlet @name="user-stream-item-header" @tagName="span" @connectorTagName="div" @args={{hash item=@item}} />
 </div>
 
 {{#if this.actionDescription}}
@@ -51,12 +51,7 @@
     {{d-icon child.icon class="icon"}}
     {{#each child.items as |grandChild|}}
       {{#if grandChild.removableBookmark}}
-        {{d-button
-          class="btn-default remove-bookmark"
-          action=(action @removeBookmark grandChild)
-          icon="times"
-          label="bookmarks.remove"
-        }}
+        <DButton @class="btn-default remove-bookmark" @action={{action @removeBookmark grandChild}} @icon="times" @label="bookmarks.remove" />
       {{else}}
         <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class="avatar-link"><div class="avatar-wrapper">{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
         {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
@@ -67,7 +62,7 @@
 
 {{#if @item.editableDraft}}
   <div class="user-stream-item-draft-actions">
-    {{d-button action=@resumeDraft actionParam=@item icon="pencil-alt" label="drafts.resume" class="btn-default resume-draft"}}
-    {{d-button action=@removeDraft actionParam=@item icon="far-trash-alt" class="btn-danger remove-draft"}}
+    <DButton @action={{@resumeDraft}} @actionParam={{@item}} @icon="pencil-alt" @label="drafts.resume" @class="btn-default resume-draft" />
+    <DButton @action={{@removeDraft}} @actionParam={{@item}} @icon="far-trash-alt" @class="btn-danger remove-draft" />
   </div>
 {{/if}}

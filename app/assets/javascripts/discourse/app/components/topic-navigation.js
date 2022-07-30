@@ -6,7 +6,8 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { later, next } from "@ember/runloop";
+import { next } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 
@@ -116,7 +117,7 @@ export default Component.extend(PanEvents, {
   _collapseFullscreen() {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
-      later(() => {
+      discourseLater(() => {
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -147,13 +148,13 @@ export default Component.extend(PanEvents, {
     $timelineContainer.addClass("animate");
     if (this._shouldPanClose(event)) {
       $timelineContainer.css("--offset", `${maxOffset}px`);
-      later(() => {
+      discourseLater(() => {
         this._collapseFullscreen();
         $timelineContainer.removeClass("animate");
       }, 200);
     } else {
       $timelineContainer.css("--offset", 0);
-      later(() => {
+      discourseLater(() => {
         $timelineContainer.removeClass("animate");
       }, 200);
     }
@@ -168,14 +169,18 @@ export default Component.extend(PanEvents, {
   },
 
   panStart(e) {
-    if (e.originalEvent.target.classList.contains("docked")) {
+    const target = e.originalEvent.target;
+
+    if (
+      target.classList.contains("docked") ||
+      !target.closest(".timeline-container")
+    ) {
       return;
     }
 
     e.originalEvent.preventDefault();
-    const center = e.center;
-    const $centeredElement = $(document.elementFromPoint(center.x, center.y));
-    if ($centeredElement.parents(".timeline-scrollarea-wrapper").length) {
+    const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
+    if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
       this.isPanning = false;
     } else if (e.direction === "up" || e.direction === "down") {
       this.isPanning = true;

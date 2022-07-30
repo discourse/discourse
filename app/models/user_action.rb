@@ -10,7 +10,6 @@ class UserAction < ActiveRecord::Base
 
   LIKE = 1
   WAS_LIKED = 2
-  BOOKMARK = 3
   NEW_TOPIC = 4
   REPLY = 5
   RESPONSE = 6
@@ -32,17 +31,19 @@ class UserAction < ActiveRecord::Base
     WAS_LIKED,
     MENTION,
     QUOTE,
-    BOOKMARK,
     EDIT,
     SOLVED,
     ASSIGNED,
   ].each_with_index.to_a.flatten]
 
+  USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE]
+
   def self.types
     @types ||= Enum.new(
       like: 1,
       was_liked: 2,
-      bookmark: 3,
+      # NOTE: Previously type 3 was bookmark but this was removed when we
+      # changed to using the Bookmark model.
       new_topic: 4,
       reply: 5,
       response: 6,
@@ -138,7 +139,7 @@ class UserAction < ActiveRecord::Base
   def self.count_daily_engaged_users(start_date = nil, end_date = nil)
     result = select(:user_id)
       .distinct
-      .where(action_type: [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE])
+      .where(action_type: USER_ACTED_TYPES)
 
     if start_date && end_date
       result = result.group('date(created_at)')
@@ -414,10 +415,6 @@ class UserAction < ActiveRecord::Base
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
       builder.where("t.visible")
-    end
-
-    unless guardian.can_see_notifications?(User.where(id: user_id).first)
-      builder.where("a.action_type not in (#{BOOKMARK})")
     end
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)

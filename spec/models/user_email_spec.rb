@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserEmail do
+RSpec.describe UserEmail do
   fab!(:user) { Fabricate(:user) }
 
   context "validation" do

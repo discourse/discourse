@@ -40,6 +40,8 @@ module Jobs
           end
         end
 
+        enqueue_pull_hotlinked_images(post) unless args[:skip_pull_hotlinked_images]
+
         if !post.user&.staff? && !post.user&.staged?
           s = post.raw
           s << " #{post.topic.title}" if post.post_number == 1
@@ -59,6 +61,11 @@ module Jobs
     def extract_links(post)
       TopicLink.extract_from(post)
       QuotedPost.extract_from(post)
+    end
+
+    def enqueue_pull_hotlinked_images(post)
+      Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: post.id)
+      Jobs.enqueue(:pull_hotlinked_images, post_id: post.id)
     end
   end
 

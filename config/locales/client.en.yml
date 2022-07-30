@@ -92,15 +92,33 @@ en:
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "less than %{count} min"
+          other: "less than %{count} mins"
         x_minutes:
           one: "%{count} min"
           other: "%{count} mins"
         x_hours:
           one: "%{count} hour"
           other: "%{count} hours"
+        about_x_hours:
+          one: "about %{count} hour"
+          other: "about %{count} hours"
         x_days:
           one: "%{count} day"
           other: "%{count} days"
+        x_months:
+          one: "%{count} month"
+          other: "%{count} months"
+        about_x_years:
+          one: "about %{count} year"
+          other: "about %{count} years"
+        over_x_years:
+          one: "over %{count} year"
+          other: "over %{count} years"
+        almost_x_years:
+          one: "almost %{count} year"
+          other: "almost %{count} years"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM D, 'YY"
       medium_with_ago:
@@ -317,11 +335,13 @@ en:
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
-      create_for: "Create bookmark for %{type}"
-      edit_for: "Edit bookmark for %{type}"
+      created_generic: "You've bookmarked this. %{name}"
+      create: "Create bookmark"
+      edit: "Edit bookmark"
       not_bookmarked: "bookmark this post"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
+      created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
@@ -395,6 +415,7 @@ en:
 
     upload: "Upload"
     uploading: "Uploading..."
+    processing: "Processing..."
     uploading_filename: "Uploading: %{filename}..."
     processing_filename: "Processing: %{filename}..."
     clipboard: "clipboard"
@@ -622,7 +643,11 @@ en:
       relative: "Relative"
 
     time_shortcut:
+      now: "Now"
+      in_one_hour: "In one hour"
+      in_two_hours: "In two hours"
       later_today: "Later today"
+      two_days: "Two days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"
@@ -630,13 +655,21 @@ en:
       this_weekend: "This weekend"
       start_of_next_business_week: "Monday"
       start_of_next_business_week_alt: "Next Monday"
+      next_week: "Next week"
       two_weeks: "Two weeks"
       next_month: "Next month"
+      two_months: "Two months"
+      three_months: "Three months"
+      four_months: "Four months"
       six_months: "Six months"
-      custom: "Custom date and time"
+      one_year: "One year"
+      forever: "Forever"
       relative: "Relative time"
       none: "None needed"
+      never: "Never"
       last_custom: "Last custom datetime"
+      custom: "Custom date and time"
+      select_timeframe: "Select a timeframe"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -1131,6 +1164,13 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
+      experimental_sidebar:
+        enable: "Enable experimental sidebar"
+        options: "Options"
+        categories_section: "Categories Section"
+        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
+        tags_section: "Tags Section"
+        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1173,7 +1213,7 @@ en:
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
-      regular_categories: "Regular"
+      regular_categories: "Normal"
       regular_categories_instructions: "You will see these categories in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
@@ -1275,6 +1315,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
+        sidebar: "Sidebar"
 
       change_password:
         success: "(email sent)"
@@ -1620,8 +1661,6 @@ en:
           title: "Invite Link"
           success: "Invite link generated successfully!"
           error: "There was an error generating Invite link"
-          max_redemptions_allowed_label: "How many people are allowed to register using this link?"
-          expires_at: "When will this invite link expire?"
 
         invite:
           new_title: "Create Invite"
@@ -1680,7 +1719,9 @@ en:
         title: "Summary"
         stats: "Stats"
         time_read: "read time"
+        time_read_title: "%{duration} (all time)"
         recent_time_read: "recent read time"
+        recent_time_read_title: "%{duration} (in the last 60 days)"
         topic_count:
           one: "topic created"
           other: "topics created"
@@ -1753,6 +1794,13 @@ en:
         sent_by: "Sent by"
         private_message: "message"
         the_topic: "the topic"
+
+    user_status:
+      save: "Save"
+      set_custom_status: "Set custom status"
+      what_are_you_doing: "What are you doing?"
+      remove_status: "Remove status"
+      until: "Until:"
 
     loading: "Loading..."
     errors:
@@ -1830,11 +1878,11 @@ en:
 
     signup_cta:
       sign_up: "Sign Up"
-      hide_session: "Remind me tomorrow"
+      hide_session: "Maybe later"
       hide_forever: "no thanks"
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. :heartpulse:"
+      value_prop: "Tired of scrolling through the same posts? when you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -1962,28 +2010,28 @@ en:
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
-        title: "with Google"
-        sr_title: "Login with Google"
+        title: "Sign in with Google"
+        sr_title: "Sign in with Google"
       twitter:
         name: "Twitter"
-        title: "with Twitter"
-        sr_title: "Login with Twitter"
+        title: "Sign in with Twitter"
+        sr_title: "Sign in with Twitter"
       instagram:
         name: "Instagram"
-        title: "with Instagram"
-        sr_title: "Login with Instagram"
+        title: "Log in with Instagram"
+        sr_title: "Log in with Instagram"
       facebook:
         name: "Facebook"
-        title: "with Facebook"
-        sr_title: "Login with Facebook"
+        title: "Log in with Facebook"
+        sr_title: "Log in with Facebook"
       github:
         name: "GitHub"
-        title: "with GitHub"
-        sr_title: "Login with GitHub"
+        title: "Log in with GitHub"
+        sr_title: "Log in with GitHub"
       discord:
         name: "Discord"
-        title: "with Discord"
-        sr_title: "Login with Discord"
+        title: "Log in with Discord"
+        sr_title: "Log in with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -1999,7 +2047,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      optional_description: "(optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -2016,6 +2063,7 @@ en:
       categories_only: "Categories Only"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
+      categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
       categories_and_top_topics: "Categories and Top Topics"
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
@@ -2059,9 +2107,6 @@ en:
       min_content_not_reached:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
-      invalid_selection_length:
-        one: "Selection must be at least %{count} character."
-        other: "Selection must be at least %{count} characters."
       components:
         tag_drop:
           filter_for_more: Filter for more...
@@ -2165,7 +2210,7 @@ en:
       edit_shared_draft: "Edit Shared Draft"
       title: "Or press %{modifier}Enter"
 
-      users_placeholder: "Add a user"
+      users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
@@ -2238,9 +2283,6 @@ en:
         reply_as_new_group_message:
           label: Reply as new group message
           desc: Create new message starting with same recipients
-        reply_as_private_message:
-          label: New message
-          desc: Create a new personal message
         reply_to_topic:
           label: Reply to topic
           desc: Reply to the topic, not any specific post
@@ -2278,6 +2320,8 @@ en:
       empty: "No notifications found."
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
+      watching_first_post_label: "New Topic"
+      user_moved_post: "%{username} moved"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2290,6 +2334,10 @@ en:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} and %{count} others"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -2298,6 +2346,7 @@ en:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> accepted your invitation"
+      invitee_accepted_your_invitation: "accepted your invitation"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Earned '%{description}'"
@@ -2401,6 +2450,8 @@ en:
       in: "in"
       in_this_topic: "in this topic"
       in_this_topic_tooltip: "switch to searching all topics"
+      in_messages: "in messages"
+      in_messages_tooltip: "switch to searching regular topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
       in_posts_by: "in posts by %{username}"
@@ -2500,6 +2551,18 @@ en:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     view_all: "view all %{tab}"
+    user_menu:
+      generic_no_items: "There are no items in this list."
+      sr_menu_tabs: "Menu tabs"
+      view_all_notifications: "view all notifications"
+      reviewable:
+        view_all: "view all review items"
+        queue: "Queue"
+        deleted_user: "(deleted user)"
+        post_number_with_topic_title: "post #%{post_number} - %{title}"
+        new_post_in_topic: "new post in %{title}"
+        suspicious_user: "suspicious user %{username}"
+        default_item: "reviewable item #%{reviewable_id}"
 
     topics:
       new_messages_marker: "last visit"
@@ -2508,6 +2571,7 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
+        reset_bump_dates: "Reset bump dates"
         defer: "Defer"
         delete: "Delete Topics"
         dismiss: "Dismiss"
@@ -2695,24 +2759,6 @@ en:
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
         duration: "Duration"
-      auto_update_input:
-        none: "Select a timeframe"
-        now: "Now"
-        later_today: "Later today"
-        tomorrow: "Tomorrow"
-        later_this_week: "Later this week"
-        this_weekend: "This weekend"
-        next_week: "Next week"
-        two_weeks: "Two weeks"
-        next_month: "Next month"
-        two_months: "Two months"
-        three_months: "Three months"
-        four_months: "Four months"
-        six_months: "Six months"
-        one_year: "One year"
-        forever: "Forever"
-        pick_date_and_time: "Pick date and time"
-        set_based_on_last_post: "Close based on last post"
       publish_to_category:
         title: "Schedule Publishing"
       temp_open:
@@ -2829,8 +2875,8 @@ en:
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
-        invisible: "Make Unlisted"
-        visible: "Make Listed"
+        invisible: "Unlist Topic"
+        visible: "List Topic"
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic..."
         make_private: "Make Personal Message"
@@ -3047,6 +3093,7 @@ en:
       deleted_by_author_simple: "(topic deleted by author)"
 
     post:
+      confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Or press q"
       quote_edit: "Edit"
@@ -3066,6 +3113,7 @@ en:
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       sr_collapse_replies: "Collapse embedded replies"
+      sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply. Click to expand"
         other: "This post has %{count} replies. Click to expand"
@@ -3325,10 +3373,11 @@ en:
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
       manage_tag_groups_link: "Manage tag groups"
       allow_global_tags_label: "Also allow other tags"
-      tag_group_selector_placeholder: "(Optional) Tag group"
-      required_tag_group_description: "Require new topics to have tags from a tag group:"
-      min_tags_from_required_group_label: "Num Tags:"
-      required_tag_group_label: "Tag group:"
+      required_tag_group:
+        description: "Require new topics to have tags from tag groups:"
+        delete: "Delete"
+        add: "Add required tag group"
+        placeholder: "select tag group..."
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"
@@ -3664,12 +3713,14 @@ en:
         today: "Today"
         other_periods: "see top:"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, log in and reply.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
       full: "Create / Reply / See"
       create_post: "Reply / See"
       readonly: "See"
+
+    preloader_text: "Loading"
 
     lightbox:
       download: "download"
@@ -3690,6 +3741,7 @@ en:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Keyboard Shortcuts"
+      short_title: "Shortcuts"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
@@ -3757,7 +3809,7 @@ en:
         edit: "%{shortcut} Edit post"
         delete: "%{shortcut} Delete post"
         mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Regular (default) topic"
+        mark_regular: "%{shortcut} Normal (default) topic"
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
@@ -3828,6 +3880,9 @@ en:
       choose_for_topic_required:
         one: "select at least %{count} tag..."
         other: "select at least %{count} tags..."
+      choose_for_topic_required_group:
+        one: "select %{count} tag from '%{name}'..."
+        other: "select %{count} tags from '%{name}'..."
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
@@ -3898,13 +3953,14 @@ en:
           title: "Tracking"
           description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
           description: "You will not be notified of anything about new topics with this tag, and they will not appear on your unread tab."
 
       groups:
+        back_btn: "Back to all tags"
         title: "Tag Groups"
         about_heading: "Select a tag group or create a new one"
         about_heading_empty: "Create a new tag group to get started"
@@ -4012,6 +4068,65 @@ en:
 
     second_factor_auth:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
+
+    sidebar:
+      unread_count:
+        one: "%{count} unread"
+        other: "%{count} unread"
+      new_count:
+        one: "%{count} new"
+        other: "%{count} new"
+      toggle_section: "toggle section"
+      more_count: "%{count} more..."
+      sections:
+        messages:
+          header_link_title: "personal messages"
+          header_link_text: "Messages"
+          header_action_title: "create a personal message"
+          links:
+            inbox: "Inbox"
+            sent: "Sent"
+            new: "New"
+            new_with_count: "New (%{count})"
+            unread: "Unread"
+            unread_with_count: "Unread (%{count})"
+            archive: "Archive"
+        tags:
+          none: "You have not added any tags."
+          click_to_get_started: "Click here to get started."
+          header_link_title: "all tags"
+          header_link_text: "Tags"
+          header_action_title: "edit your sidebar tags"
+        categories:
+          none: "You have not added any categories."
+          click_to_get_started: "Click here to get started."
+          header_link_title: "all categories"
+          header_link_text: "Categories"
+          header_action_title: "edit your sidebar categories"
+        community:
+          header_link_title: "home"
+          header_link_text: "Community"
+          header_action_title: "create a new topic"
+          links:
+            everything:
+              content: "Everything"
+              title: "All topics"
+            tracked:
+              content: "Tracked"
+              title: "All tracked topics"
+            groups:
+              content: "Groups"
+              title: "All groups"
+            users:
+              content: "Users"
+              title: "All users"
+            my_posts:
+              content: "My Posts"
+              title: "My posts"
+              draft_count:
+                one: "%{count} draft"
+                other: "%{count} drafts"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -4247,7 +4362,6 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
-              wordpress: Necessary for the WordPress wp-discourse plugin to work.
             posts:
               edit: Edit any post or a specific one.
             categories:
@@ -4275,6 +4389,11 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            wordpress:
+              publishing: Necessary for the WP Discourse plugin publishing features (required).
+              commenting: Necessary for the WP Discourse plugin commenting features.
+              discourse_connect: Necessary for the WP Discourse plugin DiscourseConnect features.
+              utilities: Necessary if you use WP Discourse plugin Utilities.
 
       web_hooks:
         title: "Webhooks"
@@ -5599,15 +5718,16 @@ en:
 
   wizard_js:
     wizard:
-      done: "Done"
-      finish: "Finish"
+      done: "Jump in!"
+      finish: "Exit setup"
       back: "Back"
       next: "Next"
+      configure_more: "Configure More..."
+      step-text: "Step"
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
-      quit: "Maybe Later"
 
       staff_count:
         one: "Your community has %{count} staff (you)."

@@ -1,6 +1,8 @@
 import {
   acceptance,
-  queryAll,
+  count,
+  exists,
+  query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
@@ -8,10 +10,11 @@ import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
-  needs.settings({ email_in: true });
+  needs.settings({ email_in: true, tagging_enabled: true });
 
   test("Editing the category", async function (assert) {
     await visit("/c/bug");
@@ -24,16 +27,16 @@ acceptance("Category Edit", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".category-breadcrumb .badge-category").text(),
+      query(".category-breadcrumb .badge-category").innerText,
       "bug"
     );
     assert.strictEqual(
-      queryAll(".category-color-editor .badge-category").text(),
+      query(".category-color-editor .badge-category").innerText,
       "bug"
     );
     await fillIn("input.category-name", "testing");
     assert.strictEqual(
-      queryAll(".category-color-editor .badge-category").text(),
+      query(".category-color-editor .badge-category").innerText,
       "testing"
     );
 
@@ -70,6 +73,73 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
+  test("Editing required tag groups", async function (assert) {
+    await visit("/c/bug/edit/tags");
+
+    assert.ok(exists(".required-tag-groups"));
+    assert.strictEqual(count(".required-tag-group-row"), 0);
+
+    await click(".add-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 1);
+
+    await click(".add-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 2);
+
+    await click(".delete-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 1);
+
+    const tagGroupChooser = selectKit(
+      ".required-tag-group-row .tag-group-chooser"
+    );
+    await tagGroupChooser.expand();
+    await tagGroupChooser.selectRowByValue("TagGroup1");
+
+    await click("#save-category");
+    assert.strictEqual(count(".required-tag-group-row"), 1);
+
+    await click(".delete-required-tag-group");
+    assert.strictEqual(count(".required-tag-group-row"), 0);
+
+    await click("#save-category");
+    assert.strictEqual(count(".required-tag-group-row"), 0);
+  });
+
+  test("Editing allowed tags and tag groups", async function (assert) {
+    await visit("/c/bug/edit/tags");
+
+    const allowedTagChooser = selectKit("#category-allowed-tags");
+    await allowedTagChooser.expand();
+    await allowedTagChooser.selectRowByValue("monkey");
+
+    const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
+    await allowedTagGroupChooser.expand();
+    await allowedTagGroupChooser.selectRowByValue("TagGroup1");
+
+    await click("#save-category");
+
+    const payload = JSON.parse(
+      pretender.handledRequests[pretender.handledRequests.length - 1]
+        .requestBody
+    );
+    assert.deepEqual(payload.allowed_tags, ["monkey"]);
+    assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
+
+    await allowedTagChooser.expand();
+    await allowedTagChooser.deselectItemByValue("monkey");
+
+    await allowedTagGroupChooser.expand();
+    await allowedTagGroupChooser.deselectItemByValue("TagGroup1");
+
+    await click("#save-category");
+
+    const removePayload = JSON.parse(
+      pretender.handledRequests[pretender.handledRequests.length - 1]
+        .requestBody
+    );
+    assert.deepEqual(removePayload.allowed_tags, []);
+    assert.deepEqual(removePayload.allowed_tag_groups, []);
+  });
+
   test("Index Route", async function (assert) {
     await visit("/c/bug/edit");
     assert.strictEqual(
@@ -86,7 +156,7 @@ acceptance("Category Edit", function (needs) {
       "/c/1-category/edit/general",
       "it goes to the general tab"
     );
-    assert.strictEqual(queryAll("input.category-name").val(), "bug");
+    assert.strictEqual(query("input.category-name").value, "bug");
   });
 
   test("Error Saving", async function (assert) {
@@ -96,7 +166,7 @@ acceptance("Category Edit", function (needs) {
 
     assert.ok(visible(".bootbox"));
     assert.strictEqual(
-      queryAll(".bootbox .modal-body").html(),
+      query(".bootbox .modal-body").innerHTML,
       "duplicate email"
     );
 

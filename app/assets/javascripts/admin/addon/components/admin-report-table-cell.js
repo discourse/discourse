@@ -16,6 +16,6 @@ export default Component.extend({
 
   type: alias("label.type"),
   property: alias("label.mainProperty"),
-  formatedValue: alias("computedLabel.formatedValue"),
+  formattedValue: alias("computedLabel.formattedValue"),
   value: alias("computedLabel.value"),
 });

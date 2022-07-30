@@ -7,12 +7,27 @@ const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
+const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
-const AssetRev = require("broccoli-asset-rev");
+
+const SILENCED_WARN_PREFIXES = [
+  "Setting the `jquery-integration` optional feature flag",
+  "The Ember Classic edition has been deprecated",
+  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
+];
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+
+  // Silence the warnings listed in SILENCED_WARN_PREFIXES
+  const ui = defaults.project.ui;
+  const oldWriteWarning = ui.writeWarnLine.bind(ui);
+  ui.writeWarnLine = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldWriteWarning(message, ...args);
+    }
+  };
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -23,17 +38,17 @@ module.exports = function (defaults) {
       insertContentForTestBody: false,
     },
     sourcemaps: {
-      // There seems to be a bug with brocolli-concat when sourcemaps are disabled
+      // There seems to be a bug with broccoli-concat when sourcemaps are disabled
       // that causes the `app.import` statements below to fail in production mode.
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
     },
     autoImport: {
       forbidEval: true,
+      insertScriptsAt: "ember-auto-import-scripts",
     },
     fingerprint: {
-      // Disabled here, but handled manually below when in production mode.
-      // This is so we can apply a single AssetRev operation over the application and our additional trees
+      // Handled by Rails asset pipeline
       enabled: false,
     },
     SRI: {
@@ -107,7 +122,7 @@ module.exports = function (defaults) {
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import(vendorJs + "bootstrap-modal.js");
+  app.import("node_modules/bootstrap/js/modal.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
@@ -119,7 +134,7 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
-  const mergedTree = mergeTrees([
+  return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -130,24 +145,15 @@ module.exports = function (defaults) {
     concat(mergeTrees([app.options.adminTree]), {
       outputFile: `assets/admin.js`,
     }),
+    concat(mergeTrees([app.options.wizardTree]), {
+      outputFile: `assets/wizard.js`,
+    }),
     prettyTextEngine(vendorJs, "discourse-markdown"),
     concat("public/assets/scripts", {
       outputFile: `assets/start-discourse.js`,
       headerFiles: [`start-app.js`],
       inputFiles: [`discourse-boot.js`],
     }),
+    generateScriptsTree(app),
   ]);
-
-  if (isProduction) {
-    return new AssetRev(mergedTree, {
-      exclude: [
-        "javascripts/**/*",
-        "assets/test-i18n*",
-        "assets/highlightjs",
-        "assets/testem.css",
-      ],
-    });
-  } else {
-    return mergedTree;
-  }
 };

@@ -7,6 +7,13 @@ class ReviewableQueuedPost < Reviewable
     DiscourseEvent.trigger(:queued_post_created, self)
   end
 
+  after_save do
+    if saved_change_to_payload? && self.status == Reviewable.statuses[:pending] && self.payload&.[]('raw').present?
+      upload_ids = Upload.extract_upload_ids(self.payload['raw'])
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+    end
+  end
+
   after_commit :compute_user_stats, only: %i[create update]
 
   def build_actions(actions, guardian, args)
@@ -198,6 +205,7 @@ end
 #
 # Indexes
 #
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

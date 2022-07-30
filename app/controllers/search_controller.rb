@@ -130,7 +130,7 @@ class SearchController < ApplicationController
       result.error = I18n.t("rate_limiter.slow_down")
     elsif site_overloaded?
       result = GroupedSearchResults.new(
-        type_filter: search_args["type_filter"],
+        type_filter: search_args[:type_filter],
         term: params[:term],
         search_context: context
       )

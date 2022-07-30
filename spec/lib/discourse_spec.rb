@@ -2,7 +2,7 @@
 
 require 'discourse'
 
-describe Discourse do
+RSpec.describe Discourse do
 
   before do
     RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('foo.com')
@@ -177,7 +177,7 @@ describe Discourse do
     end
   end
 
-  context '#site_contact_user' do
+  describe '#site_contact_user' do
 
     fab!(:admin) { Fabricate(:admin) }
     fab!(:another_admin) { Fabricate(:admin) }
@@ -194,13 +194,13 @@ describe Discourse do
 
   end
 
-  context '#system_user' do
+  describe '#system_user' do
     it 'returns the system user' do
       expect(Discourse.system_user.id).to eq(-1)
     end
   end
 
-  context "#store" do
+  describe "#store" do
 
     it "returns LocalStore by default" do
       expect(Discourse.store).to be_a(FileStore::LocalStore)
@@ -319,10 +319,11 @@ describe Discourse do
     end
   end
 
-  context "#handle_exception" do
+  describe "#handle_exception" do
 
-    class TempSidekiqLogger < Sidekiq::ExceptionHandler::Logger
+    class TempSidekiqLogger
       attr_accessor :exception, :context
+
       def call(ex, ctx)
         self.exception = ex
         self.context = ctx
@@ -332,8 +333,11 @@ describe Discourse do
     let!(:logger) { TempSidekiqLogger.new }
 
     before do
-      Sidekiq.error_handlers.clear
       Sidekiq.error_handlers << logger
+    end
+
+    after do
+      Sidekiq.error_handlers.delete(logger)
     end
 
     it "should not fail when called" do
@@ -359,7 +363,7 @@ describe Discourse do
     end
   end
 
-  context '#deprecate' do
+  describe '#deprecate' do
     def old_method(m)
       Discourse.deprecate(m)
     end
@@ -383,19 +387,19 @@ describe Discourse do
       expect(old_method_caller(k)).to include("discourse_spec")
       expect(old_method_caller(k)).to include(k)
 
-      expect(Rails.logger.warnings).to eq([old_method_caller(k)])
+      expect(@fake_logger.warnings).to eq([old_method_caller(k)])
     end
 
     it 'can report the deprecated version' do
       Discourse.deprecate(SecureRandom.hex, since: "2.1.0.beta1")
 
-      expect(Rails.logger.warnings[0]).to include("(deprecated since Discourse 2.1.0.beta1)")
+      expect(@fake_logger.warnings[0]).to include("(deprecated since Discourse 2.1.0.beta1)")
     end
 
     it 'can report the drop version' do
       Discourse.deprecate(SecureRandom.hex, drop_from: "2.3.0")
 
-      expect(Rails.logger.warnings[0]).to include("(removal in Discourse 2.3.0)")
+      expect(@fake_logger.warnings[0]).to include("(removal in Discourse 2.3.0)")
     end
 
     it 'can raise deprecation error' do
@@ -468,4 +472,128 @@ describe Discourse do
     end
   end
 
+  describe ".clear_all_theme_cache!" do
+    before do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com/gg"
+      stub_s3_store
+    end
+
+    let!(:theme) { Fabricate(:theme) }
+    let!(:upload) { Fabricate(:s3_image_upload) }
+    let!(:upload_theme_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        upload: upload,
+        type_id: ThemeField.types[:theme_upload_var],
+        target_id: Theme.targets[:common],
+        name: "imajee",
+        value: "",
+      )
+    end
+    let!(:basic_html_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        type_id: ThemeField.types[:html],
+        target_id: Theme.targets[:common],
+        name: "head_tag",
+        value: <<~HTML
+          <script type="text/discourse-plugin" version="0.1">
+            console.log(settings.uploads.imajee);
+          </script>
+        HTML
+      )
+    end
+    let!(:js_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        type_id: ThemeField.types[:js],
+        target_id: Theme.targets[:extra_js],
+        name: "somefile.js",
+        value: <<~JS
+          console.log(settings.uploads.imajee);
+        JS
+      )
+    end
+    let!(:scss_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        type_id: ThemeField.types[:scss],
+        target_id: Theme.targets[:common],
+        name: "scss",
+        value: <<~SCSS
+          .something { background: url($imajee); }
+        SCSS
+      )
+    end
+
+    it "invalidates all JS and CSS caches" do
+      Stylesheet::Manager.clear_theme_cache!
+
+      old_upload_url = Discourse.store.cdn_url(upload.url)
+
+      head_tag_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :desktop, "head_tag")
+      ).css('script').first
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      expect(head_tag_js).to include(old_upload_url)
+
+      js_file_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :extra_js, nil)
+      ).css('script').first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+      expect(file_js).to include(old_upload_url)
+
+      css_link_tag = Nokogiri::HTML5.fragment(
+        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
+      ).css('link').first
+      css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
+      expect(css).to include("url(#{old_upload_url})")
+
+      SiteSetting.s3_cdn_url = "https://new.s3.cdn.com/gg"
+      new_upload_url = Discourse.store.cdn_url(upload.url)
+
+      head_tag_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :desktop, "head_tag")
+      ).css('script').first
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      expect(head_tag_js).to include(old_upload_url)
+
+      js_file_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :extra_js, nil)
+      ).css('script').first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+      expect(file_js).to include(old_upload_url)
+
+      css_link_tag = Nokogiri::HTML5.fragment(
+        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
+      ).css('link').first
+      css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
+      expect(css).to include("url(#{old_upload_url})")
+
+      Discourse.clear_all_theme_cache!
+
+      head_tag_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :desktop, "head_tag")
+      ).css('script').first
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      expect(head_tag_js).to include(new_upload_url)
+
+      js_file_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :extra_js, nil)
+      ).css('script').first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+      expect(file_js).to include(new_upload_url)
+
+      css_link_tag = Nokogiri::HTML5.fragment(
+        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
+      ).css('link').first
+      css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
+      expect(css).to include("url(#{new_upload_url})")
+    end
+  end
 end

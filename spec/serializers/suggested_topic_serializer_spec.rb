@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SuggestedTopicSerializer do
+RSpec.describe SuggestedTopicSerializer do
   let(:user) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
 

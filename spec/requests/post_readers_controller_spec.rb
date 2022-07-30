@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostReadersController do
+RSpec.describe PostReadersController do
   describe '#index' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:reader) { Fabricate(:user) }

@@ -1,20 +1,16 @@
 import Component from "@ember/component";
-import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
+import domFromString from "discourse-common/lib/dom-from-string";
 
-export default Component.extend({
-  tagName: "span",
-  classNameBindings: [
-    ":user-badge",
-    "badge.badgeTypeClassName",
-    "badge.enabled::disabled",
-  ],
+export default class BadgeButtonComponent extends Component {
+  tagName = "";
+  badge = null;
 
-  @discourseComputed("badge.description")
-  title(badgeDescription) {
-    return $("<div>" + badgeDescription + "</div>").text();
-  },
-
-  attributeBindings: ["data-badge-name", "title"],
-  "data-badge-name": alias("badge.name"),
-});
+  @computed("badge.description")
+  get title() {
+    if (this.badge?.description) {
+      return domFromString(`<div>${this.badge?.description}</div>`)[0]
+        .innerText;
+    }
+  }
+}

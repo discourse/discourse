@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StaffActionLogger do
+RSpec.describe StaffActionLogger do
 
   fab!(:admin)  { Fabricate(:admin) }
   let(:logger) { described_class.new(admin) }
@@ -144,6 +144,18 @@ describe StaffActionLogger do
 
     it "creates a new UserHistory record" do
       expect { logger.log_site_setting_change('title', 'Discourse', 'My Site') }.to change { UserHistory.count }.by(1)
+    end
+
+    it "logs boolean values" do
+      log_record = logger.log_site_setting_change("allow_user_locale", true, false)
+      expect(log_record.previous_value).to eq("true")
+      expect(log_record.new_value).to eq("false")
+    end
+
+    it "logs nil values" do
+      log_record = logger.log_site_setting_change("title", nil, nil)
+      expect(log_record.previous_value).to be_nil
+      expect(log_record.new_value).to be_nil
     end
   end
 
@@ -307,13 +319,15 @@ describe StaffActionLogger do
   end
 
   describe 'log_roll_up' do
-    let(:subnets) { ["1.2.3.0/24", "42.42.42.0/24"] }
-    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnets) }
+    let(:subnet) { "1.2.3.0/24" }
+    let(:ips) { ["1.2.3.4", "1.2.3.100"] }
+
+    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnet, ips) }
 
     it 'creates a new UserHistory record' do
-      log_record = logger.log_roll_up(subnets)
+      log_record = logger.log_roll_up(subnet, ips)
       expect(log_record).to be_valid
-      expect(log_record.details).to eq(subnets.join(", "))
+      expect(log_record.details).to eq("#{subnet} from #{ips.join(", ")}")
     end
   end
 
@@ -384,6 +398,38 @@ describe StaffActionLogger do
 
       expect(UserHistory.count).to eq(1)
       expect(UserHistory.find_by_subject('name').category).to eq(category)
+    end
+
+    it "logs custom fields changes" do
+      attributes = {
+        custom_fields: { "auto_populated" => "t" }
+      }
+      category.update!(attributes)
+
+      logger.log_category_settings_change(
+        category,
+        attributes,
+        old_permissions: category.permissions_params,
+        old_custom_fields: {}
+      )
+
+      expect(UserHistory.count).to eq(1)
+    end
+
+    it "does not log custom fields changes if value is unchanged" do
+      attributes = {
+        custom_fields: { "auto_populated" => "t" }
+      }
+      category.update!(attributes)
+
+      logger.log_category_settings_change(
+        category,
+        attributes,
+        old_permissions: category.permissions_params,
+        old_custom_fields: { "auto_populated" => "t" }
+      )
+
+      expect(UserHistory.count).to eq(0)
     end
   end
 

@@ -10,6 +10,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
+import { htmlSafe } from "@ember/template";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -48,7 +49,7 @@ const Site = RestModel.extend({
     if (!isEmpty(siteFields)) {
       return siteFields.map((f) => {
         let value = fields ? fields[f.id.toString()] : null;
-        value = value || "&mdash;".htmlSafe();
+        value = value || htmlSafe("&mdash;");
         return { name: f.name, value };
       });
     }
@@ -80,6 +81,24 @@ const Site = RestModel.extend({
     return this.siteSettings.fixed_category_positions
       ? this.categories
       : this.sortedCategories;
+  },
+
+  @discourseComputed("categories.[]", "categories.@each.notification_level")
+  trackedCategoriesList(categories) {
+    const trackedCategories = [];
+
+    for (const category of categories) {
+      if (category.isTracked) {
+        if (
+          !this.siteSettings.suppress_uncategorized_badge ||
+          category.id !== this.uncategorized_category_id
+        ) {
+          trackedCategories.push(category);
+        }
+      }
+    }
+
+    return trackedCategories;
   },
 
   postActionTypeById(id) {
@@ -128,6 +147,7 @@ Site.reopenClass(Singleton, {
     const store = getOwner(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
+    siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");
     return store.createRecord("site", siteAttributes);
   },
 
@@ -221,7 +241,6 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }

@@ -1,6 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { later, run, throttle } from "@ember/runloop";
+import { run, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -49,7 +50,7 @@ const DEFAULT_BINDINGS = {
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
   "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
-  d: { postAction: "deletePost" },
+  d: { postAction: "deletePostWithConfirmation" },
   e: { handler: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
   "command+down": { handler: "goToLastPost", anonymous: true },
@@ -308,7 +309,7 @@ export default {
 
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    later(() => $(".d-editor .quote").click(), 500);
+    discourseLater(() => $(".d-editor .quote").click(), 500);
 
     return false;
   },
@@ -780,6 +781,7 @@ export default {
       case "categories_with_featured_topics":
         return $(".latest .featured-topic");
       case "categories_and_latest_topics":
+      case "categories_and_latest_topics_created_date":
         return $(".latest-topic-list .latest-topic-list-item");
       case "categories_and_top_topics":
         return $(".top-topic-list .latest-topic-list-item");

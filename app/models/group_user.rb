@@ -24,7 +24,9 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.update_first_unread_pm(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago)
+    whisperers_group_ids = SiteSetting.whispers_allowed_group_ids
+
+    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago, whisperers_group_ids: whisperers_group_ids)
     UPDATE group_users gu
     SET first_unread_pm_at = Y.min_date
     FROM (
@@ -51,7 +53,7 @@ class GroupUser < ActiveRecord::Base
           WHERE t.deleted_at IS NULL
           AND t.archetype = :archetype
           AND tu.last_read_post_number < CASE
-                                         WHEN u.admin OR u.moderator
+                                         WHEN u.admin OR u.moderator #{whisperers_group_ids.present? ? 'OR gu2.group_id IN (:whisperers_group_ids)' : ''}
                                          THEN t.highest_staff_post_number
                                          ELSE t.highest_post_number
                                          END

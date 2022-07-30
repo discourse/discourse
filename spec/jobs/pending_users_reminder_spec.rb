@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PendingUsersReminder do
+RSpec.describe Jobs::PendingUsersReminder do
 
   context 'must_approve_users is true' do
     before do

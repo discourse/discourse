@@ -64,8 +64,16 @@ class ApiKey < ActiveRecord::Base
 
   def request_allowed?(env)
     return false if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(Rack::Request.new(env).ip) }
+    return true if RouteMatcher.new(methods: :get, actions: "session#scopes").match?(env: env)
 
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
+  end
+
+  def update_last_used!(now = Time.zone.now)
+    return if last_used_at && (last_used_at > 1.minute.ago)
+
+    # using update_column to avoid the AR transaction
+    update_column(:last_used_at, now)
   end
 end
 

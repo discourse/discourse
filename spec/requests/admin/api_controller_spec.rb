@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::ApiController do
+RSpec.describe Admin::ApiController do
 
   it "is a subclass of AdminController" do
     expect(Admin::ApiController < Admin::AdminController).to eq(true)
@@ -235,7 +235,7 @@ describe Admin::ApiController do
 
         scopes = response.parsed_body['scopes']
 
-        expect(scopes.keys).to contain_exactly('topics', 'users', 'email', 'posts', 'uploads', 'global', 'badges', 'categories')
+        expect(scopes.keys).to contain_exactly('topics', 'users', 'email', 'posts', 'uploads', 'global', 'badges', 'categories', 'wordpress')
       end
     end
   end

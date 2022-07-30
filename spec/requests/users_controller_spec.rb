@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe UsersController do
+RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
@@ -145,6 +145,23 @@ describe UsersController do
         put "/u/activate-account/#{email_token.token}"
 
         expect(response).to redirect_to(destination_url)
+      end
+    end
+
+    context 'when cookies does not contain a destination URL but users was invited to topic' do
+      let(:invite) { Fabricate(:invite) }
+      let(:topic) { Fabricate(:topic) }
+
+      before do
+        TopicInvite.create!(topic: topic, invite: invite)
+        Fabricate(:invited_user, invite: invite, user: email_token.user)
+        invite.reload
+      end
+
+      it 'should redirect to the topic' do
+        put "/u/activate-account/#{email_token.token}"
+
+        expect(response).to redirect_to(topic.relative_url)
       end
     end
   end
@@ -2280,6 +2297,89 @@ describe UsersController do
           json = response.parsed_body
           expect(json['user']['id']).to eq user.id
         end
+
+        context 'experimental sidebar' do
+          before do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+          end
+
+          it 'does not remove category or tag sidebar section links when params are not present' do
+            Fabricate(:category_sidebar_section_link, user: user)
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json"
+
+              expect(response.status).to eq(200)
+            end.to_not change { user.sidebar_section_links.count }
+          end
+
+          it "should allow user to remove all category sidebar section links" do
+            Fabricate(:category_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_category_ids: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it "should allow user to modify category sidebar section links" do
+            category = Fabricate(:category)
+            restricted_category = Fabricate(:category, read_restricted: true)
+            category_sidebar_section_link = Fabricate(:category_sidebar_section_link, user: user)
+
+            put "/u/#{user.username}.json", params: { sidebar_category_ids: [category.id, restricted_category.id] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.count).to eq(1)
+            expect(SidebarSectionLink.exists?(id: category_sidebar_section_link.id)).to eq(false)
+
+            sidebar_section_link = user.sidebar_section_links.first
+
+            expect(sidebar_section_link.linkable).to eq(category)
+          end
+
+          it 'should allow user to remove all tag sidebar section links' do
+            SiteSetting.tagging_enabled = true
+
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_tag_names: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it 'should not allow user to add tag sidebar section links when tagging is disabled' do
+            SiteSetting.tagging_enabled = false
+
+            tag = Fabricate(:tag)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: [tag.name] }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.sidebar_section_links.count).to eq(0)
+          end
+
+          it "should allow user to add tag sidebar section links" do
+            SiteSetting.tagging_enabled = true
+
+            tag = Fabricate(:tag)
+            tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link, user: user)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: [tag.name, "somerandomtag"] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.count).to eq(1)
+            expect(SidebarSectionLink.exists?(id: tag_sidebar_section_link.id)).to eq(false)
+
+            sidebar_section_link = user.sidebar_section_links.first
+
+            expect(sidebar_section_link.linkable).to eq(tag)
+          end
+        end
       end
 
       context 'without permission to update' do
@@ -3617,6 +3717,23 @@ describe UsersController do
         token.reload
         expect(token.expired?).to eq(true)
       end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = post_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
 
     context "with a username and password" do
@@ -3690,6 +3807,25 @@ describe UsersController do
 
         token.reload
         expect(token.expired?).to eq(true)
+      end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = inactive_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            username: user.username,
+            password: 'qwerqwer123',
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
       end
     end
   end
@@ -3858,6 +3994,7 @@ describe UsersController do
         end
 
         it "includes all post types for staff members" do
+          SiteSetting.enable_whispers = true
           sign_in(admin)
 
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
@@ -5191,25 +5328,49 @@ describe UsersController do
   end
 
   describe "#bookmarks" do
-    fab!(:bookmark1) { Fabricate(:bookmark, user: user1) }
-    fab!(:bookmark2) { Fabricate(:bookmark, user: user1) }
-    fab!(:bookmark3) { Fabricate(:bookmark) }
-
     before do
-      TopicUser.change(user1.id, bookmark1.topic_id, total_msecs_viewed: 1)
-      TopicUser.change(user1.id, bookmark2.topic_id, total_msecs_viewed: 1)
+      register_test_bookmarkable
+      TopicUser.change(user1.id, bookmark1.bookmarkable.topic_id, total_msecs_viewed: 1)
+      TopicUser.change(user1.id, bookmark2.bookmarkable_id, total_msecs_viewed: 1)
+      Fabricate(:post, topic: bookmark2.bookmarkable)
+      bookmark3 && bookmark4
     end
+
+    after do
+      Bookmark.registered_bookmarkables = []
+    end
+
+    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
+    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
+    let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
+    let(:bookmark4) { Fabricate(:bookmark) }
 
     it "returns a list of serialized bookmarks for the user" do
       sign_in(user1)
       get "/u/#{user1.username}/bookmarks.json"
       expect(response.status).to eq(200)
-      expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array([bookmark1.id, bookmark2.id])
+      expect(response.parsed_body['user_bookmark_list']['bookmarks'].map { |b| b['id'] }).to match_array(
+        [bookmark1.id, bookmark2.id, bookmark3.id]
+      )
+    end
+
+    it "returns a list of serialized bookmarks for the user including custom registered bookmarkables" do
+      sign_in(user1)
+      bookmark3.bookmarkable.user_profile.update!(bio_raw: "<p>Something cooked</p>")
+      bookmark3.bookmarkable.user_profile.rebake!
+      get "/u/#{user1.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      response_bookmarks = response.parsed_body['user_bookmark_list']['bookmarks']
+      expect(response_bookmarks.map { |b| b['id'] }).to match_array(
+        [bookmark1.id, bookmark2.id, bookmark3.id]
+      )
+      expect(response_bookmarks.find { |b| b['id'] == bookmark3.id }['excerpt']).to eq('Something cooked')
     end
 
     it "returns an .ics file of bookmark reminders for the user in date order" do
       bookmark1.update!(name: nil, reminder_at: 1.day.from_now)
       bookmark2.update!(name: "Some bookmark note", reminder_at: 1.week.from_now)
+      bookmark3.update!(name: nil, reminder_at: 2.weeks.from_now)
 
       sign_in(user1)
       get "/u/#{user1.username}/bookmarks.ics"
@@ -5223,9 +5384,9 @@ describe UsersController do
         DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
         DTSTART:#{bookmark1.reminder_at_ics}
         DTEND:#{bookmark1.reminder_at_ics(offset: 1.hour)}
-        SUMMARY:#{bookmark1.topic.title}
-        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
-        URL:#{Discourse.base_url}/t/-/#{bookmark1.topic_id}
+        SUMMARY:#{bookmark1.bookmarkable.topic.title}
+        DESCRIPTION:#{bookmark1.bookmarkable.full_url}
+        URL:#{bookmark1.bookmarkable.full_url}
         END:VEVENT
         BEGIN:VEVENT
         UID:bookmark_reminder_##{bookmark2.id}@#{Discourse.current_hostname}
@@ -5233,15 +5394,24 @@ describe UsersController do
         DTSTART:#{bookmark2.reminder_at_ics}
         DTEND:#{bookmark2.reminder_at_ics(offset: 1.hour)}
         SUMMARY:Some bookmark note
-        DESCRIPTION:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
-        URL:#{Discourse.base_url}/t/-/#{bookmark2.topic_id}
+        DESCRIPTION:#{bookmark2.bookmarkable.url}
+        URL:#{bookmark2.bookmarkable.url}
+        END:VEVENT
+        BEGIN:VEVENT
+        UID:bookmark_reminder_##{bookmark3.id}@#{Discourse.current_hostname}
+        DTSTAMP:#{bookmark3.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
+        DTSTART:#{bookmark3.reminder_at_ics}
+        DTEND:#{bookmark3.reminder_at_ics(offset: 1.hour)}
+        SUMMARY:#{bookmark3.bookmarkable.username}
+        DESCRIPTION:#{Discourse.base_url}/u/#{bookmark3.bookmarkable.username}
+        URL:#{Discourse.base_url}/u/#{bookmark3.bookmarkable.username}
         END:VEVENT
         END:VCALENDAR
       ICS
     end
 
     it "does not show another user's bookmarks" do
-      sign_in(user1)
+      sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"
       expect(response.status).to eq(403)
     end

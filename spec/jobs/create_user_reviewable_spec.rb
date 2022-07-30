@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CreateUserReviewable do
+RSpec.describe Jobs::CreateUserReviewable do
 
   let(:user) { Fabricate(:user) }
 

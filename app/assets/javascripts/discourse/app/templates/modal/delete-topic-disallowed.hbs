@@ -1,6 +1,6 @@
-{{#d-modal-body}}
+<DModalBody>
   <p>{{html-safe (i18n "post.controls.delete_topic_disallowed_modal")}}</p>
-{{/d-modal-body}}
+</DModalBody>
 <div class="modal-footer">
-  {{d-button action=(route-action "closeModal") class="btn-primary" label="close"}}
+  <DButton @action={{route-action "closeModal"}} @class="btn-primary" @label="close" />
 </div>

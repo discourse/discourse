@@ -43,6 +43,9 @@ da:
       show-results:
         title: "Vis afstemningsresultat"
         label: "Vis resultat"
+      remove-vote:
+        title: "Fjern din stemme"
+        label: "Fjern stemme"
       hide-results:
         title: "Tilbage til dine stemmer"
         label: "Vis afstemning"
@@ -91,16 +94,26 @@ da:
         poll_result:
           label: Vis Resultater...
           always: Altid synlig
+          vote: Kun efter afstemning
+          closed: Når afstemningen er lukket
           staff: Kun personale
+        poll_groups:
+          label: Begræns afstemning til disse grupper
         poll_chart_type:
+          label: Resultatdiagram
           bar: Bar
           pie: Tærte
         poll_config:
+          max: Maks. Valg
+          min: Min. Valg
           step: Trin
         poll_public:
           label: Vis hvem der stemte
         poll_title:
           label: Titel (valgfrit)
+        poll_options:
+          label: Valgmuligheder (en pr. linje)
+          add: Tilføj mulighed
         automatic_close:
           label: Luk afstemning automatisk
         show_advanced: "Vis Avancerede Indstillinger"

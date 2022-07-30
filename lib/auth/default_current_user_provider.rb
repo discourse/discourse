@@ -25,6 +25,7 @@ require_relative '../route_matcher'
 class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
+  USER_TOKEN_KEY ||= "_DISCOURSE_USER_TOKEN"
   API_KEY ||= "api_key"
   API_USERNAME ||= "api_username"
   HEADER_API_KEY ||= "HTTP_API_KEY"
@@ -77,8 +78,9 @@ class Auth::DefaultCurrentUserProvider
   ]
 
   def self.find_v0_auth_cookie(request)
-    cookie = request.cookies[TOKEN_COOKIE].presence
-    if cookie && cookie.size == TOKEN_SIZE
+    cookie = request.cookies[TOKEN_COOKIE]
+
+    if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
       cookie
     end
   end
@@ -88,9 +90,11 @@ class Auth::DefaultCurrentUserProvider
 
     env[DECRYPTED_AUTH_COOKIE] = begin
       request = ActionDispatch::Request.new(env)
+      cookie = request.cookies[TOKEN_COOKIE]
+
       # don't even initialize a cookie jar if we don't have a cookie at all
-      if request.cookies[TOKEN_COOKIE].present?
-        request.cookie_jar.encrypted[TOKEN_COOKIE]
+      if cookie&.valid_encoding? && cookie.present?
+        request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
       end
     end
   end
@@ -99,6 +103,7 @@ class Auth::DefaultCurrentUserProvider
   def initialize(env)
     @env = env
     @request = Rack::Request.new(env)
+    @user_token = env[USER_TOKEN_KEY]
   end
 
   # our current user, return nil if none is found
@@ -136,7 +141,7 @@ class Auth::DefaultCurrentUserProvider
       limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN , 60)
 
       if limiter.can_perform?
-        @user_token = begin
+        @env[USER_TOKEN_KEY] = @user_token = begin
           UserAuthToken.lookup(
             auth_token,
             seen: true,
@@ -217,12 +222,17 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if current_user && should_update_last_seen?
-      u = current_user
       ip = request.ip
+      user_id = current_user.id
+      old_ip = current_user.ip_address
 
       Scheduler::Defer.later "Updating Last Seen" do
-        u.update_last_seen!
-        u.update_ip_address!(ip)
+        if User.should_update_last_seen?(user_id)
+          if u = User.find_by(id: user_id)
+            u.update_last_seen!(Time.zone.now, force: true)
+          end
+        end
+        User.update_ip_address!(user_id, new_ip: ip, old_ip: old_ip)
       end
     end
 
@@ -255,7 +265,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_on_user(user, session, cookie_jar, opts = {})
-    @user_token = UserAuthToken.generate!(
+    @env[USER_TOKEN_KEY] = @user_token = UserAuthToken.generate!(
       user_id: user.id,
       user_agent: @env['HTTP_USER_AGENT'],
       path: @env['REQUEST_PATH'],
@@ -385,7 +395,9 @@ class Auth::DefaultCurrentUserProvider
         end
 
       if user && can_write?
-        api_key.update_columns(last_used_at: Time.zone.now)
+        Scheduler::Defer.later "Updating api_key last_used" do
+          api_key.update_last_used!
+        end
       end
 
       user

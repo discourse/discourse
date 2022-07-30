@@ -1,6 +1,6 @@
 <div class="tag-group-content">
   <h3>
-    {{#if model}}
+    {{#if this.model}}
       {{i18n "tagging.groups.about_heading"}}
     {{else}}
       {{i18n "tagging.groups.about_heading_empty"}}
@@ -10,10 +10,10 @@
     <p>{{i18n "tagging.groups.about_description"}}</p>
   </section>
   <section>
-    {{#unless model}}
-      {{#link-to "tagGroups.new" class="btn btn-primary"}}
+    {{#unless this.model}}
+      <LinkTo @route="tagGroups.new" class="btn btn-primary">
         {{d-icon "plus"}} {{i18n "tagging.groups.new"}}
-      {{/link-to}}
+      </LinkTo>
     {{/unless}}
   </section>
 </div>

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserMerger do
+RSpec.describe UserMerger do
   fab!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
   fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
   fab!(:walter) { Fabricate(:walter_white) }
@@ -646,9 +646,9 @@ describe UserMerger do
   end
 
   it "updates unsubscribe keys" do
-    UnsubscribeKey.create_key_for(source_user, "digest")
-    UnsubscribeKey.create_key_for(target_user, "digest")
-    UnsubscribeKey.create_key_for(walter, "digest")
+    UnsubscribeKey.create_key_for(source_user, UnsubscribeKey::DIGEST_TYPE)
+    UnsubscribeKey.create_key_for(target_user, UnsubscribeKey::DIGEST_TYPE)
+    UnsubscribeKey.create_key_for(walter, UnsubscribeKey::DIGEST_TYPE)
 
     merge_users!
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Search do
+RSpec.describe Search do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:topic) { Fabricate(:topic) }
 
@@ -9,7 +9,7 @@ describe Search do
     Jobs.run_immediately!
   end
 
-  context "#ts_config" do
+  describe "#ts_config" do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")
       expect(Search.ts_config("en")).to eq("english")
@@ -20,7 +20,7 @@ describe Search do
     end
   end
 
-  context "#GroupedSearchResults.blurb_for" do
+  describe "#GroupedSearchResults.blurb_for" do
     it "strips audio and video URLs from search blurb" do
       cooked = <<~RAW
         link to an external page: https://google.com/?u=bar
@@ -55,7 +55,7 @@ describe Search do
     end
   end
 
-  context "#execute" do
+  describe "#execute" do
     before do
       SiteSetting.tagging_enabled = true
     end
@@ -527,7 +527,7 @@ describe Search do
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
-      ["mars in:personal", "mars IN:PERSONAL"].each do |query|
+      ["mars in:personal", "mars IN:PERSONAL", "in:messages mars", "IN:MESSAGES mars"].each do |query|
         results = Search.execute(query, guardian: Guardian.new(user))
         expect(results.posts).to contain_exactly(reply)
       end
@@ -582,10 +582,11 @@ describe Search do
       end
     end
 
-    context 'personal-direct flag' do
+    context 'personal-direct and group_messages flags' do
       let(:current) { Fabricate(:user, admin: true, username: "current_user") }
       let(:participant) { Fabricate(:user, username: "participant_1") }
       let(:participant_2) { Fabricate(:user, username: "participant_2") }
+      let(:non_participant) { Fabricate(:user, username: "non_participant") }
 
       let(:group) do
         group = Fabricate(:group, has_messages: true)
@@ -609,49 +610,93 @@ describe Search do
         pm.reload
       end
 
-      it 'can find all direct PMs of the current user' do
-        pm = create_pm(users: [current, participant])
-        _pm_2 = create_pm(users: [participant_2, participant])
-        pm_3 = create_pm(users: [participant, current])
-        pm_4 = create_pm(users: [participant_2, current])
+      context "personal-direct flag" do
+        it 'can find all direct PMs of the current user' do
+          pm = create_pm(users: [current, participant])
+          _pm_2 = create_pm(users: [participant_2, participant])
+          pm_3 = create_pm(users: [participant, current])
+          pm_4 = create_pm(users: [participant_2, current])
 
-        ["in:personal-direct", "In:PeRsOnAl-DiReCt"].each do |query|
-          results = Search.execute(query, guardian: Guardian.new(current))
+          ["in:personal-direct", "In:PeRsOnAl-DiReCt"].each do |query|
+            results = Search.execute(query, guardian: Guardian.new(current))
+            expect(results.posts.size).to eq(3)
+            expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+          end
+        end
+
+        it 'can filter direct PMs by @username' do
+          pm = create_pm(users: [current, participant])
+          pm_2 = create_pm(users: [participant, current])
+          pm_3 = create_pm(users: [participant_2, current])
+          [
+            "@#{participant.username} in:personal-direct",
+            "@#{participant.username} iN:pErSoNaL-dIrEcT",
+          ].each do |query|
+            results = Search.execute(query, guardian: Guardian.new(current))
+            expect(results.posts.size).to eq(2)
+            expect(results.posts.map(&:topic_id)).to contain_exactly(pm_2.id, pm.id)
+            expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+          end
+
+          results = Search.execute("@me in:personal-direct", guardian: Guardian.new(current))
           expect(results.posts.size).to eq(3)
-          expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+          expect(results.posts.map(&:topic_id)).to contain_exactly(pm_3.id, pm_2.id, pm.id)
+          expect(results.posts.map(&:user_id).uniq).to eq([current.id])
+        end
+
+        it "doesn't include PMs that have more than 2 participants" do
+          _pm = create_pm(users: [current, participant, participant_2])
+          results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
+        end
+
+        it "doesn't include PMs that have groups" do
+          _pm = create_pm(users: [current, participant], group: group)
+          results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
         end
       end
 
-      it 'can filter direct PMs by @username' do
-        pm = create_pm(users: [current, participant])
-        pm_2 = create_pm(users: [participant, current])
-        pm_3 = create_pm(users: [participant_2, current])
-        [
-          "@#{participant.username} in:personal-direct",
-          "@#{participant.username} iN:pErSoNaL-dIrEcT",
-        ].each do |query|
-          results = Search.execute(query, guardian: Guardian.new(current))
-          expect(results.posts.size).to eq(2)
-          expect(results.posts.map(&:topic_id)).to contain_exactly(pm_2.id, pm.id)
-          expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+      context "group_messages flag" do
+        it 'returns results correctly for a PM in a given group' do
+          pm = create_pm(users: [participant, participant_2], group: group)
+
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts).to contain_exactly(pm.first_post)
+
+          results = Search.execute("secret group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts).to contain_exactly(pm.first_post)
         end
 
-        results = Search.execute("@me in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(3)
-        expect(results.posts.map(&:topic_id)).to contain_exactly(pm_3.id, pm_2.id, pm.id)
-        expect(results.posts.map(&:user_id).uniq).to eq([current.id])
-      end
+        it 'returns nothing if user is not a group member' do
+          pm = create_pm(users: [current, participant], group: group)
 
-      it "doesn't include PMs that have more than 2 participants" do
-        _pm = create_pm(users: [current, participant, participant_2])
-        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(0)
-      end
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(non_participant))
+          expect(results.posts.size).to eq(0)
 
-      it "doesn't include PMs that have groups" do
-        _pm = create_pm(users: [current, participant], group: group)
-        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(0)
+          # even for admins
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(admin))
+          expect(results.posts.size).to eq(0)
+        end
+
+        it 'returns nothing if group has messages disabled' do
+          pm = create_pm(users: [current, participant], group: group)
+          group.update!(has_messages: false)
+
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
+        end
+
+        it 'is correctly scoped to a given group' do
+          wrong_group = Fabricate(:group, has_messages: true)
+          pm = create_pm(users: [current, participant], group: group)
+
+          results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
+          expect(results.posts).to contain_exactly(pm.first_post)
+
+          results = Search.execute("group_messages:#{wrong_group.name}", guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(0)
+        end
       end
     end
 
@@ -865,7 +910,12 @@ describe Search do
       ])
     end
 
-    it 'allows staff to search for whispers' do
+    it 'allows staff and members of whisperers group to search for whispers' do
+      whisperers_group = Fabricate(:group)
+      user = Fabricate(:user)
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+
       post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
 
       results = Search.execute('tiger')
@@ -874,6 +924,13 @@ describe Search do
 
       results = Search.execute('tiger', guardian: Guardian.new(admin))
 
+      expect(results.posts).to eq([post])
+
+      results = Search.execute('tiger', guardian: Guardian.new(user))
+      expect(results.posts).to eq([])
+
+      user.groups << whisperers_group
+      results = Search.execute('tiger', guardian: Guardian.new(user))
       expect(results.posts).to eq([post])
     end
   end
@@ -1426,6 +1483,22 @@ describe Search do
   end
 
   describe 'Advanced search' do
+    describe "bookmarks" do
+      fab!(:user) { Fabricate(:user) }
+      let!(:bookmark_post1) { Fabricate(:post, raw: 'boom this is a bookmarked post') }
+      let!(:bookmark_post2) { Fabricate(:post, raw: 'wow some other cool thing') }
+
+      def search_with_bookmarks
+        Search.execute('boom in:bookmarks', guardian: Guardian.new(user))
+      end
+
+      it "can filter by posts in the user's bookmarks" do
+        expect(search_with_bookmarks.posts.map(&:id)).to eq([])
+        bm = Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
+        expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
+      end
+    end
+
     it 'supports pinned' do
       Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
       _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
@@ -1957,7 +2030,7 @@ describe Search do
     end
   end
 
-  context '#ts_query' do
+  describe '#ts_query' do
     it 'can parse complex strings using ts_query helper' do
       str = +" grigio:babel deprecated? "
       str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
@@ -1979,7 +2052,7 @@ describe Search do
     end
   end
 
-  context '#word_to_date' do
+  describe '#word_to_date' do
     it 'parses relative dates correctly' do
       time = Time.zone.parse('2001-02-20 2:55')
       freeze_time(time)
@@ -2007,7 +2080,7 @@ describe Search do
     end
   end
 
-  context "#min_post_id" do
+  describe "#min_post_id" do
     it "returns 0 when prefer_recent_posts is disabled" do
       SiteSetting.search_prefer_recent_posts = false
       expect(Search.min_post_id_no_cache).to eq(0)
@@ -2122,24 +2195,26 @@ describe Search do
     let!(:post3) { Fabricate(:post, raw: 'hello hello hello') }
     let!(:post4) { Fabricate(:post, raw: 'hello hello') }
     let!(:post5) { Fabricate(:post, raw: 'hello') }
+
     before do
       Search.stubs(:per_filter).returns(number_of_results)
     end
 
     it 'returns more results flag' do
-      results = Search.execute('hello', type_filter: 'topic')
-      results2 = Search.execute('hello', type_filter: 'topic', page: 2)
+      results = Search.execute('hello', search_type: :full_page, type_filter: 'topic')
+      results2 = Search.execute('hello', search_type: :full_page, type_filter: 'topic', page: 2)
 
       expect(results.posts.length).to eq(number_of_results)
       expect(results.posts.map(&:id)).to eq([post1.id, post2.id])
       expect(results.more_full_page_results).to eq(true)
+
       expect(results2.posts.length).to eq(number_of_results)
       expect(results2.posts.map(&:id)).to eq([post3.id, post4.id])
       expect(results2.more_full_page_results).to eq(true)
     end
 
     it 'correctly search with page parameter' do
-      search = Search.new('hello', type_filter: 'topic', page: 3)
+      search = Search.new('hello', search_type: :full_page, type_filter: 'topic', page: 3)
       results = search.execute
 
       expect(search.offset).to eq(2 * number_of_results)
@@ -2148,6 +2223,36 @@ describe Search do
       expect(results.more_full_page_results).to eq(nil)
     end
 
+    it 'returns more results flag for header searches' do
+      results = Search.execute('hello', search_type: :header)
+      expect(results.posts.length).to eq(Search.per_facet)
+      expect(results.more_posts).to eq(nil) # not 6 posts yet
+
+      post6 = Fabricate(:post, raw: 'hello post #6')
+
+      results = Search.execute('hello', search_type: :header)
+      expect(results.posts.length).to eq(Search.per_facet)
+      expect(results.more_posts).to eq(true)
+    end
+  end
+
+  context 'header in-topic search' do
+    let!(:topic) { Fabricate(:topic, title: 'This is a topic with a bunch of posts') }
+    let!(:post1) { Fabricate(:post, topic: topic, raw: 'hola amiga') }
+    let!(:post2) { Fabricate(:post, topic: topic, raw: 'hola amigo') }
+    let!(:post3) { Fabricate(:post, topic: topic, raw: 'hola chica') }
+    let!(:post4) { Fabricate(:post, topic: topic, raw: 'hola chico') }
+    let!(:post5) { Fabricate(:post, topic: topic, raw: 'hola hermana') }
+    let!(:post6) { Fabricate(:post, topic: topic, raw: 'hola hermano') }
+    let!(:post7) { Fabricate(:post, topic: topic, raw: 'hola chiquito') }
+
+    it 'does not use per_facet pagination' do
+      search = Search.new('hola', search_type: :header, search_context: topic)
+      results = search.execute
+
+      expect(results.posts.length).to eq(7)
+      expect(results.more_posts).to eq(nil)
+    end
   end
 
   context 'in:tagged' do

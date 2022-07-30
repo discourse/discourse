@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PullHotlinkedImages do
-
+RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
@@ -44,7 +43,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
     end
 
     it 'does nothing if there are no large images to pull' do
@@ -60,12 +59,26 @@ describe Jobs::PullHotlinkedImages do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
       stub_image_size
 
-      expect do
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(1) &
-             change { UserHistory.count }.by(0) # Should not add to the staff log
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+        .and not_change { UserHistory.count } # Should not add to the staff log
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
+    end
+
+    it 'enqueues raw replacement job with a delay' do
+      Jobs.run_later!
+
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      stub_image_size
+
+      freeze_time
+      Jobs.expects(:cancel_scheduled_job).with(:update_hotlinked_raw, post_id: post.id).once
+      delay = SiteSetting.editing_grace_period + 1
+
+      expect_enqueued_with(job: :update_hotlinked_raw, args: { post_id: post.id }, at: Time.zone.now + delay.seconds) do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end
     end
 
     it 'removes downloaded images when they are no longer needed' do
@@ -73,12 +86,12 @@ describe Jobs::PullHotlinkedImages do
       stub_image_size
       post.rebake!
       post.reload
-      expect(post.post_uploads.count).to eq(1)
+      expect(post.upload_references.count).to eq(1)
 
       post.update(raw: "Post with no images")
       post.rebake!
       post.reload
-      expect(post.post_uploads.count).to eq(0)
+      expect(post.upload_references.count).to eq(0)
     end
 
     it 'replaces images again after edit' do
@@ -96,7 +109,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         post.rebake!
-      end.to change { Upload.count }.by(0) # We alread have the upload
+      end.not_to change { Upload.count } # We alread have the upload
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -197,6 +210,18 @@ describe Jobs::PullHotlinkedImages do
       expect(post.uploads).to contain_exactly(upload)
     end
 
+    it "skips editing raw for raw_html posts" do
+      raw = "<img src=\"#{image_url}\">"
+      post = Fabricate(:post, raw: raw, cook_method: Post.cook_methods[:raw_html])
+      stub_image_size
+      expect do
+        post.rebake!
+        post.reload
+      end.to change { Upload.count }.by(1)
+
+      expect(post.raw).to eq(raw)
+    end
+
     context "when secure media enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
         setup_s3
@@ -252,7 +277,7 @@ describe Jobs::PullHotlinkedImages do
             .to change { Upload.count }.by(1)
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-            .to change { Upload.count }.by(0)
+            .not_to change { Upload.count }
         end
       end
     end
@@ -324,6 +349,7 @@ describe Jobs::PullHotlinkedImages do
       before do
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
+        stub_request(:head, image_url)
 
         stub_request(:get, api_url).to_return(body: "{
           \"query\": {
@@ -349,7 +375,7 @@ describe Jobs::PullHotlinkedImages do
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
-        expect(post.post_uploads.count).to eq(1)
+        expect(post.upload_references.count).to eq(1)
       end
 
       it 'associates uploads correctly' do
@@ -358,13 +384,13 @@ describe Jobs::PullHotlinkedImages do
         post.rebake!
         post.reload
 
-        expect(post.post_uploads.count).to eq(1)
+        expect(post.upload_references.count).to eq(1)
 
         post.update(raw: "no onebox")
         post.rebake!
         post.reload
 
-        expect(post.post_uploads.count).to eq(0)
+        expect(post.upload_references.count).to eq(0)
       end
 
       it 'all combinations' do
@@ -373,6 +399,7 @@ describe Jobs::PullHotlinkedImages do
         #{url}
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        #{image_url}
         MD
         stub_image_size
 
@@ -387,12 +414,32 @@ describe Jobs::PullHotlinkedImages do
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
         expect(post.cooked).to match(/<span class="broken-image/)
         expect(post.cooked).to match(/<div class="large-image-placeholder">/)
+      end
+
+      it 'rewrites a lone onebox' do
+        post = Fabricate(:post, raw: <<~MD)
+        Onebox here:
+        #{image_url}
+        MD
+        stub_image_size
+
+        post.rebake!
+
+        post.reload
+
+        expect(post.raw).to eq(<<~MD.chomp)
+        Onebox here:
+        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        MD
+
+        expect(post.cooked).to match(/<img src=.*\/uploads/)
       end
     end
   end
@@ -542,6 +589,43 @@ describe Jobs::PullHotlinkedImages do
       post.reload
 
       expect(post.raw).to eq("![alt](#{upload.short_url})")
+    end
+  end
+
+  describe "#disable_if_low_on_disk_space" do
+    fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
+    let(:job) { Jobs::PullHotlinkedImages.new }
+
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      SiteSetting.download_remote_images_threshold = 20
+      job.stubs(:available_disk_space).returns(50)
+    end
+
+    it "does nothing when there's enough disk space" do
+      SiteSetting.expects(:download_remote_images_to_local=).never
+      job.execute({ post_id: post.id })
+    end
+
+    context "when there's not enough disk space" do
+
+      before { SiteSetting.download_remote_images_threshold = 75 }
+
+      it "disables download_remote_images_threshold and send a notification to the admin" do
+        StaffActionLogger.any_instance.expects(:log_site_setting_change).once
+        SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
+        job.execute({ post_id: post.id })
+
+        expect(SiteSetting.download_remote_images_to_local).to eq(false)
+      end
+
+      it "doesn't disable download_remote_images_to_local if site uses S3" do
+        setup_s3
+        job.execute({ post_id: post.id })
+
+        expect(SiteSetting.download_remote_images_to_local).to eq(true)
+      end
+
     end
   end
 

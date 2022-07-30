@@ -1,6 +1,7 @@
 import { action, computed } from "@ember/object";
 import Component from "@ember/component";
 import { isPresent } from "@ember/utils";
+import { htmlSafe } from "@ember/template";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -65,7 +66,7 @@ export default Component.extend({
   minimumTime: computed("relativeDate", "date", function () {
     if (this.relativeDate) {
       if (this.date) {
-        if (this.date.diff(this.relativeDate, "minutes") > 1440) {
+        if (!this.date.isSame(this.relativeDate, "day")) {
           return 0;
         } else {
           return this.relativeDate.hours() * 60 + this.relativeDate.minutes();
@@ -115,11 +116,18 @@ export default Component.extend({
       let name = convertMinutesToString(option);
       let label;
 
-      if (this.minimumTime) {
-        const diff = option - this.minimumTime;
-        label = `${name} <small>(${convertMinutesToDurationString(
-          diff
-        )})</small>`.htmlSafe();
+      if (this.date && this.relativeDate) {
+        const diff = this.date
+          .clone()
+          .startOf("day")
+          .add(option, "minutes")
+          .diff(this.relativeDate, "minutes");
+
+        if (diff < 1440) {
+          label = htmlSafe(
+            `${name} <small>(${convertMinutesToDurationString(diff)})</small>`
+          );
+        }
       }
 
       return {

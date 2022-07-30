@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UploadsController do
+RSpec.describe UploadsController do
   fab!(:user) { Fabricate(:user) }
 
   describe '#create' do
@@ -425,7 +425,7 @@ describe UploadsController do
           sign_in(user)
           get upload.short_path
 
-          expected_max_age = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - UploadsController::SECURE_REDIRECT_GRACE_SECONDS
+          expected_max_age = SiteSetting.s3_presigned_get_url_expires_after_seconds - UploadsController::SECURE_REDIRECT_GRACE_SECONDS
           expect(expected_max_age).to be > 0 # Sanity check that the constants haven't been set to broken values
 
           expect(response.headers["Cache-Control"]).to eq("max-age=#{expected_max_age}, private")
@@ -1056,23 +1056,22 @@ describe UploadsController do
       it "rate limits" do
         RateLimiter.enable
         RateLimiter.clear_all!
+        SiteSetting.max_batch_presign_multipart_per_minute = 1
 
-        stub_const(ExternalUploadHelpers, "BATCH_PRESIGN_RATE_LIMIT_PER_MINUTE", 1) do
-          stub_list_multipart_request
-          post "/uploads/batch-presign-multipart-parts.json", params: {
-            unique_identifier: external_upload_stub.unique_identifier,
-            part_numbers: [1, 2, 3]
-          }
+        stub_list_multipart_request
+        post "/uploads/batch-presign-multipart-parts.json", params: {
+          unique_identifier: external_upload_stub.unique_identifier,
+          part_numbers: [1, 2, 3]
+        }
 
-          expect(response.status).to eq(200)
+        expect(response.status).to eq(200)
 
-          post "/uploads/batch-presign-multipart-parts.json", params: {
-            unique_identifier: external_upload_stub.unique_identifier,
-            part_numbers: [1, 2, 3]
-          }
+        post "/uploads/batch-presign-multipart-parts.json", params: {
+          unique_identifier: external_upload_stub.unique_identifier,
+          part_numbers: [1, 2, 3]
+        }
 
-          expect(response.status).to eq(429)
-        end
+        expect(response.status).to eq(429)
       end
     end
 

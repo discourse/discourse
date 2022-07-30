@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  # Bug with Rails 7+
+  # see https://github.com/rails/rails/issues/44867
+  self._flash_types -= [:notice]
 
   requires_login except: [
     :show,
@@ -132,7 +135,7 @@ class PostsController < ApplicationController
       format.rss do
         @posts = posts
         @title = "#{SiteSetting.title} - #{I18n.t("rss_description.user_posts", username: user.username)}"
-        @link = "#{Discourse.base_url}/u/#{user.username}/activity"
+        @link = "#{user.full_url}/activity"
         @description = I18n.t("rss_description.user_posts", username: user.username)
         render 'posts/latest', formats: [:rss]
       end
@@ -536,7 +539,11 @@ class PostsController < ApplicationController
   def destroy_bookmark
     params.require(:post_id)
 
-    bookmark_id = Bookmark.where(post_id: params[:post_id], user_id: current_user.id).pluck_first(:id)
+    bookmark_id = Bookmark.where(
+      bookmarkable_id: params[:post_id],
+      bookmarkable_type: "Post",
+      user_id: current_user.id
+    ).pluck_first(:id)
     destroyed_bookmark = BookmarkManager.new(current_user).destroy(bookmark_id)
 
     render json: success_json.merge(BookmarkManager.bookmark_metadata(destroyed_bookmark, current_user))
@@ -698,10 +705,13 @@ class PostsController < ApplicationController
   private
 
   def user_posts(guardian, user_id, opts)
-    posts = Post.includes(:user, :topic, :deleted_by, :user_actions)
-      .where(user_id: user_id)
-      .with_deleted
-      .order(created_at: :desc)
+    # Topic.unscoped is necessary to remove the default deleted_at: nil scope
+    posts = Topic.unscoped do
+      Post.includes(:user, :topic, :deleted_by, :user_actions)
+        .where(user_id: user_id)
+        .with_deleted
+        .order(created_at: :desc)
+    end
 
     if guardian.user.moderator?
 

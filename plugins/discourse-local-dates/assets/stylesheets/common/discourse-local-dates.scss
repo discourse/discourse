@@ -23,7 +23,7 @@
   }
 }
 
-#d-popover {
+div[data-tippy-root] {
   .locale-dates-previews {
     max-width: 360px;
     .preview {

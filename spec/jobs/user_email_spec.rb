@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UserEmail do
+RSpec.describe Jobs::UserEmail do
 
   before do
     SiteSetting.email_time_window_mins = 10
@@ -145,6 +145,20 @@ describe Jobs::UserEmail do
       expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
         user.email
       )
+    end
+
+    it "doesn't send an email even if email_level is set to always if `force_respect_seen_recently` arg is true" do
+      user.user_option.update(email_level: UserOption.email_level_types[:always])
+      PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
+
+      Jobs::UserEmail.new.execute(
+        type: :user_replied,
+        user_id: user.id,
+        post_id: post.id,
+        notification_id: notification.id,
+        force_respect_seen_recently: true
+      )
+      expect(ActionMailer::Base.deliveries).to eq([])
     end
 
     it "sends an email with no gsub substitution bugs" do
@@ -593,7 +607,7 @@ describe Jobs::UserEmail do
               notification_id: notification.id,
               post_id: post.id
             )
-          end.to change { SkippedEmailLog.count }.by(0)
+          end.not_to change { SkippedEmailLog.count }
         end
 
         it "sends critical email" do

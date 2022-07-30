@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SpamRule::AutoSilence do
+RSpec.describe SpamRule::AutoSilence do
 
   before do
     SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]

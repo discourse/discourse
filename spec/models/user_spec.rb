@@ -1,15 +1,24 @@
 # frozen_string_literal: true
 
-describe User do
+RSpec.describe User do
   fab!(:group) { Fabricate(:group) }
 
-  let(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
   end
 
   it { is_expected.to have_many(:pending_posts).class_name('ReviewableQueuedPost').with_foreign_key(:created_by_id) }
+
+  context 'associations' do
+    it 'should delete sidebar_section_links when a user is destroyed' do
+      Fabricate(:category_sidebar_section_link, user: user)
+      Fabricate(:tag_sidebar_section_link, user: user)
+
+      expect { user.destroy! }.to change { SidebarSectionLink.where(user: user).count }.from(2).to(0)
+    end
+  end
 
   context 'validations' do
     describe '#username' do
@@ -136,6 +145,130 @@ describe User do
         end
       end
     end
+
+    describe "#user_fields" do
+      fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
+      fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
+
+      before { user.set_user_field(user_field.id, value) }
+
+      context "when user fields contain watched words" do
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        context "when watched words are of type 'Block'" do
+          let(:value) { "bad user field value" }
+
+          context "when user field is public" do
+            it "is not valid" do
+              user.valid?
+              expect(user.errors[:base].size).to eq(1)
+              expect(user.errors.messages[:base]).to include(/you can't post the word/)
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it { is_expected.to be_valid }
+          end
+        end
+
+        context "when watched words are of type 'Censor'" do
+          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let(:value) { "censored word" }
+
+          context "when user field is public" do
+            it "censors the words upon saving" do
+              user.save!
+              expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it "does not censor anything" do
+              user.save!
+              expect(user_field_value).to eq "censored word"
+            end
+          end
+        end
+
+        context "when watched words are of type 'Replace'" do
+          let(:value) { "word to replace" }
+          let!(:replace_word) do
+            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+          end
+
+          context "when user field is public" do
+            it "replaces the words upon saving" do
+              user.save!
+              expect(user_field_value).to eq "word replaced"
+            end
+          end
+
+          context "when user field is private" do
+            before { user_field.update(show_on_profile: false) }
+
+            it "does not replace anything" do
+              user.save!
+              expect(user_field_value).to eq "word to replace"
+            end
+          end
+        end
+      end
+
+      context "when user fields do not contain watched words" do
+        let(:value) { "good user field value" }
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when user fields contain URL" do
+        let(:value) { "https://discourse.org" }
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        it "is not cooked" do
+          user.save!
+          expect(user_field_value).to eq "https://discourse.org"
+        end
+      end
+
+      context "with a multiselect user field" do
+        fab!(:user_field) do
+          Fabricate(:user_field, field_type: 'multiselect', show_on_profile: true) do
+            user_field_options do
+              [
+                Fabricate(:user_field_option, value: 'Axe'),
+                Fabricate(:user_field_option, value: 'Sword')
+              ]
+            end
+          end
+        end
+
+        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
+
+        context "with a blocked word" do
+          let(:value) { %w{ Axe bad Sword } }
+
+          it "does not block the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
+        context "with a censored word" do
+          let(:value) { %w{ Axe bad Sword } }
+          before { watched_word.action = WatchedWord.actions[:censor] }
+
+          it "does not censor the word since it is not user generated-content" do
+            user.save!
+            expect(user_field_value).to eq %w{ Axe bad Sword }
+          end
+        end
+
+      end
+    end
   end
 
   describe '#count_by_signup_date' do
@@ -156,7 +289,7 @@ describe User do
     end
   end
 
-  context '.enqueue_welcome_message' do
+  describe '.enqueue_welcome_message' do
     fab!(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
@@ -196,11 +329,11 @@ describe User do
       user.update(admin: true)
       expect {
         user.grant_admin!
-      }.to change { Jobs::SendSystemMessage.jobs.count }.by 0
+      }.not_to change { Jobs::SendSystemMessage.jobs.count }
     end
   end
 
-  context '.set_default_tags_preferences' do
+  describe '.set_default_tags_preferences' do
     let(:tag) { Fabricate(:tag) }
 
     it "should set default tag preferences when new user created" do
@@ -262,31 +395,6 @@ describe User do
 
       user.deactivate(admin)
       expect(reviewable.reload.rejected?).to eq(true)
-    end
-  end
-
-  describe 'bookmark' do
-    before_all do
-      @post = Fabricate(:post)
-    end
-
-    it "creates a bookmark with the true parameter" do
-      expect {
-        PostActionCreator.create(@post.user, @post, :bookmark)
-      }.to change(PostAction, :count).by(1)
-    end
-
-    describe 'when removing a bookmark' do
-      before do
-        PostActionCreator.create(@post.user, @post, :bookmark)
-      end
-
-      it 'reduces the bookmark count of the post' do
-        active = PostAction.where(deleted_at: nil)
-        expect {
-          PostActionDestroyer.destroy(@post.user, @post, :bookmark)
-        }.to change(active, :count).by(-1)
-      end
     end
   end
 
@@ -1692,7 +1800,7 @@ describe User do
     end
   end
 
-  context "when user preferences are overriden" do
+  context "when user preferences are overridden" do
 
     fab!(:category0) { Fabricate(:category) }
     fab!(:category1) { Fabricate(:category) }
@@ -1721,10 +1829,10 @@ describe User do
       SiteSetting.default_categories_tracking = category1.id.to_s
       SiteSetting.default_categories_muted = category2.id.to_s
       SiteSetting.default_categories_watching_first_post = category3.id.to_s
-      SiteSetting.default_categories_regular = category4.id.to_s
+      SiteSetting.default_categories_normal = category4.id.to_s
     end
 
-    it "has overriden preferences" do
+    it "has overridden preferences" do
       user = Fabricate(:user)
       options = user.user_option
       expect(options.mailing_list_mode).to eq(true)
@@ -1878,6 +1986,16 @@ describe User do
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])
+    end
+  end
+
+  describe '.not_staged' do
+    let!(:user0) { Fabricate(:user, staged: true) }
+    let!(:user1) { Fabricate(:user) }
+
+    it "doesn't return staged users" do
+      expect(User.not_staged).to_not include(user0)
+      expect(User.not_staged).to include(user1)
     end
   end
 
@@ -2332,7 +2450,7 @@ describe User do
     end
   end
 
-  context "#destroy!" do
+  describe "#destroy!" do
     it 'clears up associated data on destroy!' do
       user = Fabricate(:user)
       post = Fabricate(:post)
@@ -2573,7 +2691,7 @@ describe User do
 
         expect do
           user.update_ip_address!('0.0.0.1')
-        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(0)
+        end.not_to change { UserIpAddressHistory.where(user_id: user.id).count }
 
         expect(
           UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
@@ -2627,6 +2745,39 @@ describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe "#whisperer?" do
+    before do
+      SiteSetting.enable_whispers = true
+    end
+
+    it 'returns true for an admin user' do
+      admin = Fabricate.create(:admin)
+      expect(admin.whisperer?).to eq(true)
+    end
+
+    it 'returns false for an admin user when whispers are not enabled' do
+      SiteSetting.enable_whispers = false
+
+      admin = Fabricate.create(:admin)
+      expect(admin.whisperer?).to eq(false)
+    end
+
+    it 'returns true for user belonging to whisperers groups' do
+      group = Fabricate(:group)
+      whisperer = Fabricate(:user)
+      user = Fabricate(:user)
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+
+      expect(whisperer.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
+
+      group.add(whisperer)
+
+      expect(whisperer.whisperer?).to eq(true)
+      expect(user.whisperer?).to eq(false)
     end
   end
 end

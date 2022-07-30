@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AboutSerializer do
+RSpec.describe AboutSerializer do
 
   fab!(:user) { Fabricate(:user) }
 

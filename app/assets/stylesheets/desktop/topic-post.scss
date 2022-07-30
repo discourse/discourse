@@ -1,7 +1,3 @@
-.wrap {
-  max-width: $large-width;
-}
-
 .full-width {
   margin-left: 0;
 }
@@ -359,13 +355,6 @@ pre.codeblock-buttons:hover {
   }
 }
 
-.suggested-topics .topic-statuses .topic-status {
-  padding: 0;
-  .d-icon {
-    font-size: 1em;
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
@@ -481,6 +470,7 @@ blockquote {
 .topic-body {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
   float: left;
+  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
@@ -504,6 +494,7 @@ blockquote {
   width: $topic-avatar-width;
   float: left;
   z-index: z("base") + 1;
+  height: 100%;
 }
 
 .gap {

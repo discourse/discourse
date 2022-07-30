@@ -60,48 +60,36 @@ let callbackCount = 0;
 
 acceptance("Second Factor Auth Page", function (needs) {
   needs.user();
-  needs.pretender((server, helpers) => {
+  needs.pretender((server, { parsePostData, response }) => {
     server.get("/session/2fa.json", (request) => {
-      const response = { ...RESPONSES[request.queryParams.nonce] };
-      const status = response.status || 200;
-      delete response.status;
-      return [status, { "Content-Type": "application/json" }, response];
+      const responseBody = { ...RESPONSES[request.queryParams.nonce] };
+      const status = responseBody.status || 200;
+      delete responseBody.status;
+      return response(status, responseBody);
     });
 
     server.post("/session/2fa", (request) => {
-      const params = helpers.parsePostData(request.requestBody);
+      const params = parsePostData(request.requestBody);
       if (params.second_factor_token === WRONG_TOTP) {
-        return [
-          401,
-          { "Content-Type": "application/json" },
-          {
-            error: "invalid token man",
-            ok: false,
-          },
-        ];
+        return response(401, {
+          error: "invalid token man",
+          ok: false,
+        });
       } else {
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          {
-            ok: true,
-            callback_method: "PUT",
-            callback_path: "/callback-path",
-            redirect_path: "/",
-          },
-        ];
+        return response({
+          ok: true,
+          callback_method: "PUT",
+          callback_path: "/callback-path",
+          redirect_url: "/",
+        });
       }
     });
 
     server.put("/callback-path", () => {
       callbackCount++;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          whatever: true,
-        },
-      ];
+      return response(200, {
+        whatever: true,
+      });
     });
   });
 
@@ -291,7 +279,7 @@ acceptance("Second Factor Auth Page", function (needs) {
     assert.equal(
       currentURL(),
       "/",
-      "user has been redirected to the redirect_path"
+      "user has been redirected to the redirect_url"
     );
     assert.equal(callbackCount, 1, "callback request has been performed");
   });

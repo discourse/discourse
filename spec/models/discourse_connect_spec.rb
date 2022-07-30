@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseConnect do
+RSpec.describe DiscourseConnect do
   before do
     @discourse_connect_url = "http://example.com/discourse_sso"
     @discourse_connect_secret = "shjkfdhsfkjh"
@@ -448,6 +448,20 @@ describe DiscourseConnect do
     user = sso.lookup_or_create_user(ip_address)
 
     expect(user.username).to eq sso.name
+  end
+
+  it "stops using name as a source for username suggestions when disabled" do
+    SiteSetting.use_name_for_username_suggestions = false
+
+    sso = new_discourse_sso
+    sso.external_id = "100"
+
+    sso.username = nil
+    sso.name = "John Smith"
+    sso.email = "mail@mail.com"
+
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "user"
   end
 
   it "doesn't use email as a source for username suggestions by default" do

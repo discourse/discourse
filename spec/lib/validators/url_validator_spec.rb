@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'validators/topic_title_length_validator'
-
 RSpec.describe UrlValidator do
   let(:record) { Fabricate.build(:user_profile, user: Fabricate.build(:user)) }
   let(:validator) { described_class.new(attributes: :website) }

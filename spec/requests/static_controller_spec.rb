@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe StaticController do
+RSpec.describe StaticController do
   fab!(:upload) { Fabricate(:upload) }
 
-  context '#favicon' do
+  describe '#favicon' do
     let(:filename) { 'smallest.png' }
     let(:file) { file_from_fixtures(filename) }
 
@@ -11,12 +11,10 @@ describe StaticController do
       UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
     end
 
-    before_all do
-      DistributedMemoizer.flush!
-    end
-
     after do
-      DistributedMemoizer.flush!
+      Discourse.redis.scan_each(match: "memoize_*").each do |key|
+        Discourse.redis.del(key)
+      end
     end
 
     describe 'local store' do
@@ -68,7 +66,7 @@ describe StaticController do
     end
   end
 
-  context '#brotli_asset' do
+  describe '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
       get "/brotli_asset/missing.js"
 
@@ -135,7 +133,7 @@ describe StaticController do
     end
   end
 
-  context '#cdn_asset' do
+  describe '#cdn_asset' do
     let (:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it 'can serve assets' do
@@ -157,7 +155,7 @@ describe StaticController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       post = create_post
       SiteSetting.tos_topic_id = post.topic.id
@@ -419,10 +417,22 @@ describe StaticController do
         JS
       ])
 
-      get "/service-worker.js"
-      expect(response.status).to eq(200)
-      expect(response.content_type).to start_with("application/javascript")
-      expect(response.body).to include("sourceMappingURL=/assets/service-worker-abcde.js.map")
+      {
+        '/assets/service-worker.js' => '/assets/service-worker-abcde.js.map',
+        '/assets/service-worker.js.br' => '/assets/service-worker-abcde.js.map',
+        '/assets/service-worker.br.js' => '/assets/service-worker-abcde.js.map',
+        '/assets/service-worker.js.gz' => '/assets/service-worker-abcde.js.map',
+        '/assets/service-worker.gz.js' => '/assets/service-worker-abcde.js.map',
+        'https://example.com/assets/service-worker.js' => 'https://example.com/assets/service-worker-abcde.js.map',
+        'https://example.com/subfolder/assets/service-worker.js' => 'https://example.com/subfolder/assets/service-worker-abcde.js.map',
+      }.each do |asset_path, expected_map_url|
+        ActionController::Base.helpers.stubs(:asset_path).with("service-worker.js").returns(asset_path)
+
+        get "/service-worker.js"
+        expect(response.status).to eq(200)
+        expect(response.content_type).to start_with("application/javascript")
+        expect(response.body).to include("sourceMappingURL=#{expected_map_url}\n")
+      end
     end
   end
 end

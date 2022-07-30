@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionType do
+RSpec.describe PostActionType do
 
   context "callbacks" do
     describe '#expiry_cache' do
@@ -24,10 +24,6 @@ describe PostActionType do
     context "verify enum sequence" do
       before do
         @types = PostActionType.types
-      end
-
-      it "'bookmark' should be at 1st position" do
-        expect(@types[:bookmark]).to eq(1)
       end
 
       it "'spam' should be at 8th position" do

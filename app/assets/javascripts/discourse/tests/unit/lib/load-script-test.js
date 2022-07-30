@@ -24,4 +24,15 @@ module("Unit | Utility | load-script", function () {
       `/javascripts/${jsVersions["ace/ace.js"]}`
     );
   });
+
+  test("lookups are case-insensitive", (assert) => {
+    assert.strictEqual(
+      cacheBuster("/javascripts/Chart.min.js"),
+      `/javascripts/${jsVersions["chart.min.js"]}`
+    );
+    assert.strictEqual(
+      cacheBuster("/javascripts/chart.min.js"),
+      `/javascripts/${jsVersions["chart.min.js"]}`
+    );
+  });
 });

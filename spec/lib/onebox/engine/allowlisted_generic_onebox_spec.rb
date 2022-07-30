@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::AllowlistedGenericOnebox do
+RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   describe ".===" do
     it "matches any domain" do
       expect(described_class === URI('http://foo.bar/resource')).to be(true)
@@ -216,6 +216,16 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
         expect(onebox.to_html).to include("https://m.media-amazon.com/images/M/MV5BZGUzMDU1YmQtMzBkOS00MTNmLTg5ZDQtZjY5Njk4Njk2MmRlXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_FMjpg_UX1000_.jpg")
         expect(onebox.to_html).to include("Rudy (1993) - IMDb")
         expect(onebox.to_html).to include("Rudy: Directed by David Anspaugh. With Sean Astin, Jon Favreau, Ned Beatty, Greta Lind. Rudy has always been told that he was too small to play college football.")
+      end
+
+      it 'shows rating' do
+        onebox = described_class.new("https://www.imdb.com/title/tt0108002/")
+        expect(onebox.to_html).to include("7.5")
+      end
+
+      it 'shows duration' do
+        onebox = described_class.new("https://www.imdb.com/title/tt0108002/")
+        expect(onebox.to_html).to include("01:54")
       end
     end
   end

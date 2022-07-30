@@ -14,6 +14,13 @@ export const queryParams = {
   bumped_before: { replace: true, refreshModel: true },
   f: { replace: true, refreshModel: true },
   period: { replace: true, refreshModel: true },
+  topic_ids: { replace: true, refreshModel: true },
+  group_name: { replace: true, refreshModel: true },
+  tags: { replace: true, refreshModel: true },
+  match_all_tags: { replace: true, refreshModel: true },
+  no_subcategories: { replace: true, refreshModel: true },
+  no_tags: { replace: true, refreshModel: true },
+  exclude_tag: { replace: true, refreshModel: true },
 };
 
 // Basic controller options
@@ -22,7 +29,7 @@ const controllerOpts = {
   queryParams: Object.keys(queryParams),
 };
 
-// Default to `null`
+// Default to `undefined`
 controllerOpts.queryParams.forEach((p) => {
   controllerOpts[p] = queryParams[p].default;
 });

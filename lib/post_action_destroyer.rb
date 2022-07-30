@@ -65,7 +65,7 @@ protected
   def notify_subscribers
     name = PostActionType.types[@post_action_type_id]
     if name == :like
-      @post.publish_change_to_clients!(:liked, { likes_count: @post.like_count })
+      @post.publish_change_to_clients!(:unliked, { likes_count: @post.like_count, user_id: @destroyed_by.id })
     elsif self.class.notify_types.include?(name)
       @post.publish_change_to_clients!(:acted)
     end

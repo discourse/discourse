@@ -7,10 +7,21 @@ class WordWatcher
     @raw = raw
   end
 
+  @cache_enabled = true
+
+  def self.disable_cache
+    @cache_enabled = false
+  end
+
+  def self.cache_enabled?
+    @cache_enabled
+  end
+
   def self.words_for_action(action)
     words = WatchedWord
       .where(action: WatchedWord.actions[action.to_sym])
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
+      .order(:id)
 
     if WatchedWord.has_replacement?(action.to_sym)
       words.pluck(:word, :replacement).to_h
@@ -24,7 +35,11 @@ class WordWatcher
   end
 
   def self.get_cached_words(action)
-    Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
+    if cache_enabled?
+      Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
+        words_for_action(action).presence
+      end
+    else
       words_for_action(action).presence
     end
   end
@@ -84,24 +99,33 @@ class WordWatcher
   end
 
   def self.censor(html)
-    regexp = WordWatcher.word_matcher_regexp(:censor)
+    regexp = word_matcher_regexp(:censor)
     return html if regexp.blank?
 
     doc = Nokogiri::HTML5::fragment(html)
     doc.traverse do |node|
-      if node.text?
-        node.content = node.content.gsub(regexp) do |match|
-          # the regex captures leading whitespaces
-          padding = match.size - match.lstrip.size
-          if padding > 0
-            match[0..padding - 1] + REPLACEMENT_LETTER * (match.size - padding)
-          else
-            REPLACEMENT_LETTER * match.size
-          end
-        end
-      end
+      node.content = censor_text_with_regexp(node.content, regexp) if node.text?
     end
     doc.to_s
+  end
+
+  def self.censor_text(text)
+    regexp = word_matcher_regexp(:censor)
+    return text if regexp.blank?
+
+    censor_text_with_regexp(text, regexp)
+  end
+
+  def self.apply_to_text(text)
+    if regexp = word_matcher_regexp(:censor)
+      text = censor_text_with_regexp(text, regexp)
+    end
+
+    %i[replace link]
+      .flat_map { |type| word_matcher_regexps(type).to_a }
+      .reduce(text) do |t, (word_regexp, replacement)|
+        t.gsub(Regexp.new(word_regexp)) { |match| "#{match[0]}#{replacement}" }
+      end
   end
 
   def self.clear_cache!
@@ -157,5 +181,19 @@ class WordWatcher
 
   def word_matches?(word)
     Regexp.new(WordWatcher.word_to_regexp(word, whole: true), Regexp::IGNORECASE).match?(@raw)
+  end
+
+  private
+
+  def self.censor_text_with_regexp(text, regexp)
+    text.gsub(regexp) do |match|
+      # the regex captures leading whitespaces
+      padding = match.size - match.lstrip.size
+      if padding > 0
+        match[0..padding - 1] + REPLACEMENT_LETTER * (match.size - padding)
+      else
+        REPLACEMENT_LETTER * match.size
+      end
+    end
   end
 end

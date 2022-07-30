@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PullUserProfileHotlinkedImages do
+RSpec.describe Jobs::PullUserProfileHotlinkedImages do
   fab!(:user) { Fabricate(:user) }
 
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
@@ -20,6 +20,11 @@ describe Jobs::PullUserProfileHotlinkedImages do
       user.user_profile.update!(bio_raw: "![](#{image_url})")
       expect { Jobs::PullUserProfileHotlinkedImages.new.execute(user_id: user.id) }.to change { Upload.count }.by(1)
       expect(user.user_profile.reload.bio_cooked).to include(Upload.last.url)
+    end
+
+    it 'handles nil bio' do
+      expect { Jobs::PullUserProfileHotlinkedImages.new.execute(user_id: user.id) }.not_to change { Upload.count }
+      expect(user.user_profile.reload.bio_cooked).to eq(nil)
     end
   end
 end

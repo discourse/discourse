@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Compression::Engine do
+RSpec.describe Compression::Engine do
   let(:available_size) { SiteSetting.decompressed_theme_max_file_size_mb }
 
   before do

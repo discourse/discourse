@@ -1,14 +1,14 @@
-{{#if model.userApiKeys}}
+{{#if this.model.userApiKeys}}
   <div class="control-group apps">
     <label class="control-label">{{i18n "user.apps"}}</label>
     <div class="controls">
-      {{#each model.userApiKeys as |key|}}
+      {{#each this.model.userApiKeys as |key|}}
         <div>
           <span>{{key.application_name}}</span>
           {{#if key.revoked}}
-            {{d-button action=(route-action "undoRevokeApiKey") actionParam=key class="btn" label="user.undo_revoke_access"}}
+            <DButton @action={{route-action "undoRevokeApiKey"}} @actionParam={{key}} @class="btn" @label="user.undo_revoke_access" />
           {{else}}
-            {{d-button action=(route-action "revokeApiKey") actionParam=key class="btn" label="user.revoke_access"}}
+            <DButton @action={{route-action "revokeApiKey"}} @actionParam={{key}} @class="btn" @label="user.revoke_access" />
           {{/if}}
           <p>
             <ul>
@@ -25,4 +25,4 @@
   </div>
 {{/if}}
 
-{{plugin-outlet name="user-preferences-apps" tagName="span" connectorTagName="div" args=(hash model=model)}}
+<PluginOutlet @name="user-preferences-apps" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

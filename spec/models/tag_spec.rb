@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Tag do
+RSpec.describe Tag do
   def make_some_tags(count: 3, tag_a_topic: false)
     @tags = []
     if tag_a_topic
@@ -13,10 +13,22 @@ describe Tag do
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_level_to_tag_topics = 0
+  end
+
+  context 'associations' do
+    it 'should delete associated sidebar_section_links when tag is destroyed' do
+      tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
+      tag_sidebar_section_link_2 = Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
+      category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
+
+      expect { tag_sidebar_section_link.linkable.destroy! }.to change { SidebarSectionLink.count }.from(3).to(1)
+      expect(SidebarSectionLink.first).to eq(category_sidebar_section_link)
+    end
   end
 
   describe 'new' do
@@ -160,13 +172,13 @@ describe Tag do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
     end
 
-    it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
-      SiteSetting.allow_staff_to_tag_pms = false
+    it "returns nothing if pm_tags_allowed_for_groups setting is empty" do
+      SiteSetting.pm_tags_allowed_for_groups = ""
       expect(Tag.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
     end
 
     it "returns all pm tags if user is a staff and pm tagging is enabled" do
-      SiteSetting.allow_staff_to_tag_pms = true
+      SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
       expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Jobs::NotifyTagChange do
+RSpec.describe ::Jobs::NotifyTagChange do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
@@ -23,6 +23,22 @@ describe ::Jobs::NotifyTagChange do
     expect(notification.user_id).to eq(user.id)
     expect(notification.topic_id).to eq(post.topic_id)
     expect(notification.notification_type).to eq(Notification.types[:posted])
+  end
+
+  it "doesn't create notifications if tags edit notifications are disabled" do
+    SiteSetting.disable_tags_edit_notifications = true
+
+    TagUser.create!(
+      user_id: user.id,
+      tag_id: tag.id,
+      notification_level: NotificationLevels.topic_levels[:watching]
+    )
+    TopicTag.create!(
+      topic_id: post.topic.id,
+      tag_id: tag.id
+    )
+
+    expect { described_class.new.execute(post_id: post.id, notified_user_ids: [regular_user.id]) }.not_to change { Notification.count }
   end
 
   it 'doesnt create notification for user watching category' do

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_dependency 'content_security_policy'
+require 'content_security_policy'
 
 class ContentSecurityPolicy
   class Default
@@ -72,6 +72,10 @@ class ContentSecurityPolicy
         if SiteSetting.gtm_container_id.present?
           sources << 'https://www.googletagmanager.com/gtm.js'
           sources << "'nonce-#{ApplicationHelper.google_tag_manager_nonce}'"
+        end
+
+        if SiteSetting.splash_screen
+          sources << "'nonce-#{ApplicationHelper.splash_screen_nonce}'"
         end
       end
     end

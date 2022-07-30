@@ -2,7 +2,7 @@
 
 require 'topic_view'
 
-describe TopicQuery do
+RSpec.describe TopicQuery do
 
   # TODO:
   #   This fab! here has impact on all tests.
@@ -65,7 +65,7 @@ describe TopicQuery do
     end
   end
 
-  context "#list_topics_by" do
+  describe "#list_topics_by" do
 
     it "allows users to view their own invisible topics" do
       _topic = Fabricate(:topic, user: user)
@@ -77,7 +77,7 @@ describe TopicQuery do
 
   end
 
-  context "#prioritize_pinned_topics" do
+  describe "#prioritize_pinned_topics" do
     it "does the pagination correctly" do
       num_topics = 15
       per_page = 3
@@ -159,31 +159,12 @@ describe TopicQuery do
     end
   end
 
-  context 'bookmarks' do
-    it "filters and returns bookmarks correctly" do
-      post = Fabricate(:post)
-      reply = Fabricate(:post, topic: post.topic)
-
-      post2 = Fabricate(:post)
-
-      PostActionCreator.create(user, post, :bookmark)
-      PostActionCreator.create(user, reply, :bookmark)
-      TopicUser.change(user, post.topic, notification_level: 1)
-      TopicUser.change(user, post2.topic, notification_level: 1)
-
-      query = TopicQuery.new(user, filter: 'bookmarked').list_latest
-
-      expect(query.topics.length).to eq(1)
-      expect(query.topics.first.user_data.post_action_data).to eq(PostActionType.types[:bookmark] => [1, 2])
-    end
-  end
-
   context 'tracked' do
     it "filters tracked topics correctly" do
       SiteSetting.tagging_enabled = true
 
       tag = Fabricate(:tag)
-      Fabricate(:topic, tags: [tag])
+      topic = Fabricate(:topic, tags: [tag])
       topic2 = Fabricate(:topic)
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
@@ -202,26 +183,48 @@ describe TopicQuery do
       )
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
-      expect(query.topics.length).to eq(1)
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id)
 
       cu.update!(notification_level: NotificationLevels.all[:tracking])
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
-      expect(query.topics.length).to eq(2)
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id)
 
       # includes subcategories of tracked categories
-      parentcat = Fabricate(:category)
-      subcat = Fabricate(:category, parent_category_id: parentcat.id)
-      topic3 = Fabricate(:topic, category_id: subcat.id)
+      parent_category = Fabricate(:category)
+      sub_category = Fabricate(:category, parent_category_id: parent_category.id)
+      topic3 = Fabricate(:topic, category_id: sub_category.id)
+
+      parent_category_2 = Fabricate(:category)
+      sub_category_2 = Fabricate(:category, parent_category: parent_category_2)
+      topic4 = Fabricate(:topic, category: sub_category_2)
 
       CategoryUser.create!(
-        category_id: parentcat.id,
+        category_id: parent_category.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:tracking]
+      )
+
+      CategoryUser.create!(
+        category_id: sub_category_2.id,
         user_id: user.id,
         notification_level: NotificationLevels.all[:tracking]
       )
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
-      expect(query.topics.length).to eq(3)
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id, topic4.id)
+
+      # includes sub-subcategories of tracked categories
+      SiteSetting.max_category_nesting = 3
+      sub_sub_category = Fabricate(:category, parent_category_id: sub_category.id)
+      topic5 = Fabricate(:topic, category_id: sub_sub_category.id)
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+
+      expect(query.topics.map(&:id)).to contain_exactly(topic.id, topic2.id, topic3.id, topic4.id, topic5.id)
     end
   end
 
@@ -500,7 +503,7 @@ describe TopicQuery do
     end
   end
 
-  context "#list_top_for" do
+  describe "#list_top_for" do
     it "lists top for the week" do
       Fabricate(:topic, like_count: 1000, posts_count: 100)
       TopTopic.refresh!
@@ -546,7 +549,7 @@ describe TopicQuery do
     end
 
     it 'should include default regular category topics in latest list for anonymous users' do
-      SiteSetting.default_categories_regular = category.id.to_s
+      SiteSetting.default_categories_normal = category.id.to_s
       expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
@@ -831,6 +834,9 @@ describe TopicQuery do
     end
 
     context 'with whispers' do
+      before do
+        SiteSetting.enable_whispers = true
+      end
 
       it 'correctly shows up in unread for staff' do
 
@@ -886,7 +892,7 @@ describe TopicQuery do
 
   end
 
-  context '#list_new' do
+  describe '#list_new' do
 
     context 'without a new topic' do
       it "has no new topics" do
@@ -963,7 +969,7 @@ describe TopicQuery do
 
   end
 
-  context '#list_posted' do
+  describe '#list_posted' do
     let(:topics) { topic_query.list_posted.topics }
 
     it "returns blank when there are no posted topics" do
@@ -1017,7 +1023,7 @@ describe TopicQuery do
     end
   end
 
-  context '#list_unseen' do
+  describe '#list_unseen' do
     it "returns an empty list when there aren't topics" do
       expect(topic_query.list_unseen.topics).to be_blank
     end
@@ -1068,7 +1074,7 @@ describe TopicQuery do
     end
   end
 
-  context '#list_related_for' do
+  describe '#list_related_for' do
 
     let(:user) do
       Fabricate(:admin)

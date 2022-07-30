@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'onpdiff'
-
-describe ONPDiff do
+RSpec.describe ONPDiff do
 
   describe "diff" do
 

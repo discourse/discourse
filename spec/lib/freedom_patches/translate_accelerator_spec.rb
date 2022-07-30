@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "translate accelerator" do
+RSpec.describe "translate accelerator" do
   before do
     @original_i18n_load_path = I18n.load_path.dup
     I18n.load_path += Dir["#{Rails.root}/spec/fixtures/i18n/translate_accelerator.*.yml"]
@@ -220,6 +220,19 @@ describe "translate accelerator" do
 
       override_translation('en', 'fish', 'fake fish')
       expect(Fish.model_name.human).to eq('Fish')
+    end
+
+    it "works when the override contains an interpolation key" do
+      expect(I18n.t("foo_with_variable")).to eq("Foo in :en with %{variable}")
+      I18n.with_locale(:de) { expect(I18n.t("foo_with_variable")).to eq("Foo in :de with %{variable}") }
+
+      override_translation("en", "foo_with_variable", "Override in :en with %{variable}")
+      expect(I18n.t("foo_with_variable")).to eq("Override in :en with %{variable}")
+      I18n.with_locale(:de) { expect(I18n.t("foo_with_variable")).to eq("Foo in :de with %{variable}") }
+
+      override_translation("de", "foo_with_variable", "Override in :de with %{variable}")
+      expect(I18n.t("foo_with_variable")).to eq("Override in :en with %{variable}")
+      I18n.with_locale(:de) { expect(I18n.t("foo_with_variable")).to eq("Override in :de with %{variable}") }
     end
   end
 

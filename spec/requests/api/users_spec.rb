@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'users' do
+RSpec.describe 'users' do
 
   let(:'Api-Key') { Fabricate(:api_key).key }
   let(:'Api-Username') { 'system' }
@@ -390,6 +390,33 @@ describe 'users' do
         } }
 
         expected_response_schema = load_spec_schema('user_suspend_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/admin/users/{id}/silence.json' do
+    put 'Silence a user' do
+      tags 'Users', 'Admin'
+      operationId 'silenceUser'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_silence_request')
+
+      parameter name: :id, in: :path, type: :integer, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:id) { Fabricate(:user).id }
+        let(:params) {}
+
+        expected_response_schema = load_spec_schema('user_silence_response')
         schema(expected_response_schema)
 
         it_behaves_like "a JSON endpoint", 200 do

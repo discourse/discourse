@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmbedController do
+RSpec.describe EmbedController do
 
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
@@ -30,7 +30,7 @@ describe EmbedController do
     end
   end
 
-  context "#info" do
+  describe "#info" do
     context "without api key" do
       it "fails" do
         get '/embed/info.json'
@@ -70,7 +70,7 @@ describe EmbedController do
     end
   end
 
-  context "#topics" do
+  describe "#topics" do
     it "raises an error when not enabled" do
       get '/embed/topics?embed_id=de-1234'
       expect(response.status).to eq(400)
@@ -156,6 +156,14 @@ describe EmbedController do
         expect(response.body).to match("data-referer=\"\\*\"")
       end
 
+      it "disallows indexing the embed topic list" do
+        topic = Fabricate(:topic)
+        get '/embed/topics?discourse_embed_id=de-1234', headers: {
+          'REFERER' => 'https://example.com/evil-trout'
+        }
+        expect(response.status).to eq(200)
+        expect(response.headers['X-Robots-Tag']).to match(/noindex/)
+      end
     end
   end
 

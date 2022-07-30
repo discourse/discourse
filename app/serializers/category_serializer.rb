@@ -37,7 +37,7 @@ class CategorySerializer < SiteCategorySerializer
         .category_groups
         .joins(:group)
         .includes(:group)
-        .merge(Group.visible_groups(scope&.user, "groups.name ASC"))
+        .merge(Group.visible_groups(scope&.user, "groups.name ASC", include_everyone: true))
         .map do |cg|
           {
             permission_type: cg.permission_type,
@@ -51,6 +51,10 @@ class CategorySerializer < SiteCategorySerializer
 
       perms
     end
+  end
+
+  def include_group_permissions?
+    scope&.can_edit?(object)
   end
 
   def include_available_groups?

@@ -130,5 +130,56 @@ RSpec.describe RobotsTxtController do
       expect(response.status).to eq(200)
       expect(response.body).to eq(SiteSetting.overridden_robots_txt)
     end
+
+    describe 'sitemap' do
+      let(:sitemap_line) { "Sitemap: #{Discourse.base_protocol}://#{Discourse.current_hostname}/sitemap.xml" }
+
+      it 'include sitemap location when enabled' do
+        SiteSetting.enable_sitemap = true
+        SiteSetting.login_required = false
+
+        get '/robots.txt'
+
+        expect(response.body).to include(sitemap_line)
+      end
+
+      it "doesn't include sitemap location when disabled" do
+        SiteSetting.enable_sitemap = false
+        SiteSetting.login_required = false
+
+        get '/robots.txt'
+
+        expect(response.body).not_to include(sitemap_line)
+      end
+
+      it "doesn't include sitemap location when site has login_required enabled" do
+        SiteSetting.enable_sitemap = true
+        SiteSetting.login_required = true
+
+        get '/robots.txt'
+
+        expect(response.body).not_to include(sitemap_line)
+      end
+    end
+
+    describe 'plugins' do
+      let(:event_handler) do
+        Proc.new { |robots_info| robots_info[:agents] << { name: 'Test', disallow: ['/test/'] } }
+      end
+
+      before do
+        DiscourseEvent.on(:robots_info, &event_handler)
+      end
+
+      after do
+        DiscourseEvent.off(:robots_info, &event_handler)
+      end
+
+      it 'can add to robots.txt' do
+        get '/robots.txt'
+
+        expect(response.parsed_body).to include("User-agent: Test\nDisallow: /test/")
+      end
+    end
   end
 end

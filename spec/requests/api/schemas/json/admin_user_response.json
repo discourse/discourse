@@ -72,7 +72,7 @@
     },
     "associated_accounts": {
       "type": "array",
-      "items": []
+      "items": {}
     },
     "can_send_activation_email": {
       "type": "boolean"
@@ -360,7 +360,7 @@
     },
     "groups": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -485,7 +485,6 @@
             "publish_read_state"
           ]
         }
-      ]
     },
     "external_ids": {
       "type": "object"

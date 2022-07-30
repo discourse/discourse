@@ -132,7 +132,7 @@ class TopicEmbed < ActiveRecord::Base
 
     response = FetchResponse.new
     begin
-      html = uri.read(allow_redirections: :safe)
+      html = uri.read
     rescue OpenURI::HTTPError, Net::OpenTimeout
       return
     end

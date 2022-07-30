@@ -21,6 +21,8 @@ module ImportScripts::Mbox
     attr_reader :automatically_remove_list_name_prefix
     attr_reader :show_trimmed_content
     attr_reader :tags
+    attr_reader :fix_mailman_via_addresses
+    attr_reader :elide_equals_in_addresses
 
     def initialize(yaml)
       @data_dir = yaml['data_dir']
@@ -39,6 +41,8 @@ module ImportScripts::Mbox
 
       @automatically_remove_list_name_prefix = yaml['automatically_remove_list_name_prefix']
       @show_trimmed_content = yaml['show_trimmed_content']
+      @fix_mailman_via_addresses = yaml['fix_mailman_via_addresses']
+      @elide_equals_in_addresses = yaml['elide_equals_in_addresses']
 
       @tags = []
       if yaml['tags'].present?

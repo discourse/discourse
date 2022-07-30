@@ -2,7 +2,7 @@
 
 require 'text_cleaner'
 
-describe TextCleaner do
+RSpec.describe TextCleaner do
 
   context "exclamation marks" do
 

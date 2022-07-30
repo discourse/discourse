@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WatchedWord do
+RSpec.describe WatchedWord do
 
   it "can't have duplicate words" do
     Fabricate(:watched_word, word: "darn", action: described_class.actions[:block])
@@ -87,6 +87,12 @@ describe WatchedWord do
         expect(w.reload.action).to eq(described_class.actions[:block])
         expect(w.id).to eq(existing.id)
       }.to_not change { described_class.count }
+    end
+
+    it "error when an tag action is created without valid tags" do
+      expect {
+        described_class.create!(word: "ramones", action: described_class.actions[:tag])
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "replaces link with absolute URL" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseUpdates do
+RSpec.describe DiscourseUpdates do
   def stub_data(latest, missing, critical, updated_at)
     DiscourseUpdates.latest_version = latest
     DiscourseUpdates.missing_versions_count = missing

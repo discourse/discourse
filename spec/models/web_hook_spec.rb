@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WebHook do
+RSpec.describe WebHook do
   it { is_expected.to validate_presence_of :payload_url }
   it { is_expected.to validate_presence_of :content_type }
   it { is_expected.to validate_presence_of :last_delivery_status }
@@ -135,6 +135,7 @@ describe WebHook do
     let(:topic) { Fabricate(:topic, user: user) }
     let(:post) { Fabricate(:post, topic: topic, user: user) }
     let(:topic_web_hook) { Fabricate(:topic_web_hook) }
+    let(:tag) { Fabricate(:tag) }
 
     before do
       topic_web_hook
@@ -206,6 +207,21 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(topic_id)
       expect(payload["category_id"]).to eq(category.id)
+
+      expect do
+        successfully_saved_post_and_topic = PostRevisor.new(post, post.topic).revise!(
+          post.user,
+          { tags: [tag.name] },
+          { skip_validations: true },
+        )
+      end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_edited")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+      expect(payload["tags"]).to contain_exactly(tag.name)
     end
 
     describe 'when topic has been deleted' do
@@ -588,7 +604,7 @@ describe WebHook do
       it 'shouldn’t trigger when the user is demoted' do
         expect {
           another_user.change_trust_level!(another_user.trust_level - 1)
-        }.to change { Jobs::EmitWebHookEvent.jobs.length }.by(0)
+        }.not_to change { Jobs::EmitWebHookEvent.jobs.length }
       end
     end
 

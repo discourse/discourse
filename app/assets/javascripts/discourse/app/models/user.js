@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { equal, filterBy, gt, or } from "@ember/object/computed";
+import { alias, equal, filterBy, gt, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -30,6 +30,11 @@ import { isEmpty } from "@ember/utils";
 import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { htmlSafe } from "@ember/template";
+import Evented from "@ember/object/evented";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
+import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -61,6 +66,8 @@ let userFields = [
   "primary_group_id",
   "flair_group_id",
   "user_notification_schedule",
+  "sidebar_category_ids",
+  "sidebar_tag_names",
 ];
 
 export function addSaveableUserField(fieldName) {
@@ -175,9 +182,9 @@ const User = RestModel.extend({
   @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (isEmpty(bgUrl) || !this.siteSettings.allow_profile_backgrounds) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
-    return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
+    return htmlSafe("background-image: url(" + getURLWithCDN(bgUrl) + ")");
   },
 
   @discourseComputed()
@@ -305,6 +312,35 @@ const User = RestModel.extend({
   @discourseComputed("silenced_till")
   silencedTillDate: longDate,
 
+  sidebarCategoryIds: alias("sidebar_category_ids"),
+
+  @discourseComputed("sidebar_tag_names.[]")
+  sidebarTagNames(sidebarTagNames) {
+    if (!sidebarTagNames || sidebarTagNames.length === 0) {
+      return [];
+    }
+
+    return sidebarTagNames;
+  },
+
+  @discourseComputed("sidebar_category_ids.[]")
+  sidebarCategories(sidebarCategoryIds) {
+    if (!sidebarCategoryIds || sidebarCategoryIds.length === 0) {
+      return [];
+    }
+
+    return Site.current().categoriesList.filter((category) => {
+      if (
+        this.siteSettings.suppress_uncategorized_badge &&
+        category.isUncategorizedCategory
+      ) {
+        return false;
+      }
+
+      return sidebarCategoryIds.includes(category.id);
+    });
+  },
+
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
       type: "PUT",
@@ -332,13 +368,13 @@ const User = RestModel.extend({
 
   save(fields) {
     const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
+      userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
     let filteredUserOptionFields = [];
     if (fields) {
-      filteredUserOptionFields = userOptionFields.filter(
-        (uo) => fields.indexOf(uo) !== -1
+      filteredUserOptionFields = userOptionFields.filter((uo) =>
+        fields.includes(uo)
       );
     } else {
       filteredUserOptionFields = userOptionFields;
@@ -380,6 +416,12 @@ const User = RestModel.extend({
     ].forEach((prop) => {
       if (fields === undefined || fields.includes(prop)) {
         data[prop] = this.get(prop) ? this.get(prop).join(",") : "";
+      }
+    });
+
+    ["sidebar_category_ids", "sidebar_tag_names"].forEach((prop) => {
+      if (data[prop]?.length === 0) {
+        data[prop] = null;
       }
     });
 
@@ -669,11 +711,6 @@ const User = RestModel.extend({
         json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
-      if (!json.user._timezone) {
-        json.user._timezone = json.user.timezone;
-        delete json.user.timezone;
-      }
-
       user.setProperties(json.user);
       return user;
     });
@@ -960,34 +997,9 @@ const User = RestModel.extend({
     );
   },
 
-  resolvedTimezone(currentUser) {
-    if (this.hasSavedTimezone()) {
-      return this._timezone;
-    }
-
-    // only change the timezone and save it if we are
-    // looking at our own user
-    if (currentUser.id === this.id) {
-      this.changeTimezone(moment.tz.guess());
-      ajax(userPath(this.username + ".json"), {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: this._timezone },
-      });
-    }
-
-    return this._timezone;
-  },
-
-  changeTimezone(tz) {
-    this._timezone = tz;
-  },
-
-  hasSavedTimezone() {
-    if (this._timezone) {
-      return true;
-    }
-    return false;
+  // obsolete, just call "user.timezone" instead
+  resolvedTimezone() {
+    return this.timezone;
   },
 
   calculateMutedIds(notificationLevel, id, type) {
@@ -1030,26 +1042,29 @@ const User = RestModel.extend({
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
   },
 
+  updateDraftProperties(properties) {
+    this.setProperties(properties);
+    this.appEvents.trigger("user-drafts:changed");
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
       new Date(this.do_not_disturb_until) >= new Date()
     );
   },
+
+  @discourseComputed(
+    "tracked_tags.[]",
+    "watched_tags.[]",
+    "watching_first_post_tags.[]"
+  )
+  trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
+    return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
 });
 
 User.reopenClass(Singleton, {
-  munge(json) {
-    // timezone should not be directly accessed, use
-    // resolvedTimezone() and changeTimezone(tz)
-    if (!json._timezone) {
-      json._timezone = json.timezone;
-      delete json.timezone;
-    }
-
-    return json;
-  },
-
   // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username });
@@ -1058,22 +1073,30 @@ User.reopenClass(Singleton, {
 
   // TODO: Use app.register and junk Singleton
   createCurrent() {
-    let userJson = PreloadStore.get("currentUser");
-
-    if (userJson && userJson.primary_group_id) {
-      const primaryGroup = userJson.groups.find(
-        (group) => group.id === userJson.primary_group_id
-      );
-      if (primaryGroup) {
-        userJson.primary_group_name = primaryGroup.name;
-      }
-    }
-
+    const userJson = PreloadStore.get("currentUser");
     if (userJson) {
-      userJson = User.munge(userJson);
+      userJson.isCurrent = true;
+
+      if (userJson.primary_group_id) {
+        const primaryGroup = userJson.groups.find(
+          (group) => group.id === userJson.primary_group_id
+        );
+        if (primaryGroup) {
+          userJson.primary_group_name = primaryGroup.name;
+        }
+      }
+
+      if (!userJson.timezone) {
+        userJson.timezone = moment.tz.guess();
+        this._saveTimezone(userJson);
+      }
+
       const store = getOwner(this).lookup("service:store");
-      return store.createRecord("user", userJson);
+      const currentUser = store.createRecord("user", userJson);
+      currentUser.trackStatus();
+      return currentUser;
     }
+
     return null;
   },
 
@@ -1144,6 +1167,120 @@ User.reopenClass(Singleton, {
       type: "POST",
     });
   },
+
+  _saveTimezone(user) {
+    ajax(userPath(user.username + ".json"), {
+      type: "PUT",
+      dataType: "json",
+      data: { timezone: user.timezone },
+    });
+  },
+});
+
+User.reopenClass({
+  create(args) {
+    args = args || {};
+    this.deleteStatusTrackingFields(args);
+    return this._super(args);
+  },
+
+  deleteStatusTrackingFields(args) {
+    // every user instance has to have it's own tracking fields
+    // when creating a new user model
+    // its _subscribersCount and _clearStatusTimerId fields
+    // should be equal to 0 and null
+    // here we makes sure that even if these fields
+    // will be passed in args they won't be set anyway
+    //
+    // this is something that could be implemented by making these fields private,
+    // but EmberObject doesn't support private fields
+    if (args.hasOwnProperty("_subscribersCount")) {
+      delete args._subscribersCount;
+    }
+    if (args.hasOwnProperty("_clearStatusTimerId")) {
+      delete args._clearStatusTimerId;
+    }
+  },
+});
+
+// user status tracking
+User.reopen(Evented, {
+  _subscribersCount: 0,
+  _clearStatusTimerId: null,
+
+  // always call stopTrackingStatus() when done with a user
+  trackStatus() {
+    if (this._subscribersCount === 0) {
+      this.addObserver("status", this, "_statusChanged");
+
+      this.appEvents.on("user-status:changed", this, this._updateStatus);
+
+      if (this.status && this.status.ends_at) {
+        this._scheduleStatusClearing(this.status.ends_at);
+      }
+    }
+
+    this._subscribersCount++;
+  },
+
+  stopTrackingStatus() {
+    if (this._subscribersCount === 0) {
+      return;
+    }
+
+    if (this._subscribersCount === 1) {
+      // the last subscriber is unsubscribing
+      this.removeObserver("status", this, "_statusChanged");
+      this.appEvents.off("user-status:changed", this, this._updateStatus);
+      this._unscheduleStatusClearing();
+    }
+
+    this._subscribersCount--;
+  },
+
+  _statusChanged(sender, key) {
+    this.trigger("status-changed");
+
+    const status = this.get(key);
+    if (status && status.ends_at) {
+      this._scheduleStatusClearing(status.ends_at);
+    } else {
+      this._unscheduleStatusClearing();
+    }
+  },
+
+  _scheduleStatusClearing(endsAt) {
+    if (isTesting()) {
+      return;
+    }
+
+    if (this._clearStatusTimerId) {
+      this._unscheduleStatusClearing();
+    }
+
+    const utcNow = moment.utc();
+    const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
+    this._clearStatusTimerId = discourseLater(
+      this,
+      "_autoClearStatus",
+      remaining
+    );
+  },
+
+  _unscheduleStatusClearing() {
+    cancel(this._clearStatusTimerId);
+    this._clearStatusTimerId = null;
+  },
+
+  _autoClearStatus() {
+    this.set("status", null);
+  },
+
+  _updateStatus(statuses) {
+    if (statuses.hasOwnProperty(this.id)) {
+      this.set("status", statuses[this.id]);
+    }
+  },
 });
 
 if (typeof Discourse !== "undefined") {
@@ -1152,9 +1289,8 @@ if (typeof Discourse !== "undefined") {
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {
-        deprecated("Import the User class instead of using User", {
+        deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }

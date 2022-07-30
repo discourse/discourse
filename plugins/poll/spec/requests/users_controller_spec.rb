@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Admin::UsersController do
+RSpec.describe Admin::UsersController do
 
   let(:admin) { Fabricate(:admin) }
 
