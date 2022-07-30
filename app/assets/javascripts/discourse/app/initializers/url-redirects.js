@@ -7,7 +7,7 @@ export default {
   after: "inject-objects",
 
   initialize(container) {
-    const currentUser = container.lookup("current-user:main");
+    const currentUser = container.lookup("service:current-user");
     if (currentUser) {
       const username = currentUser.get("username");
       const escapedUsername = escapeRegExp(username);

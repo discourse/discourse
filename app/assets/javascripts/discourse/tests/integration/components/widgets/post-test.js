@@ -237,7 +237,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("anon liking", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     const args = { showLike: true };
     this.set("args", args);
     this.set("showLogin", () => (this.loginShown = true));

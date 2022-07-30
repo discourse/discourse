@@ -18,12 +18,7 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service keyValueStore;
   @service pmTopicTrackingState;
   @service siteSettings;
-
-  @cached
-  get currentUser() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("current-user:main");
-  }
+  @service currentUser;
 
   @cached
   get messageBus() {

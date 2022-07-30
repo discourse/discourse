@@ -13,7 +13,7 @@ export default {
     const session = Session.current();
     const siteSettings = container.lookup("service:site-settings");
     const keyValueStore = container.lookup("service:key-value-store");
-    const user = container.lookup("current-user:main");
+    const user = container.lookup("service:current-user");
     const appEvents = container.lookup("service:app-events");
 
     // Preconditions

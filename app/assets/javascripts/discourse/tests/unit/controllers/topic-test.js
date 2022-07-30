@@ -21,7 +21,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
   });
 
   hooks.afterEach(function () {
-    this.registry.unregister("current-user:main");
+    this.registry.unregister("service:current-user");
     let topic = this.container.lookup("controller:topic");
     topic.setProperties({
       selectedPostIds: [],
@@ -264,10 +264,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
   test("canDeleteSelected", function (assert) {
     const currentUser = User.create({ admin: false });
-    this.registry.register("current-user:main", currentUser, {
+    this.registry.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.registry.injection("controller", "currentUser", "current-user:main");
+    this.registry.injection(
+      "controller",
+      "currentUser",
+      "service:current-user"
+    );
     let model = topicWithStream({
       posts: [
         { id: 1, can_delete: false },
@@ -362,10 +366,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
   test("canChangeOwner", function (assert) {
     const currentUser = User.create({ admin: false });
-    this.registry.register("current-user:main", currentUser, {
+    this.registry.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.registry.injection("controller", "currentUser", "current-user:main");
+    this.registry.injection(
+      "controller",
+      "currentUser",
+      "service:current-user"
+    );
 
     let model = topicWithStream({
       posts: [
@@ -405,10 +413,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
 
   test("modCanChangeOwner", function (assert) {
     const currentUser = User.create({ moderator: false });
-    this.registry.register("current-user:main", currentUser, {
+    this.registry.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.registry.injection("controller", "currentUser", "current-user:main");
+    this.registry.injection(
+      "controller",
+      "currentUser",
+      "service:current-user"
+    );
 
     let model = topicWithStream({
       posts: [
@@ -667,10 +679,14 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
 
     const currentUser = EmberObject.create({ moderator: true });
-    this.registry.register("current-user:main", currentUser, {
+    this.registry.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.registry.injection("controller", "currentUser", "current-user:main");
+    this.registry.injection(
+      "controller",
+      "currentUser",
+      "service:current-user"
+    );
 
     let model = topicWithStream({
       stream: [2, 3, 4],

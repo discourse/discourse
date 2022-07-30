@@ -19,7 +19,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const user = container.lookup("current-user:main");
+    const user = container.lookup("service:current-user");
     const bus = container.lookup("service:message-bus");
     const appEvents = container.lookup("service:app-events");
 
