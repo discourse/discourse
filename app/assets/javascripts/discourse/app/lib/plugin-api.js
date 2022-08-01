@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
@@ -478,6 +479,30 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    if (name === "hamburger-menu:generalLinks") {
+      const siteSettings = this.container.lookup("site-settings:main");
+
+      if (siteSettings.enable_experimental_sidebar_hamburger) {
+        try {
+          const { route, label, rawLabel, className } = fn();
+          const textContent = rawLabel || I18n.t(label);
+
+          this.addCommunitySectionLink({
+            name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
+            route,
+            title: textContent,
+            text: textContent,
+          });
+        } catch {
+          deprecated(
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+          );
+        }
+
+        return;
+      }
+    }
+
     decorateWidget(name, fn);
   }
 

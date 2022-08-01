@@ -1,4 +1,5 @@
 import { test } from "qunit";
+import I18n from "I18n";
 
 import { click, visit } from "@ember/test-helpers";
 import {
@@ -417,6 +418,77 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert.ok(
       !exists(".sidebar-section-test-chat-channels .sidebar-section-content a"),
       "displays no links"
+    );
+  });
+
+  test("API bridge for decorating hamburger-menu widget with generalLinks", async function (assert) {
+    withPluginApi("1.3.0", (api) => {
+      api.decorateWidget("hamburger-menu:generalLinks", () => {
+        return {
+          route: "discovery.latest",
+          label: "filters.latest.title",
+        };
+      });
+
+      api.decorateWidget("hamburger-menu:generalLinks", () => {
+        return {
+          route: "discovery.unread",
+          rawLabel: "my unreads",
+        };
+      });
+
+      api.decorateWidget("hamburger-menu:generalLinks", () => {
+        return {
+          route: "discovery.top",
+          rawLabel: "my top",
+          className: "my-custom-top",
+        };
+      });
+    });
+
+    await visit("/");
+
+    const customlatestSectionLink = query(
+      ".sidebar-section-community .sidebar-section-link-latest"
+    );
+
+    assert.ok(
+      customlatestSectionLink,
+      "adds custom latest section link to community section"
+    );
+
+    assert.strictEqual(
+      customlatestSectionLink.textContent.trim(),
+      I18n.t("filters.latest.title"),
+      "displays the right text for custom latest section link"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    const customUnreadSectionLink = query(
+      ".sidebar-section-community .sidebar-section-link-my-unreads"
+    );
+
+    assert.ok(
+      customUnreadSectionLink,
+      "adds custom unread section link to community section"
+    );
+
+    assert.strictEqual(
+      customUnreadSectionLink.textContent.trim(),
+      "my unreads",
+      "displays the right text for custom unread section link"
+    );
+
+    const customTopSectionLInk = query(
+      ".sidebar-section-community .sidebar-section-link-my-custom-top"
+    );
+
+    assert.ok(
+      customTopSectionLInk,
+      "adds custom top section link to community section with right link class"
     );
   });
 });
