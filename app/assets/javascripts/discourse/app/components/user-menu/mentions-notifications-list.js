@@ -4,4 +4,8 @@ export default class UserMenuMentionsNotificationsList extends UserMenuNotificat
   get filterByTypes() {
     return ["mentioned"];
   }
+
+  dismissWarningModal() {
+    return null;
+  }
 }
