@@ -5718,7 +5718,7 @@ en:
 
   wizard_js:
     wizard:
-      done: "Jump in!"
+      jump_in: "Jump in!"
       finish: "Exit setup"
       back: "Back"
       next: "Next"

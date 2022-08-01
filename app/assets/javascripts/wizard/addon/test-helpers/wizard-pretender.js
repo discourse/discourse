@@ -28,10 +28,10 @@ export default function (helpers) {
             index: 1,
             fields: [{ id: "some-title", type: "text" }],
             previous: "hello-world",
-            next: "last-step",
+            next: "corporate",
           },
           {
-            id: "last-step",
+            id: "corporate",
             index: 2,
             fields: [
               { id: "snack", type: "dropdown", required: true },

@@ -17,24 +17,14 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showNextButton(current, total) {
-    return current < total;
-  },
-
-  @discourseComputed("step.id", "step.displayIndex", "wizard.totalSteps")
-  showDoneButton(step, current, total) {
-    return step === "ready" || current === total;
-  },
-
-  @discourseComputed("step.id")
-  showFinishButton(step) {
-    return step === "styling" || step === "branding";
-  },
-
   @discourseComputed("step.index")
   showBackButton(index) {
     return index > 0;
+  },
+
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
+  showNextButton(current, total) {
+    return current < total;
   },
 
   @discourseComputed("step.id")
@@ -45,6 +35,26 @@ export default Component.extend({
   @discourseComputed("step.id")
   nextButtonClass(step) {
     return step === "ready" ? "configure-more" : "next";
+  },
+
+  @discourseComputed("step.id")
+  showJumpInButton(step) {
+    return step === "ready";
+  },
+
+  @discourseComputed("step.id")
+  showFinishButton(step) {
+    return ["styling", "branding", "corporate"].includes(step);
+  },
+
+  @discourseComputed("step.id")
+  finishButtonLabel(step) {
+    return `wizard.${step === "corporate" ? "jump_in" : "finish"}`;
+  },
+
+  @discourseComputed("step.id")
+  finishButtonClass(step) {
+    return step === "corporate" ? "jump-in" : "finish";
   },
 
   @discourseComputed("step.id")
@@ -73,7 +83,7 @@ export default Component.extend({
 
   keyPress(event) {
     if (event.key === "Enter") {
-      if (this.showDoneButton) {
+      if (this.showJumpInButton) {
         this.send("quit");
       } else {
         this.send("nextStep");
