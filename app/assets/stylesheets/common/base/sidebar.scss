@@ -60,6 +60,12 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+
+    .composer-open & {
+      // allows sidebar to scroll to the bottom when the composer is open
+      margin-bottom: var(--composer-height);
+      padding-bottom: var(--composer-ipad-padding);
+    }
   }
 
   .sidebar-sections {

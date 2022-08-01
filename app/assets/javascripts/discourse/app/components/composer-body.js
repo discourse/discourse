@@ -107,8 +107,9 @@ export default Component.extend(KeyEnterEscape, {
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
-    ["--reply-composer-height", "--new-topic-composer-height"].forEach((prop) =>
-      document.documentElement.style.setProperty(prop, size ? `${size}px` : "")
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      size ? `${size}px` : ""
     );
 
     this._triggerComposerResized();
