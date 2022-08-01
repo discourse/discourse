@@ -1260,7 +1260,8 @@ export default Controller.extend({
         this.model.set("reply", opts.topicBody);
       }
 
-      const defaultComposerHeight = this.model.action === "reply" ? "300px" : "400px";
+      const defaultComposerHeight =
+        this.model.action === "reply" ? "300px" : "400px";
 
       document.documentElement.style.setProperty(
         "--composer-height",
