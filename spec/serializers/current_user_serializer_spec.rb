@@ -29,7 +29,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#top_category_ids" do
+  describe "#top_category_ids" do
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
@@ -58,7 +58,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#muted_tag" do
+  describe "#muted_tag" do
     fab!(:tag) { Fabricate(:tag) }
 
     let!(:tag_user) do
@@ -75,7 +75,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#second_factor_enabled" do
+  describe "#second_factor_enabled" do
     let(:guardian) { Guardian.new(user) }
     let(:json) { serializer.as_json }
 
@@ -104,7 +104,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#groups" do
+  describe "#groups" do
     it "should only show visible groups" do
       Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
       hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
@@ -121,7 +121,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  context "#has_topic_draft" do
+  describe "#has_topic_draft" do
     it "is not included by default" do
       payload = serializer.as_json
       expect(payload).not_to have_key(:has_topic_draft)
@@ -144,7 +144,7 @@ RSpec.describe CurrentUserSerializer do
 
   end
 
-  context "#can_review" do
+  describe "#can_review" do
     let(:guardian) { Guardian.new(user) }
     let(:payload) { serializer.as_json }
 
@@ -224,8 +224,8 @@ RSpec.describe CurrentUserSerializer do
     fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user) }
     fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user) }
 
-    it "is not included when SiteSeting.enable_experimental_sidebar is false" do
-      SiteSetting.enable_experimental_sidebar = false
+    it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
 
@@ -233,7 +233,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "is not included when SiteSeting.tagging_enabled is false" do
-      SiteSetting.enable_experimental_sidebar = true
+      SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = false
 
       json = serializer.as_json
@@ -241,20 +241,18 @@ RSpec.describe CurrentUserSerializer do
       expect(json[:sidebar_tag_names]).to eq(nil)
     end
 
-    it "is not included when experimental sidebar has not been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
+    it "is not included when experimental sidebar has not been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
       SiteSetting.tagging_enabled = true
-      user.user_option.update!(enable_experimental_sidebar: false)
 
       json = serializer.as_json
 
       expect(json[:sidebar_tag_names]).to eq(nil)
     end
 
-    it "is present when experimental sidebar has been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
+    it "is present when experimental sidebar has been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = true
-      user.user_option.update!(enable_experimental_sidebar: true)
 
       json = serializer.as_json
 
@@ -269,26 +267,24 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
     fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user) }
 
-    it "is not included when SiteSeting.enable_experimental_sidebar is false" do
-      SiteSetting.enable_experimental_sidebar = false
+    it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
 
       expect(json[:sidebar_category_ids]).to eq(nil)
     end
 
-    it "is not included when experimental sidebar has not been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
-      user.user_option.update!(enable_experimental_sidebar: false)
+    it "is not included when experimental sidebar has not been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
 
       expect(json[:sidebar_category_ids]).to eq(nil)
     end
 
-    it "is present when experimental sidebar has been enabled by user" do
-      SiteSetting.enable_experimental_sidebar = true
-      user.user_option.update!(enable_experimental_sidebar: true)
+    it "is present when experimental sidebar has been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
 
       json = serializer.as_json
 
@@ -296,6 +292,22 @@ RSpec.describe CurrentUserSerializer do
         category_sidebar_section_link.linkable_id,
         category_sidebar_section_link_2.linkable_id
       )
+    end
+  end
+
+  describe "#likes_notifications_disabled" do
+    it "is true if the user disables likes notifications" do
+      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:never])
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(true)
+    end
+
+    it "is false if the user doesn't disable likes notifications" do
+      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:always])
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
+      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time_and_daily])
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
+      user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time])
+      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
     end
   end
 end

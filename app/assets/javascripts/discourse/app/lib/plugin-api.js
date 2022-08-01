@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
@@ -94,7 +95,8 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
+import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
+import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -477,6 +479,30 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    if (name === "hamburger-menu:generalLinks") {
+      const siteSettings = this.container.lookup("site-settings:main");
+
+      if (siteSettings.enable_experimental_sidebar_hamburger) {
+        try {
+          const { route, label, rawLabel, className } = fn();
+          const textContent = rawLabel || I18n.t(label);
+
+          this.addCommunitySectionLink({
+            name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
+            route,
+            title: textContent,
+            text: textContent,
+          });
+        } catch {
+          deprecated(
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+          );
+        }
+
+        return;
+      }
+    }
+
     decorateWidget(name, fn);
   }
 
@@ -1626,19 +1652,19 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Support for adding a link under Sidebar topics section by returning a class which extends from the BaseSectionLink
-   * class interface. See `lib/sidebar/topics-section/base-section-link.js` for documentation on the BaseSectionLink class
+   * Support for adding a navigation link to Sidebar Community section by returning a class which extends from the BaseSectionLink
+   * class interface. See `lib/sidebar/community-section/base-section-link.js` for documentation on the BaseSectionLink class
    * interface.
    *
    * ```
-   * api.addTopicsSectionLink((baseSectionLink) => {
+   * api.addCommunitySectionLink((baseSectionLink) => {
    *   return class CustomSectionLink extends baseSectionLink {
    *     get name() {
-   *       returns "bookmarked";
+   *       return "bookmarked";
    *     }
    *
    *     get route() {
-   *       returns "userActivity.bookmarks";
+   *       return "userActivity.bookmarks";
    *     }
    *
    *     get model() {
@@ -1659,7 +1685,7 @@ class PluginApi {
    * or
    *
    * ```
-   * api.addTopicsSectionLink({
+   * api.addCommunitySectionLink({
    *   name: "unread",
    *   route: "discovery.unread",
    *   title: I18n.t("some.unread.title"),
@@ -1667,18 +1693,142 @@ class PluginApi {
    * })
    * ```
    *
-   * @callback addTopicsSectionLinkCallback
+   * @callback addCommunitySectionLinkCallback
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addTopicsSectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
    * @param {string} arg.route - The Ember route of the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
    */
-  addTopicsSectionLink(arg) {
+  addCommunitySectionLink(arg) {
     addSectionLink(arg);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
+   * class interface. See `lib/sidebar/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
+   * interface.
+   *
+   * ```
+   * api.addSidebarSection((BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+   *   return class extends BaseCustomSidebarSection {
+   *     get name() {
+   *       return "chat-channels";
+   *     }
+   *
+   *     get route() {
+   *       return "chat";
+   *     }
+   *
+   *     get title() {
+   *       return I18n.t("sidebar.sections.chat.title");
+   *     }
+   *
+   *     get text() {
+   *       return I18n.t("sidebar.sections.chat.text");
+   *     }
+   *
+   *     get actionsIcon() {
+   *       return "cog";
+   *     }
+   *
+   *     get actions() {
+   *       return [
+   *         { id: "browseChannels", title: "Browse channel", action: () => {} },
+   *         { id: "settings", title: "Settings", action: () => {} },
+   *       ];
+   *     }
+   *
+   *     get links() {
+   *       return [
+   *         new (class extends BaseCustomSidebarSectionLink {
+   *           get name() {
+   *             "dev"
+   *           }
+   *           get route() {
+   *             return "chat.channel";
+   *           }
+   *           get model() {
+   *             return {
+   *               channelId: "1",
+   *               channelTitle: "dev channel"
+   *             };
+   *           }
+   *           get title() {
+   *             return "dev channel";
+   *           }
+   *           get text() {
+   *             return "dev channel";
+   *           }
+   *           get prefixValue() {
+   *             return "icon";
+   *           }
+   *           get prefixValue() {
+   *             return "hashtag";
+   *           }
+   *           get prefixColor() {
+   *             return "000000";
+   *           }
+   *           get prefixBadge() {
+   *             return "lock";
+   *           }
+   *           get suffixType() {
+   *             return "icon";
+   *           }
+   *           get suffixValue() {
+   *             return "circle";
+   *           }
+   *           get suffixCSSClass() {
+   *             return "unread";
+   *           }
+   *         })(),
+   *         new (class extends BaseCustomSidebarSectionLink {
+   *           get name() {
+   *             "random"
+   *           }
+   *           get route() {
+   *             return "chat.channel";
+   *           }
+   *           get model() {
+   *             return {
+   *               channelId: "2",
+   *               channelTitle: "random channel"
+   *             };
+   *           }
+   *           get currentWhen() {
+   *             return true;
+   *           }
+   *           get title() {
+   *             return "random channel";
+   *           }
+   *           get text() {
+   *             return "random channel";
+   *           }
+   *           get hoverType() {
+   *             return "icon";
+   *           }
+   *           get hoverValue() {
+   *             return "times";
+   *           }
+   *           get hoverAction() {
+   *             return () => {};
+   *           }
+   *           get hoverTitle() {
+   *             return "button title attribute"
+   *           }
+   *         })()
+   *       ];
+   *     }
+   *   }
+   * })
+   * ```
+   */
+  addSidebarSection(func) {
+    addSidebarSection(func);
   }
 }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanUpEmailChangeRequests do
+RSpec.describe Jobs::CleanUpEmailChangeRequests do
   it "deletes records older than 1 month" do
     very_old = Fabricate(:email_change_request, updated_at: 32.days.ago)
     yesterday = Fabricate(:email_change_request, updated_at: 1.day.ago)

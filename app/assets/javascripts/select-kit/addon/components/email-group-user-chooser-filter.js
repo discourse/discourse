@@ -10,7 +10,7 @@ export default MultiSelectFilterComponent.extend({
       return;
     }
 
-    const data = event.originalEvent.clipboardData;
+    const data = event?.clipboardData;
 
     if (!data) {
       return;

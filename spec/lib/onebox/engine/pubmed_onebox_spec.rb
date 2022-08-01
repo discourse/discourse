@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::PubmedOnebox do
+RSpec.describe Onebox::Engine::PubmedOnebox do
   let(:link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891" }
   let(:xml_link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891?report=xml&format=text" }
   let(:html) { described_class.new(link).to_html }

@@ -31,6 +31,7 @@ uk:
           format_title: Формат дати
           timezone: Часовий пояс
           until: Поки...
+          current_timezone: "Поточний часовий пояс:"
           recurring:
             every_day: "Щодня"
             every_week: "Щотижня"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::ThemesController do
+RSpec.describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
 
   it "is a subclass of AdminController" do

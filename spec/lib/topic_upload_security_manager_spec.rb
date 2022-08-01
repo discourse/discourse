@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicUploadSecurityManager do
+RSpec.describe TopicUploadSecurityManager do
   let(:group) { Fabricate(:group) }
   let(:category) { Fabricate(:category) }
   let!(:topic) { Fabricate(:topic, user: user, category: category) }

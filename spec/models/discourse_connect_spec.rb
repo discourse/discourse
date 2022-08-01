@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseConnect do
+RSpec.describe DiscourseConnect do
   before do
     @discourse_connect_url = "http://example.com/discourse_sso"
     @discourse_connect_secret = "shjkfdhsfkjh"

@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe "spam rules for users" do
+RSpec.describe "spam rules for users" do
 
   describe 'auto-silence users based on flagging' do
     fab!(:admin)     { Fabricate(:admin) } # needed to send a system message

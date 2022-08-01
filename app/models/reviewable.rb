@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Reviewable < ActiveRecord::Base
+  TYPE_TO_BASIC_SERIALIZER = {
+    ReviewableFlaggedPost: BasicReviewableFlaggedPostSerializer,
+    ReviewableQueuedPost: BasicReviewableQueuedPostSerializer,
+    ReviewableUser: BasicReviewableUserSerializer
+  }
+
   class UpdateConflict < StandardError; end
 
   class InvalidAction < StandardError
@@ -458,7 +464,8 @@ class Reviewable < ActiveRecord::Base
     sort_order: nil,
     from_date: nil,
     to_date: nil,
-    additional_filters: {}
+    additional_filters: {},
+    preload: true
   )
     order = case sort_order
             when 'score_asc'
@@ -473,11 +480,11 @@ class Reviewable < ActiveRecord::Base
 
     if username.present?
       user_id = User.find_by_username(username)&.id
-      return [] if user_id.blank?
+      return none if user_id.blank?
     end
 
-    return [] if user.blank?
-    result = viewable_by(user, order: order)
+    return none if user.blank?
+    result = viewable_by(user, order: order, preload: preload)
 
     result = by_status(result, status)
     result = result.where(id: ids) if ids
@@ -489,7 +496,7 @@ class Reviewable < ActiveRecord::Base
 
     if reviewed_by
       reviewed_by_id = User.find_by_username(reviewed_by)&.id
-      return [] if reviewed_by_id.nil?
+      return none if reviewed_by_id.nil?
 
       result = result.joins(<<~SQL
         INNER JOIN(
@@ -534,8 +541,34 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
+  def self.recent_list_with_pending_first(user, limit: 30)
+    min_score = Reviewable.min_score_for_priority
+
+    query = Reviewable
+      .includes(:created_by, :topic, :target)
+      .viewable_by(user, preload: false)
+      .except(:order)
+      .order(score: :desc, created_at: :desc)
+      .limit(limit)
+
+    if min_score > 0
+      query = query.where(<<~SQL, min_score: min_score)
+        reviewables.score >= :min_score OR reviewables.force_review
+      SQL
+    end
+    records = query.where(status: Reviewable.statuses[:pending]).to_a
+    if records.size < limit
+      records += query.where.not(status: Reviewable.statuses[:pending]).to_a
+    end
+    records
+  end
+
   def serializer
     self.class.serializer_for(self)
+  end
+
+  def basic_serializer
+    TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
   end
 
   def self.lookup_serializer_for(type)
@@ -753,6 +786,7 @@ end
 #
 # Indexes
 #
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

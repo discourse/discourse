@@ -2,7 +2,7 @@
 
 require "email/processor"
 
-describe Email::Processor do
+RSpec.describe Email::Processor do
   after do
     Discourse.redis.flushdb
   end
@@ -84,7 +84,7 @@ describe Email::Processor do
 
       expect {
         Email::Processor.process!(mail2)
-      }.to change { EmailLog.count }.by(0)
+      }.not_to change { EmailLog.count }
 
       freeze_time(Date.today + 1)
 
@@ -148,7 +148,7 @@ describe Email::Processor do
 
       expect {
         Email::Processor.process!(mail)
-      }.to change { EmailLog.count }.by(0)
+      }.not_to change { EmailLog.count }
     end
   end
 

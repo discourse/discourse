@@ -668,7 +668,7 @@ export default {
           uploaded_avatar_id: 5253,
           created_at: "2013-02-07T14:02:07.869Z",
           cooked:
-            '<p><aside class="quote" data-post="3" data-topic="280"><div class="title">\n<div class="quote-controls"></div>\n<img width="20" height="20" src="/user_avatar/meta.discourse.org/codinghorror/40/5297.png" class="avatar">codinghorror said:</div>\n<blockquote><p>So you could replace that lookup table with the "de" one to get German.</p></blockquote></aside></p>\n\n<p>The problem I see here is that  this file is likely two grow and change massively over the next couple months, and tracking these changes in order to keep a localized file up to date is going to be a <em>bitch</em>. </p>\n\n<p>I wonder where there is a tool that can compare two yml structures and point out which nodes are missing? That would help keep track of new strings.</p>\n\n<p>Re keeping track of <em>changed</em> strings, <a class="mention" href="/users/eviltrout">@eviltrout</a> I found this very interesting: <a href="http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders" rel="nofollow">http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders</a> if plain English placeholders were used, any change in strings would lead to a <em>new</em> node in the yml file, making keeping the translation up to date easier. Maybe worth thinking about in the future.</p>',
+            '<p><aside class="quote" data-post="3" data-topic="280"><div class="title">\n<div class="quote-controls"></div>\n<img width="20" height="20" src="/user_avatar/meta.discourse.org/codinghorror/40/5297.png" class="avatar">codinghorror said:</div>\n<blockquote><p>So you could replace that lookup table with the "de" one to get German.</p></blockquote></aside></p>\n\n<p>The problem I see here is that  this file is likely two grow and change massively over the next couple months, and tracking these changes in order to keep a localized file up to date is going to be a <em>bitch</em>. </p>\n\n<p>I wonder where there is a tool that can compare two yml structures and point out which nodes are missing? That would help keep track of new strings.</p>\n\n<p>Re keeping track of <em>changed</em> strings, <a class="mention" href="/u/eviltrout">@eviltrout</a> I found this very interesting: <a href="http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders" rel="nofollow">http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders</a> if plain English placeholders were used, any change in strings would lead to a <em>new</em> node in the yml file, making keeping the translation up to date easier. Maybe worth thinking about in the future.</p>',
           post_number: 5,
           post_type: 1,
           updated_at: "2013-02-07T14:05:42.328Z",
@@ -3612,7 +3612,7 @@ export default {
           uploaded_avatar_id: 5297,
           created_at: "2015-05-14T21:15:41.612Z",
           cooked:
-            '<p>Yeah maybe another Ember 1.10 regression for <a class="mention" href="/users/eviltrout">@eviltrout</a> ?</p>',
+            '<p>Yeah maybe another Ember 1.10 regression for <a class="mention" href="/u/eviltrout">@eviltrout</a> ?</p>',
           post_number: 4,
           post_type: 1,
           updated_at: "2015-05-14T21:15:41.612Z",

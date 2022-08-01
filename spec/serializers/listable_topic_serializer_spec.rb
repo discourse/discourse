@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe ListableTopicSerializer do
+RSpec.describe ListableTopicSerializer do
   fab!(:topic) { Fabricate(:topic) }
 
   describe '#excerpt' do

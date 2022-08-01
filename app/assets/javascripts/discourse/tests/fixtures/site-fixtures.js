@@ -697,6 +697,7 @@ export default {
           can_revoke: true,
         },
       ],
+      displayed_about_plugin_stat_groups: ["chat_messages"]
     },
   },
 };

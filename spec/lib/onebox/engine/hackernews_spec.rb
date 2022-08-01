@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::HackernewsOnebox do
+RSpec.describe Onebox::Engine::HackernewsOnebox do
   context "When oneboxing a comment" do
     let(:link) { "https://news.ycombinator.com/item?id=30181167" }
     let(:api_link) { "https://hacker-news.firebaseio.com/v0/item/30181167.json" }

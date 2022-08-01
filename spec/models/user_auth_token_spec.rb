@@ -2,7 +2,7 @@
 
 require 'discourse_ip_info'
 
-describe UserAuthToken do
+RSpec.describe UserAuthToken do
   fab!(:user) { Fabricate(:user) }
 
   it "can remove old expired tokens" do

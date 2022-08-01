@@ -5,7 +5,7 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { next } from "@ember/runloop";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { settled } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -26,7 +26,6 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     topic.setProperties({
       selectedPostIds: [],
       selectedPostUsername: null,
-      currentUser: null,
     });
   });
 
@@ -279,7 +278,6 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
     const controller = this.getController("topic", {
       model,
-      currentUser,
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
@@ -376,10 +374,8 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2],
     });
-    model.set("currentUser", { admin: false });
     const controller = this.getController("topic", {
       model,
-      currentUser,
     });
     const selectedPostIds = controller.get("selectedPostIds");
 
@@ -421,10 +417,8 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2],
     });
-    model.set("currentUser", { moderator: false });
     const controller = this.getController("topic", {
       model,
-      currentUser,
       siteSettings: {
         moderators_change_post_ownership: true,
       },
@@ -600,13 +594,9 @@ discourseModule("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectReplies", async function (assert) {
-    pretender.get("/posts/1/reply-ids.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        [{ id: 2, level: 1 }],
-      ];
-    });
+    pretender.get("/posts/1/reply-ids.json", () =>
+      response([{ id: 2, level: 1 }])
+    );
 
     let model = topicWithStream({
       posts: [{ id: 1 }, { id: 2 }],
@@ -662,9 +652,7 @@ discourseModule("Unit | Controller | topic", function (hooks) {
   });
 
   test("deletePost - no modal is shown if post does not have replies", function (assert) {
-    pretender.get("/posts/2/reply-ids.json", () => {
-      return [200, { "Content-Type": "application/json" }, []];
-    });
+    pretender.get("/posts/2/reply-ids.json", () => response([]));
 
     let destroyed;
     const post = EmberObject.create({
@@ -679,11 +667,16 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     });
 
     const currentUser = EmberObject.create({ moderator: true });
+    this.registry.register("current-user:main", currentUser, {
+      instantiate: false,
+    });
+    this.registry.injection("controller", "currentUser", "current-user:main");
+
     let model = topicWithStream({
       stream: [2, 3, 4],
       posts: [post, { id: 3 }, { id: 4 }],
     });
-    const controller = this.getController("topic", { model, currentUser });
+    const controller = this.getController("topic", { model });
 
     const done = assert.async();
     controller.send("deletePost", post);

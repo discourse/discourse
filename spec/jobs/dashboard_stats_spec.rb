@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Jobs::DashboardStats do
+RSpec.describe ::Jobs::DashboardStats do
   let(:group_message) { GroupMessage.new(Group[:admins].name, :dashboard_problems, limit_once_per: 7.days.to_i) }
 
   def clear_recently_sent!

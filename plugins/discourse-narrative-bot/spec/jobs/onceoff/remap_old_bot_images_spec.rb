@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
+RSpec.describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
   context "when bot's post contains an old link" do
     let!(:post) do
       Fabricate(:post,

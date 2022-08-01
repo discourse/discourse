@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
+RSpec.describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
   let(:response_hash) do
     {
       email: 'user@domain.com',

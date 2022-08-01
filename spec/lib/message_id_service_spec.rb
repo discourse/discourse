@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Email::MessageIdService do
+RSpec.describe Email::MessageIdService do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:second_post) { Fabricate(:post, topic: topic) }

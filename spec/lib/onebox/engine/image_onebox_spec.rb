@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::ImageOnebox do
+RSpec.describe Onebox::Engine::ImageOnebox do
   it "supports png" do
     expect(Onebox.preview('http://www.discourse.org/images/logo.png').to_s).to match(/<img/)
   end

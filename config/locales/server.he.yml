@@ -3871,6 +3871,12 @@ he:
     dark_rose: "ורד כהה"
     wcag: "נגיש בהיר"
     wcag_theme_name: "נגיש בהיר"
+    dracula: "דרקולה"
+    dracula_theme_name: "דרקולה"
+    solarized_light: "חשיפה בהירה לשמש"
+    solarized_light_theme_name: "חשיפה בהירה לשמש"
+    solarized_dark: "חשיפה כהה לשמש"
+    solarized_dark_theme_name: "חשיפה כהה לשמש"
     wcag_dark: "נגיש כהה"
     wcag_dark_theme_name: "נגיש כהה"
     default_theme_name: "בררת מחדל"
@@ -4684,6 +4690,8 @@ he:
                 label: "קטגוריות עם נושאים מומלצים"
               categories_and_latest_topics:
                 label: "קטגוריות ונושאים אחרונים"
+              categories_and_latest_topics_created_date:
+                label: "קטגוריות ונושאים עדכניים (מיון לפי תאריך יצירת הנושא)"
               categories_and_top_topics:
                 label: "קטגוריות ונושאים מובילים"
               categories_boxes:

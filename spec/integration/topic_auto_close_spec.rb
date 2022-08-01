@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:job_klass) { Jobs::CloseTopic }
 
   context 'creating a topic without auto-close' do

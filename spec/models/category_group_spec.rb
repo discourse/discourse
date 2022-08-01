@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoryGroup do
+RSpec.describe CategoryGroup do
 
   describe '#permission_types' do
     context "verify enum sequence" do

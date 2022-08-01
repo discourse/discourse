@@ -5,7 +5,11 @@ class Site
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_category_custom_fields
-  self.preloaded_category_custom_fields = Set.new
+
+  def self.reset_preloaded_category_custom_fields
+    self.preloaded_category_custom_fields = Set.new
+  end
+  reset_preloaded_category_custom_fields
 
   ##
   # Sometimes plugins need to have additional data or options available

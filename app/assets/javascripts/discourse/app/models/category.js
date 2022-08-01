@@ -344,7 +344,7 @@ let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("site-settings:main");
+    let siteSettings = getOwner(this).lookup("service:site-settings");
     return siteSettings.slug_generation_method === "encoded";
   },
 
@@ -584,8 +584,8 @@ Category.reopenClass({
       if (
         ((emptyTerm && !category.get("parent_category_id")) ||
           (!emptyTerm &&
-            (category.get("name").toLowerCase().indexOf(term) === 0 ||
-              category.get("slug").toLowerCase().indexOf(slugTerm) === 0))) &&
+            (category.get("name").toLowerCase().startsWith(term) ||
+              category.get("slug").toLowerCase().startsWith(slugTerm)))) &&
         validCategoryParent(category)
       ) {
         data.push(category);
@@ -602,7 +602,7 @@ Category.reopenClass({
             category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
           validCategoryParent(category)
         ) {
-          if (data.indexOf(category) === -1) {
+          if (!data.includes(category)) {
             data.push(category);
           }
         }

@@ -46,7 +46,7 @@ export default Mixin.create({
     }
 
     // If the user reaches the very bottom of the topic, we only want to reset
-    // this scroll direction after a second scrolldown. This is a nicer event
+    // this scroll direction after a second scroll down. This is a nicer event
     // similar to what Safari and Chrome do.
     discourseDebounce(
       this,

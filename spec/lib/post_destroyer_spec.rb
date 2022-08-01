@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostDestroyer do
+RSpec.describe PostDestroyer do
 
   before do
     UserActionManager.enable

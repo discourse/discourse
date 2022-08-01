@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PendingReviewablesReminder do
+RSpec.describe Jobs::PendingReviewablesReminder do
   let(:job) { described_class.new }
 
   def create_flag(created_at)

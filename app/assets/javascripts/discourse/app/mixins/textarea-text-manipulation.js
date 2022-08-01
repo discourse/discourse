@@ -533,10 +533,10 @@ export default Mixin.create({
     //                  *                    *
     const indentationRegexp = new RegExp(`^${indentationChar}+`);
     const lineStartsWithIndentationChar = lineVal.match(indentationRegexp);
-    const intentationCharsBeforeSelection = value.match(indentationRegexp);
+    const indentationCharsBeforeSelection = value.match(indentationRegexp);
     if (lineStartsWithIndentationChar) {
-      const charsToSubtract = intentationCharsBeforeSelection
-        ? intentationCharsBeforeSelection[0]
+      const charsToSubtract = indentationCharsBeforeSelection
+        ? indentationCharsBeforeSelection[0]
         : "";
       value =
         lineStartsWithIndentationChar[0].replace(charsToSubtract, "") + value;

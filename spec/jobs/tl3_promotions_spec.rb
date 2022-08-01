@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Tl3Promotions do
+RSpec.describe Jobs::Tl3Promotions do
 
   def create_qualifying_stats(user)
     user.create_user_stat if user.user_stat.nil?

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DistributedMemoizer do
+RSpec.describe DistributedMemoizer do
   after do
     Discourse.redis.del(DistributedMemoizer.redis_key("hello"))
     Discourse.redis.del(DistributedMemoizer.redis_lock_key("hello"))

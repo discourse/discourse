@@ -16,12 +16,15 @@ acceptance("Category 404", function (needs) {
 
   test("Navigating to a bad category link does not break the router", async function (assert) {
     // Don't log the XHR error
-    sinon.stub(console, "error");
+    const stub = sinon
+      .stub(console, "error")
+      .withArgs(sinon.match({ status: 404 }));
 
     await visit("/t/internationalization-localization/280");
 
     await click('[data-for-test="category-404"]');
     assert.strictEqual(currentURL(), "/404");
+    sinon.assert.calledOnce(stub);
 
     // See that we can navigate away
     await click("#site-logo");

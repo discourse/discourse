@@ -2,7 +2,7 @@
 
 require 'new_post_manager'
 
-describe NewPostManager do
+RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic) }
 

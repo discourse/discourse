@@ -2,7 +2,7 @@
 
 require "import_export/group_exporter"
 
-describe ImportExport::GroupExporter do
+RSpec.describe ImportExport::GroupExporter do
 
   before do
     STDOUT.stubs(:write)

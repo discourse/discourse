@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PushNotificationController do
+RSpec.describe PushNotificationController do
   fab!(:user) { Fabricate(:user) }
 
   context "logged out" do

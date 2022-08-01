@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "TopicThumbnail" do
+RSpec.describe "TopicThumbnail" do
   let(:upload1) { Fabricate(:image_upload, width: 50, height: 50) }
   let(:topic) { Fabricate(:topic, image_upload: upload1) }
   let(:upload2) { Fabricate(:image_upload, width: 50, height: 50) }

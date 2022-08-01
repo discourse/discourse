@@ -4,7 +4,7 @@ import {
   darkLightDiff,
 } from "wizard/lib/preview";
 
-export default createPreviewComponent(659, 320, {
+export default createPreviewComponent(342, 322, {
   logo: null,
   avatar: null,
 
@@ -22,9 +22,7 @@ export default createPreviewComponent(659, 320, {
   },
 
   paint({ ctx, colors, font, width, height }) {
-    if (this.logo) {
-      this.drawFullHeader(colors, font, this.logo);
-    }
+    this.drawFullHeader(colors, font, this.logo);
 
     if (this.get("step.fieldsById.homepage_style.value") === "latest") {
       this.drawPills(colors, font, height * 0.15);
@@ -361,7 +359,10 @@ export default createPreviewComponent(659, 320, {
 
   renderLatest(ctx, colors, font, width, height) {
     const rowHeight = height / 6.6;
-    const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
+    // accounts for hard-set color variables in solarized themes
+    const textColor =
+      colors.primary_medium ||
+      darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const bodyFontSize = height / 440.0;
 
     ctx.font = `${bodyFontSize}em '${font}'`;
@@ -370,12 +371,10 @@ export default createPreviewComponent(659, 320, {
 
     const drawLine = (y) => {
       ctx.beginPath();
-      ctx.strokeStyle = darkLightDiff(
-        colors.primary,
-        colors.secondary,
-        90,
-        -75
-      );
+      // accounts for hard-set color variables in solarized themes
+      ctx.strokeStyle =
+        colors.primary_low ||
+        darkLightDiff(colors.primary, colors.secondary, 90, -75);
       ctx.moveTo(margin, y);
       ctx.lineTo(width - margin, y);
       ctx.stroke();

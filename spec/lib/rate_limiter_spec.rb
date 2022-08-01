@@ -2,7 +2,7 @@
 
 require 'rate_limiter'
 
-describe RateLimiter do
+RSpec.describe RateLimiter do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }

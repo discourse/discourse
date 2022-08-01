@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PullHotlinkedImages do
+RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
@@ -43,7 +43,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
     end
 
     it 'does nothing if there are no large images to pull' do
@@ -59,10 +59,9 @@ describe Jobs::PullHotlinkedImages do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
       stub_image_size
 
-      expect do
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(1) &
-             change { UserHistory.count }.by(0) # Should not add to the staff log
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+        .and not_change { UserHistory.count } # Should not add to the staff log
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -110,7 +109,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         post.rebake!
-      end.to change { Upload.count }.by(0) # We alread have the upload
+      end.not_to change { Upload.count } # We alread have the upload
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -278,7 +277,7 @@ describe Jobs::PullHotlinkedImages do
             .to change { Upload.count }.by(1)
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-            .to change { Upload.count }.by(0)
+            .not_to change { Upload.count }
         end
       end
     end
@@ -593,7 +592,7 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  context "#disable_if_low_on_disk_space" do
+  describe "#disable_if_low_on_disk_space" do
     fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
     let(:job) { Jobs::PullHotlinkedImages.new }
 

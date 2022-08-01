@@ -470,6 +470,9 @@
     "markdown_additional_options" : {
       "type": "object"
     },
+    "displayed_about_plugin_stat_groups" : {
+      "type": "array"
+    },
     "categories": {
       "type": "array",
       "items":
@@ -634,6 +637,16 @@
             },
             "can_edit": {
               "type": "boolean"
+            },
+            "custom_fields": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": true
+            },
+            "parent_category_id": {
+              "type": "integer"
             }
           },
           "required": [

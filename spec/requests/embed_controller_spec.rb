@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmbedController do
+RSpec.describe EmbedController do
 
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
@@ -30,7 +30,7 @@ describe EmbedController do
     end
   end
 
-  context "#info" do
+  describe "#info" do
     context "without api key" do
       it "fails" do
         get '/embed/info.json'
@@ -70,7 +70,7 @@ describe EmbedController do
     end
   end
 
-  context "#topics" do
+  describe "#topics" do
     it "raises an error when not enabled" do
       get '/embed/topics?embed_id=de-1234'
       expect(response.status).to eq(400)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UsernameCheckerService do
+RSpec.describe UsernameCheckerService do
 
   describe 'check_username' do
 

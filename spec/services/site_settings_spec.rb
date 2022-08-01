@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettingsTask do
+RSpec.describe SiteSettingsTask do
 
   before do
     Discourse::Application.load_tasks

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAction do
+RSpec.describe UserAction do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   before do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdminUserIndexQuery do
+RSpec.describe AdminUserIndexQuery do
   def real_users(query)
     query.find_users_query.where('users.id > 0')
   end

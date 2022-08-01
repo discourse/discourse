@@ -4,7 +4,7 @@ require 's3_helper'
 require 'backup_restore/s3_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
-describe BackupRestore::S3BackupStore do
+RSpec.describe BackupRestore::S3BackupStore do
   before do
     @s3_client = Aws::S3::Client.new(stub_responses: true)
     @s3_options = { client: @s3_client }

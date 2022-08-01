@@ -143,15 +143,19 @@ blockquote {
 
 // Sidebar styles
 
-.sidebar-wrapper {
-  width: 0;
-  transition: width 0.2s ease-in-out;
-  z-index: z("modal", "content");
-}
-
 #main-outlet-wrapper {
-  grid-template-columns: 0 minmax(0, 100vw);
+  grid-template-columns: minmax(0, 100vw);
+  grid-template-areas: "content";
   gap: 0;
+
+  .sidebar-wrapper {
+    width: 0;
+    transition: width 0.2s ease-in-out;
+    z-index: z("modal", "content");
+    grid-area: content;
+    justify-self: end;
+  }
+
   .sidebar-container {
     padding-bottom: 6.6em; // extra space to watch out for navbar
   }
@@ -166,10 +170,11 @@ body.has-sidebar-page {
     z-index: z("modal", "content") + 1;
   }
 
-  .sidebar-wrapper {
-    width: var(--d-sidebar-width);
-    grid-area: content;
-    margin-left: -10px; // compensate for main-outlet-wrapper padding
+  #main-outlet-wrapper {
+    .sidebar-wrapper {
+      width: var(--d-sidebar-width);
+      margin-right: -10px; // compensate for main-outlet-wrapper padding
+    }
   }
 
   #main-outlet {

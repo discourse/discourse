@@ -1,5 +1,6 @@
 import {
   acceptance,
+  count,
   exists,
   query,
   queryAll,
@@ -56,12 +57,16 @@ acceptance("Do not disturb", function (needs) {
     assert.ok(exists(".do-not-disturb-modal"), "DND modal is displayed");
 
     assert.strictEqual(
-      queryAll(".do-not-disturb-tile").length,
+      count(".do-not-disturb-tile"),
       4,
       "There are 4 duration choices"
     );
 
-    await triggerKeyEvent(".do-not-disturb-tile:nth-child(1)", "keydown", 13);
+    await triggerKeyEvent(
+      ".do-not-disturb-tile:nth-child(1)",
+      "keydown",
+      "Enter"
+    );
 
     assert.ok(
       query(".do-not-disturb-modal.hidden"),

@@ -7,8 +7,10 @@ import {
   relativeAge,
   updateRelativeAge,
 } from "discourse/lib/formatter";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import sinon from "sinon";
+import {
+  discourseModule,
+  fakeTime,
+} from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import domFromString from "discourse-common/lib/dom-from-string";
 
@@ -44,14 +46,14 @@ function strip(html) {
 
 discourseModule("Unit | Utility | formatter", function (hooks) {
   hooks.beforeEach(function () {
-    this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
+    this.clock = fakeTime("2012-12-31 12:00");
   });
 
   hooks.afterEach(function () {
     this.clock.restore();
   });
 
-  test("formating medium length dates", function (assert) {
+  test("formatting medium length dates", function (assert) {
     let shortDateYear = shortDateTester("MMM D, 'YY");
 
     assert.strictEqual(
@@ -133,7 +135,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     );
 
     this.clock.restore();
-    this.clock = sinon.useFakeTimers(new Date(2012, 0, 9, 12, 0).getTime()); // Jan 9, 2012
+    this.clock = fakeTime("2012-01-09 12:00");
 
     assert.strictEqual(
       strip(formatDays(8, { format: "medium" })),
@@ -145,7 +147,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     );
   });
 
-  test("formating tiny dates", function (assert) {
+  test("formatting tiny dates", function (assert) {
     let shortDateYear = shortDateTester("MMM 'YY");
 
     assert.strictEqual(formatMins(0), "1m");
@@ -207,7 +209,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     this.siteSettings.relative_date_duration = 14;
 
     this.clock.restore();
-    this.clock = sinon.useFakeTimers(new Date(2012, 0, 12, 12, 0).getTime()); // Jan 12, 2012
+    this.clock = fakeTime("2012-01-12 12:00");
 
     assert.strictEqual(formatDays(11), "11d");
     assert.strictEqual(formatDays(14), "14d");
@@ -215,7 +217,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     assert.strictEqual(formatDays(366), shortDateYear(366));
 
     this.clock.restore();
-    this.clock = sinon.useFakeTimers(new Date(2012, 0, 20, 12, 0).getTime()); // Jan 20, 2012
+    this.clock = fakeTime("2012-01-20 12:00");
 
     assert.strictEqual(formatDays(14), "14d");
     assert.strictEqual(formatDays(15), shortDate(15));

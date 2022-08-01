@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostAnalyzer do
+RSpec.describe PostAnalyzer do
 
   let(:default_topic_id) { 12 }
   let(:url) { 'https://twitter.com/evil_trout/status/345954894420787200' }

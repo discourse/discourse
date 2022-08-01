@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe User do
+RSpec.describe User do
   let(:user) { Fabricate(:user) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
 
@@ -121,7 +121,7 @@ describe User do
         expect {
           user.user_option.save!
         }.to change { Topic.count }.by(-1)
-          .and change { UserHistory.count }.by(0)
+          .and not_change { UserHistory.count }
           .and change { user.unread_high_priority_notifications }.by(-1)
           .and change { user.notifications.count }.by(-1)
       end

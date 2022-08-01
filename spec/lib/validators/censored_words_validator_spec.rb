@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CensoredWordsValidator do
+RSpec.describe CensoredWordsValidator do
   let(:value) { 'some new bad text' }
   let(:record) { Fabricate(:post, raw: 'this is a test') }
   let(:attribute) { :raw }

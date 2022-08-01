@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubActionsOnebox do
+RSpec.describe Onebox::Engine::GithubActionsOnebox do
   describe "PR check run" do
     before do
       @link = "https://github.com/discourse/discourse/pull/13128/checks?check_run_id=2660861130"

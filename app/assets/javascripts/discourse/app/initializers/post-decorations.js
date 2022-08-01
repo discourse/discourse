@@ -1,4 +1,5 @@
-import { later, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import I18n from "I18n";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
@@ -13,7 +14,7 @@ export default {
   name: "post-decorations",
   initialize(container) {
     withPluginApi("0.1", (api) => {
-      const siteSettings = container.lookup("site-settings:main");
+      const siteSettings = container.lookup("service:site-settings");
       const session = container.lookup("session:main");
       const site = container.lookup("site:main");
       api.decorateCookedElement(
@@ -116,7 +117,7 @@ export default {
             .forEach((videoContainer) => {
               const video = videoContainer.getElementsByTagName("video")[0];
               video.addEventListener("loadeddata", () => {
-                later(() => {
+                discourseLater(() => {
                   if (video.videoWidth === 0 || video.videoHeight === 0) {
                     const notice = document.createElement("div");
                     notice.className = "notice";

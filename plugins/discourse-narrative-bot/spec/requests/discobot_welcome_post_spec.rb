@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discobot welcome post" do
+RSpec.describe "Discobot welcome post" do
   let(:user) { Fabricate(:user) }
 
   before do

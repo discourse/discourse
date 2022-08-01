@@ -63,6 +63,7 @@ pl_PL:
       unrecognized_extension: "Nie rozpoznano rozszerzenia pliku: %{extension}"
     import_error:
       generic: Wystąpił błąd podczas importowania tego motywu
+      upload: "Błąd tworzenia zasobu do przesłania: %{name}. %{errors}"
       about_json: "Błąd importu: about.json nie istnieje lub jest nieprawidłowy. Czy to na pewno szablon Discourse?"
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
@@ -222,6 +223,7 @@ pl_PL:
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć niewłaściwego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
@@ -439,6 +441,7 @@ pl_PL:
       too_many: "Przepraszamy, nie możesz dodać więcej niż %{limit} zakładek. Odwiedź stronę <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> aby niektóre usunąć."
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
+      time_must_be_provided: "Czas musi zostać podany dla wszystkich przypomnień"
       for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
       invalid_bookmarkable: "%{type} nie można dodać do zakładek."
     reminders:
@@ -2208,7 +2211,9 @@ pl_PL:
     create_revision_on_bulk_topic_moves: "Utwórz rewizję dla pierwszych postów, gdy tematy zostaną przeniesione do nowej kategorii zbiorczo."
     allow_changing_staged_user_tracking: "Zezwalaj na zmianę preferencji powiadomień o kategoriach i tagach użytkownika etapowego przez administratora."
     use_email_for_username_and_name_suggestions: "Użyj pierwszej części adresów e-mail jako sugestii dla nazwy użytkownika i pełnej nazwy. Pamiętaj, że ułatwia to odgadnięcie pełnych adresów e-mail użytkowników (ponieważ duża część osób korzysta z wspólnych usług, takich jak `gmail.com`)."
+    use_name_for_username_suggestions: "Proponując nazwy użytkownika, używaj imienia i nazwiska użytkownika."
     suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
+    splash_screen: "Wyświetla tymczasowy ekran ładowania podczas ładowania zasobów witryny"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -4844,6 +4849,7 @@ pl_PL:
     ignore_error: "Przepraszamy, nie możesz zignorować tego użytkownika."
     mute_error: "Przepraszamy, nie możesz wyciszyć tego użytkownika."
     error: "Przepraszamy, nie możesz zmienić poziomu powiadomień dla tego użytkownika."
+    invalid_value: '„%{value}” nie jest prawidłowym poziomem powiadamiania.'
   discord:
     not_in_allowed_guild: "Uwierzytelnianie nie powiodło się. Nie jesteś członkiem dozwolonej gildii Discord."
   old_keys_reminder:

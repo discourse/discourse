@@ -37,7 +37,7 @@
     "puppeteer-core": "^13.7.0"
   },
   "scripts": {
-    "postinstall": "yarn --cwd app/assets/javascripts/discourse"
+    "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
   },
   "engines": {
     "node": "16.* || >= 18",

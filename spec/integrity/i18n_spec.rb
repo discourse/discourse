@@ -20,7 +20,7 @@ def is_yaml_compatible?(english, translated)
   true
 end
 
-describe "i18n integrity checks" do
+RSpec.describe "i18n integrity checks" do
   it "has an i18n key for each Site Setting" do
     SiteSetting.all_settings.each do |s|
       next if s[:setting][/^test_/]
@@ -97,7 +97,7 @@ describe "i18n integrity checks" do
   end
 end
 
-describe "fallbacks" do
+RSpec.describe "fallbacks" do
   before do
     I18n.backend = I18n::Backend::DiscourseI18n.new
     I18n.fallbacks = I18n::Backend::FallbackLocaleList.new

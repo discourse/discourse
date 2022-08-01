@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmojiSerializer do
+RSpec.describe EmojiSerializer do
   fab!(:custom_emoji) do
     CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))
   end

@@ -4,6 +4,7 @@
     "discourse",
     "admin",
     "discourse-common",
+    "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-widget-hbs",
     "pretty-text",

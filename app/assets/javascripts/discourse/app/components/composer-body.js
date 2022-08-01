@@ -1,4 +1,5 @@
-import { cancel, later, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import discourseComputed, {
   bind,
   observes,
@@ -62,7 +63,7 @@ export default Component.extend(KeyEnterEscape, {
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
     cancel(this._lastKeyTimeout);
-    this._lastKeyTimeout = later(() => {
+    this._lastKeyTimeout = discourseLater(() => {
       if (lastKeyUp !== this._lastKeyUp) {
         return;
       }
@@ -106,8 +107,9 @@ export default Component.extend(KeyEnterEscape, {
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
-    ["--reply-composer-height", "--new-topic-composer-height"].forEach((prop) =>
-      document.documentElement.style.setProperty(prop, size ? `${size}px` : "")
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      size ? `${size}px` : ""
     );
 
     this._triggerComposerResized();
@@ -215,7 +217,8 @@ export default Component.extend(KeyEnterEscape, {
     afterTransition($(this.element), () => {
       triggerOpen();
     });
-    positioningWorkaround($(this.element));
+
+    positioningWorkaround(this.element);
   },
 
   willDestroyElement() {

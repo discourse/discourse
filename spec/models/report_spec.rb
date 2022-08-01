@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Report do
+RSpec.describe Report do
   let(:user) { Fabricate(:user) }
   let(:c0) { Fabricate(:category, user: user) }
   let(:c1) { Fabricate(:category, parent_category: c0, user: user) }  # id: 2

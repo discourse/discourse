@@ -41,7 +41,7 @@ export default Component.extend({
     if (["color_definitions"].includes(fieldName)) {
       return "scss";
     }
-    return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
+    return fieldName && fieldName.includes("scss") ? "scss" : "html";
   },
 
   @discourseComputed("currentTargetName", "fieldName")

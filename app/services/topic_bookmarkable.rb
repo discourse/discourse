@@ -36,16 +36,14 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.reminder_handler(bookmark)
-    bookmark.user.notifications.create!(
-      notification_type: Notification.types[:bookmark_reminder],
+    send_reminder_notification(
+      bookmark,
       topic_id: bookmark.bookmarkable_id,
       post_number: 1,
       data: {
         title: bookmark.bookmarkable.title,
-        display_username: bookmark.user.username,
-        bookmark_name: bookmark.name,
         bookmarkable_url: bookmark.bookmarkable.first_post.url
-      }.to_json
+      }
     )
   end
 

@@ -23,7 +23,7 @@ export default {
     DiscourseURL.rewrite(/^\/groups\//, "/g/");
 
     // Initialize default homepage
-    let siteSettings = container.lookup("site-settings:main");
+    let siteSettings = container.lookup("service:site-settings");
     initializeDefaultHomepage(siteSettings);
 
     DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary", {

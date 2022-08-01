@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Bookmark do
+RSpec.describe Bookmark do
   fab!(:post) { Fabricate(:post) }
 
   context "validations" do

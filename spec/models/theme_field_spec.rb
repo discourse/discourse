@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe ThemeField do
+RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
 
   describe "scope: find_by_theme_ids" do
@@ -504,6 +504,7 @@ HTML
 
         expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
         expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
+        expect(val["theme_uploads_local"]["test_js"]).to start_with("/theme-javascripts/")
 
       end
 

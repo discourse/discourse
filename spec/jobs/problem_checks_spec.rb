@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ProblemChecks do
+RSpec.describe Jobs::ProblemChecks do
   after do
     Discourse.redis.flushdb
     AdminDashboardData.reset_problem_checks

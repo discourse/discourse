@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicTrackingState do
+RSpec.describe TopicTrackingState do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:whisperers_group) { Fabricate(:group) }
@@ -593,13 +593,13 @@ describe TopicTrackingState do
       )
     end
 
-    it "includes tags when SiteSetting.enable_experimental_sidebar is true" do
+    it "includes tags when SiteSetting.enable_experimental_sidebar_hamburger is true" do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.respond_to?(:tags)).to eq(false)
 
-      SiteSetting.enable_experimental_sidebar = true
+      SiteSetting.enable_experimental_sidebar_hamburger = true
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)

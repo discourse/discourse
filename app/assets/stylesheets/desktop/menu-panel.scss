@@ -1,3 +1,9 @@
-.menu-panel .panel-body {
-  max-height: calc(100vh - 100px);
+.menu-panel {
+  &.user-menu.revamped {
+    width: unset;
+  }
+
+  .panel-body {
+    max-height: calc(100vh - 100px);
+  }
 }

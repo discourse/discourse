@@ -1,10 +1,15 @@
 import { test } from "qunit";
-
 import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user();
+
+  needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
+  });
+
   needs.mobileView();
 
   test("hidden by default", async function (assert) {
@@ -16,7 +21,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
   test("clicking outside sidebar collapses it", async function (assert) {
     await visit("/");
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
 
     assert.ok(exists(".sidebar-container"), "sidebar is displayed");
 
@@ -28,7 +33,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
   test("clicking on a link or button in sidebar collapses it", async function (assert) {
     await visit("/");
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
     await click(".sidebar-section-link-tracked");
 
     assert.ok(
@@ -36,7 +41,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
       "sidebar is collapsed when a button in sidebar is clicked"
     );
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
     await click(".sidebar-section-header-link");
 
     assert.ok(
@@ -45,14 +50,14 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     );
   });
 
-  test("collpasing sidebar sections does not collapse sidebar", async function (assert) {
+  test("collapsing sidebar sections does not collapse sidebar", async function (assert) {
     await visit("/");
 
-    await click(".btn-sidebar-toggle");
+    await click(".hamburger-dropdown");
     await click(".sidebar-section-header-caret");
 
     assert.ok(
-      !exists(".sidebar-section-topics .sidebar-section-content"),
+      !exists(".sidebar-section-community .sidebar-section-content"),
       "topics section is collapsed"
     );
 
