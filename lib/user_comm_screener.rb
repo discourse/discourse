@@ -26,6 +26,11 @@
 #
 # An important note is that **all of these settings do not apply when the actor
 # is a staff member**. So admins and moderators can PM and notify anyone they please.
+#
+# The secondary usage of this class is to determine which users the actor themselves
+# are muting, ignoring, or preventing private messages from. This is useful when
+# wanting to alert the actor to these users in the UI in various ways, or prevent
+# the actor from communicating with users they prefer not to talk with.
 class UserCommScreener
   attr_reader :acting_user, :preferences
 
@@ -136,6 +141,40 @@ class UserCommScreener
     preferences.disallowing_pms?(user_id) || ignoring_or_muting_actor?(user_id)
   end
 
+  def actor_allowing_communication
+    @target_users.keys - actor_preventing_communication
+  end
+
+  def actor_preventing_communication
+    (actor_preferences[:ignoring] + actor_preferences[:muting] + actor_preferences[:disallowed_pms_from]).uniq
+  end
+
+  ##
+  # The actor methods below are more fine-grained than the user ones,
+  # since we may want to display more detailed messages to the actor about
+  # their preferences than we do when we are informing the actor that
+  # they cannot communicate with certain users.
+  #
+  # In this spirit, actor_disallowing_pms? is intentionally different from
+  # disallowing_pms_from_actor? above.
+
+  def actor_ignoring?(user_id)
+    actor_preferences[:ignoring].include?(user_id)
+  end
+
+  def actor_muting?(user_id)
+    actor_preferences[:muting].include?(user_id)
+  end
+
+  def actor_disallowing_pms?(user_id)
+    return false if !acting_user.user_option.enable_allowed_pm_users
+    actor_preferences[:disallowed_pms_from].include?(user_id)
+  end
+
+  def actor_disallowing_all_pms?
+    !acting_user.user_option.allow_private_messages
+  end
+
   private
 
   def users_with_no_preference
@@ -193,6 +232,20 @@ class UserCommScreener
     UserCommPrefs.new(acting_user, resolved_user_communication_preferences)
   end
 
+  def actor_preferences
+    @actor_preferences ||= {
+      muting: @target_users.keys & actor_communication_preferences.filter_map do |pref|
+        pref.user_id if pref.preference_type == 'muted'
+      end,
+      ignoring: @target_users.keys & actor_communication_preferences.filter_map do |pref|
+        pref.user_id if pref.preference_type == 'ignored'
+      end,
+      disallowed_pms_from: @target_users.keys - actor_communication_preferences.filter_map do |pref|
+        pref.user_id if pref.preference_type == 'allowed_pm'
+      end
+    }
+  end
+
   def user_communication_preferences
     @user_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
       SELECT users.id,
@@ -211,6 +264,22 @@ class UserCommScreener
         muted_users.user_id IS NOT NULL OR
         ignored_users.user_id IS NOT NULL
       )
+    SQL
+  end
+
+  def actor_communication_preferences
+    @actor_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id)
+      SELECT allowed_pm_user_id AS user_id, 'allowed_pm' AS preference_type
+      FROM allowed_pm_users
+      WHERE user_id = :acting_user_id
+      UNION
+      SELECT ignored_user_id AS user_id, 'ignored' AS preference_type
+      FROM ignored_users
+      WHERE user_id = :acting_user_id
+      UNION
+      SELECT muted_user_id AS user_id, 'muted' AS preference_type
+      FROM muted_users
+      WHERE user_id = :acting_user_id
     SQL
   end
 end
