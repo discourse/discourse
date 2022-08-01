@@ -17,12 +17,7 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service("search") searchService;
   @service keyValueStore;
   @service pmTopicTrackingState;
-
-  @cached
-  get siteSettings() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("site-settings:main");
-  }
+  @service siteSettings;
 
   @cached
   get currentUser() {

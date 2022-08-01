@@ -11,7 +11,7 @@ export default {
       return;
     }
 
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     const messageBus = container.lookup("service:message-bus");
     const keyValueStore = container.lookup("service:key-value-store");
     const currentUser = container.lookup("current-user:main");

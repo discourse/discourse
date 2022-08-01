@@ -119,7 +119,7 @@ export default {
   name: "new-user-narratve",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.discourse_narrative_bot_enabled) {
       withPluginApi("0.8.7", initialize);
     }

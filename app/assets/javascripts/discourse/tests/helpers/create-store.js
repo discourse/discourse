@@ -73,7 +73,7 @@ export default function (customLookup = () => {}) {
           this._tracker = this._tracker || TopicTrackingState.create();
           return this._tracker;
         }
-        if (type === "site-settings:main") {
+        if (type === "service:site-settings") {
           this._settings = this._settings || currentSettings();
           return this._settings;
         }

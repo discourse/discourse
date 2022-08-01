@@ -28,11 +28,11 @@ import { buildResolver } from "discourse-common/resolver";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
-import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import sinon from "sinon";
 import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
+import SiteSettingService from "discourse/services/site-settings";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -94,6 +94,8 @@ function createApplication(config, settings) {
       return container;
     });
 
+  SiteSettingService.create = () => settings;
+
   if (!started) {
     app.instanceInitializer({
       name: "test-helper",
@@ -105,8 +107,6 @@ function createApplication(config, settings) {
     started = true;
   }
 
-  app.SiteSettings = settings;
-  registerObjects(app);
   return app;
 }
 
@@ -278,7 +278,7 @@ export default function setupTests(config) {
 
     createHelperContext({
       get siteSettings() {
-        return app.__container__.lookup("site-settings:main");
+        return app.__container__.lookup("service:site-settings");
       },
       capabilities: {},
       get site() {
