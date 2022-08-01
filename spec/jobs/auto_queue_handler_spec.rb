@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::AutoQueueHandler do
+RSpec.describe Jobs::AutoQueueHandler do
 
   subject { Jobs::AutoQueueHandler.new.execute({}) }
 

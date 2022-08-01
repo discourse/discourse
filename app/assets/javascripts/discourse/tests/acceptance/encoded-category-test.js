@@ -43,15 +43,22 @@ acceptance("Encoded Sub Category Discovery", function (needs) {
   });
 
   test("Visit subcategory by slug", async function (assert) {
-    let bodySelector =
-      "body.category-\\%E6\\%BC\\%A2\\%E5\\%AD\\%97-parent-\\%E6\\%BC\\%A2\\%E5\\%AD\\%97-subcategory";
+    const bodyClass =
+      "category-%E6%BC%A2%E5%AD%97-parent-%E6%BC%A2%E5%AD%97-subcategory";
+
     await visit("/c/%E6%BC%A2%E5%AD%97-parent/%E6%BC%A2%E5%AD%97-subcategory");
-    assert.ok($(bodySelector).length, "has the default navigation");
+    assert.ok(
+      document.body.classList.contains(bodyClass),
+      "has the default navigation"
+    );
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     await visit("/c/漢字-parent/漢字-subcategory");
-    assert.ok($(bodySelector).length, "has the default navigation");
+    assert.ok(
+      document.body.classList.contains(bodyClass),
+      "has the default navigation"
+    );
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
   });

@@ -38,7 +38,7 @@ export default EmberObject.extend({
   },
 
   basePath(store, type) {
-    if (ADMIN_MODELS.indexOf(type.replace("_", "-")) !== -1) {
+    if (ADMIN_MODELS.includes(type.replace("_", "-"))) {
       return "/admin/";
     }
     return "/";

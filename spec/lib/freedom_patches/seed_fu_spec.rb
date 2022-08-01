@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "seed-fu patch" do
+RSpec.describe "seed-fu patch" do
   it "does not modify a sequence on an existing table" do
     u = User.create!(username: "test1", email: "test1@example.com")
     uid1 = u.id

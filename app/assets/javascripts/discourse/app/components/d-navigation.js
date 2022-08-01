@@ -4,6 +4,7 @@ import NavItem from "discourse/models/nav-item";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
@@ -126,6 +127,17 @@ export default Component.extend(FilterModeMixin, {
       siteSettings: this.siteSettings,
       skipCategoriesNavItem,
     });
+  },
+
+  @discourseComputed("filterType")
+  notCategoriesRoute(filterType) {
+    return filterType !== "categories";
+  },
+
+  @discourseComputed()
+  canBulk() {
+    const controller = getOwner(this).lookup("controller:discovery/topics");
+    return controller.canBulkSelect;
   },
 
   actions: {

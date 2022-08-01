@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::ClosePoll do
+RSpec.describe Jobs::ClosePoll do
   let(:post) { Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]") }
 
   describe 'missing arguments' do

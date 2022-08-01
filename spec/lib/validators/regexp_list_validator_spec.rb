@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RegexpListValidator do
+RSpec.describe RegexpListValidator do
   subject { described_class.new }
 
   it "allows lists of valid regular expressions" do

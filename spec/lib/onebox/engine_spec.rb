@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine do
+RSpec.describe Onebox::Engine do
   class OneboxEngineExample
     include Onebox::Engine
 
@@ -88,7 +88,7 @@ describe Onebox::Engine do
   end
 end
 
-describe ".onebox_name" do
+RSpec.describe ".onebox_name" do
   module ScopeForTemplateName
     class TemplateNameOnebox
       include Onebox::Engine

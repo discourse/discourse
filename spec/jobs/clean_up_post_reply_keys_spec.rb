@@ -11,7 +11,7 @@ RSpec.describe Jobs::CleanUpPostReplyKeys do
     SiteSetting.disallow_reply_by_email_after_days = 0
 
     expect { Jobs::CleanUpPostReplyKeys.new.execute({}) }
-      .to change { PostReplyKey.count }.by(0)
+      .not_to change { PostReplyKey.count }
 
     SiteSetting.disallow_reply_by_email_after_days = 2
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostRevisionSerializer do
+RSpec.describe PostRevisionSerializer do
   fab!(:post) { Fabricate(:post, version: 2) }
 
   context 'hidden tags' do

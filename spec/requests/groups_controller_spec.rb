@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupsController do
+RSpec.describe GroupsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
@@ -1323,7 +1323,7 @@ describe GroupsController do
   end
 
   describe "membership edits" do
-    context '#add_members' do
+    describe '#add_members' do
       before do
         sign_in(admin)
       end
@@ -1352,7 +1352,7 @@ describe GroupsController do
       it "does not notify users when the param is not present" do
         expect {
           put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
-        }.to change { Topic.where(archetype: "private_message").count }.by(0)
+        }.not_to change { Topic.where(archetype: "private_message").count }
 
         expect(response.status).to eq(200)
       end
@@ -1453,7 +1453,7 @@ describe GroupsController do
           expect do
             put "/groups/#{group.id}/members.json",
               params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
-          end.to change { group.users.count }.by(0)
+          end.not_to change { group.users.count }
 
           expect(response.status).to eq(422)
 
@@ -1469,7 +1469,7 @@ describe GroupsController do
             expect do
               put "/groups/#{group.id}/members.json",
                 params: { user_emails: [user1.email, user2.email].join(",") }
-            end.to change { group.reload.users.count }.by(0)
+            end.not_to change { group.reload.users.count }
 
             expect(response.status).to eq(422)
 
@@ -1591,7 +1591,7 @@ describe GroupsController do
       end
     end
 
-    context '#join' do
+    describe '#join' do
       let(:public_group) { Fabricate(:public_group) }
 
       it 'should allow a user to join a public group' do
@@ -1642,7 +1642,7 @@ describe GroupsController do
       end
     end
 
-    context '#remove_member' do
+    describe '#remove_member' do
       before do
         sign_in(admin)
       end
@@ -1736,7 +1736,7 @@ describe GroupsController do
         end
       end
 
-      context '#remove_members' do
+      describe '#remove_members' do
         context "is able to remove several members from a group" do
           fab!(:user1) { Fabricate(:user) }
           fab!(:user2) { Fabricate(:user, username: "UsEr2") }
@@ -1790,7 +1790,7 @@ describe GroupsController do
       end
     end
 
-    context '#leave' do
+    describe '#leave' do
       let(:group_with_public_exit) { Fabricate(:group, public_exit: true, users: [user]) }
 
       it 'should allow a user to leave a group with public exit' do

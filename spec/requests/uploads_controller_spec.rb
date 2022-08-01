@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UploadsController do
+RSpec.describe UploadsController do
   fab!(:user) { Fabricate(:user) }
 
   describe '#create' do

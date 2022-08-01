@@ -1028,4 +1028,14 @@ module Discourse
   def self.allow_dev_populate?
     Rails.env.development? || ENV["ALLOW_DEV_POPULATE"] == "1"
   end
+
+  # warning: this method is very expensive and shouldn't be called in places
+  # where performance matters. it's meant to be called manually (e.g. in the
+  # rails console) when dealing with an emergency that requires invalidating
+  # theme cache
+  def self.clear_all_theme_cache!
+    ThemeField.force_recompilation!
+    Theme.all.each(&:update_javascript_cache!)
+    Theme.expire_site_cache!
+  end
 end

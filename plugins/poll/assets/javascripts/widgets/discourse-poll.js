@@ -70,7 +70,7 @@ createWidget("discourse-poll-option", {
   },
 
   click(e) {
-    if ($(e.target).closest("a").length === 0) {
+    if (!e.target.closest("a")) {
       this.sendWidgetAction("toggleOption", this.attrs.option);
     }
   },

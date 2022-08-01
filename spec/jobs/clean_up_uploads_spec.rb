@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanUpUploads do
+RSpec.describe Jobs::CleanUpUploads do
 
   def fabricate_upload(attributes = {})
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
@@ -63,7 +63,7 @@ describe Jobs::CleanUpUploads do
     it 'does not delete uploads skipped by an unused callback' do
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
     end
@@ -97,7 +97,7 @@ describe Jobs::CleanUpUploads do
     it 'does not delete uploads that are in use by callback' do
       expect do
         Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
     end

@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
-  validates :public_user_field_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email, message: -> (_, user_email) { user_email[:value]&.errors[:email]&.first }
 
   after_initialize :add_trust_level
@@ -146,6 +146,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
+  before_save :apply_watched_words, unless: :custom_fields_clean?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -590,6 +591,10 @@ class User < ActiveRecord::Base
     @unread_total_notifications ||= notifications.where("read = false").count
   end
 
+  def reviewable_count
+    Reviewable.list_for(self).count
+  end
+
   def saw_notification_id(notification_id)
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
@@ -676,7 +681,7 @@ class User < ActiveRecord::Base
       payload = nil
     end
 
-    MessageBus.publish("/user-status/#{id}", payload, user_ids: [id])
+    MessageBus.publish("/user-status", { id => payload }, group_ids: [Group::AUTO_GROUPS[:trust_level_0]])
   end
 
   def password=(password)
@@ -1272,13 +1277,25 @@ class User < ActiveRecord::Base
     end
   end
 
-  def public_user_field_values
-    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
-    user_fields(@public_user_field_ids).values.join(" ")
+  def validatable_user_fields_values
+    validatable_user_fields.values.join(" ")
   end
 
   def set_user_field(field_id, value)
     custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
+  end
+
+  def apply_watched_words
+    validatable_user_fields.each do |id, value|
+      set_user_field(id, WordWatcher.apply_to_text(value))
+    end
+  end
+
+  def validatable_user_fields
+    # ignore multiselect fields since they are admin-set and thus not user generated content
+    @public_user_field_ids ||= UserField.public_fields.where.not(field_type: 'multiselect').pluck(:id)
+
+    user_fields(@public_user_field_ids)
   end
 
   def number_of_deleted_posts
@@ -1551,6 +1568,26 @@ class User < ActiveRecord::Base
 
   def has_status?
     user_status && !user_status.expired?
+  end
+
+  REDESIGN_USER_MENU_REDIS_KEY_PREFIX = "redesigned_user_menu_for_user_"
+
+  def self.redesigned_user_menu_enabled_user_ids
+    Discourse.redis.scan_each(match: "#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}*").map do |key|
+      key.sub(REDESIGN_USER_MENU_REDIS_KEY_PREFIX, "").to_i
+    end
+  end
+
+  def redesigned_user_menu_enabled?
+    Discourse.redis.get("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}") == "1"
+  end
+
+  def enable_redesigned_user_menu
+    Discourse.redis.setex("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}", 6.months, "1")
+  end
+
+  def disable_redesigned_user_menu
+    Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
   end
 
   protected

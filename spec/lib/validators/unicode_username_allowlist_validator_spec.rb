@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UnicodeUsernameAllowlistValidator do
+RSpec.describe UnicodeUsernameAllowlistValidator do
   subject { described_class.new }
 
   it "allows an empty allowlist" do

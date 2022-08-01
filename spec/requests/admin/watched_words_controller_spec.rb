@@ -116,7 +116,7 @@ RSpec.describe Admin::WatchedWordsController do
     end
   end
 
-  context '#clear_all' do
+  describe '#clear_all' do
     context 'non admins' do
       it "doesn't allow them to perform #clear_all" do
         word = Fabricate(:watched_word, action: WatchedWord.actions[:block])

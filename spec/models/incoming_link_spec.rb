@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe IncomingLink do
+RSpec.describe IncomingLink do
 
   fab!(:sharing_user) { Fabricate(:user, name: 'Alice') }
   fab!(:current_user) { Fabricate(:user, name: 'Bob') }

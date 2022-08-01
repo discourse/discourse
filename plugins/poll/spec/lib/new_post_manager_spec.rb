@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe NewPostManager do
+RSpec.describe NewPostManager do
   let(:user) { Fabricate(:newuser) }
   let(:admin) { Fabricate(:admin) }
 

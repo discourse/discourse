@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicViewItem do
+RSpec.describe TopicViewItem do
 
   def add(topic_id, ip, user_id = nil)
     skip_redis = true

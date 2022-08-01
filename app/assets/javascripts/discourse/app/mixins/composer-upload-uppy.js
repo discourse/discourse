@@ -453,6 +453,15 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         placeholderData.uploadPlaceholder,
         placeholderData.processingPlaceholder
       );
+
+      // Safari applies user-defined replacements to text inserted programatically.
+      // One of the most common replacements is ... -> …, so we take care of the case
+      // where that transformation has been applied to the original placeholder
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        placeholderData.uploadPlaceholder.replace("...", "…"),
+        placeholderData.processingPlaceholder
+      );
     });
 
     this._onPreProcessComplete(

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::BulkInvite do
+RSpec.describe Jobs::BulkInvite do
   describe '#execute' do
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }

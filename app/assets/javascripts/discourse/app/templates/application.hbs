@@ -2,7 +2,18 @@
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
   <PluginOutlet @name="above-site-header" @connectorTagName="div" />
-  <SiteHeader @canSignUp={{this.canSignUp}} @showCreateAccount={{route-action "showCreateAccount"}} @showLogin={{route-action "showLogin"}} @showKeyboard={{route-action "showKeyboardShortcutsHelp"}} @toggleMobileView={{route-action "toggleMobileView"}} @toggleAnonymous={{route-action "toggleAnonymous"}} @logout={{route-action "logout"}} @toggleSidebar={{action "toggleSidebar"}} />
+
+  <SiteHeader
+    @canSignUp={{this.canSignUp}}
+    @showCreateAccount={{route-action "showCreateAccount"}}
+    @showLogin={{route-action "showLogin"}}
+    @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+    @toggleMobileView={{route-action "toggleMobileView"}}
+    @toggleAnonymous={{route-action "toggleAnonymous"}}
+    @logout={{route-action "logout"}}
+    @sidebarEnabled={{this.sidebarEnabled}}
+    @toggleSidebar={{action "toggleSidebar"}} />
+
   <SoftwareUpdatePrompt />
 
   <PluginOutlet @name="below-site-header" @connectorTagName="div" @args={{hash currentPath=this.router._router.currentPath}} />
@@ -11,7 +22,7 @@
 
     <div class="sidebar-wrapper">
       {{!-- empty div allows for animation --}}
-      {{#if (and this.currentUser.experimental_sidebar_enabled this.showSidebar)}}
+      {{#if (and this.siteSettings.enable_experimental_sidebar_hamburger this.sidebarEnabled this.showSidebar)}}
         <Sidebar @toggleSidebar={{action "toggleSidebar"}}/>
       {{/if}}
     </div>

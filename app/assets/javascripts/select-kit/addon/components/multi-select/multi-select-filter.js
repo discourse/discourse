@@ -3,6 +3,7 @@ import SelectKitFilterComponent from "select-kit/components/select-kit/select-ki
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import layout from "select-kit/templates/components/select-kit/select-kit-filter";
+import { action } from "@ember/object";
 
 export default SelectKitFilterComponent.extend({
   layout,
@@ -16,24 +17,23 @@ export default SelectKitFilterComponent.extend({
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   },
 
-  actions: {
-    onPaste(event) {
-      const data = event.originalEvent.clipboardData;
+  @action
+  onPaste(event) {
+    const data = event?.clipboardData;
 
-      if (!data) {
-        return;
-      }
+    if (!data) {
+      return;
+    }
 
-      const parts = data.getData("text").split("|").filter(Boolean);
+    const parts = data.getData("text").split("|").filter(Boolean);
 
-      if (parts.length > 1) {
-        event.stopPropagation();
-        event.preventDefault();
+    if (parts.length > 1) {
+      event.stopPropagation();
+      event.preventDefault();
 
-        this.selectKit.append(parts);
+      this.selectKit.append(parts);
 
-        return false;
-      }
-    },
+      return false;
+    }
   },
 });

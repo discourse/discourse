@@ -71,10 +71,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :default_calendar,
              :bookmark_auto_delete_preference,
              :pending_posts_count,
-             :experimental_sidebar_enabled,
              :status,
              :sidebar_category_ids,
-             :sidebar_tag_names
+             :sidebar_tag_names,
+             :likes_notifications_disabled,
+             :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -259,10 +260,6 @@ class CurrentUserSerializer < BasicUserSerializer
     object.anonymous?
   end
 
-  def reviewable_count
-    Reviewable.list_for(object).count
-  end
-
   def can_review
     scope.can_see_review_queue?
   end
@@ -307,20 +304,12 @@ class CurrentUserSerializer < BasicUserSerializer
     Draft.has_topic_draft(object)
   end
 
-  def experimental_sidebar_enabled
-    object.user_option.enable_experimental_sidebar
-  end
-
-  def include_experimental_sidebar_enabled?
-    SiteSetting.enable_experimental_sidebar
-  end
-
   def sidebar_category_ids
     object.category_sidebar_section_links.pluck(:linkable_id)
   end
 
   def include_sidebar_category_ids?
-    include_experimental_sidebar_enabled? && object.user_option.enable_experimental_sidebar
+    SiteSetting.enable_experimental_sidebar_hamburger
   end
 
   def sidebar_tag_names
@@ -337,5 +326,16 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def status
     UserStatusSerializer.new(object.user_status, root: false)
+  end
+
+  def redesigned_user_menu_enabled
+    if defined?(@redesigned_user_menu_enabled)
+      return @redesigned_user_menu_enabled
+    end
+    @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
+  end
+
+  def likes_notifications_disabled
+    object.user_option&.likes_notifications_disabled?
   end
 end

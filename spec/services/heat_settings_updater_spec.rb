@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HeatSettingsUpdater do
+RSpec.describe HeatSettingsUpdater do
   describe '#update' do
     subject(:update_settings) { HeatSettingsUpdater.update }
 

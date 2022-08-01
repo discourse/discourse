@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailController do
+RSpec.describe EmailController do
   fab!(:user) { Fabricate(:user) }
 
   describe '#perform_unsubscribe' do
@@ -152,7 +152,7 @@ describe EmailController do
     end
   end
 
-  context '#unsubscribe' do
+  describe '#unsubscribe' do
     it 'displays not found if key is not found' do
       navigate_to_unsubscribe(SecureRandom.hex)
 

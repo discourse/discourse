@@ -152,7 +152,7 @@ export function hostnameValid(hostname) {
 }
 
 export function extractDomainFromUrl(url) {
-  if (url.indexOf("://") > -1) {
+  if (url.includes("://")) {
     url = url.split("/")[2];
   } else {
     url = url.split("/")[0];
@@ -441,7 +441,7 @@ export function areCookiesEnabled() {
   // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
   try {
     document.cookie = "cookietest=1";
-    let ret = document.cookie.indexOf("cookietest=") !== -1;
+    let ret = document.cookie.includes("cookietest=");
     document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
     return ret;
   } catch (e) {
@@ -527,7 +527,7 @@ export function clipboardCopy(text) {
   return clipboardCopyFallback(text);
 }
 
-// Use this verison of clipboardCopy if you must use an AJAX call
+// Use this version of clipboardCopy if you must use an AJAX call
 // to retrieve/generate server-side text to copy to the clipboard,
 // otherwise this write function will error in certain browsers, because
 // the time taken from the user event to the clipboard text being copied

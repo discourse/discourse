@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdminDashboardData do
+RSpec.describe AdminDashboardData do
   after do
     AdminDashboardData.reset_problem_checks
     Discourse.redis.flushdb

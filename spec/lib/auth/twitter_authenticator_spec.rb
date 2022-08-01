@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::TwitterAuthenticator do
+RSpec.describe Auth::TwitterAuthenticator do
 
   it "takes over account if email is supplied" do
     auth = Auth::TwitterAuthenticator.new

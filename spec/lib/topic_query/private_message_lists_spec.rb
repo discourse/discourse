@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicQuery::PrivateMessageLists do
+RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }

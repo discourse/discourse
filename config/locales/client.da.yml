@@ -578,6 +578,7 @@ da:
       forever: "Forevigt"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
+      never: "Aldrig"
       last_custom: "Sidste brugerdefineret dato"
       custom: "Brugerdefineret dato og tid"
       select_timeframe: "Vælg en tidsramme"
@@ -1648,10 +1649,8 @@ da:
       other: svar
     signup_cta:
       sign_up: "Tilmeld dig"
-      hide_session: "Mind mig om det i morgen"
       hide_forever: "nej tak"
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
-      value_prop: "Når du opretter en konto, husker vi præcis, hvad du har læst, så du altid kommer tilbage, hvor du slap. Du får også meddelelser, her og via e-mail, når nogen svarer til dig. Og du kan 'Synes godt om' indlæg for at dele kærligheden. :heartpulse:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description:
@@ -1848,9 +1847,6 @@ da:
       min_content_not_reached:
         one: "Vælg mindst %{count} punkt."
         other: "Vælg mindst %{count} punkter."
-      invalid_selection_length:
-        one: "Der skal mindst vælges %{count} karakter."
-        other: "Der skal mindst vælges %{count} karakterer."
       components:
         tag_drop:
           filter_for_more: Filtrer for mere...
@@ -2034,6 +2030,7 @@ da:
       empty: "Ingen notifikationer fundet."
       post_approved: "Dit indlæg blev godkendt"
       reviewable_items: "elementer, der kræver gennemgang"
+      watching_first_post_label: "Nyt Emne"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2046,6 +2043,10 @@ da:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} og %{count} anden</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} og %{count} anden"
+        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "syntes godt om %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
@@ -3243,7 +3244,6 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top:"
-    browser_update: 'Desværre, <a href="https://www.discourse.org/faq/#browser">din browser er for gammel til at virke korrekt på dette websted</a>. <a href="https://browsehappy.com">Opgradere venligst din browser</a> for at se vore gode indhold, log ind og svar.'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -3554,8 +3554,12 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      unread_count: "%{count} ulæst"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulæst"
+        other: "%{count} ulæste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
       sections:
         messages:
           header_link_text: "Beskeder"
@@ -3573,12 +3577,17 @@ da:
         categories:
           header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
-        topics:
+        community:
           header_link_title: "hjem"
-          header_link_text: "Emner"
+          header_link_text: "Fællesskab"
           links:
             tracked:
               content: "Sporet"
+            groups:
+              content: "Grupper"
+              title: "Alle grupper"
+            users:
+              content: "Brugere"
             my_posts:
               content: "Mine indlæg"
   admin_js:

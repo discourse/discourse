@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GitlabBlobOnebox do
+RSpec.describe Onebox::Engine::GitlabBlobOnebox do
   before do
     @link = "https://gitlab.com/discourse/onebox/blob/master/lib/onebox/engine/gitlab_blob_onebox.rb"
 

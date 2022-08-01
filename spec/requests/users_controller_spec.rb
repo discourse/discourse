@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe UsersController do
+RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
@@ -2300,20 +2300,7 @@ describe UsersController do
 
         context 'experimental sidebar' do
           before do
-            SiteSetting.enable_experimental_sidebar = true
-            user.user_option.update!(enable_experimental_sidebar: true)
-          end
-
-          it "should allow user to update UserOption#enable_experimental_sidebar" do
-            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'false' }
-
-            expect(response.status).to eq(200)
-            expect(user.reload.user_option.enable_experimental_sidebar).to eq(false)
-
-            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
-
-            expect(response.status).to eq(200)
-            expect(user.reload.user_option.enable_experimental_sidebar).to eq(true)
+            SiteSetting.enable_experimental_sidebar_hamburger = true
           end
 
           it 'does not remove category or tag sidebar section links when params are not present' do
@@ -2340,13 +2327,13 @@ describe UsersController do
           it "should allow user to modify category sidebar section links" do
             category = Fabricate(:category)
             restricted_category = Fabricate(:category, read_restricted: true)
-            category_siderbar_section_link = Fabricate(:category_sidebar_section_link, user: user)
+            category_sidebar_section_link = Fabricate(:category_sidebar_section_link, user: user)
 
             put "/u/#{user.username}.json", params: { sidebar_category_ids: [category.id, restricted_category.id] }
 
             expect(response.status).to eq(200)
             expect(user.sidebar_section_links.count).to eq(1)
-            expect(SidebarSectionLink.exists?(id: category_siderbar_section_link.id)).to eq(false)
+            expect(SidebarSectionLink.exists?(id: category_sidebar_section_link.id)).to eq(false)
 
             sidebar_section_link = user.sidebar_section_links.first
 
@@ -3730,6 +3717,23 @@ describe UsersController do
         token.reload
         expect(token.expired?).to eq(true)
       end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = post_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
 
     context "with a username and password" do
@@ -3803,6 +3807,25 @@ describe UsersController do
 
         token.reload
         expect(token.expired?).to eq(true)
+      end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = inactive_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            username: user.username,
+            password: 'qwerqwer123',
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
       end
     end
   end
@@ -3978,23 +4001,6 @@ describe UsersController do
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
           expect(topic_post_count[topic.id.to_s]).to eq(2)
         end
-      end
-
-      it "includes UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is true" do
-        SiteSetting.enable_experimental_sidebar = true
-        user1.user_option.update!(enable_experimental_sidebar: true)
-
-        get "/u/#{user1.username}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(true)
-      end
-
-      it "does not include UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is false" do
-        get "/u/#{user1.username}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(nil)
       end
     end
 

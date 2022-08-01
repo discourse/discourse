@@ -40,9 +40,9 @@ export default SelectKitRowComponent.extend({
 
   category: computed("rowValue", "rowName", function () {
     if (isEmpty(this.rowValue)) {
-      const uncat = Category.findUncategorized();
-      if (uncat && uncat.name === this.rowName) {
-        return uncat;
+      const uncategorized = Category.findUncategorized();
+      if (uncategorized && uncategorized.name === this.rowName) {
+        return uncategorized;
       }
     } else {
       return Category.findById(parseInt(this.rowValue, 10));

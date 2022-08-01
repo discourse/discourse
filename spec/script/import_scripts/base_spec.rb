@@ -2,7 +2,7 @@
 
 require_relative '../../../script/import_scripts/base'
 
-describe ImportScripts::Base do
+RSpec.describe ImportScripts::Base do
   before do
     STDOUT.stubs(:write)
   end

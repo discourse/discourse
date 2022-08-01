@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicList do
+RSpec.describe TopicList do
   let!(:topic) {
     t = Fabricate(:topic)
     t.allowed_user_ids = [t.user.id]

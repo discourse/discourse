@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::JSON do
+RSpec.describe Onebox::Engine::JSON do
   before do
     @link = "http://stackoverflow.com"
     stub_request(:get, @link).to_return(status: 200, body: onebox_response("stackexchange-question"))

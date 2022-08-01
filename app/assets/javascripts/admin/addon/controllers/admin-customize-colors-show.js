@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import bootbox from "bootbox";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { action, computed } from "@ember/object";
 import { clipboardCopy } from "discourse/lib/utilities";
 
@@ -41,7 +41,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
       );
     }
 
-    later(() => {
+    discourseLater(() => {
       this.set("model.savingStatus", null);
     }, 2000);
   }

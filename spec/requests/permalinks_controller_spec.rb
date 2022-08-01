@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PermalinksController do
+RSpec.describe PermalinksController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:permalink) { Fabricate(:permalink, url: "deadroute/topic/546") }
 

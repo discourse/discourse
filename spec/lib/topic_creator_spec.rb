@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicCreator do
+RSpec.describe TopicCreator do
   fab!(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin)     { Fabricate(:admin) }

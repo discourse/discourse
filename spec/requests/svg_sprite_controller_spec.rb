@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SvgSpriteController do
+RSpec.describe SvgSpriteController do
 
   context 'show' do
     before do

@@ -3504,6 +3504,12 @@ tr_TR:
     dark_rose: "Kara Gül"
     wcag: "WCAG Light"
     wcag_theme_name: "WCAG Light"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solarized Light"
+    solarized_light_theme_name: "Solarized Light"
+    solarized_dark: "Solarized Dark"
+    solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
     default_theme_name: "Varsayılan"
@@ -3933,6 +3939,8 @@ tr_TR:
                 label: "Öne çıkan konulardaki kategoriler"
               categories_and_latest_topics:
                 label: "Kategoriler ve Son Konular"
+              categories_and_latest_topics_created_date:
+                label: "Kategoriler ve Son Konular (konu oluşturulma tarihine göre sırala)"
               categories_and_top_topics:
                 label: "Kategoriler ve Popüler Konular"
               categories_boxes:

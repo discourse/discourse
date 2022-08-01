@@ -2,7 +2,7 @@
 
 require 'theme_settings_parser'
 
-describe ThemeSettingsParser do
+RSpec.describe ThemeSettingsParser do
   after do
     ThemeField.destroy_all
   end

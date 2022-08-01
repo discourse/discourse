@@ -13,6 +13,7 @@ module NotificationLevels
   def self.topic_levels
     @topic_levels ||= Enum.new(muted: 0,
                                regular: 1,
+                               normal: 1, # alias for regular
                                tracking: 2,
                                watching: 3)
   end

@@ -11,6 +11,7 @@ export DB_NAME="mybb"
 export DB_PW=""
 export DB_USER="root"
 export TABLE_PREFIX="mybb_"
+export UPLOADS_DIR="/data/youruploads"
 export BASE="" #
 =end
 
@@ -23,6 +24,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   DB_PW ||= ENV['DB_PW'] || ""
   DB_USER ||= ENV['DB_USER'] || "root"
   TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "mybb_"
+  UPLOADS_DIR ||= ENV['UPLOADS'] || '/data/limelightgaming/uploads'
   BATCH_SIZE = 1000
   BASE = ""
   QUIET = true
@@ -59,7 +61,7 @@ class ImportScripts::MyBB < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT uid id, email email, username, regdate, g.title `group`
+        "SELECT uid id, email email, username, regdate, g.title `group`, avatar
            FROM #{TABLE_PREFIX}users u
            JOIN #{TABLE_PREFIX}usergroups g ON g.gid = u.usergroup
           WHERE g.title != 'Banned'
@@ -72,12 +74,26 @@ class ImportScripts::MyBB < ImportScripts::Base
       next if all_records_exist? :users, results.map { |u| u["id"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
+        avatar_url = user['avatar'].match(/^http/) ? user['avatar'].gsub(/\?.*/, "") : nil
         { id: user['id'],
           email: user['email'],
           username: user['username'],
           created_at: Time.zone.at(user['regdate']),
           moderator: user['group'] == 'Super Moderators',
-          admin: user['group'] == 'Administrators' }
+          admin: user['group'] == 'Administrators' ,
+          avatar_url: avatar_url,
+          post_create_action: proc do |newuser|
+            if !user["avatar"].blank?
+              avatar = user["avatar"].gsub(/\?.*/, "")
+              if avatar.match(/^http.*/)
+                UserAvatar.import_url_for_user(avatar, newuser)
+              else
+                filename = File.join(UPLOADS_DIR, avatar)
+                @uploader.create_avatar(newuser, filename) if File.exists?(filename)
+              end
+            end
+          end
+        }
       end
     end
   end

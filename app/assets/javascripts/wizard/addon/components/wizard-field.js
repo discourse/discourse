@@ -3,7 +3,11 @@ import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  classNameBindings: [":wizard-field", "typeClasses", "field.invalid"],
+  classNameBindings: [
+    ":wizard-container__field",
+    "typeClasses",
+    "field.invalid",
+  ],
 
   @discourseComputed("field.type", "field.id")
   typeClasses: (type, id) =>

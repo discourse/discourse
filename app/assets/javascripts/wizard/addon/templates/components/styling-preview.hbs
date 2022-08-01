@@ -1,9 +1,9 @@
 <div class="previews {{if this.draggingActive "dragging"}}">
-  <div class="preview-area topic-preview">
+  <div class="wizard-container__preview topic-preview">
     <canvas width={{this.elementWidth}} height={{this.elementHeight}} style={{this.canvasStyle}}>
     </canvas>
   </div>
-  <div class="preview-area homepage-preview">
+  <div class="wizard-container__preview homepage-preview">
     <HomepagePreview @wizard={{this.wizard}} @step={{this.step}} />
   </div>
 </div>

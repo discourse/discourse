@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAnonymizer do
+RSpec.describe UserAnonymizer do
   let(:admin) { Fabricate(:admin) }
 
   describe "event" do

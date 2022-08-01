@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::ImgurOnebox do
+RSpec.describe Onebox::Engine::ImgurOnebox do
   let(:link) { "https://imgur.com/gallery/Sdc0Klc" }
   let(:imgur) { described_class.new(link) }
   let(:html) { imgur.to_html }

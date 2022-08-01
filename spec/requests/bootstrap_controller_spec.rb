@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BootstrapController do
+RSpec.describe BootstrapController do
 
   let(:theme) { Fabricate(:theme, enabled: true) }
 

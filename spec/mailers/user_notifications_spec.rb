@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserNotifications do
+RSpec.describe UserNotifications do
 
   let(:user) { Fabricate(:admin) }
 

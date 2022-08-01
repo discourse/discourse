@@ -472,3 +472,60 @@ td .main-link {
 .muted-categories-link {
   margin-left: 0;
 }
+
+// Bulk select
+
+.topic-list-header {
+  display: none;
+}
+
+.topic-list.sticky-header {
+  .topic-list-header {
+    display: table-header-group;
+    position: sticky;
+    z-index: z("base") + 2;
+    top: var(--header-offset);
+    background: var(--secondary);
+    tr {
+      display: flex;
+      align-items: center;
+      border: none;
+    }
+
+    .topic-list-data {
+      display: none;
+      &.bulk-select {
+        display: inline-block;
+      }
+      &.default {
+        display: flex;
+        span:not(.bulk-select-topics) {
+          display: none;
+        }
+      }
+    }
+
+    button.bulk-select {
+      padding-left: 0.85em; // visual alignment
+    }
+  }
+}
+
+.bulk-select-topics {
+  display: flex;
+  padding-left: 0.85em;
+  .btn {
+    margin-right: 0.5em;
+  }
+}
+
+.topic-list-data .pull-left {
+  label {
+    // bulk select checkbox
+    display: flex;
+    width: 45px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+  }
+}

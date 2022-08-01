@@ -2,7 +2,7 @@
 
 require 'category_list'
 
-describe CategoryList do
+RSpec.describe CategoryList do
   before do
     # we need automatic updating here cause we are testing this
     Topic.update_featured_topics = true

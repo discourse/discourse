@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TrustLevelGranter do
+RSpec.describe TrustLevelGranter do
 
   describe 'grant' do
 

@@ -565,6 +565,10 @@ zh_CN:
             base:
               invalid_url: "替换 URL 无效"
               invalid_tag_list: "替换标签名单无效"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -3665,6 +3669,12 @@ zh_CN:
     dark_rose: "黑红"
     wcag: "WCAG 亮"
     wcag_theme_name: "WCAG 亮"
+    dracula: "德拉库拉"
+    dracula_theme_name: "德拉库拉"
+    solarized_light: "Solarized 亮色"
+    solarized_light_theme_name: "Solarized 亮色"
+    solarized_dark: "Solarized 暗色"
+    solarized_dark_theme_name: "Solarized 暗色"
     wcag_dark: "WCAG 暗"
     wcag_dark_theme_name: "WCAG 暗"
     default_theme_name: "默认"
@@ -4444,6 +4454,8 @@ zh_CN:
                 label: "包含精选话题的类别"
               categories_and_latest_topics:
                 label: "类别和最新话题"
+              categories_and_latest_topics_created_date:
+                label: "类别和最新话题(按话题创建日期排序)"
               categories_and_top_topics:
                 label: "类别和热门话题"
               categories_boxes:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GooglePlayAppOnebox do
+RSpec.describe Onebox::Engine::GooglePlayAppOnebox do
   before do
     @link = "https://play.google.com/store/apps/details?id=com.hulu.plus&hl=en"
 

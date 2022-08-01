@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe "spammers on same IP" do
+RSpec.describe "spammers on same IP" do
 
   let(:ip_address)  { '182.189.119.174' }
   let!(:spammer1)   { Fabricate(:user, ip_address: ip_address) }

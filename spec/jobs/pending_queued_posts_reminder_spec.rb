@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PendingQueuedPostsReminder do
+RSpec.describe Jobs::PendingQueuedPostsReminder do
   let(:job) { described_class.new }
 
   context "notify_about_queued_posts_after is 0" do

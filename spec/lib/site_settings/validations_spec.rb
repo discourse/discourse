@@ -2,7 +2,7 @@
 
 require 'site_settings/validations'
 
-describe SiteSettings::Validations do
+RSpec.describe SiteSettings::Validations do
   subject { Class.new.include(described_class).new }
 
   context "default_categories" do

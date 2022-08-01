@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionDestroyer do
+RSpec.describe PostActionDestroyer do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }

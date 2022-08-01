@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SearchIndexer do
+RSpec.describe SearchIndexer do
   let(:post_id) { 99 }
 
   before do

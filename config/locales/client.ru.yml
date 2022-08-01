@@ -201,9 +201,9 @@ ru:
       email: "Отправить по электронной почте"
       url: "Копировать и поделиться ссылкой"
     action_codes:
-      public_topic: "Сделал эту тему публичной %{when}"
+      public_topic: "Сделал тему публичной %{when}"
       open_topic: "Преобразовал это в тему %{when}"
-      private_topic: "Сделал эту тему личным сообщением %{when}"
+      private_topic: "Сделал тему личным сообщением %{when}"
       split_topic: "Разделил эту тему %{when}"
       invited_user: "Пригласил %{who} %{when}"
       invited_group: "Пригласил %{who} %{when}"
@@ -356,7 +356,7 @@ ru:
       user_count: "Пользователи"
       active_user_count: "Активные пользователи"
       contact: "Контакты"
-      contact_info: "В случае возникновения критической ошибки или срочного дела, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
+      contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
     bookmarked:
       title: "Закладки"
       edit_bookmark: "Изменить закладку"
@@ -686,6 +686,8 @@ ru:
       relative: "Напомнить через:"
     time_shortcut:
       now: "Сейчас"
+      in_one_hour: "Через час"
+      in_two_hours: "Через два часа"
       later_today: "Сегодня, но позже"
       two_days: "Через день"
       next_business_day: "На следующий рабочий день"
@@ -706,6 +708,7 @@ ru:
       forever: "Навсегда"
       relative: "Через указанное время"
       none: "Не настраивать напоминание"
+      never: "Никогда"
       last_custom: "Использовать ранее установленные дату и время"
       custom: "Установить дату и время"
       select_timeframe: "Выбор даты"
@@ -1188,7 +1191,7 @@ ru:
       color_scheme: "Цветовая схема"
       color_schemes:
         default_description: "Тема по умолчанию"
-        disable_dark_scheme: "То же самое, что и обычный"
+        disable_dark_scheme: "Обычная"
         dark_instructions: "Вы можете просмотреть цветовую схему тёмного режима, переключив тёмный режим вашего устройства."
         undo: "Сбросить"
         regular: "Обычная"
@@ -1590,10 +1593,10 @@ ru:
         never: "Никогда"
         immediately: "Немедленно"
         after_30_seconds: "Более 30 секунд"
-        after_1_minute: "Более 1ой минуты"
-        after_2_minutes: "Более 2х минут"
-        after_3_minutes: "Более 3х минут"
-        after_4_minutes: "Более 4х минут"
+        after_1_minute: "Более 1 минуты"
+        after_2_minutes: "Более 2 минут"
+        after_3_minutes: "Более 3 минут"
+        after_4_minutes: "Более 4 минут"
         after_5_minutes: "Более 5 минут"
         after_10_minutes: "Более 10 минут"
       notification_level_when_replying: "Когда я пишу в теме, установить для неё следующий уровень уведомлений"
@@ -1787,6 +1790,8 @@ ru:
       save: "Сохранить"
       set_custom_status: "Поменять статус"
       what_are_you_doing: "Что вы сейчас делаете?"
+      remove_status: "Удалить статус"
+      until: "До:"
     loading: "Загрузка..."
     errors:
       prev_page: "при попытке загрузки"
@@ -1848,11 +1853,11 @@ ru:
       other: ответов
     signup_cta:
       sign_up: "Зарегистрироваться"
-      hide_session: "Напомнить мне завтра"
+      hide_session: "Может быть позже"
       hide_forever: "Нет, спасибо"
       hidden_for_session: "Хорошо, напомним завтра. Кстати, зарегистрироваться можно также и с помощью кнопки \"Войти\"."
       intro: "Здравствуйте! Похоже, вам нравится обсуждение, но вы ещё не зарегистрировали аккаунт."
-      value_prop: "Когда вы создаёте учётную запись, мы точно помним, что вы прочитали, поэтому вы всегда возвращаетесь туда, где остановились. Вы также получаете уведомления, здесь и по электронной почте, когда кто-то отвечает вам. И вы можете в сообщениях поставить отметку 'Мне нравится'. :heartpulse:"
+      value_prop: "Устали листать одни и те же темы? Когда вы создаете учётную запись, вы всегда будете возвращаться туда, где остановились. С учётной записью вы также можете получать уведомления о новых ответах, сохранять закладки и использовать симпатии, чтобы благодарить других участников. Мы все можем работать вместе, чтобы сделать это сообщество необычным и интересным. :heart:"
     summary:
       enabled_description: "Вы просматриваете выдержку из темы - только самые интересные сообщения по мнению сообщества."
       description:
@@ -2020,6 +2025,7 @@ ru:
       categories_only: "Только разделы"
       categories_with_featured_topics: "Разделы с избранными темами"
       categories_and_latest_topics: "Разделы и список последних тем форума"
+      categories_and_latest_topics_created_date: "Разделы и последние темы (сортировка по дате создания темы)"
       categories_and_top_topics: "Разделы и популярные темы"
       categories_boxes: "Блоки с подразделами"
       categories_boxes_with_topics: "Блоки с избранными темами"
@@ -2071,11 +2077,6 @@ ru:
         few: "Выберите хотя бы %{count} элемента."
         many: "Выберите хотя бы %{count} элементов."
         other: "Выберите хотя бы %{count} элементов."
-      invalid_selection_length:
-        one: "Необходимо выбрать не менее %{count} символа."
-        few: "Необходимо выбрать не менее %{count} символов."
-        many: "Необходимо выбрать не менее %{count} символов."
-        other: "Необходимо выбрать не менее %{count} символов."
       components:
         tag_drop:
           filter_for_more: Больше тегов...
@@ -2116,7 +2117,7 @@ ru:
       options: "Настройки"
       whisper: "скрытое сообщение"
       unlist: "Тема скрыта"
-      add_warning: "Это официальное предупреждение."
+      add_warning: "Официальное предупреждение"
       toggle_whisper: "Скрытое сообщение"
       toggle_unlisted: "Скрыть"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
@@ -2294,6 +2295,7 @@ ru:
       empty: "Уведомления не найдены."
       post_approved: "Ваше сообщение было одобрено"
       reviewable_items: "Сообщения, требующие рассмотрения"
+      watching_first_post_label: "Новая тема"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2308,6 +2310,12 @@ ru:
         few: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователя</span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} и %{count} другой"
+        few: "%{username}, %{username2} и %{count} другие"
+        many: "%{username}, %{username2} и %{count} других"
+        other: "%{username}, %{username2} и %{count} других"
       liked_consolidated_description:
         one: "Понравилось %{count} ваше сообщение"
         few: "Понравилось %{count} ваших сообщения"
@@ -2520,6 +2528,10 @@ ru:
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
     current_user: "перейти на вашу страницу пользователя"
     view_all: "Просмотреть все %{tab}"
+    user_menu:
+      generic_no_items: "Нет элементов в списке."
+      sr_menu_tabs: "Вкладки меню"
+      view_all_notifications: "Просмотреть все уведомления"
     topics:
       new_messages_marker: "последний визит"
       bulk:
@@ -3272,7 +3284,7 @@ ru:
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
-            title: "Отобразить сообщение со всеми добавлениями и удалениями."
+            title: "Показать сообщение со всеми добавлениями и удалениями."
             button: "HTML"
           side_by_side:
             title: "Показать отличия версий бок о бок"
@@ -4062,8 +4074,17 @@ ru:
     second_factor_auth:
       redirect_after_success: "Проверка подлинности второго фактора прошла успешно. Перенаправление на предыдущую страницу…"
     sidebar:
-      unread_count: "%{count} непрочитанных"
-      new_count: "%{count} новых"
+      unread_count:
+        one: "%{count} непрочитанная"
+        few: "%{count} непрочитанных"
+        many: "%{count} непрочитанных"
+        other: "%{count} непрочитанных"
+      new_count:
+        one: "%{count} новая"
+        few: "%{count} новых"
+        many: "%{count} новых"
+        other: "%{count} непрочитанных"
+      toggle_section: "Переключить секцию"
       sections:
         messages:
           header_link_title: "Личные сообщения"
@@ -4089,20 +4110,23 @@ ru:
           header_link_title: "Все разделы"
           header_link_text: "Разделы"
           header_action_title: "Редактировать разделы боковой панели"
-        topics:
+        community:
           header_link_title: "Темы"
-          header_link_text: "Темы"
+          header_link_text: "Сообщество"
           header_action_title: "Cоздать новую тему"
           links:
             everything:
               content: "Все"
               title: "Все темы"
             tracked:
-              content: "Отслеживаемые"
+              content: "Следящие"
               title: "Все отслеживаемые темы"
-            bookmarked:
-              content: "В закладках"
-              title: "Все темы с закладками"
+            groups:
+              content: "Группы"
+              title: "Все группы"
+            users:
+              content: "Пользователи"
+              title: "Все пользователи"
             my_posts:
               content: "Мои сообщения"
               title: "Мои сообщения"

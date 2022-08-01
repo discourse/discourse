@@ -482,6 +482,7 @@ sr:
       start_of_next_business_week_alt: "Naredni ponedeljak"
       next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
+      never: "Nikad"
       custom: "Prilagođen datum i vreme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio <a href='%{topicUrl}'>temu</a>"
@@ -1139,6 +1140,7 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      watching_first_post_label: "Nova Tema"
       dismiss_confirmation:
         dismiss: "Одбаци"
         cancel: "Odustani"
@@ -1799,8 +1801,14 @@ sr:
         regular: "stalni član"
         leader: "vođa"
     sidebar:
-      unread_count: "%{count} nepročitana"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} nepročitana"
+        few: "%{count} nepročitanih"
+        other: "%{count} nepročitana"
+      new_count:
+        one: "%{count} nova"
+        few: "%{count} novih"
+        other: "%{count} nova"
       sections:
         messages:
           header_link_text: "Poruke"
@@ -1815,12 +1823,16 @@ sr:
         categories:
           header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
-        topics:
+        community:
           header_link_title: "home"
-          header_link_text: "Teme"
+          header_link_text: "Zajednica"
           links:
             tracked:
               content: "Praćeno"
+            groups:
+              content: "Grupe"
+            users:
+              content: "Korisnici"
             my_posts:
               content: "Moje poruke"
   admin_js:

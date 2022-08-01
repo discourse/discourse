@@ -542,14 +542,10 @@ users:
   min_username_length:
     client: true
     default: 3
-    min: 1
-    max: 60
     validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
-    min: 8
-    max: 60
     validator: "MaxUsernameLengthValidator"
   unicode_usernames:
     default: false
@@ -1270,7 +1266,7 @@ email:
   raw_rejected_email_max_length: 4000
   delete_rejected_email_after_days:
     default: 90
-    max: 36500
+    validator: "DeleteRejectedEmailAfterDaysValidator"
   enable_secondary_emails:
     client: true
     default: true
@@ -1989,7 +1985,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar:
+  enable_experimental_sidebar_hamburger:
+    default: false
+    client: true
+    hidden: true
+  enable_sidebar:
     default: false
     client: true
     hidden: true

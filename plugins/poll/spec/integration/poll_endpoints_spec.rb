@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "DiscoursePoll endpoints" do
+RSpec.describe "DiscoursePoll endpoints" do
   describe "fetch voters for a poll" do
     fab!(:user) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }

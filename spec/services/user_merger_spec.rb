@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserMerger do
+RSpec.describe UserMerger do
   fab!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
   fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
   fab!(:walter) { Fabricate(:walter_white) }

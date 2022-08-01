@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostSerializer do
+RSpec.describe PostSerializer do
   fab!(:post) { Fabricate(:post) }
 
   context "a post with lots of actions" do

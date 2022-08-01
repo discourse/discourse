@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InlineOneboxController do
+RSpec.describe InlineOneboxController do
 
   it "requires the user to be logged in" do
     get "/inline-onebox.json", params: { urls: [] }

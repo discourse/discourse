@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicViewPostsSerializer do
+RSpec.describe TopicViewPostsSerializer do
 
   let(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }

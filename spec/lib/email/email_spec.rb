@@ -2,7 +2,7 @@
 
 require 'email'
 
-describe Email do
+RSpec.describe Email do
 
   describe "is_valid?" do
 

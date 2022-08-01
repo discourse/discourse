@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailValidator do
+RSpec.describe EmailValidator do
   def blocks?(email)
     user = Fabricate.build(:user, email: email)
     validator = EmailValidator.new(attributes: :email)

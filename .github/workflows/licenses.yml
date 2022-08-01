@@ -10,6 +10,9 @@ concurrency:
   group: licenses-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: run
@@ -45,7 +48,10 @@ jobs:
 
       - name: Setup licensed
         run: |
-          gem install licensed
+          # gem install licensed
+          # Workaround for https://github.com/github/licensed/issues/521
+          gem install specific_install
+          gem specific_install https://github.com/CvX/licensed.git -b bundler-compat
 
       - name: Get yarn cache directory
         id: yarn-cache-dir

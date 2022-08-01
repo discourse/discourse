@@ -7,15 +7,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
-import pretender from "../helpers/create-pretender";
+import pretender, { response } from "../helpers/create-pretender";
 
 acceptance("Dismiss notification confirmation", function (needs) {
   needs.user();
 
   test("does not show modal when no high priority notifications", async function (assert) {
-    pretender.put("/notifications/mark-read", () => {
-      return [200, { "Content-Type": "application/json" }, { success: true }];
-    });
+    pretender.put("/notifications/mark-read", () =>
+      response({ success: true })
+    );
 
     await visit("/");
     await click(".current-user");
@@ -50,9 +50,9 @@ acceptance("Dismiss notification confirmation", function (needs) {
       query(".dismiss-notification-confirmation-modal .btn-primary").innerText,
       I18n.t("notifications.dismiss_confirmation.dismiss")
     );
-    pretender.put("/notifications/mark-read", () => {
-      return [200, { "Content-Type": "application/json" }, { success: true }];
-    });
+    pretender.put("/notifications/mark-read", () =>
+      response({ success: true })
+    );
 
     await click(".dismiss-notification-confirmation-modal .btn-primary");
 

@@ -1,14 +1,12 @@
 import I18n from "I18n";
 import { test } from "qunit";
-
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
-
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
+  count,
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
@@ -17,9 +15,11 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
   needs.settings({
     tagging_enabled: false,
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
-  needs.user({ experimental_sidebar_enabled: true });
+  needs.user();
 
   test("tags section is not shown", async function (assert) {
     await visit("/");
@@ -34,10 +34,11 @@ acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
 acceptance("Sidebar - Tags section", function (needs) {
   needs.settings({
     tagging_enabled: true,
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
   });
 
   needs.user({
-    experimental_sidebar_enabled: true,
     tracked_tags: ["tag1"],
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
@@ -104,7 +105,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link").length,
+      count(".sidebar-section-tags .sidebar-section-link"),
       3,
       "3 section links under the section"
     );
@@ -136,7 +137,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -155,7 +156,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -170,7 +171,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit(`/tag/tag1/l/top`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -185,7 +186,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit(`/tag/tag1/l/new`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -200,7 +201,7 @@ acceptance("Sidebar - Tags section", function (needs) {
     await visit(`/tag/tag1/l/unread`);
 
     assert.strictEqual(
-      queryAll(".sidebar-section-tags .sidebar-section-link.active").length,
+      count(".sidebar-section-tags .sidebar-section-link.active"),
       1,
       "only one link is marked as active"
     );
@@ -221,7 +222,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         category_id: 1,
         notification_level: null,
         created_in_new_period: true,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag1"],
       },
@@ -233,7 +233,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         category_id: 2,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag1"],
       },
@@ -245,7 +244,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         category_id: 3,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag2"],
       },
@@ -257,7 +255,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         category_id: 4,
         notification_level: 2,
         created_in_new_period: false,
-        unread_not_too_old: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
         tags: ["tag4"],
       },
@@ -269,7 +266,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag1 section link`
     );
 
@@ -277,7 +274,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       query(
         `.sidebar-section-link-tag2 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag2 section link`
     );
 
@@ -286,7 +283,7 @@ acceptance("Sidebar - Tags section", function (needs) {
       "does not display any badge for tag3 section link"
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -295,17 +292,15 @@ acceptance("Sidebar - Tags section", function (needs) {
       },
     });
 
-    await settled();
-
     assert.strictEqual(
       query(
         `.sidebar-section-link-tag1 .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      "1",
+      I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for tag1 section link`
     );
 
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -313,8 +308,6 @@ acceptance("Sidebar - Tags section", function (needs) {
         highest_post_number: 1,
       },
     });
-
-    await settled();
 
     assert.ok(
       !exists(`.sidebar-section-link-tag1 .sidebar-section-link-content-badge`),
@@ -333,12 +326,11 @@ acceptance("Sidebar - Tags section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".header-sidebar-toggle .btn");
-    await click(".header-sidebar-toggle .btn");
+    await click(".hamburger-dropdown");
 
-    assert.strictEqual(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length,
-      initialCallbackCount
+    assert.ok(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length <
+        initialCallbackCount
     );
   });
 });

@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe SessionController do
+RSpec.describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 

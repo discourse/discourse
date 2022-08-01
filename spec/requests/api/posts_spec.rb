@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'posts' do
+RSpec.describe 'posts' do
 
   let(:'Api-Key') { Fabricate(:api_key).key }
   let(:'Api-Username') { 'system' }

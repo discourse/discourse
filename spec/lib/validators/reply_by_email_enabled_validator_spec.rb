@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReplyByEmailEnabledValidator do
+RSpec.describe ReplyByEmailEnabledValidator do
 
   describe '#valid_value?' do
     subject(:validator) { described_class.new }

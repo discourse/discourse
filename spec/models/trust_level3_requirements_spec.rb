@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TrustLevel3Requirements do
+RSpec.describe TrustLevel3Requirements do
 
   let(:user) { Fabricate.build(:user) }
   subject(:tl3_requirements) { described_class.new(user) }

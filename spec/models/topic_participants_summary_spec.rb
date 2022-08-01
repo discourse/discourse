@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicParticipantsSummary do
+RSpec.describe TopicParticipantsSummary do
   describe '#summary' do
     let(:summary) { described_class.new(topic, user: topic_creator).summary }
 

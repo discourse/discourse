@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserGuardian do
+RSpec.describe UserGuardian do
 
   let :user do
     Fabricate(:user)

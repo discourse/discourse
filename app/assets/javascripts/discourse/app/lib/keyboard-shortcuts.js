@@ -1,6 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { later, run, throttle } from "@ember/runloop";
+import { run, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -135,7 +136,7 @@ export default {
     this.searchService = this.container.lookup("service:search");
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("current-user:main");
-    this.siteSettings = this.container.lookup("site-settings:main");
+    this.siteSettings = this.container.lookup("service:site-settings");
 
     // Disable the shortcut if private messages are disabled
     if (!this.siteSettings.enable_personal_messages) {
@@ -308,7 +309,7 @@ export default {
 
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    later(() => $(".d-editor .quote").click(), 500);
+    discourseLater(() => $(".d-editor .quote").click(), 500);
 
     return false;
   },
@@ -780,6 +781,7 @@ export default {
       case "categories_with_featured_topics":
         return $(".latest .featured-topic");
       case "categories_and_latest_topics":
+      case "categories_and_latest_topics_created_date":
         return $(".latest-topic-list .latest-topic-list-item");
       case "categories_and_top_topics":
         return $(".top-topic-list .latest-topic-list-item");

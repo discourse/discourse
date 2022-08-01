@@ -2,7 +2,7 @@
 
 require 'theme_store/zip_exporter'
 
-describe ThemeStore::ZipExporter do
+RSpec.describe ThemeStore::ZipExporter do
   let(:rand_hex) do
     +"X" << SecureRandom.hex
   end

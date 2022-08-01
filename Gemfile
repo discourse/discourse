@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = '7.0.3'
+  rails_version = '7.0.3.1'
   gem 'actionmailer', rails_version
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
@@ -105,7 +105,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# pending: https://github.com/ohler55/oj/issues/789
+gem 'oj', '3.13.14'
 
 gem 'pg'
 gem 'mini_sql'
@@ -169,7 +170,7 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem "rubocop-discourse", require: false
+  gem 'rubocop-discourse', require: false, github: 'discourse/rubocop-discourse'
   gem 'parallel_tests'
 
   gem 'rswag-specs'

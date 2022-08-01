@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AnonymousShadowCreator do
+RSpec.describe AnonymousShadowCreator do
 
   it "returns no shadow by default" do
     expect(AnonymousShadowCreator.get(Fabricate.build(:user))).to eq(nil)

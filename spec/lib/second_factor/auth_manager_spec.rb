@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SecondFactor::AuthManager do
+RSpec.describe SecondFactor::AuthManager do
   fab!(:user) { Fabricate(:user) }
   fab!(:guardian) { Guardian.new(user) }
   fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }

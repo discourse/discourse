@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Migration::SafeMigrate do
+RSpec.describe Migration::SafeMigrate do
   before do
     Migration::SafeMigrate::SafeMigration.disable_safe!
   end

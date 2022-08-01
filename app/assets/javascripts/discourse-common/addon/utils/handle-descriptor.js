@@ -50,11 +50,7 @@ function niceAttr(attr) {
   let i;
 
   for (i = 0; i < parts.length; i++) {
-    if (
-      parts[i] === "@each" ||
-      parts[i] === "[]" ||
-      parts[i].indexOf("{") !== -1
-    ) {
+    if (parts[i] === "@each" || parts[i] === "[]" || parts[i].includes("{")) {
       break;
     }
   }
