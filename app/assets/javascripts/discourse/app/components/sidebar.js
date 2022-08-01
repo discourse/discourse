@@ -32,6 +32,7 @@ export default class Sidebar extends GlimmerComponent {
       this.args.toggleSidebar();
     }
   }
+
   #scrollToElement(destinationElement) {
     const topPadding = 10;
 
