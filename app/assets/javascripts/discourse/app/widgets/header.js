@@ -97,7 +97,7 @@ createWidget("header-notifications", {
           );
         }
       } else {
-        const unreadNotifications = user.get("unread_notifications");
+        const unreadNotifications = user.unread_notifications;
         if (!!unreadNotifications) {
           contents.push(
             this.attach("link", {
@@ -111,9 +111,7 @@ createWidget("header-notifications", {
           );
         }
 
-        const unreadHighPriority = user.get(
-          "unread_high_priority_notifications"
-        );
+        const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
             this._addAvatarHighlight(contents);
@@ -141,8 +139,8 @@ createWidget("header-notifications", {
     const attrs = this.attrs;
     const { user } = attrs;
     return (
-      !user.get("read_first_notification") &&
-      !user.get("enforcedSecondFactor") &&
+      !user.read_first_notification &&
+      !user.enforcedSecondFactor &&
       !attrs.active &&
       attrs.ringBackdrop
     );
