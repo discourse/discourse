@@ -121,7 +121,7 @@ export default {
         appEvents.trigger("user-status:changed", data);
       });
 
-      const site = container.lookup("site:main");
+      const site = container.lookup("service:site");
       const siteSettings = container.lookup("service:site-settings");
       const router = container.lookup("router:main");
 
