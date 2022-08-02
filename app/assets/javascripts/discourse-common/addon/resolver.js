@@ -9,6 +9,68 @@ import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legac
 let _options = {};
 let moduleSuffixTrie = null;
 
+const DEPRECATED_MODULES = new Map(
+  Object.entries({
+    "controller:discovery.categoryWithID": {
+      newName: "controller:discovery.category",
+      since: "2.6.0",
+    },
+    "controller:discovery.parentCategory": {
+      newName: "controller:discovery.category",
+      since: "2.6.0",
+    },
+    "controller:tags-show": { newName: "controller:tag-show", since: "2.6.0" },
+    "controller:tags.show": { newName: "controller:tag.show", since: "2.6.0" },
+    "controller:tagsShow": { newName: "controller:tagShow", since: "2.6.0" },
+    "route:discovery.categoryWithID": {
+      newName: "route:discovery.category",
+      since: "2.6.0",
+    },
+    "route:discovery.parentCategory": {
+      newName: "route:discovery.category",
+      since: "2.6.0",
+    },
+    "route:tags-show": { newName: "route:tag-show", since: "2.6.0" },
+    "route:tags.show": { newName: "route:tag.show", since: "2.6.0" },
+    "route:tagsShow": { newName: "route:tagShow", since: "2.6.0" },
+    "app-events:main": {
+      newName: "service:app-events",
+      since: "2.4.0",
+      dropFrom: "2.9.0.beta1",
+    },
+    "store:main": {
+      newName: "service:store",
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+    },
+    "search-service:main": {
+      newName: "service:search",
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+    },
+    "key-value-store:main": {
+      newName: "service:key-value-store",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    },
+    "pm-topic-tracking-state:main": {
+      newName: "service:pm-topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    },
+    "message-bus:main": {
+      newName: "service:message-bus",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    },
+    "site-settings:main": {
+      newName: "service:site-settings",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    },
+  })
+);
+
 export function setResolverOption(name, value) {
   _options[name] = value;
 }
@@ -54,30 +116,16 @@ export function buildResolver(baseName) {
 
     // We overwrite this instead of `normalize` so we still get the benefits of the cache.
     _normalize(fullName) {
-      if (fullName === "app-events:main") {
+      const deprecationInfo = DEPRECATED_MODULES.get(fullName);
+      if (deprecationInfo) {
         deprecated(
-          "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
+          `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
+          {
+            since: deprecationInfo.since,
+            dropFrom: deprecationInfo.dropFrom,
+          }
         );
-        fullName = "service:app-events";
-      }
-
-      for (const [key, value] of Object.entries({
-        "controller:discovery.categoryWithID": "controller:discovery.category",
-        "controller:discovery.parentCategory": "controller:discovery.category",
-        "controller:tags-show": "controller:tag-show",
-        "controller:tags.show": "controller:tag.show",
-        "controller:tagsShow": "controller:tagShow",
-        "route:discovery.categoryWithID": "route:discovery.category",
-        "route:discovery.parentCategory": "route:discovery.category",
-        "route:tags-show": "route:tag-show",
-        "route:tags.show": "route:tag.show",
-        "route:tagsShow": "route:tagShow",
-      })) {
-        if (fullName === key) {
-          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
-          fullName = value;
-        }
+        fullName = deprecationInfo.newName;
       }
 
       const split = fullName.split(":");

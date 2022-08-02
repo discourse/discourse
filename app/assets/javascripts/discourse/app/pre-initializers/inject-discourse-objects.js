@@ -5,7 +5,6 @@ import DiscourseLocation from "discourse/lib/discourse-location";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import deprecated from "discourse-common/lib/deprecated";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 
@@ -21,84 +20,11 @@ function injectServiceIntoService({ container, app, property, specifier }) {
   });
 }
 
-function deprecateRegistration({
-  app,
-  container,
-  oldName,
-  newName,
-  since,
-  dropFrom,
-}) {
-  app.register(oldName, {
-    create() {
-      deprecated(`"${oldName}" is deprecated, use "${newName}" instead`, {
-        since,
-        dropFrom,
-      });
-      return container.lookup(newName);
-    },
-  });
-}
-
 export default {
   name: "inject-discourse-objects",
   after: "discourse-bootstrap",
 
   initialize(container, app) {
-    deprecateRegistration({
-      app,
-      container,
-      oldName: "store:main",
-      newName: "service:store",
-      since: "2.8.0.beta8",
-      dropFrom: "2.9.0.beta1",
-    });
-
-    deprecateRegistration({
-      app,
-      container,
-      oldName: "search-service:main",
-      newName: "service:search",
-      since: "2.8.0.beta8",
-      dropFrom: "2.9.0.beta1",
-    });
-
-    deprecateRegistration({
-      app,
-      container,
-      oldName: "key-value-store:main",
-      newName: "service:key-value-store",
-      since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-    });
-
-    deprecateRegistration({
-      app,
-      container,
-      oldName: "pm-topic-tracking-state:main",
-      newName: "service:pm-topic-tracking-state",
-      since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-    });
-
-    deprecateRegistration({
-      app,
-      container,
-      oldName: "message-bus:main",
-      newName: "service:message-bus",
-      since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-    });
-
-    deprecateRegistration({
-      app,
-      container,
-      oldName: "site-settings:main",
-      newName: "service:site-settings",
-      since: "2.9.0.beta7",
-      dropFrom: "3.0.0",
-    });
-
     const siteSettings = container.lookup("service:site-settings");
 
     const currentUser = User.current();
