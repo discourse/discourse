@@ -26,7 +26,7 @@ export default {
 
     if (user) {
       bus.subscribe("/reviewable_counts", (data) => {
-        if (data.reviewable_count !== undefined) {
+        if (data.reviewable_count >= 0) {
           user.set("reviewable_count", data.reviewable_count);
         }
         if (user.redesigned_user_menu_enabled) {
