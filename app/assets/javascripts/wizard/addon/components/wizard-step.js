@@ -5,10 +5,12 @@ import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 const alreadyWarned = {};
 
 export default Component.extend({
+  router: service(),
   classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
@@ -133,7 +135,7 @@ export default Component.extend({
 
   @action
   quit() {
-    document.location = getUrl("/");
+    this.router.transitionTo("discovery.latest");
   },
 
   @action
@@ -146,7 +148,7 @@ export default Component.extend({
 
       step
         .save()
-        .then(() => this.send("quit"))
+        .then((response) => this.goNext(response))
         .finally(() => this.set("saving", false));
     } else {
       this.autoFocus();

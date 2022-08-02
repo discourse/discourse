@@ -26,7 +26,7 @@ export default function (helpers) {
             id: "styling",
             title: "Second step",
             index: 1,
-            fields: [{ id: "some-title", type: "text" }],
+            fields: [{ id: "some_title", type: "text" }],
             previous: "hello-world",
             next: "corporate",
           },
@@ -34,9 +34,8 @@ export default function (helpers) {
             id: "corporate",
             index: 2,
             fields: [
-              { id: "snack", type: "dropdown", required: true },
-              { id: "theme-preview", type: "component" },
-              { id: "an-image", type: "image" },
+              { id: "company_name", type: "text", required: true },
+              { id: "theme_preview", type: "component" },
             ],
             previous: "styling",
           },
@@ -51,6 +50,12 @@ export default function (helpers) {
     if (body.fields.full_name === "Server Fail") {
       return response(422, {
         errors: [{ field: "full_name", description: "Invalid name" }],
+      });
+    } else if (body.fields.company_name === "Server Fail") {
+      return response(422, {
+        errors: [
+          { field: "company_name", description: "Invalid company name" },
+        ],
       });
     } else {
       return response(200, { success: true });
