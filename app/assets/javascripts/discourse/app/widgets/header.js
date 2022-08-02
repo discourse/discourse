@@ -81,10 +81,10 @@ createWidget("header-notifications", {
         const unread = user.all_unread_notifications || 0;
         const reviewables = user.unseen_reviewable_count || 0;
         const count = unread + reviewables;
-        if (count > 0 && this._shouldHighlightAvatar()) {
-          this._addAvatarHighlight(contents);
-        }
-        if (count) {
+        if (count > 0) {
+          if (this._shouldHighlightAvatar()) {
+            this._addAvatarHighlight(contents);
+          }
           contents.push(
             this.attach("link", {
               action: attrs.action,
