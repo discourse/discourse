@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
@@ -18,6 +18,8 @@ const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
 const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
 export default class ScreenTrack extends Service {
+  @service appEvents;
+
   _consolidatedTimings = [];
   _lastTick = null;
   _lastScrolled = null;
