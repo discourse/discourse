@@ -7,7 +7,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :unread_notifications,
              :unread_private_messages,
              :unread_high_priority_notifications,
-             :all_unread_notifications,
+             :all_unread_notifications_count,
              :read_first_notification?,
              :admin?,
              :notification_channel_position,
@@ -341,7 +341,7 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_option&.likes_notifications_disabled?
   end
 
-  def include_all_unread_notifications?
+  def include_all_unread_notifications_count?
     redesigned_user_menu_enabled
   end
 

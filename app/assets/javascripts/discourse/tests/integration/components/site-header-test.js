@@ -51,7 +51,7 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("displaying unread and reviewable notifications count when user's notifications and reviewables count are updated", async function (assert) {
-    this.currentUser.set("all_unread_notifications", 1);
+    this.currentUser.set("all_unread_notifications_count", 1);
     this.currentUser.set("redesigned_user_menu_enabled", true);
 
     await render(hbs`<SiteHeader />`);
@@ -60,7 +60,7 @@ module("Integration | Component | site-header", function (hooks) {
     );
     assert.strictEqual(unreadBadge.textContent, "1");
 
-    this.currentUser.set("all_unread_notifications", 5);
+    this.currentUser.set("all_unread_notifications_count", 5);
     await settled();
 
     unreadBadge = query(
@@ -78,7 +78,7 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("user avatar is highlighted when the user receives the first notification", async function (assert) {
-    this.currentUser.set("all_unread_notifications", 1);
+    this.currentUser.set("all_unread_notifications_count", 1);
     this.currentUser.set("redesigned_user_menu_enabled", true);
     this.currentUser.set("read_first_notification", false);
     await render(hbs`<SiteHeader />`);
@@ -87,7 +87,7 @@ module("Integration | Component | site-header", function (hooks) {
 
   test("user avatar is not highlighted when the user receives notifications beyond the first one", async function (assert) {
     this.currentUser.set("redesigned_user_menu_enabled", true);
-    this.currentUser.set("all_unread_notifications", 1);
+    this.currentUser.set("all_unread_notifications_count", 1);
     this.currentUser.set("read_first_notification", true);
     await render(hbs`<SiteHeader />`);
     assert.ok(!exists(".ring-first-notification"));

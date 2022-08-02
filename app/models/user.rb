@@ -487,7 +487,7 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications = nil
-    @all_unread_notifications = nil
+    @all_unread_notifications_count = nil
     @unread_total_notifications = nil
     @unread_pms = nil
     @unread_bookmarks = nil
@@ -588,8 +588,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def all_unread_notifications
-    @all_unread_notifications ||= begin
+  def all_unread_notifications_count
+    @all_unread_notifications_count ||= begin
       sql = <<~SQL
         SELECT COUNT(*) FROM (
           SELECT 1 FROM
@@ -710,7 +710,7 @@ class User < ActiveRecord::Base
     }
 
     if self.redesigned_user_menu_enabled?
-      payload[:all_unread_notifications] = all_unread_notifications
+      payload[:all_unread_notifications_count] = all_unread_notifications_count
     end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])

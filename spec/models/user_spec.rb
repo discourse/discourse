@@ -2059,7 +2059,7 @@ RSpec.describe User do
     end
 
     context "with redesigned_user_menu_enabled on" do
-      it "adds all_unread_notifications to the payload" do
+      it "adds all_unread_notifications_count to the payload" do
         user.update!(admin: true)
         user.enable_redesigned_user_menu
         Fabricate(:notification, user: user)
@@ -2070,7 +2070,7 @@ RSpec.describe User do
         expect(messages.size).to eq(1)
 
         message = messages.first
-        expect(message.data[:all_unread_notifications]).to eq(2)
+        expect(message.data[:all_unread_notifications_count]).to eq(2)
       ensure
         user.disable_redesigned_user_menu
       end
@@ -2799,31 +2799,31 @@ RSpec.describe User do
     end
   end
 
-  describe "#all_unread_notifications" do
+  describe "#all_unread_notifications_count" do
     it "returns count of unseen and unread high priority and normal priority notifications" do
       Fabricate(:notification, user: user, high_priority: true, read: false)
       n2 = Fabricate(:notification, user: user, high_priority: false, read: false)
-      expect(user.all_unread_notifications).to eq(2)
+      expect(user.all_unread_notifications_count).to eq(2)
 
       n2.update!(read: true)
       user.reload
 
-      expect(user.all_unread_notifications).to eq(1)
+      expect(user.all_unread_notifications_count).to eq(1)
 
       user.update!(seen_notification_id: n2.id)
       user.reload
 
-      expect(user.all_unread_notifications).to eq(0)
+      expect(user.all_unread_notifications_count).to eq(0)
 
       n3 = Fabricate(:notification, user: user)
       user.reload
 
-      expect(user.all_unread_notifications).to eq(1)
+      expect(user.all_unread_notifications_count).to eq(1)
 
       n3.topic.trash!(Fabricate(:admin))
       user.reload
 
-      expect(user.all_unread_notifications).to eq(0)
+      expect(user.all_unread_notifications_count).to eq(0)
     end
   end
 

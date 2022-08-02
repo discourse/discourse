@@ -78,7 +78,7 @@ createWidget("header-notifications", {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
       if (this.currentUser.redesigned_user_menu_enabled) {
-        const unread = user.all_unread_notifications || 0;
+        const unread = user.all_unread_notifications_count || 0;
         const reviewables = user.unseen_reviewable_count || 0;
         const count = unread + reviewables;
         if (count > 0) {
