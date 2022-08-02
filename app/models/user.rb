@@ -637,8 +637,7 @@ class User < ActiveRecord::Base
       .unseen_list_for(self, preload: false, limit: 1)
       .except(:order)
       .order(id: :desc)
-      .pluck(:id)
-      .first
+      .pluck_first(:id)
 
     if max_reviewable_id && (!last_seen_reviewable_id || max_reviewable_id > last_seen_reviewable_id)
       update!(last_seen_reviewable_id: max_reviewable_id)
