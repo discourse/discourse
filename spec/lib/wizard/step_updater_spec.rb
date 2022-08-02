@@ -217,6 +217,7 @@ RSpec.describe Wizard::StepUpdater do
 
     context "homepage style" do
       it "updates the fields correctly" do
+        SiteSetting.top_menu = "latest|categories|unread|top"
         updater = wizard.create_updater('styling',
           body_font: 'arial',
           heading_font: 'arial',
@@ -226,9 +227,10 @@ RSpec.describe Wizard::StepUpdater do
 
         expect(updater).to be_success
         expect(wizard.completed_steps?('styling')).to eq(true)
-        expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+        expect(SiteSetting.top_menu).to eq('categories|latest|unread|top')
         expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
+        SiteSetting.top_menu = "categories|latest|new|top"
         updater = wizard.create_updater('styling',
           body_font: 'arial',
           heading_font: 'arial',
@@ -236,7 +238,29 @@ RSpec.describe Wizard::StepUpdater do
         )
         updater.update
         expect(updater).to be_success
-        expect(SiteSetting.top_menu).to eq('latest|new|unread|top|categories')
+        expect(SiteSetting.top_menu).to eq('latest|categories|new|top')
+      end
+
+      it "does not overwrite top_menu site setting" do
+        SiteSetting.top_menu = "latest|unread|unseen|categories"
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "latest"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq('latest|unread|unseen|categories')
+
+        SiteSetting.top_menu = "categories|new|latest"
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "categories_and_top_topics"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq('categories|new|latest')
       end
     end
   end
