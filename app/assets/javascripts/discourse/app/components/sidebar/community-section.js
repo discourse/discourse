@@ -9,6 +9,7 @@ import MyPostsSectionLink from "discourse/lib/sidebar/community-section/my-posts
 import GroupsSectionLink from "discourse/lib/sidebar/community-section/groups-section-link";
 import UsersSectionLink from "discourse/lib/sidebar/community-section/users-section-link";
 
+import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 
@@ -21,12 +22,15 @@ const MAIN_SECTION_LINKS = [
 const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
 
 export default class SidebarCommunitySection extends GlimmerComponent {
+  @service router;
+
   moreSectionLinks = [...MORE_SECTION_LINKS, ...customSectionLinks].map(
     (sectionLinkClass) => {
       return new sectionLinkClass({
         topicTrackingState: this.topicTrackingState,
         currentUser: this.currentUser,
         appEvents: this.appEvents,
+        router: this.router,
       });
     }
   );

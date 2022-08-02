@@ -444,6 +444,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
           className: "my-custom-top",
         };
       });
+
+      api.decorateWidget("hamburger-menu:generalLinks", () => {
+        return {
+          href: "/c/bug?status=open",
+          rawLabel: "open bugs",
+        };
+      });
     });
 
     await visit("/");
@@ -455,6 +462,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert.ok(
       customlatestSectionLink,
       "adds custom latest section link to community section"
+    );
+
+    assert.ok(
+      customlatestSectionLink.href.endsWith("/latest"),
+      "sets the right href attribute for the custom latest section link"
     );
 
     assert.strictEqual(
@@ -476,6 +488,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "adds custom unread section link to community section"
     );
 
+    assert.ok(
+      customUnreadSectionLink.href.endsWith("/unread"),
+      "sets the right href attribute for the custom unread section link"
+    );
+
     assert.strictEqual(
       customUnreadSectionLink.textContent.trim(),
       "my unreads",
@@ -489,6 +506,20 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert.ok(
       customTopSectionLInk,
       "adds custom top section link to community section with right link class"
+    );
+
+    const openBugsSectionLink = query(
+      ".sidebar-section-community .sidebar-section-link-open-bugs"
+    );
+
+    assert.ok(
+      openBugsSectionLink,
+      "adds custom open bugs section link to community section with right link class"
+    );
+
+    assert.ok(
+      openBugsSectionLink.href.endsWith("/c/bug?status=open"),
+      "sets the right href attribute for the custom open bugs section link"
     );
   });
 });
