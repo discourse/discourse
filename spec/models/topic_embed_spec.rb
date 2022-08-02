@@ -399,4 +399,18 @@ RSpec.describe TopicEmbed do
     end
   end
 
+  describe ".imported_from_html" do
+    after { I18n.reload! }
+
+    it "uses the default site locale for the 'imported_from' footer" do
+      TranslationOverride.upsert!("en", "embed.imported_from", "English translation of embed.imported_from with %{link}")
+      TranslationOverride.upsert!("de", "embed.imported_from", "German translation of embed.imported_from with %{link}")
+
+      I18n.locale = :en
+      expected_html = TopicEmbed.imported_from_html("some_url")
+
+      I18n.locale = :de
+      expect(TopicEmbed.imported_from_html("some_url")).to eq(expected_html)
+    end
+  end
 end
