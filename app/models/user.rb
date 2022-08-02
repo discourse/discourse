@@ -633,13 +633,14 @@ class User < ActiveRecord::Base
   end
 
   def bump_last_seen_reviewable!
-    max_reviewable_id = Reviewable
-      .unseen_list_for(self, preload: false, limit: 1)
-      .except(:order)
-      .order(id: :desc)
-      .pluck_first(:id)
+    query = Reviewable.unseen_list_for(self, preload: false)
 
-    if max_reviewable_id && (!last_seen_reviewable_id || max_reviewable_id > last_seen_reviewable_id)
+    if last_seen_reviewable_id
+      query = query.where("id > ?", last_seen_reviewable_id)
+    end
+    max_reviewable_id = query.maximum(:id)
+
+    if max_reviewable_id
       update!(last_seen_reviewable_id: max_reviewable_id)
       MessageBus.publish(
         "/reviewable_counts",
