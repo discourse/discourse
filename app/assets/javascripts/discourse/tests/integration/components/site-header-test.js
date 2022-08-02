@@ -50,7 +50,7 @@ module("Integration | Component | site-header", function (hooks) {
     await click("header.d-header");
   });
 
-  test("rerenders when all_unread_notifications or unseen_reviewable_count change", async function (assert) {
+  test("displaying unread and reviewable notifications count when user's notifications and reviewables count are updated", async function (assert) {
     this.currentUser.set("all_unread_notifications", 1);
     this.currentUser.set("redesigned_user_menu_enabled", true);
 
