@@ -1,15 +1,24 @@
-export function censorFn(regexpString, replacementLetter) {
-  if (regexpString) {
-    let censorRegexp = new RegExp(regexpString, "ig");
+import {
+  createWatchedWordRegExp,
+  toWatchedWord,
+} from "discourse-common/utils/watched-words";
+
+export function censorFn(regexpList, replacementLetter) {
+  if (regexpList.length) {
     replacementLetter = replacementLetter || "&#9632;";
+    let censorRegexps = regexpList.map((regexp) => {
+      return createWatchedWordRegExp(toWatchedWord(regexp));
+    });
 
     return function (text) {
-      text = text.replace(censorRegexp, (fullMatch, ...groupMatches) => {
-        const stringMatch = groupMatches.find((g) => typeof g === "string");
-        return fullMatch.replace(
-          stringMatch,
-          new Array(stringMatch.length + 1).join(replacementLetter)
-        );
+      censorRegexps.forEach((censorRegexp) => {
+        text = text.replace(censorRegexp, (fullMatch, ...groupMatches) => {
+          const stringMatch = groupMatches.find((g) => typeof g === "string");
+          return fullMatch.replace(
+            stringMatch,
+            new Array(stringMatch.length + 1).join(replacementLetter)
+          );
+        });
       });
 
       return text;

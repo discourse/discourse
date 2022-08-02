@@ -65,6 +65,7 @@ class WatchedWord < ActiveRecord::Base
     w.replacement = params[:replacement] if params[:replacement]
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]
+    w.case_sensitive = params[:case_sensitive] if !params[:case_sensitive].nil?
     w.save
     w
   end
@@ -94,12 +95,13 @@ end
 #
 # Table name: watched_words
 #
-#  id          :integer          not null, primary key
-#  word        :string           not null
-#  action      :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  replacement :string
+#  id             :integer          not null, primary key
+#  word           :string           not null
+#  action         :integer          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  replacement    :string
+#  case_sensitive :boolean          default(FALSE), not null
 #
 # Indexes
 #

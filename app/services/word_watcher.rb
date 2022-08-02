@@ -18,16 +18,13 @@ class WordWatcher
   end
 
   def self.words_for_action(action)
-    words = WatchedWord
+    WatchedWord
       .where(action: WatchedWord.actions[action.to_sym])
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
-
-    if WatchedWord.has_replacement?(action.to_sym)
-      words.pluck(:word, :replacement).to_h
-    else
-      words.pluck(:word)
-    end
+      .pluck(:word, :replacement, :case_sensitive)
+      .map { |w, r, c| [w, { replacement: r, case_sensitive: c }.compact] }
+      .to_h
   end
 
   def self.words_for_action_exists?(action)
@@ -44,42 +41,55 @@ class WordWatcher
     end
   end
 
+  def self.serializable_word_matcher_regexp(action)
+    word_matcher_regexp_list(action)
+      .map { |r| { r.source => { case_sensitive: !r.casefold? } } }
+  end
+
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
-  def self.word_matcher_regexp(action, raise_errors: false)
+  def self.word_matcher_regexp_list(action, raise_errors: false)
     words = get_cached_words(action)
-    if words
-      if WatchedWord.has_replacement?(action.to_sym)
-        words = words.keys
-      end
-      words = words.map do |w|
-        word = word_to_regexp(w)
-        word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
-        word
-      end
-      regexp = words.join('|')
-      if !SiteSetting.watched_words_regular_expressions?
-        regexp = "(#{regexp})"
-        regexp = "(?:\\W|^)#{regexp}(?=\\W|$)"
-      end
-      Regexp.new(regexp, Regexp::IGNORECASE)
+    return [] if words.blank?
+
+    grouped_words = { case_sensitive: [], case_insensitive: [] }
+
+    words.each do |w, attrs|
+      word = word_to_regexp(w)
+      word = "(#{word})" if SiteSetting.watched_words_regular_expressions?
+
+      group_key = attrs[:case_sensitive] ? :case_sensitive : :case_insensitive
+      grouped_words[group_key] << word
     end
+
+    regexps = grouped_words
+      .select { |_, w| w.present? }
+      .transform_values { |w| w.join("|") }
+
+    if !SiteSetting.watched_words_regular_expressions?
+      regexps.transform_values! do |regexp|
+        regexp = "(#{regexp})"
+        "(?:\\W|^)#{regexp}(?=\\W|$)"
+      end
+    end
+
+    regexps
+      .map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
   rescue RegexpError
     raise if raise_errors
-    nil # Admin will be alerted via admin_dashboard_data.rb
+    [] # Admin will be alerted via admin_dashboard_data.rb
   end
 
   def self.word_matcher_regexps(action)
     if words = get_cached_words(action)
-      words.map { |w, r| [word_to_regexp(w, whole: true), r] }.to_h
+      words.map { |w, opts| [word_to_regexp(w, whole: true), opts] }.to_h
     end
   end
 
   def self.word_to_regexp(word, whole: false)
     if SiteSetting.watched_words_regular_expressions?
-      # Strip ruby regexp format if present, we're going to make the whole thing
-      # case insensitive anyway
+      # Strip ruby regexp format if present
       regexp = word.start_with?("(?-mix:") ? word[7..-2] : word
       regexp = "(#{regexp})" if whole
       return regexp
@@ -99,32 +109,34 @@ class WordWatcher
   end
 
   def self.censor(html)
-    regexp = word_matcher_regexp(:censor)
-    return html if regexp.blank?
+    regexps = word_matcher_regexp_list(:censor)
+    return html if regexps.blank?
 
     doc = Nokogiri::HTML5::fragment(html)
     doc.traverse do |node|
-      node.content = censor_text_with_regexp(node.content, regexp) if node.text?
+      regexps.each do |regexp|
+        node.content = censor_text_with_regexp(node.content, regexp) if node.text?
+      end
     end
+
     doc.to_s
   end
 
   def self.censor_text(text)
-    regexp = word_matcher_regexp(:censor)
-    return text if regexp.blank?
+    regexps = word_matcher_regexp_list(:censor)
+    return text if regexps.blank?
 
-    censor_text_with_regexp(text, regexp)
+    regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
   end
 
   def self.apply_to_text(text)
-    if regexp = word_matcher_regexp(:censor)
-      text = censor_text_with_regexp(text, regexp)
-    end
+    text = censor_text(text)
 
     %i[replace link]
       .flat_map { |type| word_matcher_regexps(type).to_a }
-      .reduce(text) do |t, (word_regexp, replacement)|
-        t.gsub(Regexp.new(word_regexp)) { |match| "#{match[0]}#{replacement}" }
+      .reduce(text) do |t, (word_regexp, attrs)|
+        case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
+        replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
       end
   end
 
@@ -151,10 +163,19 @@ class WordWatcher
   end
 
   def word_matches_for_action?(action, all_matches: false)
-    regexp = self.class.word_matcher_regexp(action)
-    if regexp
+    regexps = self.class.word_matcher_regexp_list(action)
+    return if regexps.blank?
+
+    match_list = []
+    regexps.each do |regexp|
       match = regexp.match(@raw)
-      return match if !all_matches || !match
+
+      if !all_matches
+        return match if match
+        next
+      end
+
+      next if !match
 
       if SiteSetting.watched_words_regular_expressions?
         set = Set.new
@@ -165,25 +186,44 @@ class WordWatcher
             set.add(m)
           end
         end
+
         matches = set.to_a
       else
         matches = @raw.scan(regexp)
         matches.flatten!
-        matches.uniq!
       end
-      matches.compact!
-      matches.sort!
-      matches
-    else
-      false
+
+      match_list.concat(matches)
+    end
+
+    return if match_list.blank?
+
+    match_list.compact!
+    match_list.uniq!
+    match_list.sort!
+    match_list
+  end
+
+  def word_matches?(word, case_sensitive: false)
+    Regexp
+      .new(WordWatcher.word_to_regexp(word, whole: true), case_sensitive ? nil : Regexp::IGNORECASE)
+      .match?(@raw)
+  end
+
+  def self.replace_text_with_regexp(text, regexp, replacement)
+    text.gsub(regexp) do |match|
+      prefix = ""
+      # match may be prefixed with a non-word character from the non-capturing group
+      # Ensure this isn't replaced if watched words regular expression is disabled.
+      if !SiteSetting.watched_words_regular_expressions? && (match[0] =~ /\W/) != nil
+        prefix = "#{match[0]}"
+      end
+
+      "#{prefix}#{replacement}"
     end
   end
 
-  def word_matches?(word)
-    Regexp.new(WordWatcher.word_to_regexp(word, whole: true), Regexp::IGNORECASE).match?(@raw)
-  end
-
-  private
+  private_class_method :replace_text_with_regexp
 
   def self.censor_text_with_regexp(text, regexp)
     text.gsub(regexp) do |match|
@@ -196,4 +236,6 @@ class WordWatcher
       end
     end
   end
+
+  private_class_method :censor_text_with_regexp
 end

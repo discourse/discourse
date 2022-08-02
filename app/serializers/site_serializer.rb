@@ -178,7 +178,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.word_matcher_regexp(:censor)&.source
+    WordWatcher.serializable_word_matcher_regexp(:censor)
   end
 
   def custom_emoji_translation

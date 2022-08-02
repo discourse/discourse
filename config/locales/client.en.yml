@@ -5109,6 +5109,7 @@ en:
         show_words:
           one: "show %{count} word"
           other: "show %{count} words"
+        case_sensitive: "(case-sensitive)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -5146,6 +5147,8 @@ en:
           exists: "Already exists"
           upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
+          case_sensitivity_label: "Is case-sensitive"
+          case_sensitivity_description: "Only words with matching character casing"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
