@@ -1,0 +1,192 @@
+<section class="user-primary-navigation">
+  <ul class="main-nav nav nav-pills user-nav" data-count={{this.navCount}}>
+    {{#unless this.model.profile_hidden}}
+      {{#if this.site.mobileView}}
+        {{#if this.currentUser.staff}}
+          <li class="user-primary-navigation_item"><a href={{this.model.adminPath}}>{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
+        {{/if}}
+      {{/if}}
+      <li class="summary user-primary-navigation_item"><LinkTo @route="user.summary">{{d-icon "user"}}<span>{{i18n "user.summary.title"}}</span></LinkTo></li>
+      <li role="button" class="activity user-primary-navigation_item-parent" onclick={{action "toggleSubmenu"}}>
+        <a class={{if (eq @currentRouteParent "userActivity") "active" }}>
+          {{d-icon "stream"}}<span>{{i18n "user.activity_stream"}}</span>{{d-icon "chevron-down"}}
+        </a>
+
+        <ul class="user-primary-navigation_submenu activity-nav">
+          <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
+          <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
+          <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
+
+          {{#if this.user.showRead}}
+            <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
+              {{i18n "user.read"}}
+            </DNavigationItem>
+          {{/if}}
+
+          {{#if this.user.showDrafts}}
+            <DNavigationItem @route="userActivity.drafts">
+              {{this.draftLabel}}
+            </DNavigationItem>
+          {{/if}}
+
+          {{#if (gt this.model.pending_posts_count 0)}}
+            <DNavigationItem @route="userActivity.pending">
+              {{this.pendingLabel}}
+            </DNavigationItem>
+          {{/if}}
+
+          <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
+          {{#if this.user.showBookmarks}}
+            <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
+          {{/if}}
+
+          <PluginOutlet @name="user-activity-bottom" @tagName="" @connectorTagName="" @args={{hash model=this.model}} />
+        </ul>
+
+      </li>
+    {{/unless}}
+    {{#if this.showNotificationsTab}}
+      <li role="button" class="user-primary-navigation_item-parent user-notifications"  onclick={{action "toggleSubmenu"}}>
+        <a class={{if (eq @currentRouteParent "userNotifications") "active" }}>
+          {{d-icon "comment" class="glyph"}}<span>{{i18n "user.notifications"}}</span>{{d-icon "chevron-down"}}
+        </a>
+
+        <ul class="user-primary-navigation_submenu notifications-nav" >
+          <li>
+            <LinkTo @route="userNotifications.index">
+              {{i18n "user.filters.all"}}
+            </LinkTo>
+          </li>
+          <li>
+            <LinkTo @route="userNotifications.responses">
+              {{i18n "user_action_groups.6"}}
+            </LinkTo>
+          </li>
+          <li>
+            <LinkTo @route="userNotifications.likesReceived">
+              {{i18n "user_action_groups.2"}}
+            </LinkTo>
+          </li>
+          {{#if this.siteSettings.enable_mentions}}
+            <li>
+              <LinkTo @route="userNotifications.mentions">
+                {{i18n "user_action_groups.7"}}
+              </LinkTo>
+            </li>
+          {{/if}}
+          <li>
+            <LinkTo @route="userNotifications.edits">
+              {{i18n "user_action_groups.11"}}
+            </LinkTo>
+          </li>
+          <PluginOutlet @name="user-notifications-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
+        </ul>
+
+      </li>
+    {{/if}}
+    {{#if this.showPrivateMessages}}
+      <li class="user-primary-navigation_item private-messages">
+        <LinkTo @route="userPrivateMessages">{{d-icon "far-envelope"}}<span>{{i18n "user.private_messages"}}</span></LinkTo>
+      </li>
+    {{/if}}
+    {{#if this.canInviteToForum}}
+      <li role="button" class="user-primary-navigation_item-parent invited" onclick={{action "toggleSubmenu"}}>
+        <a class={{if (eq @currentRouteParent "userInvited") "active" }}>
+          {{d-icon "user-plus" class="glyph"}}<span>{{i18n "user.invited.title"}}</span>{{d-icon "chevron-down"}}
+        </a>
+
+        {{#if (or this.viewingSelf this.currentUser.staff)}}
+          <ul class="invites-nav user-primary-navigation_submenu" >
+            <NavItem  @route="userInvited.show" @routeParam="pending" @i18nLabel={{this.pendingLabel}} />
+            <NavItem  @route="userInvited.show" @routeParam="expired" @i18nLabel={{this.expiredLabel}} />
+            <NavItem  @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{this.redeemedLabel}} />
+          </ul>
+        {{/if}}
+
+      </li>
+    {{/if}}
+    {{#if this.showBadges}}
+      <li class="badges"><LinkTo @route="user.badges">{{d-icon "certificate"}}<span>{{i18n "badges.title"}}</span></LinkTo></li>
+    {{/if}}
+    <PluginOutlet @name="user-main-nav" @tagName="" @connectorTagName="li" @args={{hash model=this.model}} />
+    {{#if this.model.can_edit}}
+      <li role="button" class="preferences user-primary-navigation_item-parent" onclick={{action "toggleSubmenu"}}>
+        <a class={{if (eq @currentRouteParent "preferences") "active" }}>
+          {{d-icon "cog"}}<span>{{i18n "user.preferences"}}</span>{{d-icon "chevron-down"}}
+        </a>
+
+        <ul class="user-primary-navigation_submenu preferences-nav">
+          <li class="user-primary-navigation_submenu-link nav-account">
+            <LinkTo @route="preferences.account">
+              {{i18n "user.preferences_nav.account"}}
+            </LinkTo>
+          </li>
+          <li class="user-primary-navigation_submenu-link nav-security">
+            <LinkTo @route="preferences.security">
+              {{i18n "user.preferences_nav.security"}}
+            </LinkTo>
+          </li>
+          <li class="user-primary-navigation_submenu-link nav-profile">
+            <LinkTo @route="preferences.profile">
+              {{i18n "user.preferences_nav.profile"}}
+            </LinkTo>
+          </li>
+          <li class="user-primary-navigation_submenu-link nav-emails">
+            <LinkTo @route="preferences.emails">
+              {{i18n "user.preferences_nav.emails"}}
+            </LinkTo>
+          </li>
+          <li class="user-primary-navigation_submenu-link nav-notifications">
+            <LinkTo @route="preferences.notifications">
+              {{i18n "user.preferences_nav.notifications"}}
+            </LinkTo>
+          </li>
+          {{#if this.model.can_change_tracking_preferences}}
+            <li class="indent user-primary-navigation_submenu-link nav-categories">
+              <LinkTo @route="preferences.categories">
+                {{i18n "user.preferences_nav.categories"}}
+              </LinkTo>
+            </li>
+          {{/if}}
+          <li class="indent user-primary-navigation_submenu-link nav-users">
+            <LinkTo @route="preferences.users">
+              {{i18n "user.preferences_nav.users"}}
+            </LinkTo>
+          </li>
+          {{#if (and this.model.can_change_tracking_preferences this.siteSettings.tagging_enabled)}}
+            <li class="indent user-primary-navigation_submenu-link nav-tags">
+              <LinkTo @route="preferences.tags">
+                {{i18n "user.preferences_nav.tags"}}
+              </LinkTo>
+            </li>
+          {{/if}}
+          <li class="user-primary-navigation_submenu-link nav-interface">
+            <LinkTo @route="preferences.interface">
+              {{i18n "user.preferences_nav.interface"}}
+            </LinkTo>
+          </li>
+
+          {{#if this.siteSettings.enable_experimental_sidebar}}
+            <li class="indent user-primary-navigation_submenu-link nav-sidebar">
+              <LinkTo @route="preferences.sidebar">
+                {{i18n "user.preferences_nav.sidebar"}}
+              </LinkTo>
+            </li>
+          {{/if}}
+
+          <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+
+          {{#if this.model.userApiKeys}}
+            <li class="user-primary-navigation_submenu-link nav-apps">
+              <LinkTo @route="preferences.apps">
+                {{i18n "user.preferences_nav.apps"}}
+              </LinkTo>
+            </li>
+          {{/if}}
+          <PluginOutlet @name="user-preferences-nav" @tagName="li" @args={{hash model=this.model}} />
+        </ul>
+
+      </li>
+    {{/if}}
+  </ul>
+</section>

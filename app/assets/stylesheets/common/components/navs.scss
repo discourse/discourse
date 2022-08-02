@@ -19,7 +19,6 @@
 
 .nav-pills {
   @extend %nav;
-  @extend .clearfix;
 
   display: flex;
   flex-direction: row;

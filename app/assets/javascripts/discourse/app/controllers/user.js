@@ -203,6 +203,36 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @discourseComputed(
+    "router.currentRoute.name",
+    "router.currentRoute.localName",
+    "router.currentRoute.params.filter"
+  )
+  userPageTitle(routeName, localName, filter) {
+    let customKey;
+    if (localName === ("index" || "group")) {
+      // activity, notifications, and messages
+      let parentName = routeName.split(".")[0];
+      if (parentName === "userActivity") {
+        customKey = "activity_index";
+      } else if (parentName === "userNotifications") {
+        customKey = "notifications_index";
+      } else if (parentName === "userPrivateMessages") {
+        customKey = "pm_index";
+      }
+    } else if (localName === "show") {
+      // invites
+      customKey = `invites_${filter}`;
+    } else {
+      // everything else can use localName
+      customKey = localName;
+    }
+
+    if (!localName.includes("loading")) {
+      return I18n.t(`user.page_title.${customKey}`);
+    }
+  },
+
   @discourseComputed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
     if (invitesCountTotal > 0) {
@@ -233,22 +263,6 @@ export default Controller.extend(CanCheckEmails, {
       });
     } else {
       return I18n.t("user.invited.redeemed_tab");
-    }
-  },
-
-  @bind
-  userMenuOutside(e) {
-    const isClickOnParent = e.composedPath().some((element) => {
-      if (element?.classList?.contains("user-primary-navigation_item-parent")) {
-        return true;
-      }
-    });
-
-    if (!isClickOnParent) {
-      document.querySelectorAll(".user-nav > li").forEach((navParent) => {
-        navParent.classList.remove("show-children");
-      });
-      document.removeEventListener("click", this.userMenuOutside);
     }
   },
 
@@ -292,27 +306,6 @@ export default Controller.extend(CanCheckEmails, {
         target_user: this.get("model.username"),
         action_name: "suspend_user",
       });
-    },
-
-    toggleSubmenu(e) {
-      document.addEventListener("click", this.userMenuOutside);
-
-      if (e.currentTarget.classList.contains("show-children")) {
-        return e.currentTarget.classList.remove("show-children");
-      }
-
-      document.querySelectorAll(".user-nav > li").forEach((navParent) => {
-        navParent.classList.remove("show-children");
-      });
-
-      e.currentTarget.classList.toggle("show-children");
-
-      if (this.site.mobileView) {
-        // scroll to end so the last submenu is visible
-        document
-          .querySelector(".preferences-nav")
-          .scrollIntoView({ inline: "end" });
-      }
     },
 
     toggleMobileMenu() {
