@@ -4895,7 +4895,7 @@ en:
         last_seen_user: "Last Seen User:"
         no_result: "No results found for summary."
         reply_key: "Reply Key"
-        smtp_transaction_response: "SMTP ID"
+        post_link_with_smtp: "Post & SMTP Details"
         skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "From"
