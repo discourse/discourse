@@ -77,15 +77,33 @@ it:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "meno di %{count} minuto"
+          other: "meno di %{count} minuti"
         x_minutes:
           one: "%{count} min"
           other: "%{count} min"
         x_hours:
           one: "%{count} ora"
           other: "%{count} ore"
+        about_x_hours:
+          one: "circa %{count} ora"
+          other: "circa %{count} ore"
         x_days:
           one: "%{count} giorno"
           other: "%{count} giorni"
+        x_months:
+          one: "%{count} mese"
+          other: "%{count} mesi"
+        about_x_years:
+          one: "circa %{count} anno"
+          other: "circa %{count} anni"
+        over_x_years:
+          one: "più di %{count} anno"
+          other: "più di %{count} anni"
+        almost_x_years:
+          one: "quasi %{count} anno"
+          other: "quasi %{count} anni"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -1078,6 +1096,7 @@ it:
         categories_section: "Sezione Categorie"
         categories_section_instruction: "Le categorie selezionate saranno visualizzate nella sezione Categorie della barra laterale."
         tags_section: "Sezione Tag"
+        tags_section_instruction: "Le etichette selezionate appariranno nella sezione Etichette della barra laterale."
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -1688,9 +1707,11 @@ it:
       other: risposte
     signup_cta:
       sign_up: "Iscriviti"
+      hide_session: "Magari dopo"
       hide_forever: "no grazie"
       hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
+      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa comunità un posto fantastico. :heart:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description:
@@ -2131,6 +2152,9 @@ it:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
       dismiss_confirmation:
+        body:
+          one: "Sei sicuro/a? Hai %{count} notifica importante."
+          other: "Sei sicuro/a? Hai %{count} notifiche importanti."
         dismiss: "Ignora"
         cancel: "Annulla"
       group_message_summary:
@@ -2811,6 +2835,9 @@ it:
       collapse: "comprimi"
       sr_collapse_replies: "Comprimi risposte incorporate"
       sr_date: "Data di pubblicazione"
+      sr_expand_replies:
+        one: "Questo messaggio ha %{count} risposta. Clicca per espandere"
+        other: "Questo messaggio ha %{count} risposte. Clicca per espandere"
       expand_collapse: "espandi/comprimi"
       sr_below_embedded_posts_description: "risposte al messaggio n°%{post_number}"
       sr_embedded_reply_description: "risposta da @%{username} al messaggio n°%{post_number}"
@@ -2834,6 +2861,9 @@ it:
       has_likes_title_you:
         one: "tu e un'altra persona avete messo \"Mi piace\" a questo messaggio"
         other: "tu e altre %{count} persone avete messo \"Mi piace\" a questo messaggio"
+      sr_post_like_count_button:
+        one: "Questo messaggio è piaciuto a %{count} persona. Clicca per sapere chi è"
+        other: "Questo messaggio è piaciuto a %{count} persone. Clicca per sapere chi sono"
       filtered_replies_hint:
         one: "Visualizza questo messaggio e la sua risposta"
         other: "Visualizza questo messaggio e le sue %{count} risposte"
@@ -3521,6 +3551,12 @@ it:
       changed: "etichette cambiate:"
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
+      choose_for_topic_required:
+        one: "seleziona almeno %{count} etichetta..."
+        other: "seleziona almeno %{count} etichette..."
+      choose_for_topic_required_group:
+        one: "seleziona %{count} tag da '%{name}'..."
+        other: "seleziona %{count} tag da '%{name}'..."
       info: "Info"
       default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
@@ -3698,6 +3734,7 @@ it:
         one: "%{count} nuovo"
         other: "%{count} nuovi"
       toggle_section: "inverti sezione"
+      more: "Altro..."
       sections:
         messages:
           header_link_title: "messaggi personali"
@@ -5283,15 +5320,15 @@ it:
           replace: "Sostituisci"
   wizard_js:
     wizard:
-      done: "Fatto"
-      finish: "Completa"
+      finish: "Esci dalla configurazione"
       back: "Indietro"
       next: "Avanti"
+      configure_more: "Configura altro..."
+      step-text: "Intervallo"
       step: "%{current} di %{total}"
       upload: "Carica"
       uploading: "Caricamento..."
       upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
-      quit: "Forse Dopo"
       staff_count:
         one: "La tua comunità ha %{count} membro dello staff (sei tu)."
         other: "La tua comunità ha %{count} membri dello staff, te compreso."

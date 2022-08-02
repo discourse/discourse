@@ -3399,6 +3399,7 @@ ja:
         other: "未読 %{count}"
       new_count:
         other: "新規 %{count}"
+      more: "もっと..."
       sections:
         messages:
           header_link_text: "メッセージ"
@@ -4911,15 +4912,13 @@ ja:
           replace: "置換"
   wizard_js:
     wizard:
-      done: "完了"
-      finish: "終了"
       back: "戻る"
       next: "次へ"
+      step-text: "間隔"
       step: "%{current} / %{total}"
       upload: "アップロード"
       uploading: "アップロード中..."
       upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
-      quit: "後で実行"
       staff_count:
         other: "あなたのコミュニティには、あなたを含めて %{count} 名のスタッフがいます。"
       invites:

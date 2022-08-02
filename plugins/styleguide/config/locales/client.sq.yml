@@ -20,3 +20,6 @@ sq:
           title: "Postim"
         suggested_topics:
           title: "Temat e sugjeruara"
+        rich_tooltip:
+          description: "Përshkrimi"
+          header: "Ballina"

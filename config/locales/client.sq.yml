@@ -1937,6 +1937,7 @@ sq:
       new_count:
         one: "%{count} e re"
         other: "%{count} të reja"
+      more: "Më shuMë..."
       sections:
         messages:
           header_link_text: "Mesazhet"
@@ -2751,14 +2752,13 @@ sq:
           topics: "Tema"
   wizard_js:
     wizard:
-      done: "Përfundo"
       back: "Kthehu mbrapa"
       next: "Vazhdo përpara"
+      step-text: "Hapi"
       step: "%{current} nga %{total}"
       upload: "Ngarko"
       uploading: "Duke ngarkuar..."
       upload_error: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
-      quit: "Mbase më vonë"
       invites:
         add_user: "shto"
         none_added: "Nuk keni ftuar asnjë staf. Doni të vazhdoni?"

@@ -2131,6 +2131,14 @@ fa_IR:
       generic_no_items: "هیچ موردی در این فهرست وجود ندارد."
       sr_menu_tabs: "زبان‌های منو"
       view_all_notifications: "مشاهده همه آگاه‌سازی‌ها"
+      reviewable:
+        view_all: "مشاهده تمام موارد بازبینی"
+        queue: "صف"
+        deleted_user: "«کاربر حذف شده»"
+        post_number_with_topic_title: "نوشته #%{post_number} - %{title}"
+        new_post_in_topic: "نوشته‌ی جدید در %{title}"
+        suspicious_user: "کاربر مشکوک %{username}"
+        default_item: "مورد قابل بازبینی #%{reviewable_id}"
     topics:
       new_messages_marker: "آخرین بازدید"
       bulk:
@@ -2627,14 +2635,14 @@ fa_IR:
       actions:
         people:
           like:
-            one: "این را دوست داشت"
-            other: "دوست داشته اند"
+            one: "این را پسندید"
+            other: "این را پسندیدن"
           read:
             one: "این را بخوان"
             other: "خوانده اند"
           like_capped:
-            one: "و %{count} نفر دیگر این را دوست داشتند"
-            other: "و %{count} نفر دیگر این را پسندیده‌اند."
+            one: "و %{count} نفر دیگر این را پسندیده‌اند"
+            other: "و %{count} نفر دیگر این را پسندیده‌اند"
         by_you:
           off_topic: "شما برای این مورد پرچم خارج از بحث زدید"
           spam: "شما برای این مورد پرچم هرزنامه زدید"
@@ -3243,6 +3251,7 @@ fa_IR:
         one: "%{count} تازه"
         other: "%{count} تازه"
       toggle_section: "تغییر بخش"
+      more: "بیشتر..."
       sections:
         messages:
           header_link_title: "پیام‌های شخصی"
@@ -3974,6 +3983,7 @@ fa_IR:
       watched_words:
         search: "جست‌وجو"
         clear_filter: "واضح"
+        case_sensitive: "«حساس به حروف کوچک و بزرگ»"
         download: دانلود
         clear_all: پاکسازی همه
         actions:
@@ -3992,6 +4002,7 @@ fa_IR:
           add: "افزودن"
           success: "موفقیت"
           upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."
+          case_sensitivity_label: "به حروف بزرگ و کوچک حساس است"
         test:
           no_matches: "چیزی یافت نشد."
       impersonate:
@@ -4391,14 +4402,14 @@ fa_IR:
           replace: "جایگزینی"
   wizard_js:
     wizard:
-      done: "انجام شد"
       back: "بازگشت"
       next: "بعدی"
+      configure_more: "پیکربندی بیشتر..."
+      step-text: "مرحله"
       step: "%{current} از %{total}"
       upload: "بارگذاری"
       uploading: "در حال بار گذاری..."
       upload_error: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
-      quit: "شاید بعدا"
       staff_count:
         one: "انجمن شما %{count} کارکن، شامل خودتان، دارد."
         other: "انجمن شما %{count} کارکن، شامل خودتان، دارد."

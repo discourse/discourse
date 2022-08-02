@@ -1788,6 +1788,7 @@ pl_PL:
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
       remove_status: "Usuń status"
+      until: "Aż do:"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -1849,9 +1850,11 @@ pl_PL:
       other: odpowiedzi
     signup_cta:
       sign_up: "Rejestracja"
+      hide_session: "Może później"
       hide_forever: "nie, dziękuję"
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
+      value_prop: "Masz dość przewijania tych samych postów? Zakładając konto, zawsze będziesz mógł wrócić do miejsca, w którym skończyłeś. Mając konto, możesz również otrzymywać powiadomienia o nowych odpowiedziach, zapisywać zakładki i używać polubień, aby podziękować innym. Wszyscy razem możemy uczynić tę społeczność wspaniałą. :heart:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
@@ -2019,6 +2022,7 @@ pl_PL:
       categories_only: "Tylko kategorie"
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
       categories_and_latest_topics: "Kategorie i ostatnie tematy"
+      categories_and_latest_topics_created_date: "Kategorie i najnowsze tematy (sortuj według daty utworzenia tematu)"
       categories_and_top_topics: "Kategorie i najlepsze tematy"
       categories_boxes: "Pudełka z podkategoriami"
       categories_boxes_with_topics: "Pudełka z polecanymi tematami"
@@ -2289,6 +2293,7 @@ pl_PL:
       post_approved: "Twój wpis został zatwierdzony"
       reviewable_items: "przedmioty wymagające przeglądu"
       watching_first_post_label: "Nowy temat"
+      user_moved_post: "%{username} przeniesiony"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2319,6 +2324,7 @@ pl_PL:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> przyjmuje twoje zaproszenie"
+      invitee_accepted_your_invitation: "przyjął twoje zaproszenie"
       moved_post: "<span>%{username}</span> przenosi %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Otrzymujesz '%{description}'"
@@ -2522,8 +2528,16 @@ pl_PL:
     current_user: "idź do swojej strony użytkowanika"
     view_all: "zobacz wszystkie %{tab}"
     user_menu:
+      generic_no_items: "Na tej liście nie ma żadnych pozycji."
       sr_menu_tabs: "Zakładki menu"
       view_all_notifications: "zobacz wszystkie powiadomienia"
+      reviewable:
+        queue: "Kolejka"
+        deleted_user: "(usunięty użytkownik)"
+        post_number_with_topic_title: "post #%{post_number} - %{title}"
+        new_post_in_topic: "nowy post w %{title}"
+        suspicious_user: "podejrzany użytkownik %{username}"
+        default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
@@ -3075,7 +3089,14 @@ pl_PL:
       collapse: "zawalić się"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
       sr_date: "Data wysłania"
+      sr_expand_replies:
+        one: "Ten post ma %{count} odpowiedź. Kliknij, aby rozwinąć"
+        few: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
+        many: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
+        other: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
       expand_collapse: "rozwiń/zwiń"
+      sr_below_embedded_posts_description: "post #%{post_number} odpowiedzi"
+      sr_embedded_reply_description: "odpowiedź od @%{username} na post #%{post_number}"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
       gap:
         one: "pokaż %{count} ukrytą odpowiedź"
@@ -3724,6 +3745,7 @@ pl_PL:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1}%{shortcut2}"
       title: "Skróty klawiszowe"
+      short_title: "Skróty"
       jump_to:
         title: "Skocz do"
         home: "%{shortcut} Strona główna"
@@ -4069,6 +4091,7 @@ pl_PL:
         many: "%{count} nowych"
         other: "%{count} nowy"
       toggle_section: "przełącz sekcję"
+      more: "Więcej…"
       sections:
         messages:
           header_link_title: "osobiste wiadomości"
@@ -4110,6 +4133,7 @@ pl_PL:
               title: "Wszystkie grupy"
             users:
               content: "Użytkownicy"
+              title: "Wszyscy użytkownicy"
             my_posts:
               content: "Wysłane"
               title: "Moje posty"
@@ -4440,6 +4464,8 @@ pl_PL:
         notification_event:
           name: "Zdarzenie powiadomienia"
           details: "Kiedy użytkownik otrzymuje powiadomienie."
+        user_promoted_event:
+          details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
         user_badge_event:
           name: "Wydarzenie przyznania odznak"
           details: "Gdy użytkownik otrzymuje odznakę."
@@ -5683,15 +5709,16 @@ pl_PL:
           replace: "Zamień"
   wizard_js:
     wizard:
-      done: "Zrobione"
-      finish: "Zakończ"
+      jump_in: "Wskakuj!"
+      finish: "Zakończ konfigurację"
       back: "Poprzednia"
       next: "Następna"
+      configure_more: "Skonfiguruj więcej..."
+      step-text: "Krok"
       step: "%{current} z %{total}"
       upload: "Prześlij"
       uploading: "Przesyłanie…"
       upload_error: "Przepraszamy, wystąpił błąd podczas wysyłania tego pliku. Proszę spróbuj ponownie."
-      quit: "Może później"
       staff_count:
         one: "W twojej społeczności jest %{count} członek załogi (Ty)."
         few: "W twojej społeczności jest %{count} członków załogi, w tym Ty."

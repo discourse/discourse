@@ -16,6 +16,7 @@ vi:
       date_only: "%B %-d, %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     - null
@@ -57,21 +58,36 @@ vi:
   themes:
     bad_color_scheme: "Không thể cập nhật chủ đề, bảng màu không hợp lệ"
     other_error: "Đã xảy ra lỗi khi cập nhật chủ đề"
+    ember_selector_error: "Xin lỗi - không cho phép sử dụng bộ chọn CSS #ember hoặc .ember-view vì những tên này được tạo động trong thời gian chạy và sẽ thay đổi theo thời gian, cuối cùng dẫn đến CSS bị hỏng. Hãy thử một bộ chọn khác."
     compile_error:
       unrecognized_extension: "Phần mở rộng tệp không được công nhận: %{extension}"
     import_error:
       generic: Đã xảy ra lỗi khi nhập chủ đề đó
+      upload: "Lỗi khi tạo nội dung tải lên: %{name}. %{errors}"
       about_json: "Import bị lỗi: about.json không tồn tại hoặc không hợp lệ. Bạn có chắc đây là một Discource Theme?"
       about_json_values: "about.json chứa các giá trị không hợp lệ: %{errors}"
       modifier_values: "Các công cụ sửa đổi about.json chứa các giá trị không hợp lệ: %{errors}"
       git: "Lỗi nhân bản kho git, truy cập bị từ chối hoặc không tìm thấy kho lưu trữ"
+      git_ref_not_found: "Không thể kiểm tra tham chiếu git: %{ref}"
       unpack_failed: "Tệp bị giải nén thất bại"
       file_too_big: "Tệp chưa được nén quá lớn."
       unknown_file_type: "Tệp bạn tải lên dường như không phải là một Discourse theme hợp lệ."
+      not_allowed_theme: "`%{repo}không có trong danh sách các chủ đề được phép (kiểm tra cài đặt toàn cầu `allow_theme_repos`)."
+    errors:
+      component_no_user_selectable: "Người dùng không thể chọn các thành phần chủ đề"
+      component_no_default: "Các thành phần chủ đề không thể là chủ đề mặc định"
+      component_no_color_scheme: "Các thành phần chủ đề không được có bảng màu"
+      no_multilevels_components: "Bản thân các chủ đề có chủ đề con không thể là chủ đề con"
+      optimized_link: Các liên kết hình ảnh được tối ưu hóa là không lâu và không nên được bao gồm trong mã nguồn theme.
     settings_errors:
       invalid_yaml: "YAML được cung cấp không hợp lệ."
+      data_type_not_a_number: "Thiết lập kiểu `%{name}` không được hỗ trợ. Các kiểu được hỗ trợ là `integer`, `bool`, `list`, `enum` và `upload`"
       name_too_long: "Có một cài đặt có tên quá dài. Chiều dài tối đa là 255"
       default_value_missing: "Cài đặt `%{name}'không có giá trị mặc định"
+      default_not_match_type: "Đặt kiểu giá trị mặc định `%{name}` không khớp với kiểu cài đặt."
+      default_out_range: "Đặt giá trị mặc định `%{name}' không nằm trong phạm vi được chỉ định."
+      enum_value_not_valid: "Giá trị đã chọn không phải là một trong những lựa chọn enum."
+      number_value_not_valid: "Giá trị mới không nằm trong phạm vi cho phép."
       number_value_not_valid_min_max: "Nó phải nằm trong khoảng từ %{min} đến %{max}."
       number_value_not_valid_min: "Nó phải lớn hơn hoặc bằng %{min}."
       number_value_not_valid_max: "Nó phải nhỏ hơn hoặc bằng %{max}."
@@ -89,10 +105,16 @@ vi:
       maximum_staged_user_per_email_reached: "Đạt số lượng thành viên theo giai đoạn tối đa được tạo trên mỗi email."
       no_subject: "(không chủ đề)"
       no_body: "(không ai)"
+      missing_attachment: "(Tệp đính kèm %{filename} bị thiếu)"
+      continuing_old_discussion:
+        other: "Tiếp tục thảo luận từ [%{title}](%{url}), vì nó đã được tạo hơn %{count} ngày trước."
       errors:
         empty_email_error: "Xảy ra khi hệ thống nhận được một thư rỗng."
         no_message_id_error: "Xảy ra khi thư không có phần 'Message-Id'."
         auto_generated_email_error: "Xảy ra khi tiêu đề 'ưu tiên' được đặt là: danh sách, rác, theo lô hoặc tự động trả lời, hoặc khi có tiêu đề khác bao gồm: tự động gửi, tự động trả lời hoặc tự động tạo."
+        no_body_detected_error: "Xảy ra khi chúng tôi không thể giải nén nó và không có tệp đính kèm."
+        no_sender_detected_error: "Xảy ra khi chúng tôi không thể tìm thấy địa chỉ email hợp lệ trong tiêu đề Từ."
+        from_reply_by_address_error: "Xảy ra khi tiêu đề Từ khớp với thư trả lời bằng địa chỉ email."
         inactive_user_error: "Xảy ra khi người gửi không hoạt động."
         silenced_user_error: "Xảy ra khi người gửi đã được tắt tiếng."
         bad_destination_address: "Xảy ra khi không có địa chỉ email nào trong trường To/Cc khớp với địa chỉ email đến đã được định cấu hình."
@@ -103,6 +125,8 @@ vi:
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
         bounced_email_error: "Email là một báo cáo email bị trả lại."
         screened_email_error: "Xảy ra khi địa chỉ email của người gửi đã được sàng lọc."
+        unsubscribe_not_allowed: "Xảy ra khi người dùng này không cho phép hủy đăng ký qua email."
+        email_not_allowed: "Xảy ra khi địa chỉ email không có trong danh sách cho phép hoặc nằm trong danh sách chặn."
     view_redacted_media: "Xem phương tiện"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -165,24 +189,50 @@ vi:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
   topic_invite:
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
+    receiver_does_not_allow_pm: "Xin lỗi, người dùng đó không cho phép bạn gửi tin nhắn riêng tư cho họ."
+    sender_does_not_allow_pm: "Xin lỗi, bạn không cho phép người dùng đó gửi tin nhắn riêng tư cho bạn."
+    user_cannot_see_topic: "%{username} không thể xem chủ đề."
   backup:
     operation_already_running: "Một tiến trình đang được thực hiện. Không thể bắt đầu một tiến trình mới ngay bây giờ."
     backup_file_should_be_tar_gz: "Tập tin sao lưu nên nên ở dạng .tar.gz."
     not_enough_space_on_disk: "Không đủ không gian trên đĩa để tải lên bản sao lưu này."
+    invalid_filename: "Tên tệp sao lưu chứa các ký tự không hợp lệ. Ký tự hợp lệ là a-z 0-9. - _."
+    file_exists: "Tệp bạn đang cố gắng tải lên đã tồn tại."
+  invalid_params: "Bạn đã cung cấp các thông số không hợp lệ cho yêu cầu: %{message}"
   not_logged_in: "Bạn cần phải đăng nhập để thực hiện việc đó."
   not_found: "Không thể tìm thấy đường dẫn hoặc tài nguyên yêu cầu."
   invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
+  authenticator_not_found: "Phương thức xác thực không tồn tại hoặc đã bị vô hiệu hóa."
+  authenticator_no_connect: "Nhà cung cấp xác thực này không cho phép kết nối với tài khoản diễn đàn hiện có."
+  invalid_api_credentials: "Bạn không được phép xem tài nguyên được yêu cầu. Tên người dùng hoặc khóa API không hợp lệ."
+  provider_not_enabled: "Bạn không được phép xem tài nguyên được yêu cầu. Nhà cung cấp xác thực không được kích hoạt."
+  provider_not_found: "Bạn không được phép xem tài nguyên được yêu cầu. Nhà cung cấp xác thực không tồn tại."
   read_only_mode_enabled: "Trang web đang ở chế độ chỉ đọc. Tất cả các tương tác đã bị tắt."
+  invalid_grant_badge_reason_link: "Liên kết Discourse bên ngoài hoặc không hợp lệ không được phép trong lý do huy hiệu"
+  email_template_cant_be_modified: "Không thể sửa đổi mẫu email này"
+  invalid_whisper_access: "Lời thì thầm không được bật hoặc bạn không có quyền truy cập để tạo bài đăng thì thầm"
   not_in_group:
+    title_topic: "Bạn cần yêu cầu thành viên của nhóm '%{group}' để xem chủ đề này."
+    title_category: "Bạn cần phải yêu cầu thành viên của nhóm '%{group}' để xem danh mục này."
+    request_membership: "Yêu cầu tư cách thành viên"
     join_group: "Tham gia nhóm"
   deleted_topic: "Ôi! Chủ đề này đã bị xóa và không còn khả dụng nữa."
+  delete_topic_failed: "Đã xảy ra lỗi khi xóa chủ đề đó. Vui lòng liên hệ với quản trị viên của trang web."
   reading_time: "Thời gian đọc"
   likes: "Lượt Thích"
   too_many_replies:
     other: "Xin lỗi bạn, người dùng mới tạm thời bị giới hạn với %{count} câu trả lời trong một chủ đề."
+  max_consecutive_replies:
+    other: "Không cho phép nhiều hơn %{count} câu trả lời liên tiếp. Vui lòng chỉnh sửa câu trả lời trước đó của bạn hoặc đợi ai đó trả lời bạn."
   embed:
     start_discussion: "Bắt đầu cuộc thảo luận"
     continue: "Tiếp tục cuộc thảo luận"
+    error: "Lỗi khi nhúng"
+    referer: "Người giới thiệu:"
+    error_topics: "Cài đặt trang web `danh sách chủ đề nhúng` không được bật"
+    mismatch: "Người giới thiệu hoặc không được gửi hoặc không khớp với bất kỳ máy chủ nào sau đây:"
+    no_hosts: "Không có máy chủ nào được thiết lập để nhúng."
+    configure: "Định cấu hình nhúng"
     more_replies:
       other: "còn %{count} câu trả lời"
     loading: "Đang tải cuộc thảo luận"
@@ -191,29 +241,44 @@ vi:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} trả lời"
+    likes:
+      other: "%{count} lượt thích"
+    last_reply: "Câu trả lời cuối cùng"
     created: "Tạo bởi"
+    new_topic: "Tạo chủ đề mới"
   no_mentions_allowed: "Xin lỗi, bạn không thể nhắc tới thành viên khác."
   too_many_mentions:
     other: "Xin lỗi, bạn chỉ có thể nhắc tới %{count} thành viên trong một bài viết."
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
+  no_embedded_media_allowed_trust: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
+  no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào bài viết."
   too_many_embedded_media:
     other: "Xin lỗi, người dùng mới chỉ có thể đưa %{count} mục phương tiện được nhúng vào một bài đăng."
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong bài viết."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một bài viết."
   no_links_allowed: "Xin lỗi, thành viên mới chưa được chèn liên kết trong bài viết."
+  links_require_trust: "Xin lỗi, bạn không thể bao gồm các liên kết trong bài viết của mình."
   too_many_links:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} liên kết trong một bài viết."
+  contains_blocked_word: "Xin lỗi, bạn không thể đăng từ '%{word}'; nó không được cho phép."
+  contains_blocked_words: "Xin lỗi, bạn không thể đăng nó. Không được phép: %{words}."
   spamming_host: "Xin lỗi bạn không thể chèn liên kết tới trang đó."
   user_is_suspended: "Người dùng đang bị treo không được phép đăng bài."
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   not_accepting_pms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
+  max_pm_recipients: "Xin lỗi, bạn có thể gửi tin nhắn cho tối đa %{recipients_limit} người nhận."
+  pm_reached_recipients_limit: "Xin lỗi, bạn không thể có nhiều hơn %{recipients_limit} người nhận trong một tin nhắn."
   removed_direct_reply_full_quotes: "Đã tự động xóa trích dẫn của toàn bộ bài viết trước đó."
   watched_words_auto_tag: "Chủ đề được gắn thẻ tự động"
+  secure_upload_not_allowed_in_public_topic: "Xin lỗi, không thể sử dụng (các) nội dung tải lên an toàn sau trong một chủ đề công khai: %{upload_filenames}."
+  create_pm_on_existing_topic: "Xin lỗi, bạn không thể tạo PM về một chủ đề hiện có."
+  slow_mode_enabled: "Chủ đề này đang ở chế độ chậm."
   just_posted_that: "rất giống với những gì bạn đã viết gần đây"
   invalid_characters: "chứa các kí tự không hợp lệ"
+  is_invalid: "có vẻ không rõ ràng, nó là một câu hoàn chỉnh?"
   next_page: "trang sau →"
   prev_page: "← trang trước"
   page_num: "Trang %{num}"
@@ -223,6 +288,8 @@ vi:
   rss_topics_in_category: "Nguồn cấp dữ liệu RSS của các chủ đề trong chuyên mục '%{category}'"
   rss_num_posts:
     other: "%{count} bài viết"
+  rss_num_participants:
+    other: "%{count} người tham gia"
   read_full_topic: "Đọc toàn bộ chủ đề"
   private_message_abbrev: "Tin nhắn"
   rss_description:
@@ -1981,27 +2048,14 @@ vi:
       title: "Gửi lại email kích hoạt"
   wizard:
     step:
-      forum_title:
-        title: "Tên"
+      introduction:
+        fields:
+          default_locale:
+            label: "Ngôn ngữ"
       privacy:
-        title: "Truy cập"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Công khai"
-              restricted:
-                label: "Riêng tư"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-            description: "Địa chỉ email của người hoặc nhóm chịu trách nhiệm về cộng đồng này. Được sử dụng cho các thông báo quan trọng như cờ chưa được xử lý, cập nhật bảo mật và trên <a href='%{base_path}/about' target='_blank'>trang giới thiệu</a> của bạn để liên hệ khẩn cấp với cộng đồng."
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Công ty"
-        description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
+          login_required:
+            placeholder: "Riêng tư"
       styling:
         fields:
           styling_preview:
@@ -2018,6 +2072,10 @@ vi:
                 label: "Chuyên mục và Chủ đề nổi bật"
               subcategories_with_featured_topics:
                 label: "Danh mục con với các chủ đề nổi bật"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
   joined: "Đã tham gia"
   discourse_push_notifications:
     popup:

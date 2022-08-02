@@ -3357,6 +3357,7 @@ gl:
       new_count:
         one: "%{count} novo"
         other: "%{count} novos"
+      more: "Máis..."
       sections:
         messages:
           header_link_text: "Mensaxes"
@@ -4836,15 +4837,13 @@ gl:
           replace: "Substituír"
   wizard_js:
     wizard:
-      done: "Feito"
-      finish: "Finalizar"
       back: "Volver"
       next: "Seguinte"
+      step-text: "Paso"
       step: "%{current} de %{total}"
       upload: "Cargar"
       uploading: "Cargando..."
       upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
-      quit: "Pode que logo"
       staff_count:
         one: "A súa comunidade ten %{count} en equipo (vostede)."
         other: "A súa comunidade ten %{count} en equipo, incluído vostede."

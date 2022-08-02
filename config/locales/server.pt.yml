@@ -2180,50 +2180,18 @@ pt:
   wizard:
     title: "Configuração do Discourse"
     step:
-      locale:
-        title: "Bem-vindo ao seu Discourse!"
-        fields:
-          default_locale:
-            description: "Qual é a linguagem por defeito para a sua comunidade?"
-      forum_title:
-        title: "Nome"
-        description: "O nome é um sinal visível à distância, a primeira coisa que potenciais visitantes verão sobre a sua comunidade. O que é o que seu nome e título dizem sobre a sua comunidade?"
+      introduction:
         fields:
           title:
-            label: "O nome da sua comunidade"
             placeholder: "Reduto da Joana"
           site_description:
             placeholder: "Um lugar para a Jona e os seus amigos falarem de coisas giras"
-      introduction:
-        title: "Introdução"
-        fields:
-          welcome:
-            label: "Tópico de Boas-vindas"
-            one_paragraph: "Por favor limite a sua mensagem de boas-vindas a um paragrafo."
       privacy:
-        title: "Acesso"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Público"
-              restricted:
-                label: "Privado"
-      contact:
-        title: "Contacte-nos"
-        fields:
-          contact_email:
-            label: "Email"
-            placeholder: "name@example.com"
-            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim como <a href='%{base_path}/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
-          contact_url:
-            label: "Página da Internet"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
-          site_contact:
-            label: "Mensagens Automatizadas"
-      corporate:
-        title: "Organização"
+          login_required:
+            placeholder: "Privado"
+      ready:
+        title: "O seu Discourse está Pronto!"
       styling:
         fields:
           styling_preview:
@@ -2240,16 +2208,20 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
-      logos:
-        title: "Logos"
+      branding:
         fields:
           logo:
             label: "Logo Primário"
-      icons:
-        title: "Ícones"
-        fields:
           large_icon:
             label: "Ícone Grande"
+      corporate:
+        fields:
+          contact_url:
+            label: "Página da Internet"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
+          site_contact:
+            label: "Mensagens Automatizadas"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:

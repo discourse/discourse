@@ -1340,6 +1340,7 @@ be:
       no_replies_others: "Няма адказаў."
       no_likes_others: "Не спадабалася паведамленні."
     sidebar:
+      more: "Яшчэ ..."
       sections:
         messages:
           header_link_text: "Паведамленні"
@@ -1990,13 +1991,11 @@ be:
           topics: "тэмы"
   wizard_js:
     wizard:
-      done: "Выканана"
       back: "Назад"
       next: "Далей"
       upload: "Запампаваць"
       uploading: "Запампоўванне..."
       upload_error: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
-      quit: "Мабыць пазней"
       invites:
         add_user: "дадаць"
         roles:

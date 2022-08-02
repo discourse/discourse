@@ -998,32 +998,16 @@ hr:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
     step:
-      forum_title:
-        title: "Ime i prezime"
       introduction:
         fields:
-          welcome:
-            label: "Rasprava dobrodošlice"
+          default_locale:
+            label: "Jezik"
       privacy:
-        title: "Pristup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Javno"
-              restricted:
-                label: "Privatno"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "ime@primjer.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizacija / Poduzeće"
-        fields:
-          company_name:
-            label: "Ime tvrtke"
+          login_required:
+            placeholder: "Privatno"
+          must_approve_users:
+            placeholder: "Zahtijevati odobrenje"
       styling:
         fields:
           homepage_style:
@@ -1038,6 +1022,12 @@ hr:
                 label: "Kategorije i glavne teme"
               subcategories_with_featured_topics:
                 label: "Potkategorije s istaknutim temama"
+      corporate:
+        fields:
+          company_name:
+            label: "Ime tvrtke"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
   joined: "Prijavljen"
   discourse_push_notifications:
     popup:

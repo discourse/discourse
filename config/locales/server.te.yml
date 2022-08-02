@@ -731,22 +731,10 @@ te:
     title: "ట్యాగులు"
   wizard:
     step:
-      forum_title:
-        title: "పేరు"
       privacy:
         fields:
-          privacy:
-            choices:
-              open:
-                label: "బహిరంగం"
-              restricted:
-                label: "అంతరంగికం"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-      corporate:
-        title: "సంస్థ"
+          login_required:
+            placeholder: "అంతరంగికం"
       styling:
         fields:
           homepage_style:

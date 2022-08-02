@@ -1879,6 +1879,7 @@ sv:
       categories_only: "Endast kategorier"
       categories_with_featured_topics: "Kategorier med utvalda ämnen"
       categories_and_latest_topics: "Kategorier med senaste ämnen"
+      categories_and_latest_topics_created_date: "Kategorier och senaste ämnen (sorteras efter datumet då ämnet skapades)"
       categories_and_top_topics: "Kategorier och toppämnen"
       categories_boxes: "Boxar med underkategorier"
       categories_boxes_with_topics: "Boxar med utvalda ämnen"
@@ -2341,6 +2342,14 @@ sv:
       generic_no_items: "Det finns inga objekt i den här listan."
       sr_menu_tabs: "Menyflikar"
       view_all_notifications: "visa alla aviseringar"
+      reviewable:
+        view_all: "visa alla granskningsobjekt"
+        queue: "Kö"
+        deleted_user: "(raderad användare)"
+        post_number_with_topic_title: "inlägg nr %{post_number} - %{title}"
+        new_post_in_topic: "nytt inlägg i %{title}"
+        suspicious_user: "misstänkt användare %{username}"
+        default_item: "granskningsbart objekt nr %{reviewable_id}"
     topics:
       new_messages_marker: "senaste besök"
       bulk:
@@ -3745,6 +3754,7 @@ sv:
         one: "%{count} ny"
         other: "%{count} nya"
       toggle_section: "växla avsnitt"
+      more: "Mer..."
       sections:
         messages:
           header_link_title: "personliga meddelanden"
@@ -5337,15 +5347,16 @@ sv:
           replace: "Ersätt"
   wizard_js:
     wizard:
-      done: "Klar"
-      finish: "Avsluta"
+      jump_in: "Hoppa in!"
+      finish: "Avsluta konfigureringen"
       back: "Tillbaka"
       next: "Nästa"
+      configure_more: "Konfigurera mera..."
+      step-text: "Steg"
       step: "%{current} av %{total}"
       upload: "Ladda upp"
       uploading: "Laddar upp..."
       upload_error: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Försök igen."
-      quit: "Kanske senare"
       staff_count:
         one: "Din gemenskap har %{count} arbetare (du)."
         other: "Din gemenskap har %{count} arbetare, inklusive dig."

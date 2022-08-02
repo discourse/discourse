@@ -3842,83 +3842,35 @@ tr_TR:
   wizard:
     title: "Discourse Kurulumu"
     step:
-      locale:
-        title: "Discourse topluluğunuza hoş geldiniz!"
-        fields:
-          default_locale:
-            description: "Topluluğunuz için öntanımlı dil nedir?"
-      forum_title:
-        title: "Ad"
-        description: "Yeni bir ziyaretçinin <i>ilk</i> farkedeceği şey adınız ve unvanınızdır."
+      introduction:
+        title: "Topluluğunuzdan bahsedin"
         fields:
           title:
-            label: "Topluluğunuzun adı"
+            label: "Topluluk adı"
             placeholder: "Ali'nin Yeri"
           site_description:
-            label: "Topluluğunuzu kısa bir cümleyle tanımlayın (arama sonuçlarında ve sosyal medyada kullanılır)"
+            label: "Topluluğunuzu bir cümleyle tanımlayın"
             placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
-          short_site_description:
-            label: "Topluluğunuzu birkaç kelimeyle tanımlayın (ana sayfa başlığı için kullanılır)"
-            placeholder: "Şimdiye kadarki en iyi topluluk"
-      introduction:
-        title: "Tanıtım"
-        disabled: "<p> “%{topic_title}” başlıklı konu bulamadık. </p><ul><li> Başlığı değiştirdiyseniz sitenizin tanıtım metnini değiştirmek için bu konuyu düzenleyin. </li><li> Bu konuyu sildiyseniz başlık olarak “%{topic_title}” ile başka bir konu oluşturun. İlk yayının içeriği sitenizin tanıtım metnidir. </li></ul>"
-        fields:
-          welcome:
-            label: "Hoş geldiniz Konusu"
-            description: "<p> Topluluğunuzu yaklaşık 1 dakika içinde bir asansördeki bir yabancıya nasıl tarif edersiniz? </p><ul><li> Bu tartışmalar kimler içindir? </li><li> Burada ne bulabilirim? </li><li> Neden ziyaret etmeliyim? </li></ul><p> Hoşgeldiniz konunuz, yeni gelenlerin okuyacağı ilk şeydir. Bunu <b>bir paragraf</b> “asansör konuşması” veya “görev beyanı” olarak düşünün. </p>"
-            one_paragraph: "Lütfen hoş geldiniz iletinizi bir paragraf kadar uzunlukta tutun."
-            extra_description: "Emin değilseniz bu adımı atlayabilir ve karşılama içeriğinizi daha sonra düzenleyebilirsiniz."
-      privacy:
-        title: "Erişim"
-        description: "<p>Topluluğunuz herkese açık mı yoksa üyelik, davet veya onay ile kısıtlanmış mı? İsterseniz işleri özel olarak ayarlayabilir ve daha sonra herkese açık hale getirebilirsiniz.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Herkese Açık"
-                description: "Bu topluluğa herkes erişebilir"
-              restricted:
-                label: "Özel"
-                description: "Bu topluluğa yalnızca giriş yapmış kullanıcılar erişebilir"
-          privacy_options:
-            description: "Yeni kullanıcılar bir hesaba nasıl kayıt olur?"
-            choices:
-              open:
-                label: "Kullanıcılar kendi kendilerine kaydolabilirler."
-              invite_only:
-                label: "Kullanıcıların kaydolmadan önce güvenilir kullanıcılar veya görevliler tarafından davet edilmesi gerekir."
-              must_approve:
-                label: "Kullanıcılar kendi kendilerine kaydolabilir, ancak görevliler tarafından onaylanmalıdır."
-      contact:
-        title: "İletişim"
-        fields:
           contact_email:
-            label: "Posta"
-            placeholder: "ad@örnek.com"
-            description: "Bu topluluktan sorumlu kişi veya grubun e-posta adresi. İşlenmemiş raporlar, güvenlik güncellemeleri gibi kritik bildirimler ve acil topluluk iletişimi için <a href='%{base_path}/about' target='_blank'>sizin hakkımda sayfanızda</a> kullanılır."
-          contact_url:
-            label: "Ağ Sayfası"
-            placeholder: "https://www.örnek.com/iletişim"
-            description: "Siz veya kuruluşunuz için genel iletişim web sayfası. <a href='%{base_path}/about' target='_blank'>Sizin hakkımda sayfanızda gösterilecek</a> ."
-          site_contact:
-            label: "Otomatik İletiler"
-            description: "Raporlanma uyarısı ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel iletileri bu kullanıcıdan gönderilecektir."
-      corporate:
-        title: "Organizasyon"
-        description: "Bu bilgiler, Görevli kategorisinde düzenleyebileceğiniz bir konu olan <a href='%{base_path}/tos' target='blank'>Hizmet Şartlarınıza</a> girilecektir. Bir şirketiniz yoksa şimdilik bu adımı atlamaktan çekinmeyin."
+            label: "İletişim noktası"
+            placeholder: "ornek@kullanici.com"
+          default_locale:
+            label: "Dil"
+      privacy:
+        title: "Üye Deneyimi"
         fields:
-          company_name:
-            label: "Şirket Adı"
-            placeholder: "Örnek Organizasyon"
-          governing_law:
-            label: "Geçerli Kanun"
-            placeholder: "Kaliforniya kanunu"
-          city_for_disputes:
-            label: "Anlaşmazlıklar Şehri"
-            placeholder: "San Francisco, Kaliforniya"
+          login_required:
+            placeholder: "Özel"
+            extra_description: "Bu topluluğa yalnızca giriş yapmış kullanıcılar erişebilir"
+          invite_only:
+            placeholder: "Yalnızca Davet"
+          must_approve_users:
+            placeholder: "Onay gerektir"
+            extra_description: "Kullanıcılar personel tarafından onaylanmalıdır"
+      ready:
+        title: "Discourseunuz hazır!"
       styling:
-        title: "Stil"
+        title: "Görünüm & His"
         fields:
           color_scheme:
             label: "Renk şeması"
@@ -3949,24 +3901,36 @@ tr_TR:
                 label: "Konu Etiketi İçeren Kategori Kutuları"
               subcategories_with_featured_topics:
                 label: "Öne Çıkan Konular İçeren Alt Kategoriler"
-      logos:
-        title: "Görseller"
+      branding:
+        title: "Topluluk Tanıtımı"
         fields:
           logo:
             label: "Birincil Görsel"
-            description: "Sitenizin sol üst tarafındaki logo resmi. Yüksekliği 120 ve en boy oranı 3: 1'den büyük olan geniş dikdörtgen bir görüntü kullanın"
           logo_small:
             label: "Kare Logo"
-            description: "Logonuzun kare versiyonu. Aşağı kaydırırken, tarayıcıda ve sosyal platformlarda paylaşırken sitenizin sol üst köşesinde gösterilir. İdeal olarak 512x512'den daha büyük."
-      icons:
-        title: "Simgeler"
-        fields:
           favicon:
             label: "Tarayıcı Simgesi"
-            description: "Sitenizi küçük boyutlarda iyi görünen web tarayıcılarında göstermek için kullanılan simge resmi. Önerilen resim uzantıları PNG veya JPG'dir. Varsayılan olarak kare logosunu kullanacağız."
           large_icon:
             label: "Büyük Simge"
-            description: "Sitenizi daha büyük boyutlarda iyi görünen modern cihazlarda göstermek için kullanılan simge resmi. İdeal olarak 512 × 512'den daha büyük. Varsayılan olarak kare logosunu kullanacağız."
+      corporate:
+        title: "İletişim & Organizasyon"
+        fields:
+          company_name:
+            label: "Şirket Adı"
+            placeholder: "Örnek Organizasyon"
+          governing_law:
+            label: "Geçerli Kanun"
+            placeholder: "Kaliforniya kanunu"
+          contact_url:
+            label: "Ağ Sayfası"
+            placeholder: "https://www.örnek.com/iletişim"
+            description: "Siz veya kuruluşunuz için genel iletişim web sayfası. <a href='%{base_path}/about' target='_blank'>Sizin hakkımda sayfanızda gösterilecek</a> ."
+          city_for_disputes:
+            label: "Anlaşmazlıklar Şehri"
+            placeholder: "San Francisco, Kaliforniya"
+          site_contact:
+            label: "Otomatik İletiler"
+            description: "Raporlanma uyarısı ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel iletileri bu kullanıcıdan gönderilecektir."
       invites:
         title: "Görevli Davet Et"
         description: "Neredeyse bitti! Bazı insanları, topluluğunuzu başlatmak için ilginç konular ve yanıtlarla <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınıza</a> yardımcı olmaya davet edelim."

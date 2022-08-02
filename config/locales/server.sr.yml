@@ -480,33 +480,14 @@ sr:
       name: Čitač
   wizard:
     step:
-      locale:
-        title: "Dobrodošli na vaš Discourse"
-        fields:
-          default_locale:
-            description: "Koji je podrazumevani jezik vaše zajednice?"
-      forum_title:
-        title: "Ime foruma"
-        description: "Naziv foruma je <i>prva</i> stvar koju će posetioci primetiti. Šta vaše ime govori o vašoj zajednici?"
+      introduction:
         fields:
           title:
-            label: "Ime vaše zajednice"
             placeholder: "Milenino mesto za bleju"
           site_description:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
-      introduction:
-        title: "Uvod"
-        fields:
-          welcome:
-            label: "Tema dobrodošlice"
-            description: "<p>Kako biste najbolje opisali vašu zajednicu totalnom strancu u liftu u 1 minuti?</p> <ul> <li>Za koga su ove diskusije?</li> <li>Šta ovde mogu da pronađem?</li> <li>Zašto bih ovo posećivao?</li> </ul> <p>Vaša tema dobrodošlice je prvo što će novi posetioci pročitati. Posmatrajte je to kao <b>vašu misiju</b> u jednom paragrafu. </p>"
-            one_paragraph: "Molimo da vaša poruka dobrodošlice ne bude duža od jednog paragrafa."
-      contact:
-        fields:
-          contact_email:
-            placeholder: "ime@primer.com"
-      corporate:
-        title: "Organizacija"
+      ready:
+        title: "Vaš Discource je spreman!"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"

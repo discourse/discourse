@@ -2161,6 +2161,7 @@ sv:
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
+      delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days setting eller större än %{max}"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -4069,83 +4070,38 @@ sv:
   wizard:
     title: "Discourse-inställningar"
     step:
-      locale:
-        title: "Välkommen till din Discourse!"
-        fields:
-          default_locale:
-            description: "Vilket är standardspråket för ditt forum?"
-      forum_title:
-        title: "Namn"
-        description: "Ditt namn är en skylt som syns på avstånd, det <i>första</i> som potentiella besökare kommer att notera om ditt forum. Vad säger ditt namn och din titel om forumet?"
+      introduction:
+        title: "Berätta för oss om ditt forum"
         fields:
           title:
-            label: "Ditt forums namn"
+            label: "Forumets namn"
             placeholder: "Här hänger Jane!"
           site_description:
-            label: "Beskriv din gemenskap i en kort mening (används i sökresultat och sociala medier)"
+            label: "Beskriv ditt forum i en mening"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
-          short_site_description:
-            label: "Beskriv din gemenskap med några få ord (används för hemsidans titel)"
-            placeholder: "Bästa forumet någonsin"
-      introduction:
-        title: "Introduktion"
-        disabled: "<p>Vi kunde inte hitta något ämne med rubriken ”%{topic_title}”.</p> <ul> <li>Om du har ändrat rubriken redigerar du det ämnet för att ändra webbplatsens introduktionstext.</li> <li>Om du har raderat detta ämne skapar du ett annat med ”%{topic_title}” som rubrik. Innehållet i det första inlägget är webbplatsens introduktionstext.</li> </ul>"
-        fields:
-          welcome:
-            label: "Välkomstämne"
-            description: "<p>Hur skulle du beskriva ditt forum för en främling under en hissfärd på cirka 1 minut?</p> <ul> <li>Vem är dessa diskussioner för?</li> <li>Vad kan jag hitta här?</li> <li>Varför ska jag besöka?</li> </ul> <p>Ditt välkomstämne är det första som nyanlända kommer att läsa. Tänk på det som ditt <b>kortfattade</b> 'säljargument' eller 'målbeskrivning'.</p>"
-            one_paragraph: "Vi ber dig begränsa ditt välkomstmeddelande till ett stycke."
-            extra_description: "Om du är osäker kan du hoppa över det här steget och redigera ditt välkomstämne senare."
-      privacy:
-        title: "Tillgång"
-        description: "<p>Är ditt forum öppet för alla, eller begränsas det av medlemskap, inbjudan eller godkännande? Om du föredrar kan du ställa in saker privat och sedan byta till offentligt senare.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Offentligt"
-                description: "Vem som helst kan nå detta forum"
-              restricted:
-                label: "Privat"
-                description: "Endast inloggade användare kan komma åt det här forumet"
-          privacy_options:
-            description: "Hur registrerar sig nya användare för ett konto?"
-            choices:
-              open:
-                label: "Användare kan registrera sig på egen hand."
-              invite_only:
-                label: "Användare måste bjudas in av betrodda användare eller personal innan de kan registrera sig."
-              must_approve:
-                label: "Användare kan registrera sig på egen hand, men måste godkännas av personalen."
-      contact:
-        title: "Kontakt"
-        fields:
           contact_email:
-            label: "E-post"
-            placeholder: "namn@exempel.com"
-            description: "E-postadress för den person eller grupp som är ansvarig för detta forum. Används för kritiska aviseringar som ohanterade flaggor, säkerhetsuppdateringar och på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande kontakt med forumet."
-          contact_url:
-            label: "Webbsida"
-            placeholder: "https://www.exempel.se/kontakta-oss"
-            description: "Allmän kontaktsida för dig eller din organisation. Visas på din <a href='%{base_path}/about' target='_blank'>Om-sida</a>."
-          site_contact:
-            label: "Automatiska meddelanden"
-            description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
-      corporate:
-        title: "Organisation"
-        description: "Den här informationen kommer att anges i dina <a href='%{base_path}/tos' target='blank'>användarvillkor</a>, vilket är ett ämne du kan redigera i personalkategorin. Om du inte har ett företag kan du hoppa över det här steget nu."
+            label: "Kontaktpunkt"
+            placeholder: "exempel@användare.com"
+            description: "Person eller grupp som är ansvarig för detta forum. Används för kritiska uppdateringar, och listas på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande kontakt."
+          default_locale:
+            label: "Språk"
+      privacy:
+        title: "Medlemmarnas erfarenhet"
         fields:
-          company_name:
-            label: "Företagsnamn"
-            placeholder: "Exempelorganisation"
-          governing_law:
-            label: "Gällande lag"
-            placeholder: "Kalifornisk lag"
-          city_for_disputes:
-            label: "Domstol vid tvist"
-            placeholder: "San Francisco, Kalifornien"
+          login_required:
+            placeholder: "Privat"
+            extra_description: "Endast inloggade användare kan komma åt det här forumet"
+          invite_only:
+            placeholder: "Endast med inbjudan"
+            extra_description: "Användare måste bjudas in av betrodda användare eller personal, men därefter kan användare registrera sig på egen hand"
+          must_approve_users:
+            placeholder: "Kräv godkännande"
+            extra_description: "Användare måste godkännas av personalen"
+      ready:
+        title: "Din Discourse är redo!"
+        description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"
       styling:
-        title: "Formatering"
+        title: "Utseende och känsla"
         fields:
           color_scheme:
             label: "Färgschema"
@@ -4166,6 +4122,8 @@ sv:
                 label: "Kategorier med utvalda ämnen"
               categories_and_latest_topics:
                 label: "Kategorier med senaste ämnen"
+              categories_and_latest_topics_created_date:
+                label: "Kategorier och senaste ämnen (sorteras efter datumet då ämnet skapades)"
               categories_and_top_topics:
                 label: "Kategorier och toppämnen"
               categories_boxes:
@@ -4174,24 +4132,43 @@ sv:
                 label: "Kategoriboxar med ämnen"
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
-      logos:
-        title: "Logotyper"
+      branding:
+        title: "Forumets logotyp"
         fields:
           logo:
             label: "Primär logo"
             description: "Logotypen i din hemsidas övre vänstra hörn. Använd en bred rektangulär bild med en höjd på 120 och ett storleksförhållande som är större än 3:1"
           logo_small:
             label: "Fyrkantig logga"
-            description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet på din hemsida när du scrollar ner, i webbläsaren, samt när du delar på sociala plattformar. Helst större än 512 x 512."
-      icons:
-        title: "Ikoner"
-        fields:
+            description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet när du scrollar ner, samt när du delar på sociala plattformar. Helst större än 512 x 512."
           favicon:
             label: "Webbläsarikon"
-            description: "Ikonbild i mindre storlekar som används för att representera din webbplats på enheter som ser bättre ut i mindre storlekar. Rekommenderade bildformat är PNG eller JPG. Vi använder den fyrkantiga logotypen som standard."
+            description: "Ikon som används för att representera din webbplats i webbläsare och som ser bra ut i små storlekar. PNG eller JPG rekommenderas. Som standard används en fyrkantig logotyp."
           large_icon:
             label: "Stor ikon"
-            description: "Ikonbild i större storlekar som används för att representera din webbplats på moderna enheter som klarar större storlekar. Helst större än 512 × 512. Vi använder den fyrkantiga logotypen som standard."
+            description: "Ikon som används för att representera din webbplats på mobila enheter och som ser bra ut i större storlekar. Helst större än 512x512. Som standard används en fyrkantig logotyp."
+      corporate:
+        title: "Kontakt och organisation"
+        fields:
+          company_name:
+            label: "Företagsnamn"
+            placeholder: "Exempelorganisation"
+            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+          governing_law:
+            label: "Gällande lag"
+            placeholder: "Kalifornisk lag"
+            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+          contact_url:
+            label: "Webbsida"
+            placeholder: "https://www.exempel.se/kontakta-oss"
+            description: "Allmän kontaktsida för dig eller din organisation. Visas på din <a href='%{base_path}/about' target='_blank'>Om-sida</a>."
+          city_for_disputes:
+            label: "Domstol vid tvist"
+            placeholder: "San Francisco, Kalifornien"
+            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+          site_contact:
+            label: "Automatiska meddelanden"
+            description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."

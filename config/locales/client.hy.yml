@@ -2880,6 +2880,7 @@ hy:
       new_count:
         one: "%{count} նոր"
         other: "%{count} նոր"
+      more: "Ավելին..."
       sections:
         messages:
           header_link_text: "Հաղորդագրություններ"
@@ -4235,15 +4236,13 @@ hy:
           replace: "Փոխարինել"
   wizard_js:
     wizard:
-      done: "Կատարված է"
-      finish: "Ավարտել"
       back: "Ետ"
       next: "Հաջորդը"
+      step-text: "Քայլը"
       step: "%{current} %{total}-ից"
       upload: "Վերբեռնել"
       uploading: "Վերբեռնում..."
       upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-      quit: "Միգուցե ավելի ուշ"
       staff_count:
         one: "Ձեր համայնքը ունի անձնակազմի %{count} անդամ՝ Դուք:"
         other: "Ձեր համայնքն ունի անձնակազմի %{count} անդամ՝ Դուք ներառյալ:"

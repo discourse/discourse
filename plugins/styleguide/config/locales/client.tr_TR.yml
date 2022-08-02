@@ -87,3 +87,8 @@ tr_TR:
           title: "Spinners"
         empty_state:
           title: "Boş Durum"
+        rich_tooltip:
+          title: "Detaylı ipucu"
+          description: "Açıklama"
+          header: "Başlık"
+          hover_to_see: "İpucu için fareyle üzerine gelin"

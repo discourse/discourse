@@ -26,3 +26,6 @@ et:
           title: "Postitus"
         suggested_topics:
           title: "Soovitatud teemad"
+        rich_tooltip:
+          description: "Kirjeldus"
+          header: "Päis"
