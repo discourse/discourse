@@ -20,6 +20,7 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service siteSettings;
   @service messageBus;
   @service currentUser;
+  @service session;
 
   @cached
   get topicTrackingState() {
@@ -31,11 +32,5 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   get site() {
     const applicationInstance = getOwner(this);
     return applicationInstance.lookup("site:main");
-  }
-
-  @cached
-  get session() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("session:main");
   }
 }
