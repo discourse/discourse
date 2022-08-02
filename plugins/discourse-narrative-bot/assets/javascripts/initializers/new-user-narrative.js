@@ -7,7 +7,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 const PLUGIN_ID = "new-user-narrative";
 
 function initialize(api) {
-  const messageBus = api.container.lookup("message-bus:main");
+  const messageBus = api.container.lookup("service:message-bus");
   const currentUser = api.getCurrentUser();
   const appEvents = api.container.lookup("service:app-events");
 
