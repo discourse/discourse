@@ -263,8 +263,7 @@ RSpec.describe Reviewable, type: :model do
         list = Reviewable.unseen_list_for(admin, preload: false)
         expect(list).to contain_exactly(mod_reviewable, group_reviewable)
         admin.update!(last_seen_reviewable_id: group_reviewable.id)
-        list = Reviewable.unseen_list_for(admin, preload: false).pluck(:id)
-        expect(list).to be_empty
+        expect(Reviewable.unseen_list_for(admin, preload: false).empty?).to eq(true)
       end
     end
 
