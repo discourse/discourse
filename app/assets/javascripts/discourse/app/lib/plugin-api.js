@@ -97,6 +97,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import DiscourseURL from "discourse/lib/url";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -484,15 +485,27 @@ class PluginApi {
 
       if (siteSettings.enable_experimental_sidebar_hamburger) {
         try {
-          const { route, label, rawLabel, className } = fn();
+          const { href, route, label, rawLabel, className } = fn();
           const textContent = rawLabel || I18n.t(label);
 
-          this.addCommunitySectionLink({
+          const args = {
             name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
-            route,
             title: textContent,
             text: textContent,
-          });
+          };
+
+          if (href) {
+            if (DiscourseURL.isInternal(href)) {
+              args.href = href;
+            } else {
+              // Skip external links support for now
+              return;
+            }
+          } else {
+            args.route = route;
+          }
+
+          this.addCommunitySectionLink(args);
         } catch {
           deprecated(
             `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
@@ -1699,7 +1712,8 @@ class PluginApi {
    *
    * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
-   * @param {string} arg.route - The Ember route of the link.
+   * @param {string=} arg.route - The Ember route name to generate the href attribute for the link.
+   * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
    */

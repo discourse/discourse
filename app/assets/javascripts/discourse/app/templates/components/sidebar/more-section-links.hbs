@@ -7,7 +7,8 @@
     @content={{this.activeSectionLink.text}}
     @currentWhen={{this.activeSectionLink.currentWhen}}
     @badgeText={{this.activeSectionLink.badgeText}}
-    @model={{this.activeSectionLink.model}} />
+    @model={{this.activeSectionLink.model}}
+    @models={{this.activeSectionLink.models}} />
 {{/if}}
 
 <details class="sidebar-more-section-links-details" {{on "toggle" this.toggleSectionLinks}}>
@@ -29,7 +30,8 @@
           @content={{sectionLink.text}}
           @currentWhen={{sectionLink.currentWhen}}
           @badgeText={{sectionLink.badgeText}}
-          @model={{sectionLink.model}} />
+          @model={{sectionLink.model}}
+          @models={{sectionLink.models}} />
       {{/each}}
     </div>
   {{/if}}
