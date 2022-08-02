@@ -65,7 +65,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
         updates = {}
         user.group_users.each do |gu|
           updates.merge!(all_updates[gu.group_id])
-          count += counts[gu.group_id] || 0
+          count += counts[gu.group_id]
         end
         if redesigned_menu_enabled_user_ids.include?(user.id)
           notify_user(user, updates)
