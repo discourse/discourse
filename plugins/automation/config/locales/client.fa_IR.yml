@@ -80,6 +80,10 @@ fa_IR:
           fields:
             restricted_category:
               label: دسته‌بندی
+        pm_created:
+          fields:
+            restricted_user:
+              label: کاربر
         after_post_cook:
           fields:
             restricted_category:

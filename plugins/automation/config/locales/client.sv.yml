@@ -143,6 +143,13 @@ sv:
             restricted_category:
               label: Kategori
               description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
+        pm_created:
+          fields:
+            restricted_user:
+              label: Användare
+            valid_trust_levels:
+              label: Giltiga förtroendenivåer
+              description: Kommer att utlösa endast om inlägg skapas av användare i dessa förtroendenivåer, standard är alla förtroendenivåer
         after_post_cook:
           fields:
             valid_trust_levels:

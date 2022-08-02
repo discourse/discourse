@@ -27,6 +27,9 @@ he:
         transition_placeholder: "מדרגה %{from_level_name} אל %{to_level_name}"
       post_created_edited:
         title: פוסט נוצר/נערך
+      pm_created:
+        title: נוצרה הודעה פרטית
+        description: כאשר הודעה פרטית תקפה האוטומציה תוקפץ
       topic:
         title: נושא
       after_post_cook:
@@ -44,6 +47,7 @@ he:
       pin_topic:
         title: נעיצת נושא
       banner_topic:
+        title: להציב ככרזה לנושא
         description: הפיכת נושא לכרזה
       gift_exchange:
         title: החלפת מתנות
