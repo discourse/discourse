@@ -2246,6 +2246,14 @@ zh_CN:
       generic_no_items: "此列表中没有内容。"
       sr_menu_tabs: "菜单选项卡"
       view_all_notifications: "查看所有通知"
+      reviewable:
+        view_all: "查看所有审查项目"
+        queue: "队列"
+        deleted_user: "(删除用户)"
+        post_number_with_topic_title: "帖子 #%{post_number} - %{title}"
+        new_post_in_topic: "%{title} 中的新帖子"
+        suspicious_user: "可疑用户 %{username}"
+        default_item: "可审查项目 #%{reviewable_id}"
     topics:
       new_messages_marker: "上次访问"
       bulk:
@@ -3575,6 +3583,7 @@ zh_CN:
       new_count:
         other: "%{count} 新"
       toggle_section: "切换部分"
+      more: "更多…"
       sections:
         messages:
           header_link_title: "私信"
@@ -4147,7 +4156,7 @@ zh_CN:
           and_x_more: "和其他 %{count} 个。"
           collapse: 收起
           uploads: "上传"
-          no_uploads: "您可以上传与您的主题相关的资产，例如字体和图片"
+          no_uploads: "您可以上传与您的主题相关的资源文件，例如字体和图片"
           add_upload: "添加上传"
           upload_file_tip: "选择要上传的资源（png、woff2 等）"
           variable_name: "SCSS 变量名："
@@ -5154,15 +5163,16 @@ zh_CN:
           replace: "替换"
   wizard_js:
     wizard:
-      done: "完成"
-      finish: "结束"
+      jump_in: "跳进去!"
+      finish: "退出设置"
       back: "返回"
       next: "下一步"
+      configure_more: "配置更多..."
+      step-text: "步骤"
       step: "%{current}/%{total}"
       upload: "上传"
       uploading: "正在上传…"
       upload_error: "抱歉，上传该文件时出错。请重试。"
-      quit: "以后再说"
       staff_count:
         other: "您的社区有 %{count} 位管理人员，包括您。"
       invites:

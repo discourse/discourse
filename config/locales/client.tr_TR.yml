@@ -2300,6 +2300,14 @@ tr_TR:
       generic_no_items: "Bu listede hiç öğe yok."
       sr_menu_tabs: "Menü sekmeleri"
       view_all_notifications: "tüm bildirimleri görüntüle"
+      reviewable:
+        view_all: "tüm gözden geçirme öğeleri"
+        queue: "Kuyruk"
+        deleted_user: "(silinmiş kullanıcı)"
+        post_number_with_topic_title: "gönderi #%{post_number} - %{title}"
+        new_post_in_topic: "%{title} başlığıyla yeni gönderi"
+        suspicious_user: "şüpheli kullanıcı %{username}"
+        default_item: "gözden geçirme öğesi #%{reviewable_id}"
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
@@ -3683,6 +3691,7 @@ tr_TR:
         one: "%{count} yeni"
         other: "%{count} yeni"
       toggle_section: "bölümü değiştir"
+      more: "Daha..."
       sections:
         messages:
           header_link_title: "kişisel mesajlar"
@@ -4670,6 +4679,7 @@ tr_TR:
         show_words:
           one: "%{count} sözcük göster"
           other: "%{count} sözcük göster"
+        case_sensitive: "(büyük/küçük harfe duyarlı)"
         download: İndir
         clear_all: Tümünü Temizle
         clear_all_confirm: "%{action} eylemi için izlenen tüm sözcükleri temizlemek istediğinizden emin misiniz?"
@@ -4707,6 +4717,8 @@ tr_TR:
           exists: "Zaten mevcut"
           upload: "Dosyadan ekle"
           upload_successful: "Yükleme başarılı oldu. Sözcükler eklendi."
+          case_sensitivity_label: "Büyük/küçük harf duyarlıdır"
+          case_sensitivity_description: "Yalnızca büyük/küçük harf detayında eşleşen sözcükler"
         test:
           button_label: "Deneme"
           modal_title: "%{action}: İzlenen Sözcükleri Sına"
@@ -5254,15 +5266,16 @@ tr_TR:
           replace: "Değiştir"
   wizard_js:
     wizard:
-      done: "Tamamlandı"
-      finish: "Bitir"
+      jump_in: "Başla!"
+      finish: "Kurulumdan çık"
       back: "Geri"
       next: "İleri"
+      configure_more: "Daha Fazla Ayar..."
+      step-text: "Aralık"
       step: "%{current} / %{total}"
       upload: "Yükle"
       uploading: "Yükleniyor..."
       upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
-      quit: "Belki Sonra"
       staff_count:
         one: "Topluluğunuzda %{count} görevli üye var (siz)."
         other: "Toplulukta sen dahil toplam %{count} görevli üye var."

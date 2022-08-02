@@ -2181,6 +2181,7 @@ de:
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
+      delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4445,83 +4446,38 @@ de:
   wizard:
     title: "Discourse einrichten"
     step:
-      locale:
-        title: "Willkommen bei deinem Discourse!"
-        fields:
-          default_locale:
-            description: "Was ist die Standardsprache für deine Community?"
-      forum_title:
-        title: "Name"
-        description: "Der Name ist ein Zeichen, das aus der Ferne sichtbar ist, wahrscheinlich die <i>erste</i> Sache, die mögliche Besucher über deine Community bemerken werden. Was sagen dein Name und Titel über deine Community aus?"
+      introduction:
+        title: "Erzähl uns von deiner Community"
         fields:
           title:
-            label: "Name deiner Community"
+            label: "Name der Community"
             placeholder: "Erikas Stammtisch"
           site_description:
-            label: "Beschreibe deine Community in einem kurzen Satz (wird in Suchergebnissen und sozialen Medien verwendet)"
+            label: "Beschreibe deine Community in einem Satz"
             placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
-          short_site_description:
-            label: "Beschreibe deine Community in wenigen Worten (wird für den Homepage-Titel verwendet)"
-            placeholder: "Beste Community aller Zeiten"
-      introduction:
-        title: "Einführung"
-        disabled: "<p>Wir konnten kein Thema mit dem Titel „%{topic_title}“ finden</p>. <ul> <li>Wenn du den Titel geändert hast, bearbeite das Thema, um den Begrüßungstext deiner Website zu ändern.</li> <li>Wenn du das Thema gelöscht hast, erstelle einfach ein neues Thema mit dem Titel „%{topic_title}“. Der Inhalt des ersten Beitrags wird dann als Begrüßungstext deiner Website verwendet.</li> </ul>"
-        fields:
-          welcome:
-            label: "Willkommen-Thema"
-            description: "<p>Wie würdest du deine Community einem Fremden im Fahrstuhl in etwa einer Minute beschreiben?</p> <ul> <li>An wen richten sich die Diskussionen?</li> <li>Was kann ich hier finden?</li> <li>Warum lohnt es sich, vorbeizuschauen?</li> </ul> <p>Dein Willkommen-Thema ist die erste Sache, die neue Besucher sehen werden. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder als „Leitbild“ bestehend aus <b>einem Absatz</b>. </p>"
-            one_paragraph: "Bitte begrenze deine Begrüßungsnachricht auf einen Absatz."
-            extra_description: "Wenn du dir nicht sicher bist, kannst du diesen Schritt überspringen und dein Willkommen-Thema später bearbeiten."
-      privacy:
-        title: "Zugriff"
-        description: "<p>Ist deine Community für jeden offen oder ist sie auf Mitgliedschaft, Einladung oder Genehmigung beschränkt? Wenn du es vorziehst, die Dinge privat einzurichten, dann schalte später auf öffentlich um.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Öffentlich"
-                description: "Jeder kann auf diese Community zugreifen"
-              restricted:
-                label: "Privat"
-                description: "Nur angemeldete Benutzer können auf diese Community zugreifen"
-          privacy_options:
-            description: "Wie registrieren neue Benutzer ein Benutzerkonto?"
-            choices:
-              open:
-                label: "Benutzer können sich selbst registrieren."
-              invite_only:
-                label: "Benutzer müssen von vertrauenswürdigen Benutzern oder Team-Mitgliedern eingeladen werden, bevor sie sich registrieren können."
-              must_approve:
-                label: "Benutzer können sich selbst registrieren, müssen jedoch von Team-Mitgliedern genehmigt werden."
-      contact:
-        title: "Kontakt"
-        fields:
           contact_email:
-            label: "Mail"
-            placeholder: "name@example.com"
-            description: "E-Mail-Adresse der verantwortlichen Person oder Gruppe für diese Community. Wird verwendet für kritische Benachrichtigungen wie unbehandelte Meldungen, Sicherheitsaktualisierungen sowie für die dringende Kontaktaufnahme über <a href='%{base_path}/about' target='_blank'>deine Seite „Über uns“</a>."
-          contact_url:
-            label: "Webseite"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Allgemeine Kontakt-Webseite für dich oder deine Organisation. Wird auf der <a href='%{base_path}/about' target='_blank'>Seite „Über uns“</a> angezeigt."
-          site_contact:
-            label: "Automatische Nachrichten"
-            description: "Alle automatischen persönlichen Discourse-Nachrichten werden von diesem Benutzer geschickt, z. B. Warnungen zu Meldungen und Benachrichtigungen über den Abschluss von Backups."
-      corporate:
-        title: "Organisation"
-        description: "Diese Informationen werden einfügt in deine <a href='%{base_path}/tos' target='blank'>Nutzungsbedingungen</a>. Dies ist ein Thema, das du in der Team-Kategorie bearbeiten kannst. Wenn du keine Firma hast, kannst du diesen Schritt einfach überspringen."
+            label: "Ansprechpartner"
+            placeholder: "example@user.com"
+            description: "Person oder Gruppe, die für diese Community verantwortlich ist. Wird für kritische Aktualisierungen verwendet und auf <a href='%{base_path}/about' target='_blank'>Ihrer Über-Seite</a> für dringenden Kontakt aufgelistet."
+          default_locale:
+            label: "Sprache"
+      privacy:
+        title: "Mitgliedererfahrung"
         fields:
-          company_name:
-            label: "Firmenname"
-            placeholder: "Beispiel-Organisation"
-          governing_law:
-            label: "Anzuwendendes Recht"
-            placeholder: "Deutsches Recht"
-          city_for_disputes:
-            label: "Stadt für Rechtsstreitigkeiten"
-            placeholder: "Berlin"
+          login_required:
+            placeholder: "Privat"
+            extra_description: "Nur angemeldete Benutzer können auf diese Community zugreifen"
+          invite_only:
+            placeholder: "Nur einladen"
+            extra_description: "Benutzer müssen von vertrauenswürdigen Benutzern oder Team-Mitgliedern eingeladen werden, andernfalls können sich Benutzer selbst anmelden"
+          must_approve_users:
+            placeholder: "Genehmigung erfordern"
+            extra_description: "Benutzer müssen von den Team-Mitgliedern genehmigt werden"
+      ready:
+        title: "Dein Discourse ist bereit!"
+        description: "Das war's! Du hast die Grundlagen für die Einrichtung deiner Community geschaffen. Jetzt kannst du dich umsehen, ein Willkommensthema schreiben und Einladungen verschicken!<br><br>Viel Spaß!"
       styling:
-        title: "Styling"
+        title: "Look & Feel"
         fields:
           color_scheme:
             label: "Farbschema"
@@ -4542,6 +4498,8 @@ de:
                 label: "Kategorien mit hervorgehobenen Themen"
               categories_and_latest_topics:
                 label: "Kategorien und aktuelle Themen"
+              categories_and_latest_topics_created_date:
+                label: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
               categories_and_top_topics:
                 label: "Kategorien und angesagte Themen"
               categories_boxes:
@@ -4550,24 +4508,43 @@ de:
                 label: "Kategorie-Boxen mit Themen"
               subcategories_with_featured_topics:
                 label: "Unterkategorien mit hervorgehobenen Themen"
-      logos:
-        title: "Logos"
+      branding:
+        title: "Community Branding"
         fields:
           logo:
             label: "Hauptlogo"
             description: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1."
           logo_small:
             label: "Quadratisches Logo"
-            description: "Eine quadratische Version deines Logos. Es wird beim Scrollen in der oberen linke Ecke deiner Website gezeigt, im Browser und beim Teilen auf sozialen Netzwerken. Idealerweise größer als 512 x 512."
-      icons:
-        title: "Symbole"
-        fields:
+            description: "Eine quadratische Version deines Logos. Es wird beim Scrollen in der oben links angezeigt und beim Teilen auf sozialen Netzwerken. Idealerweise größer als 512 x 512."
           favicon:
             label: "Browser-Symbol"
-            description: "Symbol, um deine Website in Browsern zu repräsentieren, das in kleinen Größen gut aussieht. Empfohlene Formate sind PNG oder JPG. Wir werden standardmäßig das quadratische Logo verwenden."
+            description: "Ein Icon, das deine Website in Webbrowsern darstellt und auch bei kleinen Größen gut aussieht. PNG oder JPG wird empfohlen. Standardmäßig wird ein quadratisches Logo verwendet."
           large_icon:
             label: "Großes Symbol"
-            description: "Symbol, um deine Website auf modernen Geräten zu repräsentieren, das in größeren Größen gut aussieht. Idealerweise größer als 512 x 512. Wir werden standardmäßig das quadratische Logo verwenden."
+            description: "Ein Icon, das deine Website auf mobilen Geräten darstellt und auch bei größeren Größen gut aussieht. Idealerweise größer als 512x512. Standardmäßig wird ein quadratisches Logo verwendet."
+      corporate:
+        title: "Kontakt & Organisation"
+        fields:
+          company_name:
+            label: "Firmenname"
+            placeholder: "Beispiel-Organisation"
+            description: "Eingetragen auf deiner Seite mit den Nutzungsbedingungen. Wenn es kein Unternehmen gibt, kannst du es überspringen."
+          governing_law:
+            label: "Anzuwendendes Recht"
+            placeholder: "Deutsches Recht"
+            description: "Eingetragen auf deiner Seite mit den Nutzungsbedingungen. Wenn es kein Unternehmen gibt, kannst du es überspringen."
+          contact_url:
+            label: "Webseite"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Allgemeine Kontakt-Webseite für dich oder deine Organisation. Wird auf der <a href='%{base_path}/about' target='_blank'>Seite „Über uns“</a> angezeigt."
+          city_for_disputes:
+            label: "Stadt für Rechtsstreitigkeiten"
+            placeholder: "Berlin"
+            description: "Eingetragen auf deiner Seite mit den Nutzungsbedingungen. Wenn es kein Unternehmen gibt, kannst du es überspringen."
+          site_contact:
+            label: "Automatische Nachrichten"
+            description: "Alle automatischen persönlichen Discourse-Nachrichten werden von diesem Benutzer geschickt, z. B. Warnungen zu Meldungen und Benachrichtigungen über den Abschluss von Backups."
       invites:
         title: "Team einladen"
         description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."

@@ -85,3 +85,6 @@ fi:
           title: "Yläpalkin kuvakkeet"
         spinners:
           title: "Latausnäkymät"
+        rich_tooltip:
+          description: "Kuvaus"
+          header: "Yläpalkki"

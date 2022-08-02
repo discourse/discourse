@@ -4287,6 +4287,7 @@ ar:
         few: "%{count} جديد"
         many: "%{count} جديدًا"
         other: "%{count} جديدة"
+      more: "المزيد..."
       sections:
         messages:
           header_link_text: "الرسائل"
@@ -5906,15 +5907,13 @@ ar:
           replace: "استبدال"
   wizard_js:
     wizard:
-      done: "تم"
-      finish: "إنهاء"
       back: "الرجوع"
       next: "التالي"
+      step-text: "المسافة"
       step: "%{current} من %{total}"
       upload: "تحميل"
       uploading: "جارٍ التحميل..."
       upload_error: "عذرًا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
-      quit: "ربما لاحقًا"
       staff_count:
         zero: "يضم مجتمعك %{count} عضو في فريق العمل."
         one: "يضم مجتمعك عضوًا واحدًا (%{count}) في فريق العمل (أنت)."

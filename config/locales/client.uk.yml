@@ -4085,6 +4085,7 @@ uk:
         many: "%{count} нова"
         other: "%{count} нова"
       toggle_section: "Переключити розділ"
+      more: "Ще..."
       sections:
         messages:
           header_link_title: "особисті повідомлення"
@@ -5702,15 +5703,13 @@ uk:
           replace: "Замінити"
   wizard_js:
     wizard:
-      done: "Виконано"
-      finish: "Закінчено"
       back: "Назад"
       next: "Далі"
+      step-text: "Крок"
       step: "%{current} з %{total}"
       upload: "Вивантажити"
       uploading: "Вивантаження..."
       upload_error: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
-      quit: "Можливо пізніше"
       staff_count:
         one: "У вашій спільноті %{count} співробітник (це ви)."
         few: "У вашій спільноті %{count} співробітника, включаючи вас."

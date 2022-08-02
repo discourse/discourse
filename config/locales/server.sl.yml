@@ -2002,37 +2002,20 @@ sl:
   wizard:
     title: "Postavitev Discourse"
     step:
-      locale:
-        title: "Dobrodošli na vaš Discourse forum!"
-        fields:
-          default_locale:
-            description: "Kateri je vaš privzet jezik skupnosti?"
-      forum_title:
-        title: "Polno ime"
-        description: "Vaše ime je znak, ki se vidi iz razdalje, je <i>prva</i> stvar, ki jo bodo potencialni obiskovalci opazili o vaši skupnosti. Kaj ime in naziv pove o vaši skupnosti?"
+      introduction:
         fields:
           title:
-            label: "Ime skupnosti"
             placeholder: "Mikijev klub"
           site_description:
             placeholder: "Prostor kjer Miki debatira s svojimi prijatelji o zanimivih zadevah "
-          short_site_description:
-            placeholder: "Najboljši klub"
+          default_locale:
+            label: "Jezik"
       privacy:
-        title: "Dostopnost"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Javno"
-              restricted:
-                label: "Zasebno"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-      corporate:
-        title: "Organizacija"
+          login_required:
+            placeholder: "Zasebno"
+          must_approve_users:
+            placeholder: "Zahtevaj odobritev"
       styling:
         fields:
           styling_preview:

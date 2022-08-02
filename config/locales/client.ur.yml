@@ -3640,6 +3640,7 @@ ur:
       new_count:
         one: "%{count} نیا"
         other: "%{count} نئے"
+      more: "مزید..."
       sections:
         messages:
           header_link_text: "پیغامات"
@@ -5208,15 +5209,13 @@ ur:
           replace: "بدلیں"
   wizard_js:
     wizard:
-      done: "مکمل"
-      finish: "ختم"
       back: "واپس"
       next: "اگلا"
+      step-text: "قدم"
       step: "%{total} میں سے %{current}"
       upload: "اَپ لوڈ"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
       upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
-      quit: "شاید بعد میں"
       staff_count:
         one: "آپ کی کمیونٹی میں %{count} اسٹاف کا رکن ہے (آپ)۔"
         other: "آپ کی کمیونٹی میں آپ سمیت، %{count} سٹاف کے ارکان ہیں۔"

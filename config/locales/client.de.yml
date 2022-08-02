@@ -1879,6 +1879,7 @@ de:
       categories_only: "Nur Kategorien"
       categories_with_featured_topics: "Kategorien mit hervorgehobenen Themen"
       categories_and_latest_topics: "Kategorien und aktuelle Themen"
+      categories_and_latest_topics_created_date: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
       categories_and_top_topics: "Kategorien und angesagte Themen"
       categories_boxes: "Boxen mit Unterkategorien"
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
@@ -2341,6 +2342,14 @@ de:
       generic_no_items: "Es gibt keine Einträge in dieser Liste."
       sr_menu_tabs: "Menü-Registerkarten"
       view_all_notifications: "Alle Benachrichtigungen anzeigen"
+      reviewable:
+        view_all: "alle Bewertungselemente ansehen"
+        queue: "Warteschlange"
+        deleted_user: "(gelöschter Benutzer)"
+        post_number_with_topic_title: "Beitrag #%{post_number} - %{title}"
+        new_post_in_topic: "neuer Beitrag in %{title}"
+        suspicious_user: "Verdächtiger Benutzer %{username}"
+        default_item: "Überprüfbarer Artikel #%{reviewable_id}"
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
@@ -3745,6 +3754,7 @@ de:
         one: "%{count} neue"
         other: "%{count} neue"
       toggle_section: "Abschnitt umschalten"
+      more: "Mehr …"
       sections:
         messages:
           header_link_title: "Persönliche Nachrichten"
@@ -4751,6 +4761,7 @@ de:
         show_words:
           one: "zeige %{count} Wort"
           other: "zeige %{count} Wörter"
+        case_sensitive: "(Groß-/Kleinschreibung beachten)"
         download: Herunterladen
         clear_all: Alle löschen
         clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
@@ -4788,6 +4799,8 @@ de:
           exists: "Existiert bereits"
           upload: "Aus Datei hinzufügen"
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
+          case_sensitivity_label: "Groß- und Kleinschreibung wird unterschieden"
+          case_sensitivity_description: "Nur Wörter mit passender Schreibweise"
         test:
           button_label: "Test"
           modal_title: "%{action}: Beobachtete Wörter testen"
@@ -5337,15 +5350,16 @@ de:
           replace: "Ersetzen"
   wizard_js:
     wizard:
-      done: "Erledigt"
-      finish: "Fertig"
+      jump_in: "Spring rein!"
+      finish: "Installation verlassen"
       back: "Zurück"
       next: "Nächstes"
+      configure_more: "Konfigurieren Mehr..."
+      step-text: "Schrittweite"
       step: "%{current} von %{total}"
       upload: "Hochladen"
       uploading: "Wird hochgeladen …"
       upload_error: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-      quit: "Vielleicht später"
       staff_count:
         one: "Deine Community hat %{count} Team-Mitglied (du)."
         other: "Deine Community hat %{count} Team-Mitglieder (einschließlich dir)."

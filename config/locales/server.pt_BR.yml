@@ -4330,83 +4330,24 @@ pt_BR:
   wizard:
     title: "Configuração do Discourse"
     step:
-      locale:
-        title: "Boas-vindas ao seu Discourse!"
-        fields:
-          default_locale:
-            description: "Qual é o idioma padrão para sua comunidade?"
-      forum_title:
-        title: "Nome"
-        description: "Seu nome é o seu cartão de visita, a <i>primeira</i> coisa que os possíveis visitantes notarão na sua comunidade. O que seu nome e título dizem sobre ela?"
+      introduction:
         fields:
           title:
-            label: "Nome de sua comunidade"
             placeholder: "Hangout de Jane"
           site_description:
-            label: "Descreva sua comunidade em uma frase curta (usada nos resultados de busca e mídias sociais)"
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
-          short_site_description:
-            label: "Descreva sua comunidade em poucas palavras (usadas no título da página inicial)"
-            placeholder: "Melhor comunidade de todos os tempos"
-      introduction:
-        title: "Introdução"
-        disabled: "<p>Não encontramos nenhum tópico com o título de “%{topic_title}”.</p> <ul> <li>Se você tiver alterado o título, edite o tópico para modificar o texto introdutório do seu site.</li> <li>Se tiver excluído o tópico, crie outro com o título de “%{topic_title}”. O conteúdo da primeira postagem é o texto introdutório do seu site.</li> </ul>"
-        fields:
-          welcome:
-            label: "Tópico de boas-vindas"
-            description: "<p>Como você descreveria sua comunidade para um(a) estranho(a) em um elevador durante cerca de 1 minuto?</p> <ul> <li>Para quem são essas discussões?</li> <li>O que posso encontrar aqui?</li> <li>Por que eu deveria acessar?</li> </ul> <p>Seu tópico de boas-vindas é a primeira coisa que os(as) recém-chegados(as) vão ler. Pense nele como um \"argumento de elevador\" ou \"declaração de missão\" de <b>um parágrafo</b>.</p>"
-            one_paragraph: "Reduza sua mensagem de boas-vindas para um parágrafo."
-            extra_description: "Se não tiver certeza, pule este passo e edite seu tópico de boas-vindas mais tarde."
+          default_locale:
+            label: "Idioma"
       privacy:
-        title: "Acesso"
-        description: "<p>A sua comunidade é aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, você pode configurar as coisas de forma privada e depois torná-la pública mais tarde.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Público"
-                description: "Qualquer um(a) pode acessar esta comunidade"
-              restricted:
-                label: "Privado(a)"
-                description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
-          privacy_options:
-            description: "Como novos(as) usuários(as) criam uma conta?"
-            choices:
-              open:
-                label: "Os usuários(as) podem criar uma conta por conta própria."
-              invite_only:
-                label: "Usuários(as) precisam ser convidados(as) por usuários(as) confiáveis ou pela equipe antes de poderem criar a conta."
-              must_approve:
-                label: "Usuários(as) podem criar sua conta por conta própria, mas devem ser aprovados pela equipe."
-      contact:
-        title: "Contato"
-        fields:
-          contact_email:
-            label: "E-mail"
-            placeholder: "nome@exemplo.com"
-            description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='%{base_path}/about' target='_blank'>sua página Sobre, para entrar em contato com a comunidade imediatamente."
-          contact_url:
-            label: "Página da web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Página de contato geral para você ou sua organização. Será exibida no <a href='%{base_path}/about' target='_blank'>sua página Sobre</a>."
-          site_contact:
-            label: "Mensagens automáticas"
-            description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
-      corporate:
-        title: "Organização"
-        description: "Estas informações serão inseridas nos seus <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, que é um tópico que você pode editar na categoria da equipe. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
-        fields:
-          company_name:
-            label: "Nome da empresa"
-            placeholder: "Exemplo de organização"
-          governing_law:
-            label: "Lei aplicável"
-            placeholder: "Lei da Califórnia"
-          city_for_disputes:
-            label: "Cidade para disputas"
-            placeholder: "São Francisco, Califórnia"
+          login_required:
+            placeholder: "Privado(a)"
+            extra_description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
+          must_approve_users:
+            placeholder: "Requerer aprovação"
+      ready:
+        title: "Seu Discourse está pronto!"
       styling:
-        title: "Estilos"
         fields:
           color_scheme:
             label: "Esquema de cores"
@@ -4429,24 +4370,34 @@ pt_BR:
                 label: "Categorias e últimos tópicos"
               categories_and_top_topics:
                 label: "Categorias e melhores tópicos"
-      logos:
-        title: "Logotipos"
+      branding:
         fields:
           logo:
             label: "Logotipo primário"
-            description: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e uma proporção maior que 3:1"
           logo_small:
             label: "Logotipo quadrado"
-            description: "Uma versão quadrada do seu logotipo. Exibido no canto superior à esquerda do seu site ao rolar para baixo, no navegador, e ao compartilhar em plataformas de redes sociais. Idealmente maior que 512x512."
-      icons:
-        title: "Ícones"
-        fields:
           favicon:
             label: "Ícone do navegador"
-            description: "Imagem de ícone usada para representar seu site em navegadores com boa aparência em tamanhos pequenos. As extensões de imagem recomendadas são PNG ou JPG. Vamos usar o logotipo quadrado por padrão."
           large_icon:
             label: "Ícone grande"
-            description: "Imagem do ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. Idealmente maior que 512×512. Usaremos o logotipo quadrado por padrão."
+      corporate:
+        fields:
+          company_name:
+            label: "Nome da empresa"
+            placeholder: "Exemplo de organização"
+          governing_law:
+            label: "Lei aplicável"
+            placeholder: "Lei da Califórnia"
+          contact_url:
+            label: "Página da web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Página de contato geral para você ou sua organização. Será exibida no <a href='%{base_path}/about' target='_blank'>sua página Sobre</a>."
+          city_for_disputes:
+            label: "Cidade para disputas"
+            placeholder: "São Francisco, Califórnia"
+          site_contact:
+            label: "Mensagens automáticas"
+            description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
       invites:
         title: "Convidar equipe"
         description: "Você está quase pronto(as)! Vamos convidar algumas pessoas para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\ndivulgar as suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."

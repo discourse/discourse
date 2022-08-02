@@ -224,6 +224,7 @@ pl_PL:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć niewłaściwego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
+      twitter_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
@@ -438,6 +439,7 @@ pl_PL:
   bookmarks:
     errors:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego wpisu dwa razy."
+      already_bookmarked: "Nie możesz dodać zakładek tego samego %{type} dwukrotnie."
       too_many: "Przepraszamy, nie możesz dodać więcej niż %{limit} zakładek. Odwiedź stronę <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> aby niektóre usunąć."
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
@@ -1543,6 +1545,8 @@ pl_PL:
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
+    block_hotlinked_media: "Uniemożliwia użytkownikom wprowadzanie zdalnych (hotlinked) mediów w swoich postach. Zdalne nośniki, które nie są pobierane przez 'download_remote_images_to_local' zostaną zastąpione linkiem zastępczym."
+    block_hotlinked_media_exceptions: "Lista podstawowych adresów URL, które są wyłączone z ustawienia block_hotlinked_media. Dołącz protokół (np. https://example.com)."
     editing_grace_period: "Przez (n) sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     editing_grace_period_max_diff: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji, jeśli więcej zmieniono, zapisz kolejną wersję wpisu (poziom zaufania 0 i 1)"
     editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji, jeśli więcej zmieniono, zapisz kolejną wersję wpisu (poziom zaufania 2 i wyższy)"
@@ -2191,7 +2195,7 @@ pl_PL:
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
     company_name: "Nazwa firmy"
     governing_law: "Obowiązujące prawo"
-    city_for_disputes: "Miasto dyskusji"
+    city_for_disputes: "Miasto sporów"
     shared_drafts_category: "Włącz funkcję współdzielonych szkiców przez wyznaczenie kategorii dla szkiców tematów. Tematy w tej kategorii zostaną ukryte z list tematów dla personelu."
     shared_drafts_min_trust_level: "Zezwalaj użytkownikom na wyświetlanie i edycję wspólnych szkiców."
     push_notifications_prompt: "Wyświetl monit o zgodę użytkownika."
@@ -3770,6 +3774,18 @@ pl_PL:
     suspicious_login:
       title: "Alert nowego logowania"
       subject_template: "[%{site_name}] Nowe logowanie z %{location}"
+      text_body_template: |
+        Witaj,
+
+        Zauważyliśmy logowanie z urządzenia lub miejsca, którego zwykle nie używasz. Czy to byłeś Ty?
+
+         - Lokalizacja: %{location} (%{client_ip})
+         - Przeglądarka: %{browser}
+         - Urządzenie: %{device} - %{os}
+
+        Jeśli to byłeś Ty, to świetnie! Nie musisz robić nic więcej.
+
+        Jeśli to nie byłeś Ty, proszę [przejrzyj swoje dotychczasowe sesje] (%{base_url}/my/preferences/security) i rozważ zmianę hasła.
     post_approved:
       title: "Twój post został zatwierdzony"
       subject_template: "[%{site_name}] Twój post został zatwierdzony"
@@ -3871,6 +3887,8 @@ pl_PL:
     dark_rose: "Ciemna róża"
     wcag: "Jasny WCAG"
     wcag_theme_name: "Jasny WCAG"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
     wcag_dark: "Ciemny WCAG"
     wcag_dark_theme_name: "Ciemny WCAG"
     default_theme_name: "Domyślny"
@@ -4567,83 +4585,38 @@ pl_PL:
   wizard:
     title: "Instalacja Discourse"
     step:
-      locale:
-        title: "Witaj w swoim Discourse!"
-        fields:
-          default_locale:
-            description: "Jaki jest podstawowy język dla twojej społeczności?"
-      forum_title:
-        title: "Imię"
-        description: "Twoja nazwa jest znakiem widocznym z daleka, <i>Pierwszą</i> rzeczą, którą goście zobaczą w twojej społeczności. Co nazwa i tytuł mówią o twojej społeczności?"
+      introduction:
+        title: "Opowiedz nam o swojej społeczności"
         fields:
           title:
-            label: "Twoja pełna nazwa"
+            label: "Nazwa społeczności"
             placeholder: "Hangout Jane"
           site_description:
-            label: "Opisz swoją społeczność w jednym krótkim zdaniu (używanym w wynikach wyszukiwania i mediach społecznościowych)"
+            label: "Opisz swoja społeczność w jednym zdaniu."
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
-          short_site_description:
-            label: "Opisz swoją społeczność kilkoma słowami (używane do tytułu strony głównej)"
-            placeholder: "Najlepsza społeczność kiedykolwiek"
-      introduction:
-        title: "Wprowadzenie"
-        disabled: "<p>Nie znaleźliśmy żadnego tematu o tytule “%{topic_title}”.</p> <ul> <li>Jeśli zmieniłeś/łaś tytuł, edytuj ten temat, aby zmodyfikować tekst wprowadzający do witryny.</li> <li>Jeśli usunąłeś/łaś ten temat, utwórz kolejny temat z “%{topic_title}” jako tytuł. Treść pierwszego posta to tekst wprowadzający do Twojej witryny.</li> </ul>"
-        fields:
-          welcome:
-            label: "Temat powitalny"
-            description: "<p>Jak opisałbyś twoją społeczność nieznajomemu w windzie mając tylko 1 minutę?</p> <ul> <li>Dla kogo są te dyskusje?</li> <li>Gdzie mogę je znaleźć?</li> <li>Dlaczego powinienem odwiedzić tą społeczność?</li> </ul><p>Temat wprowadzający to pierwsza rzecz, którą nowi użytkownicy przeczytają. Pomyśl o tym, jak o <b>jednym paragrafie</b> 'sprzedanie pomysłu' lub 'misja przedsiębiorstwa'.</p>"
-            one_paragraph: "Ogranicz wiadomość powitalną do jednego akapitu."
-            extra_description: "Jeśli nie masz pewności, możesz pominąć ten krok i edytować temat powitalny później."
-      privacy:
-        title: "Dostęp"
-        description: "<p>Czy Twoja społeczność jest otwarta dla wszystkich, czy też jest ograniczona członkostwem, zaproszeniem lub ręcznym zatwierdzeniem? Jeśli wolisz, możesz ustawić tą opcje jako prywatne, a później przełączyć stronę w tryb publiczny.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Publiczne"
-                description: "Wszyscy mają dostęp do społeczności"
-              restricted:
-                label: "Prywatne"
-                description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
-          privacy_options:
-            description: "W jaki sposób użytkownicy rejestrują swoje konta?"
-            choices:
-              open:
-                label: "Użytkownicy mogą rejestrować się samodzielnie."
-              invite_only:
-                label: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub członków zespołu, zanim będą mogli się zarejestrować."
-              must_approve:
-                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
-      contact:
-        title: "Dane kontaktowe"
-        fields:
           contact_email:
-            label: "E-mail"
-            placeholder: "name@example.com"
-            description: "Adres email osoby lub grupy odpowiedzialnej za tą społeczność. Używany dla krytycznych powiadomień jak na przykład nieobsłużone oflagowania, aktualizację bezpieczeństwa i na <a href='%{base_path}/about' target='_blank'>stronie o Tobie</a> dla szybkiego kontaktu."
-          contact_url:
-            label: "Strona kontaktowa"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Ogólna strona kontaktowa do ciebie lub twojej organizacji. Będzie wyświetlana na <a href='%{base_path}/about' target='_blank'>stronie O Tobie</a>."
-          site_contact:
-            label: "Automatyczne wiadomości"
-            description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
-      corporate:
-        title: "Organizacja"
-        description: "Te informacje zostaną wprowadzone w <a href='%{base_path}/tos' target='blank'>warunkach korzystania z usługi</a>, czyli w temacie, który można edytować w ukrytej kategorii personelu. Jeśli nie masz firmy, możesz na razie pominąć ten krok."
+            label: "Punkt kontaktu"
+            placeholder: "example@user.com"
+            description: "Osoba lub grupa odpowiedzialna za tę społeczność. Używane do krytycznych aktualizacji i wymienione na <a href='%{base_path}/about' target='_blank'>o stronie</a> w celu pilnego kontaktu."
+          default_locale:
+            label: "Język"
+      privacy:
+        title: "Doświadczenie użytkownika"
         fields:
-          company_name:
-            label: "Nazwa firmy"
-            placeholder: "Przykładowa organizacja"
-          governing_law:
-            label: "Obowiązujące prawo"
-            placeholder: "Prawo kalifornijskie"
-          city_for_disputes:
-            label: "Miasto dyskusji"
-            placeholder: "Kalifornia, San Francisco"
+          login_required:
+            placeholder: "Prywatne"
+            extra_description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
+          invite_only:
+            placeholder: "Tylko zaproszenia"
+            extra_description: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub personel, w przeciwnym razie użytkownicy mogą zarejestrować się samodzielnie"
+          must_approve_users:
+            placeholder: "Wymaga zatwierdzenia"
+            extra_description: "Użytkownicy muszą być zatwierdzeni przez personel"
+      ready:
+        title: "Twój Discourse jest Gotowy!"
+        description: "Otóż to! Wykonałeś podstawowe czynności związane z utworzeniem swojej społeczności. Teraz możesz wejść i rozejrzeć się, napisać temat powitalny i wysłać zaproszenia!<br><br>Baw się dobrze!"
       styling:
-        title: "Stylizacja"
+        title: "Wygląd i odczucia"
         fields:
           color_scheme:
             label: "Schemat kolorów"
@@ -4664,6 +4637,8 @@ pl_PL:
                 label: "Kategorie z wybranymi tematami"
               categories_and_latest_topics:
                 label: "Kategorie i ostatnie tematy"
+              categories_and_latest_topics_created_date:
+                label: "Kategorie i najnowsze tematy (sortuj według daty utworzenia tematu)"
               categories_and_top_topics:
                 label: "Kategorie i najlepsze tematy"
               categories_boxes:
@@ -4672,24 +4647,43 @@ pl_PL:
                 label: "Bloki kategorii z tematami"
               subcategories_with_featured_topics:
                 label: "Podkategorie z polecanymi tematami"
-      logos:
-        title: "Loga"
+      branding:
+        title: "Branding społeczności"
         fields:
           logo:
             label: "Podstawowe logo"
-            description: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku proporcji większym niż 3:1"
+            description: "Logo w lewym górnym rogu Twojej witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku proporcji większym niż 3:1"
           logo_small:
             label: "Kwadratowe logo"
-            description: "Kwadratowa wersja Twojego logo. Wyświetlane w lewym górnym rogu witryny podczas przewijania w dół, w przeglądarce i podczas udostępniania na platformach społecznościowych. Idealna grafika powinna być większa niż 512x512."
-      icons:
-        title: "Ikony"
-        fields:
+            description: "Kwadratowa wersja Twojego logo. Wyświetlana w lewym górnym rogu podczas przewijania w dół i podczas udostępniania na platformach społecznościowych. Najlepiej w rozmiarze co najmniej 512x512."
           favicon:
             label: "Ikona przeglądarki"
-            description: "Obraz ikony używany do reprezentowania Twojej witryny w przeglądarkach internetowych, który dobrze wygląda w małych rozmiarach. Zalecane rozszerzenia graficzne to PNG lub JPG. Domyślnie użyjemy kwadratowego logo."
+            description: "Ikona służąca do reprezentowania Twojej witryny w przeglądarkach internetowych, która dobrze wygląda w małych rozmiarach. Zalecane jest PNG lub JPG. Domyślnie używane jest logo kwadratowe."
           large_icon:
             label: "Duża ikona"
-            description: "Obraz ikony używany do reprezentowania Twojej witryny na nowoczesnych urządzeniach, który dobrze wygląda w większych rozmiarach. Idealnie większy niż 512 × 512. Domyślnie użyjemy kwadratowego logo."
+            description: "Ikona używana do reprezentowania Twojej witryny na urządzeniach mobilnych, która dobrze wygląda w większych rozmiarach. Najlepiej, jeśli jest większa niż 512x512. Domyślnie używane jest logo kwadratowe."
+      corporate:
+        title: "Kontakt i organizacja"
+        fields:
+          company_name:
+            label: "Nazwa firmy"
+            placeholder: "Przykładowa organizacja"
+            description: "Podawana na stronie warunków korzystania z usługi. Możesz pominąć, jeśli żadna firma nie istnieje."
+          governing_law:
+            label: "Obowiązujące prawo"
+            placeholder: "Prawo kalifornijskie"
+            description: "Podawane na stronie warunków korzystania z usługi. Możesz pominąć, jeśli żadna firma nie istnieje."
+          contact_url:
+            label: "Strona kontaktowa"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Ogólna strona kontaktowa do ciebie lub twojej organizacji. Będzie wyświetlana na <a href='%{base_path}/about' target='_blank'>stronie O Tobie</a>."
+          city_for_disputes:
+            label: "Miasto sporów"
+            placeholder: "Kalifornia, San Francisco"
+            description: "Podawane na stronie warunków korzystania z usługi. Możesz pominąć, jeśli żadna firma nie istnieje."
+          site_contact:
+            label: "Automatyczne wiadomości"
+            description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."

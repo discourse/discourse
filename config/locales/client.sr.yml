@@ -1809,6 +1809,7 @@ sr:
         one: "%{count} nova"
         few: "%{count} novih"
         other: "%{count} nova"
+      more: "Više..."
       sections:
         messages:
           header_link_text: "Poruke"
@@ -2499,14 +2500,13 @@ sr:
           topics: "Teme"
   wizard_js:
     wizard:
-      done: "Gotovo"
       back: "Nazad"
       next: "Dalje"
+      step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      quit: "Možda kasnije"
       staff_count:
         one: "Tvoja zajednica ima %{count} člana tima (tebe). "
         few: "Vaša zajednica ima %{count} članova tima, uključujući i vas."

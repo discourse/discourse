@@ -307,6 +307,7 @@ ro:
       create: "Creare semn de carte"
       edit: "Editare semn de carte"
       not_bookmarked: "marchează ca semn de carte acest post"
+      remove_reminder_keep_bookmark: "Șterge memento-ul și păstrează semnul de carte"
       created_with_reminder: "Ai marcat această postare cu un memento %{date}. %{name}"
       remove: "Șterge semn de carte"
       delete: "Șterge semn de carte"
@@ -320,8 +321,9 @@ ro:
       auto_delete_preference:
         label: "După ce sunteți notificat"
         never: "Păstrați marcajul"
-        when_reminder_sent: "Ștergere semn de carte"
+        when_reminder_sent: "Șterge semn de carte"
         on_owner_reply: "Șterge marcajul, după ce răspund"
+        clear_reminder: "Păstrează semnul de carte și șterge memento-ul"
       search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:
@@ -563,10 +565,27 @@ ro:
       reject_reason:
         send_email: "Trimite un e-mail de respingere"
     relative_time_picker:
+      minutes:
+        one: "minut"
+        few: "minute"
+        other: "minute"
+      hours:
+        one: "oră"
+        few: "ore"
+        other: "ore"
       days:
         one: "zi"
-        few: "Zile"
+        few: "zile"
         other: "zile"
+      months:
+        one: "lună"
+        few: "luni"
+        other: "luni"
+      years:
+        one: "an"
+        few: "ani"
+        other: "ani"
+      relative: "Relativ"
     time_shortcut:
       now: "Acum"
       later_today: "Mai târziu azi"
@@ -587,6 +606,7 @@ ro:
       one_year: "Un an"
       forever: "Pentru totdeanua"
       never: "Niciodată"
+      last_custom: "Ultima dată personalizată"
       custom: "Data și ora personalizată"
       select_timeframe: "Alege un interval de timp"
     user_action:
@@ -1996,8 +2016,13 @@ ro:
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
       slow_mode_update:
+        title: "Modul lent"
+        select: "Utilizatorii pot posta în acest subiect doar o dată la fiecare:"
+        description: "Pentru a promova discuții aprofundate în mișcare rapidă sau controversate, utilizatorii trebuie să aștepte înainte de a posta din nou pe acest subiect."
         enable: "Activează"
         remove: "Dezactivează"
+        durations:
+          custom: "Durată personalizată"
       topic_status_update:
         title: "Temporizator subiect"
         save: "Setează temporizator"
@@ -2017,10 +2042,14 @@ ro:
         title: "Închide automat subiectul"
         error: "Introduceţi o valoare validă."
         based_on_last_post: "Nu închide până când ultima postare din subiect este măcar atât de veche."
+      auto_close_after_last_post:
+        title: "Închide automat subiectul după ultima postare"
       auto_delete:
         title: "Șterge automat subiect"
       reminder:
         title: "Amintește-mi"
+      auto_delete_replies:
+        title: "Șterge automat răspunsurile"
       status_update_notice:
         auto_open: "Acest subiect va fi deschis automat la %{timeLeft}."
         auto_close: "Acest subiect va fi automat închis în %{timeLeft}."
@@ -2088,10 +2117,13 @@ ro:
         open: "Deschide subiect"
         close: "Închide subiect"
         multi_select: "Selectează subiectele ..."
+        slow_mode: "Setează modul lent..."
+        timed_update: "Setează cronometrul subiectului..."
         pin: "Fixează subiect..."
         unpin: "Anulează subiect fixat..."
         unarchive: "Dezarhivează subiect"
         archive: "Arhivează subiect"
+        invisible: "Ascunde subiectul"
         reset_read: "Resetează datele despre subiecte citite"
         make_private: "Transformă în mesaj privat"
       feature:
@@ -2201,6 +2233,7 @@ ro:
         error: "A apărut o eroare la schimbarea autorului postărilor."
         placeholder: "numele de utilizator al autorului"
       change_timestamp:
+        title: "Schimbă data publicării..."
         action: "schimbă data publicării"
         invalid_timestamp: "Marcajul de timp nu poate fi în viitor."
         error: "A apărut o eroare la schimbarea marcajului de timp în subiect."
@@ -2893,6 +2926,7 @@ ro:
         one: "%{count} nou"
         few: "%{count} noi"
         other: "%{count} nou"
+      more: "Mai multe..."
       sections:
         messages:
           header_link_text: "Mesaje"
@@ -3891,14 +3925,13 @@ ro:
           topics: "Discuții"
   wizard_js:
     wizard:
-      done: "Terminat"
       back: "Înapoi"
       next: "Următorul"
+      step-text: "Pas"
       step: "%{current} din %{total}"
       upload: "Încărcare"
       uploading: "Se încarcă..."
       upload_error: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
-      quit: "Poate mai târziu"
       staff_count:
         one: "Comunitatea ta are %{count} membru (tu)."
         few: "Comunitatea ta are %{count} membri cu tot cu tine."

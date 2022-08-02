@@ -26,3 +26,6 @@ zh_TW:
           title: "貼文"
         suggested_topics:
           title: "推薦的話題"
+        rich_tooltip:
+          description: "描述"
+          header: "頁首"

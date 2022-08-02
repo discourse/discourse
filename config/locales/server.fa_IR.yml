@@ -2257,51 +2257,29 @@ fa_IR:
   wizard:
     title: "راه اندازی Discourse"
     step:
-      locale:
-        title: "به دیسکورس خوش آمدید!"
-        fields:
-          default_locale:
-            description: "زبان پیشفرض انجمن شما چیست؟"
-      forum_title:
-        title: "نام"
-        description: "ایمیل شما نشانه‌ایست که از دور دیده می‌شود، <i>اولین</i> چیزیست که بازدیدکنندگان احتمالی درباره انجمنتان از آن مطلع می‌شوند. نام و عنوان شما درباره انجمن چه می‌گوید."
+      introduction:
+        title: "در مورد انجمن خود به ما بگویید"
         fields:
           title:
-            label: "نام انجمن شما"
+            label: "نام انجمن"
             placeholder: "انجمن آزموده"
           site_description:
+            label: "انجمن خود را در یک جمله توصیف کنید"
             placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
-      introduction:
-        title: "مقدمه"
-        fields:
-          welcome:
-            label: "موضوع خوش‌آمد‌ گویی"
-            description: "<p>انجمن خود را به یک غریبه در 1 دقیقه چطور توضیح می‌دهید؟</p><ul> <li>این گفتگو ها برای چه کسانی هستند؟</li> <li>در اینجا چه چیزی پیدا می‌شود؟</li> <li>چرا باید بازدید کنم؟</li> </ul> <p>خوش آمد گویی اولین چیزیست که اعضا می‌بینند مثل یک <b>تک پاراگراف</b> 'زمین آسانسور' یا 'اساسنامه ماموریت' به آن نگاه کنید</p>"
-            one_paragraph: "لطفا پیام خوش‌آمد خود را به یک پاراگراف محدود کنید."
-      privacy:
-        title: "دسترسی"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "عمومی"
-              restricted:
-                label: "خصوصی"
-      contact:
-        title: "تماس"
-        fields:
           contact_email:
-            label: "ایمیل"
-            placeholder: "name@example.com"
-            description: "ایمیل شخص یا گروه پاسخگوی انجمن. برای اطلاعات مهمی مانند پرچم‌های کنترل نشده، به‌روز‌رسانی‌های امنیتی و تماس‌های فوری در <a href='%{base_path}/about' target='_blank'>صفحه دباره‌ما</a> "
-          contact_url:
-            label: "صفحه وب"
-            placeholder: "https://www.example.com/contact-us"
-            description: "صفحه تماس عمومی شما در <a href='%{base_path}/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
-          site_contact:
-            label: "پیام‌های خودکار"
-      corporate:
-        title: "سازمان"
+            placeholder: "example@user.com"
+          default_locale:
+            label: "زبان"
+      privacy:
+        title: "تجربه اعضا"
+        fields:
+          login_required:
+            placeholder: "خصوصی"
+            extra_description: "فقط کاربرانی که در حسای‌کاربردی خود وارد شده‌اند، می‌توانند به این انجمن دسترسی داشته باشند"
+          must_approve_users:
+            placeholder: "نیازمند تصویب"
+      ready:
+        title: "Discourse شما آماده‌ست!"
       styling:
         fields:
           styling_preview:
@@ -2320,16 +2298,20 @@ fa_IR:
                 label: "دسته‌بندی‌ها و آخرین موضوعات «مرتب‌سازی بر اساس تاریخ ایجاد موضوع»"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
-      logos:
-        title: "لوگو‌ها"
+      branding:
         fields:
           logo:
             label: "لوگو اصلی"
-      icons:
-        title: "آیکن‌ها"
-        fields:
           large_icon:
             label: "آیکن بزرگ"
+      corporate:
+        fields:
+          contact_url:
+            label: "صفحه وب"
+            placeholder: "https://www.example.com/contact-us"
+            description: "صفحه تماس عمومی شما در <a href='%{base_path}/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
+          site_contact:
+            label: "پیام‌های خودکار"
       invites:
         title: "دعوت همکاران"
       finished:
