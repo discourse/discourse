@@ -29,7 +29,7 @@ discourseModule("Unit | Service | screen-track", function () {
     );
   });
 
-  test("appEvent topic:timings-sent is triggered when ..........", async function (assert) {
+  test("appEvent topic:timings-sent is triggered after posting consolidated timings", async function (assert) {
     const appEvents = AppEvents.create();
     const tracker = ScreenTrack.create({
       appEvents,
