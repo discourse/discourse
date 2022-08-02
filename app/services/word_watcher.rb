@@ -2,6 +2,7 @@
 
 class WordWatcher
   REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
+  CACHE_VERSION = 2
 
   def initialize(raw)
     @raw = raw
@@ -105,7 +106,7 @@ class WordWatcher
   end
 
   def self.word_matcher_regexp_key(action)
-    "watched-words-list:#{action}"
+    "watched-words-list:v#{CACHE_VERSION}:#{action}"
   end
 
   def self.censor(html)
