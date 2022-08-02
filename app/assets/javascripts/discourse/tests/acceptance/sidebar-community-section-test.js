@@ -234,7 +234,7 @@ acceptance("Sidebar - Community Section", function (needs) {
       query(
         ".sidebar-section-community .sidebar-more-section-links-details-summary"
       ).textContent.trim(),
-      I18n.t("sidebar.more_count", { count: 1 }),
+      I18n.t("sidebar.more"),
       "displays the right count as users link is currently active"
     );
 
@@ -281,7 +281,7 @@ acceptance("Sidebar - Community Section", function (needs) {
       query(
         ".sidebar-section-community .sidebar-more-section-links-details-summary"
       ).textContent.trim(),
-      I18n.t("sidebar.more_count", { count: 1 }),
+      I18n.t("sidebar.more"),
       "displays the right count as groups link is currently active"
     );
 
