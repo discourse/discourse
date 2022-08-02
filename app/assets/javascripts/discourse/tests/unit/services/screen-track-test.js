@@ -1,3 +1,5 @@
+import AppEvents from "discourse/services/app-events";
+import ScreenTrack from "discourse/services/screen-track";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
@@ -27,22 +29,15 @@ discourseModule("Unit | Service | screen-track", function () {
     );
   });
 
-  test("ScreenTrack has appEvents", async function (assert) {
-    const tracker = this.container.lookup("service:screen-track");
-    assert.ok(tracker.appEvents);
-  });
-
-  test("appEvent topic:timings-sent is triggered", async function (assert) {
-    assert.timeout(1000);
-
-    const tracker = this.container.lookup("service:screen-track");
-    const appEvents = this.container.lookup("service:app-events");
-
-    const done = assert.async();
+  test("appEvent topic:timings-sent is triggered when ..........", async function (assert) {
+    const appEvents = AppEvents.create();
+    const tracker = ScreenTrack.create({
+      appEvents,
+      _consolidatedTimings: [""],
+    });
 
     appEvents.on("topic:timings-sent", () => {
       assert.ok(true);
-      done();
     });
 
     await tracker.sendNextConsolidatedTiming();
