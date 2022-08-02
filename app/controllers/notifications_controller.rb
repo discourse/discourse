@@ -40,7 +40,9 @@ class NotificationsController < ApplicationController
       end
 
       if !params.has_key?(:silent) && !@readonly_mode && guardian.can_see_review_queue?
-        current_user.bump_last_seen_reviewable!
+        Scheduler::Defer.later "bump last seen reviewable for user" do
+          current_user.bump_last_seen_reviewable!
+        end
       end
 
       if changed
