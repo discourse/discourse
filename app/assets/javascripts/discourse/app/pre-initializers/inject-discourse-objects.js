@@ -20,6 +20,7 @@ export function injectServiceIntoService({ app, property, specifier }) {
   app.inject(specifier, property, "discourse:null");
 
   // Bypass the validation in `app.inject` by adding directly to the array
+  app.__registry__._typeInjections["service"] ??= [];
   app.__registry__._typeInjections["service"].push({
     property,
     specifier,
@@ -53,7 +54,7 @@ export default {
     app.register("site:main", site, { instantiate: false });
 
     const session = Session.current();
-    app.register("session:main", session, { instantiate: false });
+    app.register("service:session", session, { instantiate: false });
 
     app.register("location:discourse-location", DiscourseLocation);
 
@@ -63,14 +64,18 @@ export default {
       app.inject(t, "store", "service:store");
       app.inject(t, "site", "site:main");
       app.inject(t, "searchService", "service:search");
-      app.inject(t, "session", "session:main");
+      app.inject(t, "session", "service:session");
       app.inject(t, "messageBus", "service:message-bus");
       app.inject(t, "siteSettings", "service:site-settings");
       app.inject(t, "topicTrackingState", "topic-tracking-state:main");
       app.inject(t, "keyValueStore", "service:key-value-store");
     });
 
-    app.inject("service", "session", "session:main");
+    injectServiceIntoService({
+      app,
+      property: "session",
+      specifier: "service:session",
+    });
     injectServiceIntoService({
       app,
       property: "messageBus",
