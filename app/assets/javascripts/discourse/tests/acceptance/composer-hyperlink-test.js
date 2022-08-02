@@ -2,7 +2,6 @@ import {
   acceptance,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -28,7 +27,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".modal-footer button.btn-primary");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "This is a link to [Google](https://google.com)",
       "adds link with url and text, prepends 'https://'"
     );
@@ -46,7 +45,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".modal-footer button.btn-danger");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "Reset textarea contents.",
       "doesn’t insert anything after cancelling"
     );
@@ -65,7 +64,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".modal-footer button.btn-primary");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "[Reset](https://somelink.com) textarea contents.",
       "adds link to a selected text"
     );
@@ -74,21 +73,21 @@ acceptance("Composer - Hyperlink", function (needs) {
 
     await click(".d-editor button.link");
     await fillIn(".modal-body .link-url", "http://google.com");
-    await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
+    await triggerKeyEvent(".modal-body .link-url", "keyup", "Space");
     assert.ok(
       !exists(".internal-link-results"),
       "does not show internal links search dropdown when inputting a url"
     );
 
     await fillIn(".modal-body .link-url", "local");
-    await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
+    await triggerKeyEvent(".modal-body .link-url", "keyup", "Space");
     assert.ok(
       exists(".internal-link-results"),
       "shows internal links search dropdown when entering keywords"
     );
 
-    await triggerKeyEvent(".insert-link", "keydown", 40);
-    await triggerKeyEvent(".insert-link", "keydown", 13);
+    await triggerKeyEvent(".insert-link", "keydown", "ArrowDown");
+    await triggerKeyEvent(".insert-link", "keydown", "Enter");
 
     assert.ok(
       !exists(".internal-link-results"),
@@ -96,7 +95,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     );
 
     assert.ok(
-      queryAll(".link-url").val().includes("http"),
+      query(".link-url").value.includes("http"),
       "replaces link url field with internal link"
     );
   });

@@ -74,35 +74,19 @@ module("Unit | Model | report", function () {
 
   test("yesterdayCountTitle with valid values", function (assert) {
     const title = reportWithData([6, 8, 5, 2, 1]).get("yesterdayCountTitle");
-    assert.ok(title.indexOf("+60%") !== -1);
+    assert.ok(title.includes("+60%"));
     assert.ok(title.match(/Was 5/));
   });
 
   test("yesterdayCountTitle when two days ago was 0", function (assert) {
     const title = reportWithData([6, 8, 0, 2, 1]).get("yesterdayCountTitle");
-    assert.strictEqual(title.indexOf("%"), -1);
+    assert.ok(!title.includes("%"));
     assert.ok(title.match(/Was 0/));
   });
 
   test("sevenDaysCountTitle", function (assert) {
     const title = reportWithData([
-      100,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      2,
-      2,
-      2,
-      2,
-      2,
-      2,
-      2,
-      100,
-      100,
+      100, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 100, 100,
     ]).get("sevenDaysCountTitle");
     assert.ok(title.match(/-50%/));
     assert.ok(title.match(/Was 14/));
@@ -113,14 +97,14 @@ module("Unit | Model | report", function () {
     report.set("prev30Days", 10);
     let title = report.get("thirtyDaysCountTitle");
 
-    assert.ok(title.indexOf("+50%") !== -1);
+    assert.ok(title.includes("+50%"));
     assert.ok(title.match(/Was 10/));
 
     report = reportWithData([5, 5, 5, 5]);
     report.set("prev_period", 20);
     title = report.get("thirtyDaysCountTitle");
 
-    assert.ok(title.indexOf("-25%") !== -1);
+    assert.ok(title.includes("-25%"));
     assert.ok(title.match(/Was 20/));
   });
 
@@ -179,185 +163,40 @@ module("Unit | Model | report", function () {
     let trend;
 
     report = reportWithData([
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
+      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1,
     ]);
     report.set("prev30Days", 30);
     trend = report.get("thirtyDaysTrend");
     assert.ok(trend === "no-change");
 
     report = reportWithData([
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
+      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1,
     ]);
     report.set("prev30Days", 0);
     trend = report.get("thirtyDaysTrend");
     assert.ok(trend === "high-trending-up");
 
     report = reportWithData([
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
+      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1,
     ]);
     report.set("prev30Days", 25);
     trend = report.get("thirtyDaysTrend");
     assert.ok(trend === "trending-up");
 
     report = reportWithData([
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0,
     ]);
     report.set("prev30Days", 60);
     trend = report.get("thirtyDaysTrend");
     assert.ok(trend === "high-trending-down");
 
     report = reportWithData([
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
+      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 0,
     ]);
     report.set("prev30Days", 35);
     trend = report.get("thirtyDaysTrend");

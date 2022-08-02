@@ -17,7 +17,7 @@ export default {
   name: "discourse-bootstrap",
 
   // The very first initializer to run
-  initialize(container, app) {
+  initialize(container) {
     setURLContainer(container);
     setDefaultOwner(container);
 
@@ -38,7 +38,12 @@ export default {
       preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
     }
 
-    Object.keys(preloaded).forEach(function (key) {
+    const keys = Object.keys(preloaded);
+    if (keys.length === 0) {
+      throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
+    }
+
+    keys.forEach(function (key) {
       PreloadStore.store(key, JSON.parse(preloaded[key]));
 
       if (setupData.debugPreloadedAppData === "true") {
@@ -49,7 +54,6 @@ export default {
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
-    app.SiteSettings = PreloadStore.get("siteSettings");
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};

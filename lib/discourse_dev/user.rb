@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'discourse_dev/record'
-require 'faker'
+require "discourse_dev/record"
+require "faker"
 
 module DiscourseDev
   class User < Record
@@ -19,6 +19,8 @@ module DiscourseDev
       username = Faker::Internet.unique.username(specifier: ::User.username_length)
       username = UserNameSuggester.suggest(username)
       username_lower = ::User.normalize_username(username)
+      created_at = Faker::Time.between(from: DiscourseDev.config.start_date, to: DateTime.now)
+      seen_at = Faker::Time.between(from: created_at, to: DateTime.now)
 
       {
         name: name,
@@ -27,7 +29,9 @@ module DiscourseDev
         username_lower: username_lower,
         moderator: Faker::Boolean.boolean(true_ratio: 0.1),
         trust_level: Faker::Number.between(from: 1, to: 4),
-        created_at: Faker::Time.between(from: DiscourseDev.config.start_date, to: DateTime.now),
+        created_at: created_at,
+        first_seen_at: seen_at,
+        last_seen_at: seen_at,
       }
     end
 
@@ -35,11 +39,13 @@ module DiscourseDev
       super do |user|
         user.activate
         set_random_avatar(user)
-        Faker::Number.between(from: 0, to: 2).times do
-          group = Group.random
+        Faker::Number
+          .between(from: 0, to: 2)
+          .times do
+            group = Group.random
 
-          group.add(user)
-        end
+            group.add(user)
+          end
       end
     end
 
@@ -70,7 +76,7 @@ module DiscourseDev
         STDERR.puts "Failed to upload avatar for user #{user.username}: #{avatar_path}"
         STDERR.puts upload.errors.inspect if upload
       end
-    rescue
+    rescue StandardError
       STDERR.puts "Failed to create avatar for user #{user.username}: #{avatar_path}"
     ensure
       tempfile.close! if tempfile
@@ -80,11 +86,9 @@ module DiscourseDev
 
     def copy_to_tempfile(source_path)
       extension = File.extname(source_path)
-      tmp = Tempfile.new(['discourse-upload', extension])
+      tmp = Tempfile.new(["discourse-upload", extension])
 
-      File.open(source_path) do |source_stream|
-        IO.copy_stream(source_stream, tmp)
-      end
+      File.open(source_path) { |source_stream| IO.copy_stream(source_stream, tmp) }
 
       tmp.rewind
       tmp

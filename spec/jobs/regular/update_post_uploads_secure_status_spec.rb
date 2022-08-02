@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Jobs::UpdatePostUploadsSecureStatus do
+RSpec.describe Jobs::UpdatePostUploadsSecureStatus do
   fab!(:post) { Fabricate(:post) }
 
   before do

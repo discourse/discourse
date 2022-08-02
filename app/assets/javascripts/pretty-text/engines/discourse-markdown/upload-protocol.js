@@ -124,9 +124,8 @@ function rule(state) {
         } else {
           // no point putting a transparent .png for audio/video
           if (token.content.match(/\|video|\|audio/)) {
-            token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
-              "/404"
-            );
+            token.attrs[srcIndex][1] =
+              state.md.options.discourse.getURL("/404");
           } else {
             token.attrs[srcIndex][1] = state.md.options.discourse.getURL(
               "/images/transparent.png"
@@ -141,7 +140,7 @@ function rule(state) {
           // url to take advantage of access control security
           if (
             state.md.options.discourse.limitedSiteSettings.secureMedia &&
-            mapped.url.indexOf("secure-media-uploads") > -1
+            mapped.url.includes("secure-media-uploads")
           ) {
             token.attrs[srcIndex][1] = mapped.url;
           } else {

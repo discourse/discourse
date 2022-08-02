@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrivateMessageTopicTrackingState do
+RSpec.describe PrivateMessageTopicTrackingState do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
 

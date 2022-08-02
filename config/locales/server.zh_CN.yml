@@ -565,6 +565,10 @@ zh_CN:
             base:
               invalid_url: "替换 URL 无效"
               invalid_tag_list: "替换标签名单无效"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "无效"
       <<: *errors
   uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
@@ -1534,6 +1538,7 @@ zh_CN:
     enable_badges: "启用徽章系统"
     max_favorite_badges: "用户可以选择的最大徽章数"
     enable_whispers: "允许管理人员在话题中进行不公开交流。"
+    whispers_allowed_groups: "允许指定组的成员在话题内进行私人交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
@@ -3664,6 +3669,12 @@ zh_CN:
     dark_rose: "黑红"
     wcag: "WCAG 亮"
     wcag_theme_name: "WCAG 亮"
+    dracula: "德拉库拉"
+    dracula_theme_name: "德拉库拉"
+    solarized_light: "Solarized 亮色"
+    solarized_light_theme_name: "Solarized 亮色"
+    solarized_dark: "Solarized 暗色"
+    solarized_dark_theme_name: "Solarized 暗色"
     wcag_dark: "WCAG 暗"
     wcag_dark_theme_name: "WCAG 暗"
     default_theme_name: "默认"
@@ -4443,6 +4454,8 @@ zh_CN:
                 label: "包含精选话题的类别"
               categories_and_latest_topics:
                 label: "类别和最新话题"
+              categories_and_latest_topics_created_date:
+                label: "类别和最新话题(按话题创建日期排序)"
               categories_and_top_topics:
                 label: "类别和热门话题"
               categories_boxes:

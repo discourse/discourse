@@ -1,5 +1,5 @@
 <div class="fps-result-entries" role="list">
-  {{#each posts as |post|}}
-    <SearchResultEntry @post={{post}} @bulkSelectEnabled={{bulkSelectEnabled}} @selected={{selected}} @highlightQuery={{highlightQuery}} @searchLogId={{searchLogId}} />
+  {{#each this.posts as |post|}}
+    <SearchResultEntry @post={{post}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @selected={{this.selected}} @highlightQuery={{this.highlightQuery}} @searchLogId={{this.searchLogId}} />
   {{/each}}
 </div>

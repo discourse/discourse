@@ -7,12 +7,14 @@ class FakeUppy {
     this.preprocessors = [];
     this.emitted = [];
     this.files = {
-      "uppy-test/file/vv2/xvejg5w/blah/jpg-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764": {
-        data: "old file state",
-      },
-      "uppy-test/file/blah1/ads37x2/blah1/jpg-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764": {
-        data: "old file state 1",
-      },
+      "uppy-test/file/vv2/xvejg5w/blah/jpg-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764":
+        {
+          data: "old file state",
+        },
+      "uppy-test/file/blah1/ads37x2/blah1/jpg-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764":
+        {
+          data: "old file state 1",
+        },
     };
   }
 

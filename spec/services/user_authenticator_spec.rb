@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAuthenticator do
+RSpec.describe UserAuthenticator do
   def github_auth(email_valid)
     {
       email: "user53@discourse.org",
@@ -39,7 +39,7 @@ describe UserAuthenticator do
     end
   end
 
-  context "#finish" do
+  describe "#finish" do
     fab!(:group) { Fabricate(:group, automatic_membership_email_domains: "discourse.org") }
 
     it "confirms email and adds the user to appropriate groups based on email" do

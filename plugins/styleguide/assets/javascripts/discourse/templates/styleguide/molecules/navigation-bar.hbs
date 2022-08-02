@@ -1,10 +1,10 @@
 <StyleguideExample @title="navigation-bar">
-  <NavigationBar @navItems={{dummy.navItems}} @filterMode="latest" />
+  <NavigationBar @navItems={{this.dummy.navItems}} @filterMode="latest" />
 </StyleguideExample>
 
 <StyleguideExample @title=".user-main .nav-pills">
   <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
-    {{#each dummy.navItems as |ni|}}
+    {{#each this.dummy.navItems as |ni|}}
       <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
     {{/each}}
   </MobileNav>
@@ -13,10 +13,10 @@
 <StyleguideExample @title="group page navigation-bar">
   <MobileNav @class="group-nav" @desktopClass="nav nav-pills">
     <li class="group-dropdown">
-      <GroupDropdown @groups={{dummy.groupNames}} @value="staff" />
+      <GroupDropdown @groups={{this.dummy.groupNames}} @value="staff" />
     </li>
 
-    {{#each dummy.navItems as |ni|}}
+    {{#each this.dummy.navItems as |ni|}}
       <li><a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>{{ni.displayName}}</a></li>
     {{/each}}
   </MobileNav>

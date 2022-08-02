@@ -1,36 +1,13 @@
 :root {
-  --d-sidebar-width: 240px;
-}
-
-.header-sidebar-toggle {
-  margin-right: 1em;
-
-  @media screen and (min-width: 1300px) {
-    // extending the toggle beyond the page when space allows
-    // for better logo alignment with content
-    body:not(.has-sidebar-page) & {
-      margin-left: -3.7em;
-    }
-  }
-
-  button {
-    position: relative;
-    font-size: var(--font-up-2);
-    padding: 0.5em;
-
-    .discourse-no-touch & {
-      &:hover {
-        background: var(--primary-low);
-        .d-icon {
-          color: var(--primary-medium);
-        }
-      }
-    }
-  }
+  --d-sidebar-width: #{$d-sidebar-width};
+  --d-sidebar-animation-time: 0.25s;
+  --d-sidebar-animation-ease: ease-in-out;
 }
 
 #main-outlet-wrapper {
   .sidebar-wrapper {
+    --d-sidebar-highlight-color: var(--primary-low);
+
     grid-area: sidebar;
     position: sticky;
     top: var(--header-offset);
@@ -41,20 +18,25 @@
   }
 
   .sidebar-container {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     height: 100%;
-    width: 240px;
-    padding: 1em 0;
+    width: var(--d-sidebar-width);
+    padding: 1em 0 0;
     overflow-x: hidden;
     overflow-y: auto;
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
-    --scrollbarWidth: 1em;
+    --scrollbarWidth: 1.2em;
 
     scrollbar-color: transparent var(--scrollbarBg);
-    transition: scrollbar-color 0.2s ease-in-out;
+    transition: scrollbar-color 0.25s ease-in-out;
+    transition-delay: 0.5s;
+    scroll-behavior: smooth;
+
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
       border-radius: calc(var(--scrollbarWidth) / 2);
@@ -65,6 +47,7 @@
       &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbarThumbBg);
       }
+      transition-delay: 0s;
     }
     &::-webkit-scrollbar {
       width: var(--scrollbarWidth);
@@ -74,145 +57,19 @@
   .sidebar-scroll-wrap {
     // limit the wrapper width, so when the scrollbar is added the content doesn't shift
     max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
-  }
-
-  .sidebar-toggle {
+    box-sizing: border-box;
+    flex: 1;
     display: flex;
-    justify-content: flex-end;
-  }
+    flex-direction: column;
 
-  .sidebar-section-wrapper {
-    margin-bottom: 1em;
-  }
-
-  .sidebar-section-header {
-    display: flex;
-    text-transform: uppercase;
-    font-size: 1em;
-    font-weight: bold;
-    align-items: stretch;
-  }
-
-  .sidebar-section-header-link {
-    @include ellipsis;
-    flex: 1 1 auto;
-    color: var(--primary);
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
-
-    &:visited {
-      color: var(--primary);
-    }
-
-    &:hover {
-      background: var(--primary-low);
+    .composer-open & {
+      // allows sidebar to scroll to the bottom when the composer is open
+      margin-bottom: var(--composer-height);
+      padding-bottom: var(--composer-ipad-padding);
     }
   }
 
-  .sidebar-section-header-button {
-    background: none;
-    border: none;
-    padding: 0.25em 0.5em;
-
-    .d-icon {
-      font-size: $font-down-1;
-      color: var(--primary-medium);
-    }
-
-    &:hover {
-      background: var(--primary-low);
-    }
-  }
-
-  .sidebar-section-link-wrapper {
-    margin-left: 1.5em;
-  }
-
-  .sidebar-section-link {
-    display: flex;
-    align-items: center;
-    padding: 0.25em 0.5em;
-    color: var(--primary-high);
-    font-size: var(--font-down-1);
-
-    &:hover {
-      background: var(--primary-low);
-    }
-
-    &.active {
-      color: var(--primary);
-      font-weight: bold;
-    }
-
-    .sidebar-section-link-content-text {
-      @include ellipsis;
-
-      .badge-wrapper {
-        font-size: 100%;
-        width: 100%;
-
-        .category-name {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-    }
-  }
-
-  .sidebar-section-message-wrapper {
-    display: flex;
-    margin-left: 1.5em;
-  }
-
-  .sidebar-section-message {
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
-  }
-
-  .sidebar-section-link-content-badge {
-    font-size: var(--font-down-1);
-    color: var(--tertiary);
-    margin-left: auto;
-    font-weight: normal;
-    margin-right: 0.4em;
-  }
-
-  .sidebar-section-header-caret {
-    flex: 0 0 auto;
-    width: 1.5em;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    border: none;
-    background: transparent;
-    padding: 0.25em 0;
-
-    svg {
-      display: block;
-      flex: 0 0 auto;
-    }
-
-    .d-icon {
-      font-size: $font-down-1;
-      color: var(--primary-medium);
-    }
-  }
-
-  .sidebar-section-content {
-    hr {
-      margin: 0em 1.5em;
-    }
-  }
-
-  .sidebar-section-link-personal-messages-sent,
-  .sidebar-section-link-personal-messages-new,
-  .sidebar-section-link-personal-messages-archive,
-  .sidebar-section-link-personal-messages-unread,
-  .sidebar-section-link-group-messages-new,
-  .sidebar-section-link-group-messages-unread,
-  .sidebar-section-link-group-messages-archive {
-    margin-left: 0.5em;
+  .sidebar-sections {
+    flex: 1;
   }
 }

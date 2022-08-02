@@ -1,4 +1,4 @@
 <LoadMore @class="paginated-topics-list" @selector=".paginated-topics-list .topic-list tr" @action={{action "loadMore"}}>
-  <BasicTopicList @topicList={{model}} @showPosters={{true}} />
-  <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+  <BasicTopicList @topicList={{this.model}} @showPosters={{true}} />
+  <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
 </LoadMore>

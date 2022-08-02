@@ -18,11 +18,19 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
+    if notification_types = params[:filter_by_types]&.split(",").presence
+      notification_types.map! do |type|
+        Notification.types[type.to_sym] || (
+          raise Discourse::InvalidParameters.new("invalid notification type: #{type}")
+        )
+      end
+    end
+
     if params[:recent].present?
       limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
-      notifications = Notification.recent_report(current_user, limit)
+      notifications = Notification.recent_report(current_user, limit, notification_types)
       changed = false
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
@@ -31,11 +39,15 @@ class NotificationsController < ApplicationController
         changed = current_user.saw_notification_id(max_id)
       end
 
-      user.reload
-      user.publish_notifications_state if changed
+      if changed
+        current_user.reload
+        current_user.publish_notifications_state
+      end
 
-      render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
-                       seen_notification_id: current_user.seen_notification_id)
+      render_json_dump(
+        notifications: serialize_data(notifications, NotificationSerializer),
+        seen_notification_id: current_user.seen_notification_id
+      )
     else
       offset = params[:offset].to_i
 

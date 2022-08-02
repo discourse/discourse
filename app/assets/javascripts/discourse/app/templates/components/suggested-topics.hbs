@@ -1,20 +1,19 @@
-<div id="suggested-topics" class="suggested-topics"
-    role="complementary" aria-labelledby="suggested-topics-title">
+<div id="suggested-topics" class="suggested-topics" role="complementary" aria-labelledby="suggested-topics-title">
   <h3 id="suggested-topics-title" class="suggested-topics-title">
-    {{i18n suggestedTitleLabel}}
+    {{i18n this.suggestedTitleLabel}}
   </h3>
 
   <div class="topics">
-    {{#if topic.isPrivateMessage}}
-      <BasicTopicList @hideCategory="true" @showPosters="true" @topics={{topic.suggestedTopics}} />
+    {{#if this.topic.isPrivateMessage}}
+      <BasicTopicList @hideCategory="true" @showPosters="true" @topics={{this.topic.suggestedTopics}} />
     {{else}}
-      <BasicTopicList @topics={{topic.suggestedTopics}} />
+      <BasicTopicList @topics={{this.topic.suggestedTopics}} />
     {{/if}}
   </div>
 
   <h3 class="suggested-topics-message">
-    {{html-safe browseMoreMessage}}
+    {{html-safe this.browseMoreMessage}}
   </h3>
 </div>
 
-<PluginOutlet @name="below-suggested-topics" @tagName="span" @connectorTagName="div" @args={{hash topic=topic}} />
+<PluginOutlet @name="below-suggested-topics" @tagName="span" @connectorTagName="div" @args={{hash topic=this.topic}} />

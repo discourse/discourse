@@ -2,7 +2,7 @@
 
 require "file_store/s3_store"
 
-describe Jobs::UpdateS3Inventory do
+RSpec.describe Jobs::UpdateS3Inventory do
   before do
     setup_s3
     SiteSetting.s3_upload_bucket = "special-bucket"

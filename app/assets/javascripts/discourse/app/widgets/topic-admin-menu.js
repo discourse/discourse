@@ -81,7 +81,7 @@ createWidget("topic-admin-menu-button", {
     if (e === undefined) {
       $button = $(".keyboard-target-admin-menu");
     } else {
-      $button = $(e.target).closest("button");
+      $button = $(e.target.closest("button"));
     }
 
     const position = $button.position(),

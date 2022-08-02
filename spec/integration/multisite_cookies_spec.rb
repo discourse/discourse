@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'multisite', type: [:multisite, :request] do
+RSpec.describe 'multisite', type: [:multisite, :request] do
   it "works" do
     get "http://test.localhost/session/csrf.json"
     expect(response.status).to eq(200)

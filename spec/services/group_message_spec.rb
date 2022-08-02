@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupMessage do
+RSpec.describe GroupMessage do
 
   let(:moderators_group) { Group[:moderators].name }
 

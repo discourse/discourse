@@ -1,8 +1,8 @@
-{{#if model.userApiKeys}}
+{{#if this.model.userApiKeys}}
   <div class="control-group apps">
     <label class="control-label">{{i18n "user.apps"}}</label>
     <div class="controls">
-      {{#each model.userApiKeys as |key|}}
+      {{#each this.model.userApiKeys as |key|}}
         <div>
           <span>{{key.application_name}}</span>
           {{#if key.revoked}}
@@ -25,4 +25,4 @@
   </div>
 {{/if}}
 
-<PluginOutlet @name="user-preferences-apps" @tagName="span" @connectorTagName="div" @args={{hash model=model}} />
+<PluginOutlet @name="user-preferences-apps" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

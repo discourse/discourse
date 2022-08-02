@@ -2,7 +2,7 @@
 
 require 'browser_detection'
 
-describe BrowserDetection do
+RSpec.describe BrowserDetection do
 
   it "detects browser, device and operating system" do
     [

@@ -1,6 +1,6 @@
-<a href={{hrefLink}} class={{activeClass}}>
-  {{#if hasIcon}}
-    <span class={{content.name}}></span>
+<a href={{this.hrefLink}} class={{this.activeClass}}>
+  {{#if this.hasIcon}}
+    <span class={{this.content.name}}></span>
   {{/if}}
-  {{content.displayName}}
+  {{this.content.displayName}}
 </a>

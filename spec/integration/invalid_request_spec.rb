@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'invalid requests', type: :request do
+RSpec.describe 'invalid requests', type: :request do
   before do
     @orig_logger = Rails.logger
     Rails.logger = @fake_logger = FakeLogger.new

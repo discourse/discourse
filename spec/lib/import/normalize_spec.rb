@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Import::Normalize do
+RSpec.describe Import::Normalize do
   describe "#normalize_code_blocks" do
     it "normalizes 2 code blocks correctly" do
       markdown = <<MD

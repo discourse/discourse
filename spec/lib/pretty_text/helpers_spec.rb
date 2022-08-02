@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText::Helpers do
+RSpec.describe PrettyText::Helpers do
 
   context "lookup_upload_urls" do
     let(:upload) { Fabricate(:upload) }

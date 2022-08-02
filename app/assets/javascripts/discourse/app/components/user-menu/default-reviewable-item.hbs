@@ -1,0 +1,9 @@
+<li class={{unless this.reviewable.pending "reviewed"}}>
+  <LinkTo @route="review.show" @model={{this.reviewable.id}}>
+    {{d-icon this.icon}}
+    <div>
+      <span class="reviewable-label">{{this.actor}}</span>
+      <span class="reviewable-description">{{this.description}}</span>
+    </div>
+  </LinkTo>
+</li>

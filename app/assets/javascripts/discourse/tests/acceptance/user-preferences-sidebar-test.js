@@ -9,31 +9,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("User Preferences - Sidebar - Tagging Disabled", function (needs) {
-  needs.settings({
-    tagging_enabled: false,
-  });
-
-  needs.user({
-    experimental_sidebar_enabled: true,
-    sidebar_category_ids: [],
-  });
-
-  test("user should not see tag chooser", async function (assert) {
-    await visit("/u/eviltrout/preferences/sidebar");
-
-    assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
-  });
-});
-
 acceptance("User Preferences - Sidebar", function (needs) {
   needs.user({
-    experimental_sidebar_enabled: true,
     sidebar_category_ids: [],
     sidebar_tag_names: [],
   });
 
   needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
     tagging_enabled: true,
   });
 
@@ -60,6 +44,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
     });
   });
 
+  test("user should not see tag chooser when tagging is disabled", async function (assert) {
+    this.siteSettings.tagging_enabled = false;
+
+    await visit("/u/eviltrout/preferences/sidebar");
+
+    assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
+  });
+
   test("user encountering error when adding categories to sidebar", async function (assert) {
     updateCurrentUser({ sidebar_category_ids: [6] });
 
@@ -77,11 +69,6 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await categorySelector.selectKitSelectRowByName("howto");
     await categorySelector.deselectItemByName("support");
 
-    assert.ok(
-      exists(".sidebar-section-categories .sidebar-section-link-howto"),
-      "howto category has been added to sidebar"
-    );
-
     await click(".save-changes");
 
     assert.deepEqual(
@@ -96,12 +83,12 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       !exists(".sidebar-section-categories .sidebar-section-link-howto"),
-      "howto category has been removed from sidebar"
+      "howto category is not displayed in sidebar"
     );
 
     assert.ok(
       exists(".sidebar-section-categories .sidebar-section-link-support"),
-      "support category is added back to sidebar"
+      "support category is displayed in sidebar"
     );
   });
 
@@ -114,6 +101,8 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await categorySelector.selectKitSelectRowByName("support");
     await categorySelector.selectKitSelectRowByName("bug");
 
+    await click(".save-changes");
+
     assert.ok(
       exists(".sidebar-section-categories .sidebar-section-link-support"),
       "support category has been added to sidebar"
@@ -123,8 +112,6 @@ acceptance("User Preferences - Sidebar", function (needs) {
       exists(".sidebar-section-categories .sidebar-section-link-bug"),
       "bug category has been added to sidebar"
     );
-
-    await click(".save-changes");
 
     assert.deepEqual(
       updateUserRequestBody["sidebar_category_ids[]"],
@@ -140,7 +127,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(".sidebar-section-tags .sidebar-section-link-monkey"),
-      "monkey tag is present in sidebar"
+      "monkey tag is displayed in sidebar"
     );
 
     await click(".sidebar-section-tags .sidebar-section-header-button");
@@ -149,16 +136,6 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await tagChooser.expand();
     await tagChooser.selectKitSelectRowByName("gazelle");
     await tagChooser.deselectItemByName("monkey");
-
-    assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
-      "gazelle tag has been added to sidebar"
-    );
-
-    assert.ok(
-      !exists(".sidebar-section-tags .sidebar-section-link-monkey"),
-      "monkey tag has been removed from sidebar"
-    );
 
     await click(".save-changes");
 
@@ -174,12 +151,12 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       !exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
-      "gazelle tag has been removed from sidebar"
+      "gazelle tag is not displayed in sidebar"
     );
 
     assert.ok(
       exists(".sidebar-section-tags .sidebar-section-link-monkey"),
-      "monkey tag is added back to sidebar"
+      "monkey tag is displayed in sidebar"
     );
   });
 
@@ -192,6 +169,8 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await tagChooser.selectKitSelectRowByName("monkey");
     await tagChooser.selectKitSelectRowByName("gazelle");
 
+    await click(".save-changes");
+
     assert.ok(
       exists(".sidebar-section-tags .sidebar-section-link-monkey"),
       "monkey tag has been added to sidebar"
@@ -201,8 +180,6 @@ acceptance("User Preferences - Sidebar", function (needs) {
       exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
       "gazelle tag has been added to sidebar"
     );
-
-    await click(".save-changes");
 
     assert.deepEqual(
       updateUserRequestBody["sidebar_tag_names[]"],

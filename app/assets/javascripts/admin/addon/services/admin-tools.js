@@ -46,9 +46,10 @@ export default Service.extend({
     });
     controller.setProperties({ postId: opts.postId, postEdit: opts.postEdit });
 
-    return (user.adminUserView
-      ? Promise.resolve(user)
-      : AdminUser.find(user.get("id"))
+    return (
+      user.adminUserView
+        ? Promise.resolve(user)
+        : AdminUser.find(user.get("id"))
     ).then((loadedUser) => {
       controller.setProperties({
         user: loadedUser,

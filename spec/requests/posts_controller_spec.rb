@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples 'finding and showing post' do
+RSpec.shared_examples 'finding and showing post' do
   let!(:post) { post_by_user }
 
   it "ensures the user can't see the post" do
@@ -74,14 +74,14 @@ shared_examples 'finding and showing post' do
   end
 end
 
-shared_examples 'action requires login' do |method, url, params = {}|
+RSpec.shared_examples 'action requires login' do |method, url, params = {}|
   it 'raises an exception when not logged in' do
     self.public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
 
-describe PostsController do
+RSpec.describe PostsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
@@ -1893,6 +1893,16 @@ describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "does not raise if topic has been permanently deleted" do
+        post = Fabricate(:post, user: admin)
+        PostDestroyer.new(admin, post).destroy
+        post.update!(topic_id: -1000)
+
+        sign_in(admin)
+        get "/posts/#{admin.username}/deleted.json"
+        expect(response.status).to eq(200)
+      end
+
       it "doesn't return secured categories for moderators if they don't have access" do
         Fabricate(:moderator)
 
@@ -1990,10 +2000,17 @@ describe PostsController do
       expect(response).to be_redirect
     end
 
-    it "returns a 403 when access is denied" do
+    it "returns a 403 when access is denied for JSON format" do
       post = Fabricate(:private_message_post)
       get "/p/#{post.id}.json"
       expect(response).to be_forbidden
+    end
+
+    it "returns a 403 when access is denied for HTML format" do
+      post = Fabricate(:private_message_post)
+      get "/p/#{post.id}"
+      expect(response).to be_forbidden
+      expect(response.body).to have_tag("body.no-ember")
     end
 
     it "renders a 404 page" do

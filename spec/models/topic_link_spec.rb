@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicLink do
+RSpec.describe TopicLink do
 
   it { is_expected.to validate_presence_of :url }
 

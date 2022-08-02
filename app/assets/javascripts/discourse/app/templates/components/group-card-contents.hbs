@@ -1,4 +1,4 @@
-{{#if visible}}
+{{#if this.visible}}
   <div class="card-content">
     {{#if this.loading}}
       <div class="card-row first-row">
@@ -13,27 +13,27 @@
     {{else}}
       <div class="card-row first-row">
         <div class="group-card-avatar">
-          <a href={{groupPath}} {{action "showGroup" group}} class="card-huge-avatar">
-            <AvatarFlair @flairName={{group.name}} @flairUrl={{group.flair_url}} @flairBgColor={{group.flair_bg_color}} @flairColor={{group.flair_color}} />
+          <a href={{this.groupPath}} {{action "showGroup" this.group}} class="card-huge-avatar">
+            <AvatarFlair @flairName={{this.group.name}} @flairUrl={{this.group.flair_url}} @flairBgColor={{this.group.flair_bg_color}} @flairColor={{this.group.flair_color}} />
           </a>
         </div>
         <div class="names">
           <span>
-            <h1 class={{group.name}}>
-              <a href={{groupPath}} {{action "showGroup" group}} class="group-page-link">{{group.name}}</a>
+            <h1 class={{this.group.name}}>
+              <a href={{this.groupPath}} {{action "showGroup" this.group}} class="group-page-link">{{this.group.name}}</a>
             </h1>
-            {{#if group.full_name}}
-              <h2 class="full-name">{{group.full_name}}</h2>
+            {{#if this.group.full_name}}
+              <h2 class="full-name">{{this.group.full_name}}</h2>
             {{else}}
-              <h2 class="username">{{group.name}}</h2>
+              <h2 class="username">{{this.group.name}}</h2>
             {{/if}}
           </span>
         </div>
         <ul class="usercard-controls group-details-button">
           <li>
-            <GroupMembershipButton @model={{group}} @showLogin={{route-action "showLogin"}} />
+            <GroupMembershipButton @model={{this.group}} @showLogin={{route-action "showLogin"}} />
           </li>
-          {{#if group.messageable}}
+          {{#if this.group.messageable}}
             <li>
               <DButton @action={{action "messageGroup"}} @class="btn-primary group-message-button inline" @icon="envelope" @label="groups.message" />
             </li>
@@ -49,15 +49,15 @@
         </div>
       {{/if}}
 
-      {{#if group.members}}
+      {{#if this.group.members}}
         <div class="card-row third-row">
           <div class="members metadata">
-            {{#each group.members as |user|}}
+            {{#each this.group.members as |user|}}
               <a {{action "close"}} href={{user.path}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
             {{/each}}
-            {{#if showMoreMembers}}
-              <a href={{groupPath}} {{action "showGroup" group}} class="more-members-link">
-                <span class="more-members-count">+{{moreMembersCount}} {{i18n "more"}}</span>
+            {{#if this.showMoreMembers}}
+              <a href={{this.groupPath}} {{action "showGroup" this.group}} class="more-members-link">
+                <span class="more-members-count">+{{this.moreMembersCount}} {{i18n "more"}}</span>
               </a>
             {{/if}}
           </div>

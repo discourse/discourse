@@ -1,11 +1,11 @@
-<UserInfo @user={{item.user}} />
+<UserInfo @user={{this.item.user}} />
 
-{{#each columns as |column|}}
+{{#each this.columns as |column|}}
   {{#if (directory-column-is-user-field column=column)}}
-    {{#if (get item.user.user_fields column.user_field_id)}}
+    {{#if (get this.item.user.user_fields column.user_field_id)}}
       <div class="user-stat">
         <span class="value user-field">
-          {{directory-item-user-field-value item=item column=column}}
+          {{directory-item-user-field-value item=this.item column=column}}
         </span>
         <span class="label">
           {{column.name}}
@@ -16,18 +16,18 @@
   {{else}}
     <div class="user-stat">
       <span class="value">
-        {{directory-item-value item=item column=column}}
+        {{directory-item-value item=this.item column=column}}
       </span>
       <span class="label">
         {{#if column.icon}}
           {{d-icon column.icon}}
         {{/if}}
-        {{mobile-directory-item-label item=item column=column}}
+        {{mobile-directory-item-label item=this.item column=column}}
       </span>
     </div>
   {{/if}}
 {{/each}}
 
-{{#if showTimeRead}}
-  <UserStat @value={{item.time_read}} @label="directory.time_read" @type="duration" />
+{{#if this.showTimeRead}}
+  <UserStat @value={{this.item.time_read}} @label="directory.time_read" @type="duration" />
 {{/if}}

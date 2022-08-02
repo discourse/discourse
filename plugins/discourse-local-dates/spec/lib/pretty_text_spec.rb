@@ -14,7 +14,7 @@ def generate_html(text, opts = {})
   output + "</span></p>"
 end
 
-describe PrettyText do
+RSpec.describe PrettyText do
   before do
     freeze_time
   end

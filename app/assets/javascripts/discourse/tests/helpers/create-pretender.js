@@ -341,18 +341,8 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  // TODO: Remove this old path when no longer using old ember
-  pretender.get("/post_replies", () => {
-    return response({ post_replies: [{ id: 1234, cooked: "wat" }] });
-  });
-
   pretender.get("/posts/:id/replies", () => {
     return response([{ id: 1234, cooked: "wat", username: "somebody" }]);
-  });
-
-  // TODO: Remove this old path when no longer using old ember
-  pretender.get("/post_reply_histories", () => {
-    return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
   });
 
   pretender.get("/posts/:id/reply-history", () => {
@@ -534,9 +524,8 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/500.json", () => response(502, {}));
 
   pretender.put("/t/:slug/:id", (request) => {
-    const isJSON = request.requestHeaders["Content-Type"].includes(
-      "application/json"
-    );
+    const isJSON =
+      request.requestHeaders["Content-Type"].includes("application/json");
 
     const data = isJSON
       ? JSON.parse(request.requestBody)
@@ -913,7 +902,7 @@ export function applyDefaultHandlers(pretender) {
       ];
     }
 
-    if (request.queryParams.url.indexOf("/internal-page.html") > -1) {
+    if (request.queryParams.url.includes("/internal-page.html")) {
       return [
         200,
         { "Content-Type": "application/html" },
@@ -1154,4 +1143,5 @@ export function resetPretender() {
   instance.handledRequests = [];
   instance.unhandledRequests = [];
   instance.passthroughRequests = [];
+  instance.hosts.registries = {};
 }

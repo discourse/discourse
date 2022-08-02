@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "RequestTracker in multisite", type: :multisite do
+RSpec.describe "RequestTracker in multisite", type: :multisite do
   before do
     global_setting :skip_per_ip_rate_limit_trust_level, 2
 

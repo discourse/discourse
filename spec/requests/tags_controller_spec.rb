@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TagsController do
+RSpec.describe TagsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
@@ -965,7 +965,7 @@ describe TagsController do
     end
   end
 
-  context '#upload_csv' do
+  describe '#upload_csv' do
     it 'requires you to be logged in' do
       post "/tags/upload.json"
       expect(response.status).to eq(403)

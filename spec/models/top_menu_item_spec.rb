@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopMenuItem do
+RSpec.describe TopMenuItem do
   before do
     SiteSetting.top_menu = 'categories|latest'
   end

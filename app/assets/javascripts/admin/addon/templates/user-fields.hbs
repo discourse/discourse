@@ -3,12 +3,12 @@
 
   <p class="desc">{{i18n "admin.user_fields.help"}}</p>
 
-  {{#if model}}
-    {{#each sortedFields as |uf|}}
+  {{#if this.model}}
+    {{#each this.sortedFields as |uf|}}
       <AdminUserFieldItem @userField={{uf}}
-                          @fieldTypes={{fieldTypes}}
-                          @firstField={{sortedFields.firstObject}}
-                          @lastField={{sortedFields.lastObject}}
+                          @fieldTypes={{this.fieldTypes}}
+                          @firstField={{this.sortedFields.firstObject}}
+                          @lastField={{this.sortedFields.lastObject}}
                           @destroyAction={{action "destroy"}}
                           @moveUpAction={{action "moveUp"}}
                           @moveDownAction={{action "moveDown"}}
@@ -16,6 +16,6 @@
     {{/each}}
   {{/if}}
 
-  <DButton @disabled={{createDisabled}} @class="btn-primary" @action={{action "createField"}} @label="admin.user_fields.create" @icon="plus" />
+  <DButton @disabled={{this.createDisabled}} @class="btn-primary" @action={{action "createField"}} @label="admin.user_fields.create" @icon="plus" />
 
 </div>

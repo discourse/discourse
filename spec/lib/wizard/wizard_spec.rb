@@ -2,7 +2,7 @@
 
 require 'wizard'
 
-describe Wizard do
+RSpec.describe Wizard do
   fab!(:admin) { Fabricate(:admin) }
 
   before do

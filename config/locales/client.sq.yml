@@ -305,6 +305,8 @@ sq:
       days:
         one: "ditë"
         other: "ditë"
+    time_shortcut:
+      never: "Asnjëherë"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postoi <a href='%{topicUrl}'>temën</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ju</a> postuat <a href='%{topicUrl}'>temën</a>"
@@ -546,6 +548,8 @@ sq:
         regular: "Normal"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
+      experimental_sidebar:
+        options: "Opsione"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"
@@ -904,7 +908,6 @@ sq:
       other: përgjigje
     signup_cta:
       sign_up: "Regjistrohu"
-      hide_session: "Më rikujto nesër"
       hide_forever: "jo faleminderit"
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
@@ -1078,6 +1081,7 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
+      watching_first_post_label: "Temë e re"
       dismiss_confirmation:
         dismiss: "Hiqe"
         cancel: "Anulo"
@@ -1927,8 +1931,12 @@ sq:
         regular: "i zakonshëm"
         leader: "udhëheqës"
     sidebar:
-      unread_count: "%{count} e palexuar"
-      new_count: "%{count} e re"
+      unread_count:
+        one: "%{count} e palexuar"
+        other: "%{count} të palexuara"
+      new_count:
+        one: "%{count} e re"
+        other: "%{count} të reja"
       sections:
         messages:
           header_link_text: "Mesazhet"
@@ -1946,12 +1954,17 @@ sq:
         categories:
           header_link_title: "kategoritë"
           header_link_text: "Categories"
-        topics:
+        community:
           header_link_title: "kryefaqja"
-          header_link_text: "Tema"
+          header_link_text: "Komuniteti"
           links:
             tracked:
               content: "Gjurmuar"
+            groups:
+              content: "Grupet"
+              title: "Të gjitha grupet"
+            users:
+              content: "Users"
             my_posts:
               content: "Postimet e mia"
   admin_js:

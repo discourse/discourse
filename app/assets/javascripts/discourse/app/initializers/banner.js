@@ -11,7 +11,7 @@ export default {
 
     site.set("banner", banner);
 
-    const messageBus = container.lookup("message-bus:main");
+    const messageBus = container.lookup("service:message-bus");
     if (!messageBus) {
       return;
     }

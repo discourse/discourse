@@ -205,7 +205,7 @@ class Notification < ActiveRecord::Base
     Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
-  def self.recent_report(user, count = nil)
+  def self.recent_report(user, count = nil, types = [])
     return unless user && user.user_option
 
     count ||= 10
@@ -214,6 +214,7 @@ class Notification < ActiveRecord::Base
       .recent(count)
       .includes(:topic)
 
+    notifications = notifications.where(notification_type: types) if types.present?
     if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
       [
         Notification.types[:liked],
@@ -228,16 +229,22 @@ class Notification < ActiveRecord::Base
     notifications = notifications.to_a
 
     if notifications.present?
-
-      ids = DB.query_single(<<~SQL, limit: count.to_i)
+      builder = DB.build(<<~SQL)
          SELECT n.id FROM notifications n
-         WHERE
-           n.high_priority = TRUE AND
-           n.user_id = #{user.id.to_i} AND
-           NOT read
+         /*where*/
         ORDER BY n.id ASC
-        LIMIT :limit
+        /*limit*/
       SQL
+
+      builder.where(<<~SQL, user_id: user.id)
+        n.high_priority = TRUE AND
+        n.user_id = :user_id AND
+        NOT read
+      SQL
+      builder.where("notification_type IN (:types)", types: types) if types.present?
+      builder.limit(count.to_i)
+
+      ids = builder.query_single
 
       if ids.length > 0
         notifications += user

@@ -1568,6 +1568,7 @@ tr_TR:
     enable_badges: "Rozet sistemini etkinleştir"
     max_favorite_badges: "Kullanıcının seçebileceği maksimum rozet sayısı"
     enable_whispers: "Konular dahilinde yetkililerin özel iletişimine izin ver."
+    whispers_allowed_groups: "Belirli grupların üyeleri için konu içinde özel iletişime izin ver."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt dosyasını geçersiz kılabilirsiniz </a>."
     blocked_email_domains: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     allowed_email_domains: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
@@ -3503,6 +3504,12 @@ tr_TR:
     dark_rose: "Kara Gül"
     wcag: "WCAG Light"
     wcag_theme_name: "WCAG Light"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solarized Light"
+    solarized_light_theme_name: "Solarized Light"
+    solarized_dark: "Solarized Dark"
+    solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
     default_theme_name: "Varsayılan"
@@ -3932,6 +3939,8 @@ tr_TR:
                 label: "Öne çıkan konulardaki kategoriler"
               categories_and_latest_topics:
                 label: "Kategoriler ve Son Konular"
+              categories_and_latest_topics_created_date:
+                label: "Kategoriler ve Son Konular (konu oluşturulma tarihine göre sırala)"
               categories_and_top_topics:
                 label: "Kategoriler ve Popüler Konular"
               categories_boxes:

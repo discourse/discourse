@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WebHook do
+RSpec.describe WebHook do
   it { is_expected.to validate_presence_of :payload_url }
   it { is_expected.to validate_presence_of :content_type }
   it { is_expected.to validate_presence_of :last_delivery_status }
@@ -604,7 +604,7 @@ describe WebHook do
       it 'shouldn’t trigger when the user is demoted' do
         expect {
           another_user.change_trust_level!(another_user.trust_level - 1)
-        }.to change { Jobs::EmitWebHookEvent.jobs.length }.by(0)
+        }.not_to change { Jobs::EmitWebHookEvent.jobs.length }
       end
     end
 

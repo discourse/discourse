@@ -586,6 +586,8 @@ sv:
       relative: "Relativ"
     time_shortcut:
       now: "Nu"
+      in_one_hour: "Om en timme"
+      in_two_hours: "Om två timmar"
       later_today: "Senare idag"
       two_days: "Två dagar"
       next_business_day: "Nästa vardag"
@@ -606,6 +608,7 @@ sv:
       forever: "För alltid"
       relative: "Relativ tid"
       none: "Ingen behövs"
+      never: "Aldrig"
       last_custom: "Senaste anpassade datumtid"
       custom: "Anpassa datum och tid"
       select_timeframe: "Välj en tidsram"
@@ -1087,7 +1090,13 @@ sv:
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
-      enable_experimental_sidebar: "Aktivera experimentellt sidofält"
+      experimental_sidebar:
+        enable: "Aktivera experimentellt sidofält"
+        options: "Alternativ"
+        categories_section: "Sektion Kategorier"
+        categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
+        tags_section: "Sektion Taggar"
+        tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1199,6 +1208,7 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
+        sidebar: "Sidofält"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
@@ -1638,6 +1648,8 @@ sv:
       save: "Spara"
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
+      remove_status: "Ta bort status"
+      until: "T.o.m.:"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1697,11 +1709,11 @@ sv:
       other: svar
     signup_cta:
       sign_up: "Registrera"
-      hide_session: "Påminn mig imorgon"
+      hide_session: "Kanske senare"
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
-      value_prop: "När du skapar ett konto så kommer vi ihåg precis vad du har läst, så att du alltid kan komma tillbaka precis där du lämnade oss. Du kan också få notifieringar, här och via e-post, närhelst någon svarar dig. Du kan också gilla inlägg för att sprida kärlek. :heartpulse: "
+      value_prop: "Trött på att bläddra igenom samma inlägg? när du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli notifierad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
@@ -1906,9 +1918,6 @@ sv:
       min_content_not_reached:
         one: "Välj minst %{count} föremål."
         other: "Välj minst %{count} föremål."
-      invalid_selection_length:
-        one: "Valet måste innehålla minst %{count} tecken."
-        other: "Valet måste innehålla minst %{count} tecken."
       components:
         tag_drop:
           filter_for_more: Filtrera för fler...
@@ -2003,6 +2012,7 @@ sv:
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
       title: "Eller tryck på %{modifier}Enter"
+      users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "varför redigerar du?"
@@ -2106,6 +2116,8 @@ sv:
       empty: "Inga aviseringar hittades."
       post_approved: "Ditt inlägg blev godkänt"
       reviewable_items: "föremål som kräver granskning"
+      watching_first_post_label: "Nytt ämne"
+      user_moved_post: "%{username} flyttad"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2118,6 +2130,10 @@ sv:
       liked_many:
         one: "<span class='multi-user'>%{username},%{username2} och %{count} annan</span> %{description}"
         other: "<span class='multi-user'>%{username},%{username2} och %{count} andra</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username},%{username2} och %{count} annan"
+        other: "%{username},%{username2} och %{count} andra"
       liked_consolidated_description:
         one: "gillade %{count} av dina inlägg"
         other: "gillade %{count} av dina inlägg"
@@ -2126,6 +2142,7 @@ sv:
       invited_to_private_message: "<p><span>%{username}</span>%{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> tackade ja till din inbjudan"
+      invitee_accepted_your_invitation: "accepterade din inbjudan"
       moved_post: "<span>%{username}</span> flyttade %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Förtjänade '%{description}'"
@@ -2320,6 +2337,10 @@ sv:
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
     current_user: "gå till din användarsida"
     view_all: "visa alla %{tab}"
+    user_menu:
+      generic_no_items: "Det finns inga objekt i den här listan."
+      sr_menu_tabs: "Menyflikar"
+      view_all_notifications: "visa alla aviseringar"
     topics:
       new_messages_marker: "senaste besök"
       bulk:
@@ -3384,7 +3405,7 @@ sv:
         this_week: "Vecka"
         today: "Idag"
         other_periods: "se toppen för:"
-    browser_update: 'Tyvärr <a href="https://www.discourse.org/faq/#browser">är din webbläsare för gammal för att fungera på den här sidan</a>. Vi ber dig <a href="https://browsehappy.com">uppgradera din webbläsare</a> för att visa formaterat innehåll, logga in eller svara.'
+    browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3407,6 +3428,7 @@ sv:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tangentbordsgenvägar"
+      short_title: "Genvägar"
       jump_to:
         title: "Hoppa till"
         home: "%{shortcut} Hem"
@@ -3716,8 +3738,13 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
-      unread_count: "%{count} oläst"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} oläst"
+        other: "%{count} olästa"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nya"
+      toggle_section: "växla avsnitt"
       sections:
         messages:
           header_link_title: "personliga meddelanden"
@@ -3732,16 +3759,20 @@ sv:
             unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
-          no_tracked_tags: "Du följer inga taggar."
+          none: "Du har inte lagt till några taggar."
+          click_to_get_started: "Klicka här för att komma igång."
           header_link_title: "alla taggar"
           header_link_text: "Taggar"
+          header_action_title: "redigera sidofältets taggar"
         categories:
-          no_tracked_categories: "Du följer inga kategorier."
+          none: "Du har inte lagt till några kategorier."
+          click_to_get_started: "Klicka här för att komma igång."
           header_link_title: "alla kategorier"
           header_link_text: "Kategorier"
-        topics:
+          header_action_title: "redigera sidofältets kategorier"
+        community:
           header_link_title: "start"
-          header_link_text: "Ämnen"
+          header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
           links:
             everything:
@@ -3749,10 +3780,13 @@ sv:
               title: "Alla ämnen"
             tracked:
               content: "Följda"
-              title: "Alla spårade ämnen"
-            bookmarked:
-              content: "Bokmärkt"
-              title: "Alla bokmärkta ämnen"
+              title: "Alla följda ämnen"
+            groups:
+              content: "Grupper"
+              title: "Alla grupper"
+            users:
+              content: "Användare"
+              title: "Alla användare"
             my_posts:
               content: "Mina inlägg"
               title: "Mina inlägg"

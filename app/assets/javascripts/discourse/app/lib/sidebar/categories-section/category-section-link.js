@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 import { htmlSafe } from "@ember/template";
 
 import { tracked } from "@glimmer/tracking";
@@ -49,14 +51,20 @@ export default class CategorySectionLink {
   }
 
   get text() {
-    return htmlSafe(categoryBadgeHTML(this.category, { link: false }));
+    return htmlSafe(
+      categoryBadgeHTML(this.category, { link: false, categoryStyle: "bullet" })
+    );
   }
 
-  get badgeCount() {
+  get badgeText() {
     if (this.totalUnread > 0) {
-      return this.totalUnread;
+      return I18n.t("sidebar.unread_count", {
+        count: this.totalUnread,
+      });
     } else if (this.totalNew > 0) {
-      return this.totalNew;
+      return I18n.t("sidebar.new_count", {
+        count: this.totalNew,
+      });
     }
   }
 

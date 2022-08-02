@@ -90,8 +90,8 @@ export default class StickyAvatars {
               return;
             }
 
-            const postContentHeight = entry.target.querySelector(".contents")
-              ?.clientHeight;
+            const postContentHeight =
+              entry.target.querySelector(".contents")?.clientHeight;
             if (
               this.direction === "⬆️" ||
               postContentHeight > window.innerHeight - headerOffset()

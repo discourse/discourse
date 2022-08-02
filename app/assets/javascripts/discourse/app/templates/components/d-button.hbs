@@ -1,13 +1,13 @@
-{{#if isLoading}}
+{{#if this.isLoading}}
   {{~d-icon "spinner" class="loading-icon"~}}
 {{else}}
-  {{#if icon}}
-    {{~d-icon icon~}}
+  {{#if this.icon}}
+    {{~d-icon this.icon~}}
   {{/if}}
 {{/if}}
 
-{{~#if computedLabel~}}
-  <span class="d-button-label">{{html-safe computedLabel}}{{#if ellipsis}}&hellip;{{/if}}</span>
+{{~#if this.computedLabel~}}
+  <span class="d-button-label">{{html-safe this.computedLabel}}{{#if this.ellipsis}}&hellip;{{/if}}</span>
 {{~else~}}
   &#8203;
   {{! Zero-width space character, so icon-only button height = regular button height }}

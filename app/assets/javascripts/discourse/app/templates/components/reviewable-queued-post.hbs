@@ -1,11 +1,11 @@
-<ReviewableTopicLink @reviewable={{reviewable}} @tagName="">
+<ReviewableTopicLink @reviewable={{this.reviewable}} @tagName="">
   <div class="title-text">
     {{d-icon "plus-square" title="review.new_topic"}}
-    {{reviewable.payload.title}}
+    {{this.reviewable.payload.title}}
   </div>
-  {{category-badge reviewable.category}}
-  <ReviewableTags @tags={{reviewable.payload.tags}} @tagName="" />
-  {{#if reviewable.payload.via_email}}
+  {{category-badge this.reviewable.category}}
+  <ReviewableTags @tags={{this.reviewable.payload.tags}} @tagName="" />
+  {{#if this.reviewable.payload.via_email}}
     <a href {{action "showRawEmail"}} class="show-raw-email">
       {{d-icon "far-envelope" title="post.via_email"}}
     </a>
@@ -13,16 +13,16 @@
 </ReviewableTopicLink>
 
 <div class="post-contents-wrapper">
-  <ReviewableCreatedBy @user={{reviewable.created_by}} @tagName="" />
+  <ReviewableCreatedBy @user={{this.reviewable.created_by}} @tagName="" />
 
   <div class="post-contents">
-    <ReviewablePostHeader @reviewable={{reviewable}} @createdBy={{reviewable.created_by}} @tagName="" />
+    <ReviewablePostHeader @reviewable={{this.reviewable}} @createdBy={{this.reviewable.created_by}} @tagName="" />
 
     <CookText
-      @rawText={{reviewable.payload.raw}}
+      @rawText={{this.reviewable.payload.raw}}
       @class="post-body"
-      @categoryId={{reviewable.category_id}}
-      @topicId={{reviewable.topic_id}}
+      @categoryId={{this.reviewable.category_id}}
+      @topicId={{this.reviewable.topic_id}}
       @paintOneboxes={{true}}
       @opts={{hash removeMissing=true}}
     />

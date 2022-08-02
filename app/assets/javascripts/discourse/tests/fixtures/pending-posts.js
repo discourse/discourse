@@ -12,7 +12,7 @@ export default {
         title: "Lorem ipsum dolor sit amet",
         topic_id: 130,
         topic_url: "/t/lorem-ipsum-dolor-sit-amet/130",
-        username: "eviltrout"
+        username: "eviltrout",
       },
       {
         id: 1,
@@ -25,8 +25,8 @@ export default {
         title: "Lorem ipsum dolor sit amet",
         topic_id: 130,
         topic_url: "/t/lorem-ipsum-dolor-sit-amet/130",
-        username: "eviltrout"
+        username: "eviltrout",
       },
-    ]
-  }
+    ],
+  },
 };

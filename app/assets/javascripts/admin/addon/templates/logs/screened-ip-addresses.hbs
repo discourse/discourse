@@ -2,15 +2,15 @@
 
 <div class="screened-ip-controls">
   <div class="filter-screened-ip-address inline-form">
-    <TextField @value={{filter}} @class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.filter" @autocorrect="off" @autocapitalize="off" />
+    <TextField @value={{this.filter}} @class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.filter" @autocorrect="off" @autocapitalize="off" />
     <DButton @class="btn-default" @action={{action "exportScreenedIpList"}} @icon="download" @title="admin.export_csv.button_title.screened_ip" @label="admin.export_csv.button_text" />
   </div>
 
   <ScreenedIpAddressForm @action={{action "recordAdded"}} />
 </div>
 
-<ConditionalLoadingSpinner @condition={{loading}}>
-  {{#if model.length}}
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  {{#if this.model.length}}
     <table class="admin-logs-table screened-ip-addresses grid">
       <thead class="heading-container">
         <th class="col heading first ip_address">{{i18n "admin.logs.ip_address"}}</th>
@@ -21,7 +21,7 @@
         <th class="col heading actions"></th>
       </thead>
       <tbody>
-        {{#each model as |item|}}
+        {{#each this.model as |item|}}
           <tr class="admin-list-item">
             <td class="col first ip_address">
               {{#if item.editing}}

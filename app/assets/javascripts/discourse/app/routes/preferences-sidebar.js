@@ -6,13 +6,11 @@ export default RestrictedUserRoute.extend({
   setupController(controller, user) {
     const props = {
       model: user,
-      selectedSiderbarCategories: user.sidebarCategories,
-      initialSidebarCategoryIds: user.sidebarCategoryIds,
+      selectedSidebarCategories: user.sidebarCategories,
     };
 
     if (this.siteSettings.tagging_enabled) {
       props.selectedSidebarTagNames = user.sidebarTagNames;
-      props.initialSidebarTagNames = user.sidebarTagNames;
     }
 
     controller.setProperties(props);

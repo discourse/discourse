@@ -1,7 +1,7 @@
 <DModalBody @title="admin.badges.badge_groupings.modal_title" @class="badge-groupings-modal">
   <div class="badge-groupings">
     <ul class="badge-groupings-list">
-      {{#each workingCopy as |wc|}}
+      {{#each this.workingCopy as |wc|}}
         <li class="badge-grouping-item">
           <div class="badge-grouping">
             {{#if wc.editing}}
@@ -25,6 +25,6 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "saveAll"}} @label="admin.badges.save" @class="btn-primary" @disabled={{submitDisabled}} />
+  <DButton @action={{action "saveAll"}} @label="admin.badges.save" @class="btn-primary" @disabled={{this.submitDisabled}} />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

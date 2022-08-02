@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::EnqueueDigestEmails do
+RSpec.describe Jobs::EnqueueDigestEmails do
 
   describe '#target_users' do
 

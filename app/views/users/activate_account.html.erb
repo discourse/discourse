@@ -1,5 +1,6 @@
 <div id='simple-container'>
-    <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
+  <div class='activate-account'>
+    <h1 class="activate-title"><%= t 'activation.welcome_to', site_name: SiteSetting.title %> <img src="<%= Emoji.url_for("wave") %>" alt="" class="waving-hand"></h1>
     <br/>
     <button class='btn btn-primary' id='activate-account-button'><%= t 'activation.action' %></button>
 
@@ -7,6 +8,7 @@
       <%= hidden_field_tag 'password_confirmation' %>
       <%= hidden_field_tag 'challenge' %>
     <% end %>
+  </div>
 </div>
 
 <%- content_for(:no_ember_head) do %>

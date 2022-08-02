@@ -589,6 +589,11 @@ es:
               too_many: "Demasiadas palabras para esa acción"
             base:
               invalid_url: "La dirección URL de reemplazo no es válida"
+              invalid_tag_list: "La lista de etiquetas de sustitución no es válida"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "no es válido"
       <<: *errors
   uncategorized_category_name: "Sin categoría"
   vip_category_name: "Sala VIP"
@@ -1584,6 +1589,7 @@ es:
     enable_badges: "Activar el sistema de insignias"
     max_favorite_badges: "Número máximo de insignias que el usuario puede seleccionar"
     enable_whispers: "Permitir que los miembros del equipo se comuniquen entre ellos en privado dentro de los temas."
+    whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     blocked_email_domains: "Lista de dominios de correo electrónico que no pueden ser utilizados para registrarse. Ejemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista separada con barras verticales de dominios de correo electrónico que los usuarios DEBEN usar para registrar sus cuentas. ¡CUIDADO! No se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados"
@@ -3744,6 +3750,12 @@ es:
     dark_rose: "Rosa oscuro"
     wcag: "WCAG Claro"
     wcag_theme_name: "WCAG Claro"
+    dracula: "Drácula"
+    dracula_theme_name: "Drácula"
+    solarized_light: "Solarizado claro"
+    solarized_light_theme_name: "Solarizado claro"
+    solarized_dark: "Solarizado oscuro"
+    solarized_dark_theme_name: "Solarizado oscuro"
     wcag_dark: "WCAG Oscuro"
     wcag_dark_theme_name: "WCAG Oscuro"
     default_theme_name: "Por defecto"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::PermalinksController do
+RSpec.describe Admin::PermalinksController do
 
   it "is a subclass of AdminController" do
     expect(Admin::PermalinksController < Admin::AdminController).to eq(true)

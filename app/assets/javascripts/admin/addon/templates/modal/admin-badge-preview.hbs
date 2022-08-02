@@ -1,8 +1,8 @@
 <DModalBody @title="admin.badges.preview.modal_title" @class="badge-query-preview">
-  {{#if errors}}
+  {{#if this.errors}}
     <p class="error-header">{{i18n "admin.badges.preview.sql_error_header"}}</p>
 
-    <pre class="badge-errors">{{errors}}</pre>
+    <pre class="badge-errors">{{this.errors}}</pre>
 
     {{!--
       TODO we want some help pages for this, link to those instead
@@ -16,14 +16,14 @@
 
   {{else}}
     <p class="grant-count">
-      {{#if count}}
-        {{html-safe (i18n "admin.badges.preview.grant_count" count=count)}}
+      {{#if this.count}}
+        {{html-safe (i18n "admin.badges.preview.grant_count" count=this.count)}}
       {{else}}
         {{html-safe (i18n "admin.badges.preview.no_grant_count")}}
       {{/if}}
     </p>
 
-    {{#if countWarning}}
+    {{#if this.countWarning}}
       <div class="count-warning">
         <p class="heading">
           {{d-icon "exclamation-triangle"}}
@@ -35,20 +35,20 @@
       </div>
     {{/if}}
 
-    {{#if sample}}
+    {{#if this.sample}}
       <p class="sample">
         {{i18n "admin.badges.preview.sample"}}
       </p>
       <ul>
-        {{#each processedSample as |html|}}
+        {{#each this.processedSample as |html|}}
           <li>{{html-safe html}}</li>
         {{/each}}
       </ul>
     {{/if}}
 
-    {{#if hasQueryPlan}}
+    {{#if this.hasQueryPlan}}
       <div class="badge-query-plan">
-        {{html-safe queryPlanHtml}}
+        {{html-safe this.queryPlanHtml}}
       </div>
     {{/if}}
   {{/if}}

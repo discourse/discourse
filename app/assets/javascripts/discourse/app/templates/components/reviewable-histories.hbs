@@ -1,4 +1,4 @@
-{{#if filteredHistories}}
+{{#if this.filteredHistories}}
   <table class="reviewable-histories">
     <thead>
       <tr>
@@ -6,14 +6,14 @@
       </tr>
     </thead>
     <tbody>
-      {{#each filteredHistories as |rh|}}
+      {{#each this.filteredHistories as |rh|}}
         {{#unless rh.created}}
           <tr>
             <td>
               {{reviewable-history-description rh}}
             </td>
             <td>
-              <UserLink @user={{rs.user}}>
+              <UserLink @user={{this.rs.user}}>
                 {{avatar rh.created_by imageSize="tiny"}}
                 {{rh.created_by.username}}
               </UserLink>

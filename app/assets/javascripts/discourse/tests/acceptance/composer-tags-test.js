@@ -1,6 +1,6 @@
 import {
   acceptance,
-  queryAll,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -53,7 +53,7 @@ acceptance("Composer - Tags", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
     assert.strictEqual(
-      queryAll(".popup-tip.bad").text().trim(),
+      query(".popup-tip.bad").innerText.trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
     );
@@ -86,7 +86,7 @@ acceptance("Composer - Tags", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
     assert.strictEqual(
-      queryAll(".popup-tip.bad").text().trim(),
+      query(".popup-tip.bad").innerText.trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
     );

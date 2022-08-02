@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostAction do
+RSpec.describe PostAction do
   it { is_expected.to rate_limit }
 
   fab!(:moderator) { Fabricate(:moderator) }

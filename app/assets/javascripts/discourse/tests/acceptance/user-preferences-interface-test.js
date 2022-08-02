@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -22,7 +22,7 @@ acceptance("User Preferences - Interface", function (needs) {
       assert.ok(!exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
-      queryAll(".saved").remove();
+      query(".saved").remove();
     };
 
     await visit("/u/eviltrout/preferences/interface");
@@ -187,8 +187,8 @@ acceptance(
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has light scheme dropdown");
       assert.strictEqual(
-        queryAll(".light-color-scheme .selected-name").data("value"),
-        session.userColorSchemeId,
+        query(".light-color-scheme .selected-name").dataset.value,
+        session.userColorSchemeId.toString(),
         "user's selected color scheme is selected value in light scheme dropdown"
       );
     });
@@ -237,15 +237,15 @@ acceptance(
         assert.ok(!exists(".saved"), "it hasn't been saved yet");
         await click(".save-changes");
         assert.ok(exists(".saved"), "it displays the saved message");
-        queryAll(".saved").remove();
+        query(".saved").remove();
       };
 
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has regular dropdown");
       assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
       assert.strictEqual(
-        queryAll(".dark-color-scheme .selected-name").data("value"),
-        session.userDarkSchemeId,
+        query(".dark-color-scheme .selected-name").dataset.value,
+        session.userDarkSchemeId.toString(),
         "sets site default as selected dark scheme"
       );
       assert.ok(

@@ -13,7 +13,7 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-export default createPreviewComponent(659, 320, {
+export default createPreviewComponent(642, 322, {
   logo: null,
   avatar: null,
   previewTopic: true,
@@ -113,9 +113,7 @@ export default createPreviewComponent(659, 320, {
   paint({ ctx, colors, font, headingFont, width, height }) {
     const headerHeight = height * 0.3;
 
-    if (this.logo) {
-      this.drawFullHeader(colors, headingFont, this.logo);
-    }
+    this.drawFullHeader(colors, headingFont, this.logo);
 
     const margin = 20;
     const avatarSize = height * 0.15;
@@ -152,8 +150,10 @@ export default createPreviewComponent(659, 320, {
 
     ctx.beginPath();
     ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.1);
-    ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
-    ctx.fill();
+    // accounts for hard-set color variables in solarized themes
+    ctx.fillStyle =
+      colors.primary_low ||
+      darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(

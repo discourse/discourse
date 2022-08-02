@@ -4,23 +4,23 @@
 
       <div class="control-group">
         <div class="controls">
-          <h3>{{i18n (if new "user.add_email.title" "user.change_email.title")}}</h3>
+          <h3>{{i18n (if this.new "user.add_email.title" "user.change_email.title")}}</h3>
         </div>
       </div>
 
-      {{#if success}}
+      {{#if this.success}}
         <div class="control-group">
           <div class="controls">
             <div class="instructions">
-              <p>{{ successMessage }}</p>
+              <p>{{ this.successMessage }}</p>
             </div>
           </div>
         </div>
       {{else}}
-        {{#if error}}
+        {{#if this.error}}
           <div class="control-group">
             <div class="controls">
-              <div class="alert alert-error">{{errorMessage}}</div>
+              <div class="alert alert-error">{{this.errorMessage}}</div>
             </div>
           </div>
         {{/if}}
@@ -28,12 +28,12 @@
         <div class="control-group">
           <label class="control-label">{{i18n "user.email.title"}}</label>
           <div class="controls">
-            <TextField @value={{newEmail}} @id="change-email" @classNames="input-xxlarge" @autofocus="autofocus" />
-            <InputTip @validation={{emailValidation}} />
+            <TextField @value={{this.newEmail}} @id="change-email" @classNames="input-xxlarge" @autofocus="autofocus" />
+            <InputTip @validation={{this.emailValidation}} />
           </div>
           <div class="controls">
             <div class="instructions">
-              {{#if taken}}
+              {{#if this.taken}}
                 {{i18n "user.change_email.taken"}}
               {{else}}
                 {{i18n "user.email.instructions"}}
@@ -44,7 +44,7 @@
 
         <div class="control-group">
           <div class="controls">
-            <DButton @class="btn-primary" @action={{action "saveEmail"}} @type="submit" @disabled={{saveDisabled}} @translatedLabel={{saveButtonText}} />
+            <DButton @class="btn-primary" @action={{action "saveEmail"}} @type="submit" @disabled={{this.saveDisabled}} @translatedLabel={{this.saveButtonText}} />
           </div>
         </div>
       {{/if}}

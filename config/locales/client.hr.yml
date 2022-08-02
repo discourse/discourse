@@ -655,6 +655,7 @@ hr:
       forever: "Zauvijek"
       relative: "Relativno vrijeme"
       none: "Nijedna nije potrebna"
+      never: "Nikad"
       last_custom: "Posljednji prilagođeni datum"
       custom: "Prilagođeni datum i vrijeme"
       select_timeframe: "Odabir vremenskog okvira"
@@ -1143,7 +1144,9 @@ hr:
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
       enable_quoting: "Omogući citirani odgovor označenoj teksta"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
-      enable_experimental_sidebar: "Omogući eksperimentalnu bočnu traku"
+      experimental_sidebar:
+        enable: "Omogući eksperimentalnu bočnu traku"
+        options: "Mogućnosti"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -1768,11 +1771,9 @@ hr:
       other: odgovora
     signup_cta:
       sign_up: "Učlani se"
-      hide_session: "Podsjeti me sutra."
       hide_forever: "ne hvala"
       hidden_for_session: "OK, pitat ćemo te sutra. Uvijek možete upotrijebiti 'Prijava' i za stvaranje računa."
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
-      value_prop: "Kada stvorite račun, sjećamo se točno onoga što ste pročitali, pa se uvijek vraćate na mjesto gdje ste stali. Također dobivate obavijesti, ovdje i putem e-pošte, kad god vam netko odgovara. I možete lajkati :heartpulse: tuđe postove i reagirati na iste reakcijama."
     summary:
       enabled_description: "Gledate pregled ove teme: najzanimljivije članke odabire zajednica."
       description:
@@ -1984,10 +1985,6 @@ hr:
         one: "Odaberite barem %{count} stavku."
         few: "Odaberite barem %{count} stavki."
         other: "Odaberite barem %{count} stavki."
-      invalid_selection_length:
-        one: "Odabir mora sadržavati najmanje %{count} znakova."
-        few: "Odabir mora sadržavati najmanje %{count} znakova."
-        other: "Odabir mora sadržavati najmanje %{count} znakova."
       components:
         tag_drop:
           filter_for_more: Filtrirajte za više ...
@@ -2195,6 +2192,7 @@ hr:
       empty: "Obavijesti nisu pronađene."
       post_approved: "Vaš post je odobren"
       reviewable_items: "stavke koje zahtijevaju pregled"
+      watching_first_post_label: "Nova tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2208,6 +2206,11 @@ hr:
         one: "<span class='multi-user'>%{username}, %{username2} i %{count} ostalo</span> %{description}"
         few: "<span class='multi-user'>%{username}, %{username2} i %{count} ostalih</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} i %{count} ostali</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} i %{count} ostalo"
+        few: "%{username}, %{username2} i %{count} ostalih"
+        other: "%{username}, %{username2} i %{count} ostali"
       liked_consolidated_description:
         one: "se sviđa vaš %{count} post"
         few: "se sviđa vaših %{count} postova"
@@ -3539,7 +3542,6 @@ hr:
         this_week: "Tjedan"
         today: "Danas"
         other_periods: "vidi vrh:"
-    browser_update: 'Nažalost, <a href="https://www.discourse.org/faq/#browser">vaš preglednik je prestar za rad na ovoj stranici</a>. Molimo <a href="https://browsehappy.com">nadogradite svoj preglednik</a> kako biste vidjeli bogat sadržaj, prijavili se i odgovorili.'
     permission_types:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
@@ -3883,8 +3885,14 @@ hr:
     second_factor_auth:
       redirect_after_success: "Provjera autentičnosti drugog faktora je uspješna. Preusmjeravanje na prethodnu stranicu…"
     sidebar:
-      unread_count: "%{count} nepročitano"
-      new_count: "%{count} novi"
+      unread_count:
+        one: "%{count} nepročitano"
+        few: "%{count} nepročitano"
+        other: "%{count} nepročitano"
+      new_count:
+        one: "%{count} novi"
+        few: "%{count} novih"
+        other: "%{count} novi"
       sections:
         messages:
           header_link_text: "Poruke"
@@ -3902,9 +3910,9 @@ hr:
         categories:
           header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
-        topics:
+        community:
           header_link_title: "naslovnica"
-          header_link_text: "Teme"
+          header_link_text: "Zajednica"
           header_action_title: "otvori novu temu"
           links:
             everything:
@@ -3913,9 +3921,11 @@ hr:
             tracked:
               content: "Praćeno"
               title: "Sve praćene teme"
-            bookmarked:
-              content: "Označeno"
-              title: "Sve označene teme"
+            groups:
+              content: "Grupe"
+              title: "Sve grupe"
+            users:
+              content: "Korisnika"
             my_posts:
               content: "Moje objave"
   admin_js:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UrlHelper do
+RSpec.describe UrlHelper do
 
   describe "#relaxed parse" do
 

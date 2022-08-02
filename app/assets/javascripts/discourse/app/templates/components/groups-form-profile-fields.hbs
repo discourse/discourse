@@ -1,34 +1,34 @@
-{{#if canEdit}}
+{{#if this.canEdit}}
   {{#if this.currentUser.can_create_group}}
     <div class="control-group">
       <label class="control-label" for="name">{{i18n "groups.name"}}</label>
 
-      <TextField @name="name" @class="input-xxlarge group-form-name" @value={{nameInput}} @placeholderKey="admin.groups.name_placeholder" />
+      <TextField @name="name" @class="input-xxlarge group-form-name" @value={{this.nameInput}} @placeholderKey="admin.groups.name_placeholder" />
 
-      <InputTip @validation={{nameValidation}} />
+      <InputTip @validation={{this.nameValidation}} />
     </div>
   {{/if}}
 
   <div class="control-group">
     <label class="control-label" for="full_name">{{i18n "groups.manage.full_name"}}</label>
 
-    <TextField @name="full_name" @class="input-xxlarge group-form-full-name" @value={{model.full_name}} />
+    <TextField @name="full_name" @class="input-xxlarge group-form-full-name" @value={{this.model.full_name}} />
   </div>
 {{/if}}
 
 <div class="control-group">
   <label class="control-label" for="bio">{{i18n "groups.bio"}}</label>
-  <DEditor @value={{model.bio_raw}} @class="group-form-bio input-xxlarge" />
+  <DEditor @value={{this.model.bio_raw}} @class="group-form-bio input-xxlarge" />
 </div>
 
-{{#if model.automatic}}
+{{#if this.model.automatic}}
   <div class="control-group">
-    <GroupFlairInputs @model={{model}} />
+    <GroupFlairInputs @model={{this.model}} />
   </div>
 {{/if}}
 
-{{#if canEdit}}
+{{#if this.canEdit}}
   {{yield}}
 
-  <PluginOutlet @name="group-edit" @tagName="span" @connectorTagName="div" @args={{hash group=model}} />
+  <PluginOutlet @name="group-edit" @tagName="span" @connectorTagName="div" @args={{hash group=this.model}} />
 {{/if}}

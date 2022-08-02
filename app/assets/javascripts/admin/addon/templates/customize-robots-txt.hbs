@@ -1,13 +1,13 @@
 <div class="robots-txt-edit">
   <h3>{{i18n "admin.customize.robots.title"}}</h3>
   <p>{{i18n "admin.customize.robots.warning"}}</p>
-  {{#if model.overridden}}
+  {{#if this.model.overridden}}
     <div class="overridden">
       {{i18n "admin.customize.robots.overridden"}}
     </div>
   {{/if}}
-  <Textarea @value={{buffered.robots_txt}} class="robots-txt-input" />
-  <SaveControls @model={{this}} @action={{action "save"}} @saved={{saved}} @saveDisabled={{saveDisabled}}>
-    <DButton @class="btn-default" @disabled={{resetDisabled}} @icon="undo" @action={{action "reset"}} @label="admin.settings.reset" />
+  <Textarea @value={{this.buffered.robots_txt}} class="robots-txt-input" />
+  <SaveControls @model={{this}} @action={{action "save"}} @saved={{this.saved}} @saveDisabled={{this.saveDisabled}}>
+    <DButton @class="btn-default" @disabled={{this.resetDisabled}} @icon="undo" @action={{action "reset"}} @label="admin.settings.reset" />
   </SaveControls>
 </div>

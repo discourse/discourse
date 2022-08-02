@@ -2,7 +2,7 @@
 
 require 'suggested_topics_builder'
 
-describe SuggestedTopicsBuilder do
+RSpec.describe SuggestedTopicsBuilder do
 
   fab!(:topic) { Fabricate(:topic) }
   let(:builder) { SuggestedTopicsBuilder.new(topic) }

@@ -41,9 +41,15 @@ acceptance("Post controls", function () {
       I18n.t("post.actions.people.sr_post_likers_list_description"),
       "likes container has aria-label"
     );
-    const likesAvatars = Array.from(
-      likesContainer.querySelectorAll("a.trigger-user-card")
+    assert.equal(
+      likesContainer
+        .querySelector(".list-description")
+        .getAttribute("aria-hidden"),
+      "true",
+      "list description is aria-hidden"
     );
+
+    const likesAvatars = likesContainer.querySelectorAll("a.trigger-user-card");
     assert.ok(likesAvatars.length > 0, "avatars are rendered");
     likesAvatars.forEach((avatar) => {
       assert.equal(
@@ -57,13 +63,6 @@ acceptance("Post controls", function () {
         "avatars have listitem role"
       );
     });
-    assert.equal(
-      likesContainer
-        .querySelector(".list-description")
-        .getAttribute("aria-hidden"),
-      "true",
-      "list description is aria-hidden"
-    );
   });
 
   test("accessibility of the embedded replies below the post", async function (assert) {

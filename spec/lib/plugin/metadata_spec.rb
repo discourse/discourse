@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Plugin::Metadata do
+RSpec.describe Plugin::Metadata do
   context "parse" do
     it "correctly parses plugin info" do
       metadata = Plugin::Metadata.parse <<TEXT

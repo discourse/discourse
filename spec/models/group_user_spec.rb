@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupUser do
+RSpec.describe GroupUser do
 
   it 'correctly sets notification level' do
     moderator = Fabricate(:moderator)

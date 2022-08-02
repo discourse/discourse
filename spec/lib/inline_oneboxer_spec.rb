@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InlineOneboxer do
+RSpec.describe InlineOneboxer do
 
   it "should return nothing with empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank
@@ -44,7 +44,7 @@ describe InlineOneboxer do
     end
   end
 
-  context ".lookup" do
+  describe ".lookup" do
     let(:category) { Fabricate(:private_category, group: Group[:staff]) }
     let(:category2) { Fabricate(:private_category, group: Group[:staff]) }
 

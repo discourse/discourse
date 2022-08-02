@@ -1,4 +1,4 @@
-import EmberObject, { set } from "@ember/object";
+import { set } from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   alertChannel,
@@ -12,6 +12,7 @@ import {
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
+import Notification from "discourse/models/notification";
 
 export default {
   name: "subscribe-user-notifications",
@@ -19,7 +20,7 @@ export default {
 
   initialize(container) {
     const user = container.lookup("current-user:main");
-    const bus = container.lookup("message-bus:main");
+    const bus = container.lookup("service:message-bus");
     const appEvents = container.lookup("service:app-events");
 
     if (user) {
@@ -88,7 +89,7 @@ export default {
 
               oldNotifications.insertAt(
                 insertPosition,
-                EmberObject.create(lastNotification)
+                Notification.create(lastNotification)
               );
             }
 
@@ -116,13 +117,12 @@ export default {
         user.updateDoNotDisturbStatus(data.ends_at);
       });
 
-      bus.subscribe(`/user-status/${user.id}`, (data) => {
-        user.set("status", data);
-        appEvents.trigger("user-status:changed");
+      bus.subscribe(`/user-status`, (data) => {
+        appEvents.trigger("user-status:changed", data);
       });
 
       const site = container.lookup("site:main");
-      const siteSettings = container.lookup("site-settings:main");
+      const siteSettings = container.lookup("service:site-settings");
       const router = container.lookup("router:main");
 
       bus.subscribe("/categories", (data) => {

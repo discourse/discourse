@@ -1,5 +1,5 @@
 <DModalBody @title="do_not_disturb.title">
-  <TapTileGrid @activeTile={{duration}} as |grid|>
+  <TapTileGrid @activeTile={{this.duration}} as |grid|>
     <TapTile @class="do-not-disturb-tile" @tileId="30" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
       {{i18n "do_not_disturb.options.half_hour"}}
     </TapTile>

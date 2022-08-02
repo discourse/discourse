@@ -1,14 +1,14 @@
-{{#if shouldDisplay}}
+{{#if this.shouldDisplay}}
   <div class="presence-users">
     <div class="presence-avatars">
-      {{#each users as |user|}}
+      {{#each this.users as |user|}}
         <UserLink @user={{user}}>
           {{avatar user imageSize="small"}}
         </UserLink>
       {{/each}}
     </div>
     <span class="presence-text">
-      <span class="description">{{i18n "presence.replying_to_topic" count=users.length}}</span>{{!-- (using comment to stop whitespace)
+      <span class="description">{{i18n "presence.replying_to_topic" count=this.users.length}}</span>{{!-- (using comment to stop whitespace)
   --}}<span class="wave"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>
     </span>
   </div>

@@ -1,5 +1,5 @@
-<DButton @action={{this.action}} @disabled={{buttonDisabled}} @label={{savingText}} @class="btn-primary save-changes" />
-{{#if saved}}
+<DButton @action={{this.action}} @disabled={{this.buttonDisabled}} @label={{this.savingText}} @class="btn-primary save-changes" />
+{{#if this.saved}}
   <span class="saved">{{i18n "saved"}}</span>
 {{/if}}
 

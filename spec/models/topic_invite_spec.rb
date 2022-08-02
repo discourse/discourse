@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicInvite do
+RSpec.describe TopicInvite do
 
   it { is_expected.to belong_to :topic }
   it { is_expected.to belong_to :invite }

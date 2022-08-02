@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-describe EmailToken do
+RSpec.describe EmailToken do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :email }
   it { is_expected.to belong_to :user }
 
-  context '#create' do
+  describe '#create' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
     let!(:email_token) { Fabricate(:email_token, user: user, email: 'bubblegum@adventuretime.ooo') }
@@ -41,7 +41,7 @@ describe EmailToken do
     end
   end
 
-  context '#confirm' do
+  describe '#confirm' do
     fab!(:user) { Fabricate(:user, active: false) }
     let!(:email_token) { Fabricate(:email_token, user: user) }
 
@@ -113,8 +113,8 @@ describe EmailToken do
 
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
-      let!(:user_email_token) { Fabricate(:email_token, user: invited_user) }
-      let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }
+      let!(:user_email_token) { Fabricate(:email_token, user: invited_user, scope: EmailToken.scopes[:signup]) }
+      let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token, scope: EmailToken.scopes[:signup]) }
 
       it "returns the correct user" do
         expect(confirmed_invited_user).to eq invited_user
@@ -133,6 +133,41 @@ describe EmailToken do
       it 'redeems invite' do
         invite.reload
         expect(invite).to be_redeemed
+      end
+
+      it 'marks the user as approved' do
+        expect(confirmed_invited_user).to be_approved
+      end
+    end
+
+    context 'does not redeem the invite if token is password_reset' do
+      before do
+        SiteSetting.must_approve_users = true
+        Jobs.run_immediately!
+      end
+
+      fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
+      fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
+      let!(:user_email_token) { Fabricate(:email_token, user: invited_user, scope: EmailToken.scopes[:password_reset]) }
+      let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token, scope: EmailToken.scopes[:password_reset]) }
+
+      it "returns the correct user" do
+        expect(confirmed_invited_user).to eq invited_user
+      end
+
+      it 'marks the user as active' do
+        confirmed_invited_user.reload
+        expect(confirmed_invited_user).to be_active
+      end
+
+      it 'marks the token as confirmed' do
+        user_email_token.reload
+        expect(user_email_token).to be_confirmed
+      end
+
+      it 'does not redeem invite' do
+        invite.reload
+        expect(invite).not_to be_redeemed
       end
 
       it 'marks the user as approved' do

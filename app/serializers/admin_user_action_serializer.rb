@@ -52,15 +52,15 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def slug
-    topic.slug
+    object.topic&.slug
   end
 
   def title
-    topic.title
+    object.topic&.title
   end
 
   def category_id
-    topic.category_id
+    object.topic&.category_id
   end
 
   def moderator_action
@@ -80,15 +80,4 @@ class AdminUserActionSerializer < ApplicationSerializer
       .select { |ua| [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type }
       .first.try(:action_type)
   end
-
-  private
-
-  # we need this to handle deleted topics which aren't loaded via the .includes(:topic)
-  # because Rails 4 "unscoped" support is bugged (cf. https://github.com/rails/rails/issues/13775)
-  def topic
-    return @topic if @topic
-    @topic = object.topic || Topic.with_deleted.find(object.topic_id)
-    @topic
-  end
-
 end

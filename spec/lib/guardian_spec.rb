@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Guardian do
+RSpec.describe Guardian do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
@@ -2789,8 +2789,8 @@ describe Guardian do
 
       context 'with no posts' do
         include_examples "staff can always change usernames"
-        it "is true for the user to change their own username" do
-          expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_truthy
+        it "is false for the user to change their own username" do
+          expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_falsey
         end
       end
 
@@ -3377,6 +3377,22 @@ describe Guardian do
         it "returns true if admin" do
           expect(Guardian.new(admin).can_create_tag?).to be_truthy
         end
+      end
+    end
+
+    context "tagging PMs" do
+      it "pm_tags_allowed_for_groups contains everyone" do
+        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+
+        expect(Guardian.new(user).can_tag_pms?).to be_truthy
+      end
+
+      it "pm_tags_allowed_for_groups contains a group" do
+        SiteSetting.pm_tags_allowed_for_groups = "#{group.id}"
+        group.add(member)
+
+        expect(Guardian.new(user).can_tag_pms?).to be_falsey
+        expect(Guardian.new(member).can_tag_pms?).to be_truthy
       end
     end
   end

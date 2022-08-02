@@ -12,13 +12,13 @@ import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
+import sinon from "sinon";
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
     return helper.response([
       {
-        url:
-          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        url: "/images/discourse-logo-sketch-small.png",
         short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
       },
@@ -40,8 +40,7 @@ function pretender(server, helper) {
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         thumbnail_height: 320,
         thumbnail_width: 690,
-        url:
-          "//testbucket.s3.dualstack.us-east-2.amazonaws.com/original/1X/f1095d89269ff22e1818cf54b73e857261851019.jpeg",
+        url: "/images/discourse-logo-sketch-small.png",
         width: 1920,
       });
     },
@@ -76,6 +75,40 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n[Uploading: avatar.png...]()\n"
+      );
+    });
+
+    const image = createFile("avatar.png");
+    appEvents.trigger("composer:add-files", image);
+  });
+
+  test("should handle placeholders correctly even if the OS rewrites ellipses", async function (assert) {
+    const execCommand = document.execCommand;
+    sinon.stub(document, "execCommand").callsFake(function (...args) {
+      if (args[0] === "insertText") {
+        args[2] = args[2].replace("...", "…");
+      }
+      return execCommand.call(document, ...args);
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:all-uploads-complete", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
+      );
+      done();
+    });
+
+    appEvents.on("composer:upload-started", () => {
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n[Uploading: avatar.png…]()\n"
       );
     });
 
@@ -389,6 +422,14 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   });
 
   test("should show an error message for the failed upload", async function (assert) {
+    // Don't log the upload error
+    const stub = sinon
+      .stub(console, "error")
+      .withArgs(
+        sinon.match(/\[Uppy\]/),
+        sinon.match(/Failed to upload avatar\.png/)
+      );
+
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -396,6 +437,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:upload-error", async () => {
+      sinon.assert.calledOnce(stub);
       assert.strictEqual(
         query(".bootbox .modal-body").innerHTML,
         "There was an error uploading the file, the gif was way too cool.",
@@ -433,14 +475,14 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   test("should use upload handler if the matching extension is used and a single file is uploaded", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const image = createFile("handlertest.png");
+    const image = createFile("handler-test.png");
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
       assert.strictEqual(
         query(".bootbox .modal-body").innerHTML,
-        "This is an upload handler test for handlertest.png. The file WAS a native file object.",
+        "This is an upload handler test for handler-test.png. The file WAS a native file object.",
         "it should show the bootbox triggered by the upload handler"
       );
       await click(".modal-footer .btn");

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Notification do
+RSpec.describe Notification do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
@@ -106,7 +106,7 @@ describe Notification do
         post_args[:topic].notify_muted!(user)
         expect {
           Fabricate(:post, user: user2, topic: post.topic, raw: 'hello @' + user.username)
-        }.to change(user.notifications, :count).by(0)
+        }.not_to change(user.notifications, :count)
       end
     end
 
@@ -368,7 +368,7 @@ describe Notification do
 end
 
 # pulling this out cause I don't want an observer
-describe Notification do
+RSpec.describe Notification do
   describe '#recent_report' do
     fab!(:user) { Fabricate(:user) }
     let(:post) { Fabricate(:post) }

@@ -125,8 +125,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           user: this.currentUser,
           siteSettings: this.siteSettings,
           isPrivateMessage,
-          allowStaffToUploadAnyFileInPm: this.siteSettings
-            .allow_staff_to_upload_any_file_in_pm,
+          allowStaffToUploadAnyFileInPm:
+            this.siteSettings.allow_staff_to_upload_any_file_in_pm,
         };
 
         const isUploading = validateUploadedFile(currentFile, validationOpts);
@@ -451,6 +451,15 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.appEvents.trigger(
         `${this.composerEventPrefix}:replace-text`,
         placeholderData.uploadPlaceholder,
+        placeholderData.processingPlaceholder
+      );
+
+      // Safari applies user-defined replacements to text inserted programatically.
+      // One of the most common replacements is ... -> …, so we take care of the case
+      // where that transformation has been applied to the original placeholder
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        placeholderData.uploadPlaceholder.replace("...", "…"),
         placeholderData.processingPlaceholder
       );
     });

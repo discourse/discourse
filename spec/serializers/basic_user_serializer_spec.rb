@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicUserSerializer do
+RSpec.describe BasicUserSerializer do
   describe '#as_json' do
     let(:user) { Fabricate.build(:user) }
     let(:serializer) { BasicUserSerializer.new(user, scope: Guardian.new(user), root: false) }

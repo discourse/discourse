@@ -3,7 +3,7 @@
 
 require 'archetype'
 
-describe Archetype do
+RSpec.describe Archetype do
 
   context 'default archetype' do
 

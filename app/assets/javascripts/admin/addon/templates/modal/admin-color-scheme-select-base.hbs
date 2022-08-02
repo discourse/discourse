@@ -1,7 +1,7 @@
 <div>
   <DModalBody @title="admin.customize.colors.select_base.title">
     {{i18n "admin.customize.colors.select_base.description"}}
-    <ComboBox @content={{model}} @value={{selectedBaseThemeId}} @onChange={{action (mut selectedBaseThemeId)}} @valueProperty="base_scheme_id" />
+    <ComboBox @content={{this.model}} @value={{this.selectedBaseThemeId}} @onChange={{action (mut this.selectedBaseThemeId)}} @valueProperty="base_scheme_id" />
   </DModalBody>
 
   <div class="modal-footer">

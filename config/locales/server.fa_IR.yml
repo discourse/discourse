@@ -357,6 +357,10 @@ fa_IR:
               too_many: "برای چنین کاری کلمات زیادی است"
             base:
               invalid_tag_list: "فهرست برچسب جایگزین نامعتبر است"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "معتبر نیست"
       <<: *errors
   uncategorized_category_name: "دسته‌بندی‌نشده"
   vip_category_name: "سالن"
@@ -2034,6 +2038,12 @@ fa_IR:
     base_theme_name: "پایه"
     light: "روشن"
     dark: "تیره"
+    dracula: "دراکولا"
+    dracula_theme_name: "دراکولا"
+    solarized_light: "خورشیدی روشن"
+    solarized_light_theme_name: "خورشیدی روشن"
+    solarized_dark: "خورشیدی تیره"
+    solarized_dark_theme_name: "خورشیدی تیره"
     default_theme_name: "پیش‌فرض"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
@@ -2306,6 +2316,8 @@ fa_IR:
                 label: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
               categories_and_latest_topics:
                 label: "دسته‌بندی‌ها و آخرین موضوعات"
+              categories_and_latest_topics_created_date:
+                label: "دسته‌بندی‌ها و آخرین موضوعات «مرتب‌سازی بر اساس تاریخ ایجاد موضوع»"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
       logos:

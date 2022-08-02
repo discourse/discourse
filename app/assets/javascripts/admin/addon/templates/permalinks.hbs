@@ -5,10 +5,10 @@
 </div>
 <PermalinkForm @action={{action "recordAdded"}} />
 
-<ConditionalLoadingSpinner @condition={{loading}}>
-  {{#if model.length}}
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  {{#if this.model.length}}
     <div class="permalink-search">
-      <TextField @value={{filter}} @class="url-input" @placeholderKey="admin.permalink.form.filter" @autocorrect="off" @autocapitalize="off" />
+      <TextField @value={{this.filter}} @class="url-input" @placeholderKey="admin.permalink.form.filter" @autocorrect="off" @autocapitalize="off" />
     </div>
     <table class="admin-logs-table permalinks grid">
       <thead class="heading-container">
@@ -17,7 +17,7 @@
         <th class="col heading actions"></th>
       </thead>
       <tbody>
-        {{#each model as |pl|}}
+        {{#each this.model as |pl|}}
           <tr class="admin-list-item">
             <td class="col first url">
               <FlatButton @title="admin.permalink.copy_to_clipboard" @icon="far-clipboard" @action={{action "copyUrl" pl}} />

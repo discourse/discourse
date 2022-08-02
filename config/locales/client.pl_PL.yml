@@ -194,6 +194,7 @@ pl_PL:
       to_placeholder: "do daty"
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
+      post: "post #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
@@ -705,6 +706,7 @@ pl_PL:
       forever: "Zawsze"
       relative: "Względny czas"
       none: "Żadne nie są potrzebne"
+      never: "Nigdy"
       last_custom: "Ostatnia niestandardowa data i godzina"
       custom: "Niestandardowa data i godzina"
       select_timeframe: "Wybierz przedział czasowy"
@@ -1200,7 +1202,13 @@ pl_PL:
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
-      enable_experimental_sidebar: "Włącz eksperymentalny pasek boczny"
+      experimental_sidebar:
+        enable: "Włącz eksperymentalny pasek boczny"
+        options: "Opcje"
+        categories_section: "Sekcja kategorii"
+        categories_section_instruction: "Wybrane kategorie będą wyświetlane w sekcji kategorii paska bocznego."
+        tags_section: "Sekcja tagów"
+        tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1316,6 +1324,7 @@ pl_PL:
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
+        sidebar: "Pasek boczny"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -1778,6 +1787,7 @@ pl_PL:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
+      remove_status: "Usuń status"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -1839,11 +1849,9 @@ pl_PL:
       other: odpowiedzi
     signup_cta:
       sign_up: "Rejestracja"
-      hide_session: "Przypomnij mi jutro"
       hide_forever: "nie, dziękuję"
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
-      value_prop: "Jeśli założysz konto, będziemy pamiętać dokładnie to, co przeczytałeś/łaś, więc zawsze wrócisz tam, gdzie ostatnio opuściłeś/łaś temat. Otrzymasz również powiadomienia, tutaj i za pośrednictwem poczty email, gdy ktoś Ci odpowie. Możesz również polubić wpisy, aby dzielić się miłością. :heartpulse:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
@@ -2062,11 +2070,6 @@ pl_PL:
         few: "Wybierz co najmniej %{count} elementy."
         many: "Wybierz co najmniej %{count} elementów."
         other: "Wybierz co najmniej %{count} elementów."
-      invalid_selection_length:
-        one: "Zaznaczenie musi zawierać co najmniej %{count} znak."
-        few: "Zaznaczenie musi zawierać co najmniej %{count} znaki."
-        many: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
-        other: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
       components:
         tag_drop:
           filter_for_more: Filtruj po więcej...
@@ -2285,6 +2288,7 @@ pl_PL:
       empty: "Nie znaleziono powiadomień."
       post_approved: "Twój wpis został zatwierdzony"
       reviewable_items: "przedmioty wymagające przeglądu"
+      watching_first_post_label: "Nowy temat"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2299,6 +2303,12 @@ pl_PL:
         few: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} i %{count} inna osoba"
+        few: "%{username}, %{username2} i %{count} inne osoby"
+        many: "%{username}, %{username2} i %{count} innych osób"
+        other: "%{username}, %{username2} oraz %{count} innych"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"
@@ -2511,6 +2521,9 @@ pl_PL:
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
     current_user: "idź do swojej strony użytkowanika"
     view_all: "zobacz wszystkie %{tab}"
+    user_menu:
+      sr_menu_tabs: "Zakładki menu"
+      view_all_notifications: "zobacz wszystkie powiadomienia"
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
@@ -3061,6 +3074,7 @@ pl_PL:
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
+      sr_date: "Data wysłania"
       expand_collapse: "rozwiń/zwiń"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
       gap:
@@ -3687,7 +3701,7 @@ pl_PL:
         this_week: "Tydzień"
         today: "Dzisiaj"
         other_periods: "Zobacz najczęściej dyskutowane:"
-    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">Twoja przeglądarka jest za stara, aby pracować na tej stronie</a>. Proszę <a href="https://browsehappy.com">uaktualnić przeglądarkę</a> , aby wyświetlić bogatą zawartość, zalogować się i odpowiedzieć.'
+    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -4044,8 +4058,17 @@ pl_PL:
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
-      unread_count: "%{count} nieprzeczytany"
-      new_count: "%{count} nowy"
+      unread_count:
+        one: "%{count} nieprzeczytany"
+        few: "%{count} nieprzeczytane"
+        many: "%{count} nieprzeczytanych"
+        other: "%{count} nieprzeczytany"
+      new_count:
+        one: "%{count} nowy"
+        few: "%{count} nowe"
+        many: "%{count} nowych"
+        other: "%{count} nowy"
+      toggle_section: "przełącz sekcję"
       sections:
         messages:
           header_link_title: "osobiste wiadomości"
@@ -4060,16 +4083,20 @@ pl_PL:
             unread_with_count: "Nieprzeczytane (%{count})"
             archive: "Archiwum"
         tags:
-          no_tracked_tags: "Nie śledzisz żadnych tagów."
+          none: "Nie dodałeś żadnych tagów."
+          click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_title: "wszystkie tagi"
           header_link_text: "Etykiety"
+          header_action_title: "edytuj tagi paska bocznego"
         categories:
-          no_tracked_categories: "Nie śledzisz żadnych kategorii."
+          none: "Nie dodałeś żadnych kategorii."
+          click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"
-        topics:
+          header_action_title: "edytuj kategorie paska bocznego"
+        community:
           header_link_title: "strona główna"
-          header_link_text: "Tematy"
+          header_link_text: "Społeczność"
           header_action_title: "utwórz nowy temat"
           links:
             everything:
@@ -4078,8 +4105,11 @@ pl_PL:
             tracked:
               content: "Śledzone"
               title: "Wszystkie śledzone tematy"
-            bookmarked:
-              title: "Wszystkie tematy dodane do zakładek"
+            groups:
+              content: "Grupy"
+              title: "Wszystkie grupy"
+            users:
+              content: "Użytkownicy"
             my_posts:
               content: "Wysłane"
               title: "Moje posty"

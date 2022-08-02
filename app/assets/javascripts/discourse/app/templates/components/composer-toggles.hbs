@@ -1,13 +1,13 @@
 <div class="composer-controls">
   <PluginOutlet @name="before-composer-toggles" @tagName="span" @connectorTagName="div" />
 
-  {{#if site.mobileView}}
-    <DButton @class="btn-flat toggle-toolbar btn-mini-toggle" @icon="bars" @action={{toggleToolbar}} @title={{toggleToolbarTitle}} @preventFocus={{true}} @tabindex={{-1}} />
+  {{#if this.site.mobileView}}
+    <DButton @class="btn-flat toggle-toolbar btn-mini-toggle" @icon="bars" @action={{this.toggleToolbar}} @title={{this.toggleToolbarTitle}} @preventFocus={{true}} @tabindex={{-1}} />
   {{/if}}
 
-  <DButton @class="btn-flat toggler toggle-minimize btn-mini-toggle" @icon={{toggleIcon}} @action={{toggleComposer}} @title={{toggleTitle}} @tabindex={{-1}} />
+  <DButton @class="btn-flat toggler toggle-minimize btn-mini-toggle" @icon={{this.toggleIcon}} @action={{this.toggleComposer}} @title={{this.toggleTitle}} @tabindex={{-1}} />
 
-  {{#if showFullScreenButton}}
-    <DButton @class="btn-flat toggle-fullscreen btn-mini-toggle" @icon={{fullscreenIcon}} @action={{toggleFullscreen}} @title={{fullscreenTitle}} @tabindex={{-1}} />
+  {{#if this.showFullScreenButton}}
+    <DButton @class="btn-flat toggle-fullscreen btn-mini-toggle" @icon={{this.fullscreenIcon}} @action={{this.toggleFullscreen}} @title={{this.fullscreenTitle}} @tabindex={{-1}} />
   {{/if}}
 </div>

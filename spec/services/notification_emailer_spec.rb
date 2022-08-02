@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe NotificationEmailer do
+RSpec.describe NotificationEmailer do
 
   before do
     freeze_time

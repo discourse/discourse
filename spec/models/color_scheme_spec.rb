@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ColorScheme do
+RSpec.describe ColorScheme do
   after do
     ColorScheme.hex_cache.clear
   end

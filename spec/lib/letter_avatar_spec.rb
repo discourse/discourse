@@ -2,7 +2,7 @@
 
 require 'letter_avatar'
 
-describe LetterAvatar do
+RSpec.describe LetterAvatar do
   it "can cleanup correctly" do
     path = LetterAvatar.cache_path
 

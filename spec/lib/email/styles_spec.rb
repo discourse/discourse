@@ -2,7 +2,7 @@
 
 require 'email'
 
-describe Email::Styles do
+RSpec.describe Email::Styles do
   let(:attachments) { {} }
 
   def basic_fragment(html)

@@ -1,5 +1,5 @@
-{{#each categories as |c|}}
-  <div data-notification-level={{c.notificationLevelString}} style={{unless noCategoryStyle (html-safe (concat (border-color c.color) (category-color-variable c.color)))}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if noCategoryStyle "no-category-boxes-style"}}">
+{{#each this.categories as |c|}}
+  <div data-notification-level={{c.notificationLevelString}} style={{unless this.noCategoryStyle (html-safe (concat (border-color c.color) (category-color-variable c.color)))}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if this.noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       <div class="category-box-heading">
         <a href={{c.url}}>
@@ -12,7 +12,7 @@
           <h3>
             <CategoryTitleBefore @category={{c}} />
             {{#if c.read_restricted}}
-              {{d-icon lockIcon}}
+              {{d-icon this.lockIcon}}
             {{/if}}
             {{c.name}}
           </h3>

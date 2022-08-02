@@ -15,7 +15,7 @@
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^2.0.0",
+    "eslint-config-discourse": "^3.2.0",
     "magnific-popup": "1.1.0",
     "markdown-it": "13.0.1",
     "moment": "2.29.2",
@@ -37,7 +37,7 @@
     "puppeteer-core": "^13.7.0"
   },
   "scripts": {
-    "postinstall": "yarn --cwd app/assets/javascripts/discourse"
+    "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
   },
   "engines": {
     "node": "16.* || >= 18",

@@ -1,52 +1,52 @@
-{{#unless selectKit.isHidden}}
-  {{component selectKit.options.headerComponent
-    tabindex=tabindex
-    value=value
-    selectedContent=selectedContent
-    selectKit=selectKit
-    id=(concat selectKit.uniqueID "-header")
+{{#unless this.selectKit.isHidden}}
+  {{component this.selectKit.options.headerComponent
+    tabindex=this.tabindex
+    value=this.value
+    selectedContent=this.selectedContent
+    selectKit=this.selectKit
+    id=(concat this.selectKit.uniqueID "-header")
   }}
 
-  <SelectKit::SelectKitBody @selectKit={{selectKit}} @id={{concat selectKit.uniqueID "-body"}}>
-    {{component selectKit.options.filterComponent
-      selectKit=selectKit
-      id=(concat selectKit.uniqueID "-filter")
+  <SelectKit::SelectKitBody @selectKit={{this.selectKit}} @id={{concat this.selectKit.uniqueID "-body"}}>
+    {{component this.selectKit.options.filterComponent
+      selectKit=this.selectKit
+      id=(concat this.selectKit.uniqueID "-filter")
     }}
 
-    {{#if selectedContent.length}}
+    {{#if this.selectedContent.length}}
       <div class="selected-content">
-        {{#each selectedContent as |item|}}
-          {{component selectKit.options.selectedChoiceComponent
+        {{#each this.selectedContent as |item|}}
+          {{component this.selectKit.options.selectedChoiceComponent
             item=item
-            selectKit=selectKit
+            selectKit=this.selectKit
           }}
         {{/each}}
       </div>
     {{/if}}
 
-    {{#if selectKit.isLoading}}
+    {{#if this.selectKit.isLoading}}
       <span class="is-loading">
-        {{#if site}}
+        {{#if this.site}}
           {{loading-spinner size="small"}}
         {{/if}}
       </span>
     {{else}}
-      {{#each collections as |collection|}}
-        {{component (component-for-collection collection.identifier selectKit)
+      {{#each this.collections as |collection|}}
+        {{component (component-for-collection collection.identifier this.selectKit)
           collection=collection
-          selectKit=selectKit
-          value=value
+          selectKit=this.selectKit
+          value=this.value
         }}
       {{/each}}
 
-      {{#if selectKit.filter}}
-        {{#if selectKit.hasNoContent}}
+      {{#if this.selectKit.filter}}
+        {{#if this.selectKit.hasNoContent}}
           <span class="no-content" role="alert">
             {{i18n "select_kit.no_content"}}
           </span>
         {{else}}
           <span class="results-count" role="alert">
-            {{i18n "select_kit.results_count" count=mainCollection.length}}
+            {{i18n "select_kit.results_count" count=this.mainCollection.length}}
           </span>
         {{/if}}
       {{/if}}

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TestMailer do
+RSpec.describe TestMailer do
 
   describe "send_test" do
 

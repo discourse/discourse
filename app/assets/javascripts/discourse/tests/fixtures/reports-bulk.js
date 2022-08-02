@@ -18,7 +18,7 @@ let signups = {
     { x: "2018-06-24", y: 17 },
     { x: "2018-06-25", y: 27 },
     { x: "2018-06-26", y: 32 },
-    { x: "2018-06-27", y: "7" }
+    { x: "2018-06-27", y: "7" },
   ],
   start_date: "2018-06-16T00:00:00Z",
   end_date: "2018-07-16T23:59:59Z",
@@ -53,7 +53,7 @@ let signups = {
     { x: "2018-06-13", y: 30 },
     { x: "2018-06-14", y: 45 },
     { x: "2018-06-15", y: 37 },
-    { x: "2018-06-16", y: 12 }
+    { x: "2018-06-16", y: 12 },
   ],
   prev_start_date: "2018-05-17T00:00:00Z",
   prev_end_date: "2018-06-17T00:00:00Z",
@@ -61,17 +61,23 @@ let signups = {
   dates_filtering: true,
   report_key: "reports:signups:start:end:[:prev_period]:4",
   available_filters: [
-    { id: "group", type: "group", allow_any: false, choices: [], default: "88" }
+    {
+      id: "group",
+      type: "group",
+      allow_any: false,
+      choices: [],
+      default: "88",
+    },
   ],
   labels: [
     { type: "date", properties: ["x"], title: "Day" },
-    { type: "number", properties: ["y"], title: "Count" }
+    { type: "number", properties: ["y"], title: "Count" },
   ],
   average: false,
   percent: false,
   higher_is_better: true,
   modes: ["table", "chart"],
-  prev_period: 961
+  prev_period: 961,
 };
 
 let signups_fixture = JSON.parse(JSON.stringify(signups));
@@ -106,46 +112,14 @@ const startDate = moment()
   .startOf("day")
   .subtract(1, "month");
 
-const endDate = moment()
-  .locale("en")
-  .utc()
-  .endOf("day");
+const endDate = moment().locale("en").utc().endOf("day");
 
 const daysInQueryPeriod = endDate.diff(startDate, "days", false) + 1;
 
 const data = [
-  851,
-  3805,
-  2437,
-  3768,
-  4476,
-  3021,
-  1285,
-  1120,
-  3932,
-  2777,
-  3298,
-  3198,
-  3601,
-  1249,
-  1046,
-  3212,
-  3358,
-  3306,
-  2618,
-  2679,
-  910,
-  875,
-  3877,
-  2342,
-  2305,
-  3534,
-  3713,
-  1133,
-  1350,
-  4048,
-  2523,
-  1062
+  851, 3805, 2437, 3768, 4476, 3021, 1285, 1120, 3932, 2777, 3298, 3198, 3601,
+  1249, 1046, 3212, 3358, 3306, 2618, 2679, 910, 875, 3877, 2342, 2305, 3534,
+  3713, 1133, 1350, 4048, 2523, 1062,
 ].slice(-daysInQueryPeriod);
 
 const page_view_total_reqs = {
@@ -156,10 +130,8 @@ const page_view_total_reqs = {
   description: null,
   data: [...data].map((d, i) => {
     return {
-      x: moment(startDate)
-        .add(i, "days")
-        .format("YYYY-MM-DD"),
-      y: d
+      x: moment(startDate).add(i, "days").format("YYYY-MM-DD"),
+      y: d,
     };
   }),
   start_date: startDate.toISOString(),
@@ -172,14 +144,14 @@ const page_view_total_reqs = {
   report_key: `reports:page_view_total_reqs:start:end:[:prev_period]:${SCHEMA_VERSION}`,
   labels: [
     { type: "date", property: "x", title: "Day" },
-    { type: "number", property: "y", title: "Count" }
+    { type: "number", property: "y", title: "Count" },
   ],
   average: false,
   percent: false,
   higher_is_better: true,
   modes: ["table", "chart"],
   icon: "file",
-  total: 921672
+  total: 921672,
 };
 
 const staff_logins = JSON.parse(JSON.stringify(page_view_total_reqs));
@@ -196,7 +168,7 @@ export default {
       signups_exception,
       signups_timeout,
       page_view_total_reqs,
-      staff_logins
-    ]
-  }
+      staff_logins,
+    ],
+  },
 };

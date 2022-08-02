@@ -644,6 +644,8 @@ en:
 
     time_shortcut:
       now: "Now"
+      in_one_hour: "In one hour"
+      in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
       next_business_day: "Next business day"
@@ -664,6 +666,7 @@ en:
       forever: "Forever"
       relative: "Relative time"
       none: "None needed"
+      never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
       select_timeframe: "Select a timeframe"
@@ -1796,6 +1799,8 @@ en:
       save: "Save"
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
+      remove_status: "Remove status"
+      until: "Until:"
 
     loading: "Loading..."
     errors:
@@ -1873,11 +1878,11 @@ en:
 
     signup_cta:
       sign_up: "Sign Up"
-      hide_session: "Remind me tomorrow"
+      hide_session: "Maybe later"
       hide_forever: "no thanks"
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. :heartpulse:"
+      value_prop: "Tired of scrolling through the same posts? when you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -2058,6 +2063,7 @@ en:
       categories_only: "Categories Only"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
+      categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
       categories_and_top_topics: "Categories and Top Topics"
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
@@ -2101,9 +2107,6 @@ en:
       min_content_not_reached:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
-      invalid_selection_length:
-        one: "Selection must be at least %{count} character."
-        other: "Selection must be at least %{count} characters."
       components:
         tag_drop:
           filter_for_more: Filter for more...
@@ -2317,6 +2320,8 @@ en:
       empty: "No notifications found."
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
+      watching_first_post_label: "New Topic"
+      user_moved_post: "%{username} moved"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2329,6 +2334,10 @@ en:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} and %{count} others"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -2337,6 +2346,7 @@ en:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> accepted your invitation"
+      invitee_accepted_your_invitation: "accepted your invitation"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Earned '%{description}'"
@@ -2541,6 +2551,18 @@ en:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     view_all: "view all %{tab}"
+    user_menu:
+      generic_no_items: "There are no items in this list."
+      sr_menu_tabs: "Menu tabs"
+      view_all_notifications: "view all notifications"
+      reviewable:
+        view_all: "view all review items"
+        queue: "Queue"
+        deleted_user: "(deleted user)"
+        post_number_with_topic_title: "post #%{post_number} - %{title}"
+        new_post_in_topic: "new post in %{title}"
+        suspicious_user: "suspicious user %{username}"
+        default_item: "reviewable item #%{reviewable_id}"
 
     topics:
       new_messages_marker: "last visit"
@@ -3691,7 +3713,7 @@ en:
         today: "Today"
         other_periods: "see top:"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, log in and reply.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
       full: "Create / Reply / See"
@@ -3719,6 +3741,7 @@ en:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Keyboard Shortcuts"
+      short_title: "Shortcuts"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
@@ -4047,8 +4070,14 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
-      unread_count: "%{count} unread"
-      new_count: "%{count} new"
+      unread_count:
+        one: "%{count} unread"
+        other: "%{count} unread"
+      new_count:
+        one: "%{count} new"
+        other: "%{count} new"
+      toggle_section: "toggle section"
+      more: "More..."
       sections:
         messages:
           header_link_title: "personal messages"
@@ -4074,9 +4103,9 @@ en:
           header_link_title: "all categories"
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
-        topics:
+        community:
           header_link_title: "home"
-          header_link_text: "Topics"
+          header_link_text: "Community"
           header_action_title: "create a new topic"
           links:
             everything:
@@ -4085,9 +4114,12 @@ en:
             tracked:
               content: "Tracked"
               title: "All tracked topics"
-            bookmarked:
-              content: "Bookmarked"
-              title: "All bookmarked topics"
+            groups:
+              content: "Groups"
+              title: "All groups"
+            users:
+              content: "Users"
+              title: "All users"
             my_posts:
               content: "My Posts"
               title: "My posts"
@@ -5688,15 +5720,16 @@ en:
 
   wizard_js:
     wizard:
-      done: "Done"
-      finish: "Finish"
+      jump_in: "Jump in!"
+      finish: "Exit setup"
       back: "Back"
       next: "Next"
+      configure_more: "Configure More..."
+      step-text: "Step"
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
-      quit: "Maybe Later"
 
       staff_count:
         one: "Your community has %{count} staff (you)."

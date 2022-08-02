@@ -3,12 +3,12 @@ import {
   controllerFor,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", function (needs) {
@@ -50,7 +50,7 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");
 
-    await triggerKeyEvent("#main-outlet", "keydown", 27);
+    await triggerKeyEvent("#main-outlet", "keydown", "Escape");
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     // eslint-disable-next-line no-undef
@@ -69,7 +69,7 @@ acceptance("Modal", function (needs) {
       1,
       "modal should not disappear when you click outside"
     );
-    await triggerKeyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keyup", "Escape");
     assert.strictEqual(
       count(".d-modal:visible"),
       1,
@@ -90,7 +90,7 @@ acceptance("Modal", function (needs) {
     await settled();
 
     assert.strictEqual(
-      queryAll(".d-modal .modal-tab:first-child").text().trim(),
+      query(".d-modal .modal-tab:first-child").innerText.trim(),
       "Test 1",
       "it should display the raw title"
     );
@@ -109,7 +109,7 @@ acceptance("Modal", function (needs) {
     showModal("test-title", { title: "test_title" });
     await settled();
     assert.strictEqual(
-      queryAll(".d-modal .title").text().trim(),
+      query(".d-modal .title").innerText.trim(),
       "Test title",
       "it should display the title"
     );
@@ -119,7 +119,7 @@ acceptance("Modal", function (needs) {
     showModal("test-title-with-body", { title: "test_title" });
     await settled();
     assert.strictEqual(
-      queryAll(".d-modal .title").text().trim(),
+      query(".d-modal .title").innerText.trim(),
       "Test title",
       "it should display the title when used with d-modal-body"
     );
@@ -142,7 +142,7 @@ acceptance("Modal Keyboard Events", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    await triggerKeyEvent(".d-modal", "keydown", 13);
+    await triggerKeyEvent(".d-modal", "keydown", "Enter");
 
     assert.strictEqual(
       count("#modal-alert:visible"),
@@ -157,13 +157,13 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     assert.ok(exists(".d-modal:visible"), "modal should be visible");
 
-    await triggerKeyEvent("#main-outlet", "keydown", 27);
+    await triggerKeyEvent("#main-outlet", "keydown", "Escape");
 
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     await click(".topic-body button.reply");
     await click(".d-editor-button-bar .btn.link");
-    await triggerKeyEvent(".d-modal", "keydown", 13);
+    await triggerKeyEvent(".d-modal", "keydown", "Enter");
 
     assert.ok(
       !exists(".d-modal:visible"),

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::EmailController do
+RSpec.describe Admin::EmailController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:email_log) { Fabricate(:email_log) }
 

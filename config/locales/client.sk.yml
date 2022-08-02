@@ -418,6 +418,7 @@ sk:
       next_week: "Budúci týždeň"
       next_month: "Budúci mesiac"
       forever: "Vždy"
+      never: "Nikdy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vy</a> ste založili <a href='%{topicUrl}'>tému</a>"
@@ -725,6 +726,8 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"
@@ -1153,7 +1156,6 @@ sk:
       other: odpovedí
     signup_cta:
       sign_up: "Registrovať sa"
-      hide_session: "Pripomenúť zajtra"
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
@@ -1331,6 +1333,7 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
+      watching_first_post_label: "Nová téma"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -2267,8 +2270,16 @@ sk:
     user_activity:
       no_activity_others: "Žiadna aktivita"
     sidebar:
-      unread_count: "%{count} neprečítaná"
-      new_count: "%{count} nová"
+      unread_count:
+        one: "%{count} neprečítaná"
+        few: "%{count} neprečítané"
+        many: "%{count} neprečítaných"
+        other: "%{count} neprečítaná"
+      new_count:
+        one: "%{count} nová"
+        few: "%{count} nové"
+        many: "%{count} nových"
+        other: "%{count} nových"
       sections:
         messages:
           header_link_text: "Správy"
@@ -2286,12 +2297,17 @@ sk:
         categories:
           header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
-        topics:
+        community:
           header_link_title: "domov"
-          header_link_text: "Témy"
+          header_link_text: "Komunita"
           links:
             tracked:
               content: "Pozorované"
+            groups:
+              content: "Skupiny"
+              title: "Všetky skupiny"
+            users:
+              content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
   admin_js:
