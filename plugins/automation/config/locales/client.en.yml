@@ -243,6 +243,11 @@ en:
             user:
               label: User
               description: "The user closing the topic (default: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: 'User Custom Field name'
+
       models:
         script:
           name:

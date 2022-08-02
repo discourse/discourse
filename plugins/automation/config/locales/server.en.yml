@@ -102,3 +102,5 @@ en:
         summary: Check document
         details: "Perform check on document: "
         button_text: Done
+      add_user_to_group_through_custom_field:
+        title: 'Add user to group through User Custom Field'

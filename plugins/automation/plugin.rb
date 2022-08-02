@@ -182,6 +182,7 @@ after_initialize do
     '../app/lib/discourse_automation/scripts/topic_required_words',
     '../app/lib/discourse_automation/scripts/flag_post_on_words',
     '../app/lib/discourse_automation/scripts/zapier_webhook',
+    '../app/lib/discourse_automation/scripts/add_user_to_group_through_custom_field',
   ].each { |path| require File.expand_path(path, __FILE__) }
 
   module ::DiscourseAutomation
