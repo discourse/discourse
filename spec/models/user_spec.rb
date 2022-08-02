@@ -2863,20 +2863,20 @@ RSpec.describe User do
 
     it "picks the reviewable of the largest id" do
       user.update!(admin: true)
-      r1 = Fabricate(
+      Fabricate(
         :reviewable,
         created_at: 3.minutes.ago,
         updated_at: 3.minutes.ago,
         score: 100
       )
-      r2 = Fabricate(
+      reviewable2 = Fabricate(
         :reviewable,
         created_at: 30.minutes.ago,
         updated_at: 30.minutes.ago,
         score: 10
       )
       user.bump_last_seen_reviewable!
-      expect(user.last_seen_reviewable_id).to eq(r2.id)
+      expect(user.last_seen_reviewable_id).to eq(reviewable2.id)
     end
 
     it "stays at the maximum reviewable if there are no new reviewables" do
