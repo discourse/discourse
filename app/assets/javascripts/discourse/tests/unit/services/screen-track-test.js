@@ -26,4 +26,25 @@ discourseModule("Unit | Service | screen-track", function () {
       "caches highest read post number for second topic"
     );
   });
+
+  test("ScreenTrack has appEvents", async function (assert) {
+    const tracker = this.container.lookup("service:screen-track");
+    assert.ok(tracker.appEvents);
+  });
+
+  test("appEvent topic:timings-sent is triggered", async function (assert) {
+    assert.timeout(1000);
+
+    const tracker = this.container.lookup("service:screen-track");
+    const appEvents = this.container.lookup("service:app-events");
+
+    const done = assert.async();
+
+    appEvents.on("topic:timings-sent", () => {
+      assert.ok(true);
+      done();
+    });
+
+    await tracker.sendNextConsolidatedTiming();
+  });
 });
