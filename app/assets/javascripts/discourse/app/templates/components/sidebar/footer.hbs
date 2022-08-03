@@ -1,17 +1,5 @@
 <div class="sidebar-footer-wrapper">
   <div class="sidebar-footer-container">
-    <div class="sidebar-footer-links">
-      <LinkTo @route="about" title={{i18n "about.simple_title"}} class="sidebar-footer-link sidebar-footer-link-about">
-        {{i18n "about.simple_title"}}
-      </LinkTo>
-
-      {{#if this.currentUser.staff}}
-        <LinkTo @route="admin" title={{i18n "admin_title"}} class="sidebar-footer-link sidebar-footer-link-admin">
-          {{i18n "admin_title"}}
-        </LinkTo>
-      {{/if}}
-    </div>
-
     <div class="sidebar-footer-actions">
       <DButton
         @action={{route-action "showKeyboardShortcutsHelp"}}

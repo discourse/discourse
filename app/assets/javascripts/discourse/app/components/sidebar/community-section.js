@@ -8,6 +8,9 @@ import TrackedSectionLink from "discourse/lib/sidebar/community-section/tracked-
 import MyPostsSectionLink from "discourse/lib/sidebar/community-section/my-posts-section-link";
 import GroupsSectionLink from "discourse/lib/sidebar/community-section/groups-section-link";
 import UsersSectionLink from "discourse/lib/sidebar/community-section/users-section-link";
+import AboutSectionLink from "discourse/lib/sidebar/community-section/about-section-link";
+import FAQSectionLink from "discourse/lib/sidebar/community-section/faq-section-link";
+import AdminSectionLink from "discourse/lib/sidebar/community-section/admin-section-link";
 
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
@@ -19,7 +22,14 @@ const MAIN_SECTION_LINKS = [
   MyPostsSectionLink,
 ];
 
-const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
+const ADMIN_MAIN_SECTION_LINKS = [AdminSectionLink];
+
+const MORE_SECTION_LINKS = [
+  GroupsSectionLink,
+  UsersSectionLink,
+  AboutSectionLink,
+  FAQSectionLink,
+];
 
 export default class SidebarCommunitySection extends GlimmerComponent {
   @service router;
@@ -31,11 +41,16 @@ export default class SidebarCommunitySection extends GlimmerComponent {
         currentUser: this.currentUser,
         appEvents: this.appEvents,
         router: this.router,
+        siteSettings: this.siteSettings,
       });
     }
   );
 
-  sectionLinks = MAIN_SECTION_LINKS.map((sectionLinkClass) => {
+  #mainSectionLinks = this.currentUser.staff
+    ? [...MAIN_SECTION_LINKS, ...ADMIN_MAIN_SECTION_LINKS]
+    : [...MAIN_SECTION_LINKS];
+
+  sectionLinks = this.#mainSectionLinks.map((sectionLinkClass) => {
     return new sectionLinkClass({
       topicTrackingState: this.topicTrackingState,
       currentUser: this.currentUser,
