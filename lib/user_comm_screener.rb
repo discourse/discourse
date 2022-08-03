@@ -26,6 +26,11 @@
 #
 # An important note is that **all of these settings do not apply when the actor
 # is a staff member**. So admins and moderators can PM and notify anyone they please.
+#
+# The secondary usage of this class is to determine which users the actor themselves
+# are muting, ignoring, or preventing private messages from. This is useful when
+# wanting to alert the actor to these users in the UI in various ways, or prevent
+# the actor from communicating with users they prefer not to talk with.
 class UserCommScreener
   attr_reader :acting_user, :preferences
 
@@ -124,6 +129,7 @@ class UserCommScreener
   # Whether the user is ignoring or muting the actor, meaning the actor cannot
   # PM or send notifications to this target user.
   def ignoring_or_muting_actor?(user_id)
+    validate_user_id!(user_id)
     preferences.ignoring_or_muting?(user_id)
   end
 
@@ -133,7 +139,45 @@ class UserCommScreener
   # implicitly disallows PMs, so we need to take into account those preferences
   # here too.
   def disallowing_pms_from_actor?(user_id)
+    validate_user_id!(user_id)
     preferences.disallowing_pms?(user_id) || ignoring_or_muting_actor?(user_id)
+  end
+
+  def actor_allowing_communication
+    @target_users.keys - actor_preventing_communication
+  end
+
+  def actor_preventing_communication
+    (actor_preferences[:ignoring] + actor_preferences[:muting] + actor_preferences[:disallowed_pms_from]).uniq
+  end
+
+  ##
+  # The actor methods below are more fine-grained than the user ones,
+  # since we may want to display more detailed messages to the actor about
+  # their preferences than we do when we are informing the actor that
+  # they cannot communicate with certain users.
+  #
+  # In this spirit, actor_disallowing_pms? is intentionally different from
+  # disallowing_pms_from_actor? above.
+
+  def actor_ignoring?(user_id)
+    validate_user_id!(user_id)
+    actor_preferences[:ignoring].include?(user_id)
+  end
+
+  def actor_muting?(user_id)
+    validate_user_id!(user_id)
+    actor_preferences[:muting].include?(user_id)
+  end
+
+  def actor_disallowing_pms?(user_id)
+    validate_user_id!(user_id)
+    return false if !acting_user.user_option.enable_allowed_pm_users
+    actor_preferences[:disallowed_pms_from].include?(user_id)
+  end
+
+  def actor_disallowing_all_pms?
+    !acting_user.user_option.allow_private_messages
   end
 
   private
@@ -193,6 +237,21 @@ class UserCommScreener
     UserCommPrefs.new(acting_user, resolved_user_communication_preferences)
   end
 
+  def actor_preferences
+    @actor_preferences ||= begin
+      user_ids_by_preference_type = actor_communication_preferences.reduce({}) do |hash, pref|
+        hash[pref.preference_type] ||= []
+        hash[pref.preference_type] << pref.target_user_id
+        hash
+      end
+      {
+        muting: user_ids_by_preference_type["muted"],
+        ignoring: user_ids_by_preference_type["ignored"],
+        disallowed_pms_from: user_ids_by_preference_type["disallowed_pm"]
+      }
+    end
+  end
+
   def user_communication_preferences
     @user_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
       SELECT users.id,
@@ -212,5 +271,28 @@ class UserCommScreener
         ignored_users.user_id IS NOT NULL
       )
     SQL
+  end
+
+  def actor_communication_preferences
+    @actor_communication_preferences ||= DB.query(<<~SQL, acting_user_id: acting_user.id, target_user_ids: @target_users.keys)
+      SELECT users.id AS target_user_id, 'disallowed_pm' AS preference_type FROM users
+      LEFT JOIN allowed_pm_users ON allowed_pm_users.allowed_pm_user_id = users.id
+      WHERE users.id IN (:target_user_ids)
+      AND (allowed_pm_users.user_id = :acting_user_id OR allowed_pm_users.user_id IS NULL)
+      AND allowed_pm_users.allowed_pm_user_id IS NULL
+      UNION
+      SELECT ignored_user_id AS target_user_id, 'ignored' AS preference_type
+      FROM ignored_users
+      WHERE user_id = :acting_user_id AND ignored_user_id IN (:target_user_ids)
+      UNION
+      SELECT muted_user_id AS target_user_id, 'muted' AS preference_type
+      FROM muted_users
+      WHERE user_id = :acting_user_id AND muted_user_id IN (:target_user_ids)
+    SQL
+  end
+
+  def validate_user_id!(user_id)
+    return if user_id == acting_user.id
+    raise Discourse::NotFound if !@target_users.keys.include?(user_id)
   end
 end
