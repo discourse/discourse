@@ -172,6 +172,7 @@ class UserCommScreener
 
   def actor_disallowing_pms?(user_id)
     validate_user_id!(user_id)
+    return true if actor_disallowing_all_pms?
     return false if !acting_user.user_option.enable_allowed_pm_users
     actor_preferences[:disallowed_pms_from].include?(user_id)
   end
@@ -244,10 +245,16 @@ class UserCommScreener
         hash[pref.preference_type] << pref.target_user_id
         hash
       end
+      disallowed_pms_from = \
+        if acting_user.user_option.enable_allowed_pm_users
+          (user_ids_by_preference_type["disallowed_pm"] || [])
+        else
+          []
+        end
       {
-        muting: user_ids_by_preference_type["muted"],
-        ignoring: user_ids_by_preference_type["ignored"],
-        disallowed_pms_from: user_ids_by_preference_type["disallowed_pm"]
+        muting: user_ids_by_preference_type["muted"] || [],
+        ignoring: user_ids_by_preference_type["ignored"] || [],
+        disallowed_pms_from: disallowed_pms_from
       }
     end
   end

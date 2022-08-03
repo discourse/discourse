@@ -195,12 +195,42 @@ RSpec.describe UserCommScreener do
           target_user1.id, target_user2.id, target_user3.id, target_user5.id
         ])
       end
+
+      it "does not include users the actor is disallowing PMs from if they have not set enable_allowed_pm_users" do
+        expect(subject.actor_preventing_communication).to match_array([
+          target_user1.id, target_user2.id
+        ])
+      end
+
+      describe "when the actor has no preferences" do
+        before do
+          muted_user.destroy
+          ignored_user.destroy
+        end
+
+        it "returns an empty array and does not error" do
+          expect(subject.actor_preventing_communication).to match_array([])
+        end
+      end
     end
 
     describe "#actor_allowing_communication" do
       it "returns the user_ids of the users who the actor is not ignoring, muting, or disallowing PMs from" do
         acting_user.user_option.update!(enable_allowed_pm_users: true)
         expect(subject.actor_allowing_communication).to match_array([target_user4.id])
+      end
+
+      describe "when the actor has no preferences" do
+        before do
+          muted_user.destroy
+          ignored_user.destroy
+        end
+
+        it "returns an array of the target users and does not error" do
+          expect(subject.actor_allowing_communication).to match_array([
+            target_user1.id, target_user2.id, target_user3.id, target_user4.id, target_user5.id
+          ])
+        end
       end
     end
 
@@ -231,6 +261,12 @@ RSpec.describe UserCommScreener do
         acting_user.user_option.update!(enable_allowed_pm_users: true)
         expect(subject.actor_disallowing_pms?(target_user3.id)).to eq(true)
         expect(subject.actor_disallowing_pms?(target_user1.id)).to eq(false)
+      end
+
+      it "returns true if the actor has disallowed all PMs" do
+        acting_user.user_option.update!(allow_private_messages: false)
+        expect(subject.actor_disallowing_pms?(target_user3.id)).to eq(true)
+        expect(subject.actor_disallowing_pms?(target_user1.id)).to eq(true)
       end
 
       it "raises a NotFound error if the user_id passed in is not part of the target users" do
