@@ -116,8 +116,13 @@ class Guardian
     return false if !category.reviewable_by_group_id.present?
 
     @is_category_group_moderator ||= {}
-    @is_category_group_moderator[category.id] ||= begin
-      GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+
+    if @is_category_group_moderator.key?(category.id)
+      @is_category_group_moderator[category.id]
+    else
+      @is_category_group_moderator[category.id] ||= begin
+        GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+      end
     end
   end
 
