@@ -99,7 +99,6 @@ class NotificationsController < ApplicationController
       end
       query = Notification
         .where(user_id: current_user.id, read: false)
-        .includes(:topic)
 
       query = query.where(notification_type: types) if types
       query.update_all(read: true)
