@@ -360,7 +360,7 @@ RSpec.describe Discourse do
         job: { "class" => Jobs::PollMailbox }
       }
 
-      Discourse.handle_job_exception(StandardError.new, exception_context) rescue nil
+      expect { Discourse.handle_job_exception(StandardError.new, exception_context) }.to raise_error(StandardError)
 
       expect(Discourse.job_exception_stats).to eq({
         Jobs::PollMailbox => 1,
