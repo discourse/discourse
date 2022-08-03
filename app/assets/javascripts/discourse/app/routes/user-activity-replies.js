@@ -9,12 +9,17 @@ export default UserActivityStreamRoute.extend({
   emptyState() {
     const user = this.modelFor("user");
 
-    const title = this.isCurrentUser(user)
-      ? I18n.t("user_activity.no_replies_title")
-      : I18n.t("user_activity.no_replies_title_others", {
-          username: user.username,
-        });
-    const body = "";
+    let title, body;
+    if (this.isCurrentUser(user)) {
+      title = I18n.t("user_activity.no_replies_title");
+      body = "";
+    } else {
+      title = I18n.t("user_activity.no_replies_title_others", {
+        username: user.username,
+      });
+      body = "";
+    }
+
     return { title, body };
   },
 
