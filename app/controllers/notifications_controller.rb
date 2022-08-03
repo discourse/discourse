@@ -39,15 +39,17 @@ class NotificationsController < ApplicationController
         changed = current_user.saw_notification_id(max_id)
       end
 
-      if !params.has_key?(:silent) && !@readonly_mode && guardian.can_see_review_queue?
-        Scheduler::Defer.later "bump last seen reviewable for user" do
-          current_user.bump_last_seen_reviewable!
-        end
-      end
-
       if changed
         current_user.reload
         current_user.publish_notifications_state
+      end
+
+      if !params.has_key?(:silent) && !@readonly_mode
+        Scheduler::Defer.later "bump last seen reviewable for user" do
+          if guardian.can_see_review_queue?
+            current_user.bump_last_seen_reviewable!
+          end
+        end
       end
 
       render_json_dump(
