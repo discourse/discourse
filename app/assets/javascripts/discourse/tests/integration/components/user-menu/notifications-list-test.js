@@ -123,7 +123,7 @@ module(
       );
       assert.ok(
         !exists(".panel-body-bottom .btn.notifications-dismiss"),
-        "dismiss button is now removed"
+        "dismiss button is not shown"
       );
     });
   }
