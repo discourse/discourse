@@ -2916,7 +2916,7 @@ RSpec.describe User do
       expect(messages.first).to have_attributes(
         channel: "/reviewable_counts/#{user.id}",
         user_ids: [user.id],
-        data: { unseen_reviewable_count: 1 }
+        data: { unseen_reviewable_count: 0 }
       )
     end
   end
