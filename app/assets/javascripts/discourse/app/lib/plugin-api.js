@@ -400,7 +400,7 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
-    const site = this._lookupContainer("site:main");
+    const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, (dec) => {

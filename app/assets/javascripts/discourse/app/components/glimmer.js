@@ -21,16 +21,11 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service messageBus;
   @service currentUser;
   @service session;
+  @service site;
 
   @cached
   get topicTrackingState() {
     const applicationInstance = getOwner(this);
     return applicationInstance.lookup("topic-tracking-state:main");
-  }
-
-  @cached
-  get site() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("site:main");
   }
 }

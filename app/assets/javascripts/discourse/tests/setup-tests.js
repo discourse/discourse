@@ -282,7 +282,7 @@ export default function setupTests(config) {
       },
       capabilities: {},
       get site() {
-        return app.__container__.lookup("site:main") || Site.current();
+        return app.__container__.lookup("service:site") || Site.current();
       },
       registry: app.__registry__,
     });

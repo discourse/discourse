@@ -51,7 +51,7 @@ export default {
     });
 
     const site = Site.current();
-    app.register("site:main", site, { instantiate: false });
+    app.register("service:site", site, { instantiate: false });
 
     const session = Session.current();
     app.register("service:session", session, { instantiate: false });
@@ -62,7 +62,7 @@ export default {
       app.inject(t, "appEvents", "service:app-events");
       app.inject(t, "pmTopicTrackingState", "service:pm-topic-tracking-state");
       app.inject(t, "store", "service:store");
-      app.inject(t, "site", "site:main");
+      app.inject(t, "site", "service:site");
       app.inject(t, "searchService", "service:search");
       app.inject(t, "session", "service:session");
       app.inject(t, "messageBus", "service:message-bus");

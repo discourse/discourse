@@ -9,7 +9,7 @@ export default {
       return;
     }
 
-    const site = container.lookup("site:main");
+    const site = container.lookup("service:site");
     messageBus.subscribe("/site/read-only", function (enabled) {
       site.set("isReadOnly", enabled);
     });

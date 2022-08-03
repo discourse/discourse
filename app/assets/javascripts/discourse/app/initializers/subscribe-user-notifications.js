@@ -132,7 +132,7 @@ export default {
         appEvents.trigger("user-status:changed", data);
       });
 
-      const site = container.lookup("site:main");
+      const site = container.lookup("service:site");
       const router = container.lookup("router:main");
 
       bus.subscribe("/categories", (data) => {

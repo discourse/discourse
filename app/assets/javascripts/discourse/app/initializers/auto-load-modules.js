@@ -22,7 +22,7 @@ export function autoLoadModules(container, registry) {
     keyValueStore: container.lookup("service:key-value-store"),
     capabilities: container.lookup("capabilities:main"),
     currentUser: container.lookup("service:current-user"),
-    site: container.lookup("site:main"),
+    site: container.lookup("service:site"),
     session: container.lookup("service:session"),
     topicTrackingState: container.lookup("topic-tracking-state:main"),
     registry,
