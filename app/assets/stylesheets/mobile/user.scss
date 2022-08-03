@@ -456,7 +456,9 @@
       width: 100%;
       display: grid;
       grid-content-rows: 2;
-
+      .d-icon {
+        margin-right: 0.5em;
+      }
       &:not(:first-of-type) {
         border-top: 1px solid var(--primary-low);
       }
@@ -481,7 +483,7 @@
     box-shadow: none;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
-    padding: 0 0 1em 0;
+    padding: 0.5em 0 1em 1.65em;
     li a {
       box-sizing: border-box;
       padding: 0.75em 1em;
@@ -489,6 +491,16 @@
       @include ellipsis;
     }
   }
+}
+
+.user-content-wrapper
+  .user-primary-navigation
+  .nav-pills
+  .user-primary-navigation_submenu
+  li
+  a.active {
+  background: transparent;
+  color: var(--quaternary);
 }
 
 .toggle-mobile-user-menu {

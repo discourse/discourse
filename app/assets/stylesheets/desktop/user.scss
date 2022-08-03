@@ -15,8 +15,8 @@
 
 .user-primary-navigation {
   .nav-pills {
-    display: grid;
-    grid-template-columns: repeat(var(--user-nav-count), minmax(100px, 20%));
+    display: flex;
+    gap: 0 1em;
     li {
       margin: 0;
       min-width: 0;
@@ -25,7 +25,6 @@
       width: 100%;
       justify-content: center;
       box-sizing: border-box;
-      font-size: clamp(0.875rem, 0.6361rem #{"+"} 0.5119vw, 1.148rem);
       span {
         @include ellipsis;
         line-height: normal;
