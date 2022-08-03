@@ -82,6 +82,10 @@ export default DiscourseRoute.extend({
 
   deactivate() {
     this.messageBus.unsubscribe("/reviewable_claimed");
+    const channel = this.currentUser.enable_redesigned_user_menu
+      ? `/reviewable_counts/${this.currentUser.id}`
+      : "/reviewable_counts";
+    this.messageBus.unsubscribe(channel);
   },
 
   @action
