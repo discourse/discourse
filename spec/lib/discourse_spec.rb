@@ -351,8 +351,9 @@ RSpec.describe Discourse do
       }
 
       # re-raised unconditionally in test env
-      Discourse.handle_job_exception(StandardError.new, exception_context) rescue nil
-      Discourse.handle_job_exception(StandardError.new, exception_context) rescue nil
+      2.times do
+        expect { Discourse.handle_job_exception(StandardError.new, exception_context) }.to raise_error(StandardError)
+      end
 
       exception_context = {
         message: "Running a scheduled job",
