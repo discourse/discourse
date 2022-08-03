@@ -239,7 +239,7 @@ class UserCommScreener
 
   def actor_preferences
     @actor_preferences ||= begin
-      user_ids_by_preference_type = actor_communication_preferences.reduce(Hash.new([])) do |hash, pref|
+      user_ids_by_preference_type = actor_communication_preferences.reduce(Hash.new { [] }) do |hash, pref|
         hash[pref.preference_type] << pref.target_user_id
         hash
       end
