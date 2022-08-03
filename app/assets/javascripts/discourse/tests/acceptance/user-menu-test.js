@@ -70,7 +70,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       I18n.t("notifications.dismiss_confirmation.body", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
-    assert.ok(!markRead, "mark-read request isn't sent");
+    assert.notOk(markRead, "mark-read request isn't sent");
 
     await click(".modal-footer .btn-default"); // click cancel on the dismiss modal
 
