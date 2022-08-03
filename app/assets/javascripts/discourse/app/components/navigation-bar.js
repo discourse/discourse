@@ -9,10 +9,6 @@ export default Component.extend(FilterModeMixin, {
   classNameBindings: [":nav", ":nav-pills"],
   elementId: "navigation-bar",
 
-  init() {
-    this._super(...arguments);
-  },
-
   @discourseComputed("filterType", "navItems")
   selectedNavItem(filterType, navItems) {
     let item = navItems.find((i) => i.active === true);

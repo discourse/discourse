@@ -6,11 +6,21 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
+  resizeObserver: service(),
 
   tagName: "",
+
+  wrapNavigationBar: false,
+
+  init() {
+    this._super(...arguments);
+    this._childElementWidths = new Map();
+  },
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
@@ -138,6 +148,57 @@ export default Component.extend(FilterModeMixin, {
   canBulk() {
     const controller = getOwner(this).lookup("controller:discovery/topics");
     return controller.canBulkSelect;
+  },
+
+  @action
+  childResized(resizeObserverEntry) {
+    if (this.isDestroying) {
+      return;
+    }
+
+    const width = resizeObserverEntry?.contentRect?.width;
+    if (width) {
+      this._childElementWidths.set(resizeObserverEntry.target, width);
+    }
+
+    // We can't attach a modifier to the .navigation-container element because it's not part of this component.
+    // Instead we have to use this hack to find the container element and observe it resizing.
+    // Don't need to worry about cleanup - the resizeObserver service uses a WeakMap so will forget about
+    // the registration when the element disappears from the DOM.
+    this.resizeObserver.observe(
+      resizeObserverEntry.target.parentElement,
+      this.parentResized
+    );
+
+    scheduleOnce("afterRender", this, this._setNavigationBarClass);
+  },
+
+  @action
+  parentResized(resizeObserverEntry) {
+    if (this.isDestroying) {
+      return;
+    }
+
+    this._parentElementWidth = resizeObserverEntry?.contentRect?.width;
+
+    scheduleOnce("afterRender", this, this._setNavigationBarClass);
+  },
+
+  _setNavigationBarClass() {
+    if (this.isDestroying || !this._parentElementWidth) {
+      return;
+    }
+
+    let sum = 0;
+    for (const value of this._childElementWidths.values()) {
+      sum += value;
+    }
+
+    if (sum > this._parentElementWidth) {
+      this.set("wrapNavigationBar", true);
+    } else {
+      this.set("wrapNavigationBar", false);
+    }
   },
 
   actions: {

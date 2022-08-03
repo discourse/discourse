@@ -1,11 +1,17 @@
-<BreadCrumbs @categories={{this.categories}} @category={{this.category}} @noSubcategories={{this.noSubcategories}} @tag={{this.tag}} @additionalTags={{this.additionalTags}} />
+<BreadCrumbs @categories={{this.categories}} @category={{this.category}} @noSubcategories={{this.noSubcategories}} @tag={{this.tag}} @additionalTags={{this.additionalTags}} {{on-resize this.childResized}}/>
 
 {{#unless this.additionalTags}}
   {{!-- nav bar doesn't work with tag intersections --}}
-  <NavigationBar @navItems={{this.navItems}} @filterMode={{this.filterMode}} @category={{this.category}} />
+  <NavigationBar
+    @navItems={{this.navItems}}
+    @filterMode={{this.filterMode}}
+    @category={{this.category}}
+    class={{if this.wrapNavigationBar "wrapped-navigation-bar"}}
+    {{on-resize this.childResized}}
+    />
 {{/unless}}
 
-<div class="navigation-controls">
+<div class="navigation-controls" {{on-resize this.childResized}}>
   {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}
     <BulkSelectToggle @parentController={{"discovery/topics"}} @tagName=""/>
   {{/if}}

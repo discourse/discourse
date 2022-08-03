@@ -51,7 +51,12 @@
   flex-wrap: wrap;
   margin: 0;
   margin-bottom: var(--nav-space);
-  margin-right: auto;
+
+  &.wrapped-navigation-bar {
+    // When the elements in .navigation-container start wrapping, this class is added to `#navigation-bar`.
+    // We use this to visually reorder the navigation bar after the `.navigation-controls`.
+    order: 3;
+  }
 }
 
 .navigation-controls {
@@ -59,6 +64,7 @@
   flex-wrap: wrap;
   align-items: stretch;
   margin-bottom: var(--nav-space);
+  margin-left: auto;
   gap: var(--nav-space) 0; // used if the buttons wrap
   > * {
     white-space: nowrap;
