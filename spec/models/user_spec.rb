@@ -2905,5 +2905,18 @@ RSpec.describe User do
       expect(moderator.last_seen_reviewable_id).to eq(mod_reviewable.id)
       expect(user.last_seen_reviewable_id).to eq(group_reviewable.id)
     end
+
+    it "publishes a message to the user's /reviewable_counts message bus channel" do
+      user.update!(admin: true)
+      reviewable = Fabricate(:reviewable)
+      messages = MessageBus.track_publish do
+        user.bump_last_seen_reviewable!
+      end
+      expect(messages.size).to eq(1)
+      message = messages[0]
+      expect(message.channel).to eq("/reviewable_counts/#{user.id}")
+      expect(message.user_ids).to eq([user.id])
+      expect(message.data).to eq({ unseen_reviewable_count: 0 })
+    end
   end
 end
