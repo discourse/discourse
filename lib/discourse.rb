@@ -153,6 +153,16 @@ module Discourse
     end
   end
 
+  def self.job_exception_stats
+    @job_exception_stats
+  end
+
+  def self.reset_job_exception_stats!
+    @job_exception_stats = Hash.new(0)
+  end
+
+  reset_job_exception_stats!
+
   # Log an exception.
   #
   # If your code is in a scheduled job, it is recommended to use the
@@ -164,6 +174,11 @@ module Discourse
 
     context ||= {}
     parent_logger ||= Sidekiq
+
+    job = context.dig(:job, "class")
+    if job
+      job_exception_stats[job] += 1
+    end
 
     cm = RailsMultisite::ConnectionManagement
     parent_logger.handle_exception(ex, {

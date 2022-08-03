@@ -340,6 +340,32 @@ RSpec.describe Discourse do
       Sidekiq.error_handlers.delete(logger)
     end
 
+    it "should collect job exception stats" do
+      Discourse.reset_job_exception_stats!
+
+      # see MiniScheduler Manager which reports it like this
+      exception_context = {
+        message: "Running a scheduled job",
+        job: { "class" => Jobs::ReindexSearch }
+      }
+
+      # re-raised unconditionally in test env
+      Discourse.handle_job_exception(StandardError.new, exception_context) rescue nil
+      Discourse.handle_job_exception(StandardError.new, exception_context) rescue nil
+
+      exception_context = {
+        message: "Running a scheduled job",
+        job: { "class" => Jobs::PollMailbox }
+      }
+
+      Discourse.handle_job_exception(StandardError.new, exception_context) rescue nil
+
+      expect(Discourse.job_exception_stats).to eq({
+        Jobs::PollMailbox => 1,
+        Jobs::ReindexSearch => 2,
+      })
+    end
+
     it "should not fail when called" do
       exception = StandardError.new
 
