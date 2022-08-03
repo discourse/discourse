@@ -37,7 +37,7 @@ acceptance("User menu", function (needs) {
     assert.strictEqual(
       requestHeaders["Discourse-Clear-Notifications"],
       123, // id is from the fixtures in fixtures/notification-fixtures.js
-      "the Discourse-Clear-Notifications is set to the notification id in the next ajax request"
+      "the Discourse-Clear-Notifications request header is set to the notification id in the next ajax request"
     );
   });
 });
