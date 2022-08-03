@@ -292,6 +292,7 @@ class UserCommScreener
   end
 
   def validate_user_id!(user_id)
+    return if user_id == acting_user.id
     raise Discourse::NotFound if !@target_users.keys.include?(user_id)
   end
 end
