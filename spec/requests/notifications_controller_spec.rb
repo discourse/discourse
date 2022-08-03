@@ -303,6 +303,7 @@ RSpec.describe NotificationsController do
             notification.update!(user_id: Fabricate(:user).id, read: false)
             expect {
               put "/notifications/mark-read.json", params: { id: notification.id }
+              expect(response.status).to eq(200)
               notification.reload
             }.not_to change { notification.read }
           end
