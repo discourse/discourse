@@ -34,28 +34,30 @@ export default Component.extend(FilterModeMixin, {
           );
 
           this._resizeObserver = new ResizeObserver((entries) => {
-            for (let entry of entries) {
-              if (entry.contentRect && entry.contentRect.width) {
-                for (const [key, value] of Object.entries(navElements)) {
-                  if (value === entry.target) {
-                    navElements[key]["width"] = entry.contentRect.width;
+            window.requestAnimationFrame(() => {
+              for (let entry of entries) {
+                if (entry.contentRect && entry.contentRect.width) {
+                  for (const [key, value] of Object.entries(navElements)) {
+                    if (value === entry.target) {
+                      navElements[key]["width"] = entry.contentRect.width;
+                    }
                   }
                 }
               }
-            }
 
-            let childrenWidth =
-              navElements["navPills"]["width"] +
-              navElements["navBread"]["width"] +
-              navElements["navControls"]["width"];
+              let childrenWidth =
+                navElements["navPills"]["width"] +
+                navElements["navBread"]["width"] +
+                navElements["navControls"]["width"];
 
-            let wrapWidth = navElements["navWrap"]["width"];
+              let wrapWidth = navElements["navWrap"]["width"];
 
-            if (wrapWidth < childrenWidth) {
-              navElements["navPills"].style.order = "3";
-            } else {
-              navElements["navPills"].style.order = "unset";
-            }
+              if (wrapWidth < childrenWidth) {
+                navElements["navPills"].style.order = "3";
+              } else {
+                navElements["navPills"].style.order = "unset";
+              }
+            });
           });
 
           Object.values(navElements).forEach((element) => {
