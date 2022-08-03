@@ -93,6 +93,7 @@ RSpec.describe NotificationsController do
           Discourse.received_redis_readonly!
           expect {
             get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
           }.not_to change { user.reload.last_seen_reviewable_id }
         ensure
           Discourse.clear_redis_readonly!
