@@ -308,7 +308,7 @@ RSpec.describe NotificationsController do
           end
         end
 
-        context "when targeting multiple notifications by type" do
+        context "when targeting notifications by type" do
           it "can mark notifications as read" do
             replied1 = notification
             replied1.update!(notification_type: Notification.types[:replied])
