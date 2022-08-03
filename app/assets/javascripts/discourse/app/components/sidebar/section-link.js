@@ -8,6 +8,10 @@ export default class SectionLink extends GlimmerComponent {
     }
   }
 
+  get classNames() {
+    return `${this.args.class} sidebar-section-link sidebar-section-link-${this.args.linkName}`;
+  }
+
   get prefixCSS() {
     const color = this.args.prefixColor;
 

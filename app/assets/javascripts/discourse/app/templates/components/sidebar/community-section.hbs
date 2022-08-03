@@ -11,6 +11,7 @@
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink
       @linkName={{sectionLink.name}}
+      @href={{sectionLink.href}}
       @route={{sectionLink.route}}
       @query={{sectionLink.query}}
       @title={{sectionLink.title}}

@@ -1,6 +1,11 @@
 import I18n from "I18n";
 import { test } from "qunit";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  visit,
+} from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -8,6 +13,7 @@ import {
   loggedInUser,
   publishToMessageBus,
   query,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -290,6 +296,71 @@ acceptance("Sidebar - Community Section", function (needs) {
     assert.ok(
       exists(".sidebar-section-community .sidebar-section-link-groups.active"),
       "groups link is displayed in sidebar when it is the active route"
+    );
+  });
+
+  test("navigating to about from sidebar", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await click(".sidebar-section-community .sidebar-section-link-about");
+
+    assert.strictEqual(
+      currentURL(),
+      "/about",
+      "navigates to about route correctly"
+    );
+  });
+
+  test("navigating to FAQ from sidebar", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await click(".sidebar-section-community .sidebar-section-link-faq");
+
+    assert.strictEqual(
+      currentURL(),
+      "/faq",
+      "navigates to faq route correctly"
+    );
+  });
+
+  test("navigating to custom FAQ URL from sidebar", async function (assert) {
+    this.siteSettings.faq_url = "http://some.faq.url";
+
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.strictEqual(
+      query(".sidebar-section-community .sidebar-section-link-faq").href,
+      "http://some.faq.url/",
+      "href attribute is set to custom FAQ URL on the section link"
+    );
+  });
+
+  test("navigating to admin from sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-section-community .sidebar-section-link-admin");
+
+    assert.strictEqual(currentRouteName(), "admin.dashboard.general");
+  });
+
+  test("admin section link is not shown to non-staff users", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-admin")
     );
   });
 
