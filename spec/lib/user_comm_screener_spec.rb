@@ -10,6 +10,7 @@ RSpec.describe UserCommScreener do
   end
   fab!(:target_user4) { Fabricate(:user, username: "janescreen") }
   fab!(:target_user5) { Fabricate(:user, username: "maryscreen") }
+  fab!(:other_user) { Fabricate(:user) }
 
   subject do
     described_class.new(
@@ -70,6 +71,10 @@ RSpec.describe UserCommScreener do
       it "returns false for a user neither ignoring or muting the actor" do
         expect(subject.ignoring_or_muting_actor?(target_user3.id)).to eq(false)
       end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.ignoring_or_muting_actor?(other_user.id) }.to raise_error(Discourse::NotFound)
+      end
     end
 
     describe "#disallowing_pms_from_actor?" do
@@ -98,6 +103,10 @@ RSpec.describe UserCommScreener do
 
       it "returns true for a user not disallowing PMs but still muting" do
         expect(subject.disallowing_pms_from_actor?(target_user2.id)).to eq(true)
+      end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.disallowing_pms_from_actor?(other_user.id) }.to raise_error(Discourse::NotFound)
       end
     end
   end
@@ -137,6 +146,10 @@ RSpec.describe UserCommScreener do
       it "returns false for a user neither ignoring or muting the actor" do
         expect(subject.ignoring_or_muting_actor?(target_user3.id)).to eq(false)
       end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.ignoring_or_muting_actor?(other_user.id) }.to raise_error(Discourse::NotFound)
+      end
     end
 
     describe "#disallowing_pms_from_actor?" do
@@ -159,6 +172,10 @@ RSpec.describe UserCommScreener do
 
       it "returns false for a user not disallowing PMs but still muting" do
         expect(subject.disallowing_pms_from_actor?(target_user2.id)).to eq(false)
+      end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.disallowing_pms_from_actor?(other_user.id) }.to raise_error(Discourse::NotFound)
       end
     end
   end
@@ -192,12 +209,20 @@ RSpec.describe UserCommScreener do
         expect(subject.actor_ignoring?(target_user2.id)).to eq(true)
         expect(subject.actor_ignoring?(target_user4.id)).to eq(false)
       end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.actor_ignoring?(other_user.id) }.to raise_error(Discourse::NotFound)
+      end
     end
 
     describe "#actor_muting?" do
       it "returns true for user ids that the actor is muting" do
         expect(subject.actor_muting?(target_user1.id)).to eq(true)
         expect(subject.actor_muting?(target_user2.id)).to eq(false)
+      end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.actor_muting?(other_user.id) }.to raise_error(Discourse::NotFound)
       end
     end
 
@@ -206,6 +231,10 @@ RSpec.describe UserCommScreener do
         acting_user.user_option.update!(enable_allowed_pm_users: true)
         expect(subject.actor_disallowing_pms?(target_user3.id)).to eq(true)
         expect(subject.actor_disallowing_pms?(target_user1.id)).to eq(false)
+      end
+
+      it "raises a NotFound error if the user_id passed in is not part of the target users" do
+        expect { subject.actor_disallowing_pms?(other_user.id) }.to raise_error(Discourse::NotFound)
       end
     end
 
