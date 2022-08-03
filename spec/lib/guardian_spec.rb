@@ -3968,6 +3968,10 @@ RSpec.describe Guardian do
 
       expect(guardian.is_category_group_moderator?(category)).to eq(true)
       expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
+
+      # edge case ... site setting disabled while guardian instansiated (can help with test cases)
+      SiteSetting.enable_category_group_moderation = false
+      expect(guardian.is_category_group_moderator?(category)).to eq(false)
     end
   end
 end
