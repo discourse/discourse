@@ -23,7 +23,6 @@ export default DiscoveryController.extend({
   category: null,
 
   canEdit: reads("currentUser.staff"),
-  // This makes sure that we don't display incoming banners on categories with subcategory lists twice
   @discourseComputed
   isCategoriesRoute() {
     return this.router.currentRouteName === "discovery.categories";
