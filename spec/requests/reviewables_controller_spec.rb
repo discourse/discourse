@@ -76,6 +76,7 @@ RSpec.describe ReviewablesController do
         expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id }).to eq(true)
 
         expect(json['meta']['reviewable_count']).to eq(1)
+        expect(json['meta']['unseen_reviewable_count']).to eq(1)
         expect(json['meta']['status']).to eq("pending")
       end
 

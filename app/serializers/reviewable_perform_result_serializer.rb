@@ -10,7 +10,8 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :created_post_topic_id,
     :remove_reviewable_ids,
     :version,
-    :reviewable_count
+    :reviewable_count,
+    :unseen_reviewable_count
   )
 
   def success
@@ -42,6 +43,14 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
   end
 
   def reviewable_count
-    Reviewable.list_for(scope.user).count
+    scope.user.reviewable_count
+  end
+
+  def unseen_reviewable_count
+    scope.user.unseen_reviewable_count
+  end
+
+  def include_unseen_reviewable_count?
+    scope.user.redesigned_user_menu_enabled?
   end
 end

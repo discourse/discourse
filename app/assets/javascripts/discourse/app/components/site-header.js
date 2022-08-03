@@ -30,7 +30,9 @@ const SiteHeaderComponent = MountWidget.extend(
     @observes(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
-      "currentUser.reviewable_count",
+      "currentUser.all_unread_notifications_count",
+      "currentUser.reviewable_count", // TODO: remove this when redesigned_user_menu_enabled is removed
+      "currentUser.unseen_reviewable_count",
       "session.defaultColorSchemeIsDark",
       "session.darkModeAvailable"
     )
