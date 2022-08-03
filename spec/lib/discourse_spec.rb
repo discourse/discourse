@@ -344,6 +344,7 @@ RSpec.describe Discourse do
       Discourse.reset_job_exception_stats!
 
       # see MiniScheduler Manager which reports it like this
+      # https://github.com/discourse/mini_scheduler/blob/2b2c1c56b6e76f51108c2a305775469e24cf2b65/lib/mini_scheduler/manager.rb#L95
       exception_context = {
         message: "Running a scheduled job",
         job: { "class" => Jobs::ReindexSearch }
