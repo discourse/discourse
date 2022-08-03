@@ -113,15 +113,17 @@ class Guardian
     return false if !SiteSetting.enable_category_group_moderation?
     return false if !category
     return false if !authenticated?
-    return false if !category.reviewable_by_group_id.present?
 
-    @is_category_group_moderator ||= {}
+    reviewable_by_group_id = category.reviewable_by_group_id
+    return false if reviewable_by_group_id.blank?
 
-    if @is_category_group_moderator.key?(category.id)
-      @is_category_group_moderator[category.id]
+    @is_group_member ||= {}
+
+    if @is_group_member.key?(reviewable_by_group_id)
+      @is_group_member[reviewable_by_group_id]
     else
-      @is_category_group_moderator[category.id] ||= begin
-        GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+      @is_group_member[reviewable_by_group_id] ||= begin
+        GroupUser.where(group_id: reviewable_by_group_id, user_id: @user.id).exists?
       end
     end
   end
