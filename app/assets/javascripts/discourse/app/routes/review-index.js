@@ -22,6 +22,12 @@ export default DiscourseRoute.extend({
     if (meta.reviewable_count !== undefined) {
       this.currentUser.set("reviewable_count", meta.reviewable_count);
     }
+    if (meta.unseen_reviewable_count !== undefined) {
+      this.currentUser.set(
+        "unseen_reviewable_count",
+        meta.unseen_reviewable_count
+      );
+    }
 
     controller.setProperties({
       reviewables: model,
@@ -59,7 +65,10 @@ export default DiscourseRoute.extend({
       }
     });
 
-    this.messageBus.subscribe("/reviewable_counts", (data) => {
+    const channel = this.currentUser.enable_redesigned_user_menu
+      ? `/reviewable_counts/${this.currentUser.id}`
+      : "/reviewable_counts";
+    this.messageBus.subscribe(channel, (data) => {
       if (data.updates) {
         this.controller.reviewables.forEach((reviewable) => {
           const updates = data.updates[reviewable.id];

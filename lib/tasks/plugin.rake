@@ -170,11 +170,15 @@ end
 desc 'run plugin specs'
 task 'plugin:spec', :plugin do |t, args|
   args.with_defaults(plugin: "*")
-  params = ENV['RSPEC_FAILFAST'] ? '--profile --fail-fast' : '--profile'
+
+  params = ['--profile']
+  params << '--fail-fast' if ENV['RSPEC_FAILFAST']
+  params << "--seed #{ENV['RSPEC_SEED']}" if Integer(ENV['RSPEC_SEED'], exception: false)
+
   ruby = `which ruby`.strip
   files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb").sort
   if files.length > 0
-    sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')} #{params}"
+    sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')} #{params.join(' ')}"
   else
     abort "No specs found."
   end

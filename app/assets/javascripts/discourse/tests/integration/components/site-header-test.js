@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, waitUntil } from "@ember/test-helpers";
+import { click, render, settled, waitUntil } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { hbs } from "ember-cli-htmlbars";
@@ -50,8 +50,35 @@ module("Integration | Component | site-header", function (hooks) {
     await click("header.d-header");
   });
 
+  test("displaying unread and reviewable notifications count when user's notifications and reviewables count are updated", async function (assert) {
+    this.currentUser.set("all_unread_notifications_count", 1);
+    this.currentUser.set("redesigned_user_menu_enabled", true);
+
+    await render(hbs`<SiteHeader />`);
+    let unreadBadge = query(
+      ".header-dropdown-toggle.current-user .unread-notifications"
+    );
+    assert.strictEqual(unreadBadge.textContent, "1");
+
+    this.currentUser.set("all_unread_notifications_count", 5);
+    await settled();
+
+    unreadBadge = query(
+      ".header-dropdown-toggle.current-user .unread-notifications"
+    );
+    assert.strictEqual(unreadBadge.textContent, "5");
+
+    this.currentUser.set("unseen_reviewable_count", 3);
+    await settled();
+
+    unreadBadge = query(
+      ".header-dropdown-toggle.current-user .unread-notifications"
+    );
+    assert.strictEqual(unreadBadge.textContent, "8");
+  });
+
   test("user avatar is highlighted when the user receives the first notification", async function (assert) {
-    this.currentUser.set("all_unread_notifications", 1);
+    this.currentUser.set("all_unread_notifications_count", 1);
     this.currentUser.set("redesigned_user_menu_enabled", true);
     this.currentUser.set("read_first_notification", false);
     await render(hbs`<SiteHeader />`);
@@ -60,7 +87,7 @@ module("Integration | Component | site-header", function (hooks) {
 
   test("user avatar is not highlighted when the user receives notifications beyond the first one", async function (assert) {
     this.currentUser.set("redesigned_user_menu_enabled", true);
-    this.currentUser.set("all_unread_notifications", 1);
+    this.currentUser.set("all_unread_notifications_count", 1);
     this.currentUser.set("read_first_notification", true);
     await render(hbs`<SiteHeader />`);
     assert.ok(!exists(".ring-first-notification"));
@@ -73,6 +100,13 @@ module("Integration | Component | site-header", function (hooks) {
       ".hamburger-dropdown .badge-notification"
     );
     assert.strictEqual(pendingReviewablesBadge.textContent, "1");
+  });
+
+  test("hamburger menu icon doesn't show pending reviewables count when revamped user menu is enabled", async function (assert) {
+    this.currentUser.set("reviewable_count", 1);
+    this.currentUser.set("redesigned_user_menu_enabled", true);
+    await render(hbs`<SiteHeader />`);
+    assert.ok(!exists(".hamburger-dropdown .badge-notification"));
   });
 
   test("clicking outside the revamped menu closes it", async function (assert) {

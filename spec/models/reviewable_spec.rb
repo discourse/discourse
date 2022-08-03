@@ -244,6 +244,63 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe ".unseen_list_for" do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:user) { Fabricate(:user, groups: [group]) }
+    fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
+    fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
+    fab!(:group_reviewable) {
+      Fabricate(:reviewable, reviewable_by_group: group, reviewable_by_moderator: false)
+    }
+
+    context "for admins" do
+      it "returns a list of pending reviewables that haven't been seen by the user" do
+        list = Reviewable.unseen_list_for(admin, preload: false)
+        expect(list).to contain_exactly(admin_reviewable, mod_reviewable, group_reviewable)
+        admin_reviewable.update!(status: Reviewable.statuses[:approved])
+        list = Reviewable.unseen_list_for(admin, preload: false)
+        expect(list).to contain_exactly(mod_reviewable, group_reviewable)
+        admin.update!(last_seen_reviewable_id: group_reviewable.id)
+        expect(Reviewable.unseen_list_for(admin, preload: false).empty?).to eq(true)
+      end
+    end
+
+    context "for moderators" do
+      it "returns a list of pending reviewables that haven't been seen by the user" do
+        list = Reviewable.unseen_list_for(moderator, preload: false)
+        expect(list).to contain_exactly(mod_reviewable)
+
+        group_reviewable.update!(reviewable_by_moderator: true)
+
+        list = Reviewable.unseen_list_for(moderator, preload: false)
+        expect(list).to contain_exactly(mod_reviewable, group_reviewable)
+
+        moderator.update!(last_seen_reviewable_id: mod_reviewable.id)
+
+        list = Reviewable.unseen_list_for(moderator, preload: false)
+        expect(list).to contain_exactly(group_reviewable)
+      end
+    end
+
+    context "for group moderators" do
+      before do
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "returns a list of pending reviewables that haven't been seen by the user" do
+        list = Reviewable.unseen_list_for(user, preload: false)
+        expect(list).to contain_exactly(group_reviewable)
+
+        user.update!(last_seen_reviewable_id: group_reviewable.id)
+
+        list = Reviewable.unseen_list_for(user, preload: false)
+        expect(list).to be_empty
+      end
+    end
+  end
+
   describe ".recent_list_with_pending_first" do
     fab!(:pending_reviewable1) do
       Fabricate(

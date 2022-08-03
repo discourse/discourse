@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+
 import { bind } from "discourse-common/utils/decorators";
 import GlimmerComponent from "discourse/components/glimmer";
 
@@ -80,6 +82,12 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
 
       if (sectionLink.model) {
         args.push(sectionLink.model);
+      } else if (sectionLink.models) {
+        args.push(...sectionLink.models);
+      }
+
+      if (!isEmpty(sectionLink.query)) {
+        args.push({ queryParams: sectionLink.query });
       }
 
       return this.router.isActive(...args) && sectionLink;

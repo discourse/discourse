@@ -2057,6 +2057,24 @@ RSpec.describe User do
 
       expect(message).to eq(nil)
     end
+
+    context "with redesigned_user_menu_enabled on" do
+      it "adds all_unread_notifications_count to the payload" do
+        user.update!(admin: true)
+        user.enable_redesigned_user_menu
+        Fabricate(:notification, user: user)
+        Fabricate(:notification, notification_type: 15, high_priority: true, read: false, user: user)
+        messages = MessageBus.track_publish("/notification/#{user.id}") do
+          user.publish_notifications_state
+        end
+        expect(messages.size).to eq(1)
+
+        message = messages.first
+        expect(message.data[:all_unread_notifications_count]).to eq(2)
+      ensure
+        user.disable_redesigned_user_menu
+      end
+    end
   end
 
   describe "silenced?" do
@@ -2778,6 +2796,114 @@ RSpec.describe User do
 
       expect(whisperer.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
+    end
+  end
+
+  describe "#all_unread_notifications_count" do
+    it "returns count of unseen and unread high priority and normal priority notifications" do
+      Fabricate(:notification, user: user, high_priority: true, read: false)
+      n2 = Fabricate(:notification, user: user, high_priority: false, read: false)
+      expect(user.all_unread_notifications_count).to eq(2)
+
+      n2.update!(read: true)
+      user.reload
+
+      expect(user.all_unread_notifications_count).to eq(1)
+
+      user.update!(seen_notification_id: n2.id)
+      user.reload
+
+      expect(user.all_unread_notifications_count).to eq(0)
+
+      n3 = Fabricate(:notification, user: user)
+      user.reload
+
+      expect(user.all_unread_notifications_count).to eq(1)
+
+      n3.topic.trash!(Fabricate(:admin))
+      user.reload
+
+      expect(user.all_unread_notifications_count).to eq(0)
+    end
+  end
+
+  describe "#unseen_reviewable_count" do
+    fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
+    fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
+    fab!(:group_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group) }
+
+    it "doesn't include reviewables that can't be seen by the user" do
+      SiteSetting.enable_category_group_moderation = true
+      expect(user.unseen_reviewable_count).to eq(0)
+      user.groups << group
+      user.save!
+      expect(user.unseen_reviewable_count).to eq(1)
+      user.update!(moderator: true)
+      expect(user.unseen_reviewable_count).to eq(2)
+      user.update!(admin: true)
+      expect(user.unseen_reviewable_count).to eq(3)
+    end
+
+    it "returns count of unseen reviewables" do
+      user.update!(admin: true)
+      expect(user.unseen_reviewable_count).to eq(3)
+      user.update!(last_seen_reviewable_id: mod_reviewable.id)
+      expect(user.unseen_reviewable_count).to eq(1)
+      user.update!(last_seen_reviewable_id: group_reviewable.id)
+      expect(user.unseen_reviewable_count).to eq(0)
+    end
+  end
+
+  describe "#bump_last_seen_reviewable!" do
+    it "doesn't error if there are no reviewables" do
+      Reviewable.destroy_all
+      user.bump_last_seen_reviewable!
+      expect(user.last_seen_reviewable_id).to eq(nil)
+    end
+
+    it "picks the reviewable of the largest id" do
+      user.update!(admin: true)
+      Fabricate(
+        :reviewable,
+        created_at: 3.minutes.ago,
+        updated_at: 3.minutes.ago,
+        score: 100
+      )
+      reviewable2 = Fabricate(
+        :reviewable,
+        created_at: 30.minutes.ago,
+        updated_at: 30.minutes.ago,
+        score: 10
+      )
+      user.bump_last_seen_reviewable!
+      expect(user.last_seen_reviewable_id).to eq(reviewable2.id)
+    end
+
+    it "stays at the maximum reviewable if there are no new reviewables" do
+      user.update!(admin: true)
+      reviewable = Fabricate(:reviewable)
+      user.bump_last_seen_reviewable!
+      expect(user.last_seen_reviewable_id).to eq(reviewable.id)
+      user.bump_last_seen_reviewable!
+      expect(user.last_seen_reviewable_id).to eq(reviewable.id)
+    end
+
+    it "respects reviewables security" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      group = Fabricate(:group)
+      user.update!(groups: [group])
+      SiteSetting.enable_category_group_moderation = true
+
+      group_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group)
+      mod_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
+      admin_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false)
+
+      [admin, moderator, user].each(&:bump_last_seen_reviewable!)
+
+      expect(admin.last_seen_reviewable_id).to eq(admin_reviewable.id)
+      expect(moderator.last_seen_reviewable_id).to eq(mod_reviewable.id)
+      expect(user.last_seen_reviewable_id).to eq(group_reviewable.id)
     end
   end
 end

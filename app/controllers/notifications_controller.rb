@@ -44,6 +44,22 @@ class NotificationsController < ApplicationController
         current_user.publish_notifications_state
       end
 
+      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode
+        current_user_id = current_user.id
+        Scheduler::Defer.later "bump last seen reviewable for user" do
+          # we lookup current_user again in the background thread to avoid
+          # concurrency issues where the objects returned by the current_user
+          # and/or methods are changed by the time the deferred block is
+          # executed
+          user = User.find_by(id: current_user_id)
+          next if user.blank?
+          new_guardian = Guardian.new(user)
+          if new_guardian.can_see_review_queue?
+            user.bump_last_seen_reviewable!
+          end
+        end
+      end
+
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         seen_notification_id: current_user.seen_notification_id
