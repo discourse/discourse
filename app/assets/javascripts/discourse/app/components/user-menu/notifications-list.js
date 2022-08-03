@@ -1,6 +1,9 @@
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import I18n from "I18n";
 import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
+import showModal from "discourse/lib/show-modal";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   get filterByTypes() {
@@ -60,13 +63,34 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   dismissWarningModal() {
-    // TODO: add warning modal when there are unread high pri notifications
-    // TODO: review child components and override if necessary
-    return null;
+    if (this.currentUser.unread_high_priority_notifications > 0) {
+      const modalController = showModal("dismiss-notification-confirmation");
+      modalController.set(
+        "count",
+        this.currentUser.unread_high_priority_notifications
+      );
+      return modalController;
+    }
   }
 
   @action
   dismissButtonClick() {
-    // TODO
+    const opts = { type: "PUT" };
+    const dismissTypes = this.filterByTypes;
+    if (dismissTypes?.length > 0) {
+      opts.data = { dismiss_types: dismissTypes.join(",") };
+    }
+    const modalController = this.dismissWarningModal();
+    const modalCallback = () => {
+      ajax("/notifications/mark-read", opts).then(() => {
+        this.refreshList();
+        postRNWebviewMessage("markRead", "1");
+      });
+    };
+    if (modalController) {
+      modalController.set("dismissNotifications", modalCallback);
+    } else {
+      modalCallback();
+    }
   }
 }

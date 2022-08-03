@@ -288,6 +288,81 @@ RSpec.describe NotificationsController do
           delete_notification(403, :to)
         end
       end
+
+      describe '#mark_read' do
+        context "when targeting a notification by id" do
+          it 'can mark a notification as read' do
+            expect {
+              put "/notifications/mark-read.json", params: { id: notification.id }
+              expect(response.status).to eq(200)
+              notification.reload
+            }.to change { notification.read }.from(false).to(true)
+          end
+
+          it "doesn't mark a notification of another user as read" do
+            notification.update!(user_id: Fabricate(:user).id, read: false)
+            expect {
+              put "/notifications/mark-read.json", params: { id: notification.id }
+              expect(response.status).to eq(200)
+              notification.reload
+            }.not_to change { notification.read }
+          end
+        end
+
+        context "when targeting notifications by type" do
+          it "can mark notifications as read" do
+            replied1 = notification
+            replied1.update!(notification_type: Notification.types[:replied])
+            mentioned = Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:mentioned],
+              read: false
+            )
+            liked = Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:liked],
+              read: false
+            )
+            replied2 = Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:replied],
+              read: true
+            )
+            put "/notifications/mark-read.json", params: {
+              dismiss_types: "replied,mentioned"
+            }
+            expect(response.status).to eq(200)
+            expect(replied1.reload.read).to eq(true)
+            expect(replied2.reload.read).to eq(true)
+            expect(mentioned.reload.read).to eq(true)
+
+            expect(liked.reload.read).to eq(false)
+          end
+
+          it "doesn't mark notifications of another user as read" do
+            mentioned1 = Fabricate(
+              :notification,
+              user: user,
+              notification_type: Notification.types[:mentioned],
+              read: false
+            )
+            mentioned2 = Fabricate(
+              :notification,
+              user: Fabricate(:user),
+              notification_type: Notification.types[:mentioned],
+              read: false
+            )
+            put "/notifications/mark-read.json", params: {
+              dismiss_types: "mentioned"
+            }
+            expect(mentioned1.reload.read).to eq(true)
+            expect(mentioned2.reload.read).to eq(false)
+          end
+        end
+      end
     end
 
     context 'as admin' do
