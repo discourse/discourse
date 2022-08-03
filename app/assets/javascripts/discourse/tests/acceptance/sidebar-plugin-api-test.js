@@ -451,6 +451,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
           rawLabel: "open bugs",
         };
       });
+
+      api.decorateWidget("hamburger-menu:generalLinks", () => {
+        return {
+          href: "/t/internationalization-localization/280",
+          rawLabel: "my favourite topic",
+        };
+      });
     });
 
     await visit("/");
@@ -520,6 +527,29 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert.ok(
       openBugsSectionLink.href.endsWith("/c/bug?status=open"),
       "sets the right href attribute for the custom open bugs section link"
+    );
+
+    // close more links
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await visit("/t/internationalization-localization/280");
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-favourite-topic.active"
+      ),
+      "displays my favourite topic custom section link when current route matches the link's route"
+    );
+
+    await visit("/t/short-topic-with-two-posts/54077");
+
+    assert.notOk(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-favourite-topic.active"
+      ),
+      "does not display my favourite topic custom section link when current route does not match the link's route"
     );
   });
 });
