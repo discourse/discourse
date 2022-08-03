@@ -78,23 +78,17 @@ export default Component.extend({
 
   @discourseComputed(
     "site.isReadOnly",
-    "site.wizard_required",
     "siteSettings.login_required",
     "siteSettings.disable_emails",
     "siteSettings.global_notice",
-    "siteSettings.bootstrap_mode_enabled",
-    "siteSettings.bootstrap_mode_min_users",
     "session.safe_mode",
     "logNotice.{id,text,hidden}"
   )
   notices(
     isReadOnly,
-    wizardRequired,
     loginRequired,
     disableEmails,
     globalNotice,
-    bootstrapModeEnabled,
-    bootstrapModeMinUsers,
     safeMode,
     logNotice
   ) {
@@ -141,35 +135,6 @@ export default Component.extend({
           id: "alert-emails-disabled",
         })
       );
-    }
-
-    if (wizardRequired) {
-      const requiredText = I18n.t("wizard_required", {
-        url: getURL("/wizard"),
-      });
-      notices.push(
-        Notice.create({ text: htmlSafe(requiredText), id: "alert-wizard" })
-      );
-    }
-
-    if (this.currentUser?.staff && bootstrapModeEnabled) {
-      if (bootstrapModeMinUsers > 0) {
-        notices.push(
-          Notice.create({
-            text: I18n.t("bootstrap_mode_enabled", {
-              count: bootstrapModeMinUsers,
-            }),
-            id: "alert-bootstrap-mode",
-          })
-        );
-      } else {
-        notices.push(
-          Notice.create({
-            text: I18n.t("bootstrap_mode_disabled"),
-            id: "alert-bootstrap-mode",
-          })
-        );
-      }
     }
 
     if (globalNotice?.length > 0) {

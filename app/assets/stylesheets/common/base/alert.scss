@@ -40,3 +40,26 @@
 a.alert.clickable {
   display: flex;
 }
+
+.alert-bootstrap-mode {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+
+  .col-text {
+    width: 85%;
+  }
+  .col-button {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    .button, .link {
+      align-self: center;
+      justify-content: flex-end;
+    }
+    .link {
+      font-weight: bold;
+      padding-top: 5px
+    }
+  }
+}
