@@ -84,6 +84,23 @@ RSpec.describe Admin::EmailController do
         expect(logs.first["reply_key"]).to eq(post_reply_key_2.reply_key)
       end
     end
+
+    it 'should be able to filter by smtp_transaction_response' do
+      email_log_2 = Fabricate(:email_log, smtp_transaction_response: <<~RESPONSE)
+      250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
+      RESPONSE
+
+      get "/admin/email/sent.json", params: {
+        smtp_transaction_response: "pYoKu"
+      }
+
+      expect(response.status).to eq(200)
+
+      logs = response.parsed_body
+
+      expect(logs.size).to eq(1)
+      expect(logs.first["smtp_transaction_response"]).to eq(email_log_2.smtp_transaction_response)
+    end
   end
 
   describe '#skipped' do

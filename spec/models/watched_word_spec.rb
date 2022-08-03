@@ -23,6 +23,10 @@ RSpec.describe WatchedWord do
     expect(described_class.create(word: "a**les").word).to eq('a*les')
   end
 
+  it "is case-insensitive by default" do
+    expect(described_class.create(word: "Jest").case_sensitive?).to eq(false)
+  end
+
   describe "action_key=" do
     let(:w) { WatchedWord.new(word: "troll") }
 
@@ -105,5 +109,21 @@ RSpec.describe WatchedWord do
       word = Fabricate(:watched_word, action: described_class.actions[:link], word: "meta3", replacement: "/test")
       expect(word.replacement).to eq("http://test.localhost/test")
     end
+
+    it "sets case-sensitivity of a word" do
+      word = described_class.create_or_update_word(word: 'joker', action_key: :block, case_sensitive: true)
+      expect(word.case_sensitive?).to eq(true)
+
+      word = described_class.create_or_update_word(word: 'free', action_key: :block)
+      expect(word.case_sensitive?).to eq(false)
+    end
+
+    it "updates case-sensitivity of a word" do
+      existing = Fabricate(:watched_word, action: described_class.actions[:block], case_sensitive: true)
+      updated = described_class.create_or_update_word(word: existing.word, action_key: :block, case_sensitive: false)
+
+      expect(updated.case_sensitive?).to eq(false)
+    end
+
   end
 end

@@ -2260,6 +2260,7 @@ sw:
       new_count:
         one: "Mada mpya %{count}"
         other: "Mada mpya %{count} "
+      more: "Zaidi"
       sections:
         messages:
           header_link_text: "Ujumbe"
@@ -3293,14 +3294,13 @@ sw:
           topics: "Mada"
   wizard_js:
     wizard:
-      done: "Imekwisha"
       back: "Iliyopita"
       next: "Ijayo"
+      step-text: "Hatua"
       step: "%{current} chini ya %{total}"
       upload: "Ongeza"
       uploading: "Inaongezwa"
       upload_error: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
-      quit: "Labda Baadae"
       invites:
         add_user: "ongeza"
         none_added: "Haujakaribisha Msaidizi yoyote. Unauhakika ungependa kuendelea?"

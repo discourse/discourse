@@ -522,9 +522,11 @@ ro:
       long_form: "Marchează ca spam"
     inappropriate:
       title: "Necorespunzător"
+      description: 'Acest subiect conține conținut pe care o persoană rezonabilă l-ar considera ofensator, abuziv sau o încălcare a <a href="%{base_path}/guidelines">ghidurilor comunității noastre</a>.'
       long_form: "marcat cu marcaj de avertizare ca inadecvat"
     notify_moderators:
       title: "Alt motiv"
+      description: 'Acest subiect necesită atenția generală a personalului pe baza regulilor <a href="%{base_path}/guidelines"></a>, <a href="%{tos_url}">TOS</a>, sau dintr-un alt motiv care nu este enumerat mai sus.'
       long_form: "marcat cu marcaj de avertizare în atenția moderatorilor"
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
@@ -1817,8 +1819,13 @@ ro:
     editor:
       name: Editor
       description: Prima postare editată
+      long_description: |
+        Această insignă este acordată prima dată când editezi una dintre postările tale. Deși nu veți putea să vă editați postările pentru totdeauna, editarea este încurajată - puteți îmbunătăți formatarea, puteți remedia mici erori sau puteți adăuga orice ați ratat când ați postat inițial. Editați pentru a vă îmbunătăți și mai bine postările!
     basic_user:
       name: Simplu utilizator
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Niveluri de încredere</a> toate funcțiile esențiale ale comunității
+      long_description: |
+        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumesc pentru că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori; Ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, marcarea, editarea wiki și abilitatea de a posta mai multe imagini și link-uri.
     member:
       name: Membru
     regular:
@@ -1870,6 +1877,8 @@ ro:
     first_flag:
       name: Primul marcaj de avertizare
       description: Marcat postare cu marcaj de avertizare
+      long_description: |
+        Această insignă este acordată prima dată când semnalați o postare. Semnalarea este modul în care contribuim cu toții la menținerea acestui loc frumos pentru toată lumea. Dacă observați postări care necesită atenția moderatorului din orice motiv, vă rugăm să nu ezitați să semnalați. Dacă vedeți o problemă, :flag_black: semnalați-o!
     promoter:
       name: Promotor
       description: Ai invitat un utilizator
@@ -1896,6 +1905,9 @@ ro:
         Acest ecuson este oferit prima dată când citezi o postare într-un răspuns propriu. Citarea părților relevante din postările anterioare în răspunsul tău ajută la menținerea discuțiilor și la păstrarea subiectului lor inițial. Cea mai ușoară cale de a cita este să selectezi o porțiune dintr-o postare și să apeși pe butonul pentru răspuns. Citează frecvent!
     read_guidelines:
       name: Ghid Citit
+      description: Citește <a href="%{base_uri}/guidelines">ghidurile comunității</a>
+      long_description: |
+        Această insignă este acordată pentru <a href="%{base_uri}/guidelines">citirea ghidurilor comunității</a>. Respectarea și împărtășirea acestor instrucțiuni simple ajută la construirea unei comunități sigure, distractive și durabile pentru toată lumea. Amintiți-vă întotdeauna că există o altă ființă umană, una foarte asemănătoare cu tine, pe cealaltă parte a ecranului. Fi drăguț/ă!
     reader:
       name: Cititor
       description: Ai citit toate răspunsurile dintr-un subiect cu mai mult de 100 de răspunsuri
@@ -1962,6 +1974,11 @@ ro:
       name: Forum prin email
       long_description: |
         Acest ecuosn se acordă când ai răspuns pentru prima dată la o postare prin email :e-mail:.
+    enthusiast:
+      name: Entuziast
+      description: Ai vizitat 10 zile consecutive
+      long_description: |
+        Această insignă este acordată pentru vizitarea timp de 10 zile consecutive. Vă mulțumim că ați rămas alături de noi mai bine de o săptămână!
   admin_login:
     success: "Emailul a fost trimis"
     email_input: "Email Admin"
@@ -1992,50 +2009,20 @@ ro:
   wizard:
     title: "Configurare Discourse"
     step:
-      locale:
-        title: "Bun venit pe Discourse-ul tău!"
-        fields:
-          default_locale:
-            description: "Care e limba implicită pentru comunitatea ta?"
-      forum_title:
-        title: "Nume"
-        description: "Numele este un semn vizibil de la distanță, <i>primul</i> lucru pe care vizitatorii potențiali îl remarcă cu privire la comunitatea ta. Ce spune numele și titlul despre comunitatea ta?"
+      introduction:
         fields:
           title:
-            label: "Numele comunității tale"
             placeholder: "Bârlogul Mariei"
           site_description:
             placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
-      introduction:
-        title: "Introducere"
-        fields:
-          welcome:
-            label: "Subiect de bun venit"
-            one_paragraph: "Te rugăm să îți restrângi mesajul de bun venit la un paragraf."
       privacy:
-        title: "Acces"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Public"
-              restricted:
-                label: "Privat"
-      contact:
-        title: "Contact"
-        fields:
-          contact_email:
-            label: "Mail"
-            placeholder: "nume@exemplu.comb"
-            description: "Adresa de email a persoanei sau grupului responsabil de aceasta comunitate. Folosită pentru notificări critice cum ar fi marcaje de avertizare negestionate, actualizări de securitate și afișată pe pagina <a href='%{base_path}/about' target='_blank'>Despre noi</a> pentru contactarea de urgență a comunității."
-          contact_url:
-            label: "Pagină web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='%{base_path}/about' target='_blank'>pagina despre noi</a>. "
-          site_contact:
-            label: "Mesaje automate"
-      corporate:
-        title: "Organizație"
+          login_required:
+            placeholder: "Privat"
+          must_approve_users:
+            placeholder: "Necesită aprobare"
+      ready:
+        title: "Discourse-ul tău e gata!"
       styling:
         fields:
           styling_preview:
@@ -2052,16 +2039,20 @@ ro:
                 label: "Categorii și subiecte recente"
               categories_and_top_topics:
                 label: "Categorii și discuții în top"
-      logos:
-        title: "Logo-uri"
+      branding:
         fields:
           logo:
             label: "Logo-ul principal"
-      icons:
-        title: "Iconițe"
-        fields:
           large_icon:
             label: "Iconiță mare"
+      corporate:
+        fields:
+          contact_url:
+            label: "Pagină web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='%{base_path}/about' target='_blank'>pagina despre noi</a>. "
+          site_contact:
+            label: "Mesaje automate"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

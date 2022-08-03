@@ -1853,9 +1853,11 @@ he:
       other: תגובות
     signup_cta:
       sign_up: "הרשמה"
+      hide_session: "אולי מאוחר יותר"
       hide_forever: "לא תודה"
       hidden_for_session: "סבבה, השאלה תופיע מחר. תמיד ניתן להשתמש ב‚כניסה’ גם כדי ליצור חשבון."
       intro: "שלום! נראה שאתם נהנים מהדיון, אבל לא נרשמתם לחשבון עדיין."
+      value_prop: "נמאס לך לעיין באותם הפוסטים? יצירת חשבון תאפשר לך לחזור בדיוק לנקודה בה עזבת בפעם האחרונה. חשבון מאפשר לך גם לקבל התראות על תגובות חדשות, לשמור סימניות ולהשתמש בלייקים כדי להודות לאחרים. כולנו יכולים לפעול ביחד כדי שהקהילה הזאת תהיה מצוינת. :heart:"
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description:
@@ -2532,6 +2534,14 @@ he:
       generic_no_items: "אין פריטים ברשימה זו."
       sr_menu_tabs: "לשוניות תפריט"
       view_all_notifications: "הצגת כל ההתראות"
+      reviewable:
+        view_all: "הצגת כל הפריטים לסקירה"
+        queue: "תור"
+        deleted_user: "(משתמש שנמחק)"
+        post_number_with_topic_title: "פוסט מס׳ %{post_number} - %{title}"
+        new_post_in_topic: "פוסט חדש תחת %{title}"
+        suspicious_user: "משתמש חשוד %{username}"
+        default_item: "פריט מס׳ %{reviewable_id} לסקירה"
     topics:
       new_messages_marker: "ביקור אחרון"
       bulk:
@@ -3736,6 +3746,7 @@ he:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "קיצורי מקלדת"
+      short_title: "קיצורי דרך"
       jump_to:
         title: "קפצו אל"
         home: "%{shortcut} בית"
@@ -4082,6 +4093,7 @@ he:
         many: "חדש (%{count})"
         other: "חדש (%{count})"
       toggle_section: "החלפת מצב הצגת סעיף"
+      more: "עוד…"
       sections:
         messages:
           header_link_title: "הודעות פרטיות"
@@ -4123,6 +4135,7 @@ he:
               title: "כל הקבוצות"
             users:
               content: "משתמשים"
+              title: "כל המשתמשים"
             my_posts:
               content: "הפוסטים שלי"
               title: "הפוסטים שלי"
@@ -5103,6 +5116,7 @@ he:
           two: "להציג %{count} מילים"
           many: "להציג %{count} מילים"
           other: "להציג %{count} מילים"
+        case_sensitive: "(תלוי רישיות)"
         download: הורדה
         clear_all: לפנות הכול
         clear_all_confirm: "לפנות את כל המילים שבמעקב לפעולה %{action}?"
@@ -5140,6 +5154,8 @@ he:
           exists: "כבר קיימת"
           upload: "הוספה מקובץ"
           upload_successful: "העלאה הצליחה. מילים נוספו."
+          case_sensitivity_label: "הוא תלוי רישיות"
+          case_sensitivity_description: "רק מילים עם התאמת אותיות רישיות/קטנות"
         test:
           button_label: "נסיון"
           modal_title: "%{action}: בדיקת מילים במעקב"
@@ -5699,15 +5715,16 @@ he:
           replace: "החלפה"
   wizard_js:
     wizard:
-      done: "סיום"
-      finish: "סיום"
+      jump_in: "נכנסים לעניינים!"
+      finish: "יציאה מההתקנה"
       back: "חזרה"
       next: "הבא"
+      configure_more: "עוד הגדרות…"
+      step-text: "שלב"
       step: "%{current} מתוך %{total}"
       upload: "העלאה"
       uploading: "מתבצעת העלאה…"
       upload_error: "התרחשה שגיאה בהעלאת הקובץ שלך, עמך הסליחה. נא לנסות שוב."
-      quit: "אולי מאוחר יותר"
       staff_count:
         one: "לקהילה הזאת יש חבר סגל יחיד (עצמך)."
         two: "לקהילה הזאת יש שני חברי סגל, כולל אותך."

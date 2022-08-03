@@ -2429,6 +2429,7 @@ th:
         other: "%{count} ยังไม่อ่าน"
       new_count:
         other: "%{count} ใหม่"
+      more: "อื่นๆ..."
       sections:
         messages:
           header_link_text: "ข้อความ"
@@ -3151,8 +3152,6 @@ th:
           topics: "กระทู้"
   wizard_js:
     wizard:
-      done: "เสร็จ"
-      finish: "เสร็จสิ้น"
       back: "กลับ"
       next: "ต่อไป"
       upload: "อัปโหลด"

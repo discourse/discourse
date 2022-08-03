@@ -3427,6 +3427,7 @@ pt:
       new_count:
         one: "%{count} novo"
         other: "%{count} novos"
+      more: "Mais..."
       sections:
         messages:
           header_link_text: "Mensagens"
@@ -4623,14 +4624,13 @@ pt:
           topics: "Tópicos"
   wizard_js:
     wizard:
-      done: "Concluído"
       back: "Retroceder"
       next: "Próximo"
+      step-text: "Passo"
       step: "%{current} de %{total}"
       upload: "Carregar"
       uploading: "A carregar…"
       upload_error: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
-      quit: "Talvez Mais Tarde"
       invites:
         add_user: "adicionar"
         none_added: "Não convidou ninguém para a equipa de apio. Tem a certeza de que quer continuar?"

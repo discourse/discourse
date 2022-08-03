@@ -19,7 +19,7 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const user = container.lookup("current-user:main");
+    const user = container.lookup("service:current-user");
     const bus = container.lookup("service:message-bus");
     const appEvents = container.lookup("service:app-events");
 
@@ -122,7 +122,7 @@ export default {
       });
 
       const site = container.lookup("site:main");
-      const siteSettings = container.lookup("site-settings:main");
+      const siteSettings = container.lookup("service:site-settings");
       const router = container.lookup("router:main");
 
       bus.subscribe("/categories", (data) => {

@@ -104,6 +104,25 @@ RSpec.describe TopicCreator do
         end
       end
 
+      context 'when assigned via matched watched words' do
+        fab!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: tag1.name) }
+        fab!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: tag2.name) }
+        fab!(:word3) { Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: tag3.name, case_sensitive: true) }
+
+        it 'adds watched words as tags' do
+          topic = TopicCreator.create(
+            user,
+            Guardian.new(user),
+            valid_attrs.merge(
+              title: "This is a #{word1.word} title",
+              raw: "#{word2.word.upcase} is not the same as #{word3.word.upcase}")
+          )
+
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(tag1, tag2)
+        end
+      end
+
       context 'staff-only tags' do
         before do
           create_staff_only_tags(['alpha'])

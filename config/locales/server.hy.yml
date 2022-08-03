@@ -2976,66 +2976,20 @@ hy:
   wizard:
     title: "Discourse Տեղադրում"
     step:
-      locale:
-        title: "Բարի գալուստ Ձեր Discourse!"
-        fields:
-          default_locale:
-            description: "Ո՞րն է Ձեր համայնքի լռելյայն լեզուն:"
-      forum_title:
-        title: "Անուն"
-        description: "Ձեր անունը հեռավորության վրա տեսանելի նշան է, <i>առաջինը</i> , ինչ պոտենցիալ այցելուները կնկատեն Ձեր համայնքի վերաբերյալ: Ի՞նչ են ասում Ձեր անունը և վերնագիրը ասում Ձեր համայնքի մասին:"
+      introduction:
         fields:
           title:
-            label: "Ձեր համայնքի անվանումը"
             placeholder: "Jane’s Hangout"
           site_description:
             placeholder: "Ջեյնի և իր ընկերների համար ընտիր թեմաներ քննարկելու վայր"
-          short_site_description:
-            placeholder: "Բոլոր ժամանակների ամենալավ համայնքը"
-      introduction:
-        title: "Ներածություն"
-        disabled: "<p>Մենք չկարողացանք գտնել որևէ թեմա “%{topic_title}” վերնագրով:</p> <ul> <li>Եթե Դուք փոփոխել եք վերնագիրը, ծմբագրեք այս վերնագիրը՝ փոփոխելու համար Ձեր կայքի ներածական տեքստը:</li> <li>Եթե Դուք ջնջել եք այս թեման, ստեղծեք մեկ այլ թեմա “%{topic_title}” վերնագրով: Առաջին գրառման պարունակությունը կլինի Ձեր կայքի ներածական տեքստը:</li> </ul>"
-        fields:
-          welcome:
-            label: "Ողջույնի Թեմա"
-            description: "<p>Ինչպե՞ս կնկարագրեք Ձեր համայնքը վերելակի անծանոթին մոտ 1 րոպեում:</p> <ul> <li>Ո՞ւմ համար են այս քննարկումները</li> <li>Ի՞նչ կարող եմ գտնել այստեղ:</li> <li>Ինչո՞ւ պետք է այցելեմ:</li> </ul> <p>Ձեր ողջույնի թեման առաջինն է, որ կկարդան նոր այցելուները: Պատկերացրեք այն որպես Ձեր <b>մեկ պարբերություն ունեցող</b> 'ներկայացում վերելակում' կամ 'առաքելության նշում': </p>"
-            one_paragraph: "Խնդրում ենք սահմանափակել Ձեր ողջույնի հաղորդագրությունը մինչև մեկ պարբերություն:"
       privacy:
-        title: "Հասանելիություն"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Հանրային"
-              restricted:
-                label: "Մասնավոր"
-      contact:
-        title: "Կապ"
-        fields:
-          contact_email:
-            label: "Էլ. հասցե"
-            placeholder: "name@example.com"
-            description: "Այս համայնքի համար պատասխանատու անձի կամ խմբի էլ. հասցե: Օգտագործվում է ծայրահեղ ծանուցումների համար, ինչպես օրինակ՝ չկարգավորված դրոշակներ, անվտանգության թարմացումները և <a href='%{base_path}/about' target='_blank'>Ձեր մասին էջը</a> ՝ համայնքի անհապաղ կապի համար:"
-          contact_url:
-            label: "Վեբ Էջ"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Ընդհանուր կապի էջ Ձեր կամ Ձեր կազմակերպության համար: Կցուցադրվի <a href='%{base_path}/about' target='_blank'>Ձեր մասին էջում</a>:"
-          site_contact:
-            label: "Ավտոմատացված Նամակներ"
-            description: "Բոլոր ավտոմատացված Discourse անձնական նամակները կուղարկվեն այս օգտատիրոջից, օրինակ՝ դրոշակավորված զգուշացումներ և պահուստային լրացւոմների նշումներ:"
-      corporate:
-        title: "Կազմակերպություն"
-        description: "Այս տեղեկատվությունը կմուտքագրվի Ձեր <a href='%{base_path}/tos' target='blank'>Օգտագործման Կանոններ</a>, որը թեմա է, որը կարելի է խմբագրել Անձնակազմ կատեգորիայում: եթե չունեք ընկերություն, ազատ կարող եք առայժմ բաց թողնել այս քայլը: "
-        fields:
-          company_name:
-            label: "Կազմակերպության Անվանում "
-            placeholder: "Օրինակ Կազմակերպություն"
-          governing_law:
-            label: "Իշխող Օրենք"
-            placeholder: "Կալիֆորնիայի օրենք"
-          city_for_disputes:
-            label: "Վեճերի Քաղաք"
-            placeholder: "Սան-Ֆրանցիսկո, Կալիֆորնիա"
+          login_required:
+            placeholder: "Մասնավոր"
+          must_approve_users:
+            placeholder: "Պահանջել Հաստատում"
+      ready:
+        title: "Ձեր Discourse -ը պատրաստ է!"
       styling:
         fields:
           styling_preview:
@@ -3052,17 +3006,30 @@ hy:
                 label: "Կատեգորիաները և Վերջին Թեմաները"
               categories_and_top_topics:
                 label: "Կատեգորիաները և Թոփ Թեմաները"
-      logos:
-        title: "Լոգոներ"
+      branding:
         fields:
           logo:
             label: "Հիմնական Լոգո"
-            description: "Ձեր կայքի վերևի ձախ մասի լոգոյի նկարը: Օգտագործեք լայն քառանկյուն նկար՝ 120 բարձրությամբ և 3:1 -ից մեծ հարաբերակցությամբ"
-      icons:
-        title: "Պատկերակներ"
-        fields:
           large_icon:
             label: "Մեծ Պատկերակ"
+      corporate:
+        fields:
+          company_name:
+            label: "Կազմակերպության Անվանում "
+            placeholder: "Օրինակ Կազմակերպություն"
+          governing_law:
+            label: "Իշխող Օրենք"
+            placeholder: "Կալիֆորնիայի օրենք"
+          contact_url:
+            label: "Վեբ Էջ"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Ընդհանուր կապի էջ Ձեր կամ Ձեր կազմակերպության համար: Կցուցադրվի <a href='%{base_path}/about' target='_blank'>Ձեր մասին էջում</a>:"
+          city_for_disputes:
+            label: "Վեճերի Քաղաք"
+            placeholder: "Սան-Ֆրանցիսկո, Կալիֆորնիա"
+          site_contact:
+            label: "Ավտոմատացված Նամակներ"
+            description: "Բոլոր ավտոմատացված Discourse անձնական նամակները կուղարկվեն այս օգտատիրոջից, օրինակ՝ դրոշակավորված զգուշացումներ և պահուստային լրացւոմների նշումներ:"
       invites:
         title: "Հրավիրել Անձնակազմին"
         description: "Դուք գրեթե վերջացրել եք! Եկեք հրավիրենք որոշ մարդկանց՝ օգնելու <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>լցնել Ձեր քննարկումները</a> հետաքրքիր թեմաներով և պատասխաններով՝ Ձեր համայնքին սկիզբ դնելու համար:"

@@ -3305,6 +3305,7 @@ hu:
       new_count:
         one: "%{count} új"
         other: "%{count} új"
+      more: "Továbbiak..."
       sections:
         messages:
           header_link_text: "Üzenetek"
@@ -4270,14 +4271,13 @@ hu:
           topics: "Témák"
   wizard_js:
     wizard:
-      done: "Kész"
       back: "Vissza"
       next: "Tovább"
+      step-text: "Lépés"
       step: "%{current} / %{total}"
       upload: "Feltöltés"
       uploading: "Feltöltés…"
       upload_error: "Sajnáljuk, de hiba lépett fel a fájl feltöltése során. Próbálja újra."
-      quit: "Talán később"
       staff_count:
         one: "A közösségében %{count} stábtag van (Ön)."
         other: "A közösségében Önnel együtt %{count} stábtag van."

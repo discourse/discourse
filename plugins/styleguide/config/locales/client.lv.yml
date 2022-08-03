@@ -85,3 +85,5 @@ lv:
           title: "Galvenes ikonas"
         spinners:
           title: "Ciparu vērtības iestatīšana"
+        rich_tooltip:
+          description: "Apraksts"

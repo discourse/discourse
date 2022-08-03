@@ -2018,52 +2018,20 @@ sw:
   wizard:
     title: "Mpangilio wa Discourse"
     step:
-      locale:
-        title: "Karibu kwenye Discourse yako!"
-        fields:
-          default_locale:
-            description: "Lugha ipi ni chaguo-msingi ya jumuia yako?"
-      forum_title:
-        title: "Jina"
-        description: "Jina lako ni ishara ya kwanza kuonwa kutoka mbali, kitu cha <i>kwanza</i>kuonwa kuhusiana na jamii yako. Jina na cheo chako vinasema nini kuhusiana na jumuia yako?"
+      introduction:
         fields:
           title:
-            label: "Jina la Jumuia"
             placeholder: "Sehemu ya Jeni ya Kuburudika"
           site_description:
             placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
-      introduction:
-        title: "Utambulisho"
-        fields:
-          welcome:
-            label: "Mada ya Kukaribisha"
-            description: "<p>Unawezaje kuelezea jamii yako kwa mtu usiyemjua kwenye lifti ndani ya dakika 1?</p><ul><li>Majadiliano ni ya nani?</li><li>Nitakutana na nini?</li><li>Kwa nini nitembelee?</li></ul><p>Mada ya kukaribisha ni kitu cha kwanza kitakachosomwa na waalikwa wapya. Ifikirie kama <b>ankra moja</b>'msemo mfupi' au 'kauli ya vitu vya kutimizwa'.</p>"
-            one_paragraph: "Tafadhali hakikisha ujumbe wa kukaribisha ni aya moja."
       privacy:
-        title: "Kufikia"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Umma"
-              restricted:
-                label: "Binafsi"
-      contact:
-        title: "Wasiliana"
-        fields:
-          contact_email:
-            label: "Tuma Ujumbe"
-            placeholder: "jina@mfano.com"
-            description: "Barua pepe ya mtu au kikundi anayesimamia jumuiya hii. Inatumika kwa ajili ya taarifa muhimu sana, mfano ripoti ambazo hazijashughulikiwa, masasisho ya ulinzi, na <a href='%{base_path}/about' target='_blank'>ukurasa kuhusu wewe</a> kwa ajili ya mawasiliano muhimu /kuhusiana"
-          contact_url:
-            label: "Ukurasa wa Tovuti"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Ukurasa wa mawasiliano wa shirika lako. Utaonyeshwa kwenye <a href='%{base_path}/about' target='_blank'>kurasa wa kuhusu wewe</a>."
-          site_contact:
-            label: "Ujumbe uliotomatiki"
-            description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
-      corporate:
-        title: "Shirika"
+          login_required:
+            placeholder: "Binafsi"
+          must_approve_users:
+            placeholder: "Inahitaji Uthibitisho"
+      ready:
+        title: "Discourse yako iko Tayari!"
       styling:
         fields:
           styling_preview:
@@ -2080,16 +2048,21 @@ sw:
                 label: "Kategoria na Mada za Hivi Karibuni"
               categories_and_top_topics:
                 label: "Kategoria na Mada za Juu"
-      logos:
-        title: "Nembo"
+      branding:
         fields:
           logo:
             label: "Nembo Msingi"
-      icons:
-        title: "Ikoni"
-        fields:
           large_icon:
             label: "Ikoni Kubwa"
+      corporate:
+        fields:
+          contact_url:
+            label: "Ukurasa wa Tovuti"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Ukurasa wa mawasiliano wa shirika lako. Utaonyeshwa kwenye <a href='%{base_path}/about' target='_blank'>kurasa wa kuhusu wewe</a>."
+          site_contact:
+            label: "Ujumbe uliotomatiki"
+            description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       invites:
         title: "Alika Wasaidizi"
         description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."

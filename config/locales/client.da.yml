@@ -3560,6 +3560,7 @@ da:
       new_count:
         one: "%{count} ny"
         other: "%{count} nye"
+      more: "Mere..."
       sections:
         messages:
           header_link_text: "Beskeder"
@@ -5099,15 +5100,13 @@ da:
           replace: "Erstat"
   wizard_js:
     wizard:
-      done: "Færdig"
-      finish: "Afslut"
       back: "Tilbage"
       next: "Næste"
+      step-text: "Trin"
       step: "%{current} af %{total}"
       upload: "Overfør"
       uploading: "Overfører…"
       upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
-      quit: "Måske senere"
       staff_count:
         one: "Dit fællesskab har %{count} personale medlem (dig)."
         other: "Dit fællesskab har %{count} personale medlem, inklusive dig."

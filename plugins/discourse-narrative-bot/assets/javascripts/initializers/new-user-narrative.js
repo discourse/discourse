@@ -7,7 +7,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 const PLUGIN_ID = "new-user-narrative";
 
 function initialize(api) {
-  const messageBus = api.container.lookup("message-bus:main");
+  const messageBus = api.container.lookup("service:message-bus");
   const currentUser = api.getCurrentUser();
   const appEvents = api.container.lookup("service:app-events");
 
@@ -119,7 +119,7 @@ export default {
   name: "new-user-narratve",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.discourse_narrative_bot_enabled) {
       withPluginApi("0.8.7", initialize);
     }

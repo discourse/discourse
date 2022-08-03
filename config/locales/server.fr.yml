@@ -669,6 +669,7 @@ fr:
   post:
     image_placeholder:
       broken: "Cette image ne fonctionne pas"
+      blocked_hotlinked: "Image externe"
     hidden_bidi_character: "Les caractères de contrôle bidirectionnels permettent de modifier l'ordre dans lequel les éléments d'un texte seront affichés. Ceci pourrait servir à dissimuler du code informatique malveillant."
     has_likes:
       one: "%{count} « J'aime »"
@@ -4420,83 +4421,27 @@ fr:
   wizard:
     title: "Configuration de Discourse"
     step:
-      locale:
-        title: "Bienvenue sur votre Discourse !"
-        fields:
-          default_locale:
-            description: "Quelle est la langue par défaut de votre communauté ?"
-      forum_title:
-        title: "Nom"
-        description: "Votre nom est un signe visible au loin, la <i>première</i> chose que les visiteurs remarqueront à propos de votre communauté. Que dit votre nom à propos de votre communauté ?"
+      introduction:
+        title: "Parlez-nous de votre communauté"
         fields:
           title:
-            label: "Nom de votre communauté"
             placeholder: "Le repaire de Jeanne"
           site_description:
-            label: "Décrivez votre communauté en une courte phrase (s'affichera dans les moteurs de recherche et les réseaux sociaux)"
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
-          short_site_description:
-            label: "Décrivez votre communauté en quelques mots (servira de titre à la page d'accueil)"
-            placeholder: "Meilleure communauté de tous les temps"
-      introduction:
-        title: "Introduction"
-        disabled: "<p>Nous n'avons pas trouvé de sujet avec le titre « %{topic_title} ».</p> <ul> <li>Si vous avez changé le titre, modifiez ce sujet pour personnaliser le texte d'introduction de votre site.</li> <li>Si vous avez supprimé ce sujet, créez un nouveau sujet avec le titre « %{topic_title} ». Le contenu du premier message est le message d'introduction de votre site.</li> </ul>"
-        fields:
-          welcome:
-            label: "Sujet de bienvenue"
-            description: "<p>Comment décririez-vous votre communauté à un inconnu en environ 1 minute ?</p> <ul> <li>À qui sont destinées ces discussions ?</li> <li>Que puis-je trouver ici ?</li> <li>Pourquoi dois-je la visiter ?</li> </ul> <p>Votre sujet de bienvenue est la première chose que les nouveaux visiteurs verront. Voyez-le comme votre <b>unique paragraphe</b> qui définit votre mission et ce qui vous distingue. </p>"
-            one_paragraph: "Veuillez restreindre votre message de bienvenue à un paragraphe."
-            extra_description: "Si vous avez des doutes, vous pouvez ignorer cette étape et modifier votre sujet de bienvenue ultérieurement."
-      privacy:
-        title: "Accès"
-        description: "<p>Votre communauté est-elle ouverte à tous ou restreinte par adhésion, invitation et approbation ? Si vous préférez, vous pouvez préparer le site en mode privé puis passer en mode public par la suite.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Public"
-                description: "Tout le monde peut accéder à cette communauté"
-              restricted:
-                label: "Privé"
-                description: "Seuls les utilisateurs connectés peuvent accéder à cette communauté"
-          privacy_options:
-            description: "Comment les nouveaux utilisateurs peuvent-ils créer un compte ?"
-            choices:
-              open:
-                label: "Les utilisateurs peuvent s'inscrire eux-mêmes."
-              invite_only:
-                label: "Les utilisateurs doivent être invités par des utilisateurs de confiance ou un responsable avant de pouvoir s'inscrire."
-              must_approve:
-                label: "Les utilisateurs peuvent s'inscrire eux-mêmes, mais doivent être approuvés par un responsable."
-      contact:
-        title: "Contact"
-        fields:
           contact_email:
-            label: "Courriel"
-            placeholder: "nom@exemple.com"
-            description: "Adresse courriel de la personne ou groupe responsable de cette communauté. Elle est utilisée pour les notifications critiques comme les signalements non traités, les mises à jour de sécurité et sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> pour les contacts urgents."
-          contact_url:
-            label: "Page Web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Page Web permettant de vous contacter ou de contacter votre organisation. Elle sera affichée sur la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
-          site_contact:
-            label: "Messages automatiques"
-            description: "Tous les messages directs émis par Discourse, tels que les signalements ou les notifications de sauvegarde, seront envoyés par cet utilisateur."
-      corporate:
-        title: "Organisation"
-        description: "Cette information figurera dans vos <a href='%{base_path}/tos' target='blank'>Conditions générales d'utilisation</a>, qui est un sujet que vous pouvez modifier dans la catégorie des responsables. Si vous ne représentez pas une entreprise, vous pouvez ignorer cette étape pour l'instant."
+            placeholder: "exemple@utilisateur.com"
+          default_locale:
+            label: "Langue "
+      privacy:
         fields:
-          company_name:
-            label: "Nom de société"
-            placeholder: "Société exemple"
-          governing_law:
-            label: "Droit applicable"
-            placeholder: "Loi californienne"
-          city_for_disputes:
-            label: "Ville pour les litiges"
-            placeholder: "San Francisco, Californie"
+          login_required:
+            placeholder: "Privé"
+            extra_description: "Seuls les utilisateurs connectés peuvent accéder à cette communauté"
+          must_approve_users:
+            placeholder: "Nécessiter l'approbation"
+      ready:
+        title: "Votre Discourse est prêt !"
       styling:
-        title: "Choix du style"
         fields:
           color_scheme:
             label: "Jeu de couleurs"
@@ -4517,6 +4462,8 @@ fr:
                 label: "Catégories avec sujets à la une"
               categories_and_latest_topics:
                 label: "Catégories et sujets récents"
+              categories_and_latest_topics_created_date:
+                label: "Catégories et derniers sujets (triés par date de création du sujet)"
               categories_and_top_topics:
                 label: "Catégories et meilleurs sujets"
               categories_boxes:
@@ -4525,24 +4472,34 @@ fr:
                 label: "Boites de catégories et sujets"
               subcategories_with_featured_topics:
                 label: "Sous-catégories avec sujets en vedette"
-      logos:
-        title: "Logos"
+      branding:
         fields:
           logo:
             label: "Logo principal"
-            description: "L'image de votre logo située en haut à gauche de votre site. Utilisez une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360"
           logo_small:
             label: "Logo carré"
-            description: "Une version carrée de votre logo. Affiché en haut à gauche de votre site lors du défilement vers le bas, dans le navigateur et lors du partage sur les plateformes de réseaux sociaux. Idéalement plus grand que 512x512."
-      icons:
-        title: "Icônes"
-        fields:
           favicon:
             label: "Icône du navigateur"
-            description: "L'image d'icône utilisée pour représenter votre site dans les navigateurs Web et qui s'affiche correctement en petites tailles. Les extensions d'image recommandées sont PNG ou JPG. Nous utiliserons le logo carré par défaut."
           large_icon:
             label: "Grande icône"
-            description: "Icône d’image utilisée pour représenter votre site sur des appareils modernes et qui s'affiche correctement en grandes tailles. Idéalement plus grand que 512 × 512. Nous utiliserons le logo carré par défaut."
+      corporate:
+        fields:
+          company_name:
+            label: "Nom de société"
+            placeholder: "Société exemple"
+          governing_law:
+            label: "Droit applicable"
+            placeholder: "Loi californienne"
+          contact_url:
+            label: "Page Web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Page Web permettant de vous contacter ou de contacter votre organisation. Elle sera affichée sur la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
+          city_for_disputes:
+            label: "Ville pour les litiges"
+            placeholder: "San Francisco, Californie"
+          site_contact:
+            label: "Messages automatiques"
+            description: "Tous les messages directs émis par Discourse, tels que les signalements ou les notifications de sauvegarde, seront envoyés par cet utilisateur."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."

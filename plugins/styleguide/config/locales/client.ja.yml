@@ -85,3 +85,6 @@ ja:
           title: "ヘッダーアイコン"
         spinners:
           title: "スピナー"
+        rich_tooltip:
+          description: "説明"
+          header: "ヘッダー"

@@ -3893,6 +3893,7 @@ hr:
         one: "%{count} novi"
         few: "%{count} novih"
         other: "%{count} novi"
+      more: "Više..."
       sections:
         messages:
           header_link_text: "Poruke"
@@ -5484,15 +5485,13 @@ hr:
           replace: "Zamijeni"
   wizard_js:
     wizard:
-      done: "Gotovo"
-      finish: "Završi"
       back: "Natrag"
       next: "Sljedeći"
+      step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Učitaj"
       uploading: "Učitavanje..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      quit: "Možda kasnije"
       staff_count:
         one: "Vaša zajednica ima %{count} djelatnika (vi)."
         few: "Vaša zajednica ima %{count} djelatnika (vi)."

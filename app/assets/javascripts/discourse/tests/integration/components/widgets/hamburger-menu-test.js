@@ -68,7 +68,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   });
 
   test("general links", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
 
@@ -86,7 +86,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   let maxCategoriesToDisplay;
 
   test("top categories - anonymous", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     this.siteSettings.header_dropdown_category_count = 8;
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
@@ -102,7 +102,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   });
 
   test("top categories - allow_uncategorized_topics", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     this.siteSettings.allow_uncategorized_topics = false;
     this.siteSettings.header_dropdown_category_count = 8;
 

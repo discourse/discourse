@@ -1407,30 +1407,12 @@ nb_NO:
   wizard:
     title: "Discourse-oppsett"
     step:
-      forum_title:
-        title: "Navn"
-      introduction:
-        title: "Introduksjon"
       privacy:
-        title: "Tilgang"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Offentlig"
-              restricted:
-                label: "Privat"
-      contact:
-        fields:
-          contact_email:
-            label: "E-post"
-            placeholder: "navn@example.com"
-          contact_url:
-            label: "Nettside"
-          site_contact:
-            label: "Automatiserte meldinger"
-      corporate:
-        title: "Organisasjon"
+          login_required:
+            placeholder: "Privat"
+          must_approve_users:
+            placeholder: "Krev godkjenning"
       styling:
         fields:
           styling_preview:
@@ -1447,16 +1429,18 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      logos:
-        title: "Logoer"
+      branding:
         fields:
           logo:
             label: "Primær logo"
-      icons:
-        title: "Ikoner"
-        fields:
           large_icon:
             label: "Stort ikon"
+      corporate:
+        fields:
+          contact_url:
+            label: "Nettside"
+          site_contact:
+            label: "Automatiserte meldinger"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

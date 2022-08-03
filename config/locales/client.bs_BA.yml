@@ -3077,6 +3077,7 @@ bs_BA:
         one: "%{count} novi"
         few: "%{count} nova"
         other: "%{count} novih"
+      more: "Više..."
       sections:
         messages:
           header_link_text: "Poruke"
@@ -4357,15 +4358,13 @@ bs_BA:
           replace: "Zamijeni"
   wizard_js:
     wizard:
-      done: "Urađeno"
-      finish: "Završi"
       back: "Prethodno"
       next: "Iduće"
+      step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Učitaj"
       uploading: "Učitavanje..."
       upload_error: "Izvinite, doslo je greske prilikom uploada ovog fajla. Molimo pokusajte ponovo."
-      quit: "Možda kasnije"
       invites:
         add_user: "Dodaj"
         none_added: "Niste pozvali ni jednog admina/moderatora. Jeste li sigurni da želite nastaviti?"

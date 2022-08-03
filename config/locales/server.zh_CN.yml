@@ -63,7 +63,7 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生错误
-      upload: "创建上传资产错误： %{name}. %{errors}"
+      upload: "创建上传资源错误： %{name}. %{errors}"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
@@ -1660,7 +1660,7 @@ zh_CN:
     s3_access_key_id: "将用于上传图片、附件和备份的 Amazon S3 访问密钥 ID。"
     s3_secret_access_key: "将用于上传图片、附件和备份的 Amazon S3 秘密访问密钥。"
     s3_region: "将用于上传图片和备份的 Amazon S3 区域名称。"
-    s3_cdn_url: "用于所有 S3 资产的 CDN URL（例如：https://cdn.somewhere.com）。警告：更改此设置后，您必须重新发布所有旧帖子。"
+    s3_cdn_url: "用于所有 S3 资源的 CDN URL（例如：https://cdn.somewhere.com）。警告：更改此设置后，您必须重新发布所有旧帖子。"
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL。允许的替换为 {username} {first_letter} {color} {size}"
@@ -1936,7 +1936,7 @@ zh_CN:
     share_anonymized_statistics: "共享匿名使用统计信息。"
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
-    svg_icon_subset: "添加您希望包含在资产中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
+    svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
@@ -2074,7 +2074,7 @@ zh_CN:
     use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名字的建议。请注意，这使得公众更容易猜到完整的用户电子邮件地址(因为很大一部分人共享共同的服务，如`gmail.com')。"
     use_name_for_username_suggestions: "在建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末(周六和周日) (如果你仅在工作日，周一至周五使用 Discourse，请禁用此选项)。"
-    splash_screen: "在加载站点资产时显示临时负载屏幕"
+    splash_screen: "在加载站点资源时显示临时负载屏幕"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2129,6 +2129,7 @@ zh_CN:
       search_tokenize_chinese_enabled: "在启用此设置之前，你必须禁用'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，你必须禁用'search_tokenize_japanese'。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行 2FA，你不能启用 DiscourseConnect。"
+      delete_rejected_email_after_days: "这个设置不能低于 delete_email_logs_after_days 的设置，也不能大于 %{max}。"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4357,83 +4358,38 @@ zh_CN:
   wizard:
     title: "Discourse 设置"
     step:
-      locale:
-        title: "欢迎来到 Discourse！"
-        fields:
-          default_locale:
-            description: "您社区的默认语言是什么？"
-      forum_title:
-        title: "名称"
-        description: "名称是醒目标志，它是您的社区给潜在访客留下的<i>第一</i>印象。名称和标题如何传达您的社区的主旨？"
+      introduction:
+        title: "告诉我们你的社区情况"
         fields:
           title:
-            label: "您社区的名称"
+            label: "社区名字"
             placeholder: "朱桦的环聊"
           site_description:
-            label: "用一句话描述你的社区(用于搜索结果和社会媒体)。"
+            label: "用一句话来描述你的社区"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
-          short_site_description:
-            label: "用几个字描述你的社区(用于主页标题)"
-            placeholder: "有史以来最好的社区"
-      introduction:
-        title: "介绍"
-        disabled: "<p>我们找不到标题为“%{topic_title}”的任何话题。</p> <ul> <li>如果您更改了标题，请编辑该话题以修改您站点的介绍性文字。</li> <li>如果您已删除此话题，请使用“%{topic_title}”作为标题创建另一个话题。第一个帖子的内容是您站点的介绍性文字。</li> </ul>"
-        fields:
-          welcome:
-            label: "欢迎话题"
-            description: "<p>您会如何在大约 1 分钟内在电梯上向陌生人描述您的社区？</p> <ul> <li>这些讨论针对谁？</li> <li>我可以在这里找到什么？</li> <li>我为什么要访问？</li> </ul> <p>您的欢迎话题是新人首先阅读的内容。将其视为您的<b>一段</b>“电梯演讲”或“使命宣言”。</p>"
-            one_paragraph: "请将您的欢迎消息限制为一段。"
-            extra_description: "如果您不确定，可以跳过此步骤并稍后编辑您的欢迎话题。"
-      privacy:
-        title: "访问"
-        description: "<p>您的社区是对所有人开放，还是受到成员资格、邀请或审批的限制？如果您愿意，可以设置为不公开，稍后再切换到公开。</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "公开"
-                description: "任何人都可以访问此社区"
-              restricted:
-                label: "不公开"
-                description: "只有登录用户才能访问此社区"
-          privacy_options:
-            description: "新用户如何注册帐户？"
-            choices:
-              open:
-                label: "用户可以自行注册。"
-              invite_only:
-                label: "用户必须由受信任的用户或管理人员邀请才能注册。"
-              must_approve:
-                label: "用户可自行注册，但须经管理人员批准。"
-      contact:
-        title: "联系"
-        fields:
           contact_email:
-            label: "邮件"
-            placeholder: "name@example.com"
-            description: "负责此社区的个人或群组的电子邮件地址。用于重要通知（例如未处理的举报、安全更新），以及在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上用于紧急社区联系。"
-          contact_url:
-            label: "网页"
-            placeholder: "https://www.example.com/contact-us"
-            description: "您或您的组织的一般联系网页。将显示在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上。"
-          site_contact:
-            label: "自动消息"
-            description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
-      corporate:
-        title: "组织"
-        description: "此信息将被输入您的<a href='%{base_path}/tos' target='blank'>服务条款</a>，后者是您可以在“管理人员”类别中编辑的话题。如果您没有公司，可以暂时跳过此步骤。"
+            label: "联系人"
+            placeholder: "example@user.com"
+            description: "负责这个社区的人或团体。用于重要的更新，并列在 <a href='%{base_path}/about' target='_blank'>你的关于页面</a> ，以便紧急联系。"
+          default_locale:
+            label: "语言"
+      privacy:
+        title: "会员体验"
         fields:
-          company_name:
-            label: "公司名称"
-            placeholder: "示例组织"
-          governing_law:
-            label: "适用法律"
-            placeholder: "加州法律"
-          city_for_disputes:
-            label: "争议之城"
-            placeholder: "加利福尼亚州旧金山"
+          login_required:
+            placeholder: "不公开"
+            extra_description: "只有登录用户才能访问此社区"
+          invite_only:
+            placeholder: "仅限邀请"
+            extra_description: "用户必须由受信任的用户或工作人员邀请，否则用户可以自行注册"
+          must_approve_users:
+            placeholder: "需要审批"
+            extra_description: "用户必须得到工作人员的批准"
+      ready:
+        title: "您的 Discourse 已就绪！"
+        description: "就是这样！你已经完成了建立社区的基础工作。现在你可以进去看一看，写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
       styling:
-        title: "样式"
+        title: "外观和感觉"
         fields:
           color_scheme:
             label: "配色方案"
@@ -4464,24 +4420,43 @@ zh_CN:
                 label: "带有话题的类别框"
               subcategories_with_featured_topics:
                 label: "有特色主题的子类别"
-      logos:
-        title: "徽标"
+      branding:
+        title: "社区品牌"
         fields:
           logo:
             label: "主要徽标"
-            description: "您的站点左上角的徽标图片。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。"
+            description: "在你网站左上方的标志。使用一个高度为120，长宽比大于3:1的宽长方形图像。"
           logo_small:
             label: "方形徽标"
-            description: "您徽标的方形版本。向下滚动时、在浏览器中以及在社交平台上分享时，会显示在您站点的左上角。理想情况下，大于 512x512。"
-      icons:
-        title: "图标"
-        fields:
+            description: "你的标志的一个方形版本。在页面向下滚动时显示在左上方，在社交平台上分享时也是如此。最理想的尺寸是至少512x512。"
           favicon:
             label: "浏览器图标"
-            description: "用于在网络浏览器中表示您的站点的图标图片，在小尺寸时效果不错。推荐的图片扩展名为 PNG 或 JPG。默认情况下，我们将使用方形徽标。"
+            description: "用来在网络浏览器中代表你网站的图标，在小尺寸下看起来很好。建议使用PNG或JPG。默认使用方形标志。"
           large_icon:
             label: "大图标"
-            description: "用于在现代设备上表示您的站点的图标图片，在较大尺寸下效果不错。理想情况下，大于 512 × 512。默认情况下，我们将使用方形徽标。"
+            description: "用来代表你网站在移动设备上的图标，在较大的尺寸下看起来很好。最好大于512x512。默认情况下使用方形标志。"
+      corporate:
+        title: "联系和组织"
+        fields:
+          company_name:
+            label: "公司名称"
+            placeholder: "示例组织"
+            description: "在你的服务条款页面中输入。如果没有公司，请跳过。"
+          governing_law:
+            label: "适用法律"
+            placeholder: "加州法律"
+            description: "在你的服务条款页面中输入。如果没有公司，请跳过。"
+          contact_url:
+            label: "网页"
+            placeholder: "https://www.example.com/contact-us"
+            description: "您或您的组织的一般联系网页。将显示在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上。"
+          city_for_disputes:
+            label: "争议之城"
+            placeholder: "加利福尼亚州旧金山"
+            description: "在你的服务条款页面中输入。如果没有公司，请跳过。"
+          site_contact:
+            label: "自动消息"
+            description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
       invites:
         title: "邀请管理人员"
         description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"

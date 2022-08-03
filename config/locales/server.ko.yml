@@ -4042,83 +4042,24 @@ ko:
   wizard:
     title: "Discourse Setup"
     step:
-      locale:
-        title: "Welcome to your Discourse!"
-        fields:
-          default_locale:
-            description: "사이트의 기본 언어는 무엇인가요?"
-      forum_title:
-        title: "이름"
-        description: "이 이름은 이 사이트의 간판이 되며, 방문자들이 이 커뮤니티를 파악하는 <i>첫번째</i> 요소가 됩니다. 사이트 이름과 타이틀은 이 커뮤니티에 대하여 무엇을 알려주나요?"
+      introduction:
         fields:
           title:
-            label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
-            label: "짧은 문장으로 커뮤니티를 설명하십시오 (검색 결과 및 소셜 미디어에 사용)"
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
-          short_site_description:
-            label: "커뮤니티를 몇 마디로 설명하십시오 (홈페이지 제목에 사용)"
-            placeholder: "최고의 커뮤니티"
-      introduction:
-        title: "소개"
-        disabled: "<p> 제목이 &quot;%{topic_title}&quot;인 주제를 찾을 수 없습니다. </p><ul><li> 제목을 변경 한 경우 해당 주제를 편집하여 사이트의 소개 텍스트를 수정하십시오. </li><li> 이 주제를 삭제 한 경우 제목으로“%{topic_title}”을 사용하여 다른 주제를 작성하십시오. 첫 번째 게시물의 내용은 사이트의 소개 텍스트입니다. </li></ul>"
-        fields:
-          welcome:
-            label: "웰컴 토픽"
-            description: "<p>만약 1분동안 낯선 사람에게 이 커뮤니티를 설명해야한다면 어떻게 말하실 건가요?</p> <ul> <li>이 토론에는 누가 참여하나요?</li> <li>여기에서 어떤 것을 볼 수 있나요?</li> <li>왜 방문해야 하나요?</li> </ul> <p>환영 토픽은 새로운 방문자가 가장 처음으로 읽을 글이됩니다. 이 토픽을<b>한 문단으로 된</b> '엘리베이터 피칭' 또는 '사명 선언문'이라고 생각하시면 됩니다. </p>"
-            one_paragraph: "환영 메시지를 딱 한 문단으로 줄여주세요."
-            extra_description: "확실하지 않은 경우 이 단계를 건너뛰고 나중에 환영 글을 편집할 수 있습니다."
+          default_locale:
+            label: "언어"
       privacy:
-        title: "접근성"
-        description: "<p> 커뮤니티가 모든 사람에게 공개됩니까, 아니면 회원, 초대 또는 승인에 의해 제한됩니까? 원하는 경우 비공개로 설정 한 다음 나중에 공개로 전환 할 수 있습니다. </p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "공개"
-                description: "누구나이 커뮤니티에 액세스 할 수 있습니다"
-              restricted:
-                label: "비공개"
-                description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
-          privacy_options:
-            description: "신규 사용자는 어떻게 계정에 가입합니까?"
-            choices:
-              open:
-                label: "사용자는 스스로 가입 할 수 있습니다."
-              invite_only:
-                label: "신뢰할 수있는 사용자 나 직원이 사용자를 초대해야 가입 할 수 있습니다."
-              must_approve:
-                label: "사용자는 스스로 가입 할 수 있지만 직원의 승인을 받아야합니다."
-      contact:
-        title: "연락처"
-        fields:
-          contact_email:
-            label: "메일"
-            placeholder: "name@example.com"
-            description: "이 커뮤니티를 대표하는 개인 또는 그룹 이메일 주소를 입력하세요. 처리되지 않은 신고, 보안 업데이트와 같은 중요한 알림을 받게되며 긴급한 커뮤니티 연락을 받도록<a href='%{base_path}/about' target='_blank'>about 페이지</a> 에도 표시됩니다."
-          contact_url:
-            label: "웹 페이지"
-            placeholder: "https://www.example.com/contact-us"
-            description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='%{base_path}/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
-          site_contact:
-            label: "자동화된 메시지"
-            description: "신고 알림 및 백업 완료 알림과 같은 모든 자동화 된 Discourse 메시지가 이 사용자의 아이디로 전송됩니다."
-      corporate:
-        title: "소속"
-        description: "이 정보는 <a href='%{base_path}/tos' target='blank'>서비스 약관에</a> 입력되며 직원 카테고리에서 편집 할 수있는 주제입니다. 회사가없는 경우 지금은이 단계를 건너 뛰십시오."
-        fields:
-          company_name:
-            label: "회사 이름"
-            placeholder: "조직 예"
-          governing_law:
-            label: "준거법"
-            placeholder: "캘리포니아 법"
-          city_for_disputes:
-            label: "분쟁의 도시"
-            placeholder: "샌프란시스코, 캘리포니아"
+          login_required:
+            placeholder: "비공개"
+            extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
+          must_approve_users:
+            placeholder: "승인 필요"
+      ready:
+        title: "당신의 Discourse가 준비되었습니다!"
       styling:
-        title: "스타일링"
         fields:
           color_scheme:
             label: "색 구성표"
@@ -4141,24 +4082,34 @@ ko:
                 label: "카테고리와 최신 글"
               categories_and_top_topics:
                 label: "카테고리 및 주요 글"
-      logos:
-        title: "로고"
+      branding:
         fields:
           logo:
             label: "기본 로고"
-            description: "사이트 왼쪽 상단의 로고 이미지 높이가 120이고 가로 세로 비율이 3 : 1보다 큰 넓은 직사각형 이미지를 사용하십시오."
           logo_small:
             label: "스퀘어 로고"
-            description: "로고의 정사각형 버전. 아래로 스크롤하거나 브라우저에서, 소셜 플랫폼에서 공유 할 때 사이트 왼쪽 상단에 표시됩니다. 이상적으로 512x512보다 큽니다."
-      icons:
-        title: "아이콘"
-        fields:
           favicon:
             label: "브라우저 아이콘"
-            description: "작은 크기로보기 좋은 웹 브라우저에서 사이트를 나타내는 데 사용되는 아이콘 이미지. 권장 이미지 확장자는 PNG 또는 JPG입니다. 기본적으로 정사각형 로고를 사용합니다."
           large_icon:
             label: "큰 아이콘"
-            description: "더 큰 크기로보기 좋은 최신 장치에서 사이트를 나타내는 데 사용되는 아이콘 이미지. 이상적으로 512 × 512보다 큽니다. 기본적으로 정사각형 로고를 사용합니다."
+      corporate:
+        fields:
+          company_name:
+            label: "회사 이름"
+            placeholder: "조직 예"
+          governing_law:
+            label: "준거법"
+            placeholder: "캘리포니아 법"
+          contact_url:
+            label: "웹 페이지"
+            placeholder: "https://www.example.com/contact-us"
+            description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='%{base_path}/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
+          city_for_disputes:
+            label: "분쟁의 도시"
+            placeholder: "샌프란시스코, 캘리포니아"
+          site_contact:
+            label: "자동화된 메시지"
+            description: "신고 알림 및 백업 완료 알림과 같은 모든 자동화 된 Discourse 메시지가 이 사용자의 아이디로 전송됩니다."
       invites:
         title: "운영진 초청하기"
         description: "거의 다 끝났습니다! 흥미로운 주제와 답변을 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>통해 토론</a> 을 시작하여 커뮤니티를 시작하는 데 도움을 줄 사람들을 초대합시다."

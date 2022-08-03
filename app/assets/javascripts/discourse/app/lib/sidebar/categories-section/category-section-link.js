@@ -34,10 +34,6 @@ export default class CategorySectionLink {
     return this.category.slug;
   }
 
-  get route() {
-    return "discovery.latestCategory";
-  }
-
   get model() {
     return `${Category.slugFor(this.category)}/${this.category.id}`;
   }

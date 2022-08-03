@@ -20,7 +20,7 @@ export default {
       return;
     }
 
-    this.currentUser = container.lookup("current-user:main");
+    this.currentUser = container.lookup("service:current-user");
 
     getAndClearUnhandledThemeErrors().forEach((e) => {
       reportThemeError(this.currentUser, e);

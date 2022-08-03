@@ -28,11 +28,11 @@ function censorTree(state, censor) {
 
 export function setup(helper) {
   helper.registerPlugin((md) => {
-    const censoredRegexp = md.options.discourse.censoredRegexp;
+    const censoredRegexps = md.options.discourse.censoredRegexp;
 
-    if (censoredRegexp) {
+    if (Array.isArray(censoredRegexps) && censoredRegexps.length > 0) {
       const replacement = String.fromCharCode(9632);
-      const censor = censorFn(censoredRegexp, replacement);
+      const censor = censorFn(censoredRegexps, replacement);
       md.core.ruler.push("censored", (state) => censorTree(state, censor));
     }
   });

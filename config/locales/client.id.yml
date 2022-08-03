@@ -2104,6 +2104,7 @@ id:
           topics: "Topik"
   wizard_js:
     wizard:
+      step-text: "Langkah"
       upload: "Unggah"
       uploading: "Mengunggah..."
       invites:

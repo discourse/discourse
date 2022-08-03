@@ -479,23 +479,12 @@ th:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
   wizard:
     step:
-      forum_title:
-        title: "ชื่อ"
       privacy:
-        title: "การเข้าถึง"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "สาธารณะ"
-              restricted:
-                label: "ส่วนตัว"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-      corporate:
-        title: "องค์กร"
+          login_required:
+            placeholder: "ส่วนตัว"
+          must_approve_users:
+            placeholder: "ต้องได้รับการอนุมัติ"
       styling:
         fields:
           styling_preview:
