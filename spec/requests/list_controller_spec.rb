@@ -79,6 +79,16 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it 'correctly adds show_welcome_topic_banner to response' do
+      first_post = Fabricate(:post, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+      sign_in(admin)
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["show_welcome_topic_banner"]).to eq(true)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 

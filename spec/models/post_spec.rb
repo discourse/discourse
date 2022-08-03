@@ -1905,4 +1905,21 @@ RSpec.describe Post do
       expect(post4.canonical_url).to eq("#{topic_url}?page=2#post_#{post4.post_number}")
     end
   end
+
+  describe ".show_welcome_topic_banner?" do
+
+    it "returns true when conditions are met" do
+      first_post = Fabricate(:post, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Post.show_welcome_topic_banner?).to eq(true)
+    end
+
+    it "returns true when conditions are not met" do
+      first_post = Fabricate(:post, created_at: 35.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Post.show_welcome_topic_banner?).to eq(false)
+    end
+  end
 end
