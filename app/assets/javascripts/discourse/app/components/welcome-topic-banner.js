@@ -12,7 +12,7 @@ export default Component.extend({
       .querySelectorAll(
         `tr[data-topic-id='${this.siteSettings.welcome_topic_id}']`
       )[0]
-      .classList.add("hidden");
+      ?.classList.add("hidden");
   },
 
   @action

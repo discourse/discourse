@@ -5,9 +5,9 @@
         {{this.message}}
       </div>
       <div class="col-button">
-        <div class="button"><DButton @icon="user-plus" @href="/my/invited" @class="btn-primary" @label="bootstrap_mode_banner.invite_button_title" /></div>
+        <div class="button bootstrap-invite-button"><DButton @icon="user-plus" @href="/my/invited" @class="btn-primary" @label="bootstrap_mode_banner.invite_button_title" /></div>
         {{#if this.wizardRequired}}
-          <div class="link"><a href="/wizard">{{i18n "bootstrap_mode_banner.wizard_link_title"}}</a></div>
+          <div class="link bootstrap-wizard-button"><a href="/wizard">{{i18n "bootstrap_mode_banner.wizard_link_title"}}</a></div>
         {{/if}}
       </div>
     </div>
