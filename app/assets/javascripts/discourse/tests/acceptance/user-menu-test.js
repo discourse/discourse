@@ -12,7 +12,7 @@ import I18n from "I18n";
 acceptance("User menu", function (needs) {
   needs.user({ redesigned_user_menu_enabled: true });
   let requestHeaders = {};
-  
+
   needs.pretender((server, helper) => {
     server.get("/t/1234.json", (request) => {
       const json = cloneJSON(TopicFixtures["/t/130.json"]);
@@ -61,7 +61,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     markRead = false;
   });
 
-  test("shows confirmation modal for the all-notifications panel/list", async function (assert) {
+  test("shows confirmation modal for the all-notifications list", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
 
