@@ -45,9 +45,17 @@ class NotificationsController < ApplicationController
       end
 
       if !params.has_key?(:silent) && !@readonly_mode
+        current_user_id = current_user.id
         Scheduler::Defer.later "bump last seen reviewable for user" do
-          if guardian.can_see_review_queue?
-            current_user.bump_last_seen_reviewable!
+          # we lookup current_user again in the background thread to avoid
+          # concurrency issues where the objects returned by the current_user
+          # and/or methods are changed by the time the deferred block is
+          # executed
+          user = User.find_by(id: current_user_id)
+          next if user.blank?
+          new_guardian = Guardian.new(user)
+          if new_guardian.can_see_review_queue?
+            user.bump_last_seen_reviewable!
           end
         end
       end
