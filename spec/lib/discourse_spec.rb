@@ -342,12 +342,21 @@ RSpec.describe Discourse do
 
     describe "#job_exception_stats" do
 
+      class FakeTestError < StandardError
+      end
+
       before do
         Discourse.reset_job_exception_stats!
       end
 
       after do
         Discourse.reset_job_exception_stats!
+      end
+
+      it "should not fail on incorrectly shaped hash" do
+        expect do
+          Discourse.handle_job_exception(FakeTestError.new, { job: "test" })
+        end.to raise_error(FakeTestError)
       end
 
       it "should collect job exception stats" do
@@ -361,7 +370,7 @@ RSpec.describe Discourse do
 
         # re-raised unconditionally in test env
         2.times do
-          expect { Discourse.handle_job_exception(StandardError.new, exception_context) }.to raise_error(StandardError)
+          expect { Discourse.handle_job_exception(FakeTestError.new, exception_context) }.to raise_error(FakeTestError)
         end
 
         exception_context = {
@@ -369,7 +378,7 @@ RSpec.describe Discourse do
           job: { "class" => Jobs::PollMailbox }
         }
 
-        expect { Discourse.handle_job_exception(StandardError.new, exception_context) }.to raise_error(StandardError)
+        expect { Discourse.handle_job_exception(FakeTestError.new, exception_context) }.to raise_error(FakeTestError)
 
         expect(Discourse.job_exception_stats).to eq({
           Jobs::PollMailbox => 1,
