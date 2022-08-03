@@ -31,8 +31,8 @@ acceptance("User menu", function (needs) {
   test("clicking on an unread notification", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
-    const unreadNotification = query(".user-menu ul li.replied a");
-    await click(unreadNotification);
+    await click(".user-menu ul li.replied a");
+
     assert.strictEqual(
       requestHeaders["Discourse-Clear-Notifications"],
       123, // id is from the fixtures in fixtures/notification-fixtures.js
