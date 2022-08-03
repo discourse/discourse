@@ -3953,4 +3953,21 @@ RSpec.describe Guardian do
       expect(admin.guardian.can_mention_here?).to eq(true)
     end
   end
+
+  describe "#is_category_group_moderator" do
+    before do
+      SiteSetting.enable_category_group_moderation = true
+    end
+
+    fab!(:category) { Fabricate(:category) }
+
+    it "should correctly detect category moderation" do
+      group.add(user)
+      category.reviewable_by_group_id = group.id
+      guardian = Guardian.new(user)
+
+      expect(guardian.is_category_group_moderator?(category)).to eq(true)
+      expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
+    end
+  end
 end
