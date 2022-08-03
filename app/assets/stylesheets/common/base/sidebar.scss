@@ -11,6 +11,9 @@
     grid-area: sidebar;
     position: sticky;
     top: var(--header-offset);
+    .footer-nav-ipad & {
+      top: calc(var(--header-offset) + var(--footer-nav-height));
+    }
     height: calc(100vh - var(--header-offset));
     align-self: start;
     overflow-y: auto;
