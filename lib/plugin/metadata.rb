@@ -26,6 +26,7 @@ class Plugin::Metadata
     "discourse-categories-suppressed",
     "discourse-category-experts",
     "discourse-characters-required",
+    "discourse-chat",
     "discourse-chat-integration",
     "discourse-checklist",
     "discourse-code-review",
