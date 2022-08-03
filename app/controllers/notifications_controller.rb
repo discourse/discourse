@@ -102,10 +102,7 @@ class NotificationsController < ApplicationController
         end
       end
 
-      query = Notification.where(user_id: current_user.id, read: false)
-      query = query.where(notification_type: types) if types
-
-      query.update_all(read: true)
+      Notification.read_types(current_user, types)
       current_user.saw_notification_id(Notification.recent_report(current_user, 1).max.try(:id))
     end
 

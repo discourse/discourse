@@ -148,6 +148,12 @@ class Notification < ActiveRecord::Base
       .update_all(read: true)
   end
 
+  def self.read_types(user, types = nil)
+    query = Notification.where(user_id: user.id, read: false)
+    query = query.where(notification_type: types) if types
+    query.update_all(read: true)
+  end
+
   def self.interesting_after(min_date)
     result = where("created_at > ?", min_date)
       .includes(:topic)
