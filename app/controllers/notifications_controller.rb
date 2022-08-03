@@ -91,16 +91,20 @@ class NotificationsController < ApplicationController
       Notification.read(current_user, [params[:id].to_i])
     else
       if types = params[:dismiss_types]&.split(",").presence
+        invalid = []
         types.map! do |type|
-          Notification.types[type.to_sym] || (
-            raise Discourse::InvalidParameters.new("invalid notification type: #{type}")
-          )
+          type_id = Notification.types[type.to_sym]
+          invalid << type if !type_id
+          type_id
+        end
+        if invalid.size > 0
+          raise Discourse::InvalidParameters.new("invalid notification types: #{invalid.inspect}")
         end
       end
-      query = Notification
-        .where(user_id: current_user.id, read: false)
 
+      query = Notification.where(user_id: current_user.id, read: false)
       query = query.where(notification_type: types) if types
+
       query.update_all(read: true)
       current_user.saw_notification_id(Notification.recent_report(current_user, 1).max.try(:id))
     end
