@@ -175,9 +175,13 @@ module Discourse
     context ||= {}
     parent_logger ||= Sidekiq
 
-    job = context.dig(:job, "class")
-    if job
-      job_exception_stats[job] += 1
+    job = context[:job]
+
+    if Hash === job
+      job_class = job["class"]
+      if job_class
+        job_exception_stats[job_class] += 1
+      end
     end
 
     cm = RailsMultisite::ConnectionManagement
