@@ -14,47 +14,6 @@ import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import { configureEyeline } from "discourse/lib/eyeline";
 
-acceptance("Topic discovery - subcategory list", function (needs) {
-  needs.settings({
-    show_pinned_excerpt_desktop: false,
-    desktop_category_page_style: "categories_and_latest_topics",
-  });
-
-  test("Topic with subcategory list", async function (assert) {
-    let presenceService = this.container.lookup("service:presence");
-
-    let channel = presenceService.getChannel("/latest");
-    await channel.subscribe();
-
-    await visit("/c/dev");
-    publishToMessageBus("/latest", {
-      message_type: "latest",
-      topic_id: 3823,
-      payload: {
-        highest_post_number: 1,
-        last_read_post_number: 2,
-        notification_level: 1,
-        topic_id: 3823,
-      },
-    });
-    publishToMessageBus("/latest", {
-      topic_id: 3823,
-      message_type: "unread",
-      payload: {
-        category_id: 7,
-        topic_tag_ids: [44],
-        tags: ["pending"],
-        highest_post_number: 10,
-        created_at: "2012-11-31 12:00:00 UTC",
-        archetype: "regular",
-      },
-    });
-    await channel._presenceState._resubscribePromise;
-    await visit("/c/dev");
-    assert.ok(exists(".show-more"), `displays the topic incoming info`);
-  });
-});
-
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
     show_pinned_excerpt_desktop: true,
@@ -151,7 +110,7 @@ acceptance("Topic Discovery", function (needs) {
       "shows the topic unread"
     );
 
-    publishToMessageBus("/latest", {
+    await publishToMessageBus("/latest", {
       message_type: "read",
       topic_id: 11995,
       payload: {
@@ -161,8 +120,6 @@ acceptance("Topic Discovery", function (needs) {
         topic_id: 11995,
       },
     });
-
-    await visit("/"); // We're already there, but use this to wait for re-render
 
     assert.ok(
       exists(".topic-list-item.visited a[data-topic-id='11995']"),

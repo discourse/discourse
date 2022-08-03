@@ -25,12 +25,8 @@ export default DiscoveryController.extend({
   canEdit: reads("currentUser.staff"),
   // This makes sure that we don't display incoming banners on categories with subcategory lists twice
   @discourseComputed
-  showIncomingInParentCategories() {
-    if (typeof this.router.currentRoute.attributes.category === "undefined") {
-      return true;
-    }
-
-    return !this.router.currentRoute.attributes.category.show_subcategory_list;
+  isCategoriesRoute() {
+    return this.router.currentRouteName === "discovery.categories";
   },
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
