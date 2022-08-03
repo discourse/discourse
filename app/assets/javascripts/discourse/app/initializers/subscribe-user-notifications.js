@@ -25,7 +25,10 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (user) {
-      bus.subscribe("/reviewable_counts", (data) => {
+      const channel = user.enable_redesigned_user_menu
+        ? `/reviewable_counts/${user.id}`
+        : "/reviewable_counts";
+      bus.subscribe(channel, (data) => {
         if (data.reviewable_count >= 0) {
           user.set("reviewable_count", data.reviewable_count);
         }

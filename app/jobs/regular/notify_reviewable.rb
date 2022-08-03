@@ -101,6 +101,6 @@ class Jobs::NotifyReviewable < ::Jobs::Base
     }
     data[:updates] = updates if updates.present?
 
-    MessageBus.publish("/reviewable_counts", data, user_ids: [user.id])
+    user.publish_reviewable_counts(data)
   end
 end
