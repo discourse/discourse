@@ -4062,6 +4062,7 @@ en:
       no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. As you participate, your activity will be listed here."
       no_replies_title: "You have not replied to any topics yet"
       no_replies_title_others: "%{username} has not replied to any topics yet"
+      no_replies_body: "When you <a href='%{searchUrl}'>discover</a> an interesting conversation that you wish to contribute to, press the <kbd>Reply</kbd> button directly under any post to begin repying to that specific post. Or, if you’d prefer to reply to the general topic rather than any individual post or person, look for the <kbd>Reply</kbd> button at the very bottom of the topic, or under the topic timeline."
       no_drafts_title: "You haven’t started any drafts"
       no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
       no_likes_title: "You haven’t liked any topics yet"
