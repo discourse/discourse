@@ -14,11 +14,9 @@ const badgeIntroLinks = [
   },
 ];
 
-export default Route.extend({
+export default class AdminBadgesIndexRoute extends Route {
   setupController(controller) {
-    controller.setProperties({
-      badgeIntroLinks,
-      badgeIntroEmoji: emojiUrlFor("woman_student:t4"),
-    });
-  },
-});
+    controller.badgeIntroLinks = badgeIntroLinks;
+    controller.badgeIntroEmoji = emojiUrlFor("woman_student:t4");
+  }
+}
