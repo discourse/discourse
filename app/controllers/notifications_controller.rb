@@ -44,7 +44,7 @@ class NotificationsController < ApplicationController
         current_user.publish_notifications_state
       end
 
-      if !params.has_key?(:silent) && !@readonly_mode
+      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode
         current_user_id = current_user.id
         Scheduler::Defer.later "bump last seen reviewable for user" do
           # we lookup current_user again in the background thread to avoid

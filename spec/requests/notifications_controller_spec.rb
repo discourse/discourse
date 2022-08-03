@@ -102,7 +102,8 @@ RSpec.describe NotificationsController do
         it "should not bump last seen reviewable if the user can't seen reviewables" do
           Fabricate(:reviewable)
           expect {
-            get "/notifications.json", params: { recent: true }
+            get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+            expect(response.status).to eq(200)
           }.not_to change { user.reload.last_seen_reviewable_id }
         end
 
@@ -110,7 +111,21 @@ RSpec.describe NotificationsController do
           user.update!(admin: true)
           Fabricate(:reviewable)
           expect {
+            get "/notifications.json", params: {
+              recent: true,
+              silent: true,
+              bump_last_seen_reviewable: true
+            }
+            expect(response.status).to eq(200)
+          }.not_to change { user.reload.last_seen_reviewable_id }
+        end
+
+        it "should not bump last seen reviewable if the bump_last_seen_reviewable param is not present" do
+          user.update!(admin: true)
+          Fabricate(:reviewable)
+          expect {
             get "/notifications.json", params: { recent: true, silent: true }
+            expect(response.status).to eq(200)
           }.not_to change { user.reload.last_seen_reviewable_id }
         end
 
@@ -118,11 +133,11 @@ RSpec.describe NotificationsController do
           user.update!(admin: true)
           expect(user.last_seen_reviewable_id).to eq(nil)
           reviewable = Fabricate(:reviewable)
-          get "/notifications.json", params: { recent: true }
+          get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
           expect(user.reload.last_seen_reviewable_id).to eq(reviewable.id)
 
           reviewable2 = Fabricate(:reviewable)
-          get "/notifications.json", params: { recent: true }
+          get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
           expect(user.reload.last_seen_reviewable_id).to eq(reviewable2.id)
         end
 
