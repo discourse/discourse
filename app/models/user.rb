@@ -643,11 +643,6 @@ class User < ActiveRecord::Base
     if max_reviewable_id
       update!(last_seen_reviewable_id: max_reviewable_id)
       publish_reviewable_counts(unseen_reviewable_count: self.unseen_reviewable_count)
-      MessageBus.publish(
-        "/reviewable_counts",
-        { unseen_reviewable_count: self.unseen_reviewable_count },
-        user_ids: [self.id]
-      )
     end
   end
 
