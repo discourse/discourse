@@ -2,7 +2,10 @@ import GlimmerComponent from "discourse/components/glimmer";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
-import { customSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
+import {
+  customSectionLinks,
+  secondaryCustomSectionLinks,
+} from "discourse/lib/sidebar/custom-community-section-links";
 import EverythingSectionLink from "discourse/lib/sidebar/community-section/everything-section-link";
 import TrackedSectionLink from "discourse/lib/sidebar/community-section/tracked-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/community-section/my-posts-section-link";
@@ -36,11 +39,12 @@ export default class SidebarCommunitySection extends GlimmerComponent {
     }
   );
 
-  moreSecondarySectionLinks = MORE_SECONDARY_SECTION_LINKS.map(
-    (sectionLinkClass) => {
-      return this.#initializeSectionLink(sectionLinkClass);
-    }
-  );
+  moreSecondarySectionLinks = [
+    ...MORE_SECONDARY_SECTION_LINKS,
+    ...secondaryCustomSectionLinks,
+  ].map((sectionLinkClass) => {
+    return this.#initializeSectionLink(sectionLinkClass);
+  });
 
   #mainSectionLinks = this.currentUser.staff
     ? [...MAIN_SECTION_LINKS, ...ADMIN_MAIN_SECTION_LINKS]
