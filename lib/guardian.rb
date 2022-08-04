@@ -110,14 +110,21 @@ class Guardian
   end
 
   def is_category_group_moderator?(category)
-    return false unless category
-    return false unless authenticated?
-    @is_category_group_moderator ||= {}
-    @is_category_group_moderator[category.id] ||= begin
-      SiteSetting.enable_category_group_moderation? &&
-        category.present? &&
-        category.reviewable_by_group_id.present? &&
-        GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+    return false if !SiteSetting.enable_category_group_moderation?
+    return false if !category
+    return false if !authenticated?
+
+    reviewable_by_group_id = category.reviewable_by_group_id
+    return false if reviewable_by_group_id.blank?
+
+    @is_group_member ||= {}
+
+    if @is_group_member.key?(reviewable_by_group_id)
+      @is_group_member[reviewable_by_group_id]
+    else
+      @is_group_member[reviewable_by_group_id] = begin
+        GroupUser.where(group_id: reviewable_by_group_id, user_id: @user.id).exists?
+      end
     end
   end
 

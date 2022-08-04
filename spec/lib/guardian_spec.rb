@@ -3966,8 +3966,15 @@ RSpec.describe Guardian do
       category.reviewable_by_group_id = group.id
       guardian = Guardian.new(user)
 
+      # implementation detail, ensure memoization is good (hence testing twice)
+      expect(guardian.is_category_group_moderator?(category)).to eq(true)
       expect(guardian.is_category_group_moderator?(category)).to eq(true)
       expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
+      expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
+
+      # edge case ... site setting disabled while guardian instansiated (can help with test cases)
+      SiteSetting.enable_category_group_moderation = false
+      expect(guardian.is_category_group_moderator?(category)).to eq(false)
     end
   end
 end
