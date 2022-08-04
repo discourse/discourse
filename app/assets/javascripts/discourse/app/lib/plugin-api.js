@@ -95,7 +95,7 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink as addSectionLinkToCommunity } from "discourse/lib/sidebar/custom-community-section-links";
+import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 
@@ -1725,7 +1725,7 @@ class PluginApi {
    * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
   addCommunitySectionLink(arg, secondary) {
-    addSectionLinkToCommunity(arg, secondary);
+    addCustomCommunitySectionLink(arg, secondary);
   }
 
   /**
