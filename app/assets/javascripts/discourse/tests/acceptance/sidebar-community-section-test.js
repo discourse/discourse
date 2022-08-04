@@ -487,7 +487,7 @@ acceptance("Sidebar - Community Section", function (needs) {
   });
 
   test("new and unread count for everything link", async function (assert) {
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -674,7 +674,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     const category = categories.find((c) => c.id === 1001);
     category.set("notification_level", NotificationLevels.TRACKING);
 
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -918,7 +918,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     await visit("/");
 
     const topicTrackingState = this.container.lookup(
-      "topic-tracking-state:main"
+      "service:topic-tracking-state"
     );
 
     const initialCallbackCount = Object.keys(
