@@ -4136,6 +4136,11 @@ en:
                 one: "%{count} draft"
                 other: "%{count} drafts"
 
+    welcome_topic_banner:
+      title: "Create your Welcome Topic"
+      description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
+      button_title: "Start Editing"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."

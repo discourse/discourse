@@ -1878,6 +1878,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.first_login_admin_id
+    User.where(admin: true)
+      .human_users
+      .joins(:user_auth_tokens)
+      .order('user_auth_tokens.created_at')
+      .pluck_first(:id)
+  end
+
   private
 
   def stat

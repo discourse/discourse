@@ -685,6 +685,9 @@
           ]
         }
     },
+    "show_welcome_topic_banner": {
+      "type": "boolean"
+    },
     "archetypes": {
       "type": "array",
       "items":

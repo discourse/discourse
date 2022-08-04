@@ -183,4 +183,50 @@ RSpec.describe Site do
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
   end
 
+  describe ".show_welcome_topic_banner?" do
+    it "returns false when the user is not admin" do
+      first_post = Fabricate(:post, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Site.show_welcome_topic_banner?(Guardian.new(Fabricate(:user)))).to eq(false)
+    end
+
+    it "returns false when the user is not first admin who logs in" do
+      first_post = Fabricate(:post, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Site.show_welcome_topic_banner?(Guardian.new(Fabricate(:admin)))).to eq(false)
+    end
+
+    it "returns true when welcome topic is less than month old" do
+      admin = Fabricate(:admin)
+      UserAuthToken.generate!(user_id: admin.id)
+
+      first_post = Fabricate(:post, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(true)
+    end
+
+    it "returns false when welcome topic is more than month old" do
+      admin = Fabricate(:admin)
+      UserAuthToken.generate!(user_id: admin.id)
+
+      first_post = Fabricate(:post, created_at: 35.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
+    end
+
+    it "returns false when welcome topic has been edited" do
+      admin = Fabricate(:admin)
+      UserAuthToken.generate!(user_id: admin.id)
+
+      first_post = Fabricate(:post, version: 2, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = first_post.topic.id
+
+      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
+    end
+  end
+
 end
