@@ -2,7 +2,7 @@
   {{#if this.hasGroupMessages}}
     <ol class="category-breadcrumb">
       <li>
-        <MessagesDropdown  @groups={{this.model.groups}} @value={{if this.groupFilter this.groupFilter (i18n "user.messages.inbox")}} />
+        <MessagesDropdown @user={{this.model}} @value={{if this.groupFilter this.groupFilter (i18n "user.messages.inbox")}} />
       </li>
     </ol>
   {{/if}}

@@ -19,25 +19,25 @@ export default ComboBoxComponent.extend({
   },
 
   groupsWithMessages: computed(function () {
-    let groups = [];
-    groups.push(I18n.t("user.messages.inbox"));
+    let groupMenu = [];
+    groupMenu.push(I18n.t("user.messages.inbox"));
 
-    let hasMessages = this.groups.filter((group) => group.has_messages);
+    let hasMessages = this.user.groups.filter((group) => group.has_messages);
     hasMessages.forEach((group) => {
-      groups.push(group.name);
+      groupMenu.push(group.name);
     });
 
-    return groups;
+    return groupMenu;
   }),
 
   actions: {
     onChange(group) {
-      if (this.groups.some((g) => g.name === group)) {
+      if (this.user.groups.some((g) => g.name === group)) {
         DiscourseURL.routeToUrl(
-          `/u/${this.currentUser.username}/messages/group/${group}`
+          `/u/${this.user.username}/messages/group/${group}`
         );
       } else {
-        DiscourseURL.routeToUrl(`/u/${this.currentUser.username}/messages`);
+        DiscourseURL.routeToUrl(`/u/${this.user.username}/messages`);
       }
     },
   },

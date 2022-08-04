@@ -1814,6 +1814,7 @@ en:
         mentions: "mention notifications"
         edits: "edit notifications"
         pm_index: "messages"
+        group: "group messages"
         invites_pending: "pending invites"
         invites_expired: "expired invites"
         invites_redeemed: "redeemed invites"

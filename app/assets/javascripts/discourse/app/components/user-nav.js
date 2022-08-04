@@ -1,26 +1,10 @@
 import Component from "@ember/component";
 import { bind } from "discourse-common/utils/decorators";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "",
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    const navItems = [
-      this.showNotificationsTab,
-      this.showPrivateMessages,
-      this.canInviteToForum,
-      this.showBadges,
-      this.model.can_edit,
-    ];
-
-    document.documentElement.style.setProperty(
-      "--user-nav-count",
-      navItems.filter(Boolean).length + 2 // 2 always shown
-    );
-  },
 
   @bind
   userMenuOutside(e) {
@@ -39,10 +23,10 @@ export default Component.extend({
   },
 
   @bind
-  collapseMobileProfileMenu(event) {
+  collapseMobileProfileMenu(e) {
     let shouldcollapseProfileMenu = false;
 
-    const allowedInsideClick = event.composedPath().some((element) => {
+    const allowedInsideClick = e.composedPath().some((element) => {
       if (
         element.classList?.contains("user-primary-navigation_submenu-link") ||
         (!element.classList?.contains("user-primary-navigation_item-parent") &&
@@ -64,26 +48,25 @@ export default Component.extend({
     }
   },
 
-  actions: {
-    toggleSubmenu(e) {
-      document.addEventListener("click", this.userMenuOutside);
+  @action
+  toggleSubmenu(e) {
+    document.addEventListener("click", this.userMenuOutside);
 
-      if (e.currentTarget.classList.contains("show-children")) {
-        return e.currentTarget.classList.remove("show-children");
-      }
+    if (e.currentTarget.classList.contains("show-children")) {
+      return e.currentTarget.classList.remove("show-children");
+    }
 
-      document.querySelectorAll(".user-nav > li").forEach((navParent) => {
-        navParent.classList.remove("show-children");
-      });
+    document.querySelectorAll(".user-nav > li").forEach((navParent) => {
+      navParent.classList.remove("show-children");
+    });
 
-      e.currentTarget.classList.toggle("show-children");
+    e.currentTarget.classList.toggle("show-children");
 
-      if (this.site.mobileView) {
-        // scroll to end so the last submenu is visible
-        document
-          .querySelector(".preferences-nav")
-          .scrollIntoView({ inline: "end" });
-      }
-    },
+    if (this.site.mobileView) {
+      // scroll to end so the last submenu is visible
+      document
+        .querySelector(".preferences-nav")
+        .scrollIntoView({ inline: "end" });
+    }
   },
 });

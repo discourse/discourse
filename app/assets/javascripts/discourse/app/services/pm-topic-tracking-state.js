@@ -159,7 +159,7 @@ const PrivateMessageTopicTrackingState = Service.extend({
   _isGroup(topic, activeGroupName) {
     return this.currentUser.groups.some((group) => {
       return (
-        group.name === (activeGroupName || this.activeGroup.name) &&
+        group.name === (activeGroupName || this.activeGroup?.name) &&
         topic.group_ids?.includes(group.id)
       );
     });
