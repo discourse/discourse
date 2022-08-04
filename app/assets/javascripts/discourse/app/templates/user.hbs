@@ -59,7 +59,7 @@
                 <h2 class="staged">{{i18n "user.staged"}}</h2>
               {{/if}}
               <h1 class={{if this.nameFirst "full-name" "username"}}>
-                {{html-safe (i18n "user.page_title.pluralized_name" name=(if this.nameFirst this.model.name (format-username this.model.username)))}}
+                {{if this.nameFirst this.model.name (format-username this.model.username)}}
                 {{user-status this.model currentUser=this.currentUser}}
                 <div class="user-profile-page-title">{{this.userPageTitle}}</div>
                 {{#if this.model.status}}

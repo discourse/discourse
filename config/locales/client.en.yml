@@ -1797,7 +1797,6 @@ en:
         the_topic: "the topic"
 
       page_title:
-        pluralized_name: "%{name}&rsquo;s"
         summary: "summary"
         activity_index: "activity"
         topics: "topics"
@@ -1813,7 +1812,11 @@ en:
         likesReceived: "like notifications"
         mentions: "mention notifications"
         edits: "edit notifications"
-        pm_index: "messages"
+        pm_index: "latest messages"
+        sent: "sent messages"
+        new: "new messages"
+        unread: "unread messages"
+        archive: "archived messages"
         group: "group messages"
         invites_pending: "pending invites"
         invites_expired: "expired invites"
