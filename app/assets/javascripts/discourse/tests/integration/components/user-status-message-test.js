@@ -111,4 +111,34 @@ module("Integration | Component | user-status-message", function (hooks) {
       document.querySelector("[data-tippy-root] .user-status-tooltip-until")
     );
   });
+
+  test("it shows tooltip by default", async function (assert) {
+    this.set("status", {
+      emoji: "tooth",
+      description: "off to dentist",
+    });
+
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
+    await mouseenter();
+
+    assert.ok(
+      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
+    );
+  });
+
+  test("it doesn't show tooltip if disabled", async function (assert) {
+    this.set("status", {
+      emoji: "tooth",
+      description: "off to dentist",
+    });
+
+    await render(
+      hbs`<UserStatusMessage @status={{this.status}} @showTooltip={{false}} />`
+    );
+    await mouseenter();
+
+    assert.notOk(
+      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
+    );
+  });
 });
