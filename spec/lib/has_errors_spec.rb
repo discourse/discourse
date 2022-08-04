@@ -3,7 +3,6 @@
 require 'has_errors'
 
 RSpec.describe HasErrors do
-
   class ErrorTestClass
     include HasErrors
   end
@@ -18,7 +17,7 @@ RSpec.describe HasErrors do
     expect(error_test.errors).to be_blank
   end
 
-  context "validate_child" do
+  describe "validate_child" do
     it "adds the errors from invalid AR objects" do
       expect(error_test.validate_child(invalid_topic)).to eq(false)
       expect(error_test.errors).to be_present
@@ -32,7 +31,7 @@ RSpec.describe HasErrors do
     end
   end
 
-  context "rollback_from_errors!" do
+  describe "rollback_from_errors!" do
     it "triggers a rollback" do
       invalid_topic.valid?
 
@@ -42,7 +41,7 @@ RSpec.describe HasErrors do
     end
   end
 
-  context "rollback_with_error!" do
+  describe "rollback_with_error!" do
     it "triggers a rollback" do
 
       expect do
@@ -52,5 +51,4 @@ RSpec.describe HasErrors do
       expect(error_test.errors[:base]).to include("You can only send warnings to one user at a time.")
     end
   end
-
 end

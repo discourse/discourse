@@ -2166,6 +2166,15 @@ ko:
     not_logged_in_user: "현재 활동 및 기본 설정에 대한 요약이 포함된 사용자 페이지"
     current_user: "사용자 페이지로 이동"
     view_all: "모두보기 %{tab}"
+    user_menu:
+      reviewable:
+        view_all: "모든 리뷰 항목 보기"
+        queue: "대기열"
+        deleted_user: "(삭제된 사용자)"
+        post_number_with_topic_title: "게시물 #%{post_number} - %{title}"
+        new_post_in_topic: "%{title}의 새 게시물"
+        suspicious_user: "의심스러운 사용자 %{username}"
+        default_item: "검토 가능한 항목 #%{reviewable_id}"
     topics:
       new_messages_marker: "마지막 방문"
       bulk:
@@ -3442,6 +3451,7 @@ ko:
         other: "%{count} unread"
       new_count:
         other: "%{count} new"
+      more: "더 보기..."
       sections:
         messages:
           header_link_text: "메시지"
@@ -4991,15 +5001,13 @@ ko:
           replace: "바꾸기"
   wizard_js:
     wizard:
-      done: "완료"
-      finish: "마침"
       back: "이전"
       next: "다음"
+      step-text: "단계"
       step: "%{total} 중 %{current}"
       upload: "업로드"
       uploading: "업로드 중..."
       upload_error: "죄송합니다. 해당 파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하십시오."
-      quit: "아마도 다음에"
       staff_count:
         other: "커뮤니티에는 당신을 포함한 %{count}명의 스탭이 있습니다."
       invites:

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailStyle do
-
-  context "ERB evaluation" do
+  describe "ERB evaluation" do
     it "does not evaluate ERB outside of the email itself" do
       SiteSetting.email_custom_template = "<hello>%{email_content}</hello><%= (111 * 333) %>"
       html = Email::Renderer.new(UserNotifications.signup(Fabricate(:user))).html
@@ -23,7 +22,7 @@ RSpec.describe EmailStyle do
       SiteSetting.remove_override!(:email_custom_css)
     end
 
-    context 'invite' do
+    context 'with invite' do
       fab!(:invite) { Fabricate(:invite) }
       let(:invite_mail) { InviteMailer.send_invite(invite) }
 
@@ -48,7 +47,7 @@ RSpec.describe EmailStyle do
       end
     end
 
-    context 'user_replied' do
+    context 'when user_replied' do
       let(:response_by_user) { Fabricate(:user, name: "John Doe") }
       let(:category) { Fabricate(:category, name: 'India') }
       let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
@@ -80,7 +79,7 @@ RSpec.describe EmailStyle do
       # TODO: translation override
     end
 
-    context 'signup' do
+    context 'with signup' do
       let(:signup_mail) { UserNotifications.signup(Fabricate(:user)) }
       subject(:mail_html) { Email::Renderer.new(signup_mail).html }
 
@@ -89,7 +88,7 @@ RSpec.describe EmailStyle do
         expect(mail_html).to include('activate-account')
       end
 
-      context 'translation override' do
+      context 'with translation override' do
         before do
           TranslationOverride.upsert!(
             SiteSetting.default_locale,
@@ -121,7 +120,7 @@ RSpec.describe EmailStyle do
       end
     end
 
-    context 'digest' do
+    context 'with digest' do
       fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago) }
       let(:summary_email) { UserNotifications.digest(Fabricate(:user)) }
       subject(:mail_html) { Email::Renderer.new(summary_email).html }

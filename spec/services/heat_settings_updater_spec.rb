@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe HeatSettingsUpdater do
-  describe '#update' do
-    subject(:update_settings) { HeatSettingsUpdater.update }
+  describe '.update' do
+    subject(:update_settings) { described_class.update }
 
     def expect_default_values
       [:topic_views_heat, :topic_post_like_heat].each do |prefix|
@@ -20,7 +20,7 @@ RSpec.describe HeatSettingsUpdater do
       expect_default_values
     end
 
-    context 'low activity' do
+    context 'with low activity' do
       let!(:hottest_topic1) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
       let!(:hottest_topic2) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
       let!(:warm_topic1) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
@@ -51,7 +51,7 @@ RSpec.describe HeatSettingsUpdater do
       end
     end
 
-    context 'similar activity' do
+    context 'with similar activity' do
       let!(:hottest_topic1) { Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201) }
       let!(:hottest_topic2) { Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201) }
       let!(:warm_topic1) { Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99) }
@@ -71,7 +71,7 @@ RSpec.describe HeatSettingsUpdater do
       end
     end
 
-    context 'increased activity' do
+    context 'with increased activity' do
       let!(:hottest_topic1) { Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230) }
       let!(:hottest_topic2) { Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220) }
       let!(:warm_topic1) { Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126) }

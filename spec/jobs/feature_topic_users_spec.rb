@@ -33,7 +33,7 @@ RSpec.describe Jobs::FeatureTopicUsers do
     end
   end
 
-  context "participant count" do
+  context "with participant count" do
     let!(:post) { create_post }
     let(:topic) { post.topic }
 

@@ -215,7 +215,7 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq('large_and_unoptimized.png')
       end
 
-      context "jpeg image quality settings" do
+      context "with jpeg image quality settings" do
         before do
           SiteSetting.png_to_jpg_quality = 75
           SiteSetting.recompress_original_jpg_quality = 40
@@ -247,7 +247,7 @@ RSpec.describe UploadCreator do
           expect(upload.original_filename).to eq('animated.gif')
         end
 
-        context "png image quality settings" do
+        context "with png image quality settings" do
           before do
             SiteSetting.png_to_jpg_quality = 100
             SiteSetting.recompress_original_jpg_quality = 90
@@ -333,7 +333,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context 'uploading to s3' do
+    context 'when uploading to s3' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
       let(:pdf_filename) { "small.pdf" }
@@ -413,7 +413,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "secure media functionality" do
+    context "with secure media functionality" do
       let(:filename) { "logo.jpg" }
       let(:file) { file_from_fixtures(filename) }
       let(:opts) { {} }
@@ -513,7 +513,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context 'custom emojis' do
+    context 'with custom emojis' do
       let(:animated_filename) { "animated.gif" }
       let(:animated_file) { file_from_fixtures(animated_filename) }
 
@@ -658,7 +658,7 @@ RSpec.describe UploadCreator do
   end
 
   describe '#should_downsize?' do
-    context "GIF image" do
+    context "with GIF image" do
       let(:gif_file) { file_from_fixtures("animated.gif") }
 
       before do

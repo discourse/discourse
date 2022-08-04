@@ -8,7 +8,7 @@ import Topic from "discourse/models/topic";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
-    const site = this.container.lookup("site:main");
+    const site = this.container.lookup("service:site");
     let posts = attrs.posts.call(this);
     posts.forEach((p) => p.set("site", site));
     this.set("posts", posts);
@@ -26,7 +26,7 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
 
   postStreamTest("basics", {
     posts() {
-      const site = this.container.lookup("site:main");
+      const site = this.container.lookup("service:site");
       const topic = Topic.create();
       topic.set("details.created_by", { id: 123 });
       return [

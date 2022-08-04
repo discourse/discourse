@@ -64,7 +64,7 @@ RSpec.describe EmailToken do
       expect(EmailToken.confirm(email_token.token)).to be_blank
     end
 
-    context 'taken email address' do
+    context 'with taken email address' do
       before do
         @other_user = Fabricate(:coding_horror)
         email_token.update_attribute :email, @other_user.email
@@ -75,15 +75,14 @@ RSpec.describe EmailToken do
       end
     end
 
-    context 'welcome message' do
+    context 'with welcome message' do
       it 'sends a welcome message when the user is activated' do
         user = EmailToken.confirm(email_token.token)
         expect(user.send_welcome_message).to eq true
       end
-
     end
 
-    context 'success' do
+    context 'with success' do
       let!(:confirmed_user) { EmailToken.confirm(email_token.token) }
 
       it "returns the correct user" do
@@ -105,7 +104,7 @@ RSpec.describe EmailToken do
       end
     end
 
-    context 'confirms the token and redeems invite' do
+    context 'when confirms the token and redeems invite' do
       before do
         SiteSetting.must_approve_users = true
         Jobs.run_immediately!
@@ -140,7 +139,7 @@ RSpec.describe EmailToken do
       end
     end
 
-    context 'does not redeem the invite if token is password_reset' do
+    context 'when does not redeem the invite if token is password_reset' do
       before do
         SiteSetting.must_approve_users = true
         Jobs.run_immediately!

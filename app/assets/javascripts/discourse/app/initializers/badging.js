@@ -8,7 +8,7 @@ export default {
       return;
     } // must have the Badging API
 
-    const user = container.lookup("current-user:main");
+    const user = container.lookup("service:current-user");
     if (!user) {
       return;
     } // must be logged in

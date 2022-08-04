@@ -2304,6 +2304,8 @@ en:
       image_alt_text:
         aria_label: Alt text for image
 
+      delete_image_button: Delete Image  
+
     notifications:
       tooltip:
         regular:
@@ -4077,7 +4079,7 @@ en:
         one: "%{count} new"
         other: "%{count} new"
       toggle_section: "toggle section"
-      more_count: "%{count} more..."
+      more: "More..."
       sections:
         messages:
           header_link_title: "personal messages"
@@ -4895,6 +4897,7 @@ en:
         last_seen_user: "Last Seen User:"
         no_result: "No results found for summary."
         reply_key: "Reply Key"
+        post_link_with_smtp: "Post & SMTP Details"
         skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "From"
@@ -4924,6 +4927,7 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
+            smtp_transaction_response_placeholder: "SMTP ID"
 
       moderation_history:
         performed_by: "Performed By"
@@ -5109,6 +5113,7 @@ en:
         show_words:
           one: "show %{count} word"
           other: "show %{count} words"
+        case_sensitive: "(case-sensitive)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -5146,6 +5151,8 @@ en:
           exists: "Already exists"
           upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
+          case_sensitivity_label: "Is case-sensitive"
+          case_sensitivity_description: "Only words with matching character casing"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
@@ -5718,7 +5725,7 @@ en:
 
   wizard_js:
     wizard:
-      done: "Jump in!"
+      jump_in: "Jump in!"
       finish: "Exit setup"
       back: "Back"
       next: "Next"

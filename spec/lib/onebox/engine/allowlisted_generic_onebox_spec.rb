@@ -90,7 +90,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   end
 
   describe 'canonical link' do
-    context 'uses canonical link if available' do
+    context 'when using canonical link if available' do
       let(:mobile_url) { "https://m.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter" }
       let(:canonical_url) { "https://www.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter" }
       before do
@@ -111,7 +111,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       end
     end
 
-    context 'does not use canonical link for Discourse topics' do
+    context 'when not using canonical link for Discourse topics' do
       let(:discourse_topic_url) { "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483" }
       let(:discourse_topic_reply_url) { "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2" }
       before do
@@ -164,7 +164,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   end
 
   describe 'missing description' do
-    context 'works without description if image is present' do
+    context 'when working without description if image is present' do
       before do
         stub_request(:get, "https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
           .to_return(status: 200, body: onebox_response('cnn'))
@@ -183,7 +183,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       end
     end
 
-    context 'uses basic meta description when necessary' do
+    context 'when using basic meta description when necessary' do
       before do
         stub_request(:get, "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/")
           .to_return(status: 200, body: onebox_response('reddit_image'))
@@ -204,7 +204,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   end
 
   describe 'article html hosts' do
-    context 'returns article_html for hosts in article_html_hosts' do
+    context 'when returning article_html for hosts in article_html_hosts' do
       before do
         stub_request(:get, "https://www.imdb.com/title/tt0108002/")
           .to_return(status: 200, body: onebox_response('imdb'))

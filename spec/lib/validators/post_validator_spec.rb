@@ -22,7 +22,7 @@ RSpec.describe PostValidator do
       end
     end
 
-    describe "when post's topic is a PM between a human and a non human user" do
+    context "when post's topic is a PM between a human and a non human user" do
       fab!(:robot) { Fabricate(:user, id: -3) }
       fab!(:user) { Fabricate(:user) }
 
@@ -43,7 +43,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "stripped_length" do
+  describe "stripped_length" do
     it "adds an error for short raw" do
       post.raw = "abc"
       validator.stripped_length(post)
@@ -102,7 +102,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "too_many_posts" do
+  describe "too_many_posts" do
     it "should be invalid when the user has posted too much" do
       post.user.expects(:posted_too_much_in_topic?).returns(true)
       validator.max_posts_validator(post)
@@ -123,7 +123,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "too_many_mentions" do
+  describe "too_many_mentions" do
     before do
       SiteSetting.newuser_max_mentions_per_post = 2
       SiteSetting.max_mentions_per_post = 3
@@ -180,7 +180,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "too_many_embedded_media" do
+  describe "too_many_embedded_media" do
     before do
       SiteSetting.min_trust_to_post_embedded_media = 0
       SiteSetting.newuser_max_embedded_media = 2
@@ -223,7 +223,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "invalid post" do
+  describe "invalid post" do
     it "should be invalid" do
       validator.validate(post)
       expect(post.errors.count).to be > 0
@@ -250,7 +250,7 @@ RSpec.describe PostValidator do
       Discourse.redis.del(@pm_key)
     end
 
-    context "post is unique" do
+    context "when post is unique" do
       let(:new_post) do
         Fabricate.build(:post, user: user, raw: "unique content", topic: topic)
       end
@@ -268,7 +268,7 @@ RSpec.describe PostValidator do
       end
     end
 
-    context "post is not unique" do
+    context "when post is not unique" do
       def build_post(is_pm:, raw:)
         Fabricate.build(
           :post,
@@ -314,8 +314,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "force_edit_last_validator" do
-
+  describe "force_edit_last_validator" do
     fab!(:user) { Fabricate(:user) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
@@ -392,7 +391,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  context "admin editing a static page" do
+  describe "admin editing a static page" do
     before do
       post.acting_user = build(:admin)
       SiteSetting.tos_topic_id = post.topic_id
@@ -401,9 +400,8 @@ RSpec.describe PostValidator do
     include_examples "almost no validations"
   end
 
-  context "staged user" do
+  describe "staged user" do
     before { post.acting_user = build(:user, staged: true) }
     include_examples "almost no validations"
   end
-
 end

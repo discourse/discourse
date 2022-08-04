@@ -115,6 +115,7 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/utils/watched-words")
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
@@ -213,7 +214,7 @@ module PrettyText
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json };
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};

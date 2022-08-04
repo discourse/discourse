@@ -106,11 +106,11 @@ RSpec.describe UsernameValidator do
   context 'when Unicode usernames are enabled' do
     before { SiteSetting.unicode_usernames = true }
 
-    context "ASCII usernames" do
+    context "with ASCII usernames" do
       include_examples 'ASCII username'
     end
 
-    context "Unicode usernames" do
+    context "with Unicode usernames" do
       before { SiteSetting.min_username_length = 1 }
 
       it 'is invalid when the username is too short' do

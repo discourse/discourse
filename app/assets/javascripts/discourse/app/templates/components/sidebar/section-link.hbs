@@ -1,63 +1,71 @@
 <div class="sidebar-section-link-wrapper">
-  <Sidebar::SectionLinkTo
-    @class={{concat @class (concat " sidebar-section-link sidebar-section-link-" @linkName)}}
-    @route={{@route}}
-    @query={{@query}}
-    @models={{if @model (array @model) (if @models @models (array))}}
-    @current-when={{@currentWhen}}
-    @title={{@title}}
-  >
-    {{#if @prefixValue }}
-      <span class="sidebar-section-link-prefix {{@prefixType}} {{@prefixCSSClass}}" style={{this.prefixCSS}}>
-        {{#if (eq @prefixType "image")}}
-          <img src={{@prefixValue}} class="prefix-image">
-        {{/if}}
+  {{#if @href}}
+    <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
+      <span class="sidebar-section-link-content-text">
+        {{@content}}
+      </span>
+    </a>
+  {{else}}
+    <Sidebar::SectionLinkTo
+      @class={{this.classNames}}
+      @route={{@route}}
+      @query={{@query}}
+      @models={{this.models}}
+      @current-when={{@currentWhen}}
+      @title={{@title}}
+    >
+      {{#if @prefixValue }}
+        <span class="sidebar-section-link-prefix {{@prefixType}} {{@prefixCSSClass}}" style={{this.prefixCSS}}>
+          {{#if (eq @prefixType "image")}}
+            <img src={{@prefixValue}} class="prefix-image">
+          {{/if}}
 
-        {{#if (eq @prefixType "text")}}
-          {{@prefixValue}}
-        {{/if}}
+          {{#if (eq @prefixType "text")}}
+            {{@prefixValue}}
+          {{/if}}
 
-        {{#if (eq @prefixType "icon")}}
-          {{d-icon @prefixValue class="prefix-icon"}}
-        {{/if}}
+          {{#if (eq @prefixType "icon")}}
+            {{d-icon @prefixValue class="prefix-icon"}}
+          {{/if}}
 
-        {{#if @prefixBadge}}
-          {{d-icon @prefixBadge class="prefix-badge"}}
-        {{/if}}
+          {{#if @prefixBadge}}
+            {{d-icon @prefixBadge class="prefix-badge"}}
+          {{/if}}
+        </span>
+      {{/if}}
+
+      <span class="sidebar-section-link-content-text">
+        {{@content}}
+      </span>
+
+      {{#if @badgeText}}
+        <span class="sidebar-section-link-content-badge">
+          {{@badgeText}}
+        </span>
+      {{/if}}
+
+      {{#if @suffixValue}}
+        <span class="sidebar-section-link-suffix {{@suffixType}} {{@suffixCSSClass}}">
+          {{#if (eq @suffixType "icon")}}
+            {{d-icon @suffixValue}}
+          {{/if}}
+        </span>
+      {{/if}}
+    </Sidebar::SectionLinkTo>
+
+    {{#if @hoverValue}}
+      <span class="sidebar-section-link-hover">
+        <button
+          type="button"
+          title={{@hoverTitle}}
+          class="sidebar-section-hover-button"
+          {{on "click" @hoverAction}}
+          >
+          {{#if (eq @hoverType "icon")}}
+            {{d-icon @hoverValue class="hover-icon"}}
+          {{/if}}
+        </button>
       </span>
     {{/if}}
-
-    <span class="sidebar-section-link-content-text">
-      {{@content}}
-    </span>
-
-    {{#if @badgeText}}
-      <span class="sidebar-section-link-content-badge">
-        {{@badgeText}}
-      </span>
-    {{/if}}
-
-    {{#if @suffixValue}}
-      <span class="sidebar-section-link-suffix {{@suffixType}} {{@suffixCSSClass}}">
-        {{#if (eq @suffixType "icon")}}
-          {{d-icon @suffixValue}}
-        {{/if}}
-      </span>
-    {{/if}}
-  </Sidebar::SectionLinkTo>
-
-  {{#if @hoverValue}}
-    <span class="sidebar-section-link-hover">
-      <button
-        type="button"
-        title={{@hoverTitle}}
-        class="sidebar-section-hover-button"
-        {{on "click" @hoverAction}}
-        >
-        {{#if (eq @hoverType "icon")}}
-          {{d-icon @hoverValue class="hover-icon"}}
-        {{/if}}
-      </button>
-    </span>
   {{/if}}
 </div>

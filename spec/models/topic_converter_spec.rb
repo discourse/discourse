@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicConverter do
-
-  context 'convert_to_public_topic' do
+  describe 'convert_to_public_topic' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:author) { Fabricate(:user) }
     fab!(:category) { Fabricate(:category, topic_count: 1) }
@@ -14,7 +13,7 @@ RSpec.describe TopicConverter do
       Category.find(SiteSetting.uncategorized_category_id)
     end
 
-    context 'success' do
+    context 'with success' do
       it "converts private message to regular topic" do
         SiteSetting.allow_uncategorized_topics = true
         topic = nil
@@ -44,7 +43,7 @@ RSpec.describe TopicConverter do
         expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
       end
 
-      describe 'when uncategorized category is not allowed' do
+      context 'when uncategorized category is not allowed' do
         before do
           SiteSetting.allow_uncategorized_topics = false
           category.update!(read_restricted: false)
@@ -65,7 +64,7 @@ RSpec.describe TopicConverter do
         end
       end
 
-      describe 'when a custom category_id is given' do
+      context 'when a custom category_id is given' do
         it 'should convert private message into the right category' do
           topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
 
@@ -118,14 +117,14 @@ RSpec.describe TopicConverter do
     end
   end
 
-  context 'convert_to_private_message' do
+  describe 'convert_to_private_message' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:author) { Fabricate(:user) }
     fab!(:category) { Fabricate(:category) }
     fab!(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-    context 'success' do
+    context 'with success' do
       it "converts regular topic to private message" do
         private_message = topic.convert_to_private_message(post.user)
         expect(private_message).to be_valid
@@ -207,7 +206,7 @@ RSpec.describe TopicConverter do
       end
     end
 
-    context 'topic has replies' do
+    context 'when topic has replies' do
       before do
         @replied_user = Fabricate(:coding_horror)
         create_post(topic: topic, user: @replied_user)
@@ -234,7 +233,7 @@ RSpec.describe TopicConverter do
       end
     end
 
-    context 'user_profiles with newly converted PM as featured topic' do
+    context 'with user_profiles with newly converted PM as featured topic' do
       it "sets all matching user_profile featured topic ids to nil" do
         author.user_profile.update(featured_topic: topic)
         topic.convert_to_private_message(admin)
@@ -242,6 +241,5 @@ RSpec.describe TopicConverter do
         expect(author.user_profile.reload.featured_topic).to eq(nil)
       end
     end
-
   end
 end

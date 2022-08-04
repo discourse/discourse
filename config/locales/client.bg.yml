@@ -2989,6 +2989,7 @@ bg:
       new_count:
         one: "%{count} нов"
         other: "%{count} нови"
+      more: "Още..."
       sections:
         messages:
           header_link_text: "Съобщения"
@@ -3839,13 +3840,12 @@ bg:
           topics: "Теми"
   wizard_js:
     wizard:
-      done: "Готово"
       back: "Назад"
       next: "Напред"
+      step-text: "Стъпка"
       upload: "Качване"
       uploading: "Качва се..."
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
-      quit: "Може би по-късно"
       invites:
         add_user: "добавяне"
         roles:

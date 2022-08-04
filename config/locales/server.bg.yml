@@ -1284,40 +1284,30 @@ bg:
     title: "Влизане в безопасен режим"
   wizard:
     step:
-      forum_title:
-        title: "Име"
       privacy:
-        title: "Достъп"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Публични"
-              restricted:
-                label: "Затворени"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-          contact_url:
-            label: "Уеб страница"
-          site_contact:
-            label: "Автоматизирани съобщения"
-      corporate:
-        title: "Организация"
+          login_required:
+            placeholder: "Затворени"
+          must_approve_users:
+            placeholder: "Изисквай одобрение"
+      ready:
+        title: "Вашият Discourse е готов!"
       styling:
         fields:
           homepage_style:
             choices:
               latest:
                 label: "Последни теми"
-      logos:
-        title: "Логота"
+      branding:
         fields:
           logo:
             label: "Главно лого"
-      icons:
-        title: "Икони"
+      corporate:
+        fields:
+          contact_url:
+            label: "Уеб страница"
+          site_contact:
+            label: "Автоматизирани съобщения"
       invites:
         title: "Поканете персонал"
       finished:

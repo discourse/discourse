@@ -402,7 +402,7 @@ HTML
     end
   end
 
-  context "SVG sprite theme fields" do
+  describe "SVG sprite theme fields" do
     let(:upload) { Fabricate(:upload) }
     let(:theme) { Fabricate(:theme) }
     let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: SvgSprite.theme_sprite_variable_name, upload: upload, value: "", value_baked: "baked", type_id: ThemeField.types[:theme_upload_var]) }
@@ -429,8 +429,7 @@ HTML
     end
   end
 
-  context 'local js assets' do
-
+  describe 'local js assets' do
     let :js_content do
       "// not transpiled; console.log('hello world');"
     end
@@ -515,5 +514,4 @@ HTML
       expect(theme.scss_variables).not_to include("theme_uploads")
     end
   end
-
 end

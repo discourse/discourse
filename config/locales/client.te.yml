@@ -2035,7 +2035,6 @@ te:
           topics: "విషయాలు"
   wizard_js:
     wizard:
-      done: "పూర్తయింది"
       back: "వెనుకకు"
       next: "తదుపరి"
       upload: "ఎక్కించు"

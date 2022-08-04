@@ -13,7 +13,7 @@ RSpec.describe TopicView do
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
-  context "preload" do
+  describe "preload" do
     it "allows preloading of data" do
       preloaded_topic_view = nil
       preloader = lambda do |view|
@@ -51,7 +51,7 @@ RSpec.describe TopicView do
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
-  context "filter options" do
+  describe "filter options" do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, post_type: Post.types[:moderator_action]) }
     fab!(:p2) { Fabricate(:post, topic: topic, post_type: Post.types[:small_action]) }
@@ -70,7 +70,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context 'custom filters' do
+  describe 'custom filters' do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
@@ -93,7 +93,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context "setup_filtered_posts" do
+  describe "setup_filtered_posts" do
     describe "filters posts with ignored users" do
       fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
       let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
@@ -110,7 +110,7 @@ RSpec.describe TopicView do
         expect(tv.next_page).to eq(nil)
       end
 
-      describe "when an ignored user made the original post" do
+      context "when an ignored user made the original post" do
         let!(:post) { Fabricate(:post, topic: topic, user: user) }
 
         it "filters out ignored user posts only" do
@@ -119,7 +119,7 @@ RSpec.describe TopicView do
         end
       end
 
-      describe "when an anonymous user made a post" do
+      context "when an anonymous user made a post" do
         let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
         it "filters out ignored user posts only" do
@@ -128,7 +128,7 @@ RSpec.describe TopicView do
         end
       end
 
-      describe "when an anonymous (non signed-in) user is viewing a Topic" do
+      context "when an anonymous (non signed-in) user is viewing a Topic" do
         let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
         it "filters out ignored user posts only" do
@@ -137,7 +137,7 @@ RSpec.describe TopicView do
         end
       end
 
-      describe "when a staff user is ignored" do
+      context "when a staff user is ignored" do
         let!(:admin) { Fabricate(:user, admin: true) }
         let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
         let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
@@ -150,7 +150,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context "chunk_size" do
+  describe "chunk_size" do
     it "returns `chunk_size` by default" do
       expect(TopicView.new(topic.id, evil_trout).chunk_size).to eq(TopicView.chunk_size)
     end
@@ -224,7 +224,7 @@ RSpec.describe TopicView do
       expect { TopicView.new(topic.id, nil) }.to raise_error(Discourse::NotLoggedIn)
     end
 
-    context 'log_check_personal_message is enabled' do
+    context 'when log_check_personal_message is enabled' do
       fab!(:group) { Fabricate(:group) }
       fab!(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
@@ -274,7 +274,7 @@ RSpec.describe TopicView do
       expect(topic_view.absolute_url).to eq("http://test.localhost/t/#{topic.slug}/#{topic.id}")
     end
 
-    context 'subfolder' do
+    context 'with subfolder' do
       it "provides the correct absolute url" do
         set_subfolder "/forum"
         expect(topic_view.absolute_url).to eq("http://test.localhost/forum/t/#{topic.slug}/#{topic.id}")
@@ -479,7 +479,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context 'whispers' do
+  describe 'whispers' do
     it "handles their visibility properly" do
       SiteSetting.enable_whispers = true
       p1 = Fabricate(:post, topic: topic, user: evil_trout)
@@ -498,7 +498,6 @@ RSpec.describe TopicView do
   end
 
   describe '#posts' do
-
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
     let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout) }
@@ -700,7 +699,7 @@ RSpec.describe TopicView do
     end
   end
 
-  context "page_title" do
+  describe "page_title" do
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
     fab!(:op_post) { Fabricate(:post, topic: topic) }
@@ -710,7 +709,7 @@ RSpec.describe TopicView do
     subject { TopicView.new(topic.id, evil_trout).page_title }
 
     context "when a post number is specified" do
-      context "admins" do
+      context "with admins" do
         it "see post number and username for all posts" do
           title = TopicView.new(topic.id, admin, post_number: 0).page_title
           expect(title).to eq(topic.title)
@@ -724,7 +723,7 @@ RSpec.describe TopicView do
         end
       end
 
-      context "regular users" do
+      context "with regular users" do
         it "see post number and username for regular posts" do
           title = TopicView.new(topic.id, evil_trout, post_number: 0).page_title
           expect(title).to eq(topic.title)
@@ -748,20 +747,20 @@ RSpec.describe TopicView do
       end
     end
 
-    context "uncategorized topic" do
-      context "topic_page_title_includes_category is false" do
+    context "with uncategorized topic" do
+      context "when topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
         it { is_expected.to eq(topic.title) }
       end
 
-      context "topic_page_title_includes_category is true" do
+      context "when topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
         it { is_expected.to eq(topic.title) }
 
-        context "tagged topic" do
+        context "with tagged topic" do
           before { topic.tags << [tag1, tag2] }
 
-          context "tagging enabled" do
+          context "with tagging enabled" do
             before { SiteSetting.tagging_enabled = true }
 
             it { is_expected.to start_with(topic.title) }
@@ -769,7 +768,7 @@ RSpec.describe TopicView do
             it { is_expected.to end_with(tag2.name) } # tag2 has higher topic count
           end
 
-          context "tagging disabled" do
+          context "with tagging disabled" do
             before { SiteSetting.tagging_enabled = false }
 
             it { is_expected.to start_with(topic.title) }
@@ -780,22 +779,22 @@ RSpec.describe TopicView do
       end
     end
 
-    context "categorized topic" do
+    context "with categorized topic" do
       let(:category) { Fabricate(:category) }
 
       before { topic.update(category_id: category.id) }
 
-      context "topic_page_title_includes_category is false" do
+      context "when topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
         it { is_expected.to eq(topic.title) }
       end
 
-      context "topic_page_title_includes_category is true" do
+      context "when topic_page_title_includes_category is true" do
         before { SiteSetting.topic_page_title_includes_category = true }
         it { is_expected.to start_with(topic.title) }
         it { is_expected.to end_with(category.name) }
 
-        context "tagged topic" do
+        context "with tagged topic" do
           before do
             SiteSetting.tagging_enabled = true
             topic.tags << [tag1, tag2]

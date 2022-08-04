@@ -24,7 +24,7 @@ RSpec.describe Auth::GithubAuthenticator do
   let(:authenticator) { described_class.new }
   fab!(:user) { Fabricate(:user) }
 
-  context 'after_authenticate' do
+  describe 'after_authenticate' do
     let(:data) { auth_token_for(user) }
 
     it 'can authenticate and create a user record for already existing users' do
@@ -247,10 +247,9 @@ RSpec.describe Auth::GithubAuthenticator do
       expect(UserAssociatedAccount.exists?(user_id: user1.id)).to eq(false)
       expect(UserAssociatedAccount.exists?(user_id: user2.id)).to eq(true)
     end
-
   end
 
-  context 'revoke' do
+  describe 'revoke' do
     fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::GithubAuthenticator.new }
 
@@ -258,13 +257,12 @@ RSpec.describe Auth::GithubAuthenticator do
       expect { authenticator.revoke(user) }.to raise_error(Discourse::NotFound)
     end
 
-      it 'revokes correctly' do
-        UserAssociatedAccount.create!(provider_name: "github", user_id: user.id, provider_uid: 100, info: { nickname: "boris" })
-        expect(authenticator.can_revoke?).to eq(true)
-        expect(authenticator.revoke(user)).to eq(true)
-        expect(authenticator.description_for_user(user)).to eq("")
-      end
-
+    it 'revokes correctly' do
+      UserAssociatedAccount.create!(provider_name: "github", user_id: user.id, provider_uid: 100, info: { nickname: "boris" })
+      expect(authenticator.can_revoke?).to eq(true)
+      expect(authenticator.revoke(user)).to eq(true)
+      expect(authenticator.description_for_user(user)).to eq("")
+    end
   end
 
   describe 'avatar retrieval' do

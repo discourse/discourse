@@ -21,8 +21,7 @@ RSpec.describe PrettyText do
   let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
 
   describe "Quoting" do
-
-    describe "with avatar" do
+    context "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
 
       before do
@@ -47,7 +46,7 @@ RSpec.describe PrettyText do
         expect(cook("[quote=\"EvilTrout, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
       end
 
-      context "emojis" do
+      context "with emojis" do
         let(:md) do
           <<~MD
           > This is a quote with a regular emoji :upside_down_face:
@@ -298,7 +297,7 @@ RSpec.describe PrettyText do
       end
     end
 
-    describe "with primary user group" do
+    context "with primary user group" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
       fab!(:group) { Fabricate(:group) }
       fab!(:user) { Fabricate(:user, primary_group: group) }
@@ -367,8 +366,8 @@ RSpec.describe PrettyText do
       expect(cooked.scan('quote]').length).to eq(0)
     end
 
-    describe "with letter avatar" do
-      context "subfolder" do
+    context "with letter avatar" do
+      context "with subfolder" do
         it "should have correct avatar url" do
           set_subfolder "/forum"
           md = <<~MD
@@ -383,7 +382,6 @@ RSpec.describe PrettyText do
   end
 
   describe "Mentions" do
-
     it "can handle mentions after abbr" do
       expect(PrettyText.cook("test <abbr>test</abbr>\n\n@bob")).to eq("<p>test <abbr>test</abbr></p>\n<p><span class=\"mention\">@bob</span></p>")
     end
@@ -422,7 +420,7 @@ RSpec.describe PrettyText do
       end
     end
 
-    context 'subfolder' do
+    context 'with subfolder' do
       it "handles user and group mentions correctly" do
         set_subfolder "/forum"
 
@@ -466,7 +464,7 @@ RSpec.describe PrettyText do
       )
     end
 
-    describe 'when mentions are disabled' do
+    context 'when mentions are disabled' do
       before do
         SiteSetting.enable_mentions = false
       end
@@ -727,7 +725,6 @@ RSpec.describe PrettyText do
   end
 
   describe "Excerpt" do
-
     it "sanitizes attempts to inject invalid attributes" do
       spinner = "<a href=\"http://thedailywtf.com/\" data-bbcode=\"' class='fa fa-spin\">WTF</a>"
       expect(PrettyText.excerpt(spinner, 20)).to match_html spinner
@@ -736,13 +733,12 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(spinner, 20)).to match_html spinner
     end
 
-    context "images" do
-
+    context "with images" do
       it "should dump images" do
         expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100)).to eq("[image]")
       end
 
-      context 'alt tags' do
+      context 'with alt tags' do
         it "should keep alt tags" do
           expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>", 100)).to eq("[car]")
         end
@@ -754,7 +750,7 @@ RSpec.describe PrettyText do
         end
       end
 
-      context 'title tags' do
+      context 'with title tags' do
         it "should keep title tags" do
           expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100)).to eq("[car]")
         end
@@ -796,7 +792,7 @@ RSpec.describe PrettyText do
       end
     end
 
-    context "emojis" do
+    context "with emojis" do
       it "should remove broken emoji" do
         html = <<~HTML
           <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=#{Emoji::EMOJI_VERSION}\" title=\":bike:\" class=\"emoji\" alt=\":bike:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=#{Emoji::EMOJI_VERSION}\" title=\":cat:\" class=\"emoji\" alt=\":cat:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=#{Emoji::EMOJI_VERSION}\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\" loading=\"lazy\" width=\"20\" height=\"20\">
@@ -987,7 +983,7 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
-    context 'option to preserve onebox source' do
+    context 'with option to preserve onebox source' do
       it "should return the right excerpt" do
         onebox = "<aside class=\"onebox allowlistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
@@ -2166,7 +2162,7 @@ HTML
     expect(cooked).to match_html(html)
   end
 
-  context "customizing markdown-it rules" do
+  describe "customizing markdown-it rules" do
     it 'customizes the markdown-it rules correctly' do
       cooked = PrettyText.cook('This is some text **bold**', markdown_it_rules: [])
 
@@ -2178,7 +2174,7 @@ HTML
     end
   end
 
-  context "enabling/disabling features" do
+  describe "enabling/disabling features" do
     it "allows features to be overridden" do
       cooked = PrettyText.cook(':grin: @mention', features_override: [])
 

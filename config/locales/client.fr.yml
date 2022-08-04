@@ -586,6 +586,8 @@ fr:
       relative: "Relatif"
     time_shortcut:
       now: "Maintenant"
+      in_one_hour: "Dans une heure"
+      in_two_hours: "Dans deux heures"
       later_today: "Plus tard dans la journée"
       two_days: "Deux jours"
       next_business_day: "Au prochain jour ouvré"
@@ -1091,6 +1093,10 @@ fr:
       experimental_sidebar:
         enable: "Activer la barre latérale expérimentale"
         options: "Options"
+        categories_section: "Section Catégories"
+        categories_section_instruction: "Les catégories sélectionnées seront affichées dans la section Catégories de la barre latérale."
+        tags_section: "Section Étiquettes"
+        tags_section_instruction: "Les étiquettes sélectionnées seront affichées dans la section Étiquettes de la barre latérale."
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -1202,6 +1208,7 @@ fr:
         tags: "Étiquettes"
         interface: "Interface"
         apps: "Applications"
+        sidebar: "Barre latérale"
       change_password:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
@@ -1640,6 +1647,8 @@ fr:
       save: "Sauvegarder"
       set_custom_status: "Définir un statut personnalisé"
       what_are_you_doing: "« Que faites-vous ? »"
+      remove_status: "Supprimer le statut"
+      until: "Jusqu'à :"
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -1699,6 +1708,7 @@ fr:
       other: réponses
     signup_cta:
       sign_up: "S'inscrire"
+      hide_session: "Peut-être plus tard"
       hide_forever: "non merci"
       hidden_for_session: "Très bien, nous vous le demanderons demain. Vous pouvez aussi utiliser le bouton « Se connecter » pour vous créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
@@ -2000,6 +2010,7 @@ fr:
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
       title: "Ou appuyez sur %{modifier}Entrée"
+      users_placeholder: "Ajouter des utilisatrices ou des groupes"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
@@ -2128,6 +2139,7 @@ fr:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> a accepté votre invitation"
+      invitee_accepted_your_invitation: "a accepté votre invitation"
       moved_post: "<span>%{username}</span> a déplacé %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Vous avez obtenu le badge « %{description} »"
@@ -2322,6 +2334,12 @@ fr:
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
     current_user: "accéder à votre page utilisateur"
     view_all: "voir les %{tab}"
+    user_menu:
+      generic_no_items: "Cette liste ne contient aucun élément."
+      sr_menu_tabs: "Onglets du menu"
+      view_all_notifications: "Afficher toutes les notifications"
+      reviewable:
+        queue: "File d'attente"
     topics:
       new_messages_marker: "dernière visite"
       bulk:
@@ -3721,6 +3739,7 @@ fr:
       new_count:
         one: "%{count} nouveau"
         other: "%{count} nouveaux"
+      more: "Plus…"
       sections:
         messages:
           header_link_text: "Messages"
@@ -3733,9 +3752,11 @@ fr:
             unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
+          click_to_get_started: "Cliquez ici pour commencer."
           header_link_title: "toutes les étiquettes"
           header_link_text: "Étiquettes"
         categories:
+          click_to_get_started: "Cliquez ici pour commencer."
           header_link_title: "toutes les catégories"
           header_link_text: "Catégories"
         community:
@@ -3965,7 +3986,9 @@ fr:
             En configurant des permissions, vous pouvez restreindre une clé d'API à certaines actions spécifiques.
             Vous pouvez aussi définir les paramètres autorisés. Utilisez des virgules pour séparer plusieurs valeurs.
           title: Permissions
+          granular: Détaillé
           read_only: Lecture seule
+          global: Global
           global_description: La clé API n'a aucune restriction et tous les points de terminaison (Endpoint) sont accessibles.
           resource: Ressource
           action: Action
@@ -5291,15 +5314,13 @@ fr:
           replace: "Remplacer"
   wizard_js:
     wizard:
-      done: "Terminer"
-      finish: "Terminer"
       back: "Retour"
       next: "Suivant"
+      step-text: "Pas"
       step: "%{current} sur %{total}"
       upload: "Envoi"
       uploading: "Envoi en cours…"
       upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
-      quit: "Peut-être plus tard"
       staff_count:
         one: "Votre communauté a %{count} responsable (vous)."
         other: "Votre communauté a %{count} responsables, vous y compris."

@@ -17,46 +17,15 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service("search") searchService;
   @service keyValueStore;
   @service pmTopicTrackingState;
-
-  @cached
-  get siteSettings() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("site-settings:main");
-  }
-
-  @cached
-  get currentUser() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("current-user:main");
-  }
-
-  @cached
-  get messageBus() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("message-bus:main");
-  }
+  @service siteSettings;
+  @service messageBus;
+  @service currentUser;
+  @service session;
+  @service site;
 
   @cached
   get topicTrackingState() {
     const applicationInstance = getOwner(this);
     return applicationInstance.lookup("topic-tracking-state:main");
-  }
-
-  @cached
-  get site() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("site:main");
-  }
-
-  @cached
-  get store() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("store:main");
-  }
-
-  @cached
-  get session() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("session:main");
   }
 }

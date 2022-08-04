@@ -2886,6 +2886,7 @@ cs:
         few: "%{count} nová"
         many: "%{count} nových"
         other: "%{count} nové"
+      more: "Více..."
       sections:
         messages:
           header_link_text: "Zprávy"
@@ -3956,15 +3957,13 @@ cs:
           topics: "Témata"
   wizard_js:
     wizard:
-      done: "Hotovo"
-      finish: "Dokončit"
       back: "Zpět"
       next: "Další"
+      step-text: "Krok"
       step: "%{current} z %{total}"
       upload: "Nahrát"
       uploading: "Nahrává se..."
       upload_error: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
-      quit: "Možná později"
       staff_count:
         one: "Jste jediným členem v redakci vaší komunity."
         few: "Vaše komunita má %{count} členy v redakci."

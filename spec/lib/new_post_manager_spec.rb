@@ -6,7 +6,7 @@ RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic) }
 
-  context "default action" do
+  describe "default action" do
     it "creates the post by default" do
       manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
       result = manager.perform
@@ -18,7 +18,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "default action" do
+  describe "default action" do
     fab!(:other_user) { Fabricate(:user) }
 
     it "doesn't enqueue private messages" do
@@ -101,7 +101,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "default handler" do
+  describe "default handler" do
     let(:manager) { NewPostManager.new(user, raw: 'this is new post content', topic_id: topic.id) }
 
     context 'with the settings zeroed out' do
@@ -117,7 +117,7 @@ RSpec.describe NewPostManager do
       end
     end
 
-    context 'basic post/topic count restrictions' do
+    context 'with basic post/topic count restrictions' do
       before do
         SiteSetting.approve_post_count = 1
       end
@@ -324,7 +324,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "new topic handler" do
+  describe "new topic handler" do
     let(:manager) { NewPostManager.new(user, raw: 'this is new topic content', title: 'new topic title') }
     context 'with a high trust level setting for new topics' do
       before do
@@ -337,11 +337,9 @@ RSpec.describe NewPostManager do
         expect(result.reason).to eq(:new_topics_unless_trust_level)
       end
     end
-
   end
 
-  context "extensibility priority" do
-
+  describe "extensibility priority" do
     after do
       NewPostManager.clear_handlers!
     end
@@ -365,11 +363,9 @@ RSpec.describe NewPostManager do
       NewPostManager.add_handler(101, &c)
       expect(NewPostManager.handlers).to eq([c, a, b])
     end
-
   end
 
-  context "extensibility" do
-
+  describe "extensibility" do
     before do
       @counter = 0
 
@@ -465,11 +461,9 @@ RSpec.describe NewPostManager do
       expect(result.post).to be_present
       expect(@counter).to be(0)
     end
-
   end
 
-  context "user needs approval?" do
-
+  describe "user needs approval?" do
     let :user do
       user = Fabricate.build(:user, trust_level: 0)
       user_stat = UserStat.new(post_count: 0)
@@ -661,7 +655,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "via email" do
+  describe "via email" do
     let(:manager) do
       NewPostManager.new(
         topic.user,
@@ -690,7 +684,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "via email with a spam failure" do
+  describe "via email with a spam failure" do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
@@ -725,7 +719,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "via email with an authentication results failure" do
+  describe "via email with an authentication results failure" do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
@@ -759,7 +753,7 @@ RSpec.describe NewPostManager do
     end
   end
 
-  context "private message via email" do
+  describe "private message via email" do
     it "doesn't enqueue authentication results failure" do
       manager = NewPostManager.new(
         topic.user,
@@ -788,5 +782,4 @@ RSpec.describe NewPostManager do
       expect(result.action).to eq(:create_post)
     end
   end
-
 end

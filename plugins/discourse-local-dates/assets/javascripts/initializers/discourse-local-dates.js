@@ -109,7 +109,7 @@ function _rangeElements(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
-  const siteSettings = api.container.lookup("site-settings:main");
+  const siteSettings = api.container.lookup("service:site-settings");
   const defaultTitle = I18n.t("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
   });
@@ -336,7 +336,7 @@ export default {
       return;
     }
 
-    const siteSettings = owner.lookup("site-settings:main");
+    const siteSettings = owner.lookup("service:site-settings");
 
     showPopover(event, {
       trigger: "click",
@@ -357,7 +357,7 @@ export default {
   initialize(container) {
     window.addEventListener("click", this.showDatePopover);
 
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.discourse_local_dates_enabled) {
       $.fn.applyLocalDates = function () {
         deprecated(

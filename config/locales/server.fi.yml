@@ -4165,79 +4165,23 @@ fi:
   wizard:
     title: "Discoursen asennus"
     step:
-      locale:
-        title: "Tervetuloa Discourseen!"
-        fields:
-          default_locale:
-            description: "Mikä on yhteisön oletuskieli?"
-      forum_title:
-        title: "Nimi"
-        description: "Nimi on merkittävä asia, sillä se on <i>ensimmäinen</i> asia, jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
+      introduction:
         fields:
           title:
-            label: "Yhteisön nimi"
             placeholder: "Jennin mesta"
           site_description:
             placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
-          short_site_description:
-            placeholder: "Paras yhteisö ikinä missään"
-      introduction:
-        title: "Johdanto"
-        disabled: "<p>Ketjua otsikolla “%{topic_title}” ei löytynyt.</p> <ul> <li>Jos olet muuttanut otsikkoa, muuta sivuston esittelytekstiä muokkaamalla sitä ketjua.</li> <li>Jos olet poistanut ketjun, luo uusi ketju otsikolla “%{topic_title}”. Ketjun ensimmäisen viestin sisältö on sivustosi esittelyteksti.</li> </ul>"
-        fields:
-          welcome:
-            label: "Tervetuloa-ketju"
-            description: "<p>Kuinka kuvailisit yhteisöä hississä ventovieraalle, jos sinulla olisi minuutti aikaa?</p> <ul> <li>Keille nämä keskustelut on suunnattu?</li> <li>Mistä täällä puhutaan?</li> <li>Miksi täällä kannattaa käydä?</li> </ul> <p>Tervetuloa-ketju on ensimmäinen asia, jonka palstalle saapunut näkee. Ajattele sitä <b>yhden kappaleen mittaisena</b> \"hissipuheena\" tai \"perimmäisenä tavoitteena\".</p>"
-            one_paragraph: "Pidä tervetuloviesti yhden kappaleen mittaisena."
-            extra_description: "Jos olet epävarma, voit ohittaa tämän vaiheen ja muokata tervetuloketjua myöhemmin."
+          default_locale:
+            label: "Kieli"
       privacy:
-        title: "Käyttöoikeudet"
-        description: "<p>Onko yhteisö avoin kaikille vai onko sitä rajattu jäsenyyden, kutsujen tai hyväksynnän avulla? Jos haluat, voit määritellä asioita aluksi yksityisesti ja muuttaa sivuston julkiseksi myöhemmin.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Julkinen"
-                description: "Kenellä tahansa on pääsy yhteisöön"
-              restricted:
-                label: "Yksityinen"
-                description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
-          privacy_options:
-            description: "Kuinka uudet käyttäjät voivat luoda käyttäjätilin?"
-            choices:
-              open:
-                label: "Käyttäjät voivat luoda tilin itsenäisesti."
-              invite_only:
-                label: "Luotettujen käyttäjien tai henkilökunnan on kutsuttava käyttäjät tilin luomista varten."
-              must_approve:
-                label: "Käyttäjät voivat luoda tilin itsenäisesti, mutta henkilökunnan on hyväksyttävä ne."
-      contact:
-        title: "Yhteystiedot"
-        fields:
-          contact_email:
-            label: "Sähköposti"
-            placeholder: "nimi@esimerkki.fi"
-            description: "Tätä yhteisöä ylläpitävän henkilön tai ryhmän sähköpostiosoite. Käytetään vastaanottamaan kriittisiä huomautuksia käsittelemättömistä merkinnöistä ja tietoturvapäivityksistä. Se näkyy myös <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
-          contact_url:
-            label: "Verkkosivu"
-            placeholder: "https://www.esimerkki.fi/ota-yhteytta"
-            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla."
-          site_contact:
-            label: "Automaattiset viestit"
-            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
-      corporate:
-        title: "Organisaatio"
-        description: "Tämä tieto lisätään <a href='%{base_path}/tos' target='blank'>käyttöehtoihin</a>, joka on henkilökunta-alueella sijaitseva ketju, jota voit muokata tarpeen mukaan. Jos sinulla ei ole yritystä, voit ohittaa tämän vaiheen."
-        fields:
-          company_name:
-            label: "Yrityksen nimi"
-            placeholder: "Esimerkkiorganisaatio"
-          governing_law:
-            label: "Sovellettava lainsäädäntö"
-            placeholder: "Kalifornian laki"
-          city_for_disputes:
-            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-            placeholder: "San Francisco, Kalifornia"
+          login_required:
+            placeholder: "Yksityinen"
+            extra_description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
+          must_approve_users:
+            placeholder: "Vie hyväksyttäväksi"
+      ready:
+        title: "Discourse-sivustosi on valmis!"
       styling:
         fields:
           body_font:
@@ -4258,24 +4202,34 @@ fi:
                 label: "Alueet ja tuoreimmat ketjut"
               categories_and_top_topics:
                 label: "Alueet ja suosittuja ketjuja"
-      logos:
-        title: "Logot"
+      branding:
         fields:
           logo:
             label: "Ensisijainen logo"
-            description: "Sivuston vasemmassa yläkulmassa oleva logokuva. Käytä leveää suorakulmaista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1"
           logo_small:
             label: "Neliölogo"
-            description: "Neliön muotoinen versio sivuston logosta. Näkyy sivuston vasemmassa yläkulmassa, kun vierität selaimessa sivua alaspäin, sekä sosiaalisen median julkaisuissa. Mielellään suurempi kuin 512x512."
-      icons:
-        title: "Kuvakkeet"
-        fields:
           favicon:
             label: "Selaimen kuvake"
-            description: "Kuvake, jota käytetään kuvaamaan sivustoa selaimissa, ja joka näyttää hyvältä pienissä kokoluokissa. Suositellut tiedostomuodot ovat PNG tai JPG. Käytämme oletuksena neliön muotoista logoa."
           large_icon:
             label: "Suuri kuvake"
-            description: "Kuvake, jota käytetään kuvaamaan sivustoa moderneilla laitteilla, ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512 × 512. Käytämme oletuksena neliön muotoista logoa."
+      corporate:
+        fields:
+          company_name:
+            label: "Yrityksen nimi"
+            placeholder: "Esimerkkiorganisaatio"
+          governing_law:
+            label: "Sovellettava lainsäädäntö"
+            placeholder: "Kalifornian laki"
+          contact_url:
+            label: "Verkkosivu"
+            placeholder: "https://www.esimerkki.fi/ota-yhteytta"
+            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla."
+          city_for_disputes:
+            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
+            placeholder: "San Francisco, Kalifornia"
+          site_contact:
+            label: "Automaattiset viestit"
+            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."

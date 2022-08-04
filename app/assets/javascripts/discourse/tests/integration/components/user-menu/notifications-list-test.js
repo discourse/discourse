@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
@@ -19,20 +19,26 @@ module(
 
     let notificationsData = getNotificationsData();
     let queryParams = null;
+    let markRead = false;
+    let notificationsFetches = 0;
     hooks.beforeEach(() => {
       pretender.get("/notifications", (request) => {
         queryParams = request.queryParams;
+        notificationsFetches++;
         return response({ notifications: notificationsData });
       });
 
-      pretender.put("/notifications/mark-read", () =>
-        response({ success: true })
-      );
+      pretender.put("/notifications/mark-read", () => {
+        markRead = true;
+        return response({ success: true });
+      });
     });
 
     hooks.afterEach(() => {
       notificationsData = getNotificationsData();
       queryParams = null;
+      markRead = false;
+      notificationsFetches = 0;
     });
 
     const template = hbs`<UserMenu::NotificationsList/>`;
@@ -99,6 +105,26 @@ module(
       });
       await render(template);
       assert.ok(!exists(".panel-body-bottom .btn.notifications-dismiss"));
+    });
+
+    test("dismiss button makes a request to the server and then refreshes the notifications list", async function (assert) {
+      await render(template);
+      notificationsData = getNotificationsData();
+      notificationsData.forEach((notification) => {
+        notification.read = true;
+      });
+      assert.strictEqual(notificationsFetches, 1);
+      await click(".panel-body-bottom .btn.notifications-dismiss");
+      assert.ok(markRead, "request to the server is made");
+      assert.strictEqual(
+        notificationsFetches,
+        2,
+        "notifications list is refreshed"
+      );
+      assert.ok(
+        !exists(".panel-body-bottom .btn.notifications-dismiss"),
+        "dismiss button is not shown"
+      );
     });
   }
 );

@@ -87,3 +87,6 @@ es:
           title: "Indicadores de carga"
         empty_state:
           title: "En caso de vacío"
+        rich_tooltip:
+          description: "Descripción"
+          header: "Encabezado"

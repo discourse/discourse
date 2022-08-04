@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Reviewable, type: :model do
-
   describe ".create" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
@@ -136,7 +135,7 @@ RSpec.describe Reviewable, type: :model do
         expect(Reviewable.list_for(user, status: :pending)).to be_blank
       end
 
-      context 'Reviewing as an admin' do
+      context 'as an admin' do
         before { user.update_columns(moderator: false, admin: true) }
 
         it 'can filter by the target_created_by_id attribute' do
@@ -244,6 +243,63 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe ".unseen_list_for" do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:user) { Fabricate(:user, groups: [group]) }
+    fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
+    fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
+    fab!(:group_reviewable) {
+      Fabricate(:reviewable, reviewable_by_group: group, reviewable_by_moderator: false)
+    }
+
+    context "for admins" do
+      it "returns a list of pending reviewables that haven't been seen by the user" do
+        list = Reviewable.unseen_list_for(admin, preload: false)
+        expect(list).to contain_exactly(admin_reviewable, mod_reviewable, group_reviewable)
+        admin_reviewable.update!(status: Reviewable.statuses[:approved])
+        list = Reviewable.unseen_list_for(admin, preload: false)
+        expect(list).to contain_exactly(mod_reviewable, group_reviewable)
+        admin.update!(last_seen_reviewable_id: group_reviewable.id)
+        expect(Reviewable.unseen_list_for(admin, preload: false).empty?).to eq(true)
+      end
+    end
+
+    context "for moderators" do
+      it "returns a list of pending reviewables that haven't been seen by the user" do
+        list = Reviewable.unseen_list_for(moderator, preload: false)
+        expect(list).to contain_exactly(mod_reviewable)
+
+        group_reviewable.update!(reviewable_by_moderator: true)
+
+        list = Reviewable.unseen_list_for(moderator, preload: false)
+        expect(list).to contain_exactly(mod_reviewable, group_reviewable)
+
+        moderator.update!(last_seen_reviewable_id: mod_reviewable.id)
+
+        list = Reviewable.unseen_list_for(moderator, preload: false)
+        expect(list).to contain_exactly(group_reviewable)
+      end
+    end
+
+    context "for group moderators" do
+      before do
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "returns a list of pending reviewables that haven't been seen by the user" do
+        list = Reviewable.unseen_list_for(user, preload: false)
+        expect(list).to contain_exactly(group_reviewable)
+
+        user.update!(last_seen_reviewable_id: group_reviewable.id)
+
+        list = Reviewable.unseen_list_for(user, preload: false)
+        expect(list).to be_empty
+      end
+    end
+  end
+
   describe ".recent_list_with_pending_first" do
     fab!(:pending_reviewable1) do
       Fabricate(
@@ -336,7 +392,7 @@ RSpec.describe Reviewable, type: :model do
     expect(Reviewable.valid_type?("User")).to eq(false)
   end
 
-  context "events" do
+  describe "events" do
     let!(:moderator) { Fabricate(:moderator) }
     let(:reviewable) { Fabricate(:reviewable) }
 
@@ -354,7 +410,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context "message bus notifications" do
+  describe "message bus notifications" do
     fab!(:moderator) { Fabricate(:moderator) }
     let(:post) { Fabricate(:post) }
 
@@ -539,7 +595,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context "priorities" do
+  describe "priorities" do
     it "returns 0 for unknown priorities" do
       expect(Reviewable.min_score_for_priority(:wat)).to eq(0.0)
     end
@@ -567,7 +623,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context "custom filters" do
+  describe "custom filters" do
     after do
       Reviewable.clear_custom_filters!
     end
@@ -627,7 +683,7 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
-  context 'default actions' do
+  describe 'default actions' do
     let(:reviewable) { Reviewable.new }
     let(:actions) { Reviewable::Actions.new(reviewable, Guardian.new) }
 

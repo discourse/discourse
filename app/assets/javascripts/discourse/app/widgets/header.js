@@ -77,77 +77,108 @@ createWidget("header-notifications", {
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      const unreadNotifications = user.get("unread_notifications");
-      if (!!unreadNotifications) {
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification unread-notifications",
-            rawLabel: unreadNotifications,
-            omitSpan: true,
-            title: "notifications.tooltip.regular",
-            titleOptions: { count: unreadNotifications },
-          })
-        );
-      }
-
-      const unreadHighPriority = user.get("unread_high_priority_notifications");
-      if (!!unreadHighPriority) {
-        // highlight the avatar if the first ever PM is not read
-        if (
-          !user.get("read_first_notification") &&
-          !user.get("enforcedSecondFactor")
-        ) {
-          if (!attrs.active && attrs.ringBackdrop) {
-            contents.push(h("span.ring"));
-            contents.push(h("span.ring-backdrop-spotlight"));
-            contents.push(
-              h(
-                "span.ring-backdrop",
-                {},
-                h("h1.ring-first-notification", {}, [
-                  h(
-                    "span",
-                    { className: "first-notification" },
-                    I18n.t("user.first_notification")
-                  ),
-                  h("span", { className: "read-later" }, [
-                    this.attach("link", {
-                      action: "readLater",
-                      className: "read-later-link",
-                      label: "user.skip_new_user_tips.read_later",
-                    }),
-                  ]),
-                  h("span", {}, [
-                    I18n.t("user.skip_new_user_tips.not_first_time"),
-                    " ",
-                    this.attach("link", {
-                      action: "skipNewUserTips",
-                      className: "skip-new-user-tips",
-                      label: "user.skip_new_user_tips.skip_link",
-                      title: "user.skip_new_user_tips.description",
-                    }),
-                  ]),
-                ])
-              )
-            );
+      if (this.currentUser.redesigned_user_menu_enabled) {
+        const unread = user.all_unread_notifications_count || 0;
+        const reviewables = user.unseen_reviewable_count || 0;
+        const count = unread + reviewables;
+        if (count > 0) {
+          if (this._shouldHighlightAvatar()) {
+            this._addAvatarHighlight(contents);
           }
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification unread-notifications",
+              rawLabel: count,
+              omitSpan: true,
+              title: "notifications.tooltip.regular",
+              titleOptions: { count },
+            })
+          );
+        }
+      } else {
+        const unreadNotifications = user.unread_notifications;
+        if (!!unreadNotifications) {
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification unread-notifications",
+              rawLabel: unreadNotifications,
+              omitSpan: true,
+              title: "notifications.tooltip.regular",
+              titleOptions: { count: unreadNotifications },
+            })
+          );
         }
 
-        // add the counter for the unread high priority
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification unread-high-priority-notifications",
-            rawLabel: unreadHighPriority,
-            omitSpan: true,
-            title: "notifications.tooltip.high_priority",
-            titleOptions: { count: unreadHighPriority },
-          })
-        );
+        const unreadHighPriority = user.unread_high_priority_notifications;
+        if (!!unreadHighPriority) {
+          if (this._shouldHighlightAvatar()) {
+            this._addAvatarHighlight(contents);
+          }
+
+          // add the counter for the unread high priority
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className:
+                "badge-notification unread-high-priority-notifications",
+              rawLabel: unreadHighPriority,
+              omitSpan: true,
+              title: "notifications.tooltip.high_priority",
+              titleOptions: { count: unreadHighPriority },
+            })
+          );
+        }
       }
     }
     return contents;
+  },
+
+  _shouldHighlightAvatar() {
+    const attrs = this.attrs;
+    const { user } = attrs;
+    return (
+      !user.read_first_notification &&
+      !user.enforcedSecondFactor &&
+      !attrs.active &&
+      attrs.ringBackdrop
+    );
+  },
+
+  _addAvatarHighlight(contents) {
+    contents.push(h("span.ring"));
+    contents.push(h("span.ring-backdrop-spotlight"));
+    contents.push(
+      h(
+        "span.ring-backdrop",
+        {},
+        h("h1.ring-first-notification", {}, [
+          h(
+            "span",
+            { className: "first-notification" },
+            I18n.t("user.first_notification")
+          ),
+          h("span", { className: "read-later" }, [
+            this.attach("link", {
+              action: "readLater",
+              className: "read-later-link",
+              label: "user.skip_new_user_tips.read_later",
+            }),
+          ]),
+          h("span", {}, [
+            I18n.t("user.skip_new_user_tips.not_first_time"),
+            " ",
+            this.attach("link", {
+              action: "skipNewUserTips",
+              className: "skip-new-user-tips",
+              label: "user.skip_new_user_tips.skip_link",
+              title: "user.skip_new_user_tips.description",
+            }),
+          ]),
+        ])
+      )
+    );
   },
 });
 
@@ -255,7 +286,10 @@ createWidget("header-icons", {
 
       contents() {
         let { currentUser } = this;
-        if (currentUser && currentUser.reviewable_count) {
+        if (
+          currentUser?.reviewable_count &&
+          !this.currentUser.redesigned_user_menu_enabled
+        ) {
           return h(
             "div.badge-notification.reviewables",
             {

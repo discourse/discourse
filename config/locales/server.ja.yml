@@ -4082,79 +4082,23 @@ ja:
   wizard:
     title: "Discourse のセットアップ"
     step:
-      locale:
-        title: "Discourse へようこそ！"
-        fields:
-          default_locale:
-            description: "コミュニティで使用するデフォルトの言語は何ですか？"
-      forum_title:
-        title: "名前"
-        description: "あなたの名前は遠くから見える標識であり、潜在的な訪問者がコミュニティについて<i>最初</i>に気づくものです。名前とタイトルはコミュニティをどのように説明していますか？"
+      introduction:
         fields:
           title:
-            label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
             placeholder: "純子と純子の仲間がワイワイする場所"
-          short_site_description:
-            placeholder: "史上最高のコミュニティ"
-      introduction:
-        title: "紹介"
-        disabled: "<p>タイトル “%{topic_title}” のトピックが見つかりませんでした。</p><ul><li>タイトルを変更した場合は、トピックを編集してサイトの紹介文を変更してください。</li><li>このトピックを削除してしまった場合は、タイトルが “%{topic_title}” の別のトピックを作成してください。最初の投稿のコンテンツはあなたのサイトの紹介文です。</li></ul>"
-        fields:
-          welcome:
-            label: "ようこそ - トピック"
-            description: "<p>エレベーターで約 1 分間、知らない人にどのようにコミュニティを説明しますか？</p><ul><li>誰を対象にしたディスカッションか</li><li>ここで何を見つけられるか</li><li>なぜアクセスする必要があるのか</li></ul><p>新たにたどり着いた人が最初に読むのがあなたのようこそトピックです。<b>1 段落</b>にまとめた 'エレベーターピッチ' または 'ミッションステートメント' として考えてください。 </p>"
-            one_paragraph: "ようこそメッセージを 1 段落に制限してください。"
-            extra_description: "よくわからない場合は、このステップを省略して、後でようこそトピックを編集することができます。"
+          default_locale:
+            label: "言語"
       privacy:
-        title: "アクセス"
-        description: "<p>あなたのコミュニティは誰にでもオープンされていますか、それともメンバーシップ、招待、または承認によって制限されていますか？必要に応じて、非公開でセットアップしてから、後で公開に切り替えることができます。</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "公開"
-                description: "このコミュニティには誰でもアクセスできる"
-              restricted:
-                label: "非公開"
-                description: "ログインユーザーのみがこのコミュニティにアクセスできる"
-          privacy_options:
-            description: "新しいユーザーはどのようにしてアカウントに登録しますか？"
-            choices:
-              open:
-                label: "ユーザーは自己登録できます。"
-              invite_only:
-                label: "ユーザーは信頼できるユーザーまたはスタッフから招待されてから登録する必要があります。"
-              must_approve:
-                label: "ユーザーは自己登録できますが、スタッフによる承認が必要です。"
-      contact:
-        title: "連絡先"
-        fields:
-          contact_email:
-            label: "メール"
-            placeholder: "name@example.com"
-            description: "このコミュニティの責任者またはグループのメールアドレス。未対応の通知、セキュリティ更新などの重要な通知に使用され、緊急時のコミュニティ連絡先として、<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>にも表示されます。"
-          contact_url:
-            label: "ウェブページ"
-            placeholder: "https://www.example.com/contact-us"
-            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
-          site_contact:
-            label: "自動メッセージ"
-            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
-      corporate:
-        title: "組織"
-        description: "この情報は、あなたの<a href='%{base_path}/tos' target='blank'>利用規約</a>に入力されます。これは、「スタッフ」カテゴリで編集できるトピックです。会社がない場合は、今のところはこのステップを省略できます。"
-        fields:
-          company_name:
-            label: "会社名"
-            placeholder: "組織の例"
-          governing_law:
-            label: "準拠法"
-            placeholder: "カリフォルニア州法"
-          city_for_disputes:
-            label: "紛争都市"
-            placeholder: "カリフォルニア州サンフランシスコ"
+          login_required:
+            placeholder: "非公開"
+            extra_description: "ログインユーザーのみがこのコミュニティにアクセスできる"
+          must_approve_users:
+            placeholder: "要承認"
+      ready:
+        title: "あなたの Discourse の準備が整いました！"
       styling:
         fields:
           body_font:
@@ -4175,24 +4119,34 @@ ja:
                 label: "カテゴリと最新トピック"
               categories_and_top_topics:
                 label: "カテゴリと人気トピック"
-      logos:
-        title: "ロゴ"
+      branding:
         fields:
           logo:
             label: "プライマリーロゴ"
-            description: "サイトの左上にあるロゴ画像です。高さ 120、縦横比 3：1を超える広幅の長方形の画像を使用してください。"
           logo_small:
             label: "正方形のロゴ"
-            description: "正方形バージョンのロゴ。ブラウザで下にスクロールしたときにサイトの左上に、またソーシャルプラットフォームで共有したときに表示されます。512x512 よりも大きいサイズが最適です。"
-      icons:
-        title: "アイコン"
-        fields:
           favicon:
             label: "ブラウザアイコン"
-            description: "ウェブブラウザでサイトを表現するために使用され、小さいサイズで見栄えが良いアイコン画像。推奨される画像の拡張子は PNG または JPG です。デフォルトでは正方形のロゴを使用します。"
           large_icon:
             label: "大きなアイコン"
-            description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
+      corporate:
+        fields:
+          company_name:
+            label: "会社名"
+            placeholder: "組織の例"
+          governing_law:
+            label: "準拠法"
+            placeholder: "カリフォルニア州法"
+          contact_url:
+            label: "ウェブページ"
+            placeholder: "https://www.example.com/contact-us"
+            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
+          city_for_disputes:
+            label: "紛争都市"
+            placeholder: "カリフォルニア州サンフランシスコ"
+          site_contact:
+            label: "自動メッセージ"
+            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

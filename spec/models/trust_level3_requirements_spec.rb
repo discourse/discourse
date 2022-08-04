@@ -448,8 +448,7 @@ RSpec.describe TrustLevel3Requirements do
     end
   end
 
-  context "requirements with defaults" do
-
+  describe "requirements with defaults" do
     before do
       tl3_requirements.stubs(:min_days_visited).returns(50)
       tl3_requirements.stubs(:min_topics_replied_to).returns(10)

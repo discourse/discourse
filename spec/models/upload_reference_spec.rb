@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadReference do
-  context 'badge uploads' do
+  describe 'badge uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload references' do
@@ -18,7 +18,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'category uploads' do
+  describe 'category uploads' do
     fab!(:upload1) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
 
@@ -35,7 +35,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'custom emoji uploads' do
+  describe 'custom emoji uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload references' do
@@ -51,7 +51,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'group uploads' do
+  describe 'group uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload references' do
@@ -68,7 +68,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'post uploads' do
+  describe 'post uploads' do
     fab!(:upload) { Fabricate(:upload) }
     fab!(:post) { Fabricate(:post, raw: "[](#{upload.short_url})") }
 
@@ -85,7 +85,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'site setting uploads' do
+  describe 'site setting uploads' do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
     fab!(:upload) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
@@ -114,7 +114,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'theme field uploads' do
+  describe 'theme field uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload refererences' do
@@ -139,7 +139,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'theme setting uploads' do
+  describe 'theme setting uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload refererences' do
@@ -162,7 +162,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'user uploads' do
+  describe 'user uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload references' do
@@ -179,7 +179,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'user avatar uploads' do
+  describe 'user avatar uploads' do
     fab!(:upload1) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
 
@@ -196,7 +196,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'user export uploads' do
+  describe 'user export uploads' do
     fab!(:upload) { Fabricate(:upload) }
 
     it 'creates upload references' do
@@ -219,7 +219,7 @@ RSpec.describe UploadReference do
     end
   end
 
-  context 'user profile uploads' do
+  describe 'user profile uploads' do
     fab!(:user) { Fabricate(:user) }
     fab!(:upload1) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }

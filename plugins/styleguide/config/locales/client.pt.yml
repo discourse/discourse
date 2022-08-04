@@ -87,3 +87,6 @@ pt:
           title: "Spinners"
         empty_state:
           title: "Estado vazio"
+        rich_tooltip:
+          description: "Descrição"
+          header: "Cabeçalho"

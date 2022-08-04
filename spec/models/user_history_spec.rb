@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserHistory do
-
   describe '#actions' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @actions = UserHistory.actions
       end

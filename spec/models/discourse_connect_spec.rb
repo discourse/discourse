@@ -138,7 +138,7 @@ RSpec.describe DiscourseConnect do
     expect(user.name).to eq("Bob O'Bob")
   end
 
-  context "reviewables" do
+  describe "reviewables" do
     let(:sso) do
       new_discourse_sso.tap do |sso|
         sso.username = "staged"
@@ -639,7 +639,7 @@ RSpec.describe DiscourseConnect do
     expect(sso.nonce).to_not be_nil
   end
 
-  context 'nonce error' do
+  describe 'nonce error' do
     it "generates correct error message when nonce has already been used" do
       _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
@@ -672,7 +672,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'user locale' do
+  describe 'user locale' do
     it 'sets default user locale if specified' do
       SiteSetting.allow_user_locale = true
 
@@ -702,7 +702,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'trusting emails' do
+  describe 'trusting emails' do
     let(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
@@ -775,7 +775,7 @@ RSpec.describe DiscourseConnect do
 
   end
 
-  context 'welcome emails' do
+  describe 'welcome emails' do
     let(:sso) {
       sso = new_discourse_sso
       sso.username = "test"
@@ -797,7 +797,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'setting title for a user' do
+  describe 'setting title for a user' do
     let(:sso) {
       sso = new_discourse_sso
       sso.username = 'test'
@@ -824,7 +824,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'setting bio for a user' do
+  describe 'setting bio for a user' do
     let(:sso) do
       sso = new_discourse_sso
       sso.username = "test"

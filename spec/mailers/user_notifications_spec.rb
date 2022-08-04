@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotifications do
-
   let(:user) { Fabricate(:admin) }
 
   describe "#get_context_posts" do
@@ -50,11 +49,9 @@ RSpec.describe UserNotifications do
       SiteSetting.private_email = true
       expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(0)
     end
-
   end
 
   describe ".signup" do
-
     subject { UserNotifications.signup(user) }
 
     it "works" do
@@ -63,11 +60,9 @@ RSpec.describe UserNotifications do
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
     end
-
   end
 
   describe ".forgot_password" do
-
     subject { UserNotifications.forgot_password(user) }
 
     it "works" do
@@ -141,7 +136,6 @@ RSpec.describe UserNotifications do
   end
 
   describe '.digest' do
-
     subject { UserNotifications.digest(user) }
 
     after do
@@ -149,7 +143,6 @@ RSpec.describe UserNotifications do
     end
 
     context "without new topics" do
-
       it "doesn't send the email" do
         expect(subject.to).to be_blank
       end
@@ -169,7 +162,6 @@ RSpec.describe UserNotifications do
     end
 
     context "with new topics" do
-
       let!(:popular_topic) { Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago) }
 
       it "works" do
@@ -299,7 +291,6 @@ RSpec.describe UserNotifications do
         expect(html).to match(' xml:lang="pl-PL"')
       end
     end
-
   end
 
   describe '.user_replied' do
@@ -638,7 +629,7 @@ RSpec.describe UserNotifications do
         end
       end
 
-      context "one group in pm" do
+      context "with one group in pm" do
         before do
           topic.allowed_groups = [group]
         end
@@ -646,7 +637,7 @@ RSpec.describe UserNotifications do
         include_examples "includes first group name"
       end
 
-      context "multiple groups in pm" do
+      context "with multiple groups in pm" do
         let(:group2) { Fabricate(:group) }
 
         before do
@@ -656,7 +647,7 @@ RSpec.describe UserNotifications do
         include_examples "includes first group name"
       end
 
-      context "no groups in pm" do
+      context "with no groups in pm" do
         it "includes %{optional_pm} in subject" do
           expect(mail.subject).to include("[PM] ")
         end
@@ -749,7 +740,7 @@ RSpec.describe UserNotifications do
   end
 
   shared_examples "supports reply by email" do
-    context "reply_by_email" do
+    context "with reply_by_email" do
       it "should have allow_reply_by_email set when that feature is enabled" do
         expects_build_with(has_entry(:allow_reply_by_email, true))
       end
@@ -757,7 +748,7 @@ RSpec.describe UserNotifications do
   end
 
   shared_examples "no reply by email" do
-    context "reply_by_email" do
+    context "with reply_by_email" do
       it "doesn't support reply by email" do
         expects_build_with(Not(has_entry(:allow_reply_by_email, true)))
       end
@@ -765,7 +756,7 @@ RSpec.describe UserNotifications do
   end
 
   shared_examples "respect for private_email" do
-    context "private_email" do
+    context "with private_email" do
       it "doesn't support reply by email" do
         SiteSetting.private_email = true
 
@@ -789,7 +780,7 @@ RSpec.describe UserNotifications do
 
   # The parts of emails that are derived from templates are translated
   shared_examples "sets user locale" do
-    context "set locale for translating templates" do
+    context "with set locale for translating templates" do
       it "sets the locale" do
         expects_build_with(has_key(:locale))
       end
@@ -992,7 +983,7 @@ RSpec.describe UserNotifications do
       include_examples "sets user locale"
     end
 
-    context "shows the right name in 'From' field" do
+    context "when showing the right name in 'From' field" do
       let(:inviter) { Fabricate(:user) }
       let(:invitee) { Fabricate(:user) }
 
@@ -1043,22 +1034,21 @@ RSpec.describe UserNotifications do
   end
 
   # notification emails derived from templates are translated into the user's locale
-  shared_context "notification derived from template" do
+  shared_context "with notification derived from template" do
     let(:user) { Fabricate(:user, locale: locale) }
     let(:mail_type) { mail_type }
     let(:notification) { Fabricate(:notification, user: user) }
   end
 
   describe "notifications from template" do
-
-    context "user locale is allowed" do
+    context "when user locale is allowed" do
       before do
         SiteSetting.allow_user_locale = true
       end
 
       %w(signup signup_after_approval confirm_old_email notify_old_email confirm_new_email
          forgot_password admin_login account_created).each do |mail_type|
-        include_examples "notification derived from template" do
+        include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
@@ -1068,14 +1058,14 @@ RSpec.describe UserNotifications do
       end
     end
 
-    context "user locale is not allowed" do
+    context "when user locale is not allowed" do
       before do
         SiteSetting.allow_user_locale = false
       end
 
       %w(signup signup_after_approval notify_old_email confirm_old_email confirm_new_email
          forgot_password admin_login account_created).each do |mail_type|
-        include_examples "notification derived from template" do
+        include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
@@ -1197,7 +1187,7 @@ RSpec.describe UserNotifications do
       expect(mail.body).to include("May 25, 2020,  4:00pm")
     end
 
-    context "user doesn't have timezone set" do
+    context "when user doesn't have timezone set" do
       before do
         user.user_option.timezone = nil
       end
@@ -1229,7 +1219,7 @@ RSpec.describe UserNotifications do
       expect(mail.body).to include("May 25, 2020,  4:00pm")
     end
 
-    context "user doesn't have timezone set" do
+    context "when user doesn't have timezone set" do
       before do
         user.user_option.timezone = nil
       end

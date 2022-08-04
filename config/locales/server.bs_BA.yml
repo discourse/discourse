@@ -1047,25 +1047,12 @@ bs_BA:
       title: "Pošalji ponovo email aktivacije"
   wizard:
     step:
-      forum_title:
-        title: "Ime"
       privacy:
-        title: "Pristup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Javno"
-              restricted:
-                label: "Privatno"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizacija"
+          login_required:
+            placeholder: "Privatno"
+          must_approve_users:
+            placeholder: "Zahtjeva Dozvolu"
       styling:
         fields:
           styling_preview:
@@ -1080,6 +1067,10 @@ bs_BA:
                 label: "Kategorije i zadnje teme"
               categories_and_top_topics:
                 label: "Kategorije i top teme"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:

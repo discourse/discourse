@@ -2812,6 +2812,7 @@ lv:
         zero: "%{count} jaunas"
         one: "%{count} jauna"
         other: "%{count} jauna"
+      more: "Vairāk..."
       sections:
         messages:
           header_link_text: "Ziņas"
@@ -3710,14 +3711,13 @@ lv:
           topics: "Tēmas"
   wizard_js:
     wizard:
-      done: "Pabeigt"
       back: "Atpakaļ"
       next: "Nākamais"
+      step-text: "Solis"
       step: "%{current} no %{total}"
       upload: "Augšupielādēt"
       uploading: "Notiek ielāde..."
       upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-      quit: "Varbūt vēlāk"
       invites:
         add_user: "Pievienot"
         none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"

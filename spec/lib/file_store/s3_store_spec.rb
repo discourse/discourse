@@ -24,7 +24,7 @@ RSpec.describe FileStore::S3Store do
     SiteSetting.s3_region = 'us-west-1'
   end
 
-  context 'uploading to s3' do
+  describe 'uploading to s3' do
     let(:etag) { "etag" }
 
     describe "#store_upload" do
@@ -189,7 +189,7 @@ RSpec.describe FileStore::S3Store do
     end
   end
 
-  context 'copying files in S3' do
+  describe 'copying files in S3' do
     describe '#copy_file' do
       it "copies the from in S3 with the right paths" do
         upload.update!(
@@ -211,7 +211,7 @@ RSpec.describe FileStore::S3Store do
     end
   end
 
-  context 'removal from s3' do
+  describe 'removal from s3' do
     describe "#remove_upload" do
       it "removes the file from s3 with the right paths" do
         upload_key = Discourse.store.get_path_for_upload(upload)
@@ -380,7 +380,7 @@ RSpec.describe FileStore::S3Store do
     end
   end
 
-  context 'update ACL' do
+  describe 'update ACL' do
     before do
       SiteSetting.authorized_extensions = "pdf|png"
     end

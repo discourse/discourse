@@ -32,7 +32,7 @@ RSpec.describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
-  context 'privacy step' do
+  describe 'privacy step' do
     let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
 
     it 'should set the right default value for the fields' do
@@ -55,7 +55,7 @@ RSpec.describe Wizard::Builder do
     end
   end
 
-  context 'styling' do
+  describe 'styling' do
     let(:styling_step) { wizard.steps.find { |s| s.id == 'styling' } }
     let(:font_field) { styling_step.fields[1] }
     fab!(:theme) { Fabricate(:theme) }
@@ -65,8 +65,8 @@ RSpec.describe Wizard::Builder do
       expect(font_field.choices.size).to eq(DiscourseFonts.fonts.size)
     end
 
-    context "colors" do
-      describe "when the default theme has not been override" do
+    context "with colors" do
+      context "when the default theme has not been override" do
         before do
           SiteSetting.find_by(name: "default_theme_id").destroy!
         end
@@ -77,7 +77,7 @@ RSpec.describe Wizard::Builder do
         end
       end
 
-      describe "when the default theme has been override and the color scheme doesn't have a base scheme" do
+      context "when the default theme has been override and the color scheme doesn't have a base scheme" do
         let(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: nil) }
 
         before do
@@ -91,7 +91,7 @@ RSpec.describe Wizard::Builder do
         end
       end
 
-      describe "when the default theme has been overridden by a theme without a color scheme" do
+      context "when the default theme has been overridden by a theme without a color scheme" do
         before do
           theme.set_default!
         end
@@ -102,7 +102,7 @@ RSpec.describe Wizard::Builder do
         end
       end
 
-      describe "when the default theme has been overridden by a theme with a color scheme" do
+      context "when the default theme has been overridden by a theme with a color scheme" do
         before do
           theme.update(color_scheme_id: ColorScheme.find_by_name("Dark").id)
           theme.set_default!
@@ -116,7 +116,7 @@ RSpec.describe Wizard::Builder do
     end
   end
 
-  context 'branding' do
+  describe 'branding' do
     let(:branding_step) { wizard.steps.find { |s| s.id == 'branding' } }
 
     it 'should set the right default value for the fields' do

@@ -3626,6 +3626,7 @@ pt_BR:
       new_count:
         one: "%{count} nova"
         other: "%{count} novas"
+      more: "Mais..."
       sections:
         messages:
           header_link_text: "Mensagens"
@@ -5186,15 +5187,13 @@ pt_BR:
           replace: "Substituir"
   wizard_js:
     wizard:
-      done: "Concluído(a)"
-      finish: "Finalizar"
       back: "Voltar"
       next: "Próximo"
+      step-text: "Intervalo"
       step: "%{current} de %{total}"
       upload: "Enviar"
       uploading: "Enviando..."
       upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
-      quit: "Talvez mais tarde"
       staff_count:
         one: "Sua comunidade tem %{count} pessoa (você). "
         other: "Sua comunidade tem %{count} pessoas, incluindo você."

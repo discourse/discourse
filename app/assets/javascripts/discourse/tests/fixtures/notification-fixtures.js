@@ -23,7 +23,7 @@ export default {
         id: 123,
         notification_type: NOTIFICATION_TYPES.replied,
         read: false,
-        post_number: 2,
+        post_number: 1,
         topic_id: 1234,
         slug: "a-slug",
         data: { topic_title: "some title", display_username: "velesin" },

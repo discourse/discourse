@@ -13,7 +13,6 @@ RSpec.describe TagsController do
   end
 
   describe '#index' do
-
     fab!(:test_tag) { Fabricate(:tag, name: 'test') }
     fab!(:topic_tag) { Fabricate(:tag, name: 'topic-test', topic_count: 1) }
     fab!(:synonym) { Fabricate(:tag, name: 'synonym', target_tag: topic_tag) }
@@ -43,7 +42,7 @@ RSpec.describe TagsController do
         )
       end
 
-      context "enabled" do
+      context "when enabled" do
         before do
           SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
           sign_in(admin)
@@ -64,7 +63,7 @@ RSpec.describe TagsController do
         end
       end
 
-      context "disabled" do
+      context "when disabled" do
         before do
           SiteSetting.pm_tags_allowed_for_groups = ""
           sign_in(admin)
@@ -140,7 +139,7 @@ RSpec.describe TagsController do
         expect(response.parsed_body["extras"]["categories"]).to be_empty
       end
 
-      context "restricted to a category" do
+      context "when restricted to a category" do
         before do
           category.tags = [Tag.find_by_name("staff1")]
         end
@@ -168,7 +167,7 @@ RSpec.describe TagsController do
         end
       end
 
-      context "listed by group" do
+      context "when listed by group" do
         before do
           SiteSetting.tags_listed_by_group = true
         end
@@ -393,7 +392,7 @@ RSpec.describe TagsController do
       expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
     end
 
-    context 'tag belongs to a tag group' do
+    context 'when tag belongs to a tag group' do
       fab!(:tag_group) { Fabricate(:tag_group, tags: [tag]) }
 
       it "returns tag groups if tag groups are visible" do
@@ -408,7 +407,7 @@ RSpec.describe TagsController do
         expect(response.parsed_body['tag_info'].has_key?('tag_group_names')).to eq(false)
       end
 
-      context "restricted to a private category" do
+      context "when restricted to a private category" do
         let!(:private_category) do
           Fabricate(:private_category,
             group: Fabricate(:group),
@@ -551,7 +550,7 @@ RSpec.describe TagsController do
     fab!(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
     fab!(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
-    context 'tagging disabled' do
+    context 'with tagging disabled' do
       it "returns 404" do
         SiteSetting.tagging_enabled = false
         get "/tag/#{tag.name}/l/latest.json"
@@ -559,7 +558,7 @@ RSpec.describe TagsController do
       end
     end
 
-    context 'tagging enabled' do
+    context 'with tagging enabled' do
       def parse_topic_ids
         response.parsed_body["topic_list"]["topics"]
           .map { |topic| topic["id"] }
@@ -651,7 +650,6 @@ RSpec.describe TagsController do
       end
 
       context "when logged in" do
-
         before do
           sign_in(user)
         end
@@ -662,7 +660,7 @@ RSpec.describe TagsController do
           expect(response.status).to eq(200)
         end
 
-        context "muted tags" do
+        context "with muted tags" do
           before do
             TagUser.create!(
               user_id: user.id,
@@ -744,7 +742,7 @@ RSpec.describe TagsController do
   end
 
   describe '#search' do
-    context 'tagging disabled' do
+    context 'with tagging disabled' do
       it "returns 404" do
         SiteSetting.tagging_enabled = false
         get "/tags/filter/search.json", params: { q: 'stuff' }
@@ -752,7 +750,7 @@ RSpec.describe TagsController do
       end
     end
 
-    context 'tagging enabled' do
+    context 'with tagging enabled' do
       it "can return some tags" do
         tag_names = ['stuff', 'stinky', 'stumped']
         tag_names.each { |name| Fabricate(:tag, name: name) }
@@ -903,7 +901,7 @@ RSpec.describe TagsController do
   end
 
   describe '#destroy' do
-    context 'tagging enabled' do
+    context 'with tagging enabled' do
       before do
         sign_in(admin)
       end
@@ -936,7 +934,7 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    context 'logged in' do
+    context 'when logged in' do
       before do
         sign_in(admin)
       end
@@ -1025,7 +1023,7 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    context 'signed in as admin' do
+    context 'when signed in as admin' do
       before { sign_in(admin) }
 
       it 'can make a tag a synonym of another tag' do
@@ -1072,7 +1070,7 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    context 'signed in as admin' do
+    context 'when signed in as admin' do
       before { sign_in(admin) }
 
       it "can remove a synonym from a tag" do

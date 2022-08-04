@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe UserOption do
-
   describe "#ensure_consistency!" do
     it "recreates missing user option records" do
       user = Fabricate(:user)
@@ -104,7 +103,7 @@ RSpec.describe UserOption do
         expect(user.user_option.redirected_to_top).to eq(nil)
       end
 
-      context "and when top is in the `SiteSetting.top_menu`" do
+      context "when top is in the `SiteSetting.top_menu`" do
         before { SiteSetting.top_menu = "latest|top" }
 
         it "should have no reason when there are not enough topics" do
@@ -112,8 +111,7 @@ RSpec.describe UserOption do
           expect(user.user_option.redirected_to_top).to eq(nil)
         end
 
-        context "and there are enough topics" do
-
+        context "when there are enough topics" do
           before { SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly) }
 
           describe "a new user" do
@@ -154,21 +152,16 @@ RSpec.describe UserOption do
               expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
                                                                period: :monthly)
             end
-
           end
-
         end
-
       end
-
     end
-
   end
 
   describe '.user_tzinfo' do
     fab!(:user) { Fabricate(:user) }
 
-    context 'user with valid timezone given' do
+    context 'with user with valid timezone given' do
       before do
         user.user_option.update(timezone: 'Europe/Paris')
       end
@@ -178,7 +171,7 @@ RSpec.describe UserOption do
       end
     end
 
-    context 'user with invalid timezone given' do
+    context 'with user with invalid timezone given' do
       before do
         user.user_option.update(timezone: 'Catopia/Catcity')
       end

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe UserDestroyer do
-
   fab!(:user) { Fabricate(:user_with_secondary_email) }
   fab!(:admin) { Fabricate(:admin) }
 
-  describe 'new' do
+  describe '.new' do
     it 'raises an error when user is nil' do
       expect { UserDestroyer.new(nil) }.to raise_error(Discourse::InvalidParameters)
     end
@@ -15,7 +14,7 @@ RSpec.describe UserDestroyer do
     end
   end
 
-  describe 'destroy' do
+  describe '#destroy' do
     it 'raises an error when user is nil' do
       expect { UserDestroyer.new(admin).destroy(nil) }.to raise_error(Discourse::InvalidParameters)
     end
@@ -71,7 +70,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user deletes self' do
+    context 'when user deletes self' do
       let(:destroy_opts) { { delete_posts: true, context: "/u/username/preferences/account" } }
       subject(:destroy) { UserDestroyer.new(user).destroy(user, destroy_opts) }
 
@@ -83,7 +82,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'context is missing' do
+    context 'when context is missing' do
       it "logs warning message if context is missing" do
         logger = track_log_messages do
           UserDestroyer.new(admin).destroy(user)
@@ -137,13 +136,13 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user has posts' do
+    context 'when user has posts' do
       let!(:topic_starter) { Fabricate(:user) }
       let!(:topic) { Fabricate(:topic, user: topic_starter) }
       let!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
       let!(:post) { Fabricate(:post, user: user, topic: topic) }
 
-      context "delete_posts is false" do
+      context "when delete_posts is false" do
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }
         before do
           user.stubs(:post_count).returns(1)
@@ -157,10 +156,10 @@ RSpec.describe UserDestroyer do
         end
       end
 
-      context "delete_posts is true" do
+      context "when delete_posts is true" do
         let(:destroy_opts) { { delete_posts: true } }
 
-        context "staff deletes user" do
+        context "when staff deletes user" do
           subject(:destroy) { UserDestroyer.new(admin).destroy(user, destroy_opts) }
 
           include_examples "successfully destroy a user"
@@ -186,7 +185,7 @@ RSpec.describe UserDestroyer do
             expect(spammer_topic.user_id).to eq(nil)
           end
 
-          context "delete_as_spammer is true" do
+          context "when delete_as_spammer is true" do
 
             before { destroy_opts[:delete_as_spammer] = true }
 
@@ -204,7 +203,7 @@ RSpec.describe UserDestroyer do
           end
         end
 
-        context "users deletes self" do
+        context "when users deletes self" do
           subject(:destroy) { UserDestroyer.new(user).destroy(user, destroy_opts) }
 
           include_examples "successfully destroy a user"
@@ -219,7 +218,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user was invited' do
+    context 'when user was invited' do
       it "should delete the invite of user" do
         invite = Fabricate(:invite)
         topic_invite = invite.topic_invites.create!(topic: Fabricate(:topic))
@@ -235,7 +234,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user created category' do
+    context 'when user created category' do
       let!(:topic) { Fabricate(:topic, user: user) }
       let!(:first_post) { Fabricate(:post, user: user, topic: topic) }
       let!(:second_post) { Fabricate(:post, user: user, topic: topic) }
@@ -252,7 +251,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user has no posts, but user_stats table has post_count > 0' do
+    context 'when user has no posts, but user_stats table has post_count > 0' do
       before do
         # out of sync user_stat data shouldn't break UserDestroyer
         user.user_stat.update_attribute(:post_count, 1)
@@ -263,7 +262,7 @@ RSpec.describe UserDestroyer do
       include_examples "successfully destroy a user"
     end
 
-    context 'user has deleted posts' do
+    context 'when user has deleted posts' do
       let!(:deleted_post) { Fabricate(:post, user: user, deleted_at: 1.hour.ago) }
       it "should mark the user's deleted posts as belonging to a nuked user" do
         expect { UserDestroyer.new(admin).destroy(user) }.to change { User.count }.by(-1)
@@ -271,8 +270,8 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user has no posts' do
-      context 'and destroy succeeds' do
+    context 'when user has no posts' do
+      context 'when destroy succeeds' do
         let(:destroy_opts) { {} }
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }
 
@@ -280,7 +279,7 @@ RSpec.describe UserDestroyer do
         include_examples "email block list"
       end
 
-      context 'and destroy fails' do
+      context 'when destroy fails' do
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }
 
         it 'should not log the action' do
@@ -291,8 +290,8 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user has posts with links' do
-      context 'external links' do
+    context 'when user has posts with links' do
+      context 'with external links' do
         before do
           @post = Fabricate(:post_with_external_links, user: user)
           TopicLink.extract_from(@post)
@@ -309,7 +308,7 @@ RSpec.describe UserDestroyer do
         end
       end
 
-      context 'internal links' do
+      context 'with internal links' do
         before do
           @post = Fabricate(:post_with_external_links, user: user)
           TopicLink.extract_from(@post)
@@ -335,13 +334,13 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'ip address screening' do
+    context 'with ip address screening' do
       it "doesn't create screened_ip_address records by default" do
         ScreenedIpAddress.expects(:watch).never
         UserDestroyer.new(admin).destroy(user)
       end
 
-      context "block_ip is true" do
+      context "when block_ip is true" do
         it "creates a new screened_ip_address record" do
           ScreenedIpAddress.expects(:watch).with(user.ip_address).returns(stub_everything)
           UserDestroyer.new(admin).destroy(user, block_ip: true)
@@ -356,7 +355,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user created a category' do
+    context 'when user created a category' do
       let!(:category) { Fabricate(:category_with_definition, user: user) }
 
       it "assigns the system user to the categories" do
@@ -385,7 +384,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user liked things' do
+    context 'when user liked things' do
       before do
         @topic = Fabricate(:topic, user: Fabricate(:user))
         @post = Fabricate(:post, user: @topic.user, topic: @topic)
@@ -400,7 +399,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user belongs to groups that grant trust level' do
+    context 'when user belongs to groups that grant trust level' do
       let(:group) { Fabricate(:group, grant_trust_level: 4) }
 
       before do
@@ -436,7 +435,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user has staff action logs' do
+    context 'when user has staff action logs' do
       before do
         logger = StaffActionLogger.new(user)
         logger.log_site_setting_change(
@@ -467,7 +466,7 @@ RSpec.describe UserDestroyer do
       end
     end
 
-    context 'user got an email' do
+    context 'when user got an email' do
       let!(:email_log) { Fabricate(:email_log, user: user) }
 
       it "does not delete the email log" do
@@ -477,5 +476,4 @@ RSpec.describe UserDestroyer do
       end
     end
   end
-
 end

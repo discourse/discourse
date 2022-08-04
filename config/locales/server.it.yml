@@ -3962,79 +3962,23 @@ it:
   wizard:
     title: "Configurazione Discourse"
     step:
-      locale:
-        title: "Benvenuto sul tuo Discourse!"
-        fields:
-          default_locale:
-            description: "Qual è il linguaggio predefinito della tua comunità?"
-      forum_title:
-        title: "Nome"
-        description: "Il tuo nome è un segno visibile in lontananza, la <i>prima</i> cosa che i visitatori potenziali noteranno sulla tua comunità. Cosa dice il tuo nome e il tuo titolo sulla tua comunità?"
+      introduction:
         fields:
           title:
-            label: "Il nome della tua comunità"
             placeholder: "Il Ritrovo di Jane"
           site_description:
             placeholder: "Un posto per Jane e per i suoi amici dove discutere di cose forti"
-          short_site_description:
-            placeholder: "La miglior comunità di sempre"
-      introduction:
-        title: "Introduzione"
-        disabled: "<p> Non è stato possibile trovare alcun argomento con il titolo \"%{topic_title}\". </p><ul><li> Se hai cambiato il titolo, modifica quell'argomento per cambiare il testo introduttivo del tuo sito. </li><li> Se hai eliminato questo argomento, creane un altro avente per titolo '%{topic_title}'. Il contenuto del primo messaggio è il testo introduttivo del tuo sito. </li></ul>"
-        fields:
-          welcome:
-            label: "Argomento di Benvenuto"
-            description: "<p>Come descriveresti la tua comunità ad uno sconosciuto su un ascensore in circa 1 minuto?</p><ul><li>Per chi sono queste discussioni?</li><li>Cosa posso trovare qui?</li><li>Perché dovrei visitare il sito?</li></ul><p>Il tuo argomento di benvenuto è la prima cosa che i nuovi arrivati leggeranno. Pensalo come un 'discorso in ascensore' o una 'dichiarazione di intenti' di <b>un paragrafo</b>.</p>"
-            one_paragraph: "Restringi il tuo messaggio di benvenuto a un paragrafo."
-            extra_description: "Se non si è sicuri, è possibile saltare questo passaggio e modificare l'argomento di benvenuto in un secondo momento."
+          default_locale:
+            label: "Lingua"
       privacy:
-        title: "Accesso"
-        description: "<p>La tua comunità è aperta a tutti o è limitata da appartenenza, invito o approvazione? Se si preferisce, puoi configurare le cose in privato, quindi passare a pubblico in seguito.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Pubblico"
-                description: "Chiunque può accedere a questa comunità"
-              restricted:
-                label: "Privato"
-                description: "Solo gli utenti registrati possono accedere a questa comunità"
-          privacy_options:
-            description: "Come fanno i nuovi utenti a registrare un account?"
-            choices:
-              open:
-                label: "Gli utenti possono registrarsi autonomamente."
-              invite_only:
-                label: "Gli utenti devono essere invitati da utenti attendibili o dallo staff prima di potersi registrare."
-              must_approve:
-                label: "Gli utenti possono registrarsi autonomamente, ma devono essere approvati dallo staff."
-      contact:
-        title: "Contatto"
-        fields:
-          contact_email:
-            label: "Email"
-            placeholder: "nome@esempio.com"
-            description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche come segnalazioni non gestite, aggiornamenti di sicurezza e sulla tua <a href='%{base_path}/about' target='_blank'>pagina Informazioni</a> per un contatto urgente."
-          contact_url:
-            label: "Sito Web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a>."
-          site_contact:
-            label: "Messaggi Automatici"
-            description: "Tutti i messaggi personali automatici di Discourse, come avvisi di segnalazione e notifiche di completamento dei backup, saranno inviati da questo utente."
-      corporate:
-        title: "Organizzazione"
-        description: "Queste informazioni saranno inserite nei tuoi <a href='%{base_path}/tos' target='blank'>Termini di Servizio</a>, che sono un Argomento aggiornabile nella Categoria Staff. Se non hai un'azienda, puoi anche saltare questo passo, per ora."
-        fields:
-          company_name:
-            label: "Nome azienda"
-            placeholder: "Organizzazione d'esempio"
-          governing_law:
-            label: "Diritto applicabile"
-            placeholder: "Legge della California"
-          city_for_disputes:
-            label: "Sede per eventuali controversie"
-            placeholder: "San Francisco, California"
+          login_required:
+            placeholder: "Privato"
+            extra_description: "Solo gli utenti registrati possono accedere a questa comunità"
+          must_approve_users:
+            placeholder: "Richiede Approvazione"
+      ready:
+        title: "Il tuo Discourse è Pronto!"
       styling:
         fields:
           color_scheme:
@@ -4064,24 +4008,34 @@ it:
                 label: "Riquadri Categorie con Argomenti"
               subcategories_with_featured_topics:
                 label: "Sottocategorie con argomenti in evidenza"
-      logos:
-        title: "Loghi"
+      branding:
         fields:
           logo:
             label: "Logo Primario"
-            description: "L'immagine del logo nell'angolo in alto a sinistra del tuo sito. Usa un'ampia immagine rettangolare con un'altezza di 120 e una proporzione superiore a 3:1"
           logo_small:
             label: "Logo quadrato"
-            description: "Una versione quadrata del tuo logo. Mostrata nell'angolo in alto a sinistra del tuo sito quando scorri verso il basso, sul browser, e nelle condivisioni su social media. Idealmente più grande di 512x512."
-      icons:
-        title: "Icone"
-        fields:
           favicon:
             label: "Icona del Browser"
-            description: "Icona usata per rappresentare il tuo sito sul browser web, che si veda bene in piccole dimensioni. Le estensioni di immagini consigliate sono PNG e JPG. Per impostazione predefinita useremo il logo quadrato."
           large_icon:
             label: "Icona Grande"
-            description: "Icona usata per rappresentare il tuo sito sul dispositivi moderni, che si veda bene in grandi dimensioni. Idealmente più grande di 512 x 512. Per impostazione predefinita useremo il logo quadrato."
+      corporate:
+        fields:
+          company_name:
+            label: "Nome azienda"
+            placeholder: "Organizzazione d'esempio"
+          governing_law:
+            label: "Diritto applicabile"
+            placeholder: "Legge della California"
+          contact_url:
+            label: "Sito Web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a>."
+          city_for_disputes:
+            label: "Sede per eventuali controversie"
+            placeholder: "San Francisco, California"
+          site_contact:
+            label: "Messaggi Automatici"
+            description: "Tutti i messaggi personali automatici di Discourse, come avvisi di segnalazione e notifiche di completamento dei backup, saranno inviati da questo utente."
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."

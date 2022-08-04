@@ -5,7 +5,7 @@ RSpec.describe PostMover do
   fab!(:evil_trout) { Fabricate(:evil_trout) }
 
   describe '#move_types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @move_types = PostMover.move_types
       end
@@ -21,7 +21,7 @@ RSpec.describe PostMover do
   end
 
   describe 'move_posts' do
-    context 'topics' do
+    context 'with topics' do
       before { freeze_time }
 
       fab!(:user) { Fabricate(:user, admin: true) }
@@ -64,7 +64,7 @@ RSpec.describe PostMover do
           action_code: "split_topic")
       end
 
-      context 'success' do
+      context 'with success' do
 
         it "correctly handles notifications and bread crumbs" do
           old_topic = p2.topic
@@ -125,8 +125,7 @@ RSpec.describe PostMover do
         end
       end
 
-      context "errors" do
-
+      context "with errors" do
         it "raises an error when one of the posts doesn't exist" do
           non_existent_post_id = Post.maximum(:id)&.next || 1
           expect { topic.move_posts(user, [non_existent_post_id], title: "new testing topic name") }.to raise_error(Discourse::InvalidParameters)
@@ -143,7 +142,7 @@ RSpec.describe PostMover do
         end
       end
 
-      context "successfully moved" do
+      context "when successfully moved" do
         before do
           TopicUser.update_last_read(user, topic.id, p4.post_number, p4.post_number, 0)
           TopicLink.extract_from(p2)
@@ -158,7 +157,7 @@ RSpec.describe PostMover do
           )
         end
 
-        context "post replies" do
+        context "with post replies" do
           describe "when a post with replies is moved" do
             it "should update post replies correctly" do
               topic.move_posts(
@@ -203,7 +202,7 @@ RSpec.describe PostMover do
             end
           end
 
-          describe "when only one reply is left behind" do
+          context "when only one reply is left behind" do
             it "should update post replies correctly" do
               p5 = Fabricate(
                 :post,
@@ -225,7 +224,7 @@ RSpec.describe PostMover do
           end
         end
 
-        context "to a new topic" do
+        context "when moved to a new topic" do
           it "works correctly" do
             topic.expects(:add_moderator_post).once
             new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id, tags: ["tag1", "tag2"])
@@ -436,7 +435,7 @@ RSpec.describe PostMover do
             expect(new_topic_user2.bookmarked).to eq(true)
           end
 
-          context "read state and other stats per user" do
+          context "with read state and other stats per user" do
             def create_topic_user(user, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
 
@@ -535,7 +534,7 @@ RSpec.describe PostMover do
           end
         end
 
-        context "to an existing topic" do
+        context "when moved to an existing topic" do
           fab!(:destination_topic) { Fabricate(:topic, user: another_user) }
           fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user, created_at: 1.day.ago) }
 
@@ -710,7 +709,7 @@ RSpec.describe PostMover do
             expect(Notification.exists?(admin_notification.id)).to eq(true)
           end
 
-          context "post timings" do
+          context "with post timings" do
             fab!(:some_user) { Fabricate(:user) }
 
             it "successfully moves timings" do
@@ -757,7 +756,7 @@ RSpec.describe PostMover do
             expect(TopicUser.find_by(topic: destination_topic, user: user).liked).to eq(true)
           end
 
-          context "read state and other stats per user" do
+          context "with read state and other stats per user" do
             def create_topic_user(user, topic, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
 
@@ -913,8 +912,7 @@ RSpec.describe PostMover do
           end
         end
 
-        context "to a message" do
-
+        context "when moved to a message" do
           it "works correctly" do
             topic.expects(:add_moderator_post).once
             new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", archetype: "private_message")
@@ -1032,7 +1030,7 @@ RSpec.describe PostMover do
           end
         end
 
-        context "moving the first post" do
+        context "when moving the first post" do
           it "copies the OP, doesn't delete it" do
             topic.expects(:add_moderator_post).once
             new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
@@ -1099,14 +1097,13 @@ RSpec.describe PostMover do
           end
         end
 
-        context "moving replies" do
+        context "when moving replies" do
           include_examples "moves email related stuff" do
             let!(:old_post) { p3 }
           end
         end
 
-        context "to an existing topic with a deleted post" do
-
+        context "when moving to an existing topic with a deleted post" do
           before do
             topic.expects(:add_moderator_post)
           end
@@ -1142,7 +1139,7 @@ RSpec.describe PostMover do
           end
         end
 
-        context "to an existing closed topic" do
+        context "when moving to an existing closed topic" do
           fab!(:destination_topic) { Fabricate(:topic, closed: true) }
 
           it "works correctly for admin" do
@@ -1182,7 +1179,7 @@ RSpec.describe PostMover do
       end
     end
 
-    context 'messages' do
+    context 'with messages' do
       fab!(:user) { Fabricate(:user) }
       fab!(:another_user) { Fabricate(:user) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
@@ -1208,7 +1205,7 @@ RSpec.describe PostMover do
         @like = PostActionCreator.like(another_user, p4)
       end
 
-      context 'move to new message' do
+      context 'when moving to new message' do
         it "adds post users as topic allowed users" do
           TopicUser.change(user, personal_message, notification_level: TopicUser.notification_levels[:muted])
           TopicUser.change(another_user, personal_message, notification_level: TopicUser.notification_levels[:tracking])
@@ -1271,7 +1268,7 @@ RSpec.describe PostMover do
         end
       end
 
-      context 'move to existing message' do
+      context 'when moving to existing message' do
         it "adds post users as topic allowed users" do
           personal_message.move_posts(admin, [p2.id, p5.id], destination_topic_id: another_personal_message.id, archetype: "private_message")
 
@@ -1325,7 +1322,7 @@ RSpec.describe PostMover do
       end
     end
 
-    context 'banner topic' do
+    context 'with banner topic' do
       fab!(:regular_user) { Fabricate(:trust_level_4) }
       fab!(:topic) { Fabricate(:topic) }
       fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
@@ -1333,7 +1330,7 @@ RSpec.describe PostMover do
       fab!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
       fab!(:p2) { Fabricate(:post, topic: banner_topic, reply_to_post_number: p1.post_number, user: regular_user) }
 
-      context 'move to existing topic' do
+      context 'when moving to existing topic' do
         it "allows moving banner topic posts in regular topic" do
           banner_topic.move_posts(admin, [p2.id], destination_topic_id: topic.id)
           expect(p2.reload.topic_id).to eq(topic.id)

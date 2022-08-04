@@ -4,8 +4,7 @@
 require 'composer_messages_finder'
 
 RSpec.describe ComposerMessagesFinder do
-
-  context "delegates work" do
+  describe "delegates work" do
     let(:user) { Fabricate.build(:user) }
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
 
@@ -19,13 +18,12 @@ RSpec.describe ComposerMessagesFinder do
       finder.expects(:check_get_a_room).once
       finder.find
     end
-
   end
 
   describe '.check_education_message' do
     let(:user) { Fabricate.build(:user) }
 
-    context 'creating topic' do
+    context 'when creating topic' do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
 
       before do
@@ -43,10 +41,10 @@ RSpec.describe ComposerMessagesFinder do
       end
     end
 
-    context 'private message' do
+    context 'with private message' do
       fab!(:topic) { Fabricate(:private_message_topic) }
 
-      context 'starting a new private message' do
+      context 'when starting a new private message' do
         let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic', topic_id: topic.id) }
 
         it 'should return an empty string' do
@@ -54,7 +52,7 @@ RSpec.describe ComposerMessagesFinder do
         end
       end
 
-      context 'replying to a private message' do
+      context 'when replying to a private message' do
         let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
 
         it 'should return an empty string' do
@@ -63,7 +61,7 @@ RSpec.describe ComposerMessagesFinder do
       end
     end
 
-    context 'creating reply' do
+    context 'when creating reply' do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
 
       before do
@@ -85,7 +83,7 @@ RSpec.describe ComposerMessagesFinder do
   describe '.check_new_user_many_replies' do
     let(:user) { Fabricate.build(:user) }
 
-    context 'replying' do
+    context 'when replying' do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
 
       it "has no message when `posted_too_much_in_topic?` is false" do
@@ -105,7 +103,7 @@ RSpec.describe ComposerMessagesFinder do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic') }
     fab!(:user) { Fabricate(:user) }
 
-    context "success" do
+    context "with success" do
       let!(:message) { finder.check_avatar_notification }
 
       it "returns an avatar upgrade message" do
@@ -174,7 +172,7 @@ RSpec.describe ComposerMessagesFinder do
       expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_sequential_replies).to be_blank
     end
 
-    context "reply" do
+    context "with reply" do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
 
       it "does not give a message to users who are still in the 'education' phase" do
@@ -207,7 +205,7 @@ RSpec.describe ComposerMessagesFinder do
         expect(finder.check_sequential_replies).to be_blank
       end
 
-      context "success" do
+      context "with success" do
         let!(:message) { finder.check_sequential_replies }
 
         it "returns a message" do
@@ -249,7 +247,7 @@ RSpec.describe ComposerMessagesFinder do
       expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_dominating_topic).to be_blank
     end
 
-    context "reply" do
+    context "with reply" do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
 
       it "does not give a message to users who are still in the 'education' phase" do
@@ -292,7 +290,7 @@ RSpec.describe ComposerMessagesFinder do
         expect(finder.check_dominating_topic).to be_blank
       end
 
-      context "success" do
+      context "with success" do
         let!(:message) { finder.check_dominating_topic }
 
         it "returns a message" do
@@ -349,7 +347,7 @@ RSpec.describe ComposerMessagesFinder do
       expect(UserHistory.exists_for_user?(user, :notified_about_get_a_room)).to eq(false)
     end
 
-    context "reply" do
+    context "with reply" do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id, post_id: op.id) }
 
       it "does not give a message to users who are still in the 'education' phase" do
@@ -415,7 +413,7 @@ RSpec.describe ComposerMessagesFinder do
         end
       end
 
-      context "success" do
+      context "with success" do
         let!(:message) { finder.check_get_a_room(min_users_posted: 2) }
 
         it "works as expected" do
@@ -440,8 +438,8 @@ RSpec.describe ComposerMessagesFinder do
       expect(described_class.new(user, composer_action: 'reply').check_reviving_old_topic).to be_blank
     end
 
-    context "a reply" do
-      context "warn_reviving_old_topic_age is 180 days" do
+    context "with a reply" do
+      context "when warn_reviving_old_topic_age is 180 days" do
         before do
           SiteSetting.warn_reviving_old_topic_age = 180
         end
@@ -459,7 +457,7 @@ RSpec.describe ComposerMessagesFinder do
         end
       end
 
-      context "warn_reviving_old_topic_age is 0" do
+      context "when warn_reviving_old_topic_age is 0" do
         before do
           SiteSetting.warn_reviving_old_topic_age = 0
         end
@@ -503,5 +501,4 @@ RSpec.describe ComposerMessagesFinder do
       expect(edit_post_finder.find).to eq(nil)
     end
   end
-
 end

@@ -9,9 +9,9 @@ RSpec.describe CensoredWordsValidator do
     context "when there are censored words for action" do
       let!(:watched_word) { Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: 'bad') }
 
-      context "when there is a nil word_matcher_regexp" do
+      context "when word_matcher_regexp_list is empty" do
         before do
-          WordWatcher.stubs(:word_matcher_regexp).returns(nil)
+          WordWatcher.stubs(:word_matcher_regexp_list).returns([])
         end
 
         it "adds no errors to the record" do
@@ -20,7 +20,7 @@ RSpec.describe CensoredWordsValidator do
         end
       end
 
-      context "when there is word_matcher_regexp" do
+      context "when word_matcher_regexp_list is not empty" do
         context "when the new value does not contain the watched word" do
           let(:value) { 'some new good text' }
 

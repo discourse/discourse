@@ -3558,78 +3558,23 @@ da:
   wizard:
     title: "Discourse Opsætning"
     step:
-      locale:
-        title: "Velkommen til dit Discourse!"
-        fields:
-          default_locale:
-            description: "Hvad er standardsproget for dit fællesskab?"
-      forum_title:
-        title: "Navn"
-        description: "Dit navn er et tegn, der er synligt på afstand - den <i>første</i> ting som potentielle besøgende lægger mærke til i forhold til dit fællesskab. Hvad siger dit navn og titel om dit fællesskab?"
+      introduction:
         fields:
           title:
-            label: "Dit fællesskabs navn"
             placeholder: "Janes Sted"
           site_description:
             placeholder: "Et sted hvor Jane og hendes venner kan diskutere fede emner"
-          short_site_description:
-            placeholder: "Bedste fællesskab nogensinde"
-      introduction:
-        title: "Introduktion"
-        disabled: "<p>Vi kunne ikke finde noget emne med titlen “%{topic_title}”.</p> <ul> <li>Hvis du har ændret titlen, skal du redigere dette emne for at ændre dit websteds indledningstekst.</li> <li>Hvis du har slettet dette emne, skal du oprette et andet emne med “%{topic_title}” som titel. Indholdet af det første indlæg er dit websteds indledningstekst.</li> </ul>"
-        fields:
-          welcome:
-            label: "Velkomst Emne"
-            description: "<p>Hvordan vil du beskrive dit fællesskab for en fremmed i en elevator på cirka 1 minut?</p> <ul> <li>Hvem er disse diskussioner beregnet for?</li> <li>Hvad kan jeg finde her?</li> <li>Hvorfor bør jeg gå på besøg?</li> </ul> <p>Dit velkomstemner er det første som nyankomne vil læse. Betragt det som dit <b>eneste éne afsnit</b> og 'salgstale' eller 'missionserklæring'. </p>"
-            one_paragraph: "Begræns venligst din velkomstbesked til et afsnit."
-            extra_description: "Hvis du ikke er sikker, kan du springe dette trin over og redigere dit velkomstemne senere."
+          default_locale:
+            label: "Sprog"
       privacy:
-        title: "Adgang"
-        description: "<p>Er dit fællesskab åbent for alle, eller er det begrænset af medlemskab, invitation eller godkendelse? Hvis du foretrækker det, kan du opsætte alt som privat og så ændre det til offentligt senere.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Offentlig"
-                description: "Alle kan få adgang til dette fællesskab"
-              restricted:
-                label: "Privat"
-                description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
-          privacy_options:
-            description: "Hvordan tilmelder nye brugere sig en konto?"
-            choices:
-              open:
-                label: "Brugere kan tilmelde sig på egen hånd."
-              invite_only:
-                label: "Brugere skal inviteres af betroede brugere eller personale, før de kan tilmelde sig."
-              must_approve:
-                label: "Brugere kan tilmelde sig alene, men skal godkendes af personalet."
-      contact:
-        title: "Kontakt"
-        fields:
-          contact_email:
-            label: "Mail"
-            placeholder: "navn@eksempel.dk"
-            description: "E-mail-adresse for den person eller gruppe, der er ansvarlig for dette fællesskab. Bruges til vigtige meddelelser, f.eks. uhåndterede anmeldelser, sikkerhedsopdateringer og på <a href='%{base_path}/about' target='_blank'>din 'om' side</a> for vigtig kontakt fra fællesskabet."
-          contact_url:
-            label: "Webside"
-            placeholder: "https://www.example.dk/kontakt-os"
-            description: "Generel kontakt webside for dig eller din organisation. Vil blive vist på <a href='%{base_path}/about' target='_blank'>din om side</a>."
-          site_contact:
-            label: "Automatiske Meddelelser"
-      corporate:
-        title: "Organisation"
-        description: "Disse oplysninger vil blive indtastet i dine <a href='%{base_path}/tos' target='blank'>servicevilkår</a>, som er et emne, du kan redigere i kategorien personale. Hvis du ikke har et firma, er du velkommen til at springe dette trin over nu."
-        fields:
-          company_name:
-            label: "Virksomhedens Navn"
-            placeholder: "Eksempel Organisation"
-          governing_law:
-            label: "Gældende Lov"
-            placeholder: "Californiens lov"
-          city_for_disputes:
-            label: "By for tvister"
-            placeholder: "San Francisco, Californien"
+          login_required:
+            placeholder: "Privat"
+            extra_description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
+          must_approve_users:
+            placeholder: "Kræv godkendelse"
+      ready:
+        title: "Discourse er gjort klar til dig!"
       styling:
         fields:
           body_font:
@@ -3650,20 +3595,33 @@ da:
                 label: "Kategorier og Seneste Emner"
               categories_and_top_topics:
                 label: "Kategorier og top emner"
-      logos:
-        title: "Logoer"
+      branding:
         fields:
           logo:
             label: "Primært logo"
           logo_small:
             label: "Firkantet Logo"
-      icons:
-        title: "Ikoner"
-        fields:
           favicon:
             label: "Browser Ikon"
           large_icon:
             label: "Stort ikon"
+      corporate:
+        fields:
+          company_name:
+            label: "Virksomhedens Navn"
+            placeholder: "Eksempel Organisation"
+          governing_law:
+            label: "Gældende Lov"
+            placeholder: "Californiens lov"
+          contact_url:
+            label: "Webside"
+            placeholder: "https://www.example.dk/kontakt-os"
+            description: "Generel kontakt webside for dig eller din organisation. Vil blive vist på <a href='%{base_path}/about' target='_blank'>din om side</a>."
+          city_for_disputes:
+            label: "By for tvister"
+            placeholder: "San Francisco, Californien"
+          site_contact:
+            label: "Automatiske Meddelelser"
       invites:
         title: "Inviter hjælpere"
       finished:

@@ -77,7 +77,7 @@ RSpec.describe BackupRestore::S3BackupStore do
   it_behaves_like "backup store"
   it_behaves_like "remote backup store"
 
-  context "S3 specific behavior" do
+  describe "S3 specific behavior" do
     before { create_backups }
     after { remove_backups }
 

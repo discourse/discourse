@@ -85,7 +85,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to include("data-countdown=")
   end
 
-  context 'ranges' do
+  describe 'ranges' do
     it 'generates ranges without time' do
       raw = "[date-range from=2022-01-06 to=2022-01-08]"
       cooked = Fabricate(:post, raw: raw).cooked
