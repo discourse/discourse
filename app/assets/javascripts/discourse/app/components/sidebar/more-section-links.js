@@ -24,12 +24,24 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
 
   get sectionLinks() {
     if (this.activeSectionLink) {
-      return this.args.sectionLinks.filter((sectionLink) => {
-        return sectionLink.name !== this.activeSectionLink.name;
-      });
+      return this.#filterActiveSectionLink(this.args.sectionLinks);
     } else {
       return this.args.sectionLinks;
     }
+  }
+
+  get secondarySectionLinks() {
+    if (this.activeSectionLink) {
+      return this.#filterActiveSectionLink(this.args.secondarySectionLinks);
+    } else {
+      return this.args.secondarySectionLinks;
+    }
+  }
+
+  #filterActiveSectionLink(sectionLinks) {
+    return sectionLinks.filter((sectionLink) => {
+      return sectionLink.name !== this.activeSectionLink.name;
+    });
   }
 
   @bind

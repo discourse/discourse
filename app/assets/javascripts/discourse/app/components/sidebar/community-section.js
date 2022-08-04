@@ -24,25 +24,21 @@ const MAIN_SECTION_LINKS = [
 
 const ADMIN_MAIN_SECTION_LINKS = [AdminSectionLink];
 
-const MORE_SECTION_LINKS = [
-  GroupsSectionLink,
-  UsersSectionLink,
-  AboutSectionLink,
-  FAQSectionLink,
-];
+const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
+const MORE_SECONDARY_SECTION_LINKS = [AboutSectionLink, FAQSectionLink];
 
 export default class SidebarCommunitySection extends GlimmerComponent {
   @service router;
 
   moreSectionLinks = [...MORE_SECTION_LINKS, ...customSectionLinks].map(
     (sectionLinkClass) => {
-      return new sectionLinkClass({
-        topicTrackingState: this.topicTrackingState,
-        currentUser: this.currentUser,
-        appEvents: this.appEvents,
-        router: this.router,
-        siteSettings: this.siteSettings,
-      });
+      return this.#initializeSectionLink(sectionLinkClass);
+    }
+  );
+
+  moreSecondarySectionLinks = MORE_SECONDARY_SECTION_LINKS.map(
+    (sectionLinkClass) => {
+      return this.#initializeSectionLink(sectionLinkClass);
     }
   );
 
@@ -51,11 +47,7 @@ export default class SidebarCommunitySection extends GlimmerComponent {
     : [...MAIN_SECTION_LINKS];
 
   sectionLinks = this.#mainSectionLinks.map((sectionLinkClass) => {
-    return new sectionLinkClass({
-      topicTrackingState: this.topicTrackingState,
-      currentUser: this.currentUser,
-      appEvents: this.appEvents,
-    });
+    return this.#initializeSectionLink(sectionLinkClass);
   });
 
   willDestroy() {
@@ -78,6 +70,16 @@ export default class SidebarCommunitySection extends GlimmerComponent {
 
     next(() => {
       getOwner(this).lookup("controller:composer").open(composerArgs);
+    });
+  }
+
+  #initializeSectionLink(sectionLinkClass) {
+    return new sectionLinkClass({
+      topicTrackingState: this.topicTrackingState,
+      currentUser: this.currentUser,
+      appEvents: this.appEvents,
+      router: this.router,
+      siteSettings: this.siteSettings,
     });
   }
 }
