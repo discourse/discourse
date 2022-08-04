@@ -1,7 +1,7 @@
-import UserMenuDefaultReviewableItem from "discourse/components/user-menu/default-reviewable-item";
+import ReviewableItemBase from "discourse/lib/reviewable-items/base";
 import I18n from "I18n";
 
-export default class UserMenuReviewableUserItem extends UserMenuDefaultReviewableItem {
+export default class extends ReviewableItemBase {
   get description() {
     return I18n.t("user_menu.reviewable.suspicious_user", {
       username: this.reviewable.username,

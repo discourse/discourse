@@ -1,8 +1,8 @@
-import UserMenuNotificationItem from "discourse/components/user-menu/notification-item";
+import NotificationItemBase from "discourse/lib/notification-items/base";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 
-export default class UserMenuGrantedBadgeNotificationItem extends UserMenuNotificationItem {
+export default class extends NotificationItemBase {
   get linkHref() {
     const badgeId = this.notification.data.badge_id;
     if (badgeId) {

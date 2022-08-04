@@ -15,7 +15,7 @@ function getReviewable(overrides = {}) {
         pending: false,
         post_number: 3,
         topic_fancy_title: "anything hello world",
-        type: "ReviewableFlaggedPost",
+        type: "Reviewable",
       },
       overrides
     )
@@ -23,11 +23,11 @@ function getReviewable(overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | default-reviewable-item",
+  "Integration | Component | user-menu | reviewable-item",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`<UserMenu::DefaultReviewableItem @item={{this.item}}/>`;
+    const template = hbs`<UserMenu::ReviewableItem @item={{this.item}}/>`;
 
     test("doesn't push `reviewed` to the classList if the reviewable is pending", async function (assert) {
       this.set("item", getReviewable({ pending: true }));

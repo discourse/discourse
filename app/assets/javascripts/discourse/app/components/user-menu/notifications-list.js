@@ -43,6 +43,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
+  get itemComponent() {
+    return "user-menu/notification-item";
+  }
+
   fetchItems() {
     const params = {
       limit: 30,

@@ -1,7 +1,7 @@
-import UserMenuNotificationItem from "discourse/components/user-menu/notification-item";
+import NotificationItemBase from "discourse/lib/notification-items/base";
 import I18n from "I18n";
 
-export default class UserMenuCustomNotificationItem extends UserMenuNotificationItem {
+export default class extends NotificationItemBase {
   get linkTitle() {
     if (this.notification.data.title) {
       return I18n.t(this.notification.data.title);
