@@ -15,6 +15,9 @@
     &:focus,
     &:hover {
       background: var(--d-sidebar-highlight-color);
+      .sidebar-section-link-prefix.icon svg.prefix-badge {
+        background: var(--d-sidebar-highlight-color);
+      }
     }
 
     &.active {
@@ -89,13 +92,15 @@
 
       svg.prefix-badge {
         position: absolute;
-        background-color: var(--secondary);
+        background-color: var(--primary-very-low);
         border-radius: 50%;
         padding: 2px 2px 3px;
         color: var(--primary-high);
         height: 0.5rem;
         width: 0.5rem;
-        margin-left: -0.4rem;
+        top: -0.2em;
+        right: 0;
+        margin-right: -0.6em;
       }
     }
   }
