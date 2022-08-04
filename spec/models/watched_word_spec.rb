@@ -125,5 +125,36 @@ RSpec.describe WatchedWord do
       expect(updated.case_sensitive?).to eq(false)
     end
 
+    context "when a case-sensitive word already exists" do
+      subject(:create_or_update) do
+        described_class.create_or_update_word(word: word, action_key: :block, case_sensitive: true)
+      end
+
+      fab!(:existing_word) { Fabricate(:watched_word, case_sensitive: true, word: "Meta") }
+
+      context "when providing the exact same word" do
+        let(:word) { existing_word.word }
+
+        it "doesn't create a new watched word" do
+          expect { create_or_update }.not_to change { described_class.count }
+        end
+
+        it "returns the existing watched word" do
+          expect(create_or_update).to eq(existing_word)
+        end
+      end
+
+      context "when providing the same word with a different case" do
+        let(:word) { "metA" }
+
+        it "creates a new watched word" do
+          expect(create_or_update).not_to eq(existing_word)
+        end
+
+        it "returns the new watched word" do
+          expect(create_or_update).to have_attributes word: "metA", case_sensitive: true, action: 1
+        end
+      end
+    end
   end
 end
