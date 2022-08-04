@@ -405,7 +405,7 @@ RSpec.describe User do
     fab!(:post3) { Fabricate(:post, user: user) }
     fab!(:posts) { [post1, post2, post3] }
     fab!(:post_ids) { [post1.id, post2.id, post3.id] }
-    fab!(:guardian) { Guardian.new(Fabricate(:admin)) }
+    let(:guardian) { Guardian.new(Fabricate(:admin)) }
     fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, created_by: user) }
 
     it 'deletes only one batch of posts' do

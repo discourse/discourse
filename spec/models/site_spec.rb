@@ -62,7 +62,7 @@ RSpec.describe Site do
   describe '#categories' do
     fab!(:category) { Fabricate(:category) }
     fab!(:user) { Fabricate(:user) }
-    fab!(:guardian) { Guardian.new(user) }
+    let(:guardian) { Guardian.new(user) }
 
     it "omits read restricted categories" do
       expect(Site.new(guardian).categories.map { |c| c[:id] }).to contain_exactly(
