@@ -122,7 +122,7 @@ class Guardian
     if @is_group_member.key?(reviewable_by_group_id)
       @is_group_member[reviewable_by_group_id]
     else
-      @is_group_member[reviewable_by_group_id] ||= begin
+      @is_group_member[reviewable_by_group_id] = begin
         GroupUser.where(group_id: reviewable_by_group_id, user_id: @user.id).exists?
       end
     end
