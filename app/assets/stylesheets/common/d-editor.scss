@@ -200,7 +200,8 @@
 
     .scale-btn-container,
     .alt-text-readonly-container,
-    .alt-text-edit-container {
+    .alt-text-edit-container,
+    .delete-image-button {
       background: var(--secondary);
       display: flex;
       height: var(--resizer-height);
@@ -245,6 +246,7 @@
 
       .alt-text-edit-btn {
         cursor: pointer;
+        color: var(--tertiary);
 
         svg {
           padding-right: 0.5em;
@@ -279,6 +281,15 @@
         svg {
           margin: 0;
         }
+      }
+    }
+
+    .delete-image-button {
+      cursor: pointer;
+      color: var(--danger);
+
+      .d-icon-trash-alt {
+        margin-left: 0.5em;
       }
     }
 

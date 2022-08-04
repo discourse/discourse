@@ -2304,6 +2304,8 @@ en:
       image_alt_text:
         aria_label: Alt text for image
 
+      delete_image_button: Delete Image  
+
     notifications:
       tooltip:
         regular:
