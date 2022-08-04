@@ -20,7 +20,7 @@ export default class extends NotificationItemBase {
     }
   }
 
-  get labelWrapperClasses() {
+  get labelClasses() {
     if (this.count === 2) {
       return ["double-user"];
     } else if (this.count > 2) {

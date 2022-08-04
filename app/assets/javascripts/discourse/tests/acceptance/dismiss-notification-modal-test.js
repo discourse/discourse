@@ -34,7 +34,7 @@ acceptance("Dismiss notification confirmation", function (needs) {
 
     assert.strictEqual(
       query(".dismiss-notification-confirmation-modal .modal-body").innerText,
-      I18n.t("notifications.dismiss_confirmation.body", { count: 2 })
+      I18n.t("notifications.dismiss_confirmation.body.default", { count: 2 })
     );
   });
 

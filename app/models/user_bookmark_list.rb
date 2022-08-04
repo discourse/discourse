@@ -19,8 +19,8 @@ class UserBookmarkList
     @bookmarks = []
   end
 
-  def load
-    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all
+  def load(&blk)
+    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all(&blk)
     @bookmarks
   end
 

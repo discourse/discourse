@@ -84,14 +84,14 @@ export default class NotificationItemBase {
   /**
    * @returns {string[]} Include additional classes to the label's wrapper <span>.
    */
-  get labelWrapperClasses() {
+  get labelClasses() {
     return [];
   }
 
   /**
    * @returns {string[]} Include additional classes to the description's wrapper <span>.
    */
-  get descriptionWrapperClasses() {
+  get descriptionClasses() {
     return [];
   }
 
