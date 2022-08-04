@@ -11,6 +11,8 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   @tracked activeSectionLink;
   @service router;
 
+  #allLinks = [...this.args.sectionLinks, ...this.args.secondarySectionLinks];
+
   constructor() {
     super(...arguments);
     this.#setActiveSectionLink();
@@ -89,7 +91,7 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   }
 
   #setActiveSectionLink() {
-    const activeSectionLink = this.args.sectionLinks.find((sectionLink) => {
+    const activeSectionLink = this.#allLinks.find((sectionLink) => {
       const args = [sectionLink.route];
 
       if (sectionLink.model) {

@@ -313,6 +313,11 @@ acceptance("Sidebar - Community Section", function (needs) {
       "/about",
       "navigates to about route correctly"
     );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-about.active"),
+      "about section link link is displayed in the main section and marked as active"
+    );
   });
 
   test("navigating to FAQ from sidebar", async function (assert) {
