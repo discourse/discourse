@@ -16,7 +16,12 @@ export default Component.extend({
   @discourseComputed("bootstrapModeEnabled", "router.currentRouteName")
   hidden(bootstrapModeEnabled, currentRouteName) {
     const user = this.currentUser;
-    return !(user && user.get("staff") && bootstrapModeEnabled && !currentRouteName.startsWith("wizard"));
+    return !(
+      user &&
+      user.get("staff") &&
+      bootstrapModeEnabled &&
+      !currentRouteName.startsWith("wizard")
+    );
   },
 
   @discourseComputed("bootstrapModeMinUsers")

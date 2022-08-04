@@ -3,7 +3,6 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 

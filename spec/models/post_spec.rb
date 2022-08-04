@@ -1907,7 +1907,6 @@ RSpec.describe Post do
   end
 
   describe ".show_welcome_topic_banner?" do
-
     it "returns true when conditions are met" do
       first_post = Fabricate(:post, created_at: 25.days.ago)
       SiteSetting.welcome_topic_id = first_post.topic.id
