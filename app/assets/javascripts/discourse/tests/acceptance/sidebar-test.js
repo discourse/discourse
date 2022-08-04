@@ -170,5 +170,26 @@ acceptance(
         "hides the sidebar dropdown"
       );
     });
+
+    test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
+      const capabilities = this.container.lookup("capabilities:main");
+      capabilities.touch = true;
+
+      await visit("/");
+
+      assert.ok(
+        exists(
+          `.sidebar-footer-actions-toggle-mobile-view[title="${I18n.t(
+            "mobile_view"
+          )}"]`
+        ),
+        "displays the right title for the button"
+      );
+
+      assert.ok(
+        exists(".sidebar-footer-actions-toggle-mobile-view .d-icon-mobile-alt"),
+        "displays the mobile icon for the button"
+      );
+    });
   }
 );
