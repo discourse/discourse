@@ -1,6 +1,8 @@
 import BaseSectionLink from "discourse/lib/sidebar/community-section/base-section-link";
 
 export let customSectionLinks = [];
+export let secondaryCustomSectionLinks = [];
+
 class RouteInfoHelper {
   constructor(router, url) {
     this.routeInfo = router.recognize(url);
@@ -39,21 +41,25 @@ class RouteInfoHelper {
 }
 
 /**
- * Appends an additional section link under the topics section
+ * Appends an additional section link to the Community section under the "More..." links drawer.
+ *
  * @callback addSectionLinkCallback
  * @param {BaseSectionLink} baseSectionLink Factory class to inherit from.
  * @returns {BaseSectionLink} A class that extends BaseSectionLink.
  *
  * @param {(addSectionLinkCallback|Object)} args - A callback function or an Object.
- * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
- * @param {string=} arg.route - The Ember route name to generate the href attribute for the link.
- * @param {string=} arg.href - The href attribute for the link.
- * @param {string=} arg.title - The title attribute for the link.
- * @param {string} arg.text - The text to display for the link.
+ * @param {string} args.name - The name of the link. Needs to be dasherized and lowercase.
+ * @param {string=} args.route - The Ember route name to generate the href attribute for the link.
+ * @param {string=} args.href - The href attribute for the link.
+ * @param {string=} args.title - The title attribute for the link.
+ * @param {string} args.text - The text to display for the link.
+ * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
  */
-export function addSectionLink(args) {
+export function addSectionLink(args, secondary) {
+  const links = secondary ? secondaryCustomSectionLinks : customSectionLinks;
+
   if (typeof args === "function") {
-    customSectionLinks.push(args.call(this, BaseSectionLink));
+    links.push(args.call(this, BaseSectionLink));
   } else {
     const klass = class extends BaseSectionLink {
       constructor() {
@@ -97,10 +103,11 @@ export function addSectionLink(args) {
       }
     };
 
-    customSectionLinks.push(klass);
+    links.push(klass);
   }
 }
 
 export function resetDefaultSectionLinks() {
   customSectionLinks = [];
+  secondaryCustomSectionLinks = [];
 }

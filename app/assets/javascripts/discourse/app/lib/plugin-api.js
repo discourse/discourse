@@ -95,7 +95,7 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
+import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 
@@ -480,7 +480,15 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
-    if (name === "hamburger-menu:generalLinks") {
+    this._deprecateDecoratingHamburgerWidgetLinks(name, fn);
+    decorateWidget(name, fn);
+  }
+
+  _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
+    if (
+      name === "hamburger-menu:generalLinks" ||
+      name === "hamburger-menu:footerLinks"
+    ) {
       const siteSettings = this.container.lookup("site-settings:main");
 
       if (siteSettings.enable_experimental_sidebar_hamburger) {
@@ -505,7 +513,7 @@ class PluginApi {
             args.route = route;
           }
 
-          this.addCommunitySectionLink(args);
+          this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
             `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
@@ -515,8 +523,6 @@ class PluginApi {
         return;
       }
     }
-
-    decorateWidget(name, fn);
   }
 
   /**
@@ -1665,9 +1671,9 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Support for adding a navigation link to Sidebar Community section by returning a class which extends from the BaseSectionLink
-   * class interface. See `lib/sidebar/community-section/base-section-link.js` for documentation on the BaseSectionLink class
-   * interface.
+   * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/community-section/base-section-link.js`
+   * for documentation on the BaseSectionLink class interface.
    *
    * ```
    * api.addCommunitySectionLink((baseSectionLink) => {
@@ -1716,9 +1722,10 @@ class PluginApi {
    * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
+   * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
-  addCommunitySectionLink(arg) {
-    addSectionLink(arg);
+  addCommunitySectionLink(arg, secondary) {
+    addCustomCommunitySectionLink(arg, secondary);
   }
 
   /**
