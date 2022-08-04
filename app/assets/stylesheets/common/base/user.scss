@@ -102,8 +102,11 @@
     }
   }
 
-  .nav-pills > li {
-    position: relative;
+  .nav-pills {
+    padding: 1em 0 0;
+    > li {
+      position: relative;
+    }
   }
 
   li:not(.show-children) > ul {
@@ -153,7 +156,7 @@
 .user-main {
   .about {
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 0;
 
     &.has-background {
       .user-profile-image {
@@ -219,18 +222,25 @@
 
     .details {
       background: rgba(var(--secondary-rgb), 0.8);
-      border-bottom: 1px solid var(--primary-low);
 
       h1 {
-        font-size: $font-up-5;
+        font-size: var(--font-up-5);
         font-weight: normal;
+        line-height: var(--line-height-medium);
+
         .d-icon {
           font-size: 0.8em;
         }
       }
 
+      .user-profile-page-title {
+        font-weight: normal;
+        min-height: 1.5em; // remove height jitter on load
+      }
+
       h2 {
         font-weight: normal;
+        line-height: var(--line-height-medium);
         max-width: 100%;
         @include ellipsis;
       }
@@ -258,6 +268,7 @@
       .primary {
         width: 100%;
         position: relative;
+        display: flex;
 
         h1 {
           font-weight: bold;
@@ -277,9 +288,13 @@
         }
       }
 
+      .primary-textual {
+        flex: 0 1 auto;
+      }
+
       .user-profile-avatar {
+        align-self: flex-start;
         position: relative;
-        float: left;
         .avatar-flair {
           bottom: 8px;
           right: 16px;
@@ -288,9 +303,31 @@
     }
 
     .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-self: flex-start;
+      flex: 1 1 auto;
+      margin-left: auto;
       ul {
+        width: 100%;
         list-style-type: none;
         margin-top: 0;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(8em, 10em));
+        gap: 0.5em;
+      }
+
+      .select-kit {
+        width: 100%;
+      }
+
+      li a {
+        width: 100%;
+        span {
+          @include ellipsis;
+        }
       }
     }
 
@@ -304,8 +341,6 @@
         }
 
         .primary {
-          width: 100%;
-
           .avatar {
             margin-right: 10px;
             width: 45px;
@@ -362,6 +397,10 @@
     .active {
       font-weight: bold;
     }
+  }
+
+  #collapsed-info-panel {
+    border-bottom: 1px solid var(--primary-low);
   }
 
   .helpful-flags {

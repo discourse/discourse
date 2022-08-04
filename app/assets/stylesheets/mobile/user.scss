@@ -95,22 +95,13 @@
     color: var(--secondary);
 
     .secondary {
+      margin-top: 1em;
       dl {
         padding: 8px 0;
       }
     }
 
     .details {
-      margin-bottom: 0;
-
-      h1 {
-        line-height: $line-height-small;
-      }
-
-      h2 {
-        line-height: $line-height-medium;
-      }
-
       .user-profile-avatar {
         .avatar-flair {
           right: 2px;
@@ -213,24 +204,14 @@
       margin-left: auto;
       margin-top: 0.75em;
 
-      .btn {
-        margin-bottom: 16px;
-      }
-
       ul {
         margin: 0;
-        display: flex;
-        flex: 1 1 auto;
-        flex-wrap: wrap;
+        width: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
+
         li,
         > span {
-          display: flex;
-          flex: 1 1 45%;
-          margin-left: 1em;
           button,
-          a {
-            width: 100%;
-          }
           .select-kit.dropdown-select-box.user-notifications-dropdown {
             width: 100%;
             li {
@@ -241,8 +222,10 @@
         }
       }
 
-      > ul {
-        margin-left: -1em; // negates left button margin, for alignment
+      .user-profile-compose-pm-wrap {
+        // span full width
+        grid-column-start: 1;
+        grid-column-end: 3;
       }
 
       .user-profile-controls-outlet {

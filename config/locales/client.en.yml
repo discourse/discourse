@@ -1797,7 +1797,7 @@ en:
         the_topic: "the topic"
 
       page_title:
-        pluralized_name: "%{name}'s"
+        pluralized_name: "%{name}&rsquo;s"
         summary: "summary"
         activity_index: "activity"
         topics: "topics"

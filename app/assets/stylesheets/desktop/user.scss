@@ -16,7 +16,9 @@
 .user-primary-navigation {
   .nav-pills {
     display: flex;
-    gap: 0 1em;
+    flex-wrap: wrap;
+    gap: 0.5em 1em;
+
     li {
       margin: 0;
       min-width: 0;
@@ -184,10 +186,7 @@ table.user-invite-list {
           a[href] {
             text-decoration: underline;
           }
-          h1 {
-            max-width: 100%;
-            @include ellipsis;
-          }
+
           .location-and-website {
             display: flex;
             max-width: 100%;
@@ -226,16 +225,9 @@ table.user-invite-list {
 
     .controls {
       padding: 0 0 12px 0;
-      float: right;
-      max-width: 13.5em;
-
-      li {
-        margin-bottom: 0.5em;
-      }
 
       li > .select-kit-header, // select-kit
       .btn {
-        min-width: 9.5em;
         width: 100%;
       }
     }
@@ -249,14 +241,8 @@ table.user-invite-list {
         max-width: unset;
 
         > ul {
-          display: inline-flex;
           > li {
             display: inline-flex;
-            margin-left: 0.75em;
-          }
-
-          a {
-            width: auto;
           }
         }
       }

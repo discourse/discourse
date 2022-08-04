@@ -52,53 +52,24 @@
         <div class="primary">
           <PluginOutlet @name="before-user-profile-avatar" @args={{hash model=this.model}} />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
-          <section class="controls">
-            <ul>
-              {{#if this.model.can_send_private_message_to_user}}
-                <li>
-                  <DButton @class="btn-primary compose-pm" @action={{route-action "composePrivateMessage" this.model}} @icon="envelope" @label="user.private_message" />
-                </li>
-              {{/if}}
-              {{#if this.canMuteOrIgnoreUser}}
-                <li>
-                  <UserNotificationsDropdown @user={{this.model}} @value={{this.userNotificationLevel}} @updateNotificationLevel={{action "updateNotificationLevel"}} />
-                </li>
-              {{/if}}
-              {{#unless this.site.mobileView}}
-                {{#if this.currentUser.staff}}
-                  <li><a href={{this.model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
-                {{/if}}
-              {{/unless}}
-              <PluginOutlet @name="user-profile-controls" @connectorTagName="li" @args={{hash model=this.model}} />
-
-              {{#if this.canExpandProfile}}
-                <li>
-                  <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
-                </li>
-              {{/if}}
-
-              {{#if this.site.mobileView}}
-                <li>                
-                  <DButton @class="btn-default toggle-mobile-user-menu" @action={{action "toggleMobileMenu" }} @icon="bars" @label="hamburger_menu" />
-                </li>
-              {{/if}}
-            </ul>
-          </section>
-
+        
           <div class="primary-textual">
             <div class="user-profile-names">
+              {{#if this.model.staged}}
+                <h2 class="staged">{{i18n "user.staged"}}</h2>
+              {{/if}}
               <h1 class={{if this.nameFirst "full-name" "username"}}>
-                {{i18n "user.page_title.pluralized_name" name=(if this.nameFirst this.model.name (format-username this.model.username))}}
+                {{html-safe (i18n "user.page_title.pluralized_name" name=(if this.nameFirst this.model.name (format-username this.model.username)))}}
                 {{user-status this.model currentUser=this.currentUser}}
-                <span>{{this.userPageTitle}}</span>
+                <div class="user-profile-page-title">{{this.userPageTitle}}</div>
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
               </h1>
-              <h2 class={{if this.nameFirst "username" "full-name"}}>{{#if this.nameFirst}}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</h2>
-              {{#if this.model.staged}}
-                <h2 class="staged">{{i18n "user.staged"}}</h2>
-              {{/if}}
+              <h2 class={{if this.nameFirst "username" "full-name"}}>
+                {{#if this.nameFirst}}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}
+              </h2>
+              
               {{#if this.model.title}}
                 <h3>{{this.model.title}}</h3>
               {{/if}}
@@ -176,6 +147,38 @@
 
             <PluginOutlet @name="user-profile-primary" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
           </div>
+          <section class="controls">
+          <ul>
+            {{#if this.model.can_send_private_message_to_user}}
+              <li class="user-profile-compose-pm-wrap">
+                <DButton @class="btn-primary compose-pm" @action={{route-action "composePrivateMessage" this.model}} @icon="envelope" @label="user.private_message" />
+              </li>
+            {{/if}}
+            {{#if this.canMuteOrIgnoreUser}}
+              <li>
+                <UserNotificationsDropdown @user={{this.model}} @value={{this.userNotificationLevel}} @updateNotificationLevel={{action "updateNotificationLevel"}} />
+              </li>
+            {{/if}}
+            {{#unless this.site.mobileView}}
+              {{#if this.currentUser.staff}}
+                <li><a href={{this.model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
+              {{/if}}
+            {{/unless}}
+            <PluginOutlet @name="user-profile-controls" @connectorTagName="li" @args={{hash model=this.model}} />
+
+            {{#if this.canExpandProfile}}
+              <li>
+                <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
+              </li>
+            {{/if}}
+
+            {{#if this.site.mobileView}}
+              <li>                
+                <DButton @class="btn-default toggle-mobile-user-menu" @action={{action "toggleMobileMenu" }} @icon="bars" @label="hamburger_menu" />
+              </li>
+            {{/if}}
+          </ul>
+        </section>
         </div>
         <PluginOutlet @name="user-profile-above-collapsed-info" @args={{hash model=this.model collapsedInfo=this.collapsedInfo}} />
         {{#unless this.collapsedInfo}}
