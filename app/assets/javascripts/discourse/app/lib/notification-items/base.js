@@ -77,7 +77,7 @@ export default class NotificationItemBase {
   }
 
   /**
-   * Perform additional things when the notification item is clicked.
+   * Function that is called when the notification item is clicked.
    */
   onClick() {}
 
