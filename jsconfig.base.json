@@ -3,8 +3,14 @@
     "target": "es2020",
     "module": "amd",
     "experimentalDecorators": true,
+    "allowJs": true
   },
   "exclude": [
     "**/node_modules"
   ],
+  "glint": {
+    "environment": [
+      "ember-loose",
+    ],
+  }
 }
