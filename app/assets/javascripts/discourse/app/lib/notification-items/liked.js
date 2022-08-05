@@ -7,12 +7,12 @@ export default class extends NotificationItemBase {
     if (this.count === 2) {
       return I18n.t("notifications.liked_by_2_users", {
         username: this.username,
-        username2: this.username2,
+        username2: this.#username2,
       });
     } else if (this.count > 2) {
       return I18n.t("notifications.liked_by_multiple_users", {
         username: this.username,
-        username2: this.username2,
+        username2: this.#username2,
         count: this.count - 2,
       });
     } else {
@@ -32,7 +32,7 @@ export default class extends NotificationItemBase {
     return this.notification.data.count;
   }
 
-  get username2() {
+  get #username2() {
     return formatUsername(this.notification.data.username2);
   }
 }
