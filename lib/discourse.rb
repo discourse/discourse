@@ -177,11 +177,17 @@ module Discourse
 
     job = context[:job]
 
+    # mini_scheduler direct reporting
     if Hash === job
       job_class = job["class"]
       if job_class
         job_exception_stats[job_class] += 1
       end
+    end
+
+    # internal reporting
+    if job.class == Class && ::Jobs::Base > job
+      job_exception_stats[job] += 1
     end
 
     cm = RailsMultisite::ConnectionManagement
