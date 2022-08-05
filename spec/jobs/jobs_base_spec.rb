@@ -38,7 +38,7 @@ RSpec.describe ::Jobs::Base do
     expect(bad.fail_count).to eq(3)
   end
 
-  context 'Discourse.job_exception_stats' do
+  context 'when looking at Discourse.job_exception_stats' do
     before do
       Discourse.reset_job_exception_stats!
     end
