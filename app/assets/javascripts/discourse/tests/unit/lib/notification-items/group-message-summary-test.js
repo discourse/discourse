@@ -31,7 +31,7 @@ function getNotification(overrides = {}) {
 discourseModule(
   "Unit | Notification Items | group-message-summary",
   function () {
-    test("label", function (assert) {
+    test("description", function (assert) {
       const notification = getNotification();
       const director = createRenderDirector(
         notification,
@@ -39,7 +39,7 @@ discourseModule(
         this.siteSettings
       );
       assert.strictEqual(
-        director.label,
+        director.description,
         I18n.t("notifications.group_message_summary", {
           group_name: "drummers",
           count: 13,
