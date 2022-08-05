@@ -289,6 +289,10 @@ export default function transformPost(
       postAtts.isDeleted && post.can_permanently_delete;
   }
 
+  if (post.user_status) {
+    postAtts.userStatus = post.user_status;
+  }
+
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
 
   return postAtts;
