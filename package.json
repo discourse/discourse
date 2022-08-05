@@ -33,9 +33,11 @@
     "@arkweid/lefthook": "^0.7.7",
     "@glint/core": "^0.9.1",
     "@glint/environment-ember-loose": "^0.9.1",
+    "@glint/environment-ember-template-imports": "^0.9.1",
     "@mixer/parallel-prettier": "^2.0.1",
     "chrome-launcher": "^0.15.0",
     "chrome-remote-interface": "^0.31.2",
+    "ember-template-imports": "^3.0.1",
     "puppeteer-core": "^13.7.0",
     "typescript": "^4.7.4"
   },
