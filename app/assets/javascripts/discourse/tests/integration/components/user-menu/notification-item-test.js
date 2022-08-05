@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { render, settled } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { deepMerge } from "discourse-common/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import Notification from "discourse/models/notification";
@@ -357,6 +357,40 @@ module(
         "only notification description is displayed"
       );
       assert.notOk(exists(".notification-label"), "label is not rendered");
+    });
+
+    test("custom click handlers", async function (assert) {
+      let klass;
+      withPluginApi("0.1", (api) => {
+        api.registerRenderDirectorForNotificationType(
+          "linked",
+          (NotificationItemBase) => {
+            klass = class extends NotificationItemBase {
+              static onClickCalled = false;
+
+              get linkHref() {
+                return "#";
+              }
+
+              onClick() {
+                klass.onClickCalled = true;
+              }
+            };
+            return klass;
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      await click("li a");
+      assert.ok(klass.onClickCalled);
     });
   }
 );
