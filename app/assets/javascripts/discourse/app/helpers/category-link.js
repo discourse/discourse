@@ -32,10 +32,10 @@ export function addExtraIconRenderer(renderer) {
   @param {Object} category The category to generate the badge for.
   @param {Object} opts
     @param {String}  [opts.url] The url that we want the category badge to link to.
-    @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
-    @param {Boolean} [opts.link] If false, the category badge will not be a link.
-    @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
-    @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
+    @param {boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
+    @param {boolean} [opts.link] If false, the category badge will not be a link.
+    @param {boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
+    @param {boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
 **/
 export function categoryBadgeHTML(category, opts) {

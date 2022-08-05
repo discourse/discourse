@@ -726,8 +726,8 @@ const Composer = RestModel.extend({
       @param {String} [opts.recipients]
       @param {Number} [opts.composerTime]
       @param {Number} [opts.typingTime]
-      @param {Boolean} [opts.whisper]
-      @param {Boolean} [opts.noBump]
+      @param {boolean} [opts.whisper]
+      @param {boolean} [opts.noBump]
       @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
       @param {Object} [opts.metaData]
       @param {Number} [opts.categoryId]

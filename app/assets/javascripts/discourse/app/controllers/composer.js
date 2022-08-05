@@ -1056,13 +1056,13 @@ export default Controller.extend({
       @param {Post} [opts.post] The post we're replying to
       @param {Topic} [opts.topic] The topic we're replying to
       @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-      @param {Boolean} [opts.ignoreIfChanged]
-      @param {Boolean} [opts.disableScopedCategory]
+      @param {boolean} [opts.ignoreIfChanged]
+      @param {boolean} [opts.disableScopedCategory]
       @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
       @param {Number} [opts.prioritizedCategoryId]
       @param {String} [opts.draftSequence]
-      @param {Boolean} [opts.skipDraftCheck]
-      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
+      @param {boolean} [opts.skipDraftCheck]
+      @param {boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
   open(opts) {
     opts = opts || {};

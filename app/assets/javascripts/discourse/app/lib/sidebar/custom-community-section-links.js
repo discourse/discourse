@@ -53,7 +53,7 @@ class RouteInfoHelper {
  * @param {string=} args.href - The href attribute for the link.
  * @param {string=} args.title - The title attribute for the link.
  * @param {string} args.text - The text to display for the link.
- * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
+ * @param {boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
  */
 export function addSectionLink(args, secondary) {
   const links = secondary ? secondaryCustomSectionLinks : customSectionLinks;

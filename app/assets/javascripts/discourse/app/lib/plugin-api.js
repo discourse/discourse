@@ -1722,7 +1722,7 @@ class PluginApi {
    * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
-   * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
+   * @param {boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
   addCommunitySectionLink(arg, secondary) {
     addCustomCommunitySectionLink(arg, secondary);
