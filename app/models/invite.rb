@@ -182,7 +182,9 @@ class Invite < ActiveRecord::Base
 
   def self.redeem_from_email(email)
     invite = Invite.find_by(email: Email.downcase(email))
-    InviteRedeemer.new(invite: invite, email: invite.email).redeem if invite
+    if invite.present? && invite.redeemable?
+      InviteRedeemer.new(invite: invite, email: invite.email).redeem
+    end
     invite
   end
 
