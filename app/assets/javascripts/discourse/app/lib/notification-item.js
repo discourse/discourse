@@ -30,10 +30,7 @@ const CLASS_FOR_TYPE = {
 
 let _customClassForType = {};
 
-export function registerRenderDirectorForNotificationType(
-  notificationType,
-  func
-) {
+export function registerNotificationTypeRenderer(notificationType, func) {
   _customClassForType[notificationType] = func(NotificationItemBase);
 }
 

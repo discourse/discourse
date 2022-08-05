@@ -98,7 +98,7 @@ import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
-import { registerRenderDirectorForNotificationType } from "discourse/lib/notification-item";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-item";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1853,7 +1853,7 @@ class PluginApi {
    * documentation and the default renderer.
    *
    * ```
-   * api.registerRenderDirectorForNotificationType("your_notification_type", (NotificationItemBase) => {
+   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationItemBase) => {
    *   return class extends NotificationItemBase {
    *     get label() {
    *       return "some label";
@@ -1872,8 +1872,8 @@ class PluginApi {
    * @param {string} notificationType - ID of the notification type (i.e. the key value of your notification type in the `Notification.types` enum on the server side).
    * @param {renderDirectorRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
    */
-  registerRenderDirectorForNotificationType(notificationType, func) {
-    registerRenderDirectorForNotificationType(notificationType, func);
+  registerNotificationTypeRenderer(notificationType, func) {
+    registerNotificationTypeRenderer(notificationType, func);
   }
 }
 

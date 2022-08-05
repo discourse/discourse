@@ -198,7 +198,7 @@ module(
 
     test("various aspects can be customized according to the notification's render director", async function (assert) {
       withPluginApi("0.1", (api) => {
-        api.registerRenderDirectorForNotificationType(
+        api.registerNotificationTypeRenderer(
           "linked",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
@@ -290,7 +290,7 @@ module(
 
     test("description can be omitted", async function (assert) {
       withPluginApi("0.1", (api) => {
-        api.registerRenderDirectorForNotificationType(
+        api.registerNotificationTypeRenderer(
           "linked",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
@@ -327,7 +327,7 @@ module(
 
     test("label can be omitted", async function (assert) {
       withPluginApi("0.1", (api) => {
-        api.registerRenderDirectorForNotificationType(
+        api.registerNotificationTypeRenderer(
           "linked",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
@@ -362,7 +362,7 @@ module(
     test("custom click handlers", async function (assert) {
       let klass;
       withPluginApi("0.1", (api) => {
-        api.registerRenderDirectorForNotificationType(
+        api.registerNotificationTypeRenderer(
           "linked",
           (NotificationItemBase) => {
             klass = class extends NotificationItemBase {
