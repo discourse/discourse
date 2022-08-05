@@ -40,6 +40,9 @@ class WatchedWord < ActiveRecord::Base
   after_destroy :clear_cache
 
   scope :by_action, -> { order("action ASC, word ASC") }
+  scope :for, ->(word:) do
+    where("(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')", word: word)
+  end
 
   def self.normalize_word(w)
     w.strip.squeeze('*')
@@ -61,7 +64,7 @@ class WatchedWord < ActiveRecord::Base
 
   def self.create_or_update_word(params)
     new_word = normalize_word(params[:word])
-    w = WatchedWord.where("word ILIKE ?", new_word).first || WatchedWord.new(word: new_word)
+    w = self.for(word: new_word).first_or_initialize(word: new_word)
     w.replacement = params[:replacement] if params[:replacement]
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]

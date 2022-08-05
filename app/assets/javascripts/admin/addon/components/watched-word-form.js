@@ -47,9 +47,12 @@ export default Component.extend({
     const filtered = words.filter(
       (content) => content.action === this.actionKey
     );
-    return filtered.every(
-      (content) => content.word.toLowerCase() !== word.toLowerCase()
-    );
+    return filtered.every((content) => {
+      if (content.case_sensitive === true) {
+        return content.word !== word;
+      }
+      return content.word.toLowerCase() !== word.toLowerCase();
+    });
   },
 
   actions: {
