@@ -266,7 +266,9 @@ export default Service.extend({
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
 
     // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup("topic-tracking-state:main");
+    obj.topicTrackingState = this.register.lookup(
+      "service:topic-tracking-state"
+    );
     obj.keyValueStore = this.register.lookup("service:key-value-store");
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;

@@ -46,7 +46,7 @@ export default {
       currentUser,
     });
 
-    app.register("topic-tracking-state:main", topicTrackingState, {
+    app.register("service:topic-tracking-state", topicTrackingState, {
       instantiate: false,
     });
 
@@ -67,7 +67,7 @@ export default {
       app.inject(t, "session", "service:session");
       app.inject(t, "messageBus", "service:message-bus");
       app.inject(t, "siteSettings", "service:site-settings");
-      app.inject(t, "topicTrackingState", "topic-tracking-state:main");
+      app.inject(t, "topicTrackingState", "service:topic-tracking-state");
       app.inject(t, "keyValueStore", "service:key-value-store");
     });
 
@@ -86,7 +86,11 @@ export default {
       property: "siteSettings",
       specifier: "service:site-settings",
     });
-    app.inject("service", "topicTrackingState", "topic-tracking-state:main");
+    injectServiceIntoService({
+      app,
+      property: "topicTrackingState",
+      specifier: "service:topic-tracking-state",
+    });
     injectServiceIntoService({
       app,
       property: "keyValueStore",
