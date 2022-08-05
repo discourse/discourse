@@ -44,6 +44,8 @@ export default class NotificationItemBase {
     if (this.notificationName) {
       return I18n.t(`notifications.titles.${this.notificationName}`);
     } else {
+      // notifications with unknown types, e.g. notifications that come from a
+      // plugin that's no longer installed
       return "";
     }
   }
