@@ -52,7 +52,7 @@
     {{/unless}}
 
     {{#if @showNotificationsTab}}
-      <li role="button" class="user-primary-navigation_item-parent user-notifications"  onclick={{action "toggleSubmenu"}}>
+      <li role="button" class="user-primary-navigation_item-parent user-notifications" {{on "click" this.toggleSubmenu}}>
         <a class={{if (eq @currentRouteParent "userNotifications") "active" }}>
           {{d-icon "comment" class="glyph"}}<span>{{i18n "user.notifications"}}</span>{{d-icon "chevron-down"}}
         </a>
@@ -101,7 +101,7 @@
     {{/if}}
 
     {{#if @canInviteToForum}}
-      <li role="button" class="user-primary-navigation_item-parent invited" onclick={{action "toggleSubmenu"}}>
+      <li role="button" class="user-primary-navigation_item-parent invited" {{on "click" this.toggleSubmenu}}>
         <a class={{if (eq @currentRouteParent "userInvited") "active" }}>
           {{d-icon "user-plus" class="glyph"}}<span>{{i18n "user.invited.title"}}</span>{{d-icon "chevron-down"}}
         </a>
@@ -129,7 +129,7 @@
     <PluginOutlet @name="user-main-nav" @tagName="" @connectorTagName="li" @args={{hash model=@model}} />
 
     {{#if @model.can_edit}}
-      <li role="button" class="preferences user-primary-navigation_item-parent" onclick={{action "toggleSubmenu"}}>
+      <li role="button" class="preferences user-primary-navigation_item-parent" {{on "click" this.toggleSubmenu}}>
         <a class={{if (eq @currentRouteParent "preferences") "active" }}>
           {{d-icon "cog"}}<span>{{i18n "user.preferences"}}</span>{{d-icon "chevron-down"}}
         </a>
