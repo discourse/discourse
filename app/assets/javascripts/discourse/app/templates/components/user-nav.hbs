@@ -6,6 +6,7 @@
           <li class="user-primary-navigation_item"><a href={{@model.adminPath}}>{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
         {{/if}}
       {{/if}}
+
       <li class="summary user-primary-navigation_item">
         <LinkTo @route="user.summary">
           {{d-icon "user"}}
@@ -49,6 +50,39 @@
           <PluginOutlet @name="user-activity-bottom" @tagName="" @connectorTagName="" @args={{hash model=@model}} />
         </ul>
       </li>
+
+      <UserNav::DropdownList @class="activity" @isActive={{eq @currentRouteParent "userActivity"}} @icon="stream" @text={{i18n "user.activity_stream"}}>
+        <ul class="activity-nav">
+          <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
+          <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
+          <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
+
+          {{#if @user.showRead}}
+            <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
+              {{i18n "user.read"}}
+            </DNavigationItem>
+          {{/if}}
+
+          {{#if @user.showDrafts}}
+            <DNavigationItem @route="userActivity.drafts">
+              {{@draftLabel}}
+            </DNavigationItem>
+          {{/if}}
+
+          {{#if (gt @model.pending_posts_count 0)}}
+            <DNavigationItem @route="userActivity.pending">
+              {{@pendingLabel}}
+            </DNavigationItem>
+          {{/if}}
+
+          <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
+          {{#if @user.showBookmarks}}
+            <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
+          {{/if}}
+
+          <PluginOutlet @name="user-activity-bottom" @tagName="" @connectorTagName="" @args={{hash model=@model}} />
+        </ul>
+      </UserNav::DropdownList>
     {{/unless}}
 
     {{#if @showNotificationsTab}}
@@ -108,12 +142,11 @@
 
         {{#if (or @viewingSelf this.currentUser.staff)}}
           <ul class="invites-nav user-primary-navigation_submenu" >
-            <NavItem  @route="userInvited.show" @routeParam="pending" @i18nLabel={{@pendingLabel}} />
-            <NavItem  @route="userInvited.show" @routeParam="expired" @i18nLabel={{@expiredLabel}} />
-            <NavItem  @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{@redeemedLabel}} />
+            <NavItem @route="userInvited.show" @routeParam="pending" @i18nLabel={{@pendingLabel}} />
+            <NavItem @route="userInvited.show" @routeParam="expired" @i18nLabel={{@expiredLabel}} />
+            <NavItem @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{@redeemedLabel}} />
           </ul>
         {{/if}}
-
       </li>
     {{/if}}
 

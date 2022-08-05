@@ -1,0 +1,17 @@
+<li class={{concat @class " user-primary-navigation_item-parent"}}>
+  <button type="button" class={{concat (if @isActive "active") " user-primary-navigation_item-button"}} {{on "click" this.toggleList}}>
+    {{d-icon @icon}}
+    <span>{{@text}}</span>
+
+    {{d-icon this.chevron}}
+  </button>
+
+  {{#if this.displayList}}
+    <div class="user-primary-navigation_submenu"
+      {{did-insert this.registerClickListener}}
+      {{will-destroy this.deregisterClickListener}} >
+
+      {{yield}}
+    </div>
+  {{/if}}
+</li>
