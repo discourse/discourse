@@ -1,23 +1,19 @@
-import UserMenuNotificationItem from "discourse/components/user-menu/notification-item";
+import NotificationItemBase from "discourse/lib/notification-items/base";
 import { groupPath } from "discourse/lib/url";
 import I18n from "I18n";
 
-export default class UserMenuMembershipRequestAcceptedNotificationItem extends UserMenuNotificationItem {
+export default class extends NotificationItemBase {
   get linkHref() {
     return groupPath(this.notification.data.group_name);
   }
 
-  get label() {
+  get description() {
     return I18n.t("notifications.membership_request_accepted", {
       group_name: this.notification.data.group_name,
     });
   }
 
-  get wrapLabel() {
-    return false;
-  }
-
-  get description() {
+  get label() {
     return null;
   }
 }

@@ -98,6 +98,7 @@ import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-item";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1850,6 +1851,36 @@ class PluginApi {
    */
   addSidebarSection(func) {
     addSidebarSection(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom renderer for a notification type or override the
+   * renderer of an existing type. See lib/notification-items/base.js for
+   * documentation and the default renderer.
+   *
+   * ```
+   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationItemBase) => {
+   *   return class extends NotificationItemBase {
+   *     get label() {
+   *       return "some label";
+   *     }
+   *
+   *     get description() {
+   *       return "fancy description";
+   *     }
+   *   };
+   * });
+   * ```
+   * @callback renderDirectorRegistererCallback
+   * @param {NotificationItemBase} The base class from which the returned class should inherit.
+   * @returns {NotificationItemBase} A class that inherits from NotificationItemBase.
+   *
+   * @param {string} notificationType - ID of the notification type (i.e. the key value of your notification type in the `Notification.types` enum on the server side).
+   * @param {renderDirectorRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerNotificationTypeRenderer(notificationType, func) {
+    registerNotificationTypeRenderer(notificationType, func);
   }
 }
 

@@ -1,26 +1,18 @@
-import UserMenuNotificationItem from "discourse/components/user-menu/notification-item";
+import NotificationItemBase from "discourse/lib/notification-items/base";
 import { formatUsername } from "discourse/lib/utilities";
 import I18n from "I18n";
 
-export default class UserMenuLikedNotificationItem extends UserMenuNotificationItem {
-  get count() {
-    return this.notification.data.count;
-  }
-
-  get username2() {
-    return formatUsername(this.notification.data.username2);
-  }
-
+export default class extends NotificationItemBase {
   get label() {
     if (this.count === 2) {
       return I18n.t("notifications.liked_by_2_users", {
         username: this.username,
-        username2: this.username2,
+        username2: this.#username2,
       });
     } else if (this.count > 2) {
       return I18n.t("notifications.liked_by_multiple_users", {
         username: this.username,
-        username2: this.username2,
+        username2: this.#username2,
         count: this.count - 2,
       });
     } else {
@@ -30,9 +22,17 @@ export default class UserMenuLikedNotificationItem extends UserMenuNotificationI
 
   get labelWrapperClasses() {
     if (this.count === 2) {
-      return "double-user";
+      return ["double-user"];
     } else if (this.count > 2) {
-      return "multi-user";
+      return ["multi-user"];
     }
+  }
+
+  get count() {
+    return this.notification.data.count;
+  }
+
+  get #username2() {
+    return formatUsername(this.notification.data.username2);
   }
 }

@@ -1,10 +1,11 @@
-import GlimmerComponent from "discourse/components/glimmer";
 import I18n from "I18n";
 
-export default class UserMenuReviewableItem extends GlimmerComponent {
-  constructor() {
-    super(...arguments);
-    this.reviewable = this.args.item;
+export default class ReviewableItemBase {
+  constructor({ reviewable, currentUser, siteSettings, site }) {
+    this.reviewable = reviewable;
+    this.currentUser = currentUser;
+    this.siteSettings = siteSettings;
+    this.site = site;
   }
 
   get actor() {

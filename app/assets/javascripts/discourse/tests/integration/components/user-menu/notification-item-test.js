@@ -1,11 +1,12 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { render, settled } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { deepMerge } from "discourse-common/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import Notification from "discourse/models/notification";
 import { hbs } from "ember-cli-htmlbars";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 
 function getNotification(overrides = {}) {
@@ -193,6 +194,203 @@ module(
         "emojis aren't unescaped when topic title is not safe"
       );
       assert.ok(!query("img"), "no <img> exists");
+    });
+
+    test("various aspects can be customized according to the notification's render director", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get classNames() {
+                return ["additional", "classes"];
+              }
+
+              get linkHref() {
+                return "/somewhere/awesome";
+              }
+
+              get linkTitle() {
+                return "hello world this is unsafe '\"<span>";
+              }
+
+              get icon() {
+                return "wrench";
+              }
+
+              get label() {
+                return "notification label 666 <span>";
+              }
+
+              get description() {
+                return "notification description 123 <script>";
+              }
+
+              get labelWrapperClasses() {
+                return ["label-wrapper-1"];
+              }
+
+              get descriptionWrapperClasses() {
+                return ["description-class-1"];
+              }
+            };
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+
+      assert.ok(
+        exists("li.additional.classes"),
+        "extra classes are included on the item"
+      );
+
+      const link = query("li a");
+      assert.ok(
+        link.href.endsWith("/somewhere/awesome"),
+        "link href is customized"
+      );
+      assert.strictEqual(
+        link.title,
+        "hello world this is unsafe '\"<span>",
+        "link title is customized and rendered safely"
+      );
+
+      assert.ok(exists("svg.d-icon-wrench"), "icon is customized");
+
+      const label = query("li .notification-label");
+      assert.ok(
+        label.classList.contains("label-wrapper-1"),
+        "label wrapper has additional classes"
+      );
+      assert.strictEqual(
+        label.textContent.trim(),
+        "notification label 666 <span>",
+        "label content is customized"
+      );
+
+      const description = query(".notification-description");
+      assert.ok(
+        description.classList.contains("description-class-1"),
+        "description has additional classes"
+      );
+      assert.strictEqual(
+        description.textContent.trim(),
+        "notification description 123 <script>",
+        "description content is customized"
+      );
+    });
+
+    test("description can be omitted", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get description() {
+                return null;
+              }
+
+              get label() {
+                return "notification label";
+              }
+            };
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      assert.notOk(
+        exists(".notification-description"),
+        "description is not rendered"
+      );
+      assert.ok(
+        query("li").textContent.trim(),
+        "notification label",
+        "only label content is displayed"
+      );
+    });
+
+    test("label can be omitted", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get label() {
+                return null;
+              }
+
+              get description() {
+                return "notification description";
+              }
+            };
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      assert.ok(
+        query("li").textContent.trim(),
+        "notification description",
+        "only notification description is displayed"
+      );
+      assert.notOk(exists(".notification-label"), "label is not rendered");
+    });
+
+    test("custom click handlers", async function (assert) {
+      let klass;
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            klass = class extends NotificationItemBase {
+              static onClickCalled = false;
+
+              get linkHref() {
+                return "#";
+              }
+
+              onClick() {
+                klass.onClickCalled = true;
+              }
+            };
+            return klass;
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      await click("li a");
+      assert.ok(klass.onClickCalled);
     });
   }
 );

@@ -1,8 +1,8 @@
-import UserMenuDefaultReviewableItem from "discourse/components/user-menu/default-reviewable-item";
-import I18n from "I18n";
+import ReviewableItemBase from "discourse/lib/reviewable-items/base";
 import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 
-export default class UserMenuReviewableFlaggedPostItem extends UserMenuDefaultReviewableItem {
+export default class extends ReviewableItemBase {
   get description() {
     const title = this.reviewable.topic_fancy_title;
     const postNumber = this.reviewable.post_number;

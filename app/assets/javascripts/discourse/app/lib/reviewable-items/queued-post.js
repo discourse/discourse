@@ -1,10 +1,10 @@
-import UserMenuDefaultReviewableItem from "discourse/components/user-menu/default-reviewable-item";
-import I18n from "I18n";
+import ReviewableItemBase from "discourse/lib/reviewable-items/base";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import { emojiUnescape } from "discourse/lib/text";
+import I18n from "I18n";
 
-export default class UserMenuReviewableQueuedPostItem extends UserMenuDefaultReviewableItem {
+export default class extends ReviewableItemBase {
   get actor() {
     return I18n.t("user_menu.reviewable.queue");
   }
