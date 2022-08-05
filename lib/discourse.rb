@@ -186,7 +186,7 @@ module Discourse
     end
 
     # internal reporting
-    if job.class == Class && ::Jobs::Base > job
+    if job.class == Class && job.is_a?(::Jobs::Base)
       job_exception_stats[job] += 1
     end
 
