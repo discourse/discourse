@@ -51,10 +51,6 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
     return this.renderDirector.label;
   }
 
-  get wrapLabel() {
-    return this.renderDirector.wrapLabel;
-  }
-
   get labelWrapperClasses() {
     return this.renderDirector.labelWrapperClasses?.join(" ") || "";
   }

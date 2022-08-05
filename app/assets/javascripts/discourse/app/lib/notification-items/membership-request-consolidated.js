@@ -9,18 +9,14 @@ export default class extends NotificationItemBase {
     );
   }
 
-  get label() {
+  get description() {
     return I18n.t("notifications.membership_request_consolidated", {
       group_name: this.notification.data.group_name,
       count: this.notification.data.count,
     });
   }
 
-  get wrapLabel() {
-    return false;
-  }
-
-  get description() {
+  get label() {
     return null;
   }
 }

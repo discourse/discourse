@@ -358,46 +358,5 @@ module(
       );
       assert.notOk(exists(".notification-label"), "label is not rendered");
     });
-
-    test("label wrapper can be omitted but not the whole label", async function (assert) {
-      withPluginApi("0.1", (api) => {
-        api.registerRenderDirectorForNotificationType(
-          "linked",
-          (NotificationItemBase) => {
-            return class extends NotificationItemBase {
-              get label() {
-                return "label content";
-              }
-
-              get description() {
-                return "notification description 184";
-              }
-
-              get wrapLabel() {
-                return false;
-              }
-            };
-          }
-        );
-      });
-
-      this.set(
-        "notification",
-        getNotification({
-          notification_type: NOTIFICATION_TYPES.linked,
-        })
-      );
-
-      await render(template);
-      assert.notOk(
-        exists(".notification-label"),
-        "label wrapper is not rendered"
-      );
-      assert.strictEqual(
-        query("li").textContent.trim().replaceAll(/\s+/g, " "),
-        "label content notification description 184",
-        "label is shown with description"
-      );
-    });
   }
 );

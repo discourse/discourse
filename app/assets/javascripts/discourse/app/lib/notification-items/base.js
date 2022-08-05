@@ -80,13 +80,6 @@ export default class NotificationItemBase {
   onClick() {}
 
   /**
-   * @returns {boolean} If you want the label's wrapper <span> to have no classes, override wrapLabel and return false.
-   */
-  get wrapLabel() {
-    return true;
-  }
-
-  /**
    * @returns {string[]} Include additional classes to the label's wrapper <span>.
    */
   get labelWrapperClasses() {

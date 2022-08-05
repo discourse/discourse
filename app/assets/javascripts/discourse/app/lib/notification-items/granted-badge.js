@@ -20,17 +20,13 @@ export default class extends NotificationItemBase {
     }
   }
 
-  get label() {
+  get description() {
     return I18n.t("notifications.granted_badge", {
       description: this.notification.data.badge_name,
     });
   }
 
-  get wrapLabel() {
-    return false;
-  }
-
-  get description() {
+  get label() {
     return null;
   }
 }

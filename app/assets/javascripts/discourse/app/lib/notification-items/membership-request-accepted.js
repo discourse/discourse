@@ -7,17 +7,13 @@ export default class extends NotificationItemBase {
     return groupPath(this.notification.data.group_name);
   }
 
-  get label() {
+  get description() {
     return I18n.t("notifications.membership_request_accepted", {
       group_name: this.notification.data.group_name,
     });
   }
 
-  get wrapLabel() {
-    return false;
-  }
-
-  get description() {
+  get label() {
     return null;
   }
 }

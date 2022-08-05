@@ -7,13 +7,9 @@
     {{d-icon this.icon}}
     <div>
       {{#if this.label}}
-        {{#if this.wrapLabel}}
-          <span class={{concat "notification-label " this.labelWrapperClasses}}>
-            {{this.label}}
-          </span>
-        {{else}}
-          <span>{{this.label}}</span>
-        {{/if}}
+        <span class={{concat "notification-label " this.labelWrapperClasses}}>
+          {{this.label}}
+        </span>
       {{/if}}
       {{#if this.description}}
         <span
