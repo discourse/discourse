@@ -47,5 +47,5 @@ export function getRenderDirector(
 ) {
   const klass =
     _customClassForType[type] || CLASS_FOR_TYPE[type] || NotificationItemBase;
-  return new klass(notification, currentUser, siteSettings, site);
+  return new klass({ notification, currentUser, siteSettings, site });
 }

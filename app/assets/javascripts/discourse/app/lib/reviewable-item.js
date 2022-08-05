@@ -18,5 +18,5 @@ export function getRenderDirector(
   site
 ) {
   const klass = CLASS_FOR_TYPE[type] || ReviewableItemBase;
-  return new klass(reviewable, currentUser, siteSettings, site);
+  return new klass({ reviewable, currentUser, siteSettings, site });
 }

@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import I18n from "I18n";
 
 export default class NotificationItemBase {
-  constructor(notification, currentUser, siteSettings, site) {
+  constructor({ notification, currentUser, siteSettings, site }) {
     this.notification = notification;
     this.currentUser = currentUser;
     this.siteSettings = siteSettings;
