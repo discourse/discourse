@@ -230,7 +230,7 @@ module(
                 return ["label-wrapper-1"];
               }
 
-              get descriptionElementClasses() {
+              get descriptionWrapperClasses() {
                 return ["description-class-1"];
               }
             };

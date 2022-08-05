@@ -59,8 +59,8 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
     return this.renderDirector.description;
   }
 
-  get descriptionElementClasses() {
-    return this.renderDirector.descriptionElementClasses?.join(" ") || "";
+  get descriptionWrapperClasses() {
+    return this.renderDirector.descriptionWrapperClasses?.join(" ") || "";
   }
 
   get notification() {

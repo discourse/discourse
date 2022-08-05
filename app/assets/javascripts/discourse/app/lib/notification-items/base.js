@@ -91,7 +91,7 @@ export default class NotificationItemBase {
   /**
    * @returns {string[]} Include additional classes to the description's wrapper <span>.
    */
-  get descriptionElementClasses() {
+  get descriptionWrapperClasses() {
     return [];
   }
 
