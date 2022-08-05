@@ -59,7 +59,7 @@ module ImportScripts::PhpBB3
         process_code(text)
         fix_markdown(text)
         process_attachments(text, attachments) if attachments.present?
-
+        process_videos(text)
         text
       end
     end
@@ -195,6 +195,12 @@ module ImportScripts::PhpBB3
     def fix_markdown(text)
       text.gsub!(/(\n*\[\/?quote.*?\]\n*)/mi) { |q| "\n#{q.strip}\n" }
       text.gsub!(/^!\[[^\]]*\]\([^\]]*\)$/i) { |img| "\n#{img.strip}\n" } # space out images single on line
+      text
+    end
+
+    def process_videos(text)
+      # [YOUTUBE]<id>[/YOUTUBE]
+      text.gsub(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
       text
     end
   end
