@@ -52,7 +52,7 @@
         <div class="primary">
           <PluginOutlet @name="before-user-profile-avatar" @args={{hash model=this.model}} />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
-        
+
           <div class="primary-textual">
             <div class="user-profile-names">
               {{#if this.model.staged}}
@@ -69,7 +69,7 @@
               <h2 class={{if this.nameFirst "username" "full-name"}}>
                 {{#if this.nameFirst}}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}
               </h2>
-              
+
               {{#if this.model.title}}
                 <h3>{{this.model.title}}</h3>
               {{/if}}
@@ -173,7 +173,7 @@
             {{/if}}
 
             {{#if this.site.mobileView}}
-              <li>                
+              <li>
                 <DButton @class="btn-default toggle-mobile-user-menu" @action={{action "toggleMobileMenu" }} @icon="bars" @label="hamburger_menu" />
               </li>
             {{/if}}
@@ -237,20 +237,20 @@
       </div>
     </section>
     <div class='user-content-wrapper'>
-      {{user-nav 
-        model=this.model 
-        user=this.user 
-        showNotificationsTab=this.showNotificationsTab
-        showPrivateMessages=this.showPrivateMessages
-        canInviteToForum=this.canInviteToForum
-        viewingSelf=this.viewingSelf
-        currentRouteParent=this.currentRouteParent
-        showBadges=this.showBadges
-        draftLabel=this.draftLabel
-        pendingLabel=this.pendingLabel
-        expiredLabel=this.expiredLabel
-        redeemedLabel=this.redeemedLabel
-        showMobileUserMenu=this.showMobileUserMenu }}
+      <UserNav
+        @model={{this.model}}
+        @user={{this.user}}
+        @showNotificationsTab={{this.showNotificationsTab}}
+        @showPrivateMessages={{this.showPrivateMessages}}
+        @canInviteToForum={{this.canInviteToForum}}
+        @viewingSelf={{this.viewingSelf}}
+        @currentRouteParent={{this.currentRouteParent}}
+        @showBadges={{this.showBadges}}
+        @draftLabel={{this.draftLabel}}
+        @pendingLabel={{this.pendingLabel}}
+        @expiredLabel={{this.expiredLabel}}
+        @redeemedLabel={{this.redeemedLabel}}
+        @showMobileUserMenu={{this.showMobileUserMenu}} />
     {{outlet}}
   </div>
   </DSection>

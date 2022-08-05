@@ -1,11 +1,9 @@
-import Component from "@ember/component";
+import GlimmerComponent from "discourse/components/glimmer";
 import { bind } from "discourse-common/utils/decorators";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { action } from "@ember/object";
 
-export default Component.extend({
-  tagName: "",
-
+export default class UserNav extends GlimmerComponent {
   @bind
   userMenuOutside(e) {
     const isClickOnParent = e.composedPath().some((element) => {
@@ -18,9 +16,10 @@ export default Component.extend({
       document.querySelectorAll(".user-nav > li").forEach((navParent) => {
         navParent.classList.remove("show-children");
       });
+
       document.removeEventListener("click", this.userMenuOutside);
     }
-  },
+  }
 
   @bind
   collapseMobileProfileMenu(e) {
@@ -46,7 +45,7 @@ export default Component.extend({
       this.set("showMobileUserMenu", false);
       document.removeEventListener("click", this.collapseMobileProfileMenu);
     }
-  },
+  }
 
   @action
   toggleSubmenu(e) {
@@ -68,5 +67,5 @@ export default Component.extend({
         .querySelector(".preferences-nav")
         .scrollIntoView({ inline: "end" });
     }
-  },
-});
+  }
+}
