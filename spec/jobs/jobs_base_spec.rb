@@ -38,23 +38,26 @@ RSpec.describe ::Jobs::Base do
     expect(bad.fail_count).to eq(3)
   end
 
-  context 'when looking at Discourse.job_exception_stats' do
-    before do
-      Discourse.reset_job_exception_stats!
-    end
-    after do
-      Discourse.reset_job_exception_stats!
-    end
-
-    it 'collects stats for failing jobs' do
-      bad = BadJob.new
-      3.times do
-        # During test env handle_job_exception errors out
-        # in production this is suppressed
-        expect { bad.perform({}) }.to raise_error(BadJob::BadJobError)
+  describe '#perform' do
+    context 'when a job raises an error' do
+      before do
+        Discourse.reset_job_exception_stats!
       end
 
-      expect(Discourse.job_exception_stats).to eq({ BadJob => 3 })
+      after do
+        Discourse.reset_job_exception_stats!
+      end
+
+      it 'collects stats for failing jobs in Discourse.job_exception_stats' do
+        bad = BadJob.new
+        3.times do
+          # During test env handle_job_exception errors out
+          # in production this is suppressed
+          expect { bad.perform({}) }.to raise_error(BadJob::BadJobError)
+        end
+
+        expect(Discourse.job_exception_stats).to eq({ BadJob => 3 })
+      end
     end
   end
 
