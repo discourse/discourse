@@ -1,6 +1,10 @@
 import { test } from "qunit";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import { setCaretPosition } from "discourse/lib/utilities";
 
 acceptance("Composer - editor mentions", function (needs) {
@@ -16,6 +20,10 @@ acceptance("Composer - editor mentions", function (needs) {
             name: "Some User",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+            status: {
+              emoji: "tooth",
+              description: "off to dentist",
+            },
           },
           {
             username: "user2",
@@ -103,5 +111,21 @@ acceptance("Composer - editor mentions", function (needs) {
       "abc @user 123",
       "should replace mention correctly"
     );
+  });
+
+  test("shows status on search results when mentioning a user", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    // emulate typing in "abc @u"
+    const editor = query(".d-editor-input");
+    await fillIn(".d-editor-input", "@");
+    await setCaretPosition(editor, 5);
+    await triggerKeyEvent(".d-editor-input", "keyup", "@");
+    await fillIn(".d-editor-input", "@u");
+    await setCaretPosition(editor, 6);
+    await triggerKeyEvent(".d-editor-input", "keyup", "U");
+
+    assert.ok(exists(".autocomplete .emoji[title='off to dentist']"));
   });
 });
