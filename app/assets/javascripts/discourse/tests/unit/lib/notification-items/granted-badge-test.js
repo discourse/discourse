@@ -43,7 +43,7 @@ discourseModule("Unit | Notification Items | granted-badge", function () {
     );
   });
 
-  test("label", async function (assert) {
+  test("description", async function (assert) {
     const notification = getNotification();
     const director = createRenderDirector(
       notification,
@@ -51,7 +51,7 @@ discourseModule("Unit | Notification Items | granted-badge", function () {
       this.siteSettings
     );
     assert.strictEqual(
-      director.label,
+      director.description,
       I18n.t("notifications.granted_badge", { description: "Badge 15" }),
       "contains the right content"
     );
