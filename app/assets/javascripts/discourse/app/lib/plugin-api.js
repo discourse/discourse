@@ -99,6 +99,7 @@ import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/s
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-item";
+import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1881,6 +1882,49 @@ class PluginApi {
    */
   registerNotificationTypeRenderer(notificationType, func) {
     registerNotificationTypeRenderer(notificationType, func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Registers a new tab in the user menu. This API method expects a callback
+   * that should return a class inheriting from the class (UserMenuTab) that's
+   * passed to the callback. See discourse/app/lib/user-menu/tab.js for
+   * documentation of UserMenuTab.
+   *
+   * ```
+   * api.registerUserMenuTab((UserMenuTab) => {
+   *   return class extends UserMenuTab {
+   *     get id() {
+   *       return "custom-tab-id";
+   *     }
+   *
+   *     get shouldDisplay() {
+   *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
+   *     }
+   *
+   *     get count() {
+   *       return this.currentUser.my_custom_notification_count;
+   *     }
+   *
+   *     get panelComponent() {
+   *       return "your-custom-glimmer-component";
+   *     }
+   *
+   *     get icon() {
+   *       return "some-fa5-icon";
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback customTabRegistererCallback
+   * @param {UserMenuTab} The base class from which the returned class should inherit.
+   * @returns {UserMenuTab} A class that inherits from UserMenuTab.
+   *
+   * @param {customTabRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerUserMenuTab(func) {
+    registerUserMenuTab(func);
   }
 }
 
