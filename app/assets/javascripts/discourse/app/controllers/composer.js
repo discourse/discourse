@@ -747,8 +747,15 @@ export default Controller.extend({
         return;
       }
 
-      if (this.get("model.viewOpen") || this.get("model.viewFullscreen")) {
+      const composer = this.model;
+
+      if (composer.viewOpen) {
         this.shrink();
+      }
+
+      if (composer.viewFullscreen) {
+        this.toggleFullscreen();
+        this.focusComposer();
       }
     },
 
