@@ -840,6 +840,10 @@ export default Controller.extend({
     const composer = this.model;
 
     if (composer.cantSubmitPost) {
+      if (composer.composeState === Composer.FULLSCREEN) {
+        this.toggleFullscreen();
+      }
+
       this.set("lastValidatedAt", Date.now());
       return;
     }
