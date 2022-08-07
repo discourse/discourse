@@ -4,6 +4,10 @@
   {{#if this.visible}}
     <ComposerMessages @composer={{this.model}} @messageCount={{this.messageCount}} @addLinkLookup={{action "addLinkLookup"}} />
 
+    {{#if this.fullScreenPrompt}}
+      <ComposerFullscreenPrompt @model={{this.model}}/>
+    {{/if}}
+
     {{#if this.model.viewOpenOrFullscreen}}
       <div role="form" aria-label={{I18n this.saveLabel}} class="reply-area {{if this.canEditTags "with-tags" "without-tags"}}">
         <PluginOutlet @name="composer-open" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
