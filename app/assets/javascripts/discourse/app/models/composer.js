@@ -124,6 +124,7 @@ const Composer = RestModel.extend({
   noBump: false,
   draftSaving: false,
   draftForceSave: false,
+  showFullScreenExitPrompt: false,
 
   archetypes: reads("site.archetypes"),
 
