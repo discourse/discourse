@@ -248,22 +248,8 @@ HTML
       )
       expect(javascript_cache.content).to include("name: \"theme-field-#{field.id}-mobile-html-script-1\",")
       expect(javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", function (api) {")
-      expect(javascript_cache.content).to include("var x = 1;")
-    end
-
-    it "replaces const writes with _readOnlyError function call" do
-      html = <<HTML
-        <script type='text/discourse-plugin' version='0.1'>
-          const x = 1;
-          x = 2;
-        </script>
-HTML
-
-      baked, javascript_cache = transpile(html)
-      expect(baked).to include(javascript_cache.url)
-      expect(javascript_cache.content).to include('var x = 1;')
-      expect(javascript_cache.content).to include('2, _readOnlyError("x");')
+      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", api =>")
+      expect(javascript_cache.content).to include("const x = 1;")
     end
   end
 
@@ -369,9 +355,9 @@ HTML
       )
       expect(theme_field.javascript_cache.content).to include("name: \"theme-field-#{theme_field.id}-common-html-script-1\",")
       expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", function (api)")
+      expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", api =>")
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
-      expect(theme_field.javascript_cache.content).to include("var a = function a() {}")
+      expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
