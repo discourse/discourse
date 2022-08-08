@@ -124,14 +124,16 @@ class WordWatcher
   end
 
   def self.censor_text(text)
+    return text if text.blank?
+
     regexps = word_matcher_regexp_list(:censor)
     return text if regexps.blank?
 
     regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
   end
 
-  def self.apply_to_text(text)
-    text = censor_text(text)
+  def self.replace_text(text)
+    return text if text.blank?
 
     %i[replace link]
       .flat_map { |type| word_matcher_regexps(type).to_a }
@@ -139,6 +141,12 @@ class WordWatcher
         case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
         replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
       end
+  end
+
+  def self.apply_to_text(text)
+    text = censor_text(text)
+    text = replace_text(text)
+    text
   end
 
   def self.clear_cache!
