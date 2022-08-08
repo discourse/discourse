@@ -872,6 +872,13 @@ export default Component.extend(
           placement: this.selectKit.options.placement,
           modifiers: [
             {
+              name: "eventListeners",
+              options: {
+                resize: !this.site.mobileView,
+                scroll: !this.site.mobileView,
+              },
+            },
+            {
               name: "flip",
               enabled: !inModal,
               options: {

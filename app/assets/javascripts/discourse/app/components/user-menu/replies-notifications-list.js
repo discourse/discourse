@@ -5,6 +5,10 @@ export default class UserMenuRepliesNotificationsList extends UserMenuNotificati
     return ["replied"];
   }
 
+  get dismissTypes() {
+    return this.filterByTypes;
+  }
+
   dismissWarningModal() {
     return null;
   }

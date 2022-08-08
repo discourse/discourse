@@ -10,6 +10,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return null;
   }
 
+  get dismissTypes() {
+    return null;
+  }
+
   get showAllHref() {
     return `${this.currentUser.path}/notifications`;
   }
@@ -43,6 +47,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
+  get itemComponent() {
+    return "user-menu/notification-item";
+  }
+
   fetchItems() {
     const params = {
       limit: 30,
@@ -66,8 +74,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     if (this.currentUser.unread_high_priority_notifications > 0) {
       const modalController = showModal("dismiss-notification-confirmation");
       modalController.set(
-        "count",
-        this.currentUser.unread_high_priority_notifications
+        "confirmationMessage",
+        I18n.t("notifications.dismiss_confirmation.body.default", {
+          count: this.currentUser.unread_high_priority_notifications,
+        })
       );
       return modalController;
     }
@@ -76,7 +86,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @action
   dismissButtonClick() {
     const opts = { type: "PUT" };
-    const dismissTypes = this.filterByTypes;
+    const dismissTypes = this.dismissTypes;
     if (dismissTypes?.length > 0) {
       opts.data = { dismiss_types: dismissTypes.join(",") };
     }

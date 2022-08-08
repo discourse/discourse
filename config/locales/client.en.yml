@@ -1121,6 +1121,7 @@ en:
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
@@ -2363,8 +2364,12 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "Are you sure? You have %{count} important notification."
-          other: "Are you sure? You have %{count} important notifications."
+          default:
+            one: "Are you sure? You have %{count} important notification."
+            other: "Are you sure? You have %{count} important notifications."
+          bookmarks:
+            one: "Are you sure? You have %{count} unread bookmark reminder."
+            other: "Are you sure? You have %{count} unread bookmark reminders."
         dismiss: "Dismiss"
         cancel: "Cancel"
 
@@ -2557,6 +2562,7 @@ en:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "Menu tabs"
       view_all_notifications: "view all notifications"
+      view_all_bookmarks: "view all bookmarks"
       reviewable:
         view_all: "view all review items"
         queue: "Queue"
@@ -4056,6 +4062,7 @@ en:
       no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
       no_likes_others: "No liked posts."
       no_topics_title: "You have not started any topics yet"
+      no_topics_body: "It’s always best to <a href='%{searchUrl}'>search</a> for existing topics of conversation before starting a new one, but if you’re confident the topic you want isn’t out there already, go ahead and start a new topic of your very own. Look for the <kbd>+ New Topic</kbd> button at the top right of the topic list, category, or tag to begin creating a new topic in that area."
       no_topics_title_others: "%{username} has not started any topics yet"
       no_read_topics_title: "You haven’t read any topics yet"
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"

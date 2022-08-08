@@ -63,7 +63,12 @@ export default Controller.extend({
 
       if (unreadHighPriorityNotifications > 0) {
         showModal("dismiss-notification-confirmation").setProperties({
-          count: unreadHighPriorityNotifications,
+          confirmationMessage: I18n.t(
+            "notifications.dismiss_confirmation.body.default",
+            {
+              count: unreadHighPriorityNotifications,
+            }
+          ),
           dismissNotifications: () => this.markRead(),
         });
       } else {

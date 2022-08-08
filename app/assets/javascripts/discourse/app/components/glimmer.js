@@ -1,6 +1,4 @@
 import GlimmerComponent from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 
 /*
@@ -22,10 +20,5 @@ export default class DiscourseGlimmerComponent extends GlimmerComponent {
   @service currentUser;
   @service session;
   @service site;
-
-  @cached
-  get topicTrackingState() {
-    const applicationInstance = getOwner(this);
-    return applicationInstance.lookup("topic-tracking-state:main");
-  }
+  @service topicTrackingState;
 }

@@ -12,14 +12,14 @@ class UsersController < ApplicationController
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
     :bookmarks, :invited, :check_sso_email, :check_sso_payload,
-    :recent_searches, :reset_recent_searches
+    :recent_searches, :reset_recent_searches, :user_menu_bookmarks
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
     :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
-    :feature_topic, :clear_featured_topic, :bookmarks
+    :feature_topic, :clear_featured_topic, :bookmarks, :user_menu_bookmarks
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -1738,6 +1738,62 @@ class UsersController < ApplicationController
         end
       end
     end
+  end
+
+  USER_MENU_BOOKMARKS_LIST_LIMIT = 20
+  def user_menu_bookmarks
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
+
+    reminder_notifications = current_user
+      .notifications
+      .visible
+      .includes(:topic)
+      .where(read: false, notification_type: Notification.types[:bookmark_reminder])
+      .limit(USER_MENU_BOOKMARKS_LIST_LIMIT)
+      .to_a
+
+    if reminder_notifications.size < USER_MENU_BOOKMARKS_LIST_LIMIT
+      exclude_bookmark_ids = reminder_notifications
+        .filter_map { |notification| notification.data_hash[:bookmark_id] }
+
+      bookmark_list = UserBookmarkList.new(
+        user: current_user,
+        guardian: guardian,
+        params: {
+          per_page: USER_MENU_BOOKMARKS_LIST_LIMIT - reminder_notifications.size
+        }
+      )
+      bookmark_list.load do |query|
+        if exclude_bookmark_ids.present?
+          query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)
+        end
+      end
+    end
+
+    if reminder_notifications.present?
+      serialized_notifications = ActiveModel::ArraySerializer.new(
+        reminder_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    if bookmark_list
+      bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
+      serialized_bookmarks = serialize_data(
+        bookmark_list,
+        UserBookmarkListSerializer,
+        scope: guardian,
+        root: false
+      )[:bookmarks]
+    end
+
+    render json: {
+      notifications: serialized_notifications || [],
+      bookmarks: serialized_bookmarks || []
+    }
   end
 
   private

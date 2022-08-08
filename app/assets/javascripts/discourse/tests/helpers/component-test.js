@@ -43,17 +43,17 @@ export function setupRenderingTest(hooks) {
       specifier: "service:current-user",
     });
 
-    this.owner.unregister("topic-tracking-state:main");
+    this.owner.unregister("service:topic-tracking-state");
     this.owner.register(
-      "topic-tracking-state:main",
+      "service:topic-tracking-state",
       TopicTrackingState.create({ currentUser }),
       { instantiate: false }
     );
-    this.owner.inject(
-      "service",
-      "topicTrackingState",
-      "topic-tracking-state:main"
-    );
+    injectServiceIntoService({
+      app: this.owner.application,
+      property: "topicTrackingState",
+      specifier: "service:topic-tracking-state",
+    });
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");

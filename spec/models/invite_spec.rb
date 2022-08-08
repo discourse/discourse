@@ -239,13 +239,8 @@ RSpec.describe Invite do
       expect(invite.redeem).to be_blank
     end
 
-    it 'does not work with deleted invites' do
-      invite.destroy!
-      expect(invite.redeem).to be_blank
-    end
-
     it 'does not work with invalidated invites' do
-      invite.update(invalidated_at: 1.day.ago)
+      invite.update!(invalidated_at: 1.day.ago)
       expect(invite.redeem).to be_blank
     end
 
@@ -317,6 +312,25 @@ RSpec.describe Invite do
       Invite.redeem_from_email('test2@example.com')
       expect(invite.reload).not_to be_redeemed
     end
+
+    it 'does not work with expired invites' do
+      invite.update!(expires_at: 1.day.ago)
+      Invite.redeem_from_email(user.email)
+      expect(invite).not_to be_redeemed
+    end
+
+    it 'does not work with deleted invites' do
+      invite.trash!
+      Invite.redeem_from_email(user.email)
+      expect(invite).not_to be_redeemed
+    end
+
+    it 'does not work with invalidated invites' do
+      invite.update!(invalidated_at: 1.day.ago)
+      Invite.redeem_from_email(user.email)
+      expect(invite).not_to be_redeemed
+    end
+
   end
 
   describe 'scopes' do

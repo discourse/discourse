@@ -758,7 +758,7 @@ en:
       public_group_membership: "You’re joining/leaving groups a bit too frequently. Please wait %{time_left} before trying again."
       topics_per_day: "You’ve reached the maximum new topics allowed per day. You can create more new topics in %{time_left}."
       pms_per_day: "You’ve reached the maximum messages allowed per day. You can create more new messages in %{time_left}."
-      create_like: "Wow! You’ve been sharing a lot of love! You’ve reached the maximum daily likes for today, but as you gain trust levels, you’ll earn more daily likes. You’ll be able to like posts again in %{time_left}."
+      create_like: "Wow! You’ve been sharing a lot of love! You’ve reached the maximum number of likes within a 24 hour period, but as you gain trust levels, you’ll earn more daily likes. You’ll be able to like posts again in %{time_left}."
       create_bookmark: "You’ve reached the maximum number of daily bookmarks. You can create more bookmarks in %{time_left}."
       edit_post: "You’ve reached the maximum number of daily edits. You can submit more edits in %{time_left}."
       live_post_counts: "You’re asking for live post counts too quickly. Please wait %{time_left} before trying again."

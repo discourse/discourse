@@ -17,6 +17,10 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
     return "pending-reviewables";
   }
 
+  get itemComponent() {
+    return "user-menu/reviewable-item";
+  }
+
   fetchItems() {
     return ajax("/review/user-menu-list").then((data) => {
       return data.reviewables.map((item) => {

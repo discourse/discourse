@@ -5559,6 +5559,146 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#user_menu_bookmarks" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:bookmark_with_reminder) { Fabricate(:bookmark, user: user, bookmarkable: post) }
+    fab!(:bookmark_without_reminder) { Fabricate(:bookmark, user: user, bookmarkable: topic) }
+
+    before do
+      TopicUser.change(user.id, post.topic.id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
+      BookmarkReminderNotificationHandler
+        .new(bookmark_with_reminder)
+        .send_notification
+    end
+
+    context "when logged out" do
+      it "responds with 404" do
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        sign_in(user)
+      end
+
+      it "responds with 403 when requesting bookmarks list of another user" do
+        get "/u/#{user1.username}/user-menu-bookmarks"
+        expect(response.status).to eq(403)
+      end
+
+      it "sends an array of unread bookmark_reminder notifications" do
+        bookmark_with_reminder2 = Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post))
+        TopicUser.change(user.id, bookmark_with_reminder2.bookmarkable.topic, total_msecs_viewed: 1)
+        BookmarkReminderNotificationHandler
+          .new(bookmark_with_reminder2)
+          .send_notification
+
+        user
+          .notifications
+          .where(notification_type: Notification.types[:bookmark_reminder])
+          .where("data::json ->> 'bookmark_id' = ?", bookmark_with_reminder2.id.to_s)
+          .first
+          .update!(read: true)
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "responds with an array of bookmarks that are not associated with any of the unread bookmark_reminder notifications" do
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(1)
+        expect(bookmarks.first["id"]).to eq(bookmark_without_reminder.id)
+
+        bookmark_reminder = user
+          .notifications
+          .where(notification_type: Notification.types[:bookmark_reminder])
+          .where("data::json ->> 'bookmark_id' = ?", bookmark_with_reminder.id.to_s)
+          .first
+
+        bookmark_reminder.update!(read: true)
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
+          bookmark_with_reminder.id,
+          bookmark_without_reminder.id
+        )
+
+        data = bookmark_reminder.data_hash
+        data.delete(:bookmark_id)
+        bookmark_reminder.update!(data: data.to_json, read: false)
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to be_nil
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
+          bookmark_with_reminder.id,
+          bookmark_without_reminder.id
+        )
+      end
+
+      it "fills up the remaining of the USER_MENU_BOOKMARKS_LIST_LIMIT limit with bookmarks" do
+        bookmark2 = Fabricate(
+          :bookmark,
+          user: user,
+          bookmarkable: Fabricate(:post, topic: topic)
+        )
+
+        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(1)
+
+        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 3) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(2)
+
+        BookmarkReminderNotificationHandler.new(bookmark2).send_notification
+
+        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 3) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(2)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(1)
+      end
+    end
+  end
+
   def create_second_factor_security_key
     sign_in(user1)
     stub_secure_session_confirmed

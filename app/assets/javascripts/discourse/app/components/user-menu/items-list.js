@@ -28,6 +28,12 @@ export default class UserMenuItemsList extends GlimmerComponent {
     return "user-menu/items-list-empty-state";
   }
 
+  get itemComponent() {
+    throw new Error(
+      `the itemComponent property must be implemented in ${this.constructor.name}`
+    );
+  }
+
   fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
@@ -51,17 +57,6 @@ export default class UserMenuItemsList extends GlimmerComponent {
     }
     this.fetchItems()
       .then((items) => {
-        const valid = items.every((item) => {
-          if (!item.userMenuComponent) {
-            // eslint-disable-next-line no-console
-            console.error("userMenuComponent property is blank on", item);
-            return false;
-          }
-          return true;
-        });
-        if (!valid) {
-          throw new Error("userMenuComponent must be present on all items");
-        }
         this._setCachedItems(items);
         this.items = items;
       })

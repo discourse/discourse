@@ -2,8 +2,9 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import I18n from "I18n";
 
-export default class extends Component {
+export default class UserStatusMessage extends Component {
   tagName = "";
+  showTooltip = true;
 
   @computed("status.ends_at")
   get until() {
