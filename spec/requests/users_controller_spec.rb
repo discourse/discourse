@@ -5586,9 +5586,6 @@ RSpec.describe UsersController do
       end
 
       it "responds with 403 when requesting bookmarks list of another user" do
-        get "/u/#{admin.username}/user-menu-bookmarks"
-        expect(response.status).to eq(403)
-
         get "/u/#{user1.username}/user-menu-bookmarks"
         expect(response.status).to eq(403)
       end
