@@ -5591,25 +5591,25 @@ RSpec.describe UsersController do
       end
 
       it "sends an array of unread bookmark_reminder notifications" do
+        bookmark_with_reminder2 = Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post))
+        TopicUser.change(user.id, bookmark_with_reminder2.bookmarkable.topic, total_msecs_viewed: 1)
+        BookmarkReminderNotificationHandler
+          .new(bookmark_with_reminder2)
+          .send_notification
+
+        user
+          .notifications
+          .where(notification_type: Notification.types[:bookmark_reminder])
+          .where("data::json ->> 'bookmark_id' = ?", bookmark_with_reminder2.id.to_s)
+          .first
+          .update!(read: true)
+
         get "/u/#{user.username}/user-menu-bookmarks"
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
         expect(notifications.size).to eq(1)
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
-
-        bookmark_reminder = user
-          .notifications
-          .where(notification_type: Notification.types[:bookmark_reminder])
-          .where("data::json ->> 'bookmark_id' = ?", bookmark_with_reminder.id.to_s)
-          .first
-        bookmark_reminder.update!(read: true)
-
-        get "/u/#{user.username}/user-menu-bookmarks"
-        expect(response.status).to eq(200)
-
-        notifications = response.parsed_body["notifications"]
-        expect(notifications).to be_empty
       end
 
       it "responds with an array of bookmarks that are not associated with any of the unread bookmark_reminder notifications" do
