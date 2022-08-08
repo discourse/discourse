@@ -5,3 +5,24 @@
     padding: 1em;
   }
 }
+
+.alert-bootstrap-mode {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  .col-button {
+    display: flex;
+    flex-direction: row;
+    padding-top: 10px;
+    justify-content: center;
+    .alert--button,
+    .alert--link {
+      align-self: center;
+    }
+    .alert--link {
+      font-weight: bold;
+      padding-left: 10px;
+    }
+  }
+}
