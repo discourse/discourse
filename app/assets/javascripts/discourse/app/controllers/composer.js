@@ -1496,7 +1496,13 @@ export default Controller.extend({
       this.set("model.composeState", Composer.OPEN);
     } else {
       this.set("model.composeState", Composer.FULLSCREEN);
+      this.set("model.showFullScreenExitPrompt", true);
     }
+  },
+
+  @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
+  fullScreenPrompt(isFullscreen, showExitPrompt) {
+    return isFullscreen && showExitPrompt;
   },
 
   close() {
