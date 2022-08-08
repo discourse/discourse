@@ -5577,9 +5577,6 @@ RSpec.describe UsersController do
       it "responds with 404" do
         get "/u/#{user.username}/user-menu-bookmarks"
         expect(response.status).to eq(404)
-
-        get "/u/#{admin.username}/user-menu-bookmarks"
-        expect(response.status).to eq(404)
       end
     end
 
