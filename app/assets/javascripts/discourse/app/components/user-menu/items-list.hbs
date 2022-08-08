@@ -5,15 +5,17 @@
 {{else if this.items.length}}
   <ul>
     {{#each this.items as |item|}}
-      {{component this.itemComponent item=item}}
+      <UserMenu::ItemsListItem @item={{item}} />
     {{/each}}
   </ul>
+
   <div class="panel-body-bottom">
     {{#if this.showAllHref}}
       <a class="btn btn-default btn-icon no-text show-all" href={{this.showAllHref}} title={{this.showAllTitle}}>
         {{d-icon "chevron-down" aria-label=this.showAllTitle}}
       </a>
     {{/if}}
+
     {{#if this.showDismiss}}
       <button
         type="button"

@@ -3,6 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
+import UserMenuReviewableItem from "discourse/components/user-menu/reviewable-item";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
   get showAllHref() {
@@ -17,14 +18,15 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
     return "pending-reviewables";
   }
 
-  get itemComponent() {
-    return "user-menu/reviewable-item";
-  }
-
   fetchItems() {
     return ajax("/review/user-menu-list").then((data) => {
       return data.reviewables.map((item) => {
-        return UserMenuReviewable.create(item);
+        return new UserMenuReviewableItem({
+          reviewable: UserMenuReviewable.create(item),
+          siteSettings: this.siteSettings,
+          site: this.site,
+          currentUser: this.currentUser,
+        });
       });
     });
   }

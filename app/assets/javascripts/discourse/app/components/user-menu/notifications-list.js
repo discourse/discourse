@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
+import UserMenuNotificationItem from "discourse/components/user-menu/notification-item";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   get filterByTypes() {
@@ -43,10 +44,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
-  get itemComponent() {
-    return "user-menu/notification-item";
-  }
-
   fetchItems() {
     const params = {
       limit: 30,
@@ -56,14 +53,25 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     };
 
     const types = this.filterByTypes;
+
     if (types?.length > 0) {
       params.filter_by_types = types.join(",");
       params.silent = true;
     }
+
     return this.store
       .findStale("notification", params)
       .refresh()
-      .then((c) => c.content);
+      .then((c) => {
+        return c.content.map((notification) => {
+          return new UserMenuNotificationItem({
+            notification,
+            siteSettings: this.siteSettings,
+            site: this.site,
+            currentUser: this.currentUser,
+          });
+        });
+      });
   }
 
   dismissWarningModal() {

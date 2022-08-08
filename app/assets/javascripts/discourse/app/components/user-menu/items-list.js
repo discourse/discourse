@@ -28,12 +28,6 @@ export default class UserMenuItemsList extends GlimmerComponent {
     return "user-menu/items-list-empty-state";
   }
 
-  get itemComponent() {
-    throw new Error(
-      `the itemComponent property must be implemented in ${this.constructor.name}`
-    );
-  }
-
   fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
@@ -50,11 +44,13 @@ export default class UserMenuItemsList extends GlimmerComponent {
 
   _load() {
     const cached = this._getCachedItems();
+
     if (cached?.length) {
       this.items = cached;
     } else {
       this.loading = true;
     }
+
     this.fetchItems()
       .then((items) => {
         this._setCachedItems(items);

@@ -1,0 +1,25 @@
+<li class={{concat "user-menu-list-item " @item.classNames}}>
+  <a
+    href={{@item.linkHref}}
+    title={{@item.linkTitle}}
+    {{on "click" this.onClick}}
+  >
+    {{#if @item.icon}}
+      {{d-icon @item.icon}}
+    {{/if}}
+
+    <div>
+      {{#if @item.label}}
+        <span class={{concat "user-menu-list-item__label " @item.labelWrapperClasses}}>
+          {{@item.label}}
+        </span>
+      {{/if}}
+
+      {{#if @item.description}}
+        <span class={{concat "user-menu-list-item__description " @item.descriptionWrapperClasses}} >
+          {{@item.description}}
+        </span>
+      {{/if}}
+    </div>
+  </a>
+</li>

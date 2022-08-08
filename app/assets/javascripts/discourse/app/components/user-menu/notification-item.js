@@ -1,13 +1,17 @@
-import GlimmerComponent from "discourse/components/glimmer";
 import { setTransientHeader } from "discourse/lib/ajax";
-import { action } from "@ember/object";
 import { getRenderDirector } from "discourse/lib/notification-item";
 import getURL from "discourse-common/lib/get-url";
 import cookie from "discourse/lib/cookie";
+import UserMenuItemsListBaseItem from "discourse/components/user-menu/items-list-base-item";
 
-export default class UserMenuNotificationItem extends GlimmerComponent {
-  constructor() {
+export default class UserMenuNotificationItem extends UserMenuItemsListBaseItem {
+  constructor({ site, currentUser, siteSettings, notification }) {
     super(...arguments);
+    this.site = site;
+    this.currentUser = currentUser;
+    this.siteSettings = siteSettings;
+    this.notification = notification;
+
     this.renderDirector = getRenderDirector(
       this.#notificationName,
       this.notification,
@@ -17,21 +21,27 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
     );
   }
 
-  get className() {
+  get classNames() {
     const classes = [];
+
     if (this.notification.read) {
       classes.push("read");
     }
+
     if (this.#notificationName) {
       classes.push(this.#notificationName.replace(/_/g, "-"));
     }
+
     if (this.notification.is_warning) {
       classes.push("is-warning");
     }
+
     const extras = this.renderDirector.classNames;
+
     if (extras?.length) {
       classes.push(...extras);
     }
+
     return classes.join(" ");
   }
 
@@ -52,7 +62,13 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
   }
 
   get labelWrapperClasses() {
-    return this.renderDirector.labelWrapperClasses?.join(" ") || "";
+    let classes = ["notification-label"];
+
+    if (this.renderDirector.labelWrapperClasses) {
+      classes = classes.concat(this.renderDirector.labelWrapperClasses);
+    }
+
+    return classes.join(" ");
   }
 
   get description() {
@@ -60,24 +76,26 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
   }
 
   get descriptionWrapperClasses() {
-    return this.renderDirector.descriptionWrapperClasses?.join(" ") || "";
-  }
+    let classes = ["notification-description"];
 
-  get notification() {
-    return this.args.item;
+    if (this.renderDirector.descriptionWrapperClasses) {
+      classes = classes.concat(this.renderDirector.descriptionWrapperClasses);
+    }
+
+    return classes.join(" ");
   }
 
   get #notificationName() {
     return this.site.notificationLookup[this.notification.notification_type];
   }
 
-  @action
   onClick() {
     if (!this.notification.read) {
       this.notification.set("read", true);
       setTransientHeader("Discourse-Clear-Notifications", this.notification.id);
       cookie("cn", this.notification.id, { path: getURL("/") });
     }
+
     this.renderDirector.onClick();
   }
 }

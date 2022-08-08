@@ -14,8 +14,11 @@ module(
 
     test("has a 'show all' link", async function (assert) {
       await render(template);
+
       const showAll = query(".panel-body-bottom a.show-all");
+
       assert.ok(showAll.href.endsWith("/review"), "links to the /review page");
+
       assert.strictEqual(
         showAll.title,
         I18n.t("user_menu.reviewable.view_all"),
@@ -25,7 +28,9 @@ module(
 
     test("renders a list of reviewables", async function (assert) {
       await render(template);
+
       const reviewables = queryAll("ul li");
+
       assert.strictEqual(reviewables.length, 8);
     });
   }
