@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe "DistributedCache extensions" do
-  let(:cache) { DistributedCache.new('mytest') }
+RSpec.describe DistributedCache do
+  let(:cache) { described_class.new('mytest') }
 
   it "can defer_get_set" do
     messages = MessageBus.track_publish("/distributed_hash") do

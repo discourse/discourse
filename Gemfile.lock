@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/discourse/rubocop-discourse.git
-  revision: 9642e65f3767e5fd1d4e1aec4b617179f4128909
+  revision: a5aea6e5f150b1eb7765a805bec0ff618cb718b3
   specs:
     rubocop-discourse (2.5.0)
       rubocop (>= 1.1.0)
@@ -428,7 +428,7 @@ GEM
       rubocop-ast (>= 1.19.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.20.1)
+    rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
     rubocop-rspec (2.12.1)
       rubocop (~> 1.31)
