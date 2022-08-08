@@ -4545,11 +4545,11 @@ RSpec.describe UsersController do
       expect(json["users"][0]["avatar_template"]).to eq("/letter_avatar_proxy/v4/letter/j/f475e1/{size}.png")
     end
 
-    context "#status" do
+    describe "#status" do
       it "returns user status if enabled in site settings" do
         SiteSetting.enable_user_status = true
         emoji = "tooth"
-        description = "off to dentist"q
+        description = "off to dentist"
         user.set_status!(description, emoji)
 
         get "/u/search/users.json", params: { term: user.name }
