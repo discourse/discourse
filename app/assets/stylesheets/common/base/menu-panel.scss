@@ -152,8 +152,30 @@
       white-space: unset;
     }
 
-    .notification-label {
+    .item-label {
       color: var(--primary);
+    }
+
+    li {
+      background-color: var(--secondary);
+
+      &.unread,
+      &.pending {
+        background-color: var(--tertiary-low);
+      }
+
+      &:hover {
+        background-color: var(--highlight-medium);
+        outline: none;
+      }
+
+      &:focus-within {
+        background: var(--highlight-medium);
+        a {
+          // we don't need the link focus because we're styling the parent
+          outline: 0;
+        }
+      }
     }
   }
 }
@@ -426,8 +448,7 @@
         color: var(--danger);
       }
     }
-    .read,
-    .reviewed {
+    .read {
       background-color: var(--secondary);
     }
     .none {

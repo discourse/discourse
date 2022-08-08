@@ -1,7 +1,8 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import UserMenuItem from "discourse/components/user-menu/menu-item";
+import getURL from "discourse-common/lib/get-url";
 import { getRenderDirector } from "discourse/lib/reviewable-item";
 
-export default class UserMenuReviewableItem extends GlimmerComponent {
+export default class UserMenuReviewableItem extends UserMenuItem {
   constructor() {
     super(...arguments);
     this.reviewable = this.args.item;
@@ -14,15 +15,34 @@ export default class UserMenuReviewableItem extends GlimmerComponent {
     );
   }
 
-  get actor() {
+  get className() {
+    const classes = ["reviewable"];
+    if (this.reviewable.pending) {
+      classes.push("pending");
+    } else {
+      classes.push("reviewed");
+    }
+    return classes.join(" ");
+  }
+
+  get linkHref() {
+    return getURL(`/review/${this.reviewable.id}`);
+  }
+
+  get linkTitle() {
+    // TODO(osama): add title
+    return "";
+  }
+
+  get icon() {
+    return this.renderDirector.icon;
+  }
+
+  get label() {
     return this.renderDirector.actor;
   }
 
   get description() {
     return this.renderDirector.description;
-  }
-
-  get icon() {
-    return this.renderDirector.icon;
   }
 }

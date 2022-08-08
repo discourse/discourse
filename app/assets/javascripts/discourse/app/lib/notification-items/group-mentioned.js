@@ -5,7 +5,7 @@ export default class extends NotificationItemBase {
     return `${this.username} @${this.notification.data.group_name}`;
   }
 
-  get labelWrapperClasses() {
+  get labelClasses() {
     return ["mention-group", "notify"];
   }
 }

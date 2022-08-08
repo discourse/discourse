@@ -1,11 +1,11 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import UserMenuItem from "discourse/components/user-menu/menu-item";
 import { setTransientHeader } from "discourse/lib/ajax";
 import { action } from "@ember/object";
 import { getRenderDirector } from "discourse/lib/notification-item";
 import getURL from "discourse-common/lib/get-url";
 import cookie from "discourse/lib/cookie";
 
-export default class UserMenuNotificationItem extends GlimmerComponent {
+export default class UserMenuNotificationItem extends UserMenuItem {
   constructor() {
     super(...arguments);
     this.renderDirector = getRenderDirector(
@@ -18,9 +18,11 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
   }
 
   get className() {
-    const classes = [];
+    const classes = ["notification"];
     if (this.notification.read) {
       classes.push("read");
+    } else {
+      classes.push("unread");
     }
     if (this.#notificationName) {
       classes.push(this.#notificationName.replace(/_/g, "-"));
@@ -51,16 +53,20 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
     return this.renderDirector.label;
   }
 
-  get labelWrapperClasses() {
-    return this.renderDirector.labelWrapperClasses?.join(" ") || "";
+  get labelClass() {
+    return this.renderDirector.labelClasses?.join(" ") || "";
   }
 
   get description() {
     return this.renderDirector.description;
   }
 
-  get descriptionWrapperClasses() {
-    return this.renderDirector.descriptionWrapperClasses?.join(" ") || "";
+  get descriptionClass() {
+    return this.renderDirector.descriptionClasses?.join(" ") || "";
+  }
+
+  get topicId() {
+    return this.notification.topic_id;
   }
 
   get notification() {

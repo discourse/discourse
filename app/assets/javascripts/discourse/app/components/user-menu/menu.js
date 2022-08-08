@@ -1,6 +1,7 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab from "discourse/lib/user-menu/tab";
 
 const DEFAULT_TAB_ID = "all-notifications";
@@ -66,6 +67,24 @@ const CORE_TOP_TABS = [
 
     get shouldDisplay() {
       return !this.currentUser.likes_notifications_disabled;
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
+      return "bookmarks";
+    }
+
+    get icon() {
+      return NO_REMINDER_ICON;
+    }
+
+    get panelComponent() {
+      return "user-menu/bookmarks-list";
+    }
+
+    get count() {
+      return this.getUnreadCountForType("bookmark_reminder");
     }
   },
 

@@ -1121,6 +1121,7 @@ en:
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
@@ -2363,8 +2364,12 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "Are you sure? You have %{count} important notification."
-          other: "Are you sure? You have %{count} important notifications."
+          default:
+            one: "Are you sure? You have %{count} important notification."
+            other: "Are you sure? You have %{count} important notifications."
+          bookmarks:
+            one: "Are you sure? You have %{count} unread bookmark reminder."
+            other: "Are you sure? You have %{count} unread bookmark reminders."
         dismiss: "Dismiss"
         cancel: "Cancel"
 
@@ -2557,6 +2562,7 @@ en:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "Menu tabs"
       view_all_notifications: "view all notifications"
+      view_all_bookmarks: "view all bookmarks"
       reviewable:
         view_all: "view all review items"
         queue: "Queue"
