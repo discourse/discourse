@@ -1742,11 +1742,11 @@ class UsersController < ApplicationController
 
   USER_MENU_BOOKMARKS_LIST_LIMIT = 20
   def user_menu_bookmarks
-    user = fetch_user_from_params
-    guardian.ensure_can_see_notifications!(user)
-    user_guardian = Guardian.new(user)
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
 
-    reminder_notifications = user
+    reminder_notifications = current_user
       .notifications
       .visible
       .includes(:topic)
@@ -1759,8 +1759,8 @@ class UsersController < ApplicationController
         .filter_map { |notification| notification.data_hash[:bookmark_id] }
 
       bookmark_list = UserBookmarkList.new(
-        user: user,
-        guardian: user_guardian,
+        user: current_user,
+        guardian: guardian,
         params: {
           per_page: USER_MENU_BOOKMARKS_LIST_LIMIT - reminder_notifications.size
         }
@@ -1776,7 +1776,7 @@ class UsersController < ApplicationController
       serialized_notifications = ActiveModel::ArraySerializer.new(
         reminder_notifications,
         each_serializer: NotificationSerializer,
-        scope: user_guardian
+        scope: guardian
       )
     end
 
@@ -1785,7 +1785,7 @@ class UsersController < ApplicationController
       serialized_bookmarks = serialize_data(
         bookmark_list,
         UserBookmarkListSerializer,
-        scope: user_guardian,
+        scope: guardian,
         root: false
       )[:bookmarks]
     end
