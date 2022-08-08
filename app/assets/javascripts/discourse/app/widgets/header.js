@@ -14,10 +14,14 @@ import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
 
-const _extraHeaderIcons = [];
+let _extraHeaderIcons = [];
 
 export function addToHeaderIcons(icon) {
   _extraHeaderIcons.push(icon);
+}
+
+export function clearExtraHeaderIcons() {
+  _extraHeaderIcons = [];
 }
 
 const dropdown = {
