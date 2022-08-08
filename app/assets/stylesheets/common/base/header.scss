@@ -211,6 +211,31 @@
   }
 }
 
+.header-sidebar-toggle {
+  button {
+    margin-right: 1em;
+    box-sizing: content-box; // matches other header icons
+    display: flex;
+    justify-content: center;
+    width: 2.2857em;
+    height: 2.2857em;
+    padding: 0.2143em;
+    &:focus,
+    .discourse-no-touch & {
+      &:hover {
+        background-color: var(--primary-low);
+      }
+    }
+    .d-icon {
+      width: 100%;
+      font-size: var(--font-up-4);
+      line-height: var(--line-height-large);
+      display: inline-block;
+      color: var(--header_primary-low-mid);
+    }
+  }
+}
+
 .highlight-strong {
   background-color: var(--highlight-medium);
 }
