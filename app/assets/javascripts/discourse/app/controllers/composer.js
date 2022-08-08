@@ -1495,7 +1495,7 @@ export default Controller.extend({
       composer?.set("composeState", Composer.OPEN);
     } else {
       composer?.set("composeState", Composer.FULLSCREEN);
-      composer?.set("showFullScreenExitPrompt", true);
+      composer?.toggleProperty("showFullScreenExitPrompt");
     }
   },
 

@@ -18,7 +18,7 @@ export default class ComposerFullscreenPrompt extends GlimmerComponent {
       promptElement?.addEventListener(
         "animationend",
         () => {
-          this.args.model.set("showFullScreenExitPrompt", false);
+          this.args.model.toggleProperty("showFullScreenExitPrompt");
         },
         { once: true }
       );
