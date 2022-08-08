@@ -120,6 +120,15 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
 
     await click("#user-menu-button-bookmarks");
+    assert.ok(
+      exists("#quick-access-bookmarks ul li.notification"),
+      "bookmark reminder notifications are visible"
+    );
+    assert.ok(
+      exists("#quick-access-bookmarks ul li.bookmark"),
+      "bookmarks are visible"
+    );
+
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
@@ -136,6 +145,14 @@ acceptance("User menu - Dismiss button", function (needs) {
       grouped_unread_high_priority_notifications: {},
     });
 
+    assert.notOk(
+      exists("#quick-access-bookmarks ul li.notification"),
+      "bookmark reminder notifications are gone"
+    );
+    assert.ok(
+      exists("#quick-access-bookmarks ul li.bookmark"),
+      "bookmarks are still visible"
+    );
     assert.notOk(
       exists("#user-menu-button-bookmarks .badge-notification"),
       "bookmarks tab no longer has bubble"
