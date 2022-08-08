@@ -1799,7 +1799,7 @@ class UsersController < ApplicationController
     render json: {
       notifications: serialized_notifications || [],
       bookmarks: serialized_bookmarks || []
-    }, status: 200
+    }
   end
 
   private
