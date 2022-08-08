@@ -1,6 +1,6 @@
 import GlimmerComponent from "@glimmer/component";
-import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 import { next } from "@ember/runloop";
 
 export default class ComposerFullscreenPrompt extends GlimmerComponent {
