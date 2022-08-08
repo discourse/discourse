@@ -37,10 +37,6 @@ class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
     post.full_url
   end
 
-  def url_for_ui
-    Topic.url(topic_id, slug, linked_post_number)
-  end
-
   private
 
   def topic

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
+  attributes :url_for_ui
+
   # it does not matter what the linked post number is for topic bookmarks,
   # on the client we always take the user to the last unread post in the
   # topic when the bookmark URL is clicked

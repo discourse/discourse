@@ -29,12 +29,4 @@ RSpec.describe UserPostBookmarkSerializer do
       expect(serializer.highest_post_number).to eq(4)
     end
   end
-
-  describe "#url_for_ui" do
-    it "is a full topic URL to linked_post_number" do
-      post.update!(post_number: 3)
-      serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
-      expect(serializer.url_for_ui).to end_with("/t/#{topic.slug}/#{topic.id}/#{post.post_number}")
-    end
-  end
 end
