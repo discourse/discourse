@@ -73,7 +73,7 @@ import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderIcons } from "discourse/widgets/header";
 import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
-import { resetRenderDirectorForNotifictaionTypes } from "discourse/lib/notification-item";
+import { resetNotificationTypeRenderers } from "discourse/lib/notification-item";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -202,7 +202,7 @@ export function testCleanup(container, app) {
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
   resetSidebarSection();
-  resetRenderDirectorForNotifictaionTypes();
+  resetNotificationTypeRenderers();
   clearExtraHeaderIcons();
 }
 
