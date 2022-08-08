@@ -5,6 +5,10 @@ export default class UserMenuMentionsNotificationsList extends UserMenuNotificat
     return ["mentioned"];
   }
 
+  get dismissTypes() {
+    return this.filterByTypes;
+  }
+
   dismissWarningModal() {
     return null;
   }

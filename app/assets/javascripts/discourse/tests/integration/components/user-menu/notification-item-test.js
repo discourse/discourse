@@ -43,12 +43,12 @@ module(
 
     const template = hbs`<UserMenu::NotificationItem @item={{this.notification}}/>`;
 
-    test("pushes `read` to the classList if the notification is read", async function (assert) {
+    test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
       this.set("notification", getNotification());
       this.notification.read = false;
       await render(template);
-      assert.ok(!exists("li.read"));
-      assert.ok(exists("li"));
+      assert.notOk(exists("li.read"));
+      assert.ok(exists("li.unread"));
 
       this.notification.read = true;
       await settled();
@@ -57,13 +57,17 @@ module(
         exists("li.read"),
         "the item re-renders when the read property is updated"
       );
+      assert.notOk(
+        exists("li.unread"),
+        "the item re-renders when the read property is updated"
+      );
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
       let item = query("li");
-      assert.strictEqual(item.className, "mentioned");
+      assert.ok(item.classList.contains("mentioned"));
 
       this.set(
         "notification",
@@ -128,8 +132,8 @@ module(
     test("has elements for label and description", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
-      const label = query("li a .notification-label");
-      const description = query("li a .notification-description");
+      const label = query("li a .item-label");
+      const description = query("li a .item-description");
 
       assert.strictEqual(
         label.textContent.trim(),
@@ -152,7 +156,7 @@ module(
         })
       );
       await render(template);
-      const description = query("li a .notification-description");
+      const description = query("li a .item-description");
 
       assert.strictEqual(
         description.textContent.trim(),
@@ -170,7 +174,7 @@ module(
       );
       await render(template);
       assert.ok(
-        exists("li a .notification-description img.emoji"),
+        exists("li a .item-description img.emoji"),
         "emojis are unescaped when fancy_title is used for description"
       );
     });
@@ -186,7 +190,7 @@ module(
         })
       );
       await render(template);
-      const description = query("li a .notification-description");
+      const description = query("li a .item-description");
 
       assert.strictEqual(
         description.textContent.trim(),
@@ -226,11 +230,11 @@ module(
                 return "notification description 123 <script>";
               }
 
-              get labelWrapperClasses() {
+              get labelClasses() {
                 return ["label-wrapper-1"];
               }
 
-              get descriptionWrapperClasses() {
+              get descriptionClasses() {
                 return ["description-class-1"];
               }
             };
@@ -265,7 +269,7 @@ module(
 
       assert.ok(exists("svg.d-icon-wrench"), "icon is customized");
 
-      const label = query("li .notification-label");
+      const label = query("li .item-label");
       assert.ok(
         label.classList.contains("label-wrapper-1"),
         "label wrapper has additional classes"
@@ -276,7 +280,7 @@ module(
         "label content is customized"
       );
 
-      const description = query(".notification-description");
+      const description = query(".item-description");
       assert.ok(
         description.classList.contains("description-class-1"),
         "description has additional classes"
@@ -314,10 +318,7 @@ module(
       );
 
       await render(template);
-      assert.notOk(
-        exists(".notification-description"),
-        "description is not rendered"
-      );
+      assert.notOk(exists(".item-description"), "description is not rendered");
       assert.ok(
         query("li").textContent.trim(),
         "notification label",
@@ -356,7 +357,7 @@ module(
         "notification description",
         "only notification description is displayed"
       );
-      assert.notOk(exists(".notification-label"), "label is not rendered");
+      assert.notOk(exists(".item-label"), "label is not rendered");
     });
 
     test("custom click handlers", async function (assert) {

@@ -299,6 +299,40 @@ RSpec.describe PostSerializer do
     end
   end
 
+  describe "#user_status" do
+    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user) { Fabricate(:user, user_status: user_status) }
+    fab!(:post) { Fabricate(:post, user: user) }
+    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+
+    it "adds user status when enabled" do
+      SiteSetting.enable_user_status = true
+
+      json = serializer.as_json
+
+      expect(json[:user_status]).to_not be_nil do |status|
+        expect(status.description).to eq(user_status.description)
+        expect(status.emoji).to eq(user_status.emoji)
+      end
+    end
+
+    it "doesn't add user status when disabled" do
+      SiteSetting.enable_user_status = false
+      json = serializer.as_json
+      expect(json.keys).not_to include :user_status
+    end
+
+    it "doesn't add status if user doesn't have it" do
+      SiteSetting.enable_user_status = true
+
+      user.clear_status!
+      user.reload
+      json = serializer.as_json
+
+      expect(json.keys).not_to include :user_status
+    end
+  end
+
   def serialized_post(u)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true

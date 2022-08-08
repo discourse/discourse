@@ -86,22 +86,22 @@ RSpec.describe Onebox::Engine do
       expect(result).to match(/https/)
     end
   end
-end
 
-RSpec.describe ".onebox_name" do
-  module ScopeForTemplateName
-    class TemplateNameOnebox
-      include Onebox::Engine
+  describe ".onebox_name" do
+    module ScopeForTemplateName
+      class TemplateNameOnebox
+        include Onebox::Engine
+      end
     end
-  end
 
-  let(:onebox_name) { ScopeForTemplateName::TemplateNameOnebox.onebox_name }
+    let(:onebox_name) { ScopeForTemplateName::TemplateNameOnebox.onebox_name }
 
-  it "should not include the scope" do
-    expect(onebox_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
-  end
+    it "should not include the scope" do
+      expect(onebox_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
+    end
 
-  it "should not include the word Onebox" do
-    expect(onebox_name).not_to include("onebox", "Onebox")
+    it "should not include the word Onebox" do
+      expect(onebox_name).not_to include("onebox", "Onebox")
+    end
   end
 end

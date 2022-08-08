@@ -34,7 +34,7 @@ export function registerNotificationTypeRenderer(notificationType, func) {
   _customClassForType[notificationType] = func(NotificationItemBase);
 }
 
-export function resetRenderDirectorForNotifictaionTypes() {
+export function resetNotificationTypeRenderers() {
   _customClassForType = {};
 }
 

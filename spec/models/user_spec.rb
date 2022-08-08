@@ -2059,7 +2059,7 @@ RSpec.describe User do
     end
 
     context "with redesigned_user_menu_enabled on" do
-      it "adds all_unread_notifications_count to the payload" do
+      it "adds all_unread_notifications and grouped_unread_high_priority_notifications to the payload" do
         user.update!(admin: true)
         user.enable_redesigned_user_menu
         Fabricate(:notification, user: user)
@@ -2071,6 +2071,7 @@ RSpec.describe User do
 
         message = messages.first
         expect(message.data[:all_unread_notifications_count]).to eq(2)
+        expect(message.data[:grouped_unread_high_priority_notifications]).to eq({ 15 => 1 })
       ensure
         user.disable_redesigned_user_menu
       end
@@ -2796,6 +2797,28 @@ RSpec.describe User do
 
       expect(whisperer.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
+    end
+  end
+
+  describe "#grouped_unread_high_priority_notifications" do
+    it "returns a map of high priority types to their unread count" do
+      Fabricate(:notification, user: user, notification_type: 1, high_priority: true, read: true)
+      Fabricate(:notification, user: user, notification_type: 1, high_priority: true, read: false)
+      Fabricate(:notification, user: user, notification_type: 1, high_priority: false, read: true)
+      Fabricate(:notification, user: user, notification_type: 1, high_priority: false, read: false)
+
+      Fabricate(:notification, user: user, notification_type: 2, high_priority: true, read: false, topic: nil)
+
+      Fabricate(:notification, user: user, notification_type: 3, high_priority: true, read: false).tap do |n|
+        n.topic.trash!(Fabricate(:admin))
+      end
+
+      Fabricate(:notification, user: user, notification_type: 3, high_priority: false, read: true)
+
+      # notification for another user. it shouldn't be included
+      Fabricate(:notification, notification_type: 4, high_priority: true, read: false)
+
+      expect(user.grouped_unread_high_priority_notifications).to eq({ 1 => 1, 2 => 1 })
     end
   end
 

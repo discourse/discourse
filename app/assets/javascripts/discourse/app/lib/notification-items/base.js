@@ -82,16 +82,16 @@ export default class NotificationItemBase {
   onClick() {}
 
   /**
-   * @returns {string[]} Include additional classes to the label's wrapper <span>.
+   * @returns {string[]} Include additional classes to the label.
    */
-  get labelWrapperClasses() {
+  get labelClasses() {
     return [];
   }
 
   /**
-   * @returns {string[]} Include additional classes to the description's wrapper <span>.
+   * @returns {string[]} Include additional classes to the description.
    */
-  get descriptionWrapperClasses() {
+  get descriptionClasses() {
     return [];
   }
 

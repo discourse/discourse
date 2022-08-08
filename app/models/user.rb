@@ -538,6 +538,25 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
+  MAX_UNREAD_HIGH_PRI_BACKLOG = 200
+  def grouped_unread_high_priority_notifications
+    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_HIGH_PRI_BACKLOG)
+      SELECT X.notification_type AS type, COUNT(*) FROM (
+        SELECT n.notification_type
+        FROM notifications n
+        LEFT JOIN topics t ON t.id = n.topic_id
+        WHERE t.deleted_at IS NULL
+          AND n.high_priority
+          AND n.user_id = :user_id
+          AND NOT n.read
+        LIMIT :limit
+      ) AS X
+      GROUP BY X.notification_type
+    SQL
+    results.map! { |row| [row.type, row.count] }
+    results.to_h
+  end
+
   ###
   # DEPRECATED: This is only maintained for backwards compat until v2.5. There
   # may be inconsistencies with counts in the UI because of this, because unread
@@ -711,6 +730,7 @@ class User < ActiveRecord::Base
 
     if self.redesigned_user_menu_enabled?
       payload[:all_unread_notifications_count] = all_unread_notifications_count
+      payload[:grouped_unread_high_priority_notifications] = grouped_unread_high_priority_notifications
     end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])

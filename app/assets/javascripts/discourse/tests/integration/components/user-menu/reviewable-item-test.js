@@ -46,8 +46,8 @@ module(
       this.set("item", getReviewable());
       await render(template);
 
-      const label = query("li .reviewable-label");
-      const description = query("li .reviewable-description");
+      const label = query("li .item-label");
+      const description = query("li .item-description");
       assert.strictEqual(
         label.textContent.trim(),
         "sayo2",
@@ -65,7 +65,7 @@ module(
     test("the item's label is a placeholder that indicates deleted user if flagger_username is absent", async function (assert) {
       this.set("item", getReviewable({ flagger_username: null }));
       await render(template);
-      const label = query("li .reviewable-label");
+      const label = query("li .item-label");
       assert.strictEqual(
         label.textContent.trim(),
         I18n.t("user_menu.reviewable.deleted_user")

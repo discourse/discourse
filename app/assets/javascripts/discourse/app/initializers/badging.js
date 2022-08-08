@@ -15,8 +15,16 @@ export default {
 
     const appEvents = container.lookup("service:app-events");
     appEvents.on("notifications:changed", () => {
-      const notifications =
-        user.unread_notifications + user.unread_high_priority_notifications;
+      let notifications;
+      if (user.redesigned_user_menu_enabled) {
+        notifications = user.all_unread_notifications_count;
+        if (user.unseen_reviewable_count) {
+          notifications += user.unseen_reviewable_count;
+        }
+      } else {
+        notifications =
+          user.unread_notifications + user.unread_high_priority_notifications;
+      }
 
       navigator.setAppBadge(notifications);
     });

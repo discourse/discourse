@@ -10,7 +10,7 @@ module QualityTitleValidatorSpec
   end
 end
 
-RSpec.describe "A record validated with QualityTitleValidator" do
+RSpec.describe QualityTitleValidator do
   let(:valid_title) { "hello this is my cool topic! welcome: all;" }
   let(:short_title) { valid_title.slice(0, SiteSetting.min_topic_title_length - 1) }
   let(:long_title) { valid_title.center(SiteSetting.max_topic_title_length + 1, 'x') }

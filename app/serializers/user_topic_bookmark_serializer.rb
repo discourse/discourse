@@ -56,7 +56,11 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   # NOTE: In the UI there are special topic-status and topic-link components to
   # display the topic URL, this is only used for certain routes like the .ics bookmarks.
   def bookmarkable_url
-    topic.url
+    if @options[:link_to_first_unread_post]
+      Topic.url(topic_id, slug, (last_read_post_number || 0) + 1)
+    else
+      topic.url
+    end
   end
 
   private

@@ -5,7 +5,12 @@ class UserBookmarkListSerializer < ApplicationSerializer
 
   def bookmarks
     object.bookmarks.map do |bm|
-      bm.registered_bookmarkable.serializer.new(bm, scope: scope, root: false)
+      bm.registered_bookmarkable.serializer.new(
+        bm,
+        **object.bookmark_serializer_opts,
+        scope: scope,
+        root: false
+      )
     end
   end
 
