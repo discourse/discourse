@@ -151,6 +151,21 @@
     .multi-user {
       white-space: unset;
     }
+
+    .notification-label {
+      color: var(--primary);
+    }
+  }
+}
+
+// remove when the widgets-based implementation of the user menu is removed
+.user-menu:not(.revamped) {
+  .quick-access-panel {
+    li {
+      span:first-child {
+        color: var(--primary);
+      }
+    }
   }
 }
 
@@ -310,10 +325,6 @@
       // notifications. It can then be removed
       div .fa {
         display: none;
-      }
-
-      span:first-child {
-        color: var(--primary);
       }
 
       span.double-user,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TranslationOverride do
-  context 'validations' do
+  describe 'Validations' do
     describe '#value' do
       before do
         I18n.backend.store_translations(
@@ -132,7 +132,7 @@ RSpec.describe TranslationOverride do
     expect(ovr.compiled_js).to_not match(/Invalid Format/i)
   end
 
-  context "site cache" do
+  describe "site cache" do
     def cached_value(guardian, translation_key, locale:)
       types_name, name_key, attribute = translation_key.split('.')
 
@@ -171,19 +171,19 @@ RSpec.describe TranslationOverride do
       end
     end
 
-    context "post_action_types" do
+    context "with post_action_types" do
       let(:translation_keys) { ['post_action_types.off_topic.description'] }
 
       include_examples "resets site text"
     end
 
-    context "topic_flag_types" do
+    context "with topic_flag_types" do
       let(:translation_keys) { ['topic_flag_types.spam.description'] }
 
       include_examples "resets site text"
     end
 
-    context "multiple keys" do
+    context "with multiple keys" do
       let(:translation_keys) { ['post_action_types.off_topic.description', 'topic_flag_types.spam.description'] }
 
       include_examples "resets site text"

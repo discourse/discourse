@@ -9,7 +9,6 @@ RSpec.describe TopicEmbed do
   it { is_expected.to validate_presence_of :embed_url }
 
   describe '.import' do
-
     fab!(:user) { Fabricate(:user) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { 'http://eviltrout.com/123' }
@@ -23,7 +22,7 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
-    context 'creation of a post' do
+    context 'when creating a post' do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
       let(:topic_embed) { TopicEmbed.find_by(post: post) }
 
@@ -128,7 +127,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "post creation supports markdown rendering" do
+    context "when post creation supports markdown rendering" do
       before do
         SiteSetting.embed_support_markdown = true
       end
@@ -215,7 +214,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context 'post with allowed classes "foo" and "emoji"' do
+    context 'with post with allowed classes "foo" and "emoji"' do
       fab!(:user) { Fabricate(:user) }
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
@@ -247,7 +246,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context 'post with author metadata' do
+    context 'with post with author metadata' do
       fab!(:user) { Fabricate(:user, username: 'eviltrout') }
       let(:url) { 'http://eviltrout.com/321' }
       let(:contents) { '<html><head><meta name="author" content="eviltrout"></head><body>rich and morty</body></html>' }
@@ -263,7 +262,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context 'post with no allowed classes' do
+    context 'with post with no allowed classes' do
       fab!(:user) { Fabricate(:user) }
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
@@ -291,7 +290,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "non-ascii URL" do
+    context "with non-ascii URL" do
       let(:url) { 'http://eviltrout.com/test/ماهی' }
       let(:contents) { "<title>سلام</title><body>این یک پاراگراف آزمون است.</body>" }
 
@@ -305,7 +304,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "encoded URL" do
+    context "with encoded URL" do
       let(:url) { 'http://example.com/hello%20world' }
       let(:contents) { "<title>Hello World!</title><body></body>" }
 
@@ -319,7 +318,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "non-http URL" do
+    context "with non-http URL" do
       it "throws an error" do
         url = '/test.txt'
 
@@ -327,7 +326,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "emails" do
+    context "with emails" do
       let(:url) { 'http://example.com/foo' }
       let(:contents) { '<p><a href="mailto:foo%40example.com">URL encoded @ symbol</a></p><p><a href="mailto:bar@example.com">normal mailto link</a></p>' }
 
@@ -343,7 +342,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "malformed href" do
+    context "with malformed href" do
       let(:url) { 'http://example.com/foo' }
       let(:contents) { '<p><a href="(http://foo.bar)">Baz</a></p>' }
 
@@ -356,7 +355,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context 'canonical links' do
+    context 'with canonical links' do
       let(:url) { 'http://eviltrout.com/123?asd' }
       let(:canonical_url) { 'http://eviltrout.com/123' }
       let(:content) { "<head><link rel=\"canonical\" href=\"#{canonical_url}\"></head>" }

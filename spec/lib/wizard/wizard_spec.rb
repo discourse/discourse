@@ -9,7 +9,7 @@ RSpec.describe Wizard do
     SiteSetting.wizard_enabled = true
   end
 
-  context "defaults" do
+  describe "defaults" do
     it "has default values" do
       wizard = Wizard.new(Fabricate.build(:moderator))
       expect(wizard.steps).to be_empty

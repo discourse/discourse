@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserAvatarsController do
-  context 'show_proxy_letter' do
+  describe '#show_proxy_letter' do
     it 'returns not found if external avatar is set somewhere else' do
       SiteSetting.external_system_avatars_url = "https://somewhere.else.com/avatar.png"
       get "/letter_avatar_proxy/v2/letter/a/aaaaaa/20.png"
@@ -15,8 +15,8 @@ RSpec.describe UserAvatarsController do
     end
   end
 
-  context 'show' do
-    context 'invalid' do
+  describe '#show' do
+    context 'when invalid' do
       after do
         FileUtils.rm(Discourse.store.path_for(upload))
       end

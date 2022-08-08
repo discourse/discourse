@@ -289,7 +289,7 @@ RSpec.describe Admin::EmailController do
       expect(json["errors"]).to include("Discourse::InvalidParameters")
     end
 
-    context 'bounced email log entry exists' do
+    context 'when bounced email log entry exists' do
       fab!(:email_log) { Fabricate(:email_log, bounced: true, bounce_key: SecureRandom.hex) }
       let(:error_message) { "Email::Receiver::BouncedEmailError" }
 

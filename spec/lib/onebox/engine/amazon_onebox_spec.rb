@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::AmazonOnebox do
-  context "regular amazon page" do
+  describe "regular amazon page" do
     before do
       @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
       @uri = "https://www.amazon.com/dp/193609620X"
@@ -10,7 +10,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
         .to_return(status: 200, body: onebox_response("amazon"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "works with international domains" do
@@ -101,7 +101,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     end
   end
 
-  context "amazon with opengraph" do
+  describe "amazon with opengraph" do
     let(:link) { "https://www.amazon.com/dp/B01MFXN4Y2" }
     let(:html) { described_class.new(link).to_html }
 
@@ -128,7 +128,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     end
   end
 
-  context "amazon book page" do
+  describe "amazon book page" do
     let(:link) { "https://www.amazon.com/dp/B00AYQNR46" }
     let(:html) { described_class.new(link).to_html }
 
@@ -156,7 +156,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     end
   end
 
-  context "amazon ebook page" do
+  describe "amazon ebook page" do
     let(:link) { "https://www.amazon.com/dp/193435659X" }
     let(:html) { described_class.new(link).to_html }
 
@@ -192,7 +192,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     end
   end
 
-  context "non-standard response from Amazon" do
+  describe "non-standard response from Amazon" do
     let(:link) { "https://www.amazon.com/dp/B0123ABCD3210" }
     let(:onebox) { described_class.new(link) }
 
@@ -215,7 +215,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     end
   end
 
-  context "alternate page layout response from Amazon" do
+  describe "alternate page layout response from Amazon" do
     let(:link) { "https://www.amazon.com/dp/B07FQ7M16H" }
     let(:html) { described_class.new(link).to_html }
 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupMessage do
-
   let(:moderators_group) { Group[:moderators].name }
 
   let!(:admin)     { Fabricate.build(:admin, id: 999) }
@@ -61,12 +60,12 @@ RSpec.describe GroupMessage do
       end
     end
 
-    context 'user_automatically_silenced' do
+    context 'with user_automatically_silenced' do
       subject { GroupMessage.new(moderators_group, :user_automatically_silenced, user: user).message_params }
       include_examples 'common message params for group messages'
     end
 
-    context 'spam_post_blocked' do
+    context 'with spam_post_blocked' do
       subject { GroupMessage.new(moderators_group, :spam_post_blocked, user: user).message_params }
       include_examples 'common message params for group messages'
     end

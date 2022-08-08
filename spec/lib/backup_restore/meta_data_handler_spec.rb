@@ -3,7 +3,7 @@
 require_relative 'shared_context_for_backup_restore'
 
 RSpec.describe BackupRestore::MetaDataHandler do
-  include_context "shared stuff"
+  include_context "with shared stuff"
 
   let!(:backup_filename) { 'discourse-2019-11-18-143242-v20191108000414.tar.gz' }
 
@@ -22,7 +22,7 @@ RSpec.describe BackupRestore::MetaDataHandler do
     BackupRestore::MetaDataHandler.new(logger, filename, tmp_directory).validate
   end
 
-  context "metadata file" do
+  describe "metadata file" do
     it "extracts metadata from file when metadata file exists" do
       metadata = '{"source":"discourse","version":20160329101122}'
 
@@ -67,7 +67,7 @@ RSpec.describe BackupRestore::MetaDataHandler do
     end
   end
 
-  context "filename" do
+  describe "filename" do
     it "extracts metadata from filename when metadata file does not exist" do
       with_metadata_file(nil) do |dir|
         expect(validate_metadata(backup_filename, dir))

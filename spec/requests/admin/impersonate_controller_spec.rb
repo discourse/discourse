@@ -41,7 +41,7 @@ RSpec.describe Admin::ImpersonateController do
         expect(session[:current_user_id]).to eq(admin.id)
       end
 
-      context 'success' do
+      context 'with success' do
         it "succeeds and logs the impersonation" do
           expect do
             post "/admin/impersonate.json", params: { username_or_email: user.username }

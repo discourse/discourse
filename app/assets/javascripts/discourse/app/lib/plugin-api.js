@@ -95,9 +95,10 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
+import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-item";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -480,7 +481,15 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
-    if (name === "hamburger-menu:generalLinks") {
+    this._deprecateDecoratingHamburgerWidgetLinks(name, fn);
+    decorateWidget(name, fn);
+  }
+
+  _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
+    if (
+      name === "hamburger-menu:generalLinks" ||
+      name === "hamburger-menu:footerLinks"
+    ) {
       const siteSettings = this.container.lookup("site-settings:main");
 
       if (siteSettings.enable_experimental_sidebar_hamburger) {
@@ -505,7 +514,7 @@ class PluginApi {
             args.route = route;
           }
 
-          this.addCommunitySectionLink(args);
+          this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
             `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
@@ -515,8 +524,6 @@ class PluginApi {
         return;
       }
     }
-
-    decorateWidget(name, fn);
   }
 
   /**
@@ -1665,9 +1672,9 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Support for adding a navigation link to Sidebar Community section by returning a class which extends from the BaseSectionLink
-   * class interface. See `lib/sidebar/community-section/base-section-link.js` for documentation on the BaseSectionLink class
-   * interface.
+   * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/community-section/base-section-link.js`
+   * for documentation on the BaseSectionLink class interface.
    *
    * ```
    * api.addCommunitySectionLink((baseSectionLink) => {
@@ -1716,9 +1723,10 @@ class PluginApi {
    * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
+   * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
-  addCommunitySectionLink(arg) {
-    addSectionLink(arg);
+  addCommunitySectionLink(arg, secondary) {
+    addCustomCommunitySectionLink(arg, secondary);
   }
 
   /**
@@ -1843,6 +1851,36 @@ class PluginApi {
    */
   addSidebarSection(func) {
     addSidebarSection(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom renderer for a notification type or override the
+   * renderer of an existing type. See lib/notification-items/base.js for
+   * documentation and the default renderer.
+   *
+   * ```
+   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationItemBase) => {
+   *   return class extends NotificationItemBase {
+   *     get label() {
+   *       return "some label";
+   *     }
+   *
+   *     get description() {
+   *       return "fancy description";
+   *     }
+   *   };
+   * });
+   * ```
+   * @callback renderDirectorRegistererCallback
+   * @param {NotificationItemBase} The base class from which the returned class should inherit.
+   * @returns {NotificationItemBase} A class that inherits from NotificationItemBase.
+   *
+   * @param {string} notificationType - ID of the notification type (i.e. the key value of your notification type in the `Notification.types` enum on the server side).
+   * @param {renderDirectorRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerNotificationTypeRenderer(notificationType, func) {
+    registerNotificationTypeRenderer(notificationType, func);
   }
 }
 

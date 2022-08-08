@@ -30,7 +30,7 @@ RSpec.describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
-  context 'associations' do
+  describe 'Associations' do
     it 'should delete associated sidebar_section_links when category is destroyed' do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
       category_sidebar_section_link_2 = Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
@@ -289,7 +289,7 @@ RSpec.describe Category do
   end
 
   describe 'non-english characters' do
-    context 'uses ascii slug generator' do
+    context 'when using ascii slug generator' do
       before do
         SiteSetting.slug_generation_method = 'ascii'
         @category = Fabricate(:category_with_definition, name: "测试")
@@ -302,7 +302,7 @@ RSpec.describe Category do
       end
     end
 
-    context 'uses none slug generator' do
+    context 'when using none slug generator' do
       before do
         SiteSetting.slug_generation_method = 'none'
         @category = Fabricate(:category_with_definition, name: "测试")
@@ -318,7 +318,7 @@ RSpec.describe Category do
       end
     end
 
-    context 'uses encoded slug generator' do
+    context 'when using encoded slug generator' do
       before do
         SiteSetting.slug_generation_method = 'encoded'
         @category = Fabricate(:category_with_definition, name: "测试")

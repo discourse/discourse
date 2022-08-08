@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
-
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
       expect(SiteSetting.topic_title_length).to eq(
@@ -29,7 +28,6 @@ RSpec.describe SiteSetting do
   end
 
   describe 'in test we do some judo to ensure SiteSetting is always reset between tests' do
-
     it 'is always the correct default' do
       expect(SiteSetting.contact_email).to eq('')
     end
@@ -81,9 +79,7 @@ RSpec.describe SiteSetting do
   end
 
   describe "min_redirected_to_top_period" do
-
-    context "has_enough_top_topics" do
-
+    context "when has_enough_top_topics" do
       before do
         SiteSetting.topics_per_period_in_top_page = 2
         SiteSetting.top_page_default_timeframe = 'daily'
@@ -98,11 +94,9 @@ RSpec.describe SiteSetting do
       it "should_return_a_time_period" do
         expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(:daily)
       end
-
     end
 
-    context "does_not_have_enough_top_topics" do
-
+    context "when does_not_have_enough_top_topics" do
       before do
         SiteSetting.topics_per_period_in_top_page = 20
         SiteSetting.top_page_default_timeframe = 'daily'
@@ -112,9 +106,7 @@ RSpec.describe SiteSetting do
       it "should_return_a_time_period" do
         expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(nil)
       end
-
     end
-
   end
 
   describe "scheme" do
@@ -132,7 +124,7 @@ RSpec.describe SiteSetting do
     end
   end
 
-  context "shared_drafts_enabled?" do
+  describe ".shared_drafts_enabled?" do
     it "returns false by default" do
       expect(SiteSetting.shared_drafts_enabled?).to eq(false)
     end
@@ -148,7 +140,7 @@ RSpec.describe SiteSetting do
     end
   end
 
-  context 'deprecated site settings' do
+  describe 'deprecated site settings' do
     before do
       SiteSetting.force_https = true
       @orig_logger = Rails.logger

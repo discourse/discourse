@@ -23,7 +23,7 @@ RSpec.describe Middleware::RequestTracker do
     CachedCounting.disable
   end
 
-  context "full request" do
+  describe "full request" do
     it "can handle rogue user agents" do
       agent = (+"Evil Googlebot String \xc3\x28").force_encoding("Windows-1252")
 
@@ -36,7 +36,7 @@ RSpec.describe Middleware::RequestTracker do
     end
   end
 
-  context "log_request" do
+  describe "log_request" do
     before do
       freeze_time
       ApplicationRequest.clear_cache!
@@ -126,7 +126,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
     end
 
-    context "ignore anonymous page views" do
+    context "when ignoring anonymous page views" do
       let(:anon_data) do
         Middleware::RequestTracker.get_data(env(
           "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36"
@@ -180,7 +180,7 @@ RSpec.describe Middleware::RequestTracker do
     end
   end
 
-  context "rate limiting" do
+  describe "rate limiting" do
     before do
       RateLimiter.enable
       RateLimiter.clear_all_global!
@@ -549,7 +549,7 @@ RSpec.describe Middleware::RequestTracker do
     end
   end
 
-  context "callbacks" do
+  describe "callbacks" do
     def app(result, sql_calls: 0, redis_calls: 0)
       lambda do |env|
         sql_calls.times do

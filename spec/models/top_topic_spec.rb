@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TopTopic do
-
   describe '#sorted_periods' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @sorted_periods = TopTopic.sorted_periods
       end
@@ -20,8 +19,7 @@ RSpec.describe TopTopic do
 
   it { is_expected.to belong_to :topic }
 
-  context "refresh!" do
-
+  describe ".refresh!" do
     fab!(:t1) { Fabricate(:topic) }
     fab!(:t2) { Fabricate(:topic) }
 
@@ -30,7 +28,6 @@ RSpec.describe TopTopic do
     end
 
     context "after calculating" do
-
       before do
         TopTopic.refresh!
       end
@@ -42,7 +39,6 @@ RSpec.describe TopTopic do
   end
 
   describe "#compute_top_score_for" do
-
     fab!(:user) { Fabricate(:user) }
     fab!(:coding_horror) { Fabricate(:coding_horror) }
 
@@ -139,7 +135,6 @@ RSpec.describe TopTopic do
       expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(27)
       expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(18.301029995664)
       expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(0.0000000001).of(10.602059991328)
-
     end
   end
 end

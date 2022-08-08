@@ -30,7 +30,7 @@ RSpec.describe Compression::Engine do
       end
     end
 
-    context 'working with zip files' do
+    context 'when working with zip files' do
       let(:extension) { '.zip' }
 
       it 'decompress the folder and inspect files correctly' do
@@ -43,7 +43,7 @@ RSpec.describe Compression::Engine do
       end
     end
 
-    context 'working with .tar.gz files' do
+    context 'when working with .tar.gz files' do
       let(:extension) { '.tar.gz' }
 
       it 'decompress the folder and inspect files correctly' do
@@ -56,7 +56,7 @@ RSpec.describe Compression::Engine do
       end
     end
 
-    context 'working with .tar files' do
+    context 'when working with .tar files' do
       let(:extension) { '.tar' }
 
       it 'decompress the folder and inspect files correctly' do

@@ -392,7 +392,7 @@ RSpec.describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    context "local attachment" do
+    context "with local attachment" do
       before do
         SiteSetting.authorized_extensions = "pdf"
       end
@@ -428,7 +428,7 @@ RSpec.describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    context "secure media enabled" do
+    context "with secure media enabled" do
       before do
         enable_secure_media
       end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ExtraLocalesController do
-  context 'show' do
-
+  describe '#show' do
     it "won't work with a weird parameter" do
       get "/extra-locales/-invalid..character!!"
       expect(response.status).to eq(404)
@@ -29,8 +28,7 @@ RSpec.describe ExtraLocalesController do
       expect(response.status).to eq(400)
     end
 
-    context "logged in as a moderator" do
-
+    context "when logged in as a moderator" do
       let(:moderator) { Fabricate(:moderator) }
       before { sign_in(moderator) }
 
@@ -74,7 +72,7 @@ RSpec.describe ExtraLocalesController do
       end
     end
 
-    context "overridden translations" do
+    context "with overridden translations" do
       after { I18n.reload! }
 
       it "works for anonymous users" do

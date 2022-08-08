@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe UsernameCheckerService do
-
-  describe 'check_username' do
-
+  describe '#check_username' do
     before do
       @service = UsernameCheckerService.new
       @nil_email = nil
       @email = 'vincentvega@example.com'
     end
 
-    context 'Username invalid' do
+    context 'when username is invalid' do
       it 'rejects too short usernames' do
         result = @service.check_username('a', @nil_email)
         expect(result).to have_key(:errors)
@@ -31,7 +29,7 @@ RSpec.describe UsernameCheckerService do
         expect(result).to have_key(:errors)
       end
 
-      describe 'reserved usernames' do
+      context 'with reserved usernames' do
         before do
           SiteSetting.reserved_usernames = 'test|donkey'
         end
@@ -63,5 +61,4 @@ RSpec.describe UsernameCheckerService do
       expect(result[:available]).to eq(true)
     end
   end
-
 end

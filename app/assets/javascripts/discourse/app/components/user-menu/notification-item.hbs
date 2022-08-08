@@ -7,17 +7,13 @@
     {{d-icon this.icon}}
     <div>
       {{#if this.label}}
-        {{#if this.wrapLabel}}
-          <span class={{concat "notification-label " this.labelWrapperClasses}}>
-            {{this.label}}
-          </span>
-        {{else}}
-          <span>{{this.label}}</span>
-        {{/if}}
+        <span class={{concat "notification-label " this.labelWrapperClasses}}>
+          {{this.label}}
+        </span>
       {{/if}}
       {{#if this.description}}
         <span
-          class={{concat "notification-description " this.descriptionElementClasses}}
+          class={{concat "notification-description " this.descriptionWrapperClasses}}
           data-topic-id={{this.topicId}}
         >
           {{this.description}}

@@ -4,7 +4,7 @@ RSpec.describe UserBadge do
   fab!(:badge) { Fabricate(:badge) }
   fab!(:user) { Fabricate(:user) }
 
-  context 'validations' do
+  describe 'Validations' do
     let(:subject) { BadgeGranter.grant(badge, user) }
 
     it { is_expected.to validate_presence_of(:badge_id) }

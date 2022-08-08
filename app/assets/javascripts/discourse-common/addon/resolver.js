@@ -83,6 +83,11 @@ const DEPRECATED_MODULES = new Map(
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
     },
+    "topic-tracking-state:main": {
+      newName: "service:topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+    },
   })
 );
 

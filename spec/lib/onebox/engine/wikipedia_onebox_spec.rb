@@ -8,7 +8,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
       .to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
-  include_context "engines"
+  include_context "with engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do
@@ -21,7 +21,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
     end
   end
 
-  context "url with section hash" do
+  describe "url with section hash" do
     before do
       @link = "http://en.wikipedia.org/wiki/Billy_Jack#Soundtrack"
     end
@@ -31,7 +31,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
     end
   end
 
-  context "url with url-encoded section hash" do
+  describe "url with url-encoded section hash" do
     before do
       @link = "https://fr.wikipedia.org/wiki/Th%C3%A9ologie#La_th%C3%A9ologie_selon_Aristote"
 

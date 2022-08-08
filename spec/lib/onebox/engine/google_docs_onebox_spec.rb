@@ -7,7 +7,7 @@ RSpec.describe Onebox::Engine::GoogleDocsOnebox do
     stub_request(:get, @link).to_return(status: 200, body: onebox_response("googledocs"))
   end
 
-  include_context "engines"
+  include_context "with engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do

@@ -9,7 +9,7 @@ RSpec.describe UploadsController do
       expect(response.status).to eq(403)
     end
 
-    context 'logged in' do
+    context 'when logged in' do
       before do
         sign_in(user)
       end
@@ -308,8 +308,8 @@ RSpec.describe UploadsController do
         .to eq(%Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|)
     end
 
-    context "prevent anons from downloading files" do
-      it "returns 404 when an anonymous user tries to download a file" do
+    context "when user is anonymous" do
+      it "returns 404" do
         upload = upload_file("small.pdf", "pdf")
         delete "/session/#{user.username}.json"
 

@@ -5,17 +5,19 @@
       {{@status.description}}
     </span>
   {{/if}}
-  <DTooltip>
-    <div class="user-status-message-tooltip">
-      {{emoji @status.emoji skipTitle=true}}
-      <span class="user-status-tooltip-description">
-        {{@status.description}}
-      </span>
-      {{#if this.until}}
-        <div class="user-status-tooltip-until">
-          {{this.until}}
-        </div>
-      {{/if}}
-    </div>
-  </DTooltip>
+  {{#if this.showTooltip}}
+    <DTooltip>
+      <div class="user-status-message-tooltip">
+        {{emoji @status.emoji skipTitle=true}}
+        <span class="user-status-tooltip-description">
+          {{@status.description}}
+        </span>
+        {{#if this.until}}
+          <div class="user-status-tooltip-until">
+            {{this.until}}
+          </div>
+        {{/if}}
+      </div>
+    </DTooltip>
+  {{/if}}
 </span>

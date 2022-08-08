@@ -6,7 +6,6 @@ require 'discourse_tagging'
 # More tests are found in the category_tag_spec integration specs
 
 RSpec.describe DiscourseTagging do
-
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user)  { Fabricate(:user) }
   let(:guardian) { Guardian.new(user) }
@@ -40,7 +39,7 @@ RSpec.describe DiscourseTagging do
         expect(tags).to contain_exactly(tag1.name, tag3.name)
       end
 
-      context 'tag with colon' do
+      context 'with tag with colon' do
         fab!(:tag_with_colon) { Fabricate(:tag, name: 'with:colon') }
 
         it "can use it as selected tag" do
@@ -240,7 +239,7 @@ RSpec.describe DiscourseTagging do
 
       end
 
-      context 'empty term' do
+      context 'with empty term' do
         it "works with an empty term" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user),
             term: '',
@@ -250,7 +249,7 @@ RSpec.describe DiscourseTagging do
         end
       end
 
-      context 'tag synonyms' do
+      context 'with tag synonyms' do
         fab!(:base_tag) { Fabricate(:tag, name: 'discourse') }
         fab!(:synonym) { Fabricate(:tag, name: 'discource', target_tag: base_tag) }
 
@@ -320,7 +319,7 @@ RSpec.describe DiscourseTagging do
   end
 
   describe 'tag_topic_by_names' do
-    context 'visible but restricted tags' do
+    context 'with visible but restricted tags' do
       fab!(:topic) { Fabricate(:topic) }
 
       before do
@@ -357,7 +356,7 @@ RSpec.describe DiscourseTagging do
         expect(tag_changed_event[:params].second[:new_tag_names]).to eq(['alpha'])
       end
 
-      context 'non-staff users in tag group groups' do
+      context 'with non-staff users in tag group groups' do
         fab!(:non_staff_group) { Fabricate(:group, name: 'non_staff_group') }
 
         before do
@@ -424,7 +423,7 @@ RSpec.describe DiscourseTagging do
       expect(topic.reload.tags.pluck(:name)).to eq([tag1.name])
     end
 
-    context 'respects category minimum_required_tags setting' do
+    context 'when respecting category minimum_required_tags setting' do
       fab!(:category) { Fabricate(:category, minimum_required_tags: 2) }
       fab!(:topic) { Fabricate(:topic, category: category) }
 
@@ -453,7 +452,7 @@ RSpec.describe DiscourseTagging do
       end
     end
 
-    context 'hidden tags' do
+    context 'with hidden tags' do
       fab!(:hidden_tag) { Fabricate(:tag) }
       let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
       fab!(:topic) { Fabricate(:topic, user: user) }
@@ -476,7 +475,7 @@ RSpec.describe DiscourseTagging do
       end
     end
 
-    context 'tag group with parent tag' do
+    context 'with tag group with parent tag' do
       let(:topic) { Fabricate(:topic, user: user) }
       let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
       let(:tag_group) { Fabricate(:tag_group, parent_tag_id: tag1.id) }
@@ -522,7 +521,7 @@ RSpec.describe DiscourseTagging do
       end
     end
 
-    context "enforces required tags from a tag group" do
+    context "when enforcing required tags from a tag group" do
       fab!(:category) { Fabricate(:category) }
       fab!(:tag_group) { Fabricate(:tag_group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
@@ -567,7 +566,7 @@ RSpec.describe DiscourseTagging do
       end
     end
 
-    context 'tag synonyms' do
+    context 'with tag synonyms' do
       fab!(:topic) { Fabricate(:topic) }
 
       fab!(:syn1) { Fabricate(:tag, name: 'synonym1', target_tag: tag1) }
@@ -603,7 +602,7 @@ RSpec.describe DiscourseTagging do
       expect(described_class.tags_for_saving(['newtag'], guardian)).to eq([])
     end
 
-    context "can tag topics but not create tags" do
+    describe "can tag topics but not create tags" do
       before do
         guardian.stubs(:can_create_tag?).returns(false)
         guardian.stubs(:can_tag_topics?).returns(true)
@@ -620,7 +619,7 @@ RSpec.describe DiscourseTagging do
       end
     end
 
-    context "can tag topics and create tags" do
+    describe "can tag topics and create tags" do
       before do
         guardian.stubs(:can_create_tag?).returns(true)
         guardian.stubs(:can_tag_topics?).returns(true)

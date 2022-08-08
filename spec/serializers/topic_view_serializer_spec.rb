@@ -347,7 +347,7 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  context "details" do
+  context "with details" do
     it "returns the details object" do
       PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
       topic.topic_links.create!(user: user, url: 'https://discourse.org', domain: 'discourse.org', clicks: 100)
@@ -398,7 +398,7 @@ RSpec.describe TopicViewSerializer do
       expect(json[:details][:can_publish_page]).to eq(true)
     end
 
-    context "can_edit_tags" do
+    context "with can_edit_tags" do
       before do
         SiteSetting.tagging_enabled = true
         SiteSetting.min_trust_to_edit_wiki_post = 2
@@ -418,7 +418,7 @@ RSpec.describe TopicViewSerializer do
       end
     end
 
-    context "can_edit" do
+    context "with can_edit" do
       fab!(:group_user) { Fabricate(:group_user) }
       fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
@@ -440,10 +440,10 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  context "published_page" do
+  context "with published_page" do
     fab!(:published_page) { Fabricate(:published_page, topic: topic) }
 
-    context "page publishing is disabled" do
+    context "when page publishing is disabled" do
       before do
         SiteSetting.enable_page_publishing = false
       end
@@ -454,26 +454,26 @@ RSpec.describe TopicViewSerializer do
       end
     end
 
-    context "page publishing is enabled" do
+    context "when page publishing is enabled" do
       before do
         SiteSetting.enable_page_publishing = true
       end
 
-      context "not staff" do
+      context "when not staff" do
         it "doesn't return the published page" do
           json = serialize_topic(topic, user)
           expect(json[:published_page]).to be_blank
         end
       end
 
-      context "staff" do
+      context "when staff" do
         it "returns the published page" do
           json = serialize_topic(topic, admin)
           expect(json[:published_page]).to be_present
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
 
-        context "secure media is enabled" do
+        context "when secure media is enabled" do
           before do
             setup_s3
             SiteSetting.secure_media = true
@@ -488,7 +488,7 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  context "viewing private messages when enable_category_group_moderation is enabled" do
+  context "when viewing private messages when enable_category_group_moderation is enabled" do
     fab!(:pm_topic) do
       Fabricate(:private_message_topic, topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: user),
@@ -509,7 +509,7 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe '#user_last_posted_at' do
-    context 'When the slow mode is disabled' do
+    context 'when the slow mode is disabled' do
       it 'returns nil' do
         Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
 
@@ -519,7 +519,7 @@ RSpec.describe TopicViewSerializer do
       end
     end
 
-    context 'When the slow mode is enabled' do
+    context 'when the slow mode is enabled' do
       before { topic.update!(slow_mode_seconds: 1000) }
 
       it 'returns nil if no user is given' do

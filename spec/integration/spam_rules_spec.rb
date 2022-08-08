@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "spam rules for users" do
-
   describe 'auto-silence users based on flagging' do
     fab!(:admin)     { Fabricate(:admin) } # needed to send a system message
     fab!(:moderator) { Fabricate(:moderator) }
@@ -16,10 +15,10 @@ RSpec.describe "spam rules for users" do
       SiteSetting.num_users_to_silence_new_user = 2
     end
 
-    context 'spammer is a new user' do
+    context 'when spammer is a new user' do
       fab!(:spammer)  { Fabricate(:user, trust_level: TrustLevel[0]) }
 
-      context 'spammer post is not flagged enough times' do
+      context 'when spammer post is not flagged enough times' do
         let!(:spam_post)  { create_post(user: spammer) }
         let!(:spam_post2) { create_post(user: spammer) }
 
@@ -31,7 +30,7 @@ RSpec.describe "spam rules for users" do
           expect(spam_post.reload).to_not be_hidden
         end
 
-        context 'spam posts are flagged enough times, but not by enough users' do
+        context 'when spam posts are flagged enough times, but not by enough users' do
           it 'should not hide the post' do
             PostActionCreator.create(user1, spam_post2, :spam)
 
@@ -41,7 +40,7 @@ RSpec.describe "spam rules for users" do
           end
         end
 
-        context 'one spam post is flagged enough times by enough users' do
+        context 'when one spam post is flagged enough times by enough users' do
           fab!(:another_topic) { Fabricate(:topic) }
           let!(:private_messages_count) { spammer.private_topics_count }
           let!(:mod_pm_count) { moderator.private_topics_count }
@@ -57,14 +56,14 @@ RSpec.describe "spam rules for users" do
             expect(spammer.reload.private_topics_count).to eq(private_messages_count + 1)
           end
 
-          context "a post is deleted" do
+          context "when a post is deleted" do
             it 'should silence the spammer' do
               spam_post.trash!(moderator); spammer.reload
               expect(spammer.reload).to be_silenced
             end
           end
 
-          context "spammer becomes trust level 1" do
+          context "when spammer becomes trust level 1" do
             it 'should silence the spammer' do
               spammer.change_trust_level!(TrustLevel[1]); spammer.reload
               expect(spammer.reload).to be_silenced
@@ -72,7 +71,7 @@ RSpec.describe "spam rules for users" do
           end
         end
 
-        context 'hide_post_sensitivity' do
+        context 'with hide_post_sensitivity' do
           it 'should silence the spammer' do
             Reviewable.set_priorities(high: 2.0)
             SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
@@ -84,10 +83,10 @@ RSpec.describe "spam rules for users" do
       end
     end
 
-    context "spammer has trust level basic" do
+    context "when spammer has trust level basic" do
       let(:spammer)  { Fabricate(:user, trust_level: TrustLevel[1]) }
 
-      context 'one spam post is flagged enough times by enough users' do
+      context 'when one spam post is flagged enough times by enough users' do
         let!(:spam_post)              { Fabricate(:post, user: spammer) }
         let!(:private_messages_count) { spammer.private_topics_count }
 

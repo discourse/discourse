@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Auth::TwitterAuthenticator do
-
   it "takes over account if email is supplied" do
     auth = Auth::TwitterAuthenticator.new
 
@@ -51,7 +50,7 @@ RSpec.describe Auth::TwitterAuthenticator do
     expect(UserAssociatedAccount.exists?(provider_name: "twitter", user_id: user2.id)).to eq(true)
   end
 
-  context 'revoke' do
+  describe 'revoke' do
     fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::TwitterAuthenticator.new }
 
@@ -65,7 +64,5 @@ RSpec.describe Auth::TwitterAuthenticator do
         expect(authenticator.revoke(user)).to eq(true)
         expect(authenticator.description_for_user(user)).to eq("")
       end
-
   end
-
 end

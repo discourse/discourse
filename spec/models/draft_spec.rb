@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Draft do
-
   fab!(:user) do
     Fabricate(:user)
   end
@@ -10,7 +9,7 @@ RSpec.describe Draft do
     Fabricate(:post)
   end
 
-  context 'system user' do
+  describe 'system user' do
     it "can not set drafts" do
       # fake a sequence
       DraftSequence.create!(user_id: Discourse.system_user.id, draft_key: "abc", sequence: 10)
@@ -26,7 +25,7 @@ RSpec.describe Draft do
     end
   end
 
-  context 'backup_drafts_to_pm_length' do
+  describe 'backup_drafts_to_pm_length' do
     it "correctly backs up drafts to a personal message" do
       SiteSetting.backup_drafts_to_pm_length = 1
 
@@ -224,7 +223,7 @@ RSpec.describe Draft do
 
   end
 
-  context 'key expiry' do
+  describe 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
       Draft.set(user, Draft::NEW_TOPIC, 0, 'my draft')
       _t = Fabricate(:topic, user: user, advance_draft: true)
@@ -295,6 +294,5 @@ RSpec.describe Draft do
       expect(drafts[0].post_preloaded?).to eq(true)
       expect(drafts[0].post.id).to eq(post.id)
     end
-
   end
 end

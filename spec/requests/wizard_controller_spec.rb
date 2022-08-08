@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe WizardController do
-  context 'wizard enabled' do
+  context 'when wizard is enabled' do
     before do
       SiteSetting.wizard_enabled = true
     end

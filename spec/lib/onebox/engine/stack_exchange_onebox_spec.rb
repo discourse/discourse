@@ -49,7 +49,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
           .to_return(status: 200, body: onebox_response('stackexchange-question'))
       end
 
-      include_context 'engines'
+      include_context 'with engines'
       it_behaves_like 'an engine'
 
       describe '#to_html' do
@@ -80,7 +80,7 @@ RSpec.describe Onebox::Engine::StackExchangeOnebox do
           .to_return(status: 200, body: onebox_response('stackexchange-answer'))
       end
 
-      include_context 'engines'
+      include_context 'with engines'
       it_behaves_like 'an engine'
 
       describe '#to_html' do

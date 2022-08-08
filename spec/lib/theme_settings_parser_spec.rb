@@ -48,7 +48,7 @@ RSpec.describe ThemeSettingsParser do
     expect(loader.find_by_name(:enum_setting)[:type]).to        eq(types[:enum])
   end
 
-  context "description locale" do
+  describe "description locale" do
     it "favors I18n.locale" do
       I18n.locale = :ar
       SiteSetting.default_locale = "en"
@@ -72,7 +72,7 @@ RSpec.describe ThemeSettingsParser do
     end
   end
 
-  context "enum setting" do
+  describe "enum setting" do
     it "should never have less than 1 choices" do
       choices = loader.find_by_name(:enum_setting)[:opts][:choices]
       expect(choices.class).to eq(Array)
@@ -84,7 +84,7 @@ RSpec.describe ThemeSettingsParser do
     end
   end
 
-  context "list setting" do
+  describe "list setting" do
     it "supports list type" do
       list_type = loader.find_by_name(:compact_list_setting)[:opts][:list_type]
       expect(list_type).to eq("compact")

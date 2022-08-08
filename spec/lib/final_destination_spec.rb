@@ -3,7 +3,6 @@
 require 'final_destination'
 
 RSpec.describe FinalDestination do
-
   let(:opts) do
     {
       ignore_redirects: ['https://ignore-me.com'],
@@ -82,7 +81,6 @@ RSpec.describe FinalDestination do
   end
 
   describe '.resolve' do
-
     it "has a ready status code before anything happens" do
       expect(fd('https://eviltrout.com').status).to eq(:ready)
     end
@@ -118,7 +116,7 @@ RSpec.describe FinalDestination do
       expect(final.status).to eq(:resolved)
     end
 
-    context "underscores in URLs" do
+    context "with underscores in URLs" do
       before do
         stub_request(:head, 'https://some_thing.example.com').to_return(doc_response)
       end
@@ -202,7 +200,7 @@ RSpec.describe FinalDestination do
       expect { final.resolve }.to raise_error(Excon::Errors::ExpectationFailed, "connect timeout reached: https://codinghorror.com/blog")
     end
 
-    context 'follows canonical links' do
+    context 'when following canonical links' do
       it 'resolves the canonical link as the final destination' do
         canonical_follow("https://eviltrout.com", "https://codinghorror.com/blog")
         stub_request(:head, "https://codinghorror.com/blog").to_return(doc_response)
@@ -260,7 +258,7 @@ RSpec.describe FinalDestination do
       end
     end
 
-    context "GET can be forced" do
+    context "when forcing GET" do
       before do
         stub_request(:head, 'https://force.get.com/posts?page=4')
         stub_request(:get, 'https://force.get.com/posts?page=4')
@@ -305,7 +303,7 @@ RSpec.describe FinalDestination do
 
     end
 
-    context "HEAD not supported" do
+    context "when HEAD not supported" do
       before do
         stub_request(:get, 'https://eviltrout.com').to_return(
           status: 301,
@@ -410,7 +408,7 @@ RSpec.describe FinalDestination do
       expect(final.status).to eq(:resolved)
     end
 
-    context "content_type" do
+    context "with content_type" do
       before do
         stub_request(:head, "https://eviltrout.com/this/is/an/image").to_return(image_response)
       end
@@ -475,7 +473,7 @@ RSpec.describe FinalDestination do
   end
 
   describe '.validate_uri' do
-    context "host lookups" do
+    context "with host lookups" do
       it "works for various hosts" do
         expect(fd('https://private-host.com').validate_uri).to eq(false)
         expect(fd('https://eviltrout.com:443').validate_uri).to eq(true)
@@ -626,5 +624,4 @@ RSpec.describe FinalDestination do
         .to eq('https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%BE%D0%B1%D0%BE')
     end
   end
-
 end

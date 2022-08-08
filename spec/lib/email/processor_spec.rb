@@ -69,7 +69,7 @@ RSpec.describe Email::Processor do
     end
   end
 
-  context "known error" do
+  describe "known error" do
     let(:mail) { "From: #{from}\nTo: bar@foo.com" }
     let(:mail2) { "From: #{from}\nTo: foo@foo.com" }
     let(:mail3) { "From: #{from}\nTo: foobar@foo.com" }
@@ -97,7 +97,7 @@ RSpec.describe Email::Processor do
     end
   end
 
-  context "unrecognized error" do
+  describe "unrecognized error" do
     let(:mail) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
     let(:mail2) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: foo@foo.com\nSubject: BAR BAR\n\nBar bar bar bar?" }
 
@@ -140,7 +140,7 @@ RSpec.describe Email::Processor do
     end
   end
 
-  context "from reply to email address" do
+  describe "from reply to email address" do
     let(:mail) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
 
     it "ignores the email" do
@@ -152,7 +152,7 @@ RSpec.describe Email::Processor do
     end
   end
 
-  context "mailinglist mirror" do
+  describe "mailinglist mirror" do
     before do
       SiteSetting.email_in = true
       Fabricate(:mailinglist_mirror_category)

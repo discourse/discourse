@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe CrawlerDetection do
-
   def crawler!(user_agent, via = nil)
     if (!CrawlerDetection.crawler?(user_agent, via))
       raise "#{user_agent} should be a crawler!"
@@ -14,8 +13,7 @@ RSpec.describe CrawlerDetection do
     end
   end
 
-  describe "crawler?" do
-
+  describe ".crawler?" do
     it "can be amended via site settings" do
       SiteSetting.crawler_user_agents = 'Mooble|Kaboodle+*'
 
@@ -67,7 +65,7 @@ RSpec.describe CrawlerDetection do
 
   end
 
-  describe 'show_browser_update?' do
+  describe '.show_browser_update?' do
     it 'always returns false if setting is empty' do
       SiteSetting.browser_update_user_agents = ""
 
@@ -83,12 +81,12 @@ RSpec.describe CrawlerDetection do
     end
   end
 
-  describe 'allow_crawler?' do
+  describe '.allow_crawler?' do
     it 'returns true if allowlist and blocklist are blank' do
       expect(CrawlerDetection.allow_crawler?('Googlebot/2.1 (+http://www.google.com/bot.html)')).to eq(true)
     end
 
-    context 'allowlist is set' do
+    context 'when allowlist is set' do
       before do
         SiteSetting.allowed_crawler_user_agents = 'Googlebot|Twitterbot'
       end
@@ -105,7 +103,7 @@ RSpec.describe CrawlerDetection do
         expect(CrawlerDetection.allow_crawler?('')).to eq(false)
       end
 
-      context 'and blocklist is set' do
+      context 'when blocklist is set' do
         before do
           SiteSetting.blocked_crawler_user_agents = 'Googlebot-Image'
         end
@@ -116,7 +114,7 @@ RSpec.describe CrawlerDetection do
       end
     end
 
-    context 'blocklist is set' do
+    context 'when blocklist is set' do
       before do
         SiteSetting.blocked_crawler_user_agents = 'Googlebot|Twitterbot'
       end
@@ -135,7 +133,7 @@ RSpec.describe CrawlerDetection do
     end
   end
 
-  describe 'is_blocked_crawler?' do
+  describe '.is_blocked_crawler?' do
     it 'is false if user agent is a crawler and no allowlist or blocklist is defined' do
       expect(CrawlerDetection.is_blocked_crawler?('Twitterbot')).to eq(false)
     end

@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::AutoQueueHandler do
-
   subject { Jobs::AutoQueueHandler.new.execute({}) }
 
-  context "old flagged post" do
+  describe "old flagged post" do
     fab!(:spam_result) do
       PostActionCreator.new(
         Fabricate(:user),
@@ -38,7 +37,7 @@ RSpec.describe Jobs::AutoQueueHandler do
     end
   end
 
-  context "reviewables" do
+  describe "reviewables" do
     fab!(:new_post) { Fabricate(:reviewable_queued_post, created_at: 59.days.ago) }
     fab!(:old_post) { Fabricate(:reviewable_queued_post, created_at: 61.days.ago) }
     fab!(:new_user) { Fabricate(:reviewable, created_at: 10.days.ago) }
@@ -62,5 +61,4 @@ RSpec.describe Jobs::AutoQueueHandler do
       expect(old_user.reload.pending?).to eq(true)
     end
   end
-
 end

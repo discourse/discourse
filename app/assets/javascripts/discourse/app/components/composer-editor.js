@@ -594,6 +594,8 @@ export default Component.extend(ComposerUploadUppy, {
 
   resetImageControls(buttonWrapper) {
     const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+
     const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
     );
@@ -602,6 +604,8 @@ export default Component.extend(ComposerUploadUppy, {
     );
 
     imageResize.removeAttribute("hidden");
+    imageDelete.removeAttribute("hidden");
+
     readonlyContainer.removeAttribute("hidden");
     buttonWrapper.removeAttribute("editing");
     editContainer.setAttribute("hidden", "true");
@@ -647,6 +651,7 @@ export default Component.extend(ComposerUploadUppy, {
 
     const buttonWrapper = event.target.closest(".button-wrapper");
     const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
 
     const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
@@ -660,6 +665,7 @@ export default Component.extend(ComposerUploadUppy, {
 
     buttonWrapper.setAttribute("editing", "true");
     imageResize.setAttribute("hidden", "true");
+    imageDelete.setAttribute("hidden", "true");
     readonlyContainer.setAttribute("hidden", "true");
     editContainerInput.value = altText.textContent;
     editContainer.removeAttribute("hidden");
@@ -687,10 +693,30 @@ export default Component.extend(ComposerUploadUppy, {
     this.resetImageControls(buttonWrapper);
   },
 
+  @bind
+  _handleImageDeleteButtonClick(event) {
+    if (!event.target.classList.contains("delete-image-button")) {
+      return;
+    }
+    const index = parseInt(
+      event.target.closest(".button-wrapper").dataset.imageIndex,
+      10
+    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+    this.appEvents.trigger(
+      "composer:replace-text",
+      matchingPlaceholder[index],
+      "",
+      { regex: IMAGE_MARKDOWN_REGEX, index }
+    );
+  },
+
   _registerImageAltTextButtonClick(preview) {
     preview.addEventListener("click", this._handleAltTextEditButtonClick);
     preview.addEventListener("click", this._handleAltTextOkButtonClick);
     preview.addEventListener("click", this._handleAltTextCancelButtonClick);
+    preview.addEventListener("click", this._handleImageDeleteButtonClick);
     preview.addEventListener("keypress", this._handleAltTextInputKeypress);
   },
 

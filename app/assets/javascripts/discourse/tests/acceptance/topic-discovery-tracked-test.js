@@ -39,7 +39,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
   });
 
   test("navigation items with tracked filter", async function (assert) {
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -104,7 +104,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     const category = categories.find((c) => c.id === 1001);
     category.set("notification_level", NotificationLevels.TRACKING);
 
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -230,7 +230,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
   });
 
   test("visit discovery page filtered by tag with tracked filter", async function (assert) {
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -278,7 +278,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     const category = categories.at(-1);
     category.set("notification_level", NotificationLevels.TRACKING);
 
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,

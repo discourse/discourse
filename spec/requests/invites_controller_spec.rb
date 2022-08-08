@@ -197,7 +197,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'invite to topic' do
+    context 'with invite to topic' do
       fab!(:topic) { Fabricate(:topic) }
 
       it 'works' do
@@ -215,7 +215,7 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(400)
       end
 
-      context 'topic is private' do
+      context 'when topic is private' do
         fab!(:group) { Fabricate(:group) }
 
         fab!(:secured_category) do |category|
@@ -245,7 +245,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'invite to group' do
+    context 'with invite to group' do
       fab!(:group) { Fabricate(:group) }
 
       it 'works for admins' do
@@ -299,7 +299,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'email invite' do
+    context 'with email invite' do
       subject(:create_invite) { post '/invites.json', params: params }
 
       let(:params) { { email: email } }
@@ -374,7 +374,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'link invite' do
+    context 'with link invite' do
       it 'works' do
         sign_in(admin)
 
@@ -752,7 +752,7 @@ RSpec.describe InvitesController do
         end
 
         context 'with password' do
-          context 'user was invited via email' do
+          context 'when user was invited via email' do
             before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
 
             it 'does not send an activation email and activates the user' do
@@ -786,7 +786,7 @@ RSpec.describe InvitesController do
             end
           end
 
-          context 'user was invited via link' do
+          context 'when user was invited via link' do
             before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
             it 'sends an activation email and does not activate the user' do
@@ -870,7 +870,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'new registrations are disabled' do
+    context 'when new registrations are disabled' do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:invite) { Invite.generate(topic.user, email: 'test@example.com', topic: topic) }
 
@@ -885,7 +885,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'user is already logged in' do
+    context 'when user is already logged in' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:user) { sign_in(Fabricate(:user)) }
 
@@ -899,7 +899,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'topic invites' do
+    context 'with topic invites' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
 
       fab!(:secured_category) do
@@ -937,7 +937,7 @@ RSpec.describe InvitesController do
       end
     end
 
-    context 'staged user' do
+    context 'with staged user' do
       fab!(:invite) { Fabricate(:invite) }
       fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
 

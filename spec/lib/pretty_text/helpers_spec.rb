@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PrettyText::Helpers do
-
-  context "lookup_upload_urls" do
+  describe ".lookup_upload_urls" do
     let(:upload) { Fabricate(:upload) }
 
     it "should return cdn url if available" do
@@ -16,5 +15,4 @@ RSpec.describe PrettyText::Helpers do
       expect(result[short_url][:url]).to eq("https://awesome.com#{upload.url}")
     end
   end
-
 end

@@ -25,8 +25,7 @@ RSpec.describe Oneboxer do
     end
   end
 
-  context "local oneboxes" do
-
+  describe "local oneboxes" do
     def link(url)
       url = "#{Discourse.base_url}#{url}"
       %{<a href="#{url}">#{url}</a>}
@@ -171,8 +170,7 @@ RSpec.describe Oneboxer do
       <html>
     HTML
 
-    context "blacklisted domains" do
-
+    context "with blacklisted domains" do
       it "does not return a onebox if redirect uri final destination is in blacklist" do
         SiteSetting.blocked_onebox_domains = "kitten.com"
 
@@ -451,7 +449,7 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
   end
 
-  context 'missing attributes' do
+  describe 'missing attributes' do
     before do
       stub_request(:head, url)
     end
@@ -480,7 +478,7 @@ RSpec.describe Oneboxer do
     end
   end
 
-  context 'instagram' do
+  describe 'instagram' do
     it 'providing a token should attempt to use new endpoint' do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
       access_token = 'abc123'
@@ -558,7 +556,7 @@ RSpec.describe Oneboxer do
     end
   end
 
-  context 'strategies' do
+  describe 'strategies' do
     it "has a 'default' strategy" do
       expect(Oneboxer.strategies.keys.first).to eq(:default)
     end
@@ -568,7 +566,7 @@ RSpec.describe Oneboxer do
       expect(Oneboxer.strategies[strategy].keys).not_to eq([])
     end
 
-    context "using a non-default strategy" do
+    context "when using a non-default strategy" do
       let(:hostname) { "my.interesting.site" }
       let(:url) { "https://#{hostname}/cool/content" }
       let(:html) do
@@ -646,7 +644,7 @@ RSpec.describe Oneboxer do
     end
   end
 
-  context "register_local_handler" do
+  describe "register_local_handler" do
     it "calls registered local handler" do
       Oneboxer.register_local_handler('wizard') do |url, route|
         'Custom Onebox for Wizard'

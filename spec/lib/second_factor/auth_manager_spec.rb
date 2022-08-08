@@ -2,7 +2,7 @@
 
 RSpec.describe SecondFactor::AuthManager do
   fab!(:user) { Fabricate(:user) }
-  fab!(:guardian) { Guardian.new(user) }
+  let(:guardian) { Guardian.new(user) }
   fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
 
   def create_request(request_method: "GET", path: "/")
@@ -227,7 +227,7 @@ RSpec.describe SecondFactor::AuthManager do
       end
     end
 
-    context "returned results object" do
+    context "with returned results object" do
       it "has the correct status and contains the return value of the action hook that's called" do
         action = create_action
         action.expects(:skip_second_factor_auth?).with({}).returns(true).once

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::HackernewsOnebox do
-  context "When oneboxing a comment" do
+  context "when oneboxing a comment" do
     let(:link) { "https://news.ycombinator.com/item?id=30181167" }
     let(:api_link) { "https://hacker-news.firebaseio.com/v0/item/30181167.json" }
     let(:html) { described_class.new(link).to_html }
@@ -27,7 +27,7 @@ RSpec.describe Onebox::Engine::HackernewsOnebox do
     end
   end
 
-  context "When oneboxing a story" do
+  context "when oneboxing a story" do
     let(:link) { "https://news.ycombinator.com/item?id=5172905" }
     let(:api_link) { "https://hacker-news.firebaseio.com/v0/item/5172905.json" }
     let(:html) { described_class.new(link).to_html }

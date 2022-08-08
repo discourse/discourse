@@ -9,7 +9,7 @@ RSpec.describe MinUsernameLengthValidator do
     expect(validator.error_message).to eq(I18n.t("site_settings.errors.min_username_length_range"))
   end
 
-  context "checks for valid ranges" do
+  describe "checks for valid ranges" do
     it "fails for values below the valid range" do
       expect do
         SiteSetting.min_username_length = 0

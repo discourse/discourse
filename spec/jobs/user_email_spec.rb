@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::UserEmail do
-
   before do
     SiteSetting.email_time_window_mins = 10
   end
@@ -23,7 +22,7 @@ RSpec.describe Jobs::UserEmail do
     expect { Jobs::UserEmail.new.execute(type: :no_method, user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
   end
 
-  context 'digest can be generated' do
+  context 'when digest can be generated' do
     fab!(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
@@ -38,7 +37,7 @@ RSpec.describe Jobs::UserEmail do
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
-    context 'not emailed recently' do
+    context 'when not emailed recently' do
       before do
         freeze_time
         user.update!(last_emailed_at: 8.days.ago)
@@ -51,7 +50,7 @@ RSpec.describe Jobs::UserEmail do
       end
     end
 
-    context 'recently emailed' do
+    context 'when recently emailed' do
       before do
         freeze_time
         user.update!(last_emailed_at: 2.hours.ago)
@@ -66,8 +65,7 @@ RSpec.describe Jobs::UserEmail do
     end
   end
 
-  context "bounce score" do
-
+  context "with bounce score" do
     it "always sends critical emails when bounce score threshold has been reached" do
       email_token = Fabricate(:email_token)
       user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
@@ -81,10 +79,9 @@ RSpec.describe Jobs::UserEmail do
         user.email
       )
     end
-
   end
 
-  context 'to_address' do
+  context 'with to_address' do
     it 'overwrites a to_address when present' do
       Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
 
@@ -94,7 +91,7 @@ RSpec.describe Jobs::UserEmail do
     end
   end
 
-  context "disable_emails setting" do
+  context "with disable_emails setting" do
     it "sends when no" do
       SiteSetting.disable_emails = 'no'
       Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
@@ -112,7 +109,7 @@ RSpec.describe Jobs::UserEmail do
     end
   end
 
-  context "recently seen" do
+  context "when recently seen" do
     fab!(:post) { Fabricate(:post, user: user) }
     fab!(:notification) { Fabricate(
         :notification,
@@ -246,7 +243,7 @@ RSpec.describe Jobs::UserEmail do
     end
   end
 
-  context "email_log" do
+  context "with email_log" do
     fab!(:post) { Fabricate(:post, created_at: 30.seconds.ago) }
 
     before do
@@ -317,8 +314,7 @@ RSpec.describe Jobs::UserEmail do
     end
   end
 
-  context 'args' do
-
+  context 'with args' do
     it 'passes a token as an argument when a token is present' do
       Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, email_token: 'asdfasdf')
 
@@ -328,7 +324,7 @@ RSpec.describe Jobs::UserEmail do
       expect(mail.body).to include("asdfasdf")
     end
 
-    context "confirm_new_email" do
+    context "with confirm_new_email" do
       let(:email_token) { Fabricate(:email_token, user: user) }
       before do
         EmailChangeRequest.create!(
@@ -368,7 +364,7 @@ RSpec.describe Jobs::UserEmail do
       end
     end
 
-    context "post" do
+    context "with post" do
       fab!(:post) { Fabricate(:post, user: user) }
 
       it "doesn't send the email if you've seen the post" do
@@ -392,7 +388,7 @@ RSpec.describe Jobs::UserEmail do
         expect(ActionMailer::Base.deliveries).to eq([])
       end
 
-      context 'user is suspended' do
+      context 'when user is suspended' do
         it "doesn't send email for a pm from a regular user" do
           Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, post_id: post.id)
 
@@ -443,7 +439,7 @@ RSpec.describe Jobs::UserEmail do
         end
       end
 
-      context 'user is anonymous' do
+      context 'when user is anonymous' do
         before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
@@ -462,7 +458,7 @@ RSpec.describe Jobs::UserEmail do
       end
     end
 
-    context 'notification' do
+    context 'with notification' do
       fab!(:post) { Fabricate(:post, user: user) }
       fab!(:notification) {
         Fabricate(:notification,
@@ -541,7 +537,7 @@ RSpec.describe Jobs::UserEmail do
         expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(user.email)
       end
 
-      context "recently seen" do
+      context "when recently seen" do
         it "doesn't send an email to a user that's been recently seen" do
           user.update!(last_seen_at: 9.minutes.ago)
 
@@ -572,7 +568,7 @@ RSpec.describe Jobs::UserEmail do
         end
       end
 
-      context 'max_emails_per_day_per_user limit is reached' do
+      context 'when max_emails_per_day_per_user limit is reached' do
         before do
           SiteSetting.max_emails_per_day_per_user = 2
           2.times { Fabricate(:email_log, user: user, email_type: 'blah', to_address: user.email) }
@@ -718,7 +714,7 @@ RSpec.describe Jobs::UserEmail do
         expect(ActionMailer::Base.deliveries).to eq([])
       end
 
-      context 'user is suspended' do
+      context 'when user is suspended' do
         it "doesn't send email for a pm from a regular user" do
           msg, err = Jobs::UserEmail.new.message_for_email(
               suspended,
@@ -731,7 +727,7 @@ RSpec.describe Jobs::UserEmail do
           expect(err).not_to eq(nil)
         end
 
-        context 'pm from staff' do
+        context 'with pm from staff' do
           before do
             @pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
             @pm_from_staff.topic.topic_allowed_users.create!(user_id: suspended.id)
@@ -768,7 +764,7 @@ RSpec.describe Jobs::UserEmail do
         end
       end
 
-      context 'user is anonymous' do
+      context 'when user is anonymous' do
         before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
@@ -802,6 +798,5 @@ RSpec.describe Jobs::UserEmail do
         end
       end
     end
-
   end
 end

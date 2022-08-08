@@ -17,7 +17,7 @@ RSpec.describe Jobs::InvalidateInactiveAdmins do
     fab!(:not_seen_admin) { Fabricate(:admin, last_seen_at: 370.days.ago) }
     before { not_seen_admin.email_tokens.update_all(confirmed: true) }
 
-    context 'invalidate_inactive_admin_email_after_days = 365' do
+    context 'when invalidate_inactive_admin_email_after_days = 365' do
       before do
         SiteSetting.invalidate_inactive_admin_email_after_days = 365
       end
@@ -65,7 +65,7 @@ RSpec.describe Jobs::InvalidateInactiveAdmins do
       end
     end
 
-    context 'invalidate_inactive_admin_email_after_days = 0 to disable this feature' do
+    context 'when invalidate_inactive_admin_email_after_days = 0 to disable this feature' do
       before do
         SiteSetting.invalidate_inactive_admin_email_after_days = 0
       end

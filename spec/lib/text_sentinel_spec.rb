@@ -4,13 +4,11 @@
 require 'text_sentinel'
 
 RSpec.describe TextSentinel do
-
   it "allows utf-8 chars" do
     expect(TextSentinel.new("йȝîûηыეமிᚉ⠛").text).to eq("йȝîûηыეமிᚉ⠛")
   end
 
-  context "entropy" do
-
+  describe "entropy" do
     it "returns 0 for an empty string" do
       expect(TextSentinel.new("").entropy).to eq(0)
     end
@@ -42,10 +40,9 @@ RSpec.describe TextSentinel do
     it "handles repeated foreign characters" do
       expect(TextSentinel.new("又一个测试话题" * 3).entropy).to eq(18)
     end
-
   end
 
-  context 'body_sentinel' do
+  describe 'body_sentinel' do
     [ 'evil trout is evil',
       "去年十社會警告",
       "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь.",
@@ -74,8 +71,7 @@ RSpec.describe TextSentinel do
     end
   end
 
-  context "validity" do
-
+  describe "validity" do
     let(:valid_string) { "This is a cool topic about Discourse" }
 
     it "allows a valid string" do
@@ -142,23 +138,19 @@ RSpec.describe TextSentinel do
     it "allows a long string with colons" do
       expect(TextSentinel.new("error in org.gradle.internal.graph.CachingDirectedGraphWalker:colon", max_word_length: 30)).to be_valid
     end
-
   end
 
-  context 'title_sentinel' do
-
+  describe 'title_sentinel' do
     it "uses a sensible min entropy value when min title length is less than title_min_entropy" do
       SiteSetting.min_topic_title_length = 3
       SiteSetting.title_min_entropy = 10
       expect(TextSentinel.title_sentinel('Hey')).to be_valid
     end
-
   end
 
-  context 'seems_unpretentious?' do
+  describe '#seems_unpretentious?' do
     it 'works with nil title' do
       expect(TextSentinel.title_sentinel(nil).seems_unpretentious?).to eq(true)
     end
   end
-
 end

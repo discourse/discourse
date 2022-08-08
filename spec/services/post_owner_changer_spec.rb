@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostOwnerChanger do
-  describe "change_owner!" do
+  describe "#change_owner!" do
     fab!(:editor) { Fabricate(:admin) }
     fab!(:user_a) { Fabricate(:user) }
     let(:p1) { create_post(post_number: 1) }
@@ -90,7 +90,7 @@ RSpec.describe PostOwnerChanger do
       expect(TopicUser.find_by(topic_id: topic.id, user_id: user_a.id).posted).to eq(true)
     end
 
-    context "sets topic notification level for the new owner" do
+    context "when setting topic notification level for the new owner" do
       let(:p4) { create_post(post_number: 2, topic: topic) }
 
       it "'watching' if the first post gets a new owner" do
@@ -106,7 +106,7 @@ RSpec.describe PostOwnerChanger do
       end
     end
 
-    context "integration tests" do
+    context "with integration tests" do
       let(:p1user) { p1.user }
       let(:p2user) { p2.user }
 
@@ -192,8 +192,7 @@ RSpec.describe PostOwnerChanger do
         }.to_not change { user_stat.reload.post_count }
       end
 
-      context 'private message topic' do
-        # fab!(:topic) { Fabricate(:private_message_topic) }
+      context 'with private message topic' do
         let(:pm) do
           create_post(
             archetype: 'private_message',

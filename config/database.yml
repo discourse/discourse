@@ -21,7 +21,7 @@ development:
 # Do not set this db to the same as development or production.
 
 <%
-  test_db = ENV["RAILS_TEST_DB"]
+  test_db = ENV["RAILS_DB"]
   if !test_db.present?
     test_db = "discourse_test"
 

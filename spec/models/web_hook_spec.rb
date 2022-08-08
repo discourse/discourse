@@ -34,7 +34,7 @@ RSpec.describe WebHook do
     end
   end
 
-  context 'web hooks' do
+  context 'with web hooks' do
     fab!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
     fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
@@ -107,7 +107,7 @@ RSpec.describe WebHook do
         expect(job_args["payload"]).to eq(payload)
       end
 
-      context 'includes wildcard hooks' do
+      context 'when including wildcard hooks' do
         fab!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
 
         describe '#enqueue_hooks' do
@@ -588,7 +588,7 @@ RSpec.describe WebHook do
       expect(payload["user_id"]).to eq(user.id)
     end
 
-    context 'user promoted hooks' do
+    context 'with user promoted hooks' do
       fab!(:user_promoted_web_hook) { Fabricate(:user_promoted_web_hook) }
       fab!(:another_user) { Fabricate(:user, trust_level: 2) }
 
@@ -608,7 +608,7 @@ RSpec.describe WebHook do
       end
     end
 
-    context 'like created hooks' do
+    context 'with like created hooks' do
       fab!(:like_web_hook) { Fabricate(:like_web_hook) }
       fab!(:another_user) { Fabricate(:user) }
 
