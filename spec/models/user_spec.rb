@@ -2815,6 +2815,7 @@ RSpec.describe User do
 
       Fabricate(:notification, user: user, notification_type: 3, high_priority: false, read: true)
 
+      # notification for another user. it shouldn't be included
       Fabricate(:notification, notification_type: 4, high_priority: true, read: false)
 
       expect(user.grouped_unread_high_priority_notifications).to eq({ 1 => 1, 2 => 1 })
