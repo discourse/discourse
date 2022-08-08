@@ -71,8 +71,20 @@ module(
         return response({ notifications: [], bookmarks: [] });
       });
       await render(template);
-      assert.ok(exists(".empty-state-title"), "empty state title is shown");
-      assert.ok(exists(".empty-state-body"), "empty state body is shown");
+      assert.strictEqual(
+        query(".empty-state-title").textContent.trim(),
+        I18n.t("user.no_bookmarks_title"),
+        "empty state title is shown"
+      );
+      assert.strictEqual(
+        query(".empty-state-body").textContent.trim(),
+        I18n.t("user.no_bookmarks_body", { icon: "" }).trim(),
+        "empty state body is shown"
+      );
+      assert.ok(
+        exists(".empty-state-body svg.d-icon-bookmark"),
+        "icon is correctly rendered in the empty state body"
+      );
     });
   }
 );
