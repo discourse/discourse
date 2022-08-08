@@ -5654,14 +5654,16 @@ RSpec.describe UsersController do
         )
       end
 
-      it "respects the limit param" do
+      it "fills up the remaining of the USER_MENU_BOOKMARKS_LIST_LIMIT limit with bookmarks" do
         bookmark2 = Fabricate(
           :bookmark,
           user: user,
           bookmarkable: Fabricate(:post, topic: topic)
         )
 
-        get "/u/#{user.username}/user-menu-bookmarks", params: { limit: 2 }
+        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
@@ -5670,7 +5672,9 @@ RSpec.describe UsersController do
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.size).to eq(1)
 
-        get "/u/#{user.username}/user-menu-bookmarks", params: { limit: 3 }
+        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 3) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
@@ -5681,7 +5685,9 @@ RSpec.describe UsersController do
 
         BookmarkReminderNotificationHandler.new(bookmark2).send_notification
 
-        get "/u/#{user.username}/user-menu-bookmarks", params: { limit: 3 }
+        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 3) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]

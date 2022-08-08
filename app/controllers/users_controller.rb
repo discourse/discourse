@@ -1746,22 +1746,15 @@ class UsersController < ApplicationController
     guardian.ensure_can_see_notifications!(user)
     user_guardian = Guardian.new(user)
 
-    if params[:limit]
-      limit = params[:limit].to_i
-      limit = limit.clamp(1..USER_MENU_BOOKMARKS_LIST_LIMIT)
-    else
-      limit = USER_MENU_BOOKMARKS_LIST_LIMIT
-    end
-
     reminder_notifications = user
       .notifications
       .visible
       .includes(:topic)
       .where(read: false, notification_type: Notification.types[:bookmark_reminder])
-      .limit(limit)
+      .limit(USER_MENU_BOOKMARKS_LIST_LIMIT)
       .to_a
 
-    if reminder_notifications.size < limit
+    if reminder_notifications.size < USER_MENU_BOOKMARKS_LIST_LIMIT
       exclude_bookmark_ids = reminder_notifications
         .filter_map { |notification| notification.data_hash[:bookmark_id] }
 
@@ -1769,7 +1762,7 @@ class UsersController < ApplicationController
         user: user,
         guardian: user_guardian,
         params: {
-          per_page: limit - reminder_notifications.size
+          per_page: USER_MENU_BOOKMARKS_LIST_LIMIT - reminder_notifications.size
         }
       )
       bookmark_list.load do |query|
