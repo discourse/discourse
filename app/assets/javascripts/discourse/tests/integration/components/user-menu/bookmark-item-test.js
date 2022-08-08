@@ -24,6 +24,7 @@ function getBookmark(overrides = {}) {
         bookmarkable_id: 1009,
         bookmarkable_type: "Post",
         bookmarkable_url: "http://localhost:4200/t/this-bookmarkable-url/227/1",
+        url_for_ui: "http://localhost:4200/t/this-url-for-ui/227/100",
         tags: [],
         tags_descriptions: {},
         truncated: true,
@@ -56,42 +57,20 @@ module("Integration | Component | user-menu | bookmark-item", function (hooks) {
 
   const template = hbs`<UserMenu::BookmarkItem @item={{this.bookmark}}/>`;
 
-  test("links to the last read post number + 1 if the bookmarkable is Topic", async function (assert) {
-    this.set(
-      "bookmark",
-      getBookmark({ bookmarkable_type: "Topic", last_read_post_number: 18 })
-    );
+  test("uses url_for_ui for the href", async function (assert) {
+    this.set("bookmark", getBookmark());
     await render(template);
     assert.ok(
-      query("li.bookmark a").href.endsWith(
-        "/t/test-poll-topic-hello-world/227/19"
-      )
+      query("li.bookmark a").href.endsWith("/t/this-url-for-ui/227/100")
     );
   });
 
-  test("links to the post if the bookmarkable is Post", async function (assert) {
-    this.set(
-      "bookmark",
-      getBookmark({ bookmarkable_type: "Post", linked_post_number: 7 })
-    );
+  test("falls back to bookmarkable_url for the href if url_for_ui isn't available", async function (assert) {
+    this.set("bookmark", getBookmark({ url_for_ui: null }));
     await render(template);
     assert.ok(
-      query("li.bookmark a").href.endsWith(
-        "/t/test-poll-topic-hello-world/227/7"
-      )
+      query("li.bookmark a").href.endsWith("/t/this-bookmarkable-url/227/1")
     );
-  });
-
-  test("links to the bookmarkable URL if the bookmarkable is neither Post nor Topic", async function (assert) {
-    this.set(
-      "bookmark",
-      getBookmark({
-        bookmarkable_type: "User",
-        bookmarkable_url: "/u/bookmarkable-user",
-      })
-    );
-    await render(template);
-    assert.ok(query("li.bookmark a").href.endsWith("/u/bookmarkable-user"));
   });
 
   test("item label is the bookmarked post author", async function (assert) {

@@ -1,29 +1,40 @@
 # frozen_string_literal: true
 
 RSpec.describe UserPostBookmarkSerializer do
-  let(:whisperers_group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user, topic: topic) }
   let(:topic) { Fabricate(:topic) }
+  let(:post) { Fabricate(:post, user: user, topic: topic) }
   let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: post) }
 
-  before do
-    SiteSetting.enable_whispers = true
-    SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+  describe "#highest_post_number" do
+    let(:whisperers_group) { Fabricate(:group) }
+
+    before do
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+    end
+
+    it "uses the correct highest_post_number column based on whether the user is whisperer" do
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      Fabricate(:whisper, topic: topic)
+      topic.reload
+      bookmark.reload
+      serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
+
+      expect(serializer.highest_post_number).to eq(3)
+
+      user.groups << whisperers_group
+
+      expect(serializer.highest_post_number).to eq(4)
+    end
   end
 
-  it "uses the correct highest_post_number column based on whether the user is whisperer" do
-    Fabricate(:post, topic: topic)
-    Fabricate(:post, topic: topic)
-    Fabricate(:whisper, topic: topic)
-    topic.reload
-    bookmark.reload
-    serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
-
-    expect(serializer.highest_post_number).to eq(3)
-
-    user.groups << whisperers_group
-
-    expect(serializer.highest_post_number).to eq(4)
+  describe "#url_for_ui" do
+    it "is a full topic URL to linked_post_number" do
+      post.update!(post_number: 3)
+      serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
+      expect(serializer.url_for_ui).to end_with("/t/#{topic.slug}/#{topic.id}/#{post.post_number}")
+    end
   end
 end

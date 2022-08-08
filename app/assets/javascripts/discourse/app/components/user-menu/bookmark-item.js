@@ -1,6 +1,5 @@
 import UserMenuItem from "discourse/components/user-menu/menu-item";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
-import { postUrl } from "discourse/lib/utilities";
 
 export default class UserMenuBookmarkItem extends UserMenuItem {
   get className() {
@@ -8,17 +7,7 @@ export default class UserMenuBookmarkItem extends UserMenuItem {
   }
 
   get linkHref() {
-    if (["Topic", "Post"].includes(this.bookmark.bookmarkable_type)) {
-      let postNumber;
-      if (this.bookmark.bookmarkable_type === "Topic") {
-        postNumber = this.bookmark.last_read_post_number + 1;
-      } else {
-        postNumber = this.bookmark.linked_post_number;
-      }
-      return postUrl(this.bookmark.slug, this.bookmark.topic_id, postNumber);
-    } else {
-      return this.bookmark.bookmarkable_url;
-    }
+    return this.bookmark.url_for_ui || this.bookmark.bookmarkable_url;
   }
 
   get linkTitle() {

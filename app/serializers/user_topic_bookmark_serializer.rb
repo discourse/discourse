@@ -59,6 +59,10 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
     topic.url
   end
 
+  def url_for_ui
+    Topic.url(topic_id, slug, (last_read_post_number || 0) + 1)
+  end
+
   private
 
   def topic

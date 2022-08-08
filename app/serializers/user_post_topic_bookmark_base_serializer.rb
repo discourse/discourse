@@ -17,7 +17,8 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
              :highest_post_number,
              :last_read_post_number,
              :bumped_at,
-             :slug
+             :slug,
+             :url_for_ui
 
   def topic_id
     topic.id
@@ -61,6 +62,10 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
 
   def slug
     topic.slug
+  end
+
+  def url_for_ui
+    nil
   end
 
   private
