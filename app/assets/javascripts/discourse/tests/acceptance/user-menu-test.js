@@ -129,7 +129,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       }),
       "confirmation modal is shown when there are unread bookmark reminder notifications"
     );
-    assert.ok(!markRead, "mark-read request isn't sent");
+    assert.notOk(markRead, "mark-read request isn't sent");
 
     await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
