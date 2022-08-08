@@ -344,7 +344,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays hover button with correct title"
     );
 
-    await click(".hamburger-dropdown");
+    await click(".btn-sidebar-toggle");
 
     assert.strictEqual(
       linkDestroy,
