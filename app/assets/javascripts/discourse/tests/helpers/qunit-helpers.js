@@ -201,7 +201,7 @@ export function testCleanup(container, app) {
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
   resetSidebarSection();
-  resetNotificationTypeRenderers ();
+  resetNotificationTypeRenderers();
 }
 
 export function discourseModule(name, options) {
