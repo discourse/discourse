@@ -148,13 +148,12 @@ RSpec.describe User do
 
     describe "#user_fields" do
       fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
+      let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
       fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
       before { user.set_user_field(user_field.id, value) }
 
       context "when user fields contain watched words" do
-        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
-
         context "when watched words are of type 'Block'" do
           let(:value) { "bad user field value" }
 
@@ -226,7 +225,6 @@ RSpec.describe User do
 
       context "when user fields contain URL" do
         let(:value) { "https://discourse.org" }
-        let(:user_field_value) { user.reload.user_fields[user_field.id.to_s] }
 
         it "is not cooked" do
           user.save!
@@ -267,6 +265,16 @@ RSpec.describe User do
           end
         end
 
+      end
+
+      context "when reseting user fields" do
+        let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+        let(:value) { nil }
+
+        it "works" do
+          user.save!
+          expect(user_field_value).to eq nil
+        end
       end
     end
   end
