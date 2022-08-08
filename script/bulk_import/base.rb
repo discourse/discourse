@@ -744,6 +744,7 @@ class BulkImport::Base
       }
     end
   rescue => e
+    # FIXME: errors catched here stop the rest of the COPY
     puts e.message
     puts e.backtrace.join("\n")
   end

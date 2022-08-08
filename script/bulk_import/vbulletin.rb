@@ -135,6 +135,8 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_user_emails
     puts '', "Importing user emails..."
 
+    # FIXME: properly deduplicate here based on email
+
     users = mysql_stream <<-SQL
         SELECT u.userid, email, joindate
           FROM #{TABLE_PREFIX}user u
@@ -260,6 +262,9 @@ class BulkImport::VBulletin < BulkImport::Base
 
   def import_categories
     puts '', "Importing categories..."
+
+    # FIXME: properly deduplicate here based on title
+    # ie. for titles with count(title)>1, deduplicate somehow
 
     categories = mysql_query(<<-SQL
         SELECT forumid, parentid, title, description, displayorder
