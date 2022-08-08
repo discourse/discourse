@@ -38,11 +38,23 @@ RSpec.describe UserTopicBookmarkSerializer do
     end
   end
 
-  describe "#url_for_ui" do
-    it "is a full topic URL to the post after the last read post" do
-      TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
-      serializer = UserTopicBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
-      expect(serializer.url_for_ui).to end_with("/t/#{topic.slug}/#{topic.id}/#{post.post_number + 1}")
+  describe "#bookmarkable_url" do
+    context "with the link_to_first_unread_post option" do
+      it "is a full topic URL to the first unread post in the topic when the option is set" do
+        TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+        serializer = UserTopicBookmarkSerializer.new(
+          bookmark,
+          scope: Guardian.new(user),
+          link_to_first_unread_post: true
+        )
+        expect(serializer.bookmarkable_url).to end_with("/t/#{topic.slug}/#{topic.id}/#{post.post_number + 1}")
+      end
+
+      it "is a full topic URL to the first post in the topic when the option isn't set" do
+        TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+        serializer = UserTopicBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
+        expect(serializer.bookmarkable_url).to end_with("/t/#{topic.slug}/#{topic.id}")
+      end
     end
   end
 end

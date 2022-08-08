@@ -7,7 +7,7 @@ export default class UserMenuBookmarkItem extends UserMenuItem {
   }
 
   get linkHref() {
-    return this.bookmark.url_for_ui || this.bookmark.bookmarkable_url;
+    return this.bookmark.bookmarkable_url;
   }
 
   get linkTitle() {

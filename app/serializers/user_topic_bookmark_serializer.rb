@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
-  attributes :url_for_ui
-
   # it does not matter what the linked post number is for topic bookmarks,
   # on the client we always take the user to the last unread post in the
   # topic when the bookmark URL is clicked
@@ -58,11 +56,11 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   # NOTE: In the UI there are special topic-status and topic-link components to
   # display the topic URL, this is only used for certain routes like the .ics bookmarks.
   def bookmarkable_url
-    topic.url
-  end
-
-  def url_for_ui
-    Topic.url(topic_id, slug, (last_read_post_number || 0) + 1)
+    if @options[:link_to_first_unread_post]
+      Topic.url(topic_id, slug, (last_read_post_number || 0) + 1)
+    else
+      topic.url
+    end
   end
 
   private

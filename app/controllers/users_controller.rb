@@ -1781,6 +1781,7 @@ class UsersController < ApplicationController
     end
 
     if bookmark_list
+      bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
       serialized_bookmarks = serialize_data(
         bookmark_list,
         UserBookmarkListSerializer,
