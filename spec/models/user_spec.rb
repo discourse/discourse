@@ -2817,7 +2817,7 @@ RSpec.describe User do
 
       Fabricate(:notification, notification_type: 4, high_priority: true, read: false)
 
-      expect(user.grouped_unread_high_priority_notifications).to eq({1 => 1, 2 => 1})
+      expect(user.grouped_unread_high_priority_notifications).to eq({ 1 => 1, 2 => 1 })
     end
   end
 
