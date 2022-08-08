@@ -72,7 +72,7 @@ import {
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
-import { resetRenderDirectorForNotificationTypes } from "discourse/lib/notification-item";
+import { resetNotificationTypeRenderers } from "discourse/lib/notification-item";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
