@@ -606,21 +606,21 @@ RSpec.describe FinalDestination do
     end
   end
 
-  describe "#escape_url" do
-    it "correctly escapes url" do
+  describe "#normalized_url" do
+    it "correctly normalizes url" do
       fragment_url = "https://eviltrout.com/2016/02/25/fixing-android-performance.html#discourse-comments"
 
-      expect(fd(fragment_url).escape_url.to_s).to eq(fragment_url)
+      expect(fd(fragment_url).normalized_url.to_s).to eq(fragment_url)
 
-      expect(fd("https://eviltrout.com?s=180&#038;d=mm&#038;r=g").escape_url.to_s)
+      expect(fd("https://eviltrout.com?s=180&#038;d=mm&#038;r=g").normalized_url.to_s)
         .to eq("https://eviltrout.com?s=180&#038;d=mm&%23038;r=g")
 
-      expect(fd("http://example.com/?a=\11\15").escape_url.to_s).to eq("http://example.com/?a=%09%0D")
+      expect(fd("http://example.com/?a=\11\15").normalized_url.to_s).to eq("http://example.com/?a=%09%0D")
 
-      expect(fd("https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%BE%D0%B1%D0%BE").escape_url.to_s)
+      expect(fd("https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%BE%D0%B1%D0%BE").normalized_url.to_s)
         .to eq('https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%BE%D0%B1%D0%BE')
 
-      expect(fd('https://ru.wikipedia.org/wiki/Свобо').escape_url.to_s)
+      expect(fd('https://ru.wikipedia.org/wiki/Свобо').normalized_url.to_s)
         .to eq('https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%BE%D0%B1%D0%BE')
     end
   end

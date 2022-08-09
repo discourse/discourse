@@ -85,40 +85,40 @@ RSpec.describe UrlHelper do
     end
   end
 
-  describe "#escape_uri" do
+  describe "#normalized_encode" do
     it "does not double escape %3A (:)" do
       url = "http://discourse.org/%3A/test"
-      expect(UrlHelper.escape_uri(url)).to eq(url)
+      expect(UrlHelper.normalized_encode(url)).to eq(url)
     end
 
     it "does not double escape %2F (/)" do
       url = "http://discourse.org/%2F/test"
-      expect(UrlHelper.escape_uri(url)).to eq(url)
+      expect(UrlHelper.normalized_encode(url)).to eq(url)
     end
 
     it "doesn't escape simple URL" do
-      url = UrlHelper.escape_uri('http://example.com/foo/bar')
+      url = UrlHelper.normalized_encode('http://example.com/foo/bar')
       expect(url).to eq('http://example.com/foo/bar')
     end
 
     it "escapes unsafe chars" do
-      url = UrlHelper.escape_uri("http://example.com/?a=\11\15")
+      url = UrlHelper.normalized_encode("http://example.com/?a=\11\15")
       expect(url).to eq('http://example.com/?a=%09%0D')
     end
 
     it "escapes non-ascii chars" do
-      url = UrlHelper.escape_uri('http://example.com/ماهی')
+      url = UrlHelper.normalized_encode('http://example.com/ماهی')
       expect(url).to eq('http://example.com/%D9%85%D8%A7%D9%87%DB%8C')
     end
 
     it "doesn't escape already escaped chars (space)" do
-      url = UrlHelper.escape_uri('http://example.com/foo%20bar/foo bar/')
+      url = UrlHelper.normalized_encode('http://example.com/foo%20bar/foo bar/')
       expect(url).to eq('http://example.com/foo%20bar/foo%20bar/')
     end
 
     it "doesn't escape already escaped chars (hash)" do
       url = 'https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe%2FLondon'
-      escaped = UrlHelper.escape_uri(url)
+      escaped = UrlHelper.normalized_encode(url)
       expect(escaped).to eq(url)
     end
 
@@ -126,27 +126,27 @@ RSpec.describe UrlHelper do
       skip "see: https://github.com/sporkmonger/addressable/issues/472"
       url = "https://example.com/ article/id%3A1.2%2F1/bar"
       expected = "https://example.com/%20article/id%3A1.2%2F1/bar"
-      escaped = UrlHelper.escape_uri(url)
+      escaped = UrlHelper.normalized_encode(url)
       expect(escaped).to eq(expected)
     end
 
     it "handles emoji domain names" do
       url = "https://💻.example/💻?computer=💻"
       expected = "https://xn--3s8h.example/%F0%9F%92%BB?computer=%F0%9F%92%BB"
-      escaped = UrlHelper.escape_uri(url)
+      escaped = UrlHelper.normalized_encode(url)
       expect(escaped).to eq(expected)
     end
 
     it "handles special-character domain names" do
       url = "https://éxample.com/test"
       expected = "https://xn--xample-9ua.com/test"
-      escaped = UrlHelper.escape_uri(url)
+      escaped = UrlHelper.normalized_encode(url)
       expect(escaped).to eq(expected)
     end
 
     it "performs basic normalization" do
       url = "http://EXAMPLE.com/a"
-      escaped = UrlHelper.escape_uri(url)
+      escaped = UrlHelper.normalized_encode(url)
       expect(escaped).to eq("http://example.com/a")
     end
 
@@ -155,7 +155,7 @@ RSpec.describe UrlHelper do
       # sensitive information stripped
       presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977%2F20200130%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah%2Bblahblah%2Fblah%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAR&X-Amz-Signature=test"
       encoded_presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977/20200130/us-west-1/s3/aws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah+blahblah/blah//////////wEQA==&X-Amz-Signature=test"
-      expect(UrlHelper.escape_uri(presigned_url)).not_to eq(encoded_presigned_url)
+      expect(UrlHelper.normalized_encode(presigned_url)).not_to eq(encoded_presigned_url)
     end
   end
 
