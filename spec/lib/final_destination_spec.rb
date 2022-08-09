@@ -26,7 +26,7 @@ RSpec.describe FinalDestination do
         when 'any-subdomain.ihaveawildcard.com' then '104.25.152.11'
         when 'wikipedia.com' then '1.2.3.4'
         else
-          as_ip = IPAddr.new(host)
+          _as_ip = IPAddr.new(host)
           host
         end
       end

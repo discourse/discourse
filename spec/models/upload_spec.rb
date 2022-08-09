@@ -568,27 +568,6 @@ RSpec.describe Upload do
     end
   end
 
-  describe ".signed_url_from_secure_media_url" do
-    before do
-      # must be done so signed_url_for_path exists
-      enable_secure_media
-    end
-
-    it "correctly gives back a signed url from a path only" do
-      secure_url = "/secure-media-uploads/original/1X/c5a2c4ba0fa390f5aac5c2c1a12416791ebdd9e9.png"
-      signed_url = Upload.signed_url_from_secure_media_url(secure_url)
-      expect(signed_url).not_to include("secure-media-uploads")
-      expect(UrlHelper.s3_presigned_url?(signed_url)).to eq(true)
-    end
-
-    it "correctly gives back a signed url from a full url" do
-      secure_url = "http://localhost:3000/secure-media-uploads/original/1X/c5a2c4ba0fa390f5aac5c2c1a12416791ebdd9e9.png"
-      signed_url = Upload.signed_url_from_secure_media_url(secure_url)
-      expect(signed_url).not_to include(Discourse.base_url)
-      expect(UrlHelper.s3_presigned_url?(signed_url)).to eq(true)
-    end
-  end
-
   describe ".secure_media_url_from_upload_url" do
     before do
       # must be done so signed_url_for_path exists

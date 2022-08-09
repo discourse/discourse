@@ -86,6 +86,16 @@ RSpec.describe UrlHelper do
   end
 
   describe "#escape_uri" do
+    it "does not double escape %3A (:)" do
+      url = "http://discourse.org/%3A/test"
+      expect(UrlHelper.escape_uri(url)).to eq(url)
+    end
+
+    it "does not double escape %2F (/)" do
+      url = "http://discourse.org/%2F/test"
+      expect(UrlHelper.escape_uri(url)).to eq(url)
+    end
+
     it "doesn't escape simple URL" do
       url = UrlHelper.escape_uri('http://example.com/foo/bar')
       expect(url).to eq('http://example.com/foo/bar')
@@ -107,8 +117,37 @@ RSpec.describe UrlHelper do
     end
 
     it "doesn't escape already escaped chars (hash)" do
-      url = UrlHelper.escape_uri('https://calendar.google.com/calendar/embed?src=en.uk%23holiday%40group.v.calendar.google.com&ctz=Europe%2FLondon')
-      expect(url).to eq('https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe/London')
+      url = 'https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe%2FLondon'
+      escaped = UrlHelper.escape_uri(url)
+      expect(escaped).to eq(url)
+    end
+
+    it "leaves reserved chars alone in edge cases" do
+      skip "see: https://github.com/sporkmonger/addressable/issues/472"
+      url = "https://example.com/ article/id%3A1.2%2F1/bar"
+      expected = "https://example.com/%20article/id%3A1.2%2F1/bar"
+      escaped = UrlHelper.escape_uri(url)
+      expect(escaped).to eq(expected)
+    end
+
+    it "handles emoji domain names" do
+      url = "https://💻.example/💻?computer=💻"
+      expected = "https://xn--3s8h.example/%F0%9F%92%BB?computer=%F0%9F%92%BB"
+      escaped = UrlHelper.escape_uri(url)
+      expect(escaped).to eq(expected)
+    end
+
+    it "handles special-character domain names" do
+      url = "https://éxample.com/test"
+      expected = "https://xn--xample-9ua.com/test"
+      escaped = UrlHelper.escape_uri(url)
+      expect(escaped).to eq(expected)
+    end
+
+    it "performs basic normalization" do
+      url = "http://EXAMPLE.com/a"
+      escaped = UrlHelper.escape_uri(url)
+      expect(escaped).to eq("http://example.com/a")
     end
 
     it "doesn't escape S3 presigned URLs" do
