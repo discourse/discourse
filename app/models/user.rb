@@ -1619,7 +1619,7 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description, emoji, ends_at)
+  def set_status!(description, emoji, ends_at = nil)
     status = {
       description: description,
       emoji: emoji,

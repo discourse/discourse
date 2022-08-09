@@ -1193,11 +1193,7 @@ class UsersController < ApplicationController
     options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
-
-    user_fields = [:username, :upload_avatar_template]
-    user_fields << :name if SiteSetting.enable_names?
-
-    to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
+    to_render = serialize_found_users(results)
 
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
@@ -1968,5 +1964,13 @@ class UsersController < ApplicationController
       can_see_invite_details: false,
       error: message
     }
+  end
+
+  def serialize_found_users(users)
+    each_serializer = SiteSetting.enable_user_status? ?
+      FoundUserWithStatusSerializer :
+      FoundUserSerializer
+
+    { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
   end
 end

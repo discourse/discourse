@@ -4536,6 +4536,42 @@ RSpec.describe UsersController do
         expect(json["users"].size).to eq(limit)
       end
     end
+
+    it "returns avatar_template" do
+      get "/u/search/users.json", params: { term: user.username }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["users"][0]).to have_key("avatar_template")
+      expect(json["users"][0]["avatar_template"]).to eq("/letter_avatar_proxy/v4/letter/j/f475e1/{size}.png")
+    end
+
+    describe "#status" do
+      it "returns user status if enabled in site settings" do
+        SiteSetting.enable_user_status = true
+        emoji = "tooth"
+        description = "off to dentist"
+        user.set_status!(description, emoji)
+
+        get "/u/search/users.json", params: { term: user.name }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"][0]).to have_key("status")
+        expect(json["users"][0]["status"]["description"]).to eq(description)
+        expect(json["users"][0]["status"]["emoji"]).to eq(emoji)
+      end
+
+      it "doesn't return user status if disabled in site settings" do
+        SiteSetting.enable_user_status = false
+        user.set_status!("off to dentist", "tooth")
+
+        get "/u/search/users.json", params: { term: user.name }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"][0]).not_to have_key("status")
+      end
+    end
   end
 
   describe '#email_login' do
