@@ -1,32 +1,24 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
+import GlimmerComponent from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 import { inject as service } from "@ember/service";
 
-export default Component.extend({
-  router: service(),
-  classNameBindings: ["hidden:hidden", ":bootstrap-notice"],
+export default class BootstrapModeNotice extends GlimmerComponent {
+  @service router;
+  @service siteSettings;
+  @service site;
 
-  wizardRequired: alias("site.wizard_required"),
-  bootstrapModeEnabled: alias("siteSettings.bootstrap_mode_enabled"),
-  bootstrapModeMinUsers: alias("siteSettings.bootstrap_mode_min_users"),
-
-  @discourseComputed("bootstrapModeEnabled", "router.currentRouteName")
-  hidden(bootstrapModeEnabled, currentRouteName) {
-    const user = this.currentUser;
-    return !(
-      user &&
-      user.get("staff") &&
-      bootstrapModeEnabled &&
-      !currentRouteName.startsWith("wizard")
+  get showBootstrapModeNotice() {
+    return (
+      this.currentUser?.get("staff") &&
+      this.siteSettings.bootstrap_mode_enabled &&
+      !this.router.currentRouteName.startsWith("wizard")
     );
-  },
+  }
 
-  @discourseComputed("bootstrapModeMinUsers")
-  message(bootstrapModeMinUsers) {
+  get message() {
     let msg = null;
+    const bootstrapModeMinUsers = this.siteSettings.bootstrap_mode_min_users;
 
     if (bootstrapModeMinUsers > 0) {
       msg = "bootstrap_mode_enabled";
@@ -35,5 +27,5 @@ export default Component.extend({
     }
 
     return htmlSafe(I18n.t(msg, { count: bootstrapModeMinUsers }));
-  },
-});
+  }
+}

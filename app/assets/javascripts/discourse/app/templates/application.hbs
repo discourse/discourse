@@ -35,7 +35,9 @@
         {{/if}}
         <NotificationConsentBanner />
         <PwaInstallBanner />
-        <BootstrapModeNotice />
+        {{#if this.showBootstrapModeNotice}}
+          <BootstrapModeNotice />
+        {{/if}}
         <GlobalNotice />
         <CreateTopicsNotice />
         <PluginOutlet @name="top-notices" @connectorTagName="div" @args={{hash currentPath=this.router._router.currentPath}} />

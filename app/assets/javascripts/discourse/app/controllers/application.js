@@ -37,6 +37,15 @@ export default Controller.extend({
   },
 
   @discourseComputed
+  showBootstrapModeNotice() {
+    return (
+      this.currentUser?.get("staff") &&
+      this.siteSettings.bootstrap_mode_enabled &&
+      !this.router.currentRouteName.startsWith("wizard")
+    );
+  },
+
+  @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   },
