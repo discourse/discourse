@@ -60,10 +60,16 @@ class UrlHelper
     self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
   end
 
-  # This is a poorly named method. In reality, it **normalizes** the given URL,
-  # and does not escape it. Therefore it's idempotent, and can be used on user
-  # input which includes a mix of escaped and unescaped characters
   def self.escape_uri(uri)
+    Discourse.deprecate(
+      "UrlHelper.escape_uri is deprecated. For normalization of user input use `.normalized_encode`. For true encoding, use `.encode`",
+      output_in_test: true,
+      drop_from: '3.0'
+    )
+    normalized_encode(uri)
+  end
+
+  def self.normalized_encode(uri)
     validated = nil
     url = uri.to_s
 

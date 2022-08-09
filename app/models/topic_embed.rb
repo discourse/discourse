@@ -110,7 +110,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    url = UrlHelper.escape_uri(url)
+    url = UrlHelper.normalized_encode(url)
     original_uri = URI.parse(url)
     fd = FinalDestination.new(
       url,
@@ -164,7 +164,7 @@ class TopicEmbed < ActiveRecord::Base
       unless (src.nil? || src.empty?)
         begin
           # convert URL to absolute form
-          node[url_param] = URI.join(url, UrlHelper.escape_uri(src)).to_s
+          node[url_param] = URI.join(url, UrlHelper.normalized_encode(src)).to_s
         rescue URI::Error, Addressable::URI::InvalidURIError
           # If there is a mistyped URL, just do nothing
         end
@@ -200,7 +200,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
     begin
-      uri = URI(UrlHelper.escape_uri(url))
+      uri = URI(UrlHelper.normalized_encode(url))
     rescue URI::Error
       return contents
     end

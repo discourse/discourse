@@ -36,7 +36,7 @@ class FinalDestination
 
   def initialize(url, opts = nil)
     @url = url
-    @uri = uri(escape_url) if @url
+    @uri = uri(normalized_url) if @url
 
     @opts = opts || {}
     @force_get_hosts = @opts[:force_get_hosts] || []
@@ -417,8 +417,8 @@ class FinalDestination
     false
   end
 
-  def escape_url
-    UrlHelper.escape_uri(@url)
+  def normalized_url
+    UrlHelper.normalized_encode(@url)
   end
 
   def private_ranges
