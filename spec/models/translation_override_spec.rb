@@ -114,13 +114,13 @@ RSpec.describe TranslationOverride do
   end
 
   it 'sanitizes values before upsert' do
-    xss = "<a href='%{url}' data-auto-route='true'>setup wizard</a> ✨<script>alert('TEST');</script>"
+    xss = "<a target='blank' href='%{path}'>Click here</a> <script>alert('TEST');</script>"
 
-    TranslationOverride.upsert!('en', 'js.wizard_required', xss)
+    TranslationOverride.upsert!('en', 'js.themes.error_caused_by', xss)
 
-    ovr = TranslationOverride.where(locale: 'en', translation_key: 'js.wizard_required').first
+    ovr = TranslationOverride.where(locale: 'en', translation_key: 'js.themes.error_caused_by').first
     expect(ovr).to be_present
-    expect(ovr.value).to eq("<a href=\"%{url}\" data-auto-route=\"true\">setup wizard</a> ✨alert('TEST');")
+    expect(ovr.value).to eq("<a href=\"%{path}\">Click here</a> alert('TEST');")
   end
 
   it "stores js for a message format key" do

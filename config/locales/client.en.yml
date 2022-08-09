@@ -198,7 +198,6 @@ en:
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
 
-    wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
@@ -210,6 +209,8 @@ en:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
       other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
+    bootstrap_invite_button_title: "Send Invites"
+    bootstrap_wizard_link_title: "Finish setup wizard"
 
     themes:
       default_description: "Default"
