@@ -86,7 +86,7 @@ hr:
           few: "%{count} godine"
           other: "%{count}godina"
         date_month: "D MMM"
-        date_year: "Mjesec Godina"
+        date_year: "MMM, 'YY"
       medium:
         less_than_x_minutes:
           one: "manje od %{count} min"
@@ -124,6 +124,7 @@ hr:
           one: "skoro %{count} godina"
           few: "skoro %{count} godina"
           other: "skoro %{count} godina"
+        date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "prije %{count} minutu"
@@ -2235,9 +2236,10 @@ hr:
       votes_released: "%{description} - dovršeno"
       dismiss_confirmation:
         body:
-          one: "Jesi li siguran? Imate %{count} važnih obavijesti."
-          few: "Jesi li siguran? Imate %{count} važnih obavijesti."
-          other: "Jesi li siguran? Imate %{count} važnih obavijesti."
+          default:
+            one: "Jesi li siguran? Imate %{count} važnih obavijesti."
+            few: "Jesi li siguran? Imate %{count} važnih obavijesti."
+            other: "Jesi li siguran? Imate %{count} važnih obavijesti."
         dismiss: "Skloni"
         cancel: "Odustani"
       group_message_summary:

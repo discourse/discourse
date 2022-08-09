@@ -1166,6 +1166,7 @@ ru:
       dismiss: "Пометить прочитанными"
       dismiss_notifications: "Отклонить всё"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
+      dismiss_bookmarks_tooltip: "Пометить все непрочитанные напоминания о закладках как прочитанные"
       no_messages_title: "У вас нет личных сообщений"
       no_messages_body: >
         Необходимо непубличное общение с кем-то из участников форума? Напишите личное сообщение, кликнув на аватар участника и нажав на кнопку %{icon}.<br><br>. Если вам необходима помощь, вы можете написать нам на адрес, указанный на <a href='%{aboutUrl}'>этой</a> странице.
@@ -2273,6 +2274,7 @@ ru:
       ignore: "Игнорировать"
       image_alt_text:
         aria_label: Альт-текст для изображения
+      delete_image_button: Удалить изображение
     notifications:
       tooltip:
         regular:
@@ -2326,6 +2328,7 @@ ru:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> принял ваше приглашение"
+      invitee_accepted_your_invitation: "принял ваше приглашение"
       moved_post: "<span>%{username}</span> переместил %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Заслужил(а) '%{description}'"
@@ -2342,10 +2345,16 @@ ru:
       votes_released: "%{description} - завершено"
       dismiss_confirmation:
         body:
-          one: "Вы уверены? У вас %{count} важное уведомление."
-          few: "Вы уверены? У вас %{count} важных уведомления."
-          many: "Вы уверены? У вас %{count} важных уведомлений."
-          other: "Вы уверены? У вас есть %{count} важных уведомлений."
+          default:
+            one: "Вы уверены? У вас %{count} важное уведомление."
+            few: "Вы уверены? У вас %{count} важных уведомления."
+            many: "Вы уверены? У вас %{count} важных уведомлений."
+            other: "Вы уверены? У вас есть %{count} важных уведомлений."
+          bookmarks:
+            one: "Вы уверены? У вас %{count} непрочитанное напоминание о закладках."
+            few: "Вы уверены? У вас %{count} непрочитанных напоминания о закладках."
+            many: "Вы уверены? У вас %{count} непрочитанных напоминаний о закладках."
+            other: "Вы уверены? У вас %{count} непрочитанных напоминаний о закладках."
         dismiss: "Пометить прочитанными"
         cancel: "Нет"
       group_message_summary:
@@ -2532,6 +2541,15 @@ ru:
       generic_no_items: "Нет элементов в списке."
       sr_menu_tabs: "Вкладки меню"
       view_all_notifications: "Просмотреть все уведомления"
+      view_all_bookmarks: "Просмотреть все закладки"
+      reviewable:
+        view_all: "Просмотреть все сообщения, находящиеся на премодерации"
+        queue: "Очередь"
+        deleted_user: "(удалённый пользователь)"
+        post_number_with_topic_title: "Cообщение #%{post_number} - %{title}"
+        new_post_in_topic: "Новое сообщение в теме %{title}"
+        suspicious_user: "Подозрительный пользователь: %{username}"
+        default_item: "Премодерируемый элемент #%{reviewable_id}"
     topics:
       new_messages_marker: "последний визит"
       bulk:
@@ -3739,6 +3757,7 @@ ru:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Сочетания клавиш"
+      short_title: "Сочетания клавиш"
       jump_to:
         title: "Быстрый переход"
         home: "%{shortcut} Главная"
@@ -4062,6 +4081,7 @@ ru:
       no_likes_body: "Отличный способ принять участие и внести свой вклад - это начать читать обсуждения, и отмечать значком %{heartIcon} сообщения, которые вам понравились!"
       no_likes_others: "Симпатий пока нет."
       no_topics_title: "Вы пока ещё не начали ни одной темы"
+      no_topics_body: "Всегда лучше <a href='%{searchUrl}'>поискать</a> интересующий вас ответ в уже существующих темах, прежде чем начинать новую, но если вы уверены, что нужной вам темы всё же нет - создайте новую. Нажмите кнопку <kbd>+ Создать тему</kbd>, расположенную в правом верхнем углу списка тем, разделов или тегов, чтобы начать создание новой темы."
       no_topics_title_others: "Пользователь %{username} ещё не создал ни одной темы"
       no_read_topics_title: "Вы пока ещё не прочли ни одной темы"
       no_read_topics_body: "Когда вы начнете читать обсуждения, список читаемых тем появится здесь. Чтобы начать читать, поищите интересующие вас темы в разделе<a href='%{topUrl}'>Обсуждаемые</a>, в других <a href='%{categoriesUrl}'>разделах</a> форума, либо выполните поиск по ключевому слову %{searchIcon}"
@@ -4887,6 +4907,7 @@ ru:
         last_seen_user: "Последний раз был:"
         no_result: "Ничего не найдено."
         reply_key: "Ключ ответа"
+        post_link_with_smtp: "Почта и SMTP"
         skipped_reason: "Причина пропуска"
         incoming_emails:
           from_address: "От"
@@ -4916,6 +4937,7 @@ ru:
             address_placeholder: "name@gsp-example.com"
             type_placeholder: "дайджест, подписка..."
             reply_key_placeholder: "Ключ ответа"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "Выполнено пользователем "
         no_results: "История модерации недоступна."
@@ -5100,6 +5122,7 @@ ru:
           few: "Показать %{count} слова"
           many: "Показать %{count} слов"
           other: "Показать %{count} слов"
+        case_sensitive: "(с учётом регистра)"
         download: Скачать слова
         clear_all: Удалить слова
         clear_all_confirm: "Вы действительно хотите удалить все контролируемые слова, используемые на вкладке '%{action}'?"
@@ -5137,6 +5160,8 @@ ru:
           exists: "Уже существует"
           upload: "Добавить из файла"
           upload_successful: "Загрузка прошла успешна. Слова добавлены."
+          case_sensitivity_label: "С учётом регистра"
+          case_sensitivity_description: "Только слова с соответствующим регистром символов"
         test:
           button_label: "Тестирование слов"
           modal_title: "%{action}: Тестирование контролируемых слов"
@@ -5697,8 +5722,10 @@ ru:
   wizard_js:
     wizard:
       jump_in: "Готово"
+      finish: "Выйти из настройки"
       back: "Назад"
       next: "Далее"
+      configure_more: "Больше настроек..."
       step-text: "Шаг"
       step: "%{current} из %{total}"
       upload: "Загрузить"

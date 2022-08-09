@@ -2270,6 +2270,7 @@ pl_PL:
       ignore: "Ignoruj"
       image_alt_text:
         aria_label: Tekst alternatywny dla obrazu
+      delete_image_button: Usuń obraz
     notifications:
       tooltip:
         regular:
@@ -2341,10 +2342,11 @@ pl_PL:
       votes_released: "%{description} - zakończone"
       dismiss_confirmation:
         body:
-          one: "Jesteś pewny? Masz %{count} ważne powiadomienie."
-          few: "Jesteś pewny? Masz %{count} ważne powiadomienia."
-          many: "Jesteś pewny? Masz %{count} ważnych powiadomień."
-          other: "Jesteś pewny? Masz %{count} ważnych powiadomień."
+          default:
+            one: "Jesteś pewny? Masz %{count} ważne powiadomienie."
+            few: "Jesteś pewny? Masz %{count} ważne powiadomienia."
+            many: "Jesteś pewny? Masz %{count} ważnych powiadomień."
+            other: "Jesteś pewny? Masz %{count} ważnych powiadomień."
         dismiss: "Odrzuć"
         cancel: "Anuluj"
       group_message_summary:
@@ -4068,6 +4070,7 @@ pl_PL:
       no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
       no_likes_others: "Brak polubionych wpisów."
       no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
+      no_topics_body: "Zawsze najlepiej jest <a href='%{searchUrl}'>przeszukać</a> stronę w poszukiwaniu istniejących tematów konwersacji przed rozpoczęciem nowej, ale jeśli masz pewność, że temat, którego szukasz nie istnieje, śmiało rozpocznij nowy temat. Poszukaj przycisku <kbd>+ Nowy temat</kbd> w prawym górnym rogu listy tematów, kategorii lub tagu, aby rozpocząć tworzenie nowego tematu w tym obszarze."
       no_topics_title_others: "%{username} nie utworzył jeszcze żadnego tematu"
       no_read_topics_title: "Nie przeczytałeś jeszcze żadnych tematów"
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
@@ -4900,6 +4903,7 @@ pl_PL:
         last_seen_user: "Ostatnia "
         no_result: "Brak wyników przy przetwarzaniu. "
         reply_key: "Klucz odpowiedzi"
+        post_link_with_smtp: "Post & Szczegóły SMTP"
         skipped_reason: "Powód pominięcia"
         incoming_emails:
           from_address: "Od"

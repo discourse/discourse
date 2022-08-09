@@ -698,7 +698,7 @@ de:
       public_group_membership: "Du wechselst die Gruppenzugehörigkeit etwas zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
       topics_per_day: "Du hast die maximal erlaubte Anzahl an neuen Themen pro Tag erreicht. Du kannst mehr neue Themen in %{time_left} erstellen."
       pms_per_day: "Du hast die maximal erlaubte Anzahl an neuen Nachrichten pro Tag erreicht. Du kannst mehr neue Nachrichten in %{time_left} erstellen."
-      create_like: "Wow! Du hast eine Menge Liebe geteilt! Du hast die maximale Anzahl an täglichen „Gefällt mir“ für heute erreicht, aber je höher deine Vertrauensstufe, desto mehr „Gefällt mir“ stehen dir täglich zur Verfügung. In %{time_left} kannst du wieder Beiträge liken."
+      create_like: "Wow! Du hast eine Menge Liebe geteilt! Du hast die maximale Anzahl an „Gefällt mir“ innerhalb von 24 Stunden erreicht, aber je höher deine Vertrauensstufe, desto mehr „Gefällt mir“ stehen dir täglich zur Verfügung. In %{time_left} kannst du wieder Beiträge mit „Gefällt mir“ markieren."
       create_bookmark: "Du hast die maximale Anzahl an täglichen Lesezeichen erreicht. Du kannst mehr Lesezeichen in %{time_left} erstellen."
       edit_post: "Du hast die maximale Anzahl an täglichen Bearbeitungen erreicht. Du kannst in %{time_left} mehr Bearbeitungen einreichen."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, ehe du es erneut versuchst."

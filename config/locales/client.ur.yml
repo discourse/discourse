@@ -2090,8 +2090,9 @@ ur:
       votes_released: "%{description} - مکمل"
       dismiss_confirmation:
         body:
-          one: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاع ہے۔"
-          other: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاعات ہیں۔"
+          default:
+            one: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاع ہے۔"
+            other: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاعات ہیں۔"
         dismiss: "بر خاست کریں"
         cancel: "منسوخ"
       group_message_summary:

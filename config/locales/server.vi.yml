@@ -179,6 +179,7 @@ vi:
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
       page_publishing_requirements: "Không thể bật xuất bản trang nếu phương tiện bảo mật được bật."
+    conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
       error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn. :cry:"
@@ -187,8 +188,17 @@ vi:
   invite:
     disabled_errors:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
+    domain_not_allowed: "Email của bạn không thể được sử dụng để đổi lời mời này."
+  bulk_invite:
+    file_should_be_csv: "Tệp được tải lên phải có định dạng csv."
+    error: "Đã xảy ra lỗi khi tải lên tệp đó. Vui lòng thử lại sau."
+  invite_link:
+    email_taken: "Email này đã được sử dụng. Nếu bạn đã có tài khoản, vui lòng đăng nhập hoặc đặt lại mật khẩu."
+    max_redemptions_limit: "phải nằm trong khoảng từ 2 đến %{max_limit}."
   topic_invite:
+    failed_to_invite: "Người dùng không thể được mời vào chủ đề này nếu không có tư cách thành viên nhóm ở một trong các nhóm sau: %{group_names}."
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
+    muted_topic: "Xin lỗi, người dùng đó đã ẩn chủ đề này."
     receiver_does_not_allow_pm: "Xin lỗi, người dùng đó không cho phép bạn gửi tin nhắn riêng tư cho họ."
     sender_does_not_allow_pm: "Xin lỗi, bạn không cho phép người dùng đó gửi tin nhắn riêng tư cho bạn."
     user_cannot_see_topic: "%{username} không thể xem chủ đề."
@@ -296,6 +306,7 @@ vi:
     latest: "Chủ đề mới nhất"
     top: "Top chủ đề"
     posts: "Bài viết mới nhất"
+    private_posts: "Tin nhắn cá nhân mới nhất"
     group_posts: "Bài viết mới từ %{group_name}"
     group_mentions: "Đề cập mới từ %{group_name}"
     user_posts: "Bài viết mới của @%{username}"
@@ -514,6 +525,7 @@ vi:
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
       first_day_replies_per_day: "Chúng tôi đánh giá cao sự nhiệt tình của bạn, hãy duy trì nó! Điều đó có nghĩa là, vì sự an toàn của cộng đồng của chúng tôi, bạn đã đạt đến số lượng câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} và bạn sẽ có thể tạo thêm câu trả lời."
+      create_like: "Ồ! Bạn đã chia sẻ rất nhiều tình yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được mức độ tin cậy, bạn sẽ kiếm được nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích lại các bài đăng sau %{time_left}."
       live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:

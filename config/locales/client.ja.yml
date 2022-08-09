@@ -2009,7 +2009,8 @@ ja:
       votes_released: "%{description} - 完了"
       dismiss_confirmation:
         body:
-          other: "本当によろしいですか？重要な通知が %{count} 件あります。"
+          default:
+            other: "本当によろしいですか？重要な通知が %{count} 件あります。"
         dismiss: "閉じる"
         cancel: "キャンセル"
       group_message_summary:

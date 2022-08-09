@@ -671,7 +671,7 @@ zh_CN:
       public_group_membership: "您加入/离开群组的频率太快了。请等待 %{time_left}后再试。"
       topics_per_day: "您已经达到每天允许的最大新话题数。您可以在 %{time_left}后创建更多新话题。"
       pms_per_day: "您已经达到每天允许的最大消息数。您可以在 %{time_left}后创建更多新消息。"
-      create_like: "哇！您一直在分享爱！今天您已经达到每日点赞上限，但是随着您的信任级别提升，您将获得更高的每日点赞上限。您可以在 %{time_left}后再次点赞帖子。"
+      create_like: "哇哦！你一直在分享很多爱！今天你已经达到了每日点赞上限，不过，随着你的信任等级提升，你将获得更高的每日点赞上限。你可以在 %{time_left} 后再次点赞。"
       create_bookmark: "您已经达到每日书签的最大数量。您可以在 %{time_left}后创建更多书签。"
       edit_post: "您已经达到每日编辑的最大数量。您可以在 %{time_left}后提交更多编辑。"
       live_post_counts: "您请求实时帖子数量的频率太快了。请等待 %{time_left}后再试。"

@@ -209,6 +209,7 @@ it:
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Gli user agent devono essere lunghi almeno 3 caratteri per evitare di limitare erroneamente la velocità degli utenti umani."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Non puoi aggiungere nessuno dei seguenti valori all'impostazione: %{values}."
+      twitter_summary_large_image_no_svg: "Le immagini di riepilogo di Twitter utilizzate per i metadati di twitter:image non possono essere immagini .svg."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché non è stato trovato il server '%{hostname}'. Nel tuo post apparirà solo un link senza anteprima. :cry:"
@@ -588,6 +589,10 @@ it:
             base:
               invalid_url: "L'URL sostitutivo non è valido"
               invalid_tag_list: "L'elenco delle etichette sostitutive non è valido"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "non è valido"
       <<: *errors
   uncategorized_category_name: "Senza categoria"
   vip_category_name: "Salotto"
@@ -692,7 +697,7 @@ it:
       public_group_membership: "Stai entrando/uscendo dai gruppi troppo frequentemente. Attendi %{time_left} prima di riprovare."
       topics_per_day: "Hai raggiunto il numero massimo di nuovi argomenti consentiti al giorno. Potrai creare nuovi argomenti tra %{time_left}."
       pms_per_day: "Hai raggiunto il numero massimo di messaggi consentiti al giorno. Potrai creare nuovi messaggi tra %{time_left}."
-      create_like: "Wow! Hai condiviso molto affetto! Hai raggiunto il numero massimo di Mi piace giornalieri per oggi, ma man mano che guadagni livelli di attendibilità, potrai mettere più Mi piace al giorno. Potrai mettere nuovamente Mi piace ai post tra %{time_left}."
+      create_like: "Perbacco! Hai elargito molto affetto! Però hai raggiunto il numero massimo di Mi piace assegnabili nell'arco di 24 ore, ma man mano che guadagni livelli di attendibilità, potrai mettere più Mi piace al giorno. Potrai mettere nuovamente Mi piace ai messaggi tra %{time_left}."
       create_bookmark: "Hai raggiunto il numero massimo di segnalibri giornalieri. Potrai creare nuovi segnalibri tra %{time_left}."
       edit_post: "Hai raggiunto il numero massimo di modifiche giornaliere. Potrai inviare nuove modifiche tra %{time_left}."
       live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Attendi %{time_left} prima di riprovare."

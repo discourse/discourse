@@ -689,7 +689,6 @@ fr:
       public_group_membership: "Vous rejoignez ou quittez des groupes à rythme un peu trop élevé. Nous vous invitons à patienter %{time_left} avant de réessayer."
       topics_per_day: "Vous avez atteint la limite quotidienne de nouveaux sujets qu'il vous est possible de créer. Vous pourrez créer de nouveaux sujets d'ici %{time_left}."
       pms_per_day: "Vous avez atteint la limite quotidienne de messages qu'il vous est possible de publier. Vous pourrez publier de nouveaux messages d'ici %{time_left}."
-      create_like: "Ouah ! Vous avez beaucoup d'amour à partager ! Vous avez atteint la limite quotidienne du nombre de « J'aime » qu'ils vous est possible d'attribuer. Cependant, vous aurez le droit d'en attribuer davantage à mesure que votre niveau de confiance augmentera. Vous pourrez à nouveau laisser des « J'aime » d'ici %{time_left}."
       create_bookmark: "Vous avez atteint la limite quotidienne du nombre de signets qu'il vous est possible de créer. Vous pourrez créer de nouveaux signets d'ici %{time_left}."
       edit_post: "Vous avez atteint la limite quotidienne du nombre de modifications qu'il vous est possible d'apporter à des messages. Vous pourrez faire de nouvelles modifications d'ici %{time_left}."
       live_post_counts: "Vous demandez le nombre de messages en activité trop rapidement. Veuillez patienter %{time_left} avant de réessayer."

@@ -2156,8 +2156,9 @@ es:
       votes_released: "%{description} - completado"
       dismiss_confirmation:
         body:
-          one: "¿Quieres descartar? Tienes %{count} notificación importante."
-          other: "¿Quieres descartar? Tienes %{count} notificaciones importantes."
+          default:
+            one: "¿Quieres descartar? Tienes %{count} notificación importante."
+            other: "¿Quieres descartar? Tienes %{count} notificaciones importantes."
         dismiss: "Descartar"
         cancel: "Cancelar"
       group_message_summary:

@@ -2101,6 +2101,7 @@ sv:
       ignore: "Ignorera"
       image_alt_text:
         aria_label: Alternativ text för bild
+      delete_image_button: Radera bild
     notifications:
       tooltip:
         regular:
@@ -2158,8 +2159,9 @@ sv:
       votes_released: "%{description} - slutförd"
       dismiss_confirmation:
         body:
-          one: "Är du säker? Du har %{count} viktig avisering."
-          other: "Är du säker? Du har %{count} viktiga aviseringar."
+          default:
+            one: "Är du säker? Du har %{count} viktig avisering."
+            other: "Är du säker? Du har %{count} viktiga aviseringar."
         dismiss: "Avfärda"
         cancel: "Avbryt"
       group_message_summary:
@@ -3735,6 +3737,7 @@ sv:
       no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
       no_likes_others: "Inga gillade inlägg."
       no_topics_title: "Du har inte startat några ämnen än"
+      no_topics_body: "Det är alltid bäst att <a href='%{searchUrl}'>söka</a> efter befintliga samtalsämnen innan du startar ett nytt, men om du är säker på att ämnet du vill ha inte redan finns där, var så god och starta ett nytt eget ämne. Leta efter knappen <kbd>+ Nytt ämne</kbd> längst upp till höger i ämneslistan, kategorin eller taggen för att börja skapa ett nytt ämne inom det området."
       no_topics_title_others: "%{username} har inte startat några ämnen än"
       no_read_topics_title: "Du har inte läst några ämnen än"
       no_read_topics_body: "När du börjar läsa diskussioner ser du en lista här. Börja läsa genom att leta efter ämnen som du tycker är intressanta i <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> eller sök efter sökord %{searchIcon}"
@@ -4550,6 +4553,7 @@ sv:
         last_seen_user: "Senast sedd användare:"
         no_result: "Hittade inga resultat för sammanfattning."
         reply_key: "Svarsnyckel"
+        post_link_with_smtp: "Inläggs- och SMTP-detaljer"
         skipped_reason: "Anledning till överhoppning"
         incoming_emails:
           from_address: "Från"
@@ -4579,6 +4583,7 @@ sv:
             address_placeholder: "namn@exempel.se"
             type_placeholder: "sammanfattning, registrering..."
             reply_key_placeholder: "svarsnyckel"
+            smtp_transaction_response_placeholder: "SMTP-id"
       moderation_history:
         performed_by: "Genomförd av"
         no_results: "Det finns ingen modereringshistorik tillgänglig."
@@ -4761,6 +4766,7 @@ sv:
         show_words:
           one: "visa %{count} ord"
           other: "visa %{count} ord"
+        case_sensitive: "(skiftlägeskänsligt)"
         download: Hämta
         clear_all: Rensa alla
         clear_all_confirm: "Är du säker på att du vill rensa alla bevakade ord för åtgärden %{action}?"
@@ -4798,6 +4804,8 @@ sv:
           exists: "Finns redan"
           upload: "Lägg till från fil"
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
+          case_sensitivity_label: "Är skiftlägeskänsligt"
+          case_sensitivity_description: "Endast ord med bokstäver i samma skiftläge"
         test:
           button_label: "Testa"
           modal_title: "%{action}: Testa bevakade ord"

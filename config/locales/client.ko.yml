@@ -1992,7 +1992,8 @@ ko:
       votes_released: "%{description} - 완료됨"
       dismiss_confirmation:
         body:
-          other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
+          default:
+            other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
         dismiss: "읽음"
         cancel: "취소"
       group_message_summary:
@@ -3442,6 +3443,7 @@ ko:
       no_likes_body: "참여와 기여를 시작하는 가장 좋은 방법은 다른 사용자의 글을 읽고 %{heartIcon} 을 클릭하는 것입니다!"
       no_likes_others: "좋아요를 받은 게시글이 없습니다"
       no_topics_title: "아직 작성한 글이 없습니다."
+      no_topics_body: "새로운 대화를 시작하기 전에 기존 주제를 <a href='%{searchUrl}'>검색</a>하는 것이 좋습니다. 만약 원하시는 주제가 이미 존재하지 않을 것이라고 확신하신다면 계속 진행하셔도 좋습니다. 태그, 카테고리 또는 주제 목록의 오른쪽 상단의 <kbd>+ 새 주제</kbd> 버튼을 눌러 해당 영역에서 새 주제 만들기를 시작하세요."
       no_read_topics_title: "아직 읽은 글이 없습니다."
     no_group_messages_title: "그룹 메시지가 없습니다."
     fullscreen_table:
@@ -4241,6 +4243,7 @@ ko:
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
+            smtp_transaction_response_placeholder: "SMTP 아이디"
       moderation_history:
         performed_by: "수행자"
         no_results: "사용 가능한 운영 기록이 없습니다."
@@ -4422,6 +4425,7 @@ ko:
         clear_filter: "지우기"
         show_words:
           other: "%{count}개 단어 보기"
+        case_sensitive: "(대소문자 구분)"
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
@@ -4459,6 +4463,8 @@ ko:
           exists: "이미 존재 함"
           upload: "파일에서 추가"
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
+          case_sensitivity_label: "대소문자를 구분합니다"
+          case_sensitivity_description: "대/소문자가 일치하는 단어만"
         test:
           button_label: "테스트"
           modal_title: "%{action}: 검열 단어 테스트"

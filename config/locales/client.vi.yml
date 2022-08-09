@@ -2010,6 +2010,7 @@ vi:
       ignore: "Bỏ qua"
       image_alt_text:
         aria_label: Văn bản thay thế cho hình ảnh
+      delete_image_button: Xoá ảnh
     notifications:
       tooltip:
         regular:
@@ -2060,7 +2061,8 @@ vi:
       votes_released: "%{description} - hoàn thành"
       dismiss_confirmation:
         body:
-          other: "Bạn có chắc không? Bạn có %{count} thông báo quan trọng."
+          default:
+            other: "Bạn có chắc không? Bạn có %{count} thông báo quan trọng."
         dismiss: "Hủy bỏ"
         cancel: "Hủy"
       group_message_summary:
@@ -2154,15 +2156,24 @@ vi:
         default: "Chủ đề/Bài viết"
         users: "Người dùng"
         categories: "Chuyên mục"
+        categories_and_tags: "Danh mục / thẻ"
       context:
         user: "Tìm bài viết của @%{username}"
         category: "Tìm kiếm danh mục #%{category}"
         tag: "Tìm kiếm thẻ #%{tag}"
         topic: "Tìm trong chủ đề này"
         private_messages: "Tìm tin nhắn"
+      tips:
+        category_tag: "bộ lọc theo danh mục hoặc thẻ"
+        author: "bộ lọc theo tác giả bài đăng"
+        in: "lọc theo siêu dữ liệu (ví dụ: in: title, in: personal, in: pinned)"
+        status: "bộ lọc theo trạng thái chủ đề"
+        full_search: "khởi chạy tìm kiếm toàn trang"
       advanced:
+        title: Bộ lọc nâng cao
         posted_by:
           label: Gửi bởi
+          aria_label: Lọc theo tác giả bài đăng
         in_category:
           label: Đã phân loại
         in_group:
@@ -2171,6 +2182,7 @@ vi:
           label: Với huy hiệu
         with_tags:
           label: Được gắn thẻ
+          aria_label: Lọc bằng cách sử dụng thẻ
         filters:
           label: Chỉ trả lại chủ đề/bài đăng ...
           title: Chỉ khớp với tiêu đề
@@ -2201,23 +2213,41 @@ vi:
             label: Bài viết
           min:
             placeholder: tối thiểu
+            aria_label: lọc theo số lượng bài đăng tối thiểu
           max:
             placeholder: tối đa
+            aria_label: lọc theo số lượng bài đăng tối đa
           time:
             label: Được gửi
+            aria_label: Lọc theo ngày đăng
             before: trước
             after: sau
         views:
           label: Lượt xem
         min_views:
           placeholder: tối thiểu
+          aria_label: lọc theo lượt xem tối thiểu
         max_views:
           placeholder: tối đa
+          aria_label: lọc theo lượt xem tối đa
+        additional_options:
+          label: "Lọc theo số lượng bài đăng và lượt xem chủ đề"
     new_item: "mới"
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"
     current_user: "đi đến trang cá nhân của bạn"
     view_all: "xem tất cả %{tab}"
+    user_menu:
+      generic_no_items: "Không có mục nào trong danh sách này."
+      view_all_notifications: "xem tất cả các thông báo"
+      reviewable:
+        view_all: "xem tất cả các mục đánh giá"
+        queue: "Hàng đợi"
+        deleted_user: "(người dùng đã bị xóa)"
+        post_number_with_topic_title: "bài #%{post_number} - %{title}"
+        new_post_in_topic: "bài mới trong %{title}"
+        suspicious_user: "người dùng đáng ngờ %{username}"
+        default_item: "mục có thể xem lại #%{reviewable_id}"
     topics:
       new_messages_marker: "lần thăm cuối"
       bulk:
@@ -2232,6 +2262,8 @@ vi:
         dismiss_read_with_selected:
           other: "Loại bỏ %{count} chưa đọc"
         dismiss_button: "Bỏ qua..."
+        dismiss_button_with_selected:
+          other: "Loại bỏ (%{count})…"
         dismiss_tooltip: "Bỏ qua chỉ bài viết mới hoặc ngừng theo dõi chủ đề"
         also_dismiss_topics: "Ngừng theo dõi các chủ đề này để không hiển thị lại là chủ đề chưa đọc"
         dismiss_new: "Bỏ "
@@ -2254,10 +2286,13 @@ vi:
         choose_append_tags: "Chọn các thẻ mới để thêm vào cho các chủ đề này:"
         changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
         remove_tags: "Xóa tất cả các thẻ"
+        confirm_remove_tags:
+          other: "Tất cả các thẻ sẽ bị xóa khỏi <b>%{count}</b> chủ đề. Bạn có chắc không?"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
       none:
         unread: "Bạn không có chủ đề nào chưa đọc."
+        unseen: "Bạn không có chủ đề nào chưa nhìn thấy."
         new: "Bạn không có chủ đề mới nào."
         read: "Bạn vẫn chưa đọc bất kì chủ đề nào."
         posted: "Bạn vẫn chưa đăng bài trong bất kì một chủ đề nào"
@@ -2267,6 +2302,7 @@ vi:
         top: "Không có chủ đề top."
         educate:
           new: '<p>Các chủ đề mới của bạn sẽ xuất hiện ở đây. Theo mặc định, các chủ đề được coi là mới và sẽ hiển thị chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nếu chúng được tạo trong 2 ngày qua.</p><p>Truy cập <a href="%{userPrefsUrl}">tùy chọn</a> của bạn để thay đổi.</p>'
+          unread: "<p>Các chủ đề chưa đọc của bạn xuất hiện ở đây.</p><p>Theo mặc định, các chủ đề được coi là chưa đọc và sẽ hiển thị số lượng chưa đọc <span class=\"badge unread-posts badge-notification\">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã đặt chủ đề một cách rõ ràng thành Theo dõi hoặc Đã theo dõi qua \U0001F514 trong mỗi chủ đề.</p><p>Truy cập <a href=\"%{userPrefsUrl}\">tùy chọn</a> của bạn để thay đổi điều này.</p>"
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
@@ -2326,6 +2362,7 @@ vi:
       browse_all_categories: Duyệt tất cả các hạng mục
       browse_all_tags: Duyệt qua tất cả các thẻ
       view_latest_topics: xem các chủ đề mới nhất
+      suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
       jump_reply_up: nhảy đến những trả lời trước đó
       jump_reply_down: nhảy tới những trả lời sau đó
       deleted: "Chủ đề này đã bị xóa"
@@ -3509,6 +3546,7 @@ vi:
       no_likes_title: "Bạn chưa thích bất kỳ chủ đề nào"
       no_likes_body: "Một cách tuyệt vời để tham gia và bắt đầu đóng góp là bắt đầu đọc các cuộc trò chuyện đã diễn ra và chọn %{heartIcon} trên các bài đăng mà bạn thích!"
       no_topics_title: "Bạn chưa bắt đầu bất kỳ chủ đề nào"
+      no_topics_body: "Tốt nhất bạn nên <a href='%{searchUrl}'>tìm kiếm</a> chủ đề hiện có của cuộc trò chuyện trước khi bắt đầu một chủ đề mới, nhưng nếu bạn tin rằng chủ đề bạn muốn vẫn chưa xuất hiện, hãy tiếp tục và bắt đầu một chủ đề mới của riêng bạn. Tìm nút <kbd>+ Chủ đề mới</kbd> ở trên cùng bên phải của danh sách chủ đề, danh mục hoặc thẻ để bắt đầu tạo chủ đề mới trong lĩnh vực đó."
       no_topics_title_others: "%{username} chưa bắt đầu bất kỳ chủ đề nào"
       no_read_topics_title: "Bạn chưa đọc bất kỳ chủ đề nào"
       no_read_topics_body: "Khi bạn bắt đầu đọc các cuộc thảo luận, bạn sẽ thấy một danh sách ở đây. Để bắt đầu đọc, hãy tìm các chủ đề mà bạn quan tâm trong <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Danh mục</a> hoặc tìm kiếm theo từ khóa %{searchIcon}"
@@ -4330,6 +4368,7 @@ vi:
             address_placeholder: "name@example.com"
             type_placeholder: "tập san, đăng ký..."
             reply_key_placeholder: "key phản hồi"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "Thực hiện bởi"
         no_results: "Không có lịch sử kiểm duyệt."
@@ -4459,6 +4498,7 @@ vi:
             post_staff_note_create: "thêm ghi chú của nhân viên"
             post_staff_note_destroy: "hủy ghi chú của nhân viên"
             delete_group: "xóa nhóm"
+            watched_word_create: "thêm từ đã xem"
             watched_word_destroy: "xóa từ đã xem"
         screened_emails:
           title: "Screened Emails"
@@ -4511,11 +4551,14 @@ vi:
         clear_all_confirm: "Bạn có chắc chắn muốn xóa tất cả các từ đã xem cho hành động %{action} ?"
         actions:
           block: "Khóa"
+          censor: "Kiểm duyệt"
+          require_approval: "Yêu cầu phê duyệt"
           flag: "Gắn cờ"
           replace: "Thay thế"
           silence: "Im lặng"
           link: "Liên kết"
         action_descriptions:
+          censor: "Cho phép các bài đăng có chứa những từ này nhưng hãy thay thế chúng bằng các ký tự ẩn các từ đã được kiểm duyệt."
           tag: "Tự động gắn thẻ các chủ đề dựa trên bài đăng đầu tiên"
           silence: "Các bài đăng đầu tiên của người dùng có chứa những từ này sẽ yêu cầu nhân viên phê duyệt trước khi họ có thể được nhìn thấy và người dùng sẽ tự động bị tắt tiếng."
         form:

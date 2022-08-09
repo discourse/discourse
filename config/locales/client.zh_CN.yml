@@ -995,6 +995,7 @@ zh_CN:
       dismiss: "关闭"
       dismiss_notifications: "全部关闭"
       dismiss_notifications_tooltip: "将所有未读通知标记为已读"
+      dismiss_bookmarks_tooltip: "将所有未读书签提醒标记为已读"
       no_messages_title: "您没有任何消息"
       no_messages_body: >
         需要直接与某人对话而不是公开讨论？选择他的头像并点击 %{icon} 消息按钮，向他们发送消息。<br><br> 如果您需要帮助，可以<a href='%{aboutUrl}'>向管理人员发送消息</a>。
@@ -1641,7 +1642,7 @@ zh_CN:
       hide_forever: "不，谢谢"
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
-      value_prop: "厌倦了滚动浏览相同的帖子？当您创建一个帐户后，您总是可以回到您离开的地方。使用帐户，您还可以收到新回复通知、保存书签以及使用“赞”来感谢他人。我们可以共同努力使这个社区变得更好。 :heart:"
+      value_prop: "厌倦了每次从头浏览相同的帖子？当您注册后，您总是可以从上次看到的位置继续阅读。成为用户，您还可以收到新回复通知、保存书签以及使用“赞”来感谢他人。我们可以共同努力使这个社区变得更好。 :heart:"
     summary:
       enabled_description: "您正在查看此话题的摘要：社区确定的最有趣的帖子。"
       description:
@@ -1893,10 +1894,10 @@ zh_CN:
       group_mentioned:
         other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
       cannot_see_mention:
-        category: "您提及了 @%{username}，但由于他们无法访问此类别，他们将不会收到通知。您需要将其添加到可以访问此类别的群组中。"
-        private: "您提及了 @%{username}，但由于他们无法访问此个人消息，他们将不会收到通知。您需要邀请他们加入此个人消息。"
-        muted_topic: "您提到了@%{username} 但他们不会收到通知，因为他们已将这个话题设为免打扰。"
-        not_allowed: "您提到了@%{username} 但他们不会收到通知，因为他们未被邀请至这个话题。"
+        category: "您提及了 @%{username}，但该用户无法访问此类别，因此不会收到通知。您需要将其添加到可以访问此类别的群组中。"
+        private: "您提及了 @%{username}，但该用户无法访问此个人消息，因此不会收到通知。您需要邀请该用户加入此个人消息。"
+        muted_topic: "您提到了@%{username}，但该用户已将本话题设为免打扰，不会收到通知。"
+        not_allowed: "您提到了@%{username}，但该用户未被邀请至本话题，不会收到通知。"
       here_mention:
         other: "通过提及 <b>@%{here}</b>，您将要通知 %{count} 用户 – 您确定吗？"
       duplicate_link: "好像 <b>@%{username}</b> 在话题 <a href='%{post_url}'>%{ago}的回复</a>中已经发布 <b>%{domain}</b> 的链接 - 确定要再次发布吗？"
@@ -2015,6 +2016,7 @@ zh_CN:
       ignore: "忽略"
       image_alt_text:
         aria_label: 替代图片的文字
+      delete_image_button: 删除图片
     notifications:
       tooltip:
         regular:
@@ -2065,7 +2067,10 @@ zh_CN:
       votes_released: "%{description} - 已完成"
       dismiss_confirmation:
         body:
-          other: "您确定吗？您有 %{count} 个重要通知。"
+          default:
+            other: "您确定吗？您有 %{count} 个重要通知。"
+          bookmarks:
+            other: "确定吗？您共有 %{count} 个未读书签提醒。"
         dismiss: "标记为已读"
         cancel: "取消"
       group_message_summary:
@@ -2246,6 +2251,7 @@ zh_CN:
       generic_no_items: "此列表中没有内容。"
       sr_menu_tabs: "菜单选项卡"
       view_all_notifications: "查看所有通知"
+      view_all_bookmarks: "查看所有书签"
       reviewable:
         view_all: "查看所有审查项目"
         queue: "队列"
@@ -3566,6 +3572,7 @@ zh_CN:
       no_likes_body: "加入并开始贡献的一个好方法是阅读已有的主题，并在您喜欢的帖子上点击 %{heartIcon}"
       no_likes_others: "没有赞过的帖子。"
       no_topics_title: "您还没有开始任何话题"
+      no_topics_body: "在开始一个新的话题之前，最好先用 <a href='%{searchUrl}'>搜索</a> 来查找现有的话题，但如果你确信你想要的话题还没有出现，那就开始一个属于你自己的新话题吧。在话题列表、类别或标签页面的右上方找到 <kbd>+ 新建话题</kbd> 按钮来创建新的话题。"
       no_topics_title_others: "%{username} 还没有开始任何话题"
       no_read_topics_title: "您还没有阅读任何话题。"
       no_read_topics_body: "开始阅读讨论后，您将在此处看到一个列表。要开始阅读，请在 <a href='%{topUrl}'>置顶</a> 或 <a href='%{categoriesUrl}'>类别</a> 或按关键字搜索 %{searchIcon}"
@@ -4372,6 +4379,7 @@ zh_CN:
         last_seen_user: "最后活动："
         no_result: "没有找到摘要的结果。"
         reply_key: "回复键"
+        post_link_with_smtp: "Post 和 SMTP 详细信息"
         skipped_reason: "跳过原因"
         incoming_emails:
           from_address: "发件人"
@@ -4401,6 +4409,7 @@ zh_CN:
             address_placeholder: "name@example.com"
             type_placeholder: "摘要、注册…"
             reply_key_placeholder: "回复键"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "执行人"
         no_results: "没有可用的审核历史记录。"
@@ -4582,6 +4591,7 @@ zh_CN:
         clear_filter: "清除"
         show_words:
           other: "显示 %{count} 个字词"
+        case_sensitive: "（区分大小写）"
         download: 下载
         clear_all: 全部清除
         clear_all_confirm: "确定要清除%{action}操作的所有关注词吗？"
@@ -4619,6 +4629,8 @@ zh_CN:
           exists: "已存在"
           upload: "从文件添加"
           upload_successful: "上传成功。关注词已添加。"
+          case_sensitivity_label: "是否区分大小写"
+          case_sensitivity_description: "仅适用于与键入关注词大小写一致的词语"
         test:
           button_label: "测试"
           modal_title: "%{action}：测试关注词"

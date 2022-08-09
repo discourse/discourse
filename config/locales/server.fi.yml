@@ -662,7 +662,6 @@ fi:
       public_group_membership: "Liityt tai poistut ryhmistä hieman liian usein. Odota %{time_left} ja yritä sitten uudelleen."
       topics_per_day: "Olet saavuttanut päivittäin sallittujen uusien ketjujen enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       pms_per_day: "Olet saavuttanut päivässä sallitun viestien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
-      create_like: "Vau! Olet jakanut paljon rakkautta! Olet saavuttanut päivittäisten tykkäysten ylärajan tälle päivälle, mutta kun saavutat korkeamman luottamustason, ansaitset enemmän päivittäisiä tykkäyksiä. Odota %{time_left} ja yritä sitten uudelleen."
       create_bookmark: "Olet saavuttanut päivittäisten kirjanmerkkien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       edit_post: "Olet saavuttanut päivittäisten muokkausten enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."

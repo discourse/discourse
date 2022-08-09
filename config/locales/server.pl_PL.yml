@@ -751,7 +751,6 @@ pl_PL:
       public_group_membership: "Dołączasz/opuszczasz grupy zbyt często. Zaczekaj %{time_left} , zanim spróbujesz ponownie."
       topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów dziennie. Możesz utworzyć więcej tematów w %{time_left}."
       pms_per_day: "Osiągnąłeś maksymalną liczbę dozwolonych wiadomości dziennie. Możesz utworzyć więcej nowych wiadomości za %{time_left}."
-      create_like: "Wow! Podzieliłeś się wielką miłością! Osiągnąłeś maksymalną liczbę polubień na dzisiaj, ale kiedy zdobędziesz większy poziom zaufania, zyskasz więcej dziennych polubień. Będziesz mógł polubić wpisy ponownie za %{time_left}."
       create_bookmark: "Osiągnąłeś maksymalną liczbę zakładek na dziś. Możesz utworzyć więcej zakładek za %{time_left}."
       edit_post: "Osiągnąłeś maksymalną liczbę edycji na dziś. Możesz przesłać więcej edycji za %{time_left}."
       live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie wpisów. Spróbuj ponownie za %{time_left}."

@@ -2096,8 +2096,9 @@ pt_BR:
       votes_released: "%{description} - concluído(a)"
       dismiss_confirmation:
         body:
-          one: "Tem certeza? Você tem %{count} notificação importante."
-          other: "Tem certeza? Você tem %{count} notificações importantes."
+          default:
+            one: "Tem certeza? Você tem %{count} notificação importante."
+            other: "Tem certeza? Você tem %{count} notificações importantes."
         dismiss: "Descartar"
         cancel: "Cancelar"
       group_message_summary:

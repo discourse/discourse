@@ -698,7 +698,6 @@ es:
       public_group_membership: "Estás uniéndote o saliendo de grupos con mucha frecuencia. Espera %{time_left} antes de intentarlo de nuevo."
       topics_per_day: "Has llegado al límite de nuevos temas permitidos al día. Podrás crear más en %{time_left}."
       pms_per_day: "Has llegado al máximo de mensajes permitidos al día. Podrás publicar más en %{time_left}."
-      create_like: "¡Guau! ¡Has estado dándole mucho a me gusta! Has llegado al límite diario, pero conforme vayas subiendo de nivel de confianza, tu límite aumentará. Podrás seguir dándole a me gusta en %{time_left}."
       create_bookmark: "Has llegado al límite de nuevos marcadores al día. Podrás añadir más cosas a marcadores en %{time_left}."
       edit_post: "Has llegado al límite de ediciones en un día. Podrás seguir editando en %{time_left}."
       live_post_counts: "Estás pidiendo recuentos de publicaciones en vivo muy rápido. Espera %{time_left} antes de intentarlo de nuevo."

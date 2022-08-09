@@ -2344,10 +2344,11 @@ he:
       votes_released: "%{description} - הסתיים"
       dismiss_confirmation:
         body:
-          one: "בוודאות? יש לך התראה %{count} חשובה."
-          two: "בוודאות? יש לך %{count} התראות חשובות."
-          many: "בוודאות? יש לך %{count} התראות חשובות."
-          other: "בוודאות? יש לך %{count} התראות חשובות."
+          default:
+            one: "בוודאות? יש לך התראה %{count} חשובה."
+            two: "בוודאות? יש לך %{count} התראות חשובות."
+            many: "בוודאות? יש לך %{count} התראות חשובות."
+            other: "בוודאות? יש לך %{count} התראות חשובות."
         dismiss: "דחה"
         cancel: "ביטול"
       group_message_summary:

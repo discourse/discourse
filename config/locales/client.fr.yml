@@ -2154,8 +2154,9 @@ fr:
       votes_released: "%{description} - terminé"
       dismiss_confirmation:
         body:
-          one: "Vous avez %{count} notification importante. Voulez-vous continuer?"
-          other: "Vous avez %{count} notifications importantes. Voulez-vous continuer?"
+          default:
+            one: "Vous avez %{count} notification importante. Voulez-vous continuer?"
+            other: "Vous avez %{count} notifications importantes. Voulez-vous continuer?"
         dismiss: "Vu"
         cancel: "Annuler"
       group_message_summary:
@@ -3425,6 +3426,7 @@ fr:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Raccourcis clavier"
+      short_title: "Raccourcis"
       jump_to:
         title: "Aller à"
         home: "%{shortcut} Accueil"
@@ -3742,7 +3744,9 @@ fr:
       more: "Plus…"
       sections:
         messages:
+          header_link_title: "messages directs"
           header_link_text: "Messages"
+          header_action_title: "créer un message direct"
           links:
             inbox: "Boîte de réception"
             sent: "Envoyés"
@@ -3752,10 +3756,12 @@ fr:
             unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
+          none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_title: "toutes les étiquettes"
           header_link_text: "Étiquettes"
         categories:
+          none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_title: "toutes les catégories"
           header_link_text: "Catégories"
@@ -3775,6 +3781,7 @@ fr:
               title: "Tous les groupes"
             users:
               content: "Utilisateurs"
+              title: "Tous les utilisateurs"
             my_posts:
               content: "Mes messages"
               title: "Mes publications"
@@ -4729,6 +4736,7 @@ fr:
         show_words:
           one: "afficher %{count} mot"
           other: "afficher %{count} mots"
+        case_sensitive: "(sensible à la casse)"
         download: Télécharger
         clear_all: Tout supprimer
         clear_all_confirm: "Voulez-vous vraiment effacer l'ensemble des mots surveillés en rapport à l'action %{action} ?"
@@ -4766,6 +4774,8 @@ fr:
           exists: "Existe déjà"
           upload: "Ajouter à partir d'un fichier"
           upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
+          case_sensitivity_label: "Est sensible à la casse"
+          case_sensitivity_description: "Seulement les mots dont la casse des caractères correspond"
         test:
           button_label: "Tester"
           modal_title: "%{action} : Tester les mots surveillés"
@@ -5316,6 +5326,7 @@ fr:
     wizard:
       back: "Retour"
       next: "Suivant"
+      configure_more: "Configurer Plus..."
       step-text: "Pas"
       step: "%{current} sur %{total}"
       upload: "Envoi"
