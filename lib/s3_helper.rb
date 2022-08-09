@@ -104,6 +104,7 @@ class S3Helper
   def delete_object(key)
     s3_bucket.object(key).delete
   rescue Aws::S3::Errors::NoSuchKey
+  rescue Aws::S3::Errors::NotFound
   end
 
   def copy(source, destination, options: {})
