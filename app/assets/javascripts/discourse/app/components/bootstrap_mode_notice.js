@@ -4,7 +4,6 @@ import I18n from "I18n";
 import { inject as service } from "@ember/service";
 
 export default class BootstrapModeNotice extends GlimmerComponent {
-  @service router;
   @service siteSettings;
   @service site;
 
