@@ -8,14 +8,6 @@ export default class BootstrapModeNotice extends GlimmerComponent {
   @service siteSettings;
   @service site;
 
-  get showBootstrapModeNotice() {
-    return (
-      this.currentUser?.get("staff") &&
-      this.siteSettings.bootstrap_mode_enabled &&
-      !this.router.currentRouteName.startsWith("wizard")
-    );
-  }
-
   get message() {
     let msg = null;
     const bootstrapModeMinUsers = this.siteSettings.bootstrap_mode_min_users;
