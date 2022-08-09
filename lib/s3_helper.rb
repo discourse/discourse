@@ -98,6 +98,7 @@ class S3Helper
     s3_filename.prepend(multisite_upload_path) if Rails.configuration.multisite
     delete_object(get_path_for_s3_upload(s3_filename))
   rescue Aws::S3::Errors::NoSuchKey
+  rescue Aws::S3::Errors::NotFound
   end
 
   def delete_object(key)
