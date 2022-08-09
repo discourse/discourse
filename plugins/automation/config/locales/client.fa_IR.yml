@@ -116,6 +116,10 @@ fa_IR:
           fields:
             user:
               label: کاربر
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: 'نام فیلد سفارشی کاربر'
       models:
         script:
           name:
