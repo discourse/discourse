@@ -197,7 +197,7 @@ HTML
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
-    expect(theme.javascript_cache.content).to include("var settings =")
+    expect(theme.javascript_cache.content).to include("const settings =")
   end
 
   def create_upload_theme_field!(name)

@@ -4,6 +4,25 @@ require 'mini_racer'
 
 class DiscourseJsProcessor
 
+  DISCOURSE_COMMON_BABEL_PLUGINS = [
+    'proposal-optional-chaining',
+    ['proposal-decorators', { legacy: true } ],
+    'transform-template-literals',
+    'proposal-class-properties',
+    'proposal-class-static-block',
+    'proposal-private-property-in-object',
+    'proposal-private-methods',
+    'proposal-numeric-separator',
+    'proposal-logical-assignment-operators',
+    'proposal-nullish-coalescing-operator',
+    'proposal-json-strings',
+    'proposal-optional-catch-binding',
+    'transform-parameters',
+    'proposal-async-generator-functions',
+    'proposal-object-rest-spread',
+    'proposal-export-namespace-from',
+  ]
+
   def self.plugin_transpile_paths
     @@plugin_transpile_paths ||= Set.new
   end
@@ -94,9 +113,10 @@ class DiscourseJsProcessor
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
       ctx = MiniRacer::Context.new(timeout: 15000, ensure_gc_after_idle: 2000)
-      ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
+      ctx.eval("#{File.read("#{Rails.root}/app/assets/javascripts/node_modules/@babel/standalone/babel.js")}")
       ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
       ctx.eval("module = {}; exports = {};")
+      ctx.eval("const DISCOURSE_COMMON_BABEL_PLUGINS = #{DISCOURSE_COMMON_BABEL_PLUGINS.to_json};")
       ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
       ctx.eval <<JS
@@ -156,9 +176,34 @@ JS
 
       if opts[:module_name] && !@skip_module
         filename = opts[:filename] || 'unknown'
-        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-modules-amd', {noInterop: true}], 'proposal-object-rest-spread', 'proposal-optional-chaining', ['proposal-decorators', {legacy: true} ], 'proposal-class-properties', exports.WidgetHbsCompiler] }).code"
+        <<~JS
+          Babel.transform(
+            #{js_source},
+            {
+              moduleId: '#{opts[:module_name]}',
+              filename: '#{filename}',
+              ast: false,
+              plugins: [
+                exports.WidgetHbsCompiler,
+                ['transform-modules-amd', {noInterop: true}],
+                ...DISCOURSE_COMMON_BABEL_PLUGINS
+              ]
+            }
+          ).code
+        JS
       else
-        "Babel.transform(#{js_source}, { ast: false, plugins: ['proposal-json-strings', 'proposal-nullish-coalescing-operator', 'proposal-logical-assignment-operators', 'proposal-numeric-separator', 'proposal-optional-catch-binding', 'transform-dotall-regex', 'proposal-unicode-property-regex', 'transform-named-capturing-groups-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining', 'transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', ['proposal-decorators', {legacy: true}], 'proposal-class-properties', exports.WidgetHbsCompiler] }).code"
+        <<~JS
+          Babel.transform(
+            #{js_source},
+            {
+              ast: false,
+              plugins: [
+                exports.WidgetHbsCompiler,
+                ...DISCOURSE_COMMON_BABEL_PLUGINS
+              ]
+            }
+          ).code
+        JS
       end
     end
 
