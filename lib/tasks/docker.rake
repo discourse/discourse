@@ -59,9 +59,9 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
     @good = true
+    @good &&= run_or_fail("yarn install")
 
     unless ENV['SKIP_LINT']
-      @good &&= run_or_fail("yarn install")
       puts "Running linters/prettyfiers"
       puts "eslint #{`yarn eslint -v`}"
       puts "prettier #{`yarn prettier -v`}"
@@ -206,7 +206,6 @@ task 'docker:test' do
 
       unless ENV["RUBY_ONLY"]
         js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
-        @good &&= run_or_fail 'yarn install'
 
         unless ENV["SKIP_CORE"]
           @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
