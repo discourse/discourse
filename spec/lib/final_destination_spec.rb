@@ -470,6 +470,23 @@ RSpec.describe FinalDestination do
         expect(get).to be_blank
       end
     end
+
+    context "when there is an SSL error" do
+      subject(:get) { fd.get {} }
+
+      before do
+        fd.stubs(:safe_session).raises(OpenSSL::SSL::SSLError)
+      end
+
+      it "logs the exception" do
+        Rails.logger.expects(:warn).with(regexp_matches(/an error with ssl occurred/i))
+        get
+      end
+
+      it "returns nothing" do
+        expect(get).to be_blank
+      end
+    end
   end
 
   describe '.validate_uri' do
