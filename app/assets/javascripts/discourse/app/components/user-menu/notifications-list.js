@@ -93,6 +93,28 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     const modalController = this.dismissWarningModal();
     const modalCallback = () => {
       ajax("/notifications/mark-read", opts).then(() => {
+        if (dismissTypes) {
+          const unreadNotificationCountsHash = {
+            ...this.currentUser.grouped_unread_high_priority_notifications,
+          };
+          dismissTypes.forEach((type) => {
+            const typeId = this.site.notification_types[type];
+            if (typeId) {
+              delete unreadNotificationCountsHash[typeId];
+            }
+          });
+          this.currentUser.set(
+            "grouped_unread_high_priority_notifications",
+            unreadNotificationCountsHash
+          );
+        } else {
+          this.currentUser.set("all_unread_notifications_count", 0);
+          this.currentUser.set("unread_high_priority_notifications", 0);
+          this.currentUser.set(
+            "grouped_unread_high_priority_notifications",
+            {}
+          );
+        }
         this.refreshList();
         postRNWebviewMessage("markRead", "1");
       });
