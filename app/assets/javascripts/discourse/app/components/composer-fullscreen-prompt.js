@@ -26,6 +26,6 @@ export default class ComposerFullscreenPrompt extends GlimmerComponent {
   }
 
   get exitPrompt() {
-    return htmlSafe(I18n.t("composer.exit_fullscreen_prompt"));
+    return I18n.t("composer.exit_fullscreen_prompt");
   }
 }
