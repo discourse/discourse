@@ -2034,8 +2034,9 @@ nl:
       votes_released: "%{description} - voltooid"
       dismiss_confirmation:
         body:
-          one: "Weet u het zeker? U hebt %{count} belangrijke melding."
-          other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
+          default:
+            one: "Weet u het zeker? U hebt %{count} belangrijke melding."
+            other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
         dismiss: "Negeren"
         cancel: "Annuleren"
       group_message_summary:

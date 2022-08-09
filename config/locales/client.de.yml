@@ -1052,6 +1052,7 @@ de:
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
+      dismiss_bookmarks_tooltip: "Markiere alle ungelesenen Lesezeichen-Erinnerungen als gelesen"
       no_messages_title: "Du hast keine Nachrichten"
       no_messages_body: >
         Benötigst du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende der Person eine Nachricht, indem du ihren Avatar auswählst und die Schaltfläche %{icon} verwendest.<br><br> Wenn du Hilfe benötigst, kannst du eine <a href='%{aboutUrl}'>Nachricht an ein Team-Mitglied senden</a>.
@@ -2101,6 +2102,7 @@ de:
       ignore: "Ignorieren"
       image_alt_text:
         aria_label: Alternativ-Text für Bild
+      delete_image_button: Bild löschen
     notifications:
       tooltip:
         regular:
@@ -2158,8 +2160,12 @@ de:
       votes_released: "%{description} – abgeschlossen"
       dismiss_confirmation:
         body:
-          one: "Bist du sicher? Du hast %{count} wichtige Benachrichtigung."
-          other: "Bist du sicher? Du hast %{count} wichtige Benachrichtigungen."
+          default:
+            one: "Bist du sicher? Du hast %{count} wichtige Benachrichtigung."
+            other: "Bist du sicher? Du hast %{count} wichtige Benachrichtigungen."
+          bookmarks:
+            one: "Bist du sicher? Du hast %{count} ungelesene Lesezeichen Erinnerung."
+            other: "Bist du sicher? Du hast %{count} ungelesene Lesezeichen-Erinnerungen."
         dismiss: "Alles gelesen"
         cancel: "Abbrechen"
       group_message_summary:
@@ -2342,6 +2348,7 @@ de:
       generic_no_items: "Es gibt keine Einträge in dieser Liste."
       sr_menu_tabs: "Menü-Registerkarten"
       view_all_notifications: "Alle Benachrichtigungen anzeigen"
+      view_all_bookmarks: "Alle Lesezeichen anzeigen"
       reviewable:
         view_all: "alle Bewertungselemente ansehen"
         queue: "Warteschlange"
@@ -3735,6 +3742,7 @@ de:
       no_likes_body: "Eine großartige Möglichkeit einzusteigen und Beiträge zu leisten, besteht darin, bereits stattgefundene Konversationen zu lesen und die %{heartIcon} bei Beiträgen auszuwählen, die Dir gefallen!"
       no_likes_others: "Keine Beiträge mit „Gefällt mir“."
       no_topics_title: "Du hast noch keine Themen begonnen"
+      no_topics_body: "Es ist immer am besten, <a href='%{searchUrl}'></a> nach bestehenden Themen zu suchen, bevor du ein neues Thema eröffnest. Wenn du dir aber sicher bist, dass es das gewünschte Thema noch nicht gibt, kannst du auch einfach ein neues Thema erstellen. Suche nach der Schaltfläche <kbd>+ Neues Thema</kbd> oben rechts in der Themenliste, der Kategorie oder dem Tag, um ein neues Thema in diesem Bereich zu erstellen."
       no_topics_title_others: "%{username} hat noch keine Themen begonnen"
       no_read_topics_title: "Du hast noch keine Themen gelesen"
       no_read_topics_body: "Sobald Du mit dem Lesen von Diskussionen beginnst, siehst Du hier eine Liste. Zum Lesen suche nach Themen, die Du in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> oder suche nach dem Stichwort %{searchIcon}"
@@ -4550,6 +4558,7 @@ de:
         last_seen_user: "Zuletzt gesehener Benutzer:"
         no_result: "Für diese Zusammenfassung wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
+        post_link_with_smtp: "Post- und SMTP-Details"
         skipped_reason: "Grund des Überspringens"
         incoming_emails:
           from_address: "Von"
@@ -4579,6 +4588,7 @@ de:
             address_placeholder: "name@example.com"
             type_placeholder: "zusammenfassen, registrieren …"
             reply_key_placeholder: "Antwort-Schlüssel"
+            smtp_transaction_response_placeholder: "SMTP-ID"
       moderation_history:
         performed_by: "Durchgeführt von"
         no_results: "Es ist keine Moderationshistorie verfügbar."

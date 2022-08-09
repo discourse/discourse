@@ -1033,6 +1033,7 @@ tr_TR:
       dismiss: "Kapat"
       dismiss_notifications: "Tümünü Kapat"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
+      dismiss_bookmarks_tooltip: "Okunmamış tüm yer imi hatırlatıcılarını okundu olarak işaretle"
       no_messages_title: "Hiç iletiniz yok"
       no_messages_body: >
         Normal konuşma akışının dışında, biriyle doğrudan kişisel bir konuşma yapmanız mı gerekiyor? Avatarlarını seçip %{icon} ileti düğmesini kullanarak onlara ileti gönderin. <br><br> Yardıma gereksiniminiz varsa <a href='%{aboutUrl}'> bir sorumluya mesaj gönderebilirsiniz</a>.
@@ -2059,6 +2060,7 @@ tr_TR:
       ignore: "Yoksay"
       image_alt_text:
         aria_label: Resim için alternatif metin
+      delete_image_button: İmajı Sil
     notifications:
       tooltip:
         regular:
@@ -2116,8 +2118,12 @@ tr_TR:
       votes_released: "%{description} - tamamlandı"
       dismiss_confirmation:
         body:
-          one: "Emin misiniz? %{count} önemli bildiriminiz var."
-          other: "Emin misiniz? %{count} adet önemli bildiriminiz var."
+          default:
+            one: "Emin misiniz? %{count} önemli bildiriminiz var."
+            other: "Emin misiniz? %{count} adet önemli bildiriminiz var."
+          bookmarks:
+            one: "Emin misiniz? %{count} okunmamış yer imi hatırlatıcınız var."
+            other: "Emin misiniz? %{count} okunmamış yer imi hatırlatıcınız var."
         dismiss: "Kapat"
         cancel: "İptal"
       group_message_summary:
@@ -2300,6 +2306,7 @@ tr_TR:
       generic_no_items: "Bu listede hiç öğe yok."
       sr_menu_tabs: "Menü sekmeleri"
       view_all_notifications: "tüm bildirimleri görüntüle"
+      view_all_bookmarks: "tüm yer imlerini görüntüle"
       reviewable:
         view_all: "tüm gözden geçirme öğeleri"
         queue: "Kuyruk"
@@ -4468,6 +4475,7 @@ tr_TR:
         last_seen_user: "Son Görülen Kullanıcı:"
         no_result: "Özet için hiçbir sonuç bulunamadı."
         reply_key: "Yanıtla Düğmesi"
+        post_link_with_smtp: "Posta ve SMTP Detayları"
         skipped_reason: "Nedeni Atla"
         incoming_emails:
           from_address: "Gönderen"
@@ -4497,6 +4505,7 @@ tr_TR:
             address_placeholder: "ad@örnek.com"
             type_placeholder: "özet, kayıt olma..."
             reply_key_placeholder: "yanıtla düğmesi"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "Gerçekleştiren"
         no_results: "Mevcut bir moderasyon geçmişi yok"

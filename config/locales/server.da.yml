@@ -648,7 +648,6 @@ da:
     too_many_requests: "Du har udført denne handling for mange gange. Vent venligst %{time_left} før du prøver igen."
     by_type:
       first_day_replies_per_day: "Vi sætter pris på din entusiasme, bliv ved med det! Når det er sagt, så har du af hensyn til vores fællesskab nået det maksimale antal svar, som en ny bruger kan oprette på sin første dag. Vent venligst %{time_left} og du vil kunne oprette flere svar."
-      create_like: "Wow! Du har delt en masse kærlighed! Du har nået det maksimale daglige 'Synes godt om' for i dag, men efterhånden som du stiger i tillid niveauer, vil du optjene flere daglige 'Synes godt om' Du vil kunne 'Synes godt om' indlæg igen om %{time_left}."
     hours:
       one: "%{count} time"
       other: "%{count} timer"

@@ -2117,8 +2117,9 @@ hu:
       votes_released: "%{description} – kész"
       dismiss_confirmation:
         body:
-          one: "Biztos benne? %{count} fontos értesítése van."
-          other: "Biztos benne? %{count} fontos értesítése van."
+          default:
+            one: "Biztos benne? %{count} fontos értesítése van."
+            other: "Biztos benne? %{count} fontos értesítése van."
         dismiss: "Elvetés"
         cancel: "Mégse"
       group_message_summary:

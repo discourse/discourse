@@ -2006,6 +2006,12 @@ lt:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
       dismiss_confirmation:
+        body:
+          default:
+            one: "Ar esate tikras? Turite %{count} svarbų pranešimą."
+            few: "Ar esate tikras? Turite %{count} svarbių pranešimų."
+            many: "Ar esate tikras? Turite %{count} svarbių pranešimų."
+            other: "Ar esate tikras? Turite %{count} svarbių pranešimų."
         dismiss: "Praleisti"
         cancel: "Atšaukti"
       group_message_summary:

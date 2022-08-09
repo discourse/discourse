@@ -676,7 +676,6 @@ pt_BR:
       public_group_membership: "Você está entrando/saindo de grupos com frequência. Aguarde %{time_left} antes de tentar novamente."
       topics_per_day: "Você alcançou a quantidade máxima de novos tópicos permitidos por dia. Crie mais tópicos novos em %{time_left}."
       pms_per_day: "Você alcançou a quantidade máxima de mensagens novas permitidas por dia. Crie mais mensagens novas em %{time_left}."
-      create_like: "Uau! Você está distribuindo muito afeto! Você alcançou a quantidade máxima de curtidas por hoje, Mas, à medida que ganha mais níveis de confiança, você receberá mais curtidas por dia. Você poderá curtir postagens novamente em %{time_left}."
       create_bookmark: "Você alcançou a quantidade máxima de favoritos por dia. Crie mais favoritos em %{time_left}."
       edit_post: "Você alcançou a quantidade máxima de edições por dia. Envie mais edições em %{time_left}."
       live_post_counts: "Você está pedindo contagens de postagens em tempo real muito rápido. Espere %{time_left} antes de tentar novamente."

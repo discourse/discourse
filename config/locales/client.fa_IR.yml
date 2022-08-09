@@ -990,6 +990,7 @@ fa_IR:
       dismiss: "نخواستیم"
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
+      dismiss_bookmarks_tooltip: "علامت‌گذاری تمام یادآوری‌های نشانک شده، خوانده نشده به عنوان خوانده شده"
       no_messages_title: "پیامی ندارید"
       no_bookmarks_title: "شما هنوز چیزی را نشانه‌گذاری نکرده‌اید"
       no_bookmarks_search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
@@ -1932,6 +1933,7 @@ fa_IR:
       ignore: "چشم پوشی"
       image_alt_text:
         aria_label: متن Alt برای عکس
+      delete_image_button: حذف تصویر
     notifications:
       tooltip:
         regular:
@@ -1983,8 +1985,12 @@ fa_IR:
       votes_released: "%{description} - تکمیل شد"
       dismiss_confirmation:
         body:
-          one: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
-          other: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+          default:
+            one: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+            other: "آيا مطمئن هستی؟ شما %{count} آگاه‌سازی مهم دارید."
+          bookmarks:
+            one: "آيا مطمئن هستی؟ شما %{count} یادآوری نشانک شده، خوانده نشده دارید."
+            other: "آيا مطمئن هستی؟ شما %{count} یادآوری نشانک شده، خوانده نشده دارید."
         dismiss: "نادیده گرفتن"
         cancel: "انصراف"
       group_message_summary:
@@ -2131,6 +2137,7 @@ fa_IR:
       generic_no_items: "هیچ موردی در این فهرست وجود ندارد."
       sr_menu_tabs: "زبان‌های منو"
       view_all_notifications: "مشاهده همه آگاه‌سازی‌ها"
+      view_all_bookmarks: "مشاهده همه نشانک‌ها"
       reviewable:
         view_all: "مشاهده تمام موارد بازبینی"
         queue: "صف"

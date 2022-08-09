@@ -1052,6 +1052,7 @@ it:
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
+      dismiss_bookmarks_tooltip: "Contrassegna tutti i promemoria dei segnalibri non letti come già letti"
       no_messages_title: "Non hai messaggi"
       no_messages_body: >
         Hai la necessità di avere una conversazione privata con qualcuno? Invia un messaggio selezionando l'avatar e utilizzando il pulsante del messaggio %{icon}<br><br> Se hai bisogno di aiuto, puoi <a href='%{aboutUrl}'>inviare un messaggio a un membro dello staff</a>.
@@ -1877,6 +1878,7 @@ it:
       categories_only: "Solo Categorie"
       categories_with_featured_topics: "Categorie con argomenti in evidenza"
       categories_and_latest_topics: "Categorie e Argomenti Recenti"
+      categories_and_latest_topics_created_date: "Categorie e Recenti (in ordine di data di creazione)"
       categories_and_top_topics: "Categorie e Argomenti Popolari"
       categories_boxes: "Riquadri con sottocategorie"
       categories_boxes_with_topics: "Riquadri con Argomenti in evidenza"
@@ -2098,6 +2100,7 @@ it:
       ignore: "Ignora"
       image_alt_text:
         aria_label: Testo alternativo per l'immagine
+      delete_image_button: Cancella immagine
     notifications:
       tooltip:
         regular:
@@ -2115,6 +2118,7 @@ it:
       post_approved: "Il tuo messaggio è stato approvato"
       reviewable_items: "elementi in attesa di revisione"
       watching_first_post_label: "Nuovo Argomento"
+      user_moved_post: "%{username} spostato"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2139,6 +2143,7 @@ it:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> ha accettato il tuo invito"
+      invitee_accepted_your_invitation: "ha accettato il tuo invito"
       moved_post: "<span>%{username}</span> ha spostato %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Ha guadagnato '%{description}'"
@@ -2153,8 +2158,9 @@ it:
       votes_released: "%{description} - completato"
       dismiss_confirmation:
         body:
-          one: "Sei sicuro/a? Hai %{count} notifica importante."
-          other: "Sei sicuro/a? Hai %{count} notifiche importanti."
+          default:
+            one: "Sei sicuro/a? Hai %{count} notifica importante."
+            other: "Sei sicuro? Hai %{count} notifiche importanti."
         dismiss: "Ignora"
         cancel: "Annulla"
       group_message_summary:
@@ -2337,6 +2343,14 @@ it:
       generic_no_items: "Non ci sono elementi in questo elenco."
       sr_menu_tabs: "Schede del menu"
       view_all_notifications: "visualizza tutte le notifiche"
+      view_all_bookmarks: "visualizza tutti i segnalibri"
+      reviewable:
+        queue: "Coda"
+        deleted_user: "(utente cancellato)"
+        post_number_with_topic_title: "messaggio #%{post_number} - %{title}"
+        new_post_in_topic: "nuovo messaggio in %{title}"
+        suspicious_user: "utente sospetto %{username}"
+        default_item: "elemento da rivedere #%{reviewable_id}"
     topics:
       new_messages_marker: "ultima visita"
       bulk:
@@ -2344,6 +2358,7 @@ it:
         clear_all: "Deseleziona Tutto"
         unlist_topics: "Rendi argomenti invisibili"
         relist_topics: "Ripubblica Argomenti"
+        reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Leggi più tardi"
         delete: "Elimina argomenti"
         dismiss: "Ignora"
@@ -3397,6 +3412,7 @@ it:
         this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti popolari:"
+    browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato </a>, fai il login e rispondi.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -3419,6 +3435,7 @@ it:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tasti di scelta rapida"
+      short_title: "Scorciatoie"
       jump_to:
         title: "Vai a"
         home: "%{shortcut} Home"
@@ -3486,6 +3503,7 @@ it:
         edit: "%{shortcut} Modifica messaggio"
         delete: "%{shortcut} Cancella messaggio"
         mark_muted: "%{shortcut} Silenzia argomento"
+        mark_regular: "%{shortcut} Argomento normale (predefinito)"
         mark_tracking: "%{shortcut} Segui argomento"
         mark_watching: "%{shortcut} Osserva argomento"
         print: "%{shortcut} Stampa argomento"
@@ -3715,6 +3733,7 @@ it:
       no_likes_body: "Un ottimo modo per iniziare a contribuire è mettersi a leggere le conversazioni già avvenute e assegnare un %{heartIcon} ai post che ti piacciono!"
       no_likes_others: "Nessun messaggio con \"Mi piace\"."
       no_topics_title: "Non hai ancora avviato nessun argomento"
+      no_topics_body: "È sempre meglio <a href='%{searchUrl}'>cercare</a> argomenti di conversazione già esistenti prima di iniziarne uno nuovo, ma se sei sicuro che l'argomento che desideri non sia già presente, procedi a creare un nuovo argomento tutto tuo. Cerca il pulsante <kbd>+ Nuovo Argomento</kbd> vicino all'elenco di argomenti, categorie o etichette per iniziare a creare un nuovo argomento in quell'area."
       no_topics_title_others: "%{username} non ha ancora iniziato nessun argomento"
       no_read_topics_title: "Non hai ancora letto nessun argomento"
       no_read_topics_body: "Una volta che avrai iniziato a leggere discussioni, ne vedrai un elenco qui. Per cominciare a leggere, cerca argomenti di tuo interesse alle pagine <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a>; oppure effettua una ricerca per parola chiave %{searchIcon}"
@@ -3749,11 +3768,17 @@ it:
             unread_with_count: "Non letto (%{count})"
             archive: "Archiviati"
         tags:
+          none: "Non hai aggiunto nessuna etichetta."
+          click_to_get_started: "Clicca qui per iniziare."
           header_link_title: "tutte le etichette"
           header_link_text: "Etichette"
+          header_action_title: "modifica le etichette nella barra laterale"
         categories:
+          none: "Non hai aggiunto nessuna categoria."
+          click_to_get_started: "Clicca qui per iniziare."
           header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
+          header_action_title: "modifica le categorie nella barra laterale"
         community:
           header_link_title: "home"
           header_link_text: "Comunità"
@@ -4523,6 +4548,7 @@ it:
         last_seen_user: "Ultimo accesso utente:"
         no_result: "Nessun risultato trovato per il riepilogo. "
         reply_key: "Chiave di risposta"
+        post_link_with_smtp: "Dettagli posta e SMTP"
         skipped_reason: "Motivo Omissione"
         incoming_emails:
           from_address: "Da"
@@ -4552,6 +4578,7 @@ it:
             address_placeholder: "nome@esempio.com"
             type_placeholder: "riepilogo, iscrizione..."
             reply_key_placeholder: "chiave di risposta"
+            smtp_transaction_response_placeholder: "ID SMTP"
       moderation_history:
         performed_by: "Effettuato da"
         no_results: "La cronologia di moderazione non è disponibile."
@@ -4734,6 +4761,7 @@ it:
         show_words:
           one: "mostra %{count} parola"
           other: "mostra %{count} parole"
+        case_sensitive: "(distingue fra maiuscole e minuscole)"
         download: Scarica
         clear_all: Deseleziona Tutto
         clear_all_confirm: "Vuoi davvero cancellare tutte le parole che osservi per l'azione %{action}?"
@@ -4771,6 +4799,8 @@ it:
           exists: "Già esistente"
           upload: "Aggiungi dal file"
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
+          case_sensitivity_label: "distingue fra maiuscole e minuscole"
+          case_sensitivity_description: "Solo parole con maiuscole e minuscole corrispondenti"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test delle parole osservate"
@@ -5320,6 +5350,7 @@ it:
           replace: "Sostituisci"
   wizard_js:
     wizard:
+      jump_in: "Buttati!"
       finish: "Esci dalla configurazione"
       back: "Indietro"
       next: "Avanti"
