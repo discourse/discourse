@@ -236,5 +236,15 @@ RSpec.describe GroupUser do
       user.reload
       expect(user.primary_group_id).to be_nil
     end
+
+    it "removes flair_group_id" do
+      user = Fabricate(:user, flair_group: group)
+      group_user = Fabricate(:group_user, group: group, user: user)
+
+      group_user.destroy!
+
+      user.reload
+      expect(user.flair_group_id).to be_nil
+    end
   end
 end

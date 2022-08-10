@@ -8,7 +8,7 @@ class GroupUser < ActiveRecord::Base
   after_destroy :grant_other_available_title
 
   after_save :set_primary_group
-  after_destroy :remove_primary_group, :recalculate_trust_level
+  after_destroy :remove_primary_group, :remove_flair_group, :recalculate_trust_level
 
   before_create :set_notification_level
   after_save :grant_trust_level
@@ -88,6 +88,12 @@ class GroupUser < ActiveRecord::Base
     return if user.primary_group_id != group_id
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
     user.update_attribute(:primary_group_id, nil)
+  end
+
+  def remove_flair_group
+    return if user.flair_group_id != group_id
+    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
+    user.update_attribute(:flair_group_id, nil)
   end
 
   def grant_other_available_title
