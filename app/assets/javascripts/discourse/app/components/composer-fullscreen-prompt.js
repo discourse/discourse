@@ -1,27 +1,21 @@
+import { action } from "@ember/object";
 import GlimmerComponent from "@glimmer/component";
 import I18n from "I18n";
-import { next } from "@ember/runloop";
 
 export default class ComposerFullscreenPrompt extends GlimmerComponent {
-  constructor() {
-    super(...arguments);
-    this.#setupFullscreenPrompt();
+  @action
+  registerAnimationListener(element) {
+    this.#addAnimationEventListener(element);
   }
 
-  #setupFullscreenPrompt() {
-    next(() => {
-      const promptElement = document.querySelector(
-        ".composer-fullscreen-prompt"
-      );
-
-      promptElement?.addEventListener(
-        "animationend",
-        () => {
-          this.args.removeFullScreenExitPrompt();
-        },
-        { once: true }
-      );
-    });
+  #addAnimationEventListener(element) {
+    element?.addEventListener(
+      "animationend",
+      () => {
+        this.args.removeFullScreenExitPrompt();
+      },
+      { once: true }
+    );
   }
 
   get exitPrompt() {
