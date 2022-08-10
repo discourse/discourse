@@ -123,15 +123,18 @@ export default class UserMenu extends GlimmerComponent {
 
   get _topTabs() {
     const tabs = [];
+
     CORE_TOP_TABS.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
         tabs.push(tab);
       }
     });
+
     let reviewQueueTabIndex = tabs.findIndex(
       (tab) => tab.id === REVIEW_QUEUE_TAB_ID
     );
+
     CUSTOM_TABS_CLASSES.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
@@ -144,6 +147,7 @@ export default class UserMenu extends GlimmerComponent {
         }
       }
     });
+
     return tabs.map((tab, index) => {
       tab.position = index;
       return tab;

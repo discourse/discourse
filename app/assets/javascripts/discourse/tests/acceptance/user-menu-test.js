@@ -92,6 +92,7 @@ acceptance("User menu", function (needs) {
         };
       });
     });
+
     await visit("/");
     await click(".d-header-icons .current-user");
 
@@ -106,6 +107,7 @@ acceptance("User menu", function (needs) {
       "5",
       "custom tab has the right tab number"
     );
+
     assert.strictEqual(
       customTab2.dataset.tabNumber,
       "6",
@@ -113,6 +115,7 @@ acceptance("User menu", function (needs) {
     );
 
     const reviewQueueTab = query("#user-menu-button-review-queue");
+
     assert.strictEqual(
       reviewQueueTab.dataset.tabNumber,
       "7",
@@ -120,6 +123,7 @@ acceptance("User menu", function (needs) {
     );
 
     const tabs = [...queryAll(".tabs-list .btn")]; // top and bottom tabs
+
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
       ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
@@ -129,6 +133,7 @@ acceptance("User menu", function (needs) {
     let customTab1Bubble = query(
       "#user-menu-button-custom-tab-1 .badge-notification"
     );
+
     assert.strictEqual(
       customTab1Bubble.textContent.trim(),
       "73",
@@ -138,6 +143,7 @@ acceptance("User menu", function (needs) {
     const customTab2Bubble = query(
       "#user-menu-button-custom-tab-2 .badge-notification"
     );
+
     assert.strictEqual(
       customTab2Bubble.textContent.trim(),
       "29",
@@ -147,9 +153,11 @@ acceptance("User menu", function (needs) {
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
       unread_high_priority_notifications: 18,
     });
+
     customTab1Bubble = query(
       "#user-menu-button-custom-tab-1 .badge-notification"
     );
+
     assert.strictEqual(
       customTab1Bubble.textContent.trim(),
       "18",
@@ -157,10 +165,12 @@ acceptance("User menu", function (needs) {
     );
 
     await click("#user-menu-button-custom-tab-1");
+
     assert.ok(
       exists("#user-menu-button-custom-tab-1.active"),
       "custom tabs can be clicked on and become active"
     );
+
     assert.ok(
       exists("#quick-access-custom-tab-1 button.btn"),
       "the tab's content is now displayed in the panel"
