@@ -122,12 +122,30 @@ acceptance("User menu", function (needs) {
       "review queue tab comes after the custom tabs"
     );
 
-    const tabs = [...queryAll(".tabs-list .btn")]; // top and bottom tabs
+    const tabs = [...queryAll(".tabs-list.top-tabs .btn")];
 
     assert.deepEqual(
-      tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      tabs.reduce((acc, tab) => {
+        acc[tab.id] = tab.dataset.tabNumber;
+        return acc;
+      }, {}),
+      {
+        "user-menu-button-all-notifications": "0",
+        "user-menu-button-replies": "1",
+        "user-menu-button-mentions": "2",
+        "user-menu-button-likes": "3",
+        "user-menu-button-messages": "4",
+        "user-menu-button-bookmarks": "5",
+        "user-menu-button-custom-tab-1": "6",
+        "user-menu-button-custom-tab-2": "7",
+        "user-menu-button-review-queue": "8",
+      },
       "data-tab-number of the tabs has no gaps when custom tabs are added"
+    );
+    assert.strictEqual(
+      query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
+      "9",
+      "bottom tab has the correct data-tab-number"
     );
 
     let customTab1Bubble = query(
