@@ -491,7 +491,7 @@ class PluginApi {
       name === "hamburger-menu:generalLinks" ||
       name === "hamburger-menu:footerLinks"
     ) {
-      const siteSettings = this.container.lookup("site-settings:main");
+      const siteSettings = this.container.lookup("service:site-settings");
 
       if (siteSettings.enable_experimental_sidebar_hamburger) {
         try {
