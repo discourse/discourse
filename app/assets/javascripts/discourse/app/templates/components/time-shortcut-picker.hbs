@@ -12,7 +12,7 @@
         <div class="control-group custom-date-time-wrap custom-input-wrap">
           <div class="tap-tile-date-input">
             {{d-icon "calendar-alt"}}
-            <DatePickerFuture @value={{this.customDate}} @onSelect={{action (mut this.customDate)}} @id="custom-date" />
+            <DatePickerFuture @value={{this.customDate}} @defaultDate={{this.defaultCustomDate}} @onSelect={{action (mut this.customDate)}} @id="custom-date" />
           </div>
           <div class="tap-tile-time-input">
             {{d-icon "far-clock"}}
