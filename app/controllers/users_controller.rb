@@ -1742,10 +1742,11 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    reminder_notifications = find_unread_notifications_of_type(
+    reminder_notifications = Notification.unread_type(
+      current_user,
       Notification.types[:bookmark_reminder],
       USER_MENU_LIST_LIMIT
-    ).to_a
+    )
 
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids = reminder_notifications
@@ -1798,10 +1799,11 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("personal messages are disabled.")
     end
 
-    message_notifications = find_unread_notifications_of_type(
+    message_notifications = Notification.unread_type(
+      current_user,
       Notification.types[:private_message],
       USER_MENU_LIST_LIMIT
-    ).to_a
+    )
 
     if message_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = message_notifications.map(&:topic_id).uniq
