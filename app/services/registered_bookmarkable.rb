@@ -58,8 +58,10 @@ class RegisteredBookmarkable
   # @param [Array] bookmarks The array of bookmarks after initial listing and filtering, note this is
   #                          array _not_ an ActiveRecord::Relation.
   # @return [void]
-  def perform_preload(bookmarks)
+  def perform_preload(bookmarks, guardian)
     return if !bookmarkable_klass.has_preloads?
+
+    bookmarkable_klass.perform_custom_preload!(bookmarks, guardian)
 
     ActiveRecord::Associations::Preloader
       .new(

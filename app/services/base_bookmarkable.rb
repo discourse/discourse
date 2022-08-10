@@ -39,6 +39,10 @@ class BaseBookmarkable
     preload_associations.present?
   end
 
+  def self.perform_custom_preload!(bookmarks, guardian)
+    nil
+  end
+
   ##
   # This is where the main query to filter the bookmarks by the provided bookmarkable
   # type should occur. This should join on additional tables that are required later
