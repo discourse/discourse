@@ -9,7 +9,7 @@ export default class ComposerFullscreenPrompt extends GlimmerComponent {
   }
 
   #addAnimationEventListener(element) {
-    element?.addEventListener(
+    element.addEventListener(
       "animationend",
       () => {
         this.args.removeFullScreenExitPrompt();
