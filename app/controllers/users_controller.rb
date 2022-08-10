@@ -1794,6 +1794,10 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
+    if !current_user.staff? && !SiteSetting.enable_personal_messages
+      raise Discourse::InvalidAccess.new("personal messages are disabled.")
+    end
+
     message_notifications = find_unread_notifications_of_type(
       Notification.types[:private_message],
       USER_MENU_LIST_LIMIT

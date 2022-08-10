@@ -5796,9 +5796,22 @@ RSpec.describe UsersController do
         sign_in(user)
       end
 
-      it "responds with 403 when requesting bookmarks list of another user" do
+      it "responds with 403 when requesting messages list of another user" do
         get "/u/#{user1.username}/user-menu-private-messages"
         expect(response.status).to eq(403)
+      end
+
+      it "responds with 403 if private messages are disabled and the user isn't staff" do
+        SiteSetting.enable_personal_messages = false
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn't respond with 403 if private messages are disabled and the user is staff" do
+        SiteSetting.enable_personal_messages = false
+        user.update!(moderator: true)
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
       end
 
       it "sends an array of unread private_message notifications" do
