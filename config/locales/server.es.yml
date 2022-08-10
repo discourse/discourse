@@ -2568,7 +2568,7 @@ es:
       %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
-    inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/directrices)."
+    inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."
     spam: "Tu publicación fue denunciada como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional, en vez de algo útil o relevante para lo que se espera del tema."
     notify_moderators: "Tu publicación fue denunciada para la **atención de un moderador**: la comunidad piensa que algo de esta publicación requiere la intervención manual de un miembro del equipo."
     responder:
@@ -2706,7 +2706,7 @@ es:
 
         %{new_user_tips}
 
-        Creemos en una comunidad con un [comportamiento civilizado en comunidad](%{base_url}/directrices) en todo momento.
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines) en todo momento.
 
         ¡Disfruta de tu estancia!
     welcome_tl1_user:
@@ -2739,7 +2739,7 @@ es:
 
         %{new_user_tips}
 
-        Creemos en una comunidad con un [comportamiento civilizado en comunidad](%{base_url}/directrices).
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines) en todo momento.
 
         ¡Disfruta de tu estancia!
 
@@ -3061,7 +3061,7 @@ es:
 
         Es posible que desees [revisar las publicaciones recientes](%{base_url}/u/%{username}/summary) de este usuario y potencialmente otros usuarios en el [informe de usuario ignorado y silenciado](%{base_url}/admin/reports/top_ignored_users).
 
-        Para obtener orientación adicional, consulta nuestras [directrices de la comunidad](%{base_url}/directrices).
+        Para obtener orientación adicional, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Demasiadas denuncias de spam"
       subject_template: "Cuenta nueva suspendida"
@@ -3072,7 +3072,7 @@ es:
 
         Como medida preventiva, tu nueva cuenta ha sido silenciada y no podrás crear respuestas o temas hasta que un miembro del equipo la revise. Lamentamos las molestias.
 
-        Para más información, echa un vistazo a nuestras [directrices de la comunidad](%{base_url}/directrices).
+        Para más información, echa un vistazo a nuestras [directrices de la comunidad](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Demasiadas denuncias NC3"
       subject_template: "Cuenta nueva suspendida"
@@ -3083,7 +3083,7 @@ es:
 
         Como medida preventiva, tu cuenta nueva ha sido silenciada y no podrás crear nuevas respuestas o temas hasta que un miembro del equipo la revise. Lamentamos las molestias ocasionadas.
 
-        Para más información, lee las [directrices de la comunidad](%{base_url}/directrices).
+        Para más información, lee las [directrices de la comunidad](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenciado por el personal"
       subject_template: "Cuenta temporalmente suspendida"
@@ -3094,7 +3094,7 @@ es:
 
         Puedes seguir navegando, pero no podrás responder o crear temas hasta que un [miembro del equipo](%{base_url}/about) revise tus últimos mensajes. Lamentamos las molestias ocasionadas.
 
-        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/directrices).
+        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
@@ -3598,7 +3598,7 @@ es:
 
         %{new_user_tips}
 
-        Creemos en una comunidad con un [comportamiento civilizado en comunidad](%{base_url}/directrices) en todo momento.
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines) en todo momento.
 
         ¡Disfruta de tu estancia!
     signup_after_reject:
