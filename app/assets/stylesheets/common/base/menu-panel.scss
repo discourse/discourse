@@ -61,7 +61,7 @@
   .panel-body-bottom {
     display: flex;
     flex: 1 0 0%; // safari height fix
-    margin-top: 0.5em;
+    margin: 0.5rem 0.5rem 0;
     flex-wrap: wrap;
 
     .show-all {
@@ -104,7 +104,7 @@
     flex-direction: column;
     justify-content: space-between;
     border-left: 1px solid var(--primary-low);
-    padding: 0.75em 0;
+    padding: 0.5rem 0;
   }
 
   .tabs-list {
@@ -144,7 +144,7 @@
 
   .quick-access-panel {
     width: 320px;
-    padding: 0.75em;
+    padding: 0.5rem 0;
     justify-content: space-between;
     box-sizing: border-box;
 
@@ -401,8 +401,7 @@
 
       a {
         display: flex;
-        margin: 0.25em;
-        padding: 0em 0.25em;
+        padding: 0.25rem 0.75rem;
       }
 
       button {
