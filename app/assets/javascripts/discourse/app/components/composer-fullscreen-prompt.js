@@ -1,5 +1,4 @@
 import GlimmerComponent from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
 import I18n from "I18n";
 import { next } from "@ember/runloop";
 
