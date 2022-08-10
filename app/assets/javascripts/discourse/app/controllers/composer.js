@@ -1506,7 +1506,7 @@ export default Controller.extend({
 
   @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
   showFullScreenPrompt(isFullscreen, showExitPrompt) {
-    return isFullscreen && showExitPrompt;
+    return isFullscreen && showExitPrompt && !this.capabilities.touch;
   },
 
   close() {
