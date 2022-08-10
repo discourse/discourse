@@ -111,7 +111,12 @@
         ⚠️ {{this.duplicateRemoteThemeWarning}}
       </div>
     {{/if}}
-    <DButton @action={{action "installTheme"}} @disabled={{this.installDisabled}} @class="btn btn-primary" @label={{this.submitLabel}} />
+    {{#if this.themeCannotBeInstalled}}
+      <div class="install-theme-warning">
+        ⚠️ {{this.themeCannotBeInstalled}}
+      </div>
+    {{/if}}
+    <DButton @action={{action "installTheme"}} @disabled={{this.installDisabled}} @class="btn {{if this.themeCannotBeInstalled "btn-danger" "btn-primary"}}" @label={{this.submitLabel}} />
     <DModalCancel @close={{route-action "closeModal"}} />
   </div>
 {{/unless}}

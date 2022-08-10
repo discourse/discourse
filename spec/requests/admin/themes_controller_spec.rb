@@ -151,6 +151,25 @@ RSpec.describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'can fail if theme is not accessible' do
+      post "/admin/themes/import.json", params: {
+        remote: 'git@github.com:discourse/discourse-inexistent-theme.git'
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("themes.import_error.git"))
+    end
+
+    it 'can force install theme' do
+      post "/admin/themes/import.json", params: {
+        remote: 'git@github.com:discourse/discourse-inexistent-theme.git',
+        force: true
+      }
+
+      expect(response.status).to eq(201)
+      expect(response.parsed_body["theme"]["name"]).to eq("discourse-inexistent-theme")
+    end
+
     it 'fails to import with an error if uploads are not allowed' do
       SiteSetting.theme_authorized_extensions = "nothing"
 

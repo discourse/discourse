@@ -119,8 +119,12 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("selection")
-  submitLabel(selection) {
+  @discourseComputed("selection", "themeCannotBeInstalled")
+  submitLabel(selection, themeCannotBeInstalled) {
+    if (themeCannotBeInstalled) {
+      return "admin.customize.theme.create_placeholder";
+    }
+
     return `admin.customize.theme.${
       selection === "create" ? "create" : "install"
     }`;
@@ -216,6 +220,12 @@ export default Controller.extend(ModalFunctionality, {
         }
       }
 
+      // User knows that theme cannot be installed, but they want to continue
+      // to force install it.
+      if (this.themeCannotBeInstalled) {
+        options.data["force"] = true;
+      }
+
       if (this.get("model.user_id")) {
         // Used by theme-creator
         options.data["user_id"] = this.get("model.user_id");
@@ -231,7 +241,16 @@ export default Controller.extend(ModalFunctionality, {
         .then(() => {
           this.setProperties({ privateKey: null, publicKey: null });
         })
-        .catch(popupAjaxError)
+        .catch((error) => {
+          if (!this.privateKey || this.themeCannotBeInstalled) {
+            return popupAjaxError(error);
+          }
+
+          this.set(
+            "themeCannotBeInstalled",
+            I18n.t("admin.customize.theme.force_install")
+          );
+        })
         .finally(() => this.set("loading", false));
     },
   },

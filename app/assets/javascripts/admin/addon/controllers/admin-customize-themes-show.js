@@ -167,6 +167,15 @@ export default Controller.extend({
     return errorMessage && !updating;
   },
 
+  @discourseComputed(
+    "model.remote_theme.remote_url",
+    "model.remote_theme.local_version",
+    "model.remote_theme.commits_behind"
+  )
+  finishInstall(remoteUrl, localVersion, commitsBehind) {
+    return remoteUrl && !localVersion && !commitsBehind;
+  },
+
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
       (field) => field.target === target
