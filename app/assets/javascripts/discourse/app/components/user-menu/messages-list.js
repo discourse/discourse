@@ -47,16 +47,16 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   fetchItems() {
-    return ajax(`/u/${this.currentUser.username}/user-menu-messages`).then(
-      (data) => {
-        const content = [];
-        data.notifications.forEach((notification) => {
-          content.push(Notification.create(notification));
-        });
-        content.push(...data.topics);
-        return content;
-      }
-    );
+    return ajax(
+      `/u/${this.currentUser.username}/user-menu-private-messages`
+    ).then((data) => {
+      const content = [];
+      data.notifications.forEach((notification) => {
+        content.push(Notification.create(notification));
+      });
+      content.push(...data.topics);
+      return content;
+    });
   }
 
   dismissWarningModal() {

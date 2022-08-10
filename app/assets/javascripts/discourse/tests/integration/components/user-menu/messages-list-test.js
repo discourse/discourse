@@ -65,7 +65,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
   });
 
   test("empty state (aka blank page syndrome)", async function (assert) {
-    pretender.get("/u/eviltrout/user-menu-messages", () => {
+    pretender.get("/u/eviltrout/user-menu-private-messages", () => {
       return response({ notifications: [], topics: [] });
     });
     await render(template);

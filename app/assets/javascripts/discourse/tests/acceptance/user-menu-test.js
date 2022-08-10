@@ -78,16 +78,16 @@ acceptance("User menu - Dismiss button", function (needs) {
       }
     });
 
-    server.get("/u/eviltrout/user-menu-messages", () => {
+    server.get("/u/eviltrout/user-menu-private-messages", () => {
       if (markRead) {
         const copy = cloneJSON(
-          UserMenuFixtures["/u/:username/user-menu-messages"]
+          UserMenuFixtures["/u/:username/user-menu-private-messages"]
         );
         copy.notifications = [];
         return helper.response(copy);
       } else {
         return helper.response(
-          UserMenuFixtures["/u/:username/user-menu-messages"]
+          UserMenuFixtures["/u/:username/user-menu-private-messages"]
         );
       }
     });

@@ -63,7 +63,7 @@ export default {
         },
       ],
   },
-  "/u/:username/user-menu-messages": {
+  "/u/:username/user-menu-private-messages": {
       notifications: [
         {
           id: 8315,

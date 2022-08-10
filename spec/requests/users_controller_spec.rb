@@ -5786,7 +5786,7 @@ RSpec.describe UsersController do
 
     context "when logged out" do
       it "responds with 404" do
-        get "/u/#{user.username}/user-menu-messages"
+        get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(404)
       end
     end
@@ -5797,12 +5797,12 @@ RSpec.describe UsersController do
       end
 
       it "responds with 403 when requesting bookmarks list of another user" do
-        get "/u/#{user1.username}/user-menu-messages"
+        get "/u/#{user1.username}/user-menu-private-messages"
         expect(response.status).to eq(403)
       end
 
       it "sends an array of unread private_message notifications" do
-        get "/u/#{user.username}/user-menu-messages"
+        get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
@@ -5812,7 +5812,7 @@ RSpec.describe UsersController do
       end
 
       it "responds with an array of PM topics that are not associated with any of the unread private_message notifications" do
-        get "/u/#{user.username}/user-menu-messages"
+        get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
         topics = response.parsed_body["topics"]
@@ -5824,7 +5824,7 @@ RSpec.describe UsersController do
 
       it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with PM topics" do
         stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
-          get "/u/#{user.username}/user-menu-messages"
+          get "/u/#{user.username}/user-menu-private-messages"
         end
         expect(response.status).to eq(200)
         notifications = response.parsed_body["notifications"]
@@ -5842,7 +5842,7 @@ RSpec.describe UsersController do
         )
 
         stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
-          get "/u/#{user.username}/user-menu-messages"
+          get "/u/#{user.username}/user-menu-private-messages"
         end
         expect(response.status).to eq(200)
         notifications = response.parsed_body["notifications"]
