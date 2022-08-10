@@ -307,7 +307,14 @@ createWidget("header-icons", {
       },
     });
 
-    icons.push(hamburger);
+    if (
+      !this.siteSettings.enable_experimental_sidebar_hamburger ||
+      (this.siteSettings.enable_experimental_sidebar_hamburger &&
+        !attrs.sidebarEnabled) ||
+      this.site.mobileView
+    ) {
+      icons.push(hamburger);
+    }
 
     if (attrs.user) {
       icons.push(
@@ -446,6 +453,7 @@ export default createWidget("header", {
         ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
         user: this.currentUser,
+        sidebarEnabled: attrs.sidebarEnabled,
       });
 
       if (attrs.onlyIcons) {

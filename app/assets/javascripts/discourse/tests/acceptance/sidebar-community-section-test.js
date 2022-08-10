@@ -930,7 +930,7 @@ acceptance("Sidebar - Community Section", function (needs) {
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".hamburger-dropdown");
+    await click(".btn-sidebar-toggle");
 
     assert.ok(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <

@@ -68,7 +68,7 @@ acceptance(
 
       assert.ok(exists(".sidebar-container"), "sidebar is displayed");
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.notOk(
         exists(".sidebar-hamburger-dropdown"),
@@ -77,7 +77,7 @@ acceptance(
 
       assert.notOk(exists(".sidebar-container"), "sidebar is hidden");
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.ok(exists(".sidebar-container"), "sidebar is displayed");
     });
@@ -137,7 +137,7 @@ acceptance(
         "displays the sidebar by default"
       );
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.ok(
         !document.body.classList.contains("has-sidebar-page"),
@@ -146,7 +146,7 @@ acceptance(
 
       assert.ok(!exists(".sidebar-container"), "hides the sidebar");
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.ok(exists(".sidebar-container"), "displays the sidebar");
     });
