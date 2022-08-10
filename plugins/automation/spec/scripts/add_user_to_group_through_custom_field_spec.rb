@@ -5,7 +5,7 @@ require_relative '../discourse_automation_helper'
 describe 'AddUserTogroupThroughCustomField' do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group) { Fabricate(:group, full_name: 'Groupity Group') }
 
   fab!(:automation) do
     Fabricate(
@@ -35,7 +35,7 @@ describe 'AddUserTogroupThroughCustomField' do
 
   context 'with one matching user' do
     before do
-      UserCustomField.create!(user_id: user1.id, name: 'groupity_group', value: group.name)
+      UserCustomField.create!(user_id: user1.id, name: 'groupity_group', value: group.full_name)
     end
 
     it 'works' do
@@ -48,7 +48,7 @@ describe 'AddUserTogroupThroughCustomField' do
       user2.reload
 
       expect(user1.groups.count).to eq(1)
-      expect(user1.groups.first.name).to eq(group.name)
+      expect(user1.groups.first.full_name).to eq(group.full_name)
 
       expect(user2.groups).to be_empty
     end
@@ -69,7 +69,7 @@ describe 'AddUserTogroupThroughCustomField' do
       user2.reload
 
       expect(user1.groups.count).to eq(1)
-      expect(user1.groups.first.name).to eq(group.name)
+      expect(user1.groups.first.full_name).to eq(group.full_name)
 
       expect(user2.groups).to be_empty
     end

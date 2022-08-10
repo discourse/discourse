@@ -3,7 +3,7 @@
 DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD = 'add_user_to_group_through_custom_field'
 
 # This script takes the name of a User Custom Field containing a group name.
-# On each run, it ensures that each user belongs to the group name given by that UCF.
+# On each run, it ensures that each user belongs to the group name given by that UCF (NOTE: group full_name, not name).
 #
 # In other words, it designates a certain User Custom Field to act as
 # a "pointer" to a group that the user should belong to, and adds users as needed.
@@ -25,7 +25,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::ADD_USER_TO
         ON u.id = ucf.user_id
         AND ucf.name = ?
       JOIN groups g
-        on g.name = ucf.value
+        on g.full_name ilike ucf.value
       FULL OUTER JOIN group_users gu
         ON gu.user_id = u.id
         AND gu.group_id = g.id
