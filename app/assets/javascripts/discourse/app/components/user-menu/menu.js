@@ -72,6 +72,30 @@ const CORE_TOP_TABS = [
 
   class extends UserMenuTab {
     get id() {
+      return "messages";
+    }
+
+    get icon() {
+      return "notification.private_message";
+    }
+
+    get panelComponent() {
+      return "user-menu/messages-list";
+    }
+
+    get count() {
+      return this.getUnreadCountForType("private_message");
+    }
+
+    get shouldDisplay() {
+      return (
+        this.siteSettings.enable_personal_messages || this.currentUser.staff
+      );
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
       return "bookmarks";
     }
 

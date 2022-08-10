@@ -2,8 +2,6 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
-  loggedInUser,
-  publishToMessageBus,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -184,6 +182,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     unread_high_priority_notifications: 10,
     grouped_unread_high_priority_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
+      [NOTIFICATION_TYPES.private_message]: 89,
     },
   });
 
@@ -210,6 +209,20 @@ acceptance("User menu - Dismiss button", function (needs) {
         );
       }
     });
+
+    server.get("/u/eviltrout/user-menu-private-messages", () => {
+      if (markRead) {
+        const copy = cloneJSON(
+          UserMenuFixtures["/u/:username/user-menu-private-messages"]
+        );
+        copy.notifications = [];
+        return helper.response(copy);
+      } else {
+        return helper.response(
+          UserMenuFixtures["/u/:username/user-menu-private-messages"]
+        );
+      }
+    });
   });
 
   needs.hooks.afterEach(() => {
@@ -227,18 +240,13 @@ acceptance("User menu - Dismiss button", function (needs) {
       I18n.t("notifications.dismiss_confirmation.body.default", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
-    assert.notOk(markRead, "mark-read request isn't sent");
 
     await click(".modal-footer .btn-default"); // click cancel on the dismiss modal
+    assert.notOk(markRead, "mark-read request isn't sent");
 
-    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
-      unread_high_priority_notifications: 0,
-    });
     await click(".user-menu .notifications-dismiss");
-    assert.ok(
-      markRead,
-      "mark-read request is sent without a confirmation modal when there are no unread high pri notifications"
-    );
+    await click(".modal-footer .btn-primary"); // click confirm on the dismiss modal
+    assert.ok(markRead, "mark-read request is sent");
   });
 
   test("shows confirmation modal for the bookmarks list", async function (assert) {
@@ -273,9 +281,6 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert.notOk(markRead, "mark-read request isn't sent");
 
     await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
-    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
-      grouped_unread_high_priority_notifications: {},
-    });
 
     assert.notOk(
       exists("#quick-access-bookmarks ul li.notification"),
@@ -294,6 +299,60 @@ acceptance("User menu - Dismiss button", function (needs) {
       markReadRequestBody,
       "dismiss_types=bookmark_reminder",
       "mark-read request specifies bookmark_reminder types"
+    );
+    assert.notOk(exists(".user-menu .notifications-dismiss"));
+  });
+
+  test("shows confirmation modal for the messages list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    assert.strictEqual(
+      query("#user-menu-button-messages .badge-notification").textContent,
+      "89",
+      "messages tab has bubble with count"
+    );
+
+    await click("#user-menu-button-messages");
+    assert.ok(
+      exists("#quick-access-messages ul li.notification"),
+      "messages notifications are visible"
+    );
+    assert.ok(
+      exists("#quick-access-messages ul li.message"),
+      "messages are visible"
+    );
+
+    await click(".user-menu .notifications-dismiss");
+
+    assert.strictEqual(
+      query(".dismiss-notification-confirmation").textContent.trim(),
+      I18n.t("notifications.dismiss_confirmation.body.messages", {
+        count: 89,
+      }),
+      "confirmation modal is shown when there are unread messages notifications"
+    );
+    assert.notOk(markRead, "mark-read request isn't sent");
+
+    await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
+
+    assert.notOk(
+      exists("#quick-access-messages ul li.notification"),
+      "messages notifications are gone"
+    );
+    assert.ok(
+      exists("#quick-access-messages ul li.message"),
+      "messages are still visible"
+    );
+    assert.notOk(
+      exists("#user-menu-button-messages .badge-notification"),
+      "messages tab no longer has bubble"
+    );
+    assert.ok(markRead, "mark-read request is sent");
+    assert.strictEqual(
+      markReadRequestBody,
+      "dismiss_types=private_message",
+      "mark-read request specifies private_message types"
     );
     assert.notOk(exists(".user-menu .notifications-dismiss"));
   });

@@ -48,17 +48,22 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 5);
-    ["all-notifications", "replies", "mentions", "likes"].forEach(
-      (tab, index) => {
-        assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
-        assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
-        assert.strictEqual(
-          tabs[index].getAttribute("aria-controls"),
-          `quick-access-${tab}`
-        );
-      }
-    );
+    assert.strictEqual(tabs.length, 6);
+    [
+      "all-notifications",
+      "replies",
+      "mentions",
+      "likes",
+      "messages",
+      "bookmarks",
+    ].forEach((tab, index) => {
+      assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
+      assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
+      assert.strictEqual(
+        tabs[index].getAttribute("aria-controls"),
+        `quick-access-${tab}`
+      );
+    });
   });
 
   test("the menu has a group of tabs at the bottom", async function (assert) {
@@ -67,7 +72,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const preferencesTab = tabs[0];
     assert.ok(preferencesTab.href.endsWith("/u/eviltrout/preferences"));
-    assert.strictEqual(preferencesTab.dataset.tabNumber, "5");
+    assert.strictEqual(preferencesTab.dataset.tabNumber, "6");
     assert.strictEqual(preferencesTab.getAttribute("tabindex"), "-1");
   });
 
@@ -77,11 +82,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 5);
+    assert.strictEqual(tabs.length, 6);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4"],
+      ["0", "1", "2", "3", "4", "5"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -90,16 +95,45 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
-    assert.strictEqual(tab.dataset.tabNumber, "5");
+    assert.strictEqual(tab.dataset.tabNumber, "6");
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 7);
+    assert.strictEqual(tabs.length, 8);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6"],
+      ["0", "1", "2", "3", "4", "5", "6", "7"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
+  });
+
+  test("messages tab isn't shown if current user isn't staff and enable_personal_messages setting is disabled", async function (assert) {
+    this.currentUser.set("moderator", false);
+    this.currentUser.set("admin", false);
+    this.siteSettings.enable_personal_messages = false;
+
+    await render(template);
+
+    assert.ok(!exists("#user-menu-button-messages"));
+
+    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
+    assert.strictEqual(tabs.length, 6);
+
+    assert.deepEqual(
+      tabs.map((t) => t.dataset.tabNumber),
+      ["0", "1", "2", "3", "4", "5"],
+      "data-tab-number of the tabs has no gaps when the messages tab is hidden"
+    );
+  });
+
+  test("messages tab is shown if current user is staff even if enable_personal_messages setting is disabled", async function (assert) {
+    this.currentUser.set("moderator", true);
+    this.currentUser.set("admin", false);
+    this.siteSettings.enable_personal_messages = false;
+
+    await render(template);
+
+    assert.ok(exists("#user-menu-button-messages"));
   });
 
   test("reviewables count is shown on the reviewables tab", async function (assert) {

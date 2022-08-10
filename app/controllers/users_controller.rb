@@ -12,14 +12,14 @@ class UsersController < ApplicationController
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
     :bookmarks, :invited, :check_sso_email, :check_sso_payload,
-    :recent_searches, :reset_recent_searches, :user_menu_bookmarks
+    :recent_searches, :reset_recent_searches, :user_menu_bookmarks, :user_menu_messages
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
     :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
-    :feature_topic, :clear_featured_topic, :bookmarks, :user_menu_bookmarks
+    :feature_topic, :clear_featured_topic, :bookmarks, :user_menu_bookmarks, :user_menu_messages
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -1736,21 +1736,19 @@ class UsersController < ApplicationController
     end
   end
 
-  USER_MENU_BOOKMARKS_LIST_LIMIT = 20
+  USER_MENU_LIST_LIMIT = 20
   def user_menu_bookmarks
     if !current_user.username_equals_to?(params[:username])
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    reminder_notifications = current_user
-      .notifications
-      .visible
-      .includes(:topic)
-      .where(read: false, notification_type: Notification.types[:bookmark_reminder])
-      .limit(USER_MENU_BOOKMARKS_LIST_LIMIT)
-      .to_a
+    reminder_notifications = Notification.unread_type(
+      current_user,
+      Notification.types[:bookmark_reminder],
+      USER_MENU_LIST_LIMIT
+    )
 
-    if reminder_notifications.size < USER_MENU_BOOKMARKS_LIST_LIMIT
+    if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids = reminder_notifications
         .filter_map { |notification| notification.data_hash[:bookmark_id] }
 
@@ -1758,7 +1756,7 @@ class UsersController < ApplicationController
         user: current_user,
         guardian: guardian,
         params: {
-          per_page: USER_MENU_BOOKMARKS_LIST_LIMIT - reminder_notifications.size
+          per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size
         }
       )
       bookmark_list.load do |query|
@@ -1789,6 +1787,58 @@ class UsersController < ApplicationController
     render json: {
       notifications: serialized_notifications || [],
       bookmarks: serialized_bookmarks || []
+    }
+  end
+
+  def user_menu_messages
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
+
+    if !current_user.staff? && !SiteSetting.enable_personal_messages
+      raise Discourse::InvalidAccess.new("personal messages are disabled.")
+    end
+
+    message_notifications = Notification.unread_type(
+      current_user,
+      Notification.types[:private_message],
+      USER_MENU_LIST_LIMIT
+    )
+
+    if message_notifications.size < USER_MENU_LIST_LIMIT
+      exclude_topic_ids = message_notifications.map(&:topic_id).uniq
+      messages_list = TopicQuery.new(
+        current_user,
+        per_page: USER_MENU_LIST_LIMIT - message_notifications.size
+      ).list_private_messages(current_user) do |query|
+        if exclude_topic_ids.present?
+          query.where("topics.id NOT IN (?)", exclude_topic_ids)
+        else
+          query
+        end
+      end
+    end
+
+    if message_notifications.present?
+      serialized_notifications = ActiveModel::ArraySerializer.new(
+        message_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    if messages_list
+      serialized_messages = serialize_data(
+        messages_list,
+        TopicListSerializer,
+        scope: guardian,
+        root: false
+      )[:topics]
+    end
+
+    render json: {
+      notifications: serialized_notifications || [],
+      topics: serialized_messages || []
     }
   end
 
@@ -1972,5 +2022,14 @@ class UsersController < ApplicationController
       FoundUserSerializer
 
     { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
+  end
+
+  def find_unread_notifications_of_type(type, limit)
+    current_user
+      .notifications
+      .visible
+      .includes(:topic)
+      .where(read: false, notification_type: type)
+      .limit(limit)
   end
 end

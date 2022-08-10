@@ -1123,6 +1123,7 @@ en:
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
+      dismiss_messages_tooltip: "Mark all unread personal messages notifications as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
@@ -2371,6 +2372,9 @@ en:
           bookmarks:
             one: "Are you sure? You have %{count} unread bookmark reminder."
             other: "Are you sure? You have %{count} unread bookmark reminders."
+          messages:
+            one: "Are you sure? You have %{count} unread personal message."
+            other: "Are you sure? You have %{count} unread personal messages."
         dismiss: "Dismiss"
         cancel: "Cancel"
 
@@ -2564,6 +2568,7 @@ en:
       sr_menu_tabs: "Menu tabs"
       view_all_notifications: "view all notifications"
       view_all_bookmarks: "view all bookmarks"
+      view_all_messages: "view all personal messages"
       reviewable:
         view_all: "view all review items"
         queue: "Queue"

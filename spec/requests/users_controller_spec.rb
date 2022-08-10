@@ -5690,14 +5690,14 @@ RSpec.describe UsersController do
         )
       end
 
-      it "fills up the remaining of the USER_MENU_BOOKMARKS_LIST_LIMIT limit with bookmarks" do
+      it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with bookmarks" do
         bookmark2 = Fabricate(
           :bookmark,
           user: user,
           bookmarkable: Fabricate(:post, topic: topic)
         )
 
-        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 2) do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
           get "/u/#{user.username}/user-menu-bookmarks"
         end
         expect(response.status).to eq(200)
@@ -5708,7 +5708,7 @@ RSpec.describe UsersController do
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.size).to eq(1)
 
-        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 3) do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
           get "/u/#{user.username}/user-menu-bookmarks"
         end
         expect(response.status).to eq(200)
@@ -5721,7 +5721,7 @@ RSpec.describe UsersController do
 
         BookmarkReminderNotificationHandler.new(bookmark2).send_notification
 
-        stub_const(UsersController, "USER_MENU_BOOKMARKS_LIST_LIMIT", 3) do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
           get "/u/#{user.username}/user-menu-bookmarks"
         end
         expect(response.status).to eq(200)
@@ -5731,6 +5731,138 @@ RSpec.describe UsersController do
 
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.size).to eq(1)
+      end
+    end
+  end
+
+  describe "#user_menu_messages" do
+    fab!(:message_without_notification) { Fabricate(:private_message_post, recipient: user).topic }
+    fab!(:message_with_read_notification) { Fabricate(:private_message_post, recipient: user).topic }
+    fab!(:message_with_unread_notification) { Fabricate(:private_message_post, recipient: user).topic }
+
+    fab!(:user1_message_without_notification) do
+      Fabricate(:private_message_post, recipient: user1).topic
+    end
+    fab!(:user1_message_with_read_notification) do
+      Fabricate(:private_message_post, recipient: user1).topic
+    end
+    fab!(:user1_message_with_unread_notification) do
+      Fabricate(:private_message_post, recipient: user1).topic
+    end
+
+    fab!(:unread_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: false,
+        user: user,
+        topic: message_with_unread_notification
+      )
+    end
+    fab!(:read_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: true,
+        user: user,
+        topic: message_with_read_notification
+      )
+    end
+
+    fab!(:user1_unread_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: false,
+        user: user1,
+        topic: user1_message_with_unread_notification
+      )
+    end
+    fab!(:user1_read_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: true,
+        user: user1,
+        topic: user1_message_with_read_notification
+      )
+    end
+
+    context "when logged out" do
+      it "responds with 404" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        sign_in(user)
+      end
+
+      it "responds with 403 when requesting messages list of another user" do
+        get "/u/#{user1.username}/user-menu-private-messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "responds with 403 if private messages are disabled and the user isn't staff" do
+        SiteSetting.enable_personal_messages = false
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn't respond with 403 if private messages are disabled and the user is staff" do
+        SiteSetting.enable_personal_messages = false
+        user.update!(moderator: true)
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+      end
+
+      it "sends an array of unread private_message notifications" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.map { |notification| notification["id"] }).to contain_exactly(
+          unread_notification.id
+        )
+      end
+
+      it "responds with an array of PM topics that are not associated with any of the unread private_message notifications" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.map { |topic| topic["id"] }).to contain_exactly(
+          message_without_notification.id,
+          message_with_read_notification.id
+        )
+      end
+
+      it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with PM topics" do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-private-messages"
+        end
+        expect(response.status).to eq(200)
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.size).to eq(1)
+
+        message2 = Fabricate(:private_message_post, recipient: user).topic
+        Fabricate(
+          :private_message_notification,
+          read: false,
+          user: user,
+          topic: message2
+        )
+
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-private-messages"
+        end
+        expect(response.status).to eq(200)
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(2)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.size).to eq(0)
       end
     end
   end
