@@ -11,6 +11,7 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
@@ -146,6 +147,14 @@ acceptance(
         return helper.response({
           success: "OK",
         });
+      });
+      server.get("/color-scheme-stylesheet/3.json", () => {
+        return helper.response({
+          new_href: "3.css",
+        });
+      });
+      server.get("/u/charlie.json", () => {
+        return helper.response(userFixtures["/u/charlie.json"]);
       });
     });
 
@@ -308,6 +317,16 @@ acceptance(
         selectKit(".dark-color-scheme .combobox").header().value(),
         session.userDarkSchemeId.toString(),
         "resets dark scheme dropdown"
+      );
+
+      await visit("/u/charlie/preferences/interface");
+
+      await selectKit(".light-color-scheme .combobox").expand();
+      await selectKit(".light-color-scheme .combobox").selectRowByValue(3);
+
+      assert.notOk(
+        document.querySelector("link#cs-preview-light"),
+        "stylesheet not loaded"
       );
     });
   }
