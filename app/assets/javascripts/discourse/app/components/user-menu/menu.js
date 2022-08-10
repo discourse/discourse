@@ -1,8 +1,9 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
+import { inject as service } from "@ember/service";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -135,7 +136,12 @@ const CORE_TOP_TABS = [
   },
 ];
 
-export default class UserMenu extends GlimmerComponent {
+export default class UserMenu extends Component {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+  @service appEvents;
+
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
 

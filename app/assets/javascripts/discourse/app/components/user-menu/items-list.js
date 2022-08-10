@@ -1,9 +1,9 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Session from "discourse/models/session";
 
-export default class UserMenuItemsList extends GlimmerComponent {
+export default class UserMenuItemsList extends Component {
   @tracked loading = false;
   @tracked items = [];
 

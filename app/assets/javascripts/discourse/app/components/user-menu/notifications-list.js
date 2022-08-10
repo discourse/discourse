@@ -4,8 +4,13 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
+  @service currentUser;
+  @service site;
+  @service store;
+
   get filterByTypes() {
     return null;
   }
