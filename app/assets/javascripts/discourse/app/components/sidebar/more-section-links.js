@@ -72,8 +72,8 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   }
 
   @action
-  toggleSectionLinks() {
-    this.shouldDisplaySectionLinks = !this.shouldDisplaySectionLinks;
+  toggleSectionLinks(element) {
+    this.shouldDisplaySectionLinks = element.target.hasAttribute("open");
   }
 
   #removeClickEventListener() {
