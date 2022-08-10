@@ -1194,24 +1194,6 @@ RSpec.describe PostAlerter do
       end
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
     end
-
-    it "does not notify user who edits topic category" do
-      CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:watching_first_post], category.id)
-      post.update!(last_editor_id: user.id)
-
-      post_alerter = PostAlerter.new
-      post_alerter.notify_first_post_watchers(post, post_alerter.category_watchers(post.topic))
-      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
-    end
-
-    it "does not notify user who edits topic tag" do
-      TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching_first_post])
-      post.update!(last_editor_id: user.id)
-
-      post_alerter = PostAlerter.new
-      post_alerter.notify_first_post_watchers(post, post_alerter.tag_watchers(post.topic))
-      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
-    end
   end
 
   context "with replies" do

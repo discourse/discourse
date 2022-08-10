@@ -40,6 +40,14 @@ RSpec.describe ::Jobs::NotifyTagChange do
     expect { described_class.new.execute(post_id: post.id, notified_user_ids: [regular_user.id]) }.not_to change { Notification.count }
   end
 
+  it "doesn't create notification for the editor who watches new tag" do
+    TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching_first_post])
+    TopicTag.create!(topic: post.topic, tag: tag)
+    post.update!(last_editor_id: user.id)
+
+    expect { described_class.new.execute(post_id: post.id, notified_user_ids: []) }.not_to change { Notification.count }
+  end
+
   it 'doesnt create notification for user watching category' do
     CategoryUser.create!(
       user_id: user.id,
