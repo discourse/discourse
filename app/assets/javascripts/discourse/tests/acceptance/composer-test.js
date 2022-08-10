@@ -509,8 +509,9 @@ acceptance("Composer", function (needs) {
       "it expands composer to full screen"
     );
 
-    assert.ok(
-      exists(".composer-fullscreen-prompt"),
+    assert.strictEqual(
+      count(".composer-fullscreen-prompt"),
+      1,
       "the exit fullscreen prompt is visible"
     );
 
