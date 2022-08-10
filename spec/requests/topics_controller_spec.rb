@@ -1188,6 +1188,48 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe 'force destroy' do
+      fab!(:post) { Fabricate(:post, topic: topic, post_number: 1) }
+
+      before do
+        SiteSetting.can_permanently_delete = true
+
+        sign_in(admin)
+      end
+
+      it 'force destroys all deleted small actions in topic too' do
+        small_action_post = Fabricate(:small_action, topic: topic)
+        PostDestroyer.new(Discourse.system_user, post).destroy
+        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+
+        delete "/t/#{topic.id}.json", params: { force_destroy: true }
+
+        expect(response.status).to eq(200)
+
+        expect(Topic.find_by(id: topic.id)).to eq(nil)
+        expect(Post.find_by(id: post.id)).to eq(nil)
+        expect(Post.find_by(id: small_action_post.id)).to eq(nil)
+      end
+
+      it 'does not allow to destroy topic if not all posts were force destroyed' do
+        other_post = Fabricate(:post, topic: topic, post_number: 2)
+        PostDestroyer.new(Discourse.system_user, post).destroy
+
+        delete "/t/#{topic.id}.json", params: { force_destroy: true }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'does not allow to destroy topic if not all small action posts were deleted' do
+        small_action_post = Fabricate(:small_action, topic: topic)
+        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+
+        delete "/t/#{topic.id}.json", params: { force_destroy: true }
+
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe '#id_for_slug' do
