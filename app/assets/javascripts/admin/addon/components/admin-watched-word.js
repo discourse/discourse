@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { equal } from "@ember/object/computed";
+import { alias, equal } from "@ember/object/computed";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -11,6 +11,7 @@ export default Component.extend({
   isReplace: equal("actionKey", "replace"),
   isTag: equal("actionKey", "tag"),
   isLink: equal("actionKey", "link"),
+  isCaseSensitive: alias("word.case_sensitive"),
 
   @discourseComputed("word.replacement")
   tags(replacement) {

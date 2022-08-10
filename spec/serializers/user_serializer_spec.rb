@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserSerializer do
+RSpec.describe UserSerializer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
 
   context "with a TL0 user seen as anonymous" do

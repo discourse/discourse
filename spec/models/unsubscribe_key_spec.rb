@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UnsubscribeKey do
+RSpec.describe UnsubscribeKey do
 
   describe 'post unsubscribe key' do
     it 'can generate a correct url' do

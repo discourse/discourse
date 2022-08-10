@@ -95,9 +95,6 @@ export default createWidget("poster-name", {
       classNames.push("new-user");
     }
 
-    let afterNameContents =
-      applyDecorators(this, "after-name", attrs, this.state) || [];
-
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
       classNames.push(primaryGroupName);
@@ -110,6 +107,8 @@ export default createWidget("poster-name", {
         nameContents.push(glyph);
       }
     }
+
+    const afterNameContents = this.afterNameContents(attrs);
     nameContents = nameContents.concat(afterNameContents);
 
     const contents = [
@@ -147,6 +146,15 @@ export default createWidget("poster-name", {
       );
     }
 
+    return contents;
+  },
+
+  afterNameContents(attrs) {
+    const contents = [];
+    if (this.siteSettings.enable_user_status && attrs.userStatus) {
+      contents.push(this.attach("post-user-status", attrs.userStatus));
+    }
+    contents.push(...applyDecorators(this, "after-name", attrs, this.state));
     return contents;
   },
 });

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
@@ -94,8 +95,11 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink } from "discourse/lib/sidebar/custom-community-section-links";
+import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import DiscourseURL from "discourse/lib/url";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-item";
+import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -150,7 +154,7 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
-    return this._lookupContainer("current-user:main");
+    return this._lookupContainer("service:current-user");
   }
 
   _lookupContainer(path) {
@@ -398,7 +402,7 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
-    const site = this._lookupContainer("site:main");
+    const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, (dec) => {
@@ -478,7 +482,49 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    this._deprecateDecoratingHamburgerWidgetLinks(name, fn);
     decorateWidget(name, fn);
+  }
+
+  _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
+    if (
+      name === "hamburger-menu:generalLinks" ||
+      name === "hamburger-menu:footerLinks"
+    ) {
+      const siteSettings = this.container.lookup("site-settings:main");
+
+      if (siteSettings.enable_experimental_sidebar_hamburger) {
+        try {
+          const { href, route, label, rawLabel, className } = fn();
+          const textContent = rawLabel || I18n.t(label);
+
+          const args = {
+            name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
+            title: textContent,
+            text: textContent,
+          };
+
+          if (href) {
+            if (DiscourseURL.isInternal(href)) {
+              args.href = href;
+            } else {
+              // Skip external links support for now
+              return;
+            }
+          } else {
+            args.route = route;
+          }
+
+          this.addCommunitySectionLink(args, name.match(/footerLinks/));
+        } catch {
+          deprecated(
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+          );
+        }
+
+        return;
+      }
+    }
   }
 
   /**
@@ -1627,12 +1673,12 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Support for adding a link under Sidebar topics section by returning a class which extends from the BaseSectionLink
-   * class interface. See `lib/sidebar/community-section/base-section-link.js` for documentation on the BaseSectionLink class
-   * interface.
+   * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/community-section/base-section-link.js`
+   * for documentation on the BaseSectionLink class interface.
    *
    * ```
-   * api.addTopicsSectionLink((baseSectionLink) => {
+   * api.addCommunitySectionLink((baseSectionLink) => {
    *   return class CustomSectionLink extends baseSectionLink {
    *     get name() {
    *       return "bookmarked";
@@ -1660,7 +1706,7 @@ class PluginApi {
    * or
    *
    * ```
-   * api.addTopicsSectionLink({
+   * api.addCommunitySectionLink({
    *   name: "unread",
    *   route: "discovery.unread",
    *   title: I18n.t("some.unread.title"),
@@ -1668,18 +1714,20 @@ class PluginApi {
    * })
    * ```
    *
-   * @callback addTopicsSectionLinkCallback
+   * @callback addCommunitySectionLinkCallback
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addTopicsSectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
-   * @param {string} arg.route - The Ember route of the link.
+   * @param {string=} arg.route - The Ember route name to generate the href attribute for the link.
+   * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
+   * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
-  addTopicsSectionLink(arg) {
-    addSectionLink(arg);
+  addCommunitySectionLink(arg, secondary) {
+    addCustomCommunitySectionLink(arg, secondary);
   }
 
   /**
@@ -1804,6 +1852,79 @@ class PluginApi {
    */
   addSidebarSection(func) {
     addSidebarSection(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom renderer for a notification type or override the
+   * renderer of an existing type. See lib/notification-items/base.js for
+   * documentation and the default renderer.
+   *
+   * ```
+   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationItemBase) => {
+   *   return class extends NotificationItemBase {
+   *     get label() {
+   *       return "some label";
+   *     }
+   *
+   *     get description() {
+   *       return "fancy description";
+   *     }
+   *   };
+   * });
+   * ```
+   * @callback renderDirectorRegistererCallback
+   * @param {NotificationItemBase} The base class from which the returned class should inherit.
+   * @returns {NotificationItemBase} A class that inherits from NotificationItemBase.
+   *
+   * @param {string} notificationType - ID of the notification type (i.e. the key value of your notification type in the `Notification.types` enum on the server side).
+   * @param {renderDirectorRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerNotificationTypeRenderer(notificationType, func) {
+    registerNotificationTypeRenderer(notificationType, func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Registers a new tab in the user menu. This API method expects a callback
+   * that should return a class inheriting from the class (UserMenuTab) that's
+   * passed to the callback. See discourse/app/lib/user-menu/tab.js for
+   * documentation of UserMenuTab.
+   *
+   * ```
+   * api.registerUserMenuTab((UserMenuTab) => {
+   *   return class extends UserMenuTab {
+   *     get id() {
+   *       return "custom-tab-id";
+   *     }
+   *
+   *     get shouldDisplay() {
+   *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
+   *     }
+   *
+   *     get count() {
+   *       return this.currentUser.my_custom_notification_count;
+   *     }
+   *
+   *     get panelComponent() {
+   *       return "your-custom-glimmer-component";
+   *     }
+   *
+   *     get icon() {
+   *       return "some-fa5-icon";
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback customTabRegistererCallback
+   * @param {UserMenuTab} The base class from which the returned class should inherit.
+   * @returns {UserMenuTab} A class that inherits from UserMenuTab.
+   *
+   * @param {customTabRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerUserMenuTab(func) {
+    registerUserMenuTab(func);
   }
 }
 

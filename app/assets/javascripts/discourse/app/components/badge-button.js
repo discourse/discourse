@@ -1,16 +1,12 @@
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import domFromString from "discourse-common/lib/dom-from-string";
 
+// Takes @badge as argument.
 export default class BadgeButtonComponent extends Component {
-  tagName = "";
-  badge = null;
-
-  @computed("badge.description")
   get title() {
-    if (this.badge?.description) {
-      return domFromString(`<div>${this.badge?.description}</div>`)[0]
-        .innerText;
+    const description = this.args.badge?.description;
+    if (description) {
+      return domFromString(`<div>${description}</div>`)[0].innerText;
     }
   }
 }

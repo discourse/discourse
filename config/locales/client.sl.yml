@@ -3387,6 +3387,7 @@ sl:
         two: "%{count} novi"
         few: "%{count} nove"
         other: "%{count} novih"
+      more: "Več..."
       sections:
         messages:
           header_link_text: "Sporočila"
@@ -4314,15 +4315,13 @@ sl:
           replace: "Zamenjaj"
   wizard_js:
     wizard:
-      done: "Končano"
-      finish: "Končaj"
       back: "Nazaj"
       next: "Naprej"
+      step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Naloži"
       uploading: "Nalagam..."
       upload_error: "Prišlo je do napake med nalaganjem te datoteke. Poskusite ponovno."
-      quit: "Morda kasneje"
       staff_count:
         one: "Vaša skupnost ima %{count} člana osebja (vas)."
         two: "Vaša skupnost ima %{count} člana osebja, vključno z vami."

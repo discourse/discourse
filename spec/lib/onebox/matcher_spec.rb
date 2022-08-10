@@ -10,7 +10,7 @@ class TestEngine
   end
 end
 
-describe Onebox::Matcher do
+RSpec.describe Onebox::Matcher do
   let(:opts) { { allowed_iframe_regexes: [/.*/] } }
 
   describe "oneboxed" do

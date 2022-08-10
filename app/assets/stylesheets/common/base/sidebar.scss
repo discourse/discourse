@@ -11,6 +11,9 @@
     grid-area: sidebar;
     position: sticky;
     top: var(--header-offset);
+    .footer-nav-ipad & {
+      top: calc(var(--header-offset) + var(--footer-nav-height));
+    }
     height: calc(100vh - var(--header-offset));
     align-self: start;
     overflow-y: auto;
@@ -35,6 +38,7 @@
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
+    scroll-behavior: smooth;
 
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
@@ -60,6 +64,12 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+
+    .composer-open & {
+      // allows sidebar to scroll to the bottom when the composer is open
+      margin-bottom: var(--composer-height);
+      padding-bottom: var(--composer-ipad-padding);
+    }
   }
 
   .sidebar-sections {

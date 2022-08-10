@@ -487,6 +487,7 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications = nil
+    @all_unread_notifications_count = nil
     @unread_total_notifications = nil
     @unread_pms = nil
     @unread_bookmarks = nil
@@ -535,6 +536,25 @@ class User < ActiveRecord::Base
 
     # to avoid coalesce we do to_i
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
+  end
+
+  MAX_UNREAD_HIGH_PRI_BACKLOG = 200
+  def grouped_unread_high_priority_notifications
+    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_HIGH_PRI_BACKLOG)
+      SELECT X.notification_type AS type, COUNT(*) FROM (
+        SELECT n.notification_type
+        FROM notifications n
+        LEFT JOIN topics t ON t.id = n.topic_id
+        WHERE t.deleted_at IS NULL
+          AND n.high_priority
+          AND n.user_id = :user_id
+          AND NOT n.read
+        LIMIT :limit
+      ) AS X
+      GROUP BY X.notification_type
+    SQL
+    results.map! { |row| [row.type, row.count] }
+    results.to_h
   end
 
   ###
@@ -587,8 +607,39 @@ class User < ActiveRecord::Base
     end
   end
 
+  def all_unread_notifications_count
+    @all_unread_notifications_count ||= begin
+      sql = <<~SQL
+        SELECT COUNT(*) FROM (
+          SELECT 1 FROM
+          notifications n
+          LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL AND
+            n.user_id = :user_id AND
+            n.id > :seen_notification_id AND
+            NOT read
+          LIMIT :limit
+        ) AS X
+      SQL
+
+      DB.query_single(sql,
+        user_id: id,
+        seen_notification_id: seen_notification_id,
+        limit: User.max_unread_notifications
+      )[0].to_i
+    end
+  end
+
   def total_unread_notifications
     @unread_total_notifications ||= notifications.where("read = false").count
+  end
+
+  def reviewable_count
+    Reviewable.list_for(self).count
+  end
+
+  def unseen_reviewable_count
+    Reviewable.unseen_list_for(self).count
   end
 
   def saw_notification_id(notification_id)
@@ -598,6 +649,24 @@ class User < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def bump_last_seen_reviewable!
+    query = Reviewable.unseen_list_for(self, preload: false)
+
+    if last_seen_reviewable_id
+      query = query.where("id > ?", last_seen_reviewable_id)
+    end
+    max_reviewable_id = query.maximum(:id)
+
+    if max_reviewable_id
+      update!(last_seen_reviewable_id: max_reviewable_id)
+      publish_reviewable_counts(unseen_reviewable_count: self.unseen_reviewable_count)
+    end
+  end
+
+  def publish_reviewable_counts(data)
+    MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
   TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
@@ -658,6 +727,11 @@ class User < ActiveRecord::Base
       recent: recent,
       seen_notification_id: seen_notification_id,
     }
+
+    if self.redesigned_user_menu_enabled?
+      payload[:all_unread_notifications_count] = all_unread_notifications_count
+      payload[:grouped_unread_high_priority_notifications] = grouped_unread_high_priority_notifications
+    end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
@@ -1545,7 +1619,7 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description, emoji, ends_at)
+  def set_status!(description, emoji, ends_at = nil)
     status = {
       description: description,
       emoji: emoji,
@@ -1802,6 +1876,14 @@ class User < ActiveRecord::Base
     if flair_group_id == primary_group_id_was
       self.flair_group_id = primary_group&.id
     end
+  end
+
+  def self.first_login_admin_id
+    User.where(admin: true)
+      .human_users
+      .joins(:user_auth_tokens)
+      .order('user_auth_tokens.created_at')
+      .pluck_first(:id)
   end
 
   private

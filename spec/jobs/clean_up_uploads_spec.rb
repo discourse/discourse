@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanUpUploads do
+RSpec.describe Jobs::CleanUpUploads do
 
   def fabricate_upload(attributes = {})
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))

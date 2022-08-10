@@ -2,8 +2,8 @@
 
 require_relative "shared_context_for_backup_restore"
 
-describe BackupRestore::SystemInterface, type: :multisite do
-  include_context "shared stuff"
+RSpec.describe BackupRestore::SystemInterface, type: :multisite do
+  include_context "with shared stuff"
 
   subject { BackupRestore::SystemInterface.new(logger) }
 

@@ -70,12 +70,13 @@ function buildScaleButton(selectedScale, scale) {
 function buildImageShowAltTextControls(altText) {
   return `
   <span class="alt-text-readonly-container">
-    <span class="alt-text" aria-label="${I18n.t(
-      "composer.image_alt_text.aria_label"
-    )}">${altText}</span>
-    <span class="alt-text-edit-btn">
-      <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil-alt"></use></svg>
-    </span>
+  <span class="alt-text-edit-btn">
+  <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil-alt"></use></svg>
+</span>
+
+  <span class="alt-text" aria-label="${I18n.t(
+    "composer.image_alt_text.aria_label"
+  )}">${altText}</span>
   </span>
   `;
 }
@@ -94,6 +95,17 @@ function buildImageEditAltTextControls(altText) {
   `;
 }
 
+function buildImageDeleteButton() {
+  return `
+  <span class="delete-image-button" aria-label="${I18n.t(
+    "composer.delete_image_button"
+  )}">
+  <svg class="fa d-icon d-icon-trash-alt svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+  <use href="#far-trash-alt"></use>
+  </svg>
+   </span>
+  `;
+}
 // We need this to load after `upload-protocol` which is priority 0
 export const priority = 1;
 
@@ -112,19 +124,19 @@ function ruleWithImageControls(oldRule) {
       result += oldRule(tokens, idx, options, env, slf);
 
       result += `<span class="button-wrapper" data-image-index="${index}">`;
-
-      result += `<span class="scale-btn-container">`;
-      result += SCALES.map((scale) =>
-        buildScaleButton(selectedScale, scale)
-      ).join("");
-      result += `</span>`;
-
       result += buildImageShowAltTextControls(
         token.attrs[token.attrIndex("alt")][1]
       );
       result += buildImageEditAltTextControls(
         token.attrs[token.attrIndex("alt")][1]
       );
+
+      result += `<span class="scale-btn-container">`;
+      result += SCALES.map((scale) =>
+        buildScaleButton(selectedScale, scale)
+      ).join("");
+      result += `</span>`;
+      result += buildImageDeleteButton();
 
       result += "</span></span>";
 
@@ -148,16 +160,17 @@ export function setup(helper) {
       "span.scale-btn[data-scale]",
       "span.button-wrapper[data-image-index]",
       "span[aria-label]",
-
+      "span[class=delete-image-button]",
       "span.alt-text-container",
-
       "span.alt-text-readonly-container",
       "span.alt-text-readonly-container.alt-text",
       "span.alt-text-readonly-container.alt-text-edit-btn",
       "svg[class=fa d-icon d-icon-pencil svg-icon svg-string]",
       "use[href=#pencil-alt]",
+      "use[href=#far-trash-alt]",
 
       "span.alt-text-edit-container",
+      "span.delete-image-button",
       "span[hidden=true]",
       "input[type=text]",
       "input[class=alt-text-input]",
@@ -166,6 +179,7 @@ export function setup(helper) {
       "use[href=#check]",
       "button[class=alt-text-edit-cancel btn-default]",
       "svg[class=fa d-icon d-icon-times svg-icon svg-string]",
+      "svg[class=fa d-icon d-icon-trash-alt svg-icon svg-string]",
       "use[href=#times]",
     ]);
 

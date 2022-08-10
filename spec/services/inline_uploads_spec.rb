@@ -5,7 +5,7 @@ RSpec.describe InlineUploads do
   end
 
   describe '.process' do
-    describe 'local uploads' do
+    context 'with local uploads' do
       fab!(:upload) { Fabricate(:upload) }
       fab!(:upload2) { Fabricate(:upload) }
       fab!(:upload3) { Fabricate(:upload) }
@@ -249,7 +249,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      context "subfolder" do
+      context "with subfolder" do
         before do
           set_subfolder "/community"
         end
@@ -650,7 +650,7 @@ RSpec.describe InlineUploads do
       end
     end
 
-    describe "s3 uploads" do
+    context "with s3 uploads" do
       let(:upload) { Fabricate(:upload_s3) }
       let(:upload2) { Fabricate(:upload_s3) }
       let(:upload3) { Fabricate(:upload) }

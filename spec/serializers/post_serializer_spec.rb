@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe PostSerializer do
+RSpec.describe PostSerializer do
   fab!(:post) { Fabricate(:post) }
 
-  context "a post with lots of actions" do
+  context "with a post with lots of actions" do
     fab!(:actor) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
     let(:acted_ids) {
@@ -57,7 +57,7 @@ describe PostSerializer do
     end
   end
 
-  context "a post with reviewable content" do
+  context "with a post with reviewable content" do
     let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
 
     it "includes the reviewable data" do
@@ -68,7 +68,7 @@ describe PostSerializer do
     end
   end
 
-  context "a post by a nuked user" do
+  context "with a post by a nuked user" do
     before do
       post.update!(
         user_id: nil,
@@ -88,7 +88,7 @@ describe PostSerializer do
     end
   end
 
-  context "a post by a suspended user" do
+  context "with a post by a suspended user" do
     def subject
       PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
@@ -108,7 +108,7 @@ describe PostSerializer do
     end
   end
 
-  context "display_username" do
+  describe "#display_username" do
     let(:user) { post.user }
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
@@ -124,11 +124,11 @@ describe PostSerializer do
     end
   end
 
-  context "a hidden post with add_raw enabled" do
+  context "with a hidden post with add_raw enabled" do
     let(:user) { Fabricate.build(:user, id: -99999) }
     let(:raw)  { "Raw contents of the post." }
 
-    context "a public post" do
+    context "with a public post" do
       let(:post) { Fabricate.build(:post, raw: raw, user: user) }
 
       it "includes the raw post for everyone" do
@@ -138,7 +138,7 @@ describe PostSerializer do
       end
     end
 
-    context "a hidden post" do
+    context "with a hidden post" do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
 
       it "shows the raw post only if authorized to see it" do
@@ -160,7 +160,7 @@ describe PostSerializer do
       end
     end
 
-    context "a hidden revised post" do
+    context "with a hidden revised post" do
       fab!(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
 
       before do
@@ -181,7 +181,7 @@ describe PostSerializer do
       end
     end
 
-    context "a public wiki post" do
+    context "with a public wiki post" do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, wiki: true) }
 
       it "can view edit history" do
@@ -191,7 +191,7 @@ describe PostSerializer do
       end
     end
 
-    context "a hidden wiki post" do
+    context "with a hidden wiki post" do
       let(:post) {
         Fabricate.build(
           :post,
@@ -213,7 +213,7 @@ describe PostSerializer do
 
   end
 
-  context "a post with notices" do
+  context "with a post with notices" do
     fab!(:user) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl2) { Fabricate(:user, trust_level: 2) }
@@ -243,7 +243,7 @@ describe PostSerializer do
     end
   end
 
-  context "post with bookmarks" do
+  context "with a post with bookmarks" do
     let(:current_user) { Fabricate(:user) }
     let(:topic_view) { TopicView.new(post.topic, current_user) }
     let(:serialized) do
@@ -256,7 +256,7 @@ describe PostSerializer do
     context "when a Bookmark record exists for the user on the post" do
       let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, bookmarkable: post) }
 
-      context "bookmarks with reminders" do
+      context "with bookmarks with reminders" do
         it "returns true" do
           expect(serialized.as_json[:bookmarked]).to eq(true)
         end
@@ -268,7 +268,7 @@ describe PostSerializer do
     end
   end
 
-  context "posts when group moderation is enabled" do
+  context "with posts when group moderation is enabled" do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:group_user) { Fabricate(:group_user) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -289,13 +289,47 @@ describe PostSerializer do
 
   end
 
-  context "post with small action" do
+  context "with a post with small action" do
     fab!(:post) { Fabricate(:small_action, action_code: "public_topic") }
 
     it "returns `action_code` based on `login_required` site setting" do
       expect(serialized_post_for_user(nil)[:action_code]).to eq("public_topic")
       SiteSetting.login_required = true
       expect(serialized_post_for_user(nil)[:action_code]).to eq("open_topic")
+    end
+  end
+
+  describe "#user_status" do
+    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user) { Fabricate(:user, user_status: user_status) }
+    fab!(:post) { Fabricate(:post, user: user) }
+    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+
+    it "adds user status when enabled" do
+      SiteSetting.enable_user_status = true
+
+      json = serializer.as_json
+
+      expect(json[:user_status]).to_not be_nil do |status|
+        expect(status.description).to eq(user_status.description)
+        expect(status.emoji).to eq(user_status.emoji)
+      end
+    end
+
+    it "doesn't add user status when disabled" do
+      SiteSetting.enable_user_status = false
+      json = serializer.as_json
+      expect(json.keys).not_to include :user_status
+    end
+
+    it "doesn't add status if user doesn't have it" do
+      SiteSetting.enable_user_status = true
+
+      user.clear_status!
+      user.reload
+      json = serializer.as_json
+
+      expect(json.keys).not_to include :user_status
     end
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvent do
+RSpec.describe DiscourseEvent do
 
   describe "#events" do
     it "defaults to {}" do

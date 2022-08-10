@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PullHotlinkedImages do
+RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }

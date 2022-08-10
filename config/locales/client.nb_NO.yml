@@ -3424,6 +3424,7 @@ nb_NO:
       new_count:
         one: "%{count} ny"
         other: "%{count} nye"
+      more: "Mer…"
       sections:
         messages:
           header_link_text: "Meldinger"
@@ -4674,14 +4675,13 @@ nb_NO:
           topics: "Emner"
   wizard_js:
     wizard:
-      done: "Ferdig"
       back: "Forrige"
       next: "Neste"
+      step-text: "Steg"
       step: "%{current} av %{total}"
       upload: "Last opp"
       uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
-      quit: "Kanskje senere"
       staff_count:
         one: "Din gemenskap har ett stabsmedlem (deg)."
         other: " Ditt fellesskap har %{count} stab, inkludert deg selv."

@@ -42,9 +42,9 @@
 
   <div class="wizard-container__buttons">
 
-    {{#if this.showDoneButton}}
+    {{#if this.showJumpInButton}}
       <button {{action "quit"}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
-        {{i18n "wizard.done"}}
+        {{i18n "wizard.jump_in"}}
       </button>
     {{/if}}
 
@@ -55,8 +55,8 @@
     {{/if}}
 
     {{#if this.showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button finish">
-        {{i18n "wizard.finish"}}
+      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.finishButtonClass}}">
+        {{i18n this.finishButtonLabel}}
       </button>
     {{/if}}
 

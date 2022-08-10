@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettingExtension, type: :multisite do
+RSpec.describe SiteSettingExtension, type: :multisite do
   before do
     MessageBus.off
   end

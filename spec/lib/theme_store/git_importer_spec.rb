@@ -4,7 +4,7 @@
 
 require 'theme_store/git_importer'
 
-describe ThemeStore::GitImporter do
+RSpec.describe ThemeStore::GitImporter do
 
   describe "#import" do
 

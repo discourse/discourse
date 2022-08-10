@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ChildTheme do
+RSpec.describe ChildTheme do
   describe "validations" do
     it "doesn't allow children to become parents or parents to become children" do
       theme = Fabricate(:theme)

@@ -4,15 +4,14 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 
-export default DiscourseRoute.extend({
-  _json: null,
+export default class AdminBadgesRoute extends DiscourseRoute {
+  _json = null;
 
-  model() {
-    return ajax("/admin/badges.json").then((json) => {
-      this._json = json;
-      return Badge.createFromJson(json);
-    });
-  },
+  async model() {
+    let json = await ajax("/admin/badges.json");
+    this._json = json;
+    return Badge.createFromJson(json);
+  }
 
   setupController(controller, model) {
     const json = this._json;
@@ -31,12 +30,11 @@ export default DiscourseRoute.extend({
       badgeGroupings.push(BadgeGrouping.create(badgeGroupingJson));
     });
 
-    controller.setProperties({
-      badgeGroupings,
-      badgeTypes: json.badge_types,
-      protectedSystemFields: json.admin_badges.protected_system_fields,
-      badgeTriggers,
-      model,
-    });
-  },
-});
+    controller.badgeGroupings = badgeGroupings;
+    controller.badgeTypes = json.badge_types;
+    controller.protectedSystemFields =
+      json.admin_badges.protected_system_fields;
+    controller.badgeTriggers = badgeTriggers;
+    controller.model = model;
+  }
+}

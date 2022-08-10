@@ -1391,14 +1391,6 @@ sq:
       title: "Dërgo përsëri emailin e aktivizimit"
   wizard:
     step:
-      forum_title:
-        title: "Emri"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "emri@adresa.com"
-      corporate:
-        title: "Organizata"
       styling:
         fields:
           styling_preview:

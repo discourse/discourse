@@ -2976,78 +2976,21 @@ ca:
   wizard:
     title: "Instal·lació de Discourse"
     step:
-      locale:
-        title: "Benvingut al vostre Discourse!"
-        fields:
-          default_locale:
-            description: "Quin és l'idioma predeterminat de la comunitat?"
-      forum_title:
-        title: "Nom"
-        description: "El vostre nom és un senyal visible de lluny, la <i>primera</i> cosa de la vostra comunitat en què es fixaran els visitants. Què diu el nom i el títol sobre la comunitat?"
+      introduction:
         fields:
           title:
-            label: "El nom de la vostra comunitat"
             placeholder: "Cau de la Jane"
           site_description:
             placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
-          short_site_description:
-            placeholder: "La millor comunitat de tots els temps"
-      introduction:
-        title: "Introducció"
-        disabled: "<p>No hem trobat cap tema amb el títol \"%{topic_title}\". </p><ul><li> Si heu canviat el títol, editeu aquest tema per a modificar el text introductori del lloc web. </li><li> Si heu suprimit el tema, creeu-ne un altre amb \"%{topic_title}\" com a títol. El contingut de la primera publicació és el text introductori del vostre lloc web. </li></ul>"
-        fields:
-          welcome:
-            label: "Tema de benvinguda"
-            description: "<p>Com descriuríeu la vostra comunitat a una persona de fora en 1 minut en un ascensor?</p> <ul> <li>Per a què serveixen aquestes discussions?</li> <li>Què hi puc trobar?</li> <li>Per què l'hauria de visitar?</li> </ul> <p>El vostre tema de benvinguda és la primera cosa que llegiran els nouvinguts. Imagineu-vos-el com la vostra 'targeta de presentació' o 'declaració d'intencions' d'<b>un paràgraf</b>.</p>"
-            one_paragraph: "Limiteu el vostre missatge de benvinguda a un paràgraf."
       privacy:
-        title: "Accés"
-        description: "<p>¿La vostra comunitat és oberta a tothom o és restringida als membres, per invitació o aprovació? Si ho preferiu, podeu fer la configuració privadament i després passar a públic més avant.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Públic"
-                description: "Qualsevol pot accedir a aquesta comunitat"
-              restricted:
-                label: "Privat"
-                description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
-          privacy_options:
-            description: "Com es registren els usuaris nous per a obtenir un compte?"
-            choices:
-              open:
-                label: "Els usuaris poden registrar-se per si mateixos."
-              invite_only:
-                label: "Els usuaris han de ser convidats per usuaris de confiança o l'equip responsable abans de poder registrar-se."
-              must_approve:
-                label: "Els usuaris poden registrar-se per si mateixos, però han de ser aprovats per l'equip responsable. "
-      contact:
-        title: "Contacte"
-        fields:
-          contact_email:
-            label: "Correu"
-            placeholder: "name@example.com"
-            description: "L'adreça de correu de la persona o grup responsable d'aquesta comunitat. Es fa servir per a notificacions importants com ara banderes sense gestionar, actualitzacions de seguretat, i en la <a href='%{base_path}/about' target='_blank'>pàgina \"sobre...\"</a> per a un contacte urgent amb la comunitat."
-          contact_url:
-            label: "Pàgina web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Pàgina web general de contacte per a vós o la vostra organització. Es mostrarà en <a href='%{base_path}/about' target='_blank'>la vostra pàgina 'quant a'</a>."
-          site_contact:
-            label: "Missatges automàtics"
-            description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
-      corporate:
-        title: "Organització"
-        description: "Aquesta informació s'introduirà en les vostres <a href='%{base_path}/tos' target='blank'>Condicions del servei</a>, que és un tema que podeu editar en la categoria Equip responsable. Si no teniu una empresa, no dubteu a ometre aquest pas de moment."
-        fields:
-          company_name:
-            label: "Nom de l'empresa"
-            placeholder: "Organització d'exemple"
-          governing_law:
-            label: "Llei que regeix"
-            placeholder: "Jurisdicció de Califòrnia"
-          city_for_disputes:
-            label: "Ciutat per a les disputes"
-            placeholder: "San Francisco, Califòrnia"
+          login_required:
+            placeholder: "Privat"
+            extra_description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
+          must_approve_users:
+            placeholder: "Requereix aprovació"
+      ready:
+        title: "El vostre Discourse està a punt!"
       styling:
         fields:
           styling_preview:
@@ -3064,24 +3007,34 @@ ca:
                 label: "Categories i temes més recents"
               categories_and_top_topics:
                 label: "Categories i temes principals"
-      logos:
-        title: "Logos"
+      branding:
         fields:
           logo:
             label: "Logo principal"
-            description: "La imatge del logotip a la part superior esquerra del vostre lloc web. Utilitzeu una imatge ampla rectangular amb una alçada de 120 i una relació d'aspecte superior a 3: 1"
           logo_small:
             label: "Logotip quadrat"
-            description: "Versió quadrada del vostre logotip. Es mostra a la part superior esquerra del lloc web quan es fa desplaçament cap avall, en el navegador, i quan es comparteix en les plataformes socials. Idealment més gran que 512x512."
-      icons:
-        title: "Icones"
-        fields:
           favicon:
             label: "Icona del navegador"
-            description: "Imatge d'icona que s'utilitza per a representar el vostre lloc web en navegadors web que es veu bé en mides reduïdes. Les extensions d'imatge recomanades són PNG o JPG. Utilitzarem el logotip quadrat per defecte."
           large_icon:
             label: "Icona gran"
-            description: "Icona utilitzada per a representar el vostre lloc web en dispositius moderns que tingui un bon aspecte en mides més grans. Idealment més gran que 512 × 512. Utilitzarem el logotip quadrat per defecte."
+      corporate:
+        fields:
+          company_name:
+            label: "Nom de l'empresa"
+            placeholder: "Organització d'exemple"
+          governing_law:
+            label: "Llei que regeix"
+            placeholder: "Jurisdicció de Califòrnia"
+          contact_url:
+            label: "Pàgina web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Pàgina web general de contacte per a vós o la vostra organització. Es mostrarà en <a href='%{base_path}/about' target='_blank'>la vostra pàgina 'quant a'</a>."
+          city_for_disputes:
+            label: "Ciutat per a les disputes"
+            placeholder: "San Francisco, Califòrnia"
+          site_contact:
+            label: "Missatges automàtics"
+            description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
       invites:
         title: "Convida l'equip responsable"
         description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."

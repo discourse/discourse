@@ -2,7 +2,7 @@
 
 require 'site_settings/yaml_loader'
 
-describe SiteSettings::YamlLoader do
+RSpec.describe SiteSettings::YamlLoader do
 
   class Receiver
     attr_reader :settings, :client_settings, :categories

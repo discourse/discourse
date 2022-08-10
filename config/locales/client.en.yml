@@ -198,7 +198,6 @@ en:
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
 
-    wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
@@ -210,6 +209,8 @@ en:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
       other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
+    bootstrap_invite_button_title: "Send Invites"
+    bootstrap_wizard_link_title: "Finish setup wizard"
 
     themes:
       default_description: "Default"
@@ -1121,6 +1122,8 @@ en:
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
+      dismiss_messages_tooltip: "Mark all unread personal messages notifications as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
@@ -2304,6 +2307,8 @@ en:
       image_alt_text:
         aria_label: Alt text for image
 
+      delete_image_button: Delete Image  
+
     notifications:
       tooltip:
         regular:
@@ -2361,8 +2366,15 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "Are you sure? You have %{count} important notification."
-          other: "Are you sure? You have %{count} important notifications."
+          default:
+            one: "Are you sure? You have %{count} important notification."
+            other: "Are you sure? You have %{count} important notifications."
+          bookmarks:
+            one: "Are you sure? You have %{count} unread bookmark reminder."
+            other: "Are you sure? You have %{count} unread bookmark reminders."
+          messages:
+            one: "Are you sure? You have %{count} unread personal message."
+            other: "Are you sure? You have %{count} unread personal messages."
         dismiss: "Dismiss"
         cancel: "Cancel"
 
@@ -2555,6 +2567,16 @@ en:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "Menu tabs"
       view_all_notifications: "view all notifications"
+      view_all_bookmarks: "view all bookmarks"
+      view_all_messages: "view all personal messages"
+      reviewable:
+        view_all: "view all review items"
+        queue: "Queue"
+        deleted_user: "(deleted user)"
+        post_number_with_topic_title: "post #%{post_number} - %{title}"
+        new_post_in_topic: "new post in %{title}"
+        suspicious_user: "suspicious user %{username}"
+        default_item: "reviewable item #%{reviewable_id}"
 
     topics:
       new_messages_marker: "last visit"
@@ -4046,6 +4068,7 @@ en:
       no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
       no_likes_others: "No liked posts."
       no_topics_title: "You have not started any topics yet"
+      no_topics_body: "It’s always best to <a href='%{searchUrl}'>search</a> for existing topics of conversation before starting a new one, but if you’re confident the topic you want isn’t out there already, go ahead and start a new topic of your very own. Look for the <kbd>+ New Topic</kbd> button at the top right of the topic list, category, or tag to begin creating a new topic in that area."
       no_topics_title_others: "%{username} has not started any topics yet"
       no_read_topics_title: "You haven’t read any topics yet"
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
@@ -4069,6 +4092,7 @@ en:
         one: "%{count} new"
         other: "%{count} new"
       toggle_section: "toggle section"
+      more: "More..."
       sections:
         messages:
           header_link_title: "personal messages"
@@ -4117,6 +4141,11 @@ en:
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
+
+    welcome_topic_banner:
+      title: "Create your Welcome Topic"
+      description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
+      button_title: "Start Editing"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4690,6 +4719,8 @@ en:
           import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
+          finish_install: "Finish Theme Installation"
+          last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
           public_key_note: "After entering a valid private repository URL above, an SSH key will be generated and displayed here."
@@ -4700,6 +4731,8 @@ en:
           install_git_repo: "From a git repository"
           install_create: "Create new"
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
+          force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
+          create_placeholder: "Create Placeholder"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -4886,6 +4919,7 @@ en:
         last_seen_user: "Last Seen User:"
         no_result: "No results found for summary."
         reply_key: "Reply Key"
+        post_link_with_smtp: "Post & SMTP Details"
         skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "From"
@@ -4915,6 +4949,7 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
+            smtp_transaction_response_placeholder: "SMTP ID"
 
       moderation_history:
         performed_by: "Performed By"
@@ -5100,6 +5135,7 @@ en:
         show_words:
           one: "show %{count} word"
           other: "show %{count} words"
+        case_sensitive: "(case-sensitive)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -5137,6 +5173,8 @@ en:
           exists: "Already exists"
           upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
+          case_sensitivity_label: "Is case-sensitive"
+          case_sensitivity_description: "Only words with matching character casing"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
@@ -5709,7 +5747,7 @@ en:
 
   wizard_js:
     wizard:
-      done: "Jump in!"
+      jump_in: "Jump in!"
       finish: "Exit setup"
       back: "Back"
       next: "Next"

@@ -1,27 +1,94 @@
 # frozen_string_literal: true
 
-describe WordWatcher do
-  let(:raw) { "Do you like liquorice?\n\nI really like them. One could even say that I am *addicted* to liquorice. And if\nyou can mix it up with some anise, then I'm in heaven ;)" }
+RSpec.describe WordWatcher do
+  let(:raw) do
+    <<~RAW.strip
+      Do you like liquorice?
+
+
+      I really like them. One could even say that I am *addicted* to liquorice. And if
+      you can mix it up with some anise, then I'm in heaven ;)
+    RAW
+  end
 
   after do
     Discourse.redis.flushdb
   end
 
-  describe '.word_matcher_regexp' do
+  describe ".words_for_action" do
+    it "returns words with metadata including case sensitivity flag" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor])
+      word1 = Fabricate(:watched_word, action: WatchedWord.actions[:block]).word
+      word2 = Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word
+
+      expect(described_class.words_for_action(:block)).to include(
+        word1 => { case_sensitive: false },
+        word2 => { case_sensitive: true }
+      )
+    end
+
+    it "returns word with metadata including replacement if word has replacement" do
+      word = Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:link],
+        replacement: "http://test.localhost/"
+      ).word
+
+      expect(described_class.words_for_action(:link)).to include(
+        word => { case_sensitive: false, replacement: "http://test.localhost/" }
+      )
+    end
+
+    it "returns an empty hash when no words are present" do
+      expect(described_class.words_for_action(:tag)).to eq({})
+    end
+  end
+
+  describe ".word_matcher_regexp_list" do
     let!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
     let!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
+    let!(:word3) { Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word }
+    let!(:word4) { Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word }
 
-    context 'format of the result regexp' do
-      it "is correct when watched_words_regular_expressions = true" do
+    context "when watched_words_regular_expressions = true" do
+      it "returns the proper regexp" do
         SiteSetting.watched_words_regular_expressions = true
-        regexp = described_class.word_matcher_regexp(:block)
-        expect(regexp.inspect).to eq("/(#{word1})|(#{word2})/i")
+        regexps = described_class.word_matcher_regexp_list(:block)
+
+        expect(regexps).to be_an(Array)
+        expect(regexps.map(&:inspect)).to contain_exactly("/(#{word1})|(#{word2})/i", "/(#{word3})|(#{word4})/")
+      end
+    end
+
+    context "when watched_words_regular_expressions = false" do
+      it "returns the proper regexp" do
+        SiteSetting.watched_words_regular_expressions = false
+        regexps = described_class.word_matcher_regexp_list(:block)
+
+        expect(regexps).to be_an(Array)
+        expect(regexps.map(&:inspect)).to contain_exactly("/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i", "/(?:\\W|^)(#{word3}|#{word4})(?=\\W|$)/")
       end
 
-      it "is correct when watched_words_regular_expressions = false" do
-        SiteSetting.watched_words_regular_expressions = false
-        regexp = described_class.word_matcher_regexp(:block)
-        expect(regexp.inspect).to eq("/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i")
+      it "is empty for an action without watched words" do
+        regexps = described_class.word_matcher_regexp_list(:censor)
+
+        expect(regexps).to be_an(Array)
+        expect(regexps).to be_empty
+      end
+    end
+
+    context "when regular expression is invalid" do
+      before do
+        SiteSetting.watched_words_regular_expressions = true
+        Fabricate(:watched_word, word: "Test[\S*", action: WatchedWord.actions[:block])
+      end
+
+      it "does not raise an exception by default" do
+        expect { described_class.word_matcher_regexp_list(:block) }.not_to raise_error
+      end
+
+      it "raises an exception with raise_errors set to true" do
+        expect { described_class.word_matcher_regexp_list(:block, raise_errors: true) }.to raise_error(RegexpError)
       end
     end
   end
@@ -68,20 +135,18 @@ describe WordWatcher do
         expect(matches[1]).to eq("acknowledge")
       end
 
-      context "word boundary" do
-        it "handles word boundary" do
-          Fabricate(:watched_word, word: "love", action: WatchedWord.actions[:require_approval])
-          expect(described_class.new("I Love, bananas.").word_matches_for_action?(:require_approval)[1]).to eq("Love")
-          expect(described_class.new("I LOVE; apples.").word_matches_for_action?(:require_approval)[1]).to eq("LOVE")
-          expect(described_class.new("love: is a thing.").word_matches_for_action?(:require_approval)[1]).to eq("love")
-          expect(described_class.new("I love. oranges").word_matches_for_action?(:require_approval)[1]).to eq("love")
-          expect(described_class.new("I :love. pineapples").word_matches_for_action?(:require_approval)[1]).to eq("love")
-          expect(described_class.new("peace ,love and understanding.").word_matches_for_action?(:require_approval)[1]).to eq("love")
-        end
+      it "handles word boundary" do
+        Fabricate(:watched_word, word: "love", action: WatchedWord.actions[:require_approval])
+        expect(described_class.new("I Love, bananas.").word_matches_for_action?(:require_approval)[1]).to eq("Love")
+        expect(described_class.new("I LOVE; apples.").word_matches_for_action?(:require_approval)[1]).to eq("LOVE")
+        expect(described_class.new("love: is a thing.").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        expect(described_class.new("I love. oranges").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        expect(described_class.new("I :love. pineapples").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        expect(described_class.new("peace ,love and understanding.").word_matches_for_action?(:require_approval)[1]).to eq("love")
       end
 
-      context 'multiple matches' do
-        context 'non regexp words' do
+      context 'when there are multiple matches' do
+        context 'with non regexp words' do
           it 'lists all matching words' do
             %w{bananas hate hates}.each do |word|
               Fabricate(:watched_word, word: word, action: WatchedWord.actions[:block])
@@ -95,7 +160,7 @@ describe WordWatcher do
           end
         end
 
-        context 'regexp words' do
+        context 'with regexp words' do
           before do
             SiteSetting.watched_words_regular_expressions = true
           end
@@ -113,7 +178,7 @@ describe WordWatcher do
         end
       end
 
-      context "emojis" do
+      context "when word is an emoji" do
         it "handles emoji" do
           Fabricate(:watched_word, word: ":joy:", action: WatchedWord.actions[:require_approval])
 
@@ -136,7 +201,7 @@ describe WordWatcher do
         end
       end
 
-      context "regular expressions" do
+      context "when word is a regular expression" do
         before do
           SiteSetting.watched_words_regular_expressions = true
         end
@@ -187,6 +252,41 @@ describe WordWatcher do
         end
       end
 
+      context "when case sensitive words are present" do
+        before do
+          Fabricate(
+            :watched_word,
+            word: "Discourse",
+            action: WatchedWord.actions[:block],
+            case_sensitive: true
+          )
+        end
+
+        context "when watched_words_regular_expressions = true" do
+          it "respects case sensitivity flag in matching words" do
+            SiteSetting.watched_words_regular_expressions = true
+            Fabricate(:watched_word, word: "p(rivate|ublic)", action: WatchedWord.actions[:block])
+
+            matches = described_class
+              .new("PUBLIC: Discourse is great for public discourse")
+              .word_matches_for_action?(:block, all_matches: true)
+            expect(matches).to contain_exactly("PUBLIC", "Discourse", "public")
+          end
+        end
+
+        context "when watched_words_regular_expressions = false" do
+          it "repects case sensitivity flag in matching" do
+            SiteSetting.watched_words_regular_expressions = false
+            Fabricate(:watched_word, word: "private", action: WatchedWord.actions[:block])
+
+            matches = described_class
+              .new("PRIVATE: Discourse is also great private discourse")
+              .word_matches_for_action?(:block, all_matches: true)
+
+            expect(matches).to contain_exactly("PRIVATE", "Discourse", "private")
+          end
+        end
+      end
     end
   end
 
@@ -199,6 +299,32 @@ describe WordWatcher do
       text = "hello censored world to replace https://notdiscourse.org"
       expected = "hello #{described_class::REPLACEMENT_LETTER * 8} world replaced https://discourse.org"
       expect(described_class.apply_to_text(text)).to eq(expected)
+    end
+
+    context "when watched_words_regular_expressions = true" do
+      it "replaces captured non-word prefix" do
+        SiteSetting.watched_words_regular_expressions = true
+        Fabricate(
+          :watched_word,
+          word: "\\Wplaceholder",
+          replacement: "replacement",
+          action: WatchedWord.actions[:replace]
+        )
+
+        text = "is \tplaceholder in https://notdiscourse.org"
+        expected = "is replacement in https://discourse.org"
+        expect(described_class.apply_to_text(text)).to eq(expected)
+      end
+    end
+
+    context "when watched_words_regular_expressions = false" do
+      it "maintains non-word character prefix" do
+        SiteSetting.watched_words_regular_expressions = false
+
+        text = "to replace and\thttps://notdiscourse.org"
+        expected = "replaced and\thttps://discourse.org"
+        expect(described_class.apply_to_text(text)).to eq(expected)
+      end
     end
   end
 end

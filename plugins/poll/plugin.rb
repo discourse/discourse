@@ -147,7 +147,7 @@ after_initialize do
     post = options[:post]
 
     replacement = post&.url.present? ?
-      "<a href='#{UrlHelper.escape_uri(post.url)}'>#{I18n.t("poll.poll")}</a>" :
+      "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>" :
       I18n.t("poll.poll")
 
     doc.css("div.poll").each do |poll|

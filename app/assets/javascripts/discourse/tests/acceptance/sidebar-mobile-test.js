@@ -1,5 +1,8 @@
+import I18n from "I18n";
 import { test } from "qunit";
+
 import { click, visit } from "@ember/test-helpers";
+
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
@@ -64,6 +67,25 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     assert.ok(
       exists(".sidebar-container"),
       "sidebar is not collapsed when clicking on caret to collapse a section in sidebar"
+    );
+  });
+
+  test("button to toggle between mobile and desktop view", async function (assert) {
+    await visit("/");
+    await click(".hamburger-dropdown");
+
+    assert.ok(
+      exists(
+        `.sidebar-footer-actions-toggle-mobile-view[title="${I18n.t(
+          "desktop_view"
+        )}"]`
+      ),
+      "displays the right title for the button"
+    );
+
+    assert.ok(
+      exists(".sidebar-footer-actions-toggle-mobile-view .d-icon-desktop"),
+      "displays the desktop icon for the button"
     );
   });
 });

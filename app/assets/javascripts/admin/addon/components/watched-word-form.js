@@ -14,6 +14,7 @@ export default Component.extend({
   actionKey: null,
   showMessage: false,
   selectedTags: null,
+  isCaseSensitive: false,
 
   canReplace: equal("actionKey", "replace"),
   canTag: equal("actionKey", "tag"),
@@ -46,9 +47,12 @@ export default Component.extend({
     const filtered = words.filter(
       (content) => content.action === this.actionKey
     );
-    return filtered.every(
-      (content) => content.word.toLowerCase() !== word.toLowerCase()
-    );
+    return filtered.every((content) => {
+      if (content.case_sensitive === true) {
+        return content.word !== word;
+      }
+      return content.word.toLowerCase() !== word.toLowerCase();
+    });
   },
 
   actions: {
@@ -78,6 +82,7 @@ export default Component.extend({
               ? this.replacement
               : null,
           action: this.actionKey,
+          isCaseSensitive: this.isCaseSensitive,
         });
 
         watchedWord
@@ -90,6 +95,7 @@ export default Component.extend({
               selectedTags: [],
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success"),
+              isCaseSensitive: false,
             });
             this.action(WatchedWord.create(result));
             schedule("afterRender", () =>

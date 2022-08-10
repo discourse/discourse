@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RemoteTheme do
+RSpec.describe RemoteTheme do
   describe '#import_remote' do
     def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON

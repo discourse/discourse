@@ -2034,8 +2034,9 @@ nl:
       votes_released: "%{description} - voltooid"
       dismiss_confirmation:
         body:
-          one: "Weet u het zeker? U hebt %{count} belangrijke melding."
-          other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
+          default:
+            one: "Weet u het zeker? U hebt %{count} belangrijke melding."
+            other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
         dismiss: "Negeren"
         cancel: "Annuleren"
       group_message_summary:
@@ -3494,6 +3495,7 @@ nl:
       new_count:
         one: "%{count} nieuw"
         other: "%{count} nieuw"
+      more: "Meer..."
       sections:
         messages:
           header_link_text: "Berichten"
@@ -4996,15 +4998,13 @@ nl:
           replace: "Vervangen"
   wizard_js:
     wizard:
-      done: "Gereed"
-      finish: "Voltooien"
       back: "Vorige"
       next: "Volgende"
+      step-text: "Stap"
       step: "%{current} van %{total}"
       upload: "Uploaden"
       uploading: "Uploaden..."
       upload_error: "Er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
-      quit: "Misschien later"
       staff_count:
         one: "Uw gemeenschap heeft %{count} staflid (u)."
         other: "Uw gemeenschap heeft %{count} stafleden, waaronder u."

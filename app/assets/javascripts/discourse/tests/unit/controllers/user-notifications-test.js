@@ -5,6 +5,7 @@ import sinon from "sinon";
 import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
+import I18n from "I18n";
 
 discourseModule("Unit | Controller | user-notifications", function () {
   test("Mark read marks all models read when response is 200", async function (assert) {
@@ -78,7 +79,10 @@ discourseModule("Unit | Controller | user-notifications", function () {
 
     controller.send("resetNew");
 
-    assert.strictEqual(capturedProperties.count, 1);
+    assert.strictEqual(
+      capturedProperties.confirmationMessage,
+      I18n.t("notifications.dismiss_confirmation.body.default", { count: 1 })
+    );
     capturedProperties.dismissNotifications();
     assert.strictEqual(markReadFake.callCount, 1);
   });

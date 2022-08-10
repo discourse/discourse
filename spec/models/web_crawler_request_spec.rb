@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WebCrawlerRequest do
+RSpec.describe WebCrawlerRequest do
   before do
     CachedCounting.reset
     CachedCounting.enable

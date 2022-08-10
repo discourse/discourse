@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe SearchLog, type: :model do
-
   after do
     SearchLog.clear_debounce_cache!
   end
 
   describe ".log" do
-
-    context "invalid arguments" do
+    context "with invalid arguments" do
       it "no search type returns error" do
         status, _ = SearchLog.log(
           term: 'bounty hunter',
@@ -157,7 +155,6 @@ RSpec.describe SearchLog, type: :model do
         )
         expect(action).to eq(:created)
       end
-
     end
   end
 
@@ -202,7 +199,7 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
-  context "trending" do
+  describe "trending" do
     fab!(:user) { Fabricate(:user) }
     before do
       SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
@@ -234,8 +231,7 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
-  context "clean_up" do
-
+  describe "clean_up" do
     it "will remove old logs" do
       SearchLog.log(term: 'jawa', search_type: :header, ip_address: '127.0.0.1')
       SearchLog.log(term: 'jedi', search_type: :header, ip_address: '127.0.0.1')
@@ -252,7 +248,5 @@ RSpec.describe SearchLog, type: :model do
       expect(SearchLog.where(term: 'rey').first).to be_present
       expect(SearchLog.where(term: 'finn').first).to be_present
     end
-
   end
-
 end

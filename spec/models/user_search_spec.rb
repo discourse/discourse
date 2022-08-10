@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserSearch do
+RSpec.describe UserSearch do
 
   before_all { SearchIndexer.enable } # Enable for prefabrication
   before { SearchIndexer.enable } # Enable for each test

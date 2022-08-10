@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StepsController do
+RSpec.describe StepsController do
   before do
     SiteSetting.wizard_enabled = true
   end

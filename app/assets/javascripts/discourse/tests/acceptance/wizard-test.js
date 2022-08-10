@@ -1,5 +1,11 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  fillIn,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Wizard", function (needs) {
@@ -54,7 +60,7 @@ acceptance("Wizard", function (needs) {
 
     await click(".wizard-container__button.next");
     assert.ok(
-      exists(".dropdown-field.dropdown-snack"),
+      exists(".wizard-container__text-input#company_name"),
       "went to the next step"
     );
     assert.ok(
@@ -68,13 +74,37 @@ acceptance("Wizard", function (needs) {
     assert.ok(exists(".wizard-container__link.back"), "shows the back button");
     assert.ok(!exists(".wizard-container__step-title"));
     assert.ok(
+      !exists(".wizard-container__button.next"),
+      "does not show next button"
+    );
+    assert.ok(
       !exists(".wizard-container__button.finish"),
       "cannot finish on last step"
     );
 
     await click(".wizard-container__link.back");
-    assert.ok(exists(".wizard-container__step-title"));
-    assert.ok(exists(".wizard-container__button.next"));
-    assert.ok(!exists(".wizard-prev"));
+    assert.ok(exists(".wizard-container__step-title"), "shows the step title");
+    assert.ok(
+      exists(".wizard-container__button.next"),
+      "shows the next button"
+    );
+    await click(".wizard-container__button.next");
+
+    // server validation fail
+    await fillIn("input#company_name", "Server Fail");
+    await click(".wizard-container__button.jump-in");
+    assert.ok(
+      exists(".invalid #company_name"),
+      "highlights the field with error"
+    );
+    assert.ok(exists(".wizard-container__field .error"), "shows the error");
+
+    await fillIn("input#company_name", "Foo Bar");
+    await click(".wizard-container__button.jump-in");
+    assert.strictEqual(
+      currentURL(),
+      "/latest",
+      "it should transition to the homepage"
+    );
   });
 });

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanDismissedTopicUsers do
+RSpec.describe Jobs::CleanDismissedTopicUsers do
   fab!(:user) { Fabricate(:user, created_at: 1.days.ago, previous_visit_at: 1.days.ago) }
   fab!(:topic) { Fabricate(:topic, created_at: 5.hours.ago) }
   fab!(:dismissed_topic_user) { Fabricate(:dismissed_topic_user, user: user, topic: topic) }

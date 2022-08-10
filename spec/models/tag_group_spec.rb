@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TagGroup do
+RSpec.describe TagGroup do
   describe '#visible' do
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
@@ -84,7 +84,7 @@ describe TagGroup do
 
     include_examples "correct visible tag groups"
 
-    context "staff-only tag group restricted to a public category" do
+    context "with staff-only tag group restricted to a public category" do
       before do
         public_category.allowed_tag_groups = [public_tag_group.name, staff_only_tag_group.name]
         private_category.allowed_tag_groups = [private_tag_group.name, staff_only_tag_group.name]

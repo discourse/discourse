@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ProcessPost do
+RSpec.describe Jobs::ProcessPost do
   it "returns when the post cannot be found" do
     expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end

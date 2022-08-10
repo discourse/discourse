@@ -344,7 +344,7 @@ let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("site-settings:main");
+    let siteSettings = getOwner(this).lookup("service:site-settings");
     return siteSettings.slug_generation_method === "encoded";
   },
 

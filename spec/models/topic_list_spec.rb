@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicList do
+RSpec.describe TopicList do
   let!(:topic) {
     t = Fabricate(:topic)
     t.allowed_user_ids = [t.user.id]
@@ -28,7 +28,7 @@ describe TopicList do
     end
   end
 
-  context "preload" do
+  describe "preload" do
     it "allows preloading of data" do
       preloaded_topic = false
       preloader = lambda do |topics, topic_list|

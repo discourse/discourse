@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicCreator do
+RSpec.describe TopicCreator do
   fab!(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin)     { Fabricate(:admin) }
@@ -18,7 +18,7 @@ describe TopicCreator do
   end
 
   describe '#create' do
-    context 'topic success cases' do
+    context 'with topic success cases' do
       before do
         TopicCreator.any_instance.expects(:save_topic).returns(true)
         TopicCreator.any_instance.expects(:watch_topic).returns(true)
@@ -45,7 +45,7 @@ describe TopicCreator do
         expect(topic.custom_fields["import_id"]).to eq("bar")
       end
 
-      context 'regular user' do
+      context 'with regular user' do
         before { SiteSetting.min_trust_to_create_topic = TrustLevel[0] }
 
         it "should be possible for a regular user to create a topic" do
@@ -81,7 +81,7 @@ describe TopicCreator do
       end
     end
 
-    context 'tags' do
+    context 'with tags' do
       fab!(:tag1) { Fabricate(:tag, name: "fun") }
       fab!(:tag2) { Fabricate(:tag, name: "fun2") }
       fab!(:tag3) { Fabricate(:tag, name: "fun3") }
@@ -96,7 +96,7 @@ describe TopicCreator do
         SiteSetting.min_trust_level_to_tag_topics = 0
       end
 
-      context 'regular tags' do
+      context 'with regular tags' do
         it "user can add tags to topic" do
           topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name]))
           expect(topic).to be_valid
@@ -104,7 +104,26 @@ describe TopicCreator do
         end
       end
 
-      context 'staff-only tags' do
+      context 'when assigned via matched watched words' do
+        fab!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: tag1.name) }
+        fab!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: tag2.name) }
+        fab!(:word3) { Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: tag3.name, case_sensitive: true) }
+
+        it 'adds watched words as tags' do
+          topic = TopicCreator.create(
+            user,
+            Guardian.new(user),
+            valid_attrs.merge(
+              title: "This is a #{word1.word} title",
+              raw: "#{word2.word.upcase} is not the same as #{word3.word.upcase}")
+          )
+
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(tag1, tag2)
+        end
+      end
+
+      context 'with staff-only tags' do
         before do
           create_staff_only_tags(['alpha'])
         end
@@ -122,7 +141,7 @@ describe TopicCreator do
         end
       end
 
-      context 'minimum_required_tags is present' do
+      context 'when minimum_required_tags is present' do
         fab!(:category) { Fabricate(:category, name: "beta", minimum_required_tags: 2) }
 
         it "fails for regular user if minimum_required_tags is not satisfied" do
@@ -157,7 +176,7 @@ describe TopicCreator do
         end
       end
 
-      context 'required tag group' do
+      context 'with required tag group' do
         fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1]) }
         fab!(:category) { Fabricate(:category, name: "beta", category_required_tag_groups: [CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)]) }
 
@@ -324,7 +343,7 @@ describe TopicCreator do
           )
         end
 
-        context "and allows other tags" do
+        context "when allowing other tags" do
           before { category.update!(allow_global_tags: true) }
 
           it "allows topics to use tags that aren't restricted by any category" do
@@ -384,9 +403,8 @@ describe TopicCreator do
       end
     end
 
-    context 'personal message' do
-
-      context 'success cases' do
+    context 'with personal message' do
+      context 'with success cases' do
         before do
           TopicCreator.any_instance.expects(:save_topic).returns(true)
           TopicCreator.any_instance.expects(:watch_topic).returns(true)
@@ -410,7 +428,7 @@ describe TopicCreator do
         end
       end
 
-      context 'failure cases' do
+      context 'with failure cases' do
         it "should be rollback the changes when email is invalid" do
           SiteSetting.manual_polling_enabled = true
           SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
@@ -433,7 +451,7 @@ describe TopicCreator do
         end
       end
 
-      context 'to emails' do
+      context 'with to emails' do
         it 'works for staff' do
           SiteSetting.min_trust_to_send_email_messages = 'staff'
           expect(TopicCreator.create(admin, Guardian.new(admin), pm_to_email_valid_attrs)).to be_valid
@@ -458,7 +476,7 @@ describe TopicCreator do
       end
     end
 
-    context 'setting timestamps' do
+    context 'when setting timestamps' do
       it 'supports Time instances' do
         freeze_time
 
@@ -487,7 +505,7 @@ describe TopicCreator do
       end
     end
 
-    context 'external_id' do
+    context 'with external_id' do
       it 'adds external_id' do
         topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(
           external_id: 'external_id'

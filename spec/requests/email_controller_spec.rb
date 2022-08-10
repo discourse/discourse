@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailController do
+RSpec.describe EmailController do
   fab!(:user) { Fabricate(:user) }
 
   describe '#perform_unsubscribe' do
@@ -162,7 +162,7 @@ describe EmailController do
     fab!(:user) { Fabricate(:user) }
     let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type, post: post) }
 
-    context 'Unsubscribe from digest' do
+    context 'when unsubscribing from digest' do
       let(:key_type) { UnsubscribeKey::DIGEST_TYPE }
       let(:post) { nil }
 
@@ -245,7 +245,7 @@ describe EmailController do
       end
     end
 
-    context 'Unsubscribe from a post' do
+    context 'when unsubscribing from a post' do
       fab!(:post) { Fabricate(:post) }
       let(:user) { post.user }
       let(:key_type) { UnsubscribeKey::TOPIC_TYPE }

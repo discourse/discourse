@@ -150,6 +150,10 @@ registerIconRenderer({
 
     if (params.label) {
       html += " aria-hidden='true'";
+    } else if (params["aria-label"]) {
+      html += ` aria-hidden='false' aria-label='${escape(
+        params["aria-label"]
+      )}'`;
     }
     html += ` xmlns="${SVG_NAMESPACE}"><use href="#${id}" /></svg>`;
     if (params.label) {

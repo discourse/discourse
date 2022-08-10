@@ -14,15 +14,7 @@ export default class UserMenuItemsList extends GlimmerComponent {
 
   get itemsCacheKey() {}
 
-  get showAll() {
-    return false;
-  }
-
-  get showAllHref() {
-    throw new Error(
-      `the showAllHref getter must be implemented in ${this.constructor.name}`
-    );
-  }
+  get showAllHref() {}
 
   get showAllTitle() {}
 
@@ -34,6 +26,12 @@ export default class UserMenuItemsList extends GlimmerComponent {
 
   get emptyStateComponent() {
     return "user-menu/items-list-empty-state";
+  }
+
+  get itemComponent() {
+    throw new Error(
+      `the itemComponent property must be implemented in ${this.constructor.name}`
+    );
   }
 
   fetchItems() {
@@ -59,17 +57,6 @@ export default class UserMenuItemsList extends GlimmerComponent {
     }
     this.fetchItems()
       .then((items) => {
-        const valid = items.every((item) => {
-          if (!item.userMenuComponent) {
-            // eslint-disable-next-line no-console
-            console.error("userMenuComponent property is blank on", item);
-            return false;
-          }
-          return true;
-        });
-        if (!valid) {
-          throw new Error("userMenuComponent must be present on all items");
-        }
         this._setCachedItems(items);
         this.items = items;
       })

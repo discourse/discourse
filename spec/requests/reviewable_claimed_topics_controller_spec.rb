@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReviewableClaimedTopicsController do
+RSpec.describe ReviewableClaimedTopicsController do
   fab!(:moderator) { Fabricate(:moderator) }
 
   fab!(:topic) { Fabricate(:topic) }

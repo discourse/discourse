@@ -41,8 +41,8 @@ export default {
     }
 
     const messageBus = container.lookup("service:message-bus"),
-      user = container.lookup("current-user:main"),
-      siteSettings = container.lookup("site-settings:main");
+      user = container.lookup("service:current-user"),
+      siteSettings = container.lookup("service:site-settings");
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>

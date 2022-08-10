@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DistributedMutex do
+RSpec.describe DistributedMutex do
   let(:key) { "test_mutex_key" }
 
   after do
@@ -66,7 +66,7 @@ describe DistributedMutex do
     }.to raise_error(ThreadError)
   end
 
-  context "readonly redis" do
+  describe "readonly redis" do
     before do
       Discourse.redis.slaveof "127.0.0.1", "65534"
     end
@@ -91,7 +91,7 @@ describe DistributedMutex do
     end
   end
 
-  context "executions" do
+  describe "executions" do
     it "should not allow critical sections to overlap" do
       connections = 3.times.map { DiscourseRedis.new }
 

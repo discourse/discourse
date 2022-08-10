@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Upload do
+RSpec.describe Upload do
   let(:upload) { build(:upload) }
   let(:user_id) { 1 }
 
@@ -392,7 +392,7 @@ describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    context "local attachment" do
+    context "with local attachment" do
       before do
         SiteSetting.authorized_extensions = "pdf"
       end
@@ -428,7 +428,7 @@ describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    context "secure media enabled" do
+    context "with secure media enabled" do
       before do
         enable_secure_media
       end
@@ -565,27 +565,6 @@ describe Upload do
 
       expect(user.user_profile.card_background_upload_id).to eq(nil)
       expect(user.user_profile.profile_background_upload_id).to eq(nil)
-    end
-  end
-
-  describe ".signed_url_from_secure_media_url" do
-    before do
-      # must be done so signed_url_for_path exists
-      enable_secure_media
-    end
-
-    it "correctly gives back a signed url from a path only" do
-      secure_url = "/secure-media-uploads/original/1X/c5a2c4ba0fa390f5aac5c2c1a12416791ebdd9e9.png"
-      signed_url = Upload.signed_url_from_secure_media_url(secure_url)
-      expect(signed_url).not_to include("secure-media-uploads")
-      expect(UrlHelper.s3_presigned_url?(signed_url)).to eq(true)
-    end
-
-    it "correctly gives back a signed url from a full url" do
-      secure_url = "http://localhost:3000/secure-media-uploads/original/1X/c5a2c4ba0fa390f5aac5c2c1a12416791ebdd9e9.png"
-      signed_url = Upload.signed_url_from_secure_media_url(secure_url)
-      expect(signed_url).not_to include(Discourse.base_url)
-      expect(UrlHelper.s3_presigned_url?(signed_url)).to eq(true)
     end
   end
 

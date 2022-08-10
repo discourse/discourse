@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "Topic Thumbnails" do
+RSpec.describe "Topic Thumbnails" do
   before do
     SiteSetting.create_thumbnails = true
     ImageSizer.stubs(:resize).returns([9, 9])
@@ -9,7 +9,7 @@ describe "Topic Thumbnails" do
   fab!(:topic) { Fabricate(:topic, image_upload_id: image.id) }
   fab!(:user) { Fabricate(:user) }
 
-  context 'latest' do
+  describe 'latest' do
     def get_topic
       Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
       Discourse.redis.del(topic.thumbnail_job_redis_key([]))

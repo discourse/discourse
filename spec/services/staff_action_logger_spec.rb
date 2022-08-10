@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe StaffActionLogger do
+RSpec.describe StaffActionLogger do
 
   fab!(:admin)  { Fabricate(:admin) }
   let(:logger) { described_class.new(admin) }

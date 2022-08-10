@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailValidator do
+RSpec.describe EmailValidator do
   def blocks?(email)
     user = Fabricate.build(:user, email: email)
     validator = EmailValidator.new(attributes: :email)
@@ -8,7 +8,7 @@ describe EmailValidator do
     user.errors[:email].present?
   end
 
-  context "blocked email" do
+  describe "blocked email" do
     it "doesn't add an error when email doesn't match a blocked email" do
       expect(blocks?('sam@sam.com')).to eq(false)
     end
@@ -39,7 +39,7 @@ describe EmailValidator do
     end
   end
 
-  context "auto approve email domains" do
+  describe "auto approve email domains" do
     it "works as expected" do
       SiteSetting.auto_approve_email_domains = "example.com"
 

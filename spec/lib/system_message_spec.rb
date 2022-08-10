@@ -3,7 +3,7 @@
 require 'system_message'
 require 'topic_subtype'
 
-describe SystemMessage do
+RSpec.describe SystemMessage do
 
   describe '#create' do
 

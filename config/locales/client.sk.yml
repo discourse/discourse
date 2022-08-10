@@ -2280,6 +2280,7 @@ sk:
         few: "%{count} nové"
         many: "%{count} nových"
         other: "%{count} nových"
+      more: "Viac ..."
       sections:
         messages:
           header_link_text: "Správy"
@@ -3151,14 +3152,13 @@ sk:
           topics: "Témy"
   wizard_js:
     wizard:
-      done: "Hotovo"
       back: "Späť"
       next: "Ďalej"
+      step-text: "Krok"
       step: "%{current} z %{total}"
       upload: "Načítať"
       uploading: "Načítavam..."
       upload_error: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
-      quit: "Možno neskôr"
       invites:
         add_user: "pridať"
         none_added: "Neprizvali ste žiadnych členov. Určite chcete pokračovať?"

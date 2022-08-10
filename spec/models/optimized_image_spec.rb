@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe OptimizedImage do
+RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
 
@@ -245,8 +245,7 @@ describe OptimizedImage do
   end
 
   describe ".create_for" do
-
-    context "versioning" do
+    context "with versioning" do
       let(:filename) { 'logo.png' }
       let(:file) { file_from_fixtures(filename) }
 
@@ -287,7 +286,6 @@ describe OptimizedImage do
     end
 
     context "when using an internal store" do
-
       let(:store) { FakeInternalStore.new }
       before { Discourse.stubs(:store).returns(store) }
 
@@ -297,11 +295,9 @@ describe OptimizedImage do
           OptimizedImage.expects(:resize).returns(false)
           expect(OptimizedImage.create_for(upload, 100, 200)).to eq(nil)
         end
-
       end
 
       context "when the thumbnail is properly generated" do
-
         before do
           OptimizedImage.expects(:resize).returns(true)
         end
@@ -329,9 +325,7 @@ describe OptimizedImage do
           oi = OptimizedImage.create_for(upload, 100, 200, format: 'gif')
           expect(oi.url).to eq("/internally/stored/optimized/image.gif")
         end
-
       end
-
     end
 
     describe "external store" do
@@ -350,7 +344,7 @@ describe OptimizedImage do
       end
 
       context "when the thumbnail is properly generated" do
-        context "secure media disabled" do
+        context "with secure media disabled" do
           let(:s3_upload) { Fabricate(:upload_s3) }
           let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
 
@@ -396,7 +390,6 @@ describe OptimizedImage do
       end
     end
   end
-
 end
 
 class FakeInternalStore

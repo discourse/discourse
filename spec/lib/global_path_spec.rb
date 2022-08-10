@@ -6,9 +6,8 @@ class GlobalPathInstance
   extend GlobalPath
 end
 
-describe GlobalPath do
-
-  context 'cdn_relative_path' do
+RSpec.describe GlobalPath do
+  describe '.cdn_relative_path' do
     def cdn_relative_path(p)
       GlobalPathInstance.cdn_relative_path(p)
     end
@@ -28,7 +27,7 @@ describe GlobalPath do
     end
   end
 
-  describe '#upload_cdn_path' do
+  describe '.upload_cdn_path' do
     it 'generates correctly when S3 bucket has a folder' do
       global_setting :s3_access_key_id, 's3_access_key_id'
       global_setting :s3_secret_access_key, 's3_secret_access_key'

@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe CategoryUser do
+RSpec.describe CategoryUser do
   fab!(:user) { Fabricate(:user) }
 
   def tracking
@@ -98,7 +98,7 @@ describe CategoryUser do
                               notification_level: NotificationLevels.all[:regular]).exists?).to eq(true)
   end
 
-  context 'integration' do
+  describe 'integration' do
     before do
       Jobs.run_immediately!
       NotificationEmailer.enable
@@ -268,7 +268,7 @@ describe CategoryUser do
   end
 
   describe ".muted_category_ids" do
-    context "max category nesting 2" do
+    context "with max category nesting 2" do
       fab!(:category1) { Fabricate(:category) }
       fab!(:category2) { Fabricate(:category, parent_category: category1) }
       fab!(:category3) { Fabricate(:category, parent_category: category1) }
@@ -290,7 +290,8 @@ describe CategoryUser do
         expect(CategoryUser.muted_category_ids(user)).to contain_exactly(category3.id)
       end
     end
-    context "max category nesting 3" do
+
+    context "with max category nesting 3" do
       let(:category1) { Fabricate(:category) }
       let(:category2) { Fabricate(:category, parent_category: category1) }
       let(:category3) { Fabricate(:category, parent_category: category2) }

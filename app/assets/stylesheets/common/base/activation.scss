@@ -26,3 +26,30 @@
     }
   }
 }
+
+.activate-account {
+  .activate-title {
+    text-align: center;
+    .waving-hand {
+      height: 32px;
+      margin-bottom: 13px;
+    }
+  }
+  #activate-account-button {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  .perform-activation {
+    border-top: 6px solid var(--tertiary);
+    box-shadow: 0 1px 10px 1px rgba(var(--primary-low-rgb), 1.25);
+    border-radius: 10px;
+    padding: 1em 2.5em 1em 2.5em;
+    .image {
+      width: 150px;
+      margin: auto;
+      padding-bottom: 1em;
+    }
+  }
+}

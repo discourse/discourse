@@ -1,5 +1,6 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { customSections as sidebarCustomSections } from "discourse/lib/sidebar/custom-sections";
+import { getOwner, setOwner } from "@ember/application";
 
 export default class SidebarSections extends GlimmerComponent {
   customSections;
@@ -11,7 +12,9 @@ export default class SidebarSections extends GlimmerComponent {
 
   get _customSections() {
     return sidebarCustomSections.map((customSection) => {
-      return new customSection({ sidebar: this });
+      const section = new customSection({ sidebar: this });
+      setOwner(section, getOwner(this));
+      return section;
     });
   }
 }

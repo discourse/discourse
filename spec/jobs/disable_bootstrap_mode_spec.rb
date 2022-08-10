@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DisableBootstrapMode do
+RSpec.describe Jobs::DisableBootstrapMode do
 
   describe '.execute' do
     fab!(:admin) { Fabricate(:admin) }

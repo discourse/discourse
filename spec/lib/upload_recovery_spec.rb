@@ -111,7 +111,7 @@ RSpec.describe UploadRecovery do
         .to eq(File.read(file_from_fixtures("smallest.png")))
     end
 
-    context 'S3 store' do
+    describe 'S3 store' do
       before do
         setup_s3
         stub_s3_store

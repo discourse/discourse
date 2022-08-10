@@ -5,7 +5,7 @@ export default {
   after: "discourse-bootstrap",
 
   initialize(container) {
-    let session = container.lookup("session:main");
+    let session = container.lookup("service:session");
     if (session.svgSpritePath) {
       loadSprites(session.svgSpritePath, "fontawesome");
     }

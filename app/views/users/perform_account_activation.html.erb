@@ -1,22 +1,27 @@
 <div id='simple-container'>
-
   <%if flash[:error]%>
     <div class='alert alert-error'>
       <%=flash[:error]%>
     </div>
   <%else%>
-    <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
-    <br>
-
-    <% if @needs_approval %>
-      <p><%= t 'activation.approval_required' %></p>
-    <% else %>
-      <p><%= t('activation.please_continue') %></p>
-      <p><a class="btn" href="<%= path "/" %>"><%= t('activation.continue_button', site_name: SiteSetting.title) -%></a></p>
-      <%- content_for(:no_ember_head) do %>
-        <%= tag.meta id: 'data-auto-redirect', data: { path: path('/') } %>
-      <%- end %>
-      <%= preload_script 'auto-redirect' %>
-    <% end %>
+    <div class='activate-account'>
+      <h1 class="activate-title"><%= t 'activation.welcome_to', site_name: SiteSetting.title %> <img src="<%= Emoji.url_for("wave") %>" alt="" class="waving-hand"></h1>
+      <br>
+      <div class='perform-activation'>
+        <div class="image">
+          <img src="/images/wizard/tada.svg" alt="" class="waving-hand">
+        </div>
+        <% if @needs_approval %>
+          <p><%= t 'activation.approval_required' %></p>
+        <% else %>
+          <p><%= t('activation.please_continue') %></p>
+          <p><a class="btn" href="<%= path "/" %>"><%= t('activation.continue_button', site_name: SiteSetting.title) -%></a></p>
+          <%- content_for(:no_ember_head) do %>
+            <%= tag.meta id: 'data-auto-redirect', data: { path: path('/') } %>
+          <%- end %>
+          <%= preload_script 'auto-redirect' %>
+        <% end %>
+      </div>
+    </div>
   <%end%>
 </div>

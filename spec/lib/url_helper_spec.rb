@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
-describe UrlHelper do
-
+RSpec.describe UrlHelper do
   describe "#relaxed parse" do
-
     it "can handle double #" do
       url = UrlHelper.relaxed_parse("https://test.com#test#test")
       expect(url.to_s).to eq("https://test.com#test%23test")
     end
-
   end
 
   describe "#is_local" do
-
     it "is true when the file has been uploaded" do
       store = stub
       store.expects(:has_been_uploaded?).returns(true)
@@ -42,11 +38,9 @@ describe UrlHelper do
       Discourse.stubs(:store).returns(store)
       expect(UrlHelper.is_local("/plugins/all.js")).to eq(true)
     end
-
   end
 
   describe "#absolute" do
-
     it "returns an absolute URL for CDN" do
       begin
         Rails.configuration.action_controller.asset_host = "//cdn.awesome.com"
@@ -74,52 +68,86 @@ describe UrlHelper do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
       expect(UrlHelper.absolute("/path/to/file")).to eq("http://my.cdn.com/path/to/file")
     end
-
   end
 
   describe "#absolute_without_cdn" do
-
     it "changes a relative url to an absolute one using base url even when cdn is enabled" do
       Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
       expect(UrlHelper.absolute_without_cdn("/path/to/file")).to eq("http://test.localhost/path/to/file")
     end
-
   end
 
   describe "#schemaless" do
-
     it "removes http schemas only" do
       expect(UrlHelper.schemaless("http://www.discourse.org")).to eq("//www.discourse.org")
       expect(UrlHelper.schemaless("https://secure.discourse.org")).to eq("https://secure.discourse.org")
       expect(UrlHelper.schemaless("ftp://ftp.discourse.org")).to eq("ftp://ftp.discourse.org")
     end
-
   end
 
-  describe "#escape_uri" do
+  describe "#normalized_encode" do
+    it "does not double escape %3A (:)" do
+      url = "http://discourse.org/%3A/test"
+      expect(UrlHelper.normalized_encode(url)).to eq(url)
+    end
+
+    it "does not double escape %2F (/)" do
+      url = "http://discourse.org/%2F/test"
+      expect(UrlHelper.normalized_encode(url)).to eq(url)
+    end
+
     it "doesn't escape simple URL" do
-      url = UrlHelper.escape_uri('http://example.com/foo/bar')
+      url = UrlHelper.normalized_encode('http://example.com/foo/bar')
       expect(url).to eq('http://example.com/foo/bar')
     end
 
     it "escapes unsafe chars" do
-      url = UrlHelper.escape_uri("http://example.com/?a=\11\15")
+      url = UrlHelper.normalized_encode("http://example.com/?a=\11\15")
       expect(url).to eq('http://example.com/?a=%09%0D')
     end
 
     it "escapes non-ascii chars" do
-      url = UrlHelper.escape_uri('http://example.com/ماهی')
+      url = UrlHelper.normalized_encode('http://example.com/ماهی')
       expect(url).to eq('http://example.com/%D9%85%D8%A7%D9%87%DB%8C')
     end
 
     it "doesn't escape already escaped chars (space)" do
-      url = UrlHelper.escape_uri('http://example.com/foo%20bar/foo bar/')
+      url = UrlHelper.normalized_encode('http://example.com/foo%20bar/foo bar/')
       expect(url).to eq('http://example.com/foo%20bar/foo%20bar/')
     end
 
     it "doesn't escape already escaped chars (hash)" do
-      url = UrlHelper.escape_uri('https://calendar.google.com/calendar/embed?src=en.uk%23holiday%40group.v.calendar.google.com&ctz=Europe%2FLondon')
-      expect(url).to eq('https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe/London')
+      url = 'https://calendar.google.com/calendar/embed?src=en.uk%23holiday@group.v.calendar.google.com&ctz=Europe%2FLondon'
+      escaped = UrlHelper.normalized_encode(url)
+      expect(escaped).to eq(url)
+    end
+
+    it "leaves reserved chars alone in edge cases" do
+      skip "see: https://github.com/sporkmonger/addressable/issues/472"
+      url = "https://example.com/ article/id%3A1.2%2F1/bar"
+      expected = "https://example.com/%20article/id%3A1.2%2F1/bar"
+      escaped = UrlHelper.normalized_encode(url)
+      expect(escaped).to eq(expected)
+    end
+
+    it "handles emoji domain names" do
+      url = "https://💻.example/💻?computer=💻"
+      expected = "https://xn--3s8h.example/%F0%9F%92%BB?computer=%F0%9F%92%BB"
+      escaped = UrlHelper.normalized_encode(url)
+      expect(escaped).to eq(expected)
+    end
+
+    it "handles special-character domain names" do
+      url = "https://éxample.com/test"
+      expected = "https://xn--xample-9ua.com/test"
+      escaped = UrlHelper.normalized_encode(url)
+      expect(escaped).to eq(expected)
+    end
+
+    it "performs basic normalization" do
+      url = "http://EXAMPLE.com/a"
+      escaped = UrlHelper.normalized_encode(url)
+      expect(escaped).to eq("http://example.com/a")
     end
 
     it "doesn't escape S3 presigned URLs" do
@@ -127,7 +155,7 @@ describe UrlHelper do
       # sensitive information stripped
       presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977%2F20200130%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah%2Bblahblah%2Fblah%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAR&X-Amz-Signature=test"
       encoded_presigned_url = "https://test.com/original/3X/b/5/575bcc2886bf7a39684b57ca90be85f7d399bbc7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AK8888999977/20200130/us-west-1/s3/aws4_request&X-Amz-Date=20200130T064355Z&X-Amz-Expires=15&X-Amz-SignedHeaders=host&X-Amz-Security-Token=blahblah+blahblah/blah//////////wEQA==&X-Amz-Signature=test"
-      expect(UrlHelper.escape_uri(presigned_url)).not_to eq(encoded_presigned_url)
+      expect(UrlHelper.normalized_encode(presigned_url)).not_to eq(encoded_presigned_url)
     end
   end
 
@@ -185,7 +213,7 @@ describe UrlHelper do
         )
       end
 
-      context "and secure_media setting is disabled" do
+      context "when secure_media setting is disabled" do
         before { SiteSetting.secure_media = false }
 
         it "returns the local_cdn_url" do

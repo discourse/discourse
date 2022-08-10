@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Jobs::SyncAclsForUploads do
+RSpec.describe Jobs::SyncAclsForUploads do
   let(:upload1) { Fabricate(:upload) }
   let(:upload2) { Fabricate(:upload) }
   let(:upload3) { Fabricate(:secure_upload) }
@@ -17,7 +17,7 @@ describe Jobs::SyncAclsForUploads do
     run_job
   end
 
-  context "external storage enabled" do
+  context "with external storage enabled" do
     before do
       setup_s3
       stub_s3_store

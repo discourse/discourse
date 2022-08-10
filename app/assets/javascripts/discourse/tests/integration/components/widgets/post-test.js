@@ -237,7 +237,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("anon liking", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     const args = { showLike: true };
     this.set("args", args);
     this.set("showLogin", () => (this.loginShown = true));
@@ -916,5 +916,27 @@ module("Integration | Component | Widget | post", function (hooks) {
       link.getAttribute("href"),
       "/g/testGroup/requests?filter=foo"
     );
+  });
+
+  test("shows user status if enabled in site settings", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+    this.set("args", {
+      userStatus: { emoji: "tooth", description: "off to dentist" },
+    });
+
+    await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
+
+    assert.ok(exists(".user-status-message"));
+  });
+
+  test("doesn't show user status if disabled in site settings", async function (assert) {
+    this.siteSettings.enable_user_status = false;
+    this.set("args", {
+      userStatus: { emoji: "tooth", description: "off to dentist" },
+    });
+
+    await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
+
+    assert.notOk(exists(".user-status-message"));
   });
 });

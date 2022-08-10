@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe WatchedWord do
+RSpec.describe WatchedWord do
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -21,7 +21,7 @@ describe WatchedWord do
     WordWatcher.clear_cache!
   end
 
-  context "block" do
+  context "with block" do
     def should_block_post(manager)
       expect {
         result = manager.perform
@@ -88,7 +88,7 @@ describe WatchedWord do
     end
   end
 
-  context "require_approval" do
+  context "with require_approval" do
     it "should queue the post for approval" do
       manager = NewPostManager.new(tl2_user, raw: "My dog's name is #{require_approval_word.word}.", topic_id: topic.id)
       result = manager.perform
@@ -130,7 +130,7 @@ describe WatchedWord do
     end
   end
 
-  context "flag" do
+  context "with flag" do
     def should_flag_post(author, raw, topic)
       post = Fabricate(:post, raw: raw, topic: topic, user: author)
       expect {

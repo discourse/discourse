@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::BulkInvite do
+RSpec.describe Jobs::BulkInvite do
   describe '#execute' do
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
@@ -106,7 +106,7 @@ describe Jobs::BulkInvite do
       expect(new_staged_user.user_fields[user_field.id.to_s]).to eq('value 3')
     end
 
-    context 'invites are more than 200' do
+    context 'when there are more than 200 invites' do
       let(:bulk_invites) { [] }
 
       before do

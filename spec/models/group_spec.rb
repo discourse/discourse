@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-describe Group do
+RSpec.describe Group do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
-  context 'validations' do
+  describe 'Validations' do
     describe '#grant_trust_level' do
       describe 'when trust level is not valid' do
         it 'should not be valid' do
@@ -66,7 +66,7 @@ describe Group do
   end
 
   describe '#builtin' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @builtin = Group.builtin
       end
@@ -602,7 +602,7 @@ describe Group do
     end
   end
 
-  context "group management" do
+  describe "group management" do
     fab!(:group) { Fabricate(:group) }
 
     it "by default has no managers" do
@@ -1123,7 +1123,7 @@ describe Group do
     end
   end
 
-  context "Unicode usernames and group names" do
+  describe "Unicode usernames and group names" do
     before { SiteSetting.unicode_usernames = true }
 
     it "should normalize the name" do

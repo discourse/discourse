@@ -23,6 +23,10 @@ export default DiscoveryController.extend({
   category: null,
 
   canEdit: reads("currentUser.staff"),
+  @discourseComputed
+  isCategoriesRoute() {
+    return this.router.currentRouteName === "discovery.categories";
+  },
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
     let style = this.siteSettings.desktop_category_page_style;

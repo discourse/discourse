@@ -2,10 +2,11 @@
 
 class CensoredWordsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    words_regexp = censored_words_regexp
-    if WordWatcher.words_for_action(:censor).present? && !words_regexp.nil?
-      censored_words = censor_words(value, words_regexp)
+    words_regexps = WordWatcher.word_matcher_regexp_list(:censor)
+    if WordWatcher.words_for_action_exists?(:censor).present? && words_regexps.present?
+      censored_words = censor_words(value, words_regexps)
       return if censored_words.blank?
+
       record.errors.add(
         attribute,
         :contains_censored_words,
@@ -16,8 +17,8 @@ class CensoredWordsValidator < ActiveModel::EachValidator
 
   private
 
-  def censor_words(value, regexp)
-    censored_words = value.scan(regexp)
+  def censor_words(value, regexps)
+    censored_words = regexps.map { |r| value.scan(r) }
     censored_words.flatten!
     censored_words.compact!
     censored_words.map!(&:strip)
@@ -30,9 +31,5 @@ class CensoredWordsValidator < ActiveModel::EachValidator
     censored_words.map!(&:downcase)
     censored_words.uniq!
     censored_words.join(", ")
-  end
-
-  def censored_words_regexp
-    WordWatcher.word_matcher_regexp :censor
   end
 end

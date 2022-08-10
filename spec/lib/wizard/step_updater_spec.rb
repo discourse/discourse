@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Wizard::StepUpdater do
+RSpec.describe Wizard::StepUpdater do
   before do
     SiteSetting.wizard_enabled = true
   end
@@ -8,7 +8,7 @@ describe Wizard::StepUpdater do
   fab!(:user) { Fabricate(:admin) }
   let(:wizard) { Wizard::Builder.new(user).build }
 
-  context "introduction" do
+  describe "introduction" do
     it "updates the introduction step" do
       locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
       updater = wizard.create_updater('introduction',
@@ -42,7 +42,7 @@ describe Wizard::StepUpdater do
     end
   end
 
-  context "privacy" do
+  describe "privacy" do
     it "updates to open correctly" do
       updater = wizard.create_updater('privacy', login_required: false, invite_only: false, must_approve_users: false)
       updater.update
@@ -64,7 +64,7 @@ describe Wizard::StepUpdater do
     end
   end
 
-  context "styling" do
+  describe "styling" do
     it "updates fonts" do
       updater = wizard.create_updater('styling',
         body_font: 'open_sans',
@@ -78,7 +78,7 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.heading_font).to eq('oswald')
     end
 
-    context "colors" do
+    context "with colors" do
       context "with an existing color scheme" do
         fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
@@ -122,7 +122,7 @@ describe Wizard::StepUpdater do
           Theme.delete_all
         end
 
-        context 'dark theme' do
+        context 'with dark theme' do
           it "creates the theme" do
             updater = wizard.create_updater('styling',
               color_scheme: 'Dark',
@@ -140,7 +140,7 @@ describe Wizard::StepUpdater do
           end
         end
 
-        context 'light theme' do
+        context 'with light theme' do
           it "creates the theme" do
             updater = wizard.create_updater('styling',
               color_scheme: ColorScheme::LIGHT_THEME_ID,
@@ -184,7 +184,7 @@ describe Wizard::StepUpdater do
         end
       end
 
-      context "auto dark mode" do
+      context "with auto dark mode" do
         before do
           dark_scheme = ColorScheme.where(name: "Dark").first
           SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
@@ -215,8 +215,9 @@ describe Wizard::StepUpdater do
 
     end
 
-    context "homepage style" do
+    context "with homepage style" do
       it "updates the fields correctly" do
+        SiteSetting.top_menu = "latest|categories|unread|top"
         updater = wizard.create_updater('styling',
           body_font: 'arial',
           heading_font: 'arial',
@@ -226,9 +227,10 @@ describe Wizard::StepUpdater do
 
         expect(updater).to be_success
         expect(wizard.completed_steps?('styling')).to eq(true)
-        expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+        expect(SiteSetting.top_menu).to eq('categories|latest|unread|top')
         expect(SiteSetting.desktop_category_page_style).to eq('categories_and_top_topics')
 
+        SiteSetting.top_menu = "categories|latest|new|top"
         updater = wizard.create_updater('styling',
           body_font: 'arial',
           heading_font: 'arial',
@@ -236,12 +238,34 @@ describe Wizard::StepUpdater do
         )
         updater.update
         expect(updater).to be_success
-        expect(SiteSetting.top_menu).to eq('latest|new|unread|top|categories')
+        expect(SiteSetting.top_menu).to eq('latest|categories|new|top')
+      end
+
+      it "does not overwrite top_menu site setting" do
+        SiteSetting.top_menu = "latest|unread|unseen|categories"
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "latest"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq('latest|unread|unseen|categories')
+
+        SiteSetting.top_menu = "categories|new|latest"
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "categories_and_top_topics"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq('categories|new|latest')
       end
     end
   end
 
-  context "branding" do
+  describe "branding" do
     it "updates the fields correctly" do
       upload = Fabricate(:upload)
       upload2 = Fabricate(:upload)
@@ -261,7 +285,7 @@ describe Wizard::StepUpdater do
     end
   end
 
-  context "corporate" do
+  describe "corporate" do
     it "updates the fields properly" do
       p = Fabricate(:post, raw: 'company_name - governing_law - city_for_disputes template')
       SiteSetting.tos_topic_id = p.topic_id

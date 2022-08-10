@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubActionsOnebox do
+RSpec.describe Onebox::Engine::GithubActionsOnebox do
   describe "PR check run" do
     before do
       @link = "https://github.com/discourse/discourse/pull/13128/checks?check_run_id=2660861130"
@@ -12,7 +12,7 @@ describe Onebox::Engine::GithubActionsOnebox do
         .to_return(status: 200, body: onebox_response("githubactions_pr_run"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do
@@ -34,7 +34,7 @@ describe Onebox::Engine::GithubActionsOnebox do
         .to_return(status: 200, body: onebox_response("githubactions_actions_run"))
     end
 
-    include_context "engines"
+    include_context "with engines"
     it_behaves_like "an engine"
 
     describe "#to_html" do

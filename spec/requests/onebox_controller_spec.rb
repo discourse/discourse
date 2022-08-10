@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe OneboxController do
+RSpec.describe OneboxController do
 
   before do
     Discourse.cache.delete(Oneboxer.onebox_failed_cache_key(url))
@@ -187,7 +187,7 @@ describe OneboxController do
       expect(response.body).to include('blockquote')
     end
 
-    context 'local categories' do
+    context 'with local categories' do
       fab!(:category) { Fabricate(:category) }
 
       it 'oneboxes a public category' do

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-describe PostActionDestroyer do
+RSpec.describe PostActionDestroyer do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
 
   describe '#perform' do
-    context 'like' do
-      context 'post action exists' do
+    context 'with like' do
+      context 'when post action exists' do
         before do
           PostActionCreator.new(user, post, PostActionType.types[:like]).perform
         end
@@ -49,18 +49,16 @@ describe PostActionDestroyer do
         end
       end
 
-      context 'post action doesn’t exist' do
-        describe 'perform' do
-          it 'fails' do
-            result = PostActionDestroyer.destroy(user, post, :like)
-            expect(result.success).to eq(false)
-            expect(result.not_found).to eq(true)
-          end
+      context 'when post action doesn’t exist' do
+        it 'fails' do
+          result = PostActionDestroyer.destroy(user, post, :like)
+          expect(result.success).to eq(false)
+          expect(result.not_found).to eq(true)
         end
       end
     end
 
-    context 'any other notifiable type' do
+    context 'with any other notifiable type' do
       before do
         PostActionCreator.new(user, post, PostActionType.types[:spam]).perform
       end

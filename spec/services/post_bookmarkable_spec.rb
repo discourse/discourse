@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-describe PostBookmarkable do
+RSpec.describe PostBookmarkable do
   fab!(:user) { Fabricate(:user) }
-  fab!(:guardian) { Guardian.new(user) }
+  let(:guardian) { Guardian.new(user) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
   let!(:post1) { Fabricate(:post) }

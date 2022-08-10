@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AssociatedGroup do
+RSpec.describe AssociatedGroup do
   let(:user) { Fabricate(:user) }
   let(:associated_group) { Fabricate(:associated_group) }
   let(:group) { Fabricate(:group) }
@@ -20,7 +20,7 @@ describe AssociatedGroup do
     expect(described_class.has_provider?).to eq(true)
   end
 
-  context "cleanup!" do
+  describe ".cleanup!" do
     before do
       associated_group.last_used = 8.days.ago
       associated_group.save

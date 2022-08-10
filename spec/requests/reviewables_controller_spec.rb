@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-describe ReviewablesController do
-
-  context "anonymous" do
+RSpec.describe ReviewablesController do
+  context "when anonymous" do
     it "denies listing" do
       get "/review.json"
       expect(response.code).to eq("403")
@@ -29,7 +28,7 @@ describe ReviewablesController do
     end
   end
 
-  context "regular user" do
+  context "when regular user" do
     before do
       sign_in(Fabricate(:user))
     end
@@ -76,6 +75,7 @@ describe ReviewablesController do
         expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id }).to eq(true)
 
         expect(json['meta']['reviewable_count']).to eq(1)
+        expect(json['meta']['unseen_reviewable_count']).to eq(1)
         expect(json['meta']['status']).to eq("pending")
       end
 
@@ -191,7 +191,7 @@ describe ReviewablesController do
         expect(json["errors"][0]).to eq(I18n.t("reviewables.already_handled_and_user_not_exist"))
       end
 
-      context "supports filtering by range" do
+      context "when filtering by range" do
         let(:from) { 3.days.ago.strftime('%F') }
         let(:to) { 1.day.ago.strftime('%F') }
 
@@ -254,8 +254,75 @@ describe ReviewablesController do
       end
     end
 
+    describe "#user_menu_list" do
+      it "renders each reviewable with its basic serializers" do
+        reviewable_user = Fabricate(:reviewable_user, payload: { username: "someb0dy" })
+        reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
+        reviewable_queued_post = Fabricate(:reviewable_queued_post)
+
+        get "/review/user-menu-list.json"
+        expect(response.status).to eq(200)
+
+        reviewables = response.parsed_body["reviewables"]
+
+        reviewable_queued_post_json = reviewables.find { |r| r["id"] == reviewable_queued_post.id }
+        expect(reviewable_queued_post_json["is_new_topic"]).to eq(false)
+        expect(reviewable_queued_post_json["topic_fancy_title"]).to eq(
+          reviewable_queued_post.topic.fancy_title
+        )
+
+        reviewable_flagged_post_json = reviewables.find { |r| r["id"] == reviewable_flagged_post.id }
+        expect(reviewable_flagged_post_json["post_number"]).to eq(
+          reviewable_flagged_post.post.post_number
+        )
+        expect(reviewable_flagged_post_json["topic_fancy_title"]).to eq(
+          reviewable_flagged_post.topic.fancy_title
+        )
+
+        reviewable_user_json = reviewables.find { |r| r["id"] == reviewable_user.id }
+        expect(reviewable_user_json["username"]).to eq("someb0dy")
+      end
+
+      it "returns JSON containing basic information of reviewables" do
+        reviewable1 = Fabricate(:reviewable)
+        reviewable2 = Fabricate(:reviewable, status: Reviewable.statuses[:approved])
+        get "/review/user-menu-list.json"
+        expect(response.status).to eq(200)
+        reviewables = response.parsed_body["reviewables"]
+        expect(reviewables.size).to eq(2)
+        expect(reviewables[0]["flagger_username"]).to eq(reviewable1.created_by.username)
+        expect(reviewables[0]["id"]).to eq(reviewable1.id)
+        expect(reviewables[0]["type"]).to eq(reviewable1.type)
+        expect(reviewables[0]["pending"]).to eq(true)
+
+        expect(reviewables[1]["flagger_username"]).to eq(reviewable2.created_by.username)
+        expect(reviewables[1]["id"]).to eq(reviewable2.id)
+        expect(reviewables[1]["type"]).to eq(reviewable2.type)
+        expect(reviewables[1]["pending"]).to eq(false)
+      end
+
+      it "puts pending reviewables on top" do
+        approved1 = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:approved]
+        )
+        pending = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:pending]
+        )
+        approved2 = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:approved]
+        )
+        get "/review/user-menu-list.json"
+        expect(response.status).to eq(200)
+        reviewables = response.parsed_body["reviewables"]
+        expect(reviewables.map { |r| r["id"] }).to eq([pending.id, approved2.id, approved1.id])
+      end
+    end
+
     describe "#show" do
-      context "basics" do
+      context "with basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }
         before do
           sign_in(Fabricate(:moderator))
@@ -275,7 +342,7 @@ describe ReviewablesController do
         end
       end
 
-      context "conversation" do
+      context "with conversation" do
         fab!(:post) { Fabricate(:post) }
         fab!(:user) { Fabricate(:user) }
         fab!(:admin) { Fabricate(:admin) }
@@ -321,7 +388,7 @@ describe ReviewablesController do
     end
 
     describe "#explain" do
-      context "basics" do
+      context "with basics" do
         fab!(:reviewable) { Fabricate(:reviewable) }
 
         before do
@@ -415,7 +482,7 @@ describe ReviewablesController do
         expect(job).to be_blank
       end
 
-      context "claims" do
+      context "with claims" do
         fab!(:qp) { Fabricate(:reviewable_queued_post) }
 
         it "fails when reviewables must be claimed" do

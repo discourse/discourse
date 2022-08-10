@@ -95,7 +95,7 @@ export default createWidget("hamburger-menu", {
   },
 
   lookupCount(type) {
-    const tts = this.register.lookup("topic-tracking-state:main");
+    const tts = this.register.lookup("service:topic-tracking-state");
     return tts ? tts.lookupCount({ type }) : 0;
   },
 
@@ -355,7 +355,11 @@ export default createWidget("hamburger-menu", {
   },
 
   html(attrs, state) {
-    if (!state.loaded) {
+    if (
+      this.currentUser &&
+      !this.currentUser.redesigned_user_menu_enabled &&
+      !state.loaded
+    ) {
       this.refreshReviewableCount(state);
     }
 
