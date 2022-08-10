@@ -2,6 +2,8 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
+  loggedInUser,
+  publishToMessageBus,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -102,13 +104,13 @@ acceptance("User menu", function (needs) {
 
     assert.strictEqual(
       customTab1.dataset.tabNumber,
-      "5",
+      "6",
       "custom tab has the right tab number"
     );
 
     assert.strictEqual(
       customTab2.dataset.tabNumber,
-      "6",
+      "7",
       "custom tab has the right tab number"
     );
 
@@ -116,7 +118,7 @@ acceptance("User menu", function (needs) {
 
     assert.strictEqual(
       reviewQueueTab.dataset.tabNumber,
-      "7",
+      "8",
       "review queue tab comes after the custom tabs"
     );
 
@@ -124,7 +126,7 @@ acceptance("User menu", function (needs) {
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "data-tab-number of the tabs has no gaps when custom tabs are added"
     );
 
