@@ -92,34 +92,28 @@ acceptance("User menu", function (needs) {
         };
       });
     });
+    const expectedTabOrder = {
+      "user-menu-button-all-notifications": "0",
+      "user-menu-button-replies": "1",
+      "user-menu-button-mentions": "2",
+      "user-menu-button-likes": "3",
+      "user-menu-button-messages": "4",
+      "user-menu-button-bookmarks": "5",
+      "user-menu-button-custom-tab-1": "6",
+      "user-menu-button-custom-tab-2": "7",
+      "user-menu-button-review-queue": "8",
+    };
 
     await visit("/");
     await click(".d-header-icons .current-user");
 
-    const customTab1 = query("#user-menu-button-custom-tab-1");
-    const customTab2 = query("#user-menu-button-custom-tab-2");
-
-    assert.ok(customTab1, "first custom tab is rendered");
-    assert.ok(customTab2, "second custom tab is rendered");
-
-    assert.strictEqual(
-      customTab1.dataset.tabNumber,
-      "6",
-      "custom tab has the right tab number"
+    assert.ok(
+      exists("#user-menu-button-custom-tab-1"),
+      "first custom tab is rendered"
     );
-
-    assert.strictEqual(
-      customTab2.dataset.tabNumber,
-      "7",
-      "custom tab has the right tab number"
-    );
-
-    const reviewQueueTab = query("#user-menu-button-review-queue");
-
-    assert.strictEqual(
-      reviewQueueTab.dataset.tabNumber,
-      "8",
-      "review queue tab comes after the custom tabs"
+    assert.ok(
+      exists("#user-menu-button-custom-tab-2"),
+      "second custom tab is rendered"
     );
 
     const tabs = [...queryAll(".tabs-list.top-tabs .btn")];
@@ -129,18 +123,8 @@ acceptance("User menu", function (needs) {
         acc[tab.id] = tab.dataset.tabNumber;
         return acc;
       }, {}),
-      {
-        "user-menu-button-all-notifications": "0",
-        "user-menu-button-replies": "1",
-        "user-menu-button-mentions": "2",
-        "user-menu-button-likes": "3",
-        "user-menu-button-messages": "4",
-        "user-menu-button-bookmarks": "5",
-        "user-menu-button-custom-tab-1": "6",
-        "user-menu-button-custom-tab-2": "7",
-        "user-menu-button-review-queue": "8",
-      },
-      "data-tab-number of the tabs has no gaps when custom tabs are added"
+      expectedTabOrder,
+      "data-tab-number of the tabs has no gaps when custom tabs are added and the tabs are in the right order"
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
