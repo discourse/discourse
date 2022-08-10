@@ -4,8 +4,8 @@
   {{#if this.visible}}
     <ComposerMessages @composer={{this.model}} @messageCount={{this.messageCount}} @addLinkLookup={{action "addLinkLookup"}} />
 
-    {{#if this.fullScreenPrompt}}
-      <ComposerFullscreenPrompt @model={{this.model}}/>
+    {{#if this.showFullScreenPrompt}}
+      <ComposerFullscreenPrompt @removeFullScreenExitPrompt={{action "removeFullScreenExitPrompt"}}/>
     {{/if}}
 
     {{#if this.model.viewOpenOrFullscreen}}

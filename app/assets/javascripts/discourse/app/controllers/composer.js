@@ -502,6 +502,11 @@ export default Controller.extend({
     return false;
   },
 
+  @action
+  removeFullScreenExitPrompt() {
+    this.set("model.showFullScreenExitPrompt", false);
+  },
+
   actions: {
     togglePreview() {
       this.toggleProperty("showPreview");
@@ -1495,12 +1500,12 @@ export default Controller.extend({
       composer?.set("composeState", Composer.OPEN);
     } else {
       composer?.set("composeState", Composer.FULLSCREEN);
-      composer?.toggleProperty("showFullScreenExitPrompt");
+      composer?.set("showFullScreenExitPrompt", true);
     }
   },
 
   @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
-  fullScreenPrompt(isFullscreen, showExitPrompt) {
+  showFullScreenPrompt(isFullscreen, showExitPrompt) {
     return isFullscreen && showExitPrompt;
   },
 
