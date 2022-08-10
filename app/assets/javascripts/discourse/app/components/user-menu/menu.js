@@ -2,7 +2,7 @@ import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
-import UserMenuTab from "discourse/lib/user-menu/tab";
+import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -123,12 +123,31 @@ export default class UserMenu extends GlimmerComponent {
 
   get _topTabs() {
     const tabs = [];
+
     CORE_TOP_TABS.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
         tabs.push(tab);
       }
     });
+
+    let reviewQueueTabIndex = tabs.findIndex(
+      (tab) => tab.id === REVIEW_QUEUE_TAB_ID
+    );
+
+    CUSTOM_TABS_CLASSES.forEach((tabClass) => {
+      const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
+      if (tab.shouldDisplay) {
+        // ensure the review queue tab is always last
+        if (reviewQueueTabIndex === -1) {
+          tabs.push(tab);
+        } else {
+          tabs.insertAt(reviewQueueTabIndex, tab);
+          reviewQueueTabIndex++;
+        }
+      }
+    });
+
     return tabs.map((tab, index) => {
       tab.position = index;
       return tab;

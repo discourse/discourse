@@ -5,16 +5,21 @@ import {
   loggedInUser,
   publishToMessageBus,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import I18n from "I18n";
 
 acceptance("User menu", function (needs) {
-  needs.user({ redesigned_user_menu_enabled: true });
+  needs.user({
+    redesigned_user_menu_enabled: true,
+    unread_high_priority_notifications: 73,
+  });
   let requestHeaders = {};
 
   needs.pretender((server, helper) => {
@@ -42,6 +47,133 @@ acceptance("User menu", function (needs) {
       requestHeaders["Discourse-Clear-Notifications"],
       123, // id is from the fixtures in fixtures/notification-fixtures.js
       "the Discourse-Clear-Notifications request header is set to the notification id in the next ajax request"
+    );
+  });
+
+  test("tabs added via the plugin API", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-1";
+          }
+
+          get count() {
+            return this.currentUser.get("unread_high_priority_notifications");
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-2";
+          }
+
+          get count() {
+            return 29;
+          }
+
+          get icon() {
+            return "plus";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    const customTab1 = query("#user-menu-button-custom-tab-1");
+    const customTab2 = query("#user-menu-button-custom-tab-2");
+
+    assert.ok(customTab1, "first custom tab is rendered");
+    assert.ok(customTab2, "second custom tab is rendered");
+
+    assert.strictEqual(
+      customTab1.dataset.tabNumber,
+      "5",
+      "custom tab has the right tab number"
+    );
+
+    assert.strictEqual(
+      customTab2.dataset.tabNumber,
+      "6",
+      "custom tab has the right tab number"
+    );
+
+    const reviewQueueTab = query("#user-menu-button-review-queue");
+
+    assert.strictEqual(
+      reviewQueueTab.dataset.tabNumber,
+      "7",
+      "review queue tab comes after the custom tabs"
+    );
+
+    const tabs = [...queryAll(".tabs-list .btn")]; // top and bottom tabs
+
+    assert.deepEqual(
+      tabs.map((t) => t.dataset.tabNumber),
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      "data-tab-number of the tabs has no gaps when custom tabs are added"
+    );
+
+    let customTab1Bubble = query(
+      "#user-menu-button-custom-tab-1 .badge-notification"
+    );
+
+    assert.strictEqual(
+      customTab1Bubble.textContent.trim(),
+      "73",
+      "bubble shows the right count"
+    );
+
+    const customTab2Bubble = query(
+      "#user-menu-button-custom-tab-2 .badge-notification"
+    );
+
+    assert.strictEqual(
+      customTab2Bubble.textContent.trim(),
+      "29",
+      "bubble shows the right count"
+    );
+
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      unread_high_priority_notifications: 18,
+    });
+
+    customTab1Bubble = query(
+      "#user-menu-button-custom-tab-1 .badge-notification"
+    );
+
+    assert.strictEqual(
+      customTab1Bubble.textContent.trim(),
+      "18",
+      "displayed bubble count updates when the value is changed"
+    );
+
+    await click("#user-menu-button-custom-tab-1");
+
+    assert.ok(
+      exists("#user-menu-button-custom-tab-1.active"),
+      "custom tabs can be clicked on and become active"
+    );
+
+    assert.ok(
+      exists("#quick-access-custom-tab-1 button.btn"),
+      "the tab's content is now displayed in the panel"
     );
   });
 });
