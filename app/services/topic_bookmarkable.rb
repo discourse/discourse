@@ -15,10 +15,7 @@ class TopicBookmarkable < BaseBookmarkable
     [:tags, { first_post: :user }]
   end
 
-  def self.perform_custom_preload!(bookmarks, guardian)
-    topic_bookmarks = Bookmark.select_type(bookmarks, model.to_s)
-    return if topic_bookmarks.empty?
-
+  def self.perform_custom_preload!(topic_bookmarks, guardian)
     topics = topic_bookmarks.map(&:bookmarkable)
     topic_user_lookup = TopicUser.lookup_for(guardian.user, topics)
 
