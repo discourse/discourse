@@ -176,6 +176,24 @@ RSpec.describe Invite do
 
         expect(invite.invite_key).not_to eq(another_invite.invite_key)
       end
+
+      context "when email is already invited 3 times" do
+        before do
+          RateLimiter.enable
+          3.times do
+            Invite.generate(user, email: "test@example.com")
+          end
+        end
+
+        after do
+          RateLimiter.clear_all!
+        end
+
+        it "raises an error" do
+          expect { Invite.generate(user, email: "test@example.com") }
+            .to raise_error(RateLimiter::LimitExceeded)
+        end
+      end
     end
 
     context 'when inviting to a topic' do
