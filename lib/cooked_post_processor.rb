@@ -381,7 +381,11 @@ class CookedPostProcessor
       add_large_image_placeholder!(img)
       still_an_image = false
     elsif info&.download_failed?
-      add_broken_image_placeholder!(img)
+      if img.ancestors('.onebox, .onebox-body').blank?
+        add_broken_image_placeholder!(img)
+      else
+        img.remove
+      end
       still_an_image = false
     elsif info&.downloaded? && upload = info&.upload
       img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_media)
