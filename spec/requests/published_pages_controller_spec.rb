@@ -128,7 +128,7 @@ RSpec.describe PublishedPagesController do
             get published_page.path
           end.to change(TopicViewItem, :count).by(1)
         end
-        
+
         context "when login is required" do
           before do
             SiteSetting.login_required = true
