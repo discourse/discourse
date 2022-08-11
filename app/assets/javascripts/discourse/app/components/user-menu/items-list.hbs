@@ -5,7 +5,7 @@
 {{else if this.items.length}}
   <ul>
     {{#each this.items as |item|}}
-      {{component this.itemComponent item=item}}
+      <UserMenu::MenuItem @item={{item}}/>
     {{/each}}
   </ul>
   <div class="panel-body-bottom">

@@ -5,9 +5,11 @@ import { ajax } from "discourse/lib/ajax";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
+  @service siteSettings;
   @service site;
   @service store;
 
@@ -28,7 +30,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get showDismiss() {
-    return this.items.some((item) => !item.read);
+    return this.items.some((item) => !item.notification.read);
   }
 
   get dismissTitle() {
@@ -52,10 +54,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
-  get itemComponent() {
-    return "user-menu/notification-item";
-  }
-
   fetchItems() {
     const params = {
       limit: 30,
@@ -72,7 +70,16 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return this.store
       .findStale("notification", params)
       .refresh()
-      .then((c) => c.content);
+      .then((c) => {
+        return c.content.map((notification) => {
+          return new UserMenuNotificationItem({
+            notification,
+            currentUser: this.currentUser,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          });
+        });
+      });
   }
 
   dismissWarningModal() {
