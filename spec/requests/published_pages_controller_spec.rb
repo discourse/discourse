@@ -123,6 +123,12 @@ RSpec.describe PublishedPagesController do
           expect(response.body).to include("<body class=\"published-page #{published_page.slug} topic-#{published_page.topic_id} recipes uncategorized\">")
         end
 
+        it 'records a view' do
+          expect do
+            get published_page.path
+          end.to change(TopicViewItem, :count).by(1)
+        end
+        
         context "login is required" do
           before do
             SiteSetting.login_required = true

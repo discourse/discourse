@@ -35,6 +35,8 @@ class PublishedPagesController < ApplicationController
     @site_url = Discourse.base_url
     @border_color = "#" + ColorScheme.base_colors["tertiary"]
 
+    TopicViewItem.add(pp.topic.id, request.remote_ip, current_user ? current_user.id : nil)
+
     @body_classes = Set.new([
       'published-page',
       params[:slug],
