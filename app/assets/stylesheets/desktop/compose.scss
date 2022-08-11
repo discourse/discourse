@@ -288,3 +288,24 @@ a.toggle-preview {
     }
   }
 }
+
+.composer-fullscreen-prompt {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1.5s;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
+  position: fixed;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  .rtl & {
+    // R2 is not smart enough to support this swap
+    transform: translate(50%, 0);
+  }
+  z-index: z("header") + 1;
+  background: var(--primary-very-high);
+  color: var(--secondary);
+  padding: 0.5em 0.75em;
+  pointer-events: none;
+  border-radius: 2px;
+}

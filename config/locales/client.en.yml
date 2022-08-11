@@ -2259,6 +2259,7 @@ en:
       abandon: "close composer and discard draft"
       enter_fullscreen: "enter fullscreen composer"
       exit_fullscreen: "exit fullscreen composer"
+      exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
       show_toolbar: "show composer toolbar"
       hide_toolbar: "hide composer toolbar"
       modal_ok: "OK"
@@ -2307,7 +2308,7 @@ en:
       image_alt_text:
         aria_label: Alt text for image
 
-      delete_image_button: Delete Image  
+      delete_image_button: Delete Image
 
     notifications:
       tooltip:

@@ -4,6 +4,10 @@
   {{#if this.visible}}
     <ComposerMessages @composer={{this.model}} @messageCount={{this.messageCount}} @addLinkLookup={{action "addLinkLookup"}} />
 
+    {{#if this.showFullScreenPrompt}}
+      <ComposerFullscreenPrompt @removeFullScreenExitPrompt={{action "removeFullScreenExitPrompt"}}/>
+    {{/if}}
+
     {{#if this.model.viewOpenOrFullscreen}}
       <div role="form" aria-label={{I18n this.saveLabel}} class="reply-area {{if this.canEditTags "with-tags" "without-tags"}}">
         <PluginOutlet @name="composer-open" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
@@ -91,21 +95,19 @@
           <PluginOutlet @name="composer-fields-below" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
           <div class="save-or-cancel">
-            {{#unless this.model.viewFullscreen}}
-              <ComposerSaveButton @action={{action "save"}} @icon={{this.saveIcon}} @label={{this.saveLabel}} @forwardEvent={{true}} @disableSubmit={{this.disableSubmit}} />
+            <ComposerSaveButton @action={{action "save"}} @icon={{this.saveIcon}} @label={{this.saveLabel}} @forwardEvent={{true}} @disableSubmit={{this.disableSubmit}} />
 
-              {{#if this.site.mobileView}}
-                <a href {{action "cancel"}} title={{i18n "cancel"}} class="cancel">
-                  {{#if this.canEdit}}
-                    {{d-icon "times"}}
-                  {{else}}
-                    {{d-icon "far-trash-alt"}}
-                  {{/if}}
-                </a>
-              {{else}}
-                <a href {{action "cancel"}} class="cancel" >{{i18n "close"}}</a>
-              {{/if}}
-            {{/unless}}
+            {{#if this.site.mobileView}}
+              <a href {{action "cancel"}} title={{i18n "cancel"}} class="cancel">
+                {{#if this.canEdit}}
+                  {{d-icon "times"}}
+                {{else}}
+                  {{d-icon "far-trash-alt"}}
+                {{/if}}
+              </a>
+            {{else}}
+              <a href {{action "cancel"}} class="cancel" >{{i18n "close"}}</a>
+            {{/if}}
 
             {{#if this.site.mobileView}}
               {{#if this.whisperOrUnlistTopic}}
