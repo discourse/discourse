@@ -1,15 +1,17 @@
 import I18n from "I18n";
 
 import { cached } from "@glimmer/tracking";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
-import Component from "@glimmer/component";
 import TagSectionLink from "discourse/lib/sidebar/tags-section/tag-section-link";
+import PMTagSectionLink from "discourse/lib/sidebar/tags-section/pm-tag-section-link";
 
 export default class SidebarTagsSection extends Component {
   @service router;
   @service topicTrackingState;
+  @service pmTopicTrackingState;
   @service currentUser;
 
   constructor() {
@@ -17,7 +19,9 @@ export default class SidebarTagsSection extends Component {
 
     this.callbackId = this.topicTrackingState.onStateChange(() => {
       this.sectionLinks.forEach((sectionLink) => {
-        sectionLink.refreshCounts();
+        if (sectionLink.refreshCounts) {
+          sectionLink.refreshCounts();
+        }
       });
     });
   }
@@ -30,13 +34,22 @@ export default class SidebarTagsSection extends Component {
   get sectionLinks() {
     const links = [];
 
-    for (const tagName of this.currentUser.sidebarTagNames) {
-      links.push(
-        new TagSectionLink({
-          tagName,
-          topicTrackingState: this.topicTrackingState,
-        })
-      );
+    for (const tag of this.currentUser.sidebarTags) {
+      if (tag.pm_only) {
+        links.push(
+          new PMTagSectionLink({
+            tag,
+            currentUser: this.currentUser,
+          })
+        );
+      } else {
+        links.push(
+          new TagSectionLink({
+            tag,
+            topicTrackingState: this.topicTrackingState,
+          })
+        );
+      }
     }
 
     return links;

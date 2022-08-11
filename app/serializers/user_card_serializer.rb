@@ -16,7 +16,11 @@ class UserCardSerializer < BasicUserSerializer
     attributes(*attrs)
     attrs.each do |attr|
       define_method "include_#{attr}?" do
-        can_edit
+        if defined?(super)
+          super() && can_edit
+        else
+          can_edit
+        end
       end
     end
   end
