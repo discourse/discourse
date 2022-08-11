@@ -318,6 +318,16 @@ acceptance(
         session.userDarkSchemeId.toString(),
         "resets dark scheme dropdown"
       );
+    });
+
+    test("will not preview color scheme if it's not current user", async function (assert) {
+      let site = Site.current();
+
+      site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
+      site.set("user_color_schemes", [
+        { id: 2, name: "Cool Breeze" },
+        { id: 3, name: "Dark Night", is_dark: true },
+      ]);
 
       await visit("/u/charlie/preferences/interface");
 
