@@ -1132,6 +1132,44 @@ RSpec.describe CookedPostProcessor do
       expect(cpp.doc.to_s).to include(I18n.t("upload.placeholders.too_large_humanized", max_size: "4 MB"))
     end
 
+    it "removes large images from onebox" do
+      url = 'https://example.com/article'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <img src="https://example.com/favicon.ico" class="site-icon">
+            <a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://example.com/article.jpeg" class="thumbnail">
+            <h3><a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
+
+      post = Fabricate(:post, raw: url)
+
+      PostHotlinkedMedia.create!(url: "//example.com/favicon.ico", post: post, status: 'too_large')
+      PostHotlinkedMedia.create!(url: "//example.com/article.jpeg", post: post, status: 'too_large')
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process
+
+      expect(cpp.doc).to match_html <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <h3><a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
+    end
+
     it "replaces broken image placeholder" do
       url = 'https://image.com/my-avatar'
       image_url = 'https://image.com/avatar.png'
@@ -1147,6 +1185,44 @@ RSpec.describe CookedPostProcessor do
 
       expect(cpp.doc.to_s).to have_tag("span.broken-image")
       expect(cpp.doc.to_s).to include(I18n.t("post.image_placeholder.broken"))
+    end
+
+    it "removes broken images from onebox" do
+      url = 'https://example.com/article'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <img src="https://example.com/favicon.ico" class="site-icon">
+            <a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://example.com/article.jpeg" class="thumbnail">
+            <h3><a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
+
+      post = Fabricate(:post, raw: url)
+
+      PostHotlinkedMedia.create!(url: "//example.com/favicon.ico", post: post, status: 'download_failed')
+      PostHotlinkedMedia.create!(url: "//example.com/article.jpeg", post: post, status: 'download_failed')
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process
+
+      expect(cpp.doc).to match_html <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <h3><a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
     end
   end
 
