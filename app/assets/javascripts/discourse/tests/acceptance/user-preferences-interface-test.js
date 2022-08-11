@@ -148,6 +148,11 @@ acceptance(
           success: "OK",
         });
       });
+      server.get("/color-scheme-stylesheet/3.json", () => {
+        return helper.response({
+          new_href: "3.css",
+        });
+      });
       server.get("/u/charlie.json", () => {
         return helper.response(userFixtures["/u/charlie.json"]);
       });
@@ -315,7 +320,7 @@ acceptance(
       );
     });
 
-    test("will not preview color scheme if it's not current user", async function (assert) {
+    test("preview the color scheme only in current user's profile", async function (assert) {
       let site = Site.current();
 
       site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
@@ -323,6 +328,18 @@ acceptance(
         { id: 2, name: "Cool Breeze" },
         { id: 3, name: "Dark Night", is_dark: true },
       ]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      await selectKit(".light-color-scheme .combobox").expand();
+      await selectKit(".light-color-scheme .combobox").selectRowByValue(3);
+
+      assert.ok(
+        document.querySelector("link#cs-preview-light").href.endsWith("/3.css"),
+        "correct stylesheet loaded"
+      );
+
+      document.querySelector("link#cs-preview-light").remove();
 
       await visit("/u/charlie/preferences/interface");
 
