@@ -148,11 +148,6 @@ acceptance(
           success: "OK",
         });
       });
-      server.get("/color-scheme-stylesheet/3.json", () => {
-        return helper.response({
-          new_href: "3.css",
-        });
-      });
       server.get("/u/charlie.json", () => {
         return helper.response(userFixtures["/u/charlie.json"]);
       });
