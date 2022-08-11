@@ -21,11 +21,12 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
           before { sign_in(Fabricate(:admin)) }
 
           it 'triggers the automation' do
-            output = JSON.parse(capture_stdout do
+            list = capture_contexts do
               post "/automations/#{automation.id}/trigger.json"
-            end)
+            end
 
-            expect(output['kind']).to eq('api_call')
+            expect(list.length).to eq(1)
+            expect(list[0]['kind']).to eq('api_call')
           end
         end
 
@@ -55,14 +56,12 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
         it 'works' do
-          capture_stdout do
-            post "/automations/#{automation.id}/trigger.json", {
-              params: { context: { foo: :bar } },
-              headers: {
-                HTTP_API_KEY: api_key.key
-              }
+          post "/automations/#{automation.id}/trigger.json", {
+            params: { context: { foo: :bar } },
+            headers: {
+              HTTP_API_KEY: api_key.key
             }
-          end
+          }
 
           expect(response.status).to eq(200)
         end
@@ -78,12 +77,16 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
       end
 
       it 'passes the params' do
-        output = JSON.parse(capture_stdout do
+        list = capture_contexts do
           post "/automations/#{automation.id}/trigger.json", { params: { foo: '1', bar: '2' } }
-        end)
+        end
 
-        expect(output['foo']).to eq('1')
-        expect(output['bar']).to eq('2')
+        expect(list.length).to eq(1)
+
+        first = list.first
+
+        expect(first['foo']).to eq('1')
+        expect(first['bar']).to eq('2')
         expect(response.status).to eq(200)
       end
     end

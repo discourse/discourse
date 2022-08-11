@@ -19,11 +19,12 @@ describe 'UserBadgeGranted' do
 
   context 'a badge is granted' do
     it 'fires the trigger' do
-      output = JSON.parse(capture_stdout do
+      contexts = capture_contexts do
         BadgeGranter.grant(tracked_badge, user)
-      end)
+      end
 
-      expect(output['kind']).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+      expect(contexts.length).to eq(1)
+      expect(contexts[0]['kind']).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
     end
   end
 end

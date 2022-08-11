@@ -19,11 +19,12 @@ describe 'UserAddedToGroup' do
 
   context 'group is tracked' do
     it 'fires the trigger' do
-      output = capture_stdout do
+      list = capture_contexts do
         tracked_group.add(user)
       end
 
-      expect(output).to include('"kind":"user_added_to_group"')
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq('user_added_to_group')
     end
   end
 
@@ -31,11 +32,11 @@ describe 'UserAddedToGroup' do
     let(:untracked_group) { Fabricate(:group) }
 
     it 'doesn’t fire the trigger' do
-      output = capture_stdout do
+      list = capture_contexts do
         untracked_group.add(user)
       end
 
-      expect(output).to_not include('"kind":"user_added_to_group"')
+      expect(list).to eq([])
     end
   end
 end

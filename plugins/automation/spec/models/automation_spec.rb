@@ -8,11 +8,11 @@ describe DiscourseAutomation::Automation do
       fab!(:automation) { Fabricate(:automation, enabled: false) }
 
       it 'doesn’t do anything' do
-        output = capture_stdout do
+        list = capture_contexts do
           automation.trigger!('Howdy!')
         end
 
-        expect(output).to_not include('Howdy!')
+        expect(list).to eq([])
       end
     end
 
@@ -20,11 +20,11 @@ describe DiscourseAutomation::Automation do
       fab!(:automation) { Fabricate(:automation, enabled: true) }
 
       it 'runs the script' do
-        output = capture_stdout do
+        list = capture_contexts do
           automation.trigger!('Howdy!')
         end
 
-        expect(output).to include('Howdy!')
+        expect(list).to eq(['Howdy!'])
       end
     end
   end

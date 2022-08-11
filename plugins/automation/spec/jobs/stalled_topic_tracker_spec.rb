@@ -26,12 +26,14 @@ describe Jobs::StalledTopicTracker do
       create_post(topic: topic_1, user: user_1, created_at: 1.month.ago)
       create_post(topic: topic_1, user: user_1, created_at: 1.month.ago)
 
-      output = JSON.parse(capture_stdout do
+      list = capture_contexts do
         Jobs::StalledTopicTracker.new.execute
-      end)
+      end
 
-      expect(output['kind']).to eq(DiscourseAutomation::Triggerable::STALLED_TOPIC)
-      expect(output['topic']['id']).to eq(topic_1.id)
+      expect(list.length).to eq(1)
+
+      expect(list.first['kind']).to eq(DiscourseAutomation::Triggerable::STALLED_TOPIC)
+      expect(list.first['topic']['id']).to eq(topic_1.id)
     end
   end
 end

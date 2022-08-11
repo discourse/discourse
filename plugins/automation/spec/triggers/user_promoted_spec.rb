@@ -11,20 +11,23 @@ describe 'UserPromoted' do
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_PROMOTED) }
 
   it "runs without any restrictions" do
-    output = capture_stdout do
+    list = capture_contexts do
       user.change_trust_level!(TrustLevel[1])
     end
-    expect(output).to include('"kind":"user_promoted"')
-    expect(output).to include('"placeholders":{"trust_level_transition":"from new user to basic user"}}')
+
+    expect(list.length).to eq(1)
+    expect(list[0]["kind"]).to eq('user_promoted')
+    expect(list[0]["placeholders"]).to eq({ "trust_level_transition" => "from new user to basic user" })
   end
 
   it "does not run if the user is being demoted" do
-    capture_stdout { user.change_trust_level!(TrustLevel[4]) }
+    user.change_trust_level!(TrustLevel[4])
 
-    output = capture_stdout do
+    list = capture_contexts do
       user.change_trust_level!(TrustLevel[1])
     end
-    expect(output).not_to include('"kind":"user_promoted"')
+
+    expect(list).to eq([])
   end
 
   context "when there is a group restriction" do
@@ -34,18 +37,21 @@ describe 'UserPromoted' do
     end
 
     it "does not run if the user is not part of the group" do
-      output = capture_stdout do
+      list = capture_contexts do
         user.change_trust_level!(TrustLevel[1])
       end
-      expect(output).not_to include('"kind":"user_promoted"')
+
+      expect(list).to eq([])
     end
 
     it "does run if the user is part of the group" do
       Fabricate(:group_user, group: group, user: user)
-      output = capture_stdout do
+      list = capture_contexts do
         user.change_trust_level!(TrustLevel[1])
       end
-      expect(output).to include('"kind":"user_promoted"')
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq('user_promoted')
     end
   end
 
@@ -56,29 +62,36 @@ describe 'UserPromoted' do
 
     it "does not run if the trust level transition does not match" do
       user.change_trust_level!(TrustLevel[2])
-      output = capture_stdout do
+
+      list = capture_contexts do
         user.change_trust_level!(TrustLevel[3])
       end
-      expect(output).not_to include('"kind":"user_promoted"')
+
+      expect(list).to eq([])
     end
 
     it "does run if the trust level transition matches" do
-      capture_stdout { user.change_trust_level!(TrustLevel[0]) }
+      user.change_trust_level!(TrustLevel[0])
 
-      output = capture_stdout do
+      list = capture_contexts do
         user.change_trust_level!(TrustLevel[1])
       end
-      expect(output).to include('"kind":"user_promoted"')
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to include('user_promoted')
     end
 
     it "does run if the transition is for all trust levels" do
       automation.upsert_field!("trust_level_transition", "choices", { "value" => "TLALL" }, target: "trigger")
-      capture_stdout { user.change_trust_level!(TrustLevel[2]) }
 
-      output = capture_stdout do
+      user.change_trust_level!(TrustLevel[2])
+
+      list = capture_contexts do
         user.change_trust_level!(TrustLevel[4])
       end
-      expect(output).to include('"kind":"user_promoted"')
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq('user_promoted')
     end
   end
 end

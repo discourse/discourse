@@ -85,6 +85,19 @@ def handle_after_post_cook(post, cooked)
         next if restricted_category['value'] != category_id
       end
 
+      restricted_tags = automation.trigger_field('restricted_tags')
+      if tag_names = restricted_tags['value']
+        found = false
+        next if !post.topic
+
+        post.topic.tags.each do |tag|
+          found ||= tag_names.include?(tag.name)
+          break if found
+        end
+
+        next if !found
+      end
+
       if new_cooked = automation.trigger!('kind' => name, 'post' => post, 'cooked' => cooked)
         cooked = new_cooked
       end

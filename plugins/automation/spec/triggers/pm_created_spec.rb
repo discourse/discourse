@@ -22,20 +22,21 @@ describe 'PMCreated' do
       fab!(:user2) { Fabricate(:user) }
 
       it "doesn't fire the trigger" do
-        output = capture_stdout do
+        list = capture_contexts do
           PostCreator.create(user, basic_topic_params.merge({ target_usernames: [user2.username] }))
         end
 
-        expect(output).to be_blank
+        expect(list).to be_blank
       end
     end
 
     it 'fires the trigger' do
-      output = JSON.parse(capture_stdout do
+      list = capture_contexts do
         PostCreator.create(user, basic_topic_params)
-      end)
+      end
 
-      expect(output['kind']).to eq('pm_created')
+      expect(list.length).to eq(1)
+      expect(list[0]['kind']).to eq('pm_created')
     end
 
     context 'trust_levels are restricted' do
@@ -45,25 +46,26 @@ describe 'PMCreated' do
 
       context 'trust level is allowed' do
         it 'fires the trigger' do
-          output = JSON.parse(capture_stdout do
+          list = capture_contexts do
             user.trust_level = TrustLevel[2]
             user.save!
             PostCreator.create(user, basic_topic_params)
-          end)
+          end
 
-          expect(output['kind']).to eq('pm_created')
+          expect(list.length).to eq(1)
+          expect(list[0]['kind']).to eq('pm_created')
         end
       end
 
       context 'trust level is not allowed' do
         it 'doesn’t fire the trigger' do
-          output = capture_stdout do
+          list = capture_contexts do
             user.trust_level = TrustLevel[1]
             user.save!
             PostCreator.create(user, basic_topic_params)
           end
 
-          expect(output).to be_blank
+          expect(list).to be_blank
         end
       end
     end
@@ -74,13 +76,13 @@ describe 'PMCreated' do
       end
 
       it 'doesn’t fire the trigger' do
-        output = capture_stdout do
+        list = capture_contexts do
           user.moderator = true
           user.save!
           PostCreator.create(user, basic_topic_params)
         end
 
-        expect(output).to be_blank
+        expect(list).to be_blank
       end
     end
   end

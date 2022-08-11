@@ -18,10 +18,10 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
 
   context 'badge is not tracked' do
     it 'doesn’t trigger the automation' do
-      output = capture_stdout do
+      list = capture_contexts do
         described_class.handle(automation, tracked_badge.id, user.id)
       end
-      expect(output).to be_blank
+      expect(list).to be_blank
     end
   end
 
@@ -42,19 +42,21 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
         end
 
         it 'doesn’t trigger the automation' do
-          output = capture_stdout do
+          list = capture_contexts do
             described_class.handle(automation, tracked_badge.id, user.id)
           end
-          expect(output).to be_blank
+          expect(list).to be_blank
         end
       end
 
       context 'badge has not been granted already' do
         it 'triggers the automation' do
-          output = JSON.parse(capture_stdout do
+          list = capture_contexts do
             described_class.handle(automation, tracked_badge.id, user.id)
-          end)
-          expect(output['kind']).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
+          end
+
+          expect(list.length).to eq(1)
+          expect(list[0]['kind']).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
         end
       end
 
@@ -68,10 +70,12 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
     end
 
     it 'triggers the automation' do
-      output = JSON.parse(capture_stdout do
+      list = capture_contexts do
         described_class.handle(automation, tracked_badge.id, user.id)
-      end)
+      end
 
+      expect(list.length).to eq(1)
+      output = list[0]
       expect(output['kind']).to eq(DiscourseAutomation::Triggerable::USER_BADGE_GRANTED)
       expect(output['usernames']).to eq([user.username])
       expect(output['placeholders']).to eq('badge_name' => tracked_badge.name, 'grant_count' => tracked_badge.grant_count)

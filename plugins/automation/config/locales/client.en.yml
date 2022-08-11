@@ -156,6 +156,9 @@ en:
             restricted_category:
               label: Category
               description: Optional, allows to limit trigger execution to this category
+            restricted_tags:
+              label: Tags
+              description: Optional, allows to limit trigger execution to any of these tags
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
