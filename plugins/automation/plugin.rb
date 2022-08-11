@@ -153,6 +153,7 @@ after_initialize do
     '../app/lib/discourse_automation/triggers/stalled_wiki',
     '../app/lib/discourse_automation/triggers/stalled_topic',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
+    '../app/lib/discourse_automation/triggers/user_removed_from_group',
     '../app/lib/discourse_automation/triggers/user_badge_granted',
     '../app/lib/discourse_automation/triggers/pm_created',
     '../app/lib/discourse_automation/triggers/point_in_time',
@@ -262,6 +263,24 @@ after_initialize do
       if joined_group['value'] == group.id
         automation.trigger!(
           'kind' => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
+          'usernames' => [user.username],
+          'group' => group,
+          'placeholders' => {
+            'group_name' => group.name
+          }
+        )
+      end
+    end
+  end
+
+  on(:user_removed_from_group) do |user, group|
+    name = DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP
+
+    DiscourseAutomation::Automation.where(trigger: name, enabled: true).find_each do |automation|
+      left_group = automation.trigger_field('left_group')
+      if left_group['value'] == group.id
+        automation.trigger!(
+          'kind' => DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP,
           'usernames' => [user.username],
           'group' => group,
           'placeholders' => {

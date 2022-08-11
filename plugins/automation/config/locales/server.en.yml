@@ -26,6 +26,9 @@ en:
       user_added_to_group:
         title: User added to group
         description: When a user is added to the specified group the automation will be triggered
+      user_removed_from_group:
+        title: User removed from group
+        description: When a user is removed from the specified group the automation will be triggered
       user_promoted:
         title: User promoted
         description: When a user is promoted from one trust level to another
@@ -103,4 +106,4 @@ en:
         details: "Perform check on document: "
         button_text: Done
       add_user_to_group_through_custom_field:
-        title: 'Add user to group through User Custom Field'
+        title: "Add user to group through User Custom Field"

@@ -7,7 +7,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::ZAPIER_WEBH
 
   version 1
 
-  triggerables [:user_promoted, :user_added_to_group, :user_badge_granted]
+  triggerables [:user_promoted, :user_added_to_group, :user_badge_granted, :user_removed_from_group]
 
   script do |context, fields|
     webhook_url = fields.dig('webhook_url', 'value')

@@ -109,6 +109,10 @@ en:
           fields:
             joined_group:
               label: Tracked group
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Tracked group
         user_promoted:
           fields:
             restricted_group:
