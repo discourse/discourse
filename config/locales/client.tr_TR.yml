@@ -1033,6 +1033,7 @@ tr_TR:
       dismiss: "Kapat"
       dismiss_notifications: "Tümünü Kapat"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
+      dismiss_bookmarks_tooltip: "Okunmamış tüm yer imi hatırlatıcılarını okundu olarak işaretle"
       no_messages_title: "Hiç iletiniz yok"
       no_messages_body: >
         Normal konuşma akışının dışında, biriyle doğrudan kişisel bir konuşma yapmanız mı gerekiyor? Avatarlarını seçip %{icon} ileti düğmesini kullanarak onlara ileti gönderin. <br><br> Yardıma gereksiniminiz varsa <a href='%{aboutUrl}'> bir sorumluya mesaj gönderebilirsiniz</a>.
@@ -2059,6 +2060,7 @@ tr_TR:
       ignore: "Yoksay"
       image_alt_text:
         aria_label: Resim için alternatif metin
+      delete_image_button: İmajı Sil
     notifications:
       tooltip:
         regular:
@@ -2116,8 +2118,12 @@ tr_TR:
       votes_released: "%{description} - tamamlandı"
       dismiss_confirmation:
         body:
-          one: "Emin misiniz? %{count} önemli bildiriminiz var."
-          other: "Emin misiniz? %{count} adet önemli bildiriminiz var."
+          default:
+            one: "Emin misiniz? %{count} önemli bildiriminiz var."
+            other: "Emin misiniz? %{count} adet önemli bildiriminiz var."
+          bookmarks:
+            one: "Emin misiniz? %{count} okunmamış yer imi hatırlatıcınız var."
+            other: "Emin misiniz? %{count} okunmamış yer imi hatırlatıcınız var."
         dismiss: "Kapat"
         cancel: "İptal"
       group_message_summary:
@@ -2300,6 +2306,15 @@ tr_TR:
       generic_no_items: "Bu listede hiç öğe yok."
       sr_menu_tabs: "Menü sekmeleri"
       view_all_notifications: "tüm bildirimleri görüntüle"
+      view_all_bookmarks: "tüm yer imlerini görüntüle"
+      reviewable:
+        view_all: "tüm gözden geçirme öğeleri"
+        queue: "Kuyruk"
+        deleted_user: "(silinmiş kullanıcı)"
+        post_number_with_topic_title: "gönderi #%{post_number} - %{title}"
+        new_post_in_topic: "%{title} başlığıyla yeni gönderi"
+        suspicious_user: "şüpheli kullanıcı %{username}"
+        default_item: "gözden geçirme öğesi #%{reviewable_id}"
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
@@ -3683,6 +3698,7 @@ tr_TR:
         one: "%{count} yeni"
         other: "%{count} yeni"
       toggle_section: "bölümü değiştir"
+      more: "Daha..."
       sections:
         messages:
           header_link_title: "kişisel mesajlar"
@@ -4459,6 +4475,7 @@ tr_TR:
         last_seen_user: "Son Görülen Kullanıcı:"
         no_result: "Özet için hiçbir sonuç bulunamadı."
         reply_key: "Yanıtla Düğmesi"
+        post_link_with_smtp: "Posta ve SMTP Detayları"
         skipped_reason: "Nedeni Atla"
         incoming_emails:
           from_address: "Gönderen"
@@ -4488,6 +4505,7 @@ tr_TR:
             address_placeholder: "ad@örnek.com"
             type_placeholder: "özet, kayıt olma..."
             reply_key_placeholder: "yanıtla düğmesi"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "Gerçekleştiren"
         no_results: "Mevcut bir moderasyon geçmişi yok"
@@ -4670,6 +4688,7 @@ tr_TR:
         show_words:
           one: "%{count} sözcük göster"
           other: "%{count} sözcük göster"
+        case_sensitive: "(büyük/küçük harfe duyarlı)"
         download: İndir
         clear_all: Tümünü Temizle
         clear_all_confirm: "%{action} eylemi için izlenen tüm sözcükleri temizlemek istediğinizden emin misiniz?"
@@ -4707,6 +4726,8 @@ tr_TR:
           exists: "Zaten mevcut"
           upload: "Dosyadan ekle"
           upload_successful: "Yükleme başarılı oldu. Sözcükler eklendi."
+          case_sensitivity_label: "Büyük/küçük harf duyarlıdır"
+          case_sensitivity_description: "Yalnızca büyük/küçük harf detayında eşleşen sözcükler"
         test:
           button_label: "Deneme"
           modal_title: "%{action}: İzlenen Sözcükleri Sına"
@@ -5254,15 +5275,16 @@ tr_TR:
           replace: "Değiştir"
   wizard_js:
     wizard:
-      done: "Tamamlandı"
-      finish: "Bitir"
+      jump_in: "Başla!"
+      finish: "Kurulumdan çık"
       back: "Geri"
       next: "İleri"
+      configure_more: "Daha Fazla Ayar..."
+      step-text: "Aralık"
       step: "%{current} / %{total}"
       upload: "Yükle"
       uploading: "Yükleniyor..."
       upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
-      quit: "Belki Sonra"
       staff_count:
         one: "Topluluğunuzda %{count} görevli üye var (siz)."
         other: "Toplulukta sen dahil toplam %{count} görevli üye var."

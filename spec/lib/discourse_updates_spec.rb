@@ -10,13 +10,13 @@ RSpec.describe DiscourseUpdates do
 
   subject { DiscourseUpdates.check_version }
 
-  context 'version check was done at the current installed version' do
+  context 'when version check was done at the current installed version' do
     before do
       DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING
     end
 
-    context 'a good version check request happened recently' do
-      context 'and server is up-to-date' do
+    context 'when a good version check request happened recently' do
+      context 'when server is up-to-date' do
         let(:time) { 12.hours.ago }
         before { stub_data(Discourse::VERSION::STRING, 0, false, time) }
 
@@ -33,7 +33,7 @@ RSpec.describe DiscourseUpdates do
         end
       end
 
-      context 'and server is not up-to-date' do
+      context 'when server is not up-to-date' do
         let(:time) { 12.hours.ago }
         before { stub_data('0.9.0', 2, false, time) }
 
@@ -50,7 +50,7 @@ RSpec.describe DiscourseUpdates do
       end
     end
 
-    context 'a version check has never been performed' do
+    context 'when a version check has never been performed' do
       before { stub_data(nil, nil, false, nil) }
 
       it 'returns the installed version' do
@@ -77,7 +77,7 @@ RSpec.describe DiscourseUpdates do
 
     # These cases should never happen anymore, but keep the specs to be sure
     # they're handled in a sane way.
-    context 'old version check data' do
+    context 'with old version check data' do
       shared_examples "queue version check and report that version is ok" do
         it 'queues a version check' do
           expect_enqueued_with(job: :version_check) do
@@ -94,19 +94,19 @@ RSpec.describe DiscourseUpdates do
         end
       end
 
-      context 'installed is latest' do
+      context 'when installed is latest' do
         before { stub_data(Discourse::VERSION::STRING, 1, false, 8.hours.ago) }
         include_examples "queue version check and report that version is ok"
       end
 
-      context 'installed does not match latest version, but missing_versions_count is 0' do
+      context 'when installed does not match latest version, but missing_versions_count is 0' do
         before { stub_data('0.10.10.123', 0, false, 8.hours.ago) }
         include_examples "queue version check and report that version is ok"
       end
     end
   end
 
-  context 'version check was done at a different installed version' do
+  context 'when version check was done at a different installed version' do
     before do
       DiscourseUpdates.last_installed_version = '0.9.1'
     end
@@ -127,18 +127,18 @@ RSpec.describe DiscourseUpdates do
       end
     end
 
-    context 'missing_versions_count is 0' do
+    context 'when missing_versions_count is 0' do
       before { stub_data('0.9.7', 0, false, 8.hours.ago) }
       include_examples "when last_installed_version is old"
     end
 
-    context 'missing_versions_count is not 0' do
+    context 'when missing_versions_count is not 0' do
       before { stub_data('0.9.7', 1, false, 8.hours.ago) }
       include_examples "when last_installed_version is old"
     end
   end
 
-  context 'new features' do
+  describe 'new features' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:admin2) { Fabricate(:admin) }
     let!(:last_item_date) { 5.minutes.ago }

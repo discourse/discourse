@@ -151,7 +151,7 @@ RSpec.describe SvgSprite do
     expect(icons).to include("fly")
   end
 
-  context "s3" do
+  describe "s3" do
     let(:upload_s3) { Fabricate(:upload_s3) }
 
     before do
@@ -283,6 +283,5 @@ RSpec.describe SvgSprite do
       expect(Upload.exists?(id: upload.id)).to eq(true)
       expect(SvgSprite.bundle(theme.id)).to match(/my-custom-theme-icon/)
     end
-
   end
 end

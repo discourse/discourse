@@ -3,7 +3,6 @@
 require 'post_revisor'
 
 RSpec.describe PostRevisor do
-
   fab!(:topic) { Fabricate(:topic) }
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
@@ -12,7 +11,7 @@ RSpec.describe PostRevisor do
   fab!(:moderator) { Fabricate(:moderator) }
   let(:post_args) { { user: newuser, topic: topic } }
 
-  context 'TopicChanges' do
+  describe 'TopicChanges' do
     let(:tc) {
       topic.reload
       PostRevisor::TopicChanges.new(topic, topic.user)
@@ -43,7 +42,7 @@ RSpec.describe PostRevisor do
     end
   end
 
-  context 'editing category' do
+  describe 'editing category' do
     it "triggers the :post_edited event with topic_changed?" do
       category = Fabricate(:category)
       category.set_permissions(everyone: :full)
@@ -124,7 +123,7 @@ RSpec.describe PostRevisor do
     end
   end
 
-  context 'editing tags' do
+  describe 'editing tags' do
     fab!(:post) { Fabricate(:post) }
 
     subject { PostRevisor.new(post) }
@@ -152,8 +151,7 @@ RSpec.describe PostRevisor do
     end
   end
 
-  context 'revise wiki' do
-
+  describe 'revise wiki' do
     before do
       # There used to be a bug where wiki changes were considered posting "too similar"
       # so this is enabled and checked
@@ -170,7 +168,7 @@ RSpec.describe PostRevisor do
     end
   end
 
-  context 'revise' do
+  describe 'revise' do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
@@ -473,7 +471,6 @@ RSpec.describe PostRevisor do
     end
 
     describe 'category topic' do
-
       let!(:category) do
         category = Fabricate(:category)
         category.update_column(:topic_id, topic.id)
@@ -486,7 +483,7 @@ RSpec.describe PostRevisor do
         expect(category.description).to be_blank
       end
 
-      context "one paragraph description" do
+      context "with one paragraph description" do
         before do
           subject.revise!(post.user, raw: new_description)
           category.reload
@@ -501,7 +498,7 @@ RSpec.describe PostRevisor do
         end
       end
 
-      context "multiple paragraph description" do
+      context "with multiple paragraph description" do
         before do
           subject.revise!(post.user, raw: "#{new_description}\n\nOther content goes here.")
           category.reload
@@ -516,7 +513,7 @@ RSpec.describe PostRevisor do
         end
       end
 
-      context "invalid description without paragraphs" do
+      context "with invalid description without paragraphs" do
         before do
           subject.revise!(post.user, raw: "# This is a title")
           category.reload
@@ -670,8 +667,7 @@ RSpec.describe PostRevisor do
         end.to change { post.user.user_stat.post_edits_count.to_i }.by(1)
       end
 
-      context 'second poster posts again quickly' do
-
+      context 'when second poster posts again quickly' do
         it 'is a grace period edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
@@ -682,7 +678,7 @@ RSpec.describe PostRevisor do
         end
       end
 
-      context 'passing skip_revision as true' do
+      context 'when passing skip_revision as true' do
         before do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.hours, skip_revision: true)
@@ -773,7 +769,7 @@ RSpec.describe PostRevisor do
       end
     end
 
-    context "logging staff edits" do
+    context "when logging staff edits" do
       it "doesn't log when a regular user revises a post" do
         subject.revise!(
           post.user,
@@ -829,7 +825,7 @@ RSpec.describe PostRevisor do
       end
     end
 
-    context "logging group moderator edits" do
+    context "when logging group moderator edits" do
       fab!(:group_user) { Fabricate(:group_user) }
       fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic) }
 
@@ -851,9 +847,8 @@ RSpec.describe PostRevisor do
       end
     end
 
-    context "staff_edit_locks_post" do
-
-      context "disabled" do
+    context "with staff_edit_locks_post" do
+      context "when disabled" do
         before do
           SiteSetting.staff_edit_locks_post = false
         end
@@ -870,8 +865,7 @@ RSpec.describe PostRevisor do
         end
       end
 
-      context "enabled" do
-
+      context "when enabled" do
         before do
           SiteSetting.staff_edit_locks_post = true
         end
@@ -943,8 +937,7 @@ RSpec.describe PostRevisor do
       end
     end
 
-    context "alerts" do
-
+    context "with alerts" do
       fab!(:mentioned_user) { Fabricate(:user) }
 
       before do
@@ -965,8 +958,8 @@ RSpec.describe PostRevisor do
 
     end
 
-    context "tagging" do
-      context "tagging disabled" do
+    context "with tagging" do
+      context "with tagging disabled" do
         before do
           SiteSetting.tagging_enabled = false
         end
@@ -979,12 +972,12 @@ RSpec.describe PostRevisor do
         end
       end
 
-      context "tagging enabled" do
+      context "with tagging enabled" do
         before do
           SiteSetting.tagging_enabled = true
         end
 
-        context "can create tags" do
+        context "when can create tags" do
           before do
             SiteSetting.min_trust_to_create_tag = 0
             SiteSetting.min_trust_level_to_tag_topics = 0
@@ -1085,7 +1078,7 @@ RSpec.describe PostRevisor do
             end
           end
 
-          context "hidden tags" do
+          context "with hidden tags" do
             let(:bumped_at) { 1.day.ago }
 
             before do
@@ -1146,7 +1139,7 @@ RSpec.describe PostRevisor do
             end
           end
 
-          context "required tag group" do
+          context "with required tag group" do
             fab!(:tag1) { Fabricate(:tag) }
             fab!(:tag2) { Fabricate(:tag) }
             fab!(:tag3) { Fabricate(:tag) }
@@ -1179,7 +1172,7 @@ RSpec.describe PostRevisor do
           end
         end
 
-        context "cannot create tags" do
+        context "when cannot create tags" do
           before do
             SiteSetting.min_trust_to_create_tag = 4
             SiteSetting.min_trust_level_to_tag_topics = 0
@@ -1198,7 +1191,7 @@ RSpec.describe PostRevisor do
       end
     end
 
-    context "uploads" do
+    context "with uploads" do
       let(:image1) { Fabricate(:upload) }
       let(:image2) { Fabricate(:upload) }
       let(:image3) { Fabricate(:upload) }
@@ -1229,7 +1222,7 @@ RSpec.describe PostRevisor do
         expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
 
-      context "secure media uploads" do
+      context "with secure media uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
         before do
           Jobs.run_immediately!

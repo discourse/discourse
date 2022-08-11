@@ -49,7 +49,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
   end
 
   describe '#select' do
-    context 'in a PM with discobot' do
+    context 'when in a PM with discobot' do
       let(:first_post) { Fabricate(:post, user: discobot_user) }
 
       let(:topic) do
@@ -63,7 +63,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
 
       let(:post) { Fabricate(:post, topic: topic, user: user) }
 
-      context 'during a tutorial track' do
+      context 'while in a tutorial track' do
         before do
           narrative.set_data(user,
             state: :tutorial_formatting,
@@ -146,7 +146,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when user thank the bot' do
+        context 'when user thank the bot' do
           it 'should like the post' do
             post.update!(raw: 'thanks!')
 
@@ -176,7 +176,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               .to eq("tutorial_bookmark")
           end
 
-          describe 'reset trigger in surrounded by quotes' do
+          context 'when reset trigger in surrounded by quotes' do
             it 'should reset the track' do
               post.update!(
                 raw: "'#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}'"
@@ -189,8 +189,8 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'reset trigger in a middle of a sentence' do
-            describe 'when post is less than reset trigger exact match limit' do
+          context 'when reset trigger in a middle of a sentence' do
+            context 'when post is less than reset trigger exact match limit' do
               it 'should reset the track' do
                 post.update!(
                   raw: "I would like to #{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger} now"
@@ -203,7 +203,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               end
             end
 
-            describe 'when post exceeds reset trigger exact match limit' do
+            context 'when post exceeds reset trigger exact match limit' do
               it 'should not reset the track' do
                 post.update!(
                   raw: "I would like to #{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger} now #{'a' * described_class::RESET_TRIGGER_EXACT_MATCH_LENGTH}"
@@ -233,7 +233,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
         end
       end
 
-      context 'at the end of a tutorial track' do
+      context 'when at the end of a tutorial track' do
         before do
           narrative.set_data(user,
             state: :end,
@@ -242,7 +242,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           )
         end
 
-        context 'generic replies' do
+        context 'with generic replies' do
           after do
             Discourse.redis.del("#{described_class::GENERIC_REPLIES_COUNT_PREFIX}#{user.id}")
           end
@@ -290,7 +290,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             expect(new_post.raw).to eq(random_mention_reply)
           end
 
-          describe 'when asking discobot for help' do
+          context 'when asking discobot for help' do
             it 'should create the right reply' do
               post.update!(raw: 'show me what you can do @discobot display help')
               described_class.new(:reply, user, post_id: post.id).select
@@ -298,7 +298,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               expect(Post.last.raw).to include(help_message)
             end
 
-            describe 'as an admin or moderator' do
+            context 'as an admin or moderator' do
               it 'should include the commands to start the advanced user track' do
                 user.update!(moderator: true)
                 post.update!(raw: 'Show me what you can do @discobot display help')
@@ -311,7 +311,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               end
             end
 
-            describe 'as a user that has completed the new user track' do
+            context 'as a user that has completed the new user track' do
               it 'should include the commands to start the advanced user track' do
                 narrative.set_data(user,
                   state: :end,
@@ -335,7 +335,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when discobot is asked to roll dice' do
+          context 'when discobot is asked to roll dice' do
             before do
               narrative.set_data(user,
                 state: :end,
@@ -353,7 +353,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               ))
             end
 
-            describe 'when range of dice request is too high' do
+            context 'when range of dice request is too high' do
               before do
                 srand(1)
               end
@@ -376,7 +376,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               end
             end
 
-            describe 'when number of dice to roll is too high' do
+            context 'when number of dice to roll is too high' do
               it 'should create the right reply' do
                 post.update!(raw: "roll #{DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE + 1}d1")
                 described_class.new(:reply, user, post_id: post.id).select
@@ -392,7 +392,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               end
             end
 
-            describe 'when dice combination is invalid' do
+            context 'when dice combination is invalid' do
               it 'should create the right reply' do
                 post.update!(raw: "roll 0d1")
                 described_class.new(:reply, user, post_id: post.id).select
@@ -407,7 +407,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
       end
 
       context 'when in a normal PM with discobot' do
-        describe 'when discobot is replied to' do
+        context 'when discobot is replied to' do
           it 'should create the right reply' do
             SiteSetting.discourse_narrative_bot_disable_public_replies = true
             post.update!(raw: 'Show me what you can do @discobot')
@@ -439,16 +439,16 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
       end
     end
 
-    context 'random discobot mentions' do
+    context 'with random discobot mentions' do
       let(:topic) { Fabricate(:topic) }
       let(:post) { Fabricate(:post, topic: topic, user: user) }
 
-      describe 'when discobot public replies are disabled' do
+      context 'when discobot public replies are disabled' do
         before do
           SiteSetting.discourse_narrative_bot_disable_public_replies = true
         end
 
-        describe 'when discobot is mentioned' do
+        context 'when discobot is mentioned' do
           it 'should not reply' do
             post.update!(raw: 'Show me what you can do @discobot')
 
@@ -459,7 +459,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
         end
       end
 
-      describe 'when discobot is mentioned' do
+      context 'when discobot is mentioned' do
         it 'should create the right reply' do
           post.update!(raw: 'Show me what you can do @discobot')
           described_class.new(:reply, user, post_id: post.id).select
@@ -496,7 +496,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           expect(new_post.raw).to eq(random_mention_reply)
         end
 
-        describe 'rate limiting random reply message in public topic' do
+        context 'with rate limiting random reply message in public topic' do
           let(:topic) { Fabricate(:topic) }
           let(:other_post) { Fabricate(:post, raw: '@discobot show me something', topic: topic) }
           let(:post) { Fabricate(:post, topic: topic) }
@@ -505,7 +505,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             Discourse.redis.flushdb
           end
 
-          describe 'when random reply massage has been displayed in the last 6 hours' do
+          context 'when random reply massage has been displayed in the last 6 hours' do
             it 'should not do anything' do
               Discourse.redis.set(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}",
@@ -522,7 +522,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when random reply message has not been displayed in the last 6 hours' do
+          context 'when random reply message has not been displayed in the last 6 hours' do
             it 'should create the right reply' do
               Discourse.redis.set(
                 "#{described_class::PUBLIC_DISPLAY_BOT_HELP_KEY}:#{other_post.topic_id}",
@@ -540,7 +540,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when random reply message has been displayed in the last 10 replies' do
+          context 'when random reply message has been displayed in the last 10 replies' do
             it 'should not do anything' do
               described_class.new(:reply, user, post_id: other_post.id).select
               expect(Post.last.raw).to eq(random_mention_reply)
@@ -559,7 +559,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when asking discobot for help' do
+        context 'when asking discobot for help' do
           it 'should create the right reply' do
             post.update!(raw: '@discobot display help')
             described_class.new(:reply, user, post_id: post.id).select
@@ -568,8 +568,8 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when asking discobot to start new user track' do
-          describe 'invalid text' do
+        context 'when asking discobot to start new user track' do
+          context 'with invalid text' do
             it 'should not trigger the bot' do
               post.update!(raw: "`@discobot #{I18n.t('discourse_narrative_bot.track_selector.reset_trigger')} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}`")
 
@@ -579,7 +579,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when discobot is asked to roll dice' do
+        context 'when discobot is asked to roll dice' do
           it 'should create the right reply' do
             post.update!(raw: '@discobot roll 2d1')
             described_class.new(:reply, user, post_id: post.id).select
@@ -591,7 +591,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             ))
           end
 
-          describe 'when dice roll is requested incorrectly' do
+          context 'when dice roll is requested incorrectly' do
             it 'should create the right reply' do
               post.update!(raw: 'roll 2d1 @discobot')
               described_class.new(:reply, user, post_id: post.id).select
@@ -600,7 +600,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when roll dice command is present inside a quote' do
+          context 'when roll dice command is present inside a quote' do
             it 'should ignore the command' do
               user
               post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot roll 2d1\n[/quote]")
@@ -611,7 +611,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when a quote is requested' do
+        context 'when a quote is requested' do
           it 'should create the right reply' do
 
             post.update!(raw: "@discobot quote")
@@ -624,7 +624,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             ))
           end
 
-          describe 'when quote is requested incorrectly' do
+          context 'when quote is requested incorrectly' do
             it 'should create the right reply' do
               post.update!(raw: 'quote @discobot')
               described_class.new(:reply, user, post_id: post.id).select
@@ -633,7 +633,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when quote command is present inside a onebox or quote' do
+          context 'when quote command is present inside a onebox or quote' do
             it 'should ignore the command' do
               user
               post.update!(raw: "[quote=\"Donkey, post:6, topic:1\"]\n@discobot quote\n[/quote]")
@@ -643,7 +643,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe 'when user requesting quote has a preferred locale' do
+          context 'when user requesting quote has a preferred locale' do
             before do
               SiteSetting.allow_user_locale = true
               user.update!(locale: 'it')
@@ -662,7 +662,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when magic 8 ball is requested' do
+        context 'when magic 8 ball is requested' do
           before do
             srand(1)
           end
@@ -677,8 +677,8 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
         end
 
-        describe 'when bot is asked to reset/start a track' do
-          describe 'when user likes a post containing a reset trigger' do
+        context 'when bot is asked to reset/start a track' do
+          context 'when user likes a post containing a reset trigger' do
             it 'should not start the track' do
               another_post = Fabricate(:post,
                 user: Fabricate(:user),
@@ -694,7 +694,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             end
           end
 
-          describe "when new and advanced user triggers overlap" do
+          context "when new and advanced user triggers overlap" do
             before do
               @overrides = []
 
@@ -723,7 +723,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
       end
     end
 
-    context 'pm to self' do
+    context 'when sending pm to self' do
       let(:other_topic) do
         topic_allowed_user = Fabricate.build(:topic_allowed_user, user: user)
         Fabricate(:private_message_topic, topic_allowed_users: [topic_allowed_user])
@@ -731,7 +731,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
 
       let(:other_post) { Fabricate(:post, topic: other_topic) }
 
-      describe 'when a new message is made' do
+      context 'when a new message is made' do
         it 'should not do anything' do
           other_post
 
@@ -741,7 +741,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
       end
     end
 
-    context 'pms to bot' do
+    context 'when sending pms to bot' do
       let(:other_topic) do
         topic_allowed_user = Fabricate.build(:topic_allowed_user, user: user)
         bot = Fabricate.build(:topic_allowed_user, user: discobot_user)
@@ -750,7 +750,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
 
       let(:other_post) { Fabricate(:post, topic: other_topic) }
 
-      describe 'when a new like is made' do
+      context 'when a new like is made' do
         it 'should not do anything' do
           other_post
           expect { described_class.new(:like, user, post_id: other_post.id).select }
@@ -758,7 +758,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
         end
       end
 
-      describe 'when a new message is made' do
+      context 'when a new message is made' do
         it 'should create the right reply' do
           described_class.new(:reply, user, post_id: other_post.id).select
 
@@ -766,7 +766,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
         end
       end
 
-      describe 'when user thanks the bot' do
+      context 'when user thanks the bot' do
         it 'should like the post' do
           other_post.update!(raw: 'thanks!')
 

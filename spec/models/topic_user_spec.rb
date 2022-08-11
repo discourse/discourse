@@ -39,7 +39,7 @@ RSpec.describe TopicUser do
   end
 
   describe '#notification_levels' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @notification_levels = TopicUser.notification_levels
       end
@@ -55,7 +55,7 @@ RSpec.describe TopicUser do
   end
 
   describe '#notification_reasons' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @notification_reasons = TopicUser.notification_reasons
       end
@@ -97,12 +97,10 @@ RSpec.describe TopicUser do
   end
 
   describe "unpinned" do
-
     it "defaults to blank" do
       ensure_topic_user
       expect(topic_user.cleared_pinned_at).to be_blank
     end
-
   end
 
   describe 'notifications' do
@@ -171,7 +169,6 @@ RSpec.describe TopicUser do
   end
 
   describe 'visited at' do
-
     it 'set upon initial visit' do
       freeze_time yesterday
 
@@ -193,14 +190,11 @@ RSpec.describe TopicUser do
       topic_user = TopicUser.get(topic, user)
       expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
       expect(topic_user.last_visited_at.to_i).to eq(Time.zone.now.to_i)
-
     end
   end
 
   describe 'read tracking' do
-
     context "without auto tracking" do
-
       let(:topic_user) { TopicUser.get(topic, user) }
 
       it 'should create a new record for a visit' do
@@ -240,7 +234,7 @@ RSpec.describe TopicUser do
       end
     end
 
-    context 'private messages' do
+    context 'with private messages' do
       fab!(:target_user) { Fabricate(:user) }
 
       let(:post) do
@@ -316,8 +310,7 @@ RSpec.describe TopicUser do
       end
     end
 
-    context 'auto tracking' do
-
+    context 'with auto tracking' do
       let(:post_creator) { PostCreator.new(new_user, raw: Fabricate.build(:post).raw, topic_id: topic.id) }
 
       before do
@@ -410,7 +403,6 @@ RSpec.describe TopicUser do
   end
 
   describe 'change a flag' do
-
     it "only inserts a row once, even on repeated calls" do
 
       topic; user
@@ -434,9 +426,7 @@ RSpec.describe TopicUser do
       it 'has a key in the lookup for this forum topic' do
         expect(TopicUser.lookup_for(user, [topic]).has_key?(topic.id)).to eq(true)
       end
-
     end
-
   end
 
   it "can scope by tracking" do
@@ -468,7 +458,6 @@ RSpec.describe TopicUser do
   end
 
   describe "mailing_list_mode" do
-
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
 

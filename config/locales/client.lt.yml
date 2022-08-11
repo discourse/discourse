@@ -2006,6 +2006,12 @@ lt:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
       dismiss_confirmation:
+        body:
+          default:
+            one: "Ar esate tikras? Turite %{count} svarbų pranešimą."
+            few: "Ar esate tikras? Turite %{count} svarbių pranešimų."
+            many: "Ar esate tikras? Turite %{count} svarbių pranešimų."
+            other: "Ar esate tikras? Turite %{count} svarbių pranešimų."
         dismiss: "Praleisti"
         cancel: "Atšaukti"
       group_message_summary:
@@ -3498,6 +3504,7 @@ lt:
         few: "%{count} nauji"
         many: "%{count} nauja"
         other: "%{count} nauja"
+      more: "Daugiau..."
       sections:
         messages:
           header_link_text: "Žinutės"
@@ -4915,15 +4922,13 @@ lt:
           replace: "Pakeisti"
   wizard_js:
     wizard:
-      done: "Baigta"
-      finish: "Baigti"
       back: "Atgal"
       next: "Kitas"
+      step-text: "Žingsnis"
       step: "%{current} iš %{total}"
       upload: "Įkelti"
       uploading: "Įkeliama..."
       upload_error: "Atsiprašome, įvyko klaida įkeliant šį dokumentą. Prašome pamėginti dar kartą."
-      quit: "Galbūt vėliau"
       invites:
         add_user: "pridėti"
         none_added: "Jūs nekvietėte jokių darbuotojų. Ar tikrai norite tęsti?"

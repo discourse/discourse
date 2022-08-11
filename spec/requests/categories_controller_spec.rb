@@ -5,8 +5,7 @@ RSpec.describe CategoriesController do
   let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user) { Fabricate(:user) }
 
-  context 'index' do
-
+  describe '#index' do
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
@@ -240,7 +239,7 @@ RSpec.describe CategoriesController do
     end
   end
 
-  context 'extensibility event' do
+  describe 'extensibility event' do
     before do
       sign_in(admin)
     end

@@ -6,7 +6,7 @@ RSpec.describe Encodings do
     Encodings.to_utf8(string)
   end
 
-  context "unicode" do
+  describe "unicode" do
     let(:expected) { 'Το σύστημα γραφής είναι ένα συμβολικό, οπτικό σύστημα καταγραφής της γλώσσας.' }
 
     it "correctly encodes UTF-8 as UTF-8" do

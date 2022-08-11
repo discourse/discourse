@@ -18,7 +18,7 @@ RSpec.describe Email::Styles do
     Nokogiri::HTML5.fragment(styler.to_html)
   end
 
-  context "basic formatter" do
+  describe "basic formatter" do
     it "adds a max-width to large images" do
       frag = basic_fragment("<img height='auto' width='auto' src='gigantic.jpg'>")
       expect(frag.at("img")["style"]).to match("max-width")
@@ -48,7 +48,7 @@ RSpec.describe Email::Styles do
 
   end
 
-  context "html template formatter" do
+  describe "html template formatter" do
     it "attaches a style to h3 tags" do
       frag = html_fragment("<h3>hello</h3>")
       expect(frag.at('h3')['style']).to be_present
@@ -106,7 +106,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  context "rewriting protocol relative URLs to the forum" do
+  describe "rewriting protocol relative URLs to the forum" do
     it "doesn't rewrite a url to another site" do
       frag = html_fragment('<a href="//youtube.com/discourse">hello</a>')
       expect(frag.at('a')['href']).to eq("//youtube.com/discourse")
@@ -156,7 +156,7 @@ RSpec.describe Email::Styles do
 
   end
 
-  context "dark mode emails" do
+  describe "dark mode emails" do
     it "adds dark_mode_styles when site setting active" do
       frag = html_fragment('<div class="body">test</div>')
       styler = Email::Styles.new(frag)
@@ -169,7 +169,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  context "strip_avatars_and_emojis" do
+  describe "strip_avatars_and_emojis" do
     it "works for lonesome emoji with no title" do
       emoji = "<img src='/images/emoji/twitter/crying_cat_face.png'>"
       style = Email::Styles.new(emoji)
@@ -192,7 +192,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  context "onebox_styles" do
+  describe "onebox_styles" do
     it "renders quote as <blockquote>" do
       fragment = html_fragment('<aside class="quote"> <div class="title"> <div class="quote-controls"> <i class="fa fa-chevron-down" title="expand/collapse"></i><a href="/t/xyz/123" title="go to the quoted post" class="back"></a> </div> <img alt="" width="20" height="20" src="https://cdn-enterprise.discourse.org/boingboing/user_avatar/bbs.boingboing.net/techapj/40/54379_1.png" class="avatar">techAPJ: </div> <blockquote> <p>lorem ipsum</p> </blockquote> </aside>')
       expect(fragment.to_s.squish).to match(/^<blockquote.+<\/blockquote>$/)
@@ -208,7 +208,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  context "replace_secure_media_urls" do
+  describe "replace_secure_media_urls" do
     before do
       setup_s3
       SiteSetting.secure_media = true
@@ -258,7 +258,7 @@ RSpec.describe Email::Styles do
 
   end
 
-  context "inline_secure_images" do
+  describe "inline_secure_images" do
     before do
       setup_s3
       SiteSetting.secure_media = true

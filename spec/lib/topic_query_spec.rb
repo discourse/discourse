@@ -3,7 +3,6 @@
 require 'topic_view'
 
 RSpec.describe TopicQuery do
-
   # TODO:
   #   This fab! here has impact on all tests.
   #
@@ -20,7 +19,7 @@ RSpec.describe TopicQuery do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
 
-  context 'secure category' do
+  describe 'secure category' do
     it "filters categories out correctly" do
       category = Fabricate(:category_with_definition)
       group = Fabricate(:group)
@@ -45,12 +44,10 @@ RSpec.describe TopicQuery do
       group.save
 
       expect(TopicQuery.new(user).list_latest.topics.count).to eq(2)
-
     end
-
   end
 
-  context "custom filters" do
+  describe "custom filters" do
     it "allows custom filters to be applied" do
       topic1 = Fabricate(:topic)
       _topic2 = Fabricate(:topic)
@@ -66,7 +63,6 @@ RSpec.describe TopicQuery do
   end
 
   describe "#list_topics_by" do
-
     it "allows users to view their own invisible topics" do
       _topic = Fabricate(:topic, user: user)
       _invisible_topic = Fabricate(:topic, user: user, visible: false)
@@ -159,7 +155,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'tracked' do
+  describe 'tracked' do
     it "filters tracked topics correctly" do
       SiteSetting.tagging_enabled = true
 
@@ -228,7 +224,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'deleted filter' do
+  describe 'deleted filter' do
     it "filters deleted topics correctly" do
       _topic = Fabricate(:topic, deleted_at: 1.year.ago)
 
@@ -264,7 +260,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'category filter' do
+  describe 'category filter' do
     let(:category) { Fabricate(:category_with_definition) }
     let(:diff_category) { Fabricate(:category_with_definition, name: "Different Category") }
 
@@ -283,7 +279,7 @@ RSpec.describe TopicQuery do
       expect(TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size).to eq(2)
     end
 
-    context 'subcategories' do
+    context 'with subcategories' do
       let!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
       let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
 
@@ -385,7 +381,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'tag filter' do
+  describe 'tag filter' do
     fab!(:tag)       { Fabricate(:tag) }
     fab!(:other_tag) { Fabricate(:tag) }
     fab!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
@@ -394,7 +390,7 @@ RSpec.describe TopicQuery do
       SiteSetting.tagging_enabled = true
     end
 
-    context "no category filter" do
+    context "with no category filter" do
       fab!(:tagged_topic1) { Fabricate(:topic, tags: [tag]) }
       fab!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
       fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
@@ -460,7 +456,7 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context 'remove_muted_tags' do
+    context 'when remove_muted_tags is enabled' do
       fab!(:topic) { Fabricate(:topic, tags: [tag]) }
 
       before do
@@ -473,7 +469,7 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "and categories too" do
+    context "with categories too" do
       let(:category1) { Fabricate(:category_with_definition) }
       let(:category2) { Fabricate(:category_with_definition) }
 
@@ -489,7 +485,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'muted categories' do
+  describe 'muted categories' do
     it 'is removed from top, new and latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
@@ -521,7 +517,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'mute_all_categories_by_default' do
+  describe 'mute_all_categories_by_default' do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: category) }
 
@@ -559,7 +555,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'already seen topics' do
+  describe 'already seen topics' do
     it 'is removed from new and visible on latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
@@ -572,7 +568,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'muted tags' do
+  describe 'muted tags' do
     it 'is removed from new and latest lists' do
       SiteSetting.tagging_enabled = true
       SiteSetting.remove_muted_tags_from_latest = 'always'
@@ -628,7 +624,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'a bunch of topics' do
+  describe 'a bunch of topics' do
     fab!(:regular_topic) do
       Fabricate(:topic, title: 'this is a regular topic',
                         user: creator,
@@ -691,7 +687,7 @@ RSpec.describe TopicQuery do
 
     let(:topics) { topic_query.list_latest.topics }
 
-    context 'list_latest' do
+    context 'with list_latest' do
       it "returns the topics in the correct order" do
         expect(topics.map(&:id)).to eq([pinned_topic, future_topic, closed_topic, archived_topic, regular_topic].map(&:id))
 
@@ -702,8 +698,7 @@ RSpec.describe TopicQuery do
         expect(TopicQuery.new(admin).list_latest.topics.include?(invisible_topic)).to eq(true)
       end
 
-      context 'sort_order' do
-
+      context 'with sort_order' do
         def ids_in_order(order, descending = true)
           TopicQuery.new(admin, order: order, ascending: descending ? 'false' : 'true').list_latest.topics.map(&:id)
         end
@@ -757,11 +752,8 @@ RSpec.describe TopicQuery do
 
           # returns the topics in reverse sheep order if requested" do
           expect(ids_in_order('sheep', false)).to eq([invisible_topic, regular_topic, closed_topic, pinned_topic, future_topic, archived_topic].map(&:id))
-
         end
-
       end
-
     end
 
     context 'after clearing a pinned topic' do
@@ -773,10 +765,9 @@ RSpec.describe TopicQuery do
         expect(topics).to eq([future_topic, closed_topic, archived_topic, pinned_topic, regular_topic])
       end
     end
-
   end
 
-  context 'categorized' do
+  describe 'categorized' do
     fab!(:category) { Fabricate(:category_with_definition) }
     let(:topic_category) { category.topic }
     fab!(:topic_no_cat) { Fabricate(:topic) }
@@ -825,8 +816,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'unread / read topics' do
-
+  describe 'unread / read topics' do
     context 'with no data' do
       it "has no unread topics" do
         expect(topic_query.list_unread.topics).to be_blank
@@ -868,7 +858,7 @@ RSpec.describe TopicQuery do
         TopicUser.update_last_read(user, fully_read.id, 1, 1, 0)
       end
 
-      context 'list_unread' do
+      context 'with list_unread' do
         it 'lists topics correctly' do
           _new_topic = Fabricate(:post, user: creator).topic
 
@@ -877,7 +867,7 @@ RSpec.describe TopicQuery do
         end
       end
 
-      context 'user with auto_track_topics list_unread' do
+      context 'with user with auto_track_topics list_unread' do
         before do
           user.user_option.auto_track_topics_after_msecs = 0
           user.user_option.save
@@ -887,20 +877,17 @@ RSpec.describe TopicQuery do
           expect(topic_query.list_unread.topics).to eq([partially_read])
         end
       end
-
     end
-
   end
 
   describe '#list_new' do
-
     context 'without a new topic' do
       it "has no new topics" do
         expect(topic_query.list_new.topics).to be_blank
       end
     end
 
-    context 'preload api' do
+    context 'when preloading api' do
       it "preloads data correctly" do
         TopicList.preloaded_custom_fields << "tag"
         TopicList.preloaded_custom_fields << "age"
@@ -925,7 +912,6 @@ RSpec.describe TopicQuery do
 
         # if we attempt to access non preloaded fields explode
         expect { new_topic.custom_fields["boom"] }.to raise_error(StandardError)
-
       end
     end
 
@@ -944,7 +930,7 @@ RSpec.describe TopicQuery do
         expect(topic_query.list_new.topics).to eq([])
       end
 
-      context "muted topics" do
+      context "with muted topics" do
         before do
           new_topic.notify_muted!(user)
         end
@@ -954,7 +940,7 @@ RSpec.describe TopicQuery do
           expect(topic_query.list_latest.topics).to be_blank
         end
 
-        context 'un-muted' do
+        context 'when un-muted' do
           before do
             new_topic.notify_tracking!(user)
           end
@@ -966,7 +952,6 @@ RSpec.describe TopicQuery do
         end
       end
     end
-
   end
 
   describe '#list_posted' do
@@ -976,7 +961,7 @@ RSpec.describe TopicQuery do
       expect(topics).to be_blank
     end
 
-    context 'created topics' do
+    context 'with created topics' do
       let!(:created_topic) { create_post(user: user).topic }
 
       it "includes the created topic" do
@@ -984,7 +969,7 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "topic you've posted in" do
+    context "with topic you've posted in" do
       let(:other_users_topic) { create_post(user: creator).topic }
       let!(:your_post) { create_post(user: user, topic: other_users_topic) }
 
@@ -993,15 +978,14 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "topic you haven't posted in" do
+    context "with topic you haven't posted in" do
       let(:other_users_topic) { create_post(user: creator).topic }
 
       it "does not include the topic" do
         expect(topics).to be_blank
       end
 
-      context "but interacted with" do
-
+      context "with topic you interacted with" do
         it "is not included if read" do
           TopicUser.update_last_read(user, other_users_topic.id, 0, 0, 0)
 
@@ -1075,7 +1059,6 @@ RSpec.describe TopicQuery do
   end
 
   describe '#list_related_for' do
-
     let(:user) do
       Fabricate(:admin)
     end
@@ -1132,7 +1115,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context 'suggested_for' do
+  describe 'suggested_for' do
     def clear_cache!
       Discourse.redis.keys('random_topic_cache*').each { |k| Discourse.redis.del k }
     end
@@ -1150,7 +1133,7 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "anonymously browsing with invisible, closed and archived" do
+    context "when anonymously browsing with invisible, closed and archived" do
       let!(:topic) { Fabricate(:topic) }
       let!(:regular_topic) { Fabricate(:post, user: creator).topic }
       let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
@@ -1163,7 +1146,6 @@ RSpec.describe TopicQuery do
     end
 
     context 'when logged in' do
-
       def suggested_for(topic)
         topic_query.list_suggested_for(topic).topics.map { |t| t.id }
       end
@@ -1180,8 +1162,7 @@ RSpec.describe TopicQuery do
         expect(suggested_topics).to be_blank
       end
 
-      context 'random suggested' do
-
+      context 'with random suggested' do
         let!(:new_topic) { Fabricate(:topic, created_at: 2.days.ago) }
         let!(:old_topic) { Fabricate(:topic, created_at: 3.years.ago) }
 
@@ -1209,7 +1190,6 @@ RSpec.describe TopicQuery do
           expect(topics.length).to eq(1)
           expect(topics).not_to include(old_topic)
         end
-
       end
 
       context 'with private messages' do
@@ -1254,7 +1234,7 @@ RSpec.describe TopicQuery do
           another_group.add(user)
         end
 
-        describe 'as user not part of group' do
+        context 'as user not part of group' do
           let!(:user) { Fabricate(:user) }
 
           it 'should not return topics by the group user' do
@@ -1262,7 +1242,7 @@ RSpec.describe TopicQuery do
           end
         end
 
-        describe 'as user part of group' do
+        context 'as user part of group' do
           let!(:user) { group_user }
 
           it 'should return the group topics' do
@@ -1270,7 +1250,7 @@ RSpec.describe TopicQuery do
           end
         end
 
-        context "by tag filter" do
+        context "with tag filter" do
           let(:tag) { Fabricate(:tag) }
           let!(:user) { group_user }
 
@@ -1284,7 +1264,6 @@ RSpec.describe TopicQuery do
       end
 
       context 'with some existing topics' do
-
         let!(:old_partially_read) {
           topic = Fabricate(:post, user: creator).topic
           Fabricate(:post, user: creator, topic: topic)
@@ -1330,7 +1309,6 @@ RSpec.describe TopicQuery do
         end
 
         it "operates correctly" do
-
           # Note, this is a pretty slow integration test
           # it tests that suggested is returned in the expected order
           # hence we run suggested_for twice here to save on all the setup
@@ -1348,7 +1326,6 @@ RSpec.describe TopicQuery do
 
           expect(suggested_for(topic)).to contain_exactly(partially_read.id, old_partially_read.id)
         end
-
       end
     end
   end
@@ -1405,7 +1382,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  context "shared drafts" do
+  describe "shared drafts" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
@@ -1421,7 +1398,7 @@ RSpec.describe TopicQuery do
       SiteSetting.shared_drafts_min_trust_level = TrustLevel[3]
     end
 
-    context "destination_category_id" do
+    context "with destination_category_id" do
       it "doesn't allow regular users to query destination_category_id" do
         list = TopicQuery.new(user, destination_category_id: category.id).list_latest
         expect(list.topics).not_to include(topic)
@@ -1451,7 +1428,7 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "latest" do
+    context "with latest" do
       it "doesn't include shared topics unless filtering by category" do
         list = TopicQuery.new(moderator).list_latest
         expect(list.topics).not_to include(topic)
@@ -1477,7 +1454,7 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "unread" do
+    context "with unread" do
       let!(:partially_read) do
         topic = Fabricate(:topic, category: shared_drafts_category)
         Fabricate(:post, user: creator, topic: topic).topic

@@ -1,11 +1,12 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { render, settled } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { deepMerge } from "discourse-common/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import Notification from "discourse/models/notification";
 import { hbs } from "ember-cli-htmlbars";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 
 function getNotification(overrides = {}) {
@@ -42,12 +43,12 @@ module(
 
     const template = hbs`<UserMenu::NotificationItem @item={{this.notification}}/>`;
 
-    test("pushes `read` to the classList if the notification is read", async function (assert) {
+    test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
       this.set("notification", getNotification());
       this.notification.read = false;
       await render(template);
-      assert.ok(!exists("li.read"));
-      assert.ok(exists("li"));
+      assert.notOk(exists("li.read"));
+      assert.ok(exists("li.unread"));
 
       this.notification.read = true;
       await settled();
@@ -56,13 +57,17 @@ module(
         exists("li.read"),
         "the item re-renders when the read property is updated"
       );
+      assert.notOk(
+        exists("li.unread"),
+        "the item re-renders when the read property is updated"
+      );
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
       let item = query("li");
-      assert.strictEqual(item.className, "mentioned");
+      assert.ok(item.classList.contains("mentioned"));
 
       this.set(
         "notification",
@@ -127,8 +132,8 @@ module(
     test("has elements for label and description", async function (assert) {
       this.set("notification", getNotification());
       await render(template);
-      const label = query("li a .notification-label");
-      const description = query("li a .notification-description");
+      const label = query("li a .item-label");
+      const description = query("li a .item-description");
 
       assert.strictEqual(
         label.textContent.trim(),
@@ -151,7 +156,7 @@ module(
         })
       );
       await render(template);
-      const description = query("li a .notification-description");
+      const description = query("li a .item-description");
 
       assert.strictEqual(
         description.textContent.trim(),
@@ -169,7 +174,7 @@ module(
       );
       await render(template);
       assert.ok(
-        exists("li a .notification-description img.emoji"),
+        exists("li a .item-description img.emoji"),
         "emojis are unescaped when fancy_title is used for description"
       );
     });
@@ -185,7 +190,7 @@ module(
         })
       );
       await render(template);
-      const description = query("li a .notification-description");
+      const description = query("li a .item-description");
 
       assert.strictEqual(
         description.textContent.trim(),
@@ -193,6 +198,200 @@ module(
         "emojis aren't unescaped when topic title is not safe"
       );
       assert.ok(!query("img"), "no <img> exists");
+    });
+
+    test("various aspects can be customized according to the notification's render director", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get classNames() {
+                return ["additional", "classes"];
+              }
+
+              get linkHref() {
+                return "/somewhere/awesome";
+              }
+
+              get linkTitle() {
+                return "hello world this is unsafe '\"<span>";
+              }
+
+              get icon() {
+                return "wrench";
+              }
+
+              get label() {
+                return "notification label 666 <span>";
+              }
+
+              get description() {
+                return "notification description 123 <script>";
+              }
+
+              get labelClasses() {
+                return ["label-wrapper-1"];
+              }
+
+              get descriptionClasses() {
+                return ["description-class-1"];
+              }
+            };
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+
+      assert.ok(
+        exists("li.additional.classes"),
+        "extra classes are included on the item"
+      );
+
+      const link = query("li a");
+      assert.ok(
+        link.href.endsWith("/somewhere/awesome"),
+        "link href is customized"
+      );
+      assert.strictEqual(
+        link.title,
+        "hello world this is unsafe '\"<span>",
+        "link title is customized and rendered safely"
+      );
+
+      assert.ok(exists("svg.d-icon-wrench"), "icon is customized");
+
+      const label = query("li .item-label");
+      assert.ok(
+        label.classList.contains("label-wrapper-1"),
+        "label wrapper has additional classes"
+      );
+      assert.strictEqual(
+        label.textContent.trim(),
+        "notification label 666 <span>",
+        "label content is customized"
+      );
+
+      const description = query(".item-description");
+      assert.ok(
+        description.classList.contains("description-class-1"),
+        "description has additional classes"
+      );
+      assert.strictEqual(
+        description.textContent.trim(),
+        "notification description 123 <script>",
+        "description content is customized"
+      );
+    });
+
+    test("description can be omitted", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get description() {
+                return null;
+              }
+
+              get label() {
+                return "notification label";
+              }
+            };
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      assert.notOk(exists(".item-description"), "description is not rendered");
+      assert.ok(
+        query("li").textContent.trim(),
+        "notification label",
+        "only label content is displayed"
+      );
+    });
+
+    test("label can be omitted", async function (assert) {
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get label() {
+                return null;
+              }
+
+              get description() {
+                return "notification description";
+              }
+            };
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      assert.ok(
+        query("li").textContent.trim(),
+        "notification description",
+        "only notification description is displayed"
+      );
+      assert.notOk(exists(".item-label"), "label is not rendered");
+    });
+
+    test("custom click handlers", async function (assert) {
+      let klass;
+      withPluginApi("0.1", (api) => {
+        api.registerNotificationTypeRenderer(
+          "linked",
+          (NotificationItemBase) => {
+            klass = class extends NotificationItemBase {
+              static onClickCalled = false;
+
+              get linkHref() {
+                return "#";
+              }
+
+              onClick() {
+                klass.onClickCalled = true;
+              }
+            };
+            return klass;
+          }
+        );
+      });
+
+      this.set(
+        "notification",
+        getNotification({
+          notification_type: NOTIFICATION_TYPES.linked,
+        })
+      );
+
+      await render(template);
+      await click("li a");
+      assert.ok(klass.onClickCalled);
     });
   }
 );

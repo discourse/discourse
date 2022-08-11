@@ -203,8 +203,8 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # Don't notify the OP
-    user_ids -= [post.user_id]
+    # Don't notify the OP and last editor
+    user_ids -= [post.user_id, post.last_editor_id]
     users = User.where(id: user_ids).includes(:do_not_disturb_timings)
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)

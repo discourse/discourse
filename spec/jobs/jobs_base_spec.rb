@@ -10,12 +10,15 @@ RSpec.describe ::Jobs::Base do
   end
 
   class BadJob < ::Jobs::Base
+    class BadJobError < StandardError
+    end
+
     attr_accessor :fail_count
 
     def execute(args)
       @fail_count ||= 0
       @fail_count += 1
-      raise StandardError
+      raise BadJobError
     end
   end
 
@@ -33,6 +36,29 @@ RSpec.describe ::Jobs::Base do
     bad = BadJob.new
     expect { bad.perform({}) }.to raise_error(Jobs::HandledExceptionWrapper)
     expect(bad.fail_count).to eq(3)
+  end
+
+  describe '#perform' do
+    context 'when a job raises an error' do
+      before do
+        Discourse.reset_job_exception_stats!
+      end
+
+      after do
+        Discourse.reset_job_exception_stats!
+      end
+
+      it 'collects stats for failing jobs in Discourse.job_exception_stats' do
+        bad = BadJob.new
+        3.times do
+          # During test env handle_job_exception errors out
+          # in production this is suppressed
+          expect { bad.perform({}) }.to raise_error(BadJob::BadJobError)
+        end
+
+        expect(Discourse.job_exception_stats).to eq({ BadJob => 3 })
+      end
+    end
   end
 
   it 'delegates the process call to execute' do

@@ -8,7 +8,7 @@ export default {
 
   initialize(container) {
     const messageBus = container.lookup("service:message-bus");
-    const session = container.lookup("session:main");
+    const session = container.lookup("service:session");
 
     // Preserve preview_theme_id=## and pp=async-flamegraph parameters across pages
     const params = new URLSearchParams(window.location.search);

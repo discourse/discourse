@@ -401,22 +401,22 @@ export default Component.extend({
   },
 
   _setPickerMinDate(date) {
-    if (date && !moment(date, this.dateFormat).isValid()) {
-      date = null;
-    }
-
     schedule("afterRender", () => {
-      this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+      if (moment(date, this.dateFormat).isValid()) {
+        this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+      } else {
+        this._picker.setMinDate(null);
+      }
     });
   },
 
   _setPickerDate(date) {
-    if (date && !moment(date, this.dateFormat).isValid()) {
-      date = null;
-    }
-
     schedule("afterRender", () => {
-      this._picker.setDate(moment.utc(date), true);
+      if (moment(date, this.dateFormat).isValid()) {
+        this._picker.setDate(moment.utc(date), true);
+      } else {
+        this._picker.setDate(null);
+      }
     });
   },
 

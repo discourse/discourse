@@ -2673,71 +2673,22 @@ lt:
   wizard:
     title: "Discourse sąranka"
     step:
-      locale:
-        title: "Sveiki atvykę į Discourse!"
-        fields:
-          default_locale:
-            description: "Kokia numatytoji jūsų bendruomenės kalba?"
-      forum_title:
-        title: "Vardas"
-        fields:
-          title:
-            label: "Jūsų bendruomenės pavadinimas"
-          site_description:
-            label: "Apibūdinkite savo bendruomenę vienu trumpu sakiniu (naudojamu paieškos rezultatuose ir socialinėje žiniasklaidoje)"
-            placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
-          short_site_description:
-            label: "Apibūdinkite savo bendruomenę keliais žodžiais (naudojamas pagrindinio puslapio pavadinime)"
-            placeholder: "Pati geriausia bendruomenė"
       introduction:
-        title: "Prisistatymas"
         fields:
-          welcome:
-            label: "Pirmoji tema"
+          site_description:
+            placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
+          default_locale:
+            label: "Kalba"
       privacy:
-        title: "Prieiga"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Vieša"
-                description: "Kiekvienas gali pasiekti šią bendruomenę"
-              restricted:
-                label: "Privatu"
-                description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
-          privacy_options:
-            description: "Kaip nauji vartotojai prisiregistruoja prie paskyros?"
-            choices:
-              open:
-                label: "Vartotojai gali užsiregistruoti savarankiškai."
-              invite_only:
-                label: "Prieš prisiregistruodami naudotojai turi būti pakviesti patikimų naudotojų ar darbuotojų."
-              must_approve:
-                label: "Vartotojai gali užsiregistruoti patys, tačiau turi būti patvirtinti darbuotojų."
-      contact:
-        title: "Susisiekite"
-        fields:
-          contact_email:
-            label: "Paštas"
-            placeholder: "vardas@example.com"
-          contact_url:
-            label: "Interneto svetainė"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automatiniai pranešimai"
-      corporate:
-        title: "Organizacija"
-        fields:
-          company_name:
-            label: "Įmonės pavadinimas"
-            placeholder: "Organizacijos pavyzdys"
-          governing_law:
-            label: "Reglamentuojantys teisės aktai"
-            placeholder: "Kalifornijos įstatymas"
-          city_for_disputes:
-            placeholder: "San Franciskas, Kalifornija"
+          login_required:
+            placeholder: "Privatu"
+            extra_description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
+          must_approve_users:
+            placeholder: "Reikalauja patvirtinimo"
+      ready:
+        title: "Jūsų Discourse paruoštas!"
       styling:
-        title: "Stilingas"
         fields:
           color_scheme:
             label: "Spalvų schema"
@@ -2758,20 +2709,31 @@ lt:
                 label: "Kategorijos su paskutinėmis temomis"
               categories_and_top_topics:
                 label: "Kategorijos ir Top temos"
-      logos:
-        title: "Logotipas"
+      branding:
         fields:
           logo:
             label: "Pirminis logotipas"
           logo_small:
             label: "Kvadratinis logotipas"
-      icons:
-        title: "Piktogramos"
-        fields:
           favicon:
             label: "Naršyklės piktograma"
           large_icon:
             label: "Didelė piktograma"
+      corporate:
+        fields:
+          company_name:
+            label: "Įmonės pavadinimas"
+            placeholder: "Organizacijos pavyzdys"
+          governing_law:
+            label: "Reglamentuojantys teisės aktai"
+            placeholder: "Kalifornijos įstatymas"
+          contact_url:
+            label: "Interneto svetainė"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            placeholder: "San Franciskas, Kalifornija"
+          site_contact:
+            label: "Automatiniai pranešimai"
       invites:
         title: "Pakviesti valdytojus"
         description: "Beveik baigėte! Pakvieskime kelis žmones padėti <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>papildyti jūsų diskusijas</a> įdomiomis temomis ir atsakymais, kad jūsų bendruomenė pradėtų veikti."

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe HasCustomFields do
-  context "custom_fields" do
+  describe "custom_fields" do
     before do
       DB.exec("create temporary table custom_fields_test_items(id SERIAL primary key)")
       DB.exec("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text, created_at TIMESTAMP, updated_at TIMESTAMP)")

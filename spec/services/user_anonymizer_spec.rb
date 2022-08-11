@@ -21,7 +21,7 @@ RSpec.describe UserAnonymizer do
     end
   end
 
-  describe "make_anonymous" do
+  describe ".make_anonymous" do
     let(:original_email) { "edward@example.net" }
     let(:user) { Fabricate(:user, username: "edward", email: original_email) }
     fab!(:another_user) { Fabricate(:evil_trout) }
@@ -65,7 +65,7 @@ RSpec.describe UserAnonymizer do
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
-    context "Site Settings do not require full name" do
+    context "when Site Settings do not require full name" do
       before do
         SiteSetting.full_name_required = false
       end
@@ -113,7 +113,7 @@ RSpec.describe UserAnonymizer do
       end
     end
 
-    context "Site Settings require full name" do
+    context "when Site Settings require full name" do
       before do
         SiteSetting.full_name_required = true
       end
@@ -225,7 +225,7 @@ RSpec.describe UserAnonymizer do
       expect(user.user_api_keys).to be_empty
     end
 
-    context "executes job" do
+    context "when executing jobs" do
       before do
         Jobs.run_immediately!
       end
@@ -378,5 +378,4 @@ RSpec.describe UserAnonymizer do
       expect(Invite.exists?(id: invite.id)).to eq(false)
     end
   end
-
 end

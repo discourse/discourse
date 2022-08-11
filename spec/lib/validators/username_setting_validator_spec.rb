@@ -18,7 +18,7 @@ RSpec.describe UsernameSettingValidator do
       expect(validator.valid_value?('no way')).to eq(false)
     end
 
-    context "regex support" do
+    context "with regex support" do
       fab!(:darthvader) { Fabricate(:user, username: 'darthvader') }
       fab!(:luke) { Fabricate(:user, username: 'luke') }
 

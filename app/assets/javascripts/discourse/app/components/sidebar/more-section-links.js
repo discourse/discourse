@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+
 import { bind } from "discourse-common/utils/decorators";
 import GlimmerComponent from "discourse/components/glimmer";
 
@@ -8,6 +10,8 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
   @service router;
+
+  #allLinks = [...this.args.sectionLinks, ...this.args.secondarySectionLinks];
 
   constructor() {
     super(...arguments);
@@ -22,12 +26,24 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
 
   get sectionLinks() {
     if (this.activeSectionLink) {
-      return this.args.sectionLinks.filter((sectionLink) => {
-        return sectionLink.name !== this.activeSectionLink.name;
-      });
+      return this.#filterActiveSectionLink(this.args.sectionLinks);
     } else {
       return this.args.sectionLinks;
     }
+  }
+
+  get secondarySectionLinks() {
+    if (this.activeSectionLink) {
+      return this.#filterActiveSectionLink(this.args.secondarySectionLinks);
+    } else {
+      return this.args.secondarySectionLinks;
+    }
+  }
+
+  #filterActiveSectionLink(sectionLinks) {
+    return sectionLinks.filter((sectionLink) => {
+      return sectionLink.name !== this.activeSectionLink.name;
+    });
   }
 
   @bind
@@ -56,8 +72,8 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   }
 
   @action
-  toggleSectionLinks() {
-    this.shouldDisplaySectionLinks = !this.shouldDisplaySectionLinks;
+  toggleSectionLinks(element) {
+    this.shouldDisplaySectionLinks = element.target.hasAttribute("open");
   }
 
   #removeClickEventListener() {
@@ -75,11 +91,17 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   }
 
   #setActiveSectionLink() {
-    const activeSectionLink = this.args.sectionLinks.find((sectionLink) => {
+    const activeSectionLink = this.#allLinks.find((sectionLink) => {
       const args = [sectionLink.route];
 
       if (sectionLink.model) {
         args.push(sectionLink.model);
+      } else if (sectionLink.models) {
+        args.push(...sectionLink.models);
+      }
+
+      if (!isEmpty(sectionLink.query)) {
+        args.push({ queryParams: sectionLink.query });
       }
 
       return this.router.isActive(...args) && sectionLink;

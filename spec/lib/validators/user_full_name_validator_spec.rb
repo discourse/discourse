@@ -5,7 +5,7 @@ RSpec.describe UserFullNameValidator do
   subject(:validate) { validator.validate_each(record, :name, @name) }
   let(:record) { Fabricate.build(:user, name: @name) }
 
-  context "name not required" do
+  context "when name is not required" do
     before { SiteSetting.full_name_required = false }
 
     it "allows no name" do
@@ -21,7 +21,7 @@ RSpec.describe UserFullNameValidator do
     end
   end
 
-  context "name required" do
+  context "when name is required" do
     before { SiteSetting.full_name_required = true }
 
     it "adds error for nil name" do

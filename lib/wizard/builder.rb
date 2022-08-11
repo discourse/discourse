@@ -144,13 +144,16 @@ class Wizard
           updater.update_setting(:base_font, updater.fields[:body_font])
           updater.update_setting(:heading_font, updater.fields[:heading_font])
 
-          if updater.fields[:homepage_style] == 'latest'
-            top_menu = "latest|new|unread|top|categories"
-          else
-            top_menu = "categories|latest|new|unread|top"
+          top_menu = SiteSetting.top_menu.split("|")
+          if updater.fields[:homepage_style] == 'latest' && top_menu[0] != "latest"
+            top_menu.delete("latest")
+            top_menu.insert(0, "latest")
+          elsif updater.fields[:homepage_style] != 'latest' && top_menu[0] != "categories"
+            top_menu.delete("categories")
+            top_menu.insert(0, "categories")
             updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
           end
-          updater.update_setting(:top_menu, top_menu)
+          updater.update_setting(:top_menu, top_menu.join("|"))
 
           scheme_name = (
             (updater.fields[:color_scheme] || "") ||

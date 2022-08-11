@@ -14,7 +14,7 @@ RSpec.describe Admin::ReportsController do
     end
 
     describe '#bulk' do
-      context "valid params" do
+      context "with valid params" do
         it "renders the reports as JSON" do
           Fabricate(:topic)
           get "/admin/reports/bulk.json", params: {
@@ -29,8 +29,8 @@ RSpec.describe Admin::ReportsController do
         end
       end
 
-      context "invalid params" do
-        context "nonexistent report" do
+      context "with invalid params" do
+        context "with nonexistent report" do
           it "returns not found reports" do
             get "/admin/reports/bulk.json", params: {
               reports: {
@@ -46,7 +46,7 @@ RSpec.describe Admin::ReportsController do
           end
         end
 
-        context "invalid start or end dates" do
+        context "with invalid start or end dates" do
           it "doesn't return 500 error" do
             get "/admin/reports/bulk.json", params: {
               reports: {
@@ -67,7 +67,7 @@ RSpec.describe Admin::ReportsController do
     end
 
     describe '#show' do
-      context "invalid id form" do
+      context "with invalid id form" do
         let(:invalid_id) { "!!&asdfasdf" }
 
         it "returns 404" do
@@ -76,15 +76,15 @@ RSpec.describe Admin::ReportsController do
         end
       end
 
-      context "valid type form" do
-        context 'missing report' do
+      context "with valid type form" do
+        context 'with missing report' do
           it "returns a 404 error" do
             get "/admin/reports/nonexistent.json"
             expect(response.status).to eq(404)
           end
         end
 
-        context 'a report is found' do
+        context 'when a report is found' do
           it "renders the report as JSON" do
             Fabricate(:topic)
             get "/admin/reports/topics.json"

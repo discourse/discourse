@@ -86,6 +86,14 @@ acceptance("Admin - Watched Words", function (needs) {
     assert
       .dom(".watched-words-list .watched-word")
       .hasText(`Discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
+
+    fillIn(".watched-word-form input", "discourse");
+    click(".case-sensitivity-checkbox");
+    await click(".watched-word-form button");
+
+    assert
+      .dom(".watched-words-list .watched-word")
+      .hasText(`discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
   });
 
   test("remove words", async function (assert) {

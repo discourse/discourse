@@ -20,7 +20,7 @@ RSpec.describe TagUser do
     TagUser.notification_levels[:watching]
   end
 
-  context "notification_level_visible" do
+  describe "notification_level_visible" do
     let!(:tag1) { Fabricate(:tag) }
     let!(:tag2) { Fabricate(:tag) }
     let!(:tag3) { Fabricate(:tag) }
@@ -69,7 +69,7 @@ RSpec.describe TagUser do
     end
   end
 
-  context "change" do
+  describe "change" do
     it "watches or tracks on change" do
       user = Fabricate(:user)
       tag = Fabricate(:tag)
@@ -111,7 +111,7 @@ RSpec.describe TagUser do
     end
   end
 
-  context "batch_set" do
+  describe "batch_set" do
     it "watches and unwatches tags correctly" do
 
       user = Fabricate(:user)
@@ -160,7 +160,7 @@ RSpec.describe TagUser do
     end
   end
 
-  context "integration" do
+  describe "integration" do
     fab!(:user) { Fabricate(:user) }
     fab!(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag)   { Fabricate(:tag) }

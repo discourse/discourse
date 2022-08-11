@@ -4,7 +4,7 @@
 require_relative 'shared_context_for_backup_restore'
 
 RSpec.describe BackupRestore::UploadsRestorer do
-  include_context "shared stuff"
+  include_context "with shared stuff"
 
   subject { BackupRestore::UploadsRestorer.new(logger) }
 
@@ -94,7 +94,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
     Regexp.escape("//#{bucket}") + %q*\.s3(?:\.dualstack\.[a-z0-9\-]+?|[.\-][a-z0-9\-]+?)?\.amazonaws\.com* + Regexp.escape(path)
   end
 
-  context "uploads" do
+  describe "uploads" do
     let!(:multisite) { { name: "multisite", value: true } }
     let!(:no_multisite) { { name: "multisite", value: false } }
     let!(:source_db_name) { { name: "db_name", value: "foo" } }
@@ -104,7 +104,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
     let(:target_site_name) { target_site_type == multisite ? "second" : "default" }
     let(:target_hostname) { target_site_type == multisite ? "test2.localhost" : "test.localhost" }
 
-    shared_context "no uploads" do
+    shared_context "with no uploads" do
       it "does nothing when temporary uploads directory is missing or empty" do
         store_class.any_instance.expects(:copy_from).never
 
@@ -132,7 +132,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
       end
     end
 
-    shared_context "restores uploads" do
+    shared_context "when restoring uploads" do
       before do
         Upload.where("id > 0").destroy_all
         Fabricate(:optimized_image)
@@ -242,34 +242,34 @@ RSpec.describe BackupRestore::UploadsRestorer do
       end
     end
 
-    context "currently stored locally" do
+    context "when currently stored locally" do
       before do
         SiteSetting.enable_s3_uploads = false
       end
 
       let!(:store_class) { FileStore::LocalStore }
 
-      include_context "no uploads"
-      include_context "restores uploads"
+      include_context "with no uploads"
+      include_context "when restoring uploads"
 
-      context "remaps" do
+      context "with remaps" do
         include_examples "without metadata"
 
-        context "uploads previously stored locally" do
+        context "when uploads previously stored locally" do
           let!(:s3_base_url) { { name: "s3_base_url", value: nil } }
           let!(:s3_cdn_url) { { name: "s3_cdn_url", value: nil } }
 
-          context "from regular site" do
+          context "with regular site as source" do
             let!(:source_site_type) { no_multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "remaps from local storage"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { multisite }
 
               include_examples "common remaps"
@@ -277,17 +277,17 @@ RSpec.describe BackupRestore::UploadsRestorer do
             end
           end
 
-          context "from multisite" do
+          context "with multisite as source" do
             let!(:source_site_type) { multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "remaps from local storage"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { multisite }
 
               include_examples "common remaps"
@@ -296,7 +296,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
           end
         end
 
-        context "uploads previously stored on S3" do
+        context "with uploads previously stored on S3" do
           let!(:s3_base_url) { { name: "s3_base_url", value: "//old-bucket.s3-us-east-1.amazonaws.com" } }
           let!(:s3_cdn_url) { { name: "s3_cdn_url", value: "https://s3-cdn.example.com" } }
 
@@ -346,17 +346,17 @@ RSpec.describe BackupRestore::UploadsRestorer do
             end
           end
 
-          context "from regular site" do
+          context "with regular site as source" do
             let!(:source_site_type) { no_multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "regular site remaps from S3"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { multisite }
 
               include_examples "common remaps"
@@ -364,17 +364,17 @@ RSpec.describe BackupRestore::UploadsRestorer do
             end
           end
 
-          context "from multisite" do
+          context "with multisite as source" do
             let!(:source_site_type) { multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "multisite remaps from S3"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
@@ -385,34 +385,34 @@ RSpec.describe BackupRestore::UploadsRestorer do
       end
     end
 
-    context "currently stored on S3" do
+    context "when currently stored on S3" do
       before do
         setup_s3
       end
 
       let!(:store_class) { FileStore::S3Store }
 
-      include_context "no uploads"
-      include_context "restores uploads"
+      include_context "with no uploads"
+      include_context "when restoring uploads"
 
-      context "remaps" do
+      context "with remaps" do
         include_examples "without metadata"
 
-        context "uploads previously stored locally" do
+        context "with uploads previously stored locally" do
           let!(:s3_base_url) { { name: "s3_base_url", value: nil } }
           let!(:s3_cdn_url) { { name: "s3_cdn_url", value: nil } }
 
-          context "from regular site" do
+          context "with regular site as source" do
             let!(:source_site_type) { no_multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "remaps from local storage"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
@@ -420,17 +420,17 @@ RSpec.describe BackupRestore::UploadsRestorer do
             end
           end
 
-          context "from multisite" do
+          context "with multisite as source" do
             let!(:source_site_type) { multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "remaps from local storage"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { multisite }
 
               include_examples "common remaps"
@@ -439,7 +439,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
           end
         end
 
-        context "uploads previously stored on S3" do
+        context "with uploads previously stored on S3" do
           let!(:s3_base_url) { { name: "s3_base_url", value: "//old-bucket.s3-us-east-1.amazonaws.com" } }
           let!(:s3_cdn_url) { { name: "s3_cdn_url", value: "https://s3-cdn.example.com" } }
 
@@ -510,10 +510,10 @@ RSpec.describe BackupRestore::UploadsRestorer do
             end
           end
 
-          context "from regular site" do
+          context "with regular site as source" do
             let!(:source_site_type) { no_multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_name) { "default" }
               let!(:target_hostname) { "test.localhost" }
 
@@ -521,7 +521,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
               include_examples "regular site remaps from S3"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_name) { "second" }
               let!(:target_hostname) { "test2.localhost" }
 
@@ -530,17 +530,17 @@ RSpec.describe BackupRestore::UploadsRestorer do
             end
           end
 
-          context "from multisite" do
+          context "with multisite as source" do
             let!(:source_site_type) { multisite }
 
-            context "to regular site" do
+            context "with regular site as target" do
               let!(:target_site_type) { no_multisite }
 
               include_examples "common remaps"
               include_examples "multisite remaps from S3"
             end
 
-            context "to multisite", type: :multisite do
+            context "with multisite as target", type: :multisite do
               let!(:target_site_type) { multisite }
 
               include_examples "common remaps"

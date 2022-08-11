@@ -162,7 +162,6 @@ RSpec.describe UserAction do
   end
 
   describe 'when user likes' do
-
     fab!(:post) { Fabricate(:post) }
     let(:likee) { post.user }
     fab!(:liker) { coding_horror }
@@ -180,7 +179,7 @@ RSpec.describe UserAction do
       expect(likee_stream.count).to eq(@old_count + 1)
     end
 
-    context "successful like" do
+    context "with successful like" do
       before do
         PostActionCreator.like(liker, post)
         @liker_action = liker.user_actions.find_by(action_type: UserAction::LIKE)
@@ -198,7 +197,7 @@ RSpec.describe UserAction do
         expect(liker.user_stat.reload.likes_given).to eq(0)
       end
 
-      context 'private message' do
+      context 'with private message' do
         fab!(:post) { Fabricate(:private_message_post) }
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
@@ -217,8 +216,7 @@ RSpec.describe UserAction do
 
     end
 
-    context "liking a private message" do
-
+    context "when liking a private message" do
       before do
         post.topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       end

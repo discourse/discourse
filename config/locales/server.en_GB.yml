@@ -163,8 +163,6 @@ en_GB:
     optimize_failure_message: "An error occurred whilst optimising the uploaded image."
   wizard:
     step:
-      corporate:
-        title: "Organisation"
       finished:
         description: |
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>

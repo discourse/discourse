@@ -5,7 +5,7 @@ require 'site_settings/validations'
 RSpec.describe SiteSettings::Validations do
   subject { Class.new.include(described_class).new }
 
-  context "default_categories" do
+  describe "default_categories" do
     fab!(:category) { Fabricate(:category) }
 
     it "supports valid categories" do
@@ -31,7 +31,7 @@ RSpec.describe SiteSettings::Validations do
     end
   end
 
-  context "s3 buckets reusage" do
+  describe "s3 buckets reusage" do
     let(:error_message) { I18n.t("errors.site_settings.s3_bucket_reused") }
 
     shared_examples "s3 bucket validation" do
@@ -308,7 +308,7 @@ RSpec.describe SiteSettings::Validations do
     end
   end
 
-  context "slow_down_crawler_user_agents" do
+  describe "slow_down_crawler_user_agents" do
     let(:too_short_message) do
       I18n.t(
         "errors.site_settings.slow_down_crawler_user_agent_must_be_at_least_3_characters"

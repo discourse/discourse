@@ -3466,6 +3466,7 @@ fi:
       new_count:
         one: "%{count} uusi"
         other: "%{count} uutta"
+      more: "Lisää..."
       sections:
         messages:
           header_link_text: "Viestit"
@@ -4980,15 +4981,13 @@ fi:
           replace: "Korvaa"
   wizard_js:
     wizard:
-      done: "Valmis"
-      finish: "Valmis"
       back: "Takaisin"
       next: "Seuraava"
+      step-text: "Askelväli"
       step: "%{current}/%{total}"
       upload: "Lataa"
       uploading: "Ladataan..."
       upload_error: "Tiedoston lataaminen epäonnistui. Yritä uudelleen."
-      quit: "Ehkä myöhemmin"
       staff_count:
         one: "Henkilökuntalaisia on yhteisössä %{count} (eli sinä)"
         other: "Henkilökuntalaisia on yhteisössä %{count}, sinä mukaan lukien."

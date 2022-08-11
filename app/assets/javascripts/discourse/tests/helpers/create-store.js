@@ -69,7 +69,7 @@ export default function (customLookup = () => {}) {
           this._kvs = this._kvs || new KeyValueStore();
           return this._kvs;
         }
-        if (type === "topic-tracking-state:main") {
+        if (type === "service:topic-tracking-state") {
           this._tracker = this._tracker || TopicTrackingState.create();
           return this._tracker;
         }

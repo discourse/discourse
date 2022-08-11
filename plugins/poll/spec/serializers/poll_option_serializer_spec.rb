@@ -16,10 +16,10 @@ RSpec.describe PollOptionSerializer do
     poll.poll_votes.create!(poll_option_id: poll.poll_options.first.id, user_id: voter.id)
   end
 
-  context 'poll results are public' do
+  context 'when poll results are public' do
     let(:post) { Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]") }
 
-    context 'user is not staff' do
+    context 'when user is not staff' do
       let(:user) { Fabricate(:user) }
 
       it 'include votes' do
@@ -30,10 +30,10 @@ RSpec.describe PollOptionSerializer do
     end
   end
 
-  context 'poll results are staff only' do
+  context 'when poll results are staff only' do
     let(:post) { Fabricate(:post, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]") }
 
-    context 'user is not staff' do
+    context 'when user is not staff' do
       let(:user) { Fabricate(:user) }
 
       it 'doesn’t include votes' do
@@ -43,7 +43,7 @@ RSpec.describe PollOptionSerializer do
       end
     end
 
-    context 'user staff' do
+    context 'when user is staff' do
       let(:admin) { Fabricate(:admin) }
 
       it 'includes votes' do

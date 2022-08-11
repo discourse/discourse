@@ -126,7 +126,7 @@ RSpec.describe EmailUpdater do
     let(:user) { Fabricate(:user, email: old_email) }
     let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
-    context "changing primary email" do
+    context "when changing primary email" do
       before do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
           updater.change_to(new_email)
@@ -145,7 +145,7 @@ RSpec.describe EmailUpdater do
         expect(updater.change_req.new_email_token.email).to eq(new_email)
       end
 
-      context 'confirming an invalid token' do
+      context 'when confirming an invalid token' do
         it "produces an error" do
           updater.confirm('random')
           expect(updater.errors).to be_present
@@ -153,7 +153,7 @@ RSpec.describe EmailUpdater do
         end
       end
 
-      context 'confirming a valid token' do
+      context 'when confirming a valid token' do
         it "updates the user's email" do
           event = DiscourseEvent.track_events {
             expect_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email, to_address: old_email }) do
@@ -173,14 +173,14 @@ RSpec.describe EmailUpdater do
       end
     end
 
-    context "adding an email" do
+    context "when adding an email" do
       before do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
           updater.change_to(new_email, add: true)
         end
       end
 
-      context 'confirming a valid token' do
+      context 'when confirming a valid token' do
         it "adds a user email" do
           expect(UserHistory.where(action: UserHistory.actions[:add_email], acting_user_id: user.id).last).to be_present
 
@@ -201,7 +201,7 @@ RSpec.describe EmailUpdater do
         end
       end
 
-      context 'that was deleted before' do
+      context 'when it was deleted before' do
         it 'works' do
           expect_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email_add, to_address: old_email }) do
             updater.confirm(updater.change_req.new_email_token.token)
@@ -225,7 +225,7 @@ RSpec.describe EmailUpdater do
       end
     end
 
-    context "max_allowed_secondary_emails" do
+    context "with max_allowed_secondary_emails" do
       let(:secondary_email_1) { "secondary_1@email.com" }
       let(:secondary_email_2) { "secondary_2@email.com" }
 
@@ -265,7 +265,7 @@ RSpec.describe EmailUpdater do
       expect(updater.change_req.new_email_token).to be_blank
     end
 
-    context 'confirming an invalid token' do
+    context 'when confirming an invalid token' do
       it "produces an error" do
         updater.confirm('random')
         expect(updater.errors).to be_present
@@ -273,7 +273,7 @@ RSpec.describe EmailUpdater do
       end
     end
 
-    context 'confirming a valid token' do
+    context 'when confirming a valid token' do
       before do
         expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_new_email, to_address: new_email }) do
           @old_token = updater.change_req.old_email_token.token
@@ -299,7 +299,7 @@ RSpec.describe EmailUpdater do
         expect(updater.change_req.new_email_token.email).to eq(new_email)
       end
 
-      context "completing the new update process" do
+      context "when completing the new update process" do
         before do
           expect_not_enqueued_with(job: :critical_user_email, args: { type: :notify_old_email, to_address: old_email }) do
             updater.confirm(updater.change_req.new_email_token.token)
@@ -317,7 +317,7 @@ RSpec.describe EmailUpdater do
     end
   end
 
-  context 'hide_email_address_taken is enabled' do
+  context 'when hide_email_address_taken is enabled' do
     before do
       SiteSetting.hide_email_address_taken = true
     end

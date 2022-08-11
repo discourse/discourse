@@ -344,7 +344,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays hover button with correct title"
     );
 
-    await click(".hamburger-dropdown");
+    await click(".btn-sidebar-toggle");
 
     assert.strictEqual(
       linkDestroy,
@@ -421,7 +421,45 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
   });
 
-  test("API bridge for decorating hamburger-menu widget with generalLinks", async function (assert) {
+  test("API bridge for decorating hamburger-menu widget with footer links", async function (assert) {
+    withPluginApi("1.3.0", (api) => {
+      api.decorateWidget("hamburger-menu:footerLinks", () => {
+        return {
+          route: "discovery.top",
+          rawLabel: "my top",
+          className: "my-custom-top",
+        };
+      });
+    });
+
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    const myCustomTopSectionLink = query(
+      ".sidebar-section-community .sidebar-more-section-links-details-content-secondary .sidebar-section-link-my-custom-top"
+    );
+
+    assert.ok(
+      myCustomTopSectionLink,
+      "adds my custom top section link to community section under the secondary section in the More... links drawer"
+    );
+
+    assert.ok(
+      myCustomTopSectionLink.href.endsWith("/top"),
+      "sets the right href attribute for the my custom top section link"
+    );
+
+    assert.strictEqual(
+      myCustomTopSectionLink.textContent.trim(),
+      "my top",
+      "displays the right text for my custom top section link"
+    );
+  });
+
+  test("API bridge for decorating hamburger-menu widget with general links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
@@ -449,6 +487,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
         return {
           href: "/c/bug?status=open",
           rawLabel: "open bugs",
+        };
+      });
+
+      api.decorateWidget("hamburger-menu:generalLinks", () => {
+        return {
+          href: "/t/internationalization-localization/280",
+          rawLabel: "my favourite topic",
         };
       });
     });
@@ -520,6 +565,29 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert.ok(
       openBugsSectionLink.href.endsWith("/c/bug?status=open"),
       "sets the right href attribute for the custom open bugs section link"
+    );
+
+    // close more links
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await visit("/t/internationalization-localization/280");
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-favourite-topic.active"
+      ),
+      "displays my favourite topic custom section link when current route matches the link's route"
+    );
+
+    await visit("/t/short-topic-with-two-posts/54077");
+
+    assert.notOk(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-my-favourite-topic.active"
+      ),
+      "does not display my favourite topic custom section link when current route does not match the link's route"
     );
   });
 });

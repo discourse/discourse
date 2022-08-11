@@ -1992,7 +1992,8 @@ ko:
       votes_released: "%{description} - 완료됨"
       dismiss_confirmation:
         body:
-          other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
+          default:
+            other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
         dismiss: "읽음"
         cancel: "취소"
       group_message_summary:
@@ -2166,6 +2167,15 @@ ko:
     not_logged_in_user: "현재 활동 및 기본 설정에 대한 요약이 포함된 사용자 페이지"
     current_user: "사용자 페이지로 이동"
     view_all: "모두보기 %{tab}"
+    user_menu:
+      reviewable:
+        view_all: "모든 리뷰 항목 보기"
+        queue: "대기열"
+        deleted_user: "(삭제된 사용자)"
+        post_number_with_topic_title: "게시물 #%{post_number} - %{title}"
+        new_post_in_topic: "%{title}의 새 게시물"
+        suspicious_user: "의심스러운 사용자 %{username}"
+        default_item: "검토 가능한 항목 #%{reviewable_id}"
     topics:
       new_messages_marker: "마지막 방문"
       bulk:
@@ -3433,6 +3443,7 @@ ko:
       no_likes_body: "참여와 기여를 시작하는 가장 좋은 방법은 다른 사용자의 글을 읽고 %{heartIcon} 을 클릭하는 것입니다!"
       no_likes_others: "좋아요를 받은 게시글이 없습니다"
       no_topics_title: "아직 작성한 글이 없습니다."
+      no_topics_body: "새로운 대화를 시작하기 전에 기존 주제를 <a href='%{searchUrl}'>검색</a>하는 것이 좋습니다. 만약 원하시는 주제가 이미 존재하지 않을 것이라고 확신하신다면 계속 진행하셔도 좋습니다. 태그, 카테고리 또는 주제 목록의 오른쪽 상단의 <kbd>+ 새 주제</kbd> 버튼을 눌러 해당 영역에서 새 주제 만들기를 시작하세요."
       no_read_topics_title: "아직 읽은 글이 없습니다."
     no_group_messages_title: "그룹 메시지가 없습니다."
     fullscreen_table:
@@ -3442,6 +3453,7 @@ ko:
         other: "%{count} unread"
       new_count:
         other: "%{count} new"
+      more: "더 보기..."
       sections:
         messages:
           header_link_text: "메시지"
@@ -4231,6 +4243,7 @@ ko:
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
+            smtp_transaction_response_placeholder: "SMTP 아이디"
       moderation_history:
         performed_by: "수행자"
         no_results: "사용 가능한 운영 기록이 없습니다."
@@ -4412,6 +4425,7 @@ ko:
         clear_filter: "지우기"
         show_words:
           other: "%{count}개 단어 보기"
+        case_sensitive: "(대소문자 구분)"
         download: 다운로드
         clear_all: 모두 지우기
         clear_all_confirm: "%{action} 작업에 대한 모든 관심 단어를 지우시겠습니까?"
@@ -4449,6 +4463,8 @@ ko:
           exists: "이미 존재 함"
           upload: "파일에서 추가"
           upload_successful: "성공적으로 업로드되었습니다. 단어가 추가되었습니다."
+          case_sensitivity_label: "대소문자를 구분합니다"
+          case_sensitivity_description: "대/소문자가 일치하는 단어만"
         test:
           button_label: "테스트"
           modal_title: "%{action}: 검열 단어 테스트"
@@ -4991,15 +5007,13 @@ ko:
           replace: "바꾸기"
   wizard_js:
     wizard:
-      done: "완료"
-      finish: "마침"
       back: "이전"
       next: "다음"
+      step-text: "단계"
       step: "%{total} 중 %{current}"
       upload: "업로드"
       uploading: "업로드 중..."
       upload_error: "죄송합니다. 해당 파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하십시오."
-      quit: "아마도 다음에"
       staff_count:
         other: "커뮤니티에는 당신을 포함한 %{count}명의 스탭이 있습니다."
       invites:

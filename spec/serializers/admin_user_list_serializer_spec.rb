@@ -31,7 +31,7 @@ RSpec.describe AdminUserListSerializer do
     end
   end
 
-  context "emails" do
+  describe "emails" do
     fab!(:admin) { Fabricate(:user, admin: true, email: "admin@email.com") }
     fab!(:moderator) { Fabricate(:user, moderator: true, email: "moderator@email.com") }
     fab!(:user) { Fabricate(:user, email: "user@email.com") }

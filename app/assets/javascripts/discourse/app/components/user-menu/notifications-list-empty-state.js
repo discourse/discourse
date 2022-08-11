@@ -1,3 +1,3 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import templateOnly from "@ember/component/template-only";
 
-export default class UserMenuNotificationsListEmptyState extends GlimmerComponent {}
+export default templateOnly();

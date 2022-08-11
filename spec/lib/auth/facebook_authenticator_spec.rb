@@ -19,7 +19,7 @@ RSpec.describe Auth::FacebookAuthenticator do
 
   let(:authenticator) { Auth::FacebookAuthenticator.new }
 
-  context 'after_authenticate' do
+  describe 'after_authenticate' do
     it 'can authenticate and create a user record for already existing users' do
       user = Fabricate(:user)
       result = authenticator.after_authenticate(hash.deep_merge(info: { email: user.email }))
@@ -46,7 +46,7 @@ RSpec.describe Auth::FacebookAuthenticator do
     end
   end
 
-  context 'description_for_user' do
+  describe 'description_for_user' do
     fab!(:user) { Fabricate(:user) }
 
     it 'returns empty string if no entry for user' do
@@ -59,7 +59,7 @@ RSpec.describe Auth::FacebookAuthenticator do
     end
   end
 
-  context 'revoke' do
+  describe 'revoke' do
     fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::FacebookAuthenticator.new }
 
@@ -82,5 +82,4 @@ RSpec.describe Auth::FacebookAuthenticator do
       end
     end
   end
-
 end

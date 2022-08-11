@@ -19,7 +19,7 @@ RSpec.describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
     end
   end
 
-  context 'subfolder' do
+  context 'with subfolder' do
     let!(:post) do
       Fabricate(:post,
         user: ::DiscourseNarrativeBot::Base.new.discobot_user,

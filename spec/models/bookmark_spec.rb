@@ -3,7 +3,7 @@
 RSpec.describe Bookmark do
   fab!(:post) { Fabricate(:post) }
 
-  context "validations" do
+  describe "Validations" do
     it "does not allow a user to create a bookmark with only one polymorphic column" do
       user = Fabricate(:user)
       bm = Bookmark.create(bookmarkable_id: post.id, user: user)

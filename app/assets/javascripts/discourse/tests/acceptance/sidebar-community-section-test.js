@@ -1,6 +1,11 @@
 import I18n from "I18n";
 import { test } from "qunit";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  visit,
+} from "@ember/test-helpers";
 import {
   acceptance,
   count,
@@ -8,6 +13,7 @@ import {
   loggedInUser,
   publishToMessageBus,
   query,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -293,6 +299,76 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
   });
 
+  test("navigating to about from sidebar", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await click(".sidebar-section-community .sidebar-section-link-about");
+
+    assert.strictEqual(
+      currentURL(),
+      "/about",
+      "navigates to about route correctly"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-about.active"),
+      "about section link link is displayed in the main section and marked as active"
+    );
+  });
+
+  test("navigating to FAQ from sidebar", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await click(".sidebar-section-community .sidebar-section-link-faq");
+
+    assert.strictEqual(
+      currentURL(),
+      "/faq",
+      "navigates to faq route correctly"
+    );
+  });
+
+  test("navigating to custom FAQ URL from sidebar", async function (assert) {
+    this.siteSettings.faq_url = "http://some.faq.url";
+
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.strictEqual(
+      query(".sidebar-section-community .sidebar-section-link-faq").href,
+      "http://some.faq.url/",
+      "href attribute is set to custom FAQ URL on the section link"
+    );
+  });
+
+  test("navigating to admin from sidebar", async function (assert) {
+    await visit("/");
+    await click(".sidebar-section-community .sidebar-section-link-admin");
+
+    assert.strictEqual(currentRouteName(), "admin.dashboard.general");
+  });
+
+  test("admin section link is not shown to non-staff users", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-admin")
+    );
+  });
+
   test("clicking on my posts link", async function (assert) {
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-my-posts");
@@ -416,7 +492,7 @@ acceptance("Sidebar - Community Section", function (needs) {
   });
 
   test("new and unread count for everything link", async function (assert) {
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -603,7 +679,7 @@ acceptance("Sidebar - Community Section", function (needs) {
     const category = categories.find((c) => c.id === 1001);
     category.set("notification_level", NotificationLevels.TRACKING);
 
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -847,14 +923,14 @@ acceptance("Sidebar - Community Section", function (needs) {
     await visit("/");
 
     const topicTrackingState = this.container.lookup(
-      "topic-tracking-state:main"
+      "service:topic-tracking-state"
     );
 
     const initialCallbackCount = Object.keys(
       topicTrackingState.stateChangeCallbacks
     ).length;
 
-    await click(".hamburger-dropdown");
+    await click(".btn-sidebar-toggle");
 
     assert.ok(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <

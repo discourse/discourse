@@ -104,7 +104,23 @@ class Admin::ThemesController < Admin::AdminController
         @theme = RemoteTheme.import_theme(remote, theme_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
-        render_json_error e.message
+        if params[:force]
+          theme_name = params[:remote].gsub(/.git$/, "").split("/").last
+
+          remote_theme = RemoteTheme.new
+          remote_theme.private_key = params[:private_key]
+          remote_theme.branch = params[:branch] ? params[:branch] : nil
+          remote_theme.remote_url = params[:remote]
+          remote_theme.save!
+
+          @theme = Theme.new(user_id: theme_user&.id || -1, name: theme_name)
+          @theme.remote_theme = remote_theme
+          @theme.save!
+
+          render json: @theme, status: :created
+        else
+          render_json_error e.message
+        end
       end
     elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
 

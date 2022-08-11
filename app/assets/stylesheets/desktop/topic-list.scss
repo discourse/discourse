@@ -252,3 +252,22 @@
     }
   }
 }
+
+.welcome-topic-banner {
+  border: 1px solid var(--primary-low);
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+
+  .col-text {
+    width: 70%;
+  }
+  .col-button {
+    width: 30%;
+    display: flex;
+    align-self: center;
+    justify-content: flex-end;
+    padding-right: 30px;
+  }
+}

@@ -34,7 +34,8 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_link,
     :categories,
     :markdown_additional_options,
-    :displayed_about_plugin_stat_groups
+    :displayed_about_plugin_stat_groups,
+    :show_welcome_topic_banner
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -211,6 +212,10 @@ class SiteSerializer < ApplicationSerializer
 
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
+  end
+
+  def show_welcome_topic_banner
+    Site.show_welcome_topic_banner?(scope)
   end
 
   private

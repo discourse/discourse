@@ -99,7 +99,7 @@ RSpec.describe ScreenedIpAddress do
   end
 
   describe '#watch' do
-    context 'ip_address is not being watched' do
+    context 'when ip_address is not being watched' do
       it 'should create a new record' do
         record = described_class.watch(ip_address)
         expect(record).not_to be_new_record
@@ -123,7 +123,7 @@ RSpec.describe ScreenedIpAddress do
       end
     end
 
-    context 'ip_address is already being watched' do
+    context 'when ip_address is already being watched' do
       shared_examples 'exact match of ip address' do
         it 'should not create a new record' do
           expect { described_class.watch(ip_address_arg) }.to_not change { described_class.count }
@@ -134,21 +134,21 @@ RSpec.describe ScreenedIpAddress do
         end
       end
 
-      context 'using exact match' do
+      context 'when using exact match' do
         fab!(:existing) { Fabricate(:screened_ip_address) }
         let(:ip_address_arg) { existing.ip_address }
         include_examples 'exact match of ip address'
       end
 
-      context 'using subnet mask 255.255.255.0' do
+      context 'when using subnet mask 255.255.255.0' do
         fab!(:existing) { Fabricate(:screened_ip_address, ip_address: '99.232.23.124/24') }
 
-        context 'at exact address' do
+        context 'with exact address' do
           let(:ip_address_arg) { '99.232.23.124' }
           include_examples 'exact match of ip address'
         end
 
-        context 'at address in same subnet' do
+        context 'with address in same subnet' do
           let(:ip_address_arg) { '99.232.23.135' }
           include_examples 'exact match of ip address'
         end
@@ -197,7 +197,7 @@ RSpec.describe ScreenedIpAddress do
       expect(described_class.should_block?('222.234.23.12')).to eq(false)
     end
 
-    context 'IPv4' do
+    context 'with IPv4' do
       it 'returns false when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
         expect(described_class.should_block?('111.234.23.11')).to eq(false)
@@ -209,7 +209,7 @@ RSpec.describe ScreenedIpAddress do
       end
     end
 
-    context 'IPv6' do
+    context 'with IPv6' do
       it 'returns false when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
         expect(described_class.should_block?('2001:db8::ff00:42:8329')).to eq(false)
@@ -232,7 +232,7 @@ RSpec.describe ScreenedIpAddress do
       expect(described_class.is_allowed?('222.12.12.12')).to eq(false)
     end
 
-    context 'IPv4' do
+    context 'with IPv4' do
       it 'returns true when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
         expect(described_class.is_allowed?('111.234.23.11')).to eq(true)
@@ -244,7 +244,7 @@ RSpec.describe ScreenedIpAddress do
       end
     end
 
-    context 'IPv6' do
+    context 'with IPv6' do
       it 'returns true when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
         expect(described_class.is_allowed?('2001:db8::ff00:42:8329')).to eq(true)
@@ -258,13 +258,12 @@ RSpec.describe ScreenedIpAddress do
   end
 
   describe '#block_admin_login?' do
-    context 'no allow_admin records exist' do
-
+    context 'when no allow_admin records exist' do
       it "returns false when use_admin_ip_allowlist is false" do
         expect(described_class.block_admin_login?(Fabricate.build(:user), '123.12.12.12')).to eq(false)
       end
 
-      context "use_admin_ip_allowlist is true" do
+      context "when use_admin_ip_allowlist is true" do
         before { SiteSetting.use_admin_ip_allowlist = true }
 
         it "returns false when user is nil" do
@@ -285,7 +284,7 @@ RSpec.describe ScreenedIpAddress do
       end
     end
 
-    context 'allow_admin record exists' do
+    context 'when allow_admin record exists' do
       before do
         @permitted_ip_address = '111.234.23.11'
         Fabricate(:screened_ip_address, ip_address: @permitted_ip_address, action_type: described_class.actions[:allow_admin])
@@ -295,7 +294,7 @@ RSpec.describe ScreenedIpAddress do
         expect(described_class.block_admin_login?(Fabricate.build(:admin), '123.12.12.12')).to eq(false)
       end
 
-      context "use_admin_ip_allowlist is true" do
+      context "when use_admin_ip_allowlist is true" do
         before { SiteSetting.use_admin_ip_allowlist = true }
 
         it "returns false when user is nil" do

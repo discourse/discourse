@@ -7,6 +7,7 @@
         <th>{{i18n "admin.email.to_address"}}</th>
         <th>{{i18n "admin.email.email_type"}}</th>
         <th>{{i18n "admin.email.reply_key"}}</th>
+        <th>{{i18n "admin.email.post_link_with_smtp"}}</th>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
         <td><TextField @value={{this.filter.address}} @placeholderKey="admin.email.logs.filters.address_placeholder" /></td>
         <td><TextField @value={{this.filter.type}} @placeholderKey="admin.email.logs.filters.type_placeholder" /></td>
         <td><TextField @value={{this.filter.reply_key}} @placeholderKey="admin.email.logs.filters.reply_key_placeholder" /></td>
+        <td></td>
       </tr>
 
       {{#each this.model as |l|}}
@@ -34,13 +36,14 @@
             <a href="mailto:{{l.to_address}}">{{l.to_address}}</a>
           </td>
           <td class="sent-email-type">{{l.email_type}}</td>
-          <td class="sent-email-post-link">
+          <td class="sent-email-reply-key">
+            <span title={{l.reply_key}} class="reply-key">{{l.reply_key}}</span>
+          </td>
+          <td class="sent-email-post-link-with-smtp-response">
             {{#if l.post_url}}
-              <a href={{l.post_url}}>{{l.post_description}}</a>
-              <span class="reply-key">{{l.reply_key}}</span>
-            {{else}}
-              <span class="reply-key">{{l.reply_key}}</span>
+              <a href={{l.post_url}}>{{l.post_description}}</a><br>
             {{/if}}
+            <code title={{l.smtp_transaction_response}}>{{l.smtp_transaction_response}}</code>
           </td>
         </tr>
       {{else}}

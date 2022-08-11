@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe PostAnalyzer do
-
   let(:default_topic_id) { 12 }
   let(:url) { 'https://twitter.com/evil_trout/status/345954894420787200' }
 
@@ -79,7 +78,7 @@ RSpec.describe PostAnalyzer do
     end
   end
 
-  context "links" do
+  describe "links" do
     let(:raw_no_links) { "hello world my name is evil trout" }
     let(:raw_one_link_md) { "[jlawr](http://www.imdb.com/name/nm2225369)" }
     let(:raw_two_links_html) { "<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>" }

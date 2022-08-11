@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryGroup do
-
   describe '#permission_types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @permission_types = CategoryGroup.permission_types
       end

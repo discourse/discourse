@@ -502,6 +502,11 @@ export default Controller.extend({
     return false;
   },
 
+  @action
+  removeFullScreenExitPrompt() {
+    this.set("model.showFullScreenExitPrompt", false);
+  },
+
   actions: {
     togglePreview() {
       this.toggleProperty("showPreview");
@@ -655,16 +660,12 @@ export default Controller.extend({
     toggle() {
       this.closeAutocomplete();
 
-      if (
-        isEmpty(this.get("model.reply")) &&
-        isEmpty(this.get("model.title"))
-      ) {
+      const composer = this.model;
+
+      if (isEmpty(composer?.reply) && isEmpty(composer?.title)) {
         this.close();
       } else {
-        if (
-          this.get("model.composeState") === Composer.OPEN ||
-          this.get("model.composeState") === Composer.FULLSCREEN
-        ) {
+        if (composer?.viewOpenOrFullscreen) {
           this.shrink();
         } else {
           this.cancelComposer();
@@ -747,8 +748,15 @@ export default Controller.extend({
         return;
       }
 
-      if (this.get("model.viewOpen") || this.get("model.viewFullscreen")) {
+      const composer = this.model;
+
+      if (composer?.viewOpen) {
         this.shrink();
+      }
+
+      if (composer?.viewFullscreen) {
+        this.toggleFullscreen();
+        this.focusComposer();
       }
     },
 
@@ -839,7 +847,11 @@ export default Controller.extend({
 
     const composer = this.model;
 
-    if (composer.cantSubmitPost) {
+    if (composer?.cantSubmitPost) {
+      if (composer?.viewFullscreen) {
+        this.toggleFullscreen();
+      }
+
       this.set("lastValidatedAt", Date.now());
       return;
     }
@@ -1481,11 +1493,20 @@ export default Controller.extend({
 
   toggleFullscreen() {
     this._saveDraft();
-    if (this.get("model.composeState") === Composer.FULLSCREEN) {
-      this.set("model.composeState", Composer.OPEN);
+
+    const composer = this.model;
+
+    if (composer?.viewFullscreen) {
+      composer?.set("composeState", Composer.OPEN);
     } else {
-      this.set("model.composeState", Composer.FULLSCREEN);
+      composer?.set("composeState", Composer.FULLSCREEN);
+      composer?.set("showFullScreenExitPrompt", true);
     }
+  },
+
+  @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
+  showFullScreenPrompt(isFullscreen, showExitPrompt) {
+    return isFullscreen && showExitPrompt && !this.capabilities.touch;
   },
 
   close() {

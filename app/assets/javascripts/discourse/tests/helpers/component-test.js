@@ -8,6 +8,7 @@ import QUnit, { test } from "qunit";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import { testCleanup } from "discourse/tests/helpers/qunit-helpers";
+import { injectServiceIntoService } from "discourse/pre-initializers/inject-discourse-objects";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
@@ -31,24 +32,28 @@ export function setupRenderingTest(hooks) {
       timezone: "Australia/Brisbane",
     });
     this.currentUser = currentUser;
-    this.owner.unregister("current-user:main");
-    this.owner.register("current-user:main", currentUser, {
+    this.owner.unregister("service:current-user");
+    this.owner.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.owner.inject("component", "currentUser", "current-user:main");
-    this.owner.inject("service", "currentUser", "current-user:main");
+    this.owner.inject("component", "currentUser", "service:current-user");
+    injectServiceIntoService({
+      app: this.owner.application,
+      property: "currentUser",
+      specifier: "service:current-user",
+    });
 
-    this.owner.unregister("topic-tracking-state:main");
+    this.owner.unregister("service:topic-tracking-state");
     this.owner.register(
-      "topic-tracking-state:main",
+      "service:topic-tracking-state",
       TopicTrackingState.create({ currentUser }),
       { instantiate: false }
     );
-    this.owner.inject(
-      "service",
-      "topicTrackingState",
-      "topic-tracking-state:main"
-    );
+    injectServiceIntoService({
+      app: this.owner.application,
+      property: "topicTrackingState",
+      specifier: "service:topic-tracking-state",
+    });
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");
@@ -85,7 +90,7 @@ export default function (name, hooks, opts) {
 
   test(name, async function (assert) {
     if (opts.anonymous) {
-      this.owner.unregister("current-user:main");
+      this.owner.unregister("service:current-user");
     }
 
     if (opts.beforeEach) {

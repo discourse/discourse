@@ -1,9 +1,9 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Session from "discourse/models/session";
 
-export default class UserMenuItemsList extends GlimmerComponent {
+export default class UserMenuItemsList extends Component {
   @tracked loading = false;
   @tracked items = [];
 
@@ -26,6 +26,12 @@ export default class UserMenuItemsList extends GlimmerComponent {
 
   get emptyStateComponent() {
     return "user-menu/items-list-empty-state";
+  }
+
+  get itemComponent() {
+    throw new Error(
+      `the itemComponent property must be implemented in ${this.constructor.name}`
+    );
   }
 
   fetchItems() {
@@ -51,17 +57,6 @@ export default class UserMenuItemsList extends GlimmerComponent {
     }
     this.fetchItems()
       .then((items) => {
-        const valid = items.every((item) => {
-          if (!item.userMenuComponent) {
-            // eslint-disable-next-line no-console
-            console.error("userMenuComponent property is blank on", item);
-            return false;
-          }
-          return true;
-        });
-        if (!valid) {
-          throw new Error("userMenuComponent must be present on all items");
-        }
         this._setCachedItems(items);
         this.items = items;
       })

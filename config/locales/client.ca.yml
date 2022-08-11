@@ -86,6 +86,9 @@ ca:
         x_days:
           one: "%{count} dia"
           other: "%{count} dies"
+        over_x_years:
+          one: "més d'%{count} any"
+          other: "més de %{count} anys"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -116,6 +119,7 @@ ca:
       previous_month: "Mes anterior"
       next_month: "Mes següent"
       placeholder: data
+      from_placeholder: "des de la data"
       to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
@@ -276,6 +280,8 @@ ca:
         unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
+      create: "Crea un marcador"
+      edit: "Edita el marcador"
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove_reminder_keep_bookmark: "Elimina el recordatori i mantén el marcador"
       created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
@@ -2891,6 +2897,7 @@ ca:
       new_count:
         one: "%{count} nou"
         other: "%{count} nous"
+      more: "Més..."
       sections:
         messages:
           header_link_text: "Missatges"
@@ -4189,15 +4196,13 @@ ca:
           replace: "Reemplaça"
   wizard_js:
     wizard:
-      done: "Fet"
-      finish: "Acaba"
       back: "Enrere"
       next: "Següent"
+      step-text: "Pas"
       step: "%{current} de %{total}"
       upload: "Carrega"
       uploading: "Carregant..."
       upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
-      quit: "Potser més tard"
       staff_count:
         one: "La comunitat té %{count}membre responsable (vós inclòs)."
         other: "La comunitat té %{count} membres responsables (vós inclòs)."

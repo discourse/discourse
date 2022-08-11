@@ -49,7 +49,7 @@ RSpec.describe Admin::StaffActionLogsController do
       expect(json["staff_action_logs"][0]["new_value"]).to eq("value 1")
     end
 
-    context 'When staff actions are extended' do
+    context 'when staff actions are extended' do
       let(:plugin_extended_action) { :confirmed_ham }
       before { UserHistory.stubs(:staff_actions).returns([plugin_extended_action]) }
       after { UserHistory.unstub(:staff_actions) }

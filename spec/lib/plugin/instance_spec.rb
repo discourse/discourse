@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::Instance do
-
   after do
     DiscoursePluginRegistry.reset!
   end
 
-  context "find_all" do
+  describe "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
       expect(plugins.count).to eq(5)
@@ -22,14 +21,12 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  context "enabling/disabling" do
-
+  describe "enabling/disabling" do
     it "is enabled by default" do
       expect(Plugin::Instance.new.enabled?).to eq(true)
     end
 
     context "with a plugin that extends things" do
-
       class Trout
         attr_accessor :data
       end
@@ -128,7 +125,7 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  context "register asset" do
+  describe "register asset" do
     it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("test.css")
@@ -150,7 +147,7 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  context "register service worker" do
+  describe "register service worker" do
     it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_service_worker("test.js")
@@ -210,7 +207,7 @@ RSpec.describe Plugin::Instance do
     expect(authenticator.enabled?).to eq(false)
   end
 
-  context "activate!" do
+  describe "#activate!" do
     before do
       # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
       SiteSetting.enable_badges = false
@@ -271,7 +268,7 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  context "serialized_current_user_fields" do
+  describe "serialized_current_user_fields" do
     before do
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
     end
@@ -303,7 +300,7 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  context "register_color_scheme" do
+  describe "#register_color_scheme" do
     it "can add a color scheme for the first time" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       expect {
@@ -380,7 +377,7 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  context "locales" do
+  describe "locales" do
     let(:plugin_path) { "#{Rails.root}/spec/fixtures/plugins/custom_locales" }
     let!(:plugin) { Plugin::Instance.new(nil, "#{plugin_path}/plugin.rb") }
     let(:plural) do

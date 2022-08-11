@@ -26,3 +26,6 @@ ca:
           title: "Publicació"
         suggested_topics:
           title: "Temes recomanats"
+        rich_tooltip:
+          description: "Descripció"
+          header: "Capçalera"

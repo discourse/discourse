@@ -2,11 +2,18 @@
  * Base class representing a sidebar topics section link interface.
  */
 export default class BaseSectionLink {
-  constructor({ topicTrackingState, currentUser, appEvents, router } = {}) {
+  constructor({
+    topicTrackingState,
+    currentUser,
+    appEvents,
+    router,
+    siteSettings,
+  } = {}) {
     this.router = router;
     this.topicTrackingState = topicTrackingState;
     this.currentUser = currentUser;
     this.appEvents = appEvents;
+    this.siteSettings = siteSettings;
   }
 
   /**
@@ -27,6 +34,11 @@ export default class BaseSectionLink {
   get route() {
     this._notImplemented();
   }
+
+  /**
+   * @returns {string} href attribute for the link. This property will take precedence over the `route` property when set.
+   */
+  get href() {}
 
   /**
    * @returns {Object} Model for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo

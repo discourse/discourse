@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PollMailbox do
-
   let(:poller) { Jobs::PollMailbox.new }
 
   describe ".execute" do
-
     it "does no polling if pop3_polling_enabled is false" do
       SiteSetting.expects(:pop3_polling_enabled).returns(false)
       poller.expects(:poll_pop3).never
@@ -17,7 +15,6 @@ RSpec.describe Jobs::PollMailbox do
       poller.expects(:poll_pop3).once
       poller.execute({})
     end
-
   end
 
   describe ".poll_pop3" do
@@ -39,7 +36,7 @@ RSpec.describe Jobs::PollMailbox do
       EMAIL
     end
 
-    context "pop errors" do
+    context "with pop errors" do
       before do
         Discourse.expects(:handle_job_exception).at_least_once
       end
@@ -114,7 +111,7 @@ RSpec.describe Jobs::PollMailbox do
       poller.poll_pop3
     end
 
-    context "has emails" do
+    context "when has emails" do
       let(:oldmail) { file_from_fixtures("old_destination.eml", "emails").read }
 
       before do
@@ -173,7 +170,5 @@ RSpec.describe Jobs::PollMailbox do
         I18n.t("emails.incoming.errors.bounced_email_error")
       )
     end
-
   end
-
 end

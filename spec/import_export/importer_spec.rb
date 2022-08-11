@@ -3,7 +3,6 @@
 require "import_export"
 
 RSpec.describe ImportExport::Importer do
-
   before do
     STDOUT.stubs(:write)
   end
@@ -18,7 +17,6 @@ RSpec.describe ImportExport::Importer do
   end
 
   describe '.perform' do
-
     it 'topics and users' do
       data = import_data.dup
       data[:categories] = nil
@@ -32,7 +30,7 @@ RSpec.describe ImportExport::Importer do
         .and change { User.count }.by(2)
     end
 
-    context 'categories and groups' do
+    context 'with categories and groups' do
       it 'works' do
         data = import_data.dup
         data[:topics] = nil
@@ -105,7 +103,5 @@ RSpec.describe ImportExport::Importer do
         .and change { Topic.count }.by(8)
         .and change { User.count }.by(2)
     end
-
   end
-
 end

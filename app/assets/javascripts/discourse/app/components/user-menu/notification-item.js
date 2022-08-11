@@ -1,98 +1,84 @@
-import GlimmerComponent from "discourse/components/glimmer";
-import { formatUsername, postUrl } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
+import UserMenuItem from "discourse/components/user-menu/menu-item";
 import { setTransientHeader } from "discourse/lib/ajax";
 import { action } from "@ember/object";
-import { emojiUnescape } from "discourse/lib/text";
-import { htmlSafe } from "@ember/template";
+import { getRenderDirector } from "discourse/lib/notification-item";
 import getURL from "discourse-common/lib/get-url";
 import cookie from "discourse/lib/cookie";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
-export default class UserMenuNotificationItem extends GlimmerComponent {
+export default class UserMenuNotificationItem extends UserMenuItem {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+
+  constructor() {
+    super(...arguments);
+    this.renderDirector = getRenderDirector(
+      this.#notificationName,
+      this.notification,
+      this.currentUser,
+      this.siteSettings,
+      this.site
+    );
+  }
+
   get className() {
-    const classes = [];
+    const classes = ["notification"];
     if (this.notification.read) {
       classes.push("read");
+    } else {
+      classes.push("unread");
     }
-    if (this.notificationName) {
-      classes.push(this.notificationName.replace(/_/g, "-"));
+    if (this.#notificationName) {
+      classes.push(this.#notificationName.replace(/_/g, "-"));
     }
     if (this.notification.is_warning) {
       classes.push("is-warning");
+    }
+    const extras = this.renderDirector.classNames;
+    if (extras?.length) {
+      classes.push(...extras);
     }
     return classes.join(" ");
   }
 
   get linkHref() {
-    if (this.topicId) {
-      return postUrl(
-        this.notification.slug,
-        this.topicId,
-        this.notification.post_number
-      );
-    }
-    if (this.notification.data.group_id) {
-      return userPath(
-        `${this.notification.data.username}/messages/${this.notification.data.group_name}`
-      );
-    }
+    return this.renderDirector.linkHref;
   }
 
   get linkTitle() {
-    if (this.notificationName) {
-      return I18n.t(`notifications.titles.${this.notificationName}`);
-    } else {
-      return "";
-    }
+    return this.renderDirector.linkTitle;
   }
 
   get icon() {
-    return `notification.${this.notificationName}`;
+    return this.renderDirector.icon;
   }
 
   get label() {
-    return this.username;
+    return this.renderDirector.label;
   }
 
-  get wrapLabel() {
-    return true;
-  }
-
-  get labelWrapperClasses() {}
-
-  get username() {
-    return formatUsername(this.notification.data.display_username);
+  get labelClass() {
+    return this.renderDirector.labelClasses?.join(" ") || "";
   }
 
   get description() {
-    const description =
-      emojiUnescape(this.notification.fancy_title) ||
-      this.notification.data.topic_title;
-
-    if (this.descriptionHtmlSafe) {
-      return htmlSafe(description);
-    } else {
-      return description;
-    }
+    return this.renderDirector.description;
   }
 
-  get descriptionElementClasses() {}
-
-  get descriptionHtmlSafe() {
-    return !!this.notification.fancy_title;
-  }
-
-  // the following props are helper props -- they're never referenced directly in the hbs template
-  get notification() {
-    return this.args.item;
+  get descriptionClass() {
+    return this.renderDirector.descriptionClasses?.join(" ") || "";
   }
 
   get topicId() {
     return this.notification.topic_id;
   }
 
-  get notificationName() {
+  get notification() {
+    return this.args.item;
+  }
+
+  get #notificationName() {
     return this.site.notificationLookup[this.notification.notification_type];
   }
 
@@ -103,5 +89,6 @@ export default class UserMenuNotificationItem extends GlimmerComponent {
       setTransientHeader("Discourse-Clear-Notifications", this.notification.id);
       cookie("cn", this.notification.id, { path: getURL("/") });
     }
+    this.renderDirector.onClick();
   }
 }

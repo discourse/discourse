@@ -104,6 +104,7 @@
     flex-direction: column;
     justify-content: space-between;
     border-left: 1px solid var(--primary-low);
+    padding: 0.75em 0;
   }
 
   .tabs-list {
@@ -150,6 +151,43 @@
     .double-user,
     .multi-user {
       white-space: unset;
+    }
+
+    .item-label {
+      color: var(--primary);
+    }
+
+    li {
+      background-color: var(--secondary);
+
+      &.unread,
+      &.pending {
+        background-color: var(--tertiary-low);
+      }
+
+      &:hover {
+        background-color: var(--highlight-medium);
+        outline: none;
+      }
+
+      &:focus-within {
+        background: var(--highlight-medium);
+        a {
+          // we don't need the link focus because we're styling the parent
+          outline: 0;
+        }
+      }
+    }
+  }
+}
+
+// remove when the widgets-based implementation of the user menu is removed
+.user-menu:not(.revamped) {
+  .quick-access-panel {
+    li {
+      span:first-child {
+        color: var(--primary);
+      }
     }
   }
 }
@@ -312,10 +350,6 @@
         display: none;
       }
 
-      span:first-child {
-        color: var(--primary);
-      }
-
       span.double-user,
       // e.g., "username, username2"
       span.multi-user
@@ -415,8 +449,7 @@
         color: var(--danger);
       }
     }
-    .read,
-    .reviewed {
+    .read {
       background-color: var(--secondary);
     }
     .none {

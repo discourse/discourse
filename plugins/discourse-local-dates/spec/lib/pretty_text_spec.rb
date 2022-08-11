@@ -19,7 +19,7 @@ RSpec.describe PrettyText do
     freeze_time
   end
 
-  context 'emails simplified rendering' do
+  describe 'emails simplified rendering' do
     it 'works with default markup' do
       cooked = PrettyText.cook("[date=2018-05-08]")
       cooked_mail = generate_html("2018-05-08T00:00:00Z UTC",
@@ -70,7 +70,7 @@ RSpec.describe PrettyText do
     end
   end
 
-  context 'excerpt simplified rendering' do
+  describe 'excerpt simplified rendering' do
     let(:post) { Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone="America/New_York"]') }
 
     it 'adds UTC' do
@@ -79,7 +79,7 @@ RSpec.describe PrettyText do
     end
   end
 
-  context 'special quotes' do
+  describe 'special quotes' do
     it 'converts special quotes to regular quotes' do
       # german
       post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=„America/New_York“]')
@@ -97,7 +97,7 @@ RSpec.describe PrettyText do
     end
   end
 
-  context 'french quotes' do
+  describe 'french quotes' do
     let(:post) { Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=«America/New_York»]') }
 
     it 'converts french quotes to regular quotes' do

@@ -11,17 +11,17 @@ end
 
 module MultisiteTestHelpers
   def self.load_multisite?
-    Rails.env.test? && !ENV["RAILS_TEST_DB"] && !ENV["SKIP_MULTISITE"]
+    Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
 
   def self.create_multisite?
-    (Rails.env.test? || Rails.env.development?) && !ENV["RAILS_TEST_DB"] && !ENV["DATABASE_URL"] && !ENV["SKIP_MULTISITE"]
+    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
 end
 
 task 'db:environment:set' => [:load_config]  do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_ENV=test RAILS_TEST_DB=discourse_test_multisite rake db:environment:set")
+    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
   end
 end
 
@@ -30,153 +30,45 @@ task 'db:force_skip_persist' do
   GlobalSetting.skip_redis = true
 end
 
-def config_to_url(config)
-  if config[:username] || config[:password]
-    userinfo = [config[:username], config[:password]].join(":")
+task 'db:create' => [:load_config] do |_, args|
+  if MultisiteTestHelpers.create_multisite?
+    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
+
+      STDERR.puts "-" * 80
+      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
+      STDERR.puts "checking the column structure when initializing, which raises an error."
+      STDERR.puts "-" * 80
+      raise "Could not initialize discourse_test_multisite"
+    end
   end
-
-  URI::Generic.new(
-    config[:adapter],
-    userinfo,
-    config[:hostname] || "localhost",
-    config[:port],
-    nil,
-    "/#{config[:database]}",
-    nil,
-    nil,
-    nil
-  ).to_s
-end
-
-# db:create and related tasks
-
-task "multisite:create" => ["db:load_config"] do
-  next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
-
-  spec = RailsMultisite::ConnectionManagement.connection_spec(db: ENV["RAILS_DB"])
-  database_url = config_to_url(spec.config)
-  system("DATABASE_URL=#{database_url} rake db:create")
-  exit 0
-end
-
-task "multisite:create:all" => ["db:load_config"] do
-  next if !MultisiteTestHelpers.create_multisite?
-
-  unless system("RAILS_ENV=test RAILS_TEST_DB=discourse_test_multisite rake db:create")
-    STDERR.puts "-" * 80
-    STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
-    STDERR.puts "checking the column structure when initializing, which raises an error."
-    STDERR.puts "-" * 80
-    raise "Could not initialize discourse_test_multisite"
-  end
-
-  RailsMultisite::ConnectionManagement.all_dbs.each do |db|
-    spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
-    next unless spec
-
-    database_url = config_to_url(spec.config)
-    system("DATABASE_URL=#{database_url} rake db:create")
-  end
-end
-
-task "db:create" => :load_config do
-  Rake::Task["multisite:create:all"].invoke
 end
 
 begin
-  prerequisites = Rake::Task['db:create'].prerequisites.map(&:to_sym)
+  reqs = Rake::Task['db:create'].prerequisites.map(&:to_sym)
   Rake::Task['db:create'].clear_prerequisites
-  Rake::Task['db:create'].enhance(["db:force_skip_persist", "multisite:create"] + prerequisites)
+  Rake::Task['db:create'].enhance(["db:force_skip_persist"] + reqs)
 end
 
-# db:drop and related tasks
-
-task "multisite:drop" => ["db:load_config"] do
-  next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
-
-  spec = RailsMultisite::ConnectionManagement.connection_spec(db: ENV["RAILS_DB"])
-  database_url = config_to_url(spec.config)
-  system("DATABASE_URL=#{database_url} rake db:drop")
-  exit 0
-end
-
-task "multisite:drop:all" => ["db:load_config"] do
-  next if !MultisiteTestHelpers.create_multisite?
-
-  system("RAILS_TEST_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
-
-  RailsMultisite::ConnectionManagement.all_dbs.each do |db|
-    spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
-    next unless spec
-
-    database_url = config_to_url(spec.config)
-    system("DATABASE_URL=#{database_url} rake db:drop")
+task 'db:drop' => [:load_config] do |_, args|
+  if MultisiteTestHelpers.create_multisite?
+    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
   end
-end
-
-task "db:drop" => :load_config do
-  Rake::Task["multisite:drop:all"].invoke
 end
 
 begin
-  prerequisites = Rake::Task['db:drop'].prerequisites.map(&:to_sym)
-  Rake::Task['db:drop'].clear_prerequisites
-  Rake::Task['db:drop'].enhance(["db:force_skip_persist", "multisite:drop"] + prerequisites)
+  Rake::Task["db:migrate"].clear
+  Rake::Task["db:rollback"].clear
 end
 
-# db:migrate and related tasks
-
-# we need to run seed_fu every time we run rake db:migrate
-Rake::Task["db:migrate"].clear
-task "db:migrate" => ["load_config", "environment", "set_locale"] do |_, args|
-  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
-    migrations = ActiveRecord::Base.connection.migration_context.migrations
-    now_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
-    epoch_timestamp = Time.at(0).utc.strftime("%Y%m%d%H%M%S").to_i
-
-    raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
-    raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
-
-    %i[pg_trgm unaccent].each do |extension|
-      begin
-        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
-      rescue => e
-        STDERR.puts "Cannot enable database extension #{extension}"
-        STDERR.puts e
-      end
-    end
-
-    ActiveRecord::Tasks::DatabaseTasks.migrate
-
-    SeedFu.quiet = true
-    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
-
-    if Rails.env.development? && !ENV["RAILS_TEST_DB"] && !ENV["RAILS_DB"]
-      Rake::Task["db:schema:cache:dump"].invoke
-    end
-
-    if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
-      SiteIconManager.ensure_optimized!
-    end
-  end
-
-  next if Discourse.is_parallel_test?
-
-  if MultisiteTestHelpers.load_multisite?
-    system("RAILS_TEST_DB=discourse_test_multisite rake db:migrate")
-    next
-  end
-
-  next if !Rails.env.development? || !ENV["RAILS_DB"] || ENV["DATABASE_URL"]
-
-  RailsMultisite::ConnectionManagement.all_dbs.each do |db|
-    spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
-    next unless spec
-
-    database_url = config_to_url(spec.config)
-    system("DATABASE_URL=#{database_url} rake db:migrate")
-  end
+task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
+  step = ENV["STEP"] ? ENV["STEP"].to_i : 1
+  ActiveRecord::Base.connection.migration_context.rollback(step)
+  Rake::Task['db:_dump'].invoke
 end
+
+# our optimized version of multisite migrate, we have many sites and we have seeds
+# this ensures we can run migrations concurrently to save huge amounts of time
+Rake::Task['multisite:migrate'].clear
 
 class StdOutDemux
   def initialize(stdout)
@@ -217,9 +109,6 @@ class SeedHelper
   end
 end
 
-# our optimized version of multisite migrate, we have many sites and we have seeds
-# this ensures we can run migrations concurrently to save huge amounts of time
-Rake::Task['multisite:migrate'].clear
 task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
   if ENV["RAILS_ENV"] != "production"
     raise "Multisite migrate is only supported in production"
@@ -320,13 +209,42 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   end
 end
 
-# Other tasks
+# we need to run seed_fu every time we run rake db:migrate
+task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
+  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
+    migrations = ActiveRecord::Base.connection.migration_context.migrations
+    now_timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S').to_i
+    epoch_timestamp = Time.at(0).utc.strftime('%Y%m%d%H%M%S').to_i
 
-Rake::Task["db:rollback"].clear
-task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
-  step = ENV["STEP"] ? ENV["STEP"].to_i : 1
-  ActiveRecord::Base.connection.migration_context.rollback(step)
-  Rake::Task['db:_dump'].invoke
+    raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
+    raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
+
+    %i[pg_trgm unaccent].each do |extension|
+      begin
+        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
+      rescue => e
+        STDERR.puts "Cannot enable database extension #{extension}"
+        STDERR.puts e
+      end
+    end
+
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+
+    SeedFu.quiet = true
+    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+
+    if Rails.env.development? && !ENV["RAILS_DB"]
+      Rake::Task['db:schema:cache:dump'].invoke
+    end
+
+    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+      SiteIconManager.ensure_optimized!
+    end
+  end
+
+  if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
+    system("RAILS_DB=discourse_test_multisite rake db:migrate")
+  end
 end
 
 task 'test:prepare' => 'environment' do
@@ -374,6 +292,7 @@ end
 
 desc 'Statistics about database'
 task 'db:stats' => 'environment' do
+
   sql = <<~SQL
     select table_name,
     (
@@ -424,6 +343,7 @@ end
 
 desc 'Validate indexes'
 task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment'] do |_, args|
+
   db = TemporaryDb.new
   db.start
   db.migrate
