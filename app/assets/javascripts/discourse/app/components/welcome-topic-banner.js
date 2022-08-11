@@ -1,10 +1,14 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "discourse-common/lib/get-owner";
 import Topic from "discourse/models/topic";
 import Composer from "discourse/models/composer";
+import { inject as service } from "@ember/service";
 
-export default class WelcomeTopicBanner extends GlimmerComponent {
+export default class WelcomeTopicBanner extends Component {
+  @service siteSettings;
+  @service store;
+
   @action
   editWelcomeTopic() {
     const topicController = getOwner(this).lookup("controller:topic");
