@@ -1,4 +1,4 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
@@ -30,8 +30,12 @@ const ADMIN_MAIN_SECTION_LINKS = [AdminSectionLink];
 const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
 const MORE_SECONDARY_SECTION_LINKS = [AboutSectionLink, FAQSectionLink];
 
-export default class SidebarCommunitySection extends GlimmerComponent {
+export default class SidebarCommunitySection extends Component {
   @service router;
+  @service topicTrackingState;
+  @service currentUser;
+  @service appEvents;
+  @service siteSettings;
 
   moreSectionLinks = [...MORE_SECTION_LINKS, ...customSectionLinks].map(
     (sectionLinkClass) => {
