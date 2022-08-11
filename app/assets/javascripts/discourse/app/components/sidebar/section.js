@@ -1,9 +1,12 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
-export default class SidebarSection extends GlimmerComponent {
+export default class SidebarSection extends Component {
+  @service keyValueStore;
+
   @tracked displaySection;
   collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
 

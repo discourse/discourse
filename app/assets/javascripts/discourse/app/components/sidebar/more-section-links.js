@@ -4,9 +4,9 @@ import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 
 import { bind } from "discourse-common/utils/decorators";
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 
-export default class SidebarMoreSectionLinks extends GlimmerComponent {
+export default class SidebarMoreSectionLinks extends Component {
   @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
   @service router;

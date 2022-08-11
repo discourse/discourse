@@ -1,7 +1,7 @@
-import GlimmerComponent from "@glimmer/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 
-export default class SectionLink extends GlimmerComponent {
+export default class SectionLink extends Component {
   willDestroy() {
     if (this.args.willDestroy) {
       this.args.willDestroy();

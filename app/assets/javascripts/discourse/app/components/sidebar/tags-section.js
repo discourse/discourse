@@ -4,11 +4,13 @@ import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import TagSectionLink from "discourse/lib/sidebar/tags-section/tag-section-link";
 
-export default class SidebarTagsSection extends GlimmerComponent {
+export default class SidebarTagsSection extends Component {
   @service router;
+  @service topicTrackingState;
+  @service currentUser;
 
   constructor() {
     super(...arguments);
