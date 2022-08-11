@@ -94,12 +94,6 @@ class GroupUser < ActiveRecord::Base
     user.update(updates) if updates.present?
   end
 
-  def remove_flair_group
-    return if user.flair_group_id != group_id
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
-    user.update_attribute(:flair_group_id, nil)
-  end
-
   def grant_other_available_title
     if group.title.present? && group.title == user.title
       user.update_attribute(:title, user.next_best_title)
