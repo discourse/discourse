@@ -1,7 +1,7 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 
-export default class UserMenuItem extends GlimmerComponent {
+export default class UserMenuItem extends Component {
   get className() {}
 
   get linkHref() {

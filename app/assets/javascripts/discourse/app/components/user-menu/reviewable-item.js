@@ -1,8 +1,13 @@
 import UserMenuItem from "discourse/components/user-menu/menu-item";
 import getURL from "discourse-common/lib/get-url";
 import { getRenderDirector } from "discourse/lib/reviewable-item";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuReviewableItem extends UserMenuItem {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+
   constructor() {
     super(...arguments);
     this.reviewable = this.args.item;

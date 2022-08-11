@@ -1,7 +1,7 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import Notification from "discourse/models/notification";
 
-export default class UserMenuBookmarkNotificationItem extends GlimmerComponent {
+export default class UserMenuBookmarkNotificationItem extends Component {
   get component() {
     if (this.args.item.constructor === Notification) {
       return "user-menu/notification-item";

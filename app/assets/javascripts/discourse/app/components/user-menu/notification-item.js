@@ -4,8 +4,13 @@ import { action } from "@ember/object";
 import { getRenderDirector } from "discourse/lib/notification-item";
 import getURL from "discourse-common/lib/get-url";
 import cookie from "discourse/lib/cookie";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuNotificationItem extends UserMenuItem {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+
   constructor() {
     super(...arguments);
     this.renderDirector = getRenderDirector(
