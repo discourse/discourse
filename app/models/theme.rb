@@ -159,6 +159,9 @@ class Theme < ActiveRecord::Base
         BASE_COMPILER_VERSION,
         Ember::VERSION,
         GlobalSetting.cdn_url,
+        GlobalSetting.s3_cdn_url,
+        GlobalSetting.s3_endpoint,
+        GlobalSetting.s3_bucket,
         Discourse.current_hostname
       ]
       Digest::SHA1.hexdigest(dependencies.join)
