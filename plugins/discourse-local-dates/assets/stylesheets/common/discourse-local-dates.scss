@@ -180,6 +180,16 @@ div[data-tippy-root] {
         .date-time {
           color: var(--primary-medium);
           background: var(--primary-very-low);
+          padding: 1em 0.5em 1em 2em;
+          border: 0;
+          outline: none;
+          flex: 1;
+          @include ellipsis;
+          width: 100%;
+          justify-content: flex-start;
+          &:focus {
+            background-color: var(--tertiary-50);
+          }
         }
 
         .d-icon {
@@ -202,16 +212,6 @@ div[data-tippy-root] {
           bottom: 0;
           color: var(--primary-high);
           border-radius: 0 0 5px 0;
-        }
-
-        .date-time {
-          padding: 1em 0.5em 1em 2em;
-          border: 0;
-          outline: none;
-          flex: 1;
-          @include ellipsis;
-          width: 100%;
-          justify-content: flex-start;
         }
       }
 
