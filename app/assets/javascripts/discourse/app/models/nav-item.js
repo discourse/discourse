@@ -262,7 +262,7 @@ NavItem.reopenClass({
         }
 
         if (
-          (category || !args.skipCategoriesNavItem) &&
+          (category || args.skipCategoriesNavItem) &&
           i.name.startsWith("categor")
         ) {
           return false;
