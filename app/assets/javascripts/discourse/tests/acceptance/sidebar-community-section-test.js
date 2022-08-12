@@ -148,15 +148,6 @@ acceptance("Sidebar - Community Section", function (needs) {
     await click(
       ".sidebar-section-community .sidebar-more-section-links-details-summary"
     );
-
-    await click("#main-outlet");
-
-    assert.notOk(
-      exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content"
-      ),
-      "additional section links are hidden when clicking outside"
-    );
   });
 
   test("clicking on everything link", async function (assert) {
