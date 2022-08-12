@@ -508,7 +508,7 @@ RSpec.describe Oneboxer do
     end
   end
 
-  context 'Twitter' do
+  describe 'Twitter' do
     let(:url) { 'https://twitter.com/discourse/status/1428031057186627589' }
 
     before do
