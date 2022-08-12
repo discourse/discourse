@@ -47,5 +47,19 @@ discourseModule(
         "displays the right content"
       );
     });
+
+    test("linkHref", function (assert) {
+      const notification = getNotification();
+      const director = createRenderDirector(
+        notification,
+        "group_message_summary",
+        this.siteSettings
+      );
+      assert.strictEqual(
+        director.linkHref,
+        "/u/drummers.boss/messages/group/drummers",
+        "links to the group inbox in the user profile"
+      );
+    });
   }
 );

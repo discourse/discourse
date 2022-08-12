@@ -1,4 +1,5 @@
 import NotificationItemBase from "discourse/lib/notification-items/base";
+import { userPath } from "discourse/lib/url";
 import I18n from "I18n";
 
 export default class extends NotificationItemBase {
@@ -11,5 +12,11 @@ export default class extends NotificationItemBase {
 
   get label() {
     return null;
+  }
+
+  get linkHref() {
+    return userPath(
+      `${this.notification.data.username}/messages/group/${this.notification.data.group_name}`
+    );
   }
 }
