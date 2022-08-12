@@ -9,7 +9,16 @@ export default class SectionLink extends Component {
   }
 
   get classNames() {
-    return `${this.args.class} sidebar-section-link sidebar-section-link-${this.args.linkName}`;
+    let classNames = [
+      "sidebar-section-link",
+      `sidebar-section-link-${this.args.linkName}`,
+    ];
+
+    if (this.args.class) {
+      classNames.push(this.args.class);
+    }
+
+    return classNames.join(" ");
   }
 
   get models() {
