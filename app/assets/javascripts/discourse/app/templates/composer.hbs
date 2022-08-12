@@ -45,6 +45,7 @@
 
         <ComposerEditor @topic={{this.topic}} @composer={{this.model}} @lastValidatedAt={{this.lastValidatedAt}} @canWhisper={{this.canWhisper}} @storeToolbarState={{action "storeToolbarState"}} @onPopupMenuAction={{action "onPopupMenuAction"}} @showUploadModal={{route-action "showUploadSelector"}} @popupMenuOptions={{this.popupMenuOptions}} @draftStatus={{this.model.draftStatus}} @isUploading={{this.isUploading}} @isProcessingUpload={{this.isProcessingUpload}} @allowUpload={{this.allowUpload}} @uploadIcon={{this.uploadIcon}} @isCancellable={{this.isCancellable}} @uploadProgress={{this.uploadProgress}} @groupsMentioned={{action "groupsMentioned"}} @cannotSeeMention={{action "cannotSeeMention"}} @hereMention={{action "hereMention"}} @importQuote={{action "importQuote"}} @togglePreview={{action "togglePreview"}} @processPreview={{this.showPreview}} @showToolbar={{this.showToolbar}} @afterRefresh={{action "afterRefresh"}} @focusTarget={{this.focusTarget}} @disableTextarea={{this.disableTextarea}}>
           <div class="composer-fields">
+            <PluginOutlet @name="before-composer-fields" @args={{hash model=this.model}} />
             {{#unless this.model.viewFullscreen}}
               {{#if this.model.canEditTitle}}
                 {{#if this.model.creatingPrivateMessage}}
