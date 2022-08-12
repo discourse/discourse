@@ -69,6 +69,13 @@ acceptance("Topic Discovery Tracked", function (needs) {
       "the categories nav item is displayed when tracked filter is not present"
     );
 
+    await visit("/categories");
+
+    assert.ok(
+      exists("#navigation-bar li.categories"),
+      "the categories nav item is displayed on categories route when tracked filter is not present"
+    );
+
     await visit("/?f=tracked");
 
     assert.ok(
