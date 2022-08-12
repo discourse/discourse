@@ -11,37 +11,24 @@
       <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
         <div class="top-tabs tabs-list">
           {{#each this.topTabs as |tab|}}
-            <button
-              class={{concat "btn btn-flat btn-icon no-text" (if (eq tab.id this.currentTabId) " active")}}
-              type="button"
-              role="tab"
-              id={{concat "user-menu-button-" tab.id}}
-              tabindex={{if (eq tab.id this.currentTabId) "0" "-1"}}
-              aria-selected={{if (eq tab.id this.currentTabId) "true" "false"}}
-              aria-controls={{concat "quick-access-" tab.id}}
-              data-tab-number={{tab.position}}
-              {{on "click" (fn this.changeTab tab)}}
-              {{!-- template-lint-disable require-context-role --}}
+            <UserMenu::TabButton
+              @tab={{tab}}
+              @currentTabId={{this.currentTabId}}
+              @changeTabFunction={{fn this.changeTab tab}}
             >
-              {{d-icon tab.icon}}
               {{#if tab.count}}
                 <span class="badge-notification">{{tab.count}}</span>
               {{/if}}
-            </button>
+            </UserMenu::TabButton>
           {{/each}}
         </div>
         <div class="bottom-tabs tabs-list">
           {{#each this.bottomTabs as |tab|}}
-            <a
-              class="btn btn-flat btn-icon no-text"
-              role="tab"
-              tabindex="-1"
-              href={{tab.href}}
-              data-tab-number={{tab.position}}
-              {{!-- template-lint-disable require-context-role --}}
-            >
-              {{d-icon tab.icon}}
-            </a>
+            <UserMenu::TabButton
+              @tab={{tab}}
+              @currentTabId={{this.currentTabId}}
+              @changeTabFunction={{fn this.changeTab tab}}
+            />
           {{/each}}
         </div>
       </div>

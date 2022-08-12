@@ -70,10 +70,10 @@ module("Integration | Component | user-menu", function (hooks) {
     await render(template);
     const tabs = queryAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
-    const preferencesTab = tabs[0];
-    assert.ok(preferencesTab.href.endsWith("/u/eviltrout/preferences"));
-    assert.strictEqual(preferencesTab.dataset.tabNumber, "6");
-    assert.strictEqual(preferencesTab.getAttribute("tabindex"), "-1");
+    const profileTab = tabs[0];
+    assert.strictEqual(profileTab.id, "user-menu-button-profile");
+    assert.strictEqual(profileTab.dataset.tabNumber, "6");
+    assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {

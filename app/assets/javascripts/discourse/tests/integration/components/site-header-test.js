@@ -164,8 +164,9 @@ module("Integration | Component | site-header", function (hooks) {
     await triggerKeyEvent(document, "keydown", "ArrowDown");
 
     focusedTab = document.activeElement;
-    assert.ok(
-      focusedTab.href.endsWith("/u/eviltrout/preferences"),
+    assert.strictEqual(
+      focusedTab.id,
+      "user-menu-button-profile",
       "the down arrow key can move the focus to the bottom tabs"
     );
 
@@ -179,8 +180,9 @@ module("Integration | Component | site-header", function (hooks) {
 
     await triggerKeyEvent(document, "keydown", "ArrowUp");
     focusedTab = document.activeElement;
-    assert.ok(
-      focusedTab.href.endsWith("/u/eviltrout/preferences"),
+    assert.strictEqual(
+      focusedTab.id,
+      "user-menu-button-profile",
       "the up arrow key moves the focus in the opposite direction"
     );
   });
