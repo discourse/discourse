@@ -363,6 +363,12 @@ export default Component.extend(TextareaTextManipulation, {
     if (this.extraButtons) {
       this.extraButtons(toolbar);
     }
+
+    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
+    if (firstButton) {
+      firstButton.tabindex = 0;
+    }
+
     return toolbar;
   },
 
