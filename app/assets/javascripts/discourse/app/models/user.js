@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { alias, equal, filterBy, gt, or } from "@ember/object/computed";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -314,14 +314,22 @@ const User = RestModel.extend({
 
   sidebarCategoryIds: alias("sidebar_category_ids"),
 
-  @discourseComputed("sidebar_tag_names.[]")
-  sidebarTagNames(sidebarTagNames) {
-    if (!sidebarTagNames || sidebarTagNames.length === 0) {
+  @discourseComputed("sidebar_tags.[]")
+  sidebarTags(sidebarTags) {
+    if (!sidebarTags || sidebarTags.length === 0) {
       return [];
     }
 
-    return sidebarTagNames;
+    if (this.siteSettings.tags_sort_alphabetically) {
+      return sidebarTags.sort((a, b) => {
+        return a.name.localeCompare(b);
+      });
+    } else {
+      return sidebarTags;
+    }
   },
+
+  sidebarTagNames: mapBy("sidebarTags", "name"),
 
   @discourseComputed("sidebar_category_ids.[]")
   sidebarCategories(sidebarCategoryIds) {
@@ -446,6 +454,7 @@ const User = RestModel.extend({
         );
         User.current().setProperties(userProps);
         this.setProperties(updatedState);
+        return result;
       })
       .finally(() => {
         this.set("isSaving", false);

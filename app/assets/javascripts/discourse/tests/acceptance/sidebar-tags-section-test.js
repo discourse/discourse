@@ -42,13 +42,38 @@ acceptance("Sidebar - Tags section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
-    sidebar_tag_names: ["tag1", "tag2", "tag3"],
+    sidebar_tags: [
+      { name: "tag1", pm_only: false },
+      { name: "tag2", pm_only: false },
+      {
+        name: "tag3",
+        pm_only: false,
+      },
+      {
+        name: "tag4",
+        pm_only: true,
+      },
+    ],
   });
 
   needs.pretender((server, helper) => {
     server.get("/tag/:tagId/notifications", (request) => {
       return helper.response({
         tag_notification: { id: request.params.tagId },
+      });
+    });
+
+    server.get("/topics/private-messages-tags/:username/:tagId", () => {
+      const topics = [
+        { id: 1, posters: [] },
+        { id: 2, posters: [] },
+        { id: 3, posters: [] },
+      ];
+
+      return helper.response({
+        topic_list: {
+          topics,
+        },
       });
     });
 
@@ -85,7 +110,7 @@ acceptance("Sidebar - Tags section", function (needs) {
 
   test("section content when user has not added any tags", async function (assert) {
     updateCurrentUser({
-      sidebar_tag_names: [],
+      sidebar_tags: [],
     });
 
     await visit("/");
@@ -106,8 +131,8 @@ acceptance("Sidebar - Tags section", function (needs) {
 
     assert.strictEqual(
       count(".sidebar-section-tags .sidebar-section-link"),
-      3,
-      "3 section links under the section"
+      4,
+      "4 section links under the section"
     );
 
     assert.strictEqual(
@@ -164,6 +189,29 @@ acceptance("Sidebar - Tags section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-tag2.active`),
       "the tag2 section link is marked as active"
+    );
+  });
+
+  test("private message tag section links for user", async function (assert) {
+    await visit("/");
+
+    await click(".sidebar-section-link-tag4");
+
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/messages/tags/tag4",
+      "it should transition to user's private message tag4 tag page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag4.active`),
+      "the tag4 section link is marked as active"
     );
   });
 

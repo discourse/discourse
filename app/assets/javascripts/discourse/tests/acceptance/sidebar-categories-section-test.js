@@ -57,7 +57,7 @@ acceptance(
 acceptance("Sidebar - Categories Section", function (needs) {
   needs.user({
     sidebar_category_ids: [],
-    sidebar_tag_names: [],
+    sidebar_tags: [],
   });
 
   needs.settings({

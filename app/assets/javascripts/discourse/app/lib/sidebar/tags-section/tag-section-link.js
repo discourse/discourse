@@ -8,8 +8,8 @@ export default class TagSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ tagName, topicTrackingState }) {
-    this.tagName = tagName;
+  constructor({ tag, topicTrackingState }) {
+    this.tagName = tag.name;
     this.topicTrackingState = topicTrackingState;
     this.refreshCounts();
   }
@@ -31,16 +31,22 @@ export default class TagSectionLink {
     return this.tagName;
   }
 
-  get model() {
-    return this.tagName;
+  get models() {
+    return [this.tagName];
+  }
+
+  get route() {
+    if (this.totalUnread > 0) {
+      return "tag.showUnread";
+    } else if (this.totalNew > 0) {
+      return "tag.showNew";
+    } else {
+      return "tag.show";
+    }
   }
 
   get currentWhen() {
     return "tag.show tag.showNew tag.showUnread tag.showTop";
-  }
-
-  get route() {
-    return "tag.show";
   }
 
   get text() {
@@ -56,16 +62,6 @@ export default class TagSectionLink {
       return I18n.t("sidebar.new_count", {
         count: this.totalNew,
       });
-    }
-  }
-
-  get route() {
-    if (this.totalUnread > 0) {
-      return "tag.showUnread";
-    } else if (this.totalNew > 0) {
-      return "tag.showNew";
-    } else {
-      return "tag.show";
     }
   }
 }
