@@ -42,6 +42,20 @@ export default createWidget("poster-name", {
     showGlyph: true,
   },
 
+  didRenderWidget() {
+    if (this.attrs.user) {
+      this.attrs.user.trackStatus();
+      this.attrs.user.on("status-changed", this, "scheduleRerender");
+    }
+  },
+
+  willRerenderWidget() {
+    if (this.attrs.user) {
+      this.attrs.user.off("status-changed", this, "scheduleRerender");
+      this.attrs.user.stopTrackingStatus();
+    }
+  },
+
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator || attrs.groupModerator) {
@@ -151,8 +165,12 @@ export default createWidget("poster-name", {
 
   afterNameContents(attrs) {
     const contents = [];
-    if (this.siteSettings.enable_user_status && attrs.userStatus) {
-      contents.push(this.attach("post-user-status", attrs.userStatus));
+    if (
+      this.siteSettings.enable_user_status &&
+      attrs.user &&
+      attrs.user.status
+    ) {
+      contents.push(this.attach("post-user-status", attrs.user.status));
     }
     contents.push(...applyDecorators(this, "after-name", attrs, this.state));
     return contents;
