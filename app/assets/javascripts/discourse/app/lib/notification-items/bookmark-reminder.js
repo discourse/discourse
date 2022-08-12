@@ -1,5 +1,6 @@
 import NotificationItemBase from "discourse/lib/notification-items/base";
 import I18n from "I18n";
+import getUrl from "discourse-common/lib/get-url";
 
 export default class extends NotificationItemBase {
   get linkTitle() {
@@ -13,5 +14,15 @@ export default class extends NotificationItemBase {
 
   get description() {
     return super.description || this.notification.data.title;
+  }
+
+  get linkHref() {
+    let linkHref = super.linkHref;
+    if (linkHref) {
+      return linkHref;
+    }
+    if (this.notification.data.bookmarkable_url) {
+      return getUrl(this.notification.data.bookmarkable_url);
+    }
   }
 }

@@ -82,4 +82,42 @@ discourseModule("Unit | Notification Items | bookmark-reminder", function () {
       "description falls back to the bookmark title if there's no fancy title"
     );
   });
+
+  test("linkHref", function (assert) {
+    let notification = getNotification();
+    let director = createRenderDirector(
+      notification,
+      "bookmark_reminder",
+      this.siteSettings
+    );
+    assert.strictEqual(
+      director.linkHref,
+      "/t/this-is-fancy-title/449/113",
+      "is a link to the topic that the bookmark belongs to"
+    );
+
+    notification = getNotification({
+      post_number: null,
+      topic_id: null,
+      fancy_title: null,
+      slug: null,
+      data: {
+        title: "bookmark from some plugin",
+        display_username: "osama",
+        bookmark_name: "",
+        bookmarkable_url: "/link/to/somewhere",
+        bookmarkable_id: 4324,
+      },
+    });
+    director = createRenderDirector(
+      notification,
+      "bookmark_reminder",
+      this.siteSettings
+    );
+    assert.strictEqual(
+      director.linkHref,
+      "/link/to/somewhere",
+      "falls back to bookmarkable_url"
+    );
+  });
 });
