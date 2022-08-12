@@ -287,7 +287,24 @@
       }
     }
   }
+  &.btn-text {
+    &:not([disabled]) {
+      &:hover,
+      &.btn-hover,
+      &:focus {
+        background: var(--primary-low);
+        color: var(--primary);
+      }
 
+      &:active,
+      &.btn-active {
+        @include linear-gradient(
+          var(--primary-low-mid) 0%,
+          var(--primary-very-low) 100%
+        );
+      }
+    }
+  }
   &:focus {
     outline: none;
     background: var(--primary-low);

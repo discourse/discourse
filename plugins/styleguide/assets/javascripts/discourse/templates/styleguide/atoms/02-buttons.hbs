@@ -69,3 +69,15 @@
     <FlatButton @icon="trash-alt" @disabled={{bs.disabled}} @translatedTitle={{bs.title}} />
   {{/each}}
 </StyleguideExample>
+
+<StyleguideExample @title="dbutton btn-flat btn-text - sizes (large, default, small)">
+  {{#each this.dummy.buttonSizes as |bs|}}
+    <DButton @class={{concat "btn-flat " bs.class}} @disabled={{bs.disabled}} @translatedLabel={{bs.text}} />
+  {{/each}}
+</StyleguideExample>
+
+<StyleguideExample @title="dbutton btn-flat btn-text - states">
+  {{#each this.dummy.buttonStates as |bs|}}
+    <DButton @class={{concat "btn-flat " bs.class}} @disabled={{bs.disabled}} @translatedLabel={{bs.text}} />
+  {{/each}}
+</StyleguideExample>
