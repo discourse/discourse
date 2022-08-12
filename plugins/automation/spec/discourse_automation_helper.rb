@@ -8,7 +8,7 @@ end
 
 module DiscourseAutomation::CapturedContext
   def self.add(context)
-    @contexts << context
+    @contexts << context if @capturing
   end
 
   def self.capture
@@ -21,7 +21,6 @@ module DiscourseAutomation::CapturedContext
   ensure
     @capturing = false
   end
-
 end
 
 DiscourseAutomation::Scriptable.add('something_about_us') do
