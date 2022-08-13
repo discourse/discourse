@@ -474,63 +474,6 @@ acceptance("User Preferences when badges are disabled", function (needs) {
   });
 });
 
-acceptance(
-  "User can select a topic to feature on profile if site setting in enabled",
-  function (needs) {
-    needs.user();
-    needs.settings({ allow_featured_topic_on_user_profiles: true });
-    needs.pretender((server, helper) => {
-      server.put("/u/eviltrout/feature-topic", () => {
-        return helper.response({
-          success: true,
-        });
-      });
-    });
-
-    test("setting featured topic on profile", async function (assert) {
-      await visit("/u/eviltrout/preferences/profile");
-
-      assert.ok(
-        !exists(".featured-topic-link"),
-        "no featured topic link to present"
-      );
-      assert.ok(
-        !exists(".clear-feature-topic-on-profile-btn"),
-        "clear button not present"
-      );
-
-      const selectTopicBtn = query(
-        ".feature-topic-on-profile-btn:nth-of-type(1)"
-      );
-      assert.ok(exists(selectTopicBtn), "feature topic button is present");
-
-      await click(selectTopicBtn);
-
-      assert.ok(
-        exists(".feature-topic-on-profile"),
-        "topic picker modal is open"
-      );
-
-      const topicRadioBtn = query(
-        'input[name="choose_topic_id"]:nth-of-type(1)'
-      );
-      assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
-      await click(topicRadioBtn);
-
-      await click(".save-featured-topic-on-profile");
-
-      assert.ok(
-        exists(".featured-topic-link"),
-        "link to featured topic is present"
-      );
-      assert.ok(
-        exists(".clear-feature-topic-on-profile-btn"),
-        "clear button is present"
-      );
-    });
-  }
-);
-
 acceptance("Custom User Fields", function (needs) {
   needs.user();
   needs.site({
