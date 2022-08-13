@@ -68,6 +68,12 @@ export function sanitizeAsync(text, options) {
   });
 }
 
+export function parseAsync(md, options) {
+  return loadMarkdownIt().then(() => {
+    return createPrettyText(options).opts.engine.parse(md);
+  });
+}
+
 function loadMarkdownIt() {
   return new Promise((resolve) => {
     let markdownItURL = Session.currentProp("markdownItURL");
