@@ -43,6 +43,8 @@ class BulkImport::VBulletin < BulkImport::Base
            AND `COLUMN_NAME` LIKE 'post_thanks_%'
     SQL
     ).to_a.count > 0
+
+    @user_ids_by_email = {}
   end
 
   def execute
@@ -80,6 +82,8 @@ class BulkImport::VBulletin < BulkImport::Base
     import_attachments
     import_avatars
     import_signatures
+
+    merge_duplicated_users
   end
 
   def import_groups
@@ -135,8 +139,6 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_user_emails
     puts '', "Importing user emails..."
 
-    # FIXME: properly deduplicate here based on email
-
     users = mysql_stream <<-SQL
         SELECT u.userid, email, joindate
           FROM #{TABLE_PREFIX}user u
@@ -145,10 +147,21 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_user_emails(users) do |row|
+      user_id, email = row[0 .. 1]
+
+      @user_ids_by_email[email.downcase] ||= []
+      user_ids = @user_ids_by_email[email.downcase] << user_id
+
+      if user_ids.count > 1
+        # fudge email to avoid conflicts; accounts from the 2nd and on will later be merged back into the first
+        # NOTE: gsub! is used to avoid creating a new (frozen) string
+        email.gsub!(/^/, SecureRandom.hex)
+      end
+
       {
-        imported_id: row[0],
-        imported_user_id: row[0],
-        email: row[1],
+        imported_id: user_id,
+        imported_user_id: user_id,
+        email: email,
         created_at: Time.zone.at(row[2])
       }
     end
@@ -677,6 +690,23 @@ class BulkImport::VBulletin < BulkImport::Base
       UserCustomField.create!(user_id: u.id, name: "see_signatures", value: true)
       UserCustomField.create!(user_id: u.id, name: "signature_raw", value: user_sig)
       UserCustomField.create!(user_id: u.id, name: "signature_cooked", value: PrettyText.cook(user_sig, omit_nofollow: false))
+    end
+  end
+
+  def merge_duplicated_users
+    puts '', "Merging duplicated users..."
+
+    duplicated = @user_ids_by_email.select { |e, ids| ids.count > 1 }
+    duplicated.each do |email, user_ids|
+      # queried one by one to ensure ordering
+      first, *rest = user_ids.map do |id|
+        UserCustomField.includes(:user).find_by!(name: 'import_id', value: id).user
+      end
+
+      rest.each do |dup|
+        first.reload
+        UserMerger.new(dup, first).merge!
+      end
     end
   end
 
