@@ -38,6 +38,7 @@ acceptance("Topic - User Status", function (needs) {
 
 acceptance("Topic - User Status - live updates", function (needs) {
   const userId = 1;
+  const status = { emoji: "tooth", description: "off to dentist" };
 
   needs.user();
   needs.pretender((server, helper) => {
