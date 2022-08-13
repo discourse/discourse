@@ -388,6 +388,9 @@
     button {
       margin-left: auto;
     }
+    label a {
+      margin: 0;
+    }
   }
   $label-max-width: 300px;
   label.radio {
