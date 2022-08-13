@@ -83,7 +83,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_groups
-    puts "Importing groups..."
+    puts '', "Importing groups..."
 
     groups = mysql_stream <<-SQL
         SELECT usergroupid, title, description, usertitle
@@ -103,7 +103,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_users
-    puts "Importing users..."
+    puts '', "Importing users..."
 
     users = mysql_stream <<-SQL
         SELECT u.userid, username, email, joindate, birthday, ipaddress, u.usergroupid, bandate, liftdate
@@ -133,7 +133,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_emails
-    puts "Importing user emails..."
+    puts '', "Importing user emails..."
 
     users = mysql_stream <<-SQL
         SELECT u.userid, email, joindate
@@ -153,7 +153,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_stats
-    puts "Importing user stats..."
+    puts '', "Importing user stats..."
 
     users = mysql_stream <<-SQL
               SELECT u.userid, joindate, posts, COUNT(t.threadid) AS threads, p.dateline
@@ -186,7 +186,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_group_users
-    puts "Importing group users..."
+    puts '', "Importing group users..."
 
     group_users = mysql_stream <<-SQL
       SELECT usergroupid, userid
@@ -203,7 +203,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_passwords
-    puts "Importing user passwords..."
+    puts '', "Importing user passwords..."
 
     user_passwords = mysql_stream <<-SQL
         SELECT userid, password
@@ -221,7 +221,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_salts
-    puts "Importing user salts..."
+    puts '', "Importing user salts..."
 
     user_salts = mysql_stream <<-SQL
         SELECT userid, salt
@@ -240,7 +240,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_profiles
-    puts "Importing user profiles..."
+    puts '', "Importing user profiles..."
 
     user_profiles = mysql_stream <<-SQL
         SELECT userid, homepage, profilevisits
@@ -259,7 +259,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_categories
-    puts "Importing categories..."
+    puts '', "Importing categories..."
 
     categories = mysql_query(<<-SQL
         SELECT forumid, parentid, title, description, displayorder
@@ -283,7 +283,7 @@ class BulkImport::VBulletin < BulkImport::Base
       end
     end
 
-    puts "Importing parent categories..."
+    puts '', "Importing parent categories..."
     create_categories(parent_categories) do |row|
       {
         imported_id: row[0],
@@ -293,7 +293,7 @@ class BulkImport::VBulletin < BulkImport::Base
       }
     end
 
-    puts "Importing children categories..."
+    puts '', "Importing children categories..."
     create_categories(children_categories) do |row|
       {
         imported_id: row[0],
@@ -306,7 +306,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_topics
-    puts "Importing topics..."
+    puts '', "Importing topics..."
 
     topics = mysql_stream <<-SQL
         SELECT threadid, title, forumid, postuserid, open, dateline, views, visible, sticky
@@ -337,7 +337,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_posts
-    puts "Importing posts..."
+    puts '', "Importing posts..."
 
     posts = mysql_stream <<-SQL
         SELECT postid, p.threadid, parentid, userid, p.dateline, p.visible, pagetext
@@ -371,7 +371,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
   def import_likes
     return unless @has_post_thanks
-    puts "Importing likes..."
+    puts '', "Importing likes..."
 
     @imported_likes = Set.new
     @last_imported_post_id = 0
@@ -400,7 +400,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_private_topics
-    puts "Importing private topics..."
+    puts '', "Importing private topics..."
 
     @imported_topics = {}
 
@@ -429,7 +429,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    puts "Importing topic allowed users..."
+    puts '', "Importing topic allowed users..."
 
     allowed_users = Set.new
 
@@ -456,7 +456,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_private_posts
-    puts "Importing private posts..."
+    puts '', "Importing private posts..."
 
     posts = mysql_stream <<-SQL
         SELECT pmtextid, title, fromuserid, touserarray, dateline, message
