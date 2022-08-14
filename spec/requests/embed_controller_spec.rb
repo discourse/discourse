@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe EmbedController do
-
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:discourse_username) { "eviltrout" }
@@ -16,7 +15,7 @@ RSpec.describe EmbedController do
     expect(response.body).to match(I18n.t('embed.error'))
   end
 
-  context "by topic id" do
+  describe "by topic id" do
     let(:headers) { { 'REFERER' => 'http://eviltrout.com/some-page' } }
 
     before do
@@ -39,7 +38,6 @@ RSpec.describe EmbedController do
     end
 
     context "with api key" do
-
       let(:api_key) { Fabricate(:api_key) }
 
       context "with valid embed url" do
@@ -205,7 +203,7 @@ RSpec.describe EmbedController do
       expect(response.body).to include(".test-osama-15")
     end
 
-    context "success" do
+    context "with success" do
       after do
         expect(response.status).to eq(200)
         expect(response.headers['X-Frame-Options']).to be_nil
@@ -267,7 +265,7 @@ RSpec.describe EmbedController do
       Fabricate(:embeddable_host, host: 'https://example.com/1234', class_name: 'example')
     end
 
-    context "success" do
+    context "with success" do
       it "works with the first host" do
         get '/embed/comments',
           params: { embed_url: embed_url },
@@ -301,7 +299,7 @@ RSpec.describe EmbedController do
       end
     end
 
-    context "CSP frame-ancestors enabled" do
+    context "with CSP frame-ancestors enabled" do
       before do
         SiteSetting.content_security_policy_frame_ancestors = true
       end

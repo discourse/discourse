@@ -113,7 +113,7 @@ RSpec.describe "fallbacks" do
     end
   end
 
-  context "in a multi-threaded environment" do
+  context "when in a multi-threaded environment" do
     it "finds the fallback translation" do
       I18n.backend.store_translations(:en, test: "en test")
 

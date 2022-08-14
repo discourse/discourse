@@ -85,3 +85,7 @@ ko:
           title: "헤더 아이콘"
         spinners:
           title: "스피너"
+        rich_tooltip:
+          description: "설명"
+          header: "Header"
+          hover_to_see: "마우스를 올리면 툴팁이 표시됩니다."

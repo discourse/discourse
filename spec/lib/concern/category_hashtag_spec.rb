@@ -27,7 +27,7 @@ RSpec.describe CategoryHashtag do
       expect(Category.query_from_hashtag_slug("non-existent#{CategoryHashtag::SEPARATOR}#{parent_category.slug}")).to eq(nil)
     end
 
-    context "multi-level categories" do
+    context "with multi-level categories" do
       before do
         SiteSetting.max_category_nesting = 3
       end

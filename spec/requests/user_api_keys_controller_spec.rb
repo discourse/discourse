@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe UserApiKeysController do
-
   let :public_key do
     <<~TXT
     -----BEGIN PUBLIC KEY-----
@@ -44,7 +43,7 @@ RSpec.describe UserApiKeysController do
     }
   end
 
-  context 'new' do
+  describe '#new' do
     it "supports a head request cleanly" do
       head "/user-api-key/new"
       expect(response.status).to eq(200)
@@ -52,8 +51,7 @@ RSpec.describe UserApiKeysController do
     end
   end
 
-  context 'create' do
-
+  describe '#create' do
     it "does not allow anon" do
       post "/user-api-key.json", params: args
       expect(response.status).to eq(403)

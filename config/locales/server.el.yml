@@ -2533,52 +2533,20 @@ el:
   wizard:
     title: "Εγκατάσταση Discourse"
     step:
-      locale:
-        title: "Καλώς ήλθες στο Discourse!"
-        fields:
-          default_locale:
-            description: "Ποια είναι η προεπιλεγμένη γλώσσα για την κοινότητά σου;"
-      forum_title:
-        title: "Όνομα"
-        description: "Το όνομά σου είναι μια ορατή ταμπέλα από μακριά, το <i>πρώτο</i> πράγμα που οι εν δυνάμει επισκέπτες θα παρατηρήσουν για την κοινότητά σου. Τι λέει λοιπόν το όνομά σου και ο τίτλος για την κοινότητά σου;"
+      introduction:
         fields:
           title:
-            label: "Το όνομα της κοινότητάς σου"
             placeholder: "Το μέρος που συχνάζει η Jane"
           site_description:
             placeholder: "Ένα μέρος για την Jane και τις φίλες της να συζητήσουν ωραία θέματα"
-      introduction:
-        title: "Εισαγωγή"
-        fields:
-          welcome:
-            label: "Νήμα καλωσορίσματος"
-            description: "<p>Πως θα περιέγραφες την κοινότητά σου σε έναν άγνωστο σε ένα ασανσέρ μέσα σε ένα λεπτό;</p> <ul> <li>Για ποιον είναι αυτές οι συζητήσεις;</li> <li>Τι μπορώ να βρω εδώ;</li> <li>Γιατί να το επισκεφθώ;</li> </ul> <p>Το νήμα καλωσορίσματός είναι το πρώτο πράγμα που οι νέοι αφιχθέντες θα διαβάσουν. Σκέψου το σαν <b>μια παράγραφο</b> με 'λόγια του ασανσέρ' ή με την 'δήλωση αποστολής'. </p>"
-            one_paragraph: "Παρακαλώ, περιόρισε το μήνυμα καλωσορίσματος σε μία παράγραφο."
       privacy:
-        title: "Πρόσβαση"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Δημόσια"
-              restricted:
-                label: "Ιδιωτική"
-      contact:
-        title: "Επικοινωνία"
-        fields:
-          contact_email:
-            label: "Mail"
-            placeholder: "name@example.com"
-            description: "Διεύθυνση email του ατόμου ή της ομάδας που είναι υπεύθυνα για αυτή την κοινότητα. Χρησιμοποιείται για σημαντικές ειδοποιήσεις όπως σημάνσεις χωρίς διαχείριση, ανανεώσεις ασφάλειας και στην σελίδα <a href='%{base_path}/about' target='_blank'>σχετικά</a> για έκτακτη επικοινωνία με την κοινότητα."
-          contact_url:
-            label: "Ιστοσελίδα"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Ιστοσελίδα γενικής επικοινωνίας με εσάς και τον οργανισμό σας. Θα εμφανίζεται στην επιλογή <a href='%{base_path}/about' target='_blank'>σχετικά με τη σελίδα</a>."
-          site_contact:
-            label: "Αυτόματα Μηνύματα"
-            description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
-      corporate:
-        title: "Οργάνωση"
+          login_required:
+            placeholder: "Ιδιωτική"
+          must_approve_users:
+            placeholder: "Απαιτεί Έγκριση"
+      ready:
+        title: "Το Discourse σου είναι έτοιμο!"
       styling:
         fields:
           styling_preview:
@@ -2595,16 +2563,21 @@ el:
                 label: "Κατηγορίες και Τελευταία Νήματα"
               categories_and_top_topics:
                 label: "Κατηγορίες και κορυφαία θέματα"
-      logos:
-        title: "Λογότυπα"
+      branding:
         fields:
           logo:
             label: "Κυρίως Λογότυπο"
-      icons:
-        title: "Εικονίδια"
-        fields:
           large_icon:
             label: "Μεγάλο εικονίδιο"
+      corporate:
+        fields:
+          contact_url:
+            label: "Ιστοσελίδα"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Ιστοσελίδα γενικής επικοινωνίας με εσάς και τον οργανισμό σας. Θα εμφανίζεται στην επιλογή <a href='%{base_path}/about' target='_blank'>σχετικά με τη σελίδα</a>."
+          site_contact:
+            label: "Αυτόματα Μηνύματα"
+            description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
       invites:
         title: "Πρόσκληση Συνεργάτη"
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "

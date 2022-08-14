@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe SpamRule::AutoSilence do
-
   before do
     SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
     Reviewable.set_priorities(high: 4.0)
@@ -90,13 +89,13 @@ RSpec.describe SpamRule::AutoSilence do
     end
   end
 
-  describe 'silence_user' do
+  describe '#silence_user' do
     let!(:admin)  { Fabricate(:admin) } # needed for SystemMessage
     let(:user)    { Fabricate(:user) }
     let!(:post)   { Fabricate(:post, user: user) }
     subject       { described_class.new(user) }
 
-    context 'user is not silenced' do
+    context 'when user is not silenced' do
       it 'prevents the user from making new posts' do
         subject.silence_user
         expect(user).to be_silenced
@@ -120,7 +119,7 @@ RSpec.describe SpamRule::AutoSilence do
       end
     end
 
-    context 'user is already silenced' do
+    context 'when user is already silenced' do
       before do
         UserSilencer.silence(user)
       end
@@ -139,7 +138,7 @@ RSpec.describe SpamRule::AutoSilence do
     let(:post) { Fabricate(:post, user: user) }
     let(:post2) { Fabricate(:post, user: user) }
 
-    context "higher trust levels or staff" do
+    context "with higher trust levels or staff" do
       it "should not autosilence any of them" do
         PostActionCreator.spam(flagger, post)
         PostActionCreator.spam(flagger2, post)
@@ -169,7 +168,7 @@ RSpec.describe SpamRule::AutoSilence do
       end
     end
 
-    context 'new user' do
+    context 'with new user' do
       subject { described_class.new(user) }
       let(:stats) { subject.user_spam_stats }
 
@@ -217,7 +216,7 @@ RSpec.describe SpamRule::AutoSilence do
       end
     end
 
-    context "silenced, but has higher trust level now" do
+    context "when silenced, but has higher trust level now" do
       let(:user)  { Fabricate(:user, silenced_till: 1.year.from_now, trust_level: TrustLevel[1]) }
       subject     { described_class.new(user) }
 

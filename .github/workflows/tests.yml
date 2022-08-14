@@ -12,6 +12,9 @@ concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
@@ -176,7 +179,7 @@ jobs:
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim-browsers
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     strategy:
       fail-fast: false
@@ -220,16 +223,16 @@ jobs:
         if: ${{ always() }}
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 20
+        timeout-minutes: 15
 
       - name: Core QUnit 2
         if: ${{ always() }}
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 20
+        timeout-minutes: 15
 
       - name: Core QUnit 3
         if: ${{ always() }}
         working-directory: ./app/assets/javascripts/discourse
         run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 20
+        timeout-minutes: 15

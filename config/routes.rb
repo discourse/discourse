@@ -22,6 +22,7 @@ Discourse::Application.routes.draw do
     post "webhooks/mailgun"  => "webhooks#mailgun"
     post "webhooks/mailjet"  => "webhooks#mailjet"
     post "webhooks/mandrill" => "webhooks#mandrill"
+    get "webhooks/mandrill" => "webhooks#mandrill_head"
     post "webhooks/postmark" => "webhooks#postmark"
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
@@ -518,6 +519,8 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/activity/:filter" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/bookmarks" => "users#bookmarks", constraints: { username: RouteFormat.username, format: /(json|ics)/ }
+      get "#{root_path}/:username/user-menu-bookmarks" => "users#user_menu_bookmarks", constraints: { username: RouteFormat.username, format: :json }
+      get "#{root_path}/:username/user-menu-private-messages" => "users#user_menu_messages", constraints: { username: RouteFormat.username, format: :json }
       get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
       delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username }

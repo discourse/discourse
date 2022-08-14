@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTrackingState do
-
   fab!(:user) { Fabricate(:user) }
   fab!(:whisperers_group) { Fabricate(:group) }
 
@@ -459,7 +458,7 @@ RSpec.describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
-  context 'muted tags' do
+  describe 'muted tags' do
     it "remove_muted_tags_from_latest is set to always" do
       SiteSetting.remove_muted_tags_from_latest = 'always'
       tag1 = Fabricate(:tag)
@@ -580,7 +579,7 @@ RSpec.describe TopicTrackingState do
 
   end
 
-  context "tag support" do
+  describe "tag support" do
     before do
       SiteSetting.tagging_enabled = true
 

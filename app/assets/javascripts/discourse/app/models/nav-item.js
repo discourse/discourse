@@ -244,7 +244,7 @@ NavItem.reopenClass({
         since: "2.6.0",
         dropFrom: "2.7.0",
       });
-      args.siteSettings = getOwner(this).lookup("site-settings:main");
+      args.siteSettings = getOwner(this).lookup("service:site-settings");
     }
     let items = args.siteSettings.top_menu.split("|");
 
@@ -262,7 +262,7 @@ NavItem.reopenClass({
         }
 
         if (
-          (category || !args.skipCategoriesNavItem) &&
+          (category || args.skipCategoriesNavItem) &&
           i.name.startsWith("categor")
         ) {
           return false;

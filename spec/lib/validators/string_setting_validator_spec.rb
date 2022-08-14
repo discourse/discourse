@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe StringSettingValidator do
-
   describe '#valid_value?' do
     shared_examples "for all StringSettingValidator opts" do
       it "returns true for blank values" do
@@ -64,7 +63,7 @@ RSpec.describe StringSettingValidator do
       end
     end
 
-    context 'combinations of options' do
+    context 'with combinations of options' do
       it "min and regex" do
         v = described_class.new(regex: '^[\w]+$', min: 3)
         expect(v.valid_value?('chocolate')).to eq(true)
@@ -94,7 +93,5 @@ RSpec.describe StringSettingValidator do
         expect(v.valid_value?('ba')).to eq(false)
       end
     end
-
   end
-
 end

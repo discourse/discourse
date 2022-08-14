@@ -47,7 +47,7 @@ RSpec.describe PostAlerter do
     PostAlerter.post_created(post)
   end
 
-  context "private message" do
+  context "with private message" do
     it "notifies for pms correctly" do
       pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
       op = Fabricate(:post, user: pm.user)
@@ -83,7 +83,7 @@ RSpec.describe PostAlerter do
 
     end
 
-    context "group inboxes" do
+    context "with group inboxes" do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }
       fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2) }
@@ -245,7 +245,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context "unread" do
+  context "with unread" do
     it "does not return whispers as unread posts" do
       _whisper = Fabricate(:post, raw: 'this is a whisper post',
                                   user: admin,
@@ -257,7 +257,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context 'edits' do
+  context 'with edits' do
     it 'notifies correctly on edits' do
       Jobs.run_immediately!
       PostActionNotifier.enable
@@ -343,7 +343,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context 'quotes' do
+  context 'with quotes' do
     fab!(:category) { Fabricate(:category) }
     fab!(:topic) { Fabricate(:topic, category: category) }
 
@@ -417,7 +417,7 @@ RSpec.describe PostAlerter do
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], post])
     end
 
-    context "notifications when prioritizing full names" do
+    context "with notifications when prioritizing full names" do
       before do
         SiteSetting.prioritize_username_in_ux = false
         SiteSetting.display_name_on_posts = true
@@ -483,7 +483,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context 'linked' do
+  context 'with linked' do
     let(:post1) { create_post }
     let(:user) { post1.user }
     let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
@@ -541,7 +541,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context '@here' do
+  context 'with @here' do
     let(:post) { create_post_with_alerts(raw: "Hello @here how are you?", user: tl2_user, topic: topic) }
     fab!(:other_post) { Fabricate(:post, topic: topic) }
 
@@ -587,7 +587,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context '@group mentions' do
+  context 'with @group mentions' do
 
     fab!(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
     let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
@@ -639,7 +639,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context '@mentions' do
+  context 'with @mentions' do
 
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout') }
     let(:topic) { mention_post.topic }
@@ -712,7 +712,7 @@ RSpec.describe PostAlerter do
       TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[level_name])
     end
 
-    context "topic" do
+    context "with topic" do
       fab!(:topic) { Fabricate(:topic, user: alice) }
 
       [:watching, :tracking, :regular].each do |notification_level|
@@ -740,7 +740,7 @@ RSpec.describe PostAlerter do
       end
     end
 
-    context "message to users" do
+    context "with message to users" do
       fab!(:pm_topic) do
         Fabricate(:private_message_topic,
                   user: alice,
@@ -811,8 +811,7 @@ RSpec.describe PostAlerter do
       end
     end
 
-    context "message to group" do
-
+    context "with message to group" do
       fab!(:some_group) { Fabricate(:group, name: 'some_group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
       fab!(:pm_topic) do
         Fabricate(:private_message_topic,
@@ -961,9 +960,10 @@ RSpec.describe PostAlerter do
     end
   end
 
-  describe "push_notification" do
+  describe ".push_notification" do
     let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:') }
     let(:topic) { mention_post.topic }
+
     before do
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
       2.times do |i|
@@ -1090,7 +1090,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  describe "create_notification_alert" do
+  describe ".create_notification_alert" do
     it "does nothing for suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
 
@@ -1196,7 +1196,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context "replies" do
+  context "with replies" do
     it "triggers :before_create_notifications_for_users" do
       _post = Fabricate(:post, user: user, topic: topic)
       reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
@@ -1324,8 +1324,8 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context "category" do
-    context "watching" do
+  context "with category" do
+    context "with watching" do
       it "triggers :before_create_notifications_for_users" do
         topic = Fabricate(:topic, category: category)
         post = Fabricate(:post, topic: topic)
@@ -1399,8 +1399,8 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context "tags" do
-    context "watching" do
+  context "with tags" do
+    context "with watching" do
       it "triggers :before_create_notifications_for_users" do
         tag = Fabricate(:tag)
         topic = Fabricate(:topic, tags: [tag])
@@ -1461,7 +1461,7 @@ RSpec.describe PostAlerter do
       end
     end
 
-    context "on change" do
+    context "with on change" do
       fab!(:user) { Fabricate(:user) }
       fab!(:other_tag) { Fabricate(:tag) }
       fab!(:watched_tag) { Fabricate(:tag) }
@@ -1493,7 +1493,7 @@ RSpec.describe PostAlerter do
       end
     end
 
-    context "private message" do
+    context "with private message" do
       fab!(:post) { Fabricate(:private_message_post) }
       fab!(:other_tag) { Fabricate(:tag) }
       fab!(:other_tag2) { Fabricate(:tag) }
@@ -1651,7 +1651,7 @@ RSpec.describe PostAlerter do
     end
   end
 
-  context "SMTP (group_smtp_email)" do
+  context "with SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
       SiteSetting.email_in = true

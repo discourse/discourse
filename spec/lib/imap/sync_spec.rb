@@ -3,7 +3,6 @@
 require 'imap/sync'
 
 RSpec.describe Imap::Sync do
-
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
@@ -39,7 +38,7 @@ RSpec.describe Imap::Sync do
     )
   end
 
-  context 'no previous sync' do
+  describe 'no previous sync' do
     let(:from) { 'john@free.fr' }
     let(:subject) { 'Testing email post' }
     let(:message_id) { "#{SecureRandom.hex}@example.com" }
@@ -169,7 +168,7 @@ RSpec.describe Imap::Sync do
     end
   end
 
-  context 'previous sync' do
+  describe 'previous sync' do
     let(:subject) { 'Testing email post' }
 
     let(:first_from) { 'john@free.fr' }
@@ -527,7 +526,7 @@ RSpec.describe Imap::Sync do
 
   end
 
-  context 'invalidated previous sync' do
+  describe 'invalidated previous sync' do
     let(:subject) { 'Testing email post' }
 
     let(:first_from) { 'john@free.fr' }

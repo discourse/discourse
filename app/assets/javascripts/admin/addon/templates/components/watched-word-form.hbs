@@ -27,6 +27,14 @@
   </div>
 {{/if}}
 
+<div class="watched-word-input">
+  <label for="watched-case-sensitivity">{{i18n "admin.watched_words.form.case_sensitivity_label"}}</label>
+  <label class="case-sensitivity-checkbox">
+    <Input @type="checkbox" @checked={{this.isCaseSensitive}} disabled={{this.formSubmitted}} />
+    {{i18n "admin.watched_words.form.case_sensitivity_description"}}
+  </label>
+</div>
+
 <DButton @type="submit" @class="btn btn-primary" @action={{action "submit"}} @disabled={{this.formSubmitted}} @label="admin.watched_words.form.add" />
 
 {{#if this.showMessage}}

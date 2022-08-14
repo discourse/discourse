@@ -47,6 +47,7 @@ export default DiscourseRoute.extend({
     return user
       .findDetails()
       .then(() => user.findStaffInfo())
+      .then(() => user.trackStatus())
       .catch(() => this.replaceWith("/404"));
   },
 
@@ -87,6 +88,7 @@ export default DiscourseRoute.extend({
     const user = this.modelFor("user");
     this.messageBus.unsubscribe(`/u/${user.username_lower}`);
     this.messageBus.unsubscribe(`/u/${user.username_lower}/counters`);
+    user.stopTrackingStatus();
 
     // Remove the search context
     this.searchService.set("searchContext", null);

@@ -85,12 +85,12 @@ RSpec.describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
     OmniAuth.config.test_mode = false
   end
 
-  context 'request_groups is true' do
+  context 'when request_groups is true' do
     before do
       @options[:request_groups] = true
     end
 
-    context 'groups request successful' do
+    context 'when groups request successful' do
       before do
         @strategy = build_strategy(successful_groups_token)
       end
@@ -100,7 +100,7 @@ RSpec.describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
       end
     end
 
-    context 'groups request unsuccessful' do
+    context 'when groups request unsuccessful' do
       before do
         @strategy = build_strategy(unsuccessful_groups_token)
       end
@@ -111,7 +111,7 @@ RSpec.describe Auth::OmniAuthStrategies::DiscourseGoogleOauth2 do
     end
   end
 
-  context 'request_groups is not true' do
+  context 'when request_groups is not true' do
     before do
       @options[:request_groups] = false
       @strategy = build_strategy(successful_groups_token)

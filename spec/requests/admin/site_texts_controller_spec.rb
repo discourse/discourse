@@ -164,7 +164,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(value).to eq('education.new-topic override')
       end
 
-      context 'plural keys' do
+      context 'with plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
         end
@@ -191,21 +191,21 @@ RSpec.describe Admin::SiteTextsController do
           end
         end
 
-        context 'English' do
+        context 'with English' do
           let(:locale) { :en }
           let(:expected_translations) { { one: '%{count} colour', other: '%{count} colours' } }
 
           include_examples 'finds correct plural keys'
         end
 
-        context 'language with different plural keys and missing translations' do
+        context 'with language with different plural keys and missing translations' do
           let(:locale) { :ru }
           let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
 
           include_examples 'finds correct plural keys'
         end
 
-        context 'language with different plural keys and partial translation' do
+        context 'with language with different plural keys and partial translation' do
           before do
             I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета', many: '%{count} цветов' })
           end
@@ -321,7 +321,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(site_text['value']).to eq('education.new-topic override')
       end
 
-      context 'plural keys' do
+      context 'with plural keys' do
         before do
           I18n.backend.store_translations(:en, colour: { one: '%{count} colour', other: '%{count} colours' })
         end
@@ -346,21 +346,21 @@ RSpec.describe Admin::SiteTextsController do
           end
         end
 
-        context 'English' do
+        context 'with English' do
           let(:locale) { :en }
           let(:expected_translations) { { one: '%{count} colour', other: '%{count} colours' } }
 
           include_examples 'has correct plural keys'
         end
 
-        context 'language with different plural keys and missing translations' do
+        context 'with language with different plural keys and missing translations' do
           let(:locale) { :ru }
           let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
 
           include_examples 'has correct plural keys'
         end
 
-        context 'language with different plural keys and partial translation' do
+        context 'with language with different plural keys and partial translation' do
           before do
             I18n.backend.store_translations(:ru, colour: { few: '%{count} цвета' })
           end
@@ -551,7 +551,7 @@ RSpec.describe Admin::SiteTextsController do
       end
     end
 
-    context "reseeding" do
+    context "when reseeding" do
       before do
         staff_category = Fabricate(
           :category,

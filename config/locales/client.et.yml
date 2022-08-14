@@ -2539,6 +2539,7 @@ et:
       new_count:
         one: "%{count} uus"
         other: "%{count} uut"
+      more: "Veel..."
       sections:
         messages:
           header_link_text: "Sõnumid"
@@ -3536,14 +3537,13 @@ et:
           topics: "Teemasid"
   wizard_js:
     wizard:
-      done: "Tehtud"
       back: "Tagasi"
       next: "Järgmine"
+      step-text: "Samm"
       step: "%{current} %{total}st"
       upload: "Lae üles"
       uploading: "Laen üles..."
       upload_error: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
-      quit: "Võib-olla hiljem"
       invites:
         add_user: "lisa"
         none_added: "Sa ei ole kutsunud ühtegi tiimi liiget. Oled Sa kindel, et soovid jätkata?"

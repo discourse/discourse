@@ -509,6 +509,12 @@ acceptance("Composer", function (needs) {
       "it expands composer to full screen"
     );
 
+    assert.strictEqual(
+      count(".composer-fullscreen-prompt"),
+      1,
+      "the exit fullscreen prompt is visible"
+    );
+
     await click(".toggle-fullscreen");
 
     assert.strictEqual(
@@ -532,6 +538,34 @@ acceptance("Composer", function (needs) {
       count("#reply-control.open"),
       1,
       "from draft, it expands composer back to open state"
+    );
+  });
+
+  test("Composer fullscreen submit button", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click(".topic-post:nth-of-type(1) button.reply");
+
+    assert.strictEqual(
+      count("#reply-control.open"),
+      1,
+      "it starts in open state by default"
+    );
+
+    await click(".toggle-fullscreen");
+
+    assert.strictEqual(
+      count("#reply-control button.create"),
+      1,
+      "it shows composer submit button in fullscreen"
+    );
+
+    await fillIn(".d-editor-input", "too short");
+    await click("#reply-control button.create");
+
+    assert.strictEqual(
+      count("#reply-control.open"),
+      1,
+      "it goes back to open state if there's errors"
     );
   });
 

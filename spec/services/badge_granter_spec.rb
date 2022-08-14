@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe BadgeGranter do
-
   fab!(:badge) { Fabricate(:badge) }
   fab!(:user) { Fabricate(:user) }
 
@@ -390,7 +389,7 @@ RSpec.describe BadgeGranter do
     end
   end
 
-  context "update_badges" do
+  describe "update_badges" do
     fab!(:user) { Fabricate(:user) }
     fab!(:liker) { Fabricate(:user) }
 
@@ -496,7 +495,7 @@ RSpec.describe BadgeGranter do
     end
   end
 
-  context 'notification locales' do
+  describe 'notification locales' do
     it 'is using default locales when user locales are not set' do
       SiteSetting.allow_user_locale = true
       expect(BadgeGranter.notification_locale('')).to eq(SiteSetting.default_locale)

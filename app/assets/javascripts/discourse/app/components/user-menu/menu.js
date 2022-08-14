@@ -1,7 +1,9 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import UserMenuTab from "discourse/lib/user-menu/tab";
+import { NO_REMINDER_ICON } from "discourse/models/bookmark";
+import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
+import { inject as service } from "@ember/service";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -71,6 +73,48 @@ const CORE_TOP_TABS = [
 
   class extends UserMenuTab {
     get id() {
+      return "messages";
+    }
+
+    get icon() {
+      return "notification.private_message";
+    }
+
+    get panelComponent() {
+      return "user-menu/messages-list";
+    }
+
+    get count() {
+      return this.getUnreadCountForType("private_message");
+    }
+
+    get shouldDisplay() {
+      return (
+        this.siteSettings.enable_personal_messages || this.currentUser.staff
+      );
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
+      return "bookmarks";
+    }
+
+    get icon() {
+      return NO_REMINDER_ICON;
+    }
+
+    get panelComponent() {
+      return "user-menu/bookmarks-list";
+    }
+
+    get count() {
+      return this.getUnreadCountForType("bookmark_reminder");
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
       return REVIEW_QUEUE_TAB_ID;
     }
 
@@ -92,7 +136,12 @@ const CORE_TOP_TABS = [
   },
 ];
 
-export default class UserMenu extends GlimmerComponent {
+export default class UserMenu extends Component {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+  @service appEvents;
+
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
 
@@ -104,12 +153,31 @@ export default class UserMenu extends GlimmerComponent {
 
   get _topTabs() {
     const tabs = [];
+
     CORE_TOP_TABS.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
         tabs.push(tab);
       }
     });
+
+    let reviewQueueTabIndex = tabs.findIndex(
+      (tab) => tab.id === REVIEW_QUEUE_TAB_ID
+    );
+
+    CUSTOM_TABS_CLASSES.forEach((tabClass) => {
+      const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
+      if (tab.shouldDisplay) {
+        // ensure the review queue tab is always last
+        if (reviewQueueTabIndex === -1) {
+          tabs.push(tab);
+        } else {
+          tabs.insertAt(reviewQueueTabIndex, tab);
+          reviewQueueTabIndex++;
+        }
+      }
+    });
+
     return tabs.map((tab, index) => {
       tab.position = index;
       return tab;

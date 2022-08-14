@@ -179,7 +179,6 @@ es:
       forwarded: "reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     skip_to_main_content: "Saltar al contenido principal"
-    wizard_required: "¡Te damos la bienvenida a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
@@ -189,6 +188,7 @@ es:
       one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo de arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se haya registrado %{count} usuario."
       other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
+    bootstrap_invite_button_title: "Enviar invitaciones"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
@@ -1709,6 +1709,7 @@ es:
       other: respuestas
     signup_cta:
       sign_up: "Registrarse"
+      hide_session: "Tal vez más tarde"
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
@@ -2115,6 +2116,7 @@ es:
       post_approved: "Tu publicación ha sido aprobada"
       reviewable_items: "elementos que requieren revisión"
       watching_first_post_label: "Nuevo tema"
+      user_moved_post: "%{username} movió"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2139,6 +2141,7 @@ es:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> aceptó tu invitación"
+      invitee_accepted_your_invitation: "aceptó tu invitación"
       moved_post: "<span>%{username}</span> movió %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Ganaste «%{description}»"
@@ -2153,8 +2156,9 @@ es:
       votes_released: "%{description} - completado"
       dismiss_confirmation:
         body:
-          one: "¿Quieres descartar? Tienes %{count} notificación importante."
-          other: "¿Quieres descartar? Tienes %{count} notificaciones importantes."
+          default:
+            one: "¿Quieres descartar? Tienes %{count} notificación importante."
+            other: "¿Quieres descartar? Tienes %{count} notificaciones importantes."
         dismiss: "Descartar"
         cancel: "Cancelar"
       group_message_summary:
@@ -3424,6 +3428,7 @@ es:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atajos de teclado"
+      short_title: "Atajos"
       jump_to:
         title: "Saltar a"
         home: "%{shortcut} Inicio"
@@ -3740,6 +3745,7 @@ es:
         one: "%{count} nuevo"
         other: "%{count} nuevos"
       toggle_section: "mostrar/ocultar sección"
+      more: "Más..."
       sections:
         messages:
           header_link_title: "mensajes personales"
@@ -3781,6 +3787,7 @@ es:
               title: "Todos los grupos"
             users:
               content: "Usuarios"
+              title: "Todos los usuarios"
             my_posts:
               content: "Mis publicaciones"
               title: "Mis publicaciones"
@@ -5330,15 +5337,16 @@ es:
           replace: "Reemplazar"
   wizard_js:
     wizard:
-      done: "Hecho"
-      finish: "Terminar"
+      jump_in: "¡Empezar!"
+      finish: "Salir del configurador"
       back: "Atrás"
       next: "Siguiente"
+      configure_more: "Configurar más..."
+      step-text: "Intervalo"
       step: "%{current} de %{total}"
       upload: "Subir"
       uploading: "Subiendo..."
       upload_error: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
-      quit: "Tal vez más tarde"
       staff_count:
         one: "Tu comunidad tiene %{count} miembro del equipo (tú)."
         other: "Tu comunidad tiene %{count} miembros del personal, tú incluido."

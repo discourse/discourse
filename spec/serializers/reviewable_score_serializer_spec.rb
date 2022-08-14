@@ -5,7 +5,7 @@ RSpec.describe ReviewableScoreSerializer do
   fab!(:admin) { Fabricate(:admin) }
 
   describe '#reason' do
-    context 'regular links' do
+    context 'with regular links' do
       it 'adds a link for watched words' do
         serialized = serialized_score('watched_word')
         link_url = "#{Discourse.base_url}/admin/customize/watched_words"
@@ -25,7 +25,7 @@ RSpec.describe ReviewableScoreSerializer do
       end
     end
 
-    context 'site setting links' do
+    context 'with site setting links' do
       reasons = %w[
         post_count trust_level new_topics_unless_trust_level fast_typer auto_silence_regex
         staged must_approve_users invite_only email_spam suspect_user contains_media

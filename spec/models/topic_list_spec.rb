@@ -28,7 +28,7 @@ RSpec.describe TopicList do
     end
   end
 
-  context "preload" do
+  describe "preload" do
     it "allows preloading of data" do
       preloaded_topic = false
       preloader = lambda do |topics, topic_list|

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
-RSpec.shared_context "backups" do
+RSpec.shared_context "with backups" do
   before { create_backups }
   after { remove_backups }
 
@@ -46,7 +46,7 @@ RSpec.shared_examples "backup store" do
   end
 
   context "with backup files" do
-    include_context "backups"
+    include_context "with backups"
 
     describe "#files" do
       it "sorts files by last modified date in descending order" do
@@ -214,7 +214,7 @@ RSpec.shared_examples "remote backup store" do
   end
 
   context "with backups" do
-    include_context "backups"
+    include_context "with backups"
 
     describe "#upload_file" do
       def upload_file

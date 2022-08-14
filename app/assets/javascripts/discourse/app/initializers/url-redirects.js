@@ -7,7 +7,7 @@ export default {
   after: "inject-objects",
 
   initialize(container) {
-    const currentUser = container.lookup("current-user:main");
+    const currentUser = container.lookup("service:current-user");
     if (currentUser) {
       const username = currentUser.get("username");
       const escapedUsername = escapeRegExp(username);
@@ -23,7 +23,7 @@ export default {
     DiscourseURL.rewrite(/^\/groups\//, "/g/");
 
     // Initialize default homepage
-    let siteSettings = container.lookup("site-settings:main");
+    let siteSettings = container.lookup("service:site-settings");
     initializeDefaultHomepage(siteSettings);
 
     DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary", {

@@ -34,7 +34,7 @@ class BookmarkQuery
     @limit = @params[:limit].present? ? @params[:limit].to_i : @params[:per_page]
   end
 
-  def list_all
+  def list_all(&blk)
     search_term = @params[:q]
     ts_query = search_term.present? ? Search.ts_query(term: search_term) : nil
     search_term_wildcard = search_term.present? ? "%#{search_term}%" : nil
@@ -73,6 +73,10 @@ class BookmarkQuery
 
     if @page.positive?
       results = results.offset(@page * @params[:per_page])
+    end
+
+    if updated_results = blk&.call(results)
+      results = updated_results
     end
 
     results = results.limit(@limit).to_a

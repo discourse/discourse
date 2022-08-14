@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailLog do
-
   it { is_expected.to belong_to :user }
   it { is_expected.to validate_presence_of :to_address }
   it { is_expected.to validate_presence_of :email_type }
 
   fab!(:user) { Fabricate(:user) }
 
-  context 'unique email per post' do
+  describe 'unique email per post' do
     it 'only allows through one email per post' do
       post = Fabricate(:post)
       user = post.user
@@ -35,7 +34,7 @@ RSpec.describe EmailLog do
     end
   end
 
-  context 'after_create' do
+  describe 'after_create' do
     context 'with user' do
       it 'updates the last_emailed_at value for the user' do
         expect {

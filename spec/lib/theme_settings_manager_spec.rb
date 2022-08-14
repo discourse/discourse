@@ -3,7 +3,6 @@
 require 'theme_settings_manager'
 
 RSpec.describe ThemeSettingsManager do
-
   let!(:theme) { Fabricate(:theme) }
   let(:theme_settings) do
     yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
@@ -16,7 +15,7 @@ RSpec.describe ThemeSettingsManager do
     theme_settings.find { |setting| setting.name == name }
   end
 
-  context "Enum" do
+  describe "Enum" do
     it "only accepts values from its choices" do
       enum_setting = find_by_name(:enum_setting)
       expect { enum_setting.value = "trust level 2" }.to raise_error(Discourse::InvalidParameters)
@@ -32,7 +31,7 @@ RSpec.describe ThemeSettingsManager do
     end
   end
 
-  context "Bool" do
+  describe "Bool" do
     it "is either true or false" do
       bool_setting = find_by_name(:boolean_setting)
       expect(bool_setting.value).to eq(true) # default
@@ -51,7 +50,7 @@ RSpec.describe ThemeSettingsManager do
     end
   end
 
-  context "Integer" do
+  describe "Integer" do
     it "is always an integer" do
       int_setting = find_by_name(:integer_setting)
       int_setting.value = 1.6
@@ -86,7 +85,7 @@ RSpec.describe ThemeSettingsManager do
     end
   end
 
-  context "Float" do
+  describe "Float" do
     it "is always a float" do
       float_setting = find_by_name(:float_setting)
       float_setting.value = 1.615
@@ -114,7 +113,7 @@ RSpec.describe ThemeSettingsManager do
     end
   end
 
-  context "String" do
+  describe "String" do
     it "can have min or max length" do
       string_setting = find_by_name(:string_setting_02)
       expect { string_setting.value = "a" }.to raise_error(Discourse::InvalidParameters)
@@ -142,14 +141,14 @@ RSpec.describe ThemeSettingsManager do
     end
   end
 
-  context "List" do
+  describe "List" do
     it "can have a list type" do
       list_setting = find_by_name(:compact_list_setting)
       expect(list_setting.list_type).to eq("compact")
     end
   end
 
-  context "Upload" do
+  describe "Upload" do
     let!(:upload) { Fabricate(:upload) }
 
     it "saves the upload id" do

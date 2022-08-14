@@ -823,6 +823,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/admin/customize/watched_words.json", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
+    result.case_sensitive = result.case_sensitive === "true";
     return response(200, result);
   });
 

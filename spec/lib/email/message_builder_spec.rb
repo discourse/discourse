@@ -3,7 +3,6 @@
 require 'email/message_builder'
 
 RSpec.describe Email::MessageBuilder do
-
   let(:to_address) { "jake@adventuretime.ooo" }
   let(:subject) { "Tree Trunks has made some apple pie!" }
   let(:body) { "oh my glob Jake, Tree Trunks just made the tastiest apple pie ever!" }
@@ -32,8 +31,7 @@ RSpec.describe Email::MessageBuilder do
     expect(header_args['X-Auto-Response-Suppress']).to eq("All")
   end
 
-  context "reply by email" do
-
+  describe "reply by email" do
     context "without allow_reply_by_email" do
       it "does not have a X-Discourse-Reply-Key" do
         expect(header_args['X-Discourse-Reply-Key']).to be_blank
@@ -47,7 +45,7 @@ RSpec.describe Email::MessageBuilder do
     context "with allow_reply_by_email" do
       let(:reply_by_email_builder) { Email::MessageBuilder.new(to_address, allow_reply_by_email: true) }
 
-      context "With the SiteSetting enabled" do
+      context "with the SiteSetting enabled" do
         before do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
           SiteSetting.stubs(:reply_by_email_address).returns("r+%{reply_key}@reply.myforum.com")
@@ -72,7 +70,7 @@ RSpec.describe Email::MessageBuilder do
         end
       end
 
-      context "With the SiteSetting disabled" do
+      context "with the SiteSetting disabled" do
         before do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
         end
@@ -96,7 +94,7 @@ RSpec.describe Email::MessageBuilder do
         )
       end
 
-      context "With the SiteSetting enabled" do
+      context "with the SiteSetting enabled" do
         before do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
 
@@ -113,7 +111,7 @@ RSpec.describe Email::MessageBuilder do
         end
       end
 
-      context "With the SiteSetting disabled" do
+      context "with the SiteSetting disabled" do
         before do
           SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
         end
@@ -130,8 +128,7 @@ RSpec.describe Email::MessageBuilder do
 
   end
 
-  context "custom headers" do
-
+  describe "custom headers" do
     let(:custom_headers_string) { " Precedence : bulk | :: | No-colon | No-Value: | Multi-colon : : value : : | Auto-Submitted : auto-generated " }
     let(:custom_headers_result) { { "Precedence" => "bulk", "Multi-colon" => ": value : :", "Auto-Submitted" => "auto-generated" } }
 
@@ -149,8 +146,7 @@ RSpec.describe Email::MessageBuilder do
 
   end
 
-  context "header args" do
-
+  describe "header args" do
     let(:additional_opts) { {} }
     let(:message_with_header_args) do
       Email::MessageBuilder.new(
@@ -209,8 +205,7 @@ RSpec.describe Email::MessageBuilder do
     end
   end
 
-  context "unsubscribe link" do
-
+  describe "unsubscribe link" do
     context "with add_unsubscribe_link false" do
       it "has no unsubscribe header by default" do
         expect(builder.header_args['List-Unsubscribe']).to be_blank
@@ -246,7 +241,7 @@ RSpec.describe Email::MessageBuilder do
 
   end
 
-  context "template_args" do
+  describe "template_args" do
     let(:template_args) { builder.template_args }
 
     it "has site title as email_prefix when `SiteSetting.email_prefix` is not present" do
@@ -267,7 +262,7 @@ RSpec.describe Email::MessageBuilder do
     end
   end
 
-  context "email prefix in subject" do
+  describe "email prefix in subject" do
     context "when use_site_subject is true" do
       let(:message_with_email_prefix) { Email::MessageBuilder.new(to_address,
                                                                   body: 'hello world',
@@ -280,8 +275,7 @@ RSpec.describe Email::MessageBuilder do
     end
   end
 
-  context "subject_template" do
-
+  describe "subject_template" do
     let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'mystery') }
     let(:rendered_template) { "rendered template" }
 
@@ -319,11 +313,9 @@ RSpec.describe Email::MessageBuilder do
         expect(templated_builder.subject).to match("customized subject")
       end
     end
-
   end
 
-  context "from field" do
-
+  describe "from field" do
     it "has the default from" do
       SiteSetting.title = ""
       expect(build_args[:from]).to eq(SiteSetting.notification_email)

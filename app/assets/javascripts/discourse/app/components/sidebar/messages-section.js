@@ -1,10 +1,11 @@
 import { cached } from "@glimmer/tracking";
 
 import { getOwner } from "discourse-common/lib/get-owner";
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { bind } from "discourse-common/utils/decorators";
 import GroupMessageSectionLink from "discourse/lib/sidebar/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/messages-section/personal-message-section-link";
+import { inject as service } from "@ember/service";
 
 export const INBOX = "inbox";
 export const UNREAD = "unread";
@@ -22,7 +23,11 @@ export const PERSONAL_MESSAGES_INBOX_FILTERS = [
 
 export const GROUP_MESSAGES_INBOX_FILTERS = [INBOX, NEW, UNREAD, ARCHIVE];
 
-export default class SidebarMessagesSection extends GlimmerComponent {
+export default class SidebarMessagesSection extends Component {
+  @service appEvents;
+  @service pmTopicTrackingState;
+  @service currentUser;
+
   constructor() {
     super(...arguments);
 

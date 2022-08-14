@@ -109,7 +109,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'user_archive posts' do
+  describe 'user_archive posts' do
     let(:component) { 'user_archive' }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:subsubtopic) { Fabricate(:topic, category: subsubcategory) }
@@ -181,7 +181,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'preferences' do
+  describe 'preferences' do
     let(:component) { 'preferences' }
 
     before do
@@ -206,7 +206,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'auth tokens' do
+  describe 'auth tokens' do
     let(:component) { 'auth_tokens' }
 
     before do
@@ -225,7 +225,7 @@ RSpec.describe Jobs::ExportUserArchive do
       expect(data[0]['user_agent']).to eq('MyWebBrowser')
     end
 
-    context 'auth token logs' do
+    context 'with auth token logs' do
       let(:component) { 'auth_token_logs' }
       it 'includes details such as the path' do
         data, _csv_out = make_component_csv
@@ -237,7 +237,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'badges' do
+  describe 'badges' do
     let(:component) { 'badges' }
 
     let(:badge1) { Fabricate(:badge) }
@@ -264,10 +264,9 @@ RSpec.describe Jobs::ExportUserArchive do
       expect(data[2]['granted_manually']).to eq('true')
       expect(Post.find(data[3]['post_id'])).to_not be_nil
     end
-
   end
 
-  context 'bookmarks' do
+  describe 'bookmarks' do
     let(:component) { 'bookmarks' }
 
     let(:name) { 'Collect my thoughts on this' }
@@ -321,7 +320,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'category_preferences' do
+  describe 'category_preferences' do
     let(:component) { 'category_preferences' }
 
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id, name: "User Archive Subcategory") }
@@ -394,7 +393,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'flags' do
+  describe 'flags' do
     let(:component) { 'flags' }
     let(:other_post) { Fabricate(:post, user: admin) }
     let(:post3) { Fabricate(:post) }
@@ -429,7 +428,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'likes' do
+  describe 'likes' do
     let(:component) { 'likes' }
     let(:other_post) { Fabricate(:post, user: admin) }
     let(:post3) { Fabricate(:post) }
@@ -452,7 +451,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'queued posts' do
+  describe 'queued posts' do
     let(:component) { 'queued_posts' }
     let(:reviewable_post) { Fabricate(:reviewable_queued_post, topic: topic, created_by: user) }
     let(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic, category: category, created_by: user) }
@@ -478,7 +477,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'visits' do
+  describe 'visits' do
     let(:component) { 'visits' }
 
     it 'correctly exports the UserVisit table' do

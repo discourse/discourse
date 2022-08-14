@@ -2874,63 +2874,21 @@ nl:
   wizard:
     title: "Discourse instellen"
     step:
-      locale:
-        title: "Welkom bij uw Discourse!"
-        fields:
-          default_locale:
-            description: "Wat is de standaardtaal voor uw gemeenschap?"
-      forum_title:
-        title: "Naam"
-        fields:
-          title:
-            label: "Naam van uw community"
-            placeholder: "Jane's Hangout"
       introduction:
         fields:
-          welcome:
-            label: "Welkomsttopic"
+          title:
+            placeholder: "Jane's Hangout"
+          default_locale:
+            label: "Taal"
       privacy:
-        title: "Toegang"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Openbaar"
-                description: "Iedereen heeft toegang tot deze gemeenschap"
-              restricted:
-                label: "Privé"
-                description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
-          privacy_options:
-            choices:
-              open:
-                label: "Gebruikers kunnen zichzelf aanmelden."
-              invite_only:
-                label: "Gebruikers moeten door vertrouwde gebruikers of een staflid worden uitgenodigd voordat ze kunnen registreren."
-              must_approve:
-                label: "Gebruikers kunnen zelf registreren, maar moeten door een staflid worden goedgekeurd."
-      contact:
-        title: "Contact"
-        fields:
-          contact_email:
-            label: "E-mail"
-            placeholder: "naam@example.com"
-          contact_url:
-            label: "Webpagina"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Geautomatiseerde berichten"
-      corporate:
-        title: "Organisatie"
-        fields:
-          company_name:
-            label: "Bedrijfsnaam"
-            placeholder: "Voorbeeldorganisatie"
-          governing_law:
-            label: "Toepasselijk recht"
-            placeholder: "Californische wet"
-          city_for_disputes:
-            label: "Stad voor geschillen"
-            placeholder: "San Francisco, Californië"
+          login_required:
+            placeholder: "Privé"
+            extra_description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
+          must_approve_users:
+            placeholder: "Heeft goedkeuring nodig"
+      ready:
+        title: "Uw Discourse is gereed!"
       styling:
         fields:
           body_font:
@@ -2951,24 +2909,32 @@ nl:
                 label: "Categorieën en nieuwste topics"
               categories_and_top_topics:
                 label: "Categorieën en toptopics"
-      logos:
-        title: "Logo's"
+      branding:
         fields:
           logo:
             label: "Primair logo"
-            description: "De logoafbeelding links bovenaan op uw website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1"
           logo_small:
             label: "Vierkant logo"
-            description: "Een vierkante versie van uw logo. Wordt linksboven op uw website weergegeven bij het naar beneden scrollen, in de browser en bij het delen op sociale platformen. Idealiter groter dan 512x512."
-      icons:
-        title: "Pictogrammen"
-        fields:
           favicon:
             label: "Browserpictogram"
-            description: "Pictogramafbeelding die uw website vertegenwoordigt in webbrowsers en er goed uitziet bij kleine afmetingen. Aanbevolen afbeeldingsextensies zijn PNG of JPG. Standaard wordt het vierkante logo gebruikt."
           large_icon:
             label: "Groot pictogram"
-            description: "Pictogramafbeelding die uw website vertegenwoordigt op moderne apparaten en er goed uitziet bij grotere afmetingen. Moet idealiter groter zijn dan 512 x 512. Standaard wordt het vierkante logo gebruikt."
+      corporate:
+        fields:
+          company_name:
+            label: "Bedrijfsnaam"
+            placeholder: "Voorbeeldorganisatie"
+          governing_law:
+            label: "Toepasselijk recht"
+            placeholder: "Californische wet"
+          contact_url:
+            label: "Webpagina"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            label: "Stad voor geschillen"
+            placeholder: "San Francisco, Californië"
+          site_contact:
+            label: "Geautomatiseerde berichten"
       invites:
         title: "Staf uitnodigen"
         description: "U bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seeden van uw discussies</a> met interessante topics en berichten om uw gemeenschap op te zetten."

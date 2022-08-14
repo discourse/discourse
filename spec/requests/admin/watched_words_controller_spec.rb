@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
 
@@ -26,8 +27,39 @@ RSpec.describe Admin::WatchedWordsController do
     end
   end
 
+  describe '#create' do
+    context 'when logged in as admin' do
+      before do
+        sign_in(admin)
+      end
+
+      it 'creates a word with default case sensitivity' do
+        post '/admin/customize/watched_words.json', params: {
+          action_key: 'flag',
+          word: 'Deals'
+        }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.take.word).to eq('Deals')
+      end
+
+      it 'creates a word with the given case sensitivity' do
+        post '/admin/customize/watched_words.json', params: {
+          action_key: 'flag',
+          word: 'PNG',
+          case_sensitive: true
+        }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.take.case_sensitive?).to eq(true)
+        expect(WatchedWord.take.word).to eq('PNG')
+      end
+
+    end
+  end
+
   describe '#upload' do
-    context 'logged in as admin' do
+    context 'when logged in as admin' do
       before do
         sign_in(admin)
         Fabricate(:tag, name: 'tag1')
@@ -69,18 +101,33 @@ RSpec.describe Admin::WatchedWordsController do
         expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:tag]])
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_create]).count).to eq(2)
       end
+
+      it 'creates case-sensitive words from the file' do
+        post '/admin/customize/watched_words/upload.json', params: {
+          action_key: 'flag',
+          file: Rack::Test::UploadedFile.new(file_from_fixtures("words_case_sensitive.csv", "csv"))
+        }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.pluck(:word, :case_sensitive)).to contain_exactly(
+          ['hello', true],
+          ['UN', true],
+          ['world', false],
+          ['test', false]
+        )
+      end
     end
   end
 
   describe '#download' do
-    context 'not logged in as admin' do
+    context 'when not logged in as admin' do
       it "doesn't allow performing #download" do
         get "/admin/customize/watched_words/action/block/download"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'logged in as admin' do
+    context 'when logged in as admin' do
       before do
         sign_in(admin)
         Fabricate(:tag, name: 'tag1')
@@ -117,7 +164,7 @@ RSpec.describe Admin::WatchedWordsController do
   end
 
   describe '#clear_all' do
-    context 'non admins' do
+    context 'with non admins' do
       it "doesn't allow them to perform #clear_all" do
         word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         delete "/admin/customize/watched_words/action/block"
@@ -126,7 +173,7 @@ RSpec.describe Admin::WatchedWordsController do
       end
     end
 
-    context 'admins' do
+    context 'with admins' do
       before do
         sign_in(admin)
       end

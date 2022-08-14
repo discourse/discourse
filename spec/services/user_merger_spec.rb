@@ -96,7 +96,7 @@ RSpec.describe UserMerger do
     expect(category_ids).to be_empty
   end
 
-  context "developer flag" do
+  context "with developer flag" do
     it "moves the developer flag when the target user isn't a developer yet" do
       Developer.create!(user_id: source_user.id)
       merge_users!
@@ -115,7 +115,7 @@ RSpec.describe UserMerger do
     end
   end
 
-  context "drafts" do
+  context "with drafts" do
     def create_draft(user, key, text)
       seq = DraftSequence.next!(user, key)
       Draft.set(user, key, seq, text)
@@ -154,7 +154,7 @@ RSpec.describe UserMerger do
     expect(EmailLog.where(user_id: target_user.id).count).to eq(1)
   end
 
-  context "likes" do
+  context "with likes" do
     def given_daily_like_count_for(user, date)
       GivenDailyLike.find_for(user.id, date).pluck(:likes_given)[0] || 0
     end
@@ -316,7 +316,7 @@ RSpec.describe UserMerger do
     expect(IgnoredUser.where(ignored_user_id: source_user.id).count).to eq(0)
   end
 
-  context "notifications" do
+  context "with notifications" do
     it "updates notifications" do
       Fabricate(:notification, user: source_user)
       Fabricate(:notification, user: source_user)
@@ -329,7 +329,7 @@ RSpec.describe UserMerger do
     end
   end
 
-  context "post actions" do
+  context "with post actions" do
     it "merges post actions" do
       type_ids = PostActionType.public_type_ids + [PostActionType.flag_types.values.first]
 
@@ -380,7 +380,7 @@ RSpec.describe UserMerger do
     expect(post_revision.reload.user).to eq(target_user)
   end
 
-  context "post timings" do
+  context "with post timings" do
     def create_post_timing(post, user, msecs)
       PostTiming.create!(
         topic_id: post.topic_id,
@@ -422,7 +422,7 @@ RSpec.describe UserMerger do
     end
   end
 
-  context "posts" do
+  context "with posts" do
     it "updates user ids of posts" do
       source_user.update_attribute(:moderator, true)
 
@@ -562,7 +562,7 @@ RSpec.describe UserMerger do
     expect(TopicLinkClick.where(user_id: walter.id).count).to eq(1)
   end
 
-  context "topic timers" do
+  context "with topic timers" do
     def create_topic_timer(topic, user, status_type, deleted_by = nil)
       timer = Fabricate(:topic_timer, topic: topic, user: user, status_type: TopicTimer.types[status_type])
       timer.trash!(deleted_by) if deleted_by
@@ -667,7 +667,7 @@ RSpec.describe UserMerger do
     expect(Upload.where(user_id: source_user.id).count).to eq(0)
   end
 
-  context "user actions" do
+  context "with user actions" do
     # action_type and user_id are not nullable
     # target_topic_id and acting_user_id are nullable, but always have a value
 
@@ -764,7 +764,7 @@ RSpec.describe UserMerger do
     expect(UserArchivedMessage.where(user_id: source_user.id).count).to eq(0)
   end
 
-  context "badges" do
+  context "with badges" do
     def create_badge(badge, user, opts = {})
       UserBadge.create!(
         badge: badge,
@@ -929,7 +929,7 @@ RSpec.describe UserMerger do
     expect(events).to include(event_name: :merging_users, params: [source_user, target_user])
   end
 
-  context "site settings" do
+  context "with site settings" do
     it "updates usernames in site settings" do
       SiteSetting.site_contact_username = source_user.username
       SiteSetting.embed_by_username = source_user.username

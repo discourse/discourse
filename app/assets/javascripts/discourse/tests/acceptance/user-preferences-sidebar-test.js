@@ -12,7 +12,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("User Preferences - Sidebar", function (needs) {
   needs.user({
     sidebar_category_ids: [],
-    sidebar_tag_names: [],
+    sidebar_tags: [],
   });
 
   needs.settings({
@@ -39,7 +39,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
         // This request format will cause an error
         return helper.response(400, {});
       } else {
-        return helper.response({ user: {} });
+        return helper.response({
+          user: {
+            sidebar_tags: [
+              { name: "monkey", pm_only: false },
+              { name: "gazelle", pm_only: false },
+            ],
+          },
+        });
       }
     });
   });
@@ -121,7 +128,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   test("user encountering error when adding tags to sidebar", async function (assert) {
-    updateCurrentUser({ sidebar_tag_names: ["monkey"] });
+    updateCurrentUser({ sidebar_tags: [{ name: "monkey", pm_only: false }] });
 
     await visit("/");
 

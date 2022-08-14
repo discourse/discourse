@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionType do
-
-  context "callbacks" do
+  describe "Callbacks" do
     describe '#expiry_cache' do
       it 'should clear the cache on save' do
         cache = ApplicationSerializer.fragment_cache
@@ -21,7 +20,7 @@ RSpec.describe PostActionType do
   end
 
   describe '#types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @types = PostActionType.types
       end

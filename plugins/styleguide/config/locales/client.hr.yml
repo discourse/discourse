@@ -87,3 +87,6 @@ hr:
           title: "Spinneri"
         empty_state:
           title: "Prazno stanje"
+        rich_tooltip:
+          description: "Opis"
+          header: "Uzglavlje"

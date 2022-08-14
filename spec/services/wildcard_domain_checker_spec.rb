@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe WildcardDomainChecker do
-
-  describe 'check_domain' do
-    context 'valid domain' do
+  describe '.check_domain' do
+    context 'when domain is valid' do
       it 'returns correct domain' do
         result1 = WildcardDomainChecker.check_domain('*.discourse.org', 'anything.is.possible.discourse.org')
         expect(result1[0]).to eq('anything.is.possible.discourse.org')
@@ -16,7 +15,7 @@ RSpec.describe WildcardDomainChecker do
       end
     end
 
-    context 'invalid domain' do
+    context 'when domain is invalid' do
       it "doesn't return the domain" do
         result1 = WildcardDomainChecker.check_domain('*.discourse.org', 'bad-domain.discourse.org.evil.com')
         expect(result1).to eq(nil)

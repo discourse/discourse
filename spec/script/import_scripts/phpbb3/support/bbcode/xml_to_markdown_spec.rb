@@ -17,7 +17,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     expect(convert(xml)).to eq('_this is italic **and bold** text_')
   end
 
-  context "bold text" do
+  context "with bold text" do
     it "converts bold text" do
       xml = '<r><B><s>[b]</s>this is bold text<e>[/b]</e></B></r>'
       expect(convert(xml)).to eq('**this is bold text**')
@@ -51,7 +51,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "italic text" do
+  context "with italic text" do
     it "converts italic text" do
       xml = '<r><I><s>[i]</s>this is italic text<e>[/i]</e></I></r>'
       expect(convert(xml)).to eq('_this is italic text_')
@@ -85,7 +85,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "underlined text" do
+  context "with underlined text" do
     it "converts underlined text" do
       xml = '<r><U><s>[u]</s>this is underlined text<e>[/u]</e></U></r>'
       expect(convert(xml)).to eq('[u]this is underlined text[/u]')
@@ -119,8 +119,8 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "code blocks" do
-    context "inline code blocks enabled" do
+  context "with code blocks" do
+    context "with inline code blocks enabled" do
       let(:opts) { { allow_inline_code: true } }
 
       it "converts single line code blocks" do
@@ -129,7 +129,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
       end
     end
 
-    context "inline code blocks disabled" do
+    context "with inline code blocks disabled" do
       it "converts single line code blocks" do
         xml = '<r>foo <CODE><s>[code]</s>some code<e>[/code]</e></CODE> bar</r>'
 
@@ -190,7 +190,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "lists" do
+  context "with lists" do
     it "converts unordered lists" do
       xml = <<~XML
         <r><LIST><s>[list]</s>
@@ -306,7 +306,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "images" do
+  context "with images" do
     it "converts image" do
       xml = <<~XML
         <r><IMG src="https://example.com/foo.png"><s>[img]</s>
@@ -330,7 +330,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "links" do
+  context "with links" do
     it "converts links created without BBCode" do
       xml = '<r><URL url="https://en.wikipedia.org/wiki/Capybara">https://en.wikipedia.org/wiki/Capybara</URL></r>'
       expect(convert(xml)).to eq('https://en.wikipedia.org/wiki/Capybara')
@@ -391,7 +391,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "quotes" do
+  context "with quotes" do
     it "converts simple quote" do
       xml = <<~XML
         <r><QUOTE><s>[quote]</s>Lorem<br/>
@@ -603,7 +603,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     expect(convert(xml, opts)).to eq(":smiley: :astonished:")
   end
 
-  context "attachments" do
+  context "with attachments" do
     it "converts attachments" do
       opts = {
         upload_md_from_file: lambda do |filename, index|
@@ -639,7 +639,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "line breaks" do
+  context "with line breaks" do
     it "converts line breaks" do
       xml = <<~XML
       <t>Lorem ipsum dolor sit amet.<br/>
@@ -745,7 +745,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "whitespace" do
+  context "with whitespace" do
     it "doesn't strip whitespaces from inline tags" do
       xml = <<~XML
         <r>Lorem<B><s>[b]</s> ipsum <e>[/b]</e></B>dolor<br/>
@@ -766,7 +766,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "unknown element" do
+  context "with unknown element" do
     it "converts an unknown element right below the root element" do
       xml = '<r><UNKNOWN><s>[unknown]</s>foo<e>[/unknown]</e></UNKNOWN></r>'
       expect(convert(xml)).to eq('foo')
@@ -778,7 +778,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
   end
 
-  context "font size" do
+  context "with font size" do
     it "converts sizes to either <small> or <big>" do
       xml = <<~XML
         <r><SIZE size="50"><s>[size=50]</s>very small<e>[/size]</e></SIZE><br/>

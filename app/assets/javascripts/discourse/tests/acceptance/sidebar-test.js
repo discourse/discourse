@@ -1,12 +1,8 @@
 import I18n from "I18n";
 
 import { test } from "qunit";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
-import {
-  acceptance,
-  exists,
-  updateCurrentUser,
-} from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anon User", function () {
   // Don't show sidebar for anon user until we know what we want to display
@@ -72,7 +68,7 @@ acceptance(
 
       assert.ok(exists(".sidebar-container"), "sidebar is displayed");
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.notOk(
         exists(".sidebar-hamburger-dropdown"),
@@ -81,7 +77,7 @@ acceptance(
 
       assert.notOk(exists(".sidebar-container"), "sidebar is hidden");
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.ok(exists(".sidebar-container"), "sidebar is displayed");
     });
@@ -98,13 +94,6 @@ acceptance(
       enable_sidebar: true,
     });
 
-    test("navigating to about route using sidebar", async function (assert) {
-      await visit("/");
-      await click(".sidebar-footer-link-about");
-
-      assert.strictEqual(currentRouteName(), "about");
-    });
-
     test("viewing keyboard shortcuts using sidebar", async function (assert) {
       await visit("/");
       await click(
@@ -117,21 +106,6 @@ acceptance(
         exists("#keyboard-shortcuts-help"),
         "keyboard shortcuts help is displayed"
       );
-    });
-
-    test("navigating to admin route using sidebar", async function (assert) {
-      await visit("/");
-      await click(".sidebar-footer-link-admin");
-
-      assert.strictEqual(currentRouteName(), "admin.dashboard.general");
-    });
-
-    test("admin link is not shown in sidebar for non-admin user", async function (assert) {
-      updateCurrentUser({ admin: false, moderator: false });
-
-      await visit("/");
-
-      assert.notOk(exists(".sidebar-footer-link-admin"));
     });
 
     test("sidebar is disabled on wizard route", async function (assert) {
@@ -163,7 +137,7 @@ acceptance(
         "displays the sidebar by default"
       );
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.ok(
         !document.body.classList.contains("has-sidebar-page"),
@@ -172,7 +146,7 @@ acceptance(
 
       assert.ok(!exists(".sidebar-container"), "hides the sidebar");
 
-      await click(".hamburger-dropdown");
+      await click(".btn-sidebar-toggle");
 
       assert.ok(exists(".sidebar-container"), "displays the sidebar");
     });
@@ -194,6 +168,27 @@ acceptance(
       assert.notOk(
         exists(".sidebar-hamburger-dropdown"),
         "hides the sidebar dropdown"
+      );
+    });
+
+    test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
+      const capabilities = this.container.lookup("capabilities:main");
+      capabilities.touch = true;
+
+      await visit("/");
+
+      assert.ok(
+        exists(
+          `.sidebar-footer-actions-toggle-mobile-view[title="${I18n.t(
+            "mobile_view"
+          )}"]`
+        ),
+        "displays the right title for the button"
+      );
+
+      assert.ok(
+        exists(".sidebar-footer-actions-toggle-mobile-view .d-icon-mobile-alt"),
+        "displays the mobile icon for the button"
       );
     });
   }

@@ -1388,25 +1388,12 @@ sk:
       title: "Znova poslať aktivačný email."
   wizard:
     step:
-      forum_title:
-        title: "Meno"
       privacy:
-        title: "Prístup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Verejné"
-              restricted:
-                label: "Súkromné"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "meno@príklad.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizácia"
+          login_required:
+            placeholder: "Súkromné"
+          must_approve_users:
+            placeholder: "Potrebné povolenie"
       styling:
         fields:
           styling_preview:
@@ -1417,6 +1404,10 @@ sk:
                 label: "Iba kategórie"
               categories_and_latest_topics:
                 label: "Kategórie a najnovšie témy"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"

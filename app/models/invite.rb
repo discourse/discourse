@@ -113,6 +113,8 @@ class Invite < ActiveRecord::Base
         invite.destroy
         invite = nil
       end
+      email_digest = Digest::SHA256.hexdigest(email)
+      RateLimiter.new(invited_by, "reinvites-per-day-#{email_digest}", 3, 1.day.to_i).performed!
     end
 
     emailed_status = if opts[:skip_email] || invite&.emailed_status == emailed_status_types[:not_required]
@@ -182,7 +184,9 @@ class Invite < ActiveRecord::Base
 
   def self.redeem_from_email(email)
     invite = Invite.find_by(email: Email.downcase(email))
-    InviteRedeemer.new(invite: invite, email: invite.email).redeem if invite
+    if invite.present? && invite.redeemable?
+      InviteRedeemer.new(invite: invite, email: invite.email).redeem
+    end
     invite
   end
 

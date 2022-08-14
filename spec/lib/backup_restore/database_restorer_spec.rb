@@ -3,7 +3,7 @@
 require_relative 'shared_context_for_backup_restore'
 
 RSpec.describe BackupRestore::DatabaseRestorer do
-  include_context "shared stuff"
+  include_context "with shared stuff"
 
   let(:current_db) { RailsMultisite::ConnectionManagement.current_db }
 
@@ -79,7 +79,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
       end
     end
 
-    context "rewrites database dump" do
+    describe "rewrites database dump" do
       let(:logger) do
         Class.new do
           attr_reader :log_messages
@@ -124,7 +124,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
       end
     end
 
-    context "database connection" do
+    describe "database connection" do
       it 'it is not erroring for non-multisite' do
         expect { execute_stubbed_restore }.not_to raise_error
       end
@@ -144,7 +144,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
     end
   end
 
-  context "readonly functions" do
+  describe "readonly functions" do
     before do
       BackupRestore::DatabaseRestorer.stubs(:core_migration_files).returns(
         Dir[Rails.root.join("spec/fixtures/db/post_migrate/drop_column/**/*.rb")]

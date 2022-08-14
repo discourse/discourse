@@ -156,6 +156,12 @@ export default Component.extend({
               performResult.reviewable_count
             );
           }
+          if (performResult.unseen_reviewable_count !== undefined) {
+            this.currentUser.set(
+              "unseen_reviewable_count",
+              performResult.unseen_reviewable_count
+            );
+          }
 
           if (this.attrs.remove) {
             this.attrs.remove(performResult.remove_reviewable_ids);

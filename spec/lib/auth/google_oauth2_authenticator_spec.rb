@@ -29,7 +29,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
     expect(result.user).to eq(nil)
   end
 
-  context 'after_authenticate' do
+  describe 'after_authenticate' do
     it 'can authenticate and create a user record for already existing users' do
       authenticator = Auth::GoogleOAuth2Authenticator.new
       user = Fabricate(:user)
@@ -111,7 +111,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
       expect(result.name).to eq("Jane Doe")
     end
 
-    context "provides groups" do
+    describe "provides groups" do
       before do
         SiteSetting.google_oauth2_hd = "domain.com"
         group1 = OmniAuth::AuthHash.new(id: "12345", name: "group1")
@@ -137,7 +137,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
         )
       end
 
-      context "enabled" do
+      context "when enabled" do
         before do
           SiteSetting.google_oauth2_hd_groups = true
         end
@@ -154,7 +154,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
         end
       end
 
-      context "disabled" do
+      context "when disabled" do
         before do
           SiteSetting.google_oauth2_hd_groups = false
         end
@@ -167,7 +167,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
     end
   end
 
-  context 'revoke' do
+  describe 'revoke' do
     fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::GoogleOAuth2Authenticator.new }
 
@@ -175,12 +175,11 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
       expect { authenticator.revoke(user) }.to raise_error(Discourse::NotFound)
     end
 
-      it 'revokes correctly' do
-        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: 12345)
-        expect(authenticator.can_revoke?).to eq(true)
-        expect(authenticator.revoke(user)).to eq(true)
-        expect(authenticator.description_for_user(user)).to eq("")
-      end
-
+    it 'revokes correctly' do
+      UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: 12345)
+      expect(authenticator.can_revoke?).to eq(true)
+      expect(authenticator.revoke(user)).to eq(true)
+      expect(authenticator.description_for_user(user)).to eq("")
+    end
   end
 end

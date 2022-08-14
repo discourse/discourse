@@ -13,6 +13,7 @@ import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reload } from "discourse/helpers/page-reloader";
+import { propertyEqual } from "discourse/lib/computed";
 
 const USER_HOMES = {
   1: "latest",
@@ -32,15 +33,10 @@ export default Controller.extend({
   previewingColorScheme: false,
   preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
-  isCurrentUserProfile: true,
+  isCurrentUserProfile: propertyEqual("model.id", "currentUser.id"),
 
   init() {
     this._super(...arguments);
-  },
-
-  @discourseComputed("model.id")
-  isCurrentUserProfile(userId) {
-    return this.currentUser.id === userId;
   },
 
   @discourseComputed("makeThemeDefault")
@@ -368,8 +364,12 @@ export default Controller.extend({
     loadColorScheme(colorSchemeId) {
       this.setProperties({
         selectedColorSchemeId: colorSchemeId,
-        previewingColorScheme: true,
+        previewingColorScheme: this.isCurrentUserProfile,
       });
+
+      if (!this.isCurrentUserProfile) {
+        return;
+      }
 
       if (colorSchemeId < 0) {
         const defaultTheme = this.userSelectableThemes.findBy(
@@ -391,8 +391,12 @@ export default Controller.extend({
     loadDarkColorScheme(colorSchemeId) {
       this.setProperties({
         selectedDarkColorSchemeId: colorSchemeId,
-        previewingColorScheme: true,
+        previewingColorScheme: this.isCurrentUserProfile,
       });
+
+      if (!this.isCurrentUserProfile) {
+        return;
+      }
 
       if (colorSchemeId === -1) {
         // load preview of regular scheme when dark scheme is disabled

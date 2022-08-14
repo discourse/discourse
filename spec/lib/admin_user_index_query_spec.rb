@@ -100,7 +100,7 @@ RSpec.describe AdminUserIndexQuery do
       expect(query.find_users).not_to include(inactive_user)
     end
 
-    context 'and a suspended pending user' do
+    context 'with a suspended pending user' do
       fab!(:suspended_user) { Fabricate(:user, approved: false, suspended_at: 1.hour.ago, suspended_till: 20.years.from_now) }
       it "doesn't return the suspended user" do
         query = ::AdminUserIndexQuery.new(query: 'pending')
@@ -182,7 +182,7 @@ RSpec.describe AdminUserIndexQuery do
 
   describe "filtering" do
 
-    context "exact email bypass" do
+    context "with exact email bypass" do
       it "can correctly bypass expensive ilike query" do
         user = Fabricate(:user, email: 'sam@Sam.com')
 
@@ -208,7 +208,7 @@ RSpec.describe AdminUserIndexQuery do
       end
     end
 
-    context "by email fragment" do
+    context "with email fragment" do
 
       before(:each) { Fabricate(:user, email: "test1@example.com") }
 
@@ -224,7 +224,7 @@ RSpec.describe AdminUserIndexQuery do
 
     end
 
-    context "by username fragment" do
+    context "with username fragment" do
 
       before(:each) { Fabricate(:user, username: "test_user_1") }
 
@@ -239,7 +239,7 @@ RSpec.describe AdminUserIndexQuery do
       end
     end
 
-    context "by ip address fragment" do
+    context "with ip address fragment" do
 
       fab!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
 

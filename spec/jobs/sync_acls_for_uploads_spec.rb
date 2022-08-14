@@ -17,7 +17,7 @@ RSpec.describe Jobs::SyncAclsForUploads do
     run_job
   end
 
-  context "external storage enabled" do
+  context "with external storage enabled" do
     before do
       setup_s3
       stub_s3_store

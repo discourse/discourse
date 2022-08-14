@@ -29,7 +29,7 @@ RSpec.describe Auth::DiscordAuthenticator do
 
   let(:authenticator) { described_class.new }
 
-  context 'after_authenticate' do
+  describe 'after_authenticate' do
     it 'works normally' do
       result = authenticator.after_authenticate(hash)
       expect(result.user).to eq(nil)

@@ -2809,6 +2809,7 @@ zh_TW:
         other: "%{count} 個未讀"
       new_count:
         other: "%{count} 近期"
+      more: "更多..."
       sections:
         messages:
           header_link_text: "訊息"
@@ -4041,15 +4042,13 @@ zh_TW:
           replace: "取代"
   wizard_js:
     wizard:
-      done: "完成"
-      finish: "結束"
       back: "上一步"
       next: "下一步"
+      step-text: "梯級"
       step: "%{current} / %{total}"
       upload: "上傳"
       uploading: "上傳中..."
       upload_error: "抱歉，上傳檔案時發生錯誤，請再試一次。"
-      quit: "以後再說"
       staff_count:
         other: "您的社群包含您在內共有%{count}位管理員。"
       invites:

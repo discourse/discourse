@@ -437,22 +437,12 @@ lv:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
   wizard:
     step:
-      forum_title:
-        title: "Vārds"
       privacy:
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Publisks"
-              restricted:
-                label: "Privāts"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "vards@piemers.com"
-      corporate:
-        title: "Organizācija"
+          login_required:
+            placeholder: "Privāts"
+          must_approve_users:
+            placeholder: "Pieprasīt apstiprinājumu"
       styling:
         fields:
           styling_preview:

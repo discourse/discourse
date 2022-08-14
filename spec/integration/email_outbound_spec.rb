@@ -11,7 +11,7 @@ RSpec.describe "Outbound Email" do
     [message, result]
   end
 
-  context "email custom headers" do
+  describe "email custom headers" do
     it "discards the custom header if it is one that has already been set based on arguments" do
       SiteSetting.email_custom_headers = "Precedence: bulk"
       post = Fabricate(:post)

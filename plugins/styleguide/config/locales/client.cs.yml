@@ -85,3 +85,6 @@ cs:
           title: "Ikony záhlaví"
         spinners:
           title: "Spinnery"
+        rich_tooltip:
+          description: "Popis"
+          header: "Hlavička"

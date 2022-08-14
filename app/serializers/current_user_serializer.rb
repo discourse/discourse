@@ -2,11 +2,13 @@
 
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
+  include UserSidebarTagsMixin
 
   attributes :name,
              :unread_notifications,
              :unread_private_messages,
              :unread_high_priority_notifications,
+             :all_unread_notifications_count,
              :read_first_notification?,
              :admin?,
              :notification_channel_position,
@@ -43,6 +45,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
+             :unseen_reviewable_count,
              :read_faq?,
              :automatically_unpin_topics,
              :mailing_list_mode,
@@ -73,8 +76,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :sidebar_category_ids,
-             :sidebar_tag_names,
+             :sidebar_tags,
              :likes_notifications_disabled,
+             :grouped_unread_high_priority_notifications,
              :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
@@ -312,14 +316,6 @@ class CurrentUserSerializer < BasicUserSerializer
     SiteSetting.enable_experimental_sidebar_hamburger
   end
 
-  def sidebar_tag_names
-    object.sidebar_tags.pluck(:name)
-  end
-
-  def include_sidebar_tag_names?
-    include_sidebar_category_ids? && SiteSetting.tagging_enabled
-  end
-
   def include_status?
     SiteSetting.enable_user_status && object.has_status?
   end
@@ -337,5 +333,17 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def likes_notifications_disabled
     object.user_option&.likes_notifications_disabled?
+  end
+
+  def include_all_unread_notifications_count?
+    redesigned_user_menu_enabled
+  end
+
+  def include_grouped_unread_high_priority_notifications?
+    redesigned_user_menu_enabled
+  end
+
+  def include_unseen_reviewable_count?
+    redesigned_user_menu_enabled
   end
 end

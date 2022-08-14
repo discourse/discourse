@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSettingExtension do
-
   # We disable message bus here to avoid a large amount
   # of unneeded messaging, tests are careful to call refresh
   # when they need to.
@@ -21,7 +20,7 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe '#types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @types = SiteSetting.types
       end
@@ -73,7 +72,6 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe "refresh!" do
-
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -585,8 +583,7 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe "global override" do
-
-    context "default_locale" do
+    context "with default_locale" do
       it "supports adding a default locale via a global" do
         global_setting :default_locale, 'zh_CN'
         settings.default_locale = 'en'
@@ -835,5 +832,4 @@ RSpec.describe SiteSettingExtension do
       end
     end
   end
-
 end

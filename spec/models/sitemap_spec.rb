@@ -109,7 +109,7 @@ RSpec.describe Sitemap do
       it_behaves_like 'Excludes hidden and restricted topics'
     end
 
-    context 'sitemap for recent topics' do
+    context 'with sitemap for recent topics' do
       let(:sitemap) do
         described_class.new(
           enabled: true, last_posted_at: 1.minute.ago, name: described_class::RECENT_SITEMAP_NAME
@@ -134,7 +134,7 @@ RSpec.describe Sitemap do
       it_behaves_like 'Excludes hidden and restricted topics'
     end
 
-    context 'news sitemap' do
+    context 'with news sitemap' do
       let(:sitemap) do
         described_class.new(
           enabled: true, last_posted_at: 1.minute.ago, name: described_class::NEWS_SITEMAP_NAME

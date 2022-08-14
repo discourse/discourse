@@ -690,19 +690,10 @@ id:
       title: "Kirim Ulang Email Aktivasi"
   wizard:
     step:
-      forum_title:
-        title: "Nama"
       privacy:
-        title: "Mengakses"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Umum"
-              restricted:
-                label: "Pribadi"
-      corporate:
-        title: "Organisasi"
+          login_required:
+            placeholder: "Pribadi"
       styling:
         fields:
           homepage_style:

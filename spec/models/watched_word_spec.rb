@@ -23,6 +23,10 @@ RSpec.describe WatchedWord do
     expect(described_class.create(word: "a**les").word).to eq('a*les')
   end
 
+  it "is case-insensitive by default" do
+    expect(described_class.create(word: "Jest").case_sensitive?).to eq(false)
+  end
+
   describe "action_key=" do
     let(:w) { WatchedWord.new(word: "troll") }
 
@@ -104,6 +108,53 @@ RSpec.describe WatchedWord do
 
       word = Fabricate(:watched_word, action: described_class.actions[:link], word: "meta3", replacement: "/test")
       expect(word.replacement).to eq("http://test.localhost/test")
+    end
+
+    it "sets case-sensitivity of a word" do
+      word = described_class.create_or_update_word(word: 'joker', action_key: :block, case_sensitive: true)
+      expect(word.case_sensitive?).to eq(true)
+
+      word = described_class.create_or_update_word(word: 'free', action_key: :block)
+      expect(word.case_sensitive?).to eq(false)
+    end
+
+    it "updates case-sensitivity of a word" do
+      existing = Fabricate(:watched_word, action: described_class.actions[:block], case_sensitive: true)
+      updated = described_class.create_or_update_word(word: existing.word, action_key: :block, case_sensitive: false)
+
+      expect(updated.case_sensitive?).to eq(false)
+    end
+
+    context "when a case-sensitive word already exists" do
+      subject(:create_or_update) do
+        described_class.create_or_update_word(word: word, action_key: :block, case_sensitive: true)
+      end
+
+      fab!(:existing_word) { Fabricate(:watched_word, case_sensitive: true, word: "Meta") }
+
+      context "when providing the exact same word" do
+        let(:word) { existing_word.word }
+
+        it "doesn't create a new watched word" do
+          expect { create_or_update }.not_to change { described_class.count }
+        end
+
+        it "returns the existing watched word" do
+          expect(create_or_update).to eq(existing_word)
+        end
+      end
+
+      context "when providing the same word with a different case" do
+        let(:word) { "metA" }
+
+        it "creates a new watched word" do
+          expect(create_or_update).not_to eq(existing_word)
+        end
+
+        it "returns the new watched word" do
+          expect(create_or_update).to have_attributes word: "metA", case_sensitive: true, action: 1
+        end
+      end
     end
   end
 end

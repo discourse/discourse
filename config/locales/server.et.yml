@@ -1021,47 +1021,20 @@ et:
   wizard:
     title: "Discourse sätted"
     step:
-      locale:
-        title: "Tere tulemast oma Discourse'i!"
-        fields:
-          default_locale:
-            description: "Mis on Sinu kogukonna vaikekeel?"
-      forum_title:
-        title: "Nimi"
+      introduction:
         fields:
           title:
-            label: "Sinu kogukonna nimi"
             placeholder: "Jane ajaviitenurgake"
           site_description:
             placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
-      introduction:
-        title: "Sissejuhatus"
-        fields:
-          welcome:
-            label: "Tervitusteema"
-            one_paragraph: "Palun koonda oma tervitustekst ühte lõiku."
       privacy:
-        title: "Juurdepääs"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Avalik"
-              restricted:
-                label: "Privaatne"
-      contact:
-        title: "Kontakt"
-        fields:
-          contact_email:
-            label: "Meil"
-            placeholder: "nimi@kuskil.ee"
-          contact_url:
-            label: "Veebileht"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automaatsed sõnumid"
-      corporate:
-        title: "Organisatsioon"
+          login_required:
+            placeholder: "Privaatne"
+          must_approve_users:
+            placeholder: "Nõua heakskiitu"
+      ready:
+        title: "Sinu Discourse on valmis!"
       styling:
         fields:
           styling_preview:
@@ -1076,16 +1049,19 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
-      logos:
-        title: "Logod"
+      branding:
         fields:
           logo:
             label: "Peamine logo"
-      icons:
-        title: "Ikoonid"
-        fields:
           large_icon:
             label: "Suur ikoon"
+      corporate:
+        fields:
+          contact_url:
+            label: "Veebileht"
+            placeholder: "https://www.example.com/contact-us"
+          site_contact:
+            label: "Automaatsed sõnumid"
       invites:
         title: "Kutsu meeskonda"
       finished:

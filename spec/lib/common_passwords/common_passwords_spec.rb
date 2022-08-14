@@ -61,7 +61,7 @@ RSpec.describe CommonPasswords do
     end
   end
 
-  context "missing password file" do
+  describe "missing password file" do
     it "tolerates it" do
       File.stubs(:readlines).with(described_class::PASSWORD_FILE).raises(Errno::ENOENT)
       expect(described_class.common_password?("password")).to eq(false)

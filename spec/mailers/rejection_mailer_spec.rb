@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe RejectionMailer do
-
   describe "send_rejection" do
-
-    context 'sends rejection email' do
+    context 'when sending rejection email' do
       fab! (:user) { Fabricate(:user) }
       let (:template_args) { { former_title: "Mail Subject", destination: user.email, site_name: SiteSetting.title } }
       let (:reject_mail) { RejectionMailer.send_rejection("email_reject_topic_not_found", user.email, template_args) }

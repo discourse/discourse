@@ -44,7 +44,7 @@ RSpec.describe Enum do
     end
   end
 
-  context "allows to specify number of first enum member" do
+  describe "allows to specify number of first enum member" do
     it "number of first enum member should be 0 " do
       start_enum = Enum.new(:jake, :finn, :princess_bubblegum, :peppermint_butler, start: 0)
       expect(start_enum[:princess_bubblegum]).to eq(2)

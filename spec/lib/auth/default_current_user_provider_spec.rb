@@ -50,7 +50,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(provider.current_user).to eq(nil)
   end
 
-  context "server header api" do
+  describe "server header api" do
     it "raises for a revoked key" do
       api_key = ApiKey.create!
       params = { "HTTP_API_USERNAME" => user.username.downcase, "HTTP_API_KEY" => api_key.key }
@@ -214,7 +214,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    context "rate limiting" do
+    context "with rate limiting" do
       before do
         RateLimiter.enable
       end
@@ -435,7 +435,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   end
 
-  context "events" do
+  describe "events" do
     before do
       @refreshes = 0
 
@@ -472,8 +472,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
-  context "rate limiting" do
-
+  describe "rate limiting" do
     before do
       RateLimiter.enable
     end
@@ -622,7 +621,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(user.staged).to eq(false)
   end
 
-  context "user api" do
+  describe "user api" do
     fab! :user do
       Fabricate(:user)
     end
@@ -705,8 +704,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    context "rate limiting" do
-
+    context "with rate limiting" do
       before do
         RateLimiter.enable
       end

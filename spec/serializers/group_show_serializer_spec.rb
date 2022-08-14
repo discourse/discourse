@@ -4,7 +4,7 @@ RSpec.describe GroupShowSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
 
-  context 'admin user' do
+  context 'with an admin user' do
     fab!(:user) { Fabricate(:admin) }
     fab!(:group) { Fabricate(:group, users: [user]) }
 
@@ -16,7 +16,7 @@ RSpec.describe GroupShowSerializer do
     end
   end
 
-  context 'group owner' do
+  context 'with a group owner' do
     before do
       group.add_owner(user)
     end
@@ -62,7 +62,7 @@ RSpec.describe GroupShowSerializer do
     fab!(:group) { Fabricate(:group, email_username: 'foo@bar.com', email_password: 'pa$$w0rd') }
     subject { described_class.new(group, scope: guardian, root: false) }
 
-    describe 'for a user' do
+    context 'for a user' do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
       it 'are not visible' do
@@ -71,7 +71,7 @@ RSpec.describe GroupShowSerializer do
       end
     end
 
-    describe 'for an admin' do
+    context 'for an admin' do
       let(:guardian) { Guardian.new(Fabricate(:admin)) }
 
       it 'are visible' do
@@ -114,7 +114,7 @@ RSpec.describe GroupShowSerializer do
       )
     end
 
-    describe "for a user" do
+    context "for a user" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
       it "are not visible" do
@@ -123,7 +123,7 @@ RSpec.describe GroupShowSerializer do
       end
     end
 
-    describe "for admin" do
+    context "for admin" do
       let(:guardian) { Guardian.new(Fabricate(:admin)) }
 
       it "are correct" do

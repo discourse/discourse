@@ -541,6 +541,17 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
+  def self.unseen_list_for(user, preload: true, limit: nil)
+    results = list_for(user, preload: preload, limit: limit)
+    if user.last_seen_reviewable_id
+      results = results.where(
+        "reviewables.id > ?",
+        user.last_seen_reviewable_id
+      )
+    end
+    results
+  end
+
   def self.recent_list_with_pending_first(user, limit: 30)
     min_score = Reviewable.min_score_for_priority
 

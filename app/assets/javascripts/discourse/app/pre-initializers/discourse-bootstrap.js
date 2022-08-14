@@ -17,7 +17,7 @@ export default {
   name: "discourse-bootstrap",
 
   // The very first initializer to run
-  initialize(container, app) {
+  initialize(container) {
     setURLContainer(container);
     setDefaultOwner(container);
 
@@ -54,7 +54,6 @@ export default {
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
-    app.SiteSettings = PreloadStore.get("siteSettings");
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe SpamRule::FlagSockpuppets do
-
   fab!(:user1) { Fabricate(:user, ip_address: '182.189.119.174') }
   fab!(:post1) { Fabricate(:post, user: user1, topic: Fabricate(:topic, user: user1)) }
 
-  describe 'perform' do
+  describe '#perform' do
     let(:rule)        { described_class.new(post1) }
     subject(:perform) { rule.perform }
 
@@ -16,7 +15,7 @@ RSpec.describe SpamRule::FlagSockpuppets do
       expect(perform).to eq(false)
     end
 
-    context 'flag_sockpuppets is enabled' do
+    context 'when flag_sockpuppets is enabled' do
       before { SiteSetting.flag_sockpuppets = true }
 
       it 'flags posts when it should' do
@@ -33,7 +32,7 @@ RSpec.describe SpamRule::FlagSockpuppets do
     end
   end
 
-  describe 'reply_is_from_sockpuppet?' do
+  describe '#reply_is_from_sockpuppet?' do
     it 'is false for the first post in a topic' do
       expect(described_class.new(post1).reply_is_from_sockpuppet?).to eq(false)
     end
@@ -110,7 +109,7 @@ RSpec.describe SpamRule::FlagSockpuppets do
     end
   end
 
-  describe 'flag_sockpuppet_users' do
+  describe '#flag_sockpuppet_users' do
     fab!(:post2) { Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic) }
     let(:system) { Discourse.system_user }
     let(:spam) { PostActionType.types[:spam] }

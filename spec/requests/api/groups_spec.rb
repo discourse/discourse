@@ -21,6 +21,7 @@ RSpec.describe 'groups' do
       produces 'application/json'
       response '200', 'group created' do
         expected_response_schema = load_spec_schema('group_create_response')
+        schema expected_response_schema
 
         let(:params) { { 'group' => { 'name' => 'awesome' } } }
         it_behaves_like "a JSON endpoint", 200 do
@@ -59,17 +60,9 @@ RSpec.describe 'groups' do
       operationId 'updateGroup'
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
-      parameter name: :group, in: :body, schema: {
-        type: :object,
-        properties: {
-          group: {
-            type: :object,
-            properties: {
-              name: { type: :string },
-            }, required: ['name']
-          }
-        }, required: ['group']
-      }
+
+      expected_request_schema = load_spec_schema('group_create_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
       response '200', 'success response' do
@@ -78,7 +71,7 @@ RSpec.describe 'groups' do
         }
 
         let(:id) { Fabricate(:group).id }
-        let(:group) { { name: 'awesome' } }
+        let(:params) { { 'group' => { 'name' => 'awesome' } } }
 
         run_test!
       end

@@ -5,10 +5,12 @@ import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 const alreadyWarned = {};
 
 export default Component.extend({
+  router: service(),
   classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
@@ -17,24 +19,14 @@ export default Component.extend({
     this.autoFocus();
   },
 
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showNextButton(current, total) {
-    return current < total;
-  },
-
-  @discourseComputed("step.id", "step.displayIndex", "wizard.totalSteps")
-  showDoneButton(step, current, total) {
-    return step === "ready" || current === total;
-  },
-
-  @discourseComputed("step.id")
-  showFinishButton(step) {
-    return step === "styling" || step === "branding";
-  },
-
   @discourseComputed("step.index")
   showBackButton(index) {
     return index > 0;
+  },
+
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
+  showNextButton(current, total) {
+    return current < total;
   },
 
   @discourseComputed("step.id")
@@ -45,6 +37,26 @@ export default Component.extend({
   @discourseComputed("step.id")
   nextButtonClass(step) {
     return step === "ready" ? "configure-more" : "next";
+  },
+
+  @discourseComputed("step.id")
+  showJumpInButton(step) {
+    return step === "ready";
+  },
+
+  @discourseComputed("step.id")
+  showFinishButton(step) {
+    return ["styling", "branding", "corporate"].includes(step);
+  },
+
+  @discourseComputed("step.id")
+  finishButtonLabel(step) {
+    return `wizard.${step === "corporate" ? "jump_in" : "finish"}`;
+  },
+
+  @discourseComputed("step.id")
+  finishButtonClass(step) {
+    return step === "corporate" ? "jump-in" : "finish";
   },
 
   @discourseComputed("step.id")
@@ -73,7 +85,7 @@ export default Component.extend({
 
   keyPress(event) {
     if (event.key === "Enter") {
-      if (this.showDoneButton) {
+      if (this.showJumpInButton) {
         this.send("quit");
       } else {
         this.send("nextStep");
@@ -123,7 +135,7 @@ export default Component.extend({
 
   @action
   quit() {
-    document.location = getUrl("/");
+    this.router.transitionTo("discovery.latest");
   },
 
   @action
@@ -136,7 +148,7 @@ export default Component.extend({
 
       step
         .save()
-        .then(() => this.send("quit"))
+        .then((response) => this.goNext(response))
         .finally(() => this.set("saving", false));
     } else {
       this.autoFocus();

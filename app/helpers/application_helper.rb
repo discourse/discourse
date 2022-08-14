@@ -264,6 +264,13 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
+    # if slug generation method is encoded, non encoded urls can sneak in
+    # via bots
+    url = opts[:url]
+    if url.encoding.name != "UTF-8" || !url.valid_encoding?
+      opts[:url] = url.dup.force_encoding("UTF-8").scrub!
+    end
+
     if opts[:image].blank?
       twitter_summary_large_image_url = SiteSetting.site_twitter_summary_large_image_url
 
@@ -279,12 +286,12 @@ module ApplicationHelper
     opts[:twitter_summary_large_image] =
       get_absolute_image_url(opts[:twitter_summary_large_image]) if opts[:twitter_summary_large_image].present?
 
-    # Add opengraph & twitter tags
     result = []
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, property: 'og:type', content: 'website')
 
-    result = generate_twitter_card_metadata(opts, result)
+    generate_twitter_card_metadata(result, opts)
+
     result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
 
     [:url, :title, :description].each do |property|
@@ -313,7 +320,7 @@ module ApplicationHelper
     result.join("\n")
   end
 
-  def generate_twitter_card_metadata(opts, result)
+  private def generate_twitter_card_metadata(result, opts)
     img_url = opts[:twitter_summary_large_image].present? ? \
       opts[:twitter_summary_large_image] :
       opts[:image]
@@ -332,8 +339,6 @@ module ApplicationHelper
     else
       result << tag(:meta, name: 'twitter:card', content: "summary")
     end
-
-    result
   end
 
   def render_sitelinks_search_tag

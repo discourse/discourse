@@ -197,7 +197,7 @@ HTML
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
-    expect(theme.javascript_cache.content).to include("var settings =")
+    expect(theme.javascript_cache.content).to include("const settings =")
   end
 
   def create_upload_theme_field!(name)
@@ -402,7 +402,7 @@ HTML
     end
   end
 
-  context "SVG sprite theme fields" do
+  describe "SVG sprite theme fields" do
     let(:upload) { Fabricate(:upload) }
     let(:theme) { Fabricate(:theme) }
     let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: SvgSprite.theme_sprite_variable_name, upload: upload, value: "", value_baked: "baked", type_id: ThemeField.types[:theme_upload_var]) }
@@ -429,8 +429,7 @@ HTML
     end
   end
 
-  context 'local js assets' do
-
+  describe 'local js assets' do
     let :js_content do
       "// not transpiled; console.log('hello world');"
     end
@@ -504,6 +503,7 @@ HTML
 
         expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
         expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
+        expect(val["theme_uploads_local"]["test_js"]).to start_with("/theme-javascripts/")
 
       end
 
@@ -514,5 +514,4 @@ HTML
       expect(theme.scss_variables).not_to include("theme_uploads")
     end
   end
-
 end

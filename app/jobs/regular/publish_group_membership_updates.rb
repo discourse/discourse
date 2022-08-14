@@ -3,12 +3,13 @@
 module Jobs
   class PublishGroupMembershipUpdates < ::Jobs::Base
     def execute(args)
-      raise Discourse::InvalidParameters.new(:type) if !%w[add remove].include?(args[:type])
+      available_types = [Group::AUTO_GROUPS_ADD, Group::AUTO_GROUPS_REMOVE]
+      raise Discourse::InvalidParameters.new(:type) if !available_types.include?(args[:type])
 
       group = Group.find_by(id: args[:group_id])
       return if !group
 
-      added_members = args[:type] == 'add'
+      added_members = args[:type] == Group::AUTO_GROUPS_ADD
 
       User.human_users.where(id: args[:user_ids]).each do |user|
         if added_members

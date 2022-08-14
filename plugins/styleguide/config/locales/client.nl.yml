@@ -83,3 +83,6 @@ nl:
           title: "Koptekstpictogrammen"
         spinners:
           title: "Kringvelden"
+        rich_tooltip:
+          description: "Omschrijving"
+          header: "Koptekst"

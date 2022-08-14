@@ -8,7 +8,7 @@ RSpec.describe BadgesController do
     SiteSetting.enable_badges = true
   end
 
-  context 'index' do
+  describe '#index' do
     it 'should return a list of all badges' do
       get "/badges.json"
 
@@ -19,7 +19,7 @@ RSpec.describe BadgesController do
     end
   end
 
-  context 'show' do
+  describe '#show' do
     it "should return a badge" do
       get "/badges/#{badge.id}.json"
       expect(response.status).to eq(200)
@@ -42,7 +42,7 @@ RSpec.describe BadgesController do
     end
   end
 
-  context "user profiles" do
+  describe "user profiles" do
     let(:titled_badge) { Fabricate(:badge, name: 'Protector of the Realm', allow_title: true) }
     let!(:grant) { UserBadge.create!(user_id: user.id, badge_id: titled_badge.id, granted_at: 1.minute.ago, granted_by_id: -1) }
 

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryFeaturedTopic do
-
   it { is_expected.to belong_to :category }
   it { is_expected.to belong_to :topic }
 
-  context 'feature_topics_for' do
+  describe '.feature_topics_for' do
     fab!(:user)          { Fabricate(:user) }
     fab!(:category)      { Fabricate(:category) }
     let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.id) }
@@ -69,5 +68,4 @@ RSpec.describe CategoryFeaturedTopic do
 
     end
   end
-
 end
