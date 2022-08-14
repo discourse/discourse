@@ -1,6 +1,5 @@
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
-import Mobile from "discourse/lib/mobile";
 import { bind } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
@@ -117,7 +116,7 @@ export default class CodeblockButtons {
 
       if (
         this.showFullscreen &&
-        !Mobile.isMobileDevice &&
+        !this.site.isMobileDevice &&
         codeBlock.scrollWidth > codeBlock.clientWidth
       ) {
         const fullscreenButton = document.createElement("button");

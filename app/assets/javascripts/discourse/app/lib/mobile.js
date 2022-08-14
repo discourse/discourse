@@ -1,67 +1,35 @@
-import { isTesting } from "discourse-common/config/environment";
+import { getOwner } from "discourse-common/lib/get-owner";
+import deprecated from "discourse-common/lib/deprecated";
 
-let mobileForced = false;
+deprecated(
+  "`discourse/lib/mobile` import is deprecated. Use `isMobileDevice`, `mobileView`, `forceMobile` properties and `toggleMobileView` method on `site:service`"
+);
 
-//  An object that is responsible for logic related to mobile devices.
+function site() {
+  // Use the "default owner"
+  return getOwner().lookup("site:service");
+}
+
 const Mobile = {
-  isMobileDevice: false,
-  mobileView: false,
+  get isMobileDevice() {
+    return site().isMobileDevice;
+  },
 
-  init() {
-    const $html = $("html");
-    this.isMobileDevice = mobileForced || $html.hasClass("mobile-device");
-    this.mobileView = mobileForced || $html.hasClass("mobile-view");
-
-    if (isTesting() || mobileForced) {
-      return;
-    }
-
-    try {
-      if (window.location.search.match(/mobile_view=1/)) {
-        localStorage.mobileView = true;
-      }
-      if (window.location.search.match(/mobile_view=0/)) {
-        localStorage.mobileView = false;
-      }
-      if (window.location.search.match(/mobile_view=auto/)) {
-        localStorage.removeItem("mobileView");
-      }
-      if (localStorage.mobileView) {
-        let savedValue = localStorage.mobileView === "true";
-        if (savedValue !== this.mobileView) {
-          this.reloadPage(savedValue);
-        }
-      }
-    } catch (err) {
-      // localStorage may be disabled, just skip this
-      // you get security errors if it is disabled
-    }
+  get mobileView() {
+    return site().mobileView;
   },
 
   toggleMobileView() {
-    try {
-      if (localStorage) {
-        localStorage.mobileView = !this.mobileView;
-      }
-    } catch (err) {
-      // localStorage may be disabled, skip
-    }
-    this.reloadPage(!this.mobileView);
-  },
-
-  reloadPage(mobile) {
-    window.location.assign(
-      window.location.pathname + "?mobile_view=" + (mobile ? "1" : "0")
-    );
+    return site().toggleMobileView();
   },
 };
 
 export function forceMobile() {
-  mobileForced = true;
+  site().forceMobile = true;
 }
 
 export function resetMobile() {
-  mobileForced = false;
+  site().forceMobile = false;
 }
 
 export default Mobile;

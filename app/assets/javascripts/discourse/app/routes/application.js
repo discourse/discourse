@@ -10,7 +10,6 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import logout from "discourse/lib/logout";
-import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
@@ -48,7 +47,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     toggleMobileView() {
-      mobile.toggleMobileView();
+      this.site.toggleMobileView();
     },
 
     toggleSidebar() {
