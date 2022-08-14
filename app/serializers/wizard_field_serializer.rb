@@ -80,7 +80,7 @@ class WizardFieldSerializer < ApplicationSerializer
   end
 
   def include_disabled?
-    object.disabled.present?
+    object.disabled
   end
 
   def show_in_sidebar
