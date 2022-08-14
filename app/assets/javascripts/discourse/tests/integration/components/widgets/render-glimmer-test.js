@@ -42,6 +42,7 @@ class DemoWidget extends Widget {
 class DemoComponent extends ClassicComponent {
   static eventLog = [];
   classNames = ["demo-component"];
+  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} />`;
 
   init() {
     DemoComponent.eventLog.push("init");
@@ -63,8 +64,6 @@ class DemoComponent extends ClassicComponent {
   willDestroy() {
     DemoComponent.eventLog.push("willDestroy");
   }
-
-  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} />`;
 }
 
 module("Integration | Component | Widget | render-glimmer", function (hooks) {

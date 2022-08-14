@@ -17,8 +17,8 @@ const ICON = "icon";
 export default class AdminBadgesShowController extends Controller.extend(
   bufferedProperty("model")
 ) {
-  @controller adminBadges;
   @service router;
+  @controller adminBadges;
 
   @tracked saving = false;
   @tracked savingStatus = "";
