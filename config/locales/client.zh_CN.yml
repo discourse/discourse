@@ -2770,7 +2770,7 @@ zh_CN:
         upload: "抱歉，上传该文件时出错。请重试。"
         file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         file_size_zero: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
-        file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
+        file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
           other: "抱歉，一次只能上传 %{count} 个文件。"
