@@ -308,11 +308,12 @@ export function acceptance(name, optionsOrCallback) {
       }
       this.siteSettings = currentSettings();
 
-      resetSite(currentSettings(), siteChanges);
-
       if (mobileView) {
-        Site.current().mobileView = true;
+        siteChanges ||= {};
+        siteChanges.mobileView = true;
       }
+
+      resetSite(currentSettings(), siteChanges);
 
       this.container = getOwner(this);
 

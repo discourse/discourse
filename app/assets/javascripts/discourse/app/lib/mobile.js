@@ -2,12 +2,12 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import deprecated from "discourse-common/lib/deprecated";
 
 deprecated(
-  "`discourse/lib/mobile` import is deprecated. Use `isMobileDevice`, `mobileView`, properties and `toggleMobileView` method on `site:service`."
+  "`discourse/lib/mobile` import is deprecated. Use `isMobileDevice`, `mobileView`, properties and `toggleMobileView` method on `service:site`."
 );
 
 function site() {
   // Use the "default owner"
-  return getOwner().lookup("site:service");
+  return getOwner().lookup("service:site");
 }
 
 const Mobile = {
