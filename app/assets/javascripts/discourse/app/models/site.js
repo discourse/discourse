@@ -11,21 +11,16 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
-import { isTesting } from "discourse-common/config/environment";
 import DiscourseURL from "discourse/lib/url";
 
 const Site = RestModel.extend({
+  _mobileOverride: null,
   isReadOnly: alias("is_readonly"),
-  mobileForced: false,
-  isMobileDevice: false,
-  mobileView: false,
-  desktopView: true,
 
   init() {
     this._super(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
-    this._initializeMobileViewInfo();
   },
 
   @discourseComputed("notification_types")
@@ -148,57 +143,27 @@ const Site = RestModel.extend({
   },
 
   toggleMobileView() {
-    try {
-      if (localStorage) {
-        localStorage.mobileView = !this.mobileView;
-      }
-    } catch (err) {
-      // localStorage may be disabled, skip
-    }
-
     const url = new URL(document.location);
     url.searchParams.set("mobile_view", this.mobileView ? "0" : "1");
     DiscourseURL.redirectAbsolute(url.toString());
   },
 
-  _initializeMobileViewInfo() {
+  get isMobileDevice() {
     const { classList } = document.documentElement;
-    this.isMobileDevice =
-      this.mobileForced || classList.contains("mobile-device");
-    this.mobileView = this.mobileForced || classList.contains("mobile-view");
-    this.desktopView = !this.mobileView;
+    return this._mobileOverride ?? classList.contains("mobile-device");
+  },
 
-    if (isTesting() || this.mobileForced) {
-      return;
-    }
+  get mobileView() {
+    const { classList } = document.documentElement;
+    return this._mobileOverride ?? classList.contains("mobile-view");
+  },
 
-    const url = new URL(document.location);
+  set mobileView(value) {
+    return (this._mobileOverride = value);
+  },
 
-    try {
-      switch (url.searchParams.get("mobile_view")) {
-        case "1":
-          localStorage.mobileView = true;
-          break;
-        case "0":
-          localStorage.mobileView = false;
-          break;
-        case "auto":
-          localStorage.removeItem("mobileView");
-          break;
-      }
-
-      if (localStorage.mobileView) {
-        const savedValue = localStorage.mobileView === "true";
-
-        if (savedValue !== this.mobileView) {
-          url.searchParams.set("mobile_view", savedValue ? "1" : "0");
-          DiscourseURL.redirectAbsolute(url.toString());
-        }
-      }
-    } catch (err) {
-      // localStorage may be disabled, just skip this
-      // you get security errors if it is disabled
-    }
+  get desktopView() {
+    return !this.mobileView;
   },
 });
 

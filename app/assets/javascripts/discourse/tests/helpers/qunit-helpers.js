@@ -10,7 +10,6 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
@@ -292,12 +291,7 @@ export function acceptance(name, optionsOrCallback) {
 
   const setup = {
     beforeEach() {
-      resetMobile();
-
       resetExtraClasses();
-      if (mobileView) {
-        forceMobile();
-      }
 
       if (loggedIn) {
         logIn();
@@ -316,6 +310,10 @@ export function acceptance(name, optionsOrCallback) {
 
       resetSite(currentSettings(), siteChanges);
 
+      if (mobileView) {
+        Site.current().mobileView = true;
+      }
+
       this.container = getOwner(this);
 
       if (!this.owner) {
@@ -328,12 +326,13 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
-      resetMobile();
       let app = getApplication();
       options?.afterEach?.call(this);
+
       if (loggedIn) {
         User.current().stopTrackingStatus();
       }
+
       testCleanup(this.container, app);
 
       // We do this after reset so that the willClearRender will have already fired

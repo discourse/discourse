@@ -2,7 +2,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import deprecated from "discourse-common/lib/deprecated";
 
 deprecated(
-  "`discourse/lib/mobile` import is deprecated. Use `isMobileDevice`, `mobileView`, `forceMobile` properties and `toggleMobileView` method on `site:service`"
+  "`discourse/lib/mobile` import is deprecated. Use `isMobileDevice`, `mobileView`, properties and `toggleMobileView` method on `site:service`."
 );
 
 function site() {
@@ -25,11 +25,7 @@ const Mobile = {
 };
 
 export function forceMobile() {
-  site().forceMobile = true;
-}
-
-export function resetMobile() {
-  site().forceMobile = false;
+  site().mobileView = true;
 }
 
 export default Mobile;
