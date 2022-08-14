@@ -1,5 +1,7 @@
 import { isTesting } from "discourse-common/config/environment";
 
+const TEST_KEY_PREFIX = "__test_";
+
 // A simple key value store that uses LocalStorage
 let safeLocalStorage;
 
@@ -20,7 +22,7 @@ export default class KeyValueStore {
   context = null;
 
   constructor(ctx) {
-    this.context = isTesting() ? `test_${ctx}` : ctx;
+    this.context = isTesting() ? `${TEST_KEY_PREFIX}${ctx}` : ctx;
   }
 
   abandonLocal() {
