@@ -319,6 +319,7 @@ export default function setupTests(config) {
     flushMap();
 
     MessageBus.unsubscribe("*");
+    localStorage.clear();
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
