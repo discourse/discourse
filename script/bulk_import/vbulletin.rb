@@ -263,15 +263,30 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_categories
     puts '', "Importing categories..."
 
-    # FIXME: properly deduplicate here based on title
-    # ie. for titles with count(title)>1, deduplicate somehow
-
     categories = mysql_query(<<-SQL
-        SELECT forumid, parentid, title, description, displayorder
-          FROM #{TABLE_PREFIX}forum
-         WHERE forumid > #{@last_imported_category_id}
-      ORDER BY forumid
-    SQL
+      select
+        forumid,
+        parentid,
+        case
+          when forumid in (
+            select distinct forumid from (
+              select forumid, title, count(title)
+              from forum
+              group by title
+              having count(title) > 1
+            ) as duplicated_forum_ids
+          )
+          then
+            -- deduplicate by fudging the title; categories will need to be manually merged later
+            concat(title, '_DUPLICATE_', forumid)
+          else
+            title
+        end as title,
+        description,
+        displayorder
+      from forum
+      order by forumid
+      SQL
     ).to_a
 
     return if categories.empty?
