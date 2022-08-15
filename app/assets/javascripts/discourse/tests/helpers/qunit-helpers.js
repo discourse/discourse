@@ -159,7 +159,6 @@ export function testCleanup(container, app) {
     });
   }
 
-  localStorage.clear();
   User.resetCurrent();
   resetExtraClasses();
   clearOutletCache();
