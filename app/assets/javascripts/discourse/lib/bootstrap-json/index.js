@@ -329,7 +329,7 @@ async function handleRequest(proxy, baseURL, req, res) {
 
     const newCSP = csp
       .replaceAll(proxy, `http://${originalHost}`)
-      .replaceAll("script-src ", `script-src ${emberCliAdditions}`);
+      .replaceAll("script-src ", `script-src ${emberCliAdditions} `);
 
     res.set("content-security-policy", newCSP);
   }
