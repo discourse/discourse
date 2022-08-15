@@ -912,8 +912,7 @@ export default Controller.extend({
         let buttons = [
           {
             label: I18n.t("composer.cancel"),
-            class: "d-modal-cancel",
-            link: true,
+            class: "btn-flat btn-text btn-reply-where-cancel",
           },
         ];
 
@@ -923,7 +922,7 @@ export default Controller.extend({
             "<br/><div class='topic-title overflow-ellipsis'>" +
             currentTopic.get("fancyTitle") +
             "</div>",
-          class: "btn btn-reply-here",
+          class: "btn-reply-here",
           callback: () => {
             composer.setProperties({ topic: currentTopic, post: null });
             this.save(true);
