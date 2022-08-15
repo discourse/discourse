@@ -239,7 +239,8 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
     let url = new URL(`${proxy}${baseURL}bootstrap.json`);
     url.searchParams.append("for_url", req.url);
 
-    const forUrlSearchParams = new URL(req.url, url.origin).searchParams;
+    const forUrlSearchParams = new URL(req.url, "https://dummy-origin.invalid")
+      .searchParams;
     const reqUrlSafeMode = forUrlSearchParams.get("safe_mode");
     if (reqUrlSafeMode) {
       url.searchParams.append("safe_mode", reqUrlSafeMode);
