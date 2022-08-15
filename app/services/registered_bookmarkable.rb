@@ -64,16 +64,16 @@ class RegisteredBookmarkable
     bookmarks_of_type = Bookmark.select_type(bookmarks, bookmarkable_klass.model.to_s)
     return if bookmarks_of_type.empty?
 
+    if bookmarkable_klass.has_preloads?
+      ActiveRecord::Associations::Preloader
+        .new(
+          records: bookmarks_of_type,
+          associations: [bookmarkable: bookmarkable_klass.preload_associations]
+        )
+        .call
+    end
+
     bookmarkable_klass.perform_custom_preload!(bookmarks_of_type, guardian)
-
-    return if !bookmarkable_klass.has_preloads?
-
-    ActiveRecord::Associations::Preloader
-      .new(
-        records: bookmarks_of_type,
-        associations: [bookmarkable: bookmarkable_klass.preload_associations]
-      )
-      .call
   end
 
   def can_send_reminder?(bookmark)
