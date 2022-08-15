@@ -35,6 +35,10 @@
       margin-left: auto;
     }
 
+    .sidebar-section-link-suffix {
+      font-size: var(--font-down-1);
+    }
+
     .sidebar-section-link-content-text {
       @include ellipsis;
 
