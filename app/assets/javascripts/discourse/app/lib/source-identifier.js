@@ -58,7 +58,7 @@ export function getThemeInfo(id) {
   return {
     id,
     name,
-    path: getURL(`/admin/customize/themes/${id}?safe_mode=no_custom`),
+    path: getURL(`/admin/customize/themes/${id}?safe_mode=no_themes`),
   };
 }
 
