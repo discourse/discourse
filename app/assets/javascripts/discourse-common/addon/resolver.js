@@ -38,55 +38,68 @@ const DEPRECATED_MODULES = new Map(
       since: "2.4.0",
       dropFrom: "2.9.0.beta1",
     },
+    // Deprecations below are silenced because they're in widespread use, and upgrading
+    // themes/plugins right now would break their compatibility with the stable branch.
+    // These should be unsilenced for the release of 2.9.0 stable.
     "store:main": {
       newName: "service:store",
       since: "2.8.0.beta8",
       dropFrom: "2.9.0.beta1",
+      silent: true,
     },
     "search-service:main": {
       newName: "service:search",
       since: "2.8.0.beta8",
       dropFrom: "2.9.0.beta1",
+      silent: true,
     },
     "key-value-store:main": {
       newName: "service:key-value-store",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "pm-topic-tracking-state:main": {
       newName: "service:pm-topic-tracking-state",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "message-bus:main": {
       newName: "service:message-bus",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "site-settings:main": {
       newName: "service:site-settings",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "current-user:main": {
       newName: "service:current-user",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "session:main": {
       newName: "service:session",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "site:main": {
       newName: "service:site",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
     "topic-tracking-state:main": {
       newName: "service:topic-tracking-state",
       since: "2.9.0.beta7",
       dropFrom: "3.0.0",
+      silent: true,
     },
   })
 );
@@ -138,13 +151,15 @@ export function buildResolver(baseName) {
     _normalize(fullName) {
       const deprecationInfo = DEPRECATED_MODULES.get(fullName);
       if (deprecationInfo) {
-        deprecated(
-          `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
-          {
-            since: deprecationInfo.since,
-            dropFrom: deprecationInfo.dropFrom,
-          }
-        );
+        if (!deprecationInfo.silent) {
+          deprecated(
+            `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
+            {
+              since: deprecationInfo.since,
+              dropFrom: deprecationInfo.dropFrom,
+            }
+          );
+        }
         fullName = deprecationInfo.newName;
       }
 
