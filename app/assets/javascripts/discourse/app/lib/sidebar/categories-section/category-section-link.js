@@ -1,10 +1,8 @@
 import I18n from "I18n";
 
-import { htmlSafe } from "@ember/template";
-
 import { tracked } from "@glimmer/tracking";
+
 import { bind } from "discourse-common/utils/decorators";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
 
 export default class CategorySectionLink {
@@ -47,9 +45,25 @@ export default class CategorySectionLink {
   }
 
   get text() {
-    return htmlSafe(
-      categoryBadgeHTML(this.category, { link: false, categoryStyle: "bullet" })
-    );
+    return this.category.name;
+  }
+
+  get prefixType() {
+    return "icon";
+  }
+
+  get prefixValue() {
+    return "square-full";
+  }
+
+  get prefixColor() {
+    return this.category.color;
+  }
+
+  get prefixBadge() {
+    if (this.category.read_restricted) {
+      return "lock";
+    }
   }
 
   get badgeText() {

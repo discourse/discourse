@@ -84,8 +84,13 @@ acceptance("Sidebar - Categories Section", function (needs) {
     const categories = Site.current().categories;
     const category1 = categories[0];
     const category2 = categories[1];
-    updateCurrentUser({ sidebar_category_ids: [category1.id, category2.id] });
-    return { category1, category2 };
+    const category3 = categories[5];
+
+    updateCurrentUser({
+      sidebar_category_ids: [category1.id, category2.id, category3.id],
+    });
+
+    return { category1, category2, category3 };
   };
 
   test("clicking on section header link", async function (assert) {
@@ -144,34 +149,29 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("category section links uses the bullet style even when category_style site setting has been configured", async function (assert) {
-    this.siteSettings.category_style = "box";
-    const { category1 } = setupUserSidebarCategories();
-
-    await visit("/");
-
-    assert.ok(
-      exists(
-        `.sidebar-section-categories .sidebar-section-link-${category1.slug} .badge-wrapper.bullet`
-      ),
-      "category badge uses the bullet style"
-    );
-  });
-
   test("category section links", async function (assert) {
-    const { category1, category2 } = setupUserSidebarCategories();
+    const { category1, category2, category3 } = setupUserSidebarCategories();
 
     await visit("/");
 
     assert.strictEqual(
       count(".sidebar-section-categories .sidebar-section-link"),
-      2,
-      "there should only be two section link under the section"
+      3,
+      "there should only be 3 section link under the section"
     );
 
     assert.ok(
-      exists(`.sidebar-section-link-${category1.slug} .badge-category`),
-      "category1 section link is rendered with category badge"
+      exists(
+        `.sidebar-section-link-${category1.slug} .prefix-icon.d-icon-square-full`
+      ),
+      "category1 section link is rendered with right prefix icon"
+    );
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix[style="color: #${category1.color}"]`
+      ),
+      "category1 section link is rendered with right prefix icon color"
     );
 
     assert.strictEqual(
@@ -216,6 +216,13 @@ acceptance("Sidebar - Categories Section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-${category2.slug}.active`),
       "the category2 section link is marked as active"
+    );
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category3.slug} .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
+      ),
+      "category3 section link is rendered with lock prefix badge icon as it is read restricted"
     );
   });
 
