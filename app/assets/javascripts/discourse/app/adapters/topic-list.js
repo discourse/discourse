@@ -19,7 +19,7 @@ export function finderFor(filter, params) {
       const queryString = urlSearchParams.toString();
 
       if (queryString) {
-        url = `${url}?${queryString}`;
+        url += `?${queryString}`;
       }
     }
     return ajax(url);
