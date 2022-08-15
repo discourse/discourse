@@ -1952,6 +1952,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def default_sidebar_tags
+    tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
+    Tag.where(name: tag_names)
+  end
+
   def self.ensure_consistency!
     DB.exec <<~SQL
       UPDATE users

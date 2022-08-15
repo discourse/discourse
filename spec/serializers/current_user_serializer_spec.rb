@@ -257,6 +257,37 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe '#default_sidebar_tags' do
+    fab!(:tag_1) { Fabricate(:tag, name: "foo") }
+    fab!(:tag_2) { Fabricate(:tag, name: "bar") }
+    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
+
+    it 'includes visible default sidebar tags' do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.tagging_enabled = true
+      SiteSetting.default_sidebar_tags = "foo|bar|secret"
+
+      json = serializer.as_json
+
+      expect(json[:default_sidebar_tags]).to eq(
+        { name: "foo", pm_only: false },
+        { name: "bar", pm_only: false }
+      )
+    end
+
+    it 'does not include default when overriden' do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.tagging_enabled = true
+      SiteSetting.default_sidebar_tags = "foo|bar|secret"
+      Fabricate(:tag_sidebar_section_link, user: user)
+
+      json = serializer.as_json
+
+      expect(json[:default_sidebar_tags]).to eq(nil)
+    end
+  end
+
   describe '#sidebar_category_ids' do
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
     fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user) }

@@ -4,6 +4,7 @@ import { cached } from "@glimmer/tracking";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 
 import TagSectionLink from "discourse/lib/sidebar/tags-section/tag-section-link";
 import PMTagSectionLink from "discourse/lib/sidebar/tags-section/pm-tag-section-link";
@@ -13,6 +14,7 @@ export default class SidebarTagsSection extends Component {
   @service topicTrackingState;
   @service pmTopicTrackingState;
   @service currentUser;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -30,11 +32,21 @@ export default class SidebarTagsSection extends Component {
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
+  get sidebarTags() {
+    if (!isEmpty(this.currentUser.sidebarTags)) {
+      return this.currentUser.sidebarTags;
+    }
+    if (this.currentUser && !isEmpty(this.siteSettings.default_sidebar_tags)) {
+      return this.currentUser.default_sidebar_tags;
+    }
+    return [];
+  }
+
   @cached
   get sectionLinks() {
     const links = [];
 
-    for (const tag of this.currentUser.sidebarTags) {
+    for (const tag of this.sidebarTags) {
       if (tag.pm_only) {
         links.push(
           new PMTagSectionLink({
