@@ -15,7 +15,7 @@
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "diffhtml": "^1.0.0-beta.20",
-    "eslint-config-discourse": "^3.2.0",
+    "eslint-config-discourse": "^3.3.0",
     "magnific-popup": "1.1.0",
     "markdown-it": "13.0.1",
     "moment": "2.29.2",
