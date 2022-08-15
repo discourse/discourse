@@ -90,9 +90,6 @@ html.composer-open {
     .saving-text {
       display: none;
     }
-    .toggle-minimize {
-      order: 2;
-    }
   }
 
   &.saving .saving-text {
@@ -163,10 +160,6 @@ html.composer-open {
 
       .d-icon {
         color: var(--primary-medium);
-      }
-
-      .toggle-minimize {
-        order: 2;
       }
     }
   }
