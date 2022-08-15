@@ -5,16 +5,24 @@ import getURL from "discourse-common/lib/get-url";
 
 export function finderFor(filter, params) {
   return function () {
-    let url = new URL(getURL("/") + filter + ".json");
+    let url = getURL("/") + filter + ".json";
 
     if (params) {
+      const urlSearchParams = new URLSearchParams();
+
       for (const [key, value] of Object.entries(params)) {
         if (typeof value !== "undefined") {
-          url.searchParams.set(key, value);
+          urlSearchParams.set(key, value);
         }
       }
+
+      const queryString = urlSearchParams.toString();
+
+      if (queryString) {
+        url = `${url}?${queryString}`;
+      }
     }
-    return ajax(url.toString());
+    return ajax(url);
   };
 }
 
