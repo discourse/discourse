@@ -47,8 +47,6 @@ export default Controller.extend({
 
     const urlSearchParams = new URLSearchParams();
 
-    urlSearchParams.set("period", period);
-
     for (const [key, value] of Object.entries(
       this.router.currentRoute.queryParams
     )) {
@@ -57,13 +55,9 @@ export default Controller.extend({
       }
     }
 
-    const queryString = urlSearchParams.toString();
+    urlSearchParams.set("period", period);
 
-    if (queryString) {
-      url += `?${queryString}`;
-    }
-
-    return url;
+    return `${url}?${urlSearchParams.toString()}`;
   },
 
   actions: {
