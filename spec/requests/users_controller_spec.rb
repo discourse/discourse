@@ -535,6 +535,14 @@ RSpec.describe UsersController do
       expect(args["user_id"]).to eq(admin.id)
     end
 
+    it 'passes through safe mode' do
+      put "/u/admin-login", params: { email: admin.email, use_safe_mode: true }
+      expect(response.status).to eq(200)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      args = Jobs::CriticalUserEmail.jobs.first["args"].first
+      expect(args["email_token"]).to end_with("?safe_mode=no_plugins,no_themes")
+    end
+
     context 'when email is incorrect' do
       it 'should return the right response' do
         put "/u/admin-login", params: { email: 'random' }

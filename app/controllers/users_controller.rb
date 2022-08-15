@@ -961,7 +961,11 @@ class UsersController < ApplicationController
 
       if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: email_token.token)
+        token_string = email_token.token
+        if params["use_safe_mode"]
+          token_string += "?safe_mode=no_plugins,no_themes"
+        end
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: token_string)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
