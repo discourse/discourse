@@ -38,7 +38,6 @@
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
-    scroll-behavior: smooth;
 
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
