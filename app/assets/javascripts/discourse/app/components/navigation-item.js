@@ -42,13 +42,14 @@ export default Component.extend(FilterModeMixin, {
     const content = this.content;
 
     let href = content.get("href");
-    let queryParams = [];
+    let urlSearchParams = new URLSearchParams();
+    let addParamsEvenIfEmpty = false;
 
     // Include the category id if the option is present
     if (content.get("includeCategoryId")) {
       let categoryId = this.get("content.category.id");
       if (categoryId) {
-        queryParams.push(`category_id=${categoryId}`);
+        urlSearchParams.set("category_id", categoryId);
       }
     }
 
@@ -56,12 +57,12 @@ export default Component.extend(FilterModeMixin, {
     // If no query param is present, add an empty one to ensure a ? is
     // appended to the URL.
     if (content.currentRouteQueryParams) {
-      if (content.currentRouteQueryParams.filter && queryParams.length === 0) {
-        queryParams.push("");
+      if (content.currentRouteQueryParams.filter) {
+        addParamsEvenIfEmpty = true;
       }
 
       if (content.currentRouteQueryParams.f) {
-        queryParams.push(`f=${content.currentRouteQueryParams.f}`);
+        urlSearchParams.set("f", content.currentRouteQueryParams.f);
       }
     }
 
@@ -69,11 +70,12 @@ export default Component.extend(FilterModeMixin, {
       this.siteSettings.desktop_category_page_style ===
       "categories_and_latest_topics_created_date"
     ) {
-      queryParams.push("order=created");
+      urlSearchParams.set("order", "created");
     }
 
-    if (queryParams.length) {
-      href += `?${queryParams.join("&")}`;
+    const queryString = urlSearchParams.toString();
+    if (addParamsEvenIfEmpty || queryString) {
+      href += `?${queryString}`;
     }
     this.set("hrefLink", href);
 
