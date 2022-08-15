@@ -288,12 +288,20 @@
     }
   }
   &.btn-text {
+    color: var(--tertiary);
+    &[disabled] {
+      &,
+      &:hover,
+      &.btn-hover,
+      &:focus {
+        color: var(--primary);
+      }
+    }
     &:not([disabled]) {
       &:hover,
       &.btn-hover,
       &:focus {
-        background: var(--primary-low);
-        color: var(--primary);
+        color: var(--tertiary-hover);
       }
 
       &:active,
