@@ -1794,6 +1794,8 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
+    enable_experimental_sidebar_hamburger: "Allows experimental sidebar and user hamburger dropdown menu to be enabled."
+    enable_sidebar: "Enables experimental sidebar."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
