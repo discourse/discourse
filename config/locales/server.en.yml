@@ -4833,6 +4833,7 @@ en:
       invalid_token: "Invalid token."
     email_input: "Admin Email"
     submit_button: "Send Email"
+    safe_mode: "Safe Mode: disable all themes/plugins when logging in"
 
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
