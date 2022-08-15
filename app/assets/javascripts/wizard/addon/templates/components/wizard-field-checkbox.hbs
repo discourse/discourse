@@ -1,5 +1,5 @@
 <label class="wizard-container__label">
-  <Input @type="checkbox" class="wizard-container__checkbox" @checked={{this.field.value}} />
+  <Input @type="checkbox" disabled={{this.field.disabled}} class="wizard-container__checkbox" @checked={{this.field.value}} />
   <span class="wizard-container__checkbox-slider"></span>
   {{#if this.field.icon}}
     {{d-icon this.field.icon}}
