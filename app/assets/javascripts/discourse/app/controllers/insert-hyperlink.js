@@ -58,6 +58,7 @@ export default Controller.extend(ModalFunctionality, {
           event.stopPropagation();
         } else {
           this.send("closeModal");
+          document.querySelector(".d-editor-input")?.focus();
         }
         break;
     }
