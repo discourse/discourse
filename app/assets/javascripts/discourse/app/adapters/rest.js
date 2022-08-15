@@ -50,7 +50,7 @@ export default EmberObject.extend({
         const urlSearchParams = new URLSearchParams();
 
         for (const [key, value] of Object.entries(findArgs)) {
-          if (typeof value !== "undefined") {
+          if (value) {
             urlSearchParams.set(key, value);
           }
         }
