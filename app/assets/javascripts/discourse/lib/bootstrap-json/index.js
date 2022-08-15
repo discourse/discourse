@@ -239,6 +239,16 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
     let url = new URL(`${proxy}${baseURL}bootstrap.json`);
     url.searchParams.append("for_url", req.url);
 
+    const forUrlSearchParams = new URL(req.url, "https://dummy-origin.invalid")
+      .searchParams;
+    const reqUrlSafeMode = forUrlSearchParams.get("safe_mode");
+    if (reqUrlSafeMode) {
+      url.searchParams.append("safe_mode", reqUrlSafeMode);
+    }
+
+    const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
+    url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
+
     const res = await fetch(url, { headers: req.headers });
     const json = await res.json();
 
