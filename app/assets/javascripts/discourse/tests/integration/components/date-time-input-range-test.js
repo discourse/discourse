@@ -21,7 +21,8 @@ function toTimeInput() {
   return query(".to.d-date-time-input .d-time-input .combo-box-header");
 }
 
-const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
+const DEFAULT_DATE_TIME_STRING = "2019-01-29 14:45";
+const DEFAULT_DATE_TIME = moment(DEFAULT_DATE_TIME_STRING);
 
 module("Integration | Component | date-time-input-range", function (hooks) {
   setupRenderingTest(hooks);
@@ -56,7 +57,10 @@ module("Integration | Component | date-time-input-range", function (hooks) {
 
   test("timezone support", async function (assert) {
     this.setProperties({
-      state: { from: moment.tz(DEFAULT_DATE_TIME, "Europe/Paris"), to: null },
+      state: {
+        from: moment.tz(DEFAULT_DATE_TIME_STRING, "Europe/Paris"),
+        to: null,
+      },
     });
 
     await render(
@@ -64,7 +68,7 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     );
 
     assert.strictEqual(fromDateInput().value, "2019-01-29");
-    assert.strictEqual(fromTimeInput().dataset.name, "15:45");
+    assert.strictEqual(fromTimeInput().dataset.name, "14:45");
     assert.strictEqual(toDateInput().value, "");
     assert.strictEqual(toTimeInput().dataset.name, "--:--");
 
