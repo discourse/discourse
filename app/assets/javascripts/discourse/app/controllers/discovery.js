@@ -45,14 +45,22 @@ export default Controller.extend({
 
     url += "/top";
 
-    let queryParams = this.router.currentRoute.queryParams;
-    queryParams.period = period;
-    if (Object.keys(queryParams).length) {
-      url =
-        `${url}?` +
-        Object.keys(queryParams)
-          .map((key) => `${key}=${queryParams[key]}`)
-          .join("&");
+    const urlSearchParams = new URLSearchParams();
+
+    urlSearchParams.set("period", period);
+
+    for (const [key, value] of Object.entries(
+      this.router.currentRoute.queryParams
+    )) {
+      if (typeof value !== "undefined") {
+        urlSearchParams.set(key, value);
+      }
+    }
+
+    const queryString = urlSearchParams.toString();
+
+    if (queryString) {
+      url += `?${queryString}`;
     }
 
     return url;
