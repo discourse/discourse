@@ -6,14 +6,14 @@
     </p>
     <p>
     <label>
-    <%= check_box_tag 'no_customizations', true, !flash[:must_select]%>
-    <%= t 'safe_mode.no_customizations' %>
+    <%= check_box_tag 'no_themes', true, !flash[:must_select]%>
+    <%= t 'safe_mode.no_themes' %>
     </label>
     </p>
     <p>
     <label>
-    <%= check_box_tag 'only_official', true, !flash[:must_select] %>
-    <%= t 'safe_mode.only_official' %>
+    <%= check_box_tag 'no_unofficial_plugins', true, !flash[:must_select] %>
+    <%= t 'safe_mode.no_unofficial_plugins' %>
     </label>
     </p>
     <p>

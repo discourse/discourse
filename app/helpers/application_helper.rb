@@ -418,7 +418,7 @@ module ApplicationHelper
   end
 
   def customization_disabled?
-    request.env[ApplicationController::NO_CUSTOM]
+    request.env[ApplicationController::NO_THEMES]
   end
 
   def include_ios_native_app_banner?
@@ -441,15 +441,15 @@ module ApplicationHelper
   end
 
   def allow_third_party_plugins?
-    allow_plugins? && !request.env[ApplicationController::ONLY_OFFICIAL]
+    allow_plugins? && !request.env[ApplicationController::NO_UNOFFICIAL_PLUGINS]
   end
 
   def normalized_safe_mode
     safe_mode = []
 
-    safe_mode << ApplicationController::NO_CUSTOM if customization_disabled?
+    safe_mode << ApplicationController::NO_THEMES if customization_disabled?
     safe_mode << ApplicationController::NO_PLUGINS if !allow_plugins?
-    safe_mode << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
+    safe_mode << ApplicationController::NO_UNOFFICIAL_PLUGINS if !allow_third_party_plugins?
 
     safe_mode.join(",")
   end
