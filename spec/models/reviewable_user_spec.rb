@@ -92,7 +92,9 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.target.approved_at).to be_present
         expect(reviewable.version > 0).to eq(true)
       end
+    end
 
+    context "when rejecting" do
       it "allows us to reject a user" do
         result = reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
         expect(result.success?).to eq(true)
@@ -161,6 +163,18 @@ RSpec.describe ReviewableUser, type: :model do
         expect(result.success?).to eq(true)
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.target).to be_blank
+      end
+
+      it "silently transitions the reviewable if the user is an admin" do
+        reviewable.target.update!(admin: true)
+
+        result = reviewable.perform(moderator, :delete_user)
+        expect(reviewable.pending?).to eq(false)
+        expect(reviewable.rejected?).to eq(true)
+
+        reviewable.reload
+        expect(reviewable.target).to be_present
+        expect(reviewable.target.approved).to eq(false)
       end
     end
   end
