@@ -4072,9 +4072,7 @@ ja:
       message: "<p><b>%{email}</b> にアクティベーションメールを再送信しました"
   safe_mode:
     title: "セーフモードを開始"
-    description: "セーフモードでは、プラグインやサイトのカスタマイズを読み込まずにサイトをテストすることができます。"
-    no_customizations: "現在のテーマを無効にする"
-    only_official: "非公式のプラグインを無効にする"
+    no_unofficial_plugins: "非公式のプラグインを無効にする"
     no_plugins: "すべてのプラグインを無効にする"
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"

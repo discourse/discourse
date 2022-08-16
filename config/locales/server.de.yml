@@ -1677,6 +1677,8 @@ de:
     top_topics_formula_first_post_likes_multiplier: "Wert des Multiplikators (n) für die „Gefällt mir“-Angaben des ersten Beitrags in der Formel für angesagte Themen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "Wert des Multiplikators (n) für die wenigsten „Gefällt mir“-Angaben pro Beitrag in der Formel für angesagte Themen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Erlaube Benutzern, den abgesicherten Modus zu betreten, um Plug-ins zu debuggen."
+    enable_experimental_sidebar_hamburger: "Ermöglicht die Aktivierung der experimentellen Seitenleiste und des Benutzer-Hamburger-Dropdown-Menüs."
+    enable_sidebar: "Aktiviert die experimentelle Seitenleiste."
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
@@ -4389,6 +4391,7 @@ de:
       invalid_token: "Ungültiges Token."
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
+    safe_mode: "Abgesicherter Modus: Deaktivieren Sie alle Themen/Plugins beim Anmelden"
   performance_report:
     initial_post_raw: Dieses Thema enthält tägliche Leistungsberichte für deine Website.
     initial_topic_title: Berichte zur Website-Leistung
@@ -4437,9 +4440,9 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
-    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plug-ins oder Website-Anpassungen zu laden."
-    no_customizations: "Aktuelles Theme deaktivieren"
-    only_official: "Inoffizielle Plug-ins deaktivieren"
+    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plugins oder Themes zu laden."
+    no_themes: "Themen und Themenkomponenten deaktivieren"
+    no_unofficial_plugins: "Inoffizielle Plug-ins deaktivieren"
     no_plugins: "Alle Plug-ins deaktivieren"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."

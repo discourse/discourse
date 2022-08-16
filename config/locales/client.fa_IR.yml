@@ -163,12 +163,12 @@ fa_IR:
       forwarded: "ایمیل بالا را ارسال کرد"
     topic_admin_menu: "اقدامات موضوع"
     skip_to_main_content: "رفتن به محتوای اصلی"
-    wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     software_update_prompt:
       message: "سایت بروز رسانی شده٬ لطفا برای پرهیز از بروز خطای احتمالی صفحه خود را دوباره <span>بارگزاری/ریفرش</span> کنید."
       dismiss: "رد کردن"
     bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
+    bootstrap_invite_button_title: "ارسال دعوت‌نامه"
     themes:
       default_description: "پیش‌فرض"
     s3:
@@ -991,6 +991,7 @@ fa_IR:
       dismiss_notifications: "پنهان کردن همه"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       dismiss_bookmarks_tooltip: "علامت‌گذاری تمام یادآوری‌های نشانک شده، خوانده نشده به عنوان خوانده شده"
+      dismiss_messages_tooltip: "همه آگاه‌سازی‌های پیام‌های شخصی خوانده نشده را به عنوان خوانده شده، علامت گذاری کنید"
       no_messages_title: "پیامی ندارید"
       no_bookmarks_title: "شما هنوز چیزی را نشانه‌گذاری نکرده‌اید"
       no_bookmarks_search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
@@ -1898,6 +1899,7 @@ fa_IR:
       abandon: "پنل نوشتن را ببند و پیش‌نویس را حذف کن"
       enter_fullscreen: "کامپوزر تمام صفحه"
       exit_fullscreen: "خارج شدن از حالت نوشتار تمام‌صفحه"
+      exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
       modal_cancel: "لغو"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username} پیام بفرستید."
@@ -1991,6 +1993,9 @@ fa_IR:
           bookmarks:
             one: "آيا مطمئن هستی؟ شما %{count} یادآوری نشانک شده، خوانده نشده دارید."
             other: "آيا مطمئن هستی؟ شما %{count} یادآوری نشانک شده، خوانده نشده دارید."
+          messages:
+            one: "آیا مطمئن هستی؟ شما %{count} پیام شخصی خوانده نشده دارید."
+            other: "آیا مطمئن هستی؟ شما %{count} پیام شخصی خوانده نشده دارید."
         dismiss: "نادیده گرفتن"
         cancel: "انصراف"
       group_message_summary:
@@ -2138,6 +2143,7 @@ fa_IR:
       sr_menu_tabs: "زبان‌های منو"
       view_all_notifications: "مشاهده همه آگاه‌سازی‌ها"
       view_all_bookmarks: "مشاهده همه نشانک‌ها"
+      view_all_messages: "مشاهده تمام پیام‌های شخصی"
       reviewable:
         view_all: "مشاهده تمام موارد بازبینی"
         queue: "صف"

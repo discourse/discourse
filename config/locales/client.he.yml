@@ -235,7 +235,6 @@ he:
       forwarded: "העברת ההודעה שלעיל"
     topic_admin_menu: "פעולות על נושא"
     skip_to_main_content: "דילוג לתוכן הראשי"
-    wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
@@ -247,6 +246,8 @@ he:
       many: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
       other: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
     bootstrap_mode_disabled: "מצב Bootstrap יבוטל תוך 24 שעות."
+    bootstrap_invite_button_title: "משלוח הזמנות"
+    bootstrap_wizard_link_title: "סיום אשף ההקמה"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
@@ -1166,6 +1167,8 @@ he:
       dismiss: "דחה"
       dismiss_notifications: "להתעלם מהכול"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
+      dismiss_bookmarks_tooltip: "סימון כל תזכורות הסימניות כנקראו"
+      dismiss_messages_tooltip: "לסמן את כל ההתראות על ההודעות הפרטיות שלא נקראו כנקראו"
       no_messages_title: "אין לך הודעות כלל"
       no_messages_body: >
         עליך לנהל שיחה אישית עם מישהו או מישהי מחוץ לרצף הדיון?<br><br> ניתן לשלוח אליו או אליה הודעה על ידי בחירת תמונת המשתמש המתאימה ואיתור הכפתור הודעה %{icon}. לקבלת עזרה, ניתן <a href='%{aboutUrl}'>לשלוח הודעה לאחד מחברי הסגל</a>.
@@ -2230,6 +2233,7 @@ he:
       abandon: "סגור את העורך והשלך את הטיוטה"
       enter_fullscreen: "היכנס לעריכה במסך מלא"
       exit_fullscreen: "צא מעריכה במסך מלא"
+      exit_fullscreen_prompt: "לחיצה על <kbd>ESC</kbd> תוציא אותך ממסך מלא"
       show_toolbar: "הצגת סרגל כתיבת הודעות"
       hide_toolbar: "הסתרת סרגל כתיבת הודעות"
       modal_ok: "אישור"
@@ -2273,6 +2277,7 @@ he:
       ignore: "התעלמות"
       image_alt_text:
         aria_label: כיתוב חלופי לתמונה
+      delete_image_button: מחיקת תמונ
     notifications:
       tooltip:
         regular:
@@ -2349,6 +2354,16 @@ he:
             two: "בוודאות? יש לך %{count} התראות חשובות."
             many: "בוודאות? יש לך %{count} התראות חשובות."
             other: "בוודאות? יש לך %{count} התראות חשובות."
+          bookmarks:
+            one: "להמשיך? יש לך תזכורת סימנייה %{count} שלא נקראה."
+            two: "להמשיך? יש לך %{count} תזכורות סימנייה שלא נקראו."
+            many: "להמשיך? יש לך %{count} תזכורות סימנייה שלא נקראו."
+            other: "להמשיך? יש לך %{count} תזכורות סימנייה שלא נקראו."
+          messages:
+            one: "להמשיך? יש לך הודעה פרטית %{count} שלא נקראה."
+            two: "להמשיך? יש לך %{count} הודעות פרטיות שלא נקראו."
+            many: "להמשיך? יש לך %{count} הודעות פרטיות שלא נקראו."
+            other: "להמשיך? יש לך %{count} הודעות פרטיות שלא נקראו."
         dismiss: "דחה"
         cancel: "ביטול"
       group_message_summary:
@@ -2535,6 +2550,8 @@ he:
       generic_no_items: "אין פריטים ברשימה זו."
       sr_menu_tabs: "לשוניות תפריט"
       view_all_notifications: "הצגת כל ההתראות"
+      view_all_bookmarks: "הצגת כל הסימניות"
+      view_all_messages: "הצגת כל ההודעות האישיות"
       reviewable:
         view_all: "הצגת כל הפריטים לסקירה"
         queue: "תור"
@@ -4071,6 +4088,7 @@ he:
       no_likes_body: "דרך נפלאה לקפוץ ישירות פנימה ולהתחיל לתרום היא להתחיל לקרוא דיונים שכבר נערכו ולבחור בסמל %{heartIcon} על פוסטים שאהבת!"
       no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
+      no_topics_body: "תמיד עדיף <a href='%{searchUrl}'>לחפש</a> דיונים קיימים בטרם פתיחת חדשים, אבל אם בוודאות לא נתקלת בנושא המבוקש, אפשר פשוט לפתוח נושא חדש משלך. הכפתור <kbd>+ נושא חדש</kbd> אמור להופיע בפינה השמאלית העליונה של רשימת נושאים, קטגוריה או תגית כדי להתחיל ליצור נושא חדש באזור הזה."
       no_topics_title_others: "לא נפתח עוד אף נושא על ידי %{username}"
       no_read_topics_title: "טרם קראת נושאים"
       no_read_topics_body: "עם תחילת קריאת הדיונים, תופיע כאן רשימה. כדי להתחיל לקרוא, כדאי לחפש נושאים שמעניינים אותך תחת <a href='%{topUrl}'>עליונים</a> או <a href='%{categoriesUrl}'>קטגוריות</a> או לחפש אחר מילת מפתח %{searchIcon}"
@@ -4145,6 +4163,10 @@ he:
                 two: "%{count} טיוטות"
                 many: "%{count} טיוטות"
                 other: "%{count} טיוטות"
+    welcome_topic_banner:
+      title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
+      description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שמצטרפים חדשים יקראו. אפשר לחשוב על זה כעל „נאום מעלית” או „הצהרת כוונות” במשפט אחד'
+      button_title: "להתחיל לערוך"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4712,6 +4734,8 @@ he:
           import_web_advanced: "מתקדם…"
           import_file_tip: "קובץ ‎.tar.gz,‏ ‎.zip,‏ או ‎.dcstyle.json שמכיל ערכת עיצוב"
           is_private: "ערכת העיצוב נמצאת במאגר git פרטי"
+          finish_install: "סיום התקנת ערכת עיצוב"
+          last_attempt: "תהליך ההתקנה לא הסתיים, ניסיון אחרון:"
           remote_branch: "שם ענף (רשות)"
           public_key: "להעניק למפתח הציבורי הבא גישה למאגר:"
           public_key_note: "לאחר מילוי כתובת אתר מאגר פרטית תקפה לעיל, מפתח SSH ייווצר ויוצג כאן."
@@ -4722,6 +4746,8 @@ he:
           install_git_repo: "ממאגר git"
           install_create: "יצירת חדשה"
           duplicate_remote_theme: "רכיב ערכת העיצוב „%{name}” כבר מותקן, להתקין עותק נוסף?"
+          force_install: "לא ניתן להתקין את ערכת העיצוב כיוון שמאגר ה־Git אינו נגיש. להמשיך בהתקנתה?"
+          create_placeholder: "יצירת ממלא מקום"
           about_theme: "אודות"
           license: "רישיון"
           version: "גרסה:"
@@ -4904,6 +4930,7 @@ he:
         last_seen_user: "משתמש שנראה לאחרונה:"
         no_result: "לא נמצאו תוצאות לתמצית."
         reply_key: "מפתח תגובה"
+        post_link_with_smtp: "הגדרות דואר ו־SMTP"
         skipped_reason: "דלג על סיבה"
         incoming_emails:
           from_address: "מאת"
@@ -4933,6 +4960,7 @@ he:
             address_placeholder: "name@example.com"
             type_placeholder: "תמצית, הרשמה..."
             reply_key_placeholder: "מפתח תגובה"
+            smtp_transaction_response_placeholder: "מזהה SMTP"
       moderation_history:
         performed_by: "בוצע על ידי"
         no_results: "אין היסטוריית פעילות פיקוח זמינה."

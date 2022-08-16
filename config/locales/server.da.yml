@@ -3548,9 +3548,7 @@ da:
       message: "<p>Vi har gensendt aktiverings-e-mailen til <b>%{email}</b>"
   safe_mode:
     title: "Gå ind i fejlsikret tilstand"
-    description: "Fejlsikret tilstand giver dig mulighed for at teste dit websted uden at indlæse plugins eller tilpasninger af webstedet."
-    no_customizations: "Deaktiver det aktuelle tema"
-    only_official: "Deaktiver uofficielle udvidelser"
+    no_unofficial_plugins: "Deaktiver uofficielle udvidelser"
     no_plugins: "Deaktiver alle udvidelsesmoduler"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."

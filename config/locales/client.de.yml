@@ -179,7 +179,6 @@ de:
       forwarded: "hat die obige E-Mail weitergeleitet"
     topic_admin_menu: "Themen-Administration"
     skip_to_main_content: "Zum Hauptinhalt springen"
-    wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
     software_update_prompt:
@@ -189,6 +188,8 @@ de:
       one: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert hat."
       other: "Damit du mit deiner Website einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert haben."
     bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
+    bootstrap_invite_button_title: "Einladungen versenden"
+    bootstrap_wizard_link_title: "Einrichtungsassistent beenden"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil eine Theme / eine Komponente Fehler hat."
@@ -1053,6 +1054,7 @@ de:
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       dismiss_bookmarks_tooltip: "Markiere alle ungelesenen Lesezeichen-Erinnerungen als gelesen"
+      dismiss_messages_tooltip: "Markiere alle ungelesenen persönlichen Nachrichten als gelesen"
       no_messages_title: "Du hast keine Nachrichten"
       no_messages_body: >
         Benötigst du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende der Person eine Nachricht, indem du ihren Avatar auswählst und die Schaltfläche %{icon} verwendest.<br><br> Wenn du Hilfe benötigst, kannst du eine <a href='%{aboutUrl}'>Nachricht an ein Team-Mitglied senden</a>.
@@ -2059,6 +2061,7 @@ de:
       abandon: "Editor schließen und Entwurf verwerfen"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
+      exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd> um den Vollbildmodus zu verlassen."
       show_toolbar: "Editor-Werkzeugleiste anzeigen"
       hide_toolbar: "Editor-Werkzeugleiste ausblenden"
       modal_ok: "OK"
@@ -2166,6 +2169,9 @@ de:
           bookmarks:
             one: "Bist du sicher? Du hast %{count} ungelesene Lesezeichen Erinnerung."
             other: "Bist du sicher? Du hast %{count} ungelesene Lesezeichen-Erinnerungen."
+          messages:
+            one: "Bist du sicher? Du hast %{count} ungelesene persönliche Nachricht."
+            other: "Bist du sicher? Du hast %{count} ungelesene persönliche Nachrichten."
         dismiss: "Alles gelesen"
         cancel: "Abbrechen"
       group_message_summary:
@@ -2349,6 +2355,7 @@ de:
       sr_menu_tabs: "Menü-Registerkarten"
       view_all_notifications: "Alle Benachrichtigungen anzeigen"
       view_all_bookmarks: "Alle Lesezeichen anzeigen"
+      view_all_messages: "Alle persönlichen Nachrichten anzeigen"
       reviewable:
         view_all: "alle Bewertungselemente ansehen"
         queue: "Warteschlange"
@@ -3811,6 +3818,10 @@ de:
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"
+    welcome_topic_banner:
+      title: "Erstelle dein Willkommensthema"
+      description: 'Dein Willkommensthema ist das erste, was Neuankömmlinge lesen werden. Sieh es als deinen einseitigen "Elevator Pitch" oder "Mission Statement" an.'
+      button_title: "Bearbeitung beginnen"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -4368,6 +4379,8 @@ de:
           import_web_advanced: "Erweitert …"
           import_file_tip: ".tar.gz-, .zip- oder .dcstyle.json-Datei, die ein Theme enthält"
           is_private: "Theme ist in einem privaten Git-Repository"
+          finish_install: "Theme-Installation beenden"
+          last_attempt: "Der Installationsvorgang wurde nicht abgeschlossen, letzter Versuch:"
           remote_branch: "Branch-Name (optional)"
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
           public_key_note: "Nach Eingabe einer gültigen privaten Repository-URL wird ein SSH-Schlüssel generiert und hier angezeigt."
@@ -4378,6 +4391,8 @@ de:
           install_git_repo: "Aus einem Git-Repository"
           install_create: "Neu erstellen"
           duplicate_remote_theme: "Die Theme-Komponente „%{name}“ ist bereits installiert. Möchtest du wirklich eine weitere Kopie installieren?"
+          force_install: "Das Theme kann nicht installiert werden, weil auf das Git-Repository nicht zugegriffen werden kann. Bist du sicher, dass du die Installation fortsetzen willst?"
+          create_placeholder: "Platzhalter erstellen"
           about_theme: "Über uns"
           license: "Lizenz"
           version: "Version:"

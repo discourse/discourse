@@ -150,10 +150,10 @@ et:
         disabled: "eemaldas selle bänneri %{when}. Seda ei kuvata enam iga lehe ülaosas."
       forwarded: "edastas ülaltoodud e-kirja"
     topic_admin_menu: "teema toimingud"
-    wizard_required: "Tere tulemast uude Discourse’i! Alusta <a href='%{url}' data-auto-route='true'>häälestusviisardiga</a> ✨"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     software_update_prompt:
       dismiss: "Ignoreeri"
+    bootstrap_invite_button_title: "Saada kutsed"
     themes:
       default_description: "Vaikimisi"
     s3:

@@ -200,11 +200,11 @@ sl:
         disabled: "je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
       forwarded: "zgoraj navedeno sporočilo je bilo posredovano"
     topic_admin_menu: "dejanja teme"
-    wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo s <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
     bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
+    bootstrap_invite_button_title: "Pošlji povabila"
     themes:
       default_description: "Privzeto"
     s3:

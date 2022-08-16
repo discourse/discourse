@@ -678,6 +678,7 @@ sv:
       public_group_membership: "Du går med i/lämnar grupper lite för ofta. Vi ber dig vänta %{time_left} innan du försöker igen."
       topics_per_day: "Du har uppnått det högsta tillåtna antalet nya ämnen per dag. Du kan skapa fler nya ämnen om %{time_left}."
       pms_per_day: "Du har uppnått det maximala antalet meddelanden per dag. Du kan skapa fler nya meddelanden om %{time_left}."
+      create_like: "Wow! Du har delat med dig av mycket kärlek! Du har nått det maximala antalet gilla-markeringar inom en 24-timmarsperiod, men när du får ökat förtroende kommer du att få fler gilla-markeringar per dag. Du kommer att kunna gilla inlägg igen om %{time_left}."
       create_bookmark: "Du har uppnått det maximala antalet dagliga bokmärken. Du kan skapa fler bokmärken om %{time_left}."
       edit_post: "Du har uppnått det maximala antalet dagliga redigeringar. Du kan göra fler redigeringar om %{time_left}."
       live_post_counts: "Du ber om beräkning av live-inlägg för ofta. Var god vänta %{time_left} innan du försöker igen."
@@ -1656,6 +1657,8 @@ sv:
     top_topics_formula_first_post_likes_multiplier: "värde av första inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "värde av minsta inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
+    enable_experimental_sidebar_hamburger: "Tillåter att experimentellt sidofält och användarens hamburgarmeny aktiveras."
+    enable_sidebar: "Aktiverar experimentellt sidofält."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
     rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
@@ -4012,6 +4015,7 @@ sv:
       invalid_token: "Ogiltigt bevis.."
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
+    safe_mode: "Säkert läge: inaktivera alla teman/tillägg när du loggar in"
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen
@@ -4060,9 +4064,9 @@ sv:
       message: "<p>Vi har sänt om aktiveringsbrevet till <b>%{email}</b>"
   safe_mode:
     title: "Gå över i felsäkert läge"
-    description: "I felsäkert läge kan du testa din webbplats utan att ladda några plugins eller webbplatsanpassningar."
-    no_customizations: "Stäng av nuvarande tema"
-    only_official: "Inaktivera alla inofficiella plugins"
+    description: "I felsäkert läge kan du testa din webbplats utan att ladda några tillägg eller teman."
+    no_themes: "Inaktivera teman och temakomponenter"
+    no_unofficial_plugins: "Inaktivera alla inofficiella plugins"
     no_plugins: "Inaktivera alla plugins"
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."

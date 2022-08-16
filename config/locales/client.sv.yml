@@ -179,7 +179,6 @@ sv:
       forwarded: "vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
     skip_to_main_content: "Hoppa till huvudinnehållet"
-    wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
@@ -189,6 +188,8 @@ sv:
       one: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
       other: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
     bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
+    bootstrap_invite_button_title: "Skicka inbjudningar"
+    bootstrap_wizard_link_title: "Slutför installationsguiden"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -1052,6 +1053,8 @@ sv:
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
+      dismiss_bookmarks_tooltip: "Markera alla olästa bokmärkespåminnelser som lästa"
+      dismiss_messages_tooltip: "Markera alla olästa personliga meddelanden som lästa"
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
         Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
@@ -2058,6 +2061,7 @@ sv:
       abandon: "stäng skaparen och kasta utkast"
       enter_fullscreen: "skaparen i helskärm"
       exit_fullscreen: "avsluta helskärmsläge för skaparen"
+      exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
       show_toolbar: "visa redigerarens verktygsfält"
       hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
@@ -2162,6 +2166,12 @@ sv:
           default:
             one: "Är du säker? Du har %{count} viktig avisering."
             other: "Är du säker? Du har %{count} viktiga aviseringar."
+          bookmarks:
+            one: "Är du säker? Du har %{count} oläst bokmärkespåminnelse."
+            other: "Är du säker? Du har %{count} olästa bokmärkespåminnelser."
+          messages:
+            one: "Är du säker? Du har %{count} oläst personligy meddelande."
+            other: "Är du säker? Du har %{count} olästa personliga meddelanden."
         dismiss: "Avfärda"
         cancel: "Avbryt"
       group_message_summary:
@@ -2344,6 +2354,8 @@ sv:
       generic_no_items: "Det finns inga objekt i den här listan."
       sr_menu_tabs: "Menyflikar"
       view_all_notifications: "visa alla aviseringar"
+      view_all_bookmarks: "visa alla bokmärken"
+      view_all_messages: "visa alla personliga meddelanden"
       reviewable:
         view_all: "visa alla granskningsobjekt"
         queue: "Kö"
@@ -3806,6 +3818,10 @@ sv:
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
+    welcome_topic_banner:
+      title: "Skapa ditt välkomstämne"
+      description: 'Ditt välkomstämne är det första som nykomlingar läser. Tänk på det som din "snabbpresentation" eller "målbeskrivning" i ett enda stycke.'
+      button_title: "Börja redigera"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4363,6 +4379,8 @@ sv:
           import_web_advanced: "Avancerat..."
           import_file_tip: ".tar.gz-, .zip- eller .dcstyle.json-fil innehåller tema"
           is_private: "Temat är i en privat git-lagringsplats"
+          finish_install: "Slutför temainstallationen"
+          last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
           public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
           public_key_note: "När du har angett en giltig privat lagringsplats URL ovan genereras det en SSH-nyckel som visas här."
@@ -4373,6 +4391,8 @@ sv:
           install_git_repo: "Från en git-lagringsplats"
           install_create: "Skapa ny"
           duplicate_remote_theme: "Temakomponenten \"%{name}\" har redan installerats. Är du säker på att du vill installera ytterligare en kopia?"
+          force_install: "Temat kan inte installeras eftersom Git-arkivet är otillgängligt. Är du säker på att du vill fortsätta installera det?"
+          create_placeholder: "Skapa platshållare"
           about_theme: "Om"
           license: "Licens"
           version: "Version:"
