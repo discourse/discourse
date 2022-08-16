@@ -103,6 +103,10 @@ he:
           fields:
             joined_group:
               label: קבוצה במעקב
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: קבוצה במעקב
         user_promoted:
           fields:
             restricted_group:
@@ -149,6 +153,9 @@ he:
             restricted_category:
               label: קטגוריה
               description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
+            restricted_tags:
+              label: תגיות
+              description: רשות, מאפשר להגביל הפעלות לכל אחת מהתגיות האלו
       scriptables:
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
@@ -220,6 +227,10 @@ he:
             user:
               label: משתמש
               description: "המשתמש שסגר את הנושא (ברירת מחדל: מערכת)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: 'שם שדה מותאם אישית של משתמש'
       models:
         script:
           name:

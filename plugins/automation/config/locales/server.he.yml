@@ -71,3 +71,5 @@ he:
         summary: בדיקת מסמך
         details: "ביצוע בדיקה על המסמך: "
         button_text: בוצע
+      add_user_to_group_through_custom_field:
+        title: "הוספת משתמש לקבוצה באמצעות שדה מותאם אישית של משתמש"

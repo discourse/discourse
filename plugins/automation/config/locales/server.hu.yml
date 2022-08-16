@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  discourse_automation:
+    triggerables:
+      user_removed_from_group:
+        title: Felhasználó eltávolítva a csoportból
+        description: Amikor egy felhasználót eltávolítanak a megadott csoportból, az automatizálás aktiválódik

@@ -88,6 +88,8 @@ fa_IR:
           fields:
             restricted_category:
               label: دسته‌بندی
+            restricted_tags:
+              label: برچسب‌ها
       scriptables:
         user_global_notice:
           fields:

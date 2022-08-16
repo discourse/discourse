@@ -17,4 +17,4 @@ fa_IR:
       append_last_checked_by:
         text: "آخرین بررسی توسط @%{username} %{date_time}"
       add_user_to_group_through_custom_field:
-        title: 'افزودن کاربر به گروه از طریق فیلد سفارشی کاربر'
+        title: "افزودن کاربر به گروه از طریق فیلد سفارشی کاربر"

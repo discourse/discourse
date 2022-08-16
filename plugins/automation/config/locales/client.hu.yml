@@ -13,13 +13,13 @@ hu:
       select_script: Válasszon egy parancsfájlt
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
-      confirm_automation_trigger: Ez a művelet kiváltja az automatizálást, folytatja?
+      confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
       no_automation_yet: Még nem hozott létre automatizálást.
       edit_automation:
         trigger_section:
           forced: Ez az aktiválót a parancsfájl kényszeríti ki.
-          next_pending_automation: "A következő automatizálás ekkor indul: %{date}"
-          trigger_now: "Kiváltás most"
+          next_pending_automation: "A következő automatizálás ekkor aktiválódik: %{date}"
+          trigger_now: "Aktiválás most"
           title: Mikor/mi…
         fields_section:
           title: Parancsfájl beállításai
@@ -53,6 +53,13 @@ hu:
         text:
           label: Szöveg
       triggerables:
+        not_found: Nem találta a(z) `%{trigger}` kiváltóját a(z) `%{automation}` automatizáláshoz, győződjön meg róla, hogy a kapcsolódó bővítmény telepítve van-e.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Jelvény
+            only_first_grant:
+              label: Csak az első megadás esetén
         stalled_topic:
           durations:
             PT1H: "Egy óra"
@@ -71,6 +78,15 @@ hu:
             stalled_after:
               label: Ennyi idő után elakadt
         recurring:
+          every: Minden
+          frequencies:
+            minute: percben
+            hour: órában
+            day: napon
+            weekday: hétköznapon
+            week: héten
+            month: hónapban
+            year: évben
           fields:
             recurrence:
               label: Ismétlődés
@@ -79,15 +95,114 @@ hu:
         stalled_wiki:
           durations:
             PT1H: "Egy óra"
+            P1D: "Egy nap"
+            P1W: "Egy hét"
+            P2W: "Két hét"
+            P1M: "Egy hónap"
+            P3M: "Három hónap"
+            P6M: "Hat hónap"
+            P1Y: "Egy év"
+          fields:
+            restricted_category:
+              label: Kategóriára korlátozva
+            stalled_after:
+              label: Aktiváló késleltetése
+              description: Meghatározza a késleltetést az utolsó wikiszerkesztés és az automatizálás aktiválása között.
+            retriggered_after:
+              label: Késleltetés újraaktiválása
+              description: Meghatározza az első és a következő aktiválás közötti késleltetést, ha a wiki még mindig nem lett szerkesztve az első aktiválás után
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Nyomon követett csoport
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Nyomon követett csoport
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Csoportra korlátozás
+            trust_level_transition:
+              label: Bizalmi szint átmenete
+          trust_levels:
+            ALL: "Összes bizalmi szintnél"
+            TL01: "BSZ0 → BSZ1"
+            TL12: "BSZ1 → BSZ2"
+            TL23: "BSZ2 → BSZ3"
+            TL34: "BSZ3 → BSZ4"
+        topic:
+          fields:
+            restricted_topic:
+              label: Témaazonosító
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Érvényes bizalmi szintek
+            restricted_category:
+              label: Kategória
         pm_created:
           fields:
             restricted_user:
               label: Felhasználó
+              description: Lehetővé teszi az aktiváló végrehajtásának erre a felhasználóra korlátozását
+            ignore_staff:
+              label: Stáb figyelmen kívül hagyása
+              description: Az aktiválás kihagyása, ha a küldő stábtag
+            valid_trust_levels:
+              label: Érvényes bizalmi szintek
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategória
+            restricted_tags:
+              label: Címkék
       scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook webcíme
         auto_responder:
           fields:
             word_answer_list:
+              label: Szó/válasz párok listája
               description: "Kulcs/érték csoportok listáját határoz meg, ahol a `kulcs` a keresett kifejezés, az `érték` pedig a válasz szövege. Vegye figyelembe, hogy az `érték` elfogadja a `%%KEY%%` helykitöltőt, amelybe a `kulcs` értéke lesz behelyettesítve a válaszban. Vegye figyelembe, hogy a `kulcs` reguláris kifejezésként lesz kiértékelve, így figyelembe kell vennie a speciális karaktereket, például ha a `.` karakterre gondol, akkor ezt kell megadnia: `\\.`."
+            answering_user:
+              label: Válaszoló felhasználó
+              description: Alapértelmezetten a rendszerfelhasználó
+        user_global_notice:
+          fields:
+            level:
+              label: Szint
+            notice:
+              label: Értesítés
+              description: Elfogad HTML-t, ne töltse ki nem megbízható bevitellel!
+          levels:
+            warning: Figyelmeztetés
+            info: Információ
+            success: Siker
+            error: Hiba
+        suspend_user_by_email:
+          fields:
+            reason:
+              label: Ok (alapértelmezett)
+            actor:
+              label: Felhasználó
+              description: "A felfüggesztésért felelős felhasználó (alapértelmezett: rendszer)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Témaazonosító
+            pinned_globally:
+              label: Globálisan kitűzve
+            pinned_until:
+              label: Kitűzve eddig
+        banner_topic:
+          fields:
+            topic_id:
+              label: Témaazonosító
+            user:
+              label: Felhasználó
         close_topic:
           fields:
             user:
