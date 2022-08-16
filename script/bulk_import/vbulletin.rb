@@ -272,12 +272,12 @@ class BulkImport::VBulletin < BulkImport::Base
             select distinct forumid from (
               select forumid, title, count(title)
               from forum
-              group by title
+              group by replace(replace(title, ':', ''), '&', '')
               having count(title) > 1
             ) as duplicated_forum_ids
           )
           then
-            -- deduplicate by fudging the title; categories will need to be manually merged later
+            -- deduplicate by fudging the title; categories will needed to be manually merged later
             concat(title, '_DUPLICATE_', forumid)
           else
             title
