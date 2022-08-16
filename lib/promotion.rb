@@ -121,7 +121,7 @@ class Promotion
   end
 
   # Figure out what a user's trust level should be from scratch
-  def self.recalculate(user, performed_by = nil)
+  def self.recalculate(user, performed_by = nil, set_previous_trust_level: false)
     # First, use the manual locked level
     unless user.manual_locked_trust_level.nil?
       return user.update!(
@@ -129,13 +129,17 @@ class Promotion
       )
     end
 
-    # Then consider the group locked level
-    user_group_granted_trust_level = user.group_granted_trust_level
+    # Then consider the group locked level (or the previous trust level)
+    granted_trust_level = user.group_granted_trust_level
 
-    if user_group_granted_trust_level.present?
-      return user.update(
-        trust_level: user_group_granted_trust_level
-      )
+    if set_previous_trust_level && previous_trust_level = find_previous_trust_level(user)
+      if !granted_trust_level || previous_trust_level > granted_trust_level
+        granted_trust_level = previous_trust_level
+      end
+    end
+
+    if granted_trust_level.present?
+      return user.update(trust_level: granted_trust_level)
     end
 
     user.update_column(:trust_level, TrustLevel[0])
@@ -147,5 +151,21 @@ class Promotion
     if user.trust_level == 3 && Promotion.tl3_lost?(user)
       user.change_trust_level!(2, log_action_for: performed_by || Discourse.system_user)
     end
+  end
+
+  private
+
+  def self.find_previous_trust_level(user)
+    user_history = UserHistory
+      .where(action: UserHistory.actions[:change_trust_level])
+      .where(target_user_id: user.id)
+      .order(created_at: :desc)
+      .last
+    return if !user_history
+
+    match = user_history.details.match(/new trust level: (\d+)/)
+    return if !match
+
+    match[1].to_i
   end
 end
