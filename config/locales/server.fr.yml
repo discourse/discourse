@@ -4411,9 +4411,9 @@ fr:
       message: "<p>Nous avons renvoyé le courriel d'activation à <b>%{email}</b>"
   safe_mode:
     title: "Activer le mode sans échec"
-    description: "Le mode sans échec vous permet de tester votre site sans charger les extensions ou personnalisations."
-    no_customizations: "Désactiver le thème actuel"
-    only_official: "Désactiver les extensions non officielles"
+    description: "Le mode sans échec vous permet de tester votre site sans charger d'extension ni de thème."
+    no_themes: "Désactiver les thèmes et leurs composants"
+    no_unofficial_plugins: "Désactiver les extensions non officielles"
     no_plugins: "Désactiver toutes les extensions"
     enter: "Activer le mode sans échec"
     must_select: "Vous devez sélectionner au moins une option pour activer le mode sans échec."

@@ -138,7 +138,6 @@ ko:
       forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "글 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
-    wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a>로 시작합니다 ✨"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화 되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     software_update_prompt:
       message: "사이트를 업데이트했습니다. <span>새로 고침</span>하세요. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
@@ -146,6 +145,8 @@ ko:
     bootstrap_mode_enabled:
       other: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 회원 레벨 1이 부여되고 이메일로 매일 요약 전송이 활성화됩니다. %{count}명의 사용자가 가입하면 자동으로 해제됩니다."
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
+    bootstrap_invite_button_title: "초대장 보내기"
+    bootstrap_wizard_link_title: "설정 마법사 완료"
     themes:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
@@ -970,6 +971,7 @@ ko:
       dismiss: "읽음"
       dismiss_notifications: "모두 읽음"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
+      dismiss_messages_tooltip: "읽지 않은 모든 개인 메시지 알림들을 읽음으로 표시"
       no_messages_title: "메시지가 없습니다."
       no_messages_body: >
         다른 사람과 직접 개인적인 대화를 해야합니까? 아바타를 선택하고 %{icon} 메시지 버튼을 클릭하여 메시지를 보냅니다.<br><br>도움이 필요하면 <a href='%{aboutUrl}'>관리자에게 메시지</a>로 문의하세요.
@@ -1901,6 +1903,7 @@ ko:
       abandon: "글쓰기 화면을 닫고 초안을 삭제합니다."
       enter_fullscreen: "전체 화면으로 글쓰기"
       exit_fullscreen: "전체 화면 글쓰기 종료"
+      exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
       show_toolbar: "글 입력기 도구 모음 표시"
       hide_toolbar: "글 입력기 도구 모음 숨기기"
       modal_ok: "확인"
@@ -1994,6 +1997,8 @@ ko:
         body:
           default:
             other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
+          messages:
+            other: "확실한가요? 읽지 않은 개인 메시지가 %{count}개 있습니다."
         dismiss: "읽음"
         cancel: "취소"
       group_message_summary:
@@ -2168,6 +2173,7 @@ ko:
     current_user: "사용자 페이지로 이동"
     view_all: "모두보기 %{tab}"
     user_menu:
+      view_all_messages: "모든 개인 메시지 보기"
       reviewable:
         view_all: "모든 리뷰 항목 보기"
         queue: "대기열"

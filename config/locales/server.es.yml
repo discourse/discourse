@@ -4435,9 +4435,7 @@ es:
       message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"
   safe_mode:
     title: "Activar modo seguro"
-    description: "El modo seguro permite probar tu página sin cargar plugins o customizaciones."
-    no_customizations: "Desactivar tema actual"
-    only_official: "Desactivar plugins no oficiales"
+    no_unofficial_plugins: "Desactivar plugins no oficiales"
     no_plugins: "Desactivar todos los plugins"
     enter: "Activar modo seguro"
     must_select: "Debes escoger al menos una opción para entrar en el modo seguro."

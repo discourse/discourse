@@ -4155,9 +4155,7 @@ fi:
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
-    description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja sivuston mukautuksia."
-    no_customizations: "Poista nykyinen teema käytöstä"
-    only_official: "Poista epäviralliset lisäosat käytöstä"
+    no_unofficial_plugins: "Poista epäviralliset lisäosat käytöstä"
     no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."

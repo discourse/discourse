@@ -1015,7 +1015,7 @@ et:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
     title: "Sisene turvalisse režiimi"
-    only_official: "Keela kõik mitteametlikud pluginad"
+    no_unofficial_plugins: "Keela kõik mitteametlikud pluginad"
     no_plugins: "Keela kõik pluginad"
     enter: "Sisene turvalisse režiimi"
   wizard:

@@ -2173,8 +2173,7 @@ pt:
       message: "<p>Reenviamos o email de ativação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar em modo de segurança"
-    description: "O modo de segurança permite-lhe testar o seu sítio sem carregar plugins ou alterações."
-    only_official: "Desativar plugins não-oficiais"
+    no_unofficial_plugins: "Desativar plugins não-oficiais"
     no_plugins: "Desativar todos os plugins"
     enter: "Entrar em Modo de Segurança"
   wizard:

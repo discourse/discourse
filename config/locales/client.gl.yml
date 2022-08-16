@@ -156,7 +156,6 @@ gl:
         disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
       forwarded: "reenviou a mensaxe de correo anterior"
     topic_admin_menu: "accións do tema"
-    wizard_required: "Este é o novo Discourse! Pode comezar co <a href='%{url}' data-auto-route='true'>asistente de configuración</a> ✨"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
@@ -164,6 +163,7 @@ gl:
       one: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán o nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se una %{count} usuario."
       other: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se unan %{count} usuarios."
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
+    bootstrap_invite_button_title: "Enviar convites"
     themes:
       default_description: "Predeterminado"
     s3:

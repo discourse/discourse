@@ -235,7 +235,6 @@ pl_PL:
       forwarded: "przekazano powyższy email"
     topic_admin_menu: "akcje tematu"
     skip_to_main_content: "Przejdź do głównej zawartości"
-    wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
@@ -247,6 +246,8 @@ pl_PL:
       many: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
       other: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
     bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
+    bootstrap_invite_button_title: "Wyślij zaproszenia"
+    bootstrap_wizard_link_title: "Zakończ kreator konfiguracji"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -2533,6 +2534,8 @@ pl_PL:
       generic_no_items: "Na tej liście nie ma żadnych pozycji."
       sr_menu_tabs: "Zakładki menu"
       view_all_notifications: "zobacz wszystkie powiadomienia"
+      view_all_bookmarks: "zobacz wszystkie zakładki"
+      view_all_messages: "wyświetl wszystkie wiadomości osobiste"
       reviewable:
         queue: "Kolejka"
         deleted_user: "(usunięty użytkownik)"
@@ -3815,6 +3818,7 @@ pl_PL:
         edit: "%{shortcut} Edytuj wpis"
         delete: "%{shortcut} Usuń wpis"
         mark_muted: "%{shortcut} Wycisz temat"
+        mark_regular: "%{shortcut} Normalny (domyślny) temat"
         mark_tracking: "%{shortcut} śledź temat"
         mark_watching: "%{shortcut} Obserwuj temat"
         print: "%{shortcut} Drukuj temat"
@@ -4145,6 +4149,10 @@ pl_PL:
                 few: "%{count} szkice"
                 many: "%{count} szkice"
                 other: "%{count} szkice"
+    welcome_topic_banner:
+      title: "Stwórz swój temat powitalny"
+      description: 'Twój temat powitalny jest pierwszą rzeczą, którą przeczytają nowicjusze. Postaraj się w jednym akapicie wyrazić najważniejsze informacje, jakie chcesz przekazać nowym użytkownikom forum.'
+      button_title: "Rozpocznij edycję"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4711,6 +4719,8 @@ pl_PL:
           import_web_advanced: "Zaawansowane..."
           import_file_tip: "plik .tar.gz, .zip, lub .dcstyle.json zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
+          finish_install: "Zakończ instalację motywu"
+          last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
           public_key_note: "Po wprowadzeniu powyżej poprawnego adresu URL prywatnego repozytorium klucz SSH zostanie wygenerowany i wyświetlony tutaj."
@@ -4721,6 +4731,7 @@ pl_PL:
           install_git_repo: "Z repozytorium git"
           install_create: "Stwórz nowy"
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
+          force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
           about_theme: "O stronie"
           license: "Licencja"
           version: "Wersja:"

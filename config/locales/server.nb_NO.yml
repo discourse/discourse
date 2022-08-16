@@ -1403,7 +1403,6 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
-    description: "Sikkerhetsmodus lar deg teste nettstedet ditt uten at tillegg eller tilpasninger lastes."
   wizard:
     title: "Discourse-oppsett"
     step:

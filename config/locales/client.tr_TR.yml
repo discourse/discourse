@@ -164,7 +164,6 @@ tr_TR:
       forwarded: "yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
-    wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik durumlarla karşılaşabilirsiniz."
@@ -173,6 +172,8 @@ tr_TR:
       one: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılacaktır."
       other: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılacaktır."
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak."
+    bootstrap_invite_button_title: "Davetleri Gönder"
+    bootstrap_wizard_link_title: "Kurulum sihirbazını bitir"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir tema veya bileşende hata olduğu için siteniz çalışmayabilir."
@@ -2017,6 +2018,7 @@ tr_TR:
       abandon: "yazım alanını kapat ve taslağı sil"
       enter_fullscreen: "tam ekran yaratıcıya gir"
       exit_fullscreen: "tam ekran yaratıcıdan çık"
+      exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
       show_toolbar: "editör araç çubuğunu göster"
       hide_toolbar: "editör araç çubuğunu gizle"
       modal_ok: "Tamam"
@@ -3741,6 +3743,10 @@ tr_TR:
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"
+    welcome_topic_banner:
+      title: "Hoş Geldiniz konulu gönderinizi oluşturun"
+      description: 'Hoş geldiniz konulu gönderiniz, yeni katılanların okuyacağı ilk şeydir. Bunu bir paragraf “kısa bir sunum” veya “misyon anlatımınız” olarak düşünün'
+      button_title: "Düzenlemeye Başla"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:

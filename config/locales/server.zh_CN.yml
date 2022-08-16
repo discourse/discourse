@@ -4349,9 +4349,7 @@ zh_CN:
       message: "<p>我们已将激活电子邮件重新发送至 <b>%{email}</b>"
   safe_mode:
     title: "进入安全模式"
-    description: "安全模式允许您在不加载插件或站点自定义的情况下测试您的站点。"
-    no_customizations: "禁用当前主题"
-    only_official: "禁用非官方插件"
+    no_unofficial_plugins: "禁用非官方插件"
     no_plugins: "禁用所有插件"
     enter: "进入安全模式"
     must_select: "您必须至少选择一个选项才能进入安全模式。"

@@ -151,7 +151,6 @@ zh_CN:
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
     skip_to_main_content: "跳转到主要内容"
-    wizard_required: "欢迎来到全新的 Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧 ✨"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
@@ -160,6 +159,8 @@ zh_CN:
     bootstrap_mode_enabled:
       other: "为了更轻松地启动您的新站点，您现在处于引导模式。所有新用户都将被授予信任级别 1，并且已启用每日摘要电子邮件。引导模式会在达到 %{count} 个用户时自动关闭。"
     bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
+    bootstrap_invite_button_title: "发送邀请"
+    bootstrap_wizard_link_title: "完成设置向导"
     themes:
       default_description: "默认"
       broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
@@ -996,6 +997,7 @@ zh_CN:
       dismiss_notifications: "全部关闭"
       dismiss_notifications_tooltip: "将所有未读通知标记为已读"
       dismiss_bookmarks_tooltip: "将所有未读书签提醒标记为已读"
+      dismiss_messages_tooltip: "将所有未读的个人信息通知标记为已读"
       no_messages_title: "您没有任何消息"
       no_messages_body: >
         需要直接与某人对话而不是公开讨论？选择他的头像并点击 %{icon} 消息按钮，向他们发送消息。<br><br> 如果您需要帮助，可以<a href='%{aboutUrl}'>向管理人员发送消息</a>。
@@ -1973,6 +1975,7 @@ zh_CN:
       abandon: "关闭编辑器并舍弃草稿"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
+      exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
       show_toolbar: "显示编辑器工具栏"
       hide_toolbar: "隐藏编辑器工具栏"
       modal_ok: "确定"
@@ -2071,6 +2074,8 @@ zh_CN:
             other: "您确定吗？您有 %{count} 个重要通知。"
           bookmarks:
             other: "确定吗？您共有 %{count} 个未读书签提醒。"
+          messages:
+            other: "确定吗？你有 %{count} 条未读的个人信息。"
         dismiss: "标记为已读"
         cancel: "取消"
       group_message_summary:
@@ -2252,6 +2257,7 @@ zh_CN:
       sr_menu_tabs: "菜单选项卡"
       view_all_notifications: "查看所有通知"
       view_all_bookmarks: "查看所有书签"
+      view_all_messages: "查看所有个人消息"
       reviewable:
         view_all: "查看所有审查项目"
         queue: "队列"
@@ -2770,7 +2776,7 @@ zh_CN:
         upload: "抱歉，上传该文件时出错。请重试。"
         file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         file_size_zero: "抱歉，好像出了点问题，您要上传的文件大小是 0 字节。请再试一次。"
-        file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
+        file_too_large_humanized: "抱歉，该文件太大（最大大小为 %{max_size}）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         too_many_uploads: "抱歉，一次只能上传一个文件。"
         too_many_dragged_and_dropped_files:
           other: "抱歉，一次只能上传 %{count} 个文件。"
@@ -3638,6 +3644,10 @@ zh_CN:
               title: "我的帖子"
               draft_count:
                 other: "%{count} 草稿"
+    welcome_topic_banner:
+      title: "创建你的欢迎话题"
+      description: '你的欢迎话题是新来的人首先会读到的东西。可以把它看作是你的一段 "电梯推销 "或 "使命宣言"。'
+      button_title: "开始编辑"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4190,6 +4200,8 @@ zh_CN:
           import_web_advanced: "高级…"
           import_file_tip: "包含主题的 .tar.gz、.zip 或 .dcstyle.json 文件"
           is_private: "主题位于私有 git 仓库中"
+          finish_install: "完成主题安装"
+          last_attempt: "安装过程未完成，最后一次尝试："
           remote_branch: "分支名称（可选）"
           public_key: "授予以下公钥访问仓库的权限："
           public_key_note: "在上面输入有效的私有仓库 URL 后，将生成 SSH 密钥并在此处显示。"
@@ -4200,6 +4212,8 @@ zh_CN:
           install_git_repo: "从 git 仓库"
           install_create: "创建新主题"
           duplicate_remote_theme: "主题组件“%{name}”已安装，确定要安装另一个副本吗？"
+          force_install: "该主题无法安装，因为 Git 仓库无法访问。你确定你要继续安装它吗？"
+          create_placeholder: "创建占位符"
           about_theme: "关于"
           license: "许可证"
           version: "版本："

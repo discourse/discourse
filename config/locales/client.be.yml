@@ -76,6 +76,7 @@ be:
       topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       close: "схаваць"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
+    bootstrap_invite_button_title: "Адправіць запрашэнні"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіа)"
