@@ -2,6 +2,7 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testCleanup,
   testsInitialized,
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -11,7 +12,7 @@ import pretender, {
   resetPretender,
 } from "discourse/tests/helpers/create-pretender";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
+import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
@@ -217,12 +218,13 @@ export default function setupTests(config) {
     setupDataElement.remove();
   }
 
+  let app;
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
     resetThemeSettings();
 
-    const app = createApplication(config, settings);
+    app = createApplication(config, settings);
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
@@ -296,6 +298,8 @@ export default function setupTests(config) {
   });
 
   QUnit.testDone(function () {
+    testCleanup(getOwner(app), app);
+
     sinon.restore();
     resetPretender();
     clearPresenceState();

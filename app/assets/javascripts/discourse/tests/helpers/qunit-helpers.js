@@ -222,8 +222,6 @@ export function discourseModule(name, options) {
         this.siteSettings = currentSettings();
       });
 
-      hooks.afterEach(() => testCleanup(this.container));
-
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
         controller.application = {};
@@ -251,7 +249,6 @@ export function discourseModule(name, options) {
     },
     afterEach() {
       options?.afterEach?.call(this);
-      testCleanup(this.container);
     },
   });
 }
