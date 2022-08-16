@@ -4818,6 +4818,16 @@ ember-modifier@^3.2.7:
     ember-cli-typescript "^5.0.0"
     ember-compatibility-helpers "^1.2.5"
 
+ember-on-resize-modifier@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ember-on-resize-modifier/-/ember-on-resize-modifier-1.1.0.tgz#96b92cb190a552a8e240a2077037b0b71facc54e"
+  integrity sha512-Pz7muUcwzgAVGQ3ZNCdY/KMKtmvtJk5DWetuvx2MVHZCRpVzSRvkVa2tKXcp4tmz/COYUysneJxAR4tmwAyH9Q==
+  dependencies:
+    ember-cli-babel "^7.26.6"
+    ember-cli-htmlbars "^5.7.1"
+    ember-modifier "^3.2.7"
+    ember-resize-observer-service "^1.1.0"
+
 ember-qunit@^5.1.5:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-5.1.5.tgz#24a7850f052be24189ff597dfc31b923e684c444"
@@ -4832,6 +4842,14 @@ ember-qunit@^5.1.5:
     resolve-package-path "^3.1.0"
     silent-error "^1.1.1"
     validate-peer-dependencies "^1.2.0"
+
+ember-resize-observer-service@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ember-resize-observer-service/-/ember-resize-observer-service-1.1.0.tgz#62729a9de656e8eade4b3e65bd9999840dc44f65"
+  integrity sha512-/vbfxtHSyOGSNdjPKL8X3SyvUnYo3z88sJtD/bLJ0ZGhqVPaXCmtSkLyr/Fh75ckJDixRFxK4i4zEUSlrbk0PA==
+  dependencies:
+    ember-cli-babel "^7.26.6"
+    ember-cli-htmlbars "^5.7.1"
 
 ember-resolver@^8.0.3:
   version "8.0.3"
