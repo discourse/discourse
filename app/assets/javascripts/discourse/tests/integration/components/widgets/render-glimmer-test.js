@@ -66,6 +66,41 @@ class DemoComponent extends ClassicComponent {
   }
 }
 
+class ToggleDemoWidget extends Widget {
+  static actionTriggered = false;
+  tagName = "div.my-widget";
+
+  buildKey() {
+    return "abc";
+  }
+
+  defaultState() {
+    return {
+      showOne: true,
+    };
+  }
+
+  html(attrs, state) {
+    const output = [
+      this.attach("button", {
+        label: "toggle",
+        className: "toggleButton",
+        action: "toggleComponent",
+      }),
+    ];
+    if (state.showOne) {
+      output.push(new RenderGlimmer(this, "div.glimmer-wrapper", hbs`One`, {}));
+    } else {
+      output.push(new RenderGlimmer(this, "div.glimmer-wrapper", hbs`Two`, {}));
+    }
+    return output;
+  }
+
+  toggleComponent() {
+    this.state.showOne = !this.state.showOne;
+  }
+}
+
 module("Integration | Component | Widget | render-glimmer", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -73,11 +108,13 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     DemoComponent.eventLog = [];
     DemoWidget.actionTriggered = false;
     this.registry.register("widget:demo-widget", DemoWidget);
+    this.registry.register("widget:toggle-demo-widget", ToggleDemoWidget);
     this.registry.register("component:demo-component", DemoComponent);
   });
 
   hooks.afterEach(function () {
     this.registry.unregister("widget:demo-widget");
+    this.registry.unregister("widget:toggle-demo-widget");
     this.registry.unregister("component:demo-component");
   });
 
@@ -216,5 +253,14 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     // eslint-disable-next-line no-new
     new RenderGlimmer(this, "div", hbs`<TheCorrectCompiler />`);
     assert.true(true, "it doesn't raise an error for correct params");
+  });
+
+  test("multiple adjacent components", async function (assert) {
+    await render(hbs`<MountWidget @widget="toggle-demo-widget" />`);
+    assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
+    await click(".toggleButton");
+    assert.strictEqual(query("div.glimmer-wrapper").innerText, "Two");
+    await click(".toggleButton");
+    assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
   });
 });

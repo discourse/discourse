@@ -70,6 +70,16 @@ export default class RenderGlimmer {
   }
 
   update(prev) {
+    if (
+      prev.template.__id !== this.template.__id ||
+      prev.tagName !== this.tagName
+    ) {
+      // Totally different component, but the widget framework guessed it was the
+      // same widget. Destroy old component and re-init the new one.
+      prev.destroy();
+      return this.init();
+    }
+
     this._componentInfo = prev._componentInfo;
     if (prev.data !== this.data) {
       this._componentInfo.data = this.data;
