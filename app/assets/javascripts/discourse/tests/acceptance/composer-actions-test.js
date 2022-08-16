@@ -10,7 +10,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
@@ -423,53 +422,49 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   needs.site({
     can_tag_topics: true,
   });
-  needs.hooks.beforeEach(() => _clearSnapshots());
-  needs.hooks.afterEach(() => _clearSnapshots());
+
+  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("shared draft", async function (assert) {
     stubDraftResponse();
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      const composerActions = selectKit(".composer-actions");
-      const tags = selectKit(".mini-tag-chooser");
+    const composerActions = selectKit(".composer-actions");
+    const tags = selectKit(".mini-tag-chooser");
 
-      await visit("/");
-      await click("#create-topic");
+    await visit("/");
+    await click("#create-topic");
 
-      await fillIn(
-        "#reply-title",
-        "This is the new text for the title using 'quotes'"
-      );
+    await fillIn(
+      "#reply-title",
+      "This is the new text for the title using 'quotes'"
+    );
 
-      await fillIn(".d-editor-input", "This is the new text for the post");
-      await tags.expand();
-      await tags.selectRowByValue("monkey");
-      await composerActions.expand();
-      await composerActions.selectRowByValue("shared_draft");
+    await fillIn(".d-editor-input", "This is the new text for the post");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("shared_draft");
 
-      assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
 
-      assert.strictEqual(
-        query("#reply-title").value,
-        "This is the new text for the title using 'quotes'"
-      );
+    assert.strictEqual(
+      query("#reply-title").value,
+      "This is the new text for the title using 'quotes'"
+    );
 
-      assert.strictEqual(
-        query("#reply-control .btn-primary.create .d-button-label").innerText,
-        I18n.t("composer.create_shared_draft")
-      );
-      assert.strictEqual(
-        count(".composer-actions svg.d-icon-far-clipboard"),
-        1,
-        "shared draft icon is visible"
-      );
+    assert.strictEqual(
+      query("#reply-control .btn-primary.create .d-button-label").innerText,
+      I18n.t("composer.create_shared_draft")
+    );
+    assert.strictEqual(
+      count(".composer-actions svg.d-icon-far-clipboard"),
+      1,
+      "shared draft icon is visible"
+    );
 
-      assert.strictEqual(count("#reply-control.composing-shared-draft"), 1);
-      await click(".modal-footer .btn.btn-default");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    assert.strictEqual(count("#reply-control.composing-shared-draft"), 1);
+    await click(".modal-footer .btn.btn-default");
   });
 
   test("reply_as_new_topic with new_topic draft", async function (assert) {
