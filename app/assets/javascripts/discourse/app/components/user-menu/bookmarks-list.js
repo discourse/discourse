@@ -3,6 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -29,10 +31,6 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return "user-menu-bookmarks-tab";
   }
 
-  get itemComponent() {
-    return "user-menu/bookmark-notification-item";
-  }
-
   get emptyStateComponent() {
     return "user-menu/bookmarks-list-empty-state";
   }
@@ -50,10 +48,22 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return ajax(`/u/${this.currentUser.username}/user-menu-bookmarks`).then(
       (data) => {
         const content = [];
-        data.notifications.forEach((notification) => {
-          content.push(Notification.create(notification));
+        data.notifications.forEach((rawNotification) => {
+          const notification = Notification.create(rawNotification);
+          content.push(
+            new UserMenuNotificationItem({
+              notification,
+              currentUser: this.currentUser,
+              siteSettings: this.siteSettings,
+              site: this.site,
+            })
+          );
         });
-        content.push(...data.bookmarks);
+        content.push(
+          ...data.bookmarks.map((bookmark) => {
+            return new UserMenuBookmarkItem({ bookmark });
+          })
+        );
         return content;
       }
     );

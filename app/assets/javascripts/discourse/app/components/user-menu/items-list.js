@@ -9,7 +9,7 @@ export default class UserMenuItemsList extends Component {
 
   constructor() {
     super(...arguments);
-    this._load();
+    this.#load();
   }
 
   get itemsCacheKey() {}
@@ -28,12 +28,6 @@ export default class UserMenuItemsList extends Component {
     return "user-menu/items-list-empty-state";
   }
 
-  get itemComponent() {
-    throw new Error(
-      `the itemComponent property must be implemented in ${this.constructor.name}`
-    );
-  }
-
   fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
@@ -41,15 +35,15 @@ export default class UserMenuItemsList extends Component {
   }
 
   refreshList() {
-    this._load();
+    this.#load();
   }
 
   dismissWarningModal() {
     return null;
   }
 
-  _load() {
-    const cached = this._getCachedItems();
+  #load() {
+    const cached = this.#getCachedItems();
     if (cached?.length) {
       this.items = cached;
     } else {
@@ -57,20 +51,20 @@ export default class UserMenuItemsList extends Component {
     }
     this.fetchItems()
       .then((items) => {
-        this._setCachedItems(items);
+        this.#setCachedItems(items);
         this.items = items;
       })
       .finally(() => (this.loading = false));
   }
 
-  _getCachedItems() {
+  #getCachedItems() {
     const key = this.itemsCacheKey;
     if (key) {
       return Session.currentProp(`user-menu-items:${key}`);
     }
   }
 
-  _setCachedItems(newItems) {
+  #setCachedItems(newItems) {
     const key = this.itemsCacheKey;
     if (key) {
       Session.currentProp(`user-menu-items:${key}`, newItems);
