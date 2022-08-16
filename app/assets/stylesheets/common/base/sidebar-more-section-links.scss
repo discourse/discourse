@@ -1,6 +1,4 @@
 .sidebar-more-section-links-details {
-  margin-left: 1.5em;
-
   .sidebar-more-section-links-details-summary {
     padding: 0.35em 0.5em;
     color: var(--primary-high);
@@ -39,5 +37,11 @@
 
   .sidebar-more-section-links-details-content-secondary {
     border-top: 1.5px solid var(--primary-low);
+  }
+}
+
+#main-outlet-wrapper {
+  .sidebar-more-section-links-details {
+    margin-left: 1.5em;
   }
 }
