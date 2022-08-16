@@ -7,7 +7,6 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
-import { testCleanup } from "discourse/tests/helpers/qunit-helpers";
 import { injectServiceIntoService } from "discourse/pre-initializers/inject-discourse-objects";
 
 export function setupRenderingTest(hooks) {
@@ -16,11 +15,7 @@ export function setupRenderingTest(hooks) {
   hooks.beforeEach(function () {
     if (!hooks.usingDiscourseModule) {
       this.siteSettings = currentSettings();
-
-      if (!this.registry) {
-        this.registry = this.owner.__registry__;
-      }
-
+      this.registry ||= this.owner.__registry__;
       this.container = this.owner;
     }
 
@@ -60,12 +55,6 @@ export function setupRenderingTest(hooks) {
 
     $.fn.autocomplete = function () {};
   });
-
-  if (!hooks.usingDiscourseModule) {
-    hooks.afterEach(function () {
-      testCleanup(this.container);
-    });
-  }
 }
 
 export default function (name, hooks, opts) {
