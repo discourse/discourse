@@ -108,6 +108,7 @@ export default Controller.extend({
   topic: null,
   linkLookup: null,
   showPreview: true,
+  composerHeight: null,
   forcePreview: and("site.mobileView", "showPreview"),
   whisperOrUnlistTopic: or("isWhispering", "model.unlistTopic"),
   categories: alias("site.categoriesList"),
@@ -496,6 +497,10 @@ export default Controller.extend({
       }
 
       this.set("model.composeState", Composer.OPEN);
+      document.documentElement.style.setProperty(
+        "--composer-height",
+        this.get("model.composerHeight")
+      );
       return true;
     }
 
@@ -1274,6 +1279,7 @@ export default Controller.extend({
       const defaultComposerHeight =
         this.model.action === "reply" ? "300px" : "400px";
 
+      this.set("model.composerHeight", defaultComposerHeight);
       document.documentElement.style.setProperty(
         "--composer-height",
         defaultComposerHeight
@@ -1488,6 +1494,7 @@ export default Controller.extend({
   collapse() {
     this._saveDraft();
     this.set("model.composeState", Composer.DRAFT);
+    document.documentElement.style.setProperty("--composer-height", "40px");
   },
 
   toggleFullscreen() {
