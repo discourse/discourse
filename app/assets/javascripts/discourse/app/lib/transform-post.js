@@ -255,12 +255,10 @@ export default function transformPost(
   if (likeAction) {
     postAtts.liked = likeAction.acted;
     postAtts.canToggleLike = likeAction.get("canToggle");
-    postAtts.showLike = postAtts.liked || postAtts.canToggleLike;
+    postAtts.showLike = true;
     postAtts.likeCount = likeAction.count;
-  }
-
-  if (!currentUser) {
-    postAtts.showLike = !topic.archived;
+  } else if (!currentUser) {
+    postAtts.showLike = true;
   }
 
   if (postAtts.post_number === 1) {

@@ -173,13 +173,14 @@ registerButton("like", (attrs) => {
   // this is important for accessibility.
   if (attrs.liked && !attrs.canToggleLike) {
     button.title = "post.controls.has_liked";
-    button.disabled = true;
   } else {
     button.title = attrs.liked
       ? "post.controls.undo_like"
       : "post.controls.like";
   }
-
+  if (!attrs.canToggleLike) {
+    button.disabled = true;
+  }
   return button;
 });
 
