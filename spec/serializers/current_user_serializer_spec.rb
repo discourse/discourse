@@ -270,10 +270,10 @@ RSpec.describe CurrentUserSerializer do
 
       json = serializer.as_json
 
-      expect(json[:default_sidebar_tags]).to eq(
+      expect(json[:default_sidebar_tags]).to eq([
         { name: "foo", pm_only: false },
         { name: "bar", pm_only: false }
-      )
+      ])
     end
 
     it 'does not include default when overriden' do
