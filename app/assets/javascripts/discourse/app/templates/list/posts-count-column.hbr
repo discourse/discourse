@@ -1,6 +1,6 @@
 <{{view.tagName}} class='num posts-map posts {{view.likesHeat}} topic-list-data' title='{{view.title}}'>
   <button class="btn-link posts-map badge-posts {{view.likesHeat}}" aria-label="{{view.title}}">
     {{raw-plugin-outlet name="topic-list-before-reply-count"}}
-    {{number topic.replyCount noTitle="true" ariaLabel=view.title}}
+    {{number topic.replyCount noTitle="true"}}
   </button>
 </{{view.tagName}}>
