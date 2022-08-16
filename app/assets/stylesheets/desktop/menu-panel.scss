@@ -7,3 +7,31 @@
     max-height: calc(100vh - 100px);
   }
 }
+
+// Sidebar-hamburger hybrid
+
+.hamburger-panel .revamped {
+  --d-sidebar-highlight-color: var(--highlight-medium);
+  width: var(--d-sidebar-width);
+
+  .panel-body-content {
+    width: 100%;
+    min-width: 0; // prevent content blowing out width
+  }
+
+  .sidebar-section-wrapper {
+    .sidebar-section-header-button {
+      opacity: 1;
+    }
+
+    .sidebar-section-link.active {
+      font-weight: normal;
+      color: var(--primary-high);
+      background: var(--tertiary-low);
+    }
+  }
+
+  .sidebar-footer-wrapper {
+    padding: 0.5em 0 0;
+  }
+}

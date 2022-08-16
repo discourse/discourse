@@ -1,7 +1,7 @@
 <div class="hamburger-panel">
-  <div class="hamburger-menu revamped menu-panel drop-down" data-max-width="320">
+  <div class="revamped menu-panel drop-down" data-max-width="320" {{did-insert this.triggerRenderedAppEvent}}>
     <div class="panel-body">
-      <div class="panel-body-content">
+      <div class="panel-body-contents">
         <div class="sidebar-hamburger-dropdown">
           <Sidebar::Sections @collapsableSections={{false}}/>
           <Sidebar::Footer @tagName="" />

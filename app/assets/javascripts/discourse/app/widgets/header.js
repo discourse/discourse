@@ -589,7 +589,7 @@ export default createWidget("header", {
   toggleHamburger() {
     if (
       this.siteSettings.enable_experimental_sidebar_hamburger &&
-      (this.attrs.sidebarEnabled || this.site.mobileView)
+      this.attrs.sidebarEnabled
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {

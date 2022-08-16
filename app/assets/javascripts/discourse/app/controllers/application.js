@@ -74,6 +74,11 @@ export default Controller.extend({
       return false;
     }
 
+    // Always return dropdown on mobile
+    if (this.site.mobileView) {
+      return false;
+    }
+
     return enableSidebar;
   },
 
