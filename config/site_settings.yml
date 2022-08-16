@@ -168,7 +168,7 @@ basic:
     client: true
     refresh: true
     type: list
-    list_type: compact
+    list_type: simple
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
