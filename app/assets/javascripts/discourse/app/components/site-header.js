@@ -80,14 +80,6 @@ const SiteHeaderComponent = MountWidget.extend(
       return this._isRTL() ? "user-menu" : "hamburger-panel";
     },
 
-    _leftMenuAction() {
-      return this._isRTL() ? "toggleUserMenu" : "toggleHamburger";
-    },
-
-    _rightMenuAction() {
-      return this._isRTL() ? "toggleHamburger" : "toggleUserMenu";
-    },
-
     _handlePanDone(event) {
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
