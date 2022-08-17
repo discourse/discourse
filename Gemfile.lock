@@ -328,7 +328,7 @@ GEM
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.10.0)
+    pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
