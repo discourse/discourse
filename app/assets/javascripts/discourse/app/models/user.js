@@ -320,13 +320,9 @@ const User = RestModel.extend({
       return [];
     }
 
-    if (this.siteSettings.tags_sort_alphabetically) {
-      return sidebarTags.sort((a, b) => {
-        return a.name.localeCompare(b);
-      });
-    } else {
-      return sidebarTags;
-    }
+    return sidebarTags.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
   },
 
   sidebarTagNames: mapBy("sidebarTags", "name"),

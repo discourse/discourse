@@ -7,6 +7,7 @@ import {
   exists,
   publishToMessageBus,
   query,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
@@ -43,15 +44,15 @@ acceptance("Sidebar - Tags section", function (needs) {
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
     sidebar_tags: [
-      { name: "tag1", pm_only: false },
       { name: "tag2", pm_only: false },
-      {
-        name: "tag3",
-        pm_only: false,
-      },
+      { name: "tag1", pm_only: false },
       {
         name: "tag4",
         pm_only: true,
+      },
+      {
+        name: "tag3",
+        pm_only: false,
       },
     ],
   });
@@ -123,6 +124,26 @@ acceptance("Sidebar - Tags section", function (needs) {
         "sidebar.sections.tags.click_to_get_started"
       )}`,
       "the no tags message is displayed"
+    );
+  });
+
+  test("tag section links are sorted alphabetically by tag's name", async function (assert) {
+    await visit("/");
+
+    const tagSectionLinks = queryAll(
+      ".sidebar-section-tags .sidebar-section-link"
+    );
+
+    const tagNames = [];
+
+    tagSectionLinks.each((_index, tagSectionLink) => {
+      tagNames.push(tagSectionLink.textContent.trim());
+    });
+
+    assert.deepEqual(
+      tagNames,
+      ["tag1", "tag2", "tag3", "tag4"],
+      "tag section links are displayed in the right order"
     );
   });
 
