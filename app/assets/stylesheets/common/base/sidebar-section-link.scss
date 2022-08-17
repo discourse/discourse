@@ -92,11 +92,15 @@
 
     &.icon {
       position: relative;
-      margin-right: 0.75em;
+      margin-right: 0.5em;
+
+      svg {
+        font-size: var(--font-down-1);
+      }
 
       svg.prefix-badge {
         position: absolute;
-        background-color: var(--primary-very-low);
+        background-color: transparent;
         border-radius: 50%;
         padding: 2px 2px 3px;
         color: var(--primary-high);

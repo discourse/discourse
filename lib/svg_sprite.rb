@@ -181,6 +181,7 @@ module SvgSprite
     "sign-out-alt",
     "signal",
     "sliders-h",
+    "square-full",
     "star",
     "step-backward",
     "step-forward",
