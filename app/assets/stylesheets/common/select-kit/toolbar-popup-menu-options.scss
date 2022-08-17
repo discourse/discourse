@@ -1,6 +1,10 @@
 .select-kit {
   &.dropdown-select-box {
     &.toolbar-popup-menu-options {
+      .select-kit-collection {
+        max-height: 50vh;
+      }
+
       .select-kit-body {
         box-shadow: none;
         width: 230px;
