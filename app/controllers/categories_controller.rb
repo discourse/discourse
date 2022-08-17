@@ -30,7 +30,8 @@ class CategoriesController < ApplicationController
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: include_topics(parent_category),
-      include_subcategories: include_subcategories
+      include_subcategories: include_subcategories,
+      tag: params[:tag]
     }
 
     @category_list = CategoryList.new(guardian, category_options)
