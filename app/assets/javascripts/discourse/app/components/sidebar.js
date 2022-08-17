@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 export default class Sidebar extends Component {
   @service appEvents;
   @service site;
+  @service currentUser;
 
   constructor() {
     super(...arguments);
