@@ -1202,6 +1202,7 @@ email:
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
+  maximum_recipients_per_new_group_email: 10
   auto_generated_allowlist:
     default: ""
     type: list
