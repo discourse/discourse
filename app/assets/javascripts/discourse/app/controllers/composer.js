@@ -34,14 +34,8 @@ import { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 
-function loadDraft(store, opts) {
-  let promise = Promise.resolve();
-
-  opts = opts || {};
-
-  let draft = opts.draft;
-  const draftKey = opts.draftKey;
-  const draftSequence = opts.draftSequence;
+async function loadDraft(store, opts = {}) {
+  let { draft, draftKey, draftSequence } = opts;
 
   try {
     if (draft && typeof draft === "string") {
@@ -51,29 +45,27 @@ function loadDraft(store, opts) {
     draft = null;
     Draft.clear(draftKey, draftSequence);
   }
-  if (
-    draft &&
-    ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
-  ) {
-    const composer = store.createRecord("composer");
-    const serializedFields = Composer.serializedFieldsForDraft();
 
-    let attrs = {
-      draftKey,
-      draftSequence,
-      draft: true,
-      composerState: Composer.DRAFT,
-      topic: opts.topic,
-    };
-
-    serializedFields.forEach((f) => {
-      attrs[f] = draft[f] || opts[f];
-    });
-
-    promise = promise.then(() => composer.open(attrs)).then(() => composer);
+  if (!draft?.title && !draft?.reply) {
+    return;
   }
 
-  return promise;
+  let attrs = {
+    draftKey,
+    draftSequence,
+    draft: true,
+    composerState: Composer.DRAFT,
+    topic: opts.topic,
+  };
+
+  Composer.serializedFieldsForDraft().forEach((f) => {
+    attrs[f] = draft[f] || opts[f];
+  });
+
+  const composer = store.createRecord("composer");
+  await composer.open(attrs);
+
+  return composer;
 }
 
 const _popupMenuOptionsCallbacks = [];
