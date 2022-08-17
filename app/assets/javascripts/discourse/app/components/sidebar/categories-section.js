@@ -29,7 +29,7 @@ export default class SidebarCategoriesSection extends Component {
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
-  get sidebarCategories() {
+  get categories() {
     if (!isEmpty(this.currentUser.sidebarCategories)) {
       return this.currentUser.sidebarCategories;
     }
@@ -52,7 +52,7 @@ export default class SidebarCategoriesSection extends Component {
   get sectionLinks() {
     const links = [];
 
-    for (const category of this.sidebarCategories) {
+    for (const category of this.categories) {
       links.push(
         new CategorySectionLink({
           category,

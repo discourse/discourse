@@ -32,7 +32,7 @@ export default class SidebarTagsSection extends Component {
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
-  get sidebarTags() {
+  get tags() {
     if (!isEmpty(this.currentUser.sidebarTags)) {
       return this.currentUser.sidebarTags;
     }
@@ -46,7 +46,7 @@ export default class SidebarTagsSection extends Component {
   get sectionLinks() {
     const links = [];
 
-    for (const tag of this.sidebarTags) {
+    for (const tag of this.tags) {
       if (tag.pm_only) {
         links.push(
           new PMTagSectionLink({
