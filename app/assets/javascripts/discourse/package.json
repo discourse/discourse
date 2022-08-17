@@ -51,6 +51,7 @@
     "ember-cli-deprecation-workflow": "^2.1.0",
     "ember-cli-htmlbars": "^6.1.0",
     "ember-cli-inject-live-reload": "^2.1.0",
+    "ember-cli-progress-ci": "1.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
     "ember-exam": "^7.0.1",

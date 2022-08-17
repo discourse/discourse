@@ -7,6 +7,7 @@
     "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-widget-hbs",
+    "ember-cli-progress-ci",
     "pretty-text",
     "select-kit",
     "truth-helpers",
