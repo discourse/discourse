@@ -680,7 +680,7 @@ class TopicQuery
         tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
         tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
 
-        if @options[:match_all_tags]
+        if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
           # ALL of the given tags:
           if tags_arg.length == tags.length
             tags.each_with_index do |tag, index|
