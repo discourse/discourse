@@ -5,7 +5,7 @@
   "description": "A platform for community discussion. Free, open, simple.",
   "repository": "",
   "license": "GPL-2.0-only",
-  "author": "",
+  "author": "Discourse",
   "directories": {
     "doc": "doc",
     "test": "tests"
