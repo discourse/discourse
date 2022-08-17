@@ -2,10 +2,10 @@
   "name": "discourse",
   "version": "0.0.0",
   "private": true,
-  "description": "Small description for discourse-frontend goes here",
+  "description": "A platform for community discussion. Free, open, simple.",
   "repository": "",
-  "license": "MIT",
-  "author": "",
+  "license": "GPL-2.0-only",
+  "author": "Discourse",
   "directories": {
     "doc": "doc",
     "test": "tests"

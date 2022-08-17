@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Discourse's setup wizard",
   "author": "Discourse",
-  "license": "MIT",
+  "license": "GPL-2.0-only",
   "keywords": [
     "ember-addon"
   ],
