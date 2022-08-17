@@ -337,16 +337,18 @@ const User = RestModel.extend({
       return [];
     }
 
-    return Site.current().categoriesList.filter((category) => {
-      if (
-        this.siteSettings.suppress_uncategorized_badge &&
-        category.isUncategorizedCategory
-      ) {
-        return false;
-      }
+    return Site.current()
+      .categoriesList.filter((category) => {
+        if (
+          this.siteSettings.suppress_uncategorized_badge &&
+          category.isUncategorizedCategory
+        ) {
+          return false;
+        }
 
-      return sidebarCategoryIds.includes(category.id);
-    });
+        return sidebarCategoryIds.includes(category.id);
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   },
 
   changeUsername(new_username) {

@@ -7,6 +7,7 @@ import {
   exists,
   publishToMessageBus,
   query,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -146,6 +147,32 @@ acceptance("Sidebar - Categories Section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-${uncategorizedCategory.slug}`),
       `displays the section link for ${uncategorizedCategory.slug} category`
+    );
+  });
+
+  test("category section links are sorted by category name alphabetically", async function (assert) {
+    const { category1, category2, category3 } = setupUserSidebarCategories();
+
+    category3.set("name", "aBC");
+    category2.set("name", "abc");
+    category1.set("name", "efg");
+
+    await visit("/");
+
+    const categorySectionLinks = queryAll(
+      ".sidebar-section-categories .sidebar-section-link"
+    );
+
+    const categoryNames = [];
+
+    categorySectionLinks.each((_index, categorySectionLink) => {
+      categoryNames.push(categorySectionLink.textContent.trim());
+    });
+
+    assert.deepEqual(
+      categoryNames,
+      ["abc", "aBC", "efg"],
+      "category section links are displayed in the right order"
     );
   });
 
