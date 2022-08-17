@@ -194,7 +194,7 @@ RSpec.describe Email::Processor do
     end
   end
 
-  describe 'email_reject_too_many_recipients' do
+  describe 'when group email recipients exceeds maximum_recipients_per_new_group_email site setting' do
     let(:mail) { file_from_fixtures("cc.eml", "emails").read }
 
     it 'rejects the email with the right response' do
