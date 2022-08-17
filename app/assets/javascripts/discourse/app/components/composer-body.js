@@ -107,6 +107,7 @@ export default Component.extend(KeyEnterEscape, {
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
+    this.set("composer.composerHeight", `${size}px`);
     document.documentElement.style.setProperty(
       "--composer-height",
       size ? `${size}px` : ""
