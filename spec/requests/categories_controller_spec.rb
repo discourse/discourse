@@ -140,13 +140,12 @@ RSpec.describe CategoriesController do
     end
 
     describe 'topics filtered by tag for categories when requested' do
-      let(:tag){ Fabricate(:tag, name: "test-tag")}
-      let(:tag_2){ Fabricate(:tag, name: "second-test-tag")}
-      let(:topics_with_filter_tag) {[]}
+      fab!(:tag) { Fabricate(:tag, name: "test-tag") }
+      fab!(:tag_2) { Fabricate(:tag, name: "second-test-tag") }
+      let(:topics_with_filter_tag) { [] }
 
       before do
         SiteSetting.max_category_nesting = 3
-        topics_with_filter_tag = []
       end
 
       it 'includes filtered topics for categories' do
@@ -168,7 +167,7 @@ RSpec.describe CategoriesController do
       it 'includes filtered topics for subcategories' do
         subcategory = Fabricate(:category, user: admin, parent_category: category)
 
-        2.times do |i| 
+        2.times do |i|
           topics_with_filter_tag << Fabricate(:topic, category: subcategory, tags: [tag])
           Fabricate(:topic, category: subcategory, tags: [tag_2])
         end
@@ -188,7 +187,7 @@ RSpec.describe CategoriesController do
         subcategory = Fabricate(:category, user: admin, parent_category: category)
         subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
 
-        2.times do |i| 
+        2.times do |i|
           topics_with_filter_tag << Fabricate(:topic, category: subsubcategory, tags: [tag])
           Fabricate(:topic, category: subsubcategory, tags: [tag_2])
         end

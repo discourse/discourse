@@ -64,7 +64,7 @@ class CategoryList
 
     @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id)).includes(:shared_draft, :category)
 
-    @all_topics = @all_topics.includes(:tags).where(tags: { name: @options[:tag] }) if @options[:tag].present?
+    @all_topics = @all_topics.joins(:tags).where(tags: { name: @options[:tag] }) if @options[:tag].present?
 
     if @guardian.authenticated?
       @all_topics = @all_topics
