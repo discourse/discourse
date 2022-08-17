@@ -107,40 +107,28 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     end
   end
 
-  context "with html" do
-    context "with a standard tweet" do
-      let(:tweet_content) { "I'm a sucker for pledges." }
+  context "without twitter client" do
+    let(:link) { "https://twitter.com/discourse/status/1428031057186627589" }
+    let(:html) { described_class.new(link).to_html }
 
-      include_context "with standard tweet info"
-      include_context "with engines"
-
-      it_behaves_like "an engine"
-      it_behaves_like "#to_html"
+    it "does not match the url" do
+      onebox = Onebox::Matcher.new(link, { allowed_iframe_regexes: [/.*/] }).oneboxed
+      expect(onebox).not_to be(described_class)
     end
 
-    context "with a quoted tweet" do
-      let(:tweet_content) do
-        "Thank you to everyone who came out for #MetInParis last night for helping us support @EMMAUSolidarite &amp;"
-      end
+    it "logs a warn message if rate limited" do
+      SiteSetting.twitter_consumer_key = 'twitter_consumer_key'
+      SiteSetting.twitter_consumer_secret = 'twitter_consumer_secret'
 
-      include_context "with quoted tweet info"
-      include_context "with engines"
+      stub_request(:post, "https://api.twitter.com/oauth2/token")
+        .to_return(status: 200, body: "{\"access_token\":\"token\"}", headers: {})
 
-      it_behaves_like "an engine"
-      it_behaves_like '#to_html'
-      it_behaves_like "includes quoted tweet data"
-    end
+      stub_request(:get, "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended")
+        .to_return(status: 429, body: "{}", headers: {})
 
-    context "with a featured image tweet" do
-      let(:tweet_content) do
-        "My first text message from my child! A moment that shall live on in infamy!"
-      end
+      Rails.logger.expects(:warn).with(regexp_matches(/rate limit/)).at_least_once
 
-      include_context "with featured image info"
-      include_context "with engines"
-
-      it_behaves_like "an engine"
-      it_behaves_like '#to_html'
+      expect(html).to eq('')
     end
   end
 

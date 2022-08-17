@@ -125,7 +125,13 @@ class TwitterApi
     def twitter_get(uri)
       request = Net::HTTP::Get.new(uri)
       request.add_field 'Authorization', "Bearer #{bearer_token}"
-      http(uri).request(request).body
+      response = http(uri).request(request)
+
+      if response.kind_of?(Net::HTTPTooManyRequests)
+        Rails.logger.warn("Twitter API rate limit has been reached")
+      end
+
+      response.body
     end
 
     def authorization
