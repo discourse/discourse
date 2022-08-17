@@ -138,8 +138,6 @@ acceptance("Presence - Subscribing", function (needs) {
       99
     );
 
-    await channel._presenceState._resubscribePromise;
-
     sinon.assert.calledOnce(stub);
     assert.strictEqual(
       channel.users.length,
@@ -188,8 +186,6 @@ acceptance("Presence - Subscribing", function (needs) {
       0,
       3
     );
-
-    await channel._presenceState._resubscribePromise;
 
     assert.strictEqual(
       channel.count,

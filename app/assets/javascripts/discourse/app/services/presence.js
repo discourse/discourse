@@ -1,7 +1,7 @@
 import Service from "@ember/service";
 import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { cancel, debounce, next, once, run, throttle } from "@ember/runloop";
+import { cancel, debounce, next, once, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
@@ -170,15 +170,13 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
     this.lastSeenId = initialData.last_message_id;
 
-    let callback = (data, global_id, message_id) =>
-      run(() => this._processMessage(data, global_id, message_id));
     this.presenceService.messageBus.subscribe(
       `/presence${this.name}`,
-      callback,
+      this._processMessage,
       this.lastSeenId
     );
 
-    this.set("_subscribedCallback", callback);
+    this.set("_subscribedCallback", this._processMessage);
     this.trigger("change");
   }
 
@@ -198,12 +196,10 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
   async _resubscribe() {
     this.unsubscribe();
-    // Stored at object level for tests to hook in
-    this._resubscribePromise = this.subscribe();
-    await this._resubscribePromise;
-    delete this._resubscribePromise;
+    await this.subscribe();
   }
 
+  @bind
   async _processMessage(data, global_id, message_id) {
     if (message_id !== this.lastSeenId + 1) {
       // eslint-disable-next-line no-console

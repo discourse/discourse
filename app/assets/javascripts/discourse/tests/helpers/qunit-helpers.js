@@ -15,7 +15,6 @@ import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
-import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -448,15 +447,11 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 export async function selectDate(selector, date) {
-  return new Promise((resolve) => {
-    const elem = document.querySelector(selector);
-    elem.value = date;
-    const evt = new Event("input", { bubbles: true, cancelable: false });
-    elem.dispatchEvent(evt);
-    elem.blur();
-
-    resolve();
-  });
+  const elem = document.querySelector(selector);
+  elem.value = date;
+  const evt = new Event("input", { bubbles: true, cancelable: false });
+  elem.dispatchEvent(evt);
+  elem.blur();
 }
 
 export function queryAll(selector, context) {
@@ -491,10 +486,12 @@ export function exists(selector) {
 
 export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
-  MessageBus.callbacks
-    .filterBy("channel", channelPath)
-    .forEach((c) => c.func(...args));
 
+  const promises = MessageBus.callbacks
+    .filterBy("channel", channelPath)
+    .map((callback) => callback.func(...args));
+
+  await Promise.allSettled(promises);
   await settled();
 }
 
