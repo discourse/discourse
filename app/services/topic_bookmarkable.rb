@@ -12,7 +12,16 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [:topic_users, :tags, { posts: :user }]
+    [:tags, { posts: :user }]
+  end
+
+  def self.perform_custom_preload!(topic_bookmarks, guardian)
+    topics = topic_bookmarks.map(&:bookmarkable)
+    topic_user_lookup = TopicUser.lookup_for(guardian.user, topics)
+
+    topics.each do |topic|
+      topic.user_data = topic_user_lookup[topic.id]
+    end
   end
 
   def self.list_query(user, guardian)
