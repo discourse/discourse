@@ -4,7 +4,6 @@ import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import UserBadge from "discourse/models/user-badge";
-import { all } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
@@ -43,7 +42,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   onShow() {
     this.set("loading", true);
 
-    all([
+    Promise.all([
       Badge.findAll(),
       UserBadge.findByUsername(this.get("post.username")),
     ]).then(([allBadges, userBadges]) => {

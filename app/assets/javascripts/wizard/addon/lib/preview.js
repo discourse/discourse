@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { Promise } from "rsvp";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";

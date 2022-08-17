@@ -1,5 +1,4 @@
 import { UploadPreProcessorPlugin } from "discourse/lib/uppy-plugin-base";
-import { Promise } from "rsvp";
 import { HUGE_FILE_THRESHOLD_BYTES } from "discourse/mixins/uppy-upload";
 import { bind } from "discourse-common/utils/decorators";
 

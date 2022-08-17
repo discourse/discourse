@@ -6,7 +6,6 @@ import Bookmark from "discourse/models/bookmark";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";

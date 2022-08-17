@@ -1,4 +1,3 @@
-import { Promise } from "rsvp";
 import delay from "@uppy/utils/lib/delay";
 import {
   AbortController,

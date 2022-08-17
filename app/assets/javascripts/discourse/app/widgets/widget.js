@@ -18,7 +18,6 @@ import {
 } from "discourse/widgets/hooks";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { deepMerge } from "discourse-common/lib/object";
 import { get } from "@ember/object";
 import { h } from "virtual-dom";

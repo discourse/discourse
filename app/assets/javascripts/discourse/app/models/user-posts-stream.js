@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { Promise } from "rsvp";
 import UserAction from "discourse/models/user-action";
 import { ajax } from "discourse/lib/ajax";
 import { on } from "discourse-common/utils/decorators";

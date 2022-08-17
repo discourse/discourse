@@ -2,7 +2,6 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { action } from "@ember/object";
 import loadScript from "discourse/lib/load-script";
 import { schedule } from "@ember/runloop";

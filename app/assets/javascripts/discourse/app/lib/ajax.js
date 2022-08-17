@@ -1,4 +1,3 @@
-import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";

@@ -1,6 +1,5 @@
 //  We can insert data into the PreloadStore when the document is loaded.
 // The data can be accessed once by a key, after which it is removed
-import { Promise } from "rsvp";
 
 export default {
   data: new Map(),

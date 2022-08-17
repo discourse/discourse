@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 
 const StaticPage = EmberObject.extend();

@@ -1,4 +1,3 @@
-import { Promise, all } from "rsvp";
 import {
   changeSort,
   queryParams,
@@ -66,7 +65,7 @@ export default (filterArg, params) => {
       }
 
       this._setupNavigation(category);
-      return all([
+      return Promise.all([
         this._createSubcategoryList(category),
         this._retrieveTopicList(category, transition, modelParams),
       ]);

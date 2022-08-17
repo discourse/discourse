@@ -5,7 +5,6 @@ import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { createWidget } from "discourse/widgets/widget";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";

@@ -4,7 +4,6 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ItsATrap from "@discourse/itsatrap";
-import { Promise } from "rsvp";
 import {
   TIME_SHORTCUT_TYPES,
   defaultTimeShortcuts,

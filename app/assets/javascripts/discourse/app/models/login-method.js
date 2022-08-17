@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import discourseComputed from "discourse-common/utils/decorators";

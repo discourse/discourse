@@ -21,7 +21,6 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
-import { Promise } from "rsvp";
 import sinon from "sinon";
 
 acceptance("Composer", function (needs) {

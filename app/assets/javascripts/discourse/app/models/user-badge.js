@@ -1,6 +1,5 @@
 import Badge from "discourse/models/badge";
 import EmberObject from "@ember/object";
-import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";

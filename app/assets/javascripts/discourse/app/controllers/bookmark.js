@@ -2,7 +2,6 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { Promise } from "rsvp";
 import showModal from "discourse/lib/show-modal";
 
 export function openBookmarkModal(

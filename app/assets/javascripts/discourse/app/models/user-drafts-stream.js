@@ -8,7 +8,6 @@ import {
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
-import { Promise } from "rsvp";
 
 export default RestModel.extend({
   limit: 30,

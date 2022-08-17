@@ -1,7 +1,6 @@
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import { Promise } from "rsvp";
 
 export default DiscourseRoute.extend({
   queryParams: {

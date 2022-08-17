@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { Promise } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";

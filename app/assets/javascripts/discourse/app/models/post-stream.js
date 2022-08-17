@@ -2,7 +2,6 @@ import { and, equal, not, or } from "@ember/object/computed";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";

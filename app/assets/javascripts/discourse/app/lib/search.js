@@ -1,7 +1,6 @@
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";

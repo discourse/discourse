@@ -6,7 +6,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
 
 export default Controller.extend({

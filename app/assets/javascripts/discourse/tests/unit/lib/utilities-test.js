@@ -1,4 +1,3 @@
-import { Promise } from "rsvp";
 import {
   avatarImg,
   avatarUrl,

@@ -11,7 +11,6 @@ import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import Post from "discourse/models/post";
-import { Promise } from "rsvp";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";

@@ -11,7 +11,6 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { isiPad, translateModKey } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";

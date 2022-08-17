@@ -2,7 +2,6 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
 import GroupHistory from "discourse/models/group-history";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";

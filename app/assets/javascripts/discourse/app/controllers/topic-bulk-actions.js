@@ -2,7 +2,6 @@ import { alias, empty } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
 

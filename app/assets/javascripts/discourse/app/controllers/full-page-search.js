@@ -17,7 +17,6 @@ import { isEmpty } from "@ember/utils";
 import { gt, or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
-import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import showModal from "discourse/lib/show-modal";
 import userSearch from "discourse/lib/user-search";

@@ -11,7 +11,6 @@ import { authorizedExtensions } from "discourse/lib/uploads";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
-import { Promise } from "rsvp";
 import sinon from "sinon";
 
 function pretender(server, helper) {

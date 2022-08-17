@@ -1,7 +1,6 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { next } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
-import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";

@@ -1,6 +1,5 @@
 import { module, test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
-import { Promise } from "rsvp";
 
 module("Unit | Utility | preload-store", function (hooks) {
   hooks.beforeEach(function () {

@@ -10,7 +10,6 @@ import {
 } from "discourse/lib/click-track";
 import Scrolling from "discourse/mixins/scrolling";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 
 export default Component.extend(Scrolling, {
   classNames: ["bookmark-list-wrapper"],

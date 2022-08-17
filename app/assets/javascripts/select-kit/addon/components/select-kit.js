@@ -9,7 +9,6 @@ import { isEmpty, isNone, isPresent } from "@ember/utils";
 import Component from "@ember/component";
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
-import { Promise } from "rsvp";
 import UtilsMixin from "select-kit/mixins/utils";
 import { createPopper } from "@popperjs/core";
 import deprecated from "discourse-common/lib/deprecated";

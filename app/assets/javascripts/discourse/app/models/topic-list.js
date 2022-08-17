@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";

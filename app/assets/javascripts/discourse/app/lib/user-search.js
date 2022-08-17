@@ -1,7 +1,6 @@
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { Promise } from "rsvp";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { emailValid } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";

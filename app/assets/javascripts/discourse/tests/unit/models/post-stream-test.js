@@ -2,7 +2,6 @@ import { module, test } from "qunit";
 import AppEvents from "discourse/services/app-events";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import createStore from "discourse/tests/helpers/create-store";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";

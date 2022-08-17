@@ -1,6 +1,5 @@
 import Service from "@ember/service";
 import { getOwner } from "@ember/application";
-import { Promise } from "rsvp";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
 import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
 

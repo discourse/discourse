@@ -1,7 +1,6 @@
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
 import AllowLister from "pretty-text/allow-lister";
-import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import { formatUsername } from "discourse/lib/utilities";
 import { getURLWithCDN } from "discourse-common/lib/get-url";

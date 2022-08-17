@@ -9,7 +9,6 @@ import DecoratorHelper from "discourse/widgets/decorator-helper";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
-import { Promise } from "rsvp";
 import RawHtml from "discourse/widgets/raw-html";
 import bootbox from "bootbox";
 import { dateNode } from "discourse/helpers/node";

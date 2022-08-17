@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";

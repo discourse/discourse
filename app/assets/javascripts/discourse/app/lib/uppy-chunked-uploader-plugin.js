@@ -1,7 +1,6 @@
 import { UploaderPlugin } from "discourse/lib/uppy-plugin-base";
 import { next } from "@ember/runloop";
 import getURL from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
 import UppyChunkedUpload from "discourse/lib/uppy-chunked-upload";
 import EventTracker from "@uppy/utils/lib/EventTracker";
 

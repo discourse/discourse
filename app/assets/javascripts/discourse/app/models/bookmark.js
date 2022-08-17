@@ -1,6 +1,5 @@
 import categoryFromId from "discourse-common/utils/category-macro";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import Topic from "discourse/models/topic";

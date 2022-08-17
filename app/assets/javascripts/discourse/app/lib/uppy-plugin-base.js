@@ -1,5 +1,4 @@
 import { BasePlugin } from "@uppy/core";
-import { Promise } from "rsvp";
 import { warn } from "@ember/debug";
 import { isTesting } from "discourse-common/config/environment";
 

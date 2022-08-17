@@ -1,6 +1,5 @@
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";

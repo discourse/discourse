@@ -1,6 +1,5 @@
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { module, test } from "qunit";
-import { Promise } from "rsvp";
 
 class FakeUppy {
   constructor() {

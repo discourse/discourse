@@ -1,4 +1,3 @@
-import { Promise } from "rsvp";
 import { helperContext } from "discourse-common/lib/helpers";
 
 // Chrome and Firefox use a native method to do Image -> Bitmap Array (it happens of the main thread!)

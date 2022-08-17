@@ -4,7 +4,6 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";

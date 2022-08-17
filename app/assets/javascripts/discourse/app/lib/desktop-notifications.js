@@ -1,7 +1,6 @@
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { formatUsername } from "discourse/lib/utilities";

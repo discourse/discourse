@@ -1,7 +1,6 @@
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { Promise } from "rsvp";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import { next } from "@ember/runloop";

@@ -1,6 +1,5 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { A } from "@ember/array";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { ajax } from "discourse/lib/ajax";

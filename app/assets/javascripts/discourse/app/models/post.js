@@ -3,7 +3,6 @@ import { and, equal, not, or } from "@ember/object/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Composer from "discourse/models/composer";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";

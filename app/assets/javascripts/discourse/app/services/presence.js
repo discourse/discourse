@@ -4,7 +4,6 @@ import { ajax } from "discourse/lib/ajax";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import Session from "discourse/models/session";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import userPresent, {
   onPresenceChange,

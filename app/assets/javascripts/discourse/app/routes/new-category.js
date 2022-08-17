@@ -1,6 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 
 let _newCategoryColor = "0088CC",

@@ -3,7 +3,6 @@ import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { alias, oneWay } from "@ember/object/computed";
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";

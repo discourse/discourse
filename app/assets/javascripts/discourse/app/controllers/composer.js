@@ -19,7 +19,6 @@ import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { Promise } from "rsvp";
 import bootbox from "bootbox";
 import { buildQuote } from "discourse/lib/quote";
 import deprecated from "discourse-common/lib/deprecated";

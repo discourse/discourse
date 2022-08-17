@@ -10,7 +10,6 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";

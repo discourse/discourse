@@ -1,5 +1,4 @@
 import { UploadPreProcessorPlugin } from "discourse/lib/uppy-plugin-base";
-import { Promise } from "rsvp";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class UppyMediaOptimization extends UploadPreProcessorPlugin {

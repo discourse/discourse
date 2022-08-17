@@ -1,5 +1,3 @@
-import { Promise } from "rsvp";
-
 import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind, on } from "discourse-common/utils/decorators";

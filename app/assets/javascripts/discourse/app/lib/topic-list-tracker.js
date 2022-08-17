@@ -1,4 +1,3 @@
-import { Promise } from "rsvp";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 let model, currentTopicId;

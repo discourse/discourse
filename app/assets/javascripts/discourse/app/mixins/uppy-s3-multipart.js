@@ -1,7 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import getUrl from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import AwsS3Multipart from "@uppy/aws-s3-multipart";
 const RETRY_DELAYS = [0, 1000, 3000, 5000];

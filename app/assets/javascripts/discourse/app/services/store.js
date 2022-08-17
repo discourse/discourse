@@ -1,6 +1,5 @@
 import Service from "@ember/service";
 import { set } from "@ember/object";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { ajax } from "discourse/lib/ajax";

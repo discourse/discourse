@@ -1,5 +1,3 @@
-import { Promise } from "rsvp";
-
 export function nativeShare(caps, data) {
   return new Promise((resolve, reject) => {
     if (!(caps.isIOS || caps.isAndroid || caps.isWinphone)) {

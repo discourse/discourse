@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import QuickAccessItem from "discourse/widgets/quick-access-item";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";

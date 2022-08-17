@@ -1,6 +1,5 @@
 import BadgeGrouping from "discourse/models/badge-grouping";
 import EmberObject from "@ember/object";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";

@@ -1,6 +1,5 @@
 import AdminUser from "admin/models/admin-user";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";

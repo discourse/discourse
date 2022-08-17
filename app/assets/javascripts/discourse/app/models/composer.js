@@ -12,7 +12,6 @@ import {
 } from "discourse/lib/utilities";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";

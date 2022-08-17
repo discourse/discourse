@@ -1,6 +1,5 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { run } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
