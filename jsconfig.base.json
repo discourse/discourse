@@ -5,6 +5,8 @@
     "experimentalDecorators": true,
   },
   "exclude": [
-    "**/node_modules"
+    ".git",
+    "**/node_modules",
+    "**/dist",
   ],
 }
