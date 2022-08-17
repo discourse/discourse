@@ -143,9 +143,11 @@ module.exports = function (defaults) {
       destDir: "assets/highlightjs",
     }),
     concat(mergeTrees([app.options.adminTree]), {
+      inputFiles: ["**/*.js"],
       outputFile: `assets/admin.js`,
     }),
     concat(mergeTrees([app.options.wizardTree]), {
+      inputFiles: ["**/*.js"],
       outputFile: `assets/wizard.js`,
     }),
     prettyTextEngine(vendorJs, "discourse-markdown"),
