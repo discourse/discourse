@@ -427,7 +427,7 @@ RSpec.describe TopicQuery do
         expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: true).list_latest.topics.map(&:id)).to eq([tagged_topic3.id])
       end
 
-      it "can return topics with tag intersections using truthy values" do
+      it "can return topics with tag intersections using truthy/falsey values" do
         expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: "false").list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
       end
 
