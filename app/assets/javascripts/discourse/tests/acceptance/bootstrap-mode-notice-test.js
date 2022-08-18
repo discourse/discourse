@@ -1,6 +1,6 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { set } from "@ember/object";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
@@ -37,9 +37,10 @@ acceptance("Bootstrap Mode Notice", function (needs) {
     );
 
     set(this.siteSettings, "bootstrap_mode_enabled", false);
+    await settled();
     assert.ok(
       !exists(".bootstrap-mode-notice"),
-      "removes the bootstrap mode notice when bootstrap mode is disabled"
+      "removes the notice when bootstrap mode is disabled"
     );
   });
 });
