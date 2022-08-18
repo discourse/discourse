@@ -82,12 +82,11 @@ acceptance(
 
     test("clicking on section header link", async function (assert) {
       await visit("/");
-      await click(".sidebar-section-messages .sidebar-section-header-link");
+      await click(".sidebar-section-messages .sidebar-section-header");
 
-      assert.strictEqual(
-        currentURL(),
-        `/u/eviltrout/messages`,
-        "it should transition to the user's messages"
+      assert.notOk(
+        exists(".sidebar-section-messages .sidebar-section-content"),
+        "hides the content of the section"
       );
     });
 

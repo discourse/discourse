@@ -2043,6 +2043,7 @@ en:
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
+    maximum_recipients_per_new_group_email: "Block incoming emails with too many recipients."
     auto_generated_allowlist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
@@ -3356,6 +3357,16 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         You replied to a Summary email, which is not accepted.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
+
+    email_reject_too_many_recipients:
+      title: "Email Reject Too Many Recipients"
+      subject_template: "[%{email_prefix}] Email issue -- Too Many Recipients"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You attempted to email more than %{max_recipients_count} people and our system automatically tagged your email as spam.
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 

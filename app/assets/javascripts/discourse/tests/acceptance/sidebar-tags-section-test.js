@@ -87,17 +87,6 @@ acceptance("Sidebar - Tags section", function (needs) {
     });
   });
 
-  test("clicking on section header link", async function (assert) {
-    await visit("/");
-    await click(".sidebar-section-tags .sidebar-section-header-link");
-
-    assert.strictEqual(
-      currentURL(),
-      "/tags",
-      "it should transition to the tags page"
-    );
-  });
-
   test("clicking on section header button", async function (assert) {
     await visit("/");
     await click(".sidebar-section-tags .sidebar-section-header-button");

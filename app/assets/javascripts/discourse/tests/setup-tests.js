@@ -13,7 +13,12 @@ import pretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setApplication, setResolver } from "@ember/test-helpers";
+import {
+  getSettledState,
+  isSettled,
+  setApplication,
+  setResolver,
+} from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
 import MessageBus from "message-bus-client";
@@ -144,6 +149,23 @@ function setupToolbar() {
     id: "qunit_single_plugin",
     label: "Plugin",
     value: Array.from(pluginNames),
+  });
+
+  // Abort tests when the qunit controls are clicked
+  document.querySelector("#qunit").addEventListener("click", ({ target }) => {
+    if (!target.closest("#qunit-testrunner-toolbar")) {
+      // Outside toolbar, carry on
+      return;
+    }
+
+    if (target.closest("label[for=qunit-urlconfig-hidepassed]")) {
+      // This one can be toggled during tests, carry on
+      return;
+    }
+
+    if (["INPUT", "SELECT", "LABEL"].includes(target.tagName)) {
+      document.querySelector("#qunit-abort-tests-button")?.click();
+    }
   });
 }
 
@@ -372,6 +394,7 @@ export default function setupTests(config) {
 
   setupToolbar();
   reportMemoryUsageAfterTests();
+  patchFailedAssertion();
 }
 
 function getUrlParameter(name) {
@@ -399,4 +422,20 @@ function replaceUrlParameter(name, value) {
       formElement.value = value;
     }
   });
+}
+
+function patchFailedAssertion() {
+  const oldPushResult = QUnit.assert.pushResult;
+
+  QUnit.assert.pushResult = function (resultInfo) {
+    if (!resultInfo.result && !isSettled()) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
+        getSettledState()
+      );
+    }
+
+    oldPushResult.call(this, resultInfo);
+  };
 }

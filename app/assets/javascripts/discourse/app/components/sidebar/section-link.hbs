@@ -51,21 +51,21 @@
           {{/if}}
         </span>
       {{/if}}
-    </Sidebar::SectionLinkTo>
 
-    {{#if @hoverValue}}
-      <span class="sidebar-section-link-hover">
-        <button
-          type="button"
-          title={{@hoverTitle}}
-          class="sidebar-section-hover-button"
-          {{on "click" @hoverAction}}
-          >
-          {{#if (eq @hoverType "icon")}}
-            {{d-icon @hoverValue class="hover-icon"}}
-          {{/if}}
-        </button>
-      </span>
-    {{/if}}
+      {{#if @hoverValue}}
+        <span class="sidebar-section-link-hover">
+          <button
+            type="button"
+            title={{@hoverTitle}}
+            class="sidebar-section-hover-button"
+            {{on "click" @hoverAction}}
+            >
+            {{#if (eq @hoverType "icon")}}
+              {{d-icon @hoverValue class="hover-icon"}}
+            {{/if}}
+          </button>
+        </span>
+      {{/if}}
+    </Sidebar::SectionLinkTo>
   {{/if}}
 </div>

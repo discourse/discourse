@@ -591,6 +591,17 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             ))
           end
 
+          it 'should ignore extra whitespace proceeding the mention' do
+            post.update!(raw: '@discobot   roll 2d1')
+            described_class.new(:reply, user, post_id: post.id).select
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(
+              I18n.t("discourse_narrative_bot.dice.results",
+              results: '1, 1'
+            ))
+          end
+
           context 'when dice roll is requested incorrectly' do
             it 'should create the right reply' do
               post.update!(raw: 'roll 2d1 @discobot')

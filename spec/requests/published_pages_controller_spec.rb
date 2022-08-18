@@ -4,6 +4,7 @@ RSpec.describe PublishedPagesController do
   fab!(:published_page) { Fabricate(:published_page) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
 
   context "when enabled" do
     before do
@@ -39,6 +40,14 @@ RSpec.describe PublishedPagesController do
     end
 
     describe "#show" do
+
+      it 'records a view' do
+        sign_in(user2)
+        expect do
+          get published_page.path
+        end.to change(TopicViewItem, :count).by(1)
+      end
+
       it "returns 404 for a missing article" do
         get "/pub/no-article-here-no-thx"
         expect(response.status).to eq(404)

@@ -3,16 +3,18 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {
   actions: {
-    destroyDraft() {
-      this.onDestroyDraft();
+    async destroyDraft() {
+      await this.onDestroyDraft();
       this.send("closeModal");
     },
-    saveDraftAndClose() {
-      this.onSaveDraft();
+
+    async saveDraftAndClose() {
+      await this.onSaveDraft();
       this.send("closeModal");
     },
-    dismissModal() {
-      this.onDismissModal();
+
+    async dismissModal() {
+      await this.onDismissModal();
       this.send("closeModal");
     },
   },

@@ -67,6 +67,7 @@ module Email
                          when Email::Receiver::OldDestinationError         then :email_reject_old_destination
                          when Email::Receiver::ReplyNotAllowedError        then :email_reject_reply_not_allowed
                          when Email::Receiver::ReplyToDigestError          then :email_reject_reply_to_digest
+                         when Email::Receiver::TooManyRecipientsError      then :email_reject_too_many_recipients
                          else                                                   :email_reject_unrecognized_error
       end
 
@@ -94,6 +95,11 @@ module Email
       if message_template == :email_reject_old_destination
         template_args[:short_url] = e.message
         template_args[:number_of_days] = SiteSetting.disallow_reply_by_email_after_days
+      end
+
+      if message_template == :email_reject_too_many_recipients
+        template_args[:recipients_count] = e.recipients_count
+        template_args[:max_recipients_count] = SiteSetting.maximum_recipients_per_new_group_email
       end
 
       if message_template
