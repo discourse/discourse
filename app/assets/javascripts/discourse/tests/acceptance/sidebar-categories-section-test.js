@@ -96,12 +96,11 @@ acceptance("Sidebar - Categories Section", function (needs) {
 
   test("clicking on section header link", async function (assert) {
     await visit("/t/280");
-    await click(".sidebar-section-categories .sidebar-section-header-link");
+    await click(".sidebar-section-categories .sidebar-section-header");
 
-    assert.strictEqual(
-      currentURL(),
-      "/categories",
-      "it should transition to the categories page"
+    assert.notOk(
+      exists(".sidebar-section-categories .sidebar-section-content"),
+      "hides the content of the section"
     );
   });
 

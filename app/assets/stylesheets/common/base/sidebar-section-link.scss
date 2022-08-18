@@ -7,22 +7,18 @@
     display: inline-flex;
     width: 100%;
     align-items: center;
-    padding: 0.35em 0.5em;
     color: var(--primary-high);
-    font-size: var(--font-down-1);
     transition: background-color 0.25s;
 
     &:focus,
     &:hover {
       background: var(--d-sidebar-highlight-color);
-      .sidebar-section-link-prefix.icon svg.prefix-badge {
-        background: var(--d-sidebar-highlight-color);
-      }
     }
 
     &.active {
       color: var(--primary);
       font-weight: bold;
+      background: var(--d-sidebar-highlight-color);
     }
 
     .sidebar-section-link-content-badge {
@@ -36,7 +32,8 @@
     }
 
     .sidebar-section-link-suffix {
-      font-size: var(--font-down-1);
+      margin-left: 0.25rem;
+      font-size: var(--font-down-4);
     }
 
     .sidebar-section-link-content-text {
@@ -67,7 +64,9 @@
   .sidebar-section-link-group-messages-new,
   .sidebar-section-link-group-messages-unread,
   .sidebar-section-link-group-messages-archive {
-    margin-left: 0.5em;
+    .sidebar-section-link-content-text {
+      margin-left: 0.5em;
+    }
   }
 
   .sidebar-section-link-prefix {
@@ -113,13 +112,9 @@
     }
   }
 
-  .sidebar-section-link-suffix.icon {
-    align-items: center;
-    display: flex;
-    margin-left: 0.5em;
-  }
-
   .sidebar-section-link-hover {
+    margin-left: auto;
+
     .sidebar-section-hover-button {
       display: none;
       color: var(--primary-medium);
@@ -145,10 +140,4 @@
       display: block;
     }
   }
-}
-
-#main-outlet-wrapper
-  .sidebar-section-link-wrapper:not(.sidebar-more-section-links-details-content
-    .sidebar-section-link-wrapper) {
-  margin-left: 1.5em;
 }

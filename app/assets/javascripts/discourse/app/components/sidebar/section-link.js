@@ -12,6 +12,7 @@ export default class SectionLink extends Component {
     let classNames = [
       "sidebar-section-link",
       `sidebar-section-link-${this.args.linkName}`,
+      "sidebar-row",
     ];
 
     if (this.args.class) {

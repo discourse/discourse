@@ -4,20 +4,26 @@
   --d-sidebar-animation-ease: ease-in-out;
 }
 
-#main-outlet-wrapper {
-  .sidebar-wrapper {
-    --d-sidebar-highlight-color: var(--primary-low);
+.sidebar-wrapper {
+  --d-sidebar-highlight-color: var(--primary-low);
+  --d-sidebar-row-horizontal-padding: 1.5rem;
 
-    grid-area: sidebar;
-    position: sticky;
-    top: var(--header-offset);
-    .footer-nav-ipad & {
-      top: calc(var(--header-offset) + var(--footer-nav-height));
-    }
-    height: calc(100vh - var(--header-offset));
-    align-self: start;
-    overflow-y: auto;
-    background-color: var(--primary-very-low);
+  grid-area: sidebar;
+  position: sticky;
+  top: var(--header-offset);
+  .footer-nav-ipad & {
+    top: calc(var(--header-offset) + var(--footer-nav-height));
+  }
+  height: calc(100vh - var(--header-offset));
+  align-self: start;
+  overflow-y: auto;
+  background-color: var(--primary-very-low);
+
+  .sidebar-row {
+    padding: 0.25rem var(--d-sidebar-row-horizontal-padding);
+    height: 27px;
+    align-items: center;
+    font-size: var(--font-down-1);
   }
 
   .sidebar-container {
@@ -44,6 +50,7 @@
       border-radius: calc(var(--scrollbarWidth) / 2);
       border: calc(var(--scrollbarWidth) / 4) solid var(--primary-very-low);
     }
+
     &:hover {
       scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
       &::-webkit-scrollbar-thumb {
@@ -51,6 +58,7 @@
       }
       transition-delay: 0s;
     }
+
     &::-webkit-scrollbar {
       width: var(--scrollbarWidth);
     }
@@ -58,7 +66,7 @@
 
   .sidebar-scroll-wrap {
     // limit the wrapper width, so when the scrollbar is added the content doesn't shift
-    max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
+    max-width: calc(var(--d-sidebar-width));
     box-sizing: border-box;
     flex: 1;
     display: flex;

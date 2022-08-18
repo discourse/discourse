@@ -1,12 +1,12 @@
 .sidebar-section-wrapper {
   margin-bottom: 1em;
 
-  .sidebar-section-header {
+  .sidebar-section-header-wrapper {
     display: flex;
     text-transform: uppercase;
-    font-size: 1em;
     font-weight: bold;
     align-items: stretch;
+    box-sizing: border-box;
 
     .select-kit {
       .btn {
@@ -21,29 +21,32 @@
         color: var(--primary-medium);
         margin-right: 0;
       }
+
       summary {
         padding: 0.25em 0.5em;
       }
     }
   }
 
-  .sidebar-section-header-link,
-  .sidebar-section-header-text {
+  .sidebar-section-header {
     @include ellipsis;
     flex: 1 1 auto;
+    font-size: var(--font-1);
     color: var(--primary);
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
+    align-items: center;
+
+    &.sidebar-section-header-collapsable {
+      cursor: pointer;
+    }
   }
 
-  .sidebar-section-header-link {
-    &:visited {
-      color: var(--primary);
-    }
-    &:focus,
-    &:hover {
-      background: var(--d-sidebar-highlight-color);
-    }
+  .sidebar-section-header-text {
+    font-weight: bold;
+    margin-right: 0.25em;
+  }
+
+  .sidebar-section-header-caret {
+    font-size: var(--font-down-2);
   }
 
   .sidebar-section-header-button {
@@ -77,54 +80,12 @@
   }
 
   .sidebar-section-message {
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-1);
     color: var(--primary-high);
-  }
-
-  .sidebar-section-header-caret {
-    flex: 0 0 auto;
-    width: 1.5em;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    border: none;
-    background: transparent;
-    padding: 0;
-
-    .d-icon {
-      top: -0.1em; // visual alignment
-    }
-
-    .discourse-no-touch & {
-      &:hover {
-        svg {
-          color: var(--primary-high);
-        }
-      }
-    }
-
-    svg {
-      display: block;
-      flex: 0 0 auto;
-      transition: color 0.25s;
-    }
-
-    .d-icon {
-      font-size: $font-down-1;
-      color: var(--primary-medium);
-    }
   }
 
   .sidebar-section-content {
     hr {
       margin: 0em 1.5em;
     }
-  }
-}
-
-#main-outlet-wrapper .sidebar-section-wrapper {
-  .sidebar-section-message-wrapper {
-    margin-left: 1.5em;
   }
 }

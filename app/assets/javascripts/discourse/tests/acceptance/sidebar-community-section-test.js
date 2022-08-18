@@ -67,8 +67,8 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
   });
 
-  test("clicking on section caret button", async function (assert) {
-    await visit("/");
+  test("clicking on section header link", async function (assert) {
+    await visit("/t/280");
 
     assert.ok(
       exists(".sidebar-section-community .sidebar-section-content"),
@@ -76,47 +76,23 @@ acceptance("Sidebar - Community Section", function (needs) {
     );
 
     assert.strictEqual(
-      query(".sidebar-section-community .sidebar-section-header-caret").title,
+      query(".sidebar-section-community .sidebar-section-header").title,
       I18n.t("sidebar.toggle_section"),
       "caret has the right title"
     );
 
-    await click(".sidebar-section-community .sidebar-section-header-caret");
+    await click(".sidebar-section-community .sidebar-section-header");
 
-    assert.ok(
-      !exists(".sidebar-section-community .sidebar-section-content"),
-      "hides content section"
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-content"),
+      "hides the content of the section"
     );
 
-    await click(".sidebar-section-community .sidebar-section-header-caret");
+    await click(".sidebar-section-community .sidebar-section-header");
 
     assert.ok(
       exists(".sidebar-section-community .sidebar-section-content"),
       "shows content section"
-    );
-  });
-
-  test("clicking on section header link", async function (assert) {
-    await visit("/t/280");
-    await click(".sidebar-section-community .sidebar-section-header-link");
-
-    assert.strictEqual(
-      currentURL(),
-      "/latest",
-      "it should transition to the homepage"
-    );
-
-    assert.strictEqual(
-      count(".sidebar-section-community .sidebar-section-link.active"),
-      1,
-      "only one link is marked as active"
-    );
-
-    assert.ok(
-      exists(
-        ".sidebar-section-community .sidebar-section-link-everything.active"
-      ),
-      "the everything link is marked as active"
     );
   });
 
