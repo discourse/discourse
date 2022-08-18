@@ -34,12 +34,15 @@ export default Controller.extend({
     return this.siteSettings.login_required && !this.currentUser;
   },
 
-  @discourseComputed
-  showBootstrapModeNotice() {
+  @discourseComputed(
+    "siteSettings.bootstrap_mode_enabled",
+    "router.currentRouteName"
+  )
+  showBootstrapModeNotice(bootstrapModeEnabled, currentRouteName) {
     return (
       this.currentUser?.get("staff") &&
-      this.siteSettings.bootstrap_mode_enabled &&
-      !this.router.currentRouteName.startsWith("wizard")
+      bootstrapModeEnabled &&
+      !currentRouteName.startsWith("wizard")
     );
   },
 

@@ -59,6 +59,35 @@ acceptance("Composer", function (needs) {
 
   needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
+  test("Composer is opened", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "400px",
+      "sets --composer-height to 400px when creating topic"
+    );
+
+    await fillIn(
+      ".d-editor-input",
+      "this is the *content* of a new topic post"
+    );
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "40px",
+      "sets --composer-height to 40px when composer is minimized to draft mode"
+    );
+
+    await click(".toggle-fullscreen");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "400px",
+      "sets --composer-height back to 400px when composer is opened from draft mode"
+    );
+  });
+
   test("composer controls", async function (assert) {
     await visit("/");
     assert.ok(exists("#create-topic"), "the create button is visible");
