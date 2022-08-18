@@ -698,6 +698,9 @@ class BulkImport::VBulletin < BulkImport::Base
 
     duplicated = @user_ids_by_email.select { |e, ids| ids.count > 1 }
     duplicated.each do |email, user_ids|
+      # nothing to do about these - they will remain a randomized hex string
+      next unless email.presence
+
       # queried one by one to ensure ordering
       first, *rest = user_ids.map do |id|
         UserCustomField.includes(:user).find_by!(name: 'import_id', value: id).user
