@@ -496,9 +496,12 @@ class BulkImport::VBulletin < BulkImport::Base
     end
 
 
+    start = Time.now
+
     CSV.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |csv|
-      id_mapping.each do |value|
+      id_mapping.each_with_index do |value, i|
         csv << [value]
+        print "\r%7d - %6d/sec" % [i, i.to_f / (Time.now - start)] if i % 5000 == 0
       end
     end
   end
