@@ -154,14 +154,13 @@ export function endWith() {
 }
 
 /**
-  Creates a property from a SiteSetting. In the future the plan is for them to
-  be able to update when changed.
+  Creates a property from a SiteSetting. It will update live when changed.
 
   @method setting
   @param {String} name of site setting
 **/
 export function setting(name) {
-  return computed(function () {
-    return this.siteSettings[name];
+  return computed(`siteSettings.${name}`, function (value) {
+    return value;
   });
 }
