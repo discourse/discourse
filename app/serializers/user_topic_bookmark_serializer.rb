@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
-  # it does not matter what the linked post number is for topic bookmarks,
-  # on the client we always take the user to the last unread post in the
-  # topic when the bookmark URL is clicked
-
   attributes :last_read_post_number
 
+  # NOTE: It does not matter what the linked post number is for topic bookmarks,
+  # on the client we always take the user to the last unread post in the
+  # topic when the bookmark URL is clicked
   def linked_post_number
     1
   end
@@ -28,28 +27,7 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   end
 
   def cooked
-    @cooked ||= \
-      if last_read_post_number.present?
-        for_topic_cooked_post
-      else
-        first_post.cooked
-      end
-  end
-
-  def for_topic_cooked_post
-    post_number = [last_read_post_number + 1, highest_post_number].min
-    sorted_regular_posts = topic.posts.sort_by(&:post_number).select do |post|
-      post.post_type == Post.types[:regular]
-    end
-    first_unread_post = sorted_regular_posts.find do |post|
-      post.post_number >= post_number
-    end
-
-    # if first_unread_cooked is blank this likely means that the last
-    # read post was either deleted or is a small action post.
-    # in this case we should just get the last regular post and
-    # use that for the cooked value so we have something to show
-    (first_unread_post || sorted_regular_posts.last).cooked
+    first_post.cooked
   end
 
   def bookmarkable_user

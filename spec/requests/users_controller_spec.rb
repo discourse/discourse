@@ -5485,10 +5485,7 @@ RSpec.describe UsersController do
     let!(:post) { Fabricate(:post, topic: topic) }
     let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: topic) }
 
-    it "uses the last_read_post_number + 1 for the bookmarks excerpt" do
-      next_unread_post = Fabricate(:post_with_long_raw_content, topic: bookmark.bookmarkable)
-      Fabricate(:post_with_external_links, topic: bookmark.bookmarkable)
-      bookmark.reload
+    it "uses the first post of the topic for the bookmarks excerpt" do
       TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
 
       sign_in(user)
@@ -5496,40 +5493,8 @@ RSpec.describe UsersController do
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
       bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
-      expected_excerpt = PrettyText.excerpt(next_unread_post.cooked, 300, keep_emoji_images: true)
+      expected_excerpt = PrettyText.excerpt(topic.first_post.cooked, 300, keep_emoji_images: true)
       expect(bookmark_list.first["excerpt"]).to eq(expected_excerpt)
-    end
-
-    it "does not use a small post for the last unread cooked post" do
-      small_action_post = Fabricate(:small_action, topic: bookmark.bookmarkable)
-      next_unread_post = Fabricate(:post_with_long_raw_content, topic: bookmark.bookmarkable)
-      Fabricate(:post_with_external_links, topic: bookmark.bookmarkable)
-      bookmark.reload
-      TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
-
-      sign_in(user)
-
-      get "/u/#{user.username}/bookmarks.json"
-      expect(response.status).to eq(200)
-      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
-
-      expect(bookmark_list.first["excerpt"]).to eq(PrettyText.excerpt(next_unread_post.cooked, 300, keep_emoji_images: true))
-    end
-
-    it "handles the last read post in the topic being a small post by getting the last read regular post" do
-      last_regular_post = Fabricate(:post_with_long_raw_content, topic: bookmark.bookmarkable)
-      small_action_post = Fabricate(:small_action, topic: bookmark.bookmarkable)
-      bookmark.reload
-      topic.reload
-      TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: small_action_post.post_number })
-
-      sign_in(user)
-
-      get "/u/#{user.username}/bookmarks.json"
-      expect(response.status).to eq(200)
-      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
-
-      expect(bookmark_list.first["excerpt"]).to eq(PrettyText.excerpt(last_regular_post.cooked, 300, keep_emoji_images: true))
     end
 
     describe "bookmarkable_url" do

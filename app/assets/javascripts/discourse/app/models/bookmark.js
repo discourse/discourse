@@ -143,7 +143,8 @@ const Bookmark = RestModel.extend({
     // for topic level bookmarks we want to jump to the last unread post URL,
     // which the topic-link helper does by default if no linked post number is
     // provided
-    const linkedPostNumber = this.for_topic ? null : this.linked_post_number;
+    const linkedPostNumber =
+      this.bookmarkable_type === "Topic" ? null : this.linked_post_number;
 
     return Topic.create({
       id: this.topic_id,
