@@ -8,17 +8,13 @@ export default DiscourseRoute.extend(ViewingActionType, {
     acting_username: { refreshModel: true },
   },
 
-  emptyStateOthers: I18n.t("user_activity.no_activity_others"),
-
   model() {
     const user = this.modelFor("user");
     const stream = user.get("stream");
 
     return {
       stream,
-      isAnotherUsersPage: !this.isCurrentUser(user),
       emptyState: this.emptyState(),
-      emptyStateOthers: this.emptyStateOthers,
     };
   },
 

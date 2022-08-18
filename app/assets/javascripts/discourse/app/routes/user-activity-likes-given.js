@@ -7,10 +7,15 @@ import { htmlSafe } from "@ember/template";
 
 export default UserActivityStreamRoute.extend({
   userActionType: UserAction.TYPES["likes_given"],
-  emptyStateOthers: I18n.t("user_activity.no_likes_others"),
 
   emptyState() {
-    const title = I18n.t("user_activity.no_likes_title");
+    const user = this.modelFor("user");
+
+    const title = this.isCurrentUser(user)
+      ? I18n.t("user_activity.no_likes_title")
+      : I18n.t("user_activity.no_likes_title_others", {
+          username: user.username,
+        });
     const body = htmlSafe(
       I18n.t("user_activity.no_likes_body", {
         heartIcon: iconHTML("heart"),
