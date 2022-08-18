@@ -1661,11 +1661,11 @@ class User < ActiveRecord::Base
   end
 
   def sidebar_categories_ids
-    return category_sidebar_section_links.pluck(:linkable_id) if category_sidebar_section_links.present?
-    if SiteSetting.default_sidebar_categories.present?
-      return Category.secured(guardian).where(id: SiteSetting.default_sidebar_categories.split("|").map(&:to_i)).pluck(:id)
+    categories_ids = category_sidebar_section_links.pluck(:linkable_id)
+    if categories_ids.blank? && SiteSetting.default_sidebar_categories.present?
+      return guardian.allowed_category_ids & SiteSetting.default_sidebar_categories.split("|").map(&:to_i)
     end
-    []
+    categories_ids
   end
 
   protected

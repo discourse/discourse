@@ -221,10 +221,15 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe '#sidebar_tags' do
-    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user) }
-    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user) }
+    fab!(:tag_1) { Fabricate(:tag, name: "foo") }
+    fab!(:tag_2) { Fabricate(:tag, name: "bar") }
+    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
+    let(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user) }
+    let(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user) }
 
     it "is not included when experimental sidebar has not been enabled" do
+      tag_sidebar_section_link
       SiteSetting.enable_experimental_sidebar_hamburger = false
       SiteSetting.tagging_enabled = true
 
@@ -234,6 +239,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "is not included when tagging has not been enabled" do
+      tag_sidebar_section_link
       SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = false
 
@@ -243,6 +249,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "is present when experimental sidebar and tagging has been enabled" do
+      tag_sidebar_section_link
       SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = true
 
@@ -255,13 +262,6 @@ RSpec.describe CurrentUserSerializer do
         { name: tag_sidebar_section_link_2.linkable.name, pm_only: true }
       )
     end
-  end
-
-  describe '#sidebar_tags' do
-    fab!(:tag_1) { Fabricate(:tag, name: "foo") }
-    fab!(:tag_2) { Fabricate(:tag, name: "bar") }
-    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
-    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
 
     it 'includes visible default sidebar tags' do
       SiteSetting.enable_experimental_sidebar_hamburger = true
