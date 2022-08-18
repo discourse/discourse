@@ -1,6 +1,7 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { click, currentURL, visit } from "@ember/test-helpers";
+import { set } from "@ember/object";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
   needs.user();
@@ -33,6 +34,13 @@ acceptance("Bootstrap Mode Notice", function (needs) {
       currentURL(),
       "/wizard/steps/hello-world",
       "it transitions to the wizard page"
+    );
+
+    set(this.siteSettings, "bootstrap_mode_enabled", false)
+    await visit("/");
+    assert.ok(
+      !exists(".bootstrap-mode-notice"),
+      "does not has the bootstrap mode notice"
     );
   });
 });
