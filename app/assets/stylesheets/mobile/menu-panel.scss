@@ -67,3 +67,15 @@
     height: 100%;
   }
 }
+
+.hamburger-panel .revamped {
+  --d-sidebar-row-horizontal-padding: 0.5rem;
+  --d-sidebar-highlight-color: var(--primary-low);
+
+  .sidebar-row {
+    padding: 0.25rem var(--d-sidebar-row-horizontal-padding);
+    height: 27px;
+    align-items: center;
+    font-size: var(--font-down-1);
+  }
+}

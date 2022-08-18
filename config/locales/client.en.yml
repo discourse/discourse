@@ -4096,7 +4096,6 @@ en:
       more: "More..."
       sections:
         messages:
-          header_link_title: "personal messages"
           header_link_text: "Messages"
           header_action_title: "create a personal message"
           links:
@@ -4110,17 +4109,14 @@ en:
         tags:
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
-          header_link_title: "all tags"
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
         categories:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
-          header_link_title: "all categories"
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
         community:
-          header_link_title: "home"
           header_link_text: "Community"
           header_action_title: "create a new topic"
           links:

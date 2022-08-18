@@ -37,14 +37,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
               return "test-chat-channels";
             }
 
-            get route() {
-              return "discovery.latest";
-            }
-
-            get title() {
-              return "chat channels title";
-            }
-
             get text() {
               return "chat channels text";
             }
@@ -209,15 +201,8 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      query(".sidebar-section-test-chat-channels .sidebar-section-header-link")
-        .title,
-      "chat channels title",
-      "displays header with correct title attribute"
-    );
-
-    assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header-link"
+        ".sidebar-section-test-chat-channels .sidebar-section-header"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
@@ -367,14 +352,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
             return "test-chat-channels";
           }
 
-          get route() {
-            return "discovery.latest";
-          }
-
-          get title() {
-            return "chat channels title";
-          }
-
           get text() {
             return "chat channels text";
           }
@@ -404,7 +381,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header-link"
+        ".sidebar-section-test-chat-channels .sidebar-section-header"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"

@@ -1,39 +1,16 @@
 <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
-  <div class="sidebar-section-header">
-    {{#if @collapsable}}
-      <button
-        type="button"
-        class="sidebar-section-header-caret"
-        title="toggle section"
-        {{on "click" this.toggleSectionDisplay}}
-      >
-        {{d-icon this.headerCaretIcon}}
-      </button>
-    {{/if}}
-
-    {{#if @headerRoute}}
-      <LinkTo
-        @route={{@headerRoute}}
-        @query={{@headerQuery}}
-        @models={{if
-          @headerModel
-          (array @headerModel)
-          (if @headerModels @headerModels (array))
-        }}
-        class="sidebar-section-header-link"
-        title={{@headerLinkTitle}}
-      >
-
-        {{@headerLinkText}}
-      </LinkTo>
-    {{else}}
-      <span
-        title={{@headerLinkTitle}}
-        class="sidebar-section-header-text"
-      >
+  <div class="sidebar-section-header-wrapper sidebar-row">
+    <Sidebar::SectionHeader @collapsable={{@collapsable}} @toggleSectionDisplay={{this.toggleSectionDisplay}}>
+      <span class="sidebar-section-header-text">
         {{@headerLinkText}}
       </span>
-    {{/if}}
+
+      {{#if @collapsable}}
+        <span class="sidebar-section-header-caret">
+          {{d-icon this.headerCaretIcon}}
+        </span>
+      {{/if}}
+    </Sidebar::SectionHeader>
 
     {{#if this.isSingleHeaderAction}}
       {{#each @headerActions as |headerAction|}}

@@ -48,7 +48,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
     );
 
     await click(".hamburger-dropdown");
-    await click(".sidebar-section-header-link");
+    await click(".sidebar-section-community .sidebar-section-link-everything");
 
     assert.ok(
       !exists(".sidebar-hamburger-dropdown"),
