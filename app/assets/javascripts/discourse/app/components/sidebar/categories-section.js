@@ -3,7 +3,6 @@ import I18n from "I18n";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 
 import Component from "@glimmer/component";
 import CategorySectionLink from "discourse/lib/sidebar/categories-section/category-section-link";
@@ -29,30 +28,11 @@ export default class SidebarCategoriesSection extends Component {
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
-  get categories() {
-    if (!isEmpty(this.currentUser.sidebarCategories)) {
-      return this.currentUser.sidebarCategories;
-    }
-    if (
-      this.currentUser &&
-      !isEmpty(this.siteSettings.default_sidebar_categories)
-    ) {
-      const categoryIds = this.siteSettings.default_sidebar_categories
-        .split("|")
-        .map((id) => parseInt(id, 10));
-
-      return this.site.categories.filter((category) =>
-        categoryIds.includes(category.id)
-      );
-    }
-    return [];
-  }
-
   @cached
   get sectionLinks() {
     const links = [];
 
-    for (const category of this.categories) {
+    for (const category of this.currentUser.sidebarCategories) {
       links.push(
         new CategorySectionLink({
           category,

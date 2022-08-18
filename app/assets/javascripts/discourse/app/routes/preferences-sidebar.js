@@ -10,7 +10,7 @@ export default RestrictedUserRoute.extend({
     };
 
     if (this.siteSettings.tagging_enabled) {
-      props.selectedSidebarTagNames = user.sidebarTagNames;
+      props.selectedSidebarTagNames = user.sidebar_tags.map((tag) => tag.name);
     }
 
     controller.setProperties(props);

@@ -63,8 +63,7 @@ class UserSerializer < UserCardSerializer
                      :user_api_keys,
                      :user_auth_tokens,
                      :user_notification_schedule,
-                     :use_logo_small_as_avatar,
-                     :sidebar_tags
+                     :use_logo_small_as_avatar
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,

@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
 
   has_many :sidebar_section_links, dependent: :delete_all
   has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
-  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+  has_many :custom_sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -1660,6 +1660,12 @@ class User < ActiveRecord::Base
     Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
   end
 
+  def sidebar_categories_ids
+    return category_sidebar_section_links.pluck(:linkable_id) if category_sidebar_section_links.present?
+    return SiteSetting.default_sidebar_categories.split("|").map(&:to_i) if SiteSetting.default_sidebar_categories.present?
+    []
+  end
+
   protected
 
   def badge_grant
@@ -1952,7 +1958,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def default_sidebar_tags
+  def sidebar_tags
+    return custom_sidebar_tags if custom_sidebar_tags.present?
     tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
     Tag.where(name: tag_names)
   end

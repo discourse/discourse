@@ -270,7 +270,7 @@ RSpec.describe CurrentUserSerializer do
 
       json = serializer.as_json
 
-      expect(json[:default_sidebar_tags]).to eq([
+      expect(json[:sidebar_tags]).to eq([
         { name: "foo", pm_only: false },
         { name: "bar", pm_only: false }
       ])
@@ -280,11 +280,13 @@ RSpec.describe CurrentUserSerializer do
       SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = true
       SiteSetting.default_sidebar_tags = "foo|bar|secret"
-      Fabricate(:tag_sidebar_section_link, user: user)
+      tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link, user: user)
 
       json = serializer.as_json
 
-      expect(json[:default_sidebar_tags]).to eq(nil)
+      expect(json[:sidebar_tags]).to eq([
+        { name: tag_sidebar_section_link.linkable.name, pm_only: false }
+      ])
     end
   end
 

@@ -76,7 +76,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :sidebar_category_ids,
-             :sidebar_tags,
              :likes_notifications_disabled,
              :grouped_unread_high_priority_notifications,
              :redesigned_user_menu_enabled
@@ -309,7 +308,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id)
+    object.sidebar_categories_ids
   end
 
   def include_sidebar_category_ids?
