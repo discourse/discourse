@@ -3,8 +3,6 @@
 
   .sidebar-section-header-wrapper {
     display: flex;
-    text-transform: uppercase;
-    font-weight: bold;
     align-items: stretch;
     box-sizing: border-box;
 
@@ -31,12 +29,15 @@
   .sidebar-section-header {
     @include ellipsis;
     flex: 1 1 auto;
+    text-transform: uppercase;
+    font-weight: bold;
     font-size: var(--font-1);
     color: var(--primary);
     align-items: center;
 
     &.sidebar-section-header-collapsable {
-      cursor: pointer;
+      justify-content: flex-start;
+      padding: 0;
     }
   }
 

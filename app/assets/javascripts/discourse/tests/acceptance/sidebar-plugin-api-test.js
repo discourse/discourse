@@ -202,7 +202,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header"
+        ".sidebar-section-test-chat-channels .sidebar-section-header-text"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
@@ -381,7 +381,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-test-chat-channels .sidebar-section-header"
+        ".sidebar-section-test-chat-channels .sidebar-section-header-text"
       ).textContent.trim(),
       "chat channels text",
       "displays header with correct text"
