@@ -36,10 +36,10 @@ acceptance("Bootstrap Mode Notice", function (needs) {
       "it transitions to the wizard page"
     );
 
-    set(this.siteSettings, "bootstrap_mode_enabled", false)
+    set(this.siteSettings, "bootstrap_mode_enabled", false);
     assert.ok(
       !exists(".bootstrap-mode-notice"),
-      "does not has the bootstrap mode notice"
+      "removes the bootstrap mode notice when bootstrap mode is disabled"
     );
   });
 });
