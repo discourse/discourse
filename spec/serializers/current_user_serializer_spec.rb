@@ -257,7 +257,7 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  describe '#default_sidebar_tags' do
+  describe '#sidebar_tags' do
     fab!(:tag_1) { Fabricate(:tag, name: "foo") }
     fab!(:tag_2) { Fabricate(:tag, name: "bar") }
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
@@ -276,7 +276,7 @@ RSpec.describe CurrentUserSerializer do
       ])
     end
 
-    it 'does not include default when overriden' do
+    it 'includes tags choosen by user' do
       SiteSetting.enable_experimental_sidebar_hamburger = true
       SiteSetting.tagging_enabled = true
       SiteSetting.default_sidebar_tags = "foo|bar|secret"
@@ -291,10 +291,14 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe '#sidebar_category_ids' do
-    fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
-    fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:category_2) { Fabricate(:category) }
+    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    let(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
+    let(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user) }
 
     it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+      category_sidebar_section_link
       SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
@@ -303,6 +307,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "is not included when experimental sidebar has not been enabled" do
+      category_sidebar_section_link
       SiteSetting.enable_experimental_sidebar_hamburger = false
 
       json = serializer.as_json
@@ -310,15 +315,23 @@ RSpec.describe CurrentUserSerializer do
       expect(json[:sidebar_category_ids]).to eq(nil)
     end
 
-    it "is present when experimental sidebar has been enabled" do
+    it 'includes visible default sidebar categories' do
       SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.default_sidebar_categories = "#{category.id}|#{category_2.id}|#{private_category.id}"
 
       json = serializer.as_json
+      expect(json[:sidebar_category_ids]).to eq([category.id, category_2.id])
+    end
 
-      expect(json[:sidebar_category_ids]).to contain_exactly(
-        category_sidebar_section_link.linkable_id,
-        category_sidebar_section_link_2.linkable_id
-      )
+    it 'includes categories choosen by user' do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.default_sidebar_categories = "#{category.id}|#{category_2.id}|#{private_category.id}"
+
+      category_sidebar_section_link
+      category_sidebar_section_link_2
+
+      json = serializer.as_json
+      expect(json[:sidebar_category_ids]).to eq([category_sidebar_section_link.linkable.id, category_sidebar_section_link_2.linkable.id])
     end
   end
 

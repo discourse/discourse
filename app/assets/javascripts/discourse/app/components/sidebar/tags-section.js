@@ -13,7 +13,6 @@ export default class SidebarTagsSection extends Component {
   @service topicTrackingState;
   @service pmTopicTrackingState;
   @service currentUser;
-  @service siteSettings;
 
   constructor() {
     super(...arguments);

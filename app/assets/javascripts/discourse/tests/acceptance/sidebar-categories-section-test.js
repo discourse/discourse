@@ -133,26 +133,6 @@ acceptance("Sidebar - Categories Section", function (needs) {
     );
   });
 
-  test("default categories setting", async function (assert) {
-    this.siteSettings.default_sidebar_categories = "3|10";
-    await visit("/");
-    assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link"),
-      2,
-      "there should only be two default section links under the section"
-    );
-
-    assert.ok(
-      exists(`.sidebar-section-link-howto .badge-category`),
-      "howto section link is rendered with category badge"
-    );
-
-    assert.ok(
-      exists(`.sidebar-section-link-meta .badge-category`),
-      "meta section link is rendered with category badge"
-    );
-  });
-
   test("uncategorized category is shown when added to sidebar", async function (assert) {
     const categories = Site.current().categories;
 

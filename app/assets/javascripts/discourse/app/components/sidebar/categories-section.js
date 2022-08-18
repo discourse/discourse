@@ -11,8 +11,6 @@ export default class SidebarCategoriesSection extends Component {
   @service router;
   @service topicTrackingState;
   @service currentUser;
-  @service siteSettings;
-  @service site;
 
   constructor() {
     super(...arguments);
