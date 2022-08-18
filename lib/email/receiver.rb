@@ -165,8 +165,8 @@ module Email
       end
 
       recipients = get_all_recipients(@mail)
-      if recipients.count > SiteSetting.maximum_recipients_per_new_group_email
-        raise TooManyRecipientsError.new(recipients_count: recipients.count)
+      if recipients.size > SiteSetting.maximum_recipients_per_new_group_email
+        raise TooManyRecipientsError.new(recipients_count: recipients.size)
       end
 
       body, elided = select_body
@@ -244,7 +244,7 @@ module Email
     end
 
     def get_all_recipients(mail)
-      recipients = []
+      recipients = Set.new
 
       %i(to cc bcc).each do |field|
         next if mail[field].blank?
