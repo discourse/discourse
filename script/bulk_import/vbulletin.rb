@@ -485,23 +485,19 @@ class BulkImport::VBulletin < BulkImport::Base
   def create_permalink_file
     puts '', 'Creating Permalink File...', ''
 
-    id_mapping = []
-
-    Topic.listable_topics.find_each do |topic|
-      pcf = topic.first_post.custom_fields
-      if pcf && pcf["import_id"]
-        id = pcf["import_id"].split('-').last
-        id_mapping.push("XXX#{id}  YYY#{topic.id}")
-      end
-    end
-
-
     start = Time.now
 
-    CSV.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |csv|
-      id_mapping.each_with_index do |value, i|
-        csv << [value]
-        print "\r%7d - %6d/sec" % [i, i.to_f / (Time.now - start)] if i % 5000 == 0
+    i = 0
+    File.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |f|
+      Topic.listable_topics.find_each do |topic|
+        i += 1
+        pcf = topic.posts.includes(:_custom_fields).where(post_number: 1).first.custom_fields
+        if pcf && pcf["import_id"]
+          id = pcf["import_id"].split('-').last
+
+          f.print [ "XXX#{id}  YYY#{topic.id}" ].to_csv
+          print "\r%7d - %6d/sec" % [i, i.to_f / (Time.now - start)] if i % 5000 == 0
+        end
       end
     end
   end
