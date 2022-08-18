@@ -879,7 +879,17 @@ RSpec.describe Email::Receiver do
 
     it "cap the number of staged users created per email" do
       SiteSetting.maximum_staged_users_per_email = 1
-      expect { process(:cc) }.to change(Topic, :count)
+      expect { process(:cc) }.to change(Topic, :count).by(1)
+        .and change(User, :count).by(1)
+      expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
+    end
+
+    it "cap the number of staged users existing per email" do
+      Fabricate(:user, email: "discourse@bar.com", staged: true) # from
+      Fabricate(:user, email: "someone@else.com", staged: true) # to
+
+      SiteSetting.maximum_staged_users_per_email = 1
+      expect { process(:cc) }.to change(Topic, :count).and not_change(User, :count)
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
