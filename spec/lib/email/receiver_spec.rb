@@ -883,6 +883,11 @@ RSpec.describe Email::Receiver do
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
     end
 
+    it "rejects messages with too many recipients" do
+      SiteSetting.maximum_recipients_per_new_group_email = 3
+      expect { process(:cc) }.to raise_error(Email::Receiver::TooManyRecipientsError)
+    end
+
     describe "reply-to header" do
       before do
         SiteSetting.block_auto_generated_emails = false

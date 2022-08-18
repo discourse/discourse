@@ -33,6 +33,14 @@ module Email
     class OldDestinationError          < ProcessingError; end
     class ReplyToDigestError           < ProcessingError; end
 
+    class TooManyRecipientsError < ProcessingError
+      attr_reader :recipients_count
+
+      def initialize(recipients_count:)
+        @recipients_count = recipients_count
+      end
+    end
+
     attr_reader :incoming_email
     attr_reader :raw_email
     attr_reader :mail
@@ -156,6 +164,11 @@ module Email
         raise UserNotFoundError unless SiteSetting.enable_staged_users
       end
 
+      recipients = get_all_recipients(@mail)
+      if recipients.size > SiteSetting.maximum_recipients_per_new_group_email
+        raise TooManyRecipientsError.new(recipients_count: recipients.size)
+      end
+
       body, elided = select_body
       body ||= ""
 
@@ -228,6 +241,23 @@ module Email
 
       raise InactiveUserError if !user.active && !user.staged
       raise SilencedUserError if user.silenced?
+    end
+
+    def get_all_recipients(mail)
+      recipients = Set.new
+
+      %i(to cc bcc).each do |field|
+        next if mail[field].blank?
+
+        mail[field].each do |address_field|
+          begin
+            address_field.decoded
+            recipients << address_field.address.downcase
+          end
+        end
+      end
+
+      recipients
     end
 
     def is_bounce?
