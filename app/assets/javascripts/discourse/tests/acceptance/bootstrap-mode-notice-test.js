@@ -37,7 +37,6 @@ acceptance("Bootstrap Mode Notice", function (needs) {
     );
 
     set(this.siteSettings, "bootstrap_mode_enabled", false)
-    await visit("/");
     assert.ok(
       !exists(".bootstrap-mode-notice"),
       "does not has the bootstrap mode notice"
