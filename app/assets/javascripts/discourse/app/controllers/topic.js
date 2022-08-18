@@ -240,7 +240,10 @@ export default Controller.extend(bufferedProperty("model"), {
           this.model.removeBookmark(post.bookmark_id);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
+    const forTopicBookmark = this.model.bookmarks.findBy(
+      "bookmarkable_type",
+      "Topic"
+    );
     if (
       forTopicBookmark?.auto_delete_preference ===
       AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY

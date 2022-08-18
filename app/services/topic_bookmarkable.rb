@@ -12,7 +12,7 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [:tags, { posts: :user }]
+    [:tags, { first_post: :user }]
   end
 
   def self.perform_custom_preload!(topic_bookmarks, guardian)
