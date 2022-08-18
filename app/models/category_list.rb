@@ -64,17 +64,18 @@ class CategoryList
 
     @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id)).includes(:shared_draft, :category)
 
+    @all_topics = @all_topics.joins(:tags).where(tags: { name: @options[:tag] }) if @options[:tag].present?
+
     if @guardian.authenticated?
       @all_topics = @all_topics
         .joins("LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}")
         .where('COALESCE(tu.notification_level,1) > :muted', muted: TopicUser.notification_levels[:muted])
     end
 
-    @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user)
-    @all_topics = @all_topics.includes(:last_poster) if @options[:include_topics]
+    @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
     @all_topics.each do |t|
       # hint for the serializer
-      t.include_last_poster = true if @options[:include_topics]
+      t.include_last_poster = true
       t.dismissed = dismissed_topic?(t)
       @topics_by_id[t.id] = t
     end

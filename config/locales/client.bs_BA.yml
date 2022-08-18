@@ -177,11 +177,11 @@ bs_BA:
         disabled: "maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
       forwarded: "gornji email proslijeđen"
     topic_admin_menu: "akcije u vezi teme"
-    wizard_required: "Dobrodošli na vaš novi Discourse! Odpočnimo sa <a href='%{url}' data-auto-route='true'>čarobnjakom za postavke</a> ✨"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
     bootstrap_mode_disabled: "Bootstrap način rada će biti isključen u toku 24 sata."
+    bootstrap_invite_button_title: "Pošalji Pozivnice"
     themes:
       default_description: "Uobičajen"
     s3:

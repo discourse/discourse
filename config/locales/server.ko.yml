@@ -4032,9 +4032,7 @@ ko:
       message: "<p>활성화 이메일을 <b>%{email}</b>로 보냈습니다."
   safe_mode:
     title: "안전모드 들어가기"
-    description: "안전 모드가 켜지면 플러그인과 커스터마이징을 빼고 사이트를 테스트합니다."
-    no_customizations: "현재 테마 해제하기"
-    only_official: "비공식 플러그인 해제하기"
+    no_unofficial_plugins: "비공식 플러그인 해제하기"
     no_plugins: "모든 플러그인 해제하기"
     enter: "안전모드 들어가기"
     must_select: "안전 모드로 들어가려면 하나 이상의 옵션을 선택해야합니다."

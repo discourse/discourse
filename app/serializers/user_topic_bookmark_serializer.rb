@@ -4,6 +4,9 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   # it does not matter what the linked post number is for topic bookmarks,
   # on the client we always take the user to the last unread post in the
   # topic when the bookmark URL is clicked
+
+  attributes :last_read_post_number
+
   def linked_post_number
     1
   end
@@ -63,9 +66,17 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
     end
   end
 
+  def last_read_post_number
+    topic_user&.last_read_post_number
+  end
+
   private
 
   def topic
     object.bookmarkable
+  end
+
+  def topic_user
+    topic.user_data
   end
 end

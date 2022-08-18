@@ -168,7 +168,7 @@ basic:
     client: true
     refresh: true
     type: list
-    list_type: compact
+    list_type: simple
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
@@ -1988,11 +1988,9 @@ developer:
   enable_experimental_sidebar_hamburger:
     default: false
     client: true
-    hidden: true
   enable_sidebar:
-    default: false
+    default: true
     client: true
-    hidden: true
 
 embedding:
   embed_by_username:

@@ -14,18 +14,6 @@ export default class BaseCustomSidebarSection {
   }
 
   /**
-   * @returns {string} The Ember route which the section header link should link to.
-   */
-  get route() {}
-
-  /**
-   * @returns {string} Title for the header
-   */
-  get title() {
-    this._notImplemented();
-  }
-
-  /**
    * @returns {string} Text for the header
    */
   get text() {

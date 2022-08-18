@@ -2,11 +2,11 @@ const TapReporter = require("testem/lib/reporters/tap_reporter");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 class Reporter {
+  failReports = [];
+
   constructor() {
     this._tapReporter = new TapReporter(...arguments);
   }
-
-  failReports = [];
 
   reportMetadata(tag, metadata) {
     if (tag === "summary-line") {

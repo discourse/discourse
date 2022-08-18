@@ -220,26 +220,9 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  describe '#sidebar_tag_names' do
+  describe '#sidebar_tags' do
     fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user) }
     fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user) }
-
-    it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tag_names]).to eq(nil)
-    end
-
-    it "is not included when SiteSeting.tagging_enabled is false" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
-      SiteSetting.tagging_enabled = false
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tag_names]).to eq(nil)
-    end
 
     it "is not included when experimental sidebar has not been enabled" do
       SiteSetting.enable_experimental_sidebar_hamburger = false
@@ -247,18 +230,29 @@ RSpec.describe CurrentUserSerializer do
 
       json = serializer.as_json
 
-      expect(json[:sidebar_tag_names]).to eq(nil)
+      expect(json[:sidebar_tags]).to eq(nil)
     end
 
-    it "is present when experimental sidebar has been enabled" do
+    it "is not included when tagging has not been enabled" do
       SiteSetting.enable_experimental_sidebar_hamburger = true
-      SiteSetting.tagging_enabled = true
+      SiteSetting.tagging_enabled = false
 
       json = serializer.as_json
 
-      expect(json[:sidebar_tag_names]).to contain_exactly(
-        tag_sidebar_section_link.linkable.name,
-        tag_sidebar_section_link_2.linkable.name
+      expect(json[:sidebar_tags]).to eq(nil)
+    end
+
+    it "is present when experimental sidebar and tagging has been enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.tagging_enabled = true
+
+      tag_sidebar_section_link_2.linkable.update!(pm_topic_count: 5, topic_count: 0)
+
+      json = serializer.as_json
+
+      expect(json[:sidebar_tags]).to contain_exactly(
+        { name: tag_sidebar_section_link.linkable.name, pm_only: false },
+        { name: tag_sidebar_section_link_2.linkable.name, pm_only: true }
       )
     end
   end

@@ -4,20 +4,6 @@ import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Sidebar - Anon User", function () {
-  // Don't show sidebar for anon user until we know what we want to display
-  test("sidebar is not displayed", async function (assert) {
-    await visit("/");
-
-    assert.ok(
-      !document.body.classList.contains("has-sidebar-page"),
-      "does not add sidebar utility class to body"
-    );
-
-    assert.ok(!exists(".sidebar-container"));
-  });
-});
-
 acceptance(
   "Sidebar - Experimental sidebar and hamburger setting disabled",
   function (needs) {

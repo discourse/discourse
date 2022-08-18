@@ -179,7 +179,6 @@ fr:
       forwarded: "a transmis le courriel ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
-    wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification par courriel ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi de courriel est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
@@ -189,6 +188,7 @@ fr:
       one: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
       other: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
+    bootstrap_invite_button_title: "Envoyer des invitations"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner car un thème ou un composant de thème a déclenché une ou plusieurs erreurs."
@@ -1052,6 +1052,8 @@ fr:
       dismiss: "Vu"
       dismiss_notifications: "Tout vu"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
+      dismiss_bookmarks_tooltip: "Marquer tous les rappels de favoris non-lus comme lus"
+      dismiss_messages_tooltip: "Marquer toutes les notifications de messages directs non-lues comme lues"
       no_messages_title: "Vous n'avez aucun message"
       no_messages_body: >
         Besoin d'échanger directement avec une personne en-dehors de la conversation principale ? Sélectionnez son avatar et utilisez le bouton %{icon} pour lui écrire un message.<br><br>Pour obtenir de l'aide, <a href='%{aboutUrl}'>adressez-vous à l'un des responsables du site</a>.

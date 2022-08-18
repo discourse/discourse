@@ -162,12 +162,12 @@ ca:
       forwarded: "el missatge de dalt s'ha reenviat"
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
-    wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
+    bootstrap_invite_button_title: "Envia invitacions"
     themes:
       default_description: "Per defecte"
     s3:

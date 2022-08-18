@@ -179,7 +179,6 @@ it:
       forwarded: "ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
-    wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     emails_are_disabled_non_staff: "La posta in uscita è stata disattivata per gli utenti al di fuori dello staff."
     software_update_prompt:
@@ -189,6 +188,7 @@ it:
       one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
       other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
+    bootstrap_invite_button_title: "Manda Inviti"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
@@ -1053,6 +1053,7 @@ it:
       dismiss_notifications: "Ignora tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       dismiss_bookmarks_tooltip: "Contrassegna tutti i promemoria dei segnalibri non letti come già letti"
+      dismiss_messages_tooltip: "Segna come lette tutte le notifiche di messaggi personali non letti"
       no_messages_title: "Non hai messaggi"
       no_messages_body: >
         Hai la necessità di avere una conversazione privata con qualcuno? Invia un messaggio selezionando l'avatar e utilizzando il pulsante del messaggio %{icon}<br><br> Se hai bisogno di aiuto, puoi <a href='%{aboutUrl}'>inviare un messaggio a un membro dello staff</a>.
@@ -2057,6 +2058,7 @@ it:
       abandon: "chiudi il composer e scarta la bozza"
       enter_fullscreen: "Espandi il composer a tutto schermo"
       exit_fullscreen: "esci dal composer a tutto schermo"
+      exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       show_toolbar: "mostra la barra degli strumenti del Composer"
       hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
@@ -2161,6 +2163,9 @@ it:
           default:
             one: "Sei sicuro/a? Hai %{count} notifica importante."
             other: "Sei sicuro? Hai %{count} notifiche importanti."
+          messages:
+            one: "Sei sicuro/a? Hai %{count} messaggio personale non letto."
+            other: "Sei sicuro/a? Hai %{count} messaggi personali non letti."
         dismiss: "Ignora"
         cancel: "Annulla"
       group_message_summary:
@@ -2344,6 +2349,7 @@ it:
       sr_menu_tabs: "Schede del menu"
       view_all_notifications: "visualizza tutte le notifiche"
       view_all_bookmarks: "visualizza tutti i segnalibri"
+      view_all_messages: "visualizza tutti i messaggi personali"
       reviewable:
         queue: "Coda"
         deleted_user: "(utente cancellato)"
@@ -3802,6 +3808,9 @@ it:
               draft_count:
                 one: "%{count} bozza"
                 other: "%{count} bozze"
+    welcome_topic_banner:
+      title: "Crea il tuo argomento di benvenuto"
+      button_title: "Inizia a modificare"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -4358,6 +4367,8 @@ it:
           import_web_advanced: "Avanzate..."
           import_file_tip: "File .tar.gz, .zip, o .dcstyle.json contenente il tema"
           is_private: "Il tema è in un archivio git privato"
+          finish_install: "Completa l'installazione del tema"
+          last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
           public_key_note: "Dopo l’inserimento di un URL valido di archivio riservato, verrà generata e qui visualizzata una corrispondente chiave SSH."
@@ -4368,6 +4379,8 @@ it:
           install_git_repo: "Da un archivio git"
           install_create: "Crea nuovo"
           duplicate_remote_theme: "Il componente del tema «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
+          force_install: "Il tema non può essere installato perché il repository Git è inaccessibile. Sei sicuro di voler continuare l'installazione?"
+          create_placeholder: "Crea Segnaposto"
           about_theme: "Informazioni su"
           license: "Licenza"
           version: "Versione:"

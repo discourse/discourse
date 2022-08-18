@@ -40,6 +40,15 @@ class BaseBookmarkable
   end
 
   ##
+  #
+  # Implementations can define their own preloading logic here
+  # @param [Array] bookmarks_of_type The list of bookmarks to preload data for. Already filtered to be of the correct class.
+  # @param [Guardian] guardian An instance of Guardian for the current_user
+  def self.perform_custom_preload!(bookmarks_of_type, guardian)
+    nil
+  end
+
+  ##
   # This is where the main query to filter the bookmarks by the provided bookmarkable
   # type should occur. This should join on additional tables that are required later
   # on to preload additional data for serializers, and also is the place where the

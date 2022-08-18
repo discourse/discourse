@@ -903,6 +903,8 @@ hu:
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     google_oauth2_hd_groups: "(kísérleti) A felhasználók a kiszolgálóhoz tartozó domainben lévő Google-csoportjainak lekérése hitelesítéskor. A lekért Google-csoportok segítségével automatikusan állíthat be Discourse csoporttagságot (lásd a csoportbeállításokat)."
+    enable_experimental_sidebar_hamburger: "Lehetővé teszi a kísérleti oldalsáv és a felhasználói hamburger legördülő menü engedélyezését."
+    enable_sidebar: "Engedélyezi a kísérleti oldalsávot."
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
@@ -1027,12 +1029,12 @@ hu:
       Ha továbbra is szeretnéd megkapni az e-mailes frissítéseket, csak hagyd figyelmen kívül ezt az e-mailt.
   invite_password_instructions:
     text_body_template: |
-      Köszönjük, hogy elfogadtad a %{site_name} szóló meghívót - üdvözlünk!
+      Köszönjük, hogy elfogadta a(z) %{site_name} meghívóját – üdvözöljük!
 
-      Kattints erre a linkre a jelszó kiválasztásához:
-      %{base_url}/u/password-reset /%{email_token}
+      Kattintson erre a hivatkozásra a jelszóválasztáshoz:
+      %{base_url}/u/password-reset/%{email_token}
 
-      (Ha a fenti link lejárt, válaszd az "Elfelejtettem a jelszavamat" lehetőséget, amikor bejelentkezel ezzel az e-mail címeddel.)
+      (Ha a fenti hivatkozás lejárt, akkor válassza az „Elfelejtettem a jelszavamat” lehetőséget, amikor bejelentkezik az e-mail-címével.)
   test_mailer:
     text_body_template: |
       Ez egy teszt e-mail innen:

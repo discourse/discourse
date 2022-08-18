@@ -8,18 +8,18 @@ export function finderFor(filter, params) {
     let url = getURL("/") + filter + ".json";
 
     if (params) {
-      const keys = Object.keys(params),
-        encoded = [];
+      const urlSearchParams = new URLSearchParams();
 
-      keys.forEach(function (p) {
-        const value = encodeURI(params[p]);
+      for (const [key, value] of Object.entries(params)) {
         if (typeof value !== "undefined") {
-          encoded.push(p + "=" + value);
+          urlSearchParams.set(key, value);
         }
-      });
+      }
 
-      if (encoded.length > 0) {
-        url += "?" + encoded.join("&");
+      const queryString = urlSearchParams.toString();
+
+      if (queryString) {
+        url += `?${queryString}`;
       }
     }
     return ajax(url);

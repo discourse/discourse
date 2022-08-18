@@ -4,22 +4,20 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
+const HIDE_SIDEBAR_KEY = "sidebar-hidden";
+
 export default Controller.extend({
   queryParams: ["enable_sidebar"],
 
   showTop: true,
   showFooter: false,
   router: service(),
-  showSidebar: null,
-  hideSidebarKey: "sidebar-hidden",
+  showSidebar: false,
   enable_sidebar: null,
 
   init() {
     this._super(...arguments);
-
-    this.showSidebar = this.site.mobileView
-      ? false
-      : this.currentUser && !this.keyValueStore.getItem(this.hideSidebarKey);
+    this.showSidebar = !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed
@@ -72,6 +70,11 @@ export default Controller.extend({
       return false;
     }
 
+    // Always return dropdown on mobile
+    if (this.site.mobileView) {
+      return false;
+    }
+
     return enableSidebar;
   },
 
@@ -86,9 +89,9 @@ export default Controller.extend({
 
     if (this.site.desktopView) {
       if (this.showSidebar) {
-        this.keyValueStore.removeItem(this.hideSidebarKey);
+        this.keyValueStore.removeItem(HIDE_SIDEBAR_KEY);
       } else {
-        this.keyValueStore.setItem(this.hideSidebarKey);
+        this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
   },

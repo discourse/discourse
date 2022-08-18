@@ -999,10 +999,10 @@ escape-string-regexp@^4.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
-eslint-config-discourse@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-3.2.0.tgz#e48dfe9881845400d7acb7f4b8b867da8698254a"
-  integrity sha512-ckfLjFMfzzxN3VX7nB0DKPAOycVM7mbkAsytaU7rGJnlsMh1SQPBUUfIronQvAR9+f3Q6FQ3VA4T9DZYfWgyIw==
+eslint-config-discourse@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-3.3.0.tgz#e521620b5dfbd53bbd8bf0413319b3c41cc52944"
+  integrity sha512-s+N5j8DNxAsr+9czYDA7CvVVi3vsMrPgokbHwDnlLug8RJ35f47B09cHNNiREwx1ITj2epPhMbzH52wc78UPMg==
   dependencies:
     "@babel/core" "^7.18.5"
     "@babel/eslint-parser" "^7.18.2"
@@ -1014,6 +1014,7 @@ eslint-config-discourse@^3.2.0:
     eslint-plugin-ember "^10.6.1"
     eslint-plugin-lodash "^7.1.0"
     eslint-plugin-node "^11.1.0"
+    eslint-plugin-sort-class-members "^1.14.1"
     prettier "2.7.1"
 
 eslint-plugin-discourse-ember@latest:
@@ -1061,6 +1062,11 @@ eslint-plugin-node@^11.1.0:
     minimatch "^3.0.4"
     resolve "^1.10.1"
     semver "^6.1.0"
+
+eslint-plugin-sort-class-members@^1.14.1:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-sort-class-members/-/eslint-plugin-sort-class-members-1.14.1.tgz#e701d6341e267ed0d0bf44c8293ff1e15b324e3c"
+  integrity sha512-/Q/cm3h4N9DBNYvJMQMhluucSmr3Yydr9U0BgGcXUQe/rgWdXKSymZ5Ewcf4vmAG0bbTmAYmekuMnYYrqlu9Rg==
 
 eslint-scope@^5.1.1:
   version "5.1.1"

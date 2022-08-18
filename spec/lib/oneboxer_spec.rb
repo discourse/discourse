@@ -508,6 +508,29 @@ RSpec.describe Oneboxer do
     end
   end
 
+  describe 'Twitter' do
+    let(:url) { 'https://twitter.com/discourse/status/1428031057186627589' }
+
+    before do
+      SiteSetting.twitter_consumer_key = 'twitter_consumer_key'
+      SiteSetting.twitter_consumer_secret = 'twitter_consumer_secret'
+    end
+
+    it 'works with rate limit' do
+      stub_request(:head, "https://twitter.com/discourse/status/1428031057186627589")
+        .to_return(status: 200, body: "", headers: {})
+
+      stub_request(:get, "https://twitter.com/discourse/status/1428031057186627589")
+        .to_return(status: 200, body: "", headers: {})
+
+      stub_request(:post, "https://api.twitter.com/oauth2/token")
+        .to_return(status: 200, body: "{access_token: 'token'}", headers: {})
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to eq('')
+      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to eq('')
+    end
+  end
+
   describe '#apply' do
     it 'generates valid HTML' do
       raw = "Before Onebox\nhttps://example.com\nAfter Onebox"

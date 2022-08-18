@@ -286,34 +286,24 @@
     font-size: $font-up-2;
   }
 
-  .d-modal-cancel {
-    width: 100%;
-    margin: 0.5em 0;
-  }
-
   .btn {
     display: block;
     text-align: left;
-    font-size: $font-up-1;
-    line-height: $line-height-medium;
     margin-bottom: 0.75em;
-    font-weight: bold;
     overflow: hidden;
     width: 100%;
     &:first-of-type {
       margin-top: 0.25em;
     }
+    &.btn-reply-on-original,
+    &.btn-reply-here {
+      font-size: $font-up-1;
+      line-height: $line-height-medium;
+      font-weight: bold;
+    }
     .topic-title {
       font-weight: normal;
     }
-  }
-}
-
-.d-modal-cancel {
-  margin-left: 1em;
-  color: var(--primary-medium);
-  &:hover {
-    color: var(--danger);
   }
 }
 

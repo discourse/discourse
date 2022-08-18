@@ -34,14 +34,8 @@ import { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 
-function loadDraft(store, opts) {
-  let promise = Promise.resolve();
-
-  opts = opts || {};
-
-  let draft = opts.draft;
-  const draftKey = opts.draftKey;
-  const draftSequence = opts.draftSequence;
+async function loadDraft(store, opts = {}) {
+  let { draft, draftKey, draftSequence } = opts;
 
   try {
     if (draft && typeof draft === "string") {
@@ -51,29 +45,27 @@ function loadDraft(store, opts) {
     draft = null;
     Draft.clear(draftKey, draftSequence);
   }
-  if (
-    draft &&
-    ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
-  ) {
-    const composer = store.createRecord("composer");
-    const serializedFields = Composer.serializedFieldsForDraft();
 
-    let attrs = {
-      draftKey,
-      draftSequence,
-      draft: true,
-      composerState: Composer.DRAFT,
-      topic: opts.topic,
-    };
-
-    serializedFields.forEach((f) => {
-      attrs[f] = draft[f] || opts[f];
-    });
-
-    promise = promise.then(() => composer.open(attrs)).then(() => composer);
+  if (!draft?.title && !draft?.reply) {
+    return;
   }
 
-  return promise;
+  let attrs = {
+    draftKey,
+    draftSequence,
+    draft: true,
+    composerState: Composer.DRAFT,
+    topic: opts.topic,
+  };
+
+  Composer.serializedFieldsForDraft().forEach((f) => {
+    attrs[f] = draft[f] || opts[f];
+  });
+
+  const composer = store.createRecord("composer");
+  await composer.open(attrs);
+
+  return composer;
 }
 
 const _popupMenuOptionsCallbacks = [];
@@ -108,6 +100,7 @@ export default Controller.extend({
   topic: null,
   linkLookup: null,
   showPreview: true,
+  composerHeight: null,
   forcePreview: and("site.mobileView", "showPreview"),
   whisperOrUnlistTopic: or("isWhispering", "model.unlistTopic"),
   categories: alias("site.categoriesList"),
@@ -496,6 +489,10 @@ export default Controller.extend({
       }
 
       this.set("model.composeState", Composer.OPEN);
+      document.documentElement.style.setProperty(
+        "--composer-height",
+        this.get("model.composerHeight")
+      );
       return true;
     }
 
@@ -912,8 +909,7 @@ export default Controller.extend({
         let buttons = [
           {
             label: I18n.t("composer.cancel"),
-            class: "d-modal-cancel",
-            link: true,
+            class: "btn-flat btn-text btn-reply-where-cancel",
           },
         ];
 
@@ -923,7 +919,7 @@ export default Controller.extend({
             "<br/><div class='topic-title overflow-ellipsis'>" +
             currentTopic.get("fancyTitle") +
             "</div>",
-          class: "btn btn-reply-here",
+          class: "btn-reply-here",
           callback: () => {
             composer.setProperties({ topic: currentTopic, post: null });
             this.save(true);
@@ -1275,6 +1271,7 @@ export default Controller.extend({
       const defaultComposerHeight =
         this.model.action === "reply" ? "300px" : "400px";
 
+      this.set("model.composerHeight", defaultComposerHeight);
       document.documentElement.style.setProperty(
         "--composer-height",
         defaultComposerHeight
@@ -1489,6 +1486,7 @@ export default Controller.extend({
   collapse() {
     this._saveDraft();
     this.set("model.composeState", Composer.DRAFT);
+    document.documentElement.style.setProperty("--composer-height", "40px");
   },
 
   toggleFullscreen() {

@@ -4,7 +4,7 @@
       {{this.message}}
     </div>
     <div class="col-button">
-      <div class="alert--button"><DButton @icon="user-plus" @href="/my/invited" @class="btn-primary bootstrap-invite-button" @label="bootstrap_invite_button_title" /></div>
+      <div class="alert--button"><DButton @icon="user-plus" @action={{this.inviteUsers}} @class="btn-primary bootstrap-invite-button" @label="bootstrap_invite_button_title" /></div>
       {{#if this.site.wizard_required}}
         <div class="alert--link"><a class="bootstrap-wizard-link" href="/wizard">{{i18n "bootstrap_wizard_link_title"}}</a></div>
       {{/if}}

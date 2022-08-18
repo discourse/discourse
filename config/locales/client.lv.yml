@@ -166,12 +166,12 @@ lv:
         disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
       forwarded: "pārsūtīja iepriekš minēto e -pastu"
     topic_admin_menu: "tēmas darbības"
-    wizard_required: "Laipni lūgti jūsu jaunajā Discourse! Sāksim ar <a href='%{url}' data-auto-route='true'>uzstādīšanas palīgu</a> ✨"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
       message: "Mēs esam atjauninājuši šo vietni, <span>lūdzu, atjaunojiet to</span>, pretējā gadījumā var rasties kļūdas."
       dismiss: "Nerādīt"
     bootstrap_mode_disabled: "Bootstrap režīms tiks atspējots 24 stundu laikā."
+    bootstrap_invite_button_title: "Nosūtīt ielūgumus"
     themes:
       default_description: "Noklusējums"
     s3:

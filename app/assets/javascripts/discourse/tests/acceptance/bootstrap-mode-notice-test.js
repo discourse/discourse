@@ -26,13 +26,8 @@ acceptance("Bootstrap Mode Notice", function (needs) {
     );
 
     await click(".bootstrap-invite-button");
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/invited/pending",
-      "it transitions to the invite page"
-    );
+    assert.ok(exists(".create-invite-modal"), "opens create invite modal");
 
-    await visit("/");
     await click(".bootstrap-wizard-link");
     assert.strictEqual(
       currentURL(),

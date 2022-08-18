@@ -156,9 +156,10 @@
       @label="discourse_local_dates.create.form.insert" />
   {{/if}}
 
-  <a class="cancel-action" href {{action "cancel"}}>
-    {{i18n "cancel"}}
-  </a>
+  <DButton
+    @class="btn-flat"
+    @action={{action "cancel"}}
+    @translatedLabel={{i18n "cancel"}} />
 
   <DButton
     @class="btn-default advanced-mode-btn"

@@ -1,7 +1,7 @@
-import GlimmerComponent from "@glimmer/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 
-export default class SectionLink extends GlimmerComponent {
+export default class SectionLink extends Component {
   willDestroy() {
     if (this.args.willDestroy) {
       this.args.willDestroy();
@@ -9,7 +9,17 @@ export default class SectionLink extends GlimmerComponent {
   }
 
   get classNames() {
-    return `${this.args.class} sidebar-section-link sidebar-section-link-${this.args.linkName}`;
+    let classNames = [
+      "sidebar-section-link",
+      `sidebar-section-link-${this.args.linkName}`,
+      "sidebar-row",
+    ];
+
+    if (this.args.class) {
+      classNames.push(this.args.class);
+    }
+
+    return classNames.join(" ");
   }
 
   get models() {

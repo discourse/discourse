@@ -1,6 +1,12 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, settled, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  render,
+  settled,
+  triggerKeyEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { hbs } from "ember-cli-htmlbars";
@@ -134,5 +140,48 @@ module("Integration | Component | site-header", function (hooks) {
     document.querySelector(".d-header").style.height = 60 + "px";
     await waitUntil(() => getProperty() === "60px", { timeout: 100 });
     assert.strictEqual(getProperty(), "60px");
+  });
+
+  test("arrow up/down keys move focus between the tabs", async function (assert) {
+    this.currentUser.set("redesigned_user_menu_enabled", true);
+    await render(hbs`<SiteHeader />`);
+    await click(".header-dropdown-toggle.current-user");
+    let activeTab = query(".menu-tabs-container .btn.active");
+    assert.strictEqual(activeTab.id, "user-menu-button-all-notifications");
+
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+    let focusedTab = document.activeElement;
+    assert.strictEqual(
+      focusedTab.id,
+      "user-menu-button-replies",
+      "pressing the down arrow key moves focus to the next tab towards the bottom"
+    );
+
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+
+    focusedTab = document.activeElement;
+    assert.ok(
+      focusedTab.href.endsWith("/u/eviltrout/preferences"),
+      "the down arrow key can move the focus to the bottom tabs"
+    );
+
+    await triggerKeyEvent(document, "keydown", "ArrowDown");
+    focusedTab = document.activeElement;
+    assert.strictEqual(
+      focusedTab.id,
+      "user-menu-button-all-notifications",
+      "the focus moves back to the top after reaching the bottom"
+    );
+
+    await triggerKeyEvent(document, "keydown", "ArrowUp");
+    focusedTab = document.activeElement;
+    assert.ok(
+      focusedTab.href.endsWith("/u/eviltrout/preferences"),
+      "the up arrow key moves the focus in the opposite direction"
+    );
   });
 });

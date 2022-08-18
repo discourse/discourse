@@ -119,8 +119,8 @@ export default Component.extend({
   },
 
   _loadLastUsedCustomDatetime() {
-    let lastTime = localStorage.lastCustomTime;
-    let lastDate = localStorage.lastCustomDate;
+    const lastTime = this.keyValueStore.lastCustomTime;
+    const lastDate = this.keyValueStore.lastCustomDate;
 
     if (lastTime && lastDate) {
       let parsed = parseCustomDatetime(lastDate, lastTime, this.userTimezone);
@@ -243,8 +243,8 @@ export default Component.extend({
       if (customDatetime.isValid() && this.customDate) {
         dateTime = customDatetime;
 
-        localStorage.lastCustomTime = this.customTime;
-        localStorage.lastCustomDate = this.customDate;
+        this.keyValueStore.lastCustomTime = this.customTime;
+        this.keyValueStore.lastCustomDate = this.customDate;
       }
     } else {
       dateTime = this.options.findBy("id", type).time;

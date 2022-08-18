@@ -63,9 +63,7 @@
             <td class="col actions">
               {{#if item.editing}}
                 <DButton @class="btn-default" @action={{action "save"}} @actionParam={{item}} @label="admin.logs.save" />
-                <a href {{action "cancel" item}} class="cancel-action">
-                  {{i18n "cancel"}}
-                </a>
+                <DButton @class="btn-flat" @action={{action "cancel" item}} @translatedLabel={{i18n "cancel"}} />
               {{else}}
                 <DButton @class="btn-default btn-danger" @action={{action "destroy"}} @actionParam={{item}} @icon="far-trash-alt" />
                 <DButton @class="btn-default" @action={{action "edit"}} @actionParam={{item}} @icon="pencil-alt" />

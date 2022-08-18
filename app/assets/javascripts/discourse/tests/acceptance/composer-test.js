@@ -57,6 +57,8 @@ acceptance("Composer", function (needs) {
     });
   });
 
+  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
+
   test("composer controls", async function (assert) {
     await visit("/");
     assert.ok(exists("#create-topic"), "the create button is visible");
@@ -721,96 +723,84 @@ acceptance("Composer", function (needs) {
   });
 
   test("Checks for existing draft", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-      await click(".topic-post:nth-of-type(1) button.show-more-actions");
-      await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
 
-      assert.strictEqual(
-        query(".modal-body").innerText,
-        I18n.t("drafts.abandon.confirm")
-      );
+    assert.strictEqual(
+      query(".modal-body").innerText,
+      I18n.t("drafts.abandon.confirm")
+    );
 
-      await click(".modal-footer .btn.btn-default");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    await click(".modal-footer .btn.btn-default");
   });
 
   test("Can switch states without abandon popup", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-      const longText = "a".repeat(256);
+    const longText = "a".repeat(256);
 
-      sinon.stub(Draft, "get").returns(
-        Promise.resolve({
-          draft: null,
-          draft_sequence: 0,
-        })
-      );
+    sinon.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft: null,
+        draft_sequence: 0,
+      })
+    );
 
-      await click(".btn-primary.create.btn");
+    await click(".btn-primary.create.btn");
 
-      await fillIn(".d-editor-input", longText);
+    await fillIn(".d-editor-input", longText);
 
-      assert.ok(
-        exists(
-          '.action-title a[href="/t/internationalization-localization/280"]'
-        ),
-        "the mode should be: reply to post"
-      );
+    assert.ok(
+      exists(
+        '.action-title a[href="/t/internationalization-localization/280"]'
+      ),
+      "the mode should be: reply to post"
+    );
 
-      await click("article#post_3 button.reply");
+    await click("article#post_3 button.reply");
 
-      const composerActions = selectKit(".composer-actions");
-      await composerActions.expand();
-      await composerActions.selectRowByValue("reply_as_new_topic");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_new_topic");
 
-      assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
+    assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
 
-      assert.ok(
-        query(".d-editor-input").value.includes(longText),
-        "entered text should still be there"
-      );
+    assert.ok(
+      query(".d-editor-input").value.includes(longText),
+      "entered text should still be there"
+    );
 
-      assert.ok(
-        !exists(
-          '.action-title a[href="/t/internationalization-localization/280"]'
-        ),
-        "mode should have changed"
-      );
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    assert.ok(
+      !exists(
+        '.action-title a[href="/t/internationalization-localization/280"]'
+      ),
+      "mode should have changed"
+    );
   });
 
   test("Loading draft also replaces the recipients", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      sinon.stub(Draft, "get").returns(
-        Promise.resolve({
-          draft:
-            '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
-          draft_sequence: 0,
-        })
-      );
+    sinon.stub(Draft, "get").returns(
+      Promise.resolve({
+        draft:
+          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
+        draft_sequence: 0,
+      })
+    );
 
-      await visit("/u/charlie");
-      await click("button.compose-pm");
-      await click(".modal .btn-default");
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+    await click(".modal .btn-default");
 
-      const privateMessageUsers = selectKit("#private-message-users");
-      assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
   });
 
   test("Loads tags and category from draft payload", async function (assert) {

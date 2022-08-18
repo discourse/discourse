@@ -2867,8 +2867,7 @@ nl:
       message: "<p>We hebben de activeringsmail opnieuw naar <b>%{email}</b> verstuurd"
   safe_mode:
     title: "Veilige modus starten"
-    no_customizations: "Huidige thema uitschakelen"
-    only_official: "Niet-officiële plug-ins uitschakelen"
+    no_unofficial_plugins: "Niet-officiële plug-ins uitschakelen"
     no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
   wizard:

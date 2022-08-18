@@ -2002,8 +2002,7 @@ ro:
       message: "<p>Am trimis un email de activare la <b>%{email}</b>"
   safe_mode:
     title: "Activează modul sigur"
-    description: "Modul sigur îți permite să îți testezi site-ul fără să încarci plugin-uri și personalizări."
-    only_official: "Dezactivează plugin-urile neoficiale"
+    no_unofficial_plugins: "Dezactivează plugin-urile neoficiale"
     no_plugins: "Dezactivează toate plugin-urile"
     enter: "Activează modul sigur"
   wizard:

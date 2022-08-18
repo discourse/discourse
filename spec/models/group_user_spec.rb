@@ -226,8 +226,8 @@ RSpec.describe GroupUser do
   describe '#destroy!' do
     fab!(:group) { Fabricate(:group) }
 
-    it "removes `primary_group_id` and exec `match_primary_group_changes` method on user model" do
-      user = Fabricate(:user, primary_group: group)
+    it "removes `primary_group_id`, `flair_group_id` and exec `match_primary_group_changes` method on user model" do
+      user = Fabricate(:user, primary_group: group, flair_group: group)
       group_user = Fabricate(:group_user, group: group, user: user)
 
       user.expects(:match_primary_group_changes).once
@@ -235,6 +235,7 @@ RSpec.describe GroupUser do
 
       user.reload
       expect(user.primary_group_id).to be_nil
+      expect(user.flair_group_id).to be_nil
     end
   end
 end

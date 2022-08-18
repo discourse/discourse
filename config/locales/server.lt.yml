@@ -2665,8 +2665,7 @@ lt:
       title: "Persiųsti patvirtinimo laišką"
   safe_mode:
     title: "Įeikite į saugųjį režimą"
-    no_customizations: "Išjungti dabartinę temą"
-    only_official: "Išjungti neoficialius įskiepius"
+    no_unofficial_plugins: "Išjungti neoficialius įskiepius"
     no_plugins: "Išjungti visus įskiepius"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."

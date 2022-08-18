@@ -14,14 +14,15 @@ module BackupRestore
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
       @with_uploads = opts[:with_uploads].nil? ? include_uploads? : opts[:with_uploads]
       @filename_override = opts[:filename]
-
-      ensure_no_operation_is_running
-      ensure_we_have_a_user
+      @ticket = opts[:ticket]
 
       initialize_state
     end
 
     def run
+      ensure_no_operation_is_running
+      ensure_we_have_a_user
+
       log "[STARTED]"
       log "'#{@user.username}' has started the backup!"
 
@@ -55,8 +56,7 @@ module BackupRestore
       clean_up
       notify_user
       log "Finished!"
-
-      @success ? log("[SUCCESS]") : log("[FAILED]")
+      publish_completion(@success)
     end
 
     protected
@@ -66,7 +66,6 @@ module BackupRestore
     end
 
     def ensure_we_have_a_user
-      @user = User.find_by(id: @user_id)
       raise Discourse::InvalidParameters.new(:user_id) unless @user
     end
 
@@ -76,6 +75,8 @@ module BackupRestore
 
     def initialize_state
       @success = false
+      @user = User.find_by(id: @user_id)
+      @logs = []
       @store = BackupRestore::BackupStore.create
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
@@ -91,8 +92,6 @@ module BackupRestore
         else
           "#{File.basename(@archive_basename)}.sql.gz"
         end
-
-      @logs = []
     end
 
     def listen_for_shutdown_signal
@@ -387,7 +386,7 @@ module BackupRestore
 
     def log(message, ex = nil)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-      puts(message)
+      puts(message) if !Rails.env.test?
       publish_log(message, timestamp)
       save_log(message, timestamp)
       Rails.logger.error("#{ex}\n" + ex.backtrace.join("\n")) if ex
@@ -403,6 +402,15 @@ module BackupRestore
       @logs << "[#{timestamp}] #{message}"
     end
 
+    def publish_completion(success)
+      if success
+        log("[SUCCESS]")
+        DiscourseEvent.trigger(:backup_complete, logs: @logs, ticket: @ticket)
+      else
+        log("[FAILED]")
+        DiscourseEvent.trigger(:backup_failed, logs: @logs, ticket: @ticket)
+      end
+    end
   end
 
 end

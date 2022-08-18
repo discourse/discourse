@@ -41,7 +41,10 @@ document.addEventListener("discourse-booted", () => {
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam
     // handle randomization.
-    QUnit.config.seed = true;
+    QUnit.config.seed = Math.random().toString(36).slice(2);
+  } else {
+    // Don't reorder when specifying a seed
+    QUnit.config.reorder = false;
   }
 
   loader.loadModules();
@@ -53,4 +56,5 @@ document.addEventListener("discourse-booted", () => {
     setupEmberOnerrorValidation: !skipCore,
   });
 });
+
 window.EmberENV.TESTS_FILE_LOADED = true;

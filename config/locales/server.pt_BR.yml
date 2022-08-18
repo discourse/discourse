@@ -4320,9 +4320,7 @@ pt_BR:
       message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar no modo de segurança"
-    description: "O modo de segurança permite que você teste seu site sem carregar plug-ins ou personalizações."
-    no_customizations: "Desativar tema atual"
-    only_official: "Desativar plug-ins não oficiais"
+    no_unofficial_plugins: "Desativar plug-ins não oficiais"
     no_plugins: "Desativar todos os plug-ins"
     enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."

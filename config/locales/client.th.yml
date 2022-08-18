@@ -150,12 +150,12 @@ th:
       forwarded: "ส่งต่ออีเมลข้างต้นแล้ว"
     topic_admin_menu: "การดำเนินการสำหรับหัวเรื่อง"
     skip_to_main_content: "ข้ามไปยังเนื้อหา"
-    wizard_required: "ยินดีต้อนรับเข้าสู่ Discourse! เริ่มต้นด้วยการ<a href='%{url}' data-auto-route='true'>ไปที่เครื่องมือเปิดใช้งาน</a>✨"
     emails_are_disabled: "อีเมลขาออกทั้งหมดถูกปิดโดยผู้ดูแลระบบ จะไม่มีอีเมลแจ้งเตือนใดๆถูกส่งออกไป"
     emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
     software_update_prompt:
       message: "เราอัปเดตไซต์นี้เมื่อสักครู่ โปรด<span>รีเฟรช</span>หน้านี้ หรือคุณอาจเกิดเหตุการณ์ที่ไม่ตรงตามต้องการ"
       dismiss: "ซ่อน"
+    bootstrap_invite_button_title: "ส่งคำเชิญ"
     themes:
       default_description: "ค่าเริ่มต้น"
     s3:

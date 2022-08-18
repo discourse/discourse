@@ -2,6 +2,7 @@
 
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
+  include UserSidebarTagsMixin
 
   attributes :name,
              :unread_notifications,
@@ -75,7 +76,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :sidebar_category_ids,
-             :sidebar_tag_names,
+             :sidebar_tags,
              :likes_notifications_disabled,
              :grouped_unread_high_priority_notifications,
              :redesigned_user_menu_enabled
@@ -313,14 +314,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_sidebar_category_ids?
     SiteSetting.enable_experimental_sidebar_hamburger
-  end
-
-  def sidebar_tag_names
-    object.sidebar_tags.pluck(:name)
-  end
-
-  def include_sidebar_tag_names?
-    include_sidebar_category_ids? && SiteSetting.tagging_enabled
   end
 
   def include_status?

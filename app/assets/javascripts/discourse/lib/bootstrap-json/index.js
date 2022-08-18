@@ -239,6 +239,24 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
     let url = new URL(`${proxy}${baseURL}bootstrap.json`);
     url.searchParams.append("for_url", req.url);
 
+    const forUrlSearchParams = new URL(req.url, "https://dummy-origin.invalid")
+      .searchParams;
+
+    const mobileView = forUrlSearchParams.get("mobile_view");
+    if (mobileView) {
+      url.searchParams.append("mobile_view", mobileView);
+    }
+
+    const reqUrlSafeMode = forUrlSearchParams.get("safe_mode");
+    if (reqUrlSafeMode) {
+      url.searchParams.append("safe_mode", reqUrlSafeMode);
+    }
+
+    const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
+    if (reqUrlPreviewThemeId) {
+      url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
+    }
+
     const res = await fetch(url, { headers: req.headers });
     const json = await res.json();
 
@@ -319,7 +337,7 @@ async function handleRequest(proxy, baseURL, req, res) {
 
     const newCSP = csp
       .replaceAll(proxy, `http://${originalHost}`)
-      .replaceAll("script-src ", `script-src ${emberCliAdditions}`);
+      .replaceAll("script-src ", `script-src ${emberCliAdditions} `);
 
     res.set("content-security-policy", newCSP);
   }
