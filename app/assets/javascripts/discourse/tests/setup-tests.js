@@ -150,6 +150,23 @@ function setupToolbar() {
     label: "Plugin",
     value: Array.from(pluginNames),
   });
+
+  // Abort tests when the qunit controls are clicked
+  document.querySelector("#qunit").addEventListener("click", ({ target }) => {
+    if (!target.closest("#qunit-testrunner-toolbar")) {
+      // Outside toolbar, carry on
+      return;
+    }
+
+    if (target.closest("label[for=qunit-urlconfig-hidepassed]")) {
+      // This one can be toggled during tests, carry on
+      return;
+    }
+
+    if (["INPUT", "SELECT", "LABEL"].includes(target.tagName)) {
+      document.querySelector("#qunit-abort-tests-button")?.click();
+    }
+  });
 }
 
 function reportMemoryUsageAfterTests() {
