@@ -14,6 +14,7 @@ const SILENCED_WARN_PREFIXES = [
   "Setting the `jquery-integration` optional feature flag",
   "The Ember Classic edition has been deprecated",
   "Setting the `template-only-glimmer-components` optional feature flag to `false`",
+  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
 ];
 
 module.exports = function (defaults) {
@@ -28,6 +29,16 @@ module.exports = function (defaults) {
       return oldWriteWarning(message, ...args);
     }
   };
+
+  // Silence warnings which go straight to console.warn (e.g. template compiler deprecations)
+  /* eslint-disable no-console */
+  const oldConsoleWarn = console.warn.bind(console);
+  console.warn = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldConsoleWarn(message, ...args);
+    }
+  };
+  /* eslint-enable no-console */
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -134,6 +145,16 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
+  let discoursePluginsTree;
+  if (process.env.EMBER_CLI_PLUGIN_ASSETS === "1") {
+    discoursePluginsTree = app.project
+      .findAddonByName("discourse-plugins")
+      .generatePluginsTree();
+  } else {
+    // Empty tree - no-op
+    discoursePluginsTree = mergeTrees([]);
+  }
+
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
@@ -164,5 +185,6 @@ module.exports = function (defaults) {
       inputFiles: [`discourse-boot.js`],
     }),
     generateScriptsTree(app),
+    applyTerser(discoursePluginsTree),
   ]);
 };

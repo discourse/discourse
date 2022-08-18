@@ -3,6 +3,7 @@
   "workspaces": [
     "discourse",
     "admin",
+    "discourse-plugins",
     "discourse-common",
     "discourse-ensure-deprecation-order",
     "discourse-hbr",

@@ -5,7 +5,8 @@ const fetch = require("node-fetch");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const { promises: fs } = require("fs");
+const fs = require("fs");
+const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 const { Buffer } = require("node:buffer");
@@ -231,7 +232,7 @@ async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
 
 async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
   try {
-    const template = await fs.readFile(
+    const template = await fsPromises.readFile(
       path.join(cwd(), "dist", "index.html"),
       "utf8"
     );
@@ -378,10 +379,31 @@ module.exports = {
 
   contentFor(type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
-      return `
-        <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
-        <script src="${config.rootURL}assets/admin-plugins.js"></script>
-      `;
+      const scripts = [];
+
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS === "1") {
+        const pluginInfos = this.app.project
+          .findAddonByName("discourse-plugins")
+          .pluginInfos();
+
+        for (const { name, hasJs } of pluginInfos) {
+          if (hasJs) {
+            scripts.push(`plugins/${name}.js`);
+          }
+
+          if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
+            scripts.push(`plugins/${name}_extras.js`);
+          }
+        }
+      } else {
+        scripts.push("discourse/tests/active-plugins.js");
+      }
+
+      scripts.push("admin-plugins.js");
+
+      return scripts
+        .map((s) => `<script src="${config.rootURL}assets/${s}"></script>`)
+        .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
       return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
     }

@@ -4,15 +4,34 @@
   }
 
   // TODO: Remove this and have resolver find the templates
-  const prefix = "discourse/templates/";
+  const discoursePrefix = "discourse/templates/";
   const adminPrefix = "admin/templates/";
   const wizardPrefix = "wizard/templates/";
-  let len = prefix.length;
+  const discoursePrefixLength = discoursePrefix.length;
+
+  const pluginRegex = /^discourse\/plugins\/([^\/]+)\//;
+
   Object.keys(requirejs.entries).forEach(function (key) {
-    if (key.startsWith(prefix)) {
-      Ember.TEMPLATES[key.slice(len)] = require(key).default;
+    let templateKey;
+    let pluginName;
+    if (key.startsWith(discoursePrefix)) {
+      templateKey = key.slice(discoursePrefixLength);
     } else if (key.startsWith(adminPrefix) || key.startsWith(wizardPrefix)) {
-      Ember.TEMPLATES[key] = require(key).default;
+      templateKey = key;
+    } else if (
+      (pluginName = key.match(pluginRegex)?.[1]) &&
+      key.includes("/templates/") &&
+      require(key).default.__id // really is a template
+    ) {
+      // This logic mimics the old sprockets compilation system which used to
+      // output templates directly to `Ember.TEMPLATES` with this naming logic
+      templateKey = key.slice(`discourse/plugins/${pluginName}/`.length);
+      templateKey = templateKey.replace("discourse/templates/", "");
+      templateKey = `javascripts/${templateKey}`;
+    }
+
+    if (templateKey) {
+      Ember.TEMPLATES[templateKey] = require(key).default;
     }
   });
 
