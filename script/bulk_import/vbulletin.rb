@@ -495,13 +495,6 @@ class BulkImport::VBulletin < BulkImport::Base
       end
     end
 
-    # Category.find_each do |cat|
-    #   ccf = cat.custom_fields
-    #   if ccf && ccf["import_id"]
-    #     id = ccf["import_id"].to_i
-    #     id_mapping.push("/forumdisplay.php?#{id}  http://forum.quartertothree.com#{cat.url}")
-    #   end
-    # end
 
     CSV.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |csv|
       id_mapping.each do |value|
