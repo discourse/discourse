@@ -85,7 +85,7 @@ module Email
           post
         rescue Exception => e
           @incoming_email.update_columns(error: e.class.name) if @incoming_email
-          delete_staged_users
+          delete_created_staged_users
           raise
         end
       end
@@ -672,7 +672,6 @@ module Email
     def find_or_create_user(email, display_name, raise_on_failed_create: false, user: nil)
       User.transaction do
         user ||= User.find_by_email(email)
-        @staged_users << user if user&.staged?
 
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
@@ -685,13 +684,14 @@ module Email
               name: display_name.presence || User.suggest_name(email),
               staged: true
             )
-            @staged_users << user
             @created_staged_users << user
           rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
             raise if raise_on_failed_create
             user = nil
           end
         end
+
+        @staged_users << user if user&.staged?
       end
 
       user
@@ -1390,7 +1390,7 @@ module Email
       end
     end
 
-    def delete_staged_users
+    def delete_created_staged_users
       @created_staged_users.each do |user|
         if @incoming_email.user&.id == user.id
           @incoming_email.update_columns(user_id: nil)
