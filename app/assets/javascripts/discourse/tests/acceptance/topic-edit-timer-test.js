@@ -247,22 +247,18 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("schedule publish to category - last custom date and time", async function (assert) {
     updateCurrentUser({ moderator: true });
-
     await visit("/t/internationalization-localization");
-    await click(".toggle-admin-menu");
-    await click(".admin-topic-timer-update button");
-
-    await click("#tap_tile_custom");
-    await click(".modal-close");
 
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
     assert.notOk(
       exists("#tap_tile_last_custom"),
-      "it does not show last custom if the custom date and time was not filled and valid"
+      "it does not show last custom if the custom date and time was not filled before"
     );
 
+    await click(".modal-close");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
     await fillIn("#custom-time", "10:30");

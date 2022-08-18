@@ -116,11 +116,18 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
     );
   });
 
-  test("defaults to 08:00 for custom time", async function (assert) {
+  test("default custom date time is in one hour from now", async function (assert) {
+    this.clock = fakeTime(
+      "2100-12-11T17:00:00",
+      this.currentUser.timezone,
+      true
+    );
+
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
     await click("#tap_tile_custom");
-    assert.strictEqual(query("#custom-time").value, "08:00");
+    assert.strictEqual(query("#custom-date > input").value, "2100-12-11");
+    assert.strictEqual(query("#custom-time").value, "18:00");
   });
 
   test("shows 'Next Monday' instead of 'Monday' on Sundays", async function (assert) {
