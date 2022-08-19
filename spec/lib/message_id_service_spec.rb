@@ -55,6 +55,7 @@ RSpec.describe Email::MessageIdService do
   describe "find_post_from_message_ids" do
     let(:post_format_message_id) { "<topic/#{topic.id}/#{post.id}.test123@test.localhost>" }
     let(:topic_format_message_id) { "<topic/#{topic.id}.test123@test.localhost>" }
+    let(:discourse_format_message_id) { "<discourse/post/#{post.id}@test.localhost>" }
     let(:default_format_message_id) { "<36ac1ddd-5083-461d-b72c-6372fb0e7f33@test.localhost>" }
     let(:gmail_format_message_id) { "<CAPGrNgZ7QEFuPcsxJBRZLhBhAYPO_ruYpCANSdqiQEbc9Otpiw@mail.gmail.com>" }
 
@@ -64,6 +65,15 @@ RSpec.describe Email::MessageIdService do
 
     it "finds a post based only on a topic-format message id" do
       expect(subject.find_post_from_message_ids([topic_format_message_id])).to eq(post)
+    end
+
+    it "finds a post based only on a discourse-format message id" do
+      expect(subject.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
+    end
+
+    it "finds a post from the post's outbound_message_id" do
+      post.update!(outbound_message_id: subject.message_id_clean(discourse_format_message_id))
+      expect(subject.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
     end
 
     it "finds a post from the email log" do
@@ -104,6 +114,8 @@ RSpec.describe Email::MessageIdService do
       expect(check_format("<topic/1223/4525@test.localhost>")).to eq(true)
       expect(check_format("topic/1223@test.localhost")).to eq(true)
       expect(check_format("<topic/1223@test.localhost>")).to eq(true)
+      expect(check_format("discourse/post/1223@test.localhost")).to eq(true)
+      expect(check_format("<discourse/post/1223@test.localhost>")).to eq(true)
 
       expect(check_format("topic/1223@blah")).to eq(false)
       expect(check_format("<CAPGrNgZ7QEFuPcsxJBRZLhBhAYPO_ruYpCANSdqiQEbc9Otpiw@mail.gmail.com>")).to eq(false)

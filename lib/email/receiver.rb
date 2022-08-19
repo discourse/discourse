@@ -1329,6 +1329,8 @@ module Email
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
+        result.post.update(outbound_message_id: @incoming_email.message_id)
+
         if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user, @mail)
 
