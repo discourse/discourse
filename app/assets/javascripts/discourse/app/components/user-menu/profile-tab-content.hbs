@@ -1,0 +1,100 @@
+<ul>
+  <li class="summary">
+    <LinkTo @route="user.summary" @model={{this.currentUser}}>
+      {{d-icon "user"}}
+      <span class="item-label">
+        {{i18n "user.summary.title"}}
+      </span>
+    </LinkTo>
+  </li>
+
+  <li class="activity">
+    <LinkTo @route="userActivity" @model={{this.currentUser}}>
+      {{d-icon "stream"}}
+      <span class="item-label">
+        {{i18n "user.activity_stream"}}
+      </span>
+    </LinkTo>
+  </li>
+
+  {{#if this.currentUser.can_invite_to_forum}}
+    <li class="invites">
+      <LinkTo @route="userInvited" @model={{this.currentUser}}>
+        {{d-icon "user-plus"}}
+        <span class="item-label">
+          {{i18n "user.invited.title"}}
+        </span>
+      </LinkTo>
+    </li>
+  {{/if}}
+
+  <li class="drafts">
+    <LinkTo @route="userActivity.drafts" @model={{this.currentUser}}>
+      {{d-icon "pencil-alt"}}
+      <span class="item-label">
+        {{#if this.currentUser.draft_count}}
+          {{i18n "drafts.label_with_count" count=this.currentUser.draft_count}}
+        {{else}}
+          {{i18n "drafts.label"}}
+        {{/if}}
+      </span>
+    </LinkTo>
+  </li>
+
+  <li class="preferences">
+    <LinkTo @route="preferences" @model={{this.currentUser}}>
+      {{d-icon "cog"}}
+      <span class="item-label">
+        {{i18n "user.preferences"}}
+      </span>
+    </LinkTo>
+  </li>
+
+  <li class="do-not-disturb">
+    <DButton @class="btn-flat profile-tab-btn" @action={{this.doNotDisturbClick}}>
+      {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
+      <span class="item-label">
+        {{#if this.isInDoNotDisturb}}
+          <span>{{i18n "do_not_disturb.label"}}</span>
+          <span
+            title={{this.doNotDisturbDateTitle}}
+            data-time={{this.doNotDisturbDateTime}}
+            data-format="tiny"
+            class="relative-date"
+          >
+            {{this.doNotDisturbDateContent}}
+          </span>
+        {{else}}
+          {{i18n "do_not_disturb.label"}}
+        {{/if}}
+      </span>
+    </DButton>
+  </li>
+
+  {{#if this.showToggleAnonymousButton}}
+    <li class={{if this.currentUser.is_anonymous "disable-anonymous" "enable-anonymous"}}>
+      <DButton @class="btn-flat profile-tab-btn" @action={{route-action "toggleAnonymous"}}>
+        {{#if this.currentUser.is_anonymous}}
+          {{d-icon "ban"}}
+          <span class="item-label">
+            {{i18n "switch_from_anon"}}
+          </span>
+        {{else}}
+          {{d-icon "user-secret"}}
+          <span class="item-label">
+            {{i18n "switch_to_anon"}}
+          </span>
+        {{/if}}
+      </DButton>
+    </li>
+  {{/if}}
+
+  <li class="logout">
+    <DButton @class="btn-flat profile-tab-btn" @action={{route-action "logout"}}>
+      {{d-icon "sign-out-alt"}}
+      <span class="item-label">
+        {{i18n "user.log_out"}}
+      </span>
+    </DButton>
+  </li>
+</ul>

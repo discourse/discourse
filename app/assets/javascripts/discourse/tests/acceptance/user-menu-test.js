@@ -6,6 +6,7 @@ import {
   publishToMessageBus,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -19,7 +20,14 @@ acceptance("User menu", function (needs) {
   needs.user({
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 73,
+    trust_level: 3,
   });
+
+  needs.settings({
+    allow_anonymous_posting: true,
+    anonymous_posting_min_trust_level: 3,
+  });
+
   let requestHeaders = {};
 
   needs.pretender((server, helper) => {
@@ -176,6 +184,238 @@ acceptance("User menu", function (needs) {
     assert.ok(
       exists("#quick-access-custom-tab-1 button.btn"),
       "the tab's content is now displayed in the panel"
+    );
+  });
+
+  test("the profile tab", async function (assert) {
+    updateCurrentUser({ draft_count: 13 });
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    const summaryLink = query("#quick-access-profile ul li.summary a");
+    assert.ok(
+      summaryLink.href.endsWith("/u/eviltrout/summary"),
+      "has a link to the summary page of the user"
+    );
+    assert.strictEqual(
+      summaryLink.textContent.trim(),
+      I18n.t("user.summary.title"),
+      "summary link has the right label"
+    );
+    assert.ok(
+      summaryLink.querySelector(".d-icon-user"),
+      "summary link has the right icon"
+    );
+
+    const activityLink = query("#quick-access-profile ul li.activity a");
+    assert.ok(
+      activityLink.href.endsWith("/u/eviltrout/activity"),
+      "has a link to the activity page of the user"
+    );
+    assert.strictEqual(
+      activityLink.textContent.trim(),
+      I18n.t("user.activity_stream"),
+      "activity link has the right label"
+    );
+    assert.ok(
+      activityLink.querySelector(".d-icon-stream"),
+      "activity link has the right icon"
+    );
+
+    const invitesLink = query("#quick-access-profile ul li.invites a");
+    assert.ok(
+      invitesLink.href.endsWith("/u/eviltrout/invited"),
+      "has a link to the invites page of the user"
+    );
+    assert.strictEqual(
+      invitesLink.textContent.trim(),
+      I18n.t("user.invited.title"),
+      "invites link has the right label"
+    );
+    assert.ok(
+      invitesLink.querySelector(".d-icon-user-plus"),
+      "invites link has the right icon"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ can_invite_to_forum: false });
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.invites"),
+      "invites link not shown when the user can't invite"
+    );
+
+    const dratsLink = query("#quick-access-profile ul li.drafts a");
+    assert.ok(
+      dratsLink.href.endsWith("/u/eviltrout/activity/drafts"),
+      "has a link to the drafts page of the user"
+    );
+    assert.strictEqual(
+      dratsLink.textContent.trim(),
+      I18n.t("drafts.label_with_count", { count: 13 }),
+      "drafts link has the right label with count of the user's drafts"
+    );
+    assert.ok(
+      dratsLink.querySelector(".d-icon-pencil-alt"),
+      "drafts link has the right icon"
+    );
+
+    const preferencesLink = query("#quick-access-profile ul li.preferences a");
+    assert.ok(
+      preferencesLink.href.endsWith("/u/eviltrout/preferences"),
+      "has a link to the preferences page of the user"
+    );
+    assert.strictEqual(
+      preferencesLink.textContent.trim(),
+      I18n.t("user.preferences"),
+      "preferences link has the right label"
+    );
+    assert.ok(
+      preferencesLink.querySelector(".d-icon-cog"),
+      "preferences link has the right icon"
+    );
+
+    let doNotDisturbButton = query(
+      "#quick-access-profile ul li.do-not-disturb .btn"
+    );
+    assert.strictEqual(
+      doNotDisturbButton.textContent
+        .replaceAll(/\s+/g, " ")
+        .replaceAll(/\u200B/g, "")
+        .trim(),
+      I18n.t("do_not_disturb.label"),
+      "Do Not Disturb button has the right label"
+    );
+    assert.ok(
+      doNotDisturbButton.querySelector(".d-icon-toggle-off"),
+      "Do Not Disturb button has the right icon"
+    );
+
+    await click("header.d-header"); // close the menu
+    const date = new Date();
+    date.setHours(date.getHours() + 2);
+    updateCurrentUser({ do_not_disturb_until: date.toISOString() });
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    doNotDisturbButton = query(
+      "#quick-access-profile ul li.do-not-disturb .btn"
+    );
+    assert.strictEqual(
+      doNotDisturbButton.textContent
+        .replaceAll(/\s+/g, " ")
+        .replaceAll(/\u200B/g, "")
+        .trim(),
+      `${I18n.t("do_not_disturb.label")} 2h`,
+      "Do Not Disturb button has the right label when Do Not Disturb is enabled"
+    );
+    assert.ok(
+      doNotDisturbButton.querySelector(".d-icon-toggle-on"),
+      "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
+    );
+
+    let toggleAnonButton = query(
+      "#quick-access-profile ul li.enable-anonymous .btn"
+    );
+    assert.strictEqual(
+      toggleAnonButton.textContent
+        .replaceAll(/\s+/g, " ")
+        .replaceAll(/\u200B/g, "")
+        .trim(),
+      I18n.t("switch_to_anon"),
+      "toggle anonymous button has the right label when the user isn't anonymous"
+    );
+    assert.ok(
+      toggleAnonButton.querySelector(".d-icon-user-secret"),
+      "toggle anonymous button has the right icon when the user isn't anonymous"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: true });
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    toggleAnonButton = query(
+      "#quick-access-profile ul li.disable-anonymous .btn"
+    );
+    assert.strictEqual(
+      toggleAnonButton.textContent
+        .replaceAll(/\s+/g, " ")
+        .replaceAll(/\u200B/g, "")
+        .trim(),
+      I18n.t("switch_from_anon"),
+      "toggle anonymous button has the right label when the user is anonymous"
+    );
+    assert.ok(
+      toggleAnonButton.querySelector(".d-icon-ban"),
+      "toggle anonymous button has the right icon when the user is anonymous"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.enable-anonymous"),
+      "toggle anon button isn't shown when the user can't use it"
+    );
+    assert.notOk(
+      exists("#quick-access-profile ul li.disable-anonymous"),
+      "toggle anon button isn't shown when the user can't use it"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: true, trust_level: 2 });
+    this.siteSettings.allow_anonymous_posting = false;
+    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.ok(
+      exists("#quick-access-profile ul li.disable-anonymous"),
+      "toggle anon button is always shown if the user is anonymous"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: false, trust_level: 4 });
+    this.siteSettings.allow_anonymous_posting = false;
+    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.enable-anonymous"),
+      "toggle anon button is not shown if the allow_anonymous_posting setting is false"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
+    this.siteSettings.allow_anonymous_posting = true;
+    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.enable-anonymous"),
+      "toggle anon button is not shown if the user doesn't have a high enough trust level"
+    );
+
+    const logoutButton = query("#quick-access-profile ul li.logout .btn");
+    assert.strictEqual(
+      logoutButton.textContent
+        .replaceAll(/\s+/g, " ")
+        .replaceAll(/\u200B/g, "")
+        .trim(),
+      I18n.t("user.log_out"),
+      "logout button has the right label"
+    );
+    assert.ok(
+      logoutButton.querySelector(".d-icon-sign-out-alt"),
+      "logout button has the right icon"
     );
   });
 });

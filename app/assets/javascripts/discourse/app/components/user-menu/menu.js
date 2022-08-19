@@ -136,6 +136,22 @@ const CORE_TOP_TABS = [
   },
 ];
 
+const CORE_BOTTOM_TABS = [
+  class extends UserMenuTab {
+    get id() {
+      return "profile";
+    }
+
+    get icon() {
+      return "user";
+    }
+
+    get panelComponent() {
+      return "user-menu/profile-tab-content";
+    }
+  },
+];
+
 export default class UserMenu extends Component {
   @service currentUser;
   @service siteSettings;
@@ -185,8 +201,17 @@ export default class UserMenu extends Component {
   }
 
   get _bottomTabs() {
+    const tabs = [];
+
+    CORE_BOTTOM_TABS.forEach((tabClass) => {
+      const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
+      if (tab.shouldDisplay) {
+        tabs.push(tab);
+      }
+    });
+
     const topTabsLength = this.topTabs.length;
-    return this._coreBottomTabs.map((tab, index) => {
+    return tabs.map((tab, index) => {
       tab.position = index + topTabsLength;
       return tab;
     });
