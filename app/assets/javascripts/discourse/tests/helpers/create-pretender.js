@@ -1,7 +1,6 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
 
 export function parsePostData(query) {
   const result = {};
