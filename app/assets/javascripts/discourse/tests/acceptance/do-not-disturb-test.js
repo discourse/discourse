@@ -105,7 +105,7 @@ acceptance("Do not disturb - new user menu", function (needs) {
   needs.user({ redesigned_user_menu_enabled: true });
   needs.pretender((server, helper) => {
     server.post("/do-not-disturb.json", () => {
-      let now = new Date();
+      const now = new Date();
       now.setHours(now.getHours() + 1);
       return helper.response({ ends_at: now });
     });
@@ -171,7 +171,7 @@ acceptance("Do not disturb - new user menu", function (needs) {
   });
 
   test("when turned on, it can be turned off", async function (assert) {
-    let now = new Date();
+    const now = new Date();
     now.setHours(now.getHours() + 1);
     updateCurrentUser({ do_not_disturb_until: now });
 
