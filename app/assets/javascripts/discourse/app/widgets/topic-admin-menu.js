@@ -76,33 +76,44 @@ createWidget("topic-admin-menu-button", {
 
   showAdminMenu(e) {
     this.state.expanded = true;
-    let $button;
+    let button;
 
     if (e === undefined) {
-      $button = $(".keyboard-target-admin-menu");
+      button = document.getElementsByClassName(".keyboard-target-admin-menu");
     } else {
-      $button = $(e.target.closest("button"));
+      button = e.target.closest("button");
     }
 
-    const position = $button.position(),
-      SPACING = 3,
-      MENU_WIDTH = 217;
+    const position = { top: button.offsetTop, left: button.offsetLeft };
+    const spacing = 3;
+    const menuWidth = 212;
 
-    const rtl = $("html").hasClass("rtl");
-    position.outerHeight = $button.outerHeight();
-
-    if (rtl) {
-      position.left -= MENU_WIDTH - $button.outerWidth();
-    }
+    const rtl = document.querySelectorAll("html.rtl")[0];
+    const buttonDOMRect = button.getBoundingClientRect();
+    position.outerHeight = buttonDOMRect.height;
 
     if (this.attrs.openUpwards) {
       if (rtl) {
-        position.left -= $button[0].offsetWidth + SPACING;
+        position.left -= buttonDOMRect.width + spacing;
       } else {
-        position.left += $button[0].offsetWidth + SPACING;
+        position.left += buttonDOMRect.width + spacing;
       }
     } else {
-      position.top += $button[0].offsetHeight + SPACING;
+      if (rtl) {
+        if (buttonDOMRect.left < menuWidth) {
+          position.left += 0;
+        } else {
+          position.left -= menuWidth - buttonDOMRect.width;
+        }
+      } else {
+        const offsetRight = window.innerWidth - buttonDOMRect.right;
+
+        if (offsetRight < menuWidth) {
+          position.left -= menuWidth - buttonDOMRect.width;
+        }
+      }
+
+      position.top += buttonDOMRect.height + spacing;
     }
 
     this.state.position = position;
