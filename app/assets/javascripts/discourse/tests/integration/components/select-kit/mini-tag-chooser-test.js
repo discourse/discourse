@@ -125,5 +125,26 @@ module(
         "it forces the max length of the tag"
       );
     });
+
+    test("values in hiddenFromPreview will not display in preview", async function (assert) {
+      this.set("value", ["foo", "bar"]);
+      this.set("hiddenValues", ["foo"]);
+
+      await render(
+        hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=this.hiddenValues}} @value={{this.value}} />`
+      );
+      assert.strictEqual(
+        query(".formatted-selection").textContent.trim(),
+        "bar"
+      );
+
+      await this.subject.expand();
+      assert.deepEqual(
+        [...queryAll(".selected-content .selected-choice")].map((el) =>
+          el.textContent.trim()
+        ),
+        ["bar"]
+      );
+    });
   }
 );
