@@ -34,7 +34,15 @@
     width: var(--d-sidebar-width);
     padding: 1em 0 0;
     overflow-x: hidden;
-    overflow-y: auto;
+  }
+
+  .sidebar-scroll-wrap {
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: overlay;
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
@@ -48,29 +56,23 @@
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
       border-radius: calc(var(--scrollbarWidth) / 2);
-      border: calc(var(--scrollbarWidth) / 4) solid var(--primary-very-low);
+      border: calc(var(--scrollbarWidth) / 4) solid transparent;
     }
 
     &:hover {
       scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+
       &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbarThumbBg);
+        border-color: var(--primary-very-low);
       }
+
       transition-delay: 0s;
     }
 
     &::-webkit-scrollbar {
       width: var(--scrollbarWidth);
     }
-  }
-
-  .sidebar-scroll-wrap {
-    // limit the wrapper width, so when the scrollbar is added the content doesn't shift
-    max-width: calc(var(--d-sidebar-width));
-    box-sizing: border-box;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
 
     .composer-open & {
       // allows sidebar to scroll to the bottom when the composer is open
