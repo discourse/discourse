@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Importer for phpBB 3.0, 3.1 and 3.2
+# Importer for phpBB 3.0, 3.1, 3.2 and 3.3
 # Documentation: https://meta.discourse.org/t/importing-from-phpbb3/30810
 
 if ARGV.length != 1 || !File.exist?(ARGV[0])
