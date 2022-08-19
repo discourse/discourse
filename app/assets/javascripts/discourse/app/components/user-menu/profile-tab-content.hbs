@@ -51,7 +51,7 @@
   </li>
 
   <li class="do-not-disturb">
-    <DButton @class="btn-flat profile-tab-btn" @action={{action "doNotDisturbClick"}}>
+    <DButton @class="btn-flat profile-tab-btn" @action={{this.doNotDisturbClick}}>
       {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
       <span class="item-label">
         {{#if this.isInDoNotDisturb}}
