@@ -518,6 +518,7 @@ class BulkImport::VBulletin < BulkImport::Base
   def create_permalink_file
     puts '', 'Creating Permalink File...', ''
 
+    total = Topic.listable_topics.count
     start = Time.now
 
     i = 0
@@ -529,7 +530,7 @@ class BulkImport::VBulletin < BulkImport::Base
           id = pcf["import_id"].split('-').last
 
           f.print [ "XXX#{id}  YYY#{topic.id}" ].to_csv
-          print "\r%7d - %6d/sec" % [i, i.to_f / (Time.now - start)] if i % 5000 == 0
+          print "\r%7d/%7d - %6d/sec" % [i, total, i.to_f / (Time.now - start)] if i % 5000 == 0
         end
       end
     end
@@ -696,8 +697,10 @@ class BulkImport::VBulletin < BulkImport::Base
   def merge_duplicated_users
     puts '', "Merging duplicated users..."
 
+    start = Time.now
+
     duplicated = @user_ids_by_email.select { |e, ids| ids.count > 1 }
-    duplicated.each do |email, user_ids|
+    duplicated.each_with_index do |(email, user_ids), i|
       # nothing to do about these - they will remain a randomized hex string
       next unless email.presence
 
@@ -706,9 +709,11 @@ class BulkImport::VBulletin < BulkImport::Base
         UserCustomField.includes(:user).find_by!(name: 'import_id', value: id).user
       end
 
+
       rest.each do |dup|
         first.reload
         UserMerger.new(dup, first).merge!
+        print "\r%7d - %7d/sec" % [i, total, i.to_f / (Time.now - start)] if i % 1000 == 0
       end
     end
   end
