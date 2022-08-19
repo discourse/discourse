@@ -134,6 +134,9 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
+  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
+  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+
   return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
@@ -142,14 +145,18 @@ module.exports = function (defaults) {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    concat(mergeTrees([app.options.adminTree]), {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/admin.js`,
-    }),
-    concat(mergeTrees([app.options.wizardTree]), {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/wizard.js`,
-    }),
+    applyTerser(
+      concat(mergeTrees([app.options.adminTree]), {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    applyTerser(
+      concat(mergeTrees([app.options.wizardTree]), {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/wizard.js`,
+      })
+    ),
     prettyTextEngine(vendorJs, "discourse-markdown"),
     concat("public/assets/scripts", {
       outputFile: `assets/start-discourse.js`,
