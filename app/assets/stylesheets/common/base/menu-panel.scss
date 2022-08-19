@@ -94,6 +94,28 @@
   right: 0;
   width: 320px;
   padding: 0;
+  #quick-access-profile {
+    ul {
+      flex-wrap: nowrap;
+      height: 100%;
+      align-items: center;
+      max-height: 20em; // really tall viewports
+      overflow-y: auto; // really short viewports
+    }
+    li {
+      flex: 1 1 auto;
+      > * {
+        // button, a, and everything else
+        height: 100%;
+        align-items: center;
+        margin: 0;
+        padding: 0 0.5em;
+      }
+      .d-icon {
+        padding-top: 0;
+      }
+    }
+  }
 
   .panel-body-bottom {
     flex: 0;
@@ -103,7 +125,7 @@
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--primary-low);
-    padding: 0.75em 0;
+    padding: 0.75em 0 0;
   }
 
   .tabs-list {
