@@ -131,7 +131,7 @@ module(
       this.set("hiddenValues", ["foo"]);
 
       await render(
-        hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=hiddenValues}} @value={{this.value}} />`
+        hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=this.hiddenValues}} @value={{this.value}} />`
       );
       assert.strictEqual(
         query(".formatted-selection").textContent.trim(),
