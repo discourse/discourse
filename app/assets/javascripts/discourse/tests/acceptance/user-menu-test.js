@@ -368,6 +368,42 @@ acceptance("User menu", function (needs) {
       "toggle anon button isn't shown the user can't use it"
     );
 
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: true, trust_level: 2 });
+    this.siteSettings.allow_anonymous_posting = false;
+    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.ok(
+      exists("#quick-access-profile ul li.disable-anonymous"),
+      "toggle anon button is always shown if the user is anonymous"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: false, trust_level: 4 });
+    this.siteSettings.allow_anonymous_posting = false;
+    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.enable-anonymous"),
+      "toggle anon button is not shown if the allow_anonymous_posting setting is false"
+    );
+
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
+    this.siteSettings.allow_anonymous_posting = true;
+    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.enable-anonymous"),
+      "toggle anon button is not shown if the user doesn't have a high enough trust level"
+    );
+
     const logoutButton = query("#quick-access-profile ul li.logout .btn");
     assert.strictEqual(
       logoutButton.textContent
