@@ -99,11 +99,11 @@
       flex-wrap: nowrap;
       height: 100%;
       align-items: center;
-      max-height: 20em; // really tall viewports
       overflow-y: auto; // really short viewports
     }
     li {
       flex: 1 1 auto;
+      max-height: 3em; // prevent buttons from getting too tall
       > * {
         // button, a, and everything else
         height: 100%;
