@@ -25,4 +25,14 @@
   {{/if}}
 {{/if}}
 
-<PluginOutlet @name="bread-crumbs-right" @connectorTagName="li" />
+<PluginOutlet
+  @name="bread-crumbs-right"
+  @connectorTagName="li"
+  @args={{hash
+    tagId=this.tag.id
+    additionalTags=this.additionalTags
+    noSubcategories=this.noSubcategories
+    currentCategory=this.currentCategory
+    editingCategory=this.editingCategory
+  }}
+/>
