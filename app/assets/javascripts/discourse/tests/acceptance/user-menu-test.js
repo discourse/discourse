@@ -318,7 +318,7 @@ acceptance("User menu", function (needs) {
     );
 
     let toggleAnonButton = query(
-      "#quick-access-profile ul li.enable-anonymous"
+      "#quick-access-profile ul li.enable-anonymous .btn"
     );
     assert.strictEqual(
       toggleAnonButton.textContent
@@ -338,7 +338,9 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
-    toggleAnonButton = query("#quick-access-profile ul li.disable-anonymous");
+    toggleAnonButton = query(
+      "#quick-access-profile ul li.disable-anonymous .btn"
+    );
     assert.strictEqual(
       toggleAnonButton.textContent
         .replaceAll(/\s+/g, " ")
@@ -366,7 +368,7 @@ acceptance("User menu", function (needs) {
       "toggle anon button isn't shown the user can't use it"
     );
 
-    const logoutButton = query("#quick-access-profile ul li.logout");
+    const logoutButton = query("#quick-access-profile ul li.logout .btn");
     assert.strictEqual(
       logoutButton.textContent
         .replaceAll(/\s+/g, " ")
