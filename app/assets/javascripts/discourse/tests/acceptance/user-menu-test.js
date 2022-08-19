@@ -238,6 +238,16 @@ acceptance("User menu", function (needs) {
       "invites link has the right icon"
     );
 
+    await click("header.d-header"); // close the menu
+    updateCurrentUser({ can_invite_to_forum: false });
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(
+      exists("#quick-access-profile ul li.invites"),
+      "invites link not shown when the user can't invite"
+    );
+
     const dratsLink = query("#quick-access-profile ul li.drafts a");
     assert.ok(
       dratsLink.href.endsWith("/u/eviltrout/activity/drafts"),
