@@ -293,6 +293,7 @@ export default Component.extend(
       placementStrategy: null,
       mobilePlacementStrategy: null,
       desktopPlacementStrategy: null,
+      hiddenValues: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {

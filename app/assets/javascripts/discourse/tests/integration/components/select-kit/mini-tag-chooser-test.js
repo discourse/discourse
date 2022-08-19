@@ -128,10 +128,10 @@ module(
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
       this.set("value", ["foo", "bar"]);
-      this.set("hiddenFromPreview", ["foo"]);
+      this.set("hiddenValues", ["foo"]);
 
       await render(
-        hbs`<MiniTagChooser @options={{hash allowAny=true}} @value={{this.value}} @hiddenFromPreview={{hiddenFromPreview}}/>`
+        hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=hiddenValues}} @value={{this.value}} />`
       );
       assert.strictEqual(
         query(".formatted-selection").textContent.trim(),
