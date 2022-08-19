@@ -2,7 +2,6 @@ import { module, test } from "qunit";
 import AppEvents from "discourse/services/app-events";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import createStore from "discourse/tests/helpers/create-store";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -232,7 +231,7 @@ module("Unit | Model | post-stream", function () {
   test("cancelFilter", function (assert) {
     const postStream = buildStream(1235);
 
-    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+    sinon.stub(postStream, "refresh").resolves();
 
     postStream.set("filter", "summary");
     postStream.cancelFilter();
@@ -274,7 +273,7 @@ module("Unit | Model | post-stream", function () {
 
   test("fillGapBefore", function (assert) {
     const postStream = buildStream(1234, [60]);
-    sinon.stub(postStream, "findPostsByIds").returns(Promise.resolve([]));
+    sinon.stub(postStream, "findPostsByIds").resolves([]);
     let post = postStream.store.createRecord("post", {
       id: 60,
       post_number: 60,
@@ -294,7 +293,7 @@ module("Unit | Model | post-stream", function () {
 
   test("filterParticipant", function (assert) {
     const postStream = buildStream(1236);
-    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+    sinon.stub(postStream, "refresh").resolves();
 
     assert.strictEqual(
       postStream.get("userFilters.length"),
@@ -320,7 +319,7 @@ module("Unit | Model | post-stream", function () {
       store.createRecord("post", { id: 2, post_number: 3 })
     );
 
-    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+    sinon.stub(postStream, "refresh").resolves();
 
     assert.strictEqual(
       postStream.get("filterRepliesToPostNumber"),
@@ -351,7 +350,7 @@ module("Unit | Model | post-stream", function () {
       store.createRecord("post", { id: 2, post_number: 3 })
     );
 
-    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+    sinon.stub(postStream, "refresh").resolves();
 
     assert.strictEqual(
       postStream.get("filterUpwardsPostID"),
@@ -376,7 +375,7 @@ module("Unit | Model | post-stream", function () {
 
   test("streamFilters", function (assert) {
     const postStream = buildStream(1237);
-    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+    sinon.stub(postStream, "refresh").resolves();
 
     assert.deepEqual(
       postStream.get("streamFilters"),
@@ -960,9 +959,7 @@ module("Unit | Model | post-stream", function () {
       username: "ignoreduser",
     });
 
-    let stub = sinon
-      .stub(postStream, "findPostsByIds")
-      .returns(Promise.resolve([post2]));
+    let stub = sinon.stub(postStream, "findPostsByIds").resolves([post2]);
 
     await postStream.triggerNewPostsInStream([101]);
     assert.strictEqual(
@@ -977,7 +974,7 @@ module("Unit | Model | post-stream", function () {
     );
 
     stub.restore();
-    sinon.stub(postStream, "findPostsByIds").returns(Promise.resolve([post3]));
+    sinon.stub(postStream, "findPostsByIds").resolves([post3]);
 
     await postStream.triggerNewPostsInStream([102]);
     assert.strictEqual(

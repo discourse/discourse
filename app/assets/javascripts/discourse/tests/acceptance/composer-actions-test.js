@@ -9,7 +9,6 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
@@ -117,9 +116,8 @@ acceptance("Composer Actions", function (needs) {
   });
 
   test("replying to post - reply_as_new_topic", async function (assert) {
-    sinon
-      .stub(Draft, "get")
-      .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
+    sinon.stub(Draft, "get").resolves({ draft: "", draft_sequence: 0 });
+
     const composerActions = selectKit(".composer-actions");
     const categoryChooser = selectKit(".title-wrapper .category-chooser");
     const categoryChooserReplyArea = selectKit(".reply-area .category-chooser");
@@ -405,13 +403,11 @@ acceptance("Composer Actions", function (needs) {
 });
 
 function stubDraftResponse() {
-  sinon.stub(Draft, "get").returns(
-    Promise.resolve({
-      draft:
-        '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-      draft_sequence: 0,
-    })
-  );
+  sinon.stub(Draft, "get").resolves({
+    draft:
+      '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+    draft_sequence: 0,
+  });
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {

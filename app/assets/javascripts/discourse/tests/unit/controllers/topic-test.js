@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
@@ -70,9 +69,8 @@ discourseModule("Unit | Controller | topic", function (hooks) {
     const model = Topic.create();
     let destroyed = false;
     let modalDisplayed = false;
-    model.destroy = () => {
+    model.destroy = async () => {
       destroyed = true;
-      return Promise.resolve();
     };
     const controller = this.getController("topic", {
       model,
@@ -672,9 +670,8 @@ discourseModule("Unit | Controller | topic", function (hooks) {
       post_number: 2,
       can_delete: true,
       reply_count: 3,
-      destroy: () => {
+      destroy: async () => {
         destroyed = true;
-        return Promise.resolve();
       },
     });
 

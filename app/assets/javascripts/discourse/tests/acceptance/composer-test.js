@@ -21,7 +21,6 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
-import { Promise } from "rsvp";
 import sinon from "sinon";
 
 acceptance("Composer", function (needs) {
@@ -774,12 +773,10 @@ acceptance("Composer", function (needs) {
 
     const longText = "a".repeat(256);
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft: null,
-        draft_sequence: 0,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft: null,
+      draft_sequence: 0,
+    });
 
     await click(".btn-primary.create.btn");
 
@@ -816,13 +813,11 @@ acceptance("Composer", function (needs) {
   test("Loading draft also replaces the recipients", async function (assert) {
     toggleCheckDraftPopup(true);
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
-        draft_sequence: 0,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
+      draft_sequence: 0,
+    });
 
     await visit("/u/charlie");
     await click("button.compose-pm");
@@ -835,14 +830,12 @@ acceptance("Composer", function (needs) {
   test("Loads tags and category from draft payload", async function (assert) {
     updateCurrentUser({ has_topic_draft: true });
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
-        draft_sequence: 0,
-        draft_key: NEW_TOPIC_KEY,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+      draft_sequence: 0,
+      draft_key: NEW_TOPIC_KEY,
+    });
 
     await visit("/latest");
     assert.strictEqual(
