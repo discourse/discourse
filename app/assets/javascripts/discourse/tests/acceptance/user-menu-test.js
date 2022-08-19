@@ -361,11 +361,11 @@ acceptance("User menu", function (needs) {
 
     assert.notOk(
       exists("#quick-access-profile ul li.enable-anonymous"),
-      "toggle anon button isn't shown the user can't use it"
+      "toggle anon button isn't shown when the user can't use it"
     );
     assert.notOk(
       exists("#quick-access-profile ul li.disable-anonymous"),
-      "toggle anon button isn't shown the user can't use it"
+      "toggle anon button isn't shown when the user can't use it"
     );
 
     await click("header.d-header"); // close the menu
