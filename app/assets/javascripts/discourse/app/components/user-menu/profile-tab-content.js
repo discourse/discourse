@@ -22,15 +22,15 @@ export default class UserMenuProfileTabContent extends Component {
     return !!this.#doNotDisturbUntilDate;
   }
 
-  get dateTitle() {
+  get doNotDisturbDateTitle() {
     return longDate(this.#doNotDisturbUntilDate);
   }
 
-  get dateContent() {
+  get doNotDisturbDateContent() {
     return relativeAge(this.#doNotDisturbUntilDate);
   }
 
-  get dateTime() {
+  get doNotDisturbDateTime() {
     return this.#doNotDisturbUntilDate.getTime();
   }
 

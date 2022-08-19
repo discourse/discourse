@@ -57,12 +57,12 @@
         {{#if this.isInDoNotDisturb}}
           <span>{{i18n "do_not_disturb.label"}}</span>
           <span
-            title={{this.dateTitle}}
-            data-time={{this.dateTime}}
+            title={{this.doNotDisturbDateTitle}}
+            data-time={{this.doNotDisturbDateTime}}
             data-format="tiny"
             class="relative-date"
           >
-            {{this.dateContent}}
+            {{this.doNotDisturbDateContent}}
           </span>
         {{else}}
           {{i18n "do_not_disturb.label"}}
