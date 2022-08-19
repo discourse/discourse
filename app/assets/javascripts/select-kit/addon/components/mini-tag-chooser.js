@@ -26,6 +26,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     closeOnChange: false,
     maximum: "maxTagsPerTopic",
     autoInsertNoneItem: false,
+    hiddenFromPreview: null,
   },
 
   modifyComponentForRow(collection, item) {
@@ -59,7 +60,11 @@ export default MultiSelectComponent.extend(TagsMixin, {
   }),
 
   content: computed("value.[]", function () {
-    return makeArray(this.value).map((x) => this.defaultItem(x, x));
+    let values = makeArray(this.value);
+    if (this.hiddenFromPreview) {
+      values = values.filter((val) => !this.hiddenFromPreview.includes(val));
+    }
+    return values.map((x) => this.defaultItem(x, x));
   }),
 
   search(filter) {
