@@ -35,6 +35,7 @@ import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
+import { tracked } from "@glimmer/tracking";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -116,6 +117,7 @@ const User = RestModel.extend({
   hasPMs: gt("private_messages_stats.all", 0),
   hasStartedPMs: gt("private_messages_stats.mine", 0),
   hasUnreadPMs: gt("private_messages_stats.unread", 0),
+  @tracked status: null,
 
   redirected_to_top: {
     reason: null,
