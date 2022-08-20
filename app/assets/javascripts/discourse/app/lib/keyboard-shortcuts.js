@@ -151,6 +151,10 @@ export default {
   },
 
   teardown() {
+    const prototype = Object.getPrototypeOf(this.keyTrapper);
+    prototype.stopCallback = this.oldStopCallback;
+    this.oldStopCallback = null;
+
     this.keyTrapper?.destroy();
     this.keyTrapper = null;
     this.container = null;
@@ -819,7 +823,7 @@ export default {
 
   _stopCallback() {
     const prototype = Object.getPrototypeOf(this.keyTrapper);
-    const oldStopCallback = prototype.stopCallback;
+    const oldCallback = (this.oldStopCallback = prototype.stopCallback);
 
     prototype.stopCallback = function (e, element, combo, sequence) {
       if (this.paused) {
@@ -833,7 +837,7 @@ export default {
         return false;
       }
 
-      return oldStopCallback.call(this, e, element, combo, sequence);
+      return oldCallback.call(this, e, element, combo, sequence);
     };
   },
 
