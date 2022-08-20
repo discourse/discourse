@@ -426,3 +426,11 @@ div.education {
   align-self: center;
   line-height: $line-height-medium;
 }
+
+.topic-list .topic-list-data:last-of-type {
+  cursor:text;
+}
+
+.topic-list .num.activity a {
+  cursor:default;
+}
