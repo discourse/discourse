@@ -4811,7 +4811,7 @@ es:
         nav:
           new: "Nuevos"
           active: "Activos"
-          staff: "Personal"
+          staff: "STAFF"
           suspended: "Suspendidos"
           silenced: "Silenciados"
           staged: "Temporal"
@@ -4825,7 +4825,7 @@ es:
           member: "Usuarios con nivel de confianza 2 (Miembro)"
           regular: "Usuarios con nivel de confianza 3 (Habitual)"
           leader: "Usuarios con nivel de confianza 4 (Líder)"
-          staff: "Personal"
+          staff: "STAFF"
           admins: "Administradores"
           moderators: "Moderadores"
           silenced: "Usuarios silenciados"
