@@ -278,29 +278,34 @@
   }
 }
 
-.reply-where-modal {
+.bootbox.modal.reply-where-modal {
   max-width: 400px;
+  margin-left: -200px;
 
   h1 {
     margin: 0;
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 
   .btn {
     display: block;
     text-align: left;
     margin-bottom: 0.75em;
+    margin-right: 0;
     overflow: hidden;
     width: 100%;
+
     &:first-of-type {
       margin-top: 0.25em;
     }
+
     &.btn-reply-on-original,
     &.btn-reply-here {
-      font-size: $font-up-1;
-      line-height: $line-height-medium;
+      font-size: var(--font-up-1);
+      line-height: var(--line-height-medium);
       font-weight: bold;
     }
+
     .topic-title {
       font-weight: normal;
     }
