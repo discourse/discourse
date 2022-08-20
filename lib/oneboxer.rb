@@ -461,7 +461,7 @@ module Oneboxer
       preview_result = Onebox.preview(uri.to_s, onebox_options)
       result = {
         onebox: WordWatcher.censor(preview_result.to_s),
-        preview: WordWatcher.censor(preview_result&.placeholder_html.to_s)
+        preview: WordWatcher.censor(preview_result.placeholder_html.to_s)
       }
 
       # NOTE: Call preview_result.errors after calling placeholder_html
