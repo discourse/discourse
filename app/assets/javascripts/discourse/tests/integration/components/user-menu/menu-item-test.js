@@ -66,7 +66,6 @@ module(
       assert.ok(exists("li.unread"));
 
       this.item.notification.read = true;
-      // await pauseTest();
       await settled();
 
       assert.ok(
