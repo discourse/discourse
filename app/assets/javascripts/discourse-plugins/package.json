@@ -1,7 +1,7 @@
 {
   "name": "discourse-plugins",
   "version": "1.0.0",
-  "description": "A dummy addon which provides a broccoli tree for each Discourse plugin",
+  "description": "An addon providing a broccoli tree for each Discourse plugin",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [
