@@ -2380,6 +2380,8 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
+    default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
+    default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

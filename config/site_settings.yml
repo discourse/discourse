@@ -1994,6 +1994,14 @@ developer:
   enable_sidebar:
     default: true
     client: true
+  default_sidebar_categories:
+    type: category_list
+    default: ""
+    client: true
+  default_sidebar_tags:
+    type: tag_list
+    default: ""
+    client: true
 
 embedding:
   embed_by_username:
