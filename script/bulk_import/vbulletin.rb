@@ -82,8 +82,15 @@ class BulkImport::VBulletin < BulkImport::Base
     import_attachments
     import_avatars
     import_signatures
+  end
+
+  def execute_after
+    max_age = SiteSetting.delete_user_max_post_age
+    SiteSetting.delete_user_max_post_age = 50 * 365
 
     merge_duplicated_users
+
+    SiteSetting.delete_user_max_post_age = max_age
   end
 
   def import_groups

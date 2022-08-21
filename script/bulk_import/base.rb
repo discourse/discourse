@@ -99,6 +99,7 @@ class BulkImport::Base
     load_indexes
     execute
     fix_primary_keys
+    execute_after
     puts "Done! Now run the 'import:ensure_consistency' rake task."
   end
 
@@ -225,6 +226,9 @@ class BulkImport::Base
 
   def execute
     raise NotImplementedError
+  end
+
+  def execute_after
   end
 
   def fix_primary_keys
