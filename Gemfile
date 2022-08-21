@@ -254,6 +254,8 @@ if ENV["IMPORT"] == "1"
   gem 'reverse_markdown'
   gem 'tiny_tds'
   gem 'csv'
+
+  gem 'parallel', require: false
 end
 
 gem 'webpush', require: false

@@ -4,6 +4,7 @@ require_relative "base"
 require "set"
 require "mysql2"
 require "htmlentities"
+require "parallel"
 
 class BulkImport::VBulletin < BulkImport::Base
 
@@ -702,12 +703,13 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def merge_duplicated_users
-    puts '', "Merging duplicated users..."
-
-    start = Time.now
+    total_count = 0
+    user_ids_by_email.each {|e, ids| total_count += ids.count }
+    puts '', "Merging duplicated #{total_count} users..."
 
     duplicated = @user_ids_by_email.select { |e, ids| ids.count > 1 }
-    duplicated.each_with_index do |(email, user_ids), i|
+
+    Parallel.each duplicated do |email, user_ids|
       # nothing to do about these - they will remain a randomized hex string
       next unless email.presence
 
@@ -716,13 +718,14 @@ class BulkImport::VBulletin < BulkImport::Base
         UserCustomField.includes(:user).find_by!(name: 'import_id', value: id).user
       end
 
-
       rest.each do |dup|
-        first.reload
         UserMerger.new(dup, first).merge!
-        print "\r%7d - %7d/sec" % [i, total, i.to_f / (Time.now - start)] if i % 1000 == 0
+        first.reload
+        printf '.'
       end
     end
+
+    puts
   end
 
   def extract_pm_title(title)
