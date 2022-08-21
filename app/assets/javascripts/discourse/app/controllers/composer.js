@@ -650,8 +650,6 @@ export default Controller.extend({
       } else {
         await this.cancelComposer();
       }
-
-      return false;
     },
 
     fullscreenComposer() {
@@ -1054,7 +1052,7 @@ export default Controller.extend({
       @param {Boolean} [opts.skipDraftCheck]
       @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
-  open(opts = {}) {
+  async open(opts = {}) {
     if (!opts.draftKey) {
       throw new Error("composer opened without a proper draft key");
     }
@@ -1107,15 +1105,15 @@ export default Controller.extend({
       composerModel = null;
     }
 
-    let promise = new Promise((resolve, reject) => {
-      if (composerModel && composerModel.replyDirty) {
+    try {
+      if (composerModel?.replyDirty) {
         // If we're already open, we don't have to do anything
         if (
           composerModel.composeState === Composer.OPEN &&
           composerModel.draftKey === opts.draftKey &&
           !opts.action
         ) {
-          return resolve();
+          return;
         }
 
         // If it's the same draft, just open it up again.
@@ -1125,13 +1123,13 @@ export default Controller.extend({
         ) {
           composerModel.set("composeState", Composer.OPEN);
           if (!opts.action) {
-            return resolve();
+            return;
           }
         }
 
-        return this.cancelComposer()
-          .then(() => this.open(opts))
-          .then(resolve, reject);
+        await this.cancelComposer();
+        await this.open(opts);
+        return;
       }
 
       if (composerModel && composerModel.action !== opts.action) {
@@ -1140,45 +1138,37 @@ export default Controller.extend({
 
       // we need a draft sequence for the composer to work
       if (opts.draftSequence === undefined) {
-        return Draft.get(opts.draftKey)
-          .then((data) => {
-            if (opts.skipDraftCheck) {
-              data.draft = undefined;
-              return data;
-            }
-            return this.confirmDraftAbandon(data);
-          })
-          .then((data) => {
-            if (!opts.draft && data.draft) {
-              opts.draft = data.draft;
-            }
-            opts.draftSequence = data.draft_sequence;
-            return this._setModel(composerModel, opts);
-          })
-          .then(resolve, reject);
+        let data = await Draft.get(opts.draftKey);
+
+        if (opts.skipDraftCheck) {
+          data.draft = undefined;
+        } else {
+          data = await this.confirmDraftAbandon(data);
+        }
+
+        opts.draft ||= data.draft;
+        opts.draftSequence = data.draft_sequence;
+
+        await this._setModel(composerModel, opts);
+        return;
       }
+
       // otherwise, do the draft check async
-      else if (!opts.draft && !opts.skipDraftCheck) {
-        Draft.get(opts.draftKey)
-          .then((data) => {
-            return this.confirmDraftAbandon(data);
-          })
-          .then((data) => {
-            if (data.draft) {
-              opts.draft = data.draft;
-              opts.draftSequence = data.draft_sequence;
-              return this.open(opts);
-            }
-          });
+      if (!opts.draft && !opts.skipDraftCheck) {
+        let data = await Draft.get(opts.draftKey);
+        data = await this.confirmDraftAbandon(data);
+
+        if (data.draft) {
+          opts.draft = data.draft;
+          opts.draftSequence = data.draft_sequence;
+          await this.open(opts);
+        }
       }
 
-      return this._setModel(composerModel, opts).then(resolve, reject);
-    });
-
-    promise = promise.finally(() => {
+      await this._setModel(composerModel, opts);
+    } finally {
       this.skipAutoSave = false;
-    });
-    return promise;
+    }
   },
 
   // Given a potential instance and options, set the model for this composer.
@@ -1326,7 +1316,7 @@ export default Controller.extend({
       cancel(this._saveDraftDebounce);
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         const modal = showModal("discard-draft", {
           model: this.model,
@@ -1352,7 +1342,7 @@ export default Controller.extend({
             return resolve();
           },
           // needed to resume saving drafts if composer stays open
-          onDismissModal: () => reject(),
+          onDismissModal: () => resolve(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
