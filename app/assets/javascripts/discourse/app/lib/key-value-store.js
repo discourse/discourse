@@ -26,14 +26,27 @@ export default class KeyValueStore {
   }
 
   abandonLocal() {
+    return this.removeKeys();
+  }
+
+  removeKeys(predicate = () => true) {
     if (!safeLocalStorage) {
       return;
     }
 
     let i = safeLocalStorage.length - 1;
+
     while (i >= 0) {
       let k = safeLocalStorage.key(i);
-      if (k.substring(0, this.context.length) === this.context) {
+      let v = safeLocalStorage[k];
+      try {
+        v = JSON.parse(v);
+      } catch (e) {}
+
+      if (
+        k.substring(0, this.context.length) === this.context &&
+        predicate(k, v)
+      ) {
         safeLocalStorage.removeItem(k);
       }
       i--;
