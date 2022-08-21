@@ -22,6 +22,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -400,34 +401,27 @@ acceptance("Composer", function (needs) {
 
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post button.show-more-actions");
+    await click(".topic-post button.edit");
 
     await fillIn(".d-editor-input", "will return empty json");
     await fillIn("#reply-title", "This is the new text for the title");
 
-    // when this promise resolves, the request had already started because
-    // this promise will be resolved by the pretender
-    const promise = new Promise((resolve) => {
-      window.resolveLastPromise = resolve;
+    pretender.put("/posts/:post_id", async () => {
+      // at this point, request is in flight, so post is staged
+      assert.strictEqual(count(".topic-post.staged"), 1);
+      assert.ok(query(".topic-post").classList.contains("staged"));
+      assert.strictEqual(
+        query(".topic-post.staged .cooked").innerText.trim(),
+        "will return empty json"
+      );
+
+      return response(200, {});
     });
 
-    // click to trigger the save, but wait until the request starts
-    click("#reply-control button.create");
-    await promise;
+    await click("#reply-control button.create");
 
-    // at this point, request is in flight, so post is staged
-    assert.strictEqual(count(".topic-post.staged"), 1);
-    assert.ok(query(".topic-post:nth-of-type(1)").className.includes("staged"));
-    assert.strictEqual(
-      query(".topic-post.staged .cooked").innerText.trim(),
-      "will return empty json"
-    );
-
-    // finally, finish request and wait for last render
-    window.resolveLastPromise();
     await visit("/t/internationalization-localization/280");
-
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 

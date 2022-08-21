@@ -1,7 +1,6 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
 
 export function parsePostData(query) {
   const result = {};
@@ -506,14 +505,11 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.put("/posts/:post_id", async (request) => {
     const data = parsePostData(request.requestBody);
+
     if (data.post.raw === "this will 409") {
       return response(409, { errors: ["edit conflict"] });
-    } else if (data.post.raw === "will return empty json") {
-      window.resolveLastPromise();
-      return new Promise((resolve) => {
-        window.resolveLastPromise = resolve;
-      }).then(() => response(200, {}));
     }
+
     data.post.id = request.params.post_id;
     data.post.version = 2;
     return response(200, data.post);
