@@ -342,7 +342,7 @@ acceptance("Composer", function (needs) {
 
     await click(".modal-footer button.keep-editing");
 
-    assert.ok(invisible(".discard-draft-modal.modal"));
+    assert.ok(invisible(".discard-draft-modal.modal"), "hides modal");
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
