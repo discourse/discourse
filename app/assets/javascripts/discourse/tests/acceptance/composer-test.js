@@ -87,10 +87,7 @@ acceptance("Composer", function (needs) {
       "sets --composer-height back to 400px when composer is opened from draft mode"
     );
 
-    await fillIn(
-      ".d-editor-input",
-      ""
-    );
+    await fillIn(".d-editor-input", "");
     await click(".toggle-minimize");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
