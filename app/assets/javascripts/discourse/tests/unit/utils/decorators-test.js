@@ -54,13 +54,6 @@ class NativeComponent extends Component {
 module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.afterEach(function () {
-    // eslint-disable-next-line no-undef
-    delete Ember.TEMPLATES["components/native-component"];
-    // eslint-disable-next-line no-undef
-    delete Ember.TEMPLATES["components/ember-object-component"];
-  });
-
   test("afterRender", async function (assert) {
     this.registry.register("component:foo-component", fooComponent);
     this.set("baz", 0);
