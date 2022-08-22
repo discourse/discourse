@@ -19,7 +19,9 @@ const ScrollingDOMMethods = {
   },
 
   screenNotFull() {
-    return window.height > document.querySelector("#main").offsetHeight;
+    return (
+      window.height > document.querySelector(".ember-application").offsetHeight
+    );
   },
 };
 
