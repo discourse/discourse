@@ -147,41 +147,45 @@ function likeCount(attrs, state) {
 
 registerButton("like-count", likeCount);
 
-registerButton("like", (attrs) => {
-  if (!attrs.showLike) {
-    return likeCount(attrs);
+registerButton(
+  "like",
+  (attrs, _state, _siteSettings, _settings, currentUser) => {
+    if (!attrs.showLike) {
+      return likeCount(attrs);
+    }
+
+    const className = attrs.liked
+      ? "toggle-like has-like fade-out"
+      : "toggle-like like";
+
+    const button = {
+      action: "like",
+      icon: attrs.liked ? "d-liked" : "d-unliked",
+      className,
+      before: "like-count",
+      data: {
+        "post-id": attrs.id,
+      },
+    };
+
+    // If the user has already liked the post and doesn't have permission
+    // to undo that operation, then indicate via the title that they've liked it
+    // and disable the button. Otherwise, set the title even if the user
+    // is anonymous (meaning they don't currently have permission to like);
+    // this is important for accessibility.
+    if (attrs.liked && !attrs.canToggleLike) {
+      button.title = "post.controls.has_liked";
+    } else {
+      button.title = attrs.liked
+        ? "post.controls.undo_like"
+        : "post.controls.like";
+    }
+    if (currentUser && !attrs.canToggleLike) {
+      button.disabled = true;
+    }
+    return button;
   }
-
-  const className = attrs.liked
-    ? "toggle-like has-like fade-out"
-    : "toggle-like like";
-
-  const button = {
-    action: "like",
-    icon: attrs.liked ? "d-liked" : "d-unliked",
-    className,
-    before: "like-count",
-    data: {
-      "post-id": attrs.id,
-    },
-  };
-
-  // If the user has already liked the post and doesn't have permission
-  // to undo that operation, then indicate via the title that they've liked it
-  // and disable the button. Otherwise, set the title even if the user
-  // is anonymous (meaning they don't currently have permission to like);
-  // this is important for accessibility.
-  if (attrs.liked && !attrs.canToggleLike) {
-    button.title = "post.controls.has_liked";
-    button.disabled = true;
-  } else {
-    button.title = attrs.liked
-      ? "post.controls.undo_like"
-      : "post.controls.like";
-  }
-
-  return button;
-});
+);
 
 registerButton("flag-count", (attrs) => {
   let className = "button-count";
