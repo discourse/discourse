@@ -706,13 +706,23 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def merge_duplicated_users
+    count = 0
     total_count = 0
-    user_ids_by_email.each {|e, ids| total_count += ids.count }
-    puts '', "Merging duplicated #{total_count} users..."
 
-    duplicated = @user_ids_by_email.select { |e, ids| ids.count > 1 }
+    duplicated = {}
+    @user_ids_by_email.
+      select { |e, ids| ids.count > 1 }.
+      each_with_index do |(email, ids), i|
+        duplicated[email] = [ ids, i ]
+        count += 1
+        total_count += ids.count
+      end
 
-    Parallel.each duplicated do |email, user_ids|
+    puts '', "Merging #{total_count} duplicated users across #{count} distinct emails..."
+
+    start = Time.now
+
+    Parallel.each duplicated do |email, (user_ids, i)|
       # nothing to do about these - they will remain a randomized hex string
       next unless email.presence
 
@@ -726,6 +736,8 @@ class BulkImport::VBulletin < BulkImport::Base
         first.reload
         printf '.'
       end
+
+      print "\n%6d/%6d - %6d/sec" % [i, count, i.to_f / (Time.now - start)] if i % 10 == 0
     end
 
     puts
