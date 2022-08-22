@@ -8,7 +8,9 @@
       <%= preload_script "vendor" %>
       <%= preload_script "discourse" %>
       <%= preload_script "admin" %>
-      <%= preload_script "discourse/tests/active-plugins" %>
+      <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
+        <%= preload_script file %>
+      <%- end %>
       <%= preload_script "admin-plugins" %>
       <%= preload_script "test-support" %>
       <%= preload_script "test-helpers" %>

@@ -715,19 +715,31 @@ class Plugin::Instance
     handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
     javascript_includes.each { |js| contents << "require_asset('#{js}')" }
 
-    each_globbed_asset do |f, is_dir|
-      contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
+    if !EmberCli.plugin_assets?
+      each_globbed_asset do |f, is_dir|
+        contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
+      end
     end
 
-    if contents.present?
-      contents.insert(0, "<%")
-      contents << "%>"
-      Discourse::Utils.atomic_write_file(js_file_path, contents.join("\n"))
-    else
-      begin
-        File.delete(js_file_path)
+    if !contents.present?
+      [js_file_path, extra_js_file_path].each do |f|
+        File.delete(f)
       rescue Errno::ENOENT
       end
+      return
+    end
+
+    contents.insert(0, "<%")
+    contents << "%>"
+
+    write_path = EmberCli.plugin_assets? ? extra_js_file_path : js_file_path
+    delete_path = EmberCli.plugin_assets? ? js_file_path : extra_js_file_path
+
+    Discourse::Utils.atomic_write_file(write_path, contents.join("\n"))
+
+    begin
+      File.delete(delete_path)
+    rescue Errno::ENOENT
     end
   end
 
@@ -838,7 +850,16 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    File.exist?(js_file_path)
+    if EmberCli.plugin_assets?
+      # If assets/javascripts exists, ember-cli will output a .js file
+      File.exist?("#{File.dirname(@path)}/assets/javascripts")
+    else
+      File.exist?(js_file_path)
+    end
+  end
+
+  def extra_js_asset_exists?
+    EmberCli.plugin_assets? && File.exist?(extra_js_file_path)
   end
 
   # Receives an array with two elements:
@@ -1080,7 +1101,11 @@ class Plugin::Instance
   end
 
   def js_file_path
-    @file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+    "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+  end
+
+  def extra_js_file_path
+    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb"
   end
 
   def register_assets!

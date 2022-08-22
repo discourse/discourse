@@ -9,7 +9,7 @@ setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
   const script = document.getElementById("plugin-test-script");
-  if (script && !requirejs.entries["discourse/tests/active-plugins"]) {
+  if (script && !requirejs.entries["discourse/tests/plugin-tests"]) {
     throw new Error(
       `Plugin JS payload failed to load from ${script.src}. Is the Rails server running?`
     );
