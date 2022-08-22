@@ -33,6 +33,7 @@ const fooComponent = Component.extend({
 
 const EmberObjectComponent = Component.extend({
   name: "",
+  layout: hbs`<span class="ember-object-component">{{this.text}}</span>`,
 
   @discourseComputed("name")
   text(name) {
