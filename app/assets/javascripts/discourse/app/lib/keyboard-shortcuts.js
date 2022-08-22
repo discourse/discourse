@@ -346,9 +346,9 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const $el = $(".suggested-topics a.raw-topic-link:first");
-    if ($el.length) {
-      $el.click();
+    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    if (el) {
+      el.click();
     } else {
       const controller = this.container.lookup("controller:topic");
       // Only the last page contains list of suggested topics.
