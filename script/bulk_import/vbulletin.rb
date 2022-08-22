@@ -173,6 +173,9 @@ class BulkImport::VBulletin < BulkImport::Base
         created_at: Time.zone.at(row[2])
       }
     end
+
+    # for debugging purposes; not used operationally
+    save_duplicated_users
   end
 
   def import_user_stats
@@ -726,6 +729,16 @@ class BulkImport::VBulletin < BulkImport::Base
     end
 
     puts
+  end
+
+  def save_duplicated_users
+    File.open('duplicated_users.json', 'w+') do |f|
+      f.puts @user_ids_by_email.to_json
+    end
+  end
+
+  def read_duplicated_users
+    @user_ids_by_email = JSON.parse File.read('duplicated_users.json')
   end
 
   def extract_pm_title(title)
