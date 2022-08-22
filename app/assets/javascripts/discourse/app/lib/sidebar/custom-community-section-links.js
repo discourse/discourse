@@ -108,6 +108,6 @@ export function addSectionLink(args, secondary) {
 }
 
 export function resetDefaultSectionLinks() {
-  customSectionLinks = [];
-  secondaryCustomSectionLinks = [];
+  customSectionLinks.length = 0;
+  secondaryCustomSectionLinks.length = 0;
 }
