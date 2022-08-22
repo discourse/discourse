@@ -612,21 +612,6 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/posts", function (request) {
     const data = parsePostData(request.requestBody);
 
-    if (data.title === "this title triggers an error") {
-      return response(422, { errors: ["That title has already been taken"] });
-    }
-
-    if (data.raw === "enqueue this content please") {
-      return response(200, {
-        success: true,
-        action: "enqueued",
-        pending_post: {
-          id: 1234,
-          raw: data.raw,
-        },
-      });
-    }
-
     if (data.raw === "custom message") {
       return response(200, {
         success: true,
