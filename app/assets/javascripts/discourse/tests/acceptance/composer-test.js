@@ -95,7 +95,7 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
       "",
-      "removes --composer-height propety when composer is closed"
+      "removes --composer-height property when composer is closed"
     );
   });
 
