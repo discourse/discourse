@@ -2,7 +2,7 @@
   &.dropdown-select-box {
     &.toolbar-popup-menu-options {
       .select-kit-collection {
-        max-height: 50vh;
+        max-height: calc(max(var(--composer-height), 100vh) * 0.33);
       }
 
       .select-kit-body {
