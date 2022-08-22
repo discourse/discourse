@@ -10,6 +10,7 @@ import { next } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
+import { normalizeEvent } from "ember-jquery-legacy";
 
 const MIN_WIDTH_TIMELINE = 924,
   MIN_HEIGHT_TIMELINE = 325;
@@ -169,7 +170,8 @@ export default Component.extend(PanEvents, {
   },
 
   panStart(e) {
-    const target = e.originalEvent.target;
+    e = normalizeEvent(e);
+    const target = e.target;
 
     if (
       target.classList.contains("docked") ||
@@ -178,7 +180,7 @@ export default Component.extend(PanEvents, {
       return;
     }
 
-    e.originalEvent.preventDefault();
+    e.preventDefault();
     const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
     if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
       this.isPanning = false;
@@ -188,19 +190,21 @@ export default Component.extend(PanEvents, {
   },
 
   panEnd(e) {
+    e = normalizeEvent(e);
     if (!this.isPanning) {
       return;
     }
-    e.originalEvent.preventDefault();
+    e.preventDefault();
     this.isPanning = false;
     this._handlePanDone(e.deltaY, e);
   },
 
   panMove(e) {
+    e = normalizeEvent(e);
     if (!this.isPanning) {
       return;
     }
-    e.originalEvent.preventDefault();
+    e.preventDefault();
     $(".timeline-container").css("--offset", `${Math.max(0, e.deltaY)}px`);
   },
 

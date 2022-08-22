@@ -10,6 +10,7 @@ import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { normalizeEvent } from "ember-jquery-legacy";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
@@ -113,6 +114,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     panStart(e) {
+      e = normalizeEvent(e);
       const center = e.center;
       const panOverValidElement = document
         .elementsFromPoint(center.x, center.y)
@@ -125,7 +127,7 @@ const SiteHeaderComponent = MountWidget.extend(
         panOverValidElement &&
         (e.direction === "left" || e.direction === "right")
       ) {
-        e.originalEvent.preventDefault();
+        e.preventDefault();
         this._isPanning = true;
         const panel = document.querySelector(".menu-panel");
         if (panel) {
