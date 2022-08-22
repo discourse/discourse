@@ -120,7 +120,7 @@ export function setTestPresence(value) {
 }
 
 export function clearPresenceCallbacks() {
-  callbacks.splice(0, callbacks.length);
+  callbacks.length = 0;
 }
 
 if (!isTesting()) {
