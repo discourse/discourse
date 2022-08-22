@@ -55,14 +55,6 @@ RSpec.describe PostSerializer do
 
       expect(notify_user_action).to eq(nil)
     end
-
-    it "shows like for archived topics even if user cannot act" do
-      post = Fabricate(:post)
-      post.topic.update!(archived: true)
-
-      serializer = PostSerializer.new(post, scope: Guardian.new(actor), root: false)
-      expect(serializer.as_json[:actions_summary].map { |a| a[:id] }).to include(PostActionType.types[:like])
-    end
   end
 
   context "with a post with reviewable content" do

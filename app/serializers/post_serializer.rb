@@ -315,8 +315,7 @@ class PostSerializer < BasicPostSerializer
       summary.delete(:count) if summary[:count] == 0
 
       # Only include it if the user can do it or it has a count
-      # If it is a like, we want to show it always (even for archived topic)
-      if summary[:can_act] || summary[:count] || (sym == :like && object.user_id != scope.user&.id)
+      if summary[:can_act] || summary[:count]
         result << summary
       end
     end
