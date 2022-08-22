@@ -1,12 +1,11 @@
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Component from "@ember/component";
-import { clearRender } from "@ember/test-helpers";
+import { clearRender, render } from "@ember/test-helpers";
 import discourseComputed, {
   afterRender,
 } from "discourse-common/utils/decorators";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
 const fooComponent = Component.extend({
@@ -32,6 +31,15 @@ const fooComponent = Component.extend({
   },
 });
 
+const EmberObjectComponent = Component.extend({
+  name: "",
+
+  @discourseComputed("name")
+  text(name) {
+    return `hello, ${name}`;
+  },
+});
+
 class NativeComponent extends Component {
   name = "";
 
@@ -41,49 +49,77 @@ class NativeComponent extends Component {
   }
 }
 
-discourseModule("Unit | Utils | decorators", function (hooks) {
+module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("afterRender", {
-    template: hbs`{{foo-component baz=baz}}`,
-
-    beforeEach() {
-      this.registry.register("component:foo-component", fooComponent);
-      this.set("baz", 0);
-    },
-
-    async test(assert) {
-      assert.ok(exists(document.querySelector(".foo-component")));
-      assert.strictEqual(this.baz, 1);
-
-      await clearRender();
-
-      assert.ok(!exists(document.querySelector(".foo-component")));
-      assert.strictEqual(this.baz, 1);
-    },
+  hooks.afterEach(function () {
+    // eslint-disable-next-line no-undef
+    delete Ember.TEMPLATES["components/native-component"];
+    // eslint-disable-next-line no-undef
+    delete Ember.TEMPLATES["components/ember-object-component"];
   });
 
-  componentTest("discourseComputed works in native classes", {
-    template: hbs`<NativeComponent @name="Jarek" />`,
+  test("afterRender", async function (assert) {
+    this.registry.register("component:foo-component", fooComponent);
+    this.set("baz", 0);
 
-    beforeEach() {
-      // eslint-disable-next-line no-undef
-      Ember.TEMPLATES[
-        "components/native-component"
-      ] = hbs`<span class="native-component">{{this.text}}</span>`;
-      this.registry.register("component:native-component", NativeComponent);
-    },
+    await render(hbs`{{foo-component baz=baz}}`);
 
-    afterEach() {
-      // eslint-disable-next-line no-undef
-      delete Ember.TEMPLATES["components/native-component"];
-    },
+    assert.ok(exists(document.querySelector(".foo-component")));
+    assert.strictEqual(this.baz, 1);
 
-    test(assert) {
-      assert.strictEqual(
-        document.querySelector(".native-component").textContent,
-        "hello, Jarek"
-      );
-    },
+    await clearRender();
+
+    assert.ok(!exists(document.querySelector(".foo-component")));
+    assert.strictEqual(this.baz, 1);
+  });
+
+  test("discourseComputed works in EmberObject classes", async function (assert) {
+    // eslint-disable-next-line no-undef
+    Ember.TEMPLATES[
+      "components/ember-object-component"
+    ] = hbs`<span class="ember-object-component">{{this.text}}</span>`;
+    this.registry.register(
+      "component:ember-object-component",
+      EmberObjectComponent
+    );
+
+    this.set("name", "Jarek");
+    await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
+
+    assert.strictEqual(
+      document.querySelector(".ember-object-component").textContent,
+      "hello, Jarek"
+    );
+
+    this.set("name", "Joffrey");
+    assert.strictEqual(
+      document.querySelector(".ember-object-component").textContent,
+      "hello, Joffrey",
+      "rerenders the component when arguments change"
+    );
+  });
+
+  test("discourseComputed works in native classes", async function (assert) {
+    // eslint-disable-next-line no-undef
+    Ember.TEMPLATES[
+      "components/native-component"
+    ] = hbs`<span class="native-component">{{this.text}}</span>`;
+    this.registry.register("component:native-component", NativeComponent);
+
+    this.set("name", "Jarek");
+    await render(hbs`<NativeComponent @name={{this.name}} />`);
+
+    assert.strictEqual(
+      document.querySelector(".native-component").textContent,
+      "hello, Jarek"
+    );
+
+    this.set("name", "Joffrey");
+    assert.strictEqual(
+      document.querySelector(".native-component").textContent,
+      "hello, Joffrey",
+      "rerenders the component when arguments change"
+    );
   });
 });

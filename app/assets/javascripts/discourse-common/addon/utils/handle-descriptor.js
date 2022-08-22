@@ -11,7 +11,7 @@ export default function handleDescriptor(target, key, desc, params = []) {
     desc.value = undefined;
     desc.get = callUserSuppliedGet(params, val);
 
-    return computed(target, key, desc);
+    return computed(...params)(target, key, desc);
   } else {
     return {
       enumerable: desc.enumerable,
