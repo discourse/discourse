@@ -92,10 +92,6 @@ module("Unit | Utils | decorators", function (hooks) {
   });
 
   test("discourseComputed works in native classes", async function (assert) {
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      "components/native-component"
-    ] = hbs`<span class="native-component">{{this.text}}</span>`;
     this.registry.register("component:native-component", NativeComponent);
 
     this.set("name", "Jarek");
