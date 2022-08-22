@@ -51,7 +51,7 @@ acceptance("Admin - Emails", function (needs) {
     await fillIn(".admin-controls input", "test@example.com");
     await click(".btn-primary");
 
-    assert.ok(query(".bootbox.modal").innerText.includes("some error"));
-    await click(".bootbox .btn-primary");
+    assert.ok(query("#a11y-dialog").innerText.includes("some error"));
+    await click(".a11y-dialog-overlay");
   });
 });
