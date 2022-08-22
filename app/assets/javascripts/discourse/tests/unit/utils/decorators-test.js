@@ -70,10 +70,6 @@ module("Unit | Utils | decorators", function (hooks) {
   });
 
   test("discourseComputed works in EmberObject classes", async function (assert) {
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      "components/ember-object-component"
-    ] = hbs`<span class="ember-object-component">{{this.text}}</span>`;
     this.registry.register(
       "component:ember-object-component",
       EmberObjectComponent
