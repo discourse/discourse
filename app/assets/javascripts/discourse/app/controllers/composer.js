@@ -1475,6 +1475,7 @@ export default Controller.extend({
     elem.classList.remove("composer-open");
 
     document.activeElement?.blur();
+    document.documentElement.style.removeProperty("--composer-height");
     this.setProperties({ model: null, lastValidatedAt: null });
   },
 
