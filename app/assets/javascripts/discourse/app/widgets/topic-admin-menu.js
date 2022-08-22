@@ -79,7 +79,7 @@ createWidget("topic-admin-menu-button", {
     let button;
 
     if (e === undefined) {
-      button = document.getElementsByClassName(".keyboard-target-admin-menu");
+      button = document.querySelector(".keyboard-target-admin-menu");
     } else {
       button = e.target.closest("button");
     }
@@ -88,7 +88,7 @@ createWidget("topic-admin-menu-button", {
     const spacing = 3;
     const menuWidth = 212;
 
-    const rtl = document.querySelectorAll("html.rtl")[0];
+    const rtl = document.documentElement.classList.contains("html.rtl");
     const buttonDOMRect = button.getBoundingClientRect();
     position.outerHeight = buttonDOMRect.height;
 
