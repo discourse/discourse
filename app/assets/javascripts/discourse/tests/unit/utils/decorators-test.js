@@ -43,6 +43,7 @@ const EmberObjectComponent = Component.extend({
 
 class NativeComponent extends Component {
   name = "";
+  layout = hbs`<span class="native-component">{{this.text}}</span>`;
 
   @discourseComputed("name")
   text(name) {
