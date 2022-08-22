@@ -3,8 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
-import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
+import { all } from "rsvp";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -48,24 +47,30 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
     ).then((data) => {
-      const content = [];
-      data.notifications.forEach((rawNotification) => {
-        const notification = Notification.create(rawNotification);
-        content.push(
-          new UserMenuNotificationItem({
-            notification,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-            site: this.site,
-          })
-        );
-      });
-      content.push(
-        ...data.topics.map((topic) => {
-          return new UserMenuMessageItem({ message: topic });
-        })
+      const notifications = data.notifications.map((notification) =>
+        Notification.create(notification)
       );
-      return content;
+      const messages = data.topics;
+      return all([
+        this.applyListProcessorsFromPlugins("notifications", notifications),
+        this.applyListProcessorsFromPlugins("messages", messages),
+      ]).then(() => {
+        const notificationClass = this.findItemRendererClass("notification");
+        const messageClass = this.findItemRendererClass("message");
+        return [
+          ...notifications.map((notification) => {
+            return new notificationClass({
+              notification,
+              currentUser: this.currentUser,
+              siteSettings: this.siteSettings,
+              site: this.site,
+            });
+          }),
+          ...messages.map((message) => {
+            return new messageClass({ message });
+          }),
+        ];
+      });
     });
   }
 

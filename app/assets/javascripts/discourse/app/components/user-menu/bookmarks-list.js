@@ -3,8 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
-import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
+import { all } from "rsvp";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -47,24 +46,30 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   fetchItems() {
     return ajax(`/u/${this.currentUser.username}/user-menu-bookmarks`).then(
       (data) => {
-        const content = [];
-        data.notifications.forEach((rawNotification) => {
-          const notification = Notification.create(rawNotification);
-          content.push(
-            new UserMenuNotificationItem({
-              notification,
-              currentUser: this.currentUser,
-              siteSettings: this.siteSettings,
-              site: this.site,
-            })
-          );
-        });
-        content.push(
-          ...data.bookmarks.map((bookmark) => {
-            return new UserMenuBookmarkItem({ bookmark });
-          })
+        const notifications = data.notifications.map((notification) =>
+          Notification.create(notification)
         );
-        return content;
+        const bookmarks = data.bookmarks;
+        return all([
+          this.applyListProcessorsFromPlugins("notifications", notifications),
+          this.applyListProcessorsFromPlugins("bookmarks", bookmarks),
+        ]).then(() => {
+          const notificationClass = this.findItemRendererClass("notification");
+          const bookmarkClass = this.findItemRendererClass("bookmark");
+          return [
+            ...notifications.map((notification) => {
+              return new notificationClass({
+                notification,
+                currentUser: this.currentUser,
+                siteSettings: this.siteSettings,
+                site: this.site,
+              });
+            }),
+            ...bookmarks.map((bookmark) => {
+              return new bookmarkClass({ bookmark });
+            }),
+          ];
+        });
       }
     );
   }

@@ -3,7 +3,6 @@ import { ajax } from "discourse/lib/ajax";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
-import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import { inject as service } from "@ember/service";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
@@ -25,12 +24,21 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
 
   fetchItems() {
     return ajax("/review/user-menu-list").then((data) => {
-      return data.reviewables.map((item) => {
-        return new UserMenuReviewableItem({
-          reviewable: UserMenuReviewable.create(item),
-          currentUser: this.currentUser,
-          siteSettings: this.siteSettings,
-          site: this.site,
+      const reviewables = data.reviewables.map((reviewable) =>
+        UserMenuReviewable.create(reviewable)
+      );
+      return this.applyListProcessorsFromPlugins(
+        "reviewables",
+        reviewables
+      ).then(() => {
+        const reviewableClass = this.findItemRendererClass("reviewable");
+        return reviewables.map((reviewable) => {
+          return new reviewableClass({
+            reviewable,
+            currentUser: this.currentUser,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          });
         });
       });
     });

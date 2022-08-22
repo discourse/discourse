@@ -100,6 +100,8 @@ import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
+import { replaceUserMenuItemRenderer } from "discourse/lib/user-menu/item-renderers-manager";
+import { registerUserMenuListProcessor } from "discourse/lib/user-menu/list-processors-manager";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1925,6 +1927,81 @@ class PluginApi {
    */
   registerUserMenuTab(func) {
     registerUserMenuTab(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Customize how a user menu item (e.g. notification, message, bookmark,
+   * reviewable etc.) is rendered. You can use this API to change the href,
+   * icon, label and description of any item of any type in the user menu.
+   *
+   * Example usage:
+   *
+   * ```
+   * api.replaceUserMenuItemRenderer("notification", (UserMenuNotificationItem) => {
+   *   return class extends UserMenuNotificationItem {
+   *     get linkHref() {
+   *       if (this.notification.is_magic) {
+   *         return "/some-magic-link";
+   *       } else {
+   *         return super.linkHref;
+   *       }
+   *     }
+   *   }
+   * });
+   * api.replaceUserMenuItemRenderer("notification", (UserMenuNotificationItem) => {
+   *   return class extends UserMenuNotificationItem {
+   *     get description() {
+   *       if (this.notification.encrypted_content) {
+   *         return decryptNotificationContent(this.notification.encrypted_content);
+   *       } else {
+   *         return super.description;
+   *       }
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback replaceUserMenuItemRendererCallback
+   * @param {UserMenuBaseItem} The default renderer class of the user menu item type or a subclass of the default renderer class (if another plugin also customizes the type)
+   * @returns {UserMenuBaseItem} A class that inherits from the class passed to the callback
+   *
+   * @param {string} type - The type of the user menu item that you want to customize. "notification", "bookmark", "message" and "reviewable" are core's types that can be customized.
+   * @param {replaceUserMenuItemRendererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  replaceUserMenuItemRenderer(type, func) {
+    replaceUserMenuItemRenderer(type, func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Provide a callback that gets called with a list of user menu items before
+   * they're rendered. Useful for cases where some processing needs to be
+   * performed on the list of items before rendering can begin.
+   *
+   * If the callback returns a promise, it'll be awaited and the user will see
+   * the loading spinner until the promise settles. Errors in the callback are
+   * ignored and don't stop the rendering.
+   *
+   * Example usage:
+   *
+   * ```
+   * api.registerUserMenuListProcessor("notifications", (notifications) => {
+   *   notifications.forEach((notification) => {
+   *     decryptContent(notification);
+   *   });
+   * });
+   * ```
+   *
+   * @callback registerUserMenuListProcessorCallback
+   * @param {Object[]} The default renderer class of the user menu item type or a subclass of the default renderer class (if another plugin also customizes the type)
+   * @returns {Promise|undefined} A class that inherits from the class passed to the callback
+   *
+   * @param {string} type - The list type of the user menu items that you want to perform additional processing on. "notifications", "bookmarks", "messages" and "reviewables" are core's list types that can be processed.
+   * @param {registerUserMenuListProcessorCallback} func - Callback function that receives the list of items and optionally returns a promise.
+   */
+  registerUserMenuListProcessor(listType, processor) {
+    registerUserMenuListProcessor(listType, processor);
   }
 }
 

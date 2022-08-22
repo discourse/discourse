@@ -5,7 +5,6 @@ import { ajax } from "discourse/lib/ajax";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
@@ -71,12 +70,18 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       .findStale("notification", params)
       .refresh()
       .then((c) => {
-        return c.content.map((notification) => {
-          return new UserMenuNotificationItem({
-            notification,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-            site: this.site,
+        const klass = this.findItemRendererClass("notification");
+        return this.applyListProcessorsFromPlugins(
+          "notifications",
+          c.content
+        ).then(() => {
+          return c.content.map((notification) => {
+            return new klass({
+              notification,
+              currentUser: this.currentUser,
+              siteSettings: this.siteSettings,
+              site: this.site,
+            });
           });
         });
       });
