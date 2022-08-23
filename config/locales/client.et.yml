@@ -2528,10 +2528,6 @@ et:
         member: "liige"
         regular: "tavaline"
         leader: "juht"
-    user_activity:
-      no_activity_others: "Tegevusi pole."
-      no_replies_others: "Vastuseid pole."
-      no_likes_others: "Meeldimisega postitusi veel pole."
     sidebar:
       unread_count:
         one: "%{count} lugemata"
@@ -2552,13 +2548,10 @@ et:
             unread_with_count: "Lugemata (%{count})"
             archive: "Arhiiv"
         tags:
-          header_link_title: "kõik sildid"
           header_link_text: "Sildid"
         categories:
-          header_link_title: "kõik foorumid"
           header_link_text: "Liigid"
         community:
-          header_link_title: "avaleht"
           header_link_text: "Kogukond"
           links:
             tracked:

@@ -2873,8 +2873,6 @@ cs:
         member: "člen"
         regular: "pravidelný uživatel"
         leader: "vůdce"
-    user_activity:
-      no_replies_others: "Žádné odpovědi."
     sidebar:
       unread_count:
         one: "%{count} nepřečtené"
@@ -2898,13 +2896,10 @@ cs:
             unread_with_count: "Nepřečtená (%{count})"
             archive: "Archív"
         tags:
-          header_link_title: "všechny štítky"
           header_link_text: "Tagy"
         categories:
-          header_link_title: "všechny kategorie"
           header_link_text: "Kategorie"
         community:
-          header_link_title: "domů"
           header_link_text: "Komunita"
           links:
             tracked:

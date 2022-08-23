@@ -1862,6 +1862,7 @@ it:
     max_emails_per_day_per_user: "Numero massimo di email da inviare agli utenti per giorno. 0 per disabilitare il limite"
     enable_staged_users: "Crea automaticamente utenti temporanei quando si elaborano le email in arrivo."
     maximum_staged_users_per_email: "Numero massimo di utenti temporanei creati quando si elaborano le email in arrivo."
+    maximum_recipients_per_new_group_email: "Blocca le email in arrivo con troppi destinatari."
     auto_generated_allowlist: "Lista degli indirizzi email che non verranno verificati per i contenuti generati automaticamente. Esempio: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloccare le email in arrivo identificate come generate automaticamente."
     ignore_by_title: "Ignora le email in arrivo in base al loro titolo."
@@ -2114,6 +2115,8 @@ it:
     use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
     splash_screen: "Visualizza una schermata di caricamento temporanea durante il caricamento delle risorse del sito"
+    default_sidebar_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie della barra laterale."
+    default_sidebar_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette della barra laterale."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -2877,6 +2880,10 @@ it:
       title: "Email di risposta a un messaggio di riepilogo rifiutata"
       subject_template: "[%{email_prefix}] Problema e-mail - Risposta a un messaggio di riepilogo"
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
+    email_reject_too_many_recipients:
+      title: "Rifiuto di e-mail con troppi destinatari"
+      subject_template: "[%{email_prefix}] Problema email -- Troppi destinatari"
+      text_body_template: "Siamo spiacenti, ma l'invio del tuo messaggio email a %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai provato a scrivere a più di %{max_recipients_count} persone e il nostro sistema ha identificato automaticamente la tua email come spam.\n\nSe credi si tratti di un errore, [contatta lo staff](%{base_url}/about).\n"
     email_error_notification:
       title: "Notifica Errore Email"
       subject_template: "[%{email_prefix}] Problema email -- errore di autenticazione POP"

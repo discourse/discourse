@@ -658,6 +658,8 @@ hu:
     moderators_activity:
       labels:
         moderator: Moderátor
+        flag_count: Jóváhagyott jelzők
+      description: A moderátorok tevékenységének listája, beleértve az ellenőrzött jelzőket, az olvasási időt, a létrehozott témákat, a létrehozott hozzászólásokat, a létrehozott személyes üzeneteket és a módosításokat.
     flags_status:
       labels:
         flag: Típus
@@ -894,6 +896,7 @@ hu:
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
+    review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"
@@ -1345,6 +1348,9 @@ hu:
 
         Gyorsan értékes tagjává váltál közösségünknek. Köszönjük, hogy csatlakoztál, és folytasd ugyanilyen nagyszerűen! Bravo!
     queued_posts_reminder:
+      subject_template:
+        one: "%{count} bejegyzés vár jóváhagyásra"
+        other: "%{count} bejegyzés vár jóváhagyásra"
       text_body_template: |
         Szia!
 

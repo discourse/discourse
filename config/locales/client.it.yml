@@ -3730,14 +3730,13 @@ it:
     user_activity:
       no_activity_title: "Ancora nessuna attività"
       no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a e non hai ancora contribuito a nessuna discussione. Per cominciare, clicca su <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. A mano a mano che partecipi, le tue attività saranno elencate qui."
-      no_activity_others: "Nessuna attività."
       no_replies_title: "Non hai ancora risposto a nessun argomento"
-      no_replies_others: "Nessuna risposta."
+      no_replies_title_others: "%{username} non ha ancora risposto a nessun argomento"
       no_drafts_title: "Non hai iniziato nessuna bozza"
       no_drafts_body: "Non sei ancora pronto/a a pubblicare? Salveremo automaticamente una nuova bozza e la elencheremo qui ogni volta che inizierai a scrivere un argomento, una risposta o un messaggio personale. Seleziona il pulsante Annulla per eliminare o salvare la bozza e continuare a scrivere più avanti."
       no_likes_title: "Non hai ancora messo \"mi piace\" a nessun argomento"
+      no_likes_title_others: "%{username} non ha ancora messo Mi piace a nessun argomento"
       no_likes_body: "Un ottimo modo per iniziare a contribuire è mettersi a leggere le conversazioni già avvenute e assegnare un %{heartIcon} ai post che ti piacciono!"
-      no_likes_others: "Nessun messaggio con \"Mi piace\"."
       no_topics_title: "Non hai ancora avviato nessun argomento"
       no_topics_body: "È sempre meglio <a href='%{searchUrl}'>cercare</a> argomenti di conversazione già esistenti prima di iniziarne uno nuovo, ma se sei sicuro che l'argomento che desideri non sia già presente, procedi a creare un nuovo argomento tutto tuo. Cerca il pulsante <kbd>+ Nuovo Argomento</kbd> vicino all'elenco di argomenti, categorie o etichette per iniziare a creare un nuovo argomento in quell'area."
       no_topics_title_others: "%{username} non ha ancora iniziato nessun argomento"
@@ -3762,7 +3761,6 @@ it:
       more: "Altro..."
       sections:
         messages:
-          header_link_title: "messaggi personali"
           header_link_text: "Messaggi"
           header_action_title: "crea un messaggio personale"
           links:
@@ -3776,17 +3774,14 @@ it:
         tags:
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
-          header_link_title: "tutte le etichette"
           header_link_text: "Etichette"
           header_action_title: "modifica le etichette nella barra laterale"
         categories:
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
-          header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
           header_action_title: "modifica le categorie nella barra laterale"
         community:
-          header_link_title: "home"
           header_link_text: "Comunità"
           header_action_title: "crea un nuovo argomento"
           links:

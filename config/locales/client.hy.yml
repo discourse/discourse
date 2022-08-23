@@ -2869,10 +2869,6 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
-    user_activity:
-      no_activity_others: "Ակտիվություն չկա:"
-      no_replies_others: "Պատասխան չկա:"
-      no_likes_others: "Հավանած գրառումներ չկան:"
     sidebar:
       unread_count:
         one: "%{count} չկարդացած"
@@ -2893,13 +2889,10 @@ hy:
             unread_with_count: "Չկարդացած (%{count})"
             archive: "Արխիվ"
         tags:
-          header_link_title: "բոլոր թեգերը"
           header_link_text: "Թեգեր"
         categories:
-          header_link_title: "բոլոր կատեգորիաները"
           header_link_text: "Կատեգորիաներ"
         community:
-          header_link_title: "գլխավոր էջ"
           header_link_text: "Համայնք"
           links:
             tracked:

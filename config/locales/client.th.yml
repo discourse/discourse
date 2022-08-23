@@ -2442,13 +2442,10 @@ th:
             unread_with_count: "ยังไม่อ่าน (%{count})"
             archive: "คลัง"
         tags:
-          header_link_title: "แท็กทั้งหมด"
           header_link_text: "ป้าย"
         categories:
-          header_link_title: "ทุกหมวดหมู่"
           header_link_text: "หมวดหมู่"
         community:
-          header_link_title: "หน้าแรก"
           header_link_text: "ชุมชน"
           links:
             tracked:

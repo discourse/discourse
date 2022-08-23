@@ -3455,10 +3455,6 @@ fi:
         regular: "mestari"
         leader: "johtaja"
       detailed_name: "%{level}: %{name}"
-    user_activity:
-      no_activity_others: "Ei toimintaa."
-      no_replies_others: "Ei vastauksia."
-      no_likes_others: "Ei tykättyjä viestejä."
     sidebar:
       unread_count:
         one: "%{count} lukematta"
@@ -3479,13 +3475,10 @@ fi:
             unread_with_count: "Lukematta (%{count})"
             archive: "Arkisto"
         tags:
-          header_link_title: "kaikki tunnisteet"
           header_link_text: "Tunnisteet"
         categories:
-          header_link_title: "kaikki alueet"
           header_link_text: "Alueet"
         community:
-          header_link_title: "aloitus"
           header_link_text: "Yhteisö"
           links:
             tracked:

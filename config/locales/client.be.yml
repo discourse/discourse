@@ -1336,10 +1336,6 @@ be:
         member: "член"
         regular: "рэгулярны"
         leader: "лідэр"
-    user_activity:
-      no_activity_others: "Няма актыўнасці."
-      no_replies_others: "Няма адказаў."
-      no_likes_others: "Не спадабалася паведамленні."
     sidebar:
       more: "Яшчэ ..."
       sections:
@@ -1354,10 +1350,8 @@ be:
         tags:
           header_link_text: "тэгі"
         categories:
-          header_link_title: "усе катэгорыі"
           header_link_text: "катэгорыі"
         community:
-          header_link_title: "дома"
           header_link_text: "супольнасць"
           links:
             groups:
