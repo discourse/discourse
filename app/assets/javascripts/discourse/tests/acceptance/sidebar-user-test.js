@@ -1,5 +1,4 @@
 import I18n from "I18n";
-
 import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
@@ -13,7 +12,7 @@ acceptance(
       enable_experimental_sidebar_hamburger: false,
     });
 
-    test("clicking header hamburger icon displays old hamburger drodown", async function (assert) {
+    test("clicking header hamburger icon displays old hamburger dropdown", async function (assert) {
       await visit("/");
       await click(".hamburger-dropdown");
 

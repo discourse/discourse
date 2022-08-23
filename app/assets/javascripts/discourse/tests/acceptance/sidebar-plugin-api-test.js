@@ -258,31 +258,31 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.strictEqual(
-      links[0].children.item(0).style.color,
+      links[0].children[0].style.color,
       "rgb(255, 0, 0)",
       "has correct prefix color"
     );
 
     assert.strictEqual(
-      $(links[0].children.item(0).children.item(0)).hasClass("d-icon-hashtag"),
+      links[0].children[0].children[0].classList.contains("d-icon-hashtag"),
       true,
       "displays prefix icon"
     );
 
     assert.strictEqual(
-      $(links[0].children.item(0).children.item(1)).hasClass("d-icon-lock"),
+      links[0].children[0].children[1].classList.contains("d-icon-lock"),
       true,
       "displays prefix icon badge"
     );
 
     assert.strictEqual(
-      $(links[0].children.item(2).children.item(0)).hasClass("d-icon-circle"),
+      links[0].children[2].children[0].classList.contains("d-icon-circle"),
       true,
       "displays suffix icon"
     );
 
     assert.strictEqual(
-      $(links[1].children[1])[0].textContent.trim(),
+      links[1].children[1].textContent.trim(),
       "dev channel text",
       "displays second link with correct text"
     );
@@ -294,19 +294,19 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.strictEqual(
-      links[1].children.item(0).style.color,
+      links[1].children[0].style.color,
       "",
       "has no color style when value is invalid"
     );
 
     assert.strictEqual(
-      $(links[1].children)[0].textContent.trim(),
+      links[1].children[0].textContent.trim(),
       "test text",
       "displays prefix text"
     );
 
     assert.strictEqual(
-      $(links[2].children[1])[0].textContent.trim(),
+      links[2].children[1].textContent.trim(),
       "fun channel text",
       "displays third link with correct text"
     );
@@ -318,7 +318,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.strictEqual(
-      $(links[2].children.item(0).children).attr("src"),
+      links[2].children[0].children[0].getAttribute("src"),
       "/test.png",
       "uses correct prefix image url"
     );
@@ -477,22 +477,22 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     await visit("/");
 
-    const customlatestSectionLink = query(
+    const customLatestSectionLink = query(
       ".sidebar-section-community .sidebar-section-link-latest"
     );
 
     assert.ok(
-      customlatestSectionLink,
+      customLatestSectionLink,
       "adds custom latest section link to community section"
     );
 
     assert.ok(
-      customlatestSectionLink.href.endsWith("/latest"),
+      customLatestSectionLink.href.endsWith("/latest"),
       "sets the right href attribute for the custom latest section link"
     );
 
     assert.strictEqual(
-      customlatestSectionLink.textContent.trim(),
+      customLatestSectionLink.textContent.trim(),
       I18n.t("filters.latest.title"),
       "displays the right text for custom latest section link"
     );
