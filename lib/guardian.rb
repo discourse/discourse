@@ -71,6 +71,9 @@ class Guardian
     def whisperer?
       false
     end
+    def in_any_groups?(group_ids)
+      false
+    end
   end
 
   attr_reader :request
