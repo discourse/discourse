@@ -176,20 +176,16 @@ export default Component.extend(LoadMore, {
 
     onClick("button.bulk-select-all", function () {
       this.updateAutoAddTopicsToBulkSelect(true);
-      for (const unchecked of [
-        ...document.querySelectorAll("input.bulk-select:not(:checked)"),
-      ]) {
-        unchecked.click();
-      }
+      document
+        .querySelectorAll("input.bulk-select:not(:checked)")
+        .forEach((el) => el.click());
     });
 
     onClick("button.bulk-clear-all", function () {
       this.updateAutoAddTopicsToBulkSelect(false);
-      for (const checked of [
-        ...document.querySelectorAll("input.bulk-select:checked"),
-      ]) {
-        checked.click();
-      }
+      document
+        .querySelectorAll("input.bulk-select:checked")
+        .forEach((el) => el.click());
     });
 
     onClick("th.sortable", function (element) {
