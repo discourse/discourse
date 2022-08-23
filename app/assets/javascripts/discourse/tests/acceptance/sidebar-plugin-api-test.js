@@ -1,6 +1,5 @@
 import { test } from "qunit";
 import I18n from "I18n";
-
 import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
@@ -9,7 +8,6 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { resetSidebarSection } from "discourse/lib/sidebar/user/custom-sections";
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
@@ -21,7 +19,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   needs.hooks.afterEach(() => {
-    resetSidebarSection();
     linkDestroy = undefined;
     sectionDestroy = undefined;
   });
