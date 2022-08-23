@@ -38,6 +38,10 @@
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
       padding: 0;
+
+      &:focus {
+        background: transparent;
+      }
     }
   }
 
