@@ -74,6 +74,7 @@ import { clearExtraHeaderIcons } from "discourse/widgets/header";
 import { resetSidebarSection } from "discourse/lib/sidebar/user/custom-sections";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
+import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -204,6 +205,7 @@ export function testCleanup(container, app) {
   resetNotificationTypeRenderers();
   clearExtraHeaderIcons();
   resetUserMenuTabs();
+  resetLinkLookup();
 }
 
 export function discourseModule(name, options) {
