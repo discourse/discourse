@@ -388,24 +388,30 @@ module.exports = {
 
         for (const { name, hasJs } of pluginInfos) {
           if (hasJs) {
-            scripts.push(`plugins/${name}.js`);
+            scripts.push({ src: `plugins/${name}.js`, name });
           }
 
           if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
-            scripts.push(`plugins/${name}_extras.js`);
+            scripts.push({ src: `plugins/${name}_extras.js`, name });
           }
         }
       } else {
-        scripts.push("discourse/tests/active-plugins.js");
+        scripts.push({
+          src: "discourse/tests/active-plugins.js",
+          name: "_all",
+        });
       }
 
-      scripts.push("admin-plugins.js");
+      scripts.push({ src: "admin-plugins.js", name: "_admin" });
 
       return scripts
-        .map((s) => `<script src="${config.rootURL}assets/${s}"></script>`)
+        .map(
+          ({ src, name }) =>
+            `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+        )
         .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
     }
   },
 
