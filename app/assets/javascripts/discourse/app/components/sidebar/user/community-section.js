@@ -14,6 +14,7 @@ import UsersSectionLink from "discourse/lib/sidebar/user/community-section/users
 import AboutSectionLink from "discourse/lib/sidebar/user/community-section/about-section-link";
 import FAQSectionLink from "discourse/lib/sidebar/user/community-section/faq-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
+import BadgesSectionLink from "discourse/lib/sidebar/user/community-section/badges-section-link";
 
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
@@ -27,7 +28,11 @@ const MAIN_SECTION_LINKS = [
 
 const ADMIN_MAIN_SECTION_LINKS = [AdminSectionLink];
 
-const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
+const MORE_SECTION_LINKS = [
+  GroupsSectionLink,
+  UsersSectionLink,
+  BadgesSectionLink,
+];
 const MORE_SECONDARY_SECTION_LINKS = [AboutSectionLink, FAQSectionLink];
 
 export default class SidebarUserCommunitySection extends Component {
