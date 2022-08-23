@@ -11,7 +11,7 @@ export default class SidebarAnonymousTagsSection extends Component {
 
   @cached
   get sectionLinks() {
-    let tags = [];
+    let tags;
 
     if (this.site.anonymous_default_sidebar_tags) {
       tags = this.site.anonymous_default_sidebar_tags;
