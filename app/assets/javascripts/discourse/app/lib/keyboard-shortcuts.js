@@ -314,7 +314,7 @@ export default {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     discourseLater(
-      () => document.querySelector(".d-editor .quote").click(),
+      () => document.querySelector(".d-editor .quote")?.click(),
       500
     );
 
@@ -817,12 +817,12 @@ export default {
   },
 
   _changeSection(direction) {
-    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li")),
-      active = document.querySelector(".nav.nav-pills li.active"),
-      index = sections.indexOf(active) + direction;
+    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li"));
+    const active = document.querySelector(".nav.nav-pills li.active");
+    const index = sections.indexOf(active) + direction;
 
     if (index >= 0 && index < sections.length) {
-      sections[index].querySelector("a").click();
+      sections[index].querySelector("a")?.click();
     }
   },
 
