@@ -1572,7 +1572,7 @@ he:
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
     twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
-    email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
+    email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "מאלץ משתמשים להפעיל אימות דו־שלבי. יש לבחור ב‚הכול’ כדי לאלץ את כל המשתמשים. יש לבחור ב‚סגל’ כדי לאכוף על חברי סגל בלבד."
@@ -1958,6 +1958,7 @@ he:
     max_emails_per_day_per_user: "המספר המרבי של הודעות דוא״ל שניתן לשלוח למשתמש ביום. 0 להשבתת ההגבלה."
     enable_staged_users: "יצירת משתמשים מבוימים באופן אוטומטי בזמן עיבוד הודעות דוא״ל נכנסות."
     maximum_staged_users_per_email: "מספר מרבי של משתמשים מבוימים שנוצרים בזמן עיבוד הודעת דוא״ל נכנסת."
+    maximum_recipients_per_new_group_email: "חסימת הודעות דוא״ל נכנסות עם יותר מדי נמענים."
     auto_generated_allowlist: "רשימת כתובות דואר מהן לא ייבדק אם התוכן נוצר-אוטומטית. למשל: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "לחסום הודעות דוא״ל נכנסות שזוהו ככאלו שנוצרו אוטומטית."
     ignore_by_title: "להתעלם מהודעות דוא״ל נכנסות לפי הכותרת שלהן."
@@ -2213,6 +2214,8 @@ he:
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
+    default_sidebar_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד כברירת מחדל."
+    default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -3155,6 +3158,15 @@ he:
         הגבת להודעת תקציר, שזה לא מקובל.
 
         אם לדעתך מדובר בשגיאה [נא ליצור קשר עם חבר סגל](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "דחיית דוא״ל יותר מדי נמענים"
+      subject_template: "[%{email_prefix}] תקלת דוא״ל -- יותר מדי נמענים"
+      text_body_template: |
+        מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברה.
+
+        ניסית לשלוח הודעות ללמעלה מ־%{max_recipients_count} אנשים והמערכת שלנו תייגה את ההודעה שלך כספאם אוטומטית.
+
+        אם לדעתך מדובר בשגיאה [נא ליצור קשר עם חבר סגל](%{base_url}/about).
     email_error_notification:
       title: "התראת בעיית מייל"
       subject_template: "[%{email_prefix}] בעיית מייל -- בעיית אימות POP"
@@ -3652,7 +3664,7 @@ he:
         יש ללחוץ על הקישור הבא כדי לבחור סיסמה לחשבון החדש שלך:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "אישור מייל חדש"
+      title: "אישור דוא״ל חדש"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל החדשה שלך"
       text_body_template: |
         לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
@@ -3670,7 +3682,7 @@ he:
 
         החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם [הנהלת האתר](%{base_url}/about).
     confirm_old_email:
-      title: "אישור מייל ישן"
+      title: "אישור דוא״ל ישן"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל הנוכחית שלך"
       text_body_template: |
         לפני שנוכל להחליף את כתובת הדוא״ל שלך, עלינו לאשר שיש לך שליטה
@@ -4528,6 +4540,7 @@ he:
       invalid_token: "אסימון שגוי."
     email_input: "דוא״ל של המנהל"
     submit_button: "שליחת דוא״ל"
+    safe_mode: "מצב בטוח: השבתת כל ערכות העיצוב/תוספים בעת כניסה"
   performance_report:
     initial_post_raw: נושא זה כולל דוחות פעילות יומיים עבור האתר שלך.
     initial_topic_title: דוחות פעילות לאתר
@@ -4588,6 +4601,8 @@ he:
       message: "<p>הודעת ההפעלה נשלחה מחדש בדוא״ל אל <b>%{email}</b>"
   safe_mode:
     title: "כנסו למצב בטוח"
+    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או ערכות עיצוב."
+    no_themes: "השבתת ערכות עיצוב ורכיבי ערכת עיצוב"
     no_unofficial_plugins: "השבתת תוספים בלתי רשמיים"
     no_plugins: "השבתת כל התוספים"
     enter: "כנסו למצב בטוח"

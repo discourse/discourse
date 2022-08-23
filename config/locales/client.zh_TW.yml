@@ -2800,10 +2800,6 @@ zh_TW:
         member: "成員"
         regular: "活躍使用者"
         leader: "資深"
-    user_activity:
-      no_activity_others: "無活動紀錄。"
-      no_replies_others: "沒有回覆。"
-      no_likes_others: "沒有被讚的貼文。"
     sidebar:
       unread_count:
         other: "%{count} 個未讀"
@@ -2822,13 +2818,10 @@ zh_TW:
             unread_with_count: "未讀 (%{count})"
             archive: "封存"
         tags:
-          header_link_title: "所有標籤"
           header_link_text: "標籤"
         categories:
-          header_link_title: "所有分類"
           header_link_text: "分類"
         community:
-          header_link_title: "主頁"
           header_link_text: "社區"
           links:
             tracked:

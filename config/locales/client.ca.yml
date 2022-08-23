@@ -2886,10 +2886,6 @@ ca:
         member: "membre"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "No hi ha activitat."
-      no_replies_others: "No hi ha respostes."
-      no_likes_others: "Publicacions sense 'm'agrada'."
     sidebar:
       unread_count:
         one: "%{count} no llegit"
@@ -2910,13 +2906,10 @@ ca:
             unread_with_count: "No llegit (%{count})"
             archive: "Arxiva"
         tags:
-          header_link_title: "totes les etiquetes"
           header_link_text: "Etiquetes"
         categories:
-          header_link_title: "totes les categories"
           header_link_text: "Categories"
         community:
-          header_link_title: "pàgina principal"
           header_link_text: "Comunitat"
           links:
             tracked:

@@ -3866,14 +3866,11 @@ hr:
     user_activity:
       no_activity_title: "Još nema aktivnosti"
       no_activity_body: "Dobrodošli u našu zajednicu! Ovdje ste potpuno novi i još niste sudjelovali u raspravama. Kao prvi korak, posjetite <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> i samo počnite čitati! Odaberite %{heartIcon} na objavama koje vam se sviđaju ili o kojima želite saznati više. Dok budete sudjelovali, vaša će aktivnost biti navedena ovdje."
-      no_activity_others: "Nema aktivnosti."
       no_replies_title: "Još niste odgovorili ni na jednu temu"
-      no_replies_others: "Nema odgovora."
       no_drafts_title: "Niste pokrenuli nikakve skice"
       no_drafts_body: "Niste baš spremni za objavu? Automatski ćemo spremiti novu skicu i navesti je ovdje kad god počnete sastavljati temu, odgovor ili osobnu poruku. Odaberite gumb za odustajanje da biste odbacili ili spremili skicu za nastavak kasnije."
       no_likes_title: "Još vam se nije svidjela nijedna tema"
       no_likes_body: "Sjajan način da uskočite i počnete pridonositi je da počnete čitati razgovore koji su se već vodili i odaberete %{heartIcon} na objavama koje vam se sviđaju!"
-      no_likes_others: "Nema likeanih objava."
       no_topics_title: "Još niste pokrenuli nijednu temu"
       no_topics_title_others: "%{username} još nije pokrenuo nijednu temu"
       no_read_topics_title: "Još niste pročitali nijednu temu"
@@ -3908,13 +3905,10 @@ hr:
             unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
-          header_link_title: "sve oznake"
           header_link_text: "Oznake"
         categories:
-          header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "naslovnica"
           header_link_text: "Zajednica"
           header_action_title: "otvori novu temu"
           links:

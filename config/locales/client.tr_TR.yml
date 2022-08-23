@@ -3677,12 +3677,11 @@ tr_TR:
     user_activity:
       no_activity_title: "Henüz etkinlik yok"
       no_activity_body: "Topluluğumuza hoş geldiniz! Burada çok yenisiniz ve tartışmalara henüz katkıda bulunmadınız. İlk adım olarak <a href='%{topUrl}'>en çok okunanları</a> veya <a href='%{categoriesUrl}'>kategorileri</a> ziyaret edebilir ve okumaya başlayabilirsiniz! Beğendiğiniz veya hakkında daha fazla bilgi edinmek istediğiniz gönderilerde lütfen %{heartIcon} kullanarak beğeninizi belirtin. Paylaşımlara katıldıkça, etkinliğiniz burada listelenecek."
-      no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
-      no_replies_others: "Yanıt yok."
+      no_replies_title_others: "%{username} henüz hiçbir konuya cevap vermedi"
       no_drafts_title: "Hiç taslak başlatmadınız"
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
-      no_likes_others: "Beğenilen gönderi yok."
+      no_likes_title_others: "%{username} henüz hiçbir konuyu beğenmedi"
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
       no_topics_title_others: "%{username} kullanıcısı henüz herhangi bir konu başlatmadı"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
@@ -3703,7 +3702,6 @@ tr_TR:
       more: "Daha..."
       sections:
         messages:
-          header_link_title: "kişisel mesajlar"
           header_link_text: "İletiler"
           header_action_title: "kişisel bir mesaj oluştur"
           links:
@@ -3715,13 +3713,10 @@ tr_TR:
             unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
-          header_link_title: "tüm etiketler"
           header_link_text: "Etiketler"
         categories:
-          header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
         community:
-          header_link_title: "anasayfa"
           header_link_text: "Topluluk"
           header_action_title: "yeni konu oluştur"
           links:

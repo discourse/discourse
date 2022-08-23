@@ -3252,10 +3252,10 @@ fa_IR:
         leader: "راهبر"
     user_activity:
       no_replies_title: "شما هنوز به هیچ موضوعی پاسخ نداده اید"
-      no_replies_others: "بدون پاسخ"
+      no_replies_title_others: "%{username} هنوز در هیچ موضوعی، پاسخی نداده است"
       no_drafts_title: "شما هنوز هیچ پیش‌نویسی شروع نکرده‌اید"
       no_drafts_body: "برای ارسال کاملا آماده نیستید؟ هر زمان که شروع به نوشتن موضوع، پاسخ یا پیام شخصی کنید، پیش‌نویس جدیدی را به‌طور خودکار ذخیره می‌کنیم و آن را در اینجا فهرست می‌کنیم. برای صرف‌نظر کردن، دکمه لغو را انتخاب کنید یا پیش‌نویس خود را ذخیره کنید تا بعدا ادامه دهید."
-      no_likes_others: "فرسته‌ی موردپسندیدی نیست."
+      no_likes_title_others: "%{username} هنوز هیچ موضوعی را نپسندیده."
     sidebar:
       unread_count:
         one: "%{count} خوانده نشده"
@@ -3267,7 +3267,6 @@ fa_IR:
       more: "بیشتر..."
       sections:
         messages:
-          header_link_title: "پیام‌های شخصی"
           header_link_text: "پیام‌ها"
           header_action_title: "ایجاد پیام شخصی"
           links:
@@ -3281,17 +3280,14 @@ fa_IR:
         tags:
           none: "شما هنوز هیچ برچسبی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
-          header_link_title: "تمام برچسب‌ها"
           header_link_text: "برچسب"
           header_action_title: "برچسب‌های نوار کناری خود را ویرایش کنید"
         categories:
           none: "شما هنوز هیچ دسته‌بندی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
-          header_link_title: "همه‌ی دسته‌بندی‌ها"
           header_link_text: "دسته‌بندی‌ها"
           header_action_title: "دسته‌بندی‌های نوار کناری خود را ویرایش کنید"
         community:
-          header_link_title: "خانه"
           header_link_text: "انجمن"
           header_action_title: "ایجاد موضوع جدید"
           links:

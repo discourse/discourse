@@ -1625,6 +1625,8 @@ zh_CN:
     top_topics_formula_first_post_likes_multiplier: "热门话题中第一个帖子点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门话题中每个帖子的最少点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
+    enable_experimental_sidebar_hamburger: "允许启用实验性侧边栏和用户汉堡下拉菜单。"
+    enable_sidebar: "启用侧边栏（实验性）"
     rate_limit_create_topic: "创建话题后，用户必须等待 (n) 秒才能创建另一个话题。"
     rate_limit_create_post: "发帖后，用户必须等待 (n) 秒才能创建另一个帖子。"
     rate_limit_new_user_create_topic: "创建话题后，新用户必须等待 (n) 秒才能创建另一个话题。"
@@ -1820,6 +1822,7 @@ zh_CN:
     max_emails_per_day_per_user: "每天向用户发送的最大电子邮件数。设置为 0 将禁用限制"
     enable_staged_users: "处理传入电子邮件时自动创建暂存用户。"
     maximum_staged_users_per_email: "处理传入电子邮件时创建的最大暂存用户数。"
+    maximum_recipients_per_new_group_email: "阻止收件人过多的传入电子邮件。"
     auto_generated_allowlist: "不会检查自动生成内容的电子邮件地址列表。示例：foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "阻止识别为自动生成的传入电子邮件。"
     ignore_by_title: "根据标题忽略传入电子邮件。"
@@ -2075,6 +2078,8 @@ zh_CN:
     use_name_for_username_suggestions: "在建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末(周六和周日) (如果你仅在工作日，周一至周五使用 Discourse，请禁用此选项)。"
     splash_screen: "在加载站点资源时显示临时负载屏幕"
+    default_sidebar_categories: "选定的类别将默认显示在侧边栏的类别部分。"
+    default_sidebar_tags: "选定的标签将默认显示在侧边栏的标签部分。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2951,6 +2956,15 @@ zh_CN:
         我们不接受回复摘要电子邮件。
 
         如果您有异议，请[联系管理人员](%{base_url}/about)。
+    email_reject_too_many_recipients:
+      title: "拒绝太多收件人的电子邮件"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 收件人太多"
+      text_body_template: |
+        抱歉，你向 %{destination} (标题为 %{former_title})发送的电子邮件未成功。
+
+        你试图给超过 %{max_recipients_count} 的人发送电子邮件，我们的系统自动将你的电子邮件标记为垃圾邮件。
+
+        如果你认为这是一个错误，[联系工作人员](%{base_url}/about)。
     email_error_notification:
       title: "电子邮件错误通知"
       subject_template: "[%{email_prefix}] 电子邮件问题 - POP 身份验证错误"
@@ -4307,6 +4321,7 @@ zh_CN:
       invalid_token: "无效令牌。"
     email_input: "管理员电子邮件"
     submit_button: "发送电子邮件"
+    safe_mode: "安全模式：登录时禁用所有主题/插件"
   performance_report:
     initial_post_raw: 此话题包括您站点的每日表现报告。
     initial_topic_title: 网站表现报告
@@ -4349,6 +4364,8 @@ zh_CN:
       message: "<p>我们已将激活电子邮件重新发送至 <b>%{email}</b>"
   safe_mode:
     title: "进入安全模式"
+    description: "安全模式允许您在不加载插件或主题的情况下测试您的站点。"
+    no_themes: "禁用主题和组件"
     no_unofficial_plugins: "禁用非官方插件"
     no_plugins: "禁用所有插件"
     enter: "进入安全模式"

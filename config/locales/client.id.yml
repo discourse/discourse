@@ -1803,10 +1803,8 @@ id:
         tags:
           header_link_text: "Label"
         categories:
-          header_link_title: "Semua kategori"
           header_link_text: "Kategori"
         community:
-          header_link_title: "beranda"
           links:
             tracked:
               content: "Dilacak"

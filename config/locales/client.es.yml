@@ -3717,14 +3717,11 @@ es:
     user_activity:
       no_activity_title: "Todavía no hay actividad"
       no_activity_body: "¡Te damos la bienvenida a la comunidad! Acabas de llegar, por lo que todavía no has participado. Como primer paso, visita los <a href='%{topUrl}'>Destacados</a> o las <a href='%{categoriesUrl}'>Categorías</a> y empieza a leer. Dale al botón %{heartIcon} en las publicaciones que te gusten o sobre las que quieras saber más. Aquí verás tu actividad una vez empieces a participar."
-      no_activity_others: "Sin actividad."
       no_replies_title: "Todavía no has respondido a ningún tema"
-      no_replies_others: "No hay respuestas."
       no_drafts_title: "Todavía no has empezado ningún borrador"
       no_drafts_body: "¿Todavía no quieres publicarlo? Vamos a guardar un borrador automáticamente y lo pondremos aquí cuando vayas a empezar a escribir un tema, respuesta o mensaje personal. Dale al botón de cancelar para descartarlo o guardar el borrador y seguir luego."
       no_likes_title: "Todavía no le has dado a me gusta en ningún tema"
       no_likes_body: "Una buena manera de empezar a contribuir es ir leyendo los temas ya publicados y darle a %{heartIcon} en lo que te guste"
-      no_likes_others: "No le ha dado me gusta a ninguna publicación."
       no_topics_title: "Todavía no has empezado ningún tema"
       no_topics_title_others: "%{username} no ha creado ningún tema todavía"
       no_read_topics_title: "Todavía no has leído ningún tema"
@@ -3748,7 +3745,6 @@ es:
       more: "Más..."
       sections:
         messages:
-          header_link_title: "mensajes personales"
           header_link_text: "Mensajes"
           header_action_title: "crear un mensaje personal"
           links:
@@ -3762,17 +3758,14 @@ es:
         tags:
           none: "No has añadido ninguna etiqueta."
           click_to_get_started: "Haz clic aquí para empezar."
-          header_link_title: "todas las etiquetas"
           header_link_text: "Etiquetas"
           header_action_title: "editar las etiquetas de tu barra lateral"
         categories:
           none: "No has añadido ninguna categoría."
           click_to_get_started: "Haz clic aquí para empezar."
-          header_link_title: "todas las categorías"
           header_link_text: "Categorías"
           header_action_title: "editar las categorías de tu barra lateral"
         community:
-          header_link_title: "inicio"
           header_link_text: "Comunidad"
           header_action_title: "crear un nuevo tema"
           links:

@@ -3606,14 +3606,11 @@ pt_BR:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
     user_activity:
       no_activity_title: "Nenhuma atividade ainda."
-      no_activity_others: "Nenhuma atividade."
       no_replies_title: "Você ainda não respondeu a nenhum tópico."
-      no_replies_others: "Sem respostas."
       no_drafts_title: "Você ainda não iniciou nenhum rascunho"
       no_drafts_body: "Ainda não está pronto(a) para postar? Salvaremos automaticamente um novo rascunho e o listaremos aqui sempre que você começar a escrever um tópico, resposta ou mensagem pessoal. Selecione o botão de cancelamento para descartar ou salvar seu rascunho para continuar mais tarde."
       no_likes_title: "Você ainda não curtiu nenhum tópico"
       no_likes_body: "Uma ótima maneira de participar e começar a contribuir é iniciar a leitura das conversas que já aconteceram e selecionar %{heartIcon} nas postagens de que você gostou!"
-      no_likes_others: "Nenhuma postagem curtida."
       no_topics_title: "Você ainda não iniciou nenhum tópico"
       no_read_topics_title: "Você ainda não leu nenhum tópico"
       no_read_topics_body: "Quando começar a ler as discussões, uma lista será exibida aqui. Para começar a ler, procure tópicos do seu interesse em <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a>, ou pesquise por palavra-chave %{searchIcon}"
@@ -3640,13 +3637,10 @@ pt_BR:
             unread_with_count: "Não lido (%{count})"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorias"
           header_link_text: "Categorias"
         community:
-          header_link_title: "início"
           header_link_text: "Comunidade"
           links:
             tracked:
