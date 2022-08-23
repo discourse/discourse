@@ -14,7 +14,7 @@ acceptance("Wizard", function (needs) {
   test("Wizard starts", async function (assert) {
     await visit("/wizard");
     assert.ok(exists(".wizard-container"));
-    assert.notOk((
+    assert.notOk(
       exists(".d-header-wrap"),
       "header is not rendered on wizard pages"
     );
