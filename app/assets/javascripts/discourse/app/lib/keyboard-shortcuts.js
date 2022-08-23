@@ -638,10 +638,11 @@ export default {
       this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
     this._lastMoveTime = now;
 
-    const articles = Array.from(this._findArticles());
+    let articles = this._findArticles();
     if (articles === undefined) {
       return;
     }
+    articles = Array.from(articles);
 
     let selected = articles.find((element) =>
       element.classList.contains("selected")
