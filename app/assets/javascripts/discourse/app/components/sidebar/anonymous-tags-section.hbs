@@ -1,0 +1,16 @@
+<Sidebar::Section
+  @sectionName="tags"
+  @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}} >
+
+  {{#each this.sectionLinks as |sectionLink|}}
+    <Sidebar::SectionLink
+      @route={{sectionLink.route}}
+      @content={{sectionLink.text}}
+      @currentWhen={{sectionLink.currentWhen}}
+      @models={{sectionLink.models}} >
+    </Sidebar::SectionLink>
+  {{/each}}
+  <div class="sidebar-more-section-links-details-content-secondary">
+    <Sidebar::MoreSectionLink @sectionLink={{this.moreLink}} />
+  </div>
+</Sidebar::Section>

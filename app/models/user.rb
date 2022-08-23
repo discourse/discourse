@@ -1668,6 +1668,15 @@ class User < ActiveRecord::Base
     categories_ids
   end
 
+  def sidebar_tags
+    return custom_sidebar_tags if custom_sidebar_tags.present?
+    if SiteSetting.default_sidebar_tags.present?
+      tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
+      return Tag.where(name: tag_names)
+    end
+    []
+  end
+
   protected
 
   def badge_grant
@@ -1958,15 +1967,6 @@ class User < ActiveRecord::Base
         self.username == SiteSetting.site_contact_username && !staff?
       SiteSetting.set_and_log(:site_contact_username, SiteSetting.defaults[:site_contact_username])
     end
-  end
-
-  def sidebar_tags
-    return custom_sidebar_tags if custom_sidebar_tags.present?
-    if SiteSetting.default_sidebar_tags.present?
-      tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
-      return Tag.where(name: tag_names)
-    end
-    []
   end
 
   def self.ensure_consistency!
