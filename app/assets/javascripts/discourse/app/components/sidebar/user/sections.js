@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { customSections as sidebarCustomSections } from "discourse/lib/sidebar/custom-sections";
+import { customSections as sidebarCustomSections } from "discourse/lib/sidebar/user/custom-sections";
 import { getOwner, setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 
-export default class SidebarSections extends Component {
+export default class SidebarUserSections extends Component {
   @service siteSettings;
   @service currentUser;
 

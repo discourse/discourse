@@ -5,10 +5,10 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
-import TagSectionLink from "discourse/lib/sidebar/tags-section/tag-section-link";
-import PMTagSectionLink from "discourse/lib/sidebar/tags-section/pm-tag-section-link";
+import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
+import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 
-export default class SidebarTagsSection extends Component {
+export default class SidebarUserTagsSection extends Component {
   @service router;
   @service topicTrackingState;
   @service pmTopicTrackingState;

@@ -5,7 +5,7 @@ import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
-  "Sidebar - Experimental sidebar and hamburger setting disabled",
+  "Sidebar - Logged on user - Experimental sidebar and hamburger setting disabled",
   function (needs) {
     needs.user();
 
@@ -23,7 +23,7 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar disabled",
+  "Sidebar - Logged on user - Experimental sidebar and hamburger setting enabled - Sidebar disabled",
   function (needs) {
     needs.user();
 

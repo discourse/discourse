@@ -9,7 +9,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { resetSidebarSection } from "discourse/lib/sidebar/user/custom-sections";
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {

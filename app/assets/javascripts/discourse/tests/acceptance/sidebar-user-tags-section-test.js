@@ -13,26 +13,29 @@ import {
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
-acceptance("Sidebar - Tags section - tagging disabled", function (needs) {
-  needs.settings({
-    tagging_enabled: false,
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
-  });
+acceptance(
+  "Sidebar - Logged on user - Tags section - tagging disabled",
+  function (needs) {
+    needs.settings({
+      tagging_enabled: false,
+      enable_experimental_sidebar_hamburger: true,
+      enable_sidebar: true,
+    });
 
-  needs.user();
+    needs.user();
 
-  test("tags section is not shown", async function (assert) {
-    await visit("/");
+    test("tags section is not shown", async function (assert) {
+      await visit("/");
 
-    assert.ok(
-      !exists(".sidebar-section-tags"),
-      "does not display the tags section"
-    );
-  });
-});
+      assert.ok(
+        !exists(".sidebar-section-tags"),
+        "does not display the tags section"
+      );
+    });
+  }
+);
 
-acceptance("Sidebar - Tags section", function (needs) {
+acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.settings({
     tagging_enabled: true,
     enable_experimental_sidebar_hamburger: true,

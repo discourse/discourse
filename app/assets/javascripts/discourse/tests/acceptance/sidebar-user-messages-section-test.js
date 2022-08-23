@@ -12,7 +12,7 @@ import {
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
-  "Sidebar - Messages Section - enable_personal_messages disabled",
+  "Sidebar - Logged on user - Messages Section - enable_personal_messages disabled",
   function (needs) {
     needs.user();
 
@@ -34,7 +34,7 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Messages Section - enable_personal_messages enabled",
+  "Sidebar - Logged on user - Messages Section - enable_personal_messages enabled",
   function (needs) {
     needs.user();
 
