@@ -3,7 +3,7 @@ const dynamicJsTemplate = document.querySelector("#dynamic-test-js");
 const params = new URLSearchParams(document.location.search);
 const skipPlugins = params.get("qunit_skip_plugins");
 
-for (const element of Array.from(dynamicJsTemplate.content.childNodes)) {
+for (const element of dynamicJsTemplate.content.childNodes) {
   if (skipPlugins && element.dataset?.discoursePlugin) {
     continue;
   }
