@@ -77,7 +77,7 @@ export default Controller.extend({
       message: I18n.t("admin.emoji.delete_confirm", {
         name: emoji.get("name"),
       }),
-      actionConfirm: () => {
+      didConfirm: () => {
         return ajax("/admin/customize/emojis/" + emoji.get("name"), {
           type: "DELETE",
         }).then(() => {

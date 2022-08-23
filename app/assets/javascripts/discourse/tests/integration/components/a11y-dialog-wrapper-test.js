@@ -153,7 +153,7 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
 
     this.dialog.confirm({
       message: "A confirm message",
-      actionConfirm: () => {
+      didConfirm: () => {
         confirmCallbackCalled = true;
       },
     });
@@ -196,10 +196,10 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
 
     this.dialog.confirm({
       message: "A confirm message",
-      actionConfirm: () => {
+      didConfirm: () => {
         confirmCallbackCalled = true;
       },
-      actionCancel: () => {
+      didCancel: () => {
         cancelCallbackCalled = true;
       },
     });

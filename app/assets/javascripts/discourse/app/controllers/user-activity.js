@@ -47,7 +47,7 @@ export default Controller.extend({
     exportUserArchive() {
       this.dialog.yesNoConfirm({
         message: I18n.t("user.download_archive.confirm"),
-        actionConfirm: () => exportUserArchive(),
+        didConfirm: () => exportUserArchive(),
       });
     },
   },

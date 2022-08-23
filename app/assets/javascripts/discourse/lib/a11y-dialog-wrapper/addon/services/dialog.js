@@ -5,19 +5,18 @@ import { bind } from "discourse-common/utils/decorators";
 export default Service.extend({
   message: null,
   type: null,
+  dialogInstance: null,
 
   title: null,
   titleElementId: null,
 
-  actionConfirm: null,
-  labelConfirm: null,
+  didConfirm: null,
   iconConfirm: null,
+  labelConfirm: null,
 
-  actionCancel: null,
+  didCancel: null,
   labelCancel: null,
   cancelVisible: null,
-
-  dialogInstance: null,
 
   dialog(params) {
     const {
@@ -25,11 +24,11 @@ export default Service.extend({
       type,
       title,
 
-      actionConfirm,
-      labelConfirm = "ok_value",
+      didConfirm,
       iconConfirm,
+      labelConfirm = "ok_value",
 
-      actionCancel,
+      didCancel,
       labelCancel = "cancel_value",
       cancelVisible,
     } = params;
@@ -39,19 +38,18 @@ export default Service.extend({
     this.setProperties({
       message,
       type,
+      dialogInstance: new A11yDialog(element),
 
       title,
       titleElementId: title !== null ? "a11y-dialog-title" : null,
 
-      actionConfirm,
+      didConfirm,
       labelConfirm,
       iconConfirm,
 
-      actionCancel,
+      didCancel,
       labelCancel,
       cancelVisible,
-
-      dialogInstance: new A11yDialog(element),
     });
 
     this.dialogInstance.show();
@@ -85,44 +83,48 @@ export default Service.extend({
   },
 
   yesNoConfirm(params) {
-    return this.dialog({
+    return this.confirm({
       ...params,
       labelConfirm: "yes_value",
       labelCancel: "no_value",
-      cancelVisible: true,
-      type: "confirm",
     });
   },
+
   reset() {
     this.setProperties({
       message: null,
       type: null,
+      dialogInstance: null,
 
       title: null,
       titleElementId: null,
 
-      actionConfirm: null,
+      didConfirm: null,
       labelConfirm: null,
       iconConfirm: null,
 
-      actionCancel: null,
+      didCancel: null,
       labelCancel: null,
       cancelVisible: null,
     });
   },
 
+  willDestroy() {
+    this.reset();
+  },
+
   @bind
-  actionConfirmWrapped() {
-    if (this.actionConfirm) {
-      this.actionConfirm();
+  didConfirmWrapped() {
+    if (this.didConfirm) {
+      this.didConfirm();
     }
     this.dialogInstance.hide();
   },
 
   @bind
-  actionCancelWrapped() {
-    if (this.actionCancel) {
-      this.actionCancel();
+  didCancelWrapped() {
+    if (this.didCancel) {
+      this.didCancel();
     }
     this.dialogInstance.hide();
   },
