@@ -20,7 +20,24 @@ acceptance("Sidebar - Anonymous User", function (needs) {
 
     assert.ok(
       exists(".sidebar-container"),
-      "sidebar exists for anonymouse user"
+      "sidebar exists for anonymous user"
+    );
+  });
+});
+
+acceptance("Sidebar - Anonymous User - Login Required", function (needs) {
+  needs.settings({
+    enable_experimental_sidebar_hamburger: true,
+    enable_sidebar: true,
+    login_required: true,
+  });
+
+  test("sidebar is hidden", async function (assert) {
+    await visit("/");
+
+    assert.ok(
+      !exists(".sidebar-container"),
+      "sidebar is hidden for anonymous user"
     );
   });
 });
