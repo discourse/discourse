@@ -229,6 +229,22 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("clicking on badges link", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    await click(".sidebar-section-community .sidebar-section-link-badges");
+
+    assert.strictEqual(
+      currentURL(),
+      "/badges",
+      "it should transition to the badges url"
+    );
+  });
+
   test("clicking on groups link", async function (assert) {
     await visit("/t/280");
 
