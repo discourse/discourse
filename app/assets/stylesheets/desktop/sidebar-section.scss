@@ -1,12 +1,12 @@
 #main-outlet-wrapper {
-  .sidebar-wrapper {
+  .sidebar-section-wrapper {
     .sidebar-section-header-button,
     .sidebar-section-header-caret,
     .sidebar-section-header-dropdown {
       .discourse-no-touch & {
         opacity: 0;
         transition: opacity 0.25s;
-        transition-delay: 0.5s;
+        transition-delay: 0.25s;
       }
     }
 

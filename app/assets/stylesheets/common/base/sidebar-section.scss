@@ -1,10 +1,18 @@
 .sidebar-section-wrapper {
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 
   .sidebar-section-header-wrapper {
     display: flex;
     align-items: stretch;
     box-sizing: border-box;
+    padding: 0;
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus-within {
+        background: var(--d-sidebar-highlight-color);
+      }
+    }
 
     .select-kit {
       .btn {
@@ -21,23 +29,35 @@
       }
 
       summary {
-        padding: 0.25em 0.5em;
+        height: 100%;
+        padding: 0 var(--d-sidebar-row-horizontal-padding) 0
+          calc(var(--d-sidebar-row-horizontal-padding) / 2);
+        &:focus,
+        &:hover {
+          border-color: transparent;
+          .d-icon {
+            color: var(--primary);
+          }
+        }
       }
     }
   }
 
   .sidebar-section-header {
-    @include ellipsis;
     flex: 1 1 auto;
     text-transform: uppercase;
     font-weight: bold;
     font-size: var(--font-1);
     color: var(--primary);
     align-items: center;
+    padding: calc(var(--d-sidebar-row-horizontal-padding) / 2)
+      calc(var(--d-sidebar-row-horizontal-padding) / 2)
+      calc(var(--d-sidebar-row-horizontal-padding) / 2)
+      var(--d-sidebar-row-horizontal-padding);
+    min-width: 0;
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
-      padding: 0;
 
       &:focus {
         background: transparent;
@@ -48,27 +68,39 @@
   .sidebar-section-header-text {
     font-weight: bold;
     margin-right: 0.25em;
+    @include ellipsis;
   }
 
   .sidebar-section-header-caret {
+    display: block;
+    width: 1.5em;
+    margin-left: -1.5em;
     font-size: var(--font-down-2);
+    flex: 0 0 auto;
   }
 
   .sidebar-section-header-button {
     background: none;
     border: none;
-    padding: 0.25em 0.5em;
+    padding: 0 var(--d-sidebar-row-horizontal-padding) 0
+      calc(var(--d-sidebar-row-horizontal-padding) / 2);
 
     .d-icon {
       font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
 
-    &:focus,
-    &:hover {
-      background: var(--d-sidebar-highlight-color);
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        outline: none;
+        .d-icon {
+          color: var(--primary);
+        }
+      }
     }
   }
+
   .select-kit-collection {
     .texts {
       font-size: var(--font-0);

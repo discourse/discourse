@@ -1,6 +1,7 @@
 .sidebar-section-link-wrapper {
   display: flex;
   align-items: center;
+  position: relative;
 
   .sidebar-section-link {
     box-sizing: border-box;
@@ -13,6 +14,7 @@
     &:focus,
     &:hover {
       background: var(--d-sidebar-highlight-color);
+      outline: none;
     }
 
     &.active {
@@ -73,12 +75,17 @@
     flex-shrink: 0;
 
     &.image {
+      position: absolute;
       img {
         border-radius: 50%;
         width: 20px;
         aspect-ratio: auto 20 / 20;
         height: 20px;
-        margin-right: 0.75em;
+        margin-right: 0.5em;
+      }
+
+      + .sidebar-section-link-content-text {
+        margin-left: calc(20px + 0.5em);
       }
     }
 
@@ -122,8 +129,16 @@
       color: var(--primary-medium);
       border: none;
       background: transparent;
-      padding: 0.35em 0.5em;
+      padding: 0 0 0 0.5em;
+      height: 100%;
       transition: background-color 0.25s;
+
+      &:focus,
+      .discourse-no-touch & {
+        &:hover {
+          color: var(--primary);
+        }
+      }
 
       svg {
         font-size: var(--font-down-1);
