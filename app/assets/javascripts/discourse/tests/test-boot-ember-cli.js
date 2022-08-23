@@ -8,6 +8,13 @@ import { setup } from "qunit-dom";
 setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
+  // eslint-disable-next-line no-undef
+  if (!EmberENV.TESTS_FILE_LOADED) {
+    throw new Error(
+      'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
+    );
+  }
+
   const script = document.getElementById("plugin-test-script");
   if (script && !requirejs.entries["discourse/tests/plugin-tests"]) {
     throw new Error(
