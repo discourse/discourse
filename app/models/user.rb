@@ -1674,7 +1674,7 @@ class User < ActiveRecord::Base
       tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
       return Tag.where(name: tag_names)
     end
-    []
+    Tag.none
   end
 
   protected
