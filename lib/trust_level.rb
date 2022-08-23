@@ -31,32 +31,23 @@ class TrustLevel
 
   def self.calculate(user, use_previous_trust_level: false)
     # First, use the manual locked level
-    if user.manual_locked_trust_level.present?
-      return user.manual_locked_trust_level
-    end
+    return user.manual_locked_trust_level if user.manual_locked_trust_level.present?
 
     # Then consider the group locked level (or the previous trust level)
-    granted_trust_level = user.group_granted_trust_level
+    granted_trust_level = user.group_granted_trust_level || 0
+    previous_trust_level = use_previous_trust_level && find_previous_trust_level(user) || 0
 
-    if use_previous_trust_level && previous_trust_level = find_previous_trust_level(user)
-      if !granted_trust_level || previous_trust_level > granted_trust_level
-        granted_trust_level = previous_trust_level
-      end
-    end
-
-    granted_trust_level
+    [granted_trust_level, previous_trust_level].max
   end
 
   private
 
   def self.find_previous_trust_level(user)
-    user_history = UserHistory
+    UserHistory
       .where(action: UserHistory.actions[:change_trust_level])
       .where(target_user_id: user.id)
       .order(created_at: :desc)
-      .last
-    return if !user_history
-
-    user_history.new_value.to_i if user_history.new_value.present?
+      .pluck_first(:new_value)
+      &.to_i
   end
 end
