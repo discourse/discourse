@@ -5,9 +5,9 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
 import Component from "@glimmer/component";
-import CategorySectionLink from "discourse/lib/sidebar/categories-section/category-section-link";
+import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
 
-export default class SidebarCategoriesSection extends Component {
+export default class SidebarUserCategoriesSection extends Component {
   @service router;
   @service topicTrackingState;
   @service currentUser;

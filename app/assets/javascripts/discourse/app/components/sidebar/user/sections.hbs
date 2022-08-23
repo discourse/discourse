@@ -1,13 +1,13 @@
 <div class="sidebar-sections">
-  <Sidebar::CommunitySection @collapsable={{@collapsableSections}}/>
-  <Sidebar::CategoriesSection @collapsable={{@collapsableSections}}/>
+  <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}}/>
+  <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}}/>
 
   {{#if this.siteSettings.tagging_enabled}}
-    <Sidebar::TagsSection @collapsable={{@collapsableSections}}/>
+    <Sidebar::User::TagsSection @collapsable={{@collapsableSections}}/>
   {{/if}}
 
   {{#if this.siteSettings.enable_personal_messages}}
-    <Sidebar::MessagesSection @collapsable={{@collapsableSections}}/>
+    <Sidebar::User::MessagesSection @collapsable={{@collapsableSections}}/>
   {{/if}}
 
   {{#each this.customSections as |customSection|}}

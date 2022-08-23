@@ -95,8 +95,8 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
-import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/user/custom-community-section-links";
+import { addSidebarSection } from "discourse/lib/sidebar/user/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
@@ -1674,7 +1674,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
-   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/community-section/base-section-link.js`
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/user/community-section/base-section-link.js`
    * for documentation on the BaseSectionLink class interface.
    *
    * ```
@@ -1733,7 +1733,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
-   * class interface. See `lib/sidebar/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
+   * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
    *
    * ```

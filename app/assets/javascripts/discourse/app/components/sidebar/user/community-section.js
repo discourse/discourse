@@ -5,15 +5,15 @@ import PermissionType from "discourse/models/permission-type";
 import {
   customSectionLinks,
   secondaryCustomSectionLinks,
-} from "discourse/lib/sidebar/custom-community-section-links";
-import EverythingSectionLink from "discourse/lib/sidebar/community-section/everything-section-link";
-import TrackedSectionLink from "discourse/lib/sidebar/community-section/tracked-section-link";
-import MyPostsSectionLink from "discourse/lib/sidebar/community-section/my-posts-section-link";
-import GroupsSectionLink from "discourse/lib/sidebar/community-section/groups-section-link";
-import UsersSectionLink from "discourse/lib/sidebar/community-section/users-section-link";
-import AboutSectionLink from "discourse/lib/sidebar/community-section/about-section-link";
-import FAQSectionLink from "discourse/lib/sidebar/community-section/faq-section-link";
-import AdminSectionLink from "discourse/lib/sidebar/community-section/admin-section-link";
+} from "discourse/lib/sidebar/user/custom-community-section-links";
+import EverythingSectionLink from "discourse/lib/sidebar/user/community-section/everything-section-link";
+import TrackedSectionLink from "discourse/lib/sidebar/user/community-section/tracked-section-link";
+import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
+import GroupsSectionLink from "discourse/lib/sidebar/user/community-section/groups-section-link";
+import UsersSectionLink from "discourse/lib/sidebar/user/community-section/users-section-link";
+import AboutSectionLink from "discourse/lib/sidebar/user/community-section/about-section-link";
+import FAQSectionLink from "discourse/lib/sidebar/user/community-section/faq-section-link";
+import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
@@ -30,7 +30,7 @@ const ADMIN_MAIN_SECTION_LINKS = [AdminSectionLink];
 const MORE_SECTION_LINKS = [GroupsSectionLink, UsersSectionLink];
 const MORE_SECONDARY_SECTION_LINKS = [AboutSectionLink, FAQSectionLink];
 
-export default class SidebarCommunitySection extends Component {
+export default class SidebarUserCommunitySection extends Component {
   @service router;
   @service topicTrackingState;
   @service currentUser;

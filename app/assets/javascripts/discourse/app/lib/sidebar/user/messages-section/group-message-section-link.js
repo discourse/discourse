@@ -1,7 +1,7 @@
 import I18n from "I18n";
 
 import { capitalize } from "@ember/string";
-import MessageSectionLink from "discourse/lib/sidebar/messages-section/message-section-link";
+import MessageSectionLink from "discourse/lib/sidebar/user/messages-section/message-section-link";
 
 export default class GroupMessageSectionLink extends MessageSectionLink {
   routeNames = new Set([

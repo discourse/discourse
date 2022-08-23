@@ -2,9 +2,10 @@ import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
-import BaseSectionLink from "discourse/lib/sidebar/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
+import { isTrackedTopic } from "discourse/lib/topic-list-tracked-filter";
 
-export default class EverythingSectionLink extends BaseSectionLink {
+export default class TrackedSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
   callbackId = null;
@@ -15,7 +16,6 @@ export default class EverythingSectionLink extends BaseSectionLink {
     this.callbackId = this.topicTrackingState.onStateChange(
       this._refreshCounts
     );
-
     this._refreshCounts();
   }
 
@@ -25,27 +25,31 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
   @bind
   _refreshCounts() {
-    this.totalUnread = this.topicTrackingState.countUnread();
+    this.totalUnread = this.topicTrackingState.countUnread({
+      customFilterFn: isTrackedTopic,
+    });
 
     if (this.totalUnread === 0) {
-      this.totalNew = this.topicTrackingState.countNew();
+      this.totalNew = this.topicTrackingState.countNew({
+        customFilterFn: isTrackedTopic,
+      });
     }
   }
 
   get name() {
-    return "everything";
+    return "tracked";
   }
 
   get query() {
-    return { f: undefined };
+    return { f: "tracked" };
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.everything.title");
+    return I18n.t("sidebar.sections.community.links.tracked.title");
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.everything.content");
+    return I18n.t("sidebar.sections.community.links.tracked.content");
   }
 
   get currentWhen() {

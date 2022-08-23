@@ -4,7 +4,7 @@ import {
   INBOX,
   NEW,
   UNREAD,
-} from "discourse/components/sidebar/messages-section";
+} from "discourse/components/sidebar/user/messages-section";
 
 export default class MessageSectionLink {
   @tracked shouldDisplay = this._isInbox;

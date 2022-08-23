@@ -1,4 +1,4 @@
-import BaseSectionLink from "discourse/lib/sidebar/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
 
 export let customSectionLinks = [];
 export let secondaryCustomSectionLinks = [];
