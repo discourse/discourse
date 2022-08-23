@@ -21,6 +21,9 @@ he:
         description: כאשר יגיע התאריך האוטומציה תוקפץ
       user_added_to_group:
         title: משתמש נוסף לקבוצה
+      user_removed_from_group:
+        title: משתמש הוסר מהקבוצה
+        description: כאשר משתמש מוסר מהקבוצה שצוינה, האוטומציה תופעל
       user_promoted:
         title: משתמש קיבל קידום
         description: כאשר משתמש מקודם מדרגת אמון אחת לאחרת

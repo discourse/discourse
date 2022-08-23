@@ -151,6 +151,10 @@ sv:
           fields:
             restricted_user:
               label: Användare
+              description: Gör det möjligt att begränsa utförandet av utlösare till den här användaren
+            ignore_staff:
+              label: Ignorera personal
+              description: Hoppa över utlösaren om avsändaren är en medarbetare
             valid_trust_levels:
               label: Giltiga förtroendenivåer
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
@@ -252,6 +256,10 @@ sv:
             user:
               label: Användare
               description: "Användaren som stänger ämnet (standard: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: 'Användaranpassat fältnamn'
       models:
         script:
           name:
