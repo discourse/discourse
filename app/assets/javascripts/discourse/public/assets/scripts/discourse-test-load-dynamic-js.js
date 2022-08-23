@@ -24,5 +24,5 @@ for (const element of Array.from(dynamicJsTemplate.content.childNodes)) {
     clone.async = false;
   }
 
-  document.body.appendChild(clone);
+  document.querySelector("discourse-dynamic-test-js").appendChild(clone);
 }
