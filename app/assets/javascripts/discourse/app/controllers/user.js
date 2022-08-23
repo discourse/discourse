@@ -110,11 +110,22 @@ export default Controller.extend(CanCheckEmails, {
     return viewingSelf;
   },
 
-  @discourseComputed("viewingSelf", "currentUser.admin")
+  @discourseComputed(
+    "viewingSelf",
+    "currentUser.admin",
+    "currentUser.groups.[]"
+  )
   showPrivateMessages(viewingSelf, isAdmin) {
-    return (
-      this.siteSettings.enable_personal_messages && (viewingSelf || isAdmin)
-    );
+    const canSendPms =
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      );
+
+    return canSendPms && (viewingSelf || isAdmin);
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")

@@ -107,6 +107,7 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
+  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
   test("messages tab isn't shown if current user isn't staff and enable_personal_messages setting is disabled", async function (assert) {
     this.currentUser.set("moderator", false);
     this.currentUser.set("admin", false);
@@ -126,6 +127,7 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
+  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
   test("messages tab is shown if current user is staff even if enable_personal_messages setting is disabled", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);

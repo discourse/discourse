@@ -87,9 +87,21 @@ export default Controller.extend({
     return defaultTabs;
   },
 
-  @discourseComputed("model.has_messages", "model.is_group_user")
+  @discourseComputed(
+    "model.has_messages",
+    "model.is_group_user",
+    "currentUser.groups.[]"
+  )
   showMessages(hasMessages, isGroupUser) {
-    if (!this.siteSettings.enable_personal_messages) {
+    const canSendPms =
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      );
+    if (!canSendPms) {
       return false;
     }
 

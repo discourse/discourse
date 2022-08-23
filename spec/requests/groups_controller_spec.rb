@@ -631,6 +631,7 @@ RSpec.describe GroupsController do
 
   describe '#messageable' do
     it "should return the right response" do
+      user.change_trust_level!(1)
       sign_in(user)
 
       get "/groups/#{group.name}/messageable.json"
@@ -651,6 +652,16 @@ RSpec.describe GroupsController do
       expect(body["messageable"]).to eq(true)
 
       SiteSetting.enable_personal_messages = false
+
+      get "/groups/#{group.name}/messageable.json"
+      expect(response.status).to eq(200)
+
+      body = response.parsed_body
+      expect(body["messageable"]).to eq(false)
+
+      # TODO (martin) Remove deprecated enable_personal_messages here and above when plugins changed.
+      SiteSetting.enable_personal_messages = true
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
 
       get "/groups/#{group.name}/messageable.json"
       expect(response.status).to eq(200)

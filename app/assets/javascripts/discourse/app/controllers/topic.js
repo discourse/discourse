@@ -212,6 +212,19 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
+  @discourseComputed("currentUser.groups.[]")
+  canSendPms() {
+    return (
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
+  },
+
   @discourseComputed("buffered.category_id")
   minimumRequiredTags(categoryId) {
     return Category.findById(categoryId)?.minimumRequiredTags || 0;

@@ -17,7 +17,7 @@ export default Component.extend({
 
   @discourseComputed("topic.isPrivateMessage")
   canArchive(isPM) {
-    return this.siteSettings.enable_personal_messages && isPM;
+    return this.canSendPms && isPM;
   },
 
   inlineButtons: getTopicFooterButtons(),
@@ -43,7 +43,20 @@ export default Component.extend({
 
   @discourseComputed("topic.isPrivateMessage")
   showNotificationsButton(isPM) {
-    return !isPM || this.siteSettings.enable_personal_messages;
+    return !isPM || this.canSendPms;
+  },
+
+  @discourseComputed("currentUser.groups.[]")
+  canSendPms() {
+    return (
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
   },
 
   canInviteTo: alias("topic.details.can_invite_to"),

@@ -326,7 +326,15 @@ export default Controller.extend(ModalFunctionality, {
       bookmarks: buildShortcut("jump_to.bookmarks", { keys1: ["g", "b"] }),
       profile: buildShortcut("jump_to.profile", { keys1: ["g", "p"] }),
     };
-    if (this.siteSettings.enable_personal_messages) {
+    const canSendPms =
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      );
+    if (canSendPms) {
       shortcuts.messages = buildShortcut("jump_to.messages", {
         keys1: ["g", "m"],
       });

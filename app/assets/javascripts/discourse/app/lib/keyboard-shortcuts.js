@@ -139,7 +139,16 @@ export default {
     this.siteSettings = this.container.lookup("service:site-settings");
 
     // Disable the shortcut if private messages are disabled
-    if (!this.siteSettings.enable_personal_messages) {
+    // TODO (martin) Remove enable_personal_messages deprecated.
+    if (
+      !this.siteSettings.enable_personal_messages &&
+      !this.currentUser.staff &&
+      !this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    ) {
       delete DEFAULT_BINDINGS["g m"];
     }
   },

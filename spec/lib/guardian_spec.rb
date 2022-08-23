@@ -173,16 +173,25 @@ RSpec.describe Guardian do
       end
     end
 
+    # TODO (martin) Remove deprecated enable_personal_messages and min_trust_to_send_messages after plugin changes.
     it "returns false for notify_user if private messages are disabled" do
       SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
     end
 
+    # TODO (martin) Remove deprecated enable_personal_messages and min_trust_to_send_messages after plugin changes.
     it "returns false for notify_user if private messages are enabled but threshold not met" do
       SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
+      expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
+    end
+
+    it "returns false for notify_user if user is not in any group that can send personal messages" do
+      user = Fabricate(:user)
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+      user.change_trust_level!(1)
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
     end
 
@@ -282,11 +291,29 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
+    # TODO (martin) Remove enable_personal_messages here when it is deprecated.
     context "when enable_personal_messages is false" do
       before { SiteSetting.enable_personal_messages = false }
 
       it "returns false if user is not staff member" do
         expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
+      end
+
+      it "returns true for staff member" do
+        expect(Guardian.new(moderator).can_send_private_message?(another_user)).to be_truthy
+        expect(Guardian.new(admin).can_send_private_message?(another_user)).to be_truthy
+      end
+    end
+
+    context "when personal_message_enabled_groups does not contain the user" do
+      let(:group) { Fabricate(:group) }
+      before { SiteSetting.personal_message_enabled_groups = group.id }
+
+      it "returns false if user is not staff member" do
+        expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
+        GroupUser.create(user: trust_level_4, group: group)
+        trust_level_4.reload
+        expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_truthy
       end
 
       it "returns true for staff member" do
@@ -565,6 +592,7 @@ RSpec.describe Guardian do
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
 
+      # TODO (martin) Remove enable_personal_messages here when it is deprecated.
       it 'returns true for normal user when inviting to topic and PM disabled' do
         SiteSetting.enable_personal_messages = false
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
@@ -617,9 +645,13 @@ RSpec.describe Guardian do
     end
 
     describe "private messages" do
-      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-      fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
+      fab!(:user) { Fabricate(:user) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
+
+      before do
+        user.change_trust_level!(SiteSetting.min_trust_level_to_allow_invite)
+        moderator.change_trust_level!(SiteSetting.min_trust_level_to_allow_invite)
+      end
 
       context "when private messages are disabled" do
         it "allows an admin to invite to the pm" do
@@ -628,9 +660,21 @@ RSpec.describe Guardian do
         end
       end
 
+      # TODO (martin) Remove enable_personal_messages here when it is deprecated.
       context "when private messages are disabled" do
         before do
           SiteSetting.enable_personal_messages = false
+        end
+
+        it "doesn't allow a regular user to invite" do
+          expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+      end
+
+      context "when user does not belong to personal_message_enabled_groups" do
+        before do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
         end
 
         it "doesn't allow a regular user to invite" do
@@ -1307,8 +1351,14 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
     end
 
+    # TODO (martin) Remove enable_personal_messages here when it is deprecated.
     it 'returns false when personal messages are disabled' do
       SiteSetting.enable_personal_messages = false
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
+    end
+
+    it 'returns false when user is not in personal_message_enabled_groups' do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
     end
   end

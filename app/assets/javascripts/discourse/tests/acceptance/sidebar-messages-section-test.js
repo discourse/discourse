@@ -11,6 +11,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
+// TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
 acceptance(
   "Sidebar - Messages Section - enable_personal_messages disabled",
   function (needs) {
@@ -33,6 +34,7 @@ acceptance(
   }
 );
 
+// TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
 acceptance(
   "Sidebar - Messages Section - enable_personal_messages enabled",
   function (needs) {

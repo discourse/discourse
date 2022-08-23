@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -87,6 +88,19 @@ export default Controller.extend({
       },
       { name: I18n.t("user.new_topic_duration.last_here"), value: -2 },
     ];
+  },
+
+  @discourseComputed("currentUser.staff", "currentUser.groups.[]")
+  showMessageSettings() {
+    return (
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
   },
 
   actions: {

@@ -143,6 +143,12 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  def self.group_setting_map(setting)
+    if SiteSetting.respond_to?(setting) && SiteSetting.type_supervisor.get_type(setting) == :group_list
+      SiteSetting.public_send(setting).to_s.split("|").map(&:to_i)
+    end
+  end
+
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url

@@ -72,6 +72,19 @@ export default Controller.extend({
     return !allowPrivateMessages;
   },
 
+  @discourseComputed("currentUser.staff", "currentUser.groups.[]")
+  showMessageSettings() {
+    return (
+      this.siteSettings.enable_personal_messages ||
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
+  },
+
   @action
   save() {
     this.set("saved", false);

@@ -398,7 +398,11 @@ class Guardian
     if object.is_a?(Topic)
       if object.private_message?
         return true if is_admin?
-        return false unless SiteSetting.enable_personal_messages?
+        # TODO (martin) Remove enable_personal_messages here once deprecated and changed in plugins.
+        if !SiteSetting.enable_personal_messages? ||
+            !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
+          return false
+        end
         return false if object.reached_recipients_limit? && !is_staff?
       end
 
@@ -447,12 +451,17 @@ class Guardian
     (is_group || is_user) &&
     # User is authenticated
     authenticated? &&
+    # TODO (martin) Remove deprecated min_trust_to_send_messages here when plugins changed.
     # Have to be a basic level at least
     (is_group || @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled
+    # TODO (martin) Remove deprecated enable_personal_messages here when plugins changed.
     (is_staff? || SiteSetting.enable_personal_messages || notify_moderators) &&
+
+    # TODO (martin) Leave this in when removing other deprecations.
+    (is_staff? || @user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)) || notify_moderators) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
@@ -467,7 +476,10 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    SiteSetting.enable_personal_messages && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
+    # TODO (martin) Remove enable_personal_messages here once deprecated and changed in plugins.
+    (SiteSetting.enable_personal_messages ||
+      @user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))) &&
+      @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 
   def can_export_entity?(entity)

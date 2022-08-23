@@ -633,6 +633,12 @@ const User = RestModel.extend({
     return filteredGroups.length > numGroupsToDisplay;
   },
 
+  isInAnyGroups(groupIds) {
+    return this.groups
+      .mapBy("id")
+      .some((groupId) => groupIds.includes(groupId));
+  },
+
   // The user's stat count, excluding PMs.
   @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {

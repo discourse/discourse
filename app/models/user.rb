@@ -412,6 +412,10 @@ class User < ActiveRecord::Base
     find_by(username_lower: normalize_username(username))
   end
 
+  def in_any_groups?(group_ids)
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & groups.map(&:id)).any?
+  end
+
   def group_granted_trust_level
     GroupUser
       .where(user_id: id)

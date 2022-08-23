@@ -1799,7 +1799,11 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    if !current_user.staff? && !SiteSetting.enable_personal_messages
+    # TODO (martin) Remove deprecated enable_personal_messages after plugin changes.
+    if !current_user.staff? && (
+        !SiteSetting.enable_personal_messages ||
+        !current_user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
+    )
       raise Discourse::InvalidAccess.new("personal messages are disabled.")
     end
 

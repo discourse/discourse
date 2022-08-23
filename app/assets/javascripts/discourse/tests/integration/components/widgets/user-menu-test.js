@@ -91,6 +91,7 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
     assert.ok(this.loggedOut);
   });
 
+  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
   test("private messages - disabled", async function (assert) {
     this.siteSettings.enable_personal_messages = false;
 
@@ -99,6 +100,7 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
     assert.ok(!exists(".user-pms-link"));
   });
 
+  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
   test("private messages - enabled", async function (assert) {
     this.siteSettings.enable_personal_messages = true;
 

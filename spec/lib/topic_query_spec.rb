@@ -1091,12 +1091,18 @@ RSpec.describe TopicQuery do
       TopicUser.update_last_read(user, topic, post_number, post_number, 10000)
     end
 
-    it 'returns the correct suggestions' do
+    before do
+      user.change_trust_level!(4)
+      sender.change_trust_level!(4)
+    end
 
+    it 'returns the correct suggestions' do
       pm_to_group = create_pm(sender, target_group_names: [group_with_user.name])
       pm_to_user = create_pm(sender, target_usernames: [user.username])
 
-      old_unrelated_pm = create_pm(target_usernames: [user.username])
+      other_user = Fabricate(:user)
+      other_user.change_trust_level!(1)
+      old_unrelated_pm = create_pm(other_user, target_usernames: [user.username])
       read(user, old_unrelated_pm, 1)
 
       related_by_user_pm = create_pm(sender, target_usernames: [user.username])
@@ -1113,7 +1119,13 @@ RSpec.describe TopicQuery do
         eq([related_by_user_pm.id])
       )
 
+      # TODO (martin) Remove deprecated enable_personal_messages after plugin changes.
       SiteSetting.enable_personal_messages = false
+      expect(TopicQuery.new(user).list_related_for(pm_to_group)).to be_blank
+      expect(TopicQuery.new(user).list_related_for(pm_to_user)).to be_blank
+
+      SiteSetting.enable_personal_messages = true
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
       expect(TopicQuery.new(user).list_related_for(pm_to_group)).to be_blank
       expect(TopicQuery.new(user).list_related_for(pm_to_user)).to be_blank
     end
