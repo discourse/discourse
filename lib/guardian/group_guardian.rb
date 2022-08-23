@@ -33,6 +33,7 @@ module GroupGuardian
   def can_see_group_messages?(group)
     return true if is_admin?
     return true if is_moderator? && group.id == Group::AUTO_GROUPS[:moderators]
+    return false if user.blank?
 
     # TODO (martin) Remove deprecated enable_personal_messages after plugin changes.
     (

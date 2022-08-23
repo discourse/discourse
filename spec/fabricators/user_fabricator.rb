@@ -11,6 +11,8 @@ Fabricator(:user, class_name: :user) do
   trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i % 254}" } }
   active true
+
+  after_create { |user| user.change_trust_level!(user.trust_level) }
 end
 
 Fabricator(:user_with_secondary_email, from: :user) do

@@ -14,13 +14,13 @@ RSpec.describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
-  let(:trust_level_0) { build(:user, trust_level: 0) }
-  let(:trust_level_1) { build(:user, trust_level: 1) }
-  let(:trust_level_2) { build(:user, trust_level: 2) }
-  let(:trust_level_3) { build(:user, trust_level: 3) }
-  let(:trust_level_4)  { build(:user, trust_level: 4) }
-  let(:another_admin) { build(:admin) }
-  let(:coding_horror) { build(:coding_horror) }
+  let(:trust_level_0) { Fabricate(:user, trust_level: 0) }
+  let(:trust_level_1) { Fabricate(:user, trust_level: 1) }
+  let(:trust_level_2) { Fabricate(:user, trust_level: 2) }
+  let(:trust_level_3) { Fabricate(:user, trust_level: 3) }
+  let(:trust_level_4)  { Fabricate(:user, trust_level: 4) }
+  let(:another_admin) { Fabricate(:admin) }
+  let(:coding_horror) { Fabricate(:coding_horror) }
 
   let(:topic) { build(:topic, user: user) }
   let(:post) { build(:post, topic: topic, user: topic.user) }
@@ -372,6 +372,7 @@ RSpec.describe Guardian do
 
     it "allows TL0 to message group with messageable_level = everyone" do
       group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
     end
@@ -383,6 +384,7 @@ RSpec.describe Guardian do
       group.add(user)
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
 
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(false)
 
       #  group membership trumps min_trust_to_send_messages setting
