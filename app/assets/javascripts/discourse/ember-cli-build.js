@@ -146,7 +146,7 @@ module.exports = function (defaults) {
   );
 
   let discoursePluginsTree;
-  if (process.env.EMBER_CLI_PLUGIN_ASSETS === "1") {
+  if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
     discoursePluginsTree = app.project
       .findAddonByName("discourse-plugins")
       .generatePluginsTree();
