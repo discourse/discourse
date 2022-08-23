@@ -35,7 +35,7 @@ class TrustLevel
 
     # Then consider the group locked level (or the previous trust level)
     granted_trust_level = user.group_granted_trust_level || 0
-    previous_trust_level = use_previous_trust_level && find_previous_trust_level(user) || 0
+    previous_trust_level = use_previous_trust_level ? find_previous_trust_level(user) : 0
 
     [granted_trust_level, previous_trust_level].max
   end
@@ -48,6 +48,6 @@ class TrustLevel
       .where(target_user_id: user.id)
       .order(created_at: :desc)
       .pluck_first(:new_value)
-      &.to_i
+      .to_i
   end
 end
