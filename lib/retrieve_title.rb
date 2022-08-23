@@ -18,8 +18,15 @@ module RetrieveTitle
     if html =~ /<title>/ && html !~ /<\/title>/
       return nil
     end
-    if doc = Nokogiri::HTML5(html, nil, encoding)
 
+    doc = nil
+    begin
+      doc = Nokogiri::HTML5(html, nil, encoding)
+    rescue ArgumentError
+      # invalid HTML (too many attributes) - ignore
+    end
+
+    if doc
       title = doc.at('title')&.inner_text
 
       # A horrible hack - YouTube uses `document.title` to populate the title
