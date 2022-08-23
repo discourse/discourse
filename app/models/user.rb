@@ -1662,9 +1662,11 @@ class User < ActiveRecord::Base
 
   def sidebar_categories_ids
     categories_ids = category_sidebar_section_links.pluck(:linkable_id)
+
     if categories_ids.blank? && SiteSetting.default_sidebar_categories.present?
-      return guardian.allowed_category_ids & SiteSetting.default_sidebar_categories.split("|").map(&:to_i)
+      return SiteSetting.default_sidebar_categories.split("|").map(&:to_i) & guardian.allowed_category_ids
     end
+
     categories_ids
   end
 
