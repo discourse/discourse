@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import {
   click,
   currentRouteName,
@@ -96,8 +96,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  // TODO(tgxworld): Flaky probably due to assertions running before event listener callbacks have completed.
-  skip("clicking on more... link", async function (assert) {
+  test("clicking on more... link", async function (assert) {
     await visit("/");
 
     await click(
@@ -106,7 +105,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content"
+        ".sidebar-section-community .sidebar-more-section-link-details-content"
       ),
       "additional section links are displayed"
     );
@@ -117,7 +116,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-section-community .sidebar-more-section-links-details-content"
+        ".sidebar-section-community .sidebar-more-section-link-details-content"
       ),
       "additional section links are hidden"
     );
