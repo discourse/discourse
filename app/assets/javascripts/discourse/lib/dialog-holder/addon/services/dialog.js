@@ -33,7 +33,7 @@ export default Service.extend({
       cancelVisible,
     } = params;
 
-    const element = document.getElementById("a11y-dialog");
+    const element = document.getElementById("dialog-holder");
 
     this.setProperties({
       message,
@@ -41,7 +41,7 @@ export default Service.extend({
       dialogInstance: new A11yDialog(element),
 
       title,
-      titleElementId: title !== null ? "a11y-dialog-title" : null,
+      titleElementId: title !== null ? "dialog-title" : null,
 
       didConfirm,
       labelConfirm,

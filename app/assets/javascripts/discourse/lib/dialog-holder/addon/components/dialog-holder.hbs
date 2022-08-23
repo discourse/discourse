@@ -1,12 +1,12 @@
-<div id="a11y-dialog" class="a11y-dialog-container" aria-labelledby={{this.dialog.titleElementId}} aria-hidden="true">
-  <div class="a11y-dialog-overlay" data-a11y-dialog-hide></div>
+<div id="dialog-holder" class="dialog-container" aria-labelledby={{this.dialog.titleElementId}} aria-hidden="true">
+  <div class="dialog-overlay" data-a11y-dialog-hide></div>
 
   {{#if this.dialog.type}}
     <div class="dialog-content" role="document">
       {{#if this.dialog.title}}
         <div class="dialog-header">
-          <h3 id="a11y-dialog-title">{{this.dialog.title}}</h3>
-          <DButton @icon="times" @action={{action this.dialog.didCancelWrapped}} @class="btn-flat a11y-dialog-close close" @title="modal.close" />
+          <h3 id="dialog-title">{{this.dialog.title}}</h3>
+          <DButton @icon="times" @action={{action this.dialog.didCancelWrapped}} @class="btn-flat dialog-close close" @title="modal.close" />
         </div>
       {{/if}}
 

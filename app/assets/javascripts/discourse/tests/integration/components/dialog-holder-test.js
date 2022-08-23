@@ -5,7 +5,7 @@ import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
+module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -13,10 +13,10 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
   });
 
   test("basics", async function (assert) {
-    await render(hbs`<A11yDialogWrapper />`);
-    assert.ok(query("#a11y-dialog"), "element is in DOM");
+    await render(hbs`<DialogHolder />`);
+    assert.ok(query("#dialog-holder"), "element is in DOM");
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog is empty by default"
     );
@@ -27,7 +27,7 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     await settled();
 
     assert.ok(
-      query(".a11y-dialog-overlay").offsetWidth > 0,
+      query(".dialog-overlay").offsetWidth > 0,
       true,
       "overlay is visible"
     );
@@ -38,26 +38,26 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     );
 
     // dismiss by clicking on overlay
-    await click(".a11y-dialog-overlay");
+    await click(".dialog-overlay");
 
-    assert.ok(query("#a11y-dialog"), "element is still in DOM");
+    assert.ok(query("#dialog-holder"), "element is still in DOM");
     assert.strictEqual(
-      query(".a11y-dialog-overlay").offsetWidth,
+      query(".dialog-overlay").offsetWidth,
       0,
       "overlay is not visible"
     );
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog is empty"
     );
   });
 
   test("basics - dismiss using Esc", async function (assert) {
-    await render(hbs`<A11yDialogWrapper />`);
-    assert.ok(query("#a11y-dialog"), "element is in DOM");
+    await render(hbs`<DialogHolder />`);
+    assert.ok(query("#dialog-holder"), "element is in DOM");
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog is empty by default"
     );
@@ -68,7 +68,7 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     await settled();
 
     assert.ok(
-      query(".a11y-dialog-overlay").offsetWidth > 0,
+      query(".dialog-overlay").offsetWidth > 0,
       true,
       "overlay is visible"
     );
@@ -81,21 +81,21 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     // dismiss by pressing Esc
     await triggerKeyEvent(document, "keydown", "Escape");
 
-    assert.ok(query("#a11y-dialog"), "element is still in DOM");
+    assert.ok(query("#dialog-holder"), "element is still in DOM");
     assert.strictEqual(
-      query(".a11y-dialog-overlay").offsetWidth,
+      query(".dialog-overlay").offsetWidth,
       0,
       "overlay is not visible"
     );
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog is empty"
     );
   });
 
   test("prompt with title", async function (assert) {
-    await render(hbs`<A11yDialogWrapper />`);
+    await render(hbs`<DialogHolder />`);
 
     this.dialog.alert({
       message: "This is a note.",
@@ -105,36 +105,36 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     await settled();
 
     assert.strictEqual(
-      query("#a11y-dialog-title").innerText.trim(),
+      query("#dialog-title").innerText.trim(),
       "And this is a title",
       "dialog has title"
     );
 
-    assert.ok(query(".a11y-dialog-close"), "close button present");
-    assert.ok(query("#a11y-dialog"), "element is still in DOM");
+    assert.ok(query(".dialog-close"), "close button present");
+    assert.ok(query("#dialog-holder"), "element is still in DOM");
     assert.strictEqual(
       query(".dialog-body").innerText.trim(),
       "This is a note.",
       "dialog message is shown"
     );
 
-    await click(".a11y-dialog-close");
+    await click(".dialog-close");
 
-    assert.ok(query("#a11y-dialog"), "element is still in DOM");
+    assert.ok(query("#dialog-holder"), "element is still in DOM");
     assert.strictEqual(
-      query(".a11y-dialog-overlay").offsetWidth,
+      query(".dialog-overlay").offsetWidth,
       0,
       "overlay is not visible"
     );
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog is empty"
     );
   });
 
   test("prompt with a string parameter", async function (assert) {
-    await render(hbs`<A11yDialogWrapper />`);
+    await render(hbs`<DialogHolder />`);
 
     this.dialog.alert("An alert message");
     await settled();
@@ -149,7 +149,7 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
   test("confirm", async function (assert) {
     let confirmCallbackCalled = false;
     let cancelCallbackCalled = false;
-    await render(hbs`<A11yDialogWrapper />`);
+    await render(hbs`<DialogHolder />`);
 
     this.dialog.confirm({
       message: "A confirm message",
@@ -182,7 +182,7 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     assert.ok(confirmCallbackCalled);
     assert.notOk(cancelCallbackCalled);
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog is empty"
     );
@@ -192,7 +192,7 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     let confirmCallbackCalled = false;
     let cancelCallbackCalled = false;
 
-    await render(hbs`<A11yDialogWrapper />`);
+    await render(hbs`<DialogHolder />`);
 
     this.dialog.confirm({
       message: "A confirm message",
@@ -216,14 +216,14 @@ module("Integration | Component | a11y-dialog-wrapper", function (hooks) {
     assert.ok(cancelCallbackCalled, "cancel callback called");
 
     assert.strictEqual(
-      query("#a11y-dialog").innerText.trim(),
+      query("#dialog-holder").innerText.trim(),
       "",
       "dialog has been dismissed"
     );
   });
 
   test("yes/no confirm", async function (assert) {
-    await render(hbs`<A11yDialogWrapper />`);
+    await render(hbs`<DialogHolder />`);
 
     this.dialog.yesNoConfirm({ message: "A yes/no confirm message" });
     await settled();

@@ -1,5 +1,5 @@
-.a11y-dialog-container,
-.a11y-dialog-overlay {
+.dialog-container,
+.dialog-overlay {
   position: fixed;
   top: 0;
   right: 0;
@@ -7,7 +7,7 @@
   left: 0;
 }
 
-.a11y-dialog-container {
+.dialog-container {
   z-index: z("modal", "overlay");
   display: flex;
 }
@@ -16,7 +16,7 @@
  * Ensures the dialog container and all its descendants are not
  * visible and not focusable when it is hidden.
  */
-.a11y-dialog-container[aria-hidden="true"] {
+.dialog-container[aria-hidden="true"] {
   display: none;
 }
 
@@ -25,7 +25,7 @@
     opacity: 0;
   }
 }
-.a11y-dialog-overlay {
+.dialog-overlay {
   background: rgba(var(--always-black-rgb), 0.65);
   animation: fade-in 250ms both;
 }
@@ -56,7 +56,7 @@
     margin-bottom: 0;
   }
 
-  .a11y-dialog-close {
+  .dialog-close {
     margin-left: auto;
     .d-icon {
       color: var(--primary-high);

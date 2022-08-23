@@ -96,7 +96,7 @@
   },
   "ember-addon": {
     "paths": [
-      "lib/a11y-dialog-wrapper",
+      "lib/dialog-holder",
       "lib/bootstrap-json"
     ]
   },

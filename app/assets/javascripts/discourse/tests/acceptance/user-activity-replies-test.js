@@ -50,14 +50,14 @@ acceptance("User Activity / Replies - Download All", function (needs) {
     assert.ok(query(".user-additional-controls .btn"), "button exists");
 
     await click(".user-additional-controls .btn");
-    await click("#a11y-dialog .btn-primary");
+    await click("#dialog-holder .btn-primary");
 
     assert.equal(
       query(".dialog-body").innerText.trim(),
       I18n.t("user.download_archive.success")
     );
 
-    await click("#a11y-dialog .btn-primary");
+    await click("#dialog-holder .btn-primary");
   });
 
   test("Cannot see 'Download All' button for another user", async function (assert) {
