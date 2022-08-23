@@ -81,6 +81,11 @@ export default Controller.extend({
     return enableSidebar;
   },
 
+  @discourseComputed("router.currentRouteName")
+  showSiteHeader(currentRouteName) {
+    return !currentRouteName.startsWith("wizard");
+  },
+
   @action
   toggleSidebar() {
     // enables CSS transitions, but not on did-insert

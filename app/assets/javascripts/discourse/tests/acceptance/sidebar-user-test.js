@@ -5,7 +5,7 @@ import { click, visit } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
-  "Sidebar - Experimental sidebar and hamburger setting disabled",
+  "Sidebar - Logged on user - Experimental sidebar and hamburger setting disabled",
   function (needs) {
     needs.user();
 
@@ -23,7 +23,7 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar disabled",
+  "Sidebar - Logged on user - Experimental sidebar and hamburger setting enabled - Sidebar disabled",
   function (needs) {
     needs.user();
 
@@ -100,13 +100,6 @@ acceptance(
       assert.notOk(
         exists(".sidebar-container"),
         "does not display the sidebar on wizard route"
-      );
-
-      await click(".hamburger-dropdown");
-
-      assert.ok(
-        exists(".sidebar-hamburger-dropdown"),
-        "navigation around the site can still be done via the sidebar hamburger"
       );
     });
 

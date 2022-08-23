@@ -62,7 +62,7 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/user/custom-community-section-links";
 import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,
@@ -71,7 +71,7 @@ import {
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderIcons } from "discourse/widgets/header";
-import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { resetSidebarSection } from "discourse/lib/sidebar/user/custom-sections";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 

@@ -17,7 +17,7 @@ import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance(
-  "Sidebar - Categories Section - suppress_uncategorized_badge enabled",
+  "Sidebar - Logged on user - Categories Section - suppress_uncategorized_badge enabled",
   function (needs) {
     needs.settings({
       suppress_uncategorized_badge: true,
@@ -55,7 +55,7 @@ acceptance(
   }
 );
 
-acceptance("Sidebar - Categories Section", function (needs) {
+acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   needs.user({
     sidebar_category_ids: [],
     sidebar_tags: [],

@@ -21,7 +21,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
-acceptance("Sidebar - Community Section", function (needs) {
+acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   needs.user({
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],

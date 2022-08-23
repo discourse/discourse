@@ -1,4 +1,4 @@
-import BaseSectionLink from "discourse/lib/sidebar/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
 
 export let customSectionLinks = [];
 export let secondaryCustomSectionLinks = [];
@@ -108,6 +108,6 @@ export function addSectionLink(args, secondary) {
 }
 
 export function resetDefaultSectionLinks() {
-  customSectionLinks = [];
-  secondaryCustomSectionLinks = [];
+  customSectionLinks.length = 0;
+  secondaryCustomSectionLinks.length = 0;
 }
