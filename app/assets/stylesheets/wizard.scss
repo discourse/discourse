@@ -44,6 +44,10 @@ body.wizard {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
+  .d-header-wrap {
+    display: none;
+  }
+
   #wizard-main {
     display: flex;
     flex-direction: column;
