@@ -8,8 +8,8 @@ export default class TagSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ tag, topicTrackingState }) {
-    this.tagName = tag.name;
+  constructor({ tagName, topicTrackingState }) {
+    this.tagName = tagName;
     this.topicTrackingState = topicTrackingState;
     this.refreshCounts();
   }

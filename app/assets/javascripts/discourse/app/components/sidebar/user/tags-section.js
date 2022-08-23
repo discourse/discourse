@@ -38,14 +38,14 @@ export default class SidebarUserTagsSection extends Component {
       if (tag.pm_only) {
         links.push(
           new PMTagSectionLink({
-            tag,
+            tagName: tag.name,
             currentUser: this.currentUser,
           })
         );
       } else {
         links.push(
           new TagSectionLink({
-            tag,
+            tagName: tag.name,
             topicTrackingState: this.topicTrackingState,
           })
         );
