@@ -1,15 +1,15 @@
 export default class PMTagSectionLink {
-  constructor({ tag, currentUser }) {
-    this.tag = tag;
+  constructor({ tagName, currentUser }) {
+    this.tagName = tagName;
     this.currentUser = currentUser;
   }
 
   get name() {
-    return this.tag.name;
+    return this.tagName;
   }
 
   get models() {
-    return [this.currentUser, this.tag.name];
+    return [this.currentUser, this.tagName];
   }
 
   get route() {
@@ -17,6 +17,6 @@ export default class PMTagSectionLink {
   }
 
   get text() {
-    return this.tag.name;
+    return this.tagName;
   }
 }

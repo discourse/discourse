@@ -1,8 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
-import TagSectionLink from "discourse/lib/sidebar/tags-section/tag-section-link";
+import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 
 export default class SidebarAnonymousTagsSection extends Component {
   @service router;
@@ -18,19 +17,11 @@ export default class SidebarAnonymousTagsSection extends Component {
     } else {
       tags = this.site.top_tags.slice(0, 5);
     }
-    return tags.map((tag) => {
+    return tags.map((tagName) => {
       return new TagSectionLink({
-        tag: { name: tag },
+        tagName,
         topicTrackingState: this.topicTrackingState,
       });
     });
-  }
-
-  get moreLink() {
-    return {
-      name: "more-tags",
-      text: I18n.t("sidebar.more"),
-      route: "tags",
-    };
   }
 }

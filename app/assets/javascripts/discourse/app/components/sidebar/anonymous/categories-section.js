@@ -1,8 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
 import Component from "@glimmer/component";
-import CategorySectionLink from "discourse/lib/sidebar/categories-section/category-section-link";
+import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
 
 export default class SidebarAnonymousCategoriesSection extends Component {
   @service topicTrackingState;
@@ -11,7 +10,7 @@ export default class SidebarAnonymousCategoriesSection extends Component {
 
   @cached
   get sectionLinks() {
-    let categories = this.site.categories;
+    let categories = this.site.categoriesList;
 
     if (this.siteSettings.default_sidebar_categories) {
       const defaultCategoryIds = this.siteSettings.default_sidebar_categories
@@ -33,13 +32,5 @@ export default class SidebarAnonymousCategoriesSection extends Component {
         topicTrackingState: this.topicTrackingState,
       });
     });
-  }
-
-  get moreLink() {
-    return {
-      name: "more-categories",
-      text: I18n.t("sidebar.more"),
-      route: "discovery.categories",
-    };
   }
 }

@@ -14,7 +14,9 @@
       @prefixColor={{sectionLink.prefixColor}} >
     </Sidebar::SectionLink>
   {{/each}}
-  <div class="sidebar-more-section-links-details-content-secondary">
-    <Sidebar::SectionLink @sectionLink={{this.moreLink}} />
-  </div>
+  <Sidebar::SectionLink
+    @linkName="more-categories"
+    @content={{i18n "sidebar.more"}}
+    @route="discovery.categories"
+  />
 </Sidebar::Section>

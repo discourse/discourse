@@ -124,4 +124,15 @@ RSpec.describe SiteSerializer do
     serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
     expect(serialized[:show_welcome_topic_banner]).to eq(true)
   end
+
+  it 'includes anonymous_default_sidebar_tags' do
+    Fabricate(:tag, name: "dev")
+    Fabricate(:tag, name: "random")
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+
+    SiteSetting.default_sidebar_tags = "dev|random"
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    expect(serialized[:anonymous_default_sidebar_tags]).to eq(["dev", "random"])
+  end
 end
