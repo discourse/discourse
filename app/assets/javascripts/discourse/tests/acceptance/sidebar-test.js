@@ -101,13 +101,6 @@ acceptance(
         exists(".sidebar-container"),
         "does not display the sidebar on wizard route"
       );
-
-      await click(".hamburger-dropdown");
-
-      assert.ok(
-        exists(".sidebar-hamburger-dropdown"),
-        "navigation around the site can still be done via the sidebar hamburger"
-      );
     });
 
     test("showing and hiding sidebar", async function (assert) {
