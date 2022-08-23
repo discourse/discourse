@@ -25,6 +25,7 @@ module RetrieveTitle
     rescue ArgumentError
       # invalid HTML (Eg: too many attributes, status tree too deep) - ignore
       # Error in nokogumbo is not specialized, uses generic ArgumentError
+      # see: https://www.rubydoc.info/gems/nokogiri/Nokogiri/HTML5#label-Error+reporting
     end
 
     if doc
