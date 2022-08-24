@@ -6,13 +6,17 @@ describe 'UserGlobalNotice' do
   fab!(:automation_1) do
     Fabricate(
       :automation,
-      script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE
+      script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE,
+      trigger: "stalled_topic",
     )
   end
 
   fab!(:topic_1) { Fabricate(:topic) }
 
   before do
+    SiteSetting.discourse_automation_enabled = true
+
+    automation_1.upsert_field!('stalled_after', 'choices', { value: 'PT1H' }, target: 'trigger')
     automation_1.upsert_field!('notice', 'message', { value: 'foo bar' }, target: 'script')
     automation_1.upsert_field!('level', 'choices', { value: 'error' }, target: 'script')
   end
@@ -63,5 +67,15 @@ describe 'UserGlobalNotice' do
       expect(klass.exists?(identifier: automation_1.id)).to eq(false)
       expect(klass.exists?(identifier: automation_2.id)).to eq(true)
     end
+  end
+
+  it 'creates and destroy global notices' do
+    post = Fabricate(:post, created_at: 1.day.ago)
+
+    expect { Jobs::StalledTopicTracker.new.execute }
+      .to change { DiscourseAutomation::UserGlobalNotice.count }.by(1)
+
+    expect { PostCreator.create!(post.user, topic_id: post.topic_id, raw: 'lorem ipsum dolor sit amet') }
+      .to change { DiscourseAutomation::UserGlobalNotice.count }.by(-1)
   end
 end

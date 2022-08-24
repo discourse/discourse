@@ -321,6 +321,28 @@ after_initialize do
     handle_after_post_cook(post, cooked)
   end
 
+  on(:post_created) do |post|
+    next if post.user_id != post.topic.user_id
+
+    DiscourseAutomation::Automation
+      .where(trigger: DiscourseAutomation::Triggerable::STALLED_TOPIC)
+      .where(enabled: true)
+      .find_each do |automation|
+        fields = automation.serialized_fields
+
+        categories = fields.dig('categories', 'value')
+        next if categories && !categories.include?(post.topic.category_id)
+
+        tags = fields.dig('tags', 'value')
+        next if tags && (tags & post.topic.tags.map(&:name)).empty?
+
+        DiscourseAutomation::UserGlobalNotice
+          .where(identifier: automation.id)
+          .where(user_id: post.user_id)
+          .destroy_all
+      end
+  end
+
   register_topic_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
