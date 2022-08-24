@@ -20,7 +20,7 @@
         <div class="dialog-footer">
           {{#if this.dialog.buttons}}
             {{#each this.dialog.buttons as |button|}}
-              <DButton @icon={{button.icon}} @class={{button.class}} @action={{button.action}} @translatedLabel={{button.label}} />
+              <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "buttonAction" button}} @translatedLabel={{button.label}} />
             {{/each}}
           {{else}}
             <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.iconConfirm}} @label={{this.dialog.labelConfirm}} />

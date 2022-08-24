@@ -270,7 +270,10 @@ module("Integration | Component | dialog-holder", function (hooks) {
           label: "Danger ahead",
           class: "btn-danger",
           action: () => {
-            customCallbackTriggered = true;
+            return new Promise((resolve) => {
+              customCallbackTriggered = true;
+              return resolve();
+            });
           },
         },
       ],
@@ -300,6 +303,12 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     await click(".dialog-footer .btn-danger");
     assert.ok(customCallbackTriggered, "custom action was triggered");
+
+    assert.strictEqual(
+      query("#dialog-holder").innerText.trim(),
+      "",
+      "dialog has been dismissed"
+    );
   });
 
   test("alert with custom classes", async function (assert) {
