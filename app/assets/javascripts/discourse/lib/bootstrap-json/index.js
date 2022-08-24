@@ -411,7 +411,19 @@ module.exports = {
         )
         .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
+        return this.app.project
+          .findAddonByName("discourse-plugins")
+          .pluginInfos()
+          .filter(({ hasTests }) => hasTests)
+          .map(
+            ({ name }) =>
+              `<script src="${config.rootURL}assets/plugins/test/${name}_tests.js" data-discourse-plugin="${name}"></script>`
+          )
+          .join("\n");
+      } else {
+        return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
+      }
     }
   },
 
