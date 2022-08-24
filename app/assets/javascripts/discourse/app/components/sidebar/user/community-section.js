@@ -1,70 +1,50 @@
-import Component from "@glimmer/component";
+import I18n from "I18n";
+
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
-import {
-  customSectionLinks,
-  secondaryCustomSectionLinks,
-} from "discourse/lib/sidebar/user/custom-community-section-links";
-import EverythingSectionLink from "discourse/lib/sidebar/user/community-section/everything-section-link";
+import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
 import TrackedSectionLink from "discourse/lib/sidebar/user/community-section/tracked-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
-import GroupsSectionLink from "discourse/lib/sidebar/user/community-section/groups-section-link";
-import UsersSectionLink from "discourse/lib/sidebar/user/community-section/users-section-link";
-import AboutSectionLink from "discourse/lib/sidebar/user/community-section/about-section-link";
-import FAQSectionLink from "discourse/lib/sidebar/user/community-section/faq-section-link";
+import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
+import UsersSectionLink from "discourse/lib/sidebar/common/community-section/users-section-link";
+import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
+import FAQSectionLink from "discourse/lib/sidebar/common/community-section/faq-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
-import BadgesSectionLink from "discourse/lib/sidebar/user/community-section/badges-section-link";
+import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
+import SidebarCommonCommunitySection from "discourse/components/sidebar/common/community-section";
 
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 
-const MAIN_SECTION_LINKS = [
-  EverythingSectionLink,
-  TrackedSectionLink,
-  MyPostsSectionLink,
-];
+export default class SidebarUserCommunitySection extends SidebarCommonCommunitySection {
+  constructor() {
+    super(...arguments);
 
-const ADMIN_MAIN_SECTION_LINKS = [AdminSectionLink];
+    this.defaultMoreSectionLinks = [
+      GroupsSectionLink,
+      UsersSectionLink,
+      BadgesSectionLink,
+    ];
 
-const MORE_SECTION_LINKS = [
-  GroupsSectionLink,
-  UsersSectionLink,
-  BadgesSectionLink,
-];
-const MORE_SECONDARY_SECTION_LINKS = [AboutSectionLink, FAQSectionLink];
+    this.defaultMoreSecondarySectionLinks = [AboutSectionLink, FAQSectionLink];
 
-export default class SidebarUserCommunitySection extends Component {
-  @service router;
-  @service topicTrackingState;
-  @service currentUser;
-  @service appEvents;
-  @service siteSettings;
+    this.defaultMainSectionLinks = [
+      EverythingSectionLink,
+      TrackedSectionLink,
+      MyPostsSectionLink,
+    ];
 
-  moreSectionLinks = [...MORE_SECTION_LINKS, ...customSectionLinks].map(
-    (sectionLinkClass) => {
-      return this.#initializeSectionLink(sectionLinkClass);
-    }
-  );
+    this.defaultAdminMainSectionLinks = [AdminSectionLink];
 
-  moreSecondarySectionLinks = [
-    ...MORE_SECONDARY_SECTION_LINKS,
-    ...secondaryCustomSectionLinks,
-  ].map((sectionLinkClass) => {
-    return this.#initializeSectionLink(sectionLinkClass);
-  });
+    this.headerActionsIcon = "plus";
 
-  #mainSectionLinks = this.currentUser.staff
-    ? [...MAIN_SECTION_LINKS, ...ADMIN_MAIN_SECTION_LINKS]
-    : [...MAIN_SECTION_LINKS];
-
-  sectionLinks = this.#mainSectionLinks.map((sectionLinkClass) => {
-    return this.#initializeSectionLink(sectionLinkClass);
-  });
-
-  willDestroy() {
-    this.sectionLinks.forEach((sectionLink) => sectionLink.teardown());
+    this.headerActions = [
+      {
+        action: this.composeTopic,
+        title: I18n.t("sidebar.sections.community.header_action_title"),
+      },
+    ];
   }
 
   @action
@@ -83,16 +63,6 @@ export default class SidebarUserCommunitySection extends Component {
 
     next(() => {
       getOwner(this).lookup("controller:composer").open(composerArgs);
-    });
-  }
-
-  #initializeSectionLink(sectionLinkClass) {
-    return new sectionLinkClass({
-      topicTrackingState: this.topicTrackingState,
-      currentUser: this.currentUser,
-      appEvents: this.appEvents,
-      router: this.router,
-      siteSettings: this.siteSettings,
     });
   }
 }

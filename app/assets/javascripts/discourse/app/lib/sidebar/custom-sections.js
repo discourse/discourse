@@ -1,5 +1,5 @@
-import BaseCustomSidebarSection from "discourse/lib/sidebar/user/base-custom-sidebar-section";
-import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/user/base-custom-sidebar-section-link";
+import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
+import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 
 export const customSections = [];
 

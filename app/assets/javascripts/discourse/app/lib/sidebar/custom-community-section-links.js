@@ -1,4 +1,4 @@
-import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
+import BaseCommunitySectionLink from "discourse/lib/sidebar/base-community-section-link";
 
 export let customSectionLinks = [];
 export let secondaryCustomSectionLinks = [];
@@ -44,8 +44,8 @@ class RouteInfoHelper {
  * Appends an additional section link to the Community section under the "More..." links drawer.
  *
  * @callback addSectionLinkCallback
- * @param {BaseSectionLink} baseSectionLink Factory class to inherit from.
- * @returns {BaseSectionLink} A class that extends BaseSectionLink.
+ * @param {BaseCommunitySectionLink} baseCommunitySectionLink Factory class to inherit from.
+ * @returns {BaseCommunitySectionLink} A class that extends BaseCommunitySectionLink.
  *
  * @param {(addSectionLinkCallback|Object)} args - A callback function or an Object.
  * @param {string} args.name - The name of the link. Needs to be dasherized and lowercase.
@@ -59,9 +59,9 @@ export function addSectionLink(args, secondary) {
   const links = secondary ? secondaryCustomSectionLinks : customSectionLinks;
 
   if (typeof args === "function") {
-    links.push(args.call(this, BaseSectionLink));
+    links.push(args.call(this, BaseCommunitySectionLink));
   } else {
-    const klass = class extends BaseSectionLink {
+    const klass = class extends BaseCommunitySectionLink {
       constructor() {
         super(...arguments);
 

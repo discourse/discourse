@@ -2,7 +2,7 @@ import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
-import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { isTrackedTopic } from "discourse/lib/topic-list-tracked-filter";
 
 export default class TrackedSectionLink extends BaseSectionLink {
