@@ -2825,13 +2825,10 @@ lv:
             unread_with_count: "Nelasīts (%{count})"
             archive: "Arhīvs"
         tags:
-          header_link_title: "visi tagi"
           header_link_text: "Birkas"
         categories:
-          header_link_title: "visas sadaļas"
           header_link_text: "Sadaļas"
         community:
-          header_link_title: "mājas"
           header_link_text: "Kopiena"
           links:
             tracked:

@@ -126,11 +126,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       ".sidebar-section-tags .sidebar-section-link"
     );
 
-    const tagNames = [];
-
-    tagSectionLinks.each((_index, tagSectionLink) => {
-      tagNames.push(tagSectionLink.textContent.trim());
-    });
+    const tagNames = [...tagSectionLinks].map((tagSectionLink) =>
+      tagSectionLink.textContent.trim()
+    );
 
     assert.deepEqual(
       tagNames,

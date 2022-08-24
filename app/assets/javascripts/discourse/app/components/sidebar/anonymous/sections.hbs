@@ -1,3 +1,6 @@
 <div class="sidebar-sections sidebar-sections-anonymous">
-  {{!-- add sections for anonymous user --}}
+  <Sidebar::Anonymous::CategoriesSection />
+  {{#if this.siteSettings.tagging_enabled}}
+    <Sidebar::Anonymous::TagsSection />
+  {{/if}}
 </div>

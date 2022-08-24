@@ -162,11 +162,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       ".sidebar-section-categories .sidebar-section-link"
     );
 
-    const categoryNames = [];
-
-    categorySectionLinks.each((_index, categorySectionLink) => {
-      categoryNames.push(categorySectionLink.textContent.trim());
-    });
+    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+      categorySectionLink.textContent.trim()
+    );
 
     assert.deepEqual(
       categoryNames,

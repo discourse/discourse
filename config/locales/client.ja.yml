@@ -3391,10 +3391,6 @@ ja:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "サポートされていないファイルを選択しました。サポートされているファイルタイプ – %{types}。"
-    user_activity:
-      no_activity_others: "アクティビティがありません。"
-      no_replies_others: "返信はありません。"
-      no_likes_others: "「いいね！」した投稿はありません。"
     sidebar:
       unread_count:
         other: "未読 %{count}"
@@ -3413,13 +3409,10 @@ ja:
             unread_with_count: "未読 (%{count})"
             archive: "アーカイブ"
         tags:
-          header_link_title: "すべてのタグ"
           header_link_text: "タグ"
         categories:
-          header_link_title: "すべてのカテゴリ"
           header_link_text: "カテゴリ"
         community:
-          header_link_title: "ホーム"
           header_link_text: "コミュニティ"
           links:
             tracked:

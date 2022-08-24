@@ -1367,7 +1367,6 @@ te:
         tags:
           header_link_text: "ట్యాగులు"
         categories:
-          header_link_title: "అన్ని వర్గాలు"
           header_link_text: "వర్గాలు"
         community:
           header_link_text: "కమ్యునిటీ"

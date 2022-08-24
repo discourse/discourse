@@ -3346,10 +3346,6 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "Sen actividade."
-      no_replies_others: "Sen respostas."
-      no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
       unread_count:
         one: "%{count} pendente de lectura"
@@ -3370,13 +3366,10 @@ gl:
             unread_with_count: "(%{count}) pendente de ler"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorías"
           header_link_text: "Categorías"
         community:
-          header_link_title: "inicio"
           header_link_text: "Comunidade"
           links:
             tracked:

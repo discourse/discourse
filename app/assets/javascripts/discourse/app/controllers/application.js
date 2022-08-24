@@ -17,7 +17,9 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    this.showSidebar = !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+    this.showSidebar =
+      (this.currentUser || !this.siteSettings.login_required) &&
+      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed

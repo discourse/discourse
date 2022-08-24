@@ -3418,8 +3418,6 @@ pt:
         regular: "habitual"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
-    user_activity:
-      no_likes_others: "Sem publicações gostadas."
     sidebar:
       unread_count:
         one: "%{count} não lido"
@@ -3440,13 +3438,10 @@ pt:
             unread_with_count: "Não Lido (%{count})"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorias"
           header_link_text: "Categorias"
         community:
-          header_link_title: "início"
           header_link_text: "Comunidade"
           links:
             tracked:

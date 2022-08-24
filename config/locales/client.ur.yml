@@ -3614,14 +3614,11 @@ ur:
       unsupported_file_picked: "آپ نے غیر معاونت شدہ فائل منتخب کی ہے۔ معاون فائل کی اقسام — %{types}."
     user_activity:
       no_activity_title: "ابھی تک کوئی سرگرمی نہیں"
-      no_activity_others: "کوئی سرگرمی نہیں۔"
       no_replies_title: "آپ نے ابھی تک کسی بھی عنوان کا جواب نہیں دیا ہے"
-      no_replies_others: "کوئی جوابات نہیں۔"
       no_drafts_title: "آپ نے کوئی ڈرافٹ شروع نہیں کیا ہے"
       no_drafts_body: "پوسٹ کرنے کے لیے بالکل تیار نہیں؟ جب بھی آپ کوئی موضوع، جواب، یا ذاتی پیغام لکھنا شروع کریں گے تو ہم خود بخود ایک نیا مسودہ محفوظ کریں گے اور اسے یہاں درج کریں گے۔ رد کرنے کے لیے کینسل بٹن کو منتخب کریں یا بعد میں جاری رکھنے کے لیے اپنے ڈرافٹ کو محفوظ کریں۔"
       no_likes_title: "آپ نے ابھی تک کوئی عنوان پسند نہیں کیا ہے"
       no_likes_body: "کودنے اور تعاون شروع کرنے کا ایک بہترین طریقہ یہ ہے کہ پہلے سے ہو چکی گفتگو کو پڑھنا شروع کریں، اور اپنی پسند کی پوسٹس پر %{heartIcon} کو منتخب کریں!"
-      no_likes_others: "کوئی لائیک کردہ پوسٹس نہیں۔"
       no_topics_title: "آپ نے ابھی تک کوئی عنوان شروع نہیں کیا ہے"
       no_topics_title_others: "%{username} نے ابھی تک کوئی عنوان شروع نہیں کیا ہے"
       no_read_topics_title: "آپ نے ابھی تک کوئی عنوان نہیں پڑھا ہے"
@@ -3654,13 +3651,10 @@ ur:
             unread_with_count: "بغیر پڑھا (%{count})"
             archive: "آر کائیو"
         tags:
-          header_link_title: "تمام ٹیگز"
           header_link_text: "ٹیگز"
         categories:
-          header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
         community:
-          header_link_title: "ہَوم"
           header_link_text: "کمیونٹی"
           links:
             tracked:
