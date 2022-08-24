@@ -109,6 +109,7 @@ module.exports = {
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
           outputFile: `assets/plugins/${name}.js`,
+          allowNone: true,
         });
       });
     return mergeTrees(trees);
@@ -127,6 +128,7 @@ module.exports = {
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
           outputFile: `assets/plugins/test/${name}_tests.js`,
+          allowNone: true,
         });
       });
     return mergeTrees(trees);
