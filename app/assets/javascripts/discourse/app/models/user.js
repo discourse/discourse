@@ -634,6 +634,9 @@ const User = RestModel.extend({
   },
 
   isInAnyGroups(groupIds) {
+    if (!this.groups) {
+      return;
+    }
     return this.groups
       .mapBy("id")
       .some((groupId) => groupIds.includes(groupId));

@@ -48,7 +48,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 7);
     [
       "all-notifications",
       "replies",
@@ -56,6 +56,7 @@ module("Integration | Component | user-menu", function (hooks) {
       "likes",
       "messages",
       "bookmarks",
+      "review-queue",
     ].forEach((tab, index) => {
       assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
       assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
@@ -72,7 +73,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
-    assert.strictEqual(profileTab.dataset.tabNumber, "6");
+    assert.strictEqual(profileTab.dataset.tabNumber, "7");
     assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
   });
 
@@ -82,11 +83,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 7);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -107,31 +108,31 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
-  test("messages tab isn't shown if current user isn't staff and enable_personal_messages setting is disabled", async function (assert) {
+  test("messages tab isn't shown if current user isn't staff and user does not belong to personal_message_enabled_groups", async function (assert) {
     this.currentUser.set("moderator", false);
     this.currentUser.set("admin", false);
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.set("groups", []);
+    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
 
     await render(template);
 
     assert.ok(!exists("#user-menu-button-messages"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 7);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6"],
       "data-tab-number of the tabs has no gaps when the messages tab is hidden"
     );
   });
 
-  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
-  test("messages tab is shown if current user is staff even if enable_personal_messages setting is disabled", async function (assert) {
+  test("messages tab is shown if current user is staff even if they do not belong to personal_message_enabled_groups", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.set("groups", []);
+    this.siteSettings.personal_message_enabled_groups = "999";
 
     await render(template);
 

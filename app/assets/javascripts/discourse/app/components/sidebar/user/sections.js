@@ -21,4 +21,15 @@ export default class SidebarUserSections extends Component {
       return section;
     });
   }
+
+  get enableMessagesSection() {
+    return (
+      this.currentUser.staff ||
+      this.currentUser.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import { render } from "@ember/test-helpers";
+import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
@@ -22,10 +23,9 @@ export function setupRenderingTest(hooks) {
     this.site = Site.current();
     this.session = Session.current();
 
-    const currentUser = User.create({
-      username: "eviltrout",
-      timezone: "Australia/Brisbane",
-    });
+    const currentUser = User.create(
+      sessionFixtures["/session/current.json"].current_user
+    );
     this.currentUser = currentUser;
     this.owner.unregister("service:current-user");
     this.owner.register("service:current-user", currentUser, {

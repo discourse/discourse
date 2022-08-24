@@ -11,16 +11,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
-// TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
 acceptance(
-  "Sidebar - Logged on user - Messages Section - enable_personal_messages disabled",
+  "Sidebar - Logged on user - Messages Section - user not in personal_message_enabled_groups",
   function (needs) {
-    needs.user();
+    needs.user({ moderator: false, admin: false });
 
     needs.settings({
       enable_experimental_sidebar_hamburger: true,
       enable_sidebar: true,
-      enable_personal_messages: false,
+      personal_message_enabled_groups: "13", // trust_level_3 auto group ID;
     });
 
     test("clicking on section header button", async function (assert) {
@@ -34,9 +33,8 @@ acceptance(
   }
 );
 
-// TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
 acceptance(
-  "Sidebar - Logged on user - Messages Section - enable_personal_messages enabled",
+  "Sidebar - Logged on user - Messages Section - user in personal_message_enabled_groups",
   function (needs) {
     needs.user();
 

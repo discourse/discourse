@@ -36,17 +36,6 @@ export default class Sidebar extends Component {
     }
   }
 
-  get enableMessagesSection() {
-    return (
-      this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    );
-  }
-
   willDestroy() {
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);

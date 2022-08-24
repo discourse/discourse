@@ -91,18 +91,17 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
     assert.ok(this.loggedOut);
   });
 
-  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
   test("private messages - disabled", async function (assert) {
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.setProperties({ admin: false, moderator: false });
+    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 
     assert.ok(!exists(".user-pms-link"));
   });
 
-  // TODO (martin) Change this to use personal_message_enabled_groups when enable_personal_messages is deprecated.
   test("private messages - enabled", async function (assert) {
-    this.siteSettings.enable_personal_messages = true;
+    this.siteSettings.personal_message_enabled_groups = "11"; // trust_level_1 auto group ID;
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 
