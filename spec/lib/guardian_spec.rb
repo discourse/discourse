@@ -262,7 +262,8 @@ RSpec.describe Guardian do
     end
 
     it "returns false when you are untrusted" do
-      user.trust_level = TrustLevel[0]
+      user.update!(trust_level: TrustLevel[0])
+      Group.user_trust_level_change!(user.id, TrustLevel[0])
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
