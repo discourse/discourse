@@ -32,13 +32,13 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       sectionLinks[2].textContent.trim(),
-      I18n.t("about.simple_title"),
+      I18n.t("sidebar.sections.community.links.about.content"),
       "displays the about section link third"
     );
 
     assert.strictEqual(
       sectionLinks[3].textContent.trim(),
-      I18n.t("faq"),
+      I18n.t("sidebar.sections.community.links.faq.content"),
       "displays the FAQ section link last"
     );
   });
@@ -62,7 +62,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       sectionLinks[1].textContent.trim(),
-      I18n.t("badges.title"),
+      I18n.t("sidebar.sections.community.links.badges.content"),
       "displays the badges section link second"
     );
   });
