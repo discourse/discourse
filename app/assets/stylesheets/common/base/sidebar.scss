@@ -55,16 +55,19 @@
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
-    --scrollbarWidth: 1em;
+    --scrollbarWidth: 0.5em;
 
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
 
+    &::-webkit-scrollbar {
+      width: var(--scrollbarWidth);
+    }
+
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
       border-radius: calc(var(--scrollbarWidth) / 2);
-      background-color: transparent;
     }
 
     &::-webkit-scrollbar-track {
@@ -79,11 +82,6 @@
       }
 
       transition-delay: 0s;
-    }
-
-    &::-webkit-scrollbar {
-      // 0.5em gives webkit browsers a little space between the scrollbar and the content
-      width: calc(var(--scrollbarWidth) - 0.45em);
     }
   }
 }
