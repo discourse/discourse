@@ -12,10 +12,10 @@ export default class AboutSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("about.simple_title");
+    return I18n.t("sidebar.sections.community.links.about.content");
   }
 
   get text() {
-    return I18n.t("about.simple_title");
+    return I18n.t("sidebar.sections.community.links.about.content");
   }
 }

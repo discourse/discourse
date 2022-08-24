@@ -12,10 +12,10 @@ export default class AdminSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("admin_title");
+    return I18n.t("sidebar.sections.community.links.admin.content");
   }
 
   get text() {
-    return I18n.t("admin_title");
+    return I18n.t("sidebar.sections.community.links.admin.content");
   }
 }
