@@ -257,4 +257,66 @@ module("Integration | Component | dialog-holder", function (hooks) {
       "dialog second button is present and says No"
     );
   });
+
+  test("alert with custom buttons", async function (assert) {
+    let customCallbackTriggered = false;
+    await render(hbs`<DialogHolder />`);
+
+    this.dialog.alert({
+      message: "An alert with custom buttons",
+      buttons: [
+        {
+          icon: "cog",
+          label: "Danger ahead",
+          class: "btn-danger",
+          action: () => {
+            customCallbackTriggered = true;
+          },
+        },
+      ],
+    });
+    await settled();
+
+    assert.strictEqual(
+      query(".dialog-body").innerText.trim(),
+      "An alert with custom buttons",
+      "dialog message is shown"
+    );
+
+    assert.strictEqual(
+      query(".dialog-footer .btn-danger").innerText.trim(),
+      "Danger ahead",
+      "dialog custom button is present"
+    );
+
+    assert.notOk(
+      query(".dialog-footer .btn-primary"),
+      "default confirm button is not present"
+    );
+    assert.notOk(
+      query(".dialog-footer .btn-default"),
+      "default cancel button is not present"
+    );
+
+    await click(".dialog-footer .btn-danger");
+    assert.ok(customCallbackTriggered, "custom action was triggered");
+  });
+
+  test("alert with custom classes", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+
+    this.dialog.alert({
+      message: "An alert with custom classes",
+      classes: "dialog-special dialog-super",
+    });
+    await settled();
+
+    assert.strictEqual(
+      query(".dialog-body").innerText.trim(),
+      "An alert with custom classes",
+      "dialog message is shown"
+    );
+
+    assert.ok(query("#dialog-holder.dialog-special.dialog-super"));
+  });
 });

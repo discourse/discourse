@@ -18,6 +18,8 @@ export default Service.extend({
   labelCancel: null,
   cancelVisible: null,
 
+  buttons: null,
+  classes: null,
   _confirming: false,
 
   dialog(params) {
@@ -33,6 +35,9 @@ export default Service.extend({
       didCancel,
       labelCancel = "cancel_value",
       cancelVisible,
+
+      buttons,
+      classes,
     } = params;
 
     const element = document.getElementById("dialog-holder");
@@ -52,6 +57,9 @@ export default Service.extend({
       didCancel,
       labelCancel,
       cancelVisible,
+
+      buttons,
+      classes,
     });
 
     this.dialogInstance.show();
@@ -84,6 +92,7 @@ export default Service.extend({
     return this.dialog({
       ...params,
       cancelVisible: true,
+      buttons: null,
       type: "confirm",
     });
   },
@@ -112,6 +121,8 @@ export default Service.extend({
       didCancel: null,
       labelCancel: null,
       cancelVisible: null,
+
+      buttons: null,
 
       _confirming: false,
     });
