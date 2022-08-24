@@ -18,7 +18,7 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
     this.showSidebar =
-      this.sidebarAvailable && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed
@@ -31,7 +31,7 @@ export default Controller.extend({
   },
 
   @discourseComputed
-  sidebarAvailable() {
+  canDisplaySidebar() {
     return this.currentUser || !this.siteSettings.login_required;
   },
 
@@ -65,15 +65,15 @@ export default Controller.extend({
     "enable_sidebar",
     "siteSettings.enable_sidebar",
     "router.currentRouteName",
-    "sidebarAvailable"
+    "canDisplaySidebar"
   )
   sidebarEnabled(
     sidebarQueryParamOverride,
     enableSidebar,
     currentRouteName,
-    sidebarAvailable
+    canDisplaySidebar
   ) {
-    if (!sidebarAvailable) {
+    if (!canDisplaySidebar) {
       return false;
     }
     if (sidebarQueryParamOverride === "1") {
