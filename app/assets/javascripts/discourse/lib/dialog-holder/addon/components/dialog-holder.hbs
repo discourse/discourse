@@ -6,7 +6,7 @@
       {{#if this.dialog.title}}
         <div class="dialog-header">
           <h3 id="dialog-title">{{this.dialog.title}}</h3>
-          <DButton @icon="times" @action={{action this.dialog.didCancelWrapped}} @class="btn-flat dialog-close close" @title="modal.close" />
+          <DButton @icon="times" @action={{action this.dialog.cancel}} @class="btn-flat dialog-close close" @title="modal.close" />
         </div>
       {{/if}}
 
@@ -19,7 +19,7 @@
       <div class="dialog-footer">
         <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.iconConfirm}} @label={{this.dialog.labelConfirm}} />
         {{#if this.dialog.cancelVisible}}
-          <DButton @class="btn-default" @action={{this.dialog.didCancelWrapped}} @label={{this.dialog.labelCancel}} />
+          <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.labelCancel}} />
         {{/if}}
       </div>
     </div>

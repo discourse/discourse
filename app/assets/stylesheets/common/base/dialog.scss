@@ -37,6 +37,7 @@
   background-color: var(--secondary);
   animation: fade-in 250ms both;
   box-shadow: shadow("card");
+  min-width: 40vw;
 }
 
 .dialog-body {

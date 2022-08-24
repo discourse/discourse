@@ -18,6 +18,8 @@ export default Service.extend({
   labelCancel: null,
   cancelVisible: null,
 
+  _confirming: false,
+
   dialog(params) {
     const {
       message,
@@ -54,7 +56,13 @@ export default Service.extend({
 
     this.dialogInstance.show();
 
-    this.dialogInstance.on("hide", () => this.reset());
+    this.dialogInstance.on("hide", () => {
+      if (!this._confirming && this.didCancel) {
+        this.didCancel();
+      }
+
+      this.reset();
+    });
   },
 
   alert(params) {
@@ -63,14 +71,12 @@ export default Service.extend({
       return this.dialog({
         message: params,
         type: "alert",
-        labelConfirm: "ok_value",
       });
     }
 
     return this.dialog({
       ...params,
       type: "alert",
-      labelConfirm: "ok_value",
     });
   },
 
@@ -106,6 +112,8 @@ export default Service.extend({
       didCancel: null,
       labelCancel: null,
       cancelVisible: null,
+
+      _confirming: false,
     });
   },
 
@@ -118,14 +126,12 @@ export default Service.extend({
     if (this.didConfirm) {
       this.didConfirm();
     }
+    this._confirming = true;
     this.dialogInstance.hide();
   },
 
   @bind
-  didCancelWrapped() {
-    if (this.didCancel) {
-      this.didCancel();
-    }
+  cancel() {
     this.dialogInstance.hide();
   },
 });

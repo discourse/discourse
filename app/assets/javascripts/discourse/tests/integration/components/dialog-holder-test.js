@@ -54,6 +54,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
   });
 
   test("basics - dismiss using Esc", async function (assert) {
+    let cancelCallbackCalled = false;
     await render(hbs`<DialogHolder />`);
     assert.ok(query("#dialog-holder"), "element is in DOM");
     assert.strictEqual(
@@ -64,6 +65,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     this.dialog.alert({
       message: "This is an error",
+      didCancel: () => {
+        cancelCallbackCalled = true;
+      },
     });
     await settled();
 
@@ -81,12 +85,15 @@ module("Integration | Component | dialog-holder", function (hooks) {
     // dismiss by pressing Esc
     await triggerKeyEvent(document, "keydown", "Escape");
 
+    assert.ok(cancelCallbackCalled, "cancel callback called");
     assert.ok(query("#dialog-holder"), "element is still in DOM");
+
     assert.strictEqual(
       query(".dialog-overlay").offsetWidth,
       0,
       "overlay is not visible"
     );
+
     assert.strictEqual(
       query("#dialog-holder").innerText.trim(),
       "",
@@ -94,7 +101,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     );
   });
 
-  test("prompt with title", async function (assert) {
+  test("alert with title", async function (assert) {
     await render(hbs`<DialogHolder />`);
 
     this.dialog.alert({
@@ -133,7 +140,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     );
   });
 
-  test("prompt with a string parameter", async function (assert) {
+  test("alert with a string parameter", async function (assert) {
     await render(hbs`<DialogHolder />`);
 
     this.dialog.alert("An alert message");
@@ -155,6 +162,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
       message: "A confirm message",
       didConfirm: () => {
         confirmCallbackCalled = true;
+      },
+      didCancel: () => {
+        cancelCallbackCalled = true;
       },
     });
     await settled();
@@ -179,8 +189,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     await click(".dialog-footer .btn-primary");
 
-    assert.ok(confirmCallbackCalled);
-    assert.notOk(cancelCallbackCalled);
+    assert.ok(confirmCallbackCalled, "confirm callback called");
+    assert.notOk(cancelCallbackCalled, "cancel callback NOT called");
+
     assert.strictEqual(
       query("#dialog-holder").innerText.trim(),
       "",
