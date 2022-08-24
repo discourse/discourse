@@ -48,7 +48,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     /^\/javascripts\//,
     /^\/images\//,
     /^\/stylesheets\//,
-    /^\/favicon\/proxied/
+    /^\/favicon\/proxied/,
+    /^\/theme-javascripts/
   ]
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
