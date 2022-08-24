@@ -442,6 +442,7 @@ RSpec.describe TopicCreator do
         end
 
         it "personal_message_enabled_groups setting should be checked when sending private message" do
+          SiteSetting.enable_personal_messages = false
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
 
           expect do

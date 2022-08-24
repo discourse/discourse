@@ -4133,6 +4133,7 @@ RSpec.describe TopicsController do
 
         before do
           SiteSetting.max_allowed_message_recipients = 2
+          Group.refresh_automatic_groups!
         end
 
         it "doesn't allow normal users to invite" do

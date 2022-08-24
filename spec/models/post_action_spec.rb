@@ -800,6 +800,7 @@ RSpec.describe PostAction do
   end
 
   it "prevents user to act twice at the same time" do
+    Group.refresh_automatic_groups!
     # flags are already being tested
     all_types_except_flags = PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
     all_types_except_flags.values.each do |action|

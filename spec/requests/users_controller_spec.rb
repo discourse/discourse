@@ -13,6 +13,10 @@ RSpec.describe UsersController do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:inactive_user) { Fabricate(:inactive_user) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user) }

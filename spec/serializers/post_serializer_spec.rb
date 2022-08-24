@@ -3,6 +3,10 @@
 RSpec.describe PostSerializer do
   fab!(:post) { Fabricate(:post) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   context "with a post with lots of actions" do
     fab!(:actor) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }

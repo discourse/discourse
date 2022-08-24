@@ -97,6 +97,11 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe '#suggested_topics' do
+    before do
+      SiteSetting.enable_personal_messages = false
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:topic2) { Fabricate(:topic) }
 
     before do
