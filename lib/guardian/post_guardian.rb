@@ -50,11 +50,9 @@ module PostGuardian
         (!SiteSetting.allow_flagging_staff?) &&
         post&.user&.staff?
 
-      # TODO (martin) Remove enable_personal_messages here once deprecated and changed in plugins.
       if action_key == :notify_user &&
-         (!SiteSetting.enable_personal_messages? ||
-         !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) ||
-         !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)))
+         (!@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) ||
+          !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)))
 
         return false
       end

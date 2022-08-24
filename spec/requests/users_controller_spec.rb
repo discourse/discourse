@@ -5858,25 +5858,11 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it "responds with 403 if private messages are disabled and the user isn't staff" do
-        SiteSetting.enable_personal_messages = false
-        get "/u/#{user.username}/user-menu-private-messages"
-        expect(response.status).to eq(403)
-      end
-
       it "responds with 403 if personal_message_enabled_groups does not include the user and the user isn't staff" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
         user.update(trust_level: 1)
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(403)
-      end
-
-      # TODO (martin) Remove enable_personal_messages here when it is deprecated.
-      it "doesn't respond with 403 if private messages are disabled and the user is staff" do
-        SiteSetting.enable_personal_messages = false
-        user.update!(moderator: true)
-        get "/u/#{user.username}/user-menu-private-messages"
-        expect(response.status).to eq(200)
       end
 
       it "sends an array of unread private_message notifications" do

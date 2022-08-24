@@ -421,13 +421,6 @@ RSpec.describe TopicCreator do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
-        # TODO (martin) Remove deprecated enable_personal_messages and min_trust_to_send_messages after plugin changes.
-        it "enable_personal_messages setting should not be checked when sending private message to staff via flag" do
-          SiteSetting.enable_personal_messages = false
-          SiteSetting.min_trust_to_send_messages = TrustLevel[4]
-          expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs.merge(subtype: TopicSubtype.notify_moderators))).to be_valid
-        end
-
         it "personal_message_enabled_groups setting should not be checked when sending private message to staff via flag" do
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs.merge(subtype: TopicSubtype.notify_moderators))).to be_valid

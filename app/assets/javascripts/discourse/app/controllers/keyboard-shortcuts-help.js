@@ -327,7 +327,6 @@ export default Controller.extend(ModalFunctionality, {
       profile: buildShortcut("jump_to.profile", { keys1: ["g", "p"] }),
     };
     const canSendPms =
-      this.siteSettings.enable_personal_messages ||
       this.currentUser.staff ||
       this.currentUser.isInAnyGroups(
         this.siteSettings.personal_message_enabled_groups

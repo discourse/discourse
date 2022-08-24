@@ -1119,12 +1119,6 @@ RSpec.describe TopicQuery do
         eq([related_by_user_pm.id])
       )
 
-      # TODO (martin) Remove deprecated enable_personal_messages after plugin changes.
-      SiteSetting.enable_personal_messages = false
-      expect(TopicQuery.new(user).list_related_for(pm_to_group)).to be_blank
-      expect(TopicQuery.new(user).list_related_for(pm_to_user)).to be_blank
-
-      SiteSetting.enable_personal_messages = true
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
       expect(TopicQuery.new(user).list_related_for(pm_to_group)).to be_blank
       expect(TopicQuery.new(user).list_related_for(pm_to_user)).to be_blank

@@ -117,7 +117,6 @@ export default Controller.extend(CanCheckEmails, {
   )
   showPrivateMessages(viewingSelf, isAdmin) {
     const canSendPms =
-      this.siteSettings.enable_personal_messages ||
       this.currentUser.staff ||
       this.currentUser.isInAnyGroups(
         this.siteSettings.personal_message_enabled_groups

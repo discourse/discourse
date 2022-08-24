@@ -215,7 +215,6 @@ export default Controller.extend(bufferedProperty("model"), {
   @discourseComputed("currentUser.groups.[]")
   canSendPms() {
     return (
-      this.siteSettings.enable_personal_messages ||
       this.currentUser.staff ||
       this.currentUser.isInAnyGroups(
         this.siteSettings.personal_message_enabled_groups

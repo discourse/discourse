@@ -183,11 +183,7 @@ module TopicGuardian
   end
 
   def can_convert_topic?(topic)
-    # TODO (martin) Remove enable_personal_messages here once deprecated and changed in plugins.
-    return false unless (
-      SiteSetting.enable_personal_messages? &&
-      @user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
-    )
+    return false unless @user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
     return false if topic.blank?
     return false if topic.trashed?
     return false if topic.is_category_topic?

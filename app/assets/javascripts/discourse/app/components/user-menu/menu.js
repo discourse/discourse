@@ -90,13 +90,12 @@ const CORE_TOP_TABS = [
 
     get shouldDisplay() {
       return (
-        this.siteSettings.enable_personal_messages ||
+        this.currentUser.staff ||
         this.currentUser.isInAnyGroups(
           this.siteSettings.personal_message_enabled_groups
             .split("|")
             .map((groupId) => parseInt(groupId, 10))
-        ) ||
-        this.currentUser.staff
+        )
       );
     }
   },

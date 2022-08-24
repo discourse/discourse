@@ -191,55 +191,12 @@ RSpec.describe ListController do
   describe '#private_messages_group' do
     fab!(:user) { Fabricate(:user) }
 
-    # TODO (martin) Remove deprecated enable_personal_messages after plugin changes.
-    describe 'with personal_messages disabled' do
+    describe 'when user not in personal_message_enabled_groups group' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         group.add(user)
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-      end
-
-      it 'should display group private messages for an admin' do
-        sign_in(Fabricate(:admin))
-
-        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
-
-        expect(response.status).to eq(200)
-
-        expect(response.parsed_body["topic_list"]["topics"].first["id"])
-          .to eq(topic.id)
-      end
-
-      it 'should display moderator group private messages for a moderator' do
-        moderator = Fabricate(:moderator)
-        group = Group.find(Group::AUTO_GROUPS[:moderators])
-        topic = Fabricate(:private_message_topic, allowed_groups: [group])
-
-        sign_in(moderator)
-
-        get "/topics/private-messages-group/#{moderator.username}/#{group.name}.json"
-        expect(response.status).to eq(200)
-      end
-
-      it "should not display group private messages for a moderator's group" do
-        moderator = Fabricate(:moderator)
-        sign_in(moderator)
-        group.add(moderator)
-
-        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
-
-        expect(response.status).to eq(404)
-      end
-    end
-
-    # TODO (martin) Remove enable_personal_messages here when it is deprecated.
-    describe 'with personal_messages disabled' do
-      let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
-
-      before do
-        group.add(user)
-        SiteSetting.enable_personal_messages = false
       end
 
       it 'should display group private messages for an admin' do

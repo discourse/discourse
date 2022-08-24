@@ -75,7 +75,6 @@ export default Controller.extend({
   @discourseComputed("currentUser.staff", "currentUser.groups.[]")
   showMessageSettings() {
     return (
-      this.siteSettings.enable_personal_messages ||
       this.currentUser.staff ||
       this.currentUser.isInAnyGroups(
         this.siteSettings.personal_message_enabled_groups

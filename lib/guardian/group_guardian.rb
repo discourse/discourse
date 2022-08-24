@@ -35,11 +35,8 @@ module GroupGuardian
     return true if is_moderator? && group.id == Group::AUTO_GROUPS[:moderators]
     return false if user.blank?
 
-    # TODO (martin) Remove deprecated enable_personal_messages after plugin changes.
-    (
-      SiteSetting.enable_personal_messages &&
-      user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
-    ) && group.users.include?(user)
+    user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)) &&
+      group.users.include?(user)
   end
 
   def can_associate_groups?
