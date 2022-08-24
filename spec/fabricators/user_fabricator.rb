@@ -11,6 +11,19 @@ Fabricator(:user, class_name: :user) do
   trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i % 254}" } }
   active true
+
+  after_create do |user|
+    Group.refresh_automatic_groups!(
+      :staff,
+      :moderators,
+      :admins,
+      :trust_level_0,
+      :trust_level_1,
+      :trust_level_2,
+      :trust_level_3,
+      :trust_level_4
+    )
+  end
 end
 
 Fabricator(:user_with_secondary_email, from: :user) do
