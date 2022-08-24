@@ -97,6 +97,13 @@ export default Service.extend({
     });
   },
 
+  notice(message) {
+    return this.dialog({
+      message,
+      type: "notice",
+    });
+  },
+
   yesNoConfirm(params) {
     return this.confirm({
       ...params,

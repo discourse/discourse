@@ -319,4 +319,19 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     assert.ok(query("#dialog-holder.dialog-special.dialog-super"));
   });
+
+  test("notice", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+
+    this.dialog.notice("Noted!");
+    await settled();
+
+    assert.strictEqual(
+      query(".dialog-body").innerText.trim(),
+      "Noted!",
+      "message is shown"
+    );
+
+    assert.notOk(query(".dialog-footer"), "no footer");
+  });
 });

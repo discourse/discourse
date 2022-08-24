@@ -16,18 +16,20 @@
         </div>
       {{/if}}
 
-      <div class="dialog-footer">
-        {{#if this.dialog.buttons}}
-          {{#each this.dialog.buttons as |button|}}
-            <DButton @icon={{button.icon}} @class={{button.class}} @action={{button.action}} @translatedLabel={{button.label}} />
-          {{/each}}
-        {{else}}
-          <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.iconConfirm}} @label={{this.dialog.labelConfirm}} />
-          {{#if this.dialog.cancelVisible}}
-            <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.labelCancel}} />
+      {{#if (notEq this.dialog.type "notice")}}
+        <div class="dialog-footer">
+          {{#if this.dialog.buttons}}
+            {{#each this.dialog.buttons as |button|}}
+              <DButton @icon={{button.icon}} @class={{button.class}} @action={{button.action}} @translatedLabel={{button.label}} />
+            {{/each}}
+          {{else}}
+            <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.iconConfirm}} @label={{this.dialog.labelConfirm}} />
+            {{#if this.dialog.cancelVisible}}
+              <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.labelCancel}} />
+            {{/if}}
           {{/if}}
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   {{/if}}
 </div>

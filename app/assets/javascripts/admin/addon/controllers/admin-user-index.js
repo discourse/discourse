@@ -17,6 +17,7 @@ import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
+  dialog: service(),
   adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
@@ -349,7 +350,7 @@ export default Controller.extend(CanCheckEmails, {
       const location = document.location.pathname;
 
       const performDestroy = (block) => {
-        bootbox.dialog(I18n.t("admin.user.deleting_user"));
+        this.dialog.notice(I18n.t("admin.user.deleting_user"));
         let formData = { context: location };
         if (block) {
           formData["block_email"] = true;
