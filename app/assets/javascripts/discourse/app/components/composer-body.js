@@ -207,6 +207,42 @@ export default Component.extend(KeyEnterEscape, {
     );
   },
 
+  updateHeightOnViewportResize() {
+    window.addEventListener(
+      "resize",
+      () => {
+        const composerState = this.get("composer.composeState");
+        if (composerState !== Composer.OPEN) {
+          return;
+        }
+
+        const dEditorHeight =
+          this.element.querySelector(".d-editor-input").clientHeight;
+
+        document.documentElement.style.setProperty(
+          "--d-editor-height",
+          `${dEditorHeight}px`
+        );
+
+        const composerElementHeight =
+          document.querySelector("#reply-control").offsetHeight;
+        const currentHeight = parseInt(this.composer.composerHeight, 10);
+
+        if (
+          composerElementHeight < currentHeight &&
+          composerElementHeight > 255
+        ) {
+          this.set("composer.composerHeight", `${composerElementHeight}px`);
+          document.documentElement.style.setProperty(
+            "--composer-height",
+            `${composerElementHeight}px`
+          );
+        }
+      },
+      true
+    );
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -215,6 +251,8 @@ export default Component.extend(KeyEnterEscape, {
     }
 
     this.setupComposerResizeEvents();
+
+    this.updateHeightOnViewportResize();
 
     const triggerOpen = () => {
       if (this.get("composer.composeState") === Composer.OPEN) {
