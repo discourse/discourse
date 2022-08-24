@@ -340,3 +340,83 @@ acceptance("User Status", function (needs) {
     );
   });
 });
+
+acceptance("User Status - new user menu", function (needs) {
+  const userStatus = "off to dentist";
+  const userStatusEmoji = "tooth";
+  const userId = 1;
+  const userTimezone = "UTC";
+
+  needs.user({
+    id: userId,
+    timezone: userTimezone,
+    redesigned_user_menu_enabled: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.put("/user-status.json", () => {
+      publishToMessageBus(`/user-status/${userId}`, {
+        description: userStatus,
+        emoji: userStatusEmoji,
+      });
+      return helper.response({ success: true });
+    });
+    server.delete("/user-status.json", () => {
+      publishToMessageBus(`/user-status/${userId}`, null);
+      return helper.response({ success: true });
+    });
+  });
+
+  test("doesn't show the user status button on the menu by default", async function (assert) {
+    this.siteSettings.enable_user_status = false;
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click("#user-menu-button-profile");
+
+    assert.notOk(exists("li.set-user-status"));
+  });
+
+  test("shows the user status button on the menu when enabled in settings", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click("#user-menu-button-profile");
+
+    assert.ok(exists("li.set-user-status"), "shows the button");
+    assert.ok(
+      exists("li.set-user-status svg.d-icon-plus-circle"),
+      "shows the icon on the button"
+    );
+  });
+
+  test("shows user status on the button", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+    updateCurrentUser({
+      status: { description: userStatus, emoji: userStatusEmoji },
+    });
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click("#user-menu-button-profile");
+
+    assert.equal(
+      query("li.set-user-status .item-label").innerText,
+      userStatus,
+      "shows user status description on the menu"
+    );
+
+    assert.equal(
+      query("li.set-user-status .emoji").alt,
+      `${userStatusEmoji}`,
+      "shows user status emoji on the menu"
+    );
+
+    assert.equal(
+      query(".header-dropdown-toggle .user-status-background img.emoji").alt,
+      `:${userStatusEmoji}:`,
+      "shows user status emoji on the user avatar in the header"
+    );
+  });
+});
