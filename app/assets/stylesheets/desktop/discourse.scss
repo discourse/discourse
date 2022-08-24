@@ -195,7 +195,7 @@ body.has-sidebar-page {
 
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
-    gap: 0 0.5em;
+    gap: 0 1em;
     padding-left: 0;
   }
 }
