@@ -113,6 +113,26 @@ RSpec.describe DiscourseRedis do
         expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
         expect(redis.scan_each.to_a).to contain_exactly('key1', 'key2')
       end
+
+      describe '#sadd?' do
+        it "should send the right command with the right key prefix to redis" do
+          redis = DiscourseRedis.new
+
+          redis.without_namespace.expects(:sadd?).with("default:testset", "1")
+
+          redis.sadd?("testset", "1")
+        end
+      end
+
+      describe '#srem?' do
+        it "should send the right command with the right key prefix to redis" do
+          redis = DiscourseRedis.new
+
+          redis.without_namespace.expects(:srem?).with("default:testset", "1")
+
+          redis.srem?("testset", "1")
+        end
+      end
     end
 
     describe 'when namespace is disabled' do
