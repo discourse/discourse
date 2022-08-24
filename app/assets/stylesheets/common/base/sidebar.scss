@@ -5,10 +5,11 @@
 }
 
 .sidebar-wrapper {
+  display: flex;
   --d-sidebar-highlight-color: var(--primary-low);
   // 1.25rem gets text left-aligned with the hamburger icon
   --d-sidebar-row-horizontal-padding: 1.25rem;
-
+  background-color: var(--primary-very-low);
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
@@ -16,7 +17,7 @@
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
   }
-  height: calc(100vh - var(--header-offset));
+  height: calc(100vh - var(--header-offset, 0));
   align-self: start;
   overflow-y: auto;
 
@@ -31,11 +32,19 @@
     flex-direction: column;
     box-sizing: border-box;
     height: 100%;
+    width: 100%;
     padding: 0;
     overflow-x: hidden;
+    // allows sidebar to scroll to the bottom when the composer is open
+    height: calc(100% - var(--composer-height, 0));
   }
 
-  .sidebar-scroll-wrap {
+  .sidebar-sections {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    flex: 1;
+    padding: 1em 0;
     box-sizing: border-box;
     flex: 1;
     display: flex;
@@ -76,20 +85,6 @@
       // 0.5em gives webkit browsers a little space between the scrollbar and the content
       width: calc(var(--scrollbarWidth) - 0.45em);
     }
-
-    // allows sidebar to scroll to the bottom when the composer is open
-    margin-bottom: var(--composer-height);
-    padding-bottom: var(--composer-ipad-padding);
-  }
-
-  .sidebar-sections {
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    flex: 1;
-    padding: 1em 0 0;
-    max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
-    background-color: var(--primary-very-low);
   }
 }
 

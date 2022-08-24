@@ -1,9 +1,8 @@
 <DSection @pageClass="has-sidebar" @class="sidebar-container" @scrollTop={{false}}>
-  <div class="sidebar-scroll-wrap">
-    {{#if this.currentUser}}
-      <Sidebar::User::Sections @collapsableSections={{true}}/>
-    {{else}}
-      <Sidebar::Anonymous::Sections />
-    {{/if}}
-  </div>
+  {{#if this.currentUser}}
+    <Sidebar::User::Sections @collapsableSections={{true}}/>
+  {{else}}
+    <Sidebar::Anonymous::Sections />
+  {{/if}}
+  <Sidebar::Footer />
 </DSection>
