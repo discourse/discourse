@@ -1242,6 +1242,8 @@ RSpec.describe TopicQuery do
         before do
           group.add(group_user)
           another_group.add(user)
+          Group.user_trust_level_change!(user.id, user.trust_level)
+          Group.user_trust_level_change!(group_user.id, group_user.trust_level)
         end
 
         context 'as user not part of group' do

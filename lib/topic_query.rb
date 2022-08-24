@@ -173,7 +173,8 @@ class TopicQuery
     return if !topic.private_message?
     return if @user.blank?
 
-    if !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
+    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
+    if !SiteSetting.enable_personal_messages || !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
       return
     end
 
@@ -200,9 +201,11 @@ class TopicQuery
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic, pm_params: nil)
 
+    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
-    if topic.private_message? && (@user.blank? || !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)))
+    if topic.private_message? && (
+        @user.blank? || !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups) || !SiteSetting.enable_personal_messages))
       return
     end
 

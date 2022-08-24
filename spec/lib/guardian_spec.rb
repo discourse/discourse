@@ -25,6 +25,10 @@ RSpec.describe Guardian do
   let(:topic) { build(:topic, user: user) }
   let(:post) { build(:post, topic: topic, user: topic.user) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   it 'can be created without a user (not logged in)' do
     expect { Guardian.new }.not_to raise_error
   end
