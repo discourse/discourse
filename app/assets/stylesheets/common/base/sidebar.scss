@@ -6,22 +6,22 @@
 
 .sidebar-wrapper {
   --d-sidebar-highlight-color: var(--primary-low);
-  --d-sidebar-row-horizontal-padding: 1.5rem;
+  // 1.25rem gets text left-aligned with the hamburger icon
+  --d-sidebar-row-horizontal-padding: 1.25rem;
 
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
+
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
   }
   height: calc(100vh - var(--header-offset));
   align-self: start;
   overflow-y: auto;
-  background-color: var(--primary-very-low);
 
   .sidebar-row {
-    padding: 0.25rem var(--d-sidebar-row-horizontal-padding);
-    height: 27px;
+    padding: 0.33rem var(--d-sidebar-row-horizontal-padding);
     align-items: center;
     font-size: var(--font-down-1);
   }
@@ -31,8 +31,7 @@
     flex-direction: column;
     box-sizing: border-box;
     height: 100%;
-    width: var(--d-sidebar-width);
-    padding: 1em 0 0;
+    padding: 0;
     overflow-x: hidden;
   }
 
@@ -47,7 +46,7 @@
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
-    --scrollbarWidth: 1.2em;
+    --scrollbarWidth: 1em;
 
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
@@ -56,7 +55,11 @@
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
       border-radius: calc(var(--scrollbarWidth) / 2);
-      border: calc(var(--scrollbarWidth) / 4) solid transparent;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
     }
 
     &:hover {
@@ -64,24 +67,62 @@
 
       &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbarThumbBg);
-        border-color: var(--primary-very-low);
       }
 
       transition-delay: 0s;
     }
 
     &::-webkit-scrollbar {
-      width: var(--scrollbarWidth);
+      // 0.5em gives webkit browsers a little space between the scrollbar and the content
+      width: calc(var(--scrollbarWidth) - 0.45em);
     }
 
-    .composer-open & {
-      // allows sidebar to scroll to the bottom when the composer is open
-      margin-bottom: var(--composer-height);
-      padding-bottom: var(--composer-ipad-padding);
-    }
+    // allows sidebar to scroll to the bottom when the composer is open
+    margin-bottom: var(--composer-height);
+    padding-bottom: var(--composer-ipad-padding);
   }
 
   .sidebar-sections {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     flex: 1;
+    padding: 1em 0 0;
+    max-width: calc(var(--d-sidebar-width) - var(--scrollbarWidth));
+    background-color: var(--primary-very-low);
+  }
+}
+
+.sidebar-hamburger-dropdown {
+  // note that these apply to mobile and desktop dropdowns
+  .sidebar-section-wrapper {
+    .sidebar-section-header-wrapper.sidebar-row {
+      padding-right: 0;
+    }
+
+    .sidebar-section-header {
+      padding: 0;
+    }
+  }
+
+  .discourse-no-touch & {
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {
+      background: transparent;
+    }
+  }
+
+  .sidebar-footer-wrapper {
+    margin-top: 1em;
+    .sidebar-footer-container {
+      background: var(--secondary);
+      &:before {
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(var(--secondary-rgb), 1)
+        );
+      }
+    }
   }
 }
