@@ -2,7 +2,7 @@
 
 module EmberCli
   def self.plugin_assets?
-    ENV["EMBER_CLI_PLUGIN_ASSETS"] == "1"
+    ENV["EMBER_CLI_PLUGIN_ASSETS"] != "0"
   end
 
   def self.assets

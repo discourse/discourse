@@ -381,7 +381,7 @@ module.exports = {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       const scripts = [];
 
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS === "1") {
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
         const pluginInfos = this.app.project
           .findAddonByName("discourse-plugins")
           .pluginInfos();
