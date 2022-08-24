@@ -1,7 +1,7 @@
 /**
- * Base class representing a sidebar topics section link interface.
+ * Base class representing a sidebar communtiy section link interface.
  */
-export default class BaseSectionLink {
+export default class BaseCommunitySectionLink {
   constructor({
     topicTrackingState,
     currentUser,

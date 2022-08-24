@@ -2,7 +2,7 @@ import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
-import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 
 export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
@@ -12,15 +12,19 @@ export default class EverythingSectionLink extends BaseSectionLink {
   constructor() {
     super(...arguments);
 
-    this.callbackId = this.topicTrackingState.onStateChange(
-      this._refreshCounts
-    );
+    if (this.currentUser) {
+      this.callbackId = this.topicTrackingState.onStateChange(
+        this._refreshCounts
+      );
 
-    this._refreshCounts();
+      this._refreshCounts();
+    }
   }
 
   teardown() {
-    this.topicTrackingState.offStateChange(this.callbackId);
+    if (this.callbackId) {
+      this.topicTrackingState.offStateChange(this.callbackId);
+    }
   }
 
   @bind

@@ -2,7 +2,8 @@
   {{#if this.currentUser}}
     <Sidebar::User::Sections @collapsableSections={{true}}/>
   {{else}}
-    <Sidebar::Anonymous::Sections />
+    <Sidebar::Anonymous::Sections @collapsableSections={{true}}/>
   {{/if}}
+
   <Sidebar::Footer />
 </DSection>
