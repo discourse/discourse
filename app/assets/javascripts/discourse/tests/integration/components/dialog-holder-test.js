@@ -333,5 +333,6 @@ module("Integration | Component | dialog-holder", function (hooks) {
     );
 
     assert.notOk(query(".dialog-footer"), "no footer");
+    assert.notOk(query(".dialog-header"), "no header");
   });
 });
