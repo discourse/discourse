@@ -452,12 +452,9 @@ class Guardian
     (is_group || is_user) &&
     # User is authenticated
     authenticated? &&
-    # TODO (martin) Remove deprecated min_trust_to_send_messages here when plugins changed.
-    # Have to be a basic level at least
-    (is_group || @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
-    # User can send PMs.
+    # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
     (is_staff? || @user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)) || notify_moderators) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&

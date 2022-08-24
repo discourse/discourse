@@ -50,10 +50,7 @@ module PostGuardian
         (!SiteSetting.allow_flagging_staff?) &&
         post&.user&.staff?
 
-      if action_key == :notify_user &&
-         (!@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) ||
-          !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)))
-
+      if action_key == :notify_user && !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
         return false
       end
 

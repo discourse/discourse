@@ -173,14 +173,6 @@ RSpec.describe Guardian do
       end
     end
 
-    # TODO (martin) Remove deprecated enable_personal_messages and min_trust_to_send_messages after plugin changes.
-    it "returns false for notify_user if private messages are enabled but threshold not met" do
-      SiteSetting.enable_personal_messages = true
-      SiteSetting.min_trust_to_send_messages = 2
-      user.trust_level = TrustLevel[1]
-      expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
-    end
-
     it "returns false for notify_user if user is not in any group that can send personal messages" do
       user = Fabricate(:user)
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
