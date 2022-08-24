@@ -90,12 +90,16 @@
     }
 
     &.text {
-      border-radius: 3px;
+      border-radius: 100%;
       background: rgba(var(--primary-rgb), 0.1);
       text-align: center;
       font-size: var(--font-down-1);
-      padding: 0.2em 0.5em;
+      padding: 0.2em 0.47em;
       margin-right: 0.25em;
+      position: absolute;
+      + .sidebar-section-link-content-text {
+        margin-left: calc(20px + 0.5em);
+      }
     }
 
     &.icon {

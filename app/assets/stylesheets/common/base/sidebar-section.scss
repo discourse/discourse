@@ -7,13 +7,6 @@
     box-sizing: border-box;
     padding: 0;
 
-    .discourse-no-touch & {
-      &:hover,
-      &:focus-within {
-        background: var(--d-sidebar-highlight-color);
-      }
-    }
-
     .select-kit {
       .btn {
         background: transparent;
@@ -58,9 +51,13 @@
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
-
+      .discourse-no-touch & {
+        &:hover {
+          background: var(--primary-200);
+        }
+      }
       &:focus {
-        background: transparent;
+        background: var(--primary-200);
       }
     }
   }
@@ -80,11 +77,12 @@
   }
 
   .sidebar-section-header-button {
-    background: none;
+    background: transparent;
     border: none;
-    padding: 0 var(--d-sidebar-row-horizontal-padding) 0
+    padding: calc(var(--d-sidebar-row-horizontal-padding) / 4)
+      var(--d-sidebar-row-horizontal-padding)
+      calc(var(--d-sidebar-row-horizontal-padding) / 4)
       calc(var(--d-sidebar-row-horizontal-padding) / 2);
-
     .d-icon {
       font-size: var(--font-down-1);
       color: var(--primary-medium);
@@ -94,6 +92,7 @@
       &:hover,
       &:focus {
         outline: none;
+        background: var(--primary-200);
         .d-icon {
           color: var(--primary);
         }
