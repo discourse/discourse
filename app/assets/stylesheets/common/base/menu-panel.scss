@@ -208,6 +208,20 @@
   #quick-access-profile {
     display: inline;
 
+    .set-user-status {
+      .emoji {
+        padding-top: 0;
+      }
+
+      .relative-date {
+        text-align: left;
+        font-size: var(--font-down-3);
+        padding-top: 0.25em;
+        margin-left: 0.75em;
+        color: var(--primary-medium);
+      }
+    }
+
     .profile-tab-btn {
       justify-content: unset;
       line-height: $line-height-large;
