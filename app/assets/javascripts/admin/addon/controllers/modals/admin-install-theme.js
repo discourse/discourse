@@ -24,7 +24,10 @@ export default Controller.extend(ModalFunctionality, {
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
   recordType: "theme",
-  checkPrivate: match("uploadUrl", /^ssh\:\/\/.*\@.*\.git$|.*\@.*\:.*\.git$/),
+  checkPrivate: match(
+    "uploadUrl",
+    /^ssh\:\/\/.*\@.*(?:\.git)?$|.*\@.*\:.*(?:\.git)?$/
+  ),
   localFile: null,
   uploadUrl: null,
   uploadName: null,
