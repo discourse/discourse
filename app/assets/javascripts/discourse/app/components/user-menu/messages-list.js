@@ -45,31 +45,34 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
-  fetchItems() {
-    return ajax(
+  async fetchItems() {
+    const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
-    ).then(async (data) => {
-      const content = [];
-      data.notifications.forEach((rawNotification) => {
-        const notification = Notification.create(rawNotification);
-        content.push(
-          new UserMenuNotificationItem({
-            notification,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-            site: this.site,
-          })
-        );
-      });
-      const topics = data.topics.map((t) => Topic.create(t));
-      await Topic.applyTransformations(topics);
+    );
+    const content = [];
+
+    const notifications = data.notifications.map((n) => Notification.create(n));
+    await Notification.applyTransformations(notifications);
+    notifications.forEach((notification) => {
       content.push(
-        ...topics.map((topic) => {
-          return new UserMenuMessageItem({ message: topic });
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
         })
       );
-      return content;
     });
+
+    const topics = data.topics.map((t) => Topic.create(t));
+    await Topic.applyTransformations(topics);
+    content.push(
+      ...topics.map((topic) => {
+        return new UserMenuMessageItem({ message: topic });
+      })
+    );
+
+    return content;
   }
 
   dismissWarningModal() {
