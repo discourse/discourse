@@ -35,3 +35,18 @@
     }
   }
 }
+
+// ensure popupmenu options has scroll behavior on limited screen space
+#reply-control {
+  &.composer-action-createTopic {
+    .toolbar-popup-menu-options .select-kit-collection {
+      max-height: calc(var(--composer-height) - 230px);
+    }
+  }
+
+  &.composer-action-reply {
+    .toolbar-popup-menu-options .select-kit-collection {
+      max-height: calc(var(--composer-height) - 145px);
+    }
+  }
+}
