@@ -1939,7 +1939,7 @@ class PluginApi {
    * block rendering until the callback finishes executing.
    *
    * ```
-   * api.registerModelTransformer("topic", (topics) => {
+   * api.registerModelTransformer("topic", async (topics) => {
    *   for (const topic of topics) {
    *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
    *     if (decryptedTitle) {
