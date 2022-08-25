@@ -94,28 +94,6 @@
   right: 0;
   width: 320px;
   padding: 0;
-  #quick-access-profile {
-    ul {
-      flex-wrap: nowrap;
-      height: 100%;
-      align-items: center;
-      overflow-y: auto; // really short viewports
-    }
-    li {
-      flex: 1 1 auto;
-      max-height: 3em; // prevent buttons from getting too tall
-      > * {
-        // button, a, and everything else
-        height: 100%;
-        align-items: center;
-        margin: 0;
-        padding: 0 0.5em;
-      }
-      .d-icon {
-        padding-top: 0;
-      }
-    }
-  }
 
   .panel-body-bottom {
     flex: 0;
@@ -207,6 +185,28 @@
 
   #quick-access-profile {
     display: inline;
+    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
+
+    ul {
+      flex-wrap: nowrap;
+      height: 100%;
+      align-items: center;
+      overflow-y: auto; // really short viewports
+    }
+    li {
+      flex: 1 1 auto;
+      max-height: 3em; // prevent buttons from getting too tall
+      > * {
+        // button, a, and everything else
+        height: 100%;
+        align-items: center;
+        margin: 0;
+        padding: 0 0.5em;
+      }
+      .d-icon {
+        padding-top: 0;
+      }
+    }
 
     .set-user-status {
       .emoji {
