@@ -80,8 +80,9 @@ acceptance("User Status", function (needs) {
     await click(".menu-links-row .user-preferences-link");
 
     assert.equal(
-      query("div.quick-access-panel li.user-status span.d-button-label")
-        .innerText,
+      query(
+        "div.quick-access-panel li.user-status span.d-button-label"
+      ).textContent.trim(),
       userStatus,
       "shows user status description on the menu"
     );
@@ -177,8 +178,9 @@ acceptance("User Status", function (needs) {
     await click(".header-dropdown-toggle.current-user");
     await click(".menu-links-row .user-preferences-link");
     assert.equal(
-      query("div.quick-access-panel li.user-status span.d-button-label")
-        .innerText,
+      query(
+        "div.quick-access-panel li.user-status span.d-button-label"
+      ).textContent.trim(),
       userStatus,
       "shows user status description on the menu"
     );
@@ -205,8 +207,9 @@ acceptance("User Status", function (needs) {
     await click(".header-dropdown-toggle.current-user");
     await click(".menu-links-row .user-preferences-link");
     assert.equal(
-      query("div.quick-access-panel li.user-status span.d-button-label")
-        .innerText,
+      query(
+        "div.quick-access-panel li.user-status span.d-button-label"
+      ).textContent.trim(),
       updatedStatus,
       "shows user status description on the menu"
     );
@@ -243,8 +246,9 @@ acceptance("User Status", function (needs) {
     await click(".menu-links-row .user-preferences-link");
 
     assert.equal(
-      query("div.quick-access-panel li.user-status span.relative-date")
-        .innerText,
+      query(
+        "div.quick-access-panel li.user-status span.relative-date"
+      ).textContent.trim(),
       "1h",
       "shows user status timer on the menu"
     );
@@ -384,7 +388,7 @@ acceptance("User Status - new user menu", function (needs) {
     await click(".header-dropdown-toggle.current-user");
     await click("#user-menu-button-profile");
 
-    assert.ok(exists("li.set-user-status"), "shows the button");
+    assert.ok(exists("li.set-user-status .btn"), "shows the button");
     assert.ok(
       exists("li.set-user-status svg.d-icon-plus-circle"),
       "shows the icon on the button"
@@ -402,7 +406,7 @@ acceptance("User Status - new user menu", function (needs) {
     await click("#user-menu-button-profile");
 
     assert.equal(
-      query("li.set-user-status .item-label").innerText,
+      query("li.set-user-status .item-label").textContent.trim(),
       userStatus,
       "shows user status description on the menu"
     );
