@@ -20,7 +20,6 @@ import { SKIP } from "discourse/lib/autocomplete";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { isTesting } from "discourse-common/config/environment";
@@ -280,16 +279,6 @@ export default Component.extend(TextareaTextManipulation, {
     this.element
       .querySelector(".d-editor-preview")
       .addEventListener("click", this._handlePreviewLinkClick);
-
-    // ensures textarea height is correct
-    discourseLater(() => {
-      const dEditorHeight =
-        this.element.querySelector(".d-editor-input").clientHeight;
-      document.documentElement.style.setProperty(
-        "--d-editor-height",
-        `${dEditorHeight}px`
-      );
-    }, 200);
 
     if (this.composerEvents) {
       this.appEvents.on("composer:insert-block", this, "insertBlock");

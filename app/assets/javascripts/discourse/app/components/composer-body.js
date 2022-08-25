@@ -113,14 +113,6 @@ export default Component.extend(KeyEnterEscape, {
       size ? `${size}px` : ""
     );
 
-    const dEditorHeight =
-      this.element.querySelector(".d-editor-input").clientHeight;
-
-    document.documentElement.style.setProperty(
-      "--d-editor-height",
-      `${dEditorHeight}px`
-    );
-
     this._triggerComposerResized();
   },
 
@@ -215,14 +207,6 @@ export default Component.extend(KeyEnterEscape, {
         if (composerState !== Composer.OPEN) {
           return;
         }
-
-        const dEditorHeight =
-          this.element.querySelector(".d-editor-input").clientHeight;
-
-        document.documentElement.style.setProperty(
-          "--d-editor-height",
-          `${dEditorHeight}px`
-        );
 
         const composerElementHeight =
           document.querySelector("#reply-control").offsetHeight;
