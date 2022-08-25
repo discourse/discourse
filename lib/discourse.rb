@@ -382,7 +382,7 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins = self.find_plugins(args).select do |plugin|
-      plugin.js_asset_exists? || plugin.extra_js_asset_exists?
+      plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
     end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
@@ -391,6 +391,8 @@ module Discourse
       assets = []
       assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
       assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
+      # TODO: make admin asset only load for admins
+      assets << "plugins/#{plugin.directory_name}_admin" if plugin.admin_js_asset_exists?
       assets
     end
   end

@@ -386,7 +386,7 @@ module.exports = {
           .findAddonByName("discourse-plugins")
           .pluginInfos();
 
-        for (const { name, hasJs } of pluginInfos) {
+        for (const { name, hasJs, hasAdminJs } of pluginInfos) {
           if (hasJs) {
             scripts.push({ src: `plugins/${name}.js`, name });
           }
@@ -394,15 +394,18 @@ module.exports = {
           if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
             scripts.push({ src: `plugins/${name}_extras.js`, name });
           }
+
+          if (hasAdminJs) {
+            scripts.push({ src: `plugins/${name}_admin.js`, name });
+          }
         }
       } else {
         scripts.push({
           src: "discourse/tests/active-plugins.js",
           name: "_all",
         });
+        scripts.push({ src: "admin-plugins.js", name: "_admin" });
       }
-
-      scripts.push({ src: "admin-plugins.js", name: "_admin" });
 
       return scripts
         .map(
