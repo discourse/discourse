@@ -1,6 +1,6 @@
 import { test } from "qunit";
 
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
@@ -26,6 +26,18 @@ acceptance("Sidebar - Anonymous User", function (needs) {
     assert.ok(
       exists(".header-sidebar-toggle"),
       "toggle button for anonymous user"
+    );
+  });
+
+  test("sidebar hamburger panel dropdown when sidebar has been disabled", async function (assert) {
+    this.siteSettings.enable_sidebar = false;
+
+    await visit("/");
+    await click(".hamburger-dropdown");
+
+    assert.ok(
+      exists(".sidebar-hamburger-dropdown .sidebar-sections-anonymous"),
+      "sidebar hamburger panel dropdown renders anonymous sidebar sections"
     );
   });
 });
