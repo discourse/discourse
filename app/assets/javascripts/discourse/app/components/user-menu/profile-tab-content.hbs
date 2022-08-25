@@ -6,10 +6,10 @@
           {{emoji this.currentUser.status.emoji}}
           <span class="item-label">
             {{this.currentUser.status.description}}
+            {{#if this.currentUser.status.ends_at}}
+              {{format-age this.currentUser.status.ends_at}}
+            {{/if}}
           </span>
-          {{#if this.currentUser.status.ends_at}}
-            {{format-age this.currentUser.status.ends_at}}
-          {{/if}}
         {{else}}
           {{d-icon "plus-circle"}}
           <span class="item-label">

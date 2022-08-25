@@ -212,17 +212,14 @@
       .emoji {
         padding-top: 0;
       }
-
-      .relative-date {
-        text-align: left;
-        font-size: var(--font-down-3);
-        padding-top: 0.25em;
-        margin-left: 0.75em;
-        color: var(--primary-medium);
-      }
     }
 
     .profile-tab-btn {
+      .relative-date {
+        font-size: $font-down-3;
+        color: var(--primary-medium);
+      }
+
       justify-content: unset;
       line-height: $line-height-large;
       width: 100%;
@@ -233,11 +230,6 @@
     }
 
     .do-not-disturb {
-      .relative-date {
-        font-size: $font-down-3;
-        color: var(--primary-medium);
-      }
-
       .d-icon-toggle-on {
         color: var(--tertiary);
       }
