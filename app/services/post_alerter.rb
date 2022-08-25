@@ -154,12 +154,13 @@ class PostAlerter
     linked_users = extract_linked_users(post)
     notified += notify_non_pm_users(linked_users - notified, :linked, post)
 
-    # private messages
     if new_record
       if post.topic.private_message?
-        notify_pm_users(post, reply_to_user, quoted_users, notified)
+        # private messages
+        notified += notify_pm_users(post, reply_to_user, quoted_users, notified)
       elsif notify_about_reply?(post)
-        notify_post_users(post, notified, new_record: new_record)
+        # posts
+        notified += notify_post_users(post, notified, new_record: new_record)
       end
     end
 
@@ -172,7 +173,7 @@ class PostAlerter
         watchers = category_watchers(topic) + tag_watchers(topic) + group_watchers(topic)
         # Notify only users who can see the topic
         watchers &= topic.all_allowed_users.pluck(:id) if post.topic.private_message?
-        notify_first_post_watchers(post, watchers)
+        notified += notify_first_post_watchers(post, watchers, notified)
       end
     end
 
@@ -199,8 +200,8 @@ class PostAlerter
       .pluck(:user_id)
   end
 
-  def notify_first_post_watchers(post, user_ids)
-    return if user_ids.blank?
+  def notify_first_post_watchers(post, user_ids, notified = nil)
+    return [] if user_ids.blank?
     user_ids.uniq!
 
     warn_if_not_sidekiq
@@ -208,11 +209,14 @@ class PostAlerter
     # Don't notify the OP and last editor
     user_ids -= [post.user_id, post.last_editor_id]
     users = User.where(id: user_ids).includes(:do_not_disturb_timings)
+    users = users.where.not(id: notified.map(&:id)) if notified.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     each_user_in_batches(users) do |user|
       create_notification(user, Notification.types[:watching_first_post], post)
     end
+
+    users
   end
 
   def sync_group_mentions(post, mentioned_groups)
@@ -620,7 +624,7 @@ class PostAlerter
   end
 
   def notify_pm_users(post, reply_to_user, quoted_users, notified)
-    return unless post.topic
+    return [] unless post.topic
 
     warn_if_not_sidekiq
 
@@ -749,7 +753,7 @@ class PostAlerter
   end
 
   def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
-    return unless post.topic
+    return [] unless post.topic
 
     warn_if_not_sidekiq
 
@@ -845,6 +849,8 @@ class PostAlerter
       opts[:display_username] = post.last_editor.username if notification_type == Notification.types[:edited]
       create_notification(user, notification_type, post, opts)
     end
+
+    notify
   end
 
   def warn_if_not_sidekiq

@@ -2021,4 +2021,26 @@ RSpec.describe PostAlerter do
     expect(notification.topic).to eq(post.topic)
     expect(notification.post_number).to eq(1)
   end
+
+  it "does not create multiple notifications for same post" do
+    category = Fabricate(:category)
+    CategoryUser.set_notification_level_for_category(
+      user,
+      NotificationLevels.all[:tracking],
+      category.id,
+    )
+    watching_first_post_tag = Fabricate(:tag)
+    TagUser.change(user.id, watching_first_post_tag.id, TagUser.notification_levels[:watching_first_post])
+    watching_tag = Fabricate(:tag)
+    TagUser.change(user.id, watching_tag.id, TagUser.notification_levels[:watching])
+
+    post = create_post(category: category, tags: [watching_first_post_tag.name, watching_tag.name])
+    expect { PostAlerter.new.after_save_post(post, true) }.to change { Notification.count }.by(1)
+
+    notification = Notification.last
+    expect(notification.user).to eq(user)
+    expect(notification.notification_type).to eq(Notification.types[:posted])
+    expect(notification.topic).to eq(post.topic)
+    expect(notification.post_number).to eq(1)
+  end
 end
