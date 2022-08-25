@@ -170,6 +170,10 @@ RSpec.describe TopicViewSerializer do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group) { Fabricate(:group) }
 
+    before do
+      Group.refresh_automatic_groups!
+    end
+
     it 'is nil for a regular topic' do
       json = serialize_topic(topic, user)
 

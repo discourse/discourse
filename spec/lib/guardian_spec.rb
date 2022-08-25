@@ -14,13 +14,13 @@ RSpec.describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
-  let(:trust_level_0) { Fabricate(:user, trust_level: 0) }
-  let(:trust_level_1) { Fabricate(:user, trust_level: 1) }
-  let(:trust_level_2) { Fabricate(:user, trust_level: 2) }
-  let(:trust_level_3) { Fabricate(:user, trust_level: 3) }
-  let(:trust_level_4)  { Fabricate(:user, trust_level: 4) }
-  let(:another_admin) { Fabricate(:admin) }
-  let(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:trust_level_0) { Fabricate(:user, trust_level: 0) }
+  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1) }
+  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2) }
+  fab!(:trust_level_3) { Fabricate(:user, trust_level: 3) }
+  fab!(:trust_level_4)  { Fabricate(:user, trust_level: 4) }
+  fab!(:another_admin) { Fabricate(:admin) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   let(:topic) { build(:topic, user: user) }
   let(:post) { build(:post, topic: topic, user: topic.user) }

@@ -637,9 +637,12 @@ const User = RestModel.extend({
     if (!this.groups) {
       return;
     }
-    return this.groups
-      .mapBy("id")
-      .some((groupId) => groupIds.includes(groupId));
+
+    // auto group ID 0 is "everyone"
+    return (
+      groupIds.includes(0) ||
+      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
+    );
   },
 
   // The user's stat count, excluding PMs.

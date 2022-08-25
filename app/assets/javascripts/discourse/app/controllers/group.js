@@ -93,14 +93,7 @@ export default Controller.extend({
     "currentUser.groups.[]"
   )
   showMessages(hasMessages, isGroupUser) {
-    const canSendPms =
-      this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      );
-    if (!canSendPms) {
+    if (!this.site.allowPersonalMessages(this.currentUser)) {
       return false;
     }
 

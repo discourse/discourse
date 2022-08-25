@@ -156,14 +156,7 @@ createWidget("user-menu-links", {
 
     glyphs.push(this.bookmarksGlyph());
 
-    if (
-      this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    ) {
+    if (this.site.allowPersonalMessages(this.currentUser)) {
       glyphs.push(this.messagesGlyph());
     }
 
