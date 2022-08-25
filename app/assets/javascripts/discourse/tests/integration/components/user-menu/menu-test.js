@@ -56,7 +56,6 @@ module("Integration | Component | user-menu", function (hooks) {
       "likes",
       "messages",
       "bookmarks",
-      "review-queue",
     ].forEach((tab, index) => {
       assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
       assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
