@@ -1,6 +1,6 @@
 import I18n from "I18n";
 
-import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 
 export default class AdminSectionLink extends BaseSectionLink {
   get name() {
@@ -12,10 +12,10 @@ export default class AdminSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("admin_title");
+    return I18n.t("sidebar.sections.community.links.admin.content");
   }
 
   get text() {
-    return I18n.t("admin_title");
+    return I18n.t("sidebar.sections.community.links.admin.content");
   }
 }

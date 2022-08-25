@@ -4120,9 +4120,17 @@ en:
           header_link_text: "Community"
           header_action_title: "create a new topic"
           links:
+            about:
+              content: "About"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Badges"
             everything:
               content: "Everything"
               title: "All topics"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Tracked"
               title: "All tracked topics"

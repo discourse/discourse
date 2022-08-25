@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 
-import BaseSectionLink from "discourse/lib/sidebar/user/community-section/base-section-link";
+import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 

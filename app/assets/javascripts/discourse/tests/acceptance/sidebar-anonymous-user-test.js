@@ -22,6 +22,11 @@ acceptance("Sidebar - Anonymous User", function (needs) {
       exists(".sidebar-container"),
       "sidebar exists for anonymous user"
     );
+
+    assert.ok(
+      exists(".header-sidebar-toggle"),
+      "toggle button for anonymous user"
+    );
   });
 });
 
@@ -32,12 +37,17 @@ acceptance("Sidebar - Anonymous User - Login Required", function (needs) {
     login_required: true,
   });
 
-  test("sidebar is hidden", async function (assert) {
+  test("sidebar and toggle button is hidden", async function (assert) {
     await visit("/");
 
     assert.ok(
       !exists(".sidebar-container"),
       "sidebar is hidden for anonymous user"
+    );
+
+    assert.ok(
+      !exists(".header-sidebar-toggle"),
+      "toggle button is hidden for anonymous user"
     );
   });
 });

@@ -37,9 +37,25 @@
       color: var(--primary-high);
       background: var(--tertiary-low);
     }
+
+    .sidebar-section-header-wrapper .select-kit .btn:hover {
+      background: transparent;
+    }
+  }
+
+  .sidebar-section-link-wrapper
+    .sidebar-section-link-hover:hover
+    .sidebar-section-hover-button {
+    background: transparent;
   }
 
   .sidebar-footer-wrapper {
-    padding: 0.5em 0 0;
+    padding: 0;
+    .sidebar-footer-container {
+      padding: 0;
+      &:before {
+        top: calc(-100% + 2px);
+      }
+    }
   }
 }

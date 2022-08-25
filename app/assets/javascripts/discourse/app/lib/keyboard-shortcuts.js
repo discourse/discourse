@@ -313,7 +313,10 @@ export default {
 
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    discourseLater(() => $(".d-editor .quote").click(), 500);
+    discourseLater(
+      () => document.querySelector(".d-editor .quote")?.click(),
+      500
+    );
 
     return false;
   },
@@ -346,9 +349,9 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const $el = $(".suggested-topics a.raw-topic-link:first");
-    if ($el.length) {
-      $el.click();
+    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    if (el) {
+      el.click();
     } else {
       const controller = this.container.lookup("controller:topic");
       // Only the last page contains list of suggested topics.
@@ -378,7 +381,7 @@ export default {
   },
 
   _jumpTo(direction) {
-    if ($(".container.posts").length) {
+    if (document.querySelector(".container.posts")) {
       this.container.lookup("controller:topic").send(direction);
     }
   },
@@ -420,7 +423,7 @@ export default {
 
   printTopic(event) {
     run(() => {
-      if ($(".container.posts").length) {
+      if (document.querySelector(".container.posts")) {
         event.preventDefault(); // We need to stop printing the current page in Firefox
         this.container.lookup("controller:topic").print();
       }
@@ -435,9 +438,9 @@ export default {
     event.preventDefault();
 
     // If the page has a create-topic button, use it for context sensitive attributes like category
-    let $createTopicButton = $("#create-topic");
-    if ($createTopicButton.length) {
-      $createTopicButton.click();
+    const createTopicButton = document.querySelector("#create-topic");
+    if (createTopicButton) {
+      createTopicButton.click();
       return;
     }
 
@@ -635,48 +638,47 @@ export default {
       this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
     this._lastMoveTime = now;
 
-    const $articles = this._findArticles();
-    if ($articles === undefined) {
+    let articles = this._findArticles();
+    if (articles === undefined) {
       return;
     }
+    articles = Array.from(articles);
 
-    let $selected = $articles.filter(".selected");
-    if ($selected.length === 0) {
-      $selected = $articles.filter("[data-islastviewedtopic=true]");
+    let selected = articles.find((element) =>
+      element.classList.contains("selected")
+    );
+    if (!selected) {
+      selected = articles.find(
+        (element) => element.dataset.islastviewedtopic === "true"
+      );
     }
 
     // Discard selection if it is not in viewport, so users can combine
     // keyboard shortcuts with mouse scrolling.
-    if ($selected.length !== 0 && !fast) {
-      const offset = headerOffset();
-      const beginScreen = $(window).scrollTop() - offset;
-      const endScreen = beginScreen + window.innerHeight + offset;
-      const beginArticle = $selected.offset().top;
-      const endArticle = $selected.offset().top + $selected.height();
-      if (beginScreen > endArticle || beginArticle > endScreen) {
-        $selected = null;
+    if (selected && !fast) {
+      const rect = selected.getBoundingClientRect();
+      if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
+        selected = null;
       }
     }
 
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
-    if (!$selected || $selected.length === 0) {
+    if (!selected) {
       const offset = headerOffset();
-      $selected = $articles
-        .toArray()
-        .find((article) =>
-          direction > 0
-            ? article.getBoundingClientRect().top >= offset
-            : article.getBoundingClientRect().bottom >= offset
-        );
-      if (!$selected) {
-        $selected = $articles[$articles.length - 1];
+      selected = articles.find((article) =>
+        direction > 0
+          ? article.getBoundingClientRect().top >= offset
+          : article.getBoundingClientRect().bottom >= offset
+      );
+      if (!selected) {
+        selected = articles[articles.length - 1];
       }
       direction = 0;
     }
 
-    const index = $articles.index($selected);
-    let article = $articles.eq(index)[0];
+    const index = articles.indexOf(selected);
+    let article = selected;
 
     // Try doing a page scroll in the context of current post.
     if (!fast && direction !== 0 && article) {
@@ -709,25 +711,27 @@ export default {
     }
 
     // Try scrolling to post above or below.
-    if ($selected.length !== 0) {
+    if (!selected) {
       if (direction === -1 && index === 0) {
         return;
       }
-      if (direction === 1 && index === $articles.length - 1) {
+      if (direction === 1 && index === articles.length - 1) {
         return;
       }
     }
 
-    article = $articles.eq(index + direction)[0];
+    article = articles[index + direction];
     if (!article) {
       return;
     }
 
-    $articles.removeClass("selected");
+    for (const a of articles) {
+      a.classList.remove("selected");
+    }
     article.classList.add("selected");
 
     this.appEvents.trigger("keyboard:move-selection", {
-      articles: $articles.get(),
+      articles,
       selectedArticle: article,
     });
 
@@ -783,41 +787,43 @@ export default {
   categoriesTopicsList() {
     switch (this.siteSettings.desktop_category_page_style) {
       case "categories_with_featured_topics":
-        return $(".latest .featured-topic");
+        return document.querySelectorAll(".latest .featured-topic");
       case "categories_and_latest_topics":
       case "categories_and_latest_topics_created_date":
-        return $(".latest-topic-list .latest-topic-list-item");
+        return document.querySelectorAll(
+          ".latest-topic-list .latest-topic-list-item"
+        );
       case "categories_and_top_topics":
-        return $(".top-topic-list .latest-topic-list-item");
+        return document.querySelectorAll(
+          ".top-topic-list .latest-topic-list-item"
+        );
       default:
-        return $();
+        return [];
     }
   },
 
   _findArticles() {
-    const $topicList = $(".topic-list");
-    const $postsWrapper = $(".posts-wrapper");
-    const $categoriesTopicsList = this.categoriesTopicsList();
-    const $searchResults = $(".search-results");
-
-    if ($postsWrapper.length > 0) {
-      return $(".posts-wrapper .topic-post, .topic-list tbody tr");
-    } else if ($topicList.length > 0) {
-      return $topicList.find(".topic-list-item");
-    } else if ($categoriesTopicsList.length > 0) {
-      return $categoriesTopicsList;
-    } else if ($searchResults.length > 0) {
-      return $searchResults.find(".fps-result");
+    let categoriesTopicsList;
+    if (document.querySelector(".posts-wrapper")) {
+      return document.querySelectorAll(
+        ".posts-wrapper .topic-post, .topic-list tbody tr"
+      );
+    } else if (document.querySelector(".topic-list")) {
+      return document.querySelectorAll(".topic-list .topic-list-item");
+    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
+      return categoriesTopicsList;
+    } else if (document.querySelector(".search-results")) {
+      return document.querySelectorAll(".search-results .fps-result");
     }
   },
 
   _changeSection(direction) {
-    const $sections = $(".nav.nav-pills li"),
-      active = $(".nav.nav-pills li.active"),
-      index = $sections.index(active) + direction;
+    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li"));
+    const active = document.querySelector(".nav.nav-pills li.active");
+    const index = sections.indexOf(active) + direction;
 
-    if (index >= 0 && index < $sections.length) {
-      $sections.eq(index).find("a").click();
+    if (index >= 0 && index < sections.length) {
+      sections[index].querySelector("a")?.click();
     }
   },
 

@@ -273,7 +273,7 @@ RSpec.describe TopicQuery do
 
       list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
       expect(list.topics.size).to eq(1)
-      expect(list.preload_key).to eq("topic_list_c/different-category/#{diff_category.id}/l/latest")
+      expect(list.preload_key).to eq("topic_list")
 
       # Defaults to no category filter when slug does not exist
       expect(TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size).to eq(2)
