@@ -208,7 +208,18 @@
   #quick-access-profile {
     display: inline;
 
+    .set-user-status {
+      .emoji {
+        padding-top: 0;
+      }
+    }
+
     .profile-tab-btn {
+      .relative-date {
+        font-size: $font-down-3;
+        color: var(--primary-medium);
+      }
+
       justify-content: unset;
       line-height: $line-height-large;
       width: 100%;
@@ -219,11 +230,6 @@
     }
 
     .do-not-disturb {
-      .relative-date {
-        font-size: $font-down-3;
-        color: var(--primary-medium);
-      }
-
       .d-icon-toggle-on {
         color: var(--tertiary);
       }
