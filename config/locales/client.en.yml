@@ -4098,6 +4098,8 @@ en:
       toggle_section: "toggle section"
       more: "More..."
       sections:
+        about:
+          header_link_text: "About"
         messages:
           header_link_text: "Messages"
           header_action_title: "create a personal message"

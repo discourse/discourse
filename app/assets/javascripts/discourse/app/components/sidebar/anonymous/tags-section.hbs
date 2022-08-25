@@ -1,6 +1,7 @@
 <Sidebar::Section
   @sectionName="tags"
-  @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}} >
+  @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+  @collapsable={{@collapsable}} >
 
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink
