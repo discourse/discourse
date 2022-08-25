@@ -137,6 +137,7 @@ export default {
     this.appEvents = this.container.lookup("service:app-events");
     this.currentUser = this.container.lookup("service:current-user");
     this.siteSettings = this.container.lookup("service:site-settings");
+    this.site = this.container.lookup("service:site");
 
     // Disable the shortcut if private messages are disabled
     if (!this.site.allowPersonalMessages(this.currentUser)) {

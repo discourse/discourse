@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 export default class SidebarUserSections extends Component {
   @service siteSettings;
   @service currentUser;
+  @service site;
 
   customSections;
 
