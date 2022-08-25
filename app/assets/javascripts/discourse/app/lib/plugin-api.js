@@ -100,6 +100,7 @@ import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
+import { registerModelTransformer } from "discourse/lib/model-transformers";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1925,6 +1926,37 @@ class PluginApi {
    */
   registerUserMenuTab(func) {
     registerUserMenuTab(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Apply transformation using a callback on a list of model instances of a
+   * specific type. Currently, this API only works on lists rendered in the
+   * user menu such as notifications, bookmarks and topics (i.e. messages), but
+   * it may be extended to other lists in other parts of the app.
+   *
+   * You can pass an `async` callback to this API and it'll be `await`ed and
+   * block rendering until the callback finishes executing.
+   *
+   * ```
+   * api.registerModelTransformer("topic", async (topics) => {
+   *   for (const topic of topics) {
+   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
+   *     if (decryptedTitle) {
+   *       topic.fancy_title = decryptedTitle;
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback registerModelTransformerCallback
+   * @param {Object[]} A list of model instances
+   *
+   * @param {string} modelName - Model type on which transformation should be applied. Currently the only valid type is "topic".
+   * @param {registerModelTransformerCallback} transformer - Callback function that receives a list of model objects of the specified type and applies transformation on them.
+   */
+  registerModelTransformer(modelName, transformer) {
+    registerModelTransformer(modelName, transformer);
   }
 }
 

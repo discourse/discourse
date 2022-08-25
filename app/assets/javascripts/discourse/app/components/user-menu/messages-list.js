@@ -5,6 +5,7 @@ import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
+import Topic from "discourse/models/topic";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -47,7 +48,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   fetchItems() {
     return ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
-    ).then((data) => {
+    ).then(async (data) => {
       const content = [];
       data.notifications.forEach((rawNotification) => {
         const notification = Notification.create(rawNotification);
@@ -60,8 +61,10 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
           })
         );
       });
+      const topics = data.topics.map((t) => Topic.create(t));
+      await Topic.applyTransformations(topics);
       content.push(
-        ...data.topics.map((topic) => {
+        ...topics.map((topic) => {
           return new UserMenuMessageItem({ message: topic });
         })
       );
