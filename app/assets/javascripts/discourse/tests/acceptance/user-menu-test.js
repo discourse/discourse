@@ -197,8 +197,8 @@ acceptance("User menu", function (needs) {
         });
       });
       api.registerModelTransformer("topic", async (topics) => {
-        // sleep 10 ms
-        await new Promise((resolve) => later(resolve, 10));
+        // sleep 1 ms
+        await new Promise((resolve) => later(resolve, 1));
         topics.forEach((topic) => {
           topic.fancy_title = `pluginTransformer#2 ${topic.fancy_title}`;
         });
