@@ -1235,6 +1235,7 @@ export default Controller.extend({
       this.model.set("reply", opts.topicBody);
     }
 
+    // The two custom properties below can be overriden by themes/plugins to set different default composer heights.
     const defaultComposerHeight =
       this.model.action === "reply"
         ? "var(--reply-composer-height, 300px)"
