@@ -51,9 +51,9 @@ acceptance("Admin - Site Texts", function (needs) {
     // Revert the changes
     await click(".revert-site-text");
 
-    assert.ok(exists(".bootbox.modal"));
+    assert.ok(exists("#dialog-holder .dialog-content"));
 
-    await click(".bootbox.modal .btn-primary");
+    await click("#dialog-holder .btn-primary");
 
     assert.ok(!exists(".saved"));
     assert.ok(!exists(".revert-site-text"));
