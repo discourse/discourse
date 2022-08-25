@@ -55,7 +55,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
-  fetchItems() {
+  async fetchItems() {
     const params = {
       limit: 30,
       recent: true,
@@ -68,21 +68,19 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       params.filter_by_types = types.join(",");
       params.silent = true;
     }
-    return this.store
+    const collection = await this.store
       .findStale("notification", params)
-      .refresh()
-      .then(async (c) => {
-        const notifications = c.content;
-        await Notification.applyTransformations(notifications);
-        return notifications.map((notification) => {
-          return new UserMenuNotificationItem({
-            notification,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-            site: this.site,
-          });
-        });
+      .refresh();
+    const notifications = collection.content;
+    await Notification.applyTransformations(notifications);
+    return notifications.map((notification) => {
+      return new UserMenuNotificationItem({
+        notification,
+        currentUser: this.currentUser,
+        siteSettings: this.siteSettings,
+        site: this.site,
       });
+    });
   }
 
   dismissWarningModal() {

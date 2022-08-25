@@ -45,34 +45,34 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
-  fetchItems() {
-    return ajax(`/u/${this.currentUser.username}/user-menu-bookmarks`).then(
-      async (data) => {
-        const content = [];
-        const notifications = data.notifications.map((n) =>
-          Notification.create(n)
-        );
-        await Notification.applyTransformations(notifications);
-        notifications.forEach((notification) => {
-          content.push(
-            new UserMenuNotificationItem({
-              notification,
-              currentUser: this.currentUser,
-              siteSettings: this.siteSettings,
-              site: this.site,
-            })
-          );
-        });
-        const bookmarks = data.bookmarks.map((b) => Bookmark.create(b));
-        await Bookmark.applyTransformations(bookmarks);
-        content.push(
-          ...bookmarks.map((bookmark) => {
-            return new UserMenuBookmarkItem({ bookmark });
-          })
-        );
-        return content;
-      }
+  async fetchItems() {
+    const data = await ajax(
+      `/u/${this.currentUser.username}/user-menu-bookmarks`
     );
+    const content = [];
+
+    const notifications = data.notifications.map((n) => Notification.create(n));
+    await Notification.applyTransformations(notifications);
+    notifications.forEach((notification) => {
+      content.push(
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
+      );
+    });
+
+    const bookmarks = data.bookmarks.map((b) => Bookmark.create(b));
+    await Bookmark.applyTransformations(bookmarks);
+    content.push(
+      ...bookmarks.map((bookmark) => {
+        return new UserMenuBookmarkItem({ bookmark });
+      })
+    );
+
+    return content;
   }
 
   dismissWarningModal() {
