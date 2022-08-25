@@ -5,6 +5,7 @@ import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
+import Bookmark from "discourse/models/bookmark";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -46,10 +47,13 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
 
   fetchItems() {
     return ajax(`/u/${this.currentUser.username}/user-menu-bookmarks`).then(
-      (data) => {
+      async (data) => {
         const content = [];
-        data.notifications.forEach((rawNotification) => {
-          const notification = Notification.create(rawNotification);
+        const notifications = data.notifications.map((n) =>
+          Notification.create(n)
+        );
+        await Notification.applyTransformations(notifications);
+        notifications.forEach((notification) => {
           content.push(
             new UserMenuNotificationItem({
               notification,
@@ -59,8 +63,10 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
             })
           );
         });
+        const bookmarks = data.bookmarks.map((b) => Bookmark.create(b));
+        await Bookmark.applyTransformations(bookmarks);
         content.push(
-          ...data.bookmarks.map((bookmark) => {
+          ...bookmarks.map((bookmark) => {
             return new UserMenuBookmarkItem({ bookmark });
           })
         );

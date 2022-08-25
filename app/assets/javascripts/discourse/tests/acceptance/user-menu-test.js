@@ -189,6 +189,55 @@ acceptance("User menu", function (needs) {
     );
   });
 
+  test("notifications tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("notification", (notifications) => {
+        notifications.forEach((notification, index) => {
+          if (notification.fancy_title) {
+            notification.fancy_title = `pluginNotificationTransformer ${index} ${notification.fancy_title}`;
+          }
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    const notifications = queryAll(
+      "#quick-access-all-notifications ul li.notification"
+    );
+    assert.strictEqual(
+      notifications[0].textContent.replace(/\s+/g, " ").trim(),
+      "velesin pluginNotificationTransformer 0 edited topic 443"
+    );
+    assert.strictEqual(
+      notifications[1].textContent.replace(/\s+/g, " ").trim(),
+      "velesin pluginNotificationTransformer 1 some title"
+    );
+  });
+
+  test("bookmarks tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("bookmark", (bookmarks) => {
+        bookmarks.forEach((bookmark) => {
+          if (bookmark.title) {
+            bookmark.title = `pluginBookmarkTransformer ${bookmark.title}`;
+          }
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-bookmarks");
+
+    const bookmarks = queryAll("#quick-access-bookmarks ul li.bookmark");
+    assert.strictEqual(
+      bookmarks[0].textContent.replace(/\s+/g, " ").trim(),
+      "osama pluginBookmarkTransformer Test poll topic hello world"
+    );
+  });
+
   test("messages tab applies model transformations registered by plugins", async function (assert) {
     withPluginApi("0.1", (api) => {
       api.registerModelTransformer("topic", (topics) => {

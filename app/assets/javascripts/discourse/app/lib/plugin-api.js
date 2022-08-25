@@ -1952,7 +1952,7 @@ class PluginApi {
    * @callback registerModelTransformerCallback
    * @param {Object[]} A list of model instances
    *
-   * @param {string} modelName - Model type on which transformation should be applied. Currently the only valid type is "topic".
+   * @param {string} modelName - Model type on which transformation should be applied. Currently valid types are "topic", "notification" and "bookmark".
    * @param {registerModelTransformerCallback} transformer - Callback function that receives a list of model objects of the specified type and applies transformation on them.
    */
   registerModelTransformer(modelName, transformer) {

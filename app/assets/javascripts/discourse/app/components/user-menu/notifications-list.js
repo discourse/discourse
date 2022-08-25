@@ -6,6 +6,7 @@ import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import Notification from "discourse/models/notification";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
@@ -70,8 +71,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return this.store
       .findStale("notification", params)
       .refresh()
-      .then((c) => {
-        return c.content.map((notification) => {
+      .then(async (c) => {
+        const notifications = c.content;
+        await Notification.applyTransformations(notifications);
+        return notifications.map((notification) => {
           return new UserMenuNotificationItem({
             notification,
             currentUser: this.currentUser,

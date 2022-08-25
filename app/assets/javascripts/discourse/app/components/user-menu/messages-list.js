@@ -50,8 +50,11 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
       `/u/${this.currentUser.username}/user-menu-private-messages`
     ).then(async (data) => {
       const content = [];
-      data.notifications.forEach((rawNotification) => {
-        const notification = Notification.create(rawNotification);
+      const notifications = data.notifications.map((n) =>
+        Notification.create(n)
+      );
+      await Notification.applyTransformations(notifications);
+      notifications.forEach((notification) => {
         content.push(
           new UserMenuNotificationItem({
             notification,
