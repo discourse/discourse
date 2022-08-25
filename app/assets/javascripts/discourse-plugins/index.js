@@ -78,12 +78,20 @@ module.exports = {
     return pluginDirectories.map((directory) => {
       const name = directory.name;
       const jsDirectory = path.resolve(root, name, "assets/javascripts");
+      const testDirectory = path.resolve(root, name, "test/javascripts");
       const hasJs = fs.existsSync(jsDirectory);
-      return { name, jsDirectory, hasJs };
+      const hasTests = fs.existsSync(testDirectory);
+      return { name, jsDirectory, testDirectory, hasJs, hasTests };
     });
   },
 
   generatePluginsTree() {
+    const appTree = this._generatePluginAppTree();
+    const testTree = this._generatePluginTestTree();
+    return mergeTrees([appTree, testTree]);
+  },
+
+  _generatePluginAppTree() {
     const trees = this.pluginInfos()
       .filter((p) => p.hasJs)
       .map(({ name, jsDirectory }) => {
@@ -101,6 +109,26 @@ module.exports = {
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
           outputFile: `assets/plugins/${name}.js`,
+          allowNone: true,
+        });
+      });
+    return mergeTrees(trees);
+  },
+
+  _generatePluginTestTree() {
+    const trees = this.pluginInfos()
+      .filter((p) => p.hasTests)
+      .map(({ name, testDirectory }) => {
+        let tree = new WatchedDir(testDirectory);
+
+        tree = fixLegacyExtensions(tree);
+        tree = namespaceModules(tree, name);
+        tree = this.processedAddonJsFiles(tree);
+
+        return concat(mergeTrees([tree]), {
+          inputFiles: ["**/*.js"],
+          outputFile: `assets/plugins/test/${name}_tests.js`,
+          allowNone: true,
         });
       });
     return mergeTrees(trees);
