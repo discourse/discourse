@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
-import { longDate, relativeAge } from "discourse/lib/formatter";
+import { relativeAge } from "discourse/lib/formatter";
 
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
@@ -20,10 +20,6 @@ export default class UserMenuProfileTabContent extends Component {
 
   get isInDoNotDisturb() {
     return !!this.#doNotDisturbUntilDate;
-  }
-
-  get doNotDisturbDateTitle() {
-    return longDate(this.#doNotDisturbUntilDate);
   }
 
   get doNotDisturbDateContent() {
