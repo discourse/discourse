@@ -35,11 +35,8 @@ class Admin::ThemesController < Admin::AdminController
   def generate_key_pair
     require 'sshkey'
     k = SSHKey.generate
-
-    render json: {
-      private_key: k.private_key,
-      public_key: k.ssh_public_key
-    }
+    Discourse.redis.setex("ssh_key_#{k.ssh_public_key}", 1.hour, k.private_key)
+    render json: { public_key: k.ssh_public_key }
   end
 
   THEME_CONTENT_TYPES ||= %w{
@@ -101,14 +98,17 @@ class Admin::ThemesController < Admin::AdminController
 
       begin
         branch = params[:branch] ? params[:branch] : nil
-        @theme = RemoteTheme.import_theme(remote, theme_user, private_key: params[:private_key], branch: branch)
+        private_key = params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
+        return render_json_error I18n.t("themes.import_error.ssh_key_gone") if params[:public_key].present? && private_key.blank?
+
+        @theme = RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
         if params[:force]
           theme_name = params[:remote].gsub(/.git$/, "").split("/").last
 
           remote_theme = RemoteTheme.new
-          remote_theme.private_key = params[:private_key]
+          remote_theme.private_key = private_key
           remote_theme.branch = params[:branch] ? params[:branch] : nil
           remote_theme.remote_url = params[:remote]
           remote_theme.save!
