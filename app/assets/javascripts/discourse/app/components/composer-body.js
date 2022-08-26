@@ -199,17 +199,13 @@ export default Component.extend(KeyEnterEscape, {
       return;
     }
 
-    const composerElementHeight =
-      document.querySelector("#reply-control").offsetHeight;
-    const currentHeight = parseInt(this.composer.composerHeight, 10);
+    const actualHeight = parseInt(getComputedStyle(this.element).height, 10);
 
-    if (composerElementHeight < currentHeight && composerElementHeight > 255) {
-      this.set("composer.composerHeight", `${composerElementHeight}px`);
-      document.documentElement.style.setProperty(
-        "--composer-height",
-        `${composerElementHeight}px`
-      );
-    }
+    this.set("composer.composerHeight", `${actualHeight}px`);
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      `${actualHeight}px`
+    );
   },
 
   _visualViewportResizing() {
