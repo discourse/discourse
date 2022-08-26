@@ -315,7 +315,7 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.alert({
         message: I18n.t("admin.user.anonymize_confirm"),
-        classes: "delete-user-modal",
+        class: "delete-user-modal",
         buttons: [
           {
             icon: "exclamation-triangle",
@@ -379,7 +379,7 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.alert({
         message: I18n.t("admin.user.delete_confirm"),
-        classes: "delete-user-modal",
+        class: "delete-user-modal",
         buttons: [
           {
             label: I18n.t("admin.user.delete_dont_block"),

@@ -316,7 +316,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     this.dialog.alert({
       message: "An alert with custom classes",
-      classes: "dialog-special dialog-super",
+      class: "dialog-special dialog-super",
     });
     await settled();
 
@@ -326,7 +326,22 @@ module("Integration | Component | dialog-holder", function (hooks) {
       "dialog message is shown"
     );
 
-    assert.ok(query("#dialog-holder.dialog-special.dialog-super"));
+    assert.ok(
+      query("#dialog-holder.dialog-special.dialog-super"),
+      "additional classes are present"
+    );
+
+    await click(".dialog-footer .btn-primary");
+
+    assert.notOk(
+      query("#dialog-holder.dialog-special"),
+      "additional class removed on dismissal"
+    );
+
+    assert.notOk(
+      query("#dialog-holder.dialog-super"),
+      "additional class removed on dismissal"
+    );
   });
 
   test("notice", async function (assert) {

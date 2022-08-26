@@ -19,7 +19,7 @@ export default Service.extend({
   cancelVisible: null,
 
   buttons: null,
-  classes: null,
+  class: null,
   _confirming: false,
 
   dialog(params) {
@@ -37,7 +37,6 @@ export default Service.extend({
       cancelVisible,
 
       buttons,
-      classes,
     } = params;
 
     const element = document.getElementById("dialog-holder");
@@ -59,7 +58,7 @@ export default Service.extend({
       cancelVisible,
 
       buttons,
-      classes,
+      class: params.class,
     });
 
     this.dialogInstance.show();
@@ -130,6 +129,7 @@ export default Service.extend({
       cancelVisible: null,
 
       buttons: null,
+      class: null,
 
       _confirming: false,
     });
