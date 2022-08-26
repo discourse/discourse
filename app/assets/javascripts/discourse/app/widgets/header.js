@@ -596,9 +596,14 @@ export default createWidget("header", {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
-      // auto focus on first link in dropdown
       schedule("afterRender", () => {
-        document.querySelector(".hamburger-panel .menu-links a")?.focus();
+        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+          // Remove focus from hamburger toggle button
+          document.querySelector("#toggle-hamburger-menu").blur();
+        } else {
+          // auto focus on first link in dropdown
+          document.querySelector(".hamburger-panel .menu-links a")?.focus();
+        }
       });
     }
   },
