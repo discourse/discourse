@@ -195,12 +195,13 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - shows the confirmation bootbox", async function (assert) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
-    assert.ok(exists(".bootbox"));
+    assert.ok(exists(".dialog-content"));
     assert.strictEqual(
       I18n.t("admin.user.grant_admin_confirm"),
-      query(".modal-body").textContent.trim()
+      query(".dialog-body").textContent.trim()
     );
-    await click(".bootbox .btn-primary");
+
+    await click(".dialog-footer .btn-primary");
   });
 
   test("grant admin - redirects to the 2fa page", async function (assert) {
