@@ -22,6 +22,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -865,6 +866,10 @@ Topic.reopenClass({
     data.enabled_until = enabledUntil;
 
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
+  },
+
+  async applyTransformations(topics) {
+    await applyModelTransformations("topic", topics);
   },
 });
 

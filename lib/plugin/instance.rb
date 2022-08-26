@@ -862,6 +862,15 @@ class Plugin::Instance
     EmberCli.plugin_assets? && File.exist?(extra_js_file_path)
   end
 
+  def admin_js_asset_exists?
+    if EmberCli.plugin_assets?
+      # If this directory exists, ember-cli will output a .js file
+      File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+    else
+      false
+    end
+  end
+
   # Receives an array with two elements:
   # 1. A symbol that represents the name of the value to filter.
   # 2. A Proc that takes the existing ActiveRecord::Relation and the value received from the front-end.

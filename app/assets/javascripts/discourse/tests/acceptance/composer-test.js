@@ -65,7 +65,7 @@ acceptance("Composer", function (needs) {
 
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height to 400px when creating topic"
     );
 
@@ -83,7 +83,7 @@ acceptance("Composer", function (needs) {
     await click(".toggle-fullscreen");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height back to 400px when composer is opened from draft mode"
     );
 

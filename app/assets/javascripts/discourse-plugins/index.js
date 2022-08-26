@@ -78,29 +78,93 @@ module.exports = {
     return pluginDirectories.map((directory) => {
       const name = directory.name;
       const jsDirectory = path.resolve(root, name, "assets/javascripts");
+      const adminJsDirectory = path.resolve(
+        root,
+        name,
+        "admin/assets/javascripts"
+      );
+      const testDirectory = path.resolve(root, name, "test/javascripts");
       const hasJs = fs.existsSync(jsDirectory);
-      return { name, jsDirectory, hasJs };
+      const hasAdminJs = fs.existsSync(adminJsDirectory);
+      const hasTests = fs.existsSync(testDirectory);
+      return {
+        name,
+        jsDirectory,
+        adminJsDirectory,
+        testDirectory,
+        hasJs,
+        hasAdminJs,
+        hasTests,
+      };
     });
   },
 
   generatePluginsTree() {
+    const appTree = this._generatePluginAppTree();
+    const testTree = this._generatePluginTestTree();
+    const adminTree = this._generatePluginAdminTree();
+    return mergeTrees([appTree, testTree, adminTree]);
+  },
+
+  _generatePluginAppTree() {
     const trees = this.pluginInfos()
       .filter((p) => p.hasJs)
-      .map(({ name, jsDirectory }) => {
-        let tree = new WatchedDir(jsDirectory);
+      .map(({ name, jsDirectory }) =>
+        this._buildAppTree({
+          directory: jsDirectory,
+          pluginName: name,
+          outputFile: `assets/plugins/${name}.js`,
+        })
+      );
+    return mergeTrees(trees);
+  },
+
+  _generatePluginAdminTree() {
+    const trees = this.pluginInfos()
+      .filter((p) => p.hasAdminJs)
+      .map(({ name, adminJsDirectory }) =>
+        this._buildAppTree({
+          directory: adminJsDirectory,
+          pluginName: name,
+          outputFile: `assets/plugins/${name}_admin.js`,
+        })
+      );
+    return mergeTrees(trees);
+  },
+
+  _buildAppTree({ directory, pluginName, outputFile }) {
+    let tree = new WatchedDir(directory);
+
+    tree = fixLegacyExtensions(tree);
+    tree = unColocateConnectors(tree);
+    tree = namespaceModules(tree, pluginName);
+
+    tree = RawHandlebarsCompiler(tree);
+    tree = this.compileTemplates(tree);
+
+    tree = this.processedAddonJsFiles(tree);
+
+    return concat(mergeTrees([tree]), {
+      inputFiles: ["**/*.js"],
+      outputFile,
+      allowNone: true,
+    });
+  },
+
+  _generatePluginTestTree() {
+    const trees = this.pluginInfos()
+      .filter((p) => p.hasTests)
+      .map(({ name, testDirectory }) => {
+        let tree = new WatchedDir(testDirectory);
 
         tree = fixLegacyExtensions(tree);
-        tree = unColocateConnectors(tree);
         tree = namespaceModules(tree, name);
-
-        tree = RawHandlebarsCompiler(tree);
-        tree = this.compileTemplates(tree);
-
         tree = this.processedAddonJsFiles(tree);
 
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
-          outputFile: `assets/plugins/${name}.js`,
+          outputFile: `assets/plugins/test/${name}_tests.js`,
+          allowNone: true,
         });
       });
     return mergeTrees(trees);

@@ -5522,7 +5522,6 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         locale: "Language:"
-        fallback_locale_warning: "You are editing a language based on %{fallback}. Users who choose %{fallback} as their interface language won't see your changes."
         more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings

@@ -1,4 +1,25 @@
 <ul>
+  {{#if this.siteSettings.enable_user_status}}
+    <li class="set-user-status">
+      <DButton @class="btn-flat profile-tab-btn" @action={{this.setUserStatusClick}}>
+        {{#if this.currentUser.status}}
+          {{emoji this.currentUser.status.emoji}}
+          <span class="item-label">
+            {{this.currentUser.status.description}}
+            {{#if this.currentUser.status.ends_at}}
+              {{format-age this.currentUser.status.ends_at}}
+            {{/if}}
+          </span>
+        {{else}}
+          {{d-icon "plus-circle"}}
+          <span class="item-label">
+            {{i18n "user_status.set_custom_status"}}
+          </span>
+        {{/if}}
+      </DButton>
+    </li>
+  {{/if}}
+
   <li class="summary">
     <LinkTo @route="user.summary" @model={{this.currentUser}}>
       {{d-icon "user"}}
