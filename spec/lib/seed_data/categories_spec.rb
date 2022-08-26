@@ -158,13 +158,13 @@ RSpec.describe SeedData::Categories do
   describe "#reseed_options" do
     it "returns only existing categories as options" do
       create_category("meta_category_id")
-      create_category("lounge_category_id")
+      create_category("general_category_id")
       Post.last.revise(Fabricate(:admin), raw: "Hello world")
 
       expected_options = [
         { id: "uncategorized_category_id", name: I18n.t("uncategorized_category_name"), selected: true },
         { id: "meta_category_id", name: I18n.t("meta_category_name"), selected: true },
-        { id: "lounge_category_id", name: I18n.t("vip_category_name"), selected: false }
+        { id: "general_category_id", name: I18n.t("general_category_name"), selected: false }
       ]
 
       expect(subject.reseed_options).to eq(expected_options)
