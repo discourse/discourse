@@ -6,7 +6,7 @@ export default class DialogHolder extends Component {
   @service dialog;
 
   @action
-  async buttonAction(btn) {
+  async handleButtonAction(btn) {
     if (btn.action && typeof btn.action === "function") {
       await btn.action();
     }

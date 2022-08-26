@@ -5,7 +5,7 @@
     <div class="dialog-content" role="document">
       {{#if this.dialog.title}}
         <div class="dialog-header">
-          <h3 id="dialog-title">{{this.dialog.title}}</h3>
+          <h3 id={{this.dialog.titleElementId}}>{{this.dialog.title}}</h3>
           <DButton @icon="times" @action={{action this.dialog.cancel}} @class="btn-flat dialog-close close" @title="modal.close" />
         </div>
       {{/if}}
@@ -20,12 +20,12 @@
         <div class="dialog-footer">
           {{#if this.dialog.buttons}}
             {{#each this.dialog.buttons as |button|}}
-              <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "buttonAction" button}} @translatedLabel={{button.label}} />
+              <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "handleButtonAction" button}} @translatedLabel={{button.label}} />
             {{/each}}
           {{else}}
-            <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.iconConfirm}} @label={{this.dialog.labelConfirm}} />
-            {{#if this.dialog.cancelVisible}}
-              <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.labelCancel}} />
+            <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.confirmButtonIcon}} @label={{this.dialog.confirmButtonLabel}} />
+            {{#if this.dialog.shouldDisplayCancel}}
+              <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.cancelButtonLabel}} />
             {{/if}}
           {{/if}}
         </div>

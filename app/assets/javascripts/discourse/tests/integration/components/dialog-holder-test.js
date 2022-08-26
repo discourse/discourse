@@ -117,6 +117,11 @@ module("Integration | Component | dialog-holder", function (hooks) {
       "dialog has title"
     );
 
+    assert.ok(
+      query("#dialog-holder[aria-labelledby='dialog-title']"),
+      "aria-labelledby is correctly set"
+    );
+
     assert.ok(query(".dialog-close"), "close button present");
     assert.ok(query("#dialog-holder"), "element is still in DOM");
     assert.strictEqual(

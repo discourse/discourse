@@ -77,7 +77,7 @@ export default Component.extend({
 
     this.dialog.alert({
       message: I18n.t("logout"),
-      confirmLabel: I18n.t("refresh"),
+      confirmButtonLabel: "refresh",
       didConfirm: () => logout(),
       didCancel: () => logout(),
     });

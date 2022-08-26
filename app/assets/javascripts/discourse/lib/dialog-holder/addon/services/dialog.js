@@ -10,14 +10,13 @@ export default Service.extend({
   title: null,
   titleElementId: null,
 
+  confirmButtonIcon: null,
+  confirmButtonLabel: null,
+  cancelButtonLabel: null,
+  shouldDisplayCancel: null,
+
   didConfirm: null,
-  iconConfirm: null,
-  labelConfirm: null,
-
   didCancel: null,
-  labelCancel: null,
-  cancelVisible: null,
-
   buttons: null,
   class: null,
   _confirming: false,
@@ -28,14 +27,13 @@ export default Service.extend({
       type,
       title,
 
+      confirmButtonIcon,
+      confirmButtonLabel = "ok_value",
+      cancelButtonLabel = "cancel_value",
+      shouldDisplayCancel,
+
       didConfirm,
-      iconConfirm,
-      labelConfirm = "ok_value",
-
       didCancel,
-      labelCancel = "cancel_value",
-      cancelVisible,
-
       buttons,
     } = params;
 
@@ -49,14 +47,13 @@ export default Service.extend({
       title,
       titleElementId: title !== null ? "dialog-title" : null,
 
+      confirmButtonLabel,
+      confirmButtonIcon,
+      cancelButtonLabel,
+      shouldDisplayCancel,
+
       didConfirm,
-      labelConfirm,
-      iconConfirm,
-
       didCancel,
-      labelCancel,
-      cancelVisible,
-
       buttons,
       class: params.class,
     });
@@ -90,7 +87,7 @@ export default Service.extend({
   confirm(params) {
     return this.dialog({
       ...params,
-      cancelVisible: true,
+      shouldDisplayCancel: true,
       buttons: null,
       type: "confirm",
     });
@@ -106,8 +103,8 @@ export default Service.extend({
   yesNoConfirm(params) {
     return this.confirm({
       ...params,
-      labelConfirm: "yes_value",
-      labelCancel: "no_value",
+      confirmButtonLabel: "yes_value",
+      cancelButtonLabel: "no_value",
     });
   },
 
@@ -120,14 +117,13 @@ export default Service.extend({
       title: null,
       titleElementId: null,
 
+      confirmButtonLabel: null,
+      confirmButtonIcon: null,
+      cancelButtonLabel: null,
+      shouldDisplayCancel: null,
+
       didConfirm: null,
-      labelConfirm: null,
-      iconConfirm: null,
-
       didCancel: null,
-      labelCancel: null,
-      cancelVisible: null,
-
       buttons: null,
       class: null,
 
@@ -136,6 +132,7 @@ export default Service.extend({
   },
 
   willDestroy() {
+    this.dialogInstance?.destroy();
     this.reset();
   },
 
