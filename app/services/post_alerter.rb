@@ -170,6 +170,8 @@ class PostAlerter
 
       if topic.present?
         watchers = category_watchers(topic) + tag_watchers(topic) + group_watchers(topic)
+        # Notify only users who can see the topic
+        watchers &= topic.all_allowed_users.pluck(:id) if post.topic.private_message?
         notify_first_post_watchers(post, watchers)
       end
     end
