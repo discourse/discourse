@@ -35,4 +35,47 @@ RSpec.describe DiscourseJsProcessor do
       expect(DiscourseJsProcessor.skip_module?("// just some JS\nconsole.log()")).to eq(false)
     end
   end
+
+  it "correctly transpiles widget hbs" do
+    result = DiscourseJsProcessor.transpile(<<~JS, "blah", "blah/mymodule")
+      import hbs from "discourse/widgets/hbs-compiler";
+      const template = hbs`{{somevalue}}`;
+    JS
+    expect(result).to eq <<~JS.strip
+      define("blah/mymodule", [], function () {
+        "use strict";
+
+        const template = function (attrs, state) {
+          var _r = [];
+
+          _r.push(somevalue);
+
+          return _r;
+        };
+      });
+    JS
+  end
+
+  it "correctly transpiles ember hbs" do
+    result = DiscourseJsProcessor.transpile(<<~JS, "blah", "blah/mymodule")
+      import { hbs } from 'ember-cli-htmlbars';
+      const template = hbs`{{somevalue}}`;
+    JS
+    expect(result).to eq <<~JS.strip
+      define("blah/mymodule", ["@ember/template-factory"], function (_templateFactory) {
+        "use strict";
+
+        const template = (0, _templateFactory.createTemplateFactory)(
+        /*
+          {{somevalue}}
+        */
+        {
+          "id": null,
+          "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
+          "moduleName": "(unknown template module)",
+          "isStrictMode": false
+        });
+      });
+    JS
+  end
 end
