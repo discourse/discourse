@@ -334,8 +334,9 @@ export default createWidget("topic-admin-menu", {
 
     if (attrs.openUpwards) {
       const documentHeight = $(document).height();
-      const mainHeight = $("#main").height();
-      let bottom = documentHeight - top - 70 - $("#main").offset().top;
+      const mainHeight = $(".ember-application").height();
+      let bottom =
+        documentHeight - top - 70 - $(".ember-application").offset().top;
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;

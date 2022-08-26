@@ -698,6 +698,7 @@ es:
       public_group_membership: "Estás uniéndote o saliendo de grupos con mucha frecuencia. Espera %{time_left} antes de intentarlo de nuevo."
       topics_per_day: "Has llegado al límite de nuevos temas permitidos al día. Podrás crear más en %{time_left}."
       pms_per_day: "Has llegado al máximo de mensajes permitidos al día. Podrás publicar más en %{time_left}."
+      create_like: "¡Guau! ¡Has estado dándole mucho a me gusta! Has llegado al límite diario, pero conforme vayas subiendo de nivel de confianza, tu límite aumentará. Podrás seguir dándole a me gusta en %{time_left}."
       create_bookmark: "Has llegado al límite de nuevos marcadores al día. Podrás añadir más cosas a marcadores en %{time_left}."
       edit_post: "Has llegado al límite de ediciones en un día. Podrás seguir editando en %{time_left}."
       live_post_counts: "Estás pidiendo recuentos de publicaciones en vivo muy rápido. Espera %{time_left} antes de intentarlo de nuevo."
@@ -1485,6 +1486,7 @@ es:
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para que funcione correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
     apple_touch_icon: "Icono utilizado para dispositivos táctiles de Apple. Se redimensionará automáticamente a 180x180. Si se deja en blanco, se utilizará el icono grande."
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
+    twitter_summary_large_image: "\"Imagen grande de resumen\" de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg, mientras no sea un .svg"
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de correos electrónicos separados por barras"
     email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1498,7 +1500,7 @@ es:
     summary_percent_filter: "Cuando un usuario hace clic en «resumen de este tema», mostrar el % de las publicaciones destacadas"
     summary_max_results: "Cantidad máxima de publicaciones devueltas en «resumen de este tema»"
     summary_timeline_button: "Mostrar un botón para «Resumir» en la línea de tiempo"
-    enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del ajuste min trust to send messages) puedan crear y responder mensajes. Ten en cuenta que el personal siempre puede mandar mensajes, sin importar los ajustes."
+    enable_personal_messages: "Permitir que los usuarios con nivel de confianza 1 (configurable a través del ajuste min trust to send messages) puedan crear y responder mensajes. Ten en cuenta que el STAFF siempre puede mandar mensajes, sin importar los ajustes."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes personales están desactivados."
     enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
     long_polling_base_url: "URL base usada para el long polling (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al pull de origen) ejemplo: http://origin.site.com"
@@ -1675,6 +1677,8 @@ es:
     top_topics_formula_first_post_likes_multiplier: "valor del multiplicador de me gusta en la primera publicación (n) en la fórmula de temas destacados: «log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)»"
     top_topics_formula_least_likes_per_post_multiplier: "valor del multiplicador de me gusta por publicación (n) en la fórmula de temas destacados: «log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)»"
     enable_safe_mode: "Permitir a los usuarios ingresar al modo seguro para depurar plugins."
+    enable_experimental_sidebar_hamburger: "Permite habilitar la barra lateral experimental y el menú desplegable de hamburguesas del usuario."
+    enable_sidebar: "Habilita la barra lateral experimental."
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de realizar una publicación, los usuarios deben esperar (n) segundos antes de crear otra publicación."
     rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
@@ -1836,7 +1840,7 @@ es:
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
-    max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas de nivel de confianza 0 en esta IP (y ninguna es de un miembro del personal o tiene al menos nivel de confianza), bloquear nuevos registros desde esa dirección. Poner a 0 para desactivar este límite."
+    max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas de nivel de confianza 0 en esta IP (y ninguna es de un miembro del STAFF o tiene al menos nivel de confianza), bloquear nuevos registros desde esa dirección. Poner a 0 para desactivar este límite."
     min_ban_entries_for_roll_up: "Al hacer clic en el botón agrupar, se creará un nuevo rango de entradas prohibidas si hay al menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que no coincidan después de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidos que no coincidan después de (N) días."
@@ -1870,6 +1874,7 @@ es:
     max_emails_per_day_per_user: "Número de correos electrónicos que se enviarán a los usuarios por día. Establece 0 para desactivar el límite"
     enable_staged_users: "Crear cuentas provisionales automáticamente al procesar correos electrónicos entrantes."
     maximum_staged_users_per_email: "Número máximo de usuarios provisionales creados al procesar un correo electrónico entrante."
+    maximum_recipients_per_new_group_email: "Bloquee los correos electrónicos entrantes con demasiados destinatarios."
     auto_generated_allowlist: "Lista de direcciones de correo electrónico que no se revisarán para ver si es contenido generado automáticamente. Ejemplo: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquear correos electrónicos entrantes identificados como generados automaticamente."
     ignore_by_title: "Ignorar correos electrónicos entrantes por su título."
@@ -2179,6 +2184,7 @@ es:
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "No puedes activar DiscourseConnect si la autenticación de dos factores (2FA) es obligatoria."
+      delete_rejected_email_after_days: "Esta configuración no puede ser menor que la configuración delete_email_logs_after_days o mayor que %{max}"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -3027,6 +3033,8 @@ es:
         Has respondido a un correo electrónico de resumen, lo cual no es aceptable.
 
         Si crees que se trata de un error, [ponte en contacto con un miembro del equipo](%{base_url}/acerca de).
+    email_reject_too_many_recipients:
+      title: "El correo electrónico rechaza demasiados destinatarios"
     email_error_notification:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
@@ -4464,6 +4472,7 @@ es:
             extra_description: "Solo los usuarios con una sesión iniciada pueden acceder a esta comunidad"
           invite_only:
             placeholder: "Sólo por invitación"
+            extra_description: "Los usuarios deben ser invitados por usuarios de confianza o el STAFF antes de que puedan registrarse."
           must_approve_users:
             placeholder: "Requiere aprobación"
             extra_description: "Los usuarios deben ser aprobados por el personal"

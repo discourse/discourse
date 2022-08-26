@@ -12,10 +12,13 @@
   }
 }
 
-.sidebar-wrapper .sidebar-footer-wrapper .sidebar-footer-container {
-  margin-top: 0.5em;
-  margin-right: 0;
-  padding-left: 0.25em;
+.sidebar-footer-wrapper {
+  position: static;
+  margin-top: 1em;
+  .sidebar-footer-container {
+    background: transparent;
+    padding: 0.5em 0.1em;
+  }
 }
 
 .sidebar-more-section-links-details

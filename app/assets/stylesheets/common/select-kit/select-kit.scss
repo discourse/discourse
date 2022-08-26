@@ -177,8 +177,10 @@
     }
 
     &[data-popper-reference-hidden] {
-      visibility: hidden;
-      pointer-events: none;
+      html:not(.ios-device) & {
+        visibility: hidden;
+        pointer-events: none;
+      }
     }
   }
 

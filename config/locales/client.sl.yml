@@ -3400,13 +3400,10 @@ sl:
             unread_with_count: "Neprebrana (%{count})"
             archive: "Arhiv"
         tags:
-          header_link_title: "vse oznake"
           header_link_text: "Oznake"
         categories:
-          header_link_title: "vse kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "domov"
           header_link_text: "Skupnost"
           links:
             tracked:

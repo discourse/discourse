@@ -10,5 +10,5 @@ export function addSidebarSection(func) {
 }
 
 export function resetSidebarSection() {
-  customSections.splice(0, customSections.length);
+  customSections.length = 0;
 }

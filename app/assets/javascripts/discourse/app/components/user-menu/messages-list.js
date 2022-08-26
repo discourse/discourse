@@ -5,6 +5,7 @@ import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
+import Topic from "discourse/models/topic";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -44,29 +45,34 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
-  fetchItems() {
-    return ajax(
+  async fetchItems() {
+    const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
-    ).then((data) => {
-      const content = [];
-      data.notifications.forEach((rawNotification) => {
-        const notification = Notification.create(rawNotification);
-        content.push(
-          new UserMenuNotificationItem({
-            notification,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-            site: this.site,
-          })
-        );
-      });
+    );
+    const content = [];
+
+    const notifications = data.notifications.map((n) => Notification.create(n));
+    await Notification.applyTransformations(notifications);
+    notifications.forEach((notification) => {
       content.push(
-        ...data.topics.map((topic) => {
-          return new UserMenuMessageItem({ message: topic });
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
         })
       );
-      return content;
     });
+
+    const topics = data.topics.map((t) => Topic.create(t));
+    await Topic.applyTransformations(topics);
+    content.push(
+      ...topics.map((topic) => {
+        return new UserMenuMessageItem({ message: topic });
+      })
+    );
+
+    return content;
   }
 
   dismissWarningModal() {

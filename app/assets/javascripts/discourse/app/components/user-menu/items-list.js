@@ -28,33 +28,40 @@ export default class UserMenuItemsList extends Component {
     return "user-menu/items-list-empty-state";
   }
 
-  fetchItems() {
+  async fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
     );
   }
 
-  refreshList() {
-    this.#load();
+  async refreshList() {
+    await this.#load();
   }
 
   dismissWarningModal() {
     return null;
   }
 
-  #load() {
+  async #load() {
     const cached = this.#getCachedItems();
     if (cached?.length) {
       this.items = cached;
     } else {
       this.loading = true;
     }
-    this.fetchItems()
-      .then((items) => {
-        this.#setCachedItems(items);
-        this.items = items;
-      })
-      .finally(() => (this.loading = false));
+    try {
+      const items = await this.fetchItems();
+      this.#setCachedItems(items);
+      this.items = items;
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `an error occurred when loading items for ${this.constructor.name}`,
+        err
+      );
+    } finally {
+      this.loading = false;
+    }
   }
 
   #getCachedItems() {

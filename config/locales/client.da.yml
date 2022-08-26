@@ -3536,14 +3536,11 @@ da:
     user_activity:
       no_activity_title: "Ingen aktivitet endnu"
       no_activity_body: "Velkommen til vores fællesskab! Du er helt ny her og har endnu ikke bidraget til diskussioner. Som et første skridt, besøg <a href='%{topUrl}'>Top</a> eller <a href='%{categoriesUrl}'>Kategorier</a> og begynde bare at læse! Vælg %{heartIcon} på indlæg, som du kan lide eller ønsker at lære mere om. Når du deltager, vil din aktivitet blive vist her."
-      no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har ikke svaret på nogen emner endnu"
-      no_replies_others: "Ingen svar."
       no_drafts_title: "Du har ikke påbegyndt nogen kladder"
       no_drafts_body: "Ikke helt klar til at skrive? Vi gemmer automatisk en ny kladde og viser den her, hver gang du begynder at skrive et emne, svar eller personlig besked. Vælg knappen Annuller for at kassere eller gemme din kladde for at fortsætte senere."
       no_likes_title: "Du har ikke 'syntes godt om' nogen emner endnu"
       no_likes_body: "En god måde at hoppe ind og begynde at bidrage på, er at begynde at læse samtaler, der allerede har fundet sted, og vælge %{heartIcon} på indlæg, som du kan lide!"
-      no_likes_others: "Ingen 'synes om'-beskeder."
       no_topics_title: "Du har ikke startet nogen emner endnu"
       no_topics_title_others: "%{username} har endnu ikke startet nogen emner"
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
@@ -3573,13 +3570,10 @@ da:
             unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
-          header_link_title: "alle mærker"
           header_link_text: "Tags"
         categories:
-          header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
         community:
-          header_link_title: "hjem"
           header_link_text: "Fællesskab"
           links:
             tracked:

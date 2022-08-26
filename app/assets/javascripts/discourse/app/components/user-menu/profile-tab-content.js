@@ -60,4 +60,12 @@ export default class UserMenuProfileTabContent extends Component {
       showModal("do-not-disturb");
     }
   }
+
+  @action
+  setUserStatusClick() {
+    showModal("user-status", {
+      title: "user_status.set_custom_status",
+      modalClass: "user-status",
+    });
+  }
 }

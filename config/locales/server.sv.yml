@@ -1854,6 +1854,7 @@ sv:
     max_emails_per_day_per_user: "Högsta antal e-postmeddelanden att skicka till användare per dag. Ange 0 för att inaktivera gränsen"
     enable_staged_users: "Skapa automatiskt arrangerade användare vid bearbetning av inkommande e-post."
     maximum_staged_users_per_email: "Högsta antal arrangerade användare skapade vid bearbetning av inkommande e-post."
+    maximum_recipients_per_new_group_email: "Blockera inkommande e-postmeddelanden med för många mottagare."
     auto_generated_allowlist: "Lista över e-postadresser som inte undersöks för autogenererat innehåll. Exempel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
@@ -2957,6 +2958,15 @@ sv:
         Du svarade på en sammanfattning som skickades via e-post, vilket inte är tillåtet.
 
         Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "Avvisa E-post För många mottagare"
+      subject_template: "[%{email_prefix}] E-postfel -- För många mottagare"
+      text_body_template: |
+        Vi beklagar, men ditt e-postmeddelande till %{destination} (titeln %{former_title}) fungerade inte.
+
+        Du försökte maila mer än %{max_recipients_count} personer och vårt system har automatiskt taggat din e-post som skräppost.
+
+        Om du anser att detta är ett fel, [kontakta en medarbetare](%{base_url}/about).
     email_error_notification:
       title: "E-postfelsavisering"
       subject_template: "[%{email_prefix}] E-postfel -- POP-autentiseringsfel"

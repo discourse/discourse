@@ -3058,10 +3058,6 @@ el:
         member: "μέλος"
         regular: "τακτικός"
         leader: "αρχηγός"
-    user_activity:
-      no_activity_others: "Χωρίς δραστηριότητα."
-      no_replies_others: "Χωρίς απαντήσεις."
-      no_likes_others: "Καμία αρεστή ανάρτηση."
     sidebar:
       unread_count:
         one: "%{count} μη αναγνωσμένο"
@@ -3082,13 +3078,10 @@ el:
             unread_with_count: "Μη αναγνωσμένα (%{count})"
             archive: "Αρχείο"
         tags:
-          header_link_title: "όλες οι ετικέτες"
           header_link_text: "Ετικέτες"
         categories:
-          header_link_title: "όλες οι κατηγορίες"
           header_link_text: "Κατηγορίες"
         community:
-          header_link_title: "αρχική Σελίδα"
           header_link_text: "Κοινότητα"
           links:
             tracked:

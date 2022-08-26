@@ -3716,14 +3716,11 @@ fr:
     user_activity:
       no_activity_title: "Aucune activité pour le moment."
       no_activity_body: "Bienvenue dans notre communauté ! Vous êtes tout nouveau ici et n'avez pas encore contribué aux discussions. Dans un premier temps, visitez <a href='%{topUrl}'>Top</a> ou <a href='%{categoriesUrl}'>Catégories</a> et commencez simplement à lire ! Sélectionnez %{heartIcon} sur les publications que vous aimez ou sur lesquelles vous souhaitez en savoir plus. Au fur et à mesure de votre participation, votre activité sera listée ici."
-      no_activity_others: "Aucune activité."
       no_replies_title: "Vous n'avez publié de réponse à aucun sujet pour le moment"
-      no_replies_others: "Aucune réponse."
       no_drafts_title: "Vous n'avez enregistré aucun brouillon"
       no_drafts_body: "Vous n'êtes pas tout à fait prêt à publier ? Nous enregistrerons automatiquement un nouveau brouillon et le répertorierons ici chaque fois que vous commencerez à rédiger un sujet, une réponse ou un message personnel. Sélectionnez le bouton Annuler pour supprimer, ou enregistrez votre brouillon pour continuer plus tard."
       no_likes_title: "Vous n'avez encore aimé aucun sujet"
       no_likes_body: "Une excellente façon d'intervenir et de commencer à contribuer est de commencer à lire les conversations qui ont déjà eu lieu et de sélectionner le %{heartIcon} sur les publications que vous aimez !"
-      no_likes_others: "Aucun message aimé."
       no_topics_title: "Vous n'avez pas encore créé de sujet"
       no_topics_title_others: "%{username} n'a pas encore commencé de sujets."
       no_read_topics_title: "Vous n'avez lu aucun sujet pour le moment"
@@ -3746,7 +3743,6 @@ fr:
       more: "Plus…"
       sections:
         messages:
-          header_link_title: "messages directs"
           header_link_text: "Messages"
           header_action_title: "créer un message direct"
           links:
@@ -3760,15 +3756,14 @@ fr:
         tags:
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
-          header_link_title: "toutes les étiquettes"
           header_link_text: "Étiquettes"
+          header_action_title: "Modifier les étiquettes de votre barre latérale"
         categories:
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
-          header_link_title: "toutes les catégories"
           header_link_text: "Catégories"
+          header_action_title: "Modifier les catégories de votre barre latérale"
         community:
-          header_link_title: "accueil"
           header_link_text: "Communauté"
           header_action_title: "créer un nouveau sujet"
           links:
@@ -3776,7 +3771,7 @@ fr:
               content: "Tout"
               title: "Tous les sujets"
             tracked:
-              content: "Suivies"
+              content: "Suivis"
               title: "Tous les sujets suivis"
             groups:
               content: "Groupes"
@@ -3787,6 +3782,9 @@ fr:
             my_posts:
               content: "Mes messages"
               title: "Mes publications"
+              draft_count:
+                one: "%{count} brouillon"
+                other: "%{count} brouillons"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:

@@ -645,7 +645,6 @@ en:
             linkable_type:
               invalid: "is not valid"
 
-
   uncategorized_category_name: "Uncategorized"
 
   vip_category_name: "Lounge"
@@ -4888,7 +4887,7 @@ en:
     register:
       button: "Register"
       title: "Register Admin Account"
-      help: "register a new account to get started"
+      help: "Register a new account to get started."
       no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"

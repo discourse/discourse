@@ -2915,7 +2915,6 @@ ro:
       no_drafts_body: "Nu ești gata să postezi? Vom salva automat o schiță nouă și o vom afișa aici ori de câte ori începi să compui un subiect, un răspuns sau un mesaj personal. Selectați butonul de anulare pentru a renunța sau a salva ciorna pentru a continua mai târziu."
       no_likes_title: "Încă nu ți-a plăcut niciun subiect"
       no_likes_body: "O modalitate excelentă de a intra și de a începe să contribui este să începi să citești conversațiile care au avut deja loc și să selectezi %{heartIcon} din postările care îți plac!"
-      no_likes_others: "Nu există postări apreciate."
       no_topics_title: "Încă nu aţi început niciun subiect"
     sidebar:
       unread_count:
@@ -2939,13 +2938,10 @@ ro:
             unread_with_count: "Necitit (%{count})"
             archive: "Arhivă"
         tags:
-          header_link_title: "toate etichetele"
           header_link_text: "Etichete"
         categories:
-          header_link_title: "Toate categoriile"
           header_link_text: "Categorii"
         community:
-          header_link_title: "acasă"
           header_link_text: "Comunitate"
           links:
             tracked:

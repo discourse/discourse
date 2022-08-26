@@ -1,15 +1,14 @@
 <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
   <div class="sidebar-section-header-wrapper sidebar-row">
     <Sidebar::SectionHeader @collapsable={{@collapsable}} @toggleSectionDisplay={{this.toggleSectionDisplay}}>
+      <span class="sidebar-section-header-caret">
+        {{#if @collapsable}}
+          {{d-icon this.headerCaretIcon}}
+        {{/if}}
+      </span>
       <span class="sidebar-section-header-text">
         {{@headerLinkText}}
       </span>
-
-      {{#if @collapsable}}
-        <span class="sidebar-section-header-caret">
-          {{d-icon this.headerCaretIcon}}
-        </span>
-      {{/if}}
     </Sidebar::SectionHeader>
 
     {{#if this.isSingleHeaderAction}}

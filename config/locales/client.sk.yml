@@ -2267,8 +2267,6 @@ sk:
         member: "člen"
         regular: "bežný"
         leader: "vodca"
-    user_activity:
-      no_activity_others: "Žiadna aktivita"
     sidebar:
       unread_count:
         one: "%{count} neprečítaná"
@@ -2293,13 +2291,10 @@ sk:
             unread_with_count: "Neprečítaná (%{count})"
             archive: "Archív"
         tags:
-          header_link_title: "všetky štítky"
           header_link_text: "Štítky"
         categories:
-          header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
         community:
-          header_link_title: "domov"
           header_link_text: "Komunita"
           links:
             tracked:

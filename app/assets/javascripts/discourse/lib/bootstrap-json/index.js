@@ -381,31 +381,52 @@ module.exports = {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       const scripts = [];
 
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS === "1") {
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
         const pluginInfos = this.app.project
           .findAddonByName("discourse-plugins")
           .pluginInfos();
 
-        for (const { name, hasJs } of pluginInfos) {
+        for (const { name, hasJs, hasAdminJs } of pluginInfos) {
           if (hasJs) {
-            scripts.push(`plugins/${name}.js`);
+            scripts.push({ src: `plugins/${name}.js`, name });
           }
 
           if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
-            scripts.push(`plugins/${name}_extras.js`);
+            scripts.push({ src: `plugins/${name}_extras.js`, name });
+          }
+
+          if (hasAdminJs) {
+            scripts.push({ src: `plugins/${name}_admin.js`, name });
           }
         }
       } else {
-        scripts.push("discourse/tests/active-plugins.js");
+        scripts.push({
+          src: "discourse/tests/active-plugins.js",
+          name: "_all",
+        });
+        scripts.push({ src: "admin-plugins.js", name: "_admin" });
       }
 
-      scripts.push("admin-plugins.js");
-
       return scripts
-        .map((s) => `<script src="${config.rootURL}assets/${s}"></script>`)
+        .map(
+          ({ src, name }) =>
+            `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+        )
         .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
+        return this.app.project
+          .findAddonByName("discourse-plugins")
+          .pluginInfos()
+          .filter(({ hasTests }) => hasTests)
+          .map(
+            ({ name }) =>
+              `<script src="${config.rootURL}assets/plugins/test/${name}_tests.js" data-discourse-plugin="${name}"></script>`
+          )
+          .join("\n");
+      } else {
+        return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
+      }
     }
   },
 

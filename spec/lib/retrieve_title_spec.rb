@@ -51,6 +51,18 @@ RSpec.describe RetrieveTitle do
       )
       expect(title).to eq("Video Title")
     end
+
+    it "will not exception out for invalid html" do
+      attributes = (1..1000).map { |x| " attr#{x}='1' " }.join
+      title = RetrieveTitle.extract_title <<~HTML
+        <html>
+          <title>test</title>
+          <body #{attributes}>
+        </html>
+      HTML
+
+      expect(title).to eq(nil)
+    end
   end
 
   describe ".crawl" do

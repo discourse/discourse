@@ -1950,13 +1950,10 @@ sq:
             unread_with_count: "Të palexuara (%{count})"
             archive: "Arkivi"
         tags:
-          header_link_title: "të gjitha etiketat"
           header_link_text: "Etiketat"
         categories:
-          header_link_title: "kategoritë"
           header_link_text: "Categories"
         community:
-          header_link_title: "kryefaqja"
           header_link_text: "Komuniteti"
           links:
             tracked:
