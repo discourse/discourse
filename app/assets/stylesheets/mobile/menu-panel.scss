@@ -73,13 +73,13 @@
   --d-sidebar-highlight-color: var(--primary-low);
 
   .sidebar-row {
-    padding: 0.25rem var(--d-sidebar-row-horizontal-padding);
+    padding: 0.5rem var(--d-sidebar-row-horizontal-padding);
     height: 27px;
     align-items: center;
-    font-size: var(--font-down-1);
+    font-size: var(--font-0);
   }
 
-  .sidebar-section-wrapper .sidebar-section-header {
-    padding: 0;
+  .sidebar-section-wrapper {
+    margin-bottom: 0.5em;
   }
 }
