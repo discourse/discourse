@@ -212,7 +212,7 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @discourseComputed("currentUser.groups.[]")
+  @discourseComputed("currentUser.groups.[]", "currentUser.staff")
   canSendPms() {
     return this.site.allowPersonalMessages(this.currentUser);
   },

@@ -821,6 +821,7 @@ posting:
     client: true
     allow_any: false
     refresh: true
+    validator: "PersonalMessageEnabledGroupsValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400

@@ -113,7 +113,8 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed(
     "viewingSelf",
     "currentUser.admin",
-    "currentUser.groups.[]"
+    "currentUser.groups.[]",
+    "currentUser.staff"
   )
   showPrivateMessages(viewingSelf, isAdmin) {
     return (
