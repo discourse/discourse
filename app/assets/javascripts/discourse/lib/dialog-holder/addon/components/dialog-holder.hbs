@@ -18,16 +18,14 @@
 
       {{#if (notEq this.dialog.type "notice")}}
         <div class="dialog-footer">
-          {{#if this.dialog.buttons}}
-            {{#each this.dialog.buttons as |button|}}
-              <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "handleButtonAction" button}} @translatedLabel={{button.label}} />
-            {{/each}}
+          {{#each this.dialog.buttons as |button|}}
+            <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "handleButtonAction" button}} @translatedLabel={{button.label}} />
           {{else}}
             <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.confirmButtonIcon}} @label={{this.dialog.confirmButtonLabel}} />
             {{#if this.dialog.shouldDisplayCancel}}
               <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.cancelButtonLabel}} />
             {{/if}}
-          {{/if}}
+          {{/each}}
         </div>
       {{/if}}
     </div>
