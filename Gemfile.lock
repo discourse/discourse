@@ -229,7 +229,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.11.3)
+    logster (2.11.2)
     loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -375,7 +375,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
-    redis (4.8.0)
+    redis (4.7.1)
     redis-namespace (1.9.0)
       redis (>= 4)
     regexp_parser (2.5.0)
@@ -643,4 +643,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.3.20
+   2.3.18
