@@ -50,15 +50,22 @@
     <script src="{{rootURL}}assets/discourse-markdown.js"></script>
     <script src="{{rootURL}}assets/admin.js"></script>
     <script src="{{rootURL}}assets/wizard.js"></script>
-    {{content-for "test-plugin-js"}}
-    <script src="{{rootURL}}assets/test-helpers.js"></script>
-    <script src="{{rootURL}}assets/core-tests.js"></script>
-    {{content-for "test-plugin-tests-js"}}
-    <script>
-      require("discourse/tests/test-boot-ember-cli");
-    </script>
-    <script src="{{rootURL}}assets/scripts/discourse-boot.js"></script>
 
-    {{content-for "body-footer"}} {{content-for "test-body-footer"}}
+    <template id="dynamic-test-js">
+      {{content-for "test-plugin-js"}}
+      <script defer src="{{rootURL}}assets/test-helpers.js"></script>
+      <script defer src="{{rootURL}}assets/core-tests.js"></script>
+      {{content-for "test-plugin-tests-js"}}
+      <script defer src="{{rootURL}}assets/scripts/discourse-test-trigger-ember-cli-boot.js"></script>
+      <script defer src="{{rootURL}}assets/scripts/discourse-boot.js"></script>
+      {{content-for "body-footer"}} {{content-for "test-body-footer"}}
+    </template>
+
+    <discourse-dynamic-test-js>
+    </discourse-dynamic-test-js>
+
+    <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
+    <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js"></script>
+
   </body>
 </html>

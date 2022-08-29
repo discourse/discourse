@@ -60,5 +60,5 @@ export function registerUserMenuTab(func) {
 }
 
 export function resetUserMenuTabs() {
-  CUSTOM_TABS_CLASSES.clear();
+  CUSTOM_TABS_CLASSES.length = 0;
 }

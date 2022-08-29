@@ -4119,9 +4119,17 @@ en:
           header_link_text: "Community"
           header_action_title: "create a new topic"
           links:
+            about:
+              content: "About"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Badges"
             everything:
               content: "Everything"
               title: "All topics"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Tracked"
               title: "All tracked topics"
@@ -5515,7 +5523,6 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         locale: "Language:"
-        fallback_locale_warning: "You are editing a language based on %{fallback}. Users who choose %{fallback} as their interface language won't see your changes."
         more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings

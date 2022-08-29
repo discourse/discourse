@@ -10,6 +10,7 @@ export default {
         post_number: 1,
         topic_id: 130,
         slug: "lorem-ipsum-dolor-sit-amet",
+        fancy_title: "edited topic 443",
         data: {
           topic_title: "edited topic 443",
           display_username: "velesin",
@@ -26,6 +27,7 @@ export default {
         post_number: 1,
         topic_id: 1234,
         slug: "a-slug",
+        fancy_title: "some title",
         data: { topic_title: "some title", display_username: "velesin" },
       },
       {

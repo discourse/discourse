@@ -53,7 +53,7 @@ Rails.application.config.assets.precompile += %w{
   scripts/discourse-boot
 }
 
-Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
+Rails.application.config.assets.precompile += EmberCli.assets.map { |name| name.sub('.js', '.map') }
 
 # Precompile all available locales
 unless GlobalSetting.try(:omit_base_locales)

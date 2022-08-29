@@ -2235,6 +2235,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(user).can_delete?(post_action)).to be_falsey
       end
 
+      it "returns false if topic is archived" do
+        post.topic.update!(archived: true)
+
+        expect(Guardian.new(user).can_delete?(post_action)).to be_falsey
+      end
+
       it "returns true if it's yours" do
         expect(Guardian.new(user).can_delete?(post_action)).to be_truthy
       end

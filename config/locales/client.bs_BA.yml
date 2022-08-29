@@ -3066,8 +3066,6 @@ bs_BA:
         member: "član"
         regular: "pokretač"
         leader: "vođa"
-    user_activity:
-      no_replies_others: "Nema odgovora."
     sidebar:
       unread_count:
         one: "%{count} nepročitana"
@@ -3090,13 +3088,10 @@ bs_BA:
             unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
-          header_link_title: "sve oznake"
           header_link_text: "Oznake"
         categories:
-          header_link_title: "Sve kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "naslovnica"
           header_link_text: "Zajednica"
           links:
             tracked:

@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
 
   has_many :sidebar_section_links, dependent: :delete_all
   has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
-  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+  has_many :custom_sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -1658,6 +1658,25 @@ class User < ActiveRecord::Base
 
   def disable_redesigned_user_menu
     Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
+  end
+
+  def sidebar_categories_ids
+    categories_ids = category_sidebar_section_links.pluck(:linkable_id)
+
+    if categories_ids.blank? && SiteSetting.default_sidebar_categories.present?
+      return SiteSetting.default_sidebar_categories.split("|").map(&:to_i) & guardian.allowed_category_ids
+    end
+
+    categories_ids
+  end
+
+  def sidebar_tags
+    return custom_sidebar_tags if custom_sidebar_tags.present?
+    if SiteSetting.default_sidebar_tags.present?
+      tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
+      return Tag.where(name: tag_names)
+    end
+    Tag.none
   end
 
   protected

@@ -4254,14 +4254,11 @@ ar:
       unsupported_file_picked: "لقد اخترت ملفًا غير مدعوم. أنواع الملفات المدعومة - %{types}."
     user_activity:
       no_activity_title: "لا يوجد نشاط."
-      no_activity_others: "لا يوجد نشاط."
       no_replies_title: "لم ترد على أي مواضيع حتى الآن"
-      no_replies_others: "لا توجد ردود."
       no_drafts_title: "لم تبدأ أي مسودات"
       no_drafts_body: "لست مستعدًا للنشر؟ سنقوم تلقائيًا بحفظ مسودة جديدة وإدراجها هنا كلما بدأت في إنشاء موضوع أو رد أو رسالة شخصية. حدد زر الإلغاء لتجاهل المُسَوَّدَة أو حفظها للمتابعة لاحقًا."
       no_likes_title: "لم بالإعجاب بأي مواضيع حتى الآن"
       no_likes_body: "هناك طريقة رائعة للتقدّم والبدء في المساهمة هي البَدْء في قراءة المحادثات التي جرت بالفعل، واختيار %{heartIcon} على المشاركات التي تريدها."
-      no_likes_others: "لا توجد منشورات سجَّلت إعجابك بها."
       no_topics_title: "لم تنشئ أي مواضيع حتى الآن"
       no_read_topics_title: "لم تقرأ أي مواضيع حتى الآن"
       no_read_topics_body: "بمجرد البَدْء في قراءة المناقشات، سترى قائمة هنا. لبدء القراءة، ابحث عن الموضوعات التي تهمك في <a href='%{topUrl}'>أعلى</a> أو <a href='%{categoriesUrl}'>فئات</a> أو البحث عن طريق الكلمة الرئيسية %{searchIcon}"
@@ -4301,13 +4298,10 @@ ar:
             unread_with_count: "غير المقروءة (%{count})"
             archive: "الأرشيف"
         tags:
-          header_link_title: "كل الوسوم"
           header_link_text: "الوسوم"
         categories:
-          header_link_title: "كل الفئات"
           header_link_text: "الفئات"
         community:
-          header_link_title: "الصفحة الرئيسية"
           header_link_text: "المجتمع"
           header_action_title: "إنشاء موضوع جديد"
           links:

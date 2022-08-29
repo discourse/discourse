@@ -273,7 +273,7 @@ RSpec.describe TopicQuery do
 
       list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
       expect(list.topics.size).to eq(1)
-      expect(list.preload_key).to eq("topic_list_c/different-category/#{diff_category.id}/l/latest")
+      expect(list.preload_key).to eq("topic_list")
 
       # Defaults to no category filter when slug does not exist
       expect(TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size).to eq(2)
@@ -425,6 +425,10 @@ RSpec.describe TopicQuery do
 
       it "can return topics with all specified tags" do
         expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: true).list_latest.topics.map(&:id)).to eq([tagged_topic3.id])
+      end
+
+      it "can return topics with tag intersections using truthy/falsey values" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: "false").list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
       end
 
       it "returns an empty relation when an invalid tag is passed" do

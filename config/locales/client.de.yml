@@ -3740,14 +3740,14 @@ de:
     user_activity:
       no_activity_title: "Noch keine Aktivität"
       no_activity_body: "Willkommen in unserer Community! Du bist ganz neu hier und hast noch nicht an Diskussionen teilgenommen. Besuche als ersten Schritt <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> und fang einfach an zu lesen! Wähle %{heartIcon} bei Beiträgen aus, die Dir gefallen oder über die Du mehr erfahren möchtest. Wenn Du teilnimmst, wird Deine Aktivität hier aufgelistet."
-      no_activity_others: "Keine Aktivität."
       no_replies_title: "Du hast noch keine Themen beantwortet"
-      no_replies_others: "Keine Antworten."
+      no_replies_title_others: "%{username} hat noch auf keine Themen geantwortet"
+      no_replies_body: "Wenn du <a href='%{searchUrl}'>eine interessante Unterhaltung entdeckst</a>, zu der du etwas beitragen möchtest, klicke auf die Schaltfläche <kbd>Antworten</kbd> direkt unter einem Beitrag, um auf diesen Beitrag zu antworten. Wenn du lieber auf das allgemeine Thema als auf einen einzelnen Beitrag oder eine Person antworten möchtest, findest du die Schaltfläche <kbd>Antworten</kbd> ganz unten im Thema oder unter der Zeitleiste des Themas."
       no_drafts_title: "Du hast noch keine Entwürfe begonnen"
       no_drafts_body: "Noch nicht ganz bereit? Wir speichern automatisch einen neuen Entwurf und listen ihn hier auf, wenn Du ein Thema, eine Antwort oder eine persönliche Nachricht verfasst. Wähle die Abbrechen-Schaltfläche, um Deinen Entwurf zu verwerfen oder zu speichern, um später fortzufahren."
       no_likes_title: "Du hast noch keine Themen mit \"gefällt mir\" markiert."
+      no_likes_title_others: "%{username} hat noch keine Themen geliked"
       no_likes_body: "Eine großartige Möglichkeit einzusteigen und Beiträge zu leisten, besteht darin, bereits stattgefundene Konversationen zu lesen und die %{heartIcon} bei Beiträgen auszuwählen, die Dir gefallen!"
-      no_likes_others: "Keine Beiträge mit „Gefällt mir“."
       no_topics_title: "Du hast noch keine Themen begonnen"
       no_topics_body: "Es ist immer am besten, <a href='%{searchUrl}'></a> nach bestehenden Themen zu suchen, bevor du ein neues Thema eröffnest. Wenn du dir aber sicher bist, dass es das gewünschte Thema noch nicht gibt, kannst du auch einfach ein neues Thema erstellen. Suche nach der Schaltfläche <kbd>+ Neues Thema</kbd> oben rechts in der Themenliste, der Kategorie oder dem Tag, um ein neues Thema in diesem Bereich zu erstellen."
       no_topics_title_others: "%{username} hat noch keine Themen begonnen"
@@ -3772,7 +3772,6 @@ de:
       more: "Mehr …"
       sections:
         messages:
-          header_link_title: "Persönliche Nachrichten"
           header_link_text: "Nachrichten"
           header_action_title: "eine persönliche Nachricht erstellen"
           links:
@@ -3786,17 +3785,14 @@ de:
         tags:
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu starten."
-          header_link_title: "alle Schlagwörter"
           header_link_text: "Schlagwörter"
           header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
         categories:
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu starten."
-          header_link_title: "alle Kategorien"
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
         community:
-          header_link_title: "Startseite"
           header_link_text: "Community"
           header_action_title: "ein neues Thema erstellen"
           links:

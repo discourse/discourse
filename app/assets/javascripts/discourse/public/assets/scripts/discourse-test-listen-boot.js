@@ -27,4 +27,4 @@ document.body.insertAdjacentHTML(
   `
 );
 
-require('discourse/tests/test-boot-ember-cli');
+require("discourse/tests/test-boot-ember-cli");

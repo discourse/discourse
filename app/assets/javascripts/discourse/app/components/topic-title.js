@@ -9,7 +9,7 @@ export function addTopicTitleDecorator(decorator) {
 }
 
 export function resetTopicTitleDecorators() {
-  topicTitleDecorators = [];
+  topicTitleDecorators.length = 0;
 }
 
 export default Component.extend(KeyEnterEscape, {

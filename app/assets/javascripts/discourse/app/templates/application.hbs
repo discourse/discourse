@@ -3,16 +3,18 @@
   <DDocument />
   <PluginOutlet @name="above-site-header" @connectorTagName="div" />
 
-  <SiteHeader
-    @canSignUp={{this.canSignUp}}
-    @showCreateAccount={{route-action "showCreateAccount"}}
-    @showLogin={{route-action "showLogin"}}
-    @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
-    @toggleMobileView={{route-action "toggleMobileView"}}
-    @toggleAnonymous={{route-action "toggleAnonymous"}}
-    @logout={{route-action "logout"}}
-    @sidebarEnabled={{this.sidebarEnabled}}
-    @toggleSidebar={{action "toggleSidebar"}} />
+  {{#if this.showSiteHeader}}
+    <SiteHeader
+      @canSignUp={{this.canSignUp}}
+      @showCreateAccount={{route-action "showCreateAccount"}}
+      @showLogin={{route-action "showLogin"}}
+      @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+      @toggleMobileView={{route-action "toggleMobileView"}}
+      @toggleAnonymous={{route-action "toggleAnonymous"}}
+      @logout={{route-action "logout"}}
+      @sidebarEnabled={{this.sidebarEnabled}}
+      @toggleSidebar={{action "toggleSidebar"}} />
+  {{/if}}
 
   <SoftwareUpdatePrompt />
 

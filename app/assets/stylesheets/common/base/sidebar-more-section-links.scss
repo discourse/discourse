@@ -1,5 +1,5 @@
 .sidebar-more-section-links-details {
-  &:focus,
+  &:focus-within,
   &:hover {
     background: var(--d-sidebar-highlight-color);
   }
@@ -32,7 +32,6 @@
   .sidebar-more-section-link-details-content {
     background-color: var(--secondary);
     box-shadow: shadow("dropdown");
-    border-radius: 5px;
     margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
     .sidebar-row {

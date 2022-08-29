@@ -76,17 +76,7 @@ class TopicList
   end
 
   def preload_key
-    if @category
-      if @opts[:no_subcategories]
-        "topic_list_#{@category.url.sub(/^\//, '')}/none/l/#{@filter}"
-      else
-        "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
-      end
-    elsif @tags && @tags.first.present?
-      "topic_list_tag/#{@tags.first.name}/l/#{@filter}"
-    else
-      "topic_list_#{@filter}"
-    end
+    "topic_list"
   end
 
   # Lazy initialization

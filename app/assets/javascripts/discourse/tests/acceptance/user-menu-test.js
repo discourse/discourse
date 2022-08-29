@@ -14,6 +14,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import TopicFixtures from "discourse/tests/fixtures/topic";
+import { Promise } from "rsvp";
+import { later } from "@ember/runloop";
 import I18n from "I18n";
 
 acceptance("User menu", function (needs) {
@@ -184,6 +186,82 @@ acceptance("User menu", function (needs) {
     assert.ok(
       exists("#quick-access-custom-tab-1 button.btn"),
       "the tab's content is now displayed in the panel"
+    );
+  });
+
+  test("notifications tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("notification", (notifications) => {
+        notifications.forEach((notification, index) => {
+          if (notification.fancy_title) {
+            notification.fancy_title = `pluginNotificationTransformer ${index} ${notification.fancy_title}`;
+          }
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    const notifications = queryAll(
+      "#quick-access-all-notifications ul li.notification"
+    );
+    assert.strictEqual(
+      notifications[0].textContent.replace(/\s+/g, " ").trim(),
+      "velesin pluginNotificationTransformer 0 edited topic 443"
+    );
+    assert.strictEqual(
+      notifications[1].textContent.replace(/\s+/g, " ").trim(),
+      "velesin pluginNotificationTransformer 1 some title"
+    );
+  });
+
+  test("bookmarks tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("bookmark", (bookmarks) => {
+        bookmarks.forEach((bookmark) => {
+          if (bookmark.title) {
+            bookmark.title = `pluginBookmarkTransformer ${bookmark.title}`;
+          }
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-bookmarks");
+
+    const bookmarks = queryAll("#quick-access-bookmarks ul li.bookmark");
+    assert.strictEqual(
+      bookmarks[0].textContent.replace(/\s+/g, " ").trim(),
+      "osama pluginBookmarkTransformer Test poll topic hello world"
+    );
+  });
+
+  test("messages tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("topic", (topics) => {
+        topics.forEach((topic) => {
+          topic.fancy_title = `pluginTransformer#1 ${topic.fancy_title}`;
+        });
+      });
+      api.registerModelTransformer("topic", async (topics) => {
+        // sleep 1 ms
+        await new Promise((resolve) => later(resolve, 1));
+        topics.forEach((topic) => {
+          topic.fancy_title = `pluginTransformer#2 ${topic.fancy_title}`;
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-messages");
+
+    const messages = queryAll("#quick-access-messages ul li.message");
+    assert.strictEqual(
+      messages[0].textContent.replace(/\s+/g, " ").trim(),
+      "mixtape pluginTransformer#2 pluginTransformer#1 BUG: Can not render emoji properly"
     );
   });
 

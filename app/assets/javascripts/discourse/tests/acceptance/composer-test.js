@@ -21,8 +21,8 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
-import { Promise } from "rsvp";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -65,7 +65,7 @@ acceptance("Composer", function (needs) {
 
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height to 400px when creating topic"
     );
 
@@ -83,8 +83,16 @@ acceptance("Composer", function (needs) {
     await click(".toggle-fullscreen");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height back to 400px when composer is opened from draft mode"
+    );
+
+    await fillIn(".d-editor-input", "");
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "",
+      "removes --composer-height property when composer is closed"
     );
   });
 
@@ -401,34 +409,27 @@ acceptance("Composer", function (needs) {
 
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post button.show-more-actions");
+    await click(".topic-post button.edit");
 
     await fillIn(".d-editor-input", "will return empty json");
     await fillIn("#reply-title", "This is the new text for the title");
 
-    // when this promise resolves, the request had already started because
-    // this promise will be resolved by the pretender
-    const promise = new Promise((resolve) => {
-      window.resolveLastPromise = resolve;
+    pretender.put("/posts/:post_id", async () => {
+      // at this point, request is in flight, so post is staged
+      assert.strictEqual(count(".topic-post.staged"), 1);
+      assert.ok(query(".topic-post").classList.contains("staged"));
+      assert.strictEqual(
+        query(".topic-post.staged .cooked").innerText.trim(),
+        "will return empty json"
+      );
+
+      return response(200, {});
     });
 
-    // click to trigger the save, but wait until the request starts
-    click("#reply-control button.create");
-    await promise;
+    await click("#reply-control button.create");
 
-    // at this point, request is in flight, so post is staged
-    assert.strictEqual(count(".topic-post.staged"), 1);
-    assert.ok(query(".topic-post:nth-of-type(1)").className.includes("staged"));
-    assert.strictEqual(
-      query(".topic-post.staged .cooked").innerText.trim(),
-      "will return empty json"
-    );
-
-    // finally, finish request and wait for last render
-    window.resolveLastPromise();
     await visit("/t/internationalization-localization/280");
-
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 
@@ -774,12 +775,10 @@ acceptance("Composer", function (needs) {
 
     const longText = "a".repeat(256);
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft: null,
-        draft_sequence: 0,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft: null,
+      draft_sequence: 0,
+    });
 
     await click(".btn-primary.create.btn");
 
@@ -816,13 +815,11 @@ acceptance("Composer", function (needs) {
   test("Loading draft also replaces the recipients", async function (assert) {
     toggleCheckDraftPopup(true);
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
-        draft_sequence: 0,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
+      draft_sequence: 0,
+    });
 
     await visit("/u/charlie");
     await click("button.compose-pm");
@@ -835,14 +832,12 @@ acceptance("Composer", function (needs) {
   test("Loads tags and category from draft payload", async function (assert) {
     updateCurrentUser({ has_topic_draft: true });
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
-        draft_sequence: 0,
-        draft_key: NEW_TOPIC_KEY,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+      draft_sequence: 0,
+      draft_key: NEW_TOPIC_KEY,
+    });
 
     await visit("/latest");
     assert.strictEqual(

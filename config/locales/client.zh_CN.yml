@@ -3569,14 +3569,14 @@ zh_CN:
     user_activity:
       no_activity_title: "尚无活动"
       no_activity_body: "欢迎来到我们的社区！作为新人，你还未参与过讨论。第一步，请访问 <a href='%{topUrl}'>置顶</a>内容 或 <a href='%{categoriesUrl}'>分类</a> 并开始阅读！在你喜欢或想了解更多的帖子上选择 %{heartIcon} 。当你参与时，你的活动将被列在这里。"
-      no_activity_others: "无活动。"
       no_replies_title: "您还没有回复任何话题"
-      no_replies_others: "无回复。"
+      no_replies_title_others: "%{username} 还没有回复任何话题"
+      no_replies_body: "当你 <a href='%{searchUrl}'>发现</a> 一个你希望参与的有趣对话时，请直接按下任何帖子下方的 <kbd>回复</kbd> 按钮以开始回复该特定帖子。或者，如果你希望回复一般主题而不是任何个人帖子或个人，请在主题最底部或主题时间线下方按下 <kbd>回复</kbd> 按钮。"
       no_drafts_title: "您还没有写过任何草稿"
       no_drafts_body: "还没准备好发布？每当您开始撰写主题、回复或个人消息时，我们都会自动保存新草稿并在此处列出。选择取消按钮放弃或保存您的草稿以供稍后继续。"
       no_likes_title: "您还没有赞任何话题"
+      no_likes_title_others: "%{username} 还没有喜欢任何话题"
       no_likes_body: "加入并开始贡献的一个好方法是阅读已有的主题，并在您喜欢的帖子上点击 %{heartIcon}"
-      no_likes_others: "没有赞过的帖子。"
       no_topics_title: "您还没有开始任何话题"
       no_topics_body: "在开始一个新的话题之前，最好先用 <a href='%{searchUrl}'>搜索</a> 来查找现有的话题，但如果你确信你想要的话题还没有出现，那就开始一个属于你自己的新话题吧。在话题列表、类别或标签页面的右上方找到 <kbd>+ 新建话题</kbd> 按钮来创建新的话题。"
       no_topics_title_others: "%{username} 还没有开始任何话题"
@@ -3599,7 +3599,6 @@ zh_CN:
       more: "更多…"
       sections:
         messages:
-          header_link_title: "私信"
           header_link_text: "消息"
           header_action_title: "创建个人消息"
           links:
@@ -3613,17 +3612,14 @@ zh_CN:
         tags:
           none: "你还没有添加任何标签。"
           click_to_get_started: "点击这里开始。"
-          header_link_title: "所有标签"
           header_link_text: "标签"
           header_action_title: "编辑您的侧边栏标签"
         categories:
           none: "你还没有添加任何类别。"
           click_to_get_started: "点击这里开始。"
-          header_link_title: "所有类别"
           header_link_text: "类别"
           header_action_title: "编辑你的侧边栏类别"
         community:
-          header_link_title: "首页"
           header_link_text: "社区"
           header_action_title: "创建新话题"
           links:

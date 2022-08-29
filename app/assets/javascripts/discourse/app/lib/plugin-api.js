@@ -100,6 +100,7 @@ import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
+import { registerModelTransformer } from "discourse/lib/model-transformers";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1674,7 +1675,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
-   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/community-section/base-section-link.js`
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/user/community-section/base-section-link.js`
    * for documentation on the BaseSectionLink class interface.
    *
    * ```
@@ -1733,7 +1734,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
-   * class interface. See `lib/sidebar/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
+   * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
    *
    * ```
@@ -1925,6 +1926,37 @@ class PluginApi {
    */
   registerUserMenuTab(func) {
     registerUserMenuTab(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Apply transformation using a callback on a list of model instances of a
+   * specific type. Currently, this API only works on lists rendered in the
+   * user menu such as notifications, bookmarks and topics (i.e. messages), but
+   * it may be extended to other lists in other parts of the app.
+   *
+   * You can pass an `async` callback to this API and it'll be `await`ed and
+   * block rendering until the callback finishes executing.
+   *
+   * ```
+   * api.registerModelTransformer("topic", async (topics) => {
+   *   for (const topic of topics) {
+   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
+   *     if (decryptedTitle) {
+   *       topic.fancy_title = decryptedTitle;
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback registerModelTransformerCallback
+   * @param {Object[]} A list of model instances
+   *
+   * @param {string} modelName - Model type on which transformation should be applied. Currently valid types are "topic", "notification" and "bookmark".
+   * @param {registerModelTransformerCallback} transformer - Callback function that receives a list of model objects of the specified type and applies transformation on them.
+   */
+  registerModelTransformer(modelName, transformer) {
+    registerModelTransformer(modelName, transformer);
   }
 }
 

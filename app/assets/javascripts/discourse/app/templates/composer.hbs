@@ -82,6 +82,8 @@
                       }} />
                     <PopupInputTip @validation={{this.tagValidation}} />
                   {{/if}}
+
+                  <PluginOutlet @name="after-title-and-category" @args={{hash model=this.model tagValidation=this.tagValidation canEditTags=this.canEditTags disabled=this.disableTagsChooser}} />
                 </div>
               {{/if}}
 

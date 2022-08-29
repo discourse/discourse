@@ -3002,13 +3002,10 @@ bg:
             unread_with_count: "Непрочетен (%{count})"
             archive: "Архив"
         tags:
-          header_link_title: "всички тагове"
           header_link_text: "Тагове"
         categories:
-          header_link_title: "всички категории"
           header_link_text: "Категории"
         community:
-          header_link_title: "начало"
           header_link_text: "Общност "
           links:
             tracked:

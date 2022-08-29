@@ -520,11 +520,11 @@ RSpec.describe Oneboxer do
       stub_request(:head, "https://twitter.com/discourse/status/1428031057186627589")
         .to_return(status: 200, body: "", headers: {})
 
-      stub_request(:get, "https://twitter.com/discourse/status/1428031057186627589")
-        .to_return(status: 200, body: "", headers: {})
+      stub_request(:get, "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended")
+        .to_return(status: 429, body: "{}", headers: {})
 
       stub_request(:post, "https://api.twitter.com/oauth2/token")
-        .to_return(status: 200, body: "{access_token: 'token'}", headers: {})
+        .to_return(status: 200, body: "{\"access_token\":\"token\"}", headers: {})
 
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to eq('')
       expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to eq('')

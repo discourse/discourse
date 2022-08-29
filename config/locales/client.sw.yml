@@ -2249,10 +2249,6 @@ sw:
         member: "mwanachama"
         regular: "kawaida"
         leader: "kiongozi"
-    user_activity:
-      no_activity_others: "Hakuna shughuli."
-      no_replies_others: "Hakuna majibu."
-      no_likes_others: "Hakuna machapisho yaliyopendwa."
     sidebar:
       unread_count:
         one: "%{count} haijasomwa"
@@ -2272,13 +2268,10 @@ sw:
             unread_with_count: "Haijasomwa (%{count})"
             archive: "Hifadhi"
         tags:
-          header_link_title: "lebo zote"
           header_link_text: "Lebo"
         categories:
-          header_link_title: "kategoria zote"
           header_link_text: "Kategoria"
         community:
-          header_link_title: "nyumbani"
           header_link_text: "Jumuiya"
           links:
             tracked:

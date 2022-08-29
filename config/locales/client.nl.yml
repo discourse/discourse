@@ -3484,9 +3484,6 @@ nl:
         leader: "leider"
     user_activity:
       no_activity_title: "Nog geen activiteit"
-      no_activity_others: "Geen activiteit."
-      no_replies_others: "Geen antwoorden."
-      no_likes_others: "Geen gelikete berichten."
       no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
     sidebar:
       unread_count:
@@ -3508,13 +3505,10 @@ nl:
             unread_with_count: "Ongelezen (%{count})"
             archive: "Archief"
         tags:
-          header_link_title: "alle tags"
           header_link_text: "Tags"
         categories:
-          header_link_title: "alle categorieën"
           header_link_text: "Categorieën"
         community:
-          header_link_title: "hoofdpagina"
           header_link_text: "Gemeenschap"
           links:
             tracked:

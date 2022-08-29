@@ -1874,6 +1874,7 @@ de:
     max_emails_per_day_per_user: "Maximale Anzahl von E-Mails, die den Benutzern pro Tag gesendet werden. 0 zum Deaktivieren des Limits"
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
     maximum_staged_users_per_email: "Maximale Anzahl vorbereiteter Benutzer, wenn eine eingehende E-Mail bearbeitet wird."
+    maximum_recipients_per_new_group_email: "Blockiere eingehende E-Mails mit zu vielen Empfängern."
     auto_generated_allowlist: "Liste von E-Mail-Adressen, die nicht auf automatisch generierte Inhalte überprüft werden. Beispiel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
@@ -2129,6 +2130,8 @@ de:
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt Kategorien der Seitenleiste angezeigt."
+    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt Tags der Seitenleiste angezeigt."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -3031,6 +3034,15 @@ de:
         Du hast auf eine E-Mail-Zusammenfassung geantwortet, was nicht zulässig ist.
 
         Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "E-Mail lehnt zu viele Empfänger ab"
+      subject_template: "[%{email_prefix}] E-Mail-Problem - Zu viele Empfänger"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Du hast versucht, an mehr als %{max_recipients_count} Personen zu schreiben und unser System hat deine E-Mail automatisch als Spam markiert.
+
+        Wenn du glaubst, dass dies ein Fehler ist, [kontaktiere einen Mitarbeiter](%{base_url}/about).
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"

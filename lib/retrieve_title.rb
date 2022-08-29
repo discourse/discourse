@@ -18,8 +18,17 @@ module RetrieveTitle
     if html =~ /<title>/ && html !~ /<\/title>/
       return nil
     end
-    if doc = Nokogiri::HTML5(html, nil, encoding)
 
+    doc = nil
+    begin
+      doc = Nokogiri::HTML5(html, nil, encoding)
+    rescue ArgumentError
+      # invalid HTML (Eg: too many attributes, status tree too deep) - ignore
+      # Error in nokogumbo is not specialized, uses generic ArgumentError
+      # see: https://www.rubydoc.info/gems/nokogiri/Nokogiri/HTML5#label-Error+reporting
+    end
+
+    if doc
       title = doc.at('title')&.inner_text
 
       # A horrible hack - YouTube uses `document.title` to populate the title

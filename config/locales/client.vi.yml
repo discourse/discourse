@@ -3538,9 +3538,7 @@ vi:
     user_activity:
       no_activity_title: "Chưa có hoạt động nào"
       no_activity_body: "Chào mừng đến với cộng đồng của chúng tôi! Bạn là thương hiệu mới ở đây và chưa đóng góp vào các cuộc thảo luận. Bước đầu tiên, hãy truy cập <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Chuyên mục</a> và chỉ cần bắt đầu đọc! Chọn %{heartIcon} trên các bài đăng mà bạn thích hoặc muốn tìm hiểu thêm. Khi bạn tham gia, hoạt động của bạn sẽ được liệt kê ở đây."
-      no_activity_others: "Chưa có hoạt động nào."
       no_replies_title: "Bạn chưa trả lời bất kỳ chủ đề nào"
-      no_replies_others: "Không có câu trả lời."
       no_drafts_title: "Bạn chưa bắt đầu bất kỳ bản nháp nào"
       no_drafts_body: "Bạn chưa hoàn toàn sẵn sàng để đăng bài? Chúng tôi sẽ tự động lưu một bản nháp mới và liệt kê nó ở đây bất cứ khi nào bạn bắt đầu soạn một chủ đề, trả lời hoặc tin nhắn cá nhân. Chọn nút hủy để hủy hoặc lưu bản nháp của bạn để tiếp tục sau."
       no_likes_title: "Bạn chưa thích bất kỳ chủ đề nào"
@@ -3567,7 +3565,6 @@ vi:
       more: "Thêm..."
       sections:
         messages:
-          header_link_title: "tin nhắn cá nhân"
           header_link_text: "Tin nhắn"
           header_action_title: "tạo một tin nhắn cá nhân"
           links:
@@ -3581,17 +3578,14 @@ vi:
         tags:
           none: "Bạn chưa thêm bất kỳ thẻ nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
-          header_link_title: "tất cả thẻ"
           header_link_text: "Thẻ"
           header_action_title: "chỉnh sửa thẻ thanh bên của bạn"
         categories:
           none: "Bạn chưa thêm bất kỳ danh mục nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
-          header_link_title: "tất cả chuyên mục"
           header_link_text: "Thư mục"
           header_action_title: "chỉnh sửa danh mục thanh bên của bạn"
         community:
-          header_link_title: "trang chủ"
           header_link_text: "Cộng đồng"
           header_action_title: "tạo một chủ đề mới"
           links:

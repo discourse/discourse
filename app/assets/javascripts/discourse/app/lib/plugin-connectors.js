@@ -45,7 +45,12 @@ function findClass(outletName, uniqueName) {
   if (!_classPaths) {
     _classPaths = {};
     findOutlets(require._eak_seen, (outlet, res, un) => {
-      _classPaths[`${outlet}/${un}`] = requirejs(res).default;
+      const possibleConnectorClass = requirejs(res).default;
+      if (possibleConnectorClass.__id) {
+        // This is the template, not the connector class
+        return;
+      }
+      _classPaths[`${outlet}/${un}`] = possibleConnectorClass;
     });
   }
 

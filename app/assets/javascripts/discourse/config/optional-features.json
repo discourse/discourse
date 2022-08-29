@@ -1,5 +1,4 @@
 {
   "application-template-wrapper": false,
-  "default-async-observers": true,
-  "jquery-integration": true
+  "default-async-observers": true
 }

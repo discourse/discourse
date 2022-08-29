@@ -1,6 +1,5 @@
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { module, test } from "qunit";
-import { Promise } from "rsvp";
 
 class FakeUppy {
   constructor() {
@@ -75,9 +74,7 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
       runParallel: true,
-      optimizeFn: () => {
-        return Promise.resolve("new file state");
-      },
+      optimizeFn: async () => "new file state",
     });
     plugin.install();
     const done = assert.async();
@@ -96,10 +93,8 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
       runParallel: true,
-      optimizeFn: () => {
-        return new Promise(() => {
-          throw new Error("bad stuff");
-        });
+      optimizeFn: async () => {
+        throw new Error("bad stuff");
       },
     });
     plugin.install();
@@ -119,9 +114,7 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
       runParallel: false,
-      optimizeFn: () => {
-        return Promise.resolve("new file state");
-      },
+      optimizeFn: async () => "new file state",
     });
     plugin.install();
     const done = assert.async();
@@ -151,9 +144,7 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function () {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {
       runParallel: true,
-      optimizeFn: () => {
-        return Promise.resolve("new file state");
-      },
+      optimizeFn: async () => "new file state",
     });
     plugin.install();
     const done = assert.async();
