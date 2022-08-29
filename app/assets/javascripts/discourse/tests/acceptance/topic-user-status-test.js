@@ -114,7 +114,7 @@ acceptance("Topic - User Status - live updates", function (needs) {
     assert.equal(
       queryAll(".topic-post .user-status-message").length,
       3,
-      "all posts has user status"
+      "all posts have user status"
     );
     assert.ok(
       query(".topic-post .user-status-message .emoji").src.includes(
