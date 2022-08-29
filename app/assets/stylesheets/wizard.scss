@@ -84,7 +84,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgba(var(--primary-rgb), 0.05);
+  box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   margin: 3em auto 1.5em auto;
   padding: 0;
@@ -680,6 +680,40 @@ body.wizard {
 
   .wizard-container__image-upload canvas {
     border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .finish-installation {
+    .wizard-congratulations-wrap {
+      display: flex;
+      @media screen and (max-width: 750px) {
+        flex-direction: column-reverse;
+      }
+    }
+
+    .row:not(.finish-installation-image) {
+      margin-right: auto;
+    }
+
+    h1 {
+      margin: 0 auto 1em 0;
+    }
+
+    &-image {
+      margin-bottom: 1em;
+    }
+
+    .tada {
+      height: 15vw;
+      max-height: 10em;
+    }
+
+    .help-text {
+      margin: 2em 0;
+    }
+
+    .primary {
+      display: inline-block;
+    }
   }
 }
 
