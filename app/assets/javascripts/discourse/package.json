@@ -72,6 +72,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^20.0.0",
     "loader.js": "^4.7.0",
+    "markdown-it": "^13.0.1",
     "message-bus-client": "^4.2.0",
     "messageformat": "0.1.5",
     "node-fetch": "^2.6.6",

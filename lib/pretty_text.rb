@@ -63,20 +63,10 @@ module PrettyText
     end
   end
 
-  def self.ctx_load_manifest(ctx, name)
-    manifest = File.read("#{Rails.root}/app/assets/javascripts/#{name}")
+  def self.ctx_load_directory(ctx, path)
     root_path = "#{Rails.root}/app/assets/javascripts/"
-
-    manifest.each_line do |l|
-      l = l.chomp
-      if l =~ /\/\/= require (\.\/)?(.*)$/
-        apply_es6_file(ctx, root_path, Regexp.last_match[2])
-      elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
-        path = Regexp.last_match[2]
-        Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js(.es6)?$/, ''))
-        end
-      end
+    Dir["#{root_path}#{path}/**/*"].sort.each do |f|
+      apply_es6_file(ctx, root_path, f.sub(root_path, '').sub(/\.js(.es6)?$/, ''))
     end
   end
 
@@ -103,13 +93,14 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/mini-loader.js")
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/node_modules/xss/dist/xss.min.js")
-    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
-    ctx_load_manifest(ctx, "pretty-text-bundle.js")
-    ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
+    ctx_load(ctx, "#{root_path}/mini-loader.js")
+    ctx_load(ctx, "#{root_path}/handlebars-shim.js")
+    ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
+    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
+    ctx_load_directory(ctx, "pretty-text/addon")
+    ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
+    ctx_load(ctx, "#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
 
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")

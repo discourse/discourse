@@ -178,7 +178,7 @@ module.exports = function (defaults) {
         outputFile: `assets/wizard.js`,
       })
     ),
-    prettyTextEngine(vendorJs, "discourse-markdown"),
+    applyTerser(prettyTextEngine(app)),
     concat("public/assets/scripts", {
       outputFile: `assets/start-discourse.js`,
       headerFiles: [`start-app.js`],

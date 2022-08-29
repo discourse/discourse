@@ -90,8 +90,6 @@ def dependencies
       source: '@highlightjs/cdn-assets/.',
       destination: 'highlightjs'
     }, {
-      source: 'markdown-it/dist/markdown-it.js'
-    }, {
       source: 'moment/moment.js'
     }, {
       source: 'moment/locale/.',

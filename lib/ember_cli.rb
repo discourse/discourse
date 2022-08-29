@@ -12,7 +12,7 @@ module EmberCli
         admin.js
         wizard.js
         ember_jquery.js
-        pretty-text-bundle.js
+        markdown-it-bundle.js
         start-discourse.js
         vendor.js
       )
