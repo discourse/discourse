@@ -630,6 +630,7 @@ class PostRevisor
 
     update_topic_excerpt
     update_category_description
+    hide_welcome_topic_banner
   end
 
   def update_topic_excerpt
@@ -649,6 +650,14 @@ class PostRevisor
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
+  end
+
+  def hide_welcome_topic_banner
+    return false unless guardian.is_admin?
+    return false unless guardian.user.id == User.first_login_admin_id
+    return false unless @topic.id == SiteSetting.welcome_topic_id
+
+    MessageBus.publish("/site/welcome-topic-banner", false)
   end
 
   def advance_draft_sequence
