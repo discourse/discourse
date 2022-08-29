@@ -2007,30 +2007,18 @@ RSpec.describe PostAlerter do
 
   it "does not create notifications for PMs if not invited" do
     SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:everyone]}"
-    tag_1 = Fabricate(:tag)
-    TagUser.change(admin.id, tag_1.id, TagUser.notification_levels[:watching_first_post])
-    tag_2 = Fabricate(:tag)
-    TagUser.change(admin.id, tag_2.id, TagUser.notification_levels[:watching])
+    watching_first_post_tag = Fabricate(:tag)
+    TagUser.change(admin.id, watching_first_post_tag.id, TagUser.notification_levels[:watching_first_post])
+    watching_tag = Fabricate(:tag)
+    TagUser.change(admin.id, watching_tag.id, TagUser.notification_levels[:watching])
 
-    post = create_post(tags: [tag_1.name, tag_2.name], archetype: Archetype.private_message, target_usernames: "#{evil_trout.username}")
+    post = create_post(tags: [watching_first_post_tag.name, watching_tag.name], archetype: Archetype.private_message, target_usernames: "#{evil_trout.username}")
     expect { PostAlerter.new.after_save_post(post, true) }.to change { Notification.count }.by(1)
 
-    expect(
-      Notification.exists?(
-        user: evil_trout,
-        notification_type: Notification.types[:private_message],
-        topic: post.topic,
-        post_number: 1,
-      ),
-    ).to eq(true)
-
-    expect(
-      Notification.exists?(
-        user: admin,
-        notification_type: Notification.types[:watching_first_post],
-        topic: post.topic,
-        post_number: 1,
-      ),
-    ).to eq(false)
+    notification = Notification.last
+    expect(notification.user).to eq(evil_trout)
+    expect(notification.notification_type).to eq(Notification.types[:private_message])
+    expect(notification.topic).to eq(post.topic)
+    expect(notification.post_number).to eq(1)
   end
 end
