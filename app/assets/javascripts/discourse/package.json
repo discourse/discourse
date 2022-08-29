@@ -36,6 +36,7 @@
     "a11y-dialog": "7.5.0",
     "admin": "^1.0.0",
     "discourse-plugins": "^1.0.0",
+    "babel-plugin-ember-template-compilation": "^1.0.2",
     "bootstrap": "3.4.1",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
