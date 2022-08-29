@@ -144,8 +144,10 @@ class DiscourseJsProcessor
       # define/require support
       load_file_in_context(ctx, "mini-loader.js")
 
-      # Template Compiler
+      # Babel
       load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
+
+      # Template Compiler
       load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
       load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/plugin.js", wrap_in_module: "babel-plugin-ember-template-compilation/index")
       load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js", wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser")
