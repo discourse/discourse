@@ -52,6 +52,10 @@ acceptance("Admin - Emails", function (needs) {
     await click(".btn-primary");
 
     assert.ok(query("#dialog-holder").innerText.includes("some error"));
+    assert.ok(
+      query("#dialog-holder .dialog-body b"),
+      "Error message can contain html"
+    );
     await click(".dialog-overlay");
   });
 });
