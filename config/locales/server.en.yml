@@ -647,8 +647,8 @@ en:
 
   uncategorized_category_name: "Uncategorized"
 
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  general_category_name: "General"
+  general_category_description: "Create topics here that don’t fit into any other existing category."
 
   meta_category_name: "Site Feedback"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
@@ -672,30 +672,6 @@ en:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
-
-  lounge_welcome:
-    title: "Welcome to the Lounge"
-    body: |
-
-      Congratulations! :confetti_ball:
-
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
-
-      You can now &hellip;
-
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](https://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
-
-      Here's the [current list of fellow regulars](%{base_path}/badges/3/regular). Be sure to say hi.
-
-      Thanks for being an important part of this community!
-
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 

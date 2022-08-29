@@ -2263,7 +2263,7 @@ uncategorized:
     hidden: true
 
   # Category IDs
-  lounge_category_id:
+  general_category_id:
     default: -1
     hidden: true
   meta_category_id:
@@ -2335,9 +2335,6 @@ uncategorized:
     default: -1
     hidden: true
     client: true
-  lounge_welcome_topic_id:
-    default: -1
-    hidden: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true
