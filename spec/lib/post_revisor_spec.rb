@@ -696,7 +696,7 @@ RSpec.describe PostRevisor do
     describe "topic excerpt" do
       it "topic excerpt is updated only if first post is revised" do
         revisor = PostRevisor.new(post)
-        first_post = topic.posts.by_post_number.first
+        first_post = topic.first_post
         expect {
           revisor.revise!(first_post.user, { raw: 'Edit the first post' }, revised_at: first_post.updated_at + 10.seconds)
           topic.reload
@@ -714,9 +714,9 @@ RSpec.describe PostRevisor do
         SiteSetting.welcome_topic_id = topic.id
       end
 
-      it "should publish welcome topic change to clients" do
+      it "should publish welcome topic edit message" do
         revisor = PostRevisor.new(post)
-        first_post = topic.posts.by_post_number.first
+        first_post = topic.first_post
         UserAuthToken.generate!(user_id: admin.id)
 
         messages = MessageBus.track_publish("/site/welcome-topic-banner") do
@@ -724,6 +724,7 @@ RSpec.describe PostRevisor do
         end
         welcome_topic_banner_message = messages.find { |message| message.channel == "/site/welcome-topic-banner" }
         expect(welcome_topic_banner_message).to be_present
+        expect(welcome_topic_banner_message.data).to eq(false)
       end
     end
 
