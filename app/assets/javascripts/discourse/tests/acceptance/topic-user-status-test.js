@@ -8,6 +8,7 @@ import {
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import TopicFixtures from "discourse/tests/fixtures/topic";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic - User Status", function (needs) {
   const status = { emoji: "tooth", description: "off to dentist" };
@@ -15,7 +16,7 @@ acceptance("Topic - User Status", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/t/299/1.json", () => {
-      const response = TopicFixtures["/t/299/1.json"];
+      const response = cloneJSON(TopicFixtures["/t/299/1.json"]);
       response.post_stream.posts.forEach((post) => {
         post.user_status = status;
       });
@@ -43,7 +44,7 @@ acceptance("Topic - User Status - live updates", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/t/299/1.json", () => {
-      const response = TopicFixtures["/t/299/1.json"];
+      const response = cloneJSON(TopicFixtures["/t/299/1.json"]);
       response.post_stream.posts.forEach((post) => {
         post.user_id = userId;
         post.user_status = { emoji: "tooth", description: "off to dentist" };
