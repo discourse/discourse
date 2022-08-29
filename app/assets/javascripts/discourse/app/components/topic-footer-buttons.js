@@ -46,9 +46,9 @@ export default Component.extend({
     return !isPM || this.canSendPms;
   },
 
-  @discourseComputed("currentUser.groups.[]", "currentUser.staff")
+  @discourseComputed("currentUser.allowPersonalMessages")
   canSendPms() {
-    return this.site.allowPersonalMessages(this.currentUser);
+    return this.currentUser?.allowPersonalMessages;
   },
 
   canInviteTo: alias("topic.details.can_invite_to"),

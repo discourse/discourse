@@ -24,6 +24,6 @@ export default class SidebarUserSections extends Component {
   }
 
   get enableMessagesSection() {
-    return this.site.allowPersonalMessages(this.currentUser);
+    return this.currentUser?.allowPersonalMessages;
   }
 }

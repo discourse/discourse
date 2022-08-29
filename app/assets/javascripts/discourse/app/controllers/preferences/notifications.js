@@ -90,9 +90,9 @@ export default Controller.extend({
     ];
   },
 
-  @discourseComputed("currentUser.staff", "currentUser.groups.[]")
+  @discourseComputed("currentUser.allowPersonalMessages")
   showMessageSettings() {
-    return this.site.allowPersonalMessages(this.currentUser);
+    return this.currentUser?.allowPersonalMessages;
   },
 
   actions: {

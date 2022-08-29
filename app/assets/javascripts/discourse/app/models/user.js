@@ -1081,6 +1081,18 @@ const User = RestModel.extend({
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
+
+  @discourseComputed("staff", "groups.[]")
+  allowPersonalMessages() {
+    return (
+      this.staff ||
+      this.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
+  },
 });
 
 User.reopenClass(Singleton, {

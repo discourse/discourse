@@ -139,21 +139,6 @@ const Site = RestModel.extend({
       return newCategory;
     }
   },
-
-  allowPersonalMessages(user) {
-    if (!user) {
-      return false;
-    }
-
-    return (
-      user.staff ||
-      user.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    );
-  },
 });
 
 Site.reopenClass(Singleton, {

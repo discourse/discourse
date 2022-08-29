@@ -89,7 +89,7 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return this.site.allowPersonalMessages(this.currentUser);
+      return this.currentUser?.allowPersonalMessages;
     }
   },
 
