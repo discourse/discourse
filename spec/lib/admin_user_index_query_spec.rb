@@ -81,7 +81,7 @@ RSpec.describe AdminUserIndexQuery do
       it "finds user with trust #{key}" do
         user = Fabricate(:user, trust_level: value)
 
-        next if value + 1 == 5
+        next if !TrustLevel.valid?(value + 1)
         Fabricate(:user, trust_level: value + 1)
 
         query = ::AdminUserIndexQuery.new(query: key.to_s)
