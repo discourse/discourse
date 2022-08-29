@@ -192,22 +192,6 @@ export default Component.extend(KeyEnterEscape, {
     );
   },
 
-  @bind
-  updateHeightOnViewportResize() {
-    const composerState = this.get("composer.composeState");
-    if (composerState !== Composer.OPEN) {
-      return;
-    }
-
-    const actualHeight = parseInt(getComputedStyle(this.element).height, 10);
-
-    this.set("composer.composerHeight", `${actualHeight}px`);
-    document.documentElement.style.setProperty(
-      "--composer-height",
-      `${actualHeight}px`
-    );
-  },
-
   _visualViewportResizing() {
     return (
       (this.capabilities.isIpadOS || this.site.mobileView) &&
@@ -223,8 +207,6 @@ export default Component.extend(KeyEnterEscape, {
     }
 
     this.setupComposerResizeEvents();
-
-    window.addEventListener("resize", this.updateHeightOnViewportResize, true);
 
     const triggerOpen = () => {
       if (this.get("composer.composeState") === Composer.OPEN) {
@@ -246,12 +228,6 @@ export default Component.extend(KeyEnterEscape, {
     if (this._visualViewportResizing()) {
       window.visualViewport.removeEventListener("resize", this.viewportResize);
     }
-
-    window.removeEventListener(
-      "resize",
-      this.updateHeightOnViewportResize,
-      true
-    );
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element
