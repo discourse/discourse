@@ -2004,4 +2004,21 @@ RSpec.describe PostAlerter do
       expect(liked_notification.data_hash[:custom_key]).to eq(custom_data)
     end
   end
+
+  it "does not create notifications for PMs if not invited" do
+    SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+    watching_first_post_tag = Fabricate(:tag)
+    TagUser.change(admin.id, watching_first_post_tag.id, TagUser.notification_levels[:watching_first_post])
+    watching_tag = Fabricate(:tag)
+    TagUser.change(admin.id, watching_tag.id, TagUser.notification_levels[:watching])
+
+    post = create_post(tags: [watching_first_post_tag.name, watching_tag.name], archetype: Archetype.private_message, target_usernames: "#{evil_trout.username}")
+    expect { PostAlerter.new.after_save_post(post, true) }.to change { Notification.count }.by(1)
+
+    notification = Notification.last
+    expect(notification.user).to eq(evil_trout)
+    expect(notification.notification_type).to eq(Notification.types[:private_message])
+    expect(notification.topic).to eq(post.topic)
+    expect(notification.post_number).to eq(1)
+  end
 end
