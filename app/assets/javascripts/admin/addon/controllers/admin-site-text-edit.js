@@ -34,7 +34,7 @@ export default Controller.extend(bufferedProperty("siteText"), {
   revertChanges() {
     this.set("saved", false);
 
-    this.dialog.confirm({
+    this.dialog.yesNoConfirm({
       message: I18n.t("admin.site_text.revert_confirm"),
       didConfirm: () => {
         this.siteText
