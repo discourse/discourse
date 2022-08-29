@@ -7,7 +7,9 @@
           <span class='username'>{{format-username user.username}}</span>
           {{#if user.status}}
             {{emoji user.status.emoji}}
-            <span class='status-description'>{{user.status.description}}</span>
+            <span class='status-description' title='{{user.status.description}}'>
+              {{user.status.description}}
+            </span>
             {{#if user.status.ends_at}}
               {{format-age user.status.ends_at}}
             {{/if}}
