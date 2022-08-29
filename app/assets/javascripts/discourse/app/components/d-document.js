@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
-import bootbox from "bootbox";
 import logout from "discourse/lib/logout";
 import { inject as service } from "@ember/service";
 import { setLogoffCallback } from "discourse/lib/ajax";
@@ -14,6 +13,7 @@ export function addPluginDocumentTitleCounter(counterFunction) {
 export default Component.extend({
   tagName: "",
   documentTitle: service(),
+  dialog: service(),
   _showingLogout: false,
 
   didInsertElement() {
@@ -74,13 +74,12 @@ export default Component.extend({
 
     this._showingLogout = true;
     this.messageBus.stop();
-    bootbox.dialog(
-      I18n.t("logout"),
-      { label: I18n.t("refresh"), callback: logout },
-      {
-        onEscape: () => logout(),
-        backdrop: "static",
-      }
-    );
+
+    this.dialog.alert({
+      message: I18n.t("logout"),
+      confirmButtonLabel: "refresh",
+      didConfirm: () => logout(),
+      didCancel: () => logout(),
+    });
   },
 });

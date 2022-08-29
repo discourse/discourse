@@ -317,7 +317,10 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of the first reply");
 
     await visit("/t/this-is-a-test-topic/9");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.ok(
+      currentURL().startsWith("/t/this-is-a-test-topic/9"),
+      "moves to second topic"
+    );
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),

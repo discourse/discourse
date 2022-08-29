@@ -251,6 +251,8 @@ en:
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
+    ok_value: "OK"
+    cancel_value: "Cancel"
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
