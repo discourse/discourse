@@ -169,6 +169,17 @@ RSpec.describe TopicConverter do
         expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:watching])
       end
 
+      it "invites only users with regular posts" do
+        post2 = Fabricate(:post, topic: topic)
+        whipser_post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+        small_action_post = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+
+        topic.convert_to_private_message(admin)
+
+        expect(topic.reload.topic_allowed_users.pluck(:user_id))
+          .to contain_exactly(admin.id, post.user_id, post2.user_id)
+      end
+
       it "changes user_action type" do
         Jobs.run_immediately!
         UserActionManager.enable
