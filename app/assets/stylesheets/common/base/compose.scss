@@ -421,6 +421,11 @@ html.composer-open {
           background-color: var(--highlight-low);
           text-decoration: none;
         }
+
+        .relative-date {
+          font-size: var(--font-down-3);
+          padding-top: 10em;
+        }
       }
     }
   }
