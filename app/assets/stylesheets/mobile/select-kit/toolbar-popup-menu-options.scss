@@ -1,9 +1,13 @@
-.select-kit {
-  &.dropdown-select-box {
-    &.toolbar-popup-menu-options {
-      .select-kit-collection {
-        max-height: 155px;
-      }
+#reply-control {
+  &.composer-action-createTopic {
+    .toolbar-popup-menu-options .select-kit-collection {
+      max-height: 155px;
+    }
+  }
+
+  &.composer-action-reply {
+    .toolbar-popup-menu-options .select-kit-collection {
+      max-height: 230px;
     }
   }
 }
