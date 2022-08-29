@@ -1,17 +1,3 @@
-#main-outlet-wrapper {
-  .sidebar-section-header-wrapper {
-    margin-bottom: 0.25em;
-  }
-
-  .sidebar-section-header-link {
-    font-size: var(--font-0);
-  }
-  .sidebar-section-link {
-    padding: 0.5em;
-    font-size: var(--font-0);
-  }
-}
-
 .sidebar-footer-wrapper {
   position: static;
   margin-top: 1em;
@@ -19,9 +5,4 @@
     background: transparent;
     padding: 0.5em 0.1em;
   }
-}
-
-.sidebar-more-section-links-details
-  .sidebar-more-section-links-details-summary {
-  font-size: var(--font-0);
 }

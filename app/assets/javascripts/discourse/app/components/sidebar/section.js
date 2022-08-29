@@ -39,6 +39,11 @@ export default class SidebarSection extends Component {
     } else {
       this.keyValueStore.setItem(this.collapsedSidebarSectionKey, true);
     }
+
+    // remove focus from the toggle, but only on click
+    if (!event.key) {
+      document.activeElement.blur();
+    }
   }
 
   @action

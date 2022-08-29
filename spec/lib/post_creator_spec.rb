@@ -1041,6 +1041,21 @@ RSpec.describe PostCreator do
       )
     end
 
+    it 'does not add whisperers to allowed users of the topic' do
+      unrelated_user.update!(admin: true)
+
+      PostCreator.create!(
+        unrelated_user,
+        raw: "This is a whisper that I am testing",
+        topic_id: post.topic_id,
+        post_type: Post.types[:small_action],
+      )
+
+      expect(post.topic.topic_allowed_users.map(&:user_id)).to contain_exactly(
+        target_user1.id, target_user2.id, user.id
+      )
+    end
+
     it 'does not increase posts count for small actions' do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user))
 

@@ -183,6 +183,7 @@ class Wizard
           if scheme.is_dark?
             updater.update_setting(:default_dark_mode_color_scheme_id, -1)
           end
+          updater.refresh_required = true
         end
       end
 

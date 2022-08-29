@@ -121,21 +121,12 @@ class Promotion
   end
 
   # Figure out what a user's trust level should be from scratch
-  def self.recalculate(user, performed_by = nil)
-    # First, use the manual locked level
-    unless user.manual_locked_trust_level.nil?
-      return user.update!(
-        trust_level: user.manual_locked_trust_level
-      )
-    end
-
-    # Then consider the group locked level
-    user_group_granted_trust_level = user.group_granted_trust_level
-
-    if user_group_granted_trust_level.present?
-      return user.update(
-        trust_level: user_group_granted_trust_level
-      )
+  def self.recalculate(user, performed_by = nil, use_previous_trust_level: false)
+    granted_trust_level = TrustLevel.calculate(
+      user, use_previous_trust_level: use_previous_trust_level
+    )
+    if granted_trust_level.present?
+      return user.update(trust_level: granted_trust_level)
     end
 
     user.update_column(:trust_level, TrustLevel[0])
