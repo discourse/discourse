@@ -77,7 +77,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   _findCategoriesAndTopics(filter) {
     return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
-      topicsList: PreloadStore.getAndRemove("topic_list"),
+      topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`),
     }).then((response) => {
       let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =
