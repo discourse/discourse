@@ -224,8 +224,6 @@ export default Component.extend(KeyEnterEscape, {
 
     this.setupComposerResizeEvents();
 
-    this.updateHeightOnViewportResize();
-
     window.addEventListener("resize", this.updateHeightOnViewportResize, true);
 
     const triggerOpen = () => {
