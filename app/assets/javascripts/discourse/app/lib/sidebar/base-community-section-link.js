@@ -17,6 +17,11 @@ export default class BaseCommunitySectionLink {
   }
 
   /**
+   * Called when state has changed in the TopicTrackingState service
+   */
+  onTopicTrackingStateChange() {}
+
+  /**
    * Called when community-section component is torn down.
    */
   teardown() {}

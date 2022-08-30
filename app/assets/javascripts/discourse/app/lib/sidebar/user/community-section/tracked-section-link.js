@@ -1,30 +1,23 @@
 import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { isTrackedTopic } from "discourse/lib/topic-list-tracked-filter";
 
 export default class TrackedSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
-  callbackId = null;
 
   constructor() {
     super(...arguments);
-
-    this.callbackId = this.topicTrackingState.onStateChange(
-      this._refreshCounts
-    );
-    this._refreshCounts();
+    this.#refreshCounts();
   }
 
-  teardown() {
-    this.topicTrackingState.offStateChange(this.callbackId);
+  onTopicTrackingStateChange() {
+    this.#refreshCounts();
   }
 
-  @bind
-  _refreshCounts() {
+  #refreshCounts() {
     this.totalUnread = this.topicTrackingState.countUnread({
       customFilterFn: isTrackedTopic,
     });
