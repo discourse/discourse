@@ -284,6 +284,8 @@ ru:
     not_implemented: "Извините, эта функция ещё не реализована!"
     no_value: "Нет"
     yes_value: "Да"
+    ok_value: "ОК"
+    cancel_value: "Нет"
     submit: "Отправить"
     generic_error: "Извините, произошла ошибка."
     generic_error_with_reason: "Произошла ошибка: %{error}"
@@ -1794,7 +1796,6 @@ ru:
       set_custom_status: "Поменять статус"
       what_are_you_doing: "Что вы сейчас делаете?"
       remove_status: "Удалить статус"
-      until: "До:"
     loading: "Загрузка..."
     errors:
       prev_page: "при попытке загрузки"
@@ -4141,9 +4142,17 @@ ru:
           header_link_text: "Сообщество"
           header_action_title: "Cоздать новую тему"
           links:
+            about:
+              content: "О форуме"
+            admin:
+              content: "Админка"
+            badges:
+              content: "Награды"
             everything:
               content: "Все"
               title: "Все темы"
+            faq:
+              content: "Правила"
             tracked:
               content: "Отслеживаемые"
               title: "Все отслеживаемые темы"
@@ -4165,6 +4174,7 @@ ru:
       title: "Создать приветственную тему"
       description: 'Ваша приветственная тема — это первое, что прочитают новички. Постарайтесь одним абзацем выразить наиболее важную информацию, которую вы хотите донести до новых пользователей форума.'
       button_title: "Начать редактирование"
+    until: "До:"
   admin_js:
     type_to_filter: "Фильтрация настроек..."
     admin:
@@ -5511,7 +5521,6 @@ ru:
         recommended: "Мы рекомендуем изменить текст этих шаблонов под ваши требования:"
         show_overriden: "Показывать только изменённые значения"
         locale: "Язык:"
-        fallback_locale_warning: "Вы редактируете язык на основе %{fallback}. Пользователи, выбравшие %{fallback} в качестве языка интерфейса, не увидят ваши изменения."
         more_than_50_results: "Найдено более 50 результатов. Пожалуйста, уточните параметры поиска."
       settings:
         show_overriden: "Показывать только изменённые значения"

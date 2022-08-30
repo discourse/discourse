@@ -254,6 +254,8 @@ hr:
     not_implemented: "Nažalost, ova mogućnost nije još implementirana."
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "U redu"
+    cancel_value: "Odustani"
     submit: "Pošalji"
     generic_error: "Dogodila se greška, ispričavamo se."
     generic_error_with_reason: "Dogodila se greška: %{error}"
@@ -3912,9 +3914,17 @@ hr:
           header_link_text: "Zajednica"
           header_action_title: "otvori novu temu"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Administrator"
+            badges:
+              content: "Značke"
             everything:
               content: "Sve"
               title: "Sve teme"
+            faq:
+              content: "ČPP"
             tracked:
               content: "Praćeno"
               title: "Sve praćene teme"
@@ -5259,7 +5269,6 @@ hr:
         recommended: "Preporučujemo da prilagodite sljedeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Pokazuj samo promijenjeno"
         locale: "Jezik:"
-        fallback_locale_warning: "Uređujete jezik temeljen na %{fallback}. Korisnici koji odaberu %{fallback} kao jezik sučelja neće vidjeti vaše promjene."
         more_than_50_results: "Postoji više od 50 rezultata. Molimo suzite kriterije vaše pretrage."
       settings:
         show_overriden: "Pokazuj samo promijenjeno"

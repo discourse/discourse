@@ -195,6 +195,8 @@ id:
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
     yes_value: "Ya"
+    ok_value: "OK"
+    cancel_value: "Batal"
     submit: "Kirimkan"
     generic_error: "Maaf, terjadi kesalahan."
     generic_error_with_reason: "Terjadi kesalahan: %{error}"
@@ -1806,6 +1808,12 @@ id:
           header_link_text: "Kategori"
         community:
           links:
+            about:
+              content: "Tentang"
+            admin:
+              content: "Admin"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Dilacak"
             groups:

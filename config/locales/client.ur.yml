@@ -206,6 +206,8 @@ ur:
     not_implemented: "یہ خصوصیت ابھی تک لاگو نہیں کی گئی، معضرت!"
     no_value: "نہیں"
     yes_value: "جی ہاں"
+    ok_value: "ٹھیک ہے"
+    cancel_value: "منسوخ"
     submit: "شائع"
     generic_error: "معذرت، ایک تکنیکی خرابی کا سامنا کرنا پڑا ہے۔"
     generic_error_with_reason: "ایک تکنیکی خرابی پیش آئی: %{error}"
@@ -3657,6 +3659,14 @@ ur:
         community:
           header_link_text: "کمیونٹی"
           links:
+            about:
+              content: "بارے میں"
+            admin:
+              content: "ایڈمن"
+            badges:
+              content: "بَیج"
+            faq:
+              content: "عمومی سوالات"
             tracked:
               content: "ٹریک کیا ہوا"
             groups:
@@ -4983,7 +4993,6 @@ ur:
         recommended: "اَپنی ضروریات کے مطابق کرنے کے لئے ہم مندرجہ ذیل ٹَیکسٹ کو اپنی مرضی کے حساب سے تبدیل کرنے کی تجویز دیں گے:"
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         locale: "زبان:"
-        fallback_locale_warning: "آپ %{fallback}کی بنیاد پر ایک زبان میں ترمیم کر رہے ہیں۔ وہ صارفین جو %{fallback} کو اپنی انٹرفیس زبان کے طور پر منتخب کرتے ہیں وہ آپ کی تبدیلیاں نہیں دیکھ پائیں گے۔"
         more_than_50_results: "50 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں۔"
       settings:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"

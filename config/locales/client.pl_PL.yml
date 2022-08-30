@@ -284,6 +284,8 @@ pl_PL:
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
     yes_value: "Tak"
+    ok_value: "OK"
+    cancel_value: "Anuluj"
     submit: "Prześlij"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
@@ -1789,7 +1791,6 @@ pl_PL:
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
       remove_status: "Usuń status"
-      until: "Aż do:"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -4122,9 +4123,17 @@ pl_PL:
           header_link_text: "Społeczność"
           header_action_title: "utwórz nowy temat"
           links:
+            about:
+              content: "O stronie"
+            admin:
+              content: "Administratorzy"
+            badges:
+              content: "Odznaki"
             everything:
               content: "Wszystko"
               title: "Wszystkie tematy"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Śledzone"
               title: "Wszystkie śledzone tematy"
@@ -4146,6 +4155,7 @@ pl_PL:
       title: "Stwórz swój temat powitalny"
       description: 'Twój temat powitalny jest pierwszą rzeczą, którą przeczytają nowicjusze. Postaraj się w jednym akapicie wyrazić najważniejsze informacje, jakie chcesz przekazać nowym użytkownikom forum.'
       button_title: "Rozpocznij edycję"
+    until: "Aż do:"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -5495,7 +5505,6 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
         locale: "Język:"
-        fallback_locale_warning: "Edytujesz język oparty na %{fallback}. Użytkownicy, którzy wybiorą %{fallback} jako język interfejsu, nie zobaczą Twoich zmian."
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
       settings:
         show_overriden: "Pokaż tylko nadpisane"

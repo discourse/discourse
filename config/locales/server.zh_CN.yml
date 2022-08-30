@@ -571,8 +571,8 @@ zh_CN:
               invalid: "无效"
       <<: *errors
   uncategorized_category_name: "未分类"
-  vip_category_name: "贵宾室"
-  vip_category_description: "信任级别为 3 及更高级别的成员专属的类别。"
+  general_category_name: "常规"
+  general_category_description: "在这里创建不属于任何其他现有类别的主题。"
   meta_category_name: "站点反馈"
   meta_category_description: "有关此站点、其组织、运作方式以及如何改进的讨论。"
   staff_category_name: "管理人员"
@@ -593,29 +593,6 @@ zh_CN:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       您可能需要通过管理员设置 :wrench: （右上角和底部）关闭此话题，这样回复就不会积压在此公告下。
-  lounge_welcome:
-    title: "欢迎来到贵宾室"
-    body: |2
-
-      恭喜！:confetti_ball:
-
-      如果您看到此话题，说明您已经被提升至**常规**（信任级别 3）。
-
-      您现在可以&hellip;
-
-      * 编辑任何话题的标题
-      * 更改任何话题的类别
-      * 为您的链接设置 follow 属性（[自动 nofollow](https://en.wikipedia.org/wiki/Nofollow) 已被移除）
-      * 访问只有信任级别为 3 及更高的用户才能看到的贵宾室类别
-      * 一次举报即可隐藏垃圾信息
-
-      这是[目前达到“常规”级别的用户列表](%{base_path}/badges/3/regular)。一定要向他们打声招呼！
-
-      感谢成为社区的重要一员！
-
-      （如需详细了解信任级别，请[参阅此话题][trust]。请注意，只有不断继续满足要求的成员才能保持“常规”级别。）
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "首先阅读：管理员快速入门指南"
   category:
     topic_prefix: "关于%{category}类别"
@@ -4354,7 +4331,7 @@ zh_CN:
     register:
       button: "注册"
       title: "注册管理员帐户"
-      help: "注册新帐户以开始"
+      help: "注册新帐户以开始."
       no_emails: "很抱歉，在设置过程中没有定义管理员电子邮件，因此完成配置可能很困难。请在配置文件中添加开发者电子邮件或<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>从控制台创建管理员帐户</a>。"
     confirm_email:
       title: "确认您的电子邮件"

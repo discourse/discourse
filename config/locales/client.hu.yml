@@ -226,6 +226,8 @@ hu:
     not_implemented: "Ez a funkció még nincs megvalósítva."
     no_value: "Nem"
     yes_value: "Igen"
+    ok_value: "Rendben"
+    cancel_value: "Mégse"
     submit: "Beküldés"
     generic_error: "Sajnos hiba történt."
     generic_error_with_reason: "Hiba történt: %{error}"
@@ -1641,7 +1643,6 @@ hu:
       set_custom_status: "Egyéni állapot beállítása"
       what_are_you_doing: "Mit csinál?"
       remove_status: "Állapot eltávolítása"
-      until: "Eddig:"
     loading: "Betöltés…"
     errors:
       prev_page: "amíg megpróbál betölteni"
@@ -2678,18 +2679,18 @@ hu:
         to_forum: "Küldünk egy rövid e-mailt, amely lehetővé teszi, hogy a barátja azonnal és egyszerűen csatlakozni tudjon egy hivatkozásra kattintva."
         discourse_connect_enabled: "Adja meg a témába meghívandó személy felhasználónevét."
         to_topic_blank: "Adja meg a témába meghívandó személy felhasználónevét vagy e-mail-címét."
-        to_topic_email: "Megadtál egy e-mail címet. Erre küldünk egy rövid e-mailt, amely lehetővé teszi, hogy a barátod azonnal és egyszerűen csatlakozni tudjon egyetlen linkre kattintva."
-        to_topic_username: "Megadtál egy felhasználónevet. Küldünk egy rövid e-mailt, amely lehetővé teszi, hogy a barátod azonnal és egyszerűen csatlakozni tudjon egyetlen linkre kattintva."
-        to_username: "Írd be annak a felhasználónevét, akit meg szeretnél hívni. Értesítést fogunk neki küldeni, ennek a témának a linkjével."
+        to_topic_email: "Megadott egy e-mail-címet. Erre küldünk egy rövid e-mailt, amely lehetővé teszi, hogy a barátja azonnal és egyszerűen csatlakozni tudjon egyetlen hivatkozásra kattintva."
+        to_topic_username: "Megadott egy felhasználónevet. Erre küldünk egy hivatkozást tartalmazó értesítést, amely meghívja őt ebbe a témába."
+        to_username: "Adja meg a meghívandó személy felhasználónevét. Erre küldünk egy hivatkozást tartalmazó értesítést, amely meghívja őt ebbe a témába."
         email_placeholder: "név@example.com"
-        success_email: "Meghívót küldtünk ki a <b>%{invitee}</b>címre. Értesíteni fogunk, ha a meghívót elfogadják. Ellenőrizd a meghívók fület a felhasználói oldaladon, hogy nyomon kövesd a meghívásaidat."
-        success_existing_email: "Létezik felhasználó ezzel az e-mail címmel: <b>%{emailOrUsername}</b> . Meghívtuk a felhasználót, hogy vegyen részt ebben a témában zajló beszélgetésben."
-      login_reply: "Jelentkezz be, hogy válaszolhass"
+        success_email: "Meghívót küldtünk <b>%{invitee}</b> részére. Értesítjük, ha elfogadta a meghívót. Ellenőrizze a meghívók fület a felhasználói oldalán, hogy nyomon kövesse a meghívásait."
+        success_existing_email: "Már létezik felhasználó ezzel az e-mail-címmel: <b>%{emailOrUsername}</b>. Meghívtuk a felhasználót, hogy vegyen részt ebben a témában zajló beszélgetésben."
+      login_reply: "Jelentkezzen be, hogy válaszolhasson"
       filters:
         n_posts:
           one: "%{count} bejegyzés"
           other: "%{count} bejegyzés"
-        cancel: "Szűrő törlése"
+        cancel: "Szűrő eltávolítása"
       move_to:
         title: "Áthelyezés ide:"
         action: "áthelyezés ide:"
@@ -2699,14 +2700,14 @@ hu:
         action: "áthelyezés új témába"
         topic_name: "Új téma címe"
         radio_label: "Új téma"
-        error: "Hiba lépett fel a bejegyzés új témakörbe való helyezése során!"
+        error: "Hiba történt a bejegyzések új témába történő áthelyezése során."
         instructions:
           one: "Egy új témát fog létrehozni, és feltölti a kiválasztott hozzászólással."
           other: "Egy új témát fog létrehozni, és feltölti azt a kiválasztott <b>%{count}</b> hozzászólással."
       merge_topic:
-        title: "Áthelyezés létező témába"
-        action: "áthelyezés létező témába"
-        error: "Hiba történt a bejegyzések áthelyezésekor ebben a témába."
+        title: "Áthelyezés egy meglévő témába"
+        action: "áthelyezés egy meglévő témába"
+        error: "Hiba történt a bejegyzések abba a témába történő áthelyezése során."
         radio_label: "Meglévő téma"
         instructions:
           one: "Válassza ki azt a témát, ahová áthelyezi a hozzászólást."
@@ -2715,7 +2716,7 @@ hu:
         title: "Áthelyezés az új üzenethez"
         action: "áthelyezés az új üzenethez"
         message_title: "Új üzenet címe"
-        radio_label: "Új Üzenet"
+        radio_label: "Új üzenet"
         participants: "Résztvevők"
       move_to_existing_message:
         title: "Áthelyezés egy meglévő üzenethez"
@@ -2736,94 +2737,94 @@ hu:
       change_owner:
         title: "Tulajdonosváltás"
         action: "tulajdonjog módosítása"
-        error: "Hiba történt a bejegyzések átruházásakor."
+        error: "Hiba történt a bejegyzések átruházása során."
         placeholder: "az új tulajdonos felhasználóneve"
       change_timestamp:
         title: "Időbélyeg szerkesztése…"
-        action: "Időbélyeg módosítása"
+        action: "időbélyeg módosítása"
       multi_select:
         select: "kiválasztás"
         selected: "kiválasztva (%{count})"
         select_post:
-          label: "Kiválasztás"
-          title: "Hozzászólás hozzáadása a kiválasztáshoz"
+          label: "kiválasztás"
+          title: "Bejegyzés hozzáadása a kiválasztáshoz"
         selected_post:
-          label: "Kiválasztott"
-          title: "Ide kattintva eltávolíthatja a bejegyzést a kijelölésből"
+          label: "kiválasztott"
+          title: "Kattintson a bejegyzés eltávolításához a kiválasztásból"
         select_replies:
-          label: "kiválaszt +válaszok"
+          label: "kiválasztás válaszokkal együtt"
           title: "A hozzászólás és összes válaszának hozzáadása a kiválasztáshoz"
         select_below:
-          label: "Kiválaszt +alatta"
-          title: "Add hozzá a választ és minden utána következőt a kiválasztáshoz"
+          label: "Kiválasztás az alatt lévőkkel együtt"
+          title: "A bejegyzés és az összes utána következő hozzáadása a kiválasztáshoz"
         delete: kiválasztottak törlése
         cancel: kiválasztások visszavonása
-        select_all: mind kiválasztása
-        deselect_all: kijelölések törlése
+        select_all: összes kiválasztása
+        deselect_all: kiválasztások törlése
         description:
-          one: Kijelöltél <b>%{count}</b> hozzászólást.
-          other: "Kijelöltél <b>%{count}</b> hozzászólást."
+          one: Kiválasztott <b>%{count}</b> bejegyzést.
+          other: "Kiválasztott <b>%{count}</b> bejegyzést."
     post:
       confirm_delete: "Biztos, hogy törli ezt a bejegyzést?"
       quote_reply: "Idézet"
       quote_edit: "Szerkesztés"
       quote_share: "Megosztás"
-      edit_reason: "Ok:"
-      post_number: "bejegyzés %{number}"
+      edit_reason: "Ok: "
+      post_number: "%{number}. bejegyzés"
       ignored: "Letiltott tartalom"
-      reply_as_new_topic: "Válasz csatolt üzenetként"
+      reply_as_new_topic: "Válasz kapcsolódó témaként"
       reply_as_new_private_message: "Válasz új üzenetként ugyanazoknak a címzetteknek"
       follow_quote: "ugrás az idézett bejegyzéshez"
       show_full: "Teljes bejegyzés megtekintése"
       show_hidden: "Letiltott tartalom megtekintése"
-      collapse: "Összeomlás"
-      expand_collapse: "kinyitás/bezárás"
+      collapse: "összecsukás"
+      expand_collapse: "kibontás/összecsukás"
       gap:
         one: "%{count} rejtett válasz megtekintése"
         other: "%{count} rejtett válasz megtekintése"
       notice:
-        new_user: "Ez az első alkalom, hogy %{user} posztolt - üdvözöljük a közösségünkben!"
-      unread: "Olvasatlan bejegyzés"
+        new_user: "Ez az első alkalom, hogy %{user} bejegyzést tett közzé – üdvözöljük a közösségünkben!"
+      unread: "A bejegyzés olvasatlan"
       has_replies:
         one: "%{count} válasz"
         other: "%{count} válasz"
       has_likes_title:
-        one: "%{count} emberek tetszett ez a bejegyzés"
-        other: "%{count} emberek tetszett ez a bejegyzés"
-      has_likes_title_only_you: "kedvelted ezt a bejegyzést"
+        one: "%{count} embernek tetszett ez a bejegyzés"
+        other: "%{count} embernek tetszett ez a bejegyzés"
+      has_likes_title_only_you: "kedvelte ezt a bejegyzést"
       has_likes_title_you:
-        one: "rajtad kívül %{count} embernek tetszett ez a bejegyzés"
-        other: "rajtad kívül %{count} embernek tetszett ez a bejegyzés"
-      in_reply_to: "Szülő bejegyzés betöltése"
+        one: "Önön kívül még %{count} embernek tetszett ez a bejegyzés"
+        other: "Önön kívül még %{count} embernek tetszett ez a bejegyzés"
+      in_reply_to: "Szülőbejegyzés betöltése"
       view_all_posts: "Az összes válasz megtekintése"
       errors:
-        create: "Sajnáljuk, de a bejegyzésed létrehozása közben hiba lépett fel. Kérünk próbáld újra!"
-        edit: "Sajnáljuk, de a bejegyzésed szerkesztése közben hiba lépett fel. Kérünk próbáld újra!"
-        upload: "Sajnáljuk, de a fájl feltöltése közben hiba lépett fel. Kérünk próbáld újra!"
-        file_size_zero: "Sajnáljuk, úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
-        too_many_uploads: "Sajnáljuk, de egyszerre csak egy fájlt tölthetsz fel!"
-        image_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel képeket!"
-        attachment_upload_not_allowed_for_new_user: "Sajnáljuk, de az új felhasználók nem tölthetnek fel csatolmányokat!"
-        attachment_download_requires_login: "Sajnáljuk, de be kell jelentkezned, hogy letölthess csatolmányokat!"
+        create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
+        edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
+        upload: "Sajnos hiba történt a fájl feltöltése során. Próbálja újra."
+        file_size_zero: "Sajnos úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
+        too_many_uploads: "Sajnos egyszerre csak egy fájlt tölthet fel."
+        image_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel képeket."
+        attachment_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel mellékleteket."
+        attachment_download_requires_login: "Sajnos be kell jelentkeznie, hogy letölthesse a mellékleteket."
       cancel_composer:
         discard: "Elvetés"
         save_draft: "Vázlat mentése későbbre"
       via_email: "ez a válasz e-mailben érkezett"
-      via_auto_generated_email: "ez a bejegyzés egy automatikusan generált e-mailen keresztül érkezett"
-      few_likes_left: "Köszönjük, hogy aktívan osztod a kedveléseket! A jóból is megárt a sok: már csak néhány kiosztható kedvelésed maradt mára."
+      via_auto_generated_email: "ez a bejegyzés egy automatikusan előállított e-mailen keresztül érkezett"
+      few_likes_left: "Köszönjük, hogy aktívan osztja a kedveléseket! Már csak néhány kiosztható kedvelése maradt mára."
       controls:
-        reply: "kezdje meg a választ erre a bejegyzésre"
+        reply: "kezdjen el választ írni ehhez a bejegyzéshez"
         like: "bejegyzés kedvelése"
-        has_liked: "kedvelted ezt a bejegyzést"
+        has_liked: "kedvelte ezt a bejegyzést"
         read_indicator: "tagok, akik elolvasták ezt a bejegyzést"
         undo_like: "kedvelés visszavonása"
         edit: "bejegyzés szerkesztése"
         edit_action: "Szerkesztés"
-        edit_anonymous: "Sajnáljuk, de be kell jelentkezned, hogy szerkeszthesd ezt a bejegyzést!"
-        flag: "Titkosan jelöld meg ezt a bejegyzést, hogy felhívd rá a moderátorok figyelmét, vagy küldj privát értesítést róla"
+        edit_anonymous: "Sajnos be kell jelentkeznie, hogy szerkeszthesse ezt a bejegyzést."
+        flag: "a bejegyzés titkos megjelölése, hogy felhívja rá a moderátorok figyelmét, vagy privát értesítést küldjön róla"
         delete: "bejegyzés törlése"
         undelete: "bejegyzés visszaállítása"
-        share: "bejegyzés megosztása link-kel"
+        share: "bejegyzés hivatkozásának megosztása"
         more: "Több"
         delete_replies:
           just_the_post: "Nem, csak ezt a bejegyzést"
@@ -2836,9 +2837,9 @@ hu:
         unhide: "Elrejtés visszavonása"
         lock_post: "Bejegyzés zárolása"
         unlock_post: "Bejegyzés zárolásának feloldása"
-        delete_topic_confirm_modal_yes: "Igen, töröld ezt a témát"
-        delete_topic_confirm_modal_no: "Nem, tartsa meg ezt a témát"
-        delete_topic: "témakör törlése"
+        delete_topic_confirm_modal_yes: "Igen, a téma törlése"
+        delete_topic_confirm_modal_no: "Nem, a téma megtartása"
+        delete_topic: "téma törlése"
         add_post_notice: "Stábnak szóló megjegyzés hozzáadása…"
         change_post_notice: "Stábnak szóló megjegyzés módosítása…"
         delete_post_notice: "Stábnak szóló megjegyzés törlése"
@@ -2851,10 +2852,10 @@ hu:
             one: "olvasd ezt el"
             other: "olvasd ezt el"
           like_capped:
-            one: "és %{count} ezt likeolták"
-            other: "és %{count} embernek tetszett"
+            one: "és még %{count} embernek tetszett"
+            other: "és még %{count} embernek tetszett"
         by_you:
-          off_topic: "Nem a témába tartozónak jelölve"
+          off_topic: "Megjelölte nem a témához tartozóként"
           spam: "Spam-ként jelölted"
           inappropriate: "Ezt ide nem illőnek jelölte."
           notify_moderators: "Moderálásra jelölted"
@@ -3389,6 +3390,14 @@ hu:
         community:
           header_link_text: "Közösség"
           links:
+            about:
+              content: "Névjegy"
+            admin:
+              content: "Adminisztrátor"
+            badges:
+              content: "Jelvények"
+            faq:
+              content: "GYIK"
             tracked:
               content: "Követett"
             groups:
@@ -3402,6 +3411,7 @@ hu:
       title: "Hozzon létre üdvözlő témát"
       description: 'Az üdvözlő téma az első, amit az újonnan érkezők olvasnak. Gondoljon rá úgy mint egy bekezdésnyi bemutatkozóra vagy „küldetésnyilatkozatra”.'
       button_title: "Szerkesztés megkezdése"
+    until: "Eddig:"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

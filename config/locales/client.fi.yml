@@ -196,6 +196,8 @@ fi:
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
     yes_value: "Kyllä"
+    ok_value: "OK"
+    cancel_value: "Peruuta"
     submit: "Lähetä"
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
@@ -3481,6 +3483,14 @@ fi:
         community:
           header_link_text: "Yhteisö"
           links:
+            about:
+              content: "Tietoa"
+            admin:
+              content: "Ylläpitäjä"
+            badges:
+              content: "Kunniamerkit"
+            faq:
+              content: "UKK"
             tracked:
               content: "Seuratut"
             groups:
@@ -4760,7 +4770,6 @@ fi:
         recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
         show_overriden: "Näytä vain korvatut"
         locale: "Kieli:"
-        fallback_locale_warning: "Olet muokkaamassa kieltä, joka perustuu kieleen %{fallback}. Käyttäjät, jotka valitsevat näyttöliittymänsä kieleksi kielen %{fallback}, eivät näe muutoksiasi."
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
       settings:
         show_overriden: "Näytä vain korvatut"

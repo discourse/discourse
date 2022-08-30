@@ -195,6 +195,8 @@ zh_TW:
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
     yes_value: "是"
+    ok_value: "確定"
+    cancel_value: "取消"
     submit: "送出"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
@@ -2824,6 +2826,14 @@ zh_TW:
         community:
           header_link_text: "社區"
           links:
+            about:
+              content: "關於"
+            admin:
+              content: "管理員"
+            badges:
+              content: "徽章"
+            faq:
+              content: "常見問答"
             tracked:
               content: "已追蹤"
             groups:

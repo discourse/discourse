@@ -299,6 +299,8 @@ ar:
     not_implemented: "عذرًا، لم يتم تنفيذ هذه الميزة بعد."
     no_value: "لا"
     yes_value: "نعم"
+    ok_value: "حسنًا"
+    cancel_value: "إلغاء"
     submit: "إرسال"
     generic_error: "عذرًا، حدث خطأ."
     generic_error_with_reason: "حدث خطأ: %{error}"
@@ -4305,9 +4307,17 @@ ar:
           header_link_text: "المجتمع"
           header_action_title: "إنشاء موضوع جديد"
           links:
+            about:
+              content: "نبذة"
+            admin:
+              content: "مسؤول"
+            badges:
+              content: "الشارات"
             everything:
               content: "كل شىء"
               title: "جميع الموضوعات"
+            faq:
+              content: "الأسئلة الشائعة"
             tracked:
               content: "المتتبَّعة"
               title: "جميع المواضيع المُتَعَقبة"
@@ -5677,7 +5687,6 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         locale: "اللغة:"
-        fallback_locale_warning: "أنت تجري تعديلًا على لغة بناءً على %{fallback}. لن يتمكن المستخدمون الذين اختاروا%{fallback} كلغة لواجهتهم من رؤية تغييراتك."
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
       settings:
         show_overriden: "إظهار النصوص المخصَّصة فقط"

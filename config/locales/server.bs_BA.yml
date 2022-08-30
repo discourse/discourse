@@ -224,13 +224,10 @@ bs_BA:
             hex:
               invalid: "is not a valid color"
       <<: *errors
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  general_category_name: "General"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Staff"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
-  lounge_welcome:
-    title: "Welcome to the Lounge"
   category:
     topic_prefix: "About the %{category} category"
     errors:
@@ -1042,7 +1039,6 @@ bs_BA:
   finish_installation:
     register:
       button: "Registriraj"
-      help: "Registriraj novi račun kako bi počeo"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
   wizard:

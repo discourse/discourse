@@ -489,8 +489,7 @@ lt:
               invalid_url: "Pakeitimo URL neteisingas"
       <<: *errors
   uncategorized_category_name: "Nekategorizuota"
-  vip_category_name: "Šaukykla"
-  vip_category_description: "Kategorija skirta nariams turintiems 3 pasitikėjimo lygį arba aukštesnį."
+  general_category_name: "Bendrieji"
   meta_category_name: "Puslapio atsiliepimai"
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
@@ -511,8 +510,6 @@ lt:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Galbūt norėsite uždaryti šią temą per administratorių :wrench: (viršuje dešinėje ir apačioje), kad atsakymai nesikauptų ant skelbimo.
-  lounge_welcome:
-    title: "Sveiki atvykę į Šaukyklą"
   admin_quick_start_title: "PERSKAITYKITE PIRMIAUSIA: administratoriaus greitas pradžios vadovas"
   category:
     topic_prefix: "Viskas apie %{category} kategoriją"
@@ -2658,7 +2655,6 @@ lt:
     register:
       button: "Registruokis"
       title: "Užregistruokite administratoriaus paskyrą"
-      help: "Norėdami pradėti, užregistruokite naują paskyrą"
     confirm_email:
       title: "Patvirtink savo e-paštą"
     resend_email:

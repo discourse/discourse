@@ -591,8 +591,7 @@ fr:
               invalid_url: "L'URL de substitution n'est pas valide"
       <<: *errors
   uncategorized_category_name: "Sans catégorie"
-  vip_category_name: "Salon"
-  vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
+  general_category_name: "Général"
   meta_category_name: "Commentaires sur le site"
   meta_category_description: "Discussions à propos du site, son organisation, son fonctionnement et comment nous pouvons l'améliorer."
   staff_category_name: "Responsables"
@@ -613,29 +612,6 @@ fr:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et en bas) afin que les réponses ne s'accumulent pas après une annonce.
-  lounge_welcome:
-    title: "Bienvenue dans le salon"
-    body: |2
-
-      Félicitations ! :confetti_ball:
-
-      Si vous voyez ce sujet, vous avez été promu au statut d'**habitué(e)** (niveau de confiance 3).
-
-      Dorénavant vous pouvez :
-
-      * Modifier le titre de n'importe quel sujet
-      * Modifier la catégorie de n'importe quel sujet
-      * Avoir des liens qui sont suivis ([automatic nofollow](https://fr.wikipedia.org/wiki/Nofollow) est ôté)
-      * Accéder à la catégorie privée Salon qui est réservée aux utilisateurs de niveau de confiance 3 et plus
-      * Masquer le spam avec un seul signalement
-
-      Voilà la [liste des habitués actuels](%{base_path}/badges/3/regular). N'hésitez pas à les saluer.
-
-      Merci pour votre contribution à notre communauté !
-
-      (Pour plus d'informations sur les niveaux de confiance, [voir ce sujet][trust]. Notez que seuls les utilisateurs qui continuent de remplir les conditions gardent leur statut d'habitués.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "À LIRE EN PREMIER : Guide de démarrage pour les administrateurs"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
@@ -4402,7 +4378,6 @@ fr:
     register:
       button: "Créer"
       title: "Créer un compte administrateur"
-      help: "créer un nouveau compte pour commencer"
       no_emails: "Malheureusement aucune adresse courriel d'administrateur n'a été définie lors de la configuration. Veuillez ajouter un courriel de développeur dans le fichier de configuration ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>créer un compte administrateur depuis la console</a>."
     confirm_email:
       title: "Confirmer votre adresse courriel"

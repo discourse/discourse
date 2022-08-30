@@ -29,7 +29,7 @@ de:
       time_with_zone: "HH:mm (z)"
       time_short_day: "dd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM, HH:mm"
+      long_no_year: "D. MMM, HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY [um] HH:mm"
@@ -226,6 +226,8 @@ de:
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Abbrechen"
     submit: "Absenden"
     generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
@@ -1652,7 +1654,6 @@ de:
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du da?"
       remove_status: "Status entfernen"
-      until: "Bis:"
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -3796,9 +3797,17 @@ de:
           header_link_text: "Community"
           header_action_title: "ein neues Thema erstellen"
           links:
+            about:
+              content: "Über uns"
+            admin:
+              content: "Administration"
+            badges:
+              content: "Abzeichen"
             everything:
               content: "Alles"
               title: "Alle Themen"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Verfolgt"
               title: "Alle verfolgten Themen"
@@ -3818,6 +3827,7 @@ de:
       title: "Erstelle dein Willkommensthema"
       description: 'Dein Willkommensthema ist das erste, was Neuankömmlinge lesen werden. Sieh es als deinen einseitigen "Elevator Pitch" oder "Mission Statement" an.'
       button_title: "Bearbeitung beginnen"
+    until: "Bis:"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -5150,7 +5160,6 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         locale: "Sprache:"
-        fallback_locale_warning: "Du bearbeitest eine Sprache basierend auf %{fallback}. Benutzer, die %{fallback} als Sprache ihrer Oberfläche wählen, werden deine Änderungen nicht sehen."
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
         show_overriden: "Nur geänderte Texte anzeigen"

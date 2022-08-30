@@ -596,8 +596,8 @@ de:
               invalid: "ist nicht gültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
-  vip_category_name: "Lounge"
-  vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
+  general_category_name: "Allgemein"
+  general_category_description: "Erstelle hier Themen, die in keine andere bestehende Kategorie passen."
   meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Team"
@@ -618,29 +618,6 @@ de:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Du solltest dieses Thema eventuell mittels Themen-Administration :wrench: (oben rechts oder unten) schließen, damit sich bei dieser Ankündigung nicht die Antworten anhäufen.
-  lounge_welcome:
-    title: "Willkommen in der Lounge"
-    body: |2
-
-      Gratuliere! :confetti_ball:
-
-      Wenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.
-
-      Du kannst nun &hellip;
-
-      * den Titel eines jeden Themas ändern
-      * Themen in andere Kategorien verschieben
-      * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](https://de.wikipedia.org/wiki/Nofollow) wird entfernt)
-      * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
-      * Spam durch eine einzige Meldung ausblenden
-
-      Hier ist die [aktuelle Liste aller Stammgäste](%{base_path}/badges/3/regular). Vergiss nicht, Hallo zu sagen!
-
-      Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
-
-      (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -4442,7 +4419,7 @@ de:
     register:
       button: "Registrieren"
       title: "Administrator-Konto registrieren"
-      help: "registriere ein neues Konto, um loszulegen"
+      help: "Registriere ein neues Konto, um loszulegen."
       no_emails: "Leider wurde bei der Einrichtung keine Administrator-E-Mail-Adresse festgelegt, sodass es schwer sein könnte, die Konfiguration abzuschließen. Bitte füge eine Entwickler-E-Mail-Adresse in der Konfigurationsdatei hinzu oder <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>erstelle ein Administrator-Konto über die Konsole</a>."
     confirm_email:
       title: "Bestätige deine E-Mail-Adresse"

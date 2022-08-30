@@ -197,6 +197,8 @@ nb_NO:
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
@@ -3439,6 +3441,14 @@ nb_NO:
         community:
           header_link_text: "Gemenskap"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Administrator"
+            badges:
+              content: "Merker"
+            faq:
+              content: "O-S-S"
             tracked:
               content: "Overvåkes"
             groups:

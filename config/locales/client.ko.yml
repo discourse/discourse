@@ -181,6 +181,8 @@ ko:
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
     yes_value: "예"
+    ok_value: "확인"
+    cancel_value: "취소"
     submit: "확인"
     generic_error: "죄송합니다. 오류가 발생했습니다."
     generic_error_with_reason: "오류가 발생했습니다. %{error}"
@@ -4801,7 +4803,6 @@ ko:
         recommended: "다음 텍스트를 필요에 맞게 사용자 지정하는 것이 좋습니다."
         show_overriden: "오버라이드된 항목만 표시"
         locale: "언어:"
-        fallback_locale_warning: "%{fallback} 기반으로 언어를 편집하고 있습니다. 인터페이스 언어로 %{fallback} 항목을 선택한 사용자는 변경사항을 볼 수 없습니다."
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁혀보세요."
       settings:
         show_overriden: "오버라이드된 항목만 표시"

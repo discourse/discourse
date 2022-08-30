@@ -186,6 +186,8 @@ hy:
     not_implemented: "Այդ հատկանիշը դեռևս չի իրագործվել, ներողություն!"
     no_value: "Ոչ"
     yes_value: "Այո"
+    ok_value: "ՕԿ"
+    cancel_value: "Չեղարկել"
     submit: "Հաստատել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
@@ -2895,6 +2897,14 @@ hy:
         community:
           header_link_text: "Համայնք"
           links:
+            about:
+              content: "Մասին"
+            admin:
+              content: "Ադմին"
+            badges:
+              content: "Կրծքանշաններ"
+            faq:
+              content: "ՀՏՀ"
             tracked:
               content: "Հետևած"
             groups:

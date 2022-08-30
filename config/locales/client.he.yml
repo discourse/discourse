@@ -284,6 +284,8 @@ he:
     not_implemented: "יכולת זו עדיין לא מומשה, עמך הסליחה!"
     no_value: "לא"
     yes_value: "כן"
+    ok_value: "או קיי"
+    cancel_value: "ביטול"
     submit: "הגשה"
     generic_error: "ארעה שגיאה, עמך הסליחה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
@@ -1794,7 +1796,6 @@ he:
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
       remove_status: "הסרת מצב"
-      until: "עד:"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -4139,9 +4140,17 @@ he:
           header_link_text: "קהילה"
           header_action_title: "יצירת נושא חדש"
           links:
+            about:
+              content: "על אודות"
+            admin:
+              content: "הנהלה"
+            badges:
+              content: "עיטורים"
             everything:
               content: "הכול"
               title: "כל הנושאים"
+            faq:
+              content: "שאלות נפוצות"
             tracked:
               content: "במעקב"
               title: "כל הנושאים במעקב"
@@ -4163,6 +4172,7 @@ he:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שמצטרפים חדשים יקראו. אפשר לחשוב על זה כעל „נאום מעלית” או „הצהרת כוונות” במשפט אחד'
       button_title: "להתחיל לערוך"
+    until: "עד:"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -5517,7 +5527,6 @@ he:
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         locale: "שפה:"
-        fallback_locale_warning: "בחרת לערוך שפה שמבוססת על %{fallback}. משתמשים שבוחרים ב%{fallback} כשפת מנשק המשתמש שלהם לא יראו את השינויים שלך."
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"

@@ -225,6 +225,8 @@ fr:
     not_implemented: "Cette fonctionnalité n'est pas encore disponible."
     no_value: "Non"
     yes_value: "Oui"
+    ok_value: "OK"
+    cancel_value: "Annuler"
     submit: "Envoyer"
     generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
@@ -1181,7 +1183,7 @@ fr:
         personal: "Personnels"
         latest: "Récents"
         sent: "Envoyés"
-        unread: "Non lues"
+        unread: "Non lus"
         unread_with_count:
           one: "Non lu (%{count})"
           other: "Non lu (%{count})"
@@ -1650,7 +1652,6 @@ fr:
       set_custom_status: "Définir un statut personnalisé"
       what_are_you_doing: "« Que faites-vous ? »"
       remove_status: "Supprimer le statut"
-      until: "Jusqu'à :"
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -3750,7 +3751,7 @@ fr:
             sent: "Envoyés"
             new: "Nouveau"
             new_with_count: "Nouveau (%{count})"
-            unread: "Non lues"
+            unread: "Non lus"
             unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
@@ -3767,9 +3768,17 @@ fr:
           header_link_text: "Communauté"
           header_action_title: "créer un nouveau sujet"
           links:
+            about:
+              content: "À propos"
+            admin:
+              content: "Administrateur"
+            badges:
+              content: "Badges"
             everything:
               content: "Tout"
               title: "Tous les sujets"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Suivis"
               title: "Tous les sujets suivis"
@@ -3785,6 +3794,7 @@ fr:
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
+    until: "Jusqu'à :"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -5104,7 +5114,6 @@ fr:
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
         locale: "Langue :"
-        fallback_locale_warning: "Vous modifiez une langue basée sur %{fallback}. Les utilisateurs qui choisissent %{fallback} comme langue d'interface ne verront pas vos modifications."
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
       settings:
         show_overriden: "Afficher uniquement les paramètres modifiés"

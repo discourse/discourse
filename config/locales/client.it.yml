@@ -225,6 +225,8 @@ it:
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
     yes_value: "Sì"
+    ok_value: "OK"
+    cancel_value: "Annulla"
     submit: "Invia"
     generic_error: "Spiacenti, c'è stato un errore."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
@@ -1649,7 +1651,6 @@ it:
       set_custom_status: "Imposta stato personalizzato"
       what_are_you_doing: "Cosa fai?"
       remove_status: "Rimuovi lo stato"
-      until: "Fino a:"
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"
@@ -3785,9 +3786,17 @@ it:
           header_link_text: "Comunità"
           header_action_title: "crea un nuovo argomento"
           links:
+            about:
+              content: "Informazioni su"
+            admin:
+              content: "Amministrazione"
+            badges:
+              content: "Distintivi"
             everything:
               content: "Tutti"
               title: "Tutti gli argomenti"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Seguite"
               title: "Tutti gli argomenti seguiti"
@@ -3806,6 +3815,7 @@ it:
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       button_title: "Inizia a modificare"
+    until: "Fino a:"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -5137,7 +5147,6 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         locale: "Lingua:"
-        fallback_locale_warning: "Stai modificando una lingua in base a %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
         more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
       settings:
         show_overriden: "Mostra solo le opzioni sovrascritte"
