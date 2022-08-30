@@ -9,8 +9,10 @@ export default {
     }
 
     const site = container.lookup("service:site");
-    messageBus.subscribe("/site/welcome-topic-banner", function (disabled) {
-      site.set("show_welcome_topic_banner", disabled);
-    });
+    if (site.get("show_welcome_topic_banner")) {
+      messageBus.subscribe("/site/welcome-topic-banner", function (disabled) {
+        site.set("show_welcome_topic_banner", disabled);
+      });
+    }
   },
 };
