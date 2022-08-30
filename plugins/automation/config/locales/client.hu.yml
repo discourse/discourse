@@ -170,6 +170,10 @@ hu:
             answering_user:
               label: Válaszoló felhasználó
               description: Alapértelmezetten a rendszerfelhasználó
+        post:
+          fields:
+            topic:
+              label: Témaazonosító
         user_global_notice:
           fields:
             level:

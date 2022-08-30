@@ -153,6 +153,10 @@ es:
             answering_user:
               label: Usuario que responde
               description: Por defecto, usuario del sistema
+        post:
+          fields:
+            topic:
+              label: ID del tema
         user_global_notice:
           fields:
             level:

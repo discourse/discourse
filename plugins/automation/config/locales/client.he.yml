@@ -171,6 +171,10 @@ he:
             answering_user:
               label: משתמש שענה
               description: ברירת המחדל היא משתמש המערכת
+        post:
+          fields:
+            topic:
+              label: מזהה נושא
         user_global_notice:
           fields:
             level:
@@ -230,7 +234,7 @@ he:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: 'שם שדה מותאם אישית של משתמש'
+              label: "שם שדה מותאם אישית של משתמש"
       models:
         script:
           name:

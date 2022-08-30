@@ -91,6 +91,14 @@ fa_IR:
             restricted_tags:
               label: برچسب‌ها
       scriptables:
+        post:
+          fields:
+            creator:
+              label: ایجاد کننده
+            topic:
+              label: شناسه موضوع
+            post:
+              label: محتوای نوشته
         user_global_notice:
           fields:
             level:
@@ -121,7 +129,7 @@ fa_IR:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: 'نام فیلد سفارشی کاربر'
+              label: "نام فیلد سفارشی کاربر"
       models:
         script:
           name:

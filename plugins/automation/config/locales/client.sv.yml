@@ -184,6 +184,10 @@ sv:
             answering_user:
               label: Svarande användare
               description: Standard är systemanvändaren
+        post:
+          fields:
+            topic:
+              label: Ämnes-ID
         user_global_notice:
           fields:
             level:
@@ -259,7 +263,7 @@ sv:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: 'Användaranpassat fältnamn'
+              label: "Användaranpassat fältnamn"
       models:
         script:
           name:

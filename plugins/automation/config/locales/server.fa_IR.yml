@@ -12,6 +12,9 @@ fa_IR:
       topic:
         title: موضوع
     scriptables:
+      post:
+        title: ایجاد نوشته
+        description: یک نوشته را در موضوع مشخص ایجاد کنید
       append_last_edited_by:
         text: "آخرین ویرایش توسط @%{username} %{date_time}"
       append_last_checked_by:
