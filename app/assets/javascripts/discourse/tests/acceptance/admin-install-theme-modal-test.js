@@ -79,6 +79,15 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     await fillIn(urlInput, "git@github.com:discourse/discourse.git");
     assert.ok(query(publicKey), "shows public key for valid github repo url");
+
+    await fillIn(urlInput, "git@github.com:discourse/discourse");
+    assert.ok(query(publicKey), "shows public key for valid github repo url");
+
+    await fillIn(urlInput, "git@github.com/discourse/discourse");
+    assert.notOk(
+      query(publicKey),
+      "does not shows public key for valid github repo url"
+    );
   });
 
   test("modal can be auto-opened with the right query params", async function (assert) {
