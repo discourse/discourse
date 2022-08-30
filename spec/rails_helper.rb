@@ -234,7 +234,9 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver :remote_selenium_headless do |app|
-      browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |options|
+      browser_options = Selenium::WebDriver::Chrome::Options.new(
+        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+      ).tap do |options|
         options.add_argument("--headless")
         options.add_argument("--window-size=1400,1400")
         options.add_argument("--no-sandbox")
@@ -250,7 +252,9 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver :remote_selenium do |app|
-      browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |options|
+      browser_options = Selenium::WebDriver::Chrome::Options.new(
+        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+      ).tap do |options|
         options.add_argument("--window-size=1400,1400")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -367,6 +371,20 @@ RSpec.configure do |config|
     driven_by driver
 
     setup_system_test
+  end
+
+  config.after(:each, type: :system) do |example|
+    puts "~~~~~~ DRIVER LOGS: ~~~~~~~"
+    page.driver.browser.logs.get(:driver).each do |log|
+      puts log.message
+    end
+
+    if example.exception
+      puts "~~~~~~ JS ERRORS: ~~~~~~~"
+      page.driver.browser.logs.get(:browser).each do |log|
+        puts log.message
+      end
+    end
   end
 
   config.before(:each, type: :multisite) do
