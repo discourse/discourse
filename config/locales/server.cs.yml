@@ -358,8 +358,7 @@ cs:
               too_many: "Příliš mnoho slov pro tuto akci"
       <<: *errors
   uncategorized_category_name: "Nezařazené"
-  vip_category_name: "VIP"
-  vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
+  general_category_name: "Základní"
   meta_category_name: "Poznámky k webu"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
@@ -380,8 +379,6 @@ cs:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
-  lounge_welcome:
-    title: "Vítejte ve VIP"
   category:
     topic_prefix: "O kategorii %{category}"
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"

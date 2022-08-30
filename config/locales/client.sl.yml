@@ -235,6 +235,8 @@ sl:
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "V redu"
+    cancel_value: "Prekliči"
     submit: "Išči"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
@@ -3406,6 +3408,14 @@ sl:
         community:
           header_link_text: "Skupnost"
           links:
+            about:
+              content: "O nas"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Značke"
+            faq:
+              content: "Pravila skupnosti"
             tracked:
               content: "Sledim"
             groups:
@@ -4167,7 +4177,6 @@ sl:
         go_back: "Nazaj na iskalnik"
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
-        fallback_locale_warning: "Urejate jezik ki temelji na %{fallback}. Uporabniki, ki za jezik vmesnika izberejo %{fallback} ne bodo videli sprememb."
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."
       settings:
         show_overriden: "Prikaži samo preglašene/spremenjene"

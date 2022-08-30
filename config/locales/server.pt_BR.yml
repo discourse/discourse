@@ -580,8 +580,7 @@ pt_BR:
               invalid_url: "A URL de substituição não é válida"
       <<: *errors
   uncategorized_category_name: "Sem categoria"
-  vip_category_name: "Saguão"
-  vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
+  general_category_name: "Geral"
   meta_category_name: "Feedback do site"
   meta_category_description: "Discussão sobre este site, sua organização, funcionamento e maneiras de melhorá-lo."
   staff_category_name: "Equipe"
@@ -602,29 +601,6 @@ pt_BR:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Talvez você queira fechar este tópico pelo(a) administrador(a) :wrench: (na parte superior à direita e na parte inferior), para que as respostas não se acumulem em um anúncio.
-  lounge_welcome:
-    title: "Boas-vindas ao saguão"
-    body: |2
-
-      Parabéns! :confetti_ball:
-
-      Se puder ver este tópico, você acabou de ser promovido(a) para **regular** (nível de confiança 3).
-
-      Agora você pode &hellip;
-
-      * Editar o título de qualquer tópico
-      * Alterar a categoria de qualquer tópico
-      * Ter todos os seus links seguidos ([nofollow automático](https://en.wikipedia.org/wiki/Nofollow) foi removido(a))
-      * Acessar uma categoria privada visível apenas para os(as) usuários(as) com nível de confiança 3 e maior
-      * Ocultar spam com apenas um sinalizador
-
-      Aqui está a [lista atual de amigos(as) regulares](%{base_path}/badges/3/regular). Não deixe de dizer "olá".
-
-      Obrigado por ser uma parte importante desta comunidade!
-
-      (Para obter mais informações sobre níveis de confiança, [veja este tópico][trust]. Observe que somente membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de início rápido do(a) administrador(a)"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -4310,7 +4286,6 @@ pt_BR:
     register:
       button: "Cadastrar"
       title: "Cadastrar conta de administrador(a)"
-      help: "Início do registro de uma nova conta"
       no_emails: "Infelizmente, nenhum e-mail de administrador(a) foi definido durante a configuração, portanto a finalização da configuração pode ser difícil. Adicione o e-mail ao arquivo de configuração ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crie uma conta de administrador(a) a partir do console</a>."
     confirm_email:
       title: "Confirme seu e-mail"

@@ -9,8 +9,8 @@ hr:
     poll:
       voters:
         one: "glasać"
-        few: "glasaći"
-        other: "glasaći"
+        few: "glasači"
+        other: "glasači"
       total_votes:
         one: "ukupno glasova"
         few: "ukupno glasova"

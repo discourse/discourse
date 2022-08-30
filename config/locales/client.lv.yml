@@ -203,6 +203,8 @@ lv:
     not_implemented: "Šī funkcionalitāte vēl nav ieviesta, atvainojiet!"
     no_value: "Nē"
     yes_value: "Jā"
+    ok_value: "Labi"
+    cancel_value: "Atcelt"
     submit: "Iesniegt"
     generic_error: "Atvainojiet, ir notikusi kļūda."
     generic_error_with_reason: "Notikusi kļūda: %{error}"
@@ -2831,6 +2833,14 @@ lv:
         community:
           header_link_text: "Kopiena"
           links:
+            about:
+              content: "Par"
+            admin:
+              content: "Administrators"
+            badges:
+              content: "Žetoni"
+            faq:
+              content: "BUJ"
             tracked:
               content: "Sekots"
             groups:

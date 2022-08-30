@@ -323,16 +323,13 @@ ro:
               in_the_past: "trebuie să fie în viitor."
       <<: *errors
   uncategorized_category_name: "Necategorisite"
-  vip_category_name: "Sufragerie"
-  vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
+  general_category_name: "General"
   meta_category_name: "Feedback la site"
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătăți."
   staff_category_name: "Echipa"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Subiectele sunt vizibile numai pentru admini și moderatori."
   discourse_welcome_topic:
     title: "Bine ai venit la Discourse"
-  lounge_welcome:
-    title: "Bine ai venit în sufragerie"
   category:
     topic_prefix: "Despre categoria %{category}"
     post_template: "%{replace_paragraph}\n\nFolosește următoarele paragrafe pentru a scrie o descriere mai lungă sau pentru a seta regulile ori îndreptarul categoriei:\n\n- De ce să folosească lumea această categorie? Care e destinația ei?\n\n- Prin ce anume se deosebește de alte categorii pe care le avem deja?\n\n- Ce ar trebui să conțină, în general, subiectele din această categorie?\n\n- Chiar avem nevoie de aceasta categorie? N-am putea-o combina cu o altă categorie sau subcategorie deja existentă?\n"
@@ -1100,7 +1097,7 @@ ro:
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
-    delete_drafts_older_than_n_days: "șterge drafturile mai vechi de (n) zile."
+    delete_drafts_older_than_n_days: "șterge schițele mai vechi de (n) zile."
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     enable_emoji: "Activează emoji"
@@ -1263,6 +1260,7 @@ ro:
     username:
       short: "trebuie să fie cel puțin %{min} de caractere"
       long: "trebuie să nu aibă mai mult de %{max} caractere"
+      characters: "trebuie să includă numai cifre, litere, liniuțe, puncte și liniuțe de subliniere"
       unique: "trebuie să fie unic"
       blank: "trebuie să fie prezent"
       must_begin_with_alphanumeric_or_underscore: "trebuie să înceapă ci o literă, un număr sau un underscore"
@@ -1634,14 +1632,14 @@ ro:
         Dacă nu ați făcut această solicitare, puteți ignora în siguranță acest e-mail.
 
         Faceți clic pe următorul link pentru a alege o parolă:
-        %{base_url}/u/parolă-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     account_created:
       subject_template: "[%{email_prefix}] Noul tău cont"
       text_body_template: |
         Un nou cont a fost creat pentru tine la %{site_name}
 
         Apasă pe următorul link pentru a alege o parolă pentru noul tău cont:
-        %{base_url}/u/parolă-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.
@@ -1657,7 +1655,7 @@ ro:
         Bine ai venit la %{site_name}!
 
         Faceți clic pe următorul link pentru a confirma și a activa noul cont:
-        %{base_url}/u/cont activat/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
     activation_reminder:
@@ -1667,7 +1665,7 @@ ro:
         Acesta este un memento prietenos să îți activezi contul.
 
         Faceți clic pe următorul link pentru a confirma și a activa noul cont:
-        %{base_url}/u/cont activat/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
   page_not_found:
@@ -1730,6 +1728,104 @@ ro:
     Editează prima postare în acest subiect pentru a schimba conținutul paginii %{page_name}.
   guidelines_topic:
     title: "FAQ/Ghid"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Acesta este un loc civilizat pentru discuții publice](#civilizat)
+
+      Vă rugăm să tratați acest forum de discuții cu același respect cu care ați trata un parc public. Și noi suntem o resursă comună a comunității &mdash; un loc în care puteți împărtăși abilități, cunoștințe și interese prin intermediul unei conversații continue.
+
+      Acestea nu sunt reguli stricte și rapide. Ele sunt ghiduri pentru a ajuta judecata umană a comunității noastre și pentru a menține acest loc amabil și prietenos pentru conversații publice civilizate.
+
+      <a name="improve"></a>
+
+      ## [Îmbunătățiți discuția](#îmbunătăți)
+
+      Ajutați-ne să facem din acest loc un loc minunat pentru discuții adăugând întotdeauna ceva pozitiv la discuție, oricât de mic. Dacă nu ești sigur că mesajul tău contribuie la conversație, gândește-te la ceea ce vrei să spui și încearcă din nou mai târziu.
+
+      O modalitate de a îmbunătăți discuțiile este descoperirea celor care au loc deja. Petreceți timp navigând printre subiectele de aici înainte de a răspunde sau de a începe o discuție proprie și veți avea mai multe șanse să întâlniți alte persoane care vă împărtășesc interesele.
+
+      Subiectele discutate aici contează pentru noi și dorim să vă comportați ca și cum ar conta și pentru dumneavoastră. Fiți respectuoși față de subiecte și față de persoanele care le discută, chiar dacă nu sunteți de acord cu o parte din ceea ce se spune.
+
+      <a name="agreeable"></a>
+
+      ## [Fiți de acord, chiar și atunci când nu sunteți de acord](#agreeable)
+
+      Este posibil să doriți să răspundeți prin dezacord. Este în regulă. Dar nu uitați să _criticați ideile, nu oamenii_. Vă rugăm să evitați:
+
+      * Numirile
+      * Atacurile ad hominem
+      * Răspunsul la tonul unei postări în loc de conținutul real al acesteia
+      * Contrazicerea pe genunchi
+
+      În schimb, oferiți idei bine gândite care îmbunătățesc conversația.
+
+      <a name="participate"></a>
+
+      ## [Participarea ta contează](#participă)
+
+      Conversațiile pe care le purtăm aici dau tonul pentru fiecare nou venit. Ajutați-ne să influențăm viitorul acestei comunități alegând să vă implicați în discuțiile care fac din acest forum un loc interesant &mdash; și evitându-le pe cele care nu o fac.
+
+      Discourse oferă instrumente care permit comunității să identifice în mod colectiv cele mai bune (și cele mai proaste) contribuții: marcaje, aprecieri, stegulețe, răspunsuri, ediții, urmărire, muting și așa mai departe. Folosiți aceste instrumente pentru a vă îmbunătăți propria experiență, dar și pe cea a tuturor celorlalți.
+
+      Haideți să lăsăm comunitatea noastră mai bună decât am găsit-o.
+
+      <a name="flag-problems"></a>
+
+      ## [Dacă vedeți o problemă, semnalizați-o](#flag-problems)
+
+      Moderatorii au o autoritate specială; ei sunt responsabili pentru acest forum. Dar și dumneavoastră sunteți la fel. Cu ajutorul dumneavoastră, moderatorii pot fi facilitatori ai comunității, nu doar îngrijitori sau polițiști.
+
+      Când vedeți un comportament rău, nu răspundeți. Răspunsul încurajează comportamentul rău prin recunoașterea lui, vă consumă energia și irosește timpul tuturor. Semnalizează-l pur și simplu. Dacă se acumulează suficiente semnale, se vor lua măsuri, fie automat, fie prin intervenția moderatorului.
+
+      Pentru a menține comunitatea noastră, moderatorii își rezervă dreptul de a elimina orice conținut și orice cont de utilizator pentru orice motiv și în orice moment. Moderatorii nu previzualizează postările noi; moderatorii și operatorii site-ului nu își asumă nicio responsabilitate pentru orice conținut postat de comunitate.
+
+      <a name="be-civil"></a>
+
+      ## [Fii întotdeauna civilizat](#be-civil)
+
+      Nimic nu sabotează o conversație sănătoasă ca grosolănia:
+
+      * Fii civilizat. Nu postați nimic pe care o persoană rezonabilă l-ar considera ofensator, abuziv sau un discurs de ură.
+      * Păstrați curățenia. Nu postați nimic obscen sau explicit din punct de vedere sexual.
+      * Respectați-vă unii pe alții. Nu hărțuiți sau supărați pe nimeni, nu vă dați drept persoane și nu expuneți informațiile private ale acestora.
+      * Respectați forumul nostru. Nu postați spam și nu vandalizați forumul în niciun fel.
+
+      Aceștia nu sunt termeni concreți cu definiții precise &mdash; evitați chiar și _apariția_ oricăruia dintre aceste lucruri. Dacă nu ești sigur, întreabă-te cum te-ai simți dacă postul tău ar apărea pe prima pagină a unui site de știri important.
+
+      Acesta este un forum public, iar motoarele de căutare indexează aceste discuții. Păstrați limbajul, linkurile și imaginile în condiții de siguranță pentru familie și prieteni.
+
+      <a name="keep-tidy"></a>
+
+      ## [Pastrați ordinea](#keep-tidy)
+
+      Faceți efortul de a pune lucrurile la locul potrivit, astfel încât să putem petrece mai mult timp discutând și mai puțin făcând curățenie. Așadar:
+
+      * Nu începeți un subiect în categoria greșită; vă rugăm să citiți definițiile categoriilor.
+      * Nu postați încrucișat același lucru în mai multe subiecte.
+      * Nu postați răspunsuri fără conținut.
+      * Nu deturnați un subiect schimbându-l la mijlocul lui.
+      * Nu vă semnați mesajele &mdash; fiecare mesaj are atașate informațiile de profil.
+
+      În loc să postați "+1" sau "De acord", folosiți butonul "Apreciere". În loc să duceți un subiect existent într-o direcție radical diferită, folosiți "Răspunde cu link către subiect".
+
+      <a name="stealing"></a>
+
+      ## [Postați numai lucruri proprii](#stealing)
+
+      Nu aveți voie să postați nimic digital care aparține altcuiva fără permisiune. Nu aveți voie să postați descrieri, linkuri către sau metode de furt al proprietății intelectuale a cuiva (software, video, audio, imagini) sau pentru a încălca orice altă lege.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Acest site este operat de [personalul local prietenos](%{base_path}/about) și *tu*, comunitatea. Dacă mai aveți întrebări despre cum ar trebui să funcționeze lucrurile aici, deschideți un nou subiect în categoria [feedback despre site](%{base_path}/c/site-feedback) și haideți să discutăm! Dacă există o problemă critică sau urgentă care nu poate fi tratată printr-un meta topic sau un steag, contactați-ne prin intermediul [pagina staff](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Termeni de utilizare](#tos)
+
+      Da, limbajul juridic este plictisitor, dar trebuie să ne protejăm &ndash; și, prin extensie, pe dumneavoastră și datele dumneavoastră &ndash; împotriva persoanelor neprietenoase. Avem un [Termeni și condiții de utilizare](%{base_path}/tos) care descrie comportamentul și drepturile dumneavoastră (și ale noastre) legate de conținut, confidențialitate și legi. Pentru a utiliza acest serviciu, trebuie să fiți de acord să vă supuneți [TOS](%{base_path}/tos).
   tos_topic:
     title: "Condiții generale de utilizare"
   privacy_topic:
@@ -1835,6 +1931,8 @@ ro:
     welcome:
       name: Bun venit
       description: Ai primit o apreciere
+      long_description: |
+        Această insignă se acordă atunci când primești primul like la o postare. Felicitări, ai postat ceva ce colegii tăi de comunitate au găsit interesant, mișto sau util!
     autobiographer:
       name: Autobiograf
     anniversary:
@@ -1994,7 +2092,6 @@ ro:
     register:
       button: "Înregistrare"
       title: "Înregistrare cont administrator"
-      help: "înregistrează un cont nou ca să începi"
     confirm_email:
       title: "Confirmare email"
     resend_email:

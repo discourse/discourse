@@ -646,8 +646,7 @@ he:
               invalid: "לא תקף"
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
-  vip_category_name: "טרקלין"
-  vip_category_description: "קטגוריה ייחודית למשתמשים בדרגת אמון 3 ומעלה."
+  general_category_name: "כללי"
   meta_category_name: "משוב על האתר"
   meta_category_description: "דיון על האתר הזה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "סגל"
@@ -668,9 +667,6 @@ he:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       ייתכן ותרצו לסגור נושא זה באמצעות :wrench: הניהול (בפינות משמאל למעלה ולמטה), כדי שתגובות לא ייערמו על גבי כרזה.
-  lounge_welcome:
-    title: "ברוך בואך לטרקלין"
-    body: "\nברכותינו! :confetti_ball:\n\nאם יש לך אפשרות לצפות בנושא הזה, קודמת לכדי **קבוע** (דרגת אמון 3).\n\nמעכשיו יש לך אפשרות &hellip;\n\n* לערוך כותרת של כל נושא שהוא \n* להחליף קטגוריה לנושא\n* כל הקישורים שלך יחשפו למעקב (הסרה אוטומטית של [nofollow](https://en.wikipedia.org/wiki/Nofollow))\n* גישה לקטגוריית טרקלין פרטית שנגישה רק למשתמשים מדרגת אמון 3 ומעלה\n* הסתרת ספאם בסימון של דגל אחד\n\nלהלן [הרשימה הנוכחית חבריך הקבועים](%{base_path}/badges/3/regular). לא לשכוח להגיד להם שלום.\n\nתודה לך על המעורבות המבורכת שלך בקהילה הזו!\n\n(לפרטים נוספים על דרגות אמון, [מומלץ לעיין בנושא זה][trust]. נא לשים לב שאך ורק משתמשים שממשיכים לשמור על הדרישות לאורך זמן נשארים קבועים.)\n\n[trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\n"
   admin_quick_start_title: "לקרוא אותי קודם: מדריך זריז למנהלים מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
@@ -4591,7 +4587,6 @@ he:
     register:
       button: "הרשמה"
       title: "הרשמת חשבון ניהול"
-      help: "רישמו חשבון חדש כדי להתחיל"
       no_emails: "לרוע המזל, לא הוגדרו כתובות דוא״ל של מנהלים במהלך ההקמה, לכן סיום התצורה עשוי להיות מורכב. נא להוסיף כתובת דוא״ל של מפתח בקובץ התצורה או <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>ליצור חשבון מנהל מהמסוף</a>."
     confirm_email:
       title: "אישור הדוא״ל שלך"

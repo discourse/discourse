@@ -196,6 +196,8 @@ vi:
     not_implemented: "Tính năng này chưa được hoàn thiện, xin lỗi!"
     no_value: "Không"
     yes_value: "Có"
+    ok_value: "OK"
+    cancel_value: "Huỷ"
     submit: "Gửi đi"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
     generic_error_with_reason: "Đã xảy ra lỗi: %{error}"
@@ -1574,7 +1576,6 @@ vi:
       set_custom_status: "Đặt trạng thái tùy chỉnh"
       what_are_you_doing: "Bạn đang làm gì đấy?"
       remove_status: "Xóa trạng thái"
-      until: "Cho đến khi:"
     loading: "Đang tải..."
     errors:
       prev_page: "trong khi cố gắng để tải"
@@ -3589,9 +3590,17 @@ vi:
           header_link_text: "Cộng đồng"
           header_action_title: "tạo một chủ đề mới"
           links:
+            about:
+              content: "Giới thiệu"
+            admin:
+              content: "Quản trị"
+            badges:
+              content: "Huy hiệu"
             everything:
               content: "Mọi thứ"
               title: "Tất cả các chủ đề"
+            faq:
+              content: "Câu hỏi thường gặp"
             tracked:
               content: "Theo dõi"
               title: "Tất cả các chủ đề được theo dõi"
@@ -3606,6 +3615,7 @@ vi:
               title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
+    until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -4870,7 +4880,6 @@ vi:
         recommended: "Bạn nên tùy biến các nội dung sau đây cho phù hợp với nhu cầu:"
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         locale: "Ngôn ngữ:"
-        fallback_locale_warning: "Bạn đang chỉnh sửa một ngôn ngữ dựa trên %{fallback}. Người dùng chọn %{fallback} làm ngôn ngữ giao diện của họ sẽ không thấy các thay đổi của bạn."
         more_than_50_results: "Có hơn 50 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn."
       settings:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"

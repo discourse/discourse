@@ -201,6 +201,8 @@ fa_IR:
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "خیر"
     yes_value: "بله"
+    ok_value: "تایید"
+    cancel_value: "انصراف"
     submit: "ارسال"
     generic_error: "متأسفیم، خطایی روی داده."
     generic_error_with_reason: "خطایی روی داد: %{error}"
@@ -2033,6 +2035,7 @@ fa_IR:
         topic_reminder: "اگاهسازی مبحث"
         liked_consolidated: "پسندیده‌های جدید"
         post_approved: "نوشته تایید شده"
+        reaction: "واکنش جدید"
     upload_selector:
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
@@ -3291,9 +3294,17 @@ fa_IR:
           header_link_text: "انجمن"
           header_action_title: "ایجاد موضوع جدید"
           links:
+            about:
+              content: "درباره"
+            admin:
+              content: "مدیر کل"
+            badges:
+              content: "نشان‌ها"
             everything:
               content: "همه چیز"
               title: "همه موضوعات"
+            faq:
+              content: "پرسش‌های متداول"
             tracked:
               content: "پی‌گیری شده"
               title: "همه موضوعات پیگیری شده"
@@ -3309,6 +3320,7 @@ fa_IR:
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"
+    until: "تا وقتی که:"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

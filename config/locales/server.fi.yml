@@ -570,8 +570,7 @@ fi:
               invalid_url: "Korvaava URL-osoite on virheellinen"
       <<: *errors
   uncategorized_category_name: "Luokittelematon"
-  vip_category_name: "Lounge"
-  vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
+  general_category_name: "Yleistä"
   meta_category_name: "Sivuston palaute"
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
@@ -592,29 +591,6 @@ fi:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun alaosassa), jottei vastauksia kasaannu ilmoituksen alle.
-  lounge_welcome:
-    title: "Tervetuloa Loungeen"
-    body: |2
-
-      Onnittelut! :confetti_ball:
-
-      Jos näet tämän ketjun, sinut on juuri ylennetty **mestariksi** (luottamustaso 3).
-
-      Voit nyt &hellip;
-
-      * Muokata minkä hyvänsä ketjun otsikkoa
-      * Siirtää minkä tahansa ketjun toiselle alueelle
-      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](https://en.wikipedia.org/wiki/Nofollow) on poistettu)
-      * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
-      * Piilottaa roskapostiviestin yhdellä liputuksella
-
-      Tässä on nykyinen [lista mestareista](%{base_path}/badges/3/regular). Käyhän moikkaamassa.
-
-      Kiitos, että olet tämän yhteisön arvokas jäsen!
-
-      (Lisää tietoa luottamustasoista saat [tästä englanninkielisestä ketjusta][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LUE ENSIN: Ylläpitäjän pika-aloitusopas"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -4145,7 +4121,6 @@ fi:
     register:
       button: "Rekisteröidy"
       title: "Rekisteröi ylläpitäjän tili"
-      help: "aloita rekisteröimällä uusi tili"
       no_emails: "Ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjän sähköpostiosoite määritystiedostoon tai <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>luo ylläpitäjän tili konsolissa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"

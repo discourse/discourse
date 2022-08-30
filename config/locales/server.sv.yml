@@ -596,8 +596,7 @@ sv:
               invalid: "är inte giltig"
       <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
-  vip_category_name: "Lounge"
-  vip_category_description: "En kategori endast för medlemmar med förtroendenivån 3 eller högre."
+  general_category_name: "Allmänt"
   meta_category_name: "Feedback om webbplatsen"
   meta_category_description: "Diskussion om den här webbplatsen, dess organisation, hur den fungerar och hur vi kan förbättra den."
   staff_category_name: "Personal"
@@ -618,9 +617,6 @@ sv:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Det vore kanske bra att stänga det här ämnet via admin :wrench: (längst upp till höger eller i botten), så att inte svar läggs på hög vid ett meddelande.
-  lounge_welcome:
-    title: "Välkommen till loungen"
-    body: "\nGrattis! :confetti_ball:\n\nOm du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3). \n\nDu kan nu &hellip;\n\n* Redigera rubriken för alla ämnen\n* Ändra kategorin för alla ämnen\n* Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)\n* Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre\n* Dölja skräppost med en enda flagga\n\nHär är den [aktuella listan över regelbundna användare](%{base_path}/badges/3/regular). Glöm inte att hälsa.\n\nTack för att du är en viktig del av det här forumet!\n\n(För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att uppfylla kraven över tid kommer att fortsätta vara regelbundna medlemmar.)\n\n[trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\n"
   admin_quick_start_title: "LÄS MIG FÖRST: Administratörers Snabbstartsguide"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -2110,6 +2106,8 @@ sv:
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
+    default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
+    default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -4064,7 +4062,7 @@ sv:
     register:
       button: "Registrera"
       title: "Registrera ett admin-konto"
-      help: "registrera ett nytt konto för att kunna starta"
+      help: "Registrera ett nytt konto för att komma igång."
       no_emails: "Tyvärr angavs inga administratörers e-postadresser under installationen, så att det kan bli svårt att slutföra konfigureringen. Lägg till en utvecklares e-postadress i konfigurationsfilen eller <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>skapa ett administratörskonto från konsolen</a>."
     confirm_email:
       title: "Bekräfta din e-postadress"

@@ -224,6 +224,8 @@ sr:
     not_implemented: "Ova stavka nije jos omogućena za sad, izvinjavamo se."
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "U redu"
+    cancel_value: "Odustani"
     submit: "Potvrdi"
     generic_error: "Izvinite, pojavila se greška."
     generic_error_with_reason: "Došlo je do greške: %{error}"
@@ -1825,6 +1827,14 @@ sr:
         community:
           header_link_text: "Zajednica"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Značke"
+            faq:
+              content: "FAQ (često postavljana pitanja)"
             tracked:
               content: "Praćeno"
             groups:

@@ -185,6 +185,8 @@ ja:
     not_implemented: "その機能はまだ実装されていません！"
     no_value: "いいえ"
     yes_value: "はい"
+    ok_value: "OK"
+    cancel_value: "キャンセル"
     submit: "送信"
     generic_error: "申し訳ありません。エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
@@ -3415,6 +3417,14 @@ ja:
         community:
           header_link_text: "コミュニティ"
           links:
+            about:
+              content: "サイト情報"
+            admin:
+              content: "管理者"
+            badges:
+              content: "バッジ"
+            faq:
+              content: "FAQ"
             tracked:
               content: "追跡中"
             groups:
@@ -4689,7 +4699,6 @@ ja:
         recommended: "ニーズに合わせて次のテキストをカスタマイズすることをお勧めします。"
         show_overriden: "上書き部分のみ表示"
         locale: "言語:"
-        fallback_locale_warning: "%{fallback} に基づいて言語を編集しています。%{fallback} をインターフェース言語として選択したユーザーに変更内容は表示されません。"
         more_than_50_results: "結果が 50 件以上あります。検索を絞り込んでください。"
       settings:
         show_overriden: "上書き部分のみ表示"
