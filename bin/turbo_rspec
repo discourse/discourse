@@ -59,10 +59,16 @@ formatters.each do |formatter|
   end
 end
 
+default_spec_dirs = Dir.entries("#{Rails.root}/spec").reject do |entry|
+  !File.directory?("spec/#{entry}") || ["..", ".", "system"].include?(entry)
+end.map { |entry| "spec/#{entry}" }
+files = ARGV.empty? ? default_spec_dirs : ARGV
+
+puts "Running turbo_rspec using files in #{files}"
 success =
   TurboTests::Runner.run(
     formatters: formatters,
-    files: ARGV.empty? ? ["spec\/(?!system)"] : ARGV,
+    files: files,
     verbose: verbose,
     fail_fast: fail_fast
   )

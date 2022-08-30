@@ -89,9 +89,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
   fab!(:post2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 
   before do
-    SiteSetting.external_system_avatars_enabled = false
     setup_system_test
-    post.rebake!
   end
 
   it "does not allow anon to create bookmarks" do

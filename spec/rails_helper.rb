@@ -228,7 +228,6 @@ RSpec.configure do |config|
         .find(&:ipv4_private?)
         .ip_address
     end
-    puts "SELENIUM APP HOST IS #{selenium_app_host}"
     Capybara.configure do |capybara_config|
       capybara_config.server_host = selenium_app_host
       capybara_config.server_port = 31337
@@ -266,7 +265,6 @@ RSpec.configure do |config|
     end
 
     Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-    puts "CAPYBARA APP HOST IS #{Capybara.app_host}"
 
     # Rebase defaults
     #
@@ -364,7 +362,6 @@ RSpec.configure do |config|
       end
 
     if last_driven_by != driver
-      puts "SYSTEM TESTS DRIVEN BY #{driver}"
       last_driven_by = driver
     end
     driven_by driver
