@@ -167,8 +167,8 @@ jobs:
 #         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
 #         run: bin/rake plugin:spec
 #
-      - name: Precompile assets
-        run: bundle exec rake assets:precompile
+      - name: Build Ember CLI
+        run: bin/ember-cli --build
 
       - name: Core RSpec System Specs
         if: matrix.build_type == 'backend' && matrix.target == 'core'
