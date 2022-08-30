@@ -41,14 +41,15 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, annotations]
+        # build_type: [backend, frontend, annotations]
+        build_type: [backend, annotations]
         target: [core, plugins]
         ember_cli_plugin_assets: ['1', '0']
         exclude:
           - build_type: annotations
             target: plugins
-          - build_type: frontend
-            target: core # Handled by core_frontend_tests job (below)
+          # - build_type: frontend
+          #   target: core # Handled by core_frontend_tests job (below)
           - target: core
             ember_cli_plugin_assets: '1'
           - target: plugins
@@ -177,10 +178,10 @@ jobs:
           name: failed-selenium-screenshots
           path: tmp/capybara/*.png
 
-      - name: Plugin QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake plugin:qunit['*','1200000']
-        timeout-minutes: 30
+      # - name: Plugin QUnit
+      #   if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+      #   run: bin/rake plugin:qunit['*','1200000']
+      #   timeout-minutes: 30
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -199,64 +200,64 @@ jobs:
           fi
         timeout-minutes: 30
 
-  core_frontend_tests:
-    name: core frontend (${{ matrix.browser }})
-    runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim-browsers
-    timeout-minutes: 35
+  # core_frontend_tests:
+  #   name: core frontend (${{ matrix.browser }})
+  #   runs-on: ubuntu-latest
+  #   container: discourse/discourse_test:slim-browsers
+  #   timeout-minutes: 35
 
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: ["Chrome", "Firefox", "Headless Firefox"]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       browser: ["Chrome", "Firefox", "Headless Firefox"]
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 1
 
-      - name: Setup Git
-        run: |
-          git config --global user.email "ci@ci.invalid"
-          git config --global user.name "Discourse CI"
+  #     - name: Setup Git
+  #       run: |
+  #         git config --global user.email "ci@ci.invalid"
+  #         git config --global user.name "Discourse CI"
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+  #     - name: Get yarn cache directory
+  #       id: yarn-cache-dir
+  #       run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+  #     - name: Yarn cache
+  #       uses: actions/cache@v3
+  #       id: yarn-cache
+  #       with:
+  #         path: ${{ steps.yarn-cache-dir.outputs.dir }}
+  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-yarn-
 
-      - name: Yarn install
-        working-directory: ./app/assets/javascripts/discourse
-        run: yarn install
+  #     - name: Yarn install
+  #       working-directory: ./app/assets/javascripts/discourse
+  #       run: yarn install
 
-      - name: Ember Build
-        working-directory: ./app/assets/javascripts/discourse
-        run: |
-          sudo -E -u discourse mkdir /tmp/emberbuild
-          sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
+  #     - name: Ember Build
+  #       working-directory: ./app/assets/javascripts/discourse
+  #       run: |
+  #         sudo -E -u discourse mkdir /tmp/emberbuild
+  #         sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
 
-      - name: Core QUnit 1
-        if: ${{ always() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 15
+  #     - name: Core QUnit 1
+  #       if: ${{ always() }}
+  #       working-directory: ./app/assets/javascripts/discourse
+  #       run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
+  #       timeout-minutes: 15
 
-      - name: Core QUnit 2
-        if: ${{ always() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 15
+  #     - name: Core QUnit 2
+  #       if: ${{ always() }}
+  #       working-directory: ./app/assets/javascripts/discourse
+  #       run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
+  #       timeout-minutes: 15
 
-      - name: Core QUnit 3
-        if: ${{ always() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 15
+  #     - name: Core QUnit 3
+  #       if: ${{ always() }}
+  #       working-directory: ./app/assets/javascripts/discourse
+  #       run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
+  #       timeout-minutes: 15
