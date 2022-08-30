@@ -170,7 +170,8 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: SELENIUM_PORT=4444 SELENIUM_HOST=http://selenium bin/rspec spec/system
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload failed selenium screenshots
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: failed-selenium-screenshots
