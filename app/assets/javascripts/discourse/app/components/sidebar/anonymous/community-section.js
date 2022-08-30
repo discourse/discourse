@@ -7,18 +7,16 @@ import UsersSectionLink from "discourse/lib/sidebar/common/community-section/use
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 
 export default class SidebarAnonymousCommunitySection extends SidebarCommonCommunitySection {
-  constructor() {
-    super(...arguments);
-
-    this.defaultMoreSectionLinks = [GroupsSectionLink, BadgesSectionLink];
-
-    this.defaultMoreSecondarySectionLinks = [];
-
-    this.defaultMainSectionLinks = [
+  get defaultMainSectionLinks() {
+    return [
       EverythingSectionLink,
       UsersSectionLink,
       AboutSectionLink,
       FAQSectionLink,
     ];
+  }
+
+  get defaultMoreSectionLinks() {
+    return [GroupsSectionLink, BadgesSectionLink];
   }
 }

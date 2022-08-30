@@ -13,45 +13,68 @@ export default class SidebarCommunitySection extends Component {
   @service appEvents;
   @service siteSettings;
 
-  // Override in child
-  defaultMainSectionLinks = [];
-  defaultAdminMainSectionLinks = [];
-  defaultMoreSectionLinks = [];
-  defaultMoreSecondarySectionLinks = [];
   headerActionsIcon;
   headerActions;
+  sectionLinks;
+  moreSectionLinks;
+  moreSecondarySectionLinks;
+  callbackId;
 
-  get moreSectionLinks() {
-    return [...this.defaultMoreSectionLinks, ...customSectionLinks].map(
-      (sectionLinkClass) => {
-        return this.#initializeSectionLink(sectionLinkClass);
-      }
-    );
-  }
+  constructor() {
+    super(...arguments);
 
-  get moreSecondarySectionLinks() {
-    return [
+    this.moreSectionLinks = [
+      ...this.defaultMoreSectionLinks,
+      ...customSectionLinks,
+    ].map((sectionLinkClass) => {
+      return this.#initializeSectionLink(sectionLinkClass);
+    });
+
+    this.moreSecondarySectionLinks = [
       ...this.defaultMoreSecondarySectionLinks,
       ...secondaryCustomSectionLinks,
     ].map((sectionLinkClass) => {
       return this.#initializeSectionLink(sectionLinkClass);
     });
-  }
 
-  get mainSectionLinks() {
-    return this.currentUser?.staff
+    const mainSectionLinks = this.currentUser?.staff
       ? [...this.defaultMainSectionLinks, ...this.defaultAdminMainSectionLinks]
       : [...this.defaultMainSectionLinks];
-  }
 
-  get sectionLinks() {
-    return this.mainSectionLinks.map((sectionLinkClass) => {
+    this.sectionLinks = mainSectionLinks.map((sectionLinkClass) => {
       return this.#initializeSectionLink(sectionLinkClass);
+    });
+
+    this.callbackId = this.topicTrackingState.onStateChange(() => {
+      this.sectionLinks.forEach((sectionLink) => {
+        sectionLink.onTopicTrackingStateChange();
+      });
     });
   }
 
   willDestroy() {
     this.sectionLinks.forEach((sectionLink) => sectionLink.teardown());
+    this.topicTrackingState.offStateChange(this.callbackId);
+  }
+
+  // Override in child
+  get defaultMainSectionLinks() {
+    return [];
+  }
+
+  // Override in child
+  get defaultAdminMainSectionLinks() {
+    return [];
+  }
+
+  // Override in child
+  get defaultMoreSectionLinks() {
+    return [];
+  }
+
+  // Override in child
+  get defaultMoreSecondarySectionLinks() {
+    return [];
   }
 
   #initializeSectionLink(sectionLinkClass) {
