@@ -49,7 +49,13 @@ export default class UserMenuTab {
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native
     // class with @tracked properties.
-    return this.currentUser.get(key) || 0;
+
+    // TODO: remove old key fallback after plugins PRs are merged
+    // https://github.com/discourse/discourse-chat/pull/1208
+    // https://github.com/discourse/discourse-assign/pull/373
+    const oldKey = `grouped_unread_high_priority_notifications.${this.site.notification_types[type]}`;
+
+    return this.currentUser.get(key) || this.currentUser.get(oldKey) || 0;
   }
 }
 
