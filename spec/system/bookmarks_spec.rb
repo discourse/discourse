@@ -88,10 +88,6 @@ describe "Bookmarking posts and topics", type: :system, js: true do
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
   fab!(:post2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 
-  before do
-    setup_system_test
-  end
-
   it "does not allow anon to create bookmarks" do
     visit "/t/#{topic.id}"
 

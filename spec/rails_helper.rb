@@ -365,6 +365,8 @@ RSpec.configure do |config|
       last_driven_by = driver
     end
     driven_by driver
+
+    setup_system_test
   end
 
   config.before(:each, type: :multisite) do
