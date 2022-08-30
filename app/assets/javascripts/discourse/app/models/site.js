@@ -83,6 +83,24 @@ const Site = RestModel.extend({
       : this.sortedCategories;
   },
 
+  @discourseComputed("categories.[]", "categories.@each.notification_level")
+  trackedCategoriesList(categories) {
+    const trackedCategories = [];
+
+    for (const category of categories) {
+      if (category.isTracked) {
+        if (
+          !this.siteSettings.suppress_uncategorized_badge ||
+          category.id !== this.uncategorized_category_id
+        ) {
+          trackedCategories.push(category);
+        }
+      }
+    }
+
+    return trackedCategories;
+  },
+
   postActionTypeById(id) {
     return this.get("postActionByIdLookup.action" + id);
   },
@@ -223,7 +241,6 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
         });
         warned = true;
       }

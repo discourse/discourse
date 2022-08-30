@@ -1,10 +1,6 @@
-:root {
-  --reply-composer-height: 300px;
-  --new-topic-composer-height: 400px;
-}
 html.composer-open {
   #main-outlet {
-    padding-bottom: var(--reply-composer-height);
+    padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;
   }
 }
@@ -53,11 +49,7 @@ html.composer-open {
   }
 
   &.open {
-    height: var(--reply-composer-height);
-    &.edit-title {
-      // more room when editing the title
-      height: var(--new-topic-composer-height);
-    }
+    height: var(--composer-height);
   }
 
   &.closed {
@@ -97,9 +89,6 @@ html.composer-open {
     .grippie,
     .saving-text {
       display: none;
-    }
-    .toggle-minimize {
-      order: 2;
     }
   }
 
@@ -171,10 +160,6 @@ html.composer-open {
 
       .d-icon {
         color: var(--primary-medium);
-      }
-
-      .toggle-minimize {
-        order: 2;
       }
     }
   }
@@ -435,6 +420,11 @@ html.composer-open {
         @include hover {
           background-color: var(--highlight-low);
           text-decoration: none;
+        }
+
+        .relative-date {
+          font-size: var(--font-down-3);
+          padding-top: 10em;
         }
       }
     }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Permalink do
+RSpec.describe Permalink do
 
   describe "normalization" do
     it "correctly normalizes" do

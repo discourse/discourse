@@ -1,7 +1,8 @@
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
+import I18n from "I18n";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -256,7 +257,12 @@ export default createWidget("user-menu", {
 
     if (unreadHighPriorityNotifications > 0) {
       return showModal("dismiss-notification-confirmation").setProperties({
-        count: unreadHighPriorityNotifications,
+        confirmationMessage: I18n.t(
+          "notifications.dismiss_confirmation.body.default",
+          {
+            count: unreadHighPriorityNotifications,
+          }
+        ),
         dismissNotifications: () => this.state.markRead(),
       });
     } else {
@@ -295,7 +301,7 @@ export default createWidget("user-menu", {
       const headerCloak = document.querySelector(".header-cloak");
       headerCloak.classList.add("animate");
       headerCloak.style.setProperty("--opacity", 0);
-      later(() => this.sendWidgetAction("toggleUserMenu"), 200);
+      discourseLater(() => this.sendWidgetAction("toggleUserMenu"), 200);
     }
   },
 

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-describe PostValidator do
+RSpec.describe PostValidator do
   fab!(:topic) { Fabricate(:topic) }
   let(:post) { build(:post, topic: topic) }
   let(:validator) { PostValidator.new({}) }
 
-  context "#post_body_validator" do
+  describe "#post_body_validator" do
     it 'should not allow a post with an empty raw' do
       post.raw = ""
       validator.post_body_validator(post)
@@ -22,7 +22,7 @@ describe PostValidator do
       end
     end
 
-    describe "when post's topic is a PM between a human and a non human user" do
+    context "when post's topic is a PM between a human and a non human user" do
       fab!(:robot) { Fabricate(:user, id: -3) }
       fab!(:user) { Fabricate(:user) }
 
@@ -43,7 +43,7 @@ describe PostValidator do
     end
   end
 
-  context "stripped_length" do
+  describe "stripped_length" do
     it "adds an error for short raw" do
       post.raw = "abc"
       validator.stripped_length(post)
@@ -102,7 +102,7 @@ describe PostValidator do
     end
   end
 
-  context "too_many_posts" do
+  describe "too_many_posts" do
     it "should be invalid when the user has posted too much" do
       post.user.expects(:posted_too_much_in_topic?).returns(true)
       validator.max_posts_validator(post)
@@ -123,7 +123,7 @@ describe PostValidator do
     end
   end
 
-  context "too_many_mentions" do
+  describe "too_many_mentions" do
     before do
       SiteSetting.newuser_max_mentions_per_post = 2
       SiteSetting.max_mentions_per_post = 3
@@ -180,7 +180,7 @@ describe PostValidator do
     end
   end
 
-  context "too_many_embedded_media" do
+  describe "too_many_embedded_media" do
     before do
       SiteSetting.min_trust_to_post_embedded_media = 0
       SiteSetting.newuser_max_embedded_media = 2
@@ -223,7 +223,7 @@ describe PostValidator do
     end
   end
 
-  context "invalid post" do
+  describe "invalid post" do
     it "should be invalid" do
       validator.validate(post)
       expect(post.errors.count).to be > 0
@@ -232,19 +232,25 @@ describe PostValidator do
 
   describe "unique_post_validator" do
     fab!(:user) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+    fab!(:post) { Fabricate(:post, raw: "Non PM topic body", user: user, topic: topic) }
+    fab!(:pm_post) { Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic)) }
 
     before do
       SiteSetting.unique_posts_mins = 5
+
       post.store_unique_post_key
+      pm_post.store_unique_post_key
+
       @key = post.unique_post_key
+      @pm_key = pm_post.unique_post_key
     end
 
     after do
       Discourse.redis.del(@key)
+      Discourse.redis.del(@pm_key)
     end
 
-    context "post is unique" do
+    context "when post is unique" do
       let(:new_post) do
         Fabricate.build(:post, user: user, raw: "unique content", topic: topic)
       end
@@ -262,17 +268,45 @@ describe PostValidator do
       end
     end
 
-    context "post is not unique" do
-      let(:new_post) do
-        Fabricate.build(:post, user: user, raw: post.raw, topic: topic)
+    context "when post is not unique" do
+      def build_post(is_pm:, raw:)
+        Fabricate.build(
+          :post,
+          user: user,
+          raw: raw,
+          topic: is_pm ? Fabricate.build(:private_message_topic) : topic
+        )
       end
 
-      it "should add an error" do
+      it "should add an error for post dupes" do
+        new_post = build_post(is_pm: false, raw: post.raw)
+
         validator.unique_post_validator(new_post)
         expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
       end
 
+      it "should add an error for pm dupes" do
+        new_post = build_post(is_pm: true, raw: pm_post.raw)
+
+        validator.unique_post_validator(new_post)
+        expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
+      end
+
+      it "should not add an error for cross PM / topic dupes" do
+        new_post = build_post(is_pm: true, raw: post.raw)
+
+        validator.unique_post_validator(new_post)
+        expect(new_post.errors.count).to eq(0)
+
+        new_post = build_post(is_pm: false, raw: pm_post.raw)
+
+        validator.unique_post_validator(new_post)
+        expect(new_post.errors.count).to eq(0)
+      end
+
       it "should not add an error if post.skip_unique_check is true" do
+        new_post = build_post(is_pm: false, raw: post.raw)
+
         new_post.skip_unique_check = true
         validator.unique_post_validator(new_post)
         expect(new_post.errors.count).to eq(0)
@@ -280,8 +314,7 @@ describe PostValidator do
     end
   end
 
-  context "force_edit_last_validator" do
-
+  describe "force_edit_last_validator" do
     fab!(:user) { Fabricate(:user) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
@@ -358,7 +391,7 @@ describe PostValidator do
     end
   end
 
-  context "admin editing a static page" do
+  describe "admin editing a static page" do
     before do
       post.acting_user = build(:admin)
       SiteSetting.tos_topic_id = post.topic_id
@@ -367,9 +400,8 @@ describe PostValidator do
     include_examples "almost no validations"
   end
 
-  context "staged user" do
+  describe "staged user" do
     before { post.acting_user = build(:user, staged: true) }
     include_examples "almost no validations"
   end
-
 end

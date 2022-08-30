@@ -210,6 +210,7 @@ de:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Benutzeragenten müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer falsch eingeschätzt werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst die Strip-Image-Metadaten nicht deaktivieren, wenn \"composer media optimization image enabled\" aktiviert ist. Deaktiviere \"composer media optimization image enabled\", bevor du Strip-Image-Metadaten deaktivierst."
+      twitter_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -588,6 +589,11 @@ de:
               too_many: "Zu viele Wörter für diese Aktion"
             base:
               invalid_url: "Ersatz-URL ist ungültig"
+              invalid_tag_list: "Ersatz-Schlagwort-Liste ist ungültig"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "ist nicht gültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
   vip_category_name: "Lounge"
@@ -668,6 +674,11 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
+      blocked_hotlinked_title: "Das Bild befindet sich auf einer anderen Website. Anklicken, um es in einem neuen Tab zu öffnen."
+      blocked_hotlinked: "Externes Bild"
+    media_placeholder:
+      blocked_hotlinked_title: "Die Medien werden auf einer anderen Website gehostet. Anklicken, um in einem neuen Tab zu öffnen."
+      blocked_hotlinked: "Externe Medien"
     hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
@@ -687,7 +698,7 @@ de:
       public_group_membership: "Du wechselst die Gruppenzugehörigkeit etwas zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
       topics_per_day: "Du hast die maximal erlaubte Anzahl an neuen Themen pro Tag erreicht. Du kannst mehr neue Themen in %{time_left} erstellen."
       pms_per_day: "Du hast die maximal erlaubte Anzahl an neuen Nachrichten pro Tag erreicht. Du kannst mehr neue Nachrichten in %{time_left} erstellen."
-      create_like: "Wow! Du hast eine Menge Liebe geteilt! Du hast die maximale Anzahl an täglichen „Gefällt mir“ für heute erreicht, aber je höher deine Vertrauensstufe, desto mehr „Gefällt mir“ stehen dir täglich zur Verfügung. In %{time_left} kannst du wieder Beiträge liken."
+      create_like: "Wow! Du hast eine Menge Liebe geteilt! Du hast die maximale Anzahl an „Gefällt mir“ innerhalb von 24 Stunden erreicht, aber je höher deine Vertrauensstufe, desto mehr „Gefällt mir“ stehen dir täglich zur Verfügung. In %{time_left} kannst du wieder Beiträge mit „Gefällt mir“ markieren."
       create_bookmark: "Du hast die maximale Anzahl an täglichen Lesezeichen erreicht. Du kannst mehr Lesezeichen in %{time_left} erstellen."
       edit_post: "Du hast die maximale Anzahl an täglichen Bearbeitungen erreicht. Du kannst in %{time_left} mehr Bearbeitungen einreichen."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, ehe du es erneut versuchst."
@@ -1429,9 +1440,11 @@ de:
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anfragen angezeigt."
     contact_url: "Kontakt-URL für diese Website. Wird auf der Seite <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anliegen angezeigt."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
-    download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
+    download_remote_images_to_local: "Konvertiere externe (mit Hotlinks versehene) Bilder in lokale Bilder, indem du sie herunterlädst; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der verlinkten Seite entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
     disabled_image_download_domains: "Durch senkrechte Striche („|“) getrennte Liste von Domains, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
+    block_hotlinked_media: "Verhindert, dass Benutzer extrene (Hotlinked) Medien in ihren Beiträgen einfügen. Externe Medien, die nicht über 'download_remote_images_to_local' heruntergeladen werden, werden durch einen Platzhalter-Link ersetzt."
+    block_hotlinked_media_exceptions: "Eine Liste von Basis-URLs, die von der Einstellung block_hotlinked_media ausgenommen sind. Füge das Protokoll hinzu (z.B. https://example.com)."
     editing_grace_period: "Für (n) Sekunden nach dem Schreiben wird durch die Bearbeitung keine neue Version im Beitragsverlauf erstellt."
     editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
     editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 2 und höher)"
@@ -1473,7 +1486,7 @@ de:
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
     apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
-    twitter_summary_large_image: "„summary large image“ für Twitter-Karten (sollte mindestens 280 breit und 150 hoch sein). Falls leer, werden Standard-Karten-Metadaten mithilfe von opengraph_image generiert."
+    twitter_summary_large_image: "Twitter-Karte \"Zusammenfassung großes Bild\" (sollte mindestens 280 in der Breite und mindestens 150 in der Höhe sein, kann nicht .svg sein). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt."
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1577,6 +1590,7 @@ de:
     enable_badges: "Abzeichen aktivieren"
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     enable_whispers: "Erlaube dem Team private Kommunikation innerhalb von Themen."
+    whispers_allowed_groups: "Erlaube private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche („|“) getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
@@ -1663,6 +1677,8 @@ de:
     top_topics_formula_first_post_likes_multiplier: "Wert des Multiplikators (n) für die „Gefällt mir“-Angaben des ersten Beitrags in der Formel für angesagte Themen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "Wert des Multiplikators (n) für die wenigsten „Gefällt mir“-Angaben pro Beitrag in der Formel für angesagte Themen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Erlaube Benutzern, den abgesicherten Modus zu betreten, um Plug-ins zu debuggen."
+    enable_experimental_sidebar_hamburger: "Ermöglicht die Aktivierung der experimentellen Seitenleiste und des Benutzer-Hamburger-Dropdown-Menüs."
+    enable_sidebar: "Aktiviert die experimentelle Seitenleiste."
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
@@ -1858,6 +1874,7 @@ de:
     max_emails_per_day_per_user: "Maximale Anzahl von E-Mails, die den Benutzern pro Tag gesendet werden. 0 zum Deaktivieren des Limits"
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
     maximum_staged_users_per_email: "Maximale Anzahl vorbereiteter Benutzer, wenn eine eingehende E-Mail bearbeitet wird."
+    maximum_recipients_per_new_group_email: "Blockiere eingehende E-Mails mit zu vielen Empfängern."
     auto_generated_allowlist: "Liste von E-Mail-Adressen, die nicht auf automatisch generierte Inhalte überprüft werden. Beispiel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
@@ -2056,7 +2073,7 @@ de:
     default_categories_tracking: "Liste der standardmäßig verfolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste der Kategorien, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
-    default_categories_regular: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
+    default_categories_normal: "Liste der Kategorien, die nicht standardmäßig stummgeschaltet sind. Nützlich, wenn die Website-Einstellung `mute_all_categories_by_default` aktiviert ist."
     mute_all_categories_by_default: "Setze die Standard-Benachrichtigungsstufe für alle Kategorien auf stumm. Erfordere die Aktivierung der Kategorien durch die Benutzer, damit sie auf den Seiten „Aktuell“ und „Kategorien“ erscheinen. Wenn du die Standardeinstellungen für anonyme Benutzer ändern möchtest, bearbeite die „default_categories_“-Einstellungen."
     default_tags_watching: "Liste der Schlagwörter, die standardmäßig beobachtet werden."
     default_tags_tracking: "Liste der Schlagwörter, die standardmäßig verfolgt werden."
@@ -2112,6 +2129,9 @@ de:
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil der E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Dies macht es für die Öffentlichkeit einfacher, die vollständigen E-Mail-Adressen der Nutzer/innen zu erraten (da ein großer Teil der Menschen gemeinsame Dienste wie \"gmail.com\" nutzt)."
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
+    splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt Kategorien der Seitenleiste angezeigt."
+    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt Tags der Seitenleiste angezeigt."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2166,6 +2186,7 @@ de:
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
+      delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3013,6 +3034,15 @@ de:
         Du hast auf eine E-Mail-Zusammenfassung geantwortet, was nicht zulässig ist.
 
         Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "E-Mail lehnt zu viele Empfänger ab"
+      subject_template: "[%{email_prefix}] E-Mail-Problem - Zu viele Empfänger"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Du hast versucht, an mehr als %{max_recipients_count} Personen zu schreiben und unser System hat deine E-Mail automatisch als Spam markiert.
+
+        Wenn du glaubst, dass dies ein Fehler ist, [kontaktiere einen Mitarbeiter](%{base_url}/about).
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -3631,7 +3661,7 @@ de:
 
         Wenn du das warst – hervorragend! Du musst nichts weiter tun.
 
-        Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/account) und erwäge, dein Passwort zu ändern.
+        Wenn du das nicht gewesen bist, [überprüfe bitte deine aktiven Sitzungen](%{base_url}/my/preferences/security) und erwäge, dein Passwort zu ändern.
     post_approved:
       title: "Dein Beitrag wurde genehmigt"
       subject_template: "[%{site_name}] Dein Beitrag wurde genehmigt"
@@ -3736,6 +3766,12 @@ de:
     dark_rose: "Dunkelrosa"
     wcag: "WCAG (hell)"
     wcag_theme_name: "WCAG (hell)"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solarisiertes Licht"
+    solarized_light_theme_name: "Solarisiertes Licht"
+    solarized_dark: "Solarisierte Dunkelheit"
+    solarized_dark_theme_name: "Solarisierte Dunkelheit"
     wcag_dark: "WCAG (dunkel)"
     wcag_dark_theme_name: "WCAG (dunkel)"
     default_theme_name: "Standard"
@@ -4367,6 +4403,7 @@ de:
       invalid_token: "Ungültiges Token."
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
+    safe_mode: "Abgesicherter Modus: Deaktivieren Sie alle Themen/Plugins beim Anmelden"
   performance_report:
     initial_post_raw: Dieses Thema enthält tägliche Leistungsberichte für deine Website.
     initial_topic_title: Berichte zur Website-Leistung
@@ -4415,92 +4452,47 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
-    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plug-ins oder Website-Anpassungen zu laden."
-    no_customizations: "Aktuelles Theme deaktivieren"
-    only_official: "Inoffizielle Plug-ins deaktivieren"
+    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plugins oder Themes zu laden."
+    no_themes: "Themen und Themenkomponenten deaktivieren"
+    no_unofficial_plugins: "Inoffizielle Plug-ins deaktivieren"
     no_plugins: "Alle Plug-ins deaktivieren"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
   wizard:
     title: "Discourse einrichten"
     step:
-      locale:
-        title: "Willkommen bei deinem Discourse!"
-        fields:
-          default_locale:
-            description: "Was ist die Standardsprache für deine Community?"
-      forum_title:
-        title: "Name"
-        description: "Der Name ist ein Zeichen, das aus der Ferne sichtbar ist, wahrscheinlich die <i>erste</i> Sache, die mögliche Besucher über deine Community bemerken werden. Was sagen dein Name und Titel über deine Community aus?"
+      introduction:
+        title: "Erzähl uns von deiner Community"
         fields:
           title:
-            label: "Name deiner Community"
+            label: "Name der Community"
             placeholder: "Erikas Stammtisch"
           site_description:
-            label: "Beschreibe deine Community in einem kurzen Satz (wird in Suchergebnissen und sozialen Medien verwendet)"
+            label: "Beschreibe deine Community in einem Satz"
             placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
-          short_site_description:
-            label: "Beschreibe deine Community in wenigen Worten (wird für den Homepage-Titel verwendet)"
-            placeholder: "Beste Community aller Zeiten"
-      introduction:
-        title: "Einführung"
-        disabled: "<p>Wir konnten kein Thema mit dem Titel „%{topic_title}“ finden</p>. <ul> <li>Wenn du den Titel geändert hast, bearbeite das Thema, um den Begrüßungstext deiner Website zu ändern.</li> <li>Wenn du das Thema gelöscht hast, erstelle einfach ein neues Thema mit dem Titel „%{topic_title}“. Der Inhalt des ersten Beitrags wird dann als Begrüßungstext deiner Website verwendet.</li> </ul>"
-        fields:
-          welcome:
-            label: "Willkommen-Thema"
-            description: "<p>Wie würdest du deine Community einem Fremden im Fahrstuhl in etwa einer Minute beschreiben?</p> <ul> <li>An wen richten sich die Diskussionen?</li> <li>Was kann ich hier finden?</li> <li>Warum lohnt es sich, vorbeizuschauen?</li> </ul> <p>Dein Willkommen-Thema ist die erste Sache, die neue Besucher sehen werden. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder als „Leitbild“ bestehend aus <b>einem Absatz</b>. </p>"
-            one_paragraph: "Bitte begrenze deine Begrüßungsnachricht auf einen Absatz."
-            extra_description: "Wenn du dir nicht sicher bist, kannst du diesen Schritt überspringen und dein Willkommen-Thema später bearbeiten."
-      privacy:
-        title: "Zugriff"
-        description: "<p>Ist deine Community für jeden offen oder ist sie auf Mitgliedschaft, Einladung oder Genehmigung beschränkt? Wenn du es vorziehst, die Dinge privat einzurichten, dann schalte später auf öffentlich um.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Öffentlich"
-                description: "Jeder kann auf diese Community zugreifen"
-              restricted:
-                label: "Privat"
-                description: "Nur angemeldete Benutzer können auf diese Community zugreifen"
-          privacy_options:
-            description: "Wie registrieren neue Benutzer ein Benutzerkonto?"
-            choices:
-              open:
-                label: "Benutzer können sich selbst registrieren."
-              invite_only:
-                label: "Benutzer müssen von vertrauenswürdigen Benutzern oder Team-Mitgliedern eingeladen werden, bevor sie sich registrieren können."
-              must_approve:
-                label: "Benutzer können sich selbst registrieren, müssen jedoch von Team-Mitgliedern genehmigt werden."
-      contact:
-        title: "Kontakt"
-        fields:
           contact_email:
-            label: "Mail"
-            placeholder: "name@example.com"
-            description: "E-Mail-Adresse der verantwortlichen Person oder Gruppe für diese Community. Wird verwendet für kritische Benachrichtigungen wie unbehandelte Meldungen, Sicherheitsaktualisierungen sowie für die dringende Kontaktaufnahme über <a href='%{base_path}/about' target='_blank'>deine Seite „Über uns“</a>."
-          contact_url:
-            label: "Webseite"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Allgemeine Kontakt-Webseite für dich oder deine Organisation. Wird auf der <a href='%{base_path}/about' target='_blank'>Seite „Über uns“</a> angezeigt."
-          site_contact:
-            label: "Automatische Nachrichten"
-            description: "Alle automatischen persönlichen Discourse-Nachrichten werden von diesem Benutzer geschickt, z. B. Warnungen zu Meldungen und Benachrichtigungen über den Abschluss von Backups."
-      corporate:
-        title: "Organisation"
-        description: "Diese Informationen werden einfügt in deine <a href='%{base_path}/tos' target='blank'>Nutzungsbedingungen</a>. Dies ist ein Thema, das du in der Team-Kategorie bearbeiten kannst. Wenn du keine Firma hast, kannst du diesen Schritt einfach überspringen."
+            label: "Ansprechpartner"
+            placeholder: "example@user.com"
+            description: "Person oder Gruppe, die für diese Community verantwortlich ist. Wird für kritische Aktualisierungen verwendet und auf <a href='%{base_path}/about' target='_blank'>Ihrer Über-Seite</a> für dringenden Kontakt aufgelistet."
+          default_locale:
+            label: "Sprache"
+      privacy:
+        title: "Mitgliedererfahrung"
         fields:
-          company_name:
-            label: "Firmenname"
-            placeholder: "Beispiel-Organisation"
-          governing_law:
-            label: "Anzuwendendes Recht"
-            placeholder: "Deutsches Recht"
-          city_for_disputes:
-            label: "Stadt für Rechtsstreitigkeiten"
-            placeholder: "Berlin"
+          login_required:
+            placeholder: "Privat"
+            extra_description: "Nur angemeldete Benutzer können auf diese Community zugreifen"
+          invite_only:
+            placeholder: "Nur einladen"
+            extra_description: "Benutzer müssen von vertrauenswürdigen Benutzern oder Team-Mitgliedern eingeladen werden, andernfalls können sich Benutzer selbst anmelden"
+          must_approve_users:
+            placeholder: "Genehmigung erfordern"
+            extra_description: "Benutzer müssen von den Team-Mitgliedern genehmigt werden"
+      ready:
+        title: "Dein Discourse ist bereit!"
+        description: "Das war's! Du hast die Grundlagen für die Einrichtung deiner Community geschaffen. Jetzt kannst du dich umsehen, ein Willkommensthema schreiben und Einladungen verschicken!<br><br>Viel Spaß!"
       styling:
-        title: "Styling"
+        title: "Look & Feel"
         fields:
           color_scheme:
             label: "Farbschema"
@@ -4521,6 +4513,8 @@ de:
                 label: "Kategorien mit hervorgehobenen Themen"
               categories_and_latest_topics:
                 label: "Kategorien und aktuelle Themen"
+              categories_and_latest_topics_created_date:
+                label: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
               categories_and_top_topics:
                 label: "Kategorien und angesagte Themen"
               categories_boxes:
@@ -4529,24 +4523,43 @@ de:
                 label: "Kategorie-Boxen mit Themen"
               subcategories_with_featured_topics:
                 label: "Unterkategorien mit hervorgehobenen Themen"
-      logos:
-        title: "Logos"
+      branding:
+        title: "Community Branding"
         fields:
           logo:
             label: "Hauptlogo"
             description: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1."
           logo_small:
             label: "Quadratisches Logo"
-            description: "Eine quadratische Version deines Logos. Es wird beim Scrollen in der oberen linke Ecke deiner Website gezeigt, im Browser und beim Teilen auf sozialen Netzwerken. Idealerweise größer als 512 x 512."
-      icons:
-        title: "Symbole"
-        fields:
+            description: "Eine quadratische Version deines Logos. Es wird beim Scrollen in der oben links angezeigt und beim Teilen auf sozialen Netzwerken. Idealerweise größer als 512 x 512."
           favicon:
             label: "Browser-Symbol"
-            description: "Symbol, um deine Website in Browsern zu repräsentieren, das in kleinen Größen gut aussieht. Empfohlene Formate sind PNG oder JPG. Wir werden standardmäßig das quadratische Logo verwenden."
+            description: "Ein Icon, das deine Website in Webbrowsern darstellt und auch bei kleinen Größen gut aussieht. PNG oder JPG wird empfohlen. Standardmäßig wird ein quadratisches Logo verwendet."
           large_icon:
             label: "Großes Symbol"
-            description: "Symbol, um deine Website auf modernen Geräten zu repräsentieren, das in größeren Größen gut aussieht. Idealerweise größer als 512 x 512. Wir werden standardmäßig das quadratische Logo verwenden."
+            description: "Ein Icon, das deine Website auf mobilen Geräten darstellt und auch bei größeren Größen gut aussieht. Idealerweise größer als 512x512. Standardmäßig wird ein quadratisches Logo verwendet."
+      corporate:
+        title: "Kontakt & Organisation"
+        fields:
+          company_name:
+            label: "Firmenname"
+            placeholder: "Beispiel-Organisation"
+            description: "Eingetragen auf deiner Seite mit den Nutzungsbedingungen. Wenn es kein Unternehmen gibt, kannst du es überspringen."
+          governing_law:
+            label: "Anzuwendendes Recht"
+            placeholder: "Deutsches Recht"
+            description: "Eingetragen auf deiner Seite mit den Nutzungsbedingungen. Wenn es kein Unternehmen gibt, kannst du es überspringen."
+          contact_url:
+            label: "Webseite"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Allgemeine Kontakt-Webseite für dich oder deine Organisation. Wird auf der <a href='%{base_path}/about' target='_blank'>Seite „Über uns“</a> angezeigt."
+          city_for_disputes:
+            label: "Stadt für Rechtsstreitigkeiten"
+            placeholder: "Berlin"
+            description: "Eingetragen auf deiner Seite mit den Nutzungsbedingungen. Wenn es kein Unternehmen gibt, kannst du es überspringen."
+          site_contact:
+            label: "Automatische Nachrichten"
+            description: "Alle automatischen persönlichen Discourse-Nachrichten werden von diesem Benutzer geschickt, z. B. Warnungen zu Meldungen und Benachrichtigungen über den Abschluss von Backups."
       invites:
         title: "Team einladen"
         description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."
@@ -4724,6 +4737,9 @@ de:
     post_raw: "Fortsetzung der Diskussion von %{parent_url}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
     small_action_post_raw: "Setze die Diskussion bei %{new_title} fort."
   fallback_username: "Benutzer"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at sollte größer sein als set_at"
   activemodel:
     errors:
       <<: *errors

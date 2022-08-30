@@ -168,7 +168,7 @@ basic:
     client: true
     refresh: true
     type: list
-    list_type: compact
+    list_type: simple
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
@@ -323,6 +323,13 @@ basic:
   enable_whispers:
     client: true
     default: false
+  whispers_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -361,6 +368,10 @@ basic:
     default: true
   sitemap_page_size:
     default: 10000
+  enable_user_status:
+    hidden: true
+    client: true
+    default: false
 
 login:
   invite_only:
@@ -531,14 +542,10 @@ users:
   min_username_length:
     client: true
     default: 3
-    min: 1
-    max: 60
     validator: "MinUsernameLengthValidator"
   max_username_length:
     client: true
     default: 20
-    min: 8
-    max: 60
     validator: "MaxUsernameLengthValidator"
   unicode_usernames:
     default: false
@@ -830,6 +837,7 @@ posting:
   delete_removed_posts_after:
     client: true
     default: 24
+    max: 876000
   notify_users_after_responses_deleted_on_flagged_post:
     default: false
   traditional_markdown_linebreaks:
@@ -1194,6 +1202,9 @@ email:
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
+  maximum_recipients_per_new_group_email:
+    default: 10
+    min: 1
   auto_generated_allowlist:
     default: ""
     type: list
@@ -1258,7 +1269,7 @@ email:
   raw_rejected_email_max_length: 4000
   delete_rejected_email_after_days:
     default: 90
-    max: 36500
+    validator: "DeleteRejectedEmailAfterDaysValidator"
   enable_secondary_emails:
     client: true
     default: true
@@ -1322,6 +1333,12 @@ files:
     type: list
     list_type: simple
     default: ""
+  block_hotlinked_media:
+    default: false
+  block_hotlinked_media_exceptions:
+    default: ""
+    type: list
+    regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours: 48
@@ -1376,6 +1393,11 @@ files:
   s3_configure_inventory_policy:
     default: true
     hidden: true
+  s3_presigned_get_url_expires_after_seconds:
+    default: 300
+    hidden: true
+    min: 60
+    max: 604800
   allow_profile_backgrounds:
     client: true
     default: true
@@ -1689,6 +1711,7 @@ security:
     default: false
   content_security_policy_collect_reports:
     default: false
+    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -1965,10 +1988,20 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar:
+  enable_experimental_sidebar_hamburger:
     default: false
     client: true
-    hidden: true
+  enable_sidebar:
+    default: true
+    client: true
+  default_sidebar_categories:
+    type: category_list
+    default: ""
+    client: true
+  default_sidebar_tags:
+    type: tag_list
+    default: ""
+    client: true
 
 embedding:
   embed_by_username:
@@ -2230,7 +2263,7 @@ uncategorized:
     hidden: true
 
   # Category IDs
-  lounge_category_id:
+  general_category_id:
     default: -1
     hidden: true
   meta_category_id:
@@ -2301,9 +2334,7 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
-  lounge_welcome_topic_id:
-    default: -1
-    hidden: true
+    client: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true
@@ -2408,6 +2439,9 @@ uncategorized:
     default: true
     hidden: true
 
+  splash_screen:
+    default: true
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
@@ -2441,7 +2475,7 @@ user_preferences:
     default: 2880
   default_other_auto_track_topics_after_msecs:
     enum: "AutoTrackDurationSiteSetting"
-    default: 240000
+    default: 300000
   default_other_notification_level_when_replying:
     enum: "NotificationLevelWhenReplyingSiteSetting"
     default: 2
@@ -2470,7 +2504,7 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ""
-  default_categories_regular:
+  default_categories_normal:
     type: category_list
     default: ""
   mute_all_categories_by_default:

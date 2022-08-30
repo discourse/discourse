@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSerializer do
+RSpec.describe SiteSerializer do
   let(:guardian) { Guardian.new }
   let(:category) { Fabricate(:category) }
 
@@ -25,7 +25,7 @@ describe SiteSerializer do
 
     expect(c1[:custom_fields]["enable_marketplace"]).to eq("t")
   ensure
-    Site.preloaded_category_custom_fields.clear
+    Site.reset_preloaded_category_custom_fields
   end
 
   it "includes category tags" do
@@ -61,7 +61,7 @@ describe SiteSerializer do
 
   it "returns correct notification level for categories" do
     SiteSetting.mute_all_categories_by_default = true
-    SiteSetting.default_categories_regular = category.id.to_s
+    SiteSetting.default_categories_normal = category.id.to_s
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     categories = serialized[:categories]
@@ -72,19 +72,22 @@ describe SiteSerializer do
   it "includes user-selectable color schemes" do
     # it includes seeded color schemes
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(3)
+    expect(serialized[:user_color_schemes].count).to eq(6)
 
     scheme_names = serialized[:user_color_schemes].map { |x| x[:name] }
     expect(scheme_names).to include(I18n.t("color_schemes.dark"))
     expect(scheme_names).to include(I18n.t("color_schemes.wcag"))
     expect(scheme_names).to include(I18n.t("color_schemes.wcag_dark"))
+    expect(scheme_names).to include(I18n.t("color_schemes.solarized_light"))
+    expect(scheme_names).to include(I18n.t("color_schemes.solarized_dark"))
+    expect(scheme_names).to include(I18n.t("color_schemes.dracula"))
 
     dark_scheme = ColorScheme.create_from_base(name: "AnotherDarkScheme", base_scheme_id: "Dark")
     dark_scheme.user_selectable = true
     dark_scheme.save!
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(4)
+    expect(serialized[:user_color_schemes].count).to eq(7)
     expect(serialized[:user_color_schemes][0][:is_dark]).to eq(true)
   end
 
@@ -108,5 +111,28 @@ describe SiteSerializer do
 
     serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
+  end
+
+  it 'includes show_welcome_topic_banner' do
+    admin = Fabricate(:admin)
+    admin_guardian = Guardian.new(admin)
+    UserAuthToken.generate!(user_id: admin.id)
+
+    first_post = Fabricate(:post, created_at: 25.days.ago)
+    SiteSetting.welcome_topic_id = first_post.topic.id
+
+    serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+    expect(serialized[:show_welcome_topic_banner]).to eq(true)
+  end
+
+  it 'includes anonymous_default_sidebar_tags' do
+    Fabricate(:tag, name: "dev")
+    Fabricate(:tag, name: "random")
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+
+    SiteSetting.default_sidebar_tags = "dev|random"
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    expect(serialized[:anonymous_default_sidebar_tags]).to eq(["dev", "random"])
   end
 end

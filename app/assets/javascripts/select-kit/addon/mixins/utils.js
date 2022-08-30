@@ -6,7 +6,8 @@ export default Mixin.create({
     // relying on passing the event to the input is risky as it could not work
     // dispatching the event won't work as the event won't be trusted
     // safest solution is to filter event and prefill filter with it
-    const nonInputKeysRegex = /F\d+|Arrow.+|Meta|Alt|Control|Shift|Delete|Enter|Escape|Tab|Space|Insert|Backspace/;
+    const nonInputKeysRegex =
+      /F\d+|Arrow.+|Meta|Alt|Control|Shift|Delete|Enter|Escape|Tab|Space|Insert|Backspace/;
     return !nonInputKeysRegex.test(eventKey);
   },
 
@@ -76,7 +77,7 @@ export default Mixin.create({
     const property = get(this.selectKit, type);
 
     if (!property) {
-      if (content.indexOf(item) > -1) {
+      if (content.includes(item)) {
         return item;
       }
     } else if (typeof property === "string") {

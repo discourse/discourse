@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'content security policy integration' do
+RSpec.describe 'content security policy integration' do
 
   it "adds the csp headers correctly" do
     SiteSetting.content_security_policy = false

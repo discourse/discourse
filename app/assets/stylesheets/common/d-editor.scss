@@ -15,6 +15,7 @@
   flex: 1;
   flex-direction: column;
   max-width: 100%;
+  min-width: 0;
 }
 
 .d-editor-textarea-wrapper {
@@ -199,7 +200,8 @@
 
     .scale-btn-container,
     .alt-text-readonly-container,
-    .alt-text-edit-container {
+    .alt-text-edit-container,
+    .delete-image-button {
       background: var(--secondary);
       display: flex;
       height: var(--resizer-height);
@@ -244,6 +246,7 @@
 
       .alt-text-edit-btn {
         cursor: pointer;
+        color: var(--tertiary);
 
         svg {
           padding-right: 0.5em;
@@ -281,6 +284,15 @@
       }
     }
 
+    .delete-image-button {
+      cursor: pointer;
+      color: var(--danger);
+
+      .d-icon-trash-alt {
+        margin-left: 0.5em;
+      }
+    }
+
     svg {
       pointer-events: none;
     }
@@ -298,6 +310,12 @@
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
+
+  html:not(.keyboard-visible) & {
+    overflow-x: auto; // hiding overflow breaks the cog menu on iPad and mobile
+  }
+
+  flex-shrink: 0;
 
   .d-editor-spacer {
     height: 1em;

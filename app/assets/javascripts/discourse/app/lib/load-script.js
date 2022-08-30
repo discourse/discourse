@@ -48,11 +48,6 @@ export function loadCSS(url) {
 }
 
 export default function loadScript(url, opts = {}) {
-  // TODO: Remove this once plugins have been updated not to use it:
-  if (url === "defer/html-sanitizer-bundle") {
-    return Promise.resolve();
-  }
-
   if (_loaded[url]) {
     return Promise.resolve();
   }
@@ -119,7 +114,7 @@ export function cacheBuster(url) {
   if (PUBLIC_JS_VERSIONS) {
     let [folder, ...lib] = url.split("/").filter(Boolean);
     if (folder === "javascripts") {
-      lib = lib.join("/");
+      lib = lib.join("/").toLowerCase();
       const versionedPath = PUBLIC_JS_VERSIONS[lib];
       if (versionedPath) {
         return `/javascripts/${versionedPath}`;

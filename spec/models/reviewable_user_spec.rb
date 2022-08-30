@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableUser, type: :model do
-
   fab!(:moderator) { Fabricate(:moderator) }
   let(:user) do
     user = Fabricate(:user)
@@ -10,8 +9,9 @@ RSpec.describe ReviewableUser, type: :model do
   end
   fab!(:admin) { Fabricate(:admin) }
 
-  context "actions_for" do
+  describe "#actions_for" do
     fab!(:reviewable) { Fabricate(:reviewable) }
+
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(true)
@@ -55,7 +55,7 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
-  context "#update_fields" do
+  describe "#update_fields" do
     fab!(:moderator) { Fabricate(:moderator) }
     fab!(:reviewable) { Fabricate(:reviewable) }
 
@@ -77,9 +77,10 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
-  context "perform" do
+  describe "#perform" do
     fab!(:reviewable) { Fabricate(:reviewable) }
-    context "approve" do
+
+    context "when approving" do
       it "allows us to approve a user" do
         result = reviewable.perform(moderator, :approve_user)
         expect(result.success?).to eq(true)
@@ -91,7 +92,9 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.target.approved_at).to be_present
         expect(reviewable.version > 0).to eq(true)
       end
+    end
 
+    context "when rejecting" do
       it "allows us to reject a user" do
         result = reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
         expect(result.success?).to eq(true)
@@ -161,6 +164,18 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.target).to be_blank
       end
+
+      it "silently transitions the reviewable if the user is an admin" do
+        reviewable.target.update!(admin: true)
+
+        result = reviewable.perform(moderator, :delete_user)
+        expect(reviewable.pending?).to eq(false)
+        expect(reviewable.rejected?).to eq(true)
+
+        reviewable.reload
+        expect(reviewable.target).to be_present
+        expect(reviewable.target.approved).to eq(false)
+      end
     end
   end
 
@@ -185,7 +200,7 @@ RSpec.describe ReviewableUser, type: :model do
       expect(@reviewable.reviewable_by_moderator).to eq(true)
     end
 
-    context "email jobs" do
+    context "with email jobs" do
       it "enqueues a 'signup after approval' email if must_approve_users is true" do
         expect_enqueued_with(job: :critical_user_email, args: { type: :signup_after_approval }) do
           @reviewable.perform(admin, :approve_user)
@@ -221,5 +236,4 @@ RSpec.describe ReviewableUser, type: :model do
       expect(event[:params].first).to eq(user)
     end
   end
-
 end

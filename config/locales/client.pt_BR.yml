@@ -169,7 +169,6 @@ pt_BR:
       forwarded: "encaminhou o e-mail acima"
     topic_admin_menu: "ações de tópico"
     skip_to_main_content: "Ir para o conteúdo principal"
-    wizard_required: "Boas-vindas ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     software_update_prompt:
       message: "Nós atualizamos este site, <span>atualize a página</span>, ou você poderá enfrentar uma situação inesperada."
@@ -178,6 +177,7 @@ pt_BR:
       one: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
       other: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
     bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
+    bootstrap_invite_button_title: "Enviar convites"
     themes:
       default_description: "Padrão"
     s3:
@@ -581,6 +581,7 @@ pt_BR:
       forever: "Para sempre"
       relative: "Tempo relativo"
       none: "Nenhum necessário"
+      never: "Nunca"
       last_custom: "Última data personalizada"
       custom: "Data e hora personalizadas"
       select_timeframe: "Selecione um intervalo de tempo"
@@ -1060,6 +1061,8 @@ pt_BR:
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
+      experimental_sidebar:
+        options: "Opções"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -1603,6 +1606,8 @@ pt_BR:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+    user_status:
+      save: "Salvar"
     loading: "Carregando..."
     errors:
       prev_page: "ao tentar carregar"
@@ -1662,11 +1667,9 @@ pt_BR:
       other: respostas
     signup_cta:
       sign_up: "Cadastrar-se"
-      hide_session: "Lembrar amanhã"
       hide_forever: "não, obrigado(a)"
       hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
-      value_prop: "Ao cadastrar uma conta, lembramos exatamente o que foi lido para que você sempre continue de onde parou. Você também recebe notificações, por aqui e via e-mail, sempre que alguém responder. E você pode curtir as postagens para compartilhar o amor. :heartpulse:"
     summary:
       enabled_description: "Você está vendo um resumo deste tópico: as postagens mais interessantes segundo a comunidade."
       description:
@@ -1857,9 +1860,6 @@ pt_BR:
       min_content_not_reached:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
-      invalid_selection_length:
-        one: "A seleção deve ter pelo menos %{count} caracter."
-        other: "A seleção deve ter pelo menos %{count} caracteres."
       components:
         tag_drop:
           filter_for_more: Filtre para ver mais...
@@ -1954,7 +1954,6 @@ pt_BR:
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
       title: "Ou aperte %{modifier}Enter"
-      users_placeholder: "Adicionar um usuário"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "por que você está editando?"
@@ -2024,9 +2023,6 @@ pt_BR:
         reply_as_new_group_message:
           label: Responder como nova mensagem de grupo
           desc: Crie uma nova mensagem começando com os mesmos destinatários
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Criar uma nova mensagem pessoal
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma postagem específica
@@ -2061,6 +2057,7 @@ pt_BR:
       empty: "Nenhuma notificação foi encontrada."
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
+      watching_first_post_label: "Novo tópico"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2073,6 +2070,10 @@ pt_BR:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} outro"
+        other: "%{username}, %{username2} e %{count} outros"
       liked_consolidated_description:
         one: "curtiu %{count} de suas postagens"
         other: "curtiu %{count} de suas postagens"
@@ -2095,8 +2096,9 @@ pt_BR:
       votes_released: "%{description} - concluído(a)"
       dismiss_confirmation:
         body:
-          one: "Tem certeza? Você tem %{count} notificação importante."
-          other: "Tem certeza? Você tem %{count} notificações importantes."
+          default:
+            one: "Tem certeza? Você tem %{count} notificação importante."
+            other: "Tem certeza? Você tem %{count} notificações importantes."
         dismiss: "Descartar"
         cancel: "Cancelar"
       group_message_summary:
@@ -3301,11 +3303,11 @@ pt_BR:
         this_week: "Semana"
         today: "Hoje"
         other_periods: "ver melhores:"
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador é muito antigo para funcionar neste site</a>. <a href="https://browsehappy.com">Atualize seu navegador</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     permission_types:
       full: "Criar/Responder/Ver"
       create_post: "Responder/Ver"
       readonly: "Ver"
+    preloader_text: "Carregando"
     lightbox:
       download: "download"
       previous: "Anterior (seta para a esquerda)"
@@ -3389,7 +3391,6 @@ pt_BR:
         edit: "%{shortcut} Editar postagem"
         delete: "%{shortcut} Excluir postagem"
         mark_muted: "%{shortcut} Silenciar tópico"
-        mark_regular: "%{shortcut} Tópico regular (padrão)"
         mark_tracking: "%{shortcut} Monitorar tópico"
         mark_watching: "%{shortcut} Acompanhar tópico"
         print: "%{shortcut} Imprimir tópico"
@@ -3605,14 +3606,11 @@ pt_BR:
       unsupported_file_picked: "Você escolheu um arquivo incompatível. Tipos de arquivos compatíveis: %{types}."
     user_activity:
       no_activity_title: "Nenhuma atividade ainda."
-      no_activity_others: "Nenhuma atividade."
       no_replies_title: "Você ainda não respondeu a nenhum tópico."
-      no_replies_others: "Sem respostas."
       no_drafts_title: "Você ainda não iniciou nenhum rascunho"
       no_drafts_body: "Ainda não está pronto(a) para postar? Salvaremos automaticamente um novo rascunho e o listaremos aqui sempre que você começar a escrever um tópico, resposta ou mensagem pessoal. Selecione o botão de cancelamento para descartar ou salvar seu rascunho para continuar mais tarde."
       no_likes_title: "Você ainda não curtiu nenhum tópico"
       no_likes_body: "Uma ótima maneira de participar e começar a contribuir é iniciar a leitura das conversas que já aconteceram e selecionar %{heartIcon} nas postagens de que você gostou!"
-      no_likes_others: "Nenhuma postagem curtida."
       no_topics_title: "Você ainda não iniciou nenhum tópico"
       no_read_topics_title: "Você ainda não leu nenhum tópico"
       no_read_topics_body: "Quando começar a ler as discussões, uma lista será exibida aqui. Para começar a ler, procure tópicos do seu interesse em <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a>, ou pesquise por palavra-chave %{searchIcon}"
@@ -3620,18 +3618,40 @@ pt_BR:
     fullscreen_table:
       expand_btn: "Expandir tabela"
     sidebar:
-      unread_count: "%{count} não lido"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} não lido"
+        other: "%{count} não lidos"
+      new_count:
+        one: "%{count} nova"
+        other: "%{count} novas"
+      more: "Mais..."
       sections:
+        messages:
+          header_link_text: "Mensagens"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            new_with_count: "Novo (%{count})"
+            unread: "Não lidos(as)"
+            unread_with_count: "Não lido (%{count})"
+            archive: "Arquivo"
+        tags:
+          header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorias"
           header_link_text: "Categorias"
-        topics:
-          header_link_title: "início"
-          header_link_text: "Tópicos"
+        community:
+          header_link_text: "Comunidade"
           links:
             tracked:
               content: "Monitorados(as)"
+            groups:
+              content: "Grupos"
+              title: "Todos os grupos"
+            users:
+              content: "Usuários(as)"
+            my_posts:
+              content: "Minhas postagens"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -5162,15 +5182,13 @@ pt_BR:
           replace: "Substituir"
   wizard_js:
     wizard:
-      done: "Concluído(a)"
-      finish: "Finalizar"
       back: "Voltar"
       next: "Próximo"
+      step-text: "Intervalo"
       step: "%{current} de %{total}"
       upload: "Enviar"
       uploading: "Enviando..."
       upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
-      quit: "Talvez mais tarde"
       staff_count:
         one: "Sua comunidade tem %{count} pessoa (você). "
         other: "Sua comunidade tem %{count} pessoas, incluindo você."

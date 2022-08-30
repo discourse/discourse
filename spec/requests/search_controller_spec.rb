@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SearchController do
+RSpec.describe SearchController do
   fab!(:awesome_topic) do
     topic = Fabricate(:topic)
     tag = Fabricate(:tag)
@@ -28,7 +28,7 @@ describe SearchController do
     Fabricate(:post, raw: "#{user.username} is a cool person")
   end
 
-  context "integration" do
+  context "with integration" do
     before do
       SearchIndexer.enable
     end
@@ -174,7 +174,7 @@ describe SearchController do
       expect(data['users'][0]['id']).to eq(user.id)
     end
 
-    context 'searching by topic id' do
+    context 'when searching by topic id' do
       it 'should not be restricted by minimum search term length' do
         SiteSetting.min_search_term_length = 20000
 
@@ -205,7 +205,7 @@ describe SearchController do
     end
   end
 
-  context "#query" do
+  describe "#query" do
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search/query.json", params: { term: 'wookie' }
@@ -241,7 +241,7 @@ describe SearchController do
       expect(response.status).to eq(200)
     end
 
-    context 'rate limited' do
+    context 'when rate limited' do
       it 'rate limits anon searches per user' do
         SiteSetting.rate_limit_search_anon_user = 2
         RateLimiter.enable
@@ -288,7 +288,7 @@ describe SearchController do
         expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
-      context "and a logged in user" do
+      context "with a logged in user" do
         before { sign_in(user) }
 
         it 'rate limits logged in searches' do
@@ -317,7 +317,7 @@ describe SearchController do
     end
   end
 
-  context "#show" do
+  describe "#show" do
     it "doesn't raise an error when search term not specified" do
       get "/search"
       expect(response.status).to eq(200)
@@ -374,7 +374,7 @@ describe SearchController do
       expect(SearchLog.where(term: 'bantha')).to be_blank
     end
 
-    context 'rate limited' do
+    context 'when rate limited' do
       it 'rate limits anon searches per user' do
         SiteSetting.rate_limit_search_anon_user = 2
         RateLimiter.enable
@@ -423,7 +423,7 @@ describe SearchController do
 
       end
 
-      context "and a logged in user" do
+      context "with a logged in user" do
         before { sign_in(user) }
 
         it 'rate limits searches' do
@@ -452,7 +452,7 @@ describe SearchController do
     end
   end
 
-  context "search priority" do
+  context "with search priority" do
     fab!(:very_low_priority_category) do
       Fabricate(
         :category,
@@ -550,7 +550,7 @@ describe SearchController do
     end
   end
 
-  context "search context" do
+  context "with search context" do
     it "raises an error with an invalid context type" do
       get "/search/query.json", params: {
         term: 'test', search_context: { type: 'security', id: 'hole' }
@@ -601,7 +601,7 @@ describe SearchController do
     end
   end
 
-  context "#click" do
+  describe "#click" do
     after do
       SearchLog.clear_debounce_cache!
     end

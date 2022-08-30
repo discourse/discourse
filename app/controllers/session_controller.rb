@@ -79,7 +79,7 @@ class SessionController < ApplicationController
     end
   rescue DiscourseConnectProvider::BlankSecret
     render plain: I18n.t("discourse_connect.missing_secret"), status: 400
-  rescue DiscourseConnectProvider::ParseError => e
+  rescue DiscourseConnectProvider::ParseError
     # Do NOT pass the error text to the client, it would give them the correct signature
     render plain: I18n.t("discourse_connect.login_error"), status: 422
   rescue DiscourseConnectProvider::BlankReturnUrl
@@ -156,9 +156,11 @@ class SessionController < ApplicationController
           return
         end
 
-        # users logging in via SSO using an invite do not need to be approved,
-        # they are already pre-approved because they have been invited
-        if SiteSetting.must_approve_users? && !user.approved? && invite.blank?
+        if SiteSetting.must_approve_users? && !user.approved?
+          if invite.present? && user.invited_user.blank?
+            redeem_invitation(invite, sso)
+          end
+
           if SiteSetting.discourse_connect_not_approved_url.present?
             redirect_to SiteSetting.discourse_connect_not_approved_url, allow_other_host: true
           else
@@ -566,7 +568,7 @@ class SessionController < ApplicationController
 
     redirect_url ||= path("/")
 
-    event_data = { redirect_url: redirect_url, user: current_user }
+    event_data = { redirect_url: redirect_url, user: current_user, client_ip: request&.ip, user_agent: request&.user_agent }
     DiscourseEvent.trigger(:before_session_destroy, event_data)
     redirect_url = event_data[:redirect_url]
 

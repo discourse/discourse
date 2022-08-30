@@ -7,11 +7,11 @@ export default {
 
   initialize(container) {
     const banner = EmberObject.create(PreloadStore.get("banner") || {}),
-      site = container.lookup("site:main");
+      site = container.lookup("service:site");
 
     site.set("banner", banner);
 
-    const messageBus = container.lookup("message-bus:main");
+    const messageBus = container.lookup("service:message-bus");
     if (!messageBus) {
       return;
     }

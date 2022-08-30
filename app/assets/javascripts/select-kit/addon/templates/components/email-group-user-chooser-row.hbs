@@ -1,13 +1,13 @@
-{{#if item.isUser}}
-  {{avatar item imageSize="tiny"}}
-  <span class="identifier">{{format-username item.id}}</span>
-  <span class="name">{{item.name}}</span>
-  {{decorate-username-selector item.id}}
-{{else if item.isGroup}}
+{{#if this.item.isUser}}
+  {{avatar this.item imageSize="tiny"}}
+  <span class="identifier">{{format-username this.item.id}}</span>
+  <span class="name">{{this.item.name}}</span>
+  {{decorate-username-selector this.item.id}}
+{{else if this.item.isGroup}}
   {{d-icon "users"}}
-  <span class="identifier">{{item.id}}</span>
-  <span class="name">{{item.full_name}}</span>
+  <span class="identifier">{{this.item.id}}</span>
+  <span class="name">{{this.item.full_name}}</span>
 {{else}}
   {{d-icon "envelope"}}
-  <span class="identifier">{{item.id}}</span>
+  <span class="identifier">{{this.item.id}}</span>
 {{/if}}

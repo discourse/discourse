@@ -102,6 +102,7 @@ module Discourse
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
     config.active_record.legacy_connection_handling = true
+    config.active_record.yaml_column_permitted_classes = [Hash, HashWithIndifferentAccess, Time, Symbol]
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the
@@ -174,6 +175,7 @@ module Discourse
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
       'admin/addon/templates' => 'admin/templates/',
+      'wizard/addon/templates' => 'wizard/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -187,13 +189,11 @@ module Discourse
     Sprockets.register_mime_type 'application/javascript', extensions: ['.js', '.es6', '.js.es6'], charset: :unicode
     Sprockets.register_postprocessor 'application/javascript', DiscourseJsProcessor
 
-    if EmberCli.enabled?
-      Discourse::Application.initializer :prepend_ember_assets do |app|
-        # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
-        app.config.assets.paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
-        Sprockets.unregister_postprocessor 'application/javascript', Sprockets::Rails::SourcemappingUrlProcessor
-        Sprockets.register_postprocessor 'application/javascript', DiscourseSourcemappingUrlProcessor
-      end
+    Discourse::Application.initializer :prepend_ember_assets do |app|
+      # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
+      app.config.assets.paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
+      Sprockets.unregister_postprocessor 'application/javascript', Sprockets::Rails::SourcemappingUrlProcessor
+      Sprockets.register_postprocessor 'application/javascript', DiscourseSourcemappingUrlProcessor
     end
 
     require 'discourse_redis'
@@ -244,28 +244,14 @@ module Discourse
 
       # we got to clear the pool in case plugins connect
       ActiveRecord::Base.connection_handler.clear_active_connections!
-
-      # This nasty hack is required for not precompiling QUnit assets
-      # in test mode. see: https://github.com/rails/sprockets-rails/issues/299#issuecomment-167701012
-      ActiveSupport.on_load(:action_view) do
-        default_checker = ActionView::Base.precompiled_asset_checker
-
-        ActionView::Base.precompiled_asset_checker = -> logical_path do
-          default_checker[logical_path] ||
-            %w{qunit.js
-              qunit.css
-              test_helper.css
-              discourse/tests/test-boot-rails.js
-              wizard/test/test_helper.js
-            }.include?(logical_path) ||
-            logical_path =~ /\/node_modules/ ||
-            logical_path =~ /\/dist/
-        end
-      end
     end
 
     if ENV['RBTRACE'] == "1"
       require 'rbtrace'
+    end
+
+    if ENV['RAILS_QUERY_LOG_TAGS'] == "1"
+      config.active_record.query_log_tags_enabled = true
     end
 
     config.generators do |g|

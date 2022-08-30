@@ -6,17 +6,16 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
+  dialog: service(),
   adminTools: service(),
   originalPrimaryGroupId: null,
   customGroupIdsBuffer: null,
@@ -130,7 +129,7 @@ export default Controller.extend(CanCheckEmails, {
   groupAdded(added) {
     this.model
       .groupAdded(added)
-      .catch(() => bootbox.alert(I18n.t("generic_error")));
+      .catch(() => this.dialog.alert(I18n.t("generic_error")));
   },
 
   groupRemoved(groupId) {
@@ -141,7 +140,7 @@ export default Controller.extend(CanCheckEmails, {
           this.set("originalPrimaryGroupId", null);
         }
       })
-      .catch(() => bootbox.alert(I18n.t("generic_error")));
+      .catch(() => this.dialog.alert(I18n.t("generic_error")));
   },
 
   @discourseComputed("ssoLastPayload")
@@ -156,16 +155,16 @@ export default Controller.extend(CanCheckEmails, {
         .then(() => DiscourseURL.redirectTo("/"))
         .catch((e) => {
           if (e.status === 404) {
-            bootbox.alert(I18n.t("admin.impersonate.not_found"));
+            this.dialog.alert(I18n.t("admin.impersonate.not_found"));
           } else {
-            bootbox.alert(I18n.t("admin.impersonate.invalid"));
+            this.dialog.alert(I18n.t("admin.impersonate.invalid"));
           }
         });
     },
     logOut() {
       return this.model
         .logOut()
-        .then(() => bootbox.alert(I18n.t("admin.user.logged_out")));
+        .then(() => this.dialog.alert(I18n.t("admin.user.logged_out")));
     },
     resetBounceScore() {
       return this.model.resetBounceScore();
@@ -188,13 +187,15 @@ export default Controller.extend(CanCheckEmails, {
           const error = I18n.t("admin.user.deactivate_failed", {
             error: this._formatError(e),
           });
-          bootbox.alert(error);
+          this.dialog.alert(error);
         });
     },
     sendActivationEmail() {
       return this.model
         .sendActivationEmail()
-        .then(() => bootbox.alert(I18n.t("admin.user.activation_email_sent")))
+        .then(() =>
+          this.dialog.alert(I18n.t("admin.user.activation_email_sent"))
+        )
         .catch(popupAjaxError);
     },
     activate() {
@@ -210,7 +211,7 @@ export default Controller.extend(CanCheckEmails, {
           const error = I18n.t("admin.user.activate_failed", {
             error: this._formatError(e),
           });
-          bootbox.alert(error);
+          this.dialog.alert(error);
         });
     },
     revokeAdmin() {
@@ -221,7 +222,7 @@ export default Controller.extend(CanCheckEmails, {
         .grantAdmin()
         .then((result) => {
           if (result.email_confirmation_required) {
-            bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
+            this.dialog.alert(I18n.t("admin.user.grant_admin_confirm"));
           }
         })
         .catch((error) => {
@@ -255,7 +256,7 @@ export default Controller.extend(CanCheckEmails, {
             I18n.t("admin.user.trust_level_change_failed", {
               error: this._formatError(e),
             });
-          bootbox.alert(error);
+          this.dialog.alert(error);
         });
     },
     restoreTrustLevel() {
@@ -275,7 +276,7 @@ export default Controller.extend(CanCheckEmails, {
             I18n.t("admin.user.trust_level_change_failed", {
               error: this._formatError(e),
             });
-          bootbox.alert(error);
+          this.dialog.alert(error);
         });
     },
     unsilence() {
@@ -287,7 +288,6 @@ export default Controller.extend(CanCheckEmails, {
 
     anonymize() {
       const user = this.model;
-      const message = I18n.t("admin.user.anonymize_confirm");
 
       const performAnonymize = () => {
         this.model
@@ -302,31 +302,32 @@ export default Controller.extend(CanCheckEmails, {
                 document.location = getURL("/admin/users/list/active");
               }
             } else {
-              bootbox.alert(I18n.t("admin.user.anonymize_failed"));
+              this.dialog.alert(I18n.t("admin.user.anonymize_failed"));
               if (data.user) {
                 user.setProperties(data.user);
               }
             }
           })
-          .catch(() => bootbox.alert(I18n.t("admin.user.anonymize_failed")));
+          .catch(() =>
+            this.dialog.alert(I18n.t("admin.user.anonymize_failed"))
+          );
       };
-      const buttons = [
-        {
-          label: I18n.t("composer.cancel"),
-          class: "cancel",
-          link: true,
-        },
-        {
-          label: I18n.t("admin.user.anonymize_yes"),
-          class: "btn btn-danger",
-          icon: iconHTML("exclamation-triangle"),
-          callback: () => {
-            performAnonymize();
-          },
-        },
-      ];
 
-      bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
+      this.dialog.alert({
+        message: I18n.t("admin.user.anonymize_confirm"),
+        class: "delete-user-modal",
+        buttons: [
+          {
+            icon: "exclamation-triangle",
+            label: I18n.t("admin.user.anonymize_yes"),
+            class: "btn-danger",
+            action: () => performAnonymize(),
+          },
+          {
+            label: I18n.t("composer.cancel"),
+          },
+        ],
+      });
     },
 
     disableSecondFactor() {
@@ -345,11 +346,10 @@ export default Controller.extend(CanCheckEmails, {
     destroy() {
       const postCount = this.get("model.post_count");
       const maxPostCount = this.siteSettings.delete_all_posts_max;
-      const message = I18n.t("admin.user.delete_confirm");
       const location = document.location.pathname;
 
       const performDestroy = (block) => {
-        bootbox.dialog(I18n.t("admin.user.deleting_user"));
+        this.dialog.notice(I18n.t("admin.user.deleting_user"));
         let formData = { context: location };
         if (block) {
           formData["block_email"] = true;
@@ -369,38 +369,38 @@ export default Controller.extend(CanCheckEmails, {
                 document.location = getURL("/admin/users/list/active");
               }
             } else {
-              bootbox.alert(I18n.t("admin.user.delete_failed"));
+              this.dialog.alert(I18n.t("admin.user.delete_failed"));
             }
           })
           .catch(() => {
-            bootbox.alert(I18n.t("admin.user.delete_failed"));
+            this.dialog.alert(I18n.t("admin.user.delete_failed"));
           });
       };
 
-      const buttons = [
-        {
-          label: I18n.t("composer.cancel"),
-          class: "btn",
-          link: true,
-        },
-        {
-          icon: iconHTML("exclamation-triangle"),
-          label: I18n.t("admin.user.delete_and_block"),
-          class: "btn btn-danger",
-          callback: () => {
-            performDestroy(true);
+      this.dialog.alert({
+        message: I18n.t("admin.user.delete_confirm"),
+        class: "delete-user-modal",
+        buttons: [
+          {
+            label: I18n.t("admin.user.delete_dont_block"),
+            class: "btn-primary",
+            action: () => {
+              return performDestroy(true);
+            },
           },
-        },
-        {
-          label: I18n.t("admin.user.delete_dont_block"),
-          class: "btn btn-primary",
-          callback: () => {
-            performDestroy(false);
+          {
+            icon: "exclamation-triangle",
+            label: I18n.t("admin.user.delete_and_block"),
+            class: "btn-danger",
+            action: () => {
+              return performDestroy(false);
+            },
           },
-        },
-      ];
-
-      bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
+          {
+            label: I18n.t("composer.cancel"),
+          },
+        ],
+      });
     },
 
     promptTargetUser() {
@@ -439,12 +439,12 @@ export default Controller.extend(CanCheckEmails, {
               model: this.model,
             });
           } else {
-            bootbox.alert(I18n.t("admin.user.merge_failed"));
+            this.dialog.alert(I18n.t("admin.user.merge_failed"));
           }
         })
         .catch(() => {
           AdminUser.find(user.id).then((u) => user.setProperties(u));
-          bootbox.alert(I18n.t("admin.user.merge_failed"));
+          this.dialog.alert(I18n.t("admin.user.merge_failed"));
         });
     },
 
@@ -532,7 +532,7 @@ export default Controller.extend(CanCheckEmails, {
         data: { primary_group_id: primaryGroupId },
       })
         .then(() => this.set("originalPrimaryGroupId", primaryGroupId))
-        .catch(() => bootbox.alert(I18n.t("generic_error")));
+        .catch(() => this.dialog.alert(I18n.t("generic_error")));
     },
 
     resetPrimaryGroup() {
@@ -540,16 +540,10 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     deleteSSORecord() {
-      return bootbox.confirm(
-        I18n.t("admin.user.discourse_connect.confirm_delete"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            return this.model.deleteSSORecord();
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.user.discourse_connect.confirm_delete"),
+        didConfirm: () => this.model.deleteSSORecord(),
+      });
     },
 
     checkSsoEmail() {
@@ -607,7 +601,7 @@ export default Controller.extend(CanCheckEmails, {
             let error;
             AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
             error = extractError(e) || I18n.t("admin.user.delete_posts_failed");
-            bootbox.alert(error);
+            this.dialog.alert(error);
           });
       };
 

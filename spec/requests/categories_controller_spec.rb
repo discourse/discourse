@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-describe CategoriesController do
+RSpec.describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user) { Fabricate(:user) }
 
-  context 'index' do
-
+  describe '#index' do
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
@@ -22,7 +21,7 @@ describe CategoriesController do
 
       expect(response.body).to have_tag("div#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-        expect(json['topic_list_latest']).to include(%{"more_topics_url":"/latest"})
+        expect(json['topic_list']).to include(%{"more_topics_url":"/latest"})
       end
     end
 
@@ -140,6 +139,102 @@ describe CategoriesController do
       expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
     end
 
+    describe 'topics filtered by tag for categories when requested' do
+      fab!(:tag) { Fabricate(:tag, name: "test-tag") }
+      fab!(:tag_2) { Fabricate(:tag, name: "second-test-tag") }
+      let(:topics_with_filter_tag) { [] }
+
+      before do
+        SiteSetting.max_category_nesting = 3
+      end
+
+      it 'includes filtered topics for categories' do
+        2.times do |i|
+          topics_with_filter_tag << Fabricate(:topic, category: category, tags: [tag])
+          Fabricate(:topic, category: category, tags: [tag_2])
+        end
+        CategoryFeaturedTopic.feature_topics
+
+        get "/categories.json?tag=#{tag.name}&include_topics=true"
+        expect(response.status).to eq(200)
+
+        category_list = response.parsed_body["category_list"]
+        category_response = category_list["categories"].find { |c| c["id"] == category.id }
+
+        expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+      end
+
+      it 'includes filtered topics for subcategories' do
+        subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+        2.times do |i|
+          topics_with_filter_tag << Fabricate(:topic, category: subcategory, tags: [tag])
+          Fabricate(:topic, category: subcategory, tags: [tag_2])
+        end
+        CategoryFeaturedTopic.feature_topics
+
+        get "/categories.json?tag=#{tag.name}&include_subcategories=true&include_topics=true"
+        expect(response.status).to eq(200)
+
+        category_list = response.parsed_body["category_list"]
+        category_response = category_list["categories"].find { |c| c["id"] == category.id }
+        subcategory_response = category_response["subcategory_list"][0]
+
+        expect(subcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+      end
+
+      it 'includes filtered topics for subsubcategories' do
+        subcategory = Fabricate(:category, user: admin, parent_category: category)
+        subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
+
+        2.times do |i|
+          topics_with_filter_tag << Fabricate(:topic, category: subsubcategory, tags: [tag])
+          Fabricate(:topic, category: subsubcategory, tags: [tag_2])
+        end
+        CategoryFeaturedTopic.feature_topics
+
+        get "/categories.json?tag=#{tag.name}&include_subcategories=true&include_topics=true"
+        expect(response.status).to eq(200)
+
+        category_list = response.parsed_body["category_list"]
+        category_response = category_list["categories"].find { |c| c["id"] == category.id }
+        subsubcategory_response = category_response["subcategory_list"][0]["subcategory_list"][0]
+
+        expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+      end
+    end
+
+    describe 'categories and latest topics - ordered by created date' do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:topic1) { Fabricate(:topic, category: category, created_at: 5.days.ago, updated_at: Time.now, bumped_at: Time.now) }
+      fab!(:topic2) { Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago) }
+      fab!(:topic3) { Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago) }
+
+      context 'when order is not set to created date' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+        end
+
+        it 'sorts topics by the default bump date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic1.id, topic3.id, topic2.id])
+        end
+      end
+
+      context 'when order is set to created' do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics_created_date"
+        end
+
+        it 'sorts topics by crated at date' do
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['topic_list']['topics'].map { |t| t["id"] }).to eq([topic3.id, topic2.id, topic1.id])
+        end
+      end
+    end
+
     it 'includes subcategories and topics by default when view is subcategories_with_featured_topics' do
       SiteSetting.max_category_nesting = 3
       subcategory = Fabricate(:category, user: admin, parent_category: category)
@@ -209,7 +304,7 @@ describe CategoriesController do
     end
   end
 
-  context 'extensibility event' do
+  describe 'extensibility event' do
     before do
       sign_in(admin)
     end
@@ -228,7 +323,7 @@ describe CategoriesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it "requires the user to be logged in" do
       post "/categories.json"
       expect(response.status).to eq(403)
@@ -320,7 +415,7 @@ describe CategoriesController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       category.set_permissions(admins: :full)
       category.save!
@@ -347,7 +442,7 @@ describe CategoriesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
       expect(response.status).to eq(403)
@@ -376,7 +471,7 @@ describe CategoriesController do
     end
   end
 
-  context '#reorder' do
+  describe '#reorder' do
     it "reorders the categories" do
       sign_in(admin)
 
@@ -413,7 +508,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     before do
       Jobs.run_immediately!
     end
@@ -489,7 +584,8 @@ describe CategoriesController do
               "staff" => create_post
             },
             custom_fields: {
-              "dancing" => "frogs"
+              "dancing" => "frogs",
+              "running" => ["turtle", "salamander"]
             },
             minimum_required_tags: "",
             allow_global_tags: 'true',
@@ -508,7 +604,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-category")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
-          expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.custom_fields).to eq("dancing" => "frogs", "running" => ["turtle", "salamander"])
           expect(category.minimum_required_tags).to eq(0)
           expect(category.allow_global_tags).to eq(true)
           expect(category.category_required_tag_groups.count).to eq(1)
@@ -616,7 +712,7 @@ describe CategoriesController do
     end
   end
 
-  context '#update_slug' do
+  describe '#update_slug' do
     it 'requires the user to be logged in' do
       put "/category/category/slug.json"
       expect(response.status).to eq(403)
@@ -664,7 +760,7 @@ describe CategoriesController do
     end
   end
 
-  context '#categories_and_topics' do
+  describe '#categories_and_topics' do
     before do
       10.times.each { Fabricate(:topic) }
     end

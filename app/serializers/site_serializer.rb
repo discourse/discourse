@@ -33,7 +33,10 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_replace,
     :watched_words_link,
     :categories,
-    :markdown_additional_options
+    :markdown_additional_options,
+    :displayed_about_plugin_stat_groups,
+    :show_welcome_topic_banner,
+    :anonymous_default_sidebar_tags
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -177,7 +180,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.word_matcher_regexp(:censor)&.source
+    WordWatcher.serializable_word_matcher_regexp(:censor)
   end
 
   def custom_emoji_translation
@@ -206,6 +209,22 @@ class SiteSerializer < ApplicationSerializer
 
   def markdown_additional_options
     Site.markdown_additional_options
+  end
+
+  def displayed_about_plugin_stat_groups
+    About.displayed_plugin_stat_groups
+  end
+
+  def show_welcome_topic_banner
+    Site.show_welcome_topic_banner?(scope)
+  end
+
+  def anonymous_default_sidebar_tags
+    User.new.sidebar_tags.pluck(:name)
+  end
+
+  def include_anonymous_default_sidebar_tags?
+    SiteSetting.default_sidebar_tags.present?
   end
 
   private

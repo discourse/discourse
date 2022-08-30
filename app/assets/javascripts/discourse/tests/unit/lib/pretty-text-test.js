@@ -877,7 +877,7 @@ eviltrout</p>
 
     assert.cooked(
       "    ```\n    hello\n    ```",
-      "<pre><code>```\nhello\n```</code></pre>",
+      "<pre><code>```\nhello\n```\n</code></pre>",
       "only detect ``` at the beginning of lines"
     );
 
@@ -925,13 +925,13 @@ eviltrout</p>
 
     assert.cooked(
       "    <pre>test</pre>",
-      "<pre><code>&lt;pre&gt;test&lt;/pre&gt;</code></pre>",
+      "<pre><code>&lt;pre&gt;test&lt;/pre&gt;\n</code></pre>",
       "it does not parse other block types in markdown code blocks"
     );
 
     assert.cooked(
       "    [quote]test[/quote]",
-      "<pre><code>[quote]test[/quote]</code></pre>",
+      "<pre><code>[quote]test[/quote]\n</code></pre>",
       "it does not parse other block types in markdown code blocks"
     );
 
@@ -989,8 +989,7 @@ eviltrout</p>
       let cache = {};
       cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
-        url:
-          "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+        url: "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1011,8 +1010,7 @@ eviltrout</p>
       let cache = {};
       cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
-        url:
-          "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+        url: "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1106,7 +1104,7 @@ eviltrout</p>
     assert.cookedOptions(
       "Pleased to meet you, but pleeeease call me later, xyz123",
       {
-        censoredRegexp: "(xyz*|plee+ase)",
+        censoredRegexp: [{ "(xyz*|plee+ase)": { case_sensitive: false } }],
       },
       "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
       "supports censoring"
@@ -1712,7 +1710,12 @@ var bar = 'bar';
 
   test("watched words replace", function (assert) {
     const opts = {
-      watchedWordsReplace: { "(?:\\W|^)(fun)(?=\\W|$)": "times" },
+      watchedWordsReplace: {
+        "(?:\\W|^)(fun)(?=\\W|$)": {
+          replacement: "times",
+          case_sensitive: false,
+        },
+      },
     };
 
     assert.cookedOptions("test fun funny", opts, "<p>test times funny</p>");
@@ -1721,7 +1724,12 @@ var bar = 'bar';
 
   test("watched words link", function (assert) {
     const opts = {
-      watchedWordsLink: { "(?:\\W|^)(fun)(?=\\W|$)": "https://discourse.org" },
+      watchedWordsLink: {
+        "(?:\\W|^)(fun)(?=\\W|$)": {
+          replacement: "https://discourse.org",
+          case_sensitive: false,
+        },
+      },
     };
 
     assert.cookedOptions(
@@ -1735,7 +1743,9 @@ var bar = 'bar';
     const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
-      watchedWordsReplace: { "(\\bu?\\b)": "you" },
+      watchedWordsReplace: {
+        "(\\bu?\\b)": { replacement: "you", case_sensitive: false },
+      },
     };
 
     assert.cookedOptions(

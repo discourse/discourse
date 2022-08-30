@@ -11,11 +11,17 @@ import { schedule } from "@ember/runloop";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { hbs } from "ember-cli-htmlbars";
 
-const _extraHeaderIcons = [];
+let _extraHeaderIcons = [];
 
 export function addToHeaderIcons(icon) {
   _extraHeaderIcons.push(icon);
+}
+
+export function clearExtraHeaderIcons() {
+  _extraHeaderIcons = [];
 }
 
 const dropdown = {
@@ -68,80 +74,115 @@ createWidget("header-notifications", {
       ),
     ];
 
+    if (this.currentUser.status) {
+      contents.push(this.attach("user-status-bubble", this.currentUser.status));
+    }
+
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      const unreadNotifications = user.get("unread_notifications");
-      if (!!unreadNotifications) {
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification unread-notifications",
-            rawLabel: unreadNotifications,
-            omitSpan: true,
-            title: "notifications.tooltip.regular",
-            titleOptions: { count: unreadNotifications },
-          })
-        );
-      }
-
-      const unreadHighPriority = user.get("unread_high_priority_notifications");
-      if (!!unreadHighPriority) {
-        // highlight the avatar if the first ever PM is not read
-        if (
-          !user.get("read_first_notification") &&
-          !user.get("enforcedSecondFactor")
-        ) {
-          if (!attrs.active && attrs.ringBackdrop) {
-            contents.push(h("span.ring"));
-            contents.push(h("span.ring-backdrop-spotlight"));
-            contents.push(
-              h(
-                "span.ring-backdrop",
-                {},
-                h("h1.ring-first-notification", {}, [
-                  h(
-                    "span",
-                    { className: "first-notification" },
-                    I18n.t("user.first_notification")
-                  ),
-                  h("span", { className: "read-later" }, [
-                    this.attach("link", {
-                      action: "readLater",
-                      className: "read-later-link",
-                      label: "user.skip_new_user_tips.read_later",
-                    }),
-                  ]),
-                  h("span", {}, [
-                    I18n.t("user.skip_new_user_tips.not_first_time"),
-                    " ",
-                    this.attach("link", {
-                      action: "skipNewUserTips",
-                      className: "skip-new-user-tips",
-                      label: "user.skip_new_user_tips.skip_link",
-                      title: "user.skip_new_user_tips.description",
-                    }),
-                  ]),
-                ])
-              )
-            );
+      if (this.currentUser.redesigned_user_menu_enabled) {
+        const unread = user.all_unread_notifications_count || 0;
+        const reviewables = user.unseen_reviewable_count || 0;
+        const count = unread + reviewables;
+        if (count > 0) {
+          if (this._shouldHighlightAvatar()) {
+            this._addAvatarHighlight(contents);
           }
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification unread-notifications",
+              rawLabel: count,
+              omitSpan: true,
+              title: "notifications.tooltip.regular",
+              titleOptions: { count },
+            })
+          );
+        }
+      } else {
+        const unreadNotifications = user.unread_notifications;
+        if (!!unreadNotifications) {
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification unread-notifications",
+              rawLabel: unreadNotifications,
+              omitSpan: true,
+              title: "notifications.tooltip.regular",
+              titleOptions: { count: unreadNotifications },
+            })
+          );
         }
 
-        // add the counter for the unread high priority
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification unread-high-priority-notifications",
-            rawLabel: unreadHighPriority,
-            omitSpan: true,
-            title: "notifications.tooltip.high_priority",
-            titleOptions: { count: unreadHighPriority },
-          })
-        );
+        const unreadHighPriority = user.unread_high_priority_notifications;
+        if (!!unreadHighPriority) {
+          if (this._shouldHighlightAvatar()) {
+            this._addAvatarHighlight(contents);
+          }
+
+          // add the counter for the unread high priority
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className:
+                "badge-notification unread-high-priority-notifications",
+              rawLabel: unreadHighPriority,
+              omitSpan: true,
+              title: "notifications.tooltip.high_priority",
+              titleOptions: { count: unreadHighPriority },
+            })
+          );
+        }
       }
     }
     return contents;
+  },
+
+  _shouldHighlightAvatar() {
+    const attrs = this.attrs;
+    const { user } = attrs;
+    return (
+      !user.read_first_notification &&
+      !user.enforcedSecondFactor &&
+      !attrs.active &&
+      attrs.ringBackdrop
+    );
+  },
+
+  _addAvatarHighlight(contents) {
+    contents.push(h("span.ring"));
+    contents.push(h("span.ring-backdrop-spotlight"));
+    contents.push(
+      h(
+        "span.ring-backdrop",
+        {},
+        h("h1.ring-first-notification", {}, [
+          h(
+            "span",
+            { className: "first-notification" },
+            I18n.t("user.first_notification")
+          ),
+          h("span", { className: "read-later" }, [
+            this.attach("link", {
+              action: "readLater",
+              className: "read-later-link",
+              label: "user.skip_new_user_tips.read_later",
+            }),
+          ]),
+          h("span", {}, [
+            I18n.t("user.skip_new_user_tips.not_first_time"),
+            " ",
+            this.attach("link", {
+              action: "skipNewUserTips",
+              className: "skip-new-user-tips",
+              label: "user.skip_new_user_tips.skip_link",
+              title: "user.skip_new_user_tips.description",
+            }),
+          ]),
+        ])
+      )
+    );
   },
 });
 
@@ -249,7 +290,10 @@ createWidget("header-icons", {
 
       contents() {
         let { currentUser } = this;
-        if (currentUser && currentUser.reviewable_count) {
+        if (
+          currentUser?.reviewable_count &&
+          !this.currentUser.redesigned_user_menu_enabled
+        ) {
           return h(
             "div.badge-notification.reviewables",
             {
@@ -263,7 +307,14 @@ createWidget("header-icons", {
       },
     });
 
-    icons.push(hamburger);
+    if (
+      !this.siteSettings.enable_experimental_sidebar_hamburger ||
+      (this.siteSettings.enable_experimental_sidebar_hamburger &&
+        !attrs.sidebarEnabled) ||
+      this.site.mobileView
+    ) {
+      icons.push(hamburger);
+    }
 
     if (attrs.user) {
       icons.push(
@@ -326,6 +377,46 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
+createWidget("revamped-hamburger-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<Sidebar::HamburgerDropdown />`
+      ),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleHamburger");
+  },
+});
+
+createWidget("revamped-user-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<UserMenu::Menu />`
+      ),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleUserMenu");
+  },
+});
+
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
@@ -362,6 +453,7 @@ export default createWidget("header", {
         ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
         user: this.currentUser,
+        sidebarEnabled: attrs.sidebarEnabled,
       });
 
       if (attrs.onlyIcons) {
@@ -377,9 +469,19 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        panels.push(this.attach("hamburger-menu"));
+        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+          if (!attrs.sidebarEnabled) {
+            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
+          }
+        } else {
+          panels.push(this.attach("hamburger-menu"));
+        }
       } else if (state.userVisible) {
-        panels.push(this.attach("user-menu"));
+        if (this.currentUser.redesigned_user_menu_enabled) {
+          panels.push(this.attach("revamped-user-menu-wrapper", {}));
+        } else {
+          panels.push(this.attach("user-menu"));
+        }
       }
 
       additionalPanels.map((panel) => {
@@ -403,7 +505,6 @@ export default createWidget("header", {
     const contentsAttrs = {
       contents,
       minimized: !!attrs.topic,
-      sidebarEnabled: this.currentUser?.experimental_sidebar_enabled,
     };
 
     return h(
@@ -486,13 +587,25 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    this.state.hamburgerVisible = !this.state.hamburgerVisible;
-    this.toggleBodyScrolling(this.state.hamburgerVisible);
+    if (
+      this.siteSettings.enable_experimental_sidebar_hamburger &&
+      this.attrs.sidebarEnabled
+    ) {
+      this.sendWidgetAction("toggleSidebar");
+    } else {
+      this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      this.toggleBodyScrolling(this.state.hamburgerVisible);
 
-    // auto focus on first link in dropdown
-    schedule("afterRender", () => {
-      document.querySelector(".hamburger-panel .menu-links a")?.focus();
-    });
+      schedule("afterRender", () => {
+        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+          // Remove focus from hamburger toggle button
+          document.querySelector("#toggle-hamburger-menu").blur();
+        } else {
+          // auto focus on first link in dropdown
+          document.querySelector(".hamburger-panel .menu-links a")?.focus();
+        }
+      });
+    }
   },
 
   toggleBodyScrolling(bool) {
@@ -511,7 +624,7 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrollin on menu panels, except on overflow
+    // prevent all scrolling on menu panels, except on overflow
     const height = window.innerHeight ? window.innerHeight : $(window).height();
     if (
       !$(e.target).parents(".menu-panel").length ||

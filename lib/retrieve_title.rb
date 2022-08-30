@@ -9,10 +9,8 @@ module RetrieveTitle
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit
     )
-  rescue Exception => ex
-    raise if Rails.env.test?
-    Rails.logger.error(ex)
-    nil
+  rescue Net::ReadTimeout
+    # do nothing for Net::ReadTimeout errors
   end
 
   def self.extract_title(html, encoding = nil)
@@ -20,8 +18,17 @@ module RetrieveTitle
     if html =~ /<title>/ && html !~ /<\/title>/
       return nil
     end
-    if doc = Nokogiri::HTML5(html, nil, encoding)
 
+    doc = nil
+    begin
+      doc = Nokogiri::HTML5(html, nil, encoding)
+    rescue ArgumentError
+      # invalid HTML (Eg: too many attributes, status tree too deep) - ignore
+      # Error in nokogumbo is not specialized, uses generic ArgumentError
+      # see: https://www.rubydoc.info/gems/nokogiri/Nokogiri/HTML5#label-Error+reporting
+    end
+
+    if doc
       title = doc.at('title')&.inner_text
 
       # A horrible hack - YouTube uses `document.title` to populate the title

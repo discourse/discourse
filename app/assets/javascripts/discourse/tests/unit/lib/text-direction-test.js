@@ -5,14 +5,14 @@ function quoteHtml() {
   return `
     <aside class="quote">
       <div class="title">
-        <img src="avatar.png"> osama:
+        <img src="/images/avatar.png"> osama:
       </div>
       <blockquote>
         <p>كلمات بالعربي هنا</p>
         <p>English words here!!</p>
         <aside class="quote">
           <div class="title">
-            <img src="avatar.png"> أسامة:
+            <img src="/images/avatar.png"> أسامة:
           </div>
           <blockquote>
             <p>English words here (nested quote)</p>

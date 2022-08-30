@@ -67,6 +67,7 @@ Discourse::Application.configure do
   end
 
   if hosts = ENV['DISCOURSE_DEV_HOSTS']
+    Discourse.deprecate("DISCOURSE_DEV_HOSTS is deprecated. Use RAILS_DEVELOPMENT_HOSTS instead.")
     config.hosts.concat(hosts.split(","))
   end
 
@@ -110,4 +111,6 @@ Discourse::Application.configure do
       Bullet.rails_logger = true
     end
   end
+
+  config.hosts << /\A(([a-z0-9-]+)\.)*localhost(\:\d+)?\Z/
 end

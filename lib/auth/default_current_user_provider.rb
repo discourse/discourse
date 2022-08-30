@@ -25,6 +25,7 @@ require_relative '../route_matcher'
 class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
+  USER_TOKEN_KEY ||= "_DISCOURSE_USER_TOKEN"
   API_KEY ||= "api_key"
   API_USERNAME ||= "api_username"
   HEADER_API_KEY ||= "HTTP_API_KEY"
@@ -77,8 +78,9 @@ class Auth::DefaultCurrentUserProvider
   ]
 
   def self.find_v0_auth_cookie(request)
-    cookie = request.cookies[TOKEN_COOKIE].presence
-    if cookie && cookie.size == TOKEN_SIZE
+    cookie = request.cookies[TOKEN_COOKIE]
+
+    if cookie&.valid_encoding? && cookie.present? && cookie.size == TOKEN_SIZE
       cookie
     end
   end
@@ -88,8 +90,10 @@ class Auth::DefaultCurrentUserProvider
 
     env[DECRYPTED_AUTH_COOKIE] = begin
       request = ActionDispatch::Request.new(env)
+      cookie = request.cookies[TOKEN_COOKIE]
+
       # don't even initialize a cookie jar if we don't have a cookie at all
-      if request.cookies[TOKEN_COOKIE].present?
+      if cookie&.valid_encoding? && cookie.present?
         request.cookie_jar.encrypted[TOKEN_COOKIE]&.with_indifferent_access
       end
     end
@@ -99,6 +103,7 @@ class Auth::DefaultCurrentUserProvider
   def initialize(env)
     @env = env
     @request = Rack::Request.new(env)
+    @user_token = env[USER_TOKEN_KEY]
   end
 
   # our current user, return nil if none is found
@@ -136,7 +141,7 @@ class Auth::DefaultCurrentUserProvider
       limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN , 60)
 
       if limiter.can_perform?
-        @user_token = begin
+        @env[USER_TOKEN_KEY] = @user_token = begin
           UserAuthToken.lookup(
             auth_token,
             seen: true,
@@ -260,7 +265,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_on_user(user, session, cookie_jar, opts = {})
-    @user_token = UserAuthToken.generate!(
+    @env[USER_TOKEN_KEY] = @user_token = UserAuthToken.generate!(
       user_id: user.id,
       user_agent: @env['HTTP_USER_AGENT'],
       path: @env['REQUEST_PATH'],

@@ -2,8 +2,8 @@
 
 require_relative "shared_context_for_backup_restore"
 
-describe BackupRestore::SystemInterface, type: :multisite do
-  include_context "shared stuff"
+RSpec.describe BackupRestore::SystemInterface, type: :multisite do
+  include_context "with shared stuff"
 
   subject { BackupRestore::SystemInterface.new(logger) }
 
@@ -33,6 +33,23 @@ describe BackupRestore::SystemInterface, type: :multisite do
       test_multisite_connection("default") do
         expect(Discourse.redis.get("foo")).to eq("default-foo")
         expect(Discourse.redis.get("bar")).to eq("default-bar")
+      end
+    end
+  end
+
+  describe "#listen_for_shutdown_signal" do
+    it "uses the correct Redis namespace" do
+      test_multisite_connection("second") do
+        BackupRestore.mark_as_running!
+
+        expect do
+          thread = subject.listen_for_shutdown_signal
+          BackupRestore.set_shutdown_signal!
+          thread.join
+        end.to raise_error(SystemExit)
+
+        BackupRestore.clear_shutdown_signal!
+        BackupRestore.mark_as_not_running!
       end
     end
   end

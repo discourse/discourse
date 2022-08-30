@@ -1,0 +1,52 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "silence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "silenced": {
+          "type": "boolean"
+        },
+        "silence_reason": {
+          "type": "string"
+        },
+        "silenced_till": {
+          "type": "string"
+        },
+        "silenced_at": {
+          "type": "string"
+        },
+        "silenced_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            }
+          },
+          "required": ["id", "username", "name", "avatar_template"]
+        }
+      },
+      "required": [
+        "silenced",
+        "silence_reason",
+        "silenced_till",
+        "silenced_at",
+        "silenced_by"
+      ]
+    }
+  },
+  "required": [
+    "silence"
+  ]
+}

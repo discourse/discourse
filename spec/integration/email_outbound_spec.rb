@@ -4,14 +4,14 @@
 # with mailer specific mailer specs like UserEmail, but sometimes we need
 # to test things along the whole outbound flow including the MessageBuilder
 # and the Sender.
-describe "Outbound Email" do
+RSpec.describe "Outbound Email" do
   def send_email(opts = {})
     message = TestMailer.send_test("test@test.com", opts)
     result = Email::Sender.new(message, :test_message).send
     [message, result]
   end
 
-  context "email custom headers" do
+  describe "email custom headers" do
     it "discards the custom header if it is one that has already been set based on arguments" do
       SiteSetting.email_custom_headers = "Precedence: bulk"
       post = Fabricate(:post)

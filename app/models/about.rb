@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 class About
+  cattr_reader :plugin_stat_groups
+
+  def self.add_plugin_stat_group(prefix, show_in_ui: false, &block)
+    @@displayed_plugin_stat_groups << prefix if show_in_ui
+    @@plugin_stat_groups[prefix] = block
+  end
+
+  def self.clear_plugin_stat_groups
+    @@displayed_plugin_stat_groups = Set.new
+    @@plugin_stat_groups = {}
+  end
+
+  def self.displayed_plugin_stat_groups
+    @@displayed_plugin_stat_groups.to_a
+  end
+
+  clear_plugin_stat_groups
+
   class CategoryMods
     include ActiveModel::Serialization
     attr_reader :category_id, :moderators
@@ -82,7 +100,30 @@ class About
       likes_last_day: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.days.ago).count,
       likes_7_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
       likes_30_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count
-    }
+    }.merge(plugin_stats)
+  end
+
+  def plugin_stats
+    final_plugin_stats = {}
+    @@plugin_stat_groups.each do |plugin_stat_group_name, stat_group|
+      begin
+        stats = stat_group.call
+      rescue StandardError => err
+        Discourse.warn_exception(err, message: "Unexpected error when collecting #{plugin_stat_group_name} About stats.")
+        next
+      end
+
+      if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") || !stats.key?(:count)
+        Rails.logger.warn("Plugin stat group #{plugin_stat_group_name} for About stats does not have all required keys, skipping.")
+      else
+        final_plugin_stats.merge!(
+          stats.transform_keys do |key|
+            "#{plugin_stat_group_name}_#{key}".to_sym
+          end
+        )
+      end
+    end
+    final_plugin_stats
   end
 
   def category_moderators

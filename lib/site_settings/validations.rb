@@ -46,7 +46,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -59,7 +59,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_muted.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -72,7 +72,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_watching_first_post.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -85,7 +85,7 @@ module SiteSettings::Validations
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_regular.split("|")
+      SiteSetting.default_categories_normal.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -243,6 +243,12 @@ module SiteSettings::Validations
     return if new_val == "t"
     return if SiteSetting.composer_media_optimization_image_enabled == false
     validate_error :strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled
+  end
+
+  def validate_twitter_summary_large_image(new_val)
+    return if new_val.blank?
+    return if !Upload.exists?(id: new_val, extension: "svg")
+    validate_error :twitter_summary_large_image_no_svg
   end
 
   private

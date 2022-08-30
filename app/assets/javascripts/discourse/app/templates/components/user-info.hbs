@@ -1,33 +1,36 @@
-{{#if includeAvatar}}
+{{#if this.includeAvatar}}
   <div class="user-image">
     <div class="user-image-inner">
       <a href={{this.userPath}} data-user-card={{@user.username}}>{{avatar @user imageSize="large"}}</a>
-      {{user-avatar-flair user=@user}}
+      <UserAvatarFlair @user={{@user}} />
     </div>
   </div>
 {{/if}}
 
 <div class="user-detail">
   <div class="name-line">
-    <span class={{if nameFirst "name bold" "username bold"}}>
-      {{#if includeLink}}
+    <span class={{if this.nameFirst "name bold" "username bold"}}>
+      {{#if this.includeLink}}
         <a href={{this.userPath}} data-user-card={{@user.username}}>
-          {{if nameFirst @user.name (format-username @user.username)}}
+          {{if this.nameFirst @user.name (format-username @user.username)}}
         </a>
       {{else}}
-        {{if nameFirst @user.name (format-username @user.username)}}
+        {{if this.nameFirst @user.name (format-username @user.username)}}
       {{/if}}
     </span>
-    <span class={{if nameFirst "username margin" "name margin"}}>
-      {{#if includeLink}}
+    <span class={{if this.nameFirst "username margin" "name margin"}}>
+      {{#if this.includeLink}}
         <a href={{this.userPath}} data-user-card={{@user.username}}>
-          {{if nameFirst (format-username @user.username) @user.name}}
+          {{if this.nameFirst (format-username @user.username) @user.name}}
         </a>
       {{else}}
-        {{if nameFirst (format-username @user.username) @user.name}}
+        {{if this.nameFirst (format-username @user.username) @user.name}}
       {{/if}}
     </span>
-    {{plugin-outlet name="after-user-name" tagName="span" connectorTagName="span" args=(hash user=user)}}
+    {{#if (and @showStatus @user.status)}}
+      <UserStatusMessage @status={{@user.status}} @showDescription={{true}} @showTooltip={{false}} />
+    {{/if}}
+    <PluginOutlet @name="after-user-name" @tagName="span" @connectorTagName="span" @args={{hash user=this.user}} />
   </div>
   <div class="title">{{@user.title}}</div>
 
@@ -39,4 +42,4 @@
 
 </div>
 
-{{plugin-outlet name="after-user-info" tagName="span" connectorTagName="div" args=(hash user=user)}}
+<PluginOutlet @name="after-user-info" @tagName="span" @connectorTagName="div" @args={{hash user=this.user}} />

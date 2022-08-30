@@ -5,7 +5,6 @@
 # version: 1.0
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/main/plugins/poll
-# transpile_js: true
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
@@ -148,7 +147,7 @@ after_initialize do
     post = options[:post]
 
     replacement = post&.url.present? ?
-      "<a href='#{UrlHelper.escape_uri(post.url)}'>#{I18n.t("poll.poll")}</a>" :
+      "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>" :
       I18n.t("poll.poll")
 
     doc.css("div.poll").each do |poll|

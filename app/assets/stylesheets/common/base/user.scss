@@ -171,7 +171,6 @@
       }
 
       .groups {
-        margin-left: 10px;
         display: inline;
       }
 
@@ -388,6 +387,9 @@
     }
     button {
       margin-left: auto;
+    }
+    label a {
+      margin: 0;
     }
   }
   $label-max-width: 300px;

@@ -6,9 +6,11 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
+  BASE_COMPILER_VERSION = 60
+
   attr_accessor :child_components
 
-  @cache = DistributedCache.new('theme')
+  @cache = DistributedCache.new("theme:compiler#{BASE_COMPILER_VERSION}")
 
   belongs_to :user
   belongs_to :color_scheme
@@ -149,18 +151,17 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
-    ColorScheme.hex_cache.clear
-    CSP::Extension.clear_theme_extensions_cache!
-    SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 55
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
         BASE_COMPILER_VERSION,
         Ember::VERSION,
         GlobalSetting.cdn_url,
+        GlobalSetting.s3_cdn_url,
+        GlobalSetting.s3_endpoint,
+        GlobalSetting.s3_bucket,
         Discourse.current_hostname
       ]
       Digest::SHA1.hexdigest(dependencies.join)
@@ -216,6 +217,8 @@ class Theme < ActiveRecord::Base
     clear_cache!
     ApplicationSerializer.expire_cache_fragment!("user_themes")
     ColorScheme.hex_cache.clear
+    CSP::Extension.clear_theme_extensions_cache!
+    SvgSprite.expire_cache
   end
 
   def self.clear_default!
@@ -391,7 +394,7 @@ class Theme < ActiveRecord::Base
       end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
-      return caches.map { |c| "<script src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
+      return caches.map { |c| "<script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
     end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end

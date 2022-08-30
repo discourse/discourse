@@ -1,0 +1,13 @@
+<div id="wizard-main">
+  {{#if this.showCanvas}}
+    <WizardCanvas />
+  {{/if}}
+
+  <div class="discourse-logo">
+    <DiscourseLogo />
+  </div>
+
+  <div class="wizard-container">
+    {{outlet}}
+  </div>
+</div>

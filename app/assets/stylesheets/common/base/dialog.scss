@@ -1,0 +1,78 @@
+.dialog-container,
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.dialog-container {
+  z-index: z("modal", "overlay");
+  display: flex;
+}
+
+/**
+ * Ensures the dialog container and all its descendants are not
+ * visible and not focusable when it is hidden.
+ */
+.dialog-container[aria-hidden="true"] {
+  display: none;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.dialog-overlay {
+  background: rgba(var(--always-black-rgb), 0.65);
+  animation: fade-in 250ms both;
+}
+
+.dialog-content {
+  margin: auto;
+  z-index: z("modal", "content");
+  position: relative;
+  background-color: var(--secondary);
+  animation: fade-in 250ms both;
+  box-shadow: shadow("card");
+  min-width: 40vw;
+}
+
+.dialog-body {
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 1em;
+}
+
+.dialog-header {
+  display: flex;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--primary-low);
+  align-items: center;
+
+  h3 {
+    font-size: var(--font-up-3);
+    margin-bottom: 0;
+  }
+
+  .dialog-close {
+    margin-left: auto;
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 14px 15px 10px;
+  border-top: 1px solid var(--primary-low);
+  --btn-bottom-margin: 0.3em;
+  .btn {
+    margin: 0 0.75em var(--btn-bottom-margin) 0;
+  }
+}

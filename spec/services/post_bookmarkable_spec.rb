@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-describe PostBookmarkable do
+RSpec.describe PostBookmarkable do
   fab!(:user) { Fabricate(:user) }
-  fab!(:guardian) { Guardian.new(user) }
+  let(:guardian) { Guardian.new(user) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
   let!(:post1) { Fabricate(:post) }
@@ -82,9 +82,10 @@ describe PostBookmarkable do
       expect(notif.data).to eq(
         {
           title: bookmark1.bookmarkable.topic.title,
+          bookmarkable_url: bookmark1.bookmarkable.url,
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
-          bookmarkable_url: bookmark1.bookmarkable.url
+          bookmark_id: bookmark1.id
         }.to_json
       )
     end

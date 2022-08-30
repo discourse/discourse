@@ -3,7 +3,6 @@ import {
   exists,
   loggedInUser,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
@@ -111,6 +110,10 @@ acceptance("Bookmarking", function (needs) {
       exists("#bookmark-reminder-modal"),
       "it shows the bookmark modal"
     );
+    assert.ok(
+      exists("#tap_tile_none.active"),
+      "it highlights the None option by default"
+    );
   });
 
   test("Bookmarks modal selecting reminder type", async function (assert) {
@@ -214,9 +217,9 @@ acceptance("Bookmarking", function (needs) {
 
     assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
     assert.ok(
-      queryAll(".bootbox.modal")
-        .text()
-        .includes(I18n.t("bookmarks.confirm_delete")),
+      query(".bootbox.modal").innerText.includes(
+        I18n.t("bookmarks.confirm_delete")
+      ),
       "it shows delete confirmation message"
     );
 
@@ -248,17 +251,17 @@ acceptance("Bookmarking", function (needs) {
 
     await openEditBookmarkModal();
     assert.strictEqual(
-      queryAll("#bookmark-name").val(),
+      query("#bookmark-name").value,
       "Test name",
       "it should prefill the bookmark name"
     );
     assert.strictEqual(
-      queryAll("#custom-date > input").val(),
+      query("#custom-date > input").value,
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.strictEqual(
-      queryAll("#custom-time").val(),
+      query("#custom-time").value,
       "08:00",
       "it should prefill the bookmark time"
     );
@@ -274,17 +277,17 @@ acceptance("Bookmarking", function (needs) {
 
     await openEditBookmarkModal();
     assert.strictEqual(
-      queryAll("#bookmark-name").val(),
+      query("#bookmark-name").value,
       "Test name",
       "it should prefill the bookmark name"
     );
     assert.strictEqual(
-      queryAll("#custom-date > input").val(),
+      query("#custom-date > input").value,
       postDateFormatted,
       "it should prefill the bookmark date"
     );
     assert.strictEqual(
-      queryAll("#custom-time").val(),
+      query("#custom-time").value,
       "10:35",
       "it should prefill the bookmark time"
     );
@@ -442,9 +445,9 @@ acceptance("Bookmarking", function (needs) {
 
     assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
     assert.ok(
-      queryAll(".bootbox.modal")
-        .text()
-        .includes(I18n.t("bookmarks.confirm_delete")),
+      query(".bootbox.modal").innerText.includes(
+        I18n.t("bookmarks.confirm_delete")
+      ),
       "it shows delete confirmation message"
     );
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Middleware::DiscoursePublicExceptions do
+RSpec.describe Middleware::DiscoursePublicExceptions do
   before do
     @orig_logger = Rails.logger
     Rails.logger = @fake_logger = FakeLogger.new

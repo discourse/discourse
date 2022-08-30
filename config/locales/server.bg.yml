@@ -675,7 +675,6 @@ bg:
     title: "Наименованието на този сайт , както е използвано в заглавния маркер."
     site_description: "Опишете този сайт с едно изречение като използвате мета описателен таг."
     crawl_images: "Възстановете изображенията от отдалечения URLs, за да въведете размери с правилната дължина и ширина."
-    download_remote_images_to_local: "Конвертирайте отдалечените изображения в местни изображения като ги свалите; това ще предотврати повредата им."
     download_remote_images_threshold: "Минимум необходимо дисково пространство за изтеглянето на отдалечените изображения ( в проценти)"
     disabled_image_download_domains: "Отдалечените изображения никога няма да бъдат изтеглени от тези домейни. Разделен със знака \"|\" списък."
     editing_grace_period: "За(n) секунди след публикуването , системата няма да запише нова версия в историята на публикациите."
@@ -1285,40 +1284,30 @@ bg:
     title: "Влизане в безопасен режим"
   wizard:
     step:
-      forum_title:
-        title: "Име"
       privacy:
-        title: "Достъп"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Публични"
-              restricted:
-                label: "Затворени"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-          contact_url:
-            label: "Уеб страница"
-          site_contact:
-            label: "Автоматизирани съобщения"
-      corporate:
-        title: "Организация"
+          login_required:
+            placeholder: "Затворени"
+          must_approve_users:
+            placeholder: "Изисквай одобрение"
+      ready:
+        title: "Вашият Discourse е готов!"
       styling:
         fields:
           homepage_style:
             choices:
               latest:
                 label: "Последни теми"
-      logos:
-        title: "Логота"
+      branding:
         fields:
           logo:
             label: "Главно лого"
-      icons:
-        title: "Икони"
+      corporate:
+        fields:
+          contact_url:
+            label: "Уеб страница"
+          site_contact:
+            label: "Автоматизирани съобщения"
       invites:
         title: "Поканете персонал"
       finished:

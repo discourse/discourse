@@ -3,7 +3,7 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { alias } from "@ember/object/computed";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
@@ -95,7 +95,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _hideCopyMessage() {
-    later(
+    discourseLater(
       () => this.setProperties({ successMessage: null, errorMessage: null }),
       2000
     );

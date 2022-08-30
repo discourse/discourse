@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Theme do
+RSpec.describe Theme do
   after do
     Theme.clear_cache!
   end
@@ -222,7 +222,7 @@ HTML
     end
   end
 
-  context "plugin api" do
+  describe "plugin api" do
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.ensure_baked!
@@ -248,26 +248,12 @@ HTML
       )
       expect(javascript_cache.content).to include("name: \"theme-field-#{field.id}-mobile-html-script-1\",")
       expect(javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", function (api) {")
-      expect(javascript_cache.content).to include("var x = 1;")
-    end
-
-    it "wraps constants calls in a readOnlyError function" do
-      html = <<HTML
-        <script type='text/discourse-plugin' version='0.1'>
-          const x = 1;
-          x = 2;
-        </script>
-HTML
-
-      baked, javascript_cache = transpile(html)
-      expect(baked).to include(javascript_cache.url)
-      expect(javascript_cache.content).to include('var x = 1;')
-      expect(javascript_cache.content).to include('x = (_readOnlyError("x"), 2);')
+      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", api =>")
+      expect(javascript_cache.content).to include("const x = 1;")
     end
   end
 
-  context 'theme upload vars' do
+  describe 'theme upload vars' do
     let :image do
       file_from_fixtures("logo.png")
     end
@@ -282,7 +268,7 @@ HTML
       freeze_time (SiteSetting.clean_orphan_uploads_grace_period_hours + 1).hours.from_now
       Jobs::CleanUpUploads.new.execute(nil)
 
-      expect(Upload.where(id: upload.id)).to be_exist
+      expect(Upload.where(id: upload.id)).to be_exists
 
       # no error for theme field
       theme.reload
@@ -298,7 +284,7 @@ HTML
     end
   end
 
-  context "theme settings" do
+  describe "theme settings" do
     it "allows values to be used in scss" do
       theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
       theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
@@ -369,9 +355,9 @@ HTML
       )
       expect(theme_field.javascript_cache.content).to include("name: \"theme-field-#{theme_field.id}-common-html-script-1\",")
       expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", function (api)")
+      expect(theme_field.javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"1.0\", api =>")
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
-      expect(theme_field.javascript_cache.content).to include("var a = function a() {}")
+      expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'

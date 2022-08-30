@@ -64,7 +64,7 @@ class ApiKeyScope < ActiveRecord::Base
           list: { actions: %w[admin/users#index] },
         },
         email: {
-          receive_emails: { actions: %w[admin/email#handle_mail] }
+          receive_emails: { actions: %w[admin/email#handle_mail admin/email#smtp_should_reject] }
         },
         badges: {
           create: { actions: %w[admin/badges#create] },

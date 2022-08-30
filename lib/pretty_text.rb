@@ -18,6 +18,9 @@ module PrettyText
   ].freeze
   DANGEROUS_BIDI_REGEXP = Regexp.new(DANGEROUS_BIDI_CHARACTERS.join("|")).freeze
 
+  BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
+  BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
+
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -60,20 +63,10 @@ module PrettyText
     end
   end
 
-  def self.ctx_load_manifest(ctx, name)
-    manifest = File.read("#{Rails.root}/app/assets/javascripts/#{name}")
+  def self.ctx_load_directory(ctx, path)
     root_path = "#{Rails.root}/app/assets/javascripts/"
-
-    manifest.each_line do |l|
-      l = l.chomp
-      if l =~ /\/\/= require (\.\/)?(.*)$/
-        apply_es6_file(ctx, root_path, Regexp.last_match[2])
-      elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
-        path = Regexp.last_match[2]
-        Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js(.es6)?$/, ''))
-        end
-      end
+    Dir["#{root_path}#{path}/**/*"].sort.each do |f|
+      apply_es6_file(ctx, root_path, f.sub(root_path, '').sub(/\.js(.es6)?$/, ''))
     end
   end
 
@@ -100,18 +93,20 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
-    ctx_load(ctx, "vendor/assets/javascripts/xss.min.js")
-    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
-    ctx_load_manifest(ctx, "pretty-text-bundle.js")
-    ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
+    ctx_load(ctx, "#{root_path}/mini-loader.js")
+    ctx_load(ctx, "#{root_path}/handlebars-shim.js")
+    ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
+    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
+    ctx_load_directory(ctx, "pretty-text/addon")
+    ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
+    ctx_load(ctx, "#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
 
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/utils/watched-words")
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
@@ -210,7 +205,7 @@ module PrettyText
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json };
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
@@ -318,6 +313,7 @@ module PrettyText
     add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
     add_rel_attributes_to_user_content(doc, add_nofollow)
     strip_hidden_unicode_bidirectional_characters(doc)
+    sanitize_hotlinked_media(doc)
 
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
@@ -344,6 +340,25 @@ module PrettyText
           bidi,
           "<span class=\"bidi-warning\" title=\"#{I18n.t("post.hidden_bidi_character")}\">#{formatted}</span>"
         )
+      end
+    end
+  end
+
+  def self.sanitize_hotlinked_media(doc)
+    return if !SiteSetting.block_hotlinked_media
+
+    allowed_pattern = allowed_src_pattern
+
+    doc.css("img[src], source[src], source[srcset], track[src]").each do |el|
+      if el["src"] && !el["src"].match?(allowed_pattern)
+        el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] = el.delete("src")
+      end
+
+      if el["srcset"]
+        srcs = el["srcset"].split(',').map { |e| e.split(' ', 2)[0].presence }
+        if srcs.any? { |src| !src.match?(allowed_pattern) }
+          el[PrettyText::BLOCKED_HOTLINKED_SRCSET_ATTR] = el.delete("srcset")
+        end
       end
     end
   end
@@ -464,7 +479,7 @@ module PrettyText
   def self.convert_vimeo_iframes(doc)
     doc.css("iframe[src*='player.vimeo.com']").each do |iframe|
       if iframe["data-original-href"].present?
-        vimeo_url = UrlHelper.escape_uri(iframe["data-original-href"])
+        vimeo_url = UrlHelper.normalized_encode(iframe["data-original-href"])
       else
         vimeo_id = iframe['src'].split('/').last
         vimeo_url = "https://vimeo.com/#{vimeo_id}"
@@ -673,4 +688,25 @@ module PrettyText
     mentions
   end
 
+  def self.allowed_src_pattern
+    allowed_src_prefixes = [
+      Discourse.base_path,
+      Discourse.base_url,
+      GlobalSetting.s3_cdn_url,
+      GlobalSetting.cdn_url,
+      SiteSetting.external_emoji_url.presence,
+      *SiteSetting.block_hotlinked_media_exceptions.split("|")
+    ]
+
+    patterns = allowed_src_prefixes.compact.map do |url|
+      pattern = Regexp.escape(url)
+
+      # If 'https://example.com' is allowed, ensure 'https://example.com.blah.com' is not
+      pattern += '(?:/|\z)' if !pattern.ends_with?("\/")
+
+      pattern
+    end
+
+    /\A(data:|#{patterns.join("|")})/
+  end
 end

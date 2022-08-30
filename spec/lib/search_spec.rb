@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Search do
+RSpec.describe Search do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:topic) { Fabricate(:topic) }
 
@@ -9,7 +9,7 @@ describe Search do
     Jobs.run_immediately!
   end
 
-  context "#ts_config" do
+  describe "#ts_config" do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")
       expect(Search.ts_config("en")).to eq("english")
@@ -20,7 +20,7 @@ describe Search do
     end
   end
 
-  context "#GroupedSearchResults.blurb_for" do
+  describe "#GroupedSearchResults.blurb_for" do
     it "strips audio and video URLs from search blurb" do
       cooked = <<~RAW
         link to an external page: https://google.com/?u=bar
@@ -55,12 +55,12 @@ describe Search do
     end
   end
 
-  context "#execute" do
+  describe "#execute" do
     before do
       SiteSetting.tagging_enabled = true
     end
 
-    context "staff tags" do
+    context "with staff tags" do
       fab!(:hidden_tag) { Fabricate(:tag) }
       let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
       fab!(:topic) { Fabricate(:topic, tags: [hidden_tag]) }
@@ -85,7 +85,7 @@ describe Search do
       end
     end
 
-    context "accents" do
+    context "with accents" do
       fab!(:post_1) { Fabricate(:post, raw: "Cette ****** d'art n'est pas une œuvre") }
       fab!(:post_2) { Fabricate(:post, raw: "Cette oeuvre d'art n'est pas une *****") }
 
@@ -115,7 +115,7 @@ describe Search do
     end
   end
 
-  context "custom_eager_load" do
+  describe "custom_eager_load" do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -146,7 +146,7 @@ describe Search do
     end
   end
 
-  context "users" do
+  describe "users" do
     fab!(:user) { Fabricate(:user, username: "DonaldDuck") }
     fab!(:user2) { Fabricate(:user) }
 
@@ -214,7 +214,7 @@ describe Search do
     end
   end
 
-  context "categories" do
+  describe "categories" do
     it "finds topics in sub-sub-categories" do
       SiteSetting.max_category_nesting = 3
 
@@ -242,7 +242,7 @@ describe Search do
     end
   end
 
-  context 'post indexing' do
+  describe 'post indexing' do
     fab!(:category) { Fabricate(:category_with_definition, name: 'america') }
     fab!(:topic) { Fabricate(:topic, title: 'sam saffron test topic', category: category) }
     let!(:post) { Fabricate(:post, topic: topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">') }
@@ -283,7 +283,7 @@ describe Search do
     end
   end
 
-  context 'user indexing' do
+  describe 'user indexing' do
     before do
       @user = Fabricate(:user, username: 'fred', name: 'bob jones')
       @indexed = @user.user_search_data.search_data
@@ -295,7 +295,7 @@ describe Search do
     end
   end
 
-  context 'category indexing' do
+  describe 'category indexing' do
     let!(:category) { Fabricate(:category_with_definition, name: 'america') }
     let!(:topic) { Fabricate(:topic, category: category) }
     let!(:post) { Fabricate(:post, topic: topic) }
@@ -366,7 +366,7 @@ describe Search do
     expect(search.term).to eq('a b c okaylength')
   end
 
-  context 'query sanitization' do
+  describe 'query sanitization' do
     let!(:post) { Fabricate(:post, raw: 'hello world') }
 
     it 'escapes backslash' do
@@ -386,7 +386,7 @@ describe Search do
     expect { Search.execute('evil trout') }.not_to raise_error
   end
 
-  context 'users' do
+  describe 'users' do
     let!(:user) { Fabricate(:user) }
     let(:result) { Search.execute('bruce', type_filter: 'user') }
 
@@ -395,7 +395,7 @@ describe Search do
       expect(result.users[0].id).to eq(user.id)
     end
 
-    context 'hiding user profiles' do
+    context 'when hiding user profiles' do
       before { SiteSetting.hide_user_profiles_from_public = true }
 
       it 'returns no result for anon' do
@@ -409,7 +409,7 @@ describe Search do
     end
   end
 
-  context 'inactive users' do
+  describe 'inactive users' do
     let!(:inactive_user) { Fabricate(:inactive_user, active: false) }
     let(:result) { Search.execute('bruce') }
 
@@ -418,7 +418,7 @@ describe Search do
     end
   end
 
-  context 'staged users' do
+  describe 'staged users' do
     let(:staged) { Fabricate(:staged) }
     let(:result) { Search.execute(staged.username) }
 
@@ -427,7 +427,7 @@ describe Search do
     end
   end
 
-  context 'private messages' do
+  describe 'private messages' do
     let!(:post) { Fabricate(:private_message_post) }
 
     let(:topic) { post.topic }
@@ -533,7 +533,7 @@ describe Search do
       end
     end
 
-    context 'personal_messages filter' do
+    context 'with personal_messages filter' do
       it 'does not allow a normal user to search for personal messages of another user' do
         expect do
           Search.execute(
@@ -562,7 +562,7 @@ describe Search do
       end
     end
 
-    context 'all-pms flag' do
+    context 'with all-pms flag' do
       it 'returns matching PMs if the user is an admin' do
         results = Search.execute('mars in:all-pms', guardian: Guardian.new(admin))
 
@@ -582,7 +582,7 @@ describe Search do
       end
     end
 
-    context 'personal-direct and group_messages flags' do
+    context 'with personal-direct and group_messages flags' do
       let(:current) { Fabricate(:user, admin: true, username: "current_user") }
       let(:participant) { Fabricate(:user, username: "participant_1") }
       let(:participant_2) { Fabricate(:user, username: "participant_2") }
@@ -610,7 +610,7 @@ describe Search do
         pm.reload
       end
 
-      context "personal-direct flag" do
+      context "with personal-direct flag" do
         it 'can find all direct PMs of the current user' do
           pm = create_pm(users: [current, participant])
           _pm_2 = create_pm(users: [participant_2, participant])
@@ -657,7 +657,7 @@ describe Search do
         end
       end
 
-      context "group_messages flag" do
+      context "with group_messages flag" do
         it 'returns results correctly for a PM in a given group' do
           pm = create_pm(users: [participant, participant_2], group: group)
 
@@ -700,7 +700,7 @@ describe Search do
       end
     end
 
-    context 'all topics' do
+    context 'with all topics' do
       let!(:u1) { Fabricate(:user, username: 'fred', name: 'bob jones', email: 'foo+1@bar.baz') }
       let!(:u2) { Fabricate(:user, username: 'bob', name: 'fred jones', email: 'foo+2@bar.baz') }
       let!(:u3) { Fabricate(:user, username: 'jones', name: 'bob fred', email: 'foo+3@bar.baz') }
@@ -765,7 +765,7 @@ describe Search do
     end
   end
 
-  context 'posts' do
+  context 'with posts' do
     fab!(:post) do
       SearchIndexer.enable
       Fabricate(:post)
@@ -910,7 +910,12 @@ describe Search do
       ])
     end
 
-    it 'allows staff to search for whispers' do
+    it 'allows staff and members of whisperers group to search for whispers' do
+      whisperers_group = Fabricate(:group)
+      user = Fabricate(:user)
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+
       post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
 
       results = Search.execute('tiger')
@@ -920,14 +925,21 @@ describe Search do
       results = Search.execute('tiger', guardian: Guardian.new(admin))
 
       expect(results.posts).to eq([post])
+
+      results = Search.execute('tiger', guardian: Guardian.new(user))
+      expect(results.posts).to eq([])
+
+      user.groups << whisperers_group
+      results = Search.execute('tiger', guardian: Guardian.new(user))
+      expect(results.posts).to eq([post])
     end
   end
 
-  context 'topics' do
+  describe 'topics' do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
-    context 'search within topic' do
+    context 'with search within topic' do
       def new_post(raw, topic = nil, created_at: nil)
         topic ||= Fabricate(:topic)
         Fabricate(:post, topic: topic, topic_id: topic.id, user: topic.user, raw: raw, created_at: created_at)
@@ -978,7 +990,7 @@ describe Search do
       end
     end
 
-    context 'searching the OP' do
+    context 'when searching the OP' do
       let!(:post) { Fabricate(:post_with_long_raw_content) }
       let(:result) { Search.execute('hundred', type_filter: 'topic') }
 
@@ -988,7 +1000,7 @@ describe Search do
       end
     end
 
-    context 'searching for quoted title' do
+    context 'when searching for quoted title' do
       it "can find quoted title" do
         create_post(raw: "this is the raw body", title: "I am a title yeah")
         result = Search.execute('"a title yeah"')
@@ -997,7 +1009,7 @@ describe Search do
       end
     end
 
-    context "search for a topic by id" do
+    context "when searching for a topic by id" do
       let(:result) { Search.execute(topic.id, type_filter: 'topic', search_for_id: true, min_search_term_length: 1) }
 
       it 'returns the topic' do
@@ -1006,14 +1018,14 @@ describe Search do
       end
     end
 
-    context "search for a topic by url" do
+    context "when searching for a topic by url" do
       it 'returns the topic' do
         result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')
         expect(result.posts.length).to eq(1)
         expect(result.posts.first.id).to eq(post.id)
       end
 
-      context 'restrict_to_archetype' do
+      context 'with restrict_to_archetype' do
         let(:personal_message) { Fabricate(:private_message_topic) }
         let!(:p1) { Fabricate(:post, topic: personal_message, post_number: 1) }
 
@@ -1035,7 +1047,7 @@ describe Search do
       end
     end
 
-    context 'security' do
+    context 'with security' do
       def result(current_user)
         Search.execute('hello', guardian: Guardian.new(current_user))
       end
@@ -1056,7 +1068,7 @@ describe Search do
     end
   end
 
-  context 'cyrillic topic' do
+  describe 'cyrillic topic' do
     let!(:cyrillic_topic) do
       Fabricate(:topic) do
         user
@@ -1077,7 +1089,7 @@ describe Search do
     expect(Search.execute('canned').posts).to be_present
   end
 
-  context 'categories' do
+  describe 'categories' do
     let(:category) { Fabricate(:category_with_definition, name: "monkey Category 2") }
     let(:topic) { Fabricate(:topic, category: category) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "snow monkey") }
@@ -1173,7 +1185,7 @@ describe Search do
     end
   end
 
-  context 'groups' do
+  describe 'groups' do
     def search(user = Fabricate(:user))
       Search.execute(group.name, guardian: Guardian.new(user))
     end
@@ -1184,20 +1196,20 @@ describe Search do
       expect(search.groups.map(&:name)).to eq([group.name])
     end
 
-    context 'group visibility' do
+    context 'with group visibility' do
       let!(:group) { Fabricate(:group) }
 
       before do
         group.update!(visibility_level: 3)
       end
 
-      context 'staff logged in' do
+      context 'with staff logged in' do
         it 'shows group' do
           expect(search(admin).groups.map(&:name)).to eq([group.name])
         end
       end
 
-      context 'non staff logged in' do
+      context 'with non staff logged in' do
         it 'shows doesn’t show group' do
           expect(search.groups.map(&:name)).to be_empty
         end
@@ -1205,7 +1217,7 @@ describe Search do
     end
   end
 
-  context 'tags' do
+  describe 'tags' do
     def search
       Search.execute(tag.name)
     end
@@ -1215,7 +1227,7 @@ describe Search do
     let(:tag_group) { Fabricate(:tag_group) }
     let(:category) { Fabricate(:category_with_definition) }
 
-    context 'post searching' do
+    context 'with post searching' do
       before do
         SiteSetting.tagging_enabled = true
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name, uppercase_tag.name])
@@ -1248,7 +1260,7 @@ describe Search do
       end
     end
 
-    context 'tagging is disabled' do
+    context 'when tagging is disabled' do
       before { SiteSetting.tagging_enabled = false }
 
       it 'does not include tags' do
@@ -1256,7 +1268,7 @@ describe Search do
       end
     end
 
-    context 'tagging is enabled' do
+    context 'when tagging is enabled' do
       before { SiteSetting.tagging_enabled = true }
 
       it 'returns the tag in the result' do
@@ -1283,11 +1295,11 @@ describe Search do
     end
   end
 
-  context 'type_filter' do
+  describe 'type_filter' do
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }
     let!(:category) { Fabricate(:category_with_definition, name: 'amazing category', user: user) }
 
-    context 'user filter' do
+    context 'with user filter' do
       let(:results) { Search.execute('amazing', type_filter: 'user') }
 
       it "returns a user result" do
@@ -1297,7 +1309,7 @@ describe Search do
       end
     end
 
-    context 'category filter' do
+    context 'with category filter' do
       let(:results) { Search.execute('amazing', type_filter: 'category') }
 
       it "returns a category result" do
@@ -1308,7 +1320,7 @@ describe Search do
     end
   end
 
-  context 'search_context' do
+  describe 'search_context' do
     it 'can find a user when using search context' do
       coding_horror = Fabricate(:coding_horror)
       post = Fabricate(:post)
@@ -1357,7 +1369,7 @@ describe Search do
     end
   end
 
-  context 'Japanese search' do
+  describe 'Japanese search' do
     let!(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic, raw: 'This is some japanese text 日本が大好きです。') }
     let!(:topic_2) { Fabricate(:topic, title: '日本の話題、 more japanese text') }
@@ -1586,7 +1598,7 @@ describe Search do
       expect(Search.execute("@#{post_1.user.username}").posts).to contain_exactly(post_1)
     end
 
-    context "searching for posts made by users of a group" do
+    context "when searching for posts made by users of a group" do
       fab!(:topic) { Fabricate(:topic, created_at: 3.months.ago) }
       fab!(:user) { Fabricate(:user) }
       fab!(:user_2) { Fabricate(:user) }
@@ -1898,7 +1910,7 @@ describe Search do
       expect(results.posts.length).to eq(0)
     end
 
-    context 'tags' do
+    context 'with tags' do
       fab!(:tag1) { Fabricate(:tag, name: 'lunch') }
       fab!(:tag2) { Fabricate(:tag, name: 'eggs') }
       fab!(:tag3) { Fabricate(:tag, name: 'sandwiches') }
@@ -2018,7 +2030,7 @@ describe Search do
     end
   end
 
-  context '#ts_query' do
+  describe '#ts_query' do
     it 'can parse complex strings using ts_query helper' do
       str = +" grigio:babel deprecated? "
       str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
@@ -2040,7 +2052,7 @@ describe Search do
     end
   end
 
-  context '#word_to_date' do
+  describe '#word_to_date' do
     it 'parses relative dates correctly' do
       time = Time.zone.parse('2001-02-20 2:55')
       freeze_time(time)
@@ -2068,7 +2080,7 @@ describe Search do
     end
   end
 
-  context "#min_post_id" do
+  describe "#min_post_id" do
     it "returns 0 when prefer_recent_posts is disabled" do
       SiteSetting.search_prefer_recent_posts = false
       expect(Search.min_post_id_no_cache).to eq(0)
@@ -2085,7 +2097,7 @@ describe Search do
     end
   end
 
-  context "search_log_id" do
+  describe "search_log_id" do
     it "returns an id when the search succeeds" do
       s = Search.new(
         'indiana jones',
@@ -2103,7 +2115,7 @@ describe Search do
     end
   end
 
-  context 'in:title' do
+  describe 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
       _post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
@@ -2133,7 +2145,7 @@ describe Search do
     end
   end
 
-  context 'ignore_diacritics' do
+  describe 'ignore_diacritics' do
     before { SiteSetting.search_ignore_accents = true }
     let!(:post1) { Fabricate(:post, raw: 'สวัสดี Rágis hello') }
 
@@ -2155,7 +2167,7 @@ describe Search do
     end
   end
 
-  context 'include_diacritics' do
+  describe 'include_diacritics' do
     before { SiteSetting.search_ignore_accents = false }
     let!(:post1) { Fabricate(:post, raw: 'สวัสดี Régis hello') }
 
@@ -2176,7 +2188,7 @@ describe Search do
     end
   end
 
-  context 'pagination' do
+  describe 'pagination' do
     let(:number_of_results) { 2 }
     let!(:post1) { Fabricate(:post, raw: 'hello hello hello hello hello') }
     let!(:post2) { Fabricate(:post, raw: 'hello hello hello hello') }
@@ -2224,7 +2236,7 @@ describe Search do
     end
   end
 
-  context 'header in-topic search' do
+  describe 'header in-topic search' do
     let!(:topic) { Fabricate(:topic, title: 'This is a topic with a bunch of posts') }
     let!(:post1) { Fabricate(:post, topic: topic, raw: 'hola amiga') }
     let!(:post2) { Fabricate(:post, topic: topic, raw: 'hola amigo') }
@@ -2243,7 +2255,7 @@ describe Search do
     end
   end
 
-  context 'in:tagged' do
+  describe 'in:tagged' do
     it 'allows for searching by presence of any tags' do
       topic = Fabricate(:topic, title: 'I am testing a tagged search')
       _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
@@ -2261,7 +2273,7 @@ describe Search do
     end
   end
 
-  context 'in:untagged' do
+  describe 'in:untagged' do
     it 'allows for searching by presence of no tags' do
       topic = Fabricate(:topic, title: 'I am testing a untagged search')
       _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
@@ -2274,7 +2286,7 @@ describe Search do
     end
   end
 
-  context 'plugin extensions' do
+  describe 'plugin extensions' do
     let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
     let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
 
@@ -2297,7 +2309,7 @@ describe Search do
     end
   end
 
-  context 'exclude_topics filter' do
+  describe 'exclude_topics filter' do
     before { SiteSetting.tagging_enabled = true }
     let!(:user) { Fabricate(:user) }
     fab!(:group) { Fabricate(:group, name: 'bruce-world-fans') }

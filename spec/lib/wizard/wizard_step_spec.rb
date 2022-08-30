@@ -2,7 +2,7 @@
 
 require 'wizard'
 
-describe Wizard::Step do
+RSpec.describe Wizard::Step do
 
   let(:wizard) { Wizard.new(Fabricate.build(:user)) }
   let(:step) { wizard.create_step('test-step') }
@@ -16,9 +16,12 @@ describe Wizard::Step do
     dropdown.add_choice('candy')
     dropdown.add_choice('nachos', data: { color: 'yellow' })
     dropdown.add_choice('pizza', label: 'Pizza!')
-
     expect(step.fields).to eq([text, dropdown])
     expect(dropdown.choices.size).to eq(3)
+
+    checkbox = step.add_field(id: 'foobar', type: 'checkbox', disabled: true)
+    expect(step.fields).to eq([text, dropdown, checkbox])
+    expect(checkbox.disabled).to eq(true)
   end
 
 end

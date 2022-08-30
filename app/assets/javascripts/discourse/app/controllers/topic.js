@@ -4,7 +4,8 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { isEmpty, isPresent } from "@ember/utils";
-import { later, next, schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
@@ -239,7 +240,10 @@ export default Controller.extend(bufferedProperty("model"), {
           this.model.removeBookmark(post.bookmark_id);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.findBy("for_topic", true);
+    const forTopicBookmark = this.model.bookmarks.findBy(
+      "bookmarkable_type",
+      "Topic"
+    );
     if (
       forTopicBookmark?.auto_delete_preference ===
       AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
@@ -781,8 +785,8 @@ export default Controller.extend(bufferedProperty("model"), {
             Bookmark.create({
               bookmarkable_id: post.id,
               bookmarkable_type: "Post",
-              auto_delete_preference: this.currentUser
-                .bookmark_auto_delete_preference,
+              auto_delete_preference:
+                this.currentUser.bookmark_auto_delete_preference,
             }),
           post
         );
@@ -890,7 +894,8 @@ export default Controller.extend(bufferedProperty("model"), {
     selectReplies(post) {
       ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
         const replyIds = replies.map((r) => r.id);
-        this.selectedPostIds.pushObjects([post.id, ...replyIds]);
+        const postIds = [...this.selectedPostIds, post.id, ...replyIds];
+        this.set("selectedPostIds", [...new Set(postIds)]);
         this._forceRefreshPostStream();
       });
     },
@@ -1334,8 +1339,8 @@ export default Controller.extend(bufferedProperty("model"), {
         Bookmark.create({
           bookmarkable_id: this.model.id,
           bookmarkable_type: "Topic",
-          auto_delete_preference: this.currentUser
-            .bookmark_auto_delete_preference,
+          auto_delete_preference:
+            this.currentUser.bookmark_auto_delete_preference,
         })
       );
     }
@@ -1544,7 +1549,7 @@ export default Controller.extend(bufferedProperty("model"), {
     }
 
     if (this._retryInProgress) {
-      later(() => {
+      discourseLater(() => {
         this.retryOnRateLimit(times, promise, topicId);
       }, 100);
       return;
@@ -1569,7 +1574,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
           this._retryRateLimited = true;
 
-          later(() => {
+          discourseLater(() => {
             this._retryRateLimited = false;
             this.retryOnRateLimit(times - 1, promise, topicId);
           }, waitSeconds * 1000);
@@ -1697,6 +1702,30 @@ export default Controller.extend(bufferedProperty("model"), {
           }
           case "archived": {
             topic.set("message_archived", true);
+            break;
+          }
+          case "stats": {
+            let updateStream = false;
+            ["last_posted_at", "like_count", "posts_count"].forEach(
+              (property) => {
+                const value = data[property];
+                if (typeof value !== "undefined") {
+                  topic.set(property, value);
+                  updateStream = true;
+                }
+              }
+            );
+
+            if (data["last_poster"]) {
+              topic.details.set("last_poster", data["last_poster"]);
+              updateStream = true;
+            }
+
+            if (updateStream) {
+              postStream
+                .triggerChangedTopicStats()
+                .then((firstPostId) => refresh({ id: firstPostId }));
+            }
             break;
           }
           default: {

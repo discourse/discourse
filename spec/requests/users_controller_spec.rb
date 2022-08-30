@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe UsersController do
+RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
@@ -59,7 +59,7 @@ describe UsersController do
       UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false)
     end
 
-    context 'invalid token' do
+    context 'with invalid token' do
       it 'return success' do
         put "/u/activate-account/invalid-tooken"
         expect(response.status).to eq(200)
@@ -67,8 +67,8 @@ describe UsersController do
       end
     end
 
-    context 'valid token' do
-      context 'welcome message' do
+    context 'with valid token' do
+      context 'with welcome message' do
         it 'enqueues a welcome message if the user object indicates so' do
           SiteSetting.send_welcome_message = true
           user_deferred.update(active: false)
@@ -86,7 +86,7 @@ describe UsersController do
         end
       end
 
-      context "honeypot" do
+      context "with honeypot" do
         it "raises an error if the honeypot is invalid" do
           UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(true)
           put "/u/activate-account/#{email_token.token}"
@@ -94,7 +94,7 @@ describe UsersController do
         end
       end
 
-      context 'response' do
+      context 'with response' do
         it 'correctly logs on user' do
           email_token
 
@@ -115,7 +115,7 @@ describe UsersController do
         end
       end
 
-      context 'user is not approved' do
+      context 'when user is not approved' do
         before do
           SiteSetting.must_approve_users = true
         end
@@ -169,7 +169,7 @@ describe UsersController do
   describe '#password_reset' do
     let(:token) { SecureRandom.hex }
 
-    context "you can view it even if login is required" do
+    context "when login is required" do
       it "returns success" do
         SiteSetting.login_required = true
         get "/u/password-reset/#{token}"
@@ -178,7 +178,7 @@ describe UsersController do
       end
     end
 
-    context 'missing token' do
+    context 'with missing token' do
       it 'disallows login' do
         get "/u/password-reset/#{token}"
 
@@ -203,7 +203,7 @@ describe UsersController do
       end
     end
 
-    context 'invalid token' do
+    context 'with invalid token' do
       it 'disallows login' do
         get "/u/password-reset/ev!l_trout@!"
 
@@ -228,7 +228,7 @@ describe UsersController do
       end
     end
 
-    context 'valid token' do
+    context 'with valid token' do
       let!(:user_auth_token) { UserAuthToken.generate!(user_id: user1.id) }
       let!(:email_token) { Fabricate(:email_token, user: user1, scope: EmailToken.scopes[:password_reset]) }
 
@@ -308,7 +308,7 @@ describe UsersController do
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(1)
       end
 
-      context "rate limiting" do
+      context "with rate limiting" do
         before { RateLimiter.clear_all!; RateLimiter.enable }
 
         it "rate limits reset passwords" do
@@ -352,7 +352,7 @@ describe UsersController do
         end
       end
 
-      context '2 factor authentication required' do
+      context 'when 2 factor authentication is required' do
         fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user1) }
 
         it 'does not change with an invalid token' do
@@ -394,7 +394,7 @@ describe UsersController do
         end
       end
 
-      context 'security key authentication required' do
+      context 'when security key authentication is required' do
         let!(:user_security_key) do
           Fabricate(
             :user_security_key,
@@ -472,7 +472,7 @@ describe UsersController do
       end
     end
 
-    context 'submit change' do
+    context 'with submit change' do
       let(:email_token) { Fabricate(:email_token, user: user1, scope: EmailToken.scopes[:password_reset]) }
 
       it "fails when the password is blank" do
@@ -527,14 +527,20 @@ describe UsersController do
   end
 
   describe '#admin_login' do
-    context 'enqueues mail' do
-      it 'enqueues mail with admin email and sso enabled' do
-        put "/u/admin-login", params: { email: admin.email }
-        expect(response.status).to eq(200)
-        expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
-        args = Jobs::CriticalUserEmail.jobs.first["args"].first
-        expect(args["user_id"]).to eq(admin.id)
-      end
+    it 'enqueues mail with admin email and sso enabled' do
+      put "/u/admin-login", params: { email: admin.email }
+      expect(response.status).to eq(200)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      args = Jobs::CriticalUserEmail.jobs.first["args"].first
+      expect(args["user_id"]).to eq(admin.id)
+    end
+
+    it 'passes through safe mode' do
+      put "/u/admin-login", params: { email: admin.email, use_safe_mode: true }
+      expect(response.status).to eq(200)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      args = Jobs::CriticalUserEmail.jobs.first["args"].first
+      expect(args["email_token"]).to end_with("?safe_mode=no_plugins,no_themes")
     end
 
     context 'when email is incorrect' do
@@ -765,7 +771,7 @@ describe UsersController do
         expect(args["type"]).to eq("signup")
       end
 
-      context "`must approve users` site setting is enabled" do
+      context "when `must approve users` site setting is enabled" do
         before { SiteSetting.must_approve_users = true }
 
         it 'creates a user correctly' do
@@ -786,7 +792,7 @@ describe UsersController do
         end
       end
 
-      context 'users already exists with given email' do
+      context 'when users already exists with given email' do
         let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
 
         it 'returns an error if hide_email_address_taken is disabled' do
@@ -828,7 +834,7 @@ describe UsersController do
       end
     end
 
-    context "creating as active" do
+    context "when creating as active" do
       it "won't create the user as active" do
         post "/u.json", params: post_user_params.merge(active: true)
         expect(response.status).to eq(200)
@@ -938,7 +944,7 @@ describe UsersController do
       end
     end
 
-    context "creating as staged" do
+    context "when creating as staged" do
       it "won't create the user as staged" do
         post "/u.json", params: post_user_params.merge(staged: true)
         expect(response.status).to eq(200)
@@ -1029,7 +1035,7 @@ describe UsersController do
         expect(json['message']).to be_present
       end
 
-      context 'authentication records for' do
+      context 'with authentication records for' do
         before do
           OmniAuth.config.test_mode = true
 
@@ -1653,14 +1659,14 @@ describe UsersController do
       expect(response.status).to eq(200)
     end
 
-    context 'username is available' do
+    context 'when username is available' do
       before do
         get "/u/check_username.json", params: { username: 'BruceWayne' }
       end
       include_examples 'when username is available'
     end
 
-    context 'username is unavailable' do
+    context 'when username is unavailable' do
       before do
         get "/u/check_username.json", params: { username: user1.username }
       end
@@ -1675,7 +1681,7 @@ describe UsersController do
       end
     end
 
-    context 'has invalid characters' do
+    context 'when has invalid characters' do
       before do
         get "/u/check_username.json", params: { username: 'bad username' }
       end
@@ -1687,7 +1693,7 @@ describe UsersController do
       end
     end
 
-    context 'is too long' do
+    context 'when is too long' do
       before do
         get "/u/check_username.json", params: { username: SecureRandom.alphanumeric(SiteSetting.max_username_length.to_i + 1) }
       end
@@ -1700,7 +1706,7 @@ describe UsersController do
     end
 
     describe 'different case of existing username' do
-      context "it's my username" do
+      context "when it's my username" do
         fab!(:user) { Fabricate(:user, username: 'hansolo') }
         before do
           sign_in(user)
@@ -1710,7 +1716,7 @@ describe UsersController do
         include_examples 'when username is available'
       end
 
-      context "it's someone else's username" do
+      context "when it's someone else's username" do
         fab!(:user) { Fabricate(:user, username: 'hansolo') }
         fab!(:someone_else) { Fabricate(:user) }
         before do
@@ -1721,7 +1727,7 @@ describe UsersController do
         include_examples 'when username is unavailable'
       end
 
-      context "an admin changing it for someone else" do
+      context "when an admin changing it for someone else" do
         fab!(:user) { Fabricate(:user, username: 'hansolo') }
         before do
           sign_in(admin)
@@ -2005,7 +2011,7 @@ describe UsersController do
     end
 
     context "as a staff user" do
-      context "uneditable field" do
+      context "with uneditable field" do
         fab!(:user_field) { Fabricate(:user_field, editable: false) }
 
         it "allows staff to edit the field" do
@@ -2096,7 +2102,7 @@ describe UsersController do
           expect(response.parsed_body['user']['watched_tags'].count).to eq(2)
         end
 
-        context 'a locale is chosen that differs from I18n.locale' do
+        context 'when a locale is chosen that differs from I18n.locale' do
           before do
             SiteSetting.allow_user_locale = true
           end
@@ -2123,7 +2129,7 @@ describe UsersController do
         end
 
         context "with user fields" do
-          context "an editable field" do
+          context "with an editable field" do
             fab!(:user_field) { Fabricate(:user_field) }
             fab!(:optional_field) { Fabricate(:user_field, required: false) }
 
@@ -2197,7 +2203,7 @@ describe UsersController do
             end
           end
 
-          context "uneditable field" do
+          context "with uneditable field" do
             fab!(:user_field) { Fabricate(:user_field, editable: false) }
 
             it "does not update the user field" do
@@ -2208,7 +2214,7 @@ describe UsersController do
             end
           end
 
-          context "custom_field" do
+          context "with custom_field" do
             before do
               plugin = Plugin::Instance.new
               plugin.register_editable_user_custom_field :test2
@@ -2297,6 +2303,89 @@ describe UsersController do
           json = response.parsed_body
           expect(json['user']['id']).to eq user.id
         end
+
+        context 'with experimental sidebar' do
+          before do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+          end
+
+          it 'does not remove category or tag sidebar section links when params are not present' do
+            Fabricate(:category_sidebar_section_link, user: user)
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json"
+
+              expect(response.status).to eq(200)
+            end.to_not change { user.sidebar_section_links.count }
+          end
+
+          it "should allow user to remove all category sidebar section links" do
+            Fabricate(:category_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_category_ids: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it "should allow user to modify category sidebar section links" do
+            category = Fabricate(:category)
+            restricted_category = Fabricate(:category, read_restricted: true)
+            category_sidebar_section_link = Fabricate(:category_sidebar_section_link, user: user)
+
+            put "/u/#{user.username}.json", params: { sidebar_category_ids: [category.id, restricted_category.id] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.count).to eq(1)
+            expect(SidebarSectionLink.exists?(id: category_sidebar_section_link.id)).to eq(false)
+
+            sidebar_section_link = user.sidebar_section_links.first
+
+            expect(sidebar_section_link.linkable).to eq(category)
+          end
+
+          it 'should allow user to remove all tag sidebar section links' do
+            SiteSetting.tagging_enabled = true
+
+            Fabricate(:tag_sidebar_section_link, user: user)
+
+            expect do
+              put "/u/#{user.username}.json", params: { sidebar_tag_names: nil }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(0)
+          end
+
+          it 'should not allow user to add tag sidebar section links when tagging is disabled' do
+            SiteSetting.tagging_enabled = false
+
+            tag = Fabricate(:tag)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: [tag.name] }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.sidebar_section_links.count).to eq(0)
+          end
+
+          it "should allow user to add tag sidebar section links" do
+            SiteSetting.tagging_enabled = true
+
+            tag = Fabricate(:tag)
+            tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link, user: user)
+
+            put "/u/#{user.username}.json", params: { sidebar_tag_names: [tag.name, "somerandomtag"] }
+
+            expect(response.status).to eq(200)
+            expect(user.sidebar_section_links.count).to eq(1)
+            expect(SidebarSectionLink.exists?(id: tag_sidebar_section_link.id)).to eq(false)
+
+            sidebar_section_link = user.sidebar_section_links.first
+
+            expect(sidebar_section_link.linkable).to eq(tag)
+          end
+        end
       end
 
       context 'without permission to update' do
@@ -2308,21 +2397,6 @@ describe UsersController do
 
           expect(response).to be_forbidden
           expect(user.reload.name).not_to eq 'Jim Tom'
-        end
-
-        context 'enabling experimental sidebar' do
-          before do
-            sign_in(user)
-          end
-
-          it "should be able to update UserOption#enable_experimental_sidebar" do
-            SiteSetting.enable_experimental_sidebar = true
-
-            put "/u/#{user.username}.json", params: { enable_experimental_sidebar: 'true' }
-
-            expect(response.status).to eq(200)
-            expect(user.user_option.enable_experimental_sidebar).to eq(true)
-          end
         end
       end
     end
@@ -2505,7 +2579,7 @@ describe UsersController do
         end
       end
 
-      context "approval is enabled" do
+      context "when approval is enabled" do
         before do
           SiteSetting.must_approve_users = true
         end
@@ -2780,7 +2854,7 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      context 'selectable avatars is enabled' do
+      context 'when selectable avatars is enabled' do
 
         before do
           SiteSetting.selectable_avatars = [avatar1, avatar2]
@@ -2793,7 +2867,7 @@ describe UsersController do
           expect(response.status).to eq(422)
         end
 
-        context 'selectable avatars is properly setup' do
+        context 'when selectable avatars is properly setup' do
           it 'raises an error when url is not in selectable avatars list' do
             put "/u/#{user1.username}/preferences/avatar/select.json", params: { url: url }
             expect(response.status).to eq(422)
@@ -3395,14 +3469,14 @@ describe UsersController do
   end
 
   describe '#topic_tracking_state' do
-    context 'anon' do
+    context 'when anon' do
       it "raises an error on anon for topic_tracking_state" do
         get "/u/#{user1.username}/topic-tracking-state.json"
         expect(response.status).to eq(403)
       end
     end
 
-    context 'logged on' do
+    context 'when logged on' do
       it "detects new topic" do
         sign_in(user1)
 
@@ -3429,7 +3503,7 @@ describe UsersController do
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
 
-    context '`hide_profile_and_presence` user option is checked' do
+    context 'when `hide_profile_and_presence` user option is checked' do
       before_all do
         user1.user_option.update_columns(hide_profile_and_presence: true)
       end
@@ -3447,7 +3521,7 @@ describe UsersController do
       end
     end
 
-    context 'avatar flair in Most... sections' do
+    context 'with avatar flair in Most... sections' do
       it "returns data for automatic groups flair" do
         liker = Fabricate(:user, admin: true, moderator: true, trust_level: 1)
         create_and_like_post(user_deferred, liker)
@@ -3649,6 +3723,23 @@ describe UsersController do
         token.reload
         expect(token.expired?).to eq(true)
       end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = post_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
 
     context "with a username and password" do
@@ -3723,11 +3814,30 @@ describe UsersController do
         token.reload
         expect(token.expired?).to eq(true)
       end
+
+      it 'tells the user to slow down after many requests' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+        freeze_time
+
+        user = inactive_user
+        token = user.email_tokens.first
+
+        6.times do |n|
+          put "/u/update-activation-email.json", params: {
+            username: user.username,
+            password: 'qwerqwer123',
+            email: "updatedemail#{n}@example.com"
+          }, env: { "REMOTE_ADDR": "1.2.3.#{n}" }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
   end
 
   describe '#show' do
-    context "anon" do
+    context "when anon" do
       let(:user) { Discourse.system_user }
 
       it "returns success" do
@@ -3772,7 +3882,7 @@ describe UsersController do
       end
     end
 
-    context "logged in" do
+    context "when logged in" do
       before do
         sign_in(user1)
       end
@@ -3828,7 +3938,7 @@ describe UsersController do
         end
       end
 
-      context "fetching a user by external_id" do
+      context "when fetching a user by external_id" do
         before { user1.create_single_sign_on_record(external_id: '997', last_payload: '') }
 
         it "returns fetch for a matching external_id" do
@@ -3890,29 +4000,13 @@ describe UsersController do
         end
 
         it "includes all post types for staff members" do
+          SiteSetting.enable_whispers = true
           sign_in(admin)
 
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
           expect(topic_post_count[topic.id.to_s]).to eq(2)
         end
-      end
-
-      it "includes UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is true" do
-        SiteSetting.enable_experimental_sidebar = true
-        user1.user_option.update!(enable_experimental_sidebar: true)
-
-        get "/u/#{user1.username}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(true)
-      end
-
-      it "does not include UserOption#enable_experimental_sidebar when SiteSetting.enable_experimental_sidebar is false" do
-        get "/u/#{user1.username}.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["user"]["user_option"]["enable_experimental_sidebar"]).to eq(nil)
       end
     end
 
@@ -3948,7 +4042,7 @@ describe UsersController do
   end
 
   describe "#show_card" do
-    context "anon" do
+    context "when anon" do
       let(:user) { Discourse.system_user }
 
       it "returns success" do
@@ -3968,7 +4062,7 @@ describe UsersController do
       end
     end
 
-    context "logged in" do
+    context "when logged in" do
       before do
         sign_in(user1)
       end
@@ -4014,7 +4108,7 @@ describe UsersController do
       expect(response).to redirect_to '/login'
     end
 
-    context '`hide_profile_and_presence` user option is checked' do
+    context 'when `hide_profile_and_presence` user option is checked' do
       before do
         user2.user_option.update_columns(hide_profile_and_presence: true)
       end
@@ -4172,7 +4266,7 @@ describe UsersController do
       expect(response.status).to eq(200)
     end
 
-    context 'limit' do
+    context 'with limit' do
       it "returns an error if value is invalid" do
         get "/u/search/users.json", params: { limit: '-1' }
         expect(response.status).to eq(400)
@@ -4203,7 +4297,7 @@ describe UsersController do
       end
     end
 
-    context 'groups' do
+    context 'with groups' do
       fab!(:mentionable_group) do
         Fabricate(:group,
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
@@ -4413,7 +4507,7 @@ describe UsersController do
       end
     end
 
-    context '`include_staged_users`' do
+    context 'with `include_staged_users`' do
       it "includes staged users when the param is true" do
         get "/u/search/users.json", params: { term: staged_user.name, include_staged_users: true }
         json = response.parsed_body
@@ -4433,7 +4527,7 @@ describe UsersController do
       end
     end
 
-    context '`last_seen_users`' do
+    context 'with `last_seen_users`' do
       it "returns results when the param is true" do
         get "/u/search/users.json", params: { last_seen_users: true }
 
@@ -4448,6 +4542,42 @@ describe UsersController do
         json = response.parsed_body
         expect(json["users"]).not_to be_empty
         expect(json["users"].size).to eq(limit)
+      end
+    end
+
+    it "returns avatar_template" do
+      get "/u/search/users.json", params: { term: user.username }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["users"][0]).to have_key("avatar_template")
+      expect(json["users"][0]["avatar_template"]).to eq("/letter_avatar_proxy/v4/letter/j/f475e1/{size}.png")
+    end
+
+    describe "#status" do
+      it "returns user status if enabled in site settings" do
+        SiteSetting.enable_user_status = true
+        emoji = "tooth"
+        description = "off to dentist"
+        user.set_status!(description, emoji)
+
+        get "/u/search/users.json", params: { term: user.name }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"][0]).to have_key("status")
+        expect(json["users"][0]["status"]["description"]).to eq(description)
+        expect(json["users"][0]["status"]["emoji"]).to eq(emoji)
+      end
+
+      it "doesn't return user status if disabled in site settings" do
+        SiteSetting.enable_user_status = false
+        user.set_status!("off to dentist", "tooth")
+
+        get "/u/search/users.json", params: { term: user.name }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"][0]).not_to have_key("status")
       end
     end
   end
@@ -5346,6 +5476,55 @@ describe UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body['bookmarks']).to eq([])
     end
+
+  end
+
+  describe "#bookmarks excerpts" do
+    fab!(:user) { Fabricate(:user) }
+    let!(:topic) { Fabricate(:topic, user: user) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: topic) }
+
+    it "uses the first post of the topic for the bookmarks excerpt" do
+      TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+
+      sign_in(user)
+
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
+      expected_excerpt = PrettyText.excerpt(topic.first_post.cooked, 300, keep_emoji_images: true)
+      expect(bookmark_list.first["excerpt"]).to eq(expected_excerpt)
+    end
+
+    describe "bookmarkable_url" do
+      context "with the link_to_first_unread_post option" do
+        it "is a full topic URL to the first unread post in the topic when the option is set" do
+          TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+
+          sign_in(user)
+
+          get "/u/#{user.username}/user-menu-bookmarks.json"
+          expect(response.status).to eq(200)
+          bookmark_list = response.parsed_body["bookmarks"]
+
+          expect(bookmark_list.first["bookmarkable_url"]).to end_with("/t/#{topic.slug}/#{topic.id}/#{post.post_number + 1}")
+        end
+
+        it "is a full topic URL to the first post in the topic when the option isn't set" do
+          TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+
+          sign_in(user)
+
+          get "/u/#{user.username}/bookmarks.json"
+          expect(response.status).to eq(200)
+          bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
+
+          expect(bookmark_list.first["bookmarkable_url"]).to end_with("/t/#{topic.slug}/#{topic.id}")
+        end
+      end
+    end
+
   end
 
   describe "#private_message_topic_tracking_state" do
@@ -5470,6 +5649,278 @@ describe UsersController do
 
       expect(response.status).to eq(403)
       expect(response.parsed_body["error"]).to eq(I18n.t("user_activity.no_log_search_queries"))
+    end
+  end
+
+  describe "#user_menu_bookmarks" do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:bookmark_with_reminder) { Fabricate(:bookmark, user: user, bookmarkable: post) }
+    fab!(:bookmark_without_reminder) { Fabricate(:bookmark, user: user, bookmarkable: topic) }
+
+    before do
+      TopicUser.change(user.id, post.topic.id, total_msecs_viewed: 1)
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
+      BookmarkReminderNotificationHandler
+        .new(bookmark_with_reminder)
+        .send_notification
+    end
+
+    context "when logged out" do
+      it "responds with 404" do
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        sign_in(user)
+      end
+
+      it "responds with 403 when requesting bookmarks list of another user" do
+        get "/u/#{user1.username}/user-menu-bookmarks"
+        expect(response.status).to eq(403)
+      end
+
+      it "sends an array of unread bookmark_reminder notifications" do
+        bookmark_with_reminder2 = Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post))
+        TopicUser.change(user.id, bookmark_with_reminder2.bookmarkable.topic, total_msecs_viewed: 1)
+        BookmarkReminderNotificationHandler
+          .new(bookmark_with_reminder2)
+          .send_notification
+
+        user
+          .notifications
+          .where(notification_type: Notification.types[:bookmark_reminder])
+          .where("data::json ->> 'bookmark_id' = ?", bookmark_with_reminder2.id.to_s)
+          .first
+          .update!(read: true)
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "responds with an array of bookmarks that are not associated with any of the unread bookmark_reminder notifications" do
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(1)
+        expect(bookmarks.first["id"]).to eq(bookmark_without_reminder.id)
+
+        bookmark_reminder = user
+          .notifications
+          .where(notification_type: Notification.types[:bookmark_reminder])
+          .where("data::json ->> 'bookmark_id' = ?", bookmark_with_reminder.id.to_s)
+          .first
+
+        bookmark_reminder.update!(read: true)
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
+          bookmark_with_reminder.id,
+          bookmark_without_reminder.id
+        )
+
+        data = bookmark_reminder.data_hash
+        data.delete(:bookmark_id)
+        bookmark_reminder.update!(data: data.to_json, read: false)
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to be_nil
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
+          bookmark_with_reminder.id,
+          bookmark_without_reminder.id
+        )
+      end
+
+      it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with bookmarks" do
+        bookmark2 = Fabricate(
+          :bookmark,
+          user: user,
+          bookmarkable: Fabricate(:post, topic: topic)
+        )
+
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(1)
+
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(2)
+
+        BookmarkReminderNotificationHandler.new(bookmark2).send_notification
+
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
+          get "/u/#{user.username}/user-menu-bookmarks"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(2)
+
+        bookmarks = response.parsed_body["bookmarks"]
+        expect(bookmarks.size).to eq(1)
+      end
+    end
+  end
+
+  describe "#user_menu_messages" do
+    fab!(:message_without_notification) { Fabricate(:private_message_post, recipient: user).topic }
+    fab!(:message_with_read_notification) { Fabricate(:private_message_post, recipient: user).topic }
+    fab!(:message_with_unread_notification) { Fabricate(:private_message_post, recipient: user).topic }
+
+    fab!(:user1_message_without_notification) do
+      Fabricate(:private_message_post, recipient: user1).topic
+    end
+    fab!(:user1_message_with_read_notification) do
+      Fabricate(:private_message_post, recipient: user1).topic
+    end
+    fab!(:user1_message_with_unread_notification) do
+      Fabricate(:private_message_post, recipient: user1).topic
+    end
+
+    fab!(:unread_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: false,
+        user: user,
+        topic: message_with_unread_notification
+      )
+    end
+    fab!(:read_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: true,
+        user: user,
+        topic: message_with_read_notification
+      )
+    end
+
+    fab!(:user1_unread_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: false,
+        user: user1,
+        topic: user1_message_with_unread_notification
+      )
+    end
+    fab!(:user1_read_notification) do
+      Fabricate(
+        :private_message_notification,
+        read: true,
+        user: user1,
+        topic: user1_message_with_read_notification
+      )
+    end
+
+    context "when logged out" do
+      it "responds with 404" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        sign_in(user)
+      end
+
+      it "responds with 403 when requesting messages list of another user" do
+        get "/u/#{user1.username}/user-menu-private-messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "responds with 403 if private messages are disabled and the user isn't staff" do
+        SiteSetting.enable_personal_messages = false
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn't respond with 403 if private messages are disabled and the user is staff" do
+        SiteSetting.enable_personal_messages = false
+        user.update!(moderator: true)
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+      end
+
+      it "sends an array of unread private_message notifications" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.map { |notification| notification["id"] }).to contain_exactly(
+          unread_notification.id
+        )
+      end
+
+      it "responds with an array of PM topics that are not associated with any of the unread private_message notifications" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.map { |topic| topic["id"] }).to contain_exactly(
+          message_without_notification.id,
+          message_with_read_notification.id
+        )
+      end
+
+      it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with PM topics" do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-private-messages"
+        end
+        expect(response.status).to eq(200)
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.size).to eq(1)
+
+        message2 = Fabricate(:private_message_post, recipient: user).topic
+        Fabricate(
+          :private_message_notification,
+          read: false,
+          user: user,
+          topic: message2
+        )
+
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
+          get "/u/#{user.username}/user-menu-private-messages"
+        end
+        expect(response.status).to eq(200)
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(2)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.size).to eq(0)
+      end
     end
   end
 

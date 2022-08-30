@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Oneboxer do
+RSpec.describe Oneboxer do
   def response(file)
     file = File.join("spec", "fixtures", "onebox", "#{file}.response")
     File.exist?(file) ? File.read(file) : ""
@@ -25,8 +25,7 @@ describe Oneboxer do
     end
   end
 
-  context "local oneboxes" do
-
+  describe "local oneboxes" do
     def link(url)
       url = "#{Discourse.base_url}#{url}"
       %{<a href="#{url}">#{url}</a>}
@@ -149,7 +148,7 @@ describe Oneboxer do
     end
   end
 
-  context ".onebox_raw" do
+  describe ".onebox_raw" do
     it "should escape the onebox URL before processing" do
       post = Fabricate(:post, raw: Discourse.base_url + "/new?'class=black")
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
@@ -158,7 +157,7 @@ describe Oneboxer do
     end
   end
 
-  context ".external_onebox" do
+  describe ".external_onebox" do
     html = <<~HTML
       <html>
       <head>
@@ -171,8 +170,7 @@ describe Oneboxer do
       <html>
     HTML
 
-    context "blacklisted domains" do
-
+    context "with blacklisted domains" do
       it "does not return a onebox if redirect uri final destination is in blacklist" do
         SiteSetting.blocked_onebox_domains = "kitten.com"
 
@@ -384,7 +382,7 @@ describe Oneboxer do
       <<~HTML
         <html>
         <head>
-          <meta property="og:title" content="Onebox1">
+          <meta property="og:title" content="Onebox1 - ceci n'est pas un titre">
           <meta property="og:description" content="this is bodycontent">
           <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
         </head>
@@ -416,6 +414,11 @@ describe Oneboxer do
       output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
       expect(output).to include("<iframe") # Regular youtube onebox
     end
+
+    it "appropriately escapes youtube titles" do
+      preview = Oneboxer.preview("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(preview).to include("ceci n'est pas un titre")
+    end
   end
 
   it "allows iframes from generic sites via the allowed_iframes setting" do
@@ -446,7 +449,7 @@ describe Oneboxer do
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
   end
 
-  context 'missing attributes' do
+  describe 'missing attributes' do
     before do
       stub_request(:head, url)
     end
@@ -475,7 +478,7 @@ describe Oneboxer do
     end
   end
 
-  context 'instagram' do
+  describe 'instagram' do
     it 'providing a token should attempt to use new endpoint' do
       url = "https://www.instagram.com/p/CHLkBERAiLa"
       access_token = 'abc123'
@@ -502,6 +505,29 @@ describe Oneboxer do
       stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
 
       expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to include('iframe')
+    end
+  end
+
+  describe 'Twitter' do
+    let(:url) { 'https://twitter.com/discourse/status/1428031057186627589' }
+
+    before do
+      SiteSetting.twitter_consumer_key = 'twitter_consumer_key'
+      SiteSetting.twitter_consumer_secret = 'twitter_consumer_secret'
+    end
+
+    it 'works with rate limit' do
+      stub_request(:head, "https://twitter.com/discourse/status/1428031057186627589")
+        .to_return(status: 200, body: "", headers: {})
+
+      stub_request(:get, "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended")
+        .to_return(status: 429, body: "{}", headers: {})
+
+      stub_request(:post, "https://api.twitter.com/oauth2/token")
+        .to_return(status: 200, body: "{\"access_token\":\"token\"}", headers: {})
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to eq('')
+      expect(Oneboxer.onebox(url, invalidate_oneboxes: true)).to eq('')
     end
   end
 
@@ -553,7 +579,7 @@ describe Oneboxer do
     end
   end
 
-  context 'strategies' do
+  describe 'strategies' do
     it "has a 'default' strategy" do
       expect(Oneboxer.strategies.keys.first).to eq(:default)
     end
@@ -563,7 +589,7 @@ describe Oneboxer do
       expect(Oneboxer.strategies[strategy].keys).not_to eq([])
     end
 
-    context "using a non-default strategy" do
+    context "when using a non-default strategy" do
       let(:hostname) { "my.interesting.site" }
       let(:url) { "https://#{hostname}/cool/content" }
       let(:html) do
@@ -641,7 +667,7 @@ describe Oneboxer do
     end
   end
 
-  context "register_local_handler" do
+  describe "register_local_handler" do
     it "calls registered local handler" do
       Oneboxer.register_local_handler('wizard') do |url, route|
         'Custom Onebox for Wizard'

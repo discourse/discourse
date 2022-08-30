@@ -210,6 +210,7 @@ sv:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långt för att undvika felaktiga hastighetsbegränsning för mänskliga användare."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kan inte inaktivera Radera metadata för bild om 'composer media optimization image enabled' är aktiverat. Inaktivera 'composer media optimization image enabled' innan du inaktiverar Radera metadata för bild."
+      twitter_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
@@ -588,6 +589,11 @@ sv:
               too_many: "För många ord för den funktionen"
             base:
               invalid_url: "Ersättnings-URL är ogiltig"
+              invalid_tag_list: "Listan över ersättningstaggar är ogiltig"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "är inte giltig"
       <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
   vip_category_name: "Lounge"
@@ -648,6 +654,11 @@ sv:
   post:
     image_placeholder:
       broken: "Den här bilden är trasig"
+      blocked_hotlinked_title: "Bilden finns på en annan webbplats. Klicka för att öppna i en ny flik."
+      blocked_hotlinked: "Extern bild"
+    media_placeholder:
+      blocked_hotlinked_title: "Media finns på en annan webbplats. Klicka för att öppna i en ny flik."
+      blocked_hotlinked: "Extern media"
     hidden_bidi_character: "Dubbelriktade tecken kan ändra ordningen som text renderas. Detta kan användas för att dölja skadlig kod."
     has_likes:
       one: "%{count} gillning"
@@ -667,7 +678,7 @@ sv:
       public_group_membership: "Du går med i/lämnar grupper lite för ofta. Vi ber dig vänta %{time_left} innan du försöker igen."
       topics_per_day: "Du har uppnått det högsta tillåtna antalet nya ämnen per dag. Du kan skapa fler nya ämnen om %{time_left}."
       pms_per_day: "Du har uppnått det maximala antalet meddelanden per dag. Du kan skapa fler nya meddelanden om %{time_left}."
-      create_like: "Wow! Du har delat med dig av så mycket kärlek! Du har uppnått det maximala antalet dagliga gillningar för idag, men i takt med att du når högre förtroendenivåer kommer du att kunna dela ut fler gillningar per dag. Du kan gilla inlägg igen om %{time_left}."
+      create_like: "Wow! Du har delat med dig av mycket kärlek! Du har nått det maximala antalet gilla-markeringar inom en 24-timmarsperiod, men när du får ökat förtroende kommer du att få fler gilla-markeringar per dag. Du kommer att kunna gilla inlägg igen om %{time_left}."
       create_bookmark: "Du har uppnått det maximala antalet dagliga bokmärken. Du kan skapa fler bokmärken om %{time_left}."
       edit_post: "Du har uppnått det maximala antalet dagliga redigeringar. Du kan göra fler redigeringar om %{time_left}."
       live_post_counts: "Du ber om beräkning av live-inlägg för ofta. Var god vänta %{time_left} innan du försöker igen."
@@ -1409,9 +1420,11 @@ sv:
     contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a> för brådskande ärenden."
     contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
-    download_remote_images_to_local: "Konvertera externa bilder till lokala bilder genom att hämta dem; det motverkar felaktiga bildlänkar."
+    download_remote_images_to_local: "Konvertera fjärrbilder (med aktiva länkar) till lokala bilder genom att ladda ner dem. Detta bevarar innehållet även om bilderna tas bort från den fjärranslutna webbplatsen i framtiden."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
     disabled_image_download_domains: "Externa bilder kommer aldrig att hämtas hem från dessa domän. Pipe-avgränsad lista."
+    block_hotlinked_media: "Förhindra att användare infogar fjärransluten media (med aktiva länkar) i sina inlägg. Fjärranslutna media som inte hämtas via 'download_remote_images_to_local' kommer att ersättas med en platshållarlänk."
+    block_hotlinked_media_exceptions: "En lista över baswebbadresser som undantas från inställningen block_hotlinked_media (Blockera media med aktiva länkar). Inkludera protokollet (t.ex. https://example.com)."
     editing_grace_period: "I (n) sekunder efter inlägg kommer redigeringar inte att skapa nya versioner i inläggshistoriken."
     editing_grace_period_max_diff: "Uppnått maximalt antal teckenförändringar som tillåts för redigering under prövotid, om fler ändras spara dessa i en annan inläggsversion (förtroendenivå 0 och 1)"
     editing_grace_period_max_diff_high_trust: "Uppnått maximalt antal teckenförändringar som tillåts för redigering under prövotid, om fler ändras spara dessa i en annan inläggsversion (förtroendenivå 2 och upp)"
@@ -1434,6 +1447,7 @@ sv:
     show_pinned_excerpt_desktop: "Visa utdrag för fästa ämnen på datorn."
     post_onebox_maxlength: "Maximal teckenlängd för ett Discourse-inlägg i onebox."
     blocked_onebox_domains: "En lista över domäner som aldrig kommer att oneboxas t.ex. wikipedia.org\n(Jokertecken * ? stöds inte)"
+    block_onebox_on_redirect: "Blockera onebox för webbadresser som omdirigerar."
     allowed_inline_onebox_domains: "En lista över domäner som placeras i onebox i miniatyrform om de länkas utan en rubrik"
     enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
@@ -1452,7 +1466,7 @@ sv:
     favicon: "En favoritikon för din webbplats, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a>. För att fungera korrekt över en CDN måste det vara en png. Storleken ändras automatiskt till 32 x 32. Om detta lämnas tomt används large_icon."
     apple_touch_icon: "Ikon som används för Apples pekskärmsenheter. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
-    twitter_summary_large_image: "Twitter-korts 'sammanfattande storbild' (ska vara minst 280 i bredd och minst 150 i höjd). Om detta lämnas tomt genereras vanliga metadata för kort genom opengraph_image."
+    twitter_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1556,6 +1570,7 @@ sv:
     enable_badges: "Aktivera utmärkelsesystemet"
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     enable_whispers: "Tiliåt privat kommunikation inom ämnena."
+    whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
@@ -1642,6 +1657,8 @@ sv:
     top_topics_formula_first_post_likes_multiplier: "värde av första inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "värde av minsta inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
+    enable_experimental_sidebar_hamburger: "Tillåter att experimentellt sidofält och användarens hamburgarmeny aktiveras."
+    enable_sidebar: "Aktiverar experimentellt sidofält."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
     rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
@@ -1837,6 +1854,7 @@ sv:
     max_emails_per_day_per_user: "Högsta antal e-postmeddelanden att skicka till användare per dag. Ange 0 för att inaktivera gränsen"
     enable_staged_users: "Skapa automatiskt arrangerade användare vid bearbetning av inkommande e-post."
     maximum_staged_users_per_email: "Högsta antal arrangerade användare skapade vid bearbetning av inkommande e-post."
+    maximum_recipients_per_new_group_email: "Blockera inkommande e-postmeddelanden med för många mottagare."
     auto_generated_allowlist: "Lista över e-postadresser som inte undersöks för autogenererat innehåll. Exempel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
@@ -2035,7 +2053,7 @@ sv:
     default_categories_tracking: "Lista över kategorier som följs som standard."
     default_categories_muted: "Lista över kategorier som tystas som standard."
     default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämne kommer att bevakas som standard."
-    default_categories_regular: "Lista över kategorier som inte tystas som standard. Användbart när webbplatsinställningen för att tysta alla kategorier som standard, `mute_all_categories_by_default`, har aktiverats."
+    default_categories_normal: "Lista över kategorier som inte tystas som standard. Användbart när webbplatsinställningen för att tysta alla kategorier som standard, `mute_all_categories_by_default`, har aktiverats."
     mute_all_categories_by_default: "Ställ in alla kategoriers standardaviseringsnivå till tystad. Kräv att användare väljer kategorier för att de ska visas på sidorna 'senaste' och 'kategorier'. Om du vill ändra standardvärdena för anonyma användare ställer du in inställningarna i 'default_category_'."
     default_tags_watching: "Lista med taggar som bevakas som standard."
     default_tags_tracking: "Lista med taggar som följs som standard."
@@ -2091,6 +2109,7 @@ sv:
     use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
+    splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2145,6 +2164,7 @@ sv:
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
+      delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -2938,6 +2958,15 @@ sv:
         Du svarade på en sammanfattning som skickades via e-post, vilket inte är tillåtet.
 
         Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "Avvisa E-post För många mottagare"
+      subject_template: "[%{email_prefix}] E-postfel -- För många mottagare"
+      text_body_template: |
+        Vi beklagar, men ditt e-postmeddelande till %{destination} (titeln %{former_title}) fungerade inte.
+
+        Du försökte maila mer än %{max_recipients_count} personer och vårt system har automatiskt taggat din e-post som skräppost.
+
+        Om du anser att detta är ett fel, [kontakta en medarbetare](%{base_url}/about).
     email_error_notification:
       title: "E-postfelsavisering"
       subject_template: "[%{email_prefix}] E-postfel -- POP-autentiseringsfel"
@@ -3425,7 +3454,7 @@ sv:
     suspicious_login:
       title: "Ny inloggningsvarning"
       subject_template: "[%{site_name}] Ny inloggning från %{location}"
-      text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n- Plats: %{location} (%{client_ip})\n- Webbläsare: %{browser}\n- Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/account) samt överväga att ändra ditt lösenord.\n"
+      text_body_template: "Hej, \n\nVi noterade en inloggning från en enhet eller plats som du vanligtvis inte använder. Var det du?\n\n - Plats: %{location} (%{client_ip})\n - Webbläsare: %{browser}\n - Enhet: %{device} – %{os}\n\nOm det var du, toppen! Du behöver inte göra något mer. \n\nOm det inte var du, ber vi dig [granska dina befintliga sessioner](%{base_url}/my/preferences/security) samt överväga att ändra ditt lösenord.\n"
     post_approved:
       title: "Ditt inlägg godkändes"
       subject_template: "[%{site_name}] Ditt inlägg godkändes"
@@ -3530,6 +3559,12 @@ sv:
     dark_rose: "Mörk ros"
     wcag: "WCAG ljus"
     wcag_theme_name: "WCAG ljus"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solariserat ljust"
+    solarized_light_theme_name: "Solariserat ljust"
+    solarized_dark: "Solariserat mörkt"
+    solarized_dark_theme_name: "Solariserat mörkt"
     wcag_dark: "WCAG mörk"
     wcag_dark_theme_name: "WCAG mörk"
     default_theme_name: "Standard"
@@ -3990,6 +4025,7 @@ sv:
       invalid_token: "Ogiltigt bevis.."
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
+    safe_mode: "Säkert läge: inaktivera alla teman/tillägg när du loggar in"
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen
@@ -4038,92 +4074,47 @@ sv:
       message: "<p>Vi har sänt om aktiveringsbrevet till <b>%{email}</b>"
   safe_mode:
     title: "Gå över i felsäkert läge"
-    description: "I felsäkert läge kan du testa din webbplats utan att ladda några plugins eller webbplatsanpassningar."
-    no_customizations: "Stäng av nuvarande tema"
-    only_official: "Inaktivera alla inofficiella plugins"
+    description: "I felsäkert läge kan du testa din webbplats utan att ladda några tillägg eller teman."
+    no_themes: "Inaktivera teman och temakomponenter"
+    no_unofficial_plugins: "Inaktivera alla inofficiella plugins"
     no_plugins: "Inaktivera alla plugins"
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
   wizard:
     title: "Discourse-inställningar"
     step:
-      locale:
-        title: "Välkommen till din Discourse!"
-        fields:
-          default_locale:
-            description: "Vilket är standardspråket för ditt forum?"
-      forum_title:
-        title: "Namn"
-        description: "Ditt namn är en skylt som syns på avstånd, det <i>första</i> som potentiella besökare kommer att notera om ditt forum. Vad säger ditt namn och din titel om forumet?"
+      introduction:
+        title: "Berätta för oss om ditt forum"
         fields:
           title:
-            label: "Ditt forums namn"
+            label: "Forumets namn"
             placeholder: "Här hänger Jane!"
           site_description:
-            label: "Beskriv din gemenskap i en kort mening (används i sökresultat och sociala medier)"
+            label: "Beskriv ditt forum i en mening"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
-          short_site_description:
-            label: "Beskriv din gemenskap med några få ord (används för hemsidans titel)"
-            placeholder: "Bästa forumet någonsin"
-      introduction:
-        title: "Introduktion"
-        disabled: "<p>Vi kunde inte hitta något ämne med rubriken ”%{topic_title}”.</p> <ul> <li>Om du har ändrat rubriken redigerar du det ämnet för att ändra webbplatsens introduktionstext.</li> <li>Om du har raderat detta ämne skapar du ett annat med ”%{topic_title}” som rubrik. Innehållet i det första inlägget är webbplatsens introduktionstext.</li> </ul>"
-        fields:
-          welcome:
-            label: "Välkomstämne"
-            description: "<p>Hur skulle du beskriva ditt forum för en främling under en hissfärd på cirka 1 minut?</p> <ul> <li>Vem är dessa diskussioner för?</li> <li>Vad kan jag hitta här?</li> <li>Varför ska jag besöka?</li> </ul> <p>Ditt välkomstämne är det första som nyanlända kommer att läsa. Tänk på det som ditt <b>kortfattade</b> 'säljargument' eller 'målbeskrivning'.</p>"
-            one_paragraph: "Vi ber dig begränsa ditt välkomstmeddelande till ett stycke."
-            extra_description: "Om du är osäker kan du hoppa över det här steget och redigera ditt välkomstämne senare."
-      privacy:
-        title: "Tillgång"
-        description: "<p>Är ditt forum öppet för alla, eller begränsas det av medlemskap, inbjudan eller godkännande? Om du föredrar kan du ställa in saker privat och sedan byta till offentligt senare.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Offentligt"
-                description: "Vem som helst kan nå detta forum"
-              restricted:
-                label: "Privat"
-                description: "Endast inloggade användare kan komma åt det här forumet"
-          privacy_options:
-            description: "Hur registrerar sig nya användare för ett konto?"
-            choices:
-              open:
-                label: "Användare kan registrera sig på egen hand."
-              invite_only:
-                label: "Användare måste bjudas in av betrodda användare eller personal innan de kan registrera sig."
-              must_approve:
-                label: "Användare kan registrera sig på egen hand, men måste godkännas av personalen."
-      contact:
-        title: "Kontakt"
-        fields:
           contact_email:
-            label: "E-post"
-            placeholder: "namn@exempel.com"
-            description: "E-postadress för den person eller grupp som är ansvarig för detta forum. Används för kritiska aviseringar som ohanterade flaggor, säkerhetsuppdateringar och på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande kontakt med forumet."
-          contact_url:
-            label: "Webbsida"
-            placeholder: "https://www.exempel.se/kontakta-oss"
-            description: "Allmän kontaktsida för dig eller din organisation. Visas på din <a href='%{base_path}/about' target='_blank'>Om-sida</a>."
-          site_contact:
-            label: "Automatiska meddelanden"
-            description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
-      corporate:
-        title: "Organisation"
-        description: "Den här informationen kommer att anges i dina <a href='%{base_path}/tos' target='blank'>användarvillkor</a>, vilket är ett ämne du kan redigera i personalkategorin. Om du inte har ett företag kan du hoppa över det här steget nu."
+            label: "Kontaktpunkt"
+            placeholder: "exempel@användare.com"
+            description: "Person eller grupp som är ansvarig för detta forum. Används för kritiska uppdateringar, och listas på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande kontakt."
+          default_locale:
+            label: "Språk"
+      privacy:
+        title: "Medlemmarnas erfarenhet"
         fields:
-          company_name:
-            label: "Företagsnamn"
-            placeholder: "Exempelorganisation"
-          governing_law:
-            label: "Gällande lag"
-            placeholder: "Kalifornisk lag"
-          city_for_disputes:
-            label: "Domstol vid tvist"
-            placeholder: "San Francisco, Kalifornien"
+          login_required:
+            placeholder: "Privat"
+            extra_description: "Endast inloggade användare kan komma åt det här forumet"
+          invite_only:
+            placeholder: "Endast med inbjudan"
+            extra_description: "Användare måste bjudas in av betrodda användare eller personal, men därefter kan användare registrera sig på egen hand"
+          must_approve_users:
+            placeholder: "Kräv godkännande"
+            extra_description: "Användare måste godkännas av personalen"
+      ready:
+        title: "Din Discourse är redo!"
+        description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"
       styling:
-        title: "Formatering"
+        title: "Utseende och känsla"
         fields:
           color_scheme:
             label: "Färgschema"
@@ -4144,6 +4135,8 @@ sv:
                 label: "Kategorier med utvalda ämnen"
               categories_and_latest_topics:
                 label: "Kategorier med senaste ämnen"
+              categories_and_latest_topics_created_date:
+                label: "Kategorier och senaste ämnen (sorteras efter datumet då ämnet skapades)"
               categories_and_top_topics:
                 label: "Kategorier och toppämnen"
               categories_boxes:
@@ -4152,24 +4145,43 @@ sv:
                 label: "Kategoriboxar med ämnen"
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
-      logos:
-        title: "Logotyper"
+      branding:
+        title: "Forumets logotyp"
         fields:
           logo:
             label: "Primär logo"
             description: "Logotypen i din hemsidas övre vänstra hörn. Använd en bred rektangulär bild med en höjd på 120 och ett storleksförhållande som är större än 3:1"
           logo_small:
             label: "Fyrkantig logga"
-            description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet på din hemsida när du scrollar ner, i webbläsaren, samt när du delar på sociala plattformar. Helst större än 512 x 512."
-      icons:
-        title: "Ikoner"
-        fields:
+            description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet när du scrollar ner, samt när du delar på sociala plattformar. Helst större än 512 x 512."
           favicon:
             label: "Webbläsarikon"
-            description: "Ikonbild i mindre storlekar som används för att representera din webbplats på enheter som ser bättre ut i mindre storlekar. Rekommenderade bildformat är PNG eller JPG. Vi använder den fyrkantiga logotypen som standard."
+            description: "Ikon som används för att representera din webbplats i webbläsare och som ser bra ut i små storlekar. PNG eller JPG rekommenderas. Som standard används en fyrkantig logotyp."
           large_icon:
             label: "Stor ikon"
-            description: "Ikonbild i större storlekar som används för att representera din webbplats på moderna enheter som klarar större storlekar. Helst större än 512 × 512. Vi använder den fyrkantiga logotypen som standard."
+            description: "Ikon som används för att representera din webbplats på mobila enheter och som ser bra ut i större storlekar. Helst större än 512x512. Som standard används en fyrkantig logotyp."
+      corporate:
+        title: "Kontakt och organisation"
+        fields:
+          company_name:
+            label: "Företagsnamn"
+            placeholder: "Exempelorganisation"
+            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+          governing_law:
+            label: "Gällande lag"
+            placeholder: "Kalifornisk lag"
+            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+          contact_url:
+            label: "Webbsida"
+            placeholder: "https://www.exempel.se/kontakta-oss"
+            description: "Allmän kontaktsida för dig eller din organisation. Visas på din <a href='%{base_path}/about' target='_blank'>Om-sida</a>."
+          city_for_disputes:
+            label: "Domstol vid tvist"
+            placeholder: "San Francisco, Kalifornien"
+            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+          site_contact:
+            label: "Automatiska meddelanden"
+            description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."
@@ -4340,6 +4352,9 @@ sv:
     post_raw: "Fortsätter diskussionen från %{parent_url}.\n\nTidigare diskussioner:\n\n%{previous_topics}"
     small_action_post_raw: "Fortsätt diskussionen vid %{new_title}."
   fallback_username: "användare"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at bör vara större än set_at."
   activemodel:
     errors:
       <<: *errors

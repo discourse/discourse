@@ -795,7 +795,6 @@ sk:
     title: "Meno stránok, tak ako je použité v značke title."
     site_description: "Popíšte stránky v jednej vete, tak ako sa popisujú v tagu meta."
     crawl_images: "Načítať obrázky z URL pre vloženie správnej výšky a šírky."
-    download_remote_images_to_local: "Stiahnuť obrázky zo vzdialených zdrojov na lokálne. Zabráni poškodeniu obrázkov. "
     download_remote_images_threshold: "Minimálne miesto na lokálnom disku potrebné na stiahnutie obrázkov zo vzdialených zdrojov (v percentách)"
     disabled_image_download_domains: "Nikdy nesťahovať obrázky z týchto domén. Zoznam oddeleny pipou \"|\"."
     editing_grace_period: "Nevytvárať nové verzie editovaných príspevkov do (n) sekúnd po odoslaní príspevku."
@@ -1389,25 +1388,12 @@ sk:
       title: "Znova poslať aktivačný email."
   wizard:
     step:
-      forum_title:
-        title: "Meno"
       privacy:
-        title: "Prístup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Verejné"
-              restricted:
-                label: "Súkromné"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "meno@príklad.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizácia"
+          login_required:
+            placeholder: "Súkromné"
+          must_approve_users:
+            placeholder: "Potrebné povolenie"
       styling:
         fields:
           styling_preview:
@@ -1418,6 +1404,10 @@ sk:
                 label: "Iba kategórie"
               categories_and_latest_topics:
                 label: "Kategórie a najnovšie témy"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"

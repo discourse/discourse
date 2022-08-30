@@ -30,15 +30,25 @@ RSpec.describe PushNotificationPusher do
       PushSubscription.create!(user_id: user.id, data: data)
     end
 
-    def execute_push
+    def execute_push(notification_type: 1)
       PushNotificationPusher.push(user, {
         topic_title: 'Topic',
         username: 'system',
         excerpt: 'description',
         topic_id: 1,
         post_url: "https://example.com/t/1/2",
-        notification_type: 1
+        notification_type: notification_type
       })
+    end
+
+    it "correctly guesses an image if missing" do
+      message = execute_push(notification_type: -1)
+      expect(message[:icon]).to eq("/assets/push-notifications/discourse.png")
+    end
+
+    it "correctly finds image if exists" do
+      message = execute_push(notification_type: 1)
+      expect(message[:icon]).to eq("/assets/push-notifications/mentioned.png")
     end
 
     it "sends notification in user's locale" do

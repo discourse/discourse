@@ -1,5 +1,8 @@
 .select-kit {
-  .category-row {
+  .select-kit-row.category-row {
+    flex-direction: column;
+    align-items: flex-start;
+
     .category-status {
       display: flex;
       align-items: center;
@@ -16,6 +19,11 @@
         margin-bottom: 1px;
         margin-top: 1px;
       }
+    }
+    .category-desc {
+      margin: 0;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
     }
     .topic-count {
       white-space: nowrap;

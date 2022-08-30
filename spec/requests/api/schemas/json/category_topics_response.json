@@ -3,7 +3,7 @@
   "properties": {
     "users": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -28,13 +28,12 @@
             "avatar_template"
           ]
         }
-      ]
     },
     "primary_groups": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "topic_list": {
       "type": "object",
@@ -47,11 +46,12 @@
           "type": "integer"
         },
         "top_tags": {
-          "type": "array"
+          "type": "array",
+          "items": {}
         },
         "topics": {
           "type": "array",
-          "items": [
+          "items":
             {
               "type": "object",
               "additionalProperties": false,
@@ -160,7 +160,7 @@
                 },
                 "posters": {
                   "type": "array",
-                  "items": [
+                  "items":
                     {
                       "type": "object",
                       "additionalProperties": false,
@@ -188,7 +188,6 @@
                         "primary_group_id"
                       ]
                     }
-                  ]
                 }
               },
               "required": [
@@ -224,7 +223,6 @@
                 "posters"
               ]
             }
-          ]
         }
       },
       "required": [

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
+RSpec.describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
   context "when bot's post contains an old link" do
     let!(:post) do
       Fabricate(:post,
@@ -19,7 +19,7 @@ describe Jobs::DiscourseNarrativeBot::RemapOldBotImages do
     end
   end
 
-  context 'subfolder' do
+  context 'with subfolder' do
     let!(:post) do
       Fabricate(:post,
         user: ::DiscourseNarrativeBot::Base.new.discobot_user,

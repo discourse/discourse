@@ -12,7 +12,7 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
 
-    if guardian.can_approve?(target) || args[:approved_by_invite]
+    if guardian.can_approve?(target)
       actions.add(:approve_user) do |a|
         a.icon = 'user-plus'
         a.label = "reviewables.actions.approve_user.title"
@@ -69,8 +69,8 @@ class ReviewableUser < Reviewable
         end
 
         destroyer.destroy(target, delete_args)
-      rescue UserDestroyer::PostsExistError
-        # If a user has posts, we won't delete them to preserve their content.
+      rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess
+        # If a user has posts or user is an admin, we won't delete them to preserve their content.
         # However the reviewable record will be "rejected" and they will remain
         # unapproved in the database. A staff member can still approve them
         # via the admin.
@@ -126,6 +126,7 @@ end
 #
 # Indexes
 #
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

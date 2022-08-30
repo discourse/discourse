@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-describe 'SiteSetting.styleguide_admin_only' do
+RSpec.describe 'SiteSetting.styleguide_admin_only' do
   before do
     SiteSetting.styleguide_enabled = true
   end
 
-  context 'styleguide is admin only' do
+  context 'when styleguide is admin only' do
     before do
       SiteSetting.styleguide_admin_only = true
     end
 
-    context 'user is admin' do
+    context 'when user is admin' do
       before do
         sign_in(Fabricate(:admin))
       end
@@ -21,7 +21,7 @@ describe 'SiteSetting.styleguide_admin_only' do
       end
     end
 
-    context 'user is not admin' do
+    context 'when user is not admin' do
       before do
         sign_in(Fabricate(:user))
       end
@@ -34,12 +34,12 @@ describe 'SiteSetting.styleguide_admin_only' do
   end
 end
 
-describe 'SiteSetting.styleguide_enabled' do
+RSpec.describe 'SiteSetting.styleguide_enabled' do
   before do
     sign_in(Fabricate(:admin))
   end
 
-  context 'style is enabled' do
+  context 'when style is enabled' do
     before do
       SiteSetting.styleguide_enabled = true
     end
@@ -50,7 +50,7 @@ describe 'SiteSetting.styleguide_enabled' do
     end
   end
 
-  context 'styleguide is disabled' do
+  context 'when styleguide is disabled' do
     before do
       SiteSetting.styleguide_enabled = false
     end

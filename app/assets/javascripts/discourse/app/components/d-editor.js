@@ -363,6 +363,12 @@ export default Component.extend(TextareaTextManipulation, {
     if (this.extraButtons) {
       this.extraButtons(toolbar);
     }
+
+    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
+    if (firstButton) {
+      firstButton.tabindex = 0;
+    }
+
     return toolbar;
   },
 
@@ -499,9 +505,10 @@ export default Component.extend(TextareaTextManipulation, {
           return false;
         }
 
-        const matches = /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
-          text.substring(0, cp)
-        );
+        const matches =
+          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+            text.substring(0, cp)
+          );
 
         if (matches && matches[1]) {
           return [matches[1]];
@@ -601,7 +608,7 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   _applyList(sel, head, exampleKey, opts) {
-    if (sel.value.indexOf("\n") !== -1) {
+    if (sel.value.includes("\n")) {
       this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
@@ -610,10 +617,9 @@ export default Component.extend(TextareaTextManipulation, {
       }
 
       const trimmedPre = sel.pre.trim();
-      const number =
-        sel.value.indexOf(hval) === 0
-          ? sel.value.slice(hlen)
-          : `${hval}${sel.value}`;
+      const number = sel.value.startsWith(hval)
+        ? sel.value.slice(hlen)
+        : `${hval}${sel.value}`;
       const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
 
       const trimmedPost = sel.post.trim();
@@ -670,6 +676,13 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     return true;
+  },
+
+  @action
+  onEmojiPickerClose() {
+    if (!(this.isDestroyed || this.isDestroying)) {
+      this.set("emojiPickerIsActive", false);
+    }
   },
 
   actions: {
@@ -732,7 +745,7 @@ export default Component.extend(TextareaTextManipulation, {
 
       const sel = this.getSelected("", { lineVal: true });
       const selValue = sel.value;
-      const hasNewLine = selValue.indexOf("\n") !== -1;
+      const hasNewLine = selValue.includes("\n");
       const isBlankLine = sel.lineVal.trim().length === 0;
       const isFourSpacesIndent =
         this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;

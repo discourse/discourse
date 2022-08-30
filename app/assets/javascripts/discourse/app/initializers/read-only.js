@@ -4,12 +4,12 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const messageBus = container.lookup("message-bus:main");
+    const messageBus = container.lookup("service:message-bus");
     if (!messageBus) {
       return;
     }
 
-    const site = container.lookup("site:main");
+    const site = container.lookup("service:site");
     messageBus.subscribe("/site/read-only", function (enabled) {
       site.set("isReadOnly", enabled);
     });

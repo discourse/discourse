@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe MobileDetection do
+RSpec.describe MobileDetection do
   let :old_user_agents do
     (<<~STR).split("\n")
       Mozilla/5.0 (Linux; U; Android 4.0.3; en-us; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30

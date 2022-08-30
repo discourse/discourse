@@ -123,6 +123,12 @@ blockquote {
 
 #main-outlet {
   padding-top: 1.25em;
+  &:after {
+    // setup overlay for sidebar
+    content: "";
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
 }
 
 #main {

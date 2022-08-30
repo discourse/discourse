@@ -69,7 +69,7 @@ export default Controller.extend({
     if (available) {
       const themes = !childThemes
         ? available
-        : available.filter((theme) => childThemes.indexOf(theme) === -1);
+        : available.filter((theme) => !childThemes.includes(theme));
       return themes.length === 0 ? null : themes;
     }
   },
@@ -165,6 +165,15 @@ export default Controller.extend({
   @discourseComputed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
     return errorMessage && !updating;
+  },
+
+  @discourseComputed(
+    "model.remote_theme.remote_url",
+    "model.remote_theme.local_version",
+    "model.remote_theme.commits_behind"
+  )
+  finishInstall(remoteUrl, localVersion, commitsBehind) {
+    return remoteUrl && !localVersion && !commitsBehind;
   },
 
   editedFieldsForTarget(target) {

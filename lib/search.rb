@@ -695,9 +695,9 @@ class Search
 
       UNION
 
-      SELECT post_uploads.post_id
+      SELECT upload_references.target_id
         FROM uploads
-        JOIN post_uploads ON post_uploads.upload_id = uploads.id
+        JOIN upload_references ON upload_references.target_type = 'Post' AND upload_references.upload_id = uploads.id
        WHERE lower(uploads.extension) IN (:file_extensions)
     )", file_extensions: file_extensions)
   end

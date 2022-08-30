@@ -85,3 +85,8 @@ ar:
           title: "أيقونات الترويسة"
         spinners:
           title: "المُنزلقات"
+        empty_state:
+          title: "حالة فارغة"
+        rich_tooltip:
+          description: "الوصف"
+          header: "الرأس"

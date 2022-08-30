@@ -3,6 +3,7 @@
 require "openssl"
 
 class WebhooksController < ActionController::Base
+  skip_before_action :verify_authenticity_token
 
   def mailgun
     return mailgun_failure if SiteSetting.mailgun_api_key.blank?
@@ -62,6 +63,12 @@ class WebhooksController < ActionController::Base
       end
     end
 
+    success
+  end
+
+  def mandrill_head
+    # Mandrill sends a HEAD request to validate the webhook before saving
+    # Rails interprets it as a GET request
     success
   end
 

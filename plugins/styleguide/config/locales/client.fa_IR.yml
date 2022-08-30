@@ -85,3 +85,8 @@ fa_IR:
           title: "نمادهای سربرگ"
         spinners:
           title: "اسپینرها"
+        empty_state:
+          title: "حالت خالی"
+        rich_tooltip:
+          description: "توضیحات"
+          header: "سربرگ"

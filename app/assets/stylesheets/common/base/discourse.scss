@@ -327,11 +327,10 @@ table {
 }
 
 .wrap {
-  @extend .clearfix;
+  max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
   padding: 0 10px;
-
   .contents {
     position: relative;
   }
@@ -381,10 +380,6 @@ table {
   border-radius: 50%;
 }
 
-.profiler-results.profiler-left {
-  top: var(--header-offset) !important;
-}
-
 .flex-center-align {
   display: flex;
   align-items: center;
@@ -401,7 +396,7 @@ table {
 
 .d-header .header-dropdown-toggle .do-not-disturb-background {
   position: absolute;
-  left: 2px;
+  left: 0;
   bottom: -1px;
   z-index: 1002;
 }
@@ -422,6 +417,37 @@ table {
     font-size: 0.875em;
     margin: 0 !important;
   }
+}
+
+.d-header .header-dropdown-toggle .user-status-background {
+  position: absolute;
+  right: -3px;
+  bottom: -1px;
+  z-index: 1002;
+}
+
+.user-status-background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  background-color: var(--secondary);
+  border-radius: 50%;
+
+  .emoji {
+    width: 14px;
+    height: 14px;
+    display: block;
+  }
+}
+
+.user-menu .quick-access-panel li.user-status .relative-date {
+  text-align: left;
+  font-size: var(--font-down-3);
+  padding-top: 0.45em;
+  margin-left: 0.75em;
+  color: var(--primary-medium);
 }
 
 .user-menu .quick-access-panel li.do-not-disturb {
@@ -648,6 +674,19 @@ table {
 }
 
 // Special elements
+
+#main-outlet-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  display: grid;
+  grid-template-areas: "sidebar content";
+  grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
+  gap: 0;
+
+  #main-outlet {
+    grid-area: content;
+  }
+}
 
 #main-outlet {
   padding-top: 2.5em;

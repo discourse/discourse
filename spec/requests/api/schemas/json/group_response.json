@@ -211,9 +211,9 @@
         },
         "imap_mailboxes": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "email_username": {
           "type": [
@@ -259,69 +259,69 @@
         },
         "associated_group_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "watching_category_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "tracking_category_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "watching_first_post_category_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "regular_category_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "muted_category_ids": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "watching_tags": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "watching_first_post_tags": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "tracking_tags": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "regular_tags": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         },
         "muted_tags": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         }
       },
       "required": [
@@ -386,9 +386,9 @@
       "properties": {
         "visible_group_names": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         }
       },
       "required": [

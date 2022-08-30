@@ -23,7 +23,10 @@ export default DiscoveryController.extend({
   category: null,
 
   canEdit: reads("currentUser.staff"),
-
+  @discourseComputed
+  isCategoriesRoute() {
+    return this.router.currentRouteName === "discovery.categories";
+  },
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
     let style = this.siteSettings.desktop_category_page_style;
@@ -40,7 +43,9 @@ export default DiscoveryController.extend({
     }
 
     const componentName =
-      parentCategory && style === "categories_and_latest_topics"
+      parentCategory &&
+      (style === "categories_and_latest_topics" ||
+        style === "categories_and_latest_topics_created_date")
         ? "categories_only"
         : style;
     return dasherize(componentName);

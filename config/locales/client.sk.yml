@@ -184,11 +184,11 @@ sk:
       banner:
         enabled: "Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
         disabled: "odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
-    wizard_required: "Vitajte vo vašom novom Discourse! Začnime so <a href='%{url}' data-auto-route='true'>sprievodcom nastavením</a>✨ "
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     software_update_prompt:
       dismiss: "Zahodiť"
     bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
+    bootstrap_invite_button_title: "Poslať pozvánky"
     themes:
       default_description: "Predvolené"
     s3:
@@ -418,6 +418,7 @@ sk:
       next_week: "Budúci týždeň"
       next_month: "Budúci mesiac"
       forever: "Vždy"
+      never: "Nikdy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vy</a> ste založili <a href='%{topicUrl}'>tému</a>"
@@ -725,6 +726,8 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      experimental_sidebar:
+        options: "Možnosti"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"
@@ -1107,6 +1110,8 @@ sk:
         sent_by: "Odoslané používateľom"
         private_message: "správa"
         the_topic: "téma"
+    user_status:
+      save: "Uložiť"
     loading: "Prebieha načítavanie..."
     errors:
       prev_page: "pri pokuse o načítanie"
@@ -1151,7 +1156,6 @@ sk:
       other: odpovedí
     signup_cta:
       sign_up: "Registrovať sa"
-      hide_session: "Pripomenúť zajtra"
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
@@ -1285,7 +1289,6 @@ sk:
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"
       create_pm: "Správa"
-      users_placeholder: "Pridať používateľa"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       edit_reason_placeholder: "prečo upravujete?"
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -1322,8 +1325,6 @@ sk:
       composer_actions:
         reply: Odpoveď
         edit: Upraviť
-        reply_as_private_message:
-          label: Nová správa
         reply_to_topic:
           label: Odpovedať na tému
         create_topic:
@@ -1332,6 +1333,7 @@ sk:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
+      watching_first_post_label: "Nová téma"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -2114,6 +2116,7 @@ sk:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
       readonly: "Zobraz"
+    preloader_text: "Načítava sa"
     lightbox:
       download: "stiahnuť"
       counter: "%curr% z %total%"
@@ -2163,7 +2166,6 @@ sk:
         edit: "%{shortcut} Upraviť príspevok"
         delete: "%{shortcut} Zmazať príspevok"
         mark_muted: "%{shortcut} Umlčať tému"
-        mark_regular: "%{shortcut} Obyčajná (preddefinovaná) téma"
         mark_tracking: "%{shortcut} Pozorovať tému"
         mark_watching: "%{shortcut} Pozorovať tému"
     badges:
@@ -2265,21 +2267,45 @@ sk:
         member: "člen"
         regular: "bežný"
         leader: "vodca"
-    user_activity:
-      no_activity_others: "Žiadna aktivita"
     sidebar:
-      unread_count: "%{count} neprečítaná"
-      new_count: "%{count} nová"
+      unread_count:
+        one: "%{count} neprečítaná"
+        few: "%{count} neprečítané"
+        many: "%{count} neprečítaných"
+        other: "%{count} neprečítaná"
+      new_count:
+        one: "%{count} nová"
+        few: "%{count} nové"
+        many: "%{count} nových"
+        other: "%{count} nových"
+      more: "Viac ..."
       sections:
+        messages:
+          header_link_text: "Správy"
+          links:
+            inbox: "Prijaté správy"
+            sent: "Odoslané"
+            new: "Nové"
+            new_with_count: "Nová (%{count})"
+            unread: "Neprečítané"
+            unread_with_count: "Neprečítaná (%{count})"
+            archive: "Archív"
+        tags:
+          header_link_text: "Štítky"
         categories:
-          header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
-        topics:
-          header_link_title: "domov"
-          header_link_text: "Témy"
+        community:
+          header_link_text: "Komunita"
           links:
             tracked:
               content: "Pozorované"
+            groups:
+              content: "Skupiny"
+              title: "Všetky skupiny"
+            users:
+              content: "Používatelia"
+            my_posts:
+              content: "Moje príspevky"
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -3121,14 +3147,13 @@ sk:
           topics: "Témy"
   wizard_js:
     wizard:
-      done: "Hotovo"
       back: "Späť"
       next: "Ďalej"
+      step-text: "Krok"
       step: "%{current} z %{total}"
       upload: "Načítať"
       uploading: "Načítavam..."
       upload_error: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
-      quit: "Možno neskôr"
       invites:
         add_user: "pridať"
         none_added: "Neprizvali ste žiadnych členov. Určite chcete pokračovať?"

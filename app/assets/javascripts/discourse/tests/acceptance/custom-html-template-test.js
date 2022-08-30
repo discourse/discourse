@@ -1,5 +1,5 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 
@@ -17,7 +17,7 @@ acceptance("CustomHTML template", function (needs) {
   test("renders custom template", async function (assert) {
     await visit("/static/faq");
     assert.strictEqual(
-      queryAll("span.top-span").text(),
+      query("span.top-span").innerText,
       "TOP",
       "it inserted the template"
     );

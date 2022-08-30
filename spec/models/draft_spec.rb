@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe Draft do
-
+RSpec.describe Draft do
   fab!(:user) do
     Fabricate(:user)
   end
@@ -10,7 +9,7 @@ describe Draft do
     Fabricate(:post)
   end
 
-  context 'system user' do
+  describe 'system user' do
     it "can not set drafts" do
       # fake a sequence
       DraftSequence.create!(user_id: Discourse.system_user.id, draft_key: "abc", sequence: 10)
@@ -26,7 +25,7 @@ describe Draft do
     end
   end
 
-  context 'backup_drafts_to_pm_length' do
+  describe 'backup_drafts_to_pm_length' do
     it "correctly backs up drafts to a personal message" do
       SiteSetting.backup_drafts_to_pm_length = 1
 
@@ -179,19 +178,21 @@ describe Draft do
   it 'updates draft count when a draft is created or destroyed' do
     Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, "data")
 
-    messages = MessageBus.track_publish("/user") do
+    messages = MessageBus.track_publish("/user-drafts/#{user.id}") do
       Draft.set(user, Draft::NEW_TOPIC, 0, "data")
     end
 
     expect(messages.first.data[:draft_count]).to eq(1)
     expect(messages.first.data[:has_topic_draft]).to eq(true)
+    expect(messages.first.user_ids).to contain_exactly(user.id)
 
-    messages = MessageBus.track_publish("/user") do
+    messages = MessageBus.track_publish("/user-drafts/#{user.id}") do
       Draft.where(user: user).destroy_all
     end
 
     expect(messages.first.data[:draft_count]).to eq(0)
     expect(messages.first.data[:has_topic_draft]).to eq(false)
+    expect(messages.first.user_ids).to contain_exactly(user.id)
   end
 
   describe '#stream' do
@@ -222,7 +223,7 @@ describe Draft do
 
   end
 
-  context 'key expiry' do
+  describe 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
       Draft.set(user, Draft::NEW_TOPIC, 0, 'my draft')
       _t = Fabricate(:topic, user: user, advance_draft: true)
@@ -293,6 +294,5 @@ describe Draft do
       expect(drafts[0].post_preloaded?).to eq(true)
       expect(drafts[0].post.id).to eq(post.id)
     end
-
   end
 end

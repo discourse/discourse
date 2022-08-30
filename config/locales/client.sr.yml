@@ -88,6 +88,10 @@ sr:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "manje od %{count} min"
+          few: "manje od %{count} min"
+          other: "manje od %{count} min"
         x_minutes:
           one: "%{count} min"
           few: "%{count} min"
@@ -96,10 +100,22 @@ sr:
           one: "%{count} sat"
           few: "%{count} sata"
           other: "%{count} sati"
+        about_x_hours:
+          one: "oko %{count} sat"
+          few: "oko %{count} sati"
+          other: "oko %{count} sati"
         x_days:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"
+        x_months:
+          one: "%{count} mesec"
+          few: "%{count} meseca"
+          other: "%{count} meseci"
+        about_x_years:
+          one: "približno %{count} godinu"
+          few: "oko %{count} godine"
+          other: "oko %{count} godina"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -172,7 +188,6 @@ sr:
         disabled: "je uklonio ovaj baner%{when}. Više se neće pojavljivati na vrhu svake stranice."
       forwarded: "je prosledio/la navedenu e-poštu"
     topic_admin_menu: "opcije teme"
-    wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
     software_update_prompt:
       message: "Ažurirali smo ovaj sajt, <span>molimo vas rifrešujte</span>, u suprotnom može doći do nepredviđenih rezultata."
@@ -290,7 +305,9 @@ sr:
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
+      remove_reminder_keep_bookmark: "Uklonite podsetnik i sačuvajte obeleživač"
       created_with_reminder: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
+      created_with_reminder_generic: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       remove: "Obriši marker"
       delete: "Ukloni obeleživač"
       confirm_delete: "Da li ste sigurni da želite da uklonite ovaj obeleživač? Podsetnik će takođe biti uklonjen."
@@ -464,6 +481,7 @@ sr:
       start_of_next_business_week_alt: "Naredni ponedeljak"
       next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
+      never: "Nikad"
       custom: "Prilagođen datum i vreme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio <a href='%{topicUrl}'>temu</a>"
@@ -673,6 +691,8 @@ sr:
         regular: "Stalni član"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
+      experimental_sidebar:
+        options: "Opcije"
       change: "promeni"
       moderator: "%{user} je moderator"
       admin: "%{user} je administrator"
@@ -687,7 +707,7 @@ sr:
       watched_categories: "Pregledano"
       tracked_categories: "Praćeno"
       muted_categories: "Utišano"
-      regular_categories: "Stalni član"
+      regular_categories: "Normalno"
       delete_account: "Obriši moj Nalog"
       delete_account_confirm: "Jeste li sigurni da želite trajno obrisati svoj nalog? Ova se akcija ne može poništiti!"
       deleted_yourself: "Vaš nalog je uspešno obrisan."
@@ -944,6 +964,8 @@ sr:
         sent_by: "Poslao"
         private_message: "privatna poruka"
         the_topic: "tema"
+    user_status:
+      save: "Sačuvaj"
     loading: "Učitavanje..."
     errors:
       prev_page: "pri pokušaju očitavanja"
@@ -1002,7 +1024,7 @@ sr:
     trust_level: "Nivo poverenja"
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
-      header_title: "Dobrodošao!"
+      header_title: "Добро дошли!"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
       action: "Zaboravio/la sam šifru"
@@ -1039,7 +1061,7 @@ sr:
       twitter:
         name: "Twitter"
     invites:
-      welcome_to: "Dobrodošao na %{site_name}!"
+      welcome_to: "Добро дошли на пројекат %{site_name}!"
       success: "Tvoj nalog je kreiran i sada si ulogovan."
       name_label: "Ime foruma"
       password_label: "Šifra"
@@ -1074,7 +1096,6 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       create_pm: "Privatna poruka"
-      users_placeholder: "Dodaj korisnika"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1118,6 +1139,7 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      watching_first_post_label: "Nova Tema"
       dismiss_confirmation:
         dismiss: "Одбаци"
         cancel: "Odustani"
@@ -1671,6 +1693,7 @@ sr:
       full: "Otvoriti / Odgovori / Pogledaj"
       create_post: "Odgovori / Pogledaj"
       readonly: "Pogledaj"
+    preloader_text: "Učitavanje"
     lightbox:
       download: "preuzmi"
       counter: "%curr% od %total%"
@@ -1713,7 +1736,6 @@ sr:
         edit: "%{shortcut} Izmeni poruku"
         delete: "%{shortcut} Obriši poruku"
         mark_muted: "%{shortcut} Utišaj poruku"
-        mark_regular: "%{shortcut} Standardna (Normalna) tema"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Posmatraj temu"
     badges:
@@ -1750,7 +1772,7 @@ sr:
         tracking:
           title: "Praćeno"
         regular:
-          title: "Stalni član"
+          title: "Normalno"
           description: "Biće te obavešteni ako vas neko spomene @imenom ili odgovori na vašu poruku."
         muted:
           title: "Utišano"
@@ -1778,18 +1800,39 @@ sr:
         regular: "stalni član"
         leader: "vođa"
     sidebar:
-      unread_count: "%{count} nepročitana"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} nepročitana"
+        few: "%{count} nepročitanih"
+        other: "%{count} nepročitana"
+      new_count:
+        one: "%{count} nova"
+        few: "%{count} novih"
+        other: "%{count} nova"
+      more: "Više..."
       sections:
+        messages:
+          header_link_text: "Poruke"
+          links:
+            inbox: "Primljeno"
+            sent: "Poslato"
+            new: "Novo"
+            new_with_count: "Nove (%{count})"
+            unread: "Nepročitano"
+            unread_with_count: "Nepročitane (%{count})"
+            archive: "Arhiviraj"
         categories:
-          header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
-        topics:
-          header_link_title: "home"
-          header_link_text: "Teme"
+        community:
+          header_link_text: "Zajednica"
           links:
             tracked:
               content: "Praćeno"
+            groups:
+              content: "Grupe"
+            users:
+              content: "Korisnici"
+            my_posts:
+              content: "Moje poruke"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:
@@ -2454,14 +2497,13 @@ sr:
           topics: "Teme"
   wizard_js:
     wizard:
-      done: "Gotovo"
       back: "Nazad"
       next: "Dalje"
+      step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      quit: "Možda kasnije"
       staff_count:
         one: "Tvoja zajednica ima %{count} člana tima (tebe). "
         few: "Vaša zajednica ima %{count} članova tima, uključujući i vas."

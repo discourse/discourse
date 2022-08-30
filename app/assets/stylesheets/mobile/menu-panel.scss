@@ -62,4 +62,24 @@
 .panel-body-contents {
   // 2em padding very useful for iOS Safari's overlayed bottom nav
   padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
+
+  .user-menu.revamped & {
+    height: 100%;
+  }
+}
+
+.hamburger-panel .revamped {
+  --d-sidebar-row-horizontal-padding: 0.5rem;
+  --d-sidebar-highlight-color: var(--primary-low);
+
+  .sidebar-row {
+    padding: 0.5rem var(--d-sidebar-row-horizontal-padding);
+    height: 27px;
+    align-items: center;
+    font-size: var(--font-0);
+  }
+
+  .sidebar-section-wrapper {
+    margin-bottom: 0.5em;
+  }
 }

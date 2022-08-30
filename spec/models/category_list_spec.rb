@@ -2,7 +2,7 @@
 
 require 'category_list'
 
-describe CategoryList do
+RSpec.describe CategoryList do
   before do
     # we need automatic updating here cause we are testing this
     Topic.update_featured_topics = true
@@ -12,8 +12,7 @@ describe CategoryList do
   fab!(:admin) { Fabricate(:admin) }
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
-  context "security" do
-
+  describe "security" do
     it "properly hide secure categories" do
       cat = Fabricate(:category_with_definition)
       Fabricate(:topic, category: cat)
@@ -92,7 +91,6 @@ describe CategoryList do
   end
 
   context "with a category" do
-
     fab!(:topic_category) { Fabricate(:category_with_definition, num_featured_topics: 2) }
 
     context "with a topic in a category" do
@@ -130,7 +128,7 @@ describe CategoryList do
       end
     end
 
-    context "notification level" do
+    context "with notification level" do
       it "returns 'regular' as default notification level" do
         category = category_list.categories.find { |c| c.id == topic_category.id }
         expect(category.notification_level).to eq(NotificationLevels.all[:regular])
@@ -151,7 +149,6 @@ describe CategoryList do
         expect(category.notification_level).to eq(NotificationLevels.all[:regular])
       end
     end
-
   end
 
   describe 'category order' do
@@ -170,7 +167,7 @@ describe CategoryList do
       uncategorized.save
     end
 
-    context 'fixed_category_positions is enabled' do
+    context 'when fixed_category_positions is enabled' do
       before do
         SiteSetting.fixed_category_positions = true
       end
@@ -194,7 +191,7 @@ describe CategoryList do
       end
     end
 
-    context 'fixed_category_positions is disabled' do
+    context 'when fixed_category_positions is disabled' do
       before do
         SiteSetting.fixed_category_positions = false
       end
@@ -241,7 +238,7 @@ describe CategoryList do
       end
     end
 
-    context 'some categories are muted' do
+    context 'when some categories are muted' do
       let!(:cat1) { Fabricate(:category_with_definition) }
       let!(:muted_cat) { Fabricate(:category_with_definition) }
       let!(:cat3) { Fabricate(:category_with_definition) }

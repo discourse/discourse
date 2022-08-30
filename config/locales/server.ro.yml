@@ -88,6 +88,7 @@ ro:
       inclusion: nu este inclus in listă
       invalid: nu este valid
       is_invalid: "pare neclar, e completă propoziția?"
+      is_invalid_meaningful: "pare neclar, majoritatea cuvintelor conţin aceleaşi litere de mai multe ori?"
       less_than: trebuie să fie mai mic decât %{count}
       less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
@@ -124,6 +125,7 @@ ro:
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
   invite:
     expired: "Codul tău de invitație a expirat. Te rugăm <a href='%{base_url}/about'>contactezi personalul</a> forumului."
+    confirm_email: "<p>Ești aproape gata! Am trimis un e-mail de activare la adresa ta de e-mail. Te rugăm să urmezi instrucţiunile din mail pentru a-ţi activa contul.</p><p>Dacă nu ajunge, verifică folderul spam.</p>"
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
   bulk_invite:
@@ -251,6 +253,16 @@ ro:
       one: "o postare"
       few: "%{count} postări"
       other: "%{count} de postări"
+    "new-topic": |
+      Bine ai venit la %{site_name} &mdash; **mulțumim pentru începerea unei noi conversații! *
+
+      - Titlul sună interesant dacă îl citești cu voce tare? Este un rezumat bun?
+
+      - Cine ar fi interesat de acest lucru? De ce contează? Ce fel de răspunsuri vrei?
+
+      - Include cuvinte folosite în mod obișnuit în subiectul tău astfel încât ceilalți să le poată *găsi*. Pentru a grupa subiectul cu subiecte conexe, selectaţi o categorie (sau etichetă).
+
+      Pentru mai multe, [a se vedea instrucțiuni ale comunității](%{base_path}/orientări). Acest panou va apărea numai pentru prima ta %{education_posts_text}.
     avatar: |
       ### Ce zici de o poză atașată contului tău?
 
@@ -310,6 +322,7 @@ ro:
             execute_at:
               in_the_past: "trebuie să fie în viitor."
       <<: *errors
+  uncategorized_category_name: "Necategorisite"
   vip_category_name: "Sufragerie"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
   meta_category_name: "Feedback la site"
@@ -509,9 +522,11 @@ ro:
       long_form: "Marchează ca spam"
     inappropriate:
       title: "Necorespunzător"
+      description: 'Acest subiect conține conținut pe care o persoană rezonabilă l-ar considera ofensator, abuziv sau o încălcare a <a href="%{base_path}/guidelines">ghidurilor comunității noastre</a>.'
       long_form: "marcat cu marcaj de avertizare ca inadecvat"
     notify_moderators:
       title: "Alt motiv"
+      description: 'Acest subiect necesită atenția generală a personalului pe baza regulilor <a href="%{base_path}/guidelines"></a>, <a href="%{tos_url}">TOS</a>, sau dintr-un alt motiv care nu este enumerat mai sus.'
       long_form: "marcat cu marcaj de avertizare în atenția moderatorilor"
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
@@ -819,7 +834,6 @@ ro:
     title: "Titlul scurt al site-ului, folosit în tag-ul title."
     site_description: "Descrie acest site într-o singură frază, așa cum se folosește în tagul meta-descriere."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
-    download_remote_images_to_local: "Transformă imaginile la distanță în imagini locale descărcându-le; asta previne imaginile stricate."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
@@ -1109,6 +1123,7 @@ ro:
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
+    default_other_skip_new_user_tips: "Omitete sfaturile și insignele de înscriere pentru utilizatori noi."
     default_other_like_notification_frequency: "Implicit, notifică utilizatorul la primirea de aprecieri."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
     default_categories_watching: "Implicit, listează categoriile care sunt urmărite în mod activ."
@@ -1224,6 +1239,7 @@ ro:
     incorrect_username_email_or_password: "Nume de utilizator, email sau parolă incorecte"
     wait_approval: "Îți mulțumim pentru autentificare. Te vom anunța când contul dumneavoastră a fost aprobat."
     active: "Contul tău a fost activat și e gata să fie folosit."
+    activate_email: "<p>Ești aproape gata! Am trimis un e-mail de activare către <b>%{email}</b>. Te rugăm să urmezi instrucțiunile din e-mail pentru a-ți activa contul.</p><p>Dacă nu ajunge, verifică dosarul spam.</p>"
     not_activated: "Nu te poți încă autentifica. Ți-am trimis un email de autentificare. Te rugăm să urmezi instrucțiunile din email pentru a-ți activa contul."
     not_allowed_from_ip_address: "Nu te poți conecta ca %{username} de la această adresa de IP."
     admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator de la această adresa de IP."
@@ -1602,10 +1618,30 @@ ro:
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:
       title: "Parolă uitată"
+      subject_template: "[%{email_prefix}] Resetare parolă"
+      text_body_template: |
+        Cineva a cerut resetarea parolei pe [%{site_name}] (%{base_url}).
+
+        Dacă nu ai fost tu, poți ignora în siguranță acest e-mail.
+
+        Faceţi clic pe următorul link pentru a alege o nouă parolă:
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "Setează parola"
+      text_body_template: |
+        Cineva a cerut să adauge o parolă în contul tău pe [%{site_name}](%{base_url}). Alternativ, te poți conecta folosind orice serviciu online suportat (Google, Facebook, etc) care este asociat cu această adresă de e-mail validată.
+
+        Dacă nu ați făcut această solicitare, puteți ignora în siguranță acest e-mail.
+
+        Faceți clic pe următorul link pentru a alege o parolă:
+        %{base_url}/u/parolă-reset/%{email_token}
     account_created:
       subject_template: "[%{email_prefix}] Noul tău cont"
+      text_body_template: |
+        Un nou cont a fost creat pentru tine la %{site_name}
+
+        Apasă pe următorul link pentru a alege o parolă pentru noul tău cont:
+        %{base_url}/u/parolă-reset/%{email_token}
     notify_old_email:
       text_body_template: |
         Acesta este un mesaj automat pentru a te informa că adresa ta de email pentru %{site_name} a fost schimbată. Dacă acest lucru s-a întâmplat dintr-o eroare, contractează un administrator al site-lui.
@@ -1615,6 +1651,25 @@ ro:
         %{new_email}
     signup_after_approval:
       subject_template: "Contul tă pe site-ul %{site_name} a fost aprobat!"
+    signup:
+      subject_template: "[%{email_prefix}] Confirmă noul cont"
+      text_body_template: |
+        Bine ai venit la %{site_name}!
+
+        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        %{base_url}/u/cont activat/%{email_token}
+
+        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
+    activation_reminder:
+      text_body_template: |
+        Bine ai venit la %{site_name}!
+
+        Acesta este un memento prietenos să îți activezi contul.
+
+        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        %{base_url}/u/cont activat/%{email_token}
+
+        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
@@ -1764,8 +1819,13 @@ ro:
     editor:
       name: Editor
       description: Prima postare editată
+      long_description: |
+        Această insignă este acordată prima dată când editezi una dintre postările tale. Deși nu veți putea să vă editați postările pentru totdeauna, editarea este încurajată - puteți îmbunătăți formatarea, puteți remedia mici erori sau puteți adăuga orice ați ratat când ați postat inițial. Editați pentru a vă îmbunătăți și mai bine postările!
     basic_user:
       name: Simplu utilizator
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Niveluri de încredere</a> toate funcțiile esențiale ale comunității
+      long_description: |
+        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumesc pentru că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori; Ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, marcarea, editarea wiki și abilitatea de a posta mai multe imagini și link-uri.
     member:
       name: Membru
     regular:
@@ -1817,6 +1877,8 @@ ro:
     first_flag:
       name: Primul marcaj de avertizare
       description: Marcat postare cu marcaj de avertizare
+      long_description: |
+        Această insignă este acordată prima dată când semnalați o postare. Semnalarea este modul în care contribuim cu toții la menținerea acestui loc frumos pentru toată lumea. Dacă observați postări care necesită atenția moderatorului din orice motiv, vă rugăm să nu ezitați să semnalați. Dacă vedeți o problemă, :flag_black: semnalați-o!
     promoter:
       name: Promotor
       description: Ai invitat un utilizator
@@ -1843,6 +1905,9 @@ ro:
         Acest ecuson este oferit prima dată când citezi o postare într-un răspuns propriu. Citarea părților relevante din postările anterioare în răspunsul tău ajută la menținerea discuțiilor și la păstrarea subiectului lor inițial. Cea mai ușoară cale de a cita este să selectezi o porțiune dintr-o postare și să apeși pe butonul pentru răspuns. Citează frecvent!
     read_guidelines:
       name: Ghid Citit
+      description: Citește <a href="%{base_uri}/guidelines">ghidurile comunității</a>
+      long_description: |
+        Această insignă este acordată pentru <a href="%{base_uri}/guidelines">citirea ghidurilor comunității</a>. Respectarea și împărtășirea acestor instrucțiuni simple ajută la construirea unei comunități sigure, distractive și durabile pentru toată lumea. Amintiți-vă întotdeauna că există o altă ființă umană, una foarte asemănătoare cu tine, pe cealaltă parte a ecranului. Fi drăguț/ă!
     reader:
       name: Cititor
       description: Ai citit toate răspunsurile dintr-un subiect cu mai mult de 100 de răspunsuri
@@ -1909,6 +1974,11 @@ ro:
       name: Forum prin email
       long_description: |
         Acest ecuosn se acordă când ai răspuns pentru prima dată la o postare prin email :e-mail:.
+    enthusiast:
+      name: Entuziast
+      description: Ai vizitat 10 zile consecutive
+      long_description: |
+        Această insignă este acordată pentru vizitarea timp de 10 zile consecutive. Vă mulțumim că ați rămas alături de noi mai bine de o săptămână!
   admin_login:
     success: "Emailul a fost trimis"
     email_input: "Email Admin"
@@ -1932,57 +2002,26 @@ ro:
       message: "<p>Am trimis un email de activare la <b>%{email}</b>"
   safe_mode:
     title: "Activează modul sigur"
-    description: "Modul sigur îți permite să îți testezi site-ul fără să încarci plugin-uri și personalizări."
-    only_official: "Dezactivează plugin-urile neoficiale"
+    no_unofficial_plugins: "Dezactivează plugin-urile neoficiale"
     no_plugins: "Dezactivează toate plugin-urile"
     enter: "Activează modul sigur"
   wizard:
     title: "Configurare Discourse"
     step:
-      locale:
-        title: "Bun venit pe Discourse-ul tău!"
-        fields:
-          default_locale:
-            description: "Care e limba implicită pentru comunitatea ta?"
-      forum_title:
-        title: "Nume"
-        description: "Numele este un semn vizibil de la distanță, <i>primul</i> lucru pe care vizitatorii potențiali îl remarcă cu privire la comunitatea ta. Ce spune numele și titlul despre comunitatea ta?"
+      introduction:
         fields:
           title:
-            label: "Numele comunității tale"
             placeholder: "Bârlogul Mariei"
           site_description:
             placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
-      introduction:
-        title: "Introducere"
-        fields:
-          welcome:
-            label: "Subiect de bun venit"
-            one_paragraph: "Te rugăm să îți restrângi mesajul de bun venit la un paragraf."
       privacy:
-        title: "Acces"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Public"
-              restricted:
-                label: "Privat"
-      contact:
-        title: "Contact"
-        fields:
-          contact_email:
-            label: "Mail"
-            placeholder: "nume@exemplu.comb"
-            description: "Adresa de email a persoanei sau grupului responsabil de aceasta comunitate. Folosită pentru notificări critice cum ar fi marcaje de avertizare negestionate, actualizări de securitate și afișată pe pagina <a href='%{base_path}/about' target='_blank'>Despre noi</a> pentru contactarea de urgență a comunității."
-          contact_url:
-            label: "Pagină web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='%{base_path}/about' target='_blank'>pagina despre noi</a>. "
-          site_contact:
-            label: "Mesaje automate"
-      corporate:
-        title: "Organizație"
+          login_required:
+            placeholder: "Privat"
+          must_approve_users:
+            placeholder: "Necesită aprobare"
+      ready:
+        title: "Discourse-ul tău e gata!"
       styling:
         fields:
           styling_preview:
@@ -1999,16 +2038,20 @@ ro:
                 label: "Categorii și subiecte recente"
               categories_and_top_topics:
                 label: "Categorii și discuții în top"
-      logos:
-        title: "Logo-uri"
+      branding:
         fields:
           logo:
             label: "Logo-ul principal"
-      icons:
-        title: "Iconițe"
-        fields:
           large_icon:
             label: "Iconiță mare"
+      corporate:
+        fields:
+          contact_url:
+            label: "Pagină web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='%{base_path}/about' target='_blank'>pagina despre noi</a>. "
+          site_contact:
+            label: "Mesaje automate"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

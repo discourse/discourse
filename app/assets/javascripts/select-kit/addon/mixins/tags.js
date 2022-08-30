@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
-import { ajax } from "select-kit/lib/ajax-helper";
+import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -25,6 +25,10 @@ export default Mixin.create({
   allowAnyTag: reads("site.can_create_tag"),
 
   validateCreate(filter, content) {
+    if (!filter.length) {
+      return;
+    }
+
     const maximum = this.selectKit.options.maximum;
     if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
       this.addError(
@@ -39,18 +43,6 @@ export default Mixin.create({
     filter = filter.replace(filterRegexp, "").trim().toLowerCase();
 
     if (this.termMatchesForbidden) {
-      return false;
-    }
-
-    if (
-      !filter.length ||
-      this.get("siteSettings.max_tag_length") < filter.length
-    ) {
-      this.addError(
-        I18n.t("select_kit.invalid_selection_length", {
-          count: `[1 - ${this.get("siteSettings.max_tag_length")}]`,
-        })
-      );
       return false;
     }
 

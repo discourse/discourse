@@ -2,17 +2,24 @@
 
 require 'email/sender'
 
-describe Email::Sender do
+RSpec.describe Email::Sender do
   before do
     SiteSetting.secure_media_allow_embed_images_in_emails = false
   end
   fab!(:post) { Fabricate(:post) }
+  let(:mock_smtp_transaction_response) { "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example" }
 
-  context "disable_emails is enabled" do
+  def stub_deliver_response(message)
+    message.stubs(:deliver!).returns(
+      Net::SMTP::Response.new("250", mock_smtp_transaction_response)
+    )
+  end
+
+  context "when disable_emails is enabled" do
     fab!(:user) { Fabricate(:user) }
     fab!(:moderator) { Fabricate(:moderator) }
 
-    context "disable_emails is enabled for everyone" do
+    context "when disable_emails is enabled for everyone" do
       before { SiteSetting.disable_emails = "yes" }
 
       it "doesn't deliver mail when mails are disabled" do
@@ -37,23 +44,24 @@ describe Email::Sender do
       end
     end
 
-    context "disable_emails is enabled for non-staff users" do
+    context "when disable_emails is enabled for non-staff users" do
       before { SiteSetting.disable_emails = "non-staff" }
 
       it "doesn't deliver mail to normal user" do
-        Mail::Message.any_instance.expects(:deliver_now).never
+        Mail::Message.any_instance.expects(:deliver!).never
         message = Mail::Message.new(to: user.email, body: "hello")
+        stub_deliver_response(message)
         expect(Email::Sender.new(message, :hello).send).to eq(nil)
       end
 
       it "delivers mail to staff user" do
-        Mail::Message.any_instance.expects(:deliver_now).once
+        Mail::Message.any_instance.expects(:deliver!).once
         message = Mail::Message.new(to: moderator.email, body: "hello")
         Email::Sender.new(message, :hello).send
       end
 
       it "delivers mail to staff user when confirming new email if user is provided" do
-        Mail::Message.any_instance.expects(:deliver_now).once
+        Mail::Message.any_instance.expects(:deliver!).once
         Fabricate(:email_change_request, {
           user: moderator,
           new_email: "newemail@testmoderator.com",
@@ -69,36 +77,36 @@ describe Email::Sender do
   end
 
   it "doesn't deliver mail when the message is of type NullMail" do
-    Mail::Message.any_instance.expects(:deliver_now).never
+    Mail::Message.any_instance.expects(:deliver!).never
     message = ActionMailer::Base::NullMail.new
     expect(Email::Sender.new(message, :hello).send).to eq(nil)
   end
 
   it "doesn't deliver mail when the message is nil" do
-    Mail::Message.any_instance.expects(:deliver_now).never
+    Mail::Message.any_instance.expects(:deliver!).never
     Email::Sender.new(nil, :hello).send
   end
 
   it "doesn't deliver when the to address is nil" do
     message = Mail::Message.new(body: 'hello')
-    message.expects(:deliver_now).never
+    message.expects(:deliver!).never
     Email::Sender.new(message, :hello).send
   end
 
   it "doesn't deliver when the to address uses the .invalid tld" do
     message = Mail::Message.new(body: 'hello', to: 'myemail@example.invalid')
-    message.expects(:deliver_now).never
+    message.expects(:deliver!).never
     expect { Email::Sender.new(message, :hello).send }.
       to change { SkippedEmailLog.where(reason_type: SkippedEmailLog.reason_types[:sender_message_to_invalid]).count }.by(1)
   end
 
   it "doesn't deliver when the body is nil" do
     message = Mail::Message.new(to: 'eviltrout@test.domain')
-    message.expects(:deliver_now).never
+    message.expects(:deliver!).never
     Email::Sender.new(message, :hello).send
   end
 
-  context "host_for" do
+  describe ".host_for" do
     it "defaults to localhost" do
       expect(Email::Sender.host_for(nil)).to eq("localhost")
     end
@@ -118,7 +126,6 @@ describe Email::Sender do
   end
 
   context 'with a valid message' do
-
     let(:reply_key) { "abcd" * 8 }
 
     let(:message) do
@@ -126,18 +133,18 @@ describe Email::Sender do
         to: 'eviltrout@test.domain',
         body: '**hello**'
       )
-      message.stubs(:deliver_now)
+      stub_deliver_response(message)
       message
     end
 
     let(:email_sender) { Email::Sender.new(message, :valid_type) }
 
     it 'calls deliver' do
-      message.expects(:deliver_now).once
+      message.expects(:deliver!).once
       email_sender.send
     end
 
-    context "doesn't add return_path when no plus addressing" do
+    context "when no plus addressing" do
       before { SiteSetting.reply_by_email_address = '%{reply_key}@test.com' }
 
       it 'should not set the return_path' do
@@ -146,7 +153,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds return_path with plus addressing" do
+    context "with plus addressing" do
       before { SiteSetting.reply_by_email_address = 'replies+%{reply_key}@test.com' }
 
       it 'should set the return_path' do
@@ -155,7 +162,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds a List-ID header to identify the forum" do
+    context "when topic id is present" do
       fab!(:category) { Fabricate(:category, name: 'Name With Space') }
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:post) { Fabricate(:post, topic: topic) }
@@ -173,8 +180,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds a Message-ID header even when topic id is not present" do
-
+    context "when topic id is not present" do
       it 'should add the right header' do
         email_sender.send
 
@@ -182,7 +188,7 @@ describe Email::Sender do
       end
     end
 
-    context "replaces reply_key in custom headers" do
+    context "when reply_key is present" do
       fab!(:user) { Fabricate(:user) }
       let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
       let(:reply_key) { PostReplyKey.find_by!(post_id: post.id, user_id: user.id).reply_key }
@@ -219,7 +225,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds Precedence header" do
+    describe "adds Precedence header" do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -234,7 +240,7 @@ describe Email::Sender do
       end
     end
 
-    context "removes custom Discourse headers from topic notification mails" do
+    describe "removes custom Discourse headers from topic notification mails" do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -251,7 +257,7 @@ describe Email::Sender do
       end
     end
 
-    context "removes custom Discourse headers from digest/registration/other mails" do
+    describe "removes custom Discourse headers from digest/registration/other mails" do
       it 'should remove the right headers' do
         email_sender.send
         expect(message.header['X-Discourse-Topic-Id']).not_to be_present
@@ -260,7 +266,7 @@ describe Email::Sender do
       end
     end
 
-    context "email threading" do
+    context "with email threading" do
       let(:random_message_id_suffix) { "5f1330cfd941f323d7f99b9e" }
       fab!(:topic) { Fabricate(:topic) }
 
@@ -361,7 +367,7 @@ describe Email::Sender do
 
     end
 
-    context "merges custom mandrill header" do
+    describe "merges custom mandrill header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.mandrillapp.com"
         message.header['X-MC-Metadata'] = { foo: "bar" }.to_json
@@ -373,7 +379,7 @@ describe Email::Sender do
       end
     end
 
-    context "merges custom sparkpost header" do
+    describe "merges custom sparkpost header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.sparkpostmail.com"
         message.header['X-MSYS-API'] = { foo: "bar" }.to_json
@@ -385,7 +391,7 @@ describe Email::Sender do
       end
     end
 
-    context 'email logs' do
+    context 'with email logs' do
       let(:email_log) { EmailLog.last }
 
       it 'should create the right log' do
@@ -414,6 +420,7 @@ describe Email::Sender do
 
         before do
           SiteSetting.enable_smtp = true
+          stub_deliver_response(message)
         end
 
         it 'adds the group id and raw content to the email log' do
@@ -448,7 +455,7 @@ describe Email::Sender do
       end
     end
 
-    context "email log with a post id and topic id" do
+    context "with email log with a post id and topic id" do
       let(:topic) { post.topic }
 
       before do
@@ -466,7 +473,7 @@ describe Email::Sender do
       end
     end
 
-    context 'email parts' do
+    context 'with email parts' do
       it 'should contain the right message' do
         email_sender.send
 
@@ -677,14 +684,13 @@ describe Email::Sender do
   end
 
   context 'with a deleted post' do
-
     it 'should skip sending the email' do
       post = Fabricate(:post, deleted_at: 1.day.ago)
 
       message = Mail::Message.new to: 'disc@ourse.org', body: 'some content'
       message.header['X-Discourse-Post-Id'] = post.id
       message.header['X-Discourse-Topic-Id'] = post.topic_id
-      message.expects(:deliver_now).never
+      message.expects(:deliver!).never
 
       email_sender = Email::Sender.new(message, :valid_type)
       expect { email_sender.send }.to change { SkippedEmailLog.count }
@@ -696,14 +702,13 @@ describe Email::Sender do
   end
 
   context 'with a deleted topic' do
-
     it 'should skip sending the email' do
       post = Fabricate(:post, topic: Fabricate(:topic, deleted_at: 1.day.ago))
 
       message = Mail::Message.new to: 'disc@ourse.org', body: 'some content'
       message.header['X-Discourse-Post-Id'] = post.id
       message.header['X-Discourse-Topic-Id'] = post.topic_id
-      message.expects(:deliver_now).never
+      message.expects(:deliver!).never
 
       email_sender = Email::Sender.new(message, :valid_type)
       expect { email_sender.send }.to change { SkippedEmailLog.count }
@@ -717,7 +722,7 @@ describe Email::Sender do
   context 'with a user' do
     let(:message) do
       message = Mail::Message.new to: 'eviltrout@test.domain', body: 'test body'
-      message.stubs(:deliver_now)
+      stub_deliver_response(message)
       message
     end
 
@@ -731,6 +736,10 @@ describe Email::Sender do
 
     it 'should have the current user_id' do
       expect(@email_log.user_id).to eq(user.id)
+    end
+
+    it 'should have the smtp_transaction_response message' do
+      expect(@email_log.smtp_transaction_response).to eq(mock_smtp_transaction_response)
     end
 
     describe "post reply keys" do
@@ -765,8 +774,16 @@ describe Email::Sender do
           expect(message.header[header]).to eq(nil)
           expect(post_reply_key.user_id).to eq(user.id)
           expect(post_reply_key.post_id).to eq(post.id)
-          expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
+          expect { email_sender.send }.not_to change { PostReplyKey.count }
         end
+
+        it 'should find existing key' do
+          existing_post_reply_key = PostReplyKey.create(post_id: post.id, user_id: user.id)
+          expect { email_sender.send }.not_to change { PostReplyKey.count }
+          post_reply_key = PostReplyKey.last
+          expect(post_reply_key).to eq(existing_post_reply_key)
+        end
+
       end
     end
   end
@@ -774,7 +791,7 @@ describe Email::Sender do
   context "with cc addresses" do
     let(:message) do
       message = Mail::Message.new to: 'eviltrout@test.domain', body: 'test body', cc: 'someguy@test.com;otherguy@xyz.com'
-      message.stubs(:deliver_now)
+      stub_deliver_response(message)
       message
     end
 

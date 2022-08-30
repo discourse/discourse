@@ -48,7 +48,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#show' do
-    context 'an existing user' do
+    context 'with an existing user' do
       it 'returns success' do
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
@@ -64,7 +64,7 @@ RSpec.describe Admin::UsersController do
       end
     end
 
-    context 'a non-existing user' do
+    context 'with a non-existing user' do
       it 'returns 404 error' do
         get "/admin/users/0.json"
         expect(response.status).to eq(404)
@@ -154,7 +154,7 @@ RSpec.describe Admin::UsersController do
           suspend_until: 5.hours.from_now,
           reason: "because I said so"
         }
-      end.to change { Jobs::CriticalUserEmail.jobs.size }.by(0)
+      end.not_to change { Jobs::CriticalUserEmail.jobs.size }
 
       expect(response.status).to eq(200)
 
@@ -162,6 +162,7 @@ RSpec.describe Admin::UsersController do
       expect(user).to be_suspended
       expect(user.suspended_at).to be_present
       expect(user.suspended_till).to be_present
+      expect(user.suspend_record).to be_present
 
       log = UserHistory.where(target_user_id: user.id).order('id desc').first
       expect(log.details).to match(/because I said so/)
@@ -777,7 +778,7 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(403)
     end
 
-    context "user has post" do
+    context "when user has post" do
       let(:topic) { Fabricate(:topic, user: delete_me) }
       let!(:post) { Fabricate(:post, topic: topic, user: delete_me) }
 
@@ -802,7 +803,7 @@ RSpec.describe Admin::UsersController do
         expect(User.where(id: delete_me.id).count).to eq(0)
       end
 
-      context "user has reviewable flagged post which was handled" do
+      context "when user has reviewable flagged post which was handled" do
         let!(:reviewable) { Fabricate(:reviewable_flagged_post, created_by: admin, target_created_by: delete_me, target: post, topic: topic, status: 4) }
 
         it "deletes the user record" do
@@ -810,6 +811,83 @@ RSpec.describe Admin::UsersController do
           expect(response.status).to eq(200)
           expect(User.where(id: delete_me.id).count).to eq(0)
         end
+      end
+    end
+
+    it "blocks the e-mail if block_email param is is true" do
+      user_emails = delete_me.user_emails.pluck(:email)
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_email: true }
+      expect(response.status).to eq(200)
+      expect(ScreenedEmail.exists?(email: user_emails)).to eq(true)
+    end
+
+    it "does not block the e-mails if block_email param is is false" do
+      user_emails = delete_me.user_emails.pluck(:email)
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_email: false }
+      expect(response.status).to eq(200)
+      expect(ScreenedEmail.exists?(email: user_emails)).to eq(false)
+    end
+
+    it "does not block the e-mails by default" do
+      user_emails = delete_me.user_emails.pluck(:email)
+
+      delete "/admin/users/#{delete_me.id}.json"
+      expect(response.status).to eq(200)
+      expect(ScreenedEmail.exists?(email: user_emails)).to eq(false)
+    end
+
+    it "blocks the ip address if block_ip param is true" do
+      ip_address = delete_me.ip_address
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_ip: true }
+      expect(response.status).to eq(200)
+      expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(true)
+    end
+
+    it "does not block the ip address if block_ip param is false" do
+      ip_address = delete_me.ip_address
+
+      delete "/admin/users/#{delete_me.id}.json", params: { block_ip: false }
+      expect(response.status).to eq(200)
+      expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(false)
+    end
+
+    it "does not block the ip address by default" do
+      ip_address = delete_me.ip_address
+
+      delete "/admin/users/#{delete_me.id}.json"
+      expect(response.status).to eq(200)
+      expect(ScreenedIpAddress.exists?(ip_address: ip_address)).to eq(false)
+    end
+
+    context "with param block_url" do
+      before do
+        @post = Fabricate(:post_with_external_links, user: delete_me)
+        TopicLink.extract_from(@post)
+
+        @urls = TopicLink.where(user: delete_me, internal: false)
+          .pluck(:url)
+          .map { |url| ScreenedUrl.normalize_url(url) }
+      end
+
+      it "blocks the urls if block_url param is true" do
+        delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: true }
+        expect(response.status).to eq(200)
+        expect(ScreenedUrl.exists?(url: @urls)).to eq(true)
+      end
+
+      it "does not block the urls if block_url param is false" do
+        delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: false }
+        expect(response.status).to eq(200)
+        expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
+      end
+
+      it "does not block the urls by default" do
+        delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true, block_urls: false }
+        expect(response.status).to eq(200)
+        expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
       end
     end
 
@@ -896,6 +974,7 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       reg_user.reload
       expect(reg_user).to be_silenced
+      expect(reg_user.silenced_record).to be_present
     end
 
     it "can have an associated post" do
@@ -1313,5 +1392,4 @@ RSpec.describe Admin::UsersController do
       expect(sl.reload.ip_address).to eq('127.0.0.2')
     end
   end
-
 end

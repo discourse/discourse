@@ -18,11 +18,19 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
+    if notification_types = params[:filter_by_types]&.split(",").presence
+      notification_types.map! do |type|
+        Notification.types[type.to_sym] || (
+          raise Discourse::InvalidParameters.new("invalid notification type: #{type}")
+        )
+      end
+    end
+
     if params[:recent].present?
       limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
-      notifications = Notification.recent_report(current_user, limit)
+      notifications = Notification.recent_report(current_user, limit, notification_types)
       changed = false
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
@@ -31,11 +39,31 @@ class NotificationsController < ApplicationController
         changed = current_user.saw_notification_id(max_id)
       end
 
-      user.reload
-      user.publish_notifications_state if changed
+      if changed
+        current_user.reload
+        current_user.publish_notifications_state
+      end
 
-      render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
-                       seen_notification_id: current_user.seen_notification_id)
+      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode
+        current_user_id = current_user.id
+        Scheduler::Defer.later "bump last seen reviewable for user" do
+          # we lookup current_user again in the background thread to avoid
+          # concurrency issues where the objects returned by the current_user
+          # and/or methods are changed by the time the deferred block is
+          # executed
+          user = User.find_by(id: current_user_id)
+          next if user.blank?
+          new_guardian = Guardian.new(user)
+          if new_guardian.can_see_review_queue?
+            user.bump_last_seen_reviewable!
+          end
+        end
+      end
+
+      render_json_dump(
+        notifications: serialize_data(notifications, NotificationSerializer),
+        seen_notification_id: current_user.seen_notification_id
+      )
     else
       offset = params[:offset].to_i
 
@@ -62,7 +90,19 @@ class NotificationsController < ApplicationController
     if params[:id]
       Notification.read(current_user, [params[:id].to_i])
     else
-      Notification.where(user_id: current_user.id).includes(:topic).where(read: false).update_all(read: true)
+      if types = params[:dismiss_types]&.split(",").presence
+        invalid = []
+        types.map! do |type|
+          type_id = Notification.types[type.to_sym]
+          invalid << type if !type_id
+          type_id
+        end
+        if invalid.size > 0
+          raise Discourse::InvalidParameters.new("invalid notification types: #{invalid.inspect}")
+        end
+      end
+
+      Notification.read_types(current_user, types)
       current_user.saw_notification_id(Notification.recent_report(current_user, 1).max.try(:id))
     end
 

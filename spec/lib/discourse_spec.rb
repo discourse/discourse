@@ -2,25 +2,24 @@
 
 require 'discourse'
 
-describe Discourse do
-
+RSpec.describe Discourse do
   before do
     RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('foo.com')
   end
 
-  context 'current_hostname' do
+  describe 'current_hostname' do
     it 'returns the hostname from the current db connection' do
       expect(Discourse.current_hostname).to eq('foo.com')
     end
   end
 
-  context 'avatar_sizes' do
+  describe 'avatar_sizes' do
     it 'returns a list of integers' do
       expect(Discourse.avatar_sizes).to contain_exactly(20, 25, 30, 32, 37, 40, 45, 48, 50, 60, 64, 67, 75, 90, 96, 120, 135, 180, 240, 360)
     end
   end
 
-  context 'running_in_rack' do
+  describe 'running_in_rack' do
     after do
       ENV.delete("DISCOURSE_RUNNING_IN_RACK")
     end
@@ -32,7 +31,7 @@ describe Discourse do
     end
   end
 
-  context 'base_url' do
+  describe 'base_url' do
     context 'when https is off' do
       before do
         SiteSetting.force_https = false
@@ -64,7 +63,7 @@ describe Discourse do
     end
   end
 
-  context "asset_filter_options" do
+  describe "asset_filter_options" do
     it "obmits path if request is missing" do
       opts = Discourse.asset_filter_options(:js, nil)
       expect(opts[:path]).to be_blank
@@ -77,7 +76,7 @@ describe Discourse do
     end
   end
 
-  context 'plugins' do
+  describe 'plugins' do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
@@ -129,7 +128,7 @@ describe Discourse do
 
   end
 
-  context 'authenticators' do
+  describe 'authenticators' do
     it 'returns inbuilt authenticators' do
       expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))
     end
@@ -167,7 +166,7 @@ describe Discourse do
     end
   end
 
-  context 'enabled_authenticators' do
+  describe 'enabled_authenticators' do
     it 'only returns enabled authenticators' do
       expect(Discourse.enabled_authenticators.length).to be(0)
       expect { SiteSetting.enable_twitter_logins = true }
@@ -177,8 +176,7 @@ describe Discourse do
     end
   end
 
-  context '#site_contact_user' do
-
+  describe '#site_contact_user' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:another_admin) { Fabricate(:admin) }
 
@@ -194,14 +192,13 @@ describe Discourse do
 
   end
 
-  context '#system_user' do
+  describe '#system_user' do
     it 'returns the system user' do
       expect(Discourse.system_user.id).to eq(-1)
     end
   end
 
-  context "#store" do
-
+  describe "#store" do
     it "returns LocalStore by default" do
       expect(Discourse.store).to be_a(FileStore::LocalStore)
     end
@@ -213,10 +210,9 @@ describe Discourse do
       SiteSetting.s3_secret_access_key = "s3_secret_access_key"
       expect(Discourse.store).to be_a(FileStore::S3Store)
     end
-
   end
 
-  context 'readonly mode' do
+  describe 'readonly mode' do
     let(:readonly_mode_key) { Discourse::READONLY_MODE_KEY }
     let(:readonly_mode_ttl) { Discourse::READONLY_MODE_KEY_TTL }
     let(:user_readonly_mode_key) { Discourse::USER_READONLY_MODE_KEY }
@@ -244,7 +240,7 @@ describe Discourse do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
       end
 
-      context 'user enabled readonly mode' do
+      context 'when user enabled readonly mode' do
         it "adds a key in redis and publish a message through the message bus" do
           expect(Discourse.redis.get(user_readonly_mode_key)).to eq(nil)
         end
@@ -252,7 +248,7 @@ describe Discourse do
     end
 
     describe ".disable_readonly_mode" do
-      context 'user disabled readonly mode' do
+      context 'when user disabled readonly mode' do
         it "removes readonly key in redis and publish a message through the message bus" do
           message = MessageBus.track_publish { Discourse.disable_readonly_mode(user_readonly_mode_key) }.first
           assert_readonly_mode_disabled(message, user_readonly_mode_key)
@@ -319,10 +315,10 @@ describe Discourse do
     end
   end
 
-  context "#handle_exception" do
-
-    class TempSidekiqLogger < Sidekiq::ExceptionHandler::Logger
+  describe "#handle_exception" do
+    class TempSidekiqLogger
       attr_accessor :exception, :context
+
       def call(ex, ctx)
         self.exception = ex
         self.context = ctx
@@ -332,8 +328,57 @@ describe Discourse do
     let!(:logger) { TempSidekiqLogger.new }
 
     before do
-      Sidekiq.error_handlers.clear
       Sidekiq.error_handlers << logger
+    end
+
+    after do
+      Sidekiq.error_handlers.delete(logger)
+    end
+
+    describe "#job_exception_stats" do
+      class FakeTestError < StandardError
+      end
+
+      before do
+        Discourse.reset_job_exception_stats!
+      end
+
+      after do
+        Discourse.reset_job_exception_stats!
+      end
+
+      it "should not fail on incorrectly shaped hash" do
+        expect do
+          Discourse.handle_job_exception(FakeTestError.new, { job: "test" })
+        end.to raise_error(FakeTestError)
+      end
+
+      it "should collect job exception stats" do
+
+        # see MiniScheduler Manager which reports it like this
+        # https://github.com/discourse/mini_scheduler/blob/2b2c1c56b6e76f51108c2a305775469e24cf2b65/lib/mini_scheduler/manager.rb#L95
+        exception_context = {
+          message: "Running a scheduled job",
+          job: { "class" => Jobs::ReindexSearch }
+        }
+
+        # re-raised unconditionally in test env
+        2.times do
+          expect { Discourse.handle_job_exception(FakeTestError.new, exception_context) }.to raise_error(FakeTestError)
+        end
+
+        exception_context = {
+          message: "Running a scheduled job",
+          job: { "class" => Jobs::PollMailbox }
+        }
+
+        expect { Discourse.handle_job_exception(FakeTestError.new, exception_context) }.to raise_error(FakeTestError)
+
+        expect(Discourse.job_exception_stats).to eq({
+          Jobs::PollMailbox => 1,
+          Jobs::ReindexSearch => 2,
+        })
+      end
     end
 
     it "should not fail when called" do
@@ -359,7 +404,7 @@ describe Discourse do
     end
   end
 
-  context '#deprecate' do
+  describe '#deprecate' do
     def old_method(m)
       Discourse.deprecate(m)
     end
@@ -468,4 +513,128 @@ describe Discourse do
     end
   end
 
+  describe ".clear_all_theme_cache!" do
+    before do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com/gg"
+      stub_s3_store
+    end
+
+    let!(:theme) { Fabricate(:theme) }
+    let!(:upload) { Fabricate(:s3_image_upload) }
+    let!(:upload_theme_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        upload: upload,
+        type_id: ThemeField.types[:theme_upload_var],
+        target_id: Theme.targets[:common],
+        name: "imajee",
+        value: "",
+      )
+    end
+    let!(:basic_html_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        type_id: ThemeField.types[:html],
+        target_id: Theme.targets[:common],
+        name: "head_tag",
+        value: <<~HTML
+          <script type="text/discourse-plugin" version="0.1">
+            console.log(settings.uploads.imajee);
+          </script>
+        HTML
+      )
+    end
+    let!(:js_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        type_id: ThemeField.types[:js],
+        target_id: Theme.targets[:extra_js],
+        name: "somefile.js",
+        value: <<~JS
+          console.log(settings.uploads.imajee);
+        JS
+      )
+    end
+    let!(:scss_field) do
+      Fabricate(
+        :theme_field,
+        theme: theme,
+        type_id: ThemeField.types[:scss],
+        target_id: Theme.targets[:common],
+        name: "scss",
+        value: <<~SCSS
+          .something { background: url($imajee); }
+        SCSS
+      )
+    end
+
+    it "invalidates all JS and CSS caches" do
+      Stylesheet::Manager.clear_theme_cache!
+
+      old_upload_url = Discourse.store.cdn_url(upload.url)
+
+      head_tag_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :desktop, "head_tag")
+      ).css('script').first
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      expect(head_tag_js).to include(old_upload_url)
+
+      js_file_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :extra_js, nil)
+      ).css('script').first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+      expect(file_js).to include(old_upload_url)
+
+      css_link_tag = Nokogiri::HTML5.fragment(
+        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
+      ).css('link').first
+      css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
+      expect(css).to include("url(#{old_upload_url})")
+
+      SiteSetting.s3_cdn_url = "https://new.s3.cdn.com/gg"
+      new_upload_url = Discourse.store.cdn_url(upload.url)
+
+      head_tag_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :desktop, "head_tag")
+      ).css('script').first
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      expect(head_tag_js).to include(old_upload_url)
+
+      js_file_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :extra_js, nil)
+      ).css('script').first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+      expect(file_js).to include(old_upload_url)
+
+      css_link_tag = Nokogiri::HTML5.fragment(
+        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
+      ).css('link').first
+      css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
+      expect(css).to include("url(#{old_upload_url})")
+
+      Discourse.clear_all_theme_cache!
+
+      head_tag_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :desktop, "head_tag")
+      ).css('script').first
+      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:src][/\h{40}/]).content
+      expect(head_tag_js).to include(new_upload_url)
+
+      js_file_script = Nokogiri::HTML5.fragment(
+        Theme.lookup_field(theme.id, :extra_js, nil)
+      ).css('script').first
+      file_js = JavascriptCache.find_by(digest: js_file_script[:src][/\h{40}/]).content
+      expect(file_js).to include(new_upload_url)
+
+      css_link_tag = Nokogiri::HTML5.fragment(
+        Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, 'all')
+      ).css('link').first
+      css = StylesheetCache.find_by(digest: css_link_tag[:href][/\h{40}/]).content
+      expect(css).to include("url(#{new_upload_url})")
+    end
+  end
 end

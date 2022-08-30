@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-describe RetrieveTitle do
-
-  context "extract_title" do
-
+RSpec.describe RetrieveTitle do
+  describe ".extract_title" do
     it "will extract the value from the title tag" do
       title = RetrieveTitle.extract_title(
         "<html><title>My Cool Title</title></html>"
@@ -53,9 +51,21 @@ describe RetrieveTitle do
       )
       expect(title).to eq("Video Title")
     end
+
+    it "will not exception out for invalid html" do
+      attributes = (1..1000).map { |x| " attr#{x}='1' " }.join
+      title = RetrieveTitle.extract_title <<~HTML
+        <html>
+          <title>test</title>
+          <body #{attributes}>
+        </html>
+      HTML
+
+      expect(title).to eq(nil)
+    end
   end
 
-  context "crawl" do
+  describe ".crawl" do
     it "can properly extract a title from a url" do
       stub_request(:get, "https://brelksdjflaskfj.com/amazing")
         .to_return(status: 200, body: "<html><title>very amazing</title>")
@@ -142,9 +152,21 @@ describe RetrieveTitle do
 
       expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end
+
+    it "it raises errors other than Net::ReadTimeout, e.g. NoMethodError" do
+      stub_request(:get, "https://example.com").to_raise(NoMethodError)
+
+      expect { RetrieveTitle.crawl("https://example.com") }.to raise_error(NoMethodError)
+    end
+
+    it "it ignores Net::ReadTimeout errors" do
+      stub_request(:get, "https://example.com").to_raise(Net::ReadTimeout)
+
+      expect { RetrieveTitle.crawl("https://example.com") }.not_to raise_error
+    end
   end
 
-  context 'fetch_title' do
+  describe '.fetch_title' do
     it "does not parse broken title tag" do
       # webmock does not do chunks
       stub_request(:get, "https://en.wikipedia.org/wiki/Internet").

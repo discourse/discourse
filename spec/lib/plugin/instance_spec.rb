@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-describe Plugin::Instance do
-
+RSpec.describe Plugin::Instance do
   after do
     DiscoursePluginRegistry.reset!
   end
 
-  context "find_all" do
+  describe "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
       expect(plugins.count).to eq(5)
@@ -22,14 +21,12 @@ describe Plugin::Instance do
     end
   end
 
-  context "enabling/disabling" do
-
+  describe "enabling/disabling" do
     it "is enabled by default" do
       expect(Plugin::Instance.new.enabled?).to eq(true)
     end
 
     context "with a plugin that extends things" do
-
       class Trout
         attr_accessor :data
       end
@@ -128,7 +125,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "register asset" do
+  describe "register asset" do
     it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("test.css")
@@ -150,7 +147,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "register service worker" do
+  describe "register service worker" do
     it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_service_worker("test.js")
@@ -162,7 +159,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "#add_report" do
+  describe "#add_report" do
     it "adds a report" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.add_report("readers") {}
@@ -210,7 +207,7 @@ describe Plugin::Instance do
     expect(authenticator.enabled?).to eq(false)
   end
 
-  context "activate!" do
+  describe "#activate!" do
     before do
       # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
       SiteSetting.enable_badges = false
@@ -271,7 +268,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "serialized_current_user_fields" do
+  describe "serialized_current_user_fields" do
     before do
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
     end
@@ -303,7 +300,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "register_color_scheme" do
+  describe "#register_color_scheme" do
     it "can add a color scheme for the first time" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       expect {
@@ -380,7 +377,7 @@ describe Plugin::Instance do
     end
   end
 
-  context "locales" do
+  describe "locales" do
     let(:plugin_path) { "#{Rails.root}/spec/fixtures/plugins/custom_locales" }
     let!(:plugin) { Plugin::Instance.new(nil, "#{plugin_path}/plugin.rb") }
     let(:plural) do
@@ -499,11 +496,11 @@ describe Plugin::Instance do
   describe '#register_reviewable_types' do
     it 'Overrides the existing Reviewable types adding new ones' do
       current_types = Reviewable.types
-       new_type_class = Class
+      new_type_class = Class
 
-       Plugin::Instance.new.register_reviewable_type new_type_class
+      Plugin::Instance.new.register_reviewable_type new_type_class
 
-       expect(Reviewable.types).to match_array(current_types << new_type_class.name)
+      expect(Reviewable.types).to match_array(current_types << new_type_class.name)
     end
   end
 
@@ -718,6 +715,59 @@ describe Plugin::Instance do
         user: topic.user,
         data: {}
       )
+    end
+  end
+
+  describe '#register_email_unsubscriber' do
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry.reset_register!(:email_unsubscribers)
+    end
+
+    it "doesn't let you override core unsubscribers" do
+      expect { plugin.register_email_unsubscriber(UnsubscribeKey::ALL_TYPE, Object) }.to raise_error(ArgumentError)
+    end
+
+    it "finds the plugin's custom unsubscriber" do
+      new_unsubscriber_type = 'new_type'
+      key = UnsubscribeKey.new(unsubscribe_key_type: new_unsubscriber_type)
+      CustomUnsubscriber = Class.new(EmailControllerHelper::BaseEmailUnsubscriber)
+
+      plugin.register_email_unsubscriber(new_unsubscriber_type, CustomUnsubscriber)
+
+      expect(UnsubscribeKey.get_unsubscribe_strategy_for(key).class).to eq(CustomUnsubscriber)
+    end
+  end
+
+  describe "#register_about_stat_group" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      About.clear_plugin_stat_groups
+    end
+
+    it "registers an about stat group correctly" do
+      stats = { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000 }
+      plugin.register_about_stat_group("some_group", show_in_ui: true) do
+        stats
+      end
+      expect(About.new.plugin_stats.with_indifferent_access).to match(
+        hash_including(
+          some_group_last_day: 1,
+          some_group_7_days: 10,
+          some_group_30_days: 100,
+          some_group_count: 1000,
+        )
+      )
+    end
+
+    it "hides the stat group from the UI by default" do
+      stats = { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000 }
+      plugin.register_about_stat_group("some_group") do
+        stats
+      end
+      expect(About.displayed_plugin_stat_groups).to eq([])
     end
   end
 end

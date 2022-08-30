@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 export default Component.extend({
   tagName: "th",
   classNames: ["sortable"],
-  attributeBindings: ["title"],
+  attributeBindings: ["title", "colspan"],
   labelKey: null,
   chevronIcon: null,
   columnIcon: null,
@@ -30,6 +30,11 @@ export default Component.extend({
   },
   click() {
     this.toggleProperties();
+  },
+  keyPress(e) {
+    if (e.which === 13) {
+      this.toggleProperties();
+    }
   },
   didReceiveAttrs() {
     this._super(...arguments);

@@ -24,7 +24,10 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     let style =
       !this.site.mobileView && this.siteSettings.desktop_category_page_style;
 
-    if (style === "categories_and_latest_topics") {
+    if (
+      style === "categories_and_latest_topics" ||
+      style === "categories_and_latest_topics_created_date"
+    ) {
       return this._findCategoriesAndTopics("latest");
     } else if (style === "categories_and_top_topics") {
       return this._findCategoriesAndTopics("top");
@@ -47,7 +50,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     return function (topic_ids, storeInSession) {
       // refresh dupes
       this.topics.removeObjects(
-        this.topics.filter((topic) => topic_ids.indexOf(topic.id) >= 0)
+        this.topics.filter((topic) => topic_ids.includes(topic.id))
       );
 
       const url = `${getURL("/")}latest.json?topic_ids=${topic_ids.join(",")}`;
@@ -74,7 +77,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   _findCategoriesAndTopics(filter) {
     return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
-      topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`),
+      topicsList: PreloadStore.getAndRemove("topic_list"),
     }).then((response) => {
       let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =

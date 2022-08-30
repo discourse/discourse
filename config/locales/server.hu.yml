@@ -155,6 +155,7 @@ hu:
       local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakteresnek kell lenniük, hogy elkerülje az emberi felhasználók téves korlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
+      twitter_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
     onebox:
       invalid_address: "Sajnos nem tudtunk előnézetet generálni ehhez a weboldalhoz, mert a (z) „%{hostname}” szerver nem található. Az előnézet helyett csak egy link jelenik meg a bejegyzésben. :cry:"
   invite:
@@ -293,7 +294,7 @@ hu:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
     "new-topic": |
-      Üdvözlünk a %{site_name} &mdash; -ben! **Köszönjük, hogy új beszélgetést indítaszl!**
+      Üdvözlünk a %{site_name} oldalon! **Köszönjük, hogy új beszélgetést indítaszl!**
 
       - Érdekesnek tűnik a cím, ha hangosan felolvasod? Jó az összefoglaló?
 
@@ -657,6 +658,8 @@ hu:
     moderators_activity:
       labels:
         moderator: Moderátor
+        flag_count: Jóváhagyott jelzők
+      description: A moderátorok tevékenységének listája, beleértve az ellenőrzött jelzőket, az olvasási időt, a létrehozott témákat, a létrehozott hozzászólásokat, a létrehozott személyes üzeneteket és a módosításokat.
     flags_status:
       labels:
         flag: Típus
@@ -893,6 +896,7 @@ hu:
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
+    review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"
@@ -902,6 +906,8 @@ hu:
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     google_oauth2_hd_groups: "(kísérleti) A felhasználók a kiszolgálóhoz tartozó domainben lévő Google-csoportjainak lekérése hitelesítéskor. A lekért Google-csoportok segítségével automatikusan állíthat be Discourse csoporttagságot (lásd a csoportbeállításokat)."
+    enable_experimental_sidebar_hamburger: "Lehetővé teszi a kísérleti oldalsáv és a felhasználói hamburger legördülő menü engedélyezését."
+    enable_sidebar: "Engedélyezi a kísérleti oldalsávot."
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
@@ -1026,12 +1032,12 @@ hu:
       Ha továbbra is szeretnéd megkapni az e-mailes frissítéseket, csak hagyd figyelmen kívül ezt az e-mailt.
   invite_password_instructions:
     text_body_template: |
-      Köszönjük, hogy elfogadtad a %{site_name} szóló meghívót - üdvözlünk!
+      Köszönjük, hogy elfogadta a(z) %{site_name} meghívóját – üdvözöljük!
 
-      Kattints erre a linkre a jelszó kiválasztásához:
-      %{base_url}/u/password-reset /%{email_token}
+      Kattintson erre a hivatkozásra a jelszóválasztáshoz:
+      %{base_url}/u/password-reset/%{email_token}
 
-      (Ha a fenti link lejárt, válaszd az "Elfelejtettem a jelszavamat" lehetőséget, amikor bejelentkezel ezzel az e-mail címeddel.)
+      (Ha a fenti hivatkozás lejárt, akkor válassza az „Elfelejtettem a jelszavamat” lehetőséget, amikor bejelentkezik az e-mail-címével.)
   test_mailer:
     text_body_template: |
       Ez egy teszt e-mail innen:
@@ -1160,9 +1166,9 @@ hu:
     welcome_tl1_user:
       subject_template: "Köszönjük, hogy velünk töltötted az idődet!"
       text_body_template: |
-        Halihó! Örmmel látjuk, hogy hasznos és aktív tagja vagy a fórumunknak. Úgy gondoljuk, itt az idő, hogy előléptessünk egy bizalmi szinttel! [trust level!] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+        Halihó! Örömmel látjuk, hogy hasznos és aktív tagja vagy a fórumunknak. Úgy gondoljuk, itt az idő, hogy előléptessünk egy bizalmi szinttel! [trust level!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        Nagyon örülünk, hogy közöttünk vagy, és szívesen megtudnánk többet rólad. Ha még nem tetted. szánj egy percet [a profilod kötöltésére] (%{base_url}/my/preferences/profile), vagy nyugodtan [indíts egy új témát] (%{base_url}/categories).
+        Nagyon örülünk, hogy közöttünk vagy, és szívesen megtudnánk többet rólad. Ha még nem tetted. szánj egy percet [a profilod kitöltésére](%{base_url}/my/preferences/profile), vagy nyugodtan [indíts egy új témát](%{base_url}/categories).
     welcome_staff:
       subject_template: "%{role} státuszt kaptál. Gratulálunk!"
       text_body_template: |
@@ -1342,6 +1348,9 @@ hu:
 
         Gyorsan értékes tagjává váltál közösségünknek. Köszönjük, hogy csatlakoztál, és folytasd ugyanilyen nagyszerűen! Bravo!
     queued_posts_reminder:
+      subject_template:
+        one: "%{count} bejegyzés vár jóváhagyásra"
+        other: "%{count} bejegyzés vár jóváhagyásra"
       text_body_template: |
         Szia!
 
@@ -1703,19 +1712,6 @@ hu:
         %{base_url}/u/activate-account/%{email_token}
 
         Ha a fenti link valamiért nem működne, másold ki és illeszd be a böngésződ címsorába!
-    suspicious_login:
-      text_body_template: |
-        Szia!
-
-        Észrevettünk egy bejelentkezést egy olyan eszközről vagy helyről, amelyet általában te nem használsz. Te voltál az?
-
-         - Hely: %{location} (%{client_ip})
-         - Böngésző: %{browser}
-         - Eszköz: %{device} - %{os}
-
-        Ha te voltál, nagyszerű! Nincsen további teendőd.
-
-        Ha nem te voltál, kérlek [nézd át a meglévő munkameneteidet](%{base_url}/my/preferences/account), és változtasd meg a jelszavad!
     post_approved:
       title: "A bejegyzésedet jóváhagytuk"
   page_forbidden:
@@ -1896,7 +1892,7 @@ hu:
     first_quote:
       name: Első idézet
       long_description: |
-        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemeleia bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
+        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemelei a bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
     read_guidelines:
       name: Irányelvek elolvasva
       long_description: |
@@ -2017,40 +2013,14 @@ hu:
       title: "Aktiváló e-mail újraküldése"
   wizard:
     step:
-      forum_title:
-        title: "Név"
-      introduction:
-        title: "Bemutatkozás"
-        fields:
-          welcome:
-            extra_description: "Ha nem vagy biztos benne, kihagyhatod ezt a lépést, és később szerkesztheted az üdvözlő témát."
       privacy:
-        title: "Hozzáférés"
-        description: "<p>A közösséged mindenki előtt nyitva áll, vagy tagság, meghívás vagy jóváhagyás korlátozza? Ha szeretnéd, beállíthatod először titkosra ezt, majd később átválthatsz a nyilvánosra is.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Nyilvános"
-              restricted:
-                label: "Privát"
-      contact:
-        title: "Kapcsolat"
-        fields:
-          contact_email:
-            label: "E-mail"
-            placeholder: "name@example.com"
-          contact_url:
-            label: "Weboldal"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automatikus üzenetek"
-      corporate:
-        title: "Szervezet"
-        fields:
-          company_name:
-            label: "Cégnév"
-            placeholder: "Példa szervezet"
+          login_required:
+            placeholder: "Privát"
+          must_approve_users:
+            placeholder: "Jóváhagyást igényel"
+      ready:
+        title: "A Discourse készen áll!"
       styling:
         fields:
           styling_preview:
@@ -2067,16 +2037,22 @@ hu:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
                 label: "Kategóriák és legfelső témák"
-      logos:
-        title: "Logók"
+      branding:
         fields:
           logo:
             label: "Elsődleges logó"
-      icons:
-        title: "Ikonok"
-        fields:
           large_icon:
             label: "Nagy ikon"
+      corporate:
+        fields:
+          company_name:
+            label: "Cégnév"
+            placeholder: "Példa szervezet"
+          contact_url:
+            label: "Weboldal"
+            placeholder: "https://www.example.com/contact-us"
+          site_contact:
+            label: "Automatikus üzenetek"
       invites:
         title: "Stáb meghívása"
       finished:

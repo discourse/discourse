@@ -1,0 +1,15 @@
+<button
+  class={{concat "btn btn-flat btn-icon no-text" (if (eq @tab.id @currentTabId) " active")}}
+  type="button"
+  role="tab"
+  id={{concat "user-menu-button-" @tab.id}}
+  tabindex={{if (eq @tab.id @currentTabId) "0" "-1"}}
+  aria-selected={{if (eq @tab.id @currentTabId) "true" "false"}}
+  aria-controls={{concat "quick-access-" @tab.id}}
+  data-tab-number={{@tab.position}}
+  {{on "click" @changeTabFunction}}
+  {{!-- template-lint-disable require-context-role --}}
+>
+  {{d-icon @tab.icon}}
+  {{yield}}
+</button>

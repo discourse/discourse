@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-describe Group do
+RSpec.describe Group do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
-  context 'validations' do
+  describe 'Validations' do
     describe '#grant_trust_level' do
       describe 'when trust level is not valid' do
         it 'should not be valid' do
@@ -66,7 +66,7 @@ describe Group do
   end
 
   describe '#builtin' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @builtin = Group.builtin
       end
@@ -240,6 +240,41 @@ describe Group do
       staged.unstage!
 
       expect(GroupUser.where(user_id: staged.id).count).to eq(2)
+    end
+
+    describe 'after updating automatic group members' do
+      fab!(:user) { Fabricate(:user) }
+
+      it 'triggers an event when a user is removed from an automatic group' do
+        tl3_users = Group.find(Group::AUTO_GROUPS[:trust_level_3])
+        tl3_users.add(user)
+
+        events = DiscourseEvent.track_events do
+          Group.refresh_automatic_group!(:trust_level_3)
+        end
+
+        expect(GroupUser.exists?(group: tl3_users, user: user)).to eq(false)
+        publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last['args'].first
+        expect(publish_event_job_args["user_ids"]).to include(user.id)
+        expect(publish_event_job_args["group_id"]).to eq(tl3_users.id)
+        expect(publish_event_job_args["type"]).to include('remove')
+      end
+
+      it 'triggers an event when a user is added to an automatic group' do
+        tl0_users = Group.find(Group::AUTO_GROUPS[:trust_level_0])
+
+        expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(false)
+
+        events = DiscourseEvent.track_events do
+          Group.refresh_automatic_group!(:trust_level_0)
+        end
+
+        expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(true)
+        publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last['args'].first
+        expect(publish_event_job_args["user_ids"]).to include(user.id)
+        expect(publish_event_job_args["group_id"]).to eq(tl0_users.id)
+        expect(publish_event_job_args["type"]).to eq('add')
+      end
     end
 
     it "makes sure the everyone group is not visible except to staff" do
@@ -567,7 +602,7 @@ describe Group do
     end
   end
 
-  context "group management" do
+  describe "group management" do
     fab!(:group) { Fabricate(:group) }
 
     it "by default has no managers" do
@@ -1088,7 +1123,7 @@ describe Group do
     end
   end
 
-  context "Unicode usernames and group names" do
+  describe "Unicode usernames and group names" do
     before { SiteSetting.unicode_usernames = true }
 
     it "should normalize the name" do

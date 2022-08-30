@@ -8,7 +8,7 @@ class GroupUser < ActiveRecord::Base
   after_destroy :grant_other_available_title
 
   after_save :set_primary_group
-  after_destroy :remove_primary_group, :recalculate_trust_level
+  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
   before_create :set_notification_level
   after_save :grant_trust_level
@@ -24,7 +24,9 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.update_first_unread_pm(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago)
+    whisperers_group_ids = SiteSetting.whispers_allowed_group_ids
+
+    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago, whisperers_group_ids: whisperers_group_ids)
     UPDATE group_users gu
     SET first_unread_pm_at = Y.min_date
     FROM (
@@ -51,7 +53,7 @@ class GroupUser < ActiveRecord::Base
           WHERE t.deleted_at IS NULL
           AND t.archetype = :archetype
           AND tu.last_read_post_number < CASE
-                                         WHEN u.admin OR u.moderator
+                                         WHEN u.admin OR u.moderator #{whisperers_group_ids.present? ? 'OR gu2.group_id IN (:whisperers_group_ids)' : ''}
                                          THEN t.highest_staff_post_number
                                          ELSE t.highest_post_number
                                          END
@@ -82,10 +84,14 @@ class GroupUser < ActiveRecord::Base
     user.update!(primary_group: group) if group.primary_group
   end
 
-  def remove_primary_group
-    return if user.primary_group_id != group_id
+  def remove_primary_and_flair_group
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
-    user.update_attribute(:primary_group_id, nil)
+
+    updates = {}
+    updates[:primary_group_id] = nil if user.primary_group_id == group_id
+    updates[:flair_group_id] = nil if user.flair_group_id == group_id
+
+    user.update(updates) if updates.present?
   end
 
   def grant_other_available_title
@@ -114,7 +120,7 @@ class GroupUser < ActiveRecord::Base
     return if group.grant_trust_level.nil?
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
 
-    Promotion.recalculate(user)
+    Promotion.recalculate(user, use_previous_trust_level: true)
   end
 
   def set_category_notifications

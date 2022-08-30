@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubPullRequestOnebox do
+RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
   before do
     @link = "https://github.com/discourse/discourse/pull/1253/"
     @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
@@ -8,7 +8,7 @@ describe Onebox::Engine::GithubPullRequestOnebox do
     stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
-  include_context "engines"
+  include_context "with engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do

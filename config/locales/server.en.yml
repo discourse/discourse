@@ -220,6 +220,7 @@ en:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid incorrectly rate limiting human users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
+      twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
@@ -638,11 +639,16 @@ en:
               too_many: "Too many words for that action"
             base:
               invalid_url: "Replacement URL is invalid"
+              invalid_tag_list: "Replacement tag list is invalid"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "is not valid"
 
   uncategorized_category_name: "Uncategorized"
 
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  general_category_name: "General"
+  general_category_description: "Create topics here that don’t fit into any other existing category."
 
   meta_category_name: "Site Feedback"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
@@ -666,30 +672,6 @@ en:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
-
-  lounge_welcome:
-    title: "Welcome to the Lounge"
-    body: |
-
-      Congratulations! :confetti_ball:
-
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
-
-      You can now &hellip;
-
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](https://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
-
-      Here's the [current list of fellow regulars](%{base_path}/badges/3/regular). Be sure to say hi.
-
-      Thanks for being an important part of this community!
-
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 
@@ -726,6 +708,11 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+      blocked_hotlinked_title: "Image hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Image"
+    media_placeholder:
+      blocked_hotlinked_title: "Media hosted on another site. Click to open in a new tab."
+      blocked_hotlinked: "External Media"
     hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
@@ -746,7 +733,7 @@ en:
       public_group_membership: "You’re joining/leaving groups a bit too frequently. Please wait %{time_left} before trying again."
       topics_per_day: "You’ve reached the maximum new topics allowed per day. You can create more new topics in %{time_left}."
       pms_per_day: "You’ve reached the maximum messages allowed per day. You can create more new messages in %{time_left}."
-      create_like: "Wow! You’ve been sharing a lot of love! You’ve reached the maximum daily likes for today, but as you gain trust levels, you’ll earn more daily likes. You’ll be able to like posts again in %{time_left}."
+      create_like: "Wow! You’ve been sharing a lot of love! You’ve reached the maximum number of likes within a 24 hour period, but as you gain trust levels, you’ll earn more daily likes. You’ll be able to like posts again in %{time_left}."
       create_bookmark: "You’ve reached the maximum number of daily bookmarks. You can create more bookmarks in %{time_left}."
       edit_post: "You’ve reached the maximum number of daily edits. You can submit more edits in %{time_left}."
       live_post_counts: "You’re asking for live post counts too quickly. Please wait %{time_left} before trying again."
@@ -1513,9 +1500,11 @@ en:
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
     contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
-    download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
+    download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    block_hotlinked_media: "Prevent users from introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
+    block_hotlinked_media_exceptions: "A list of base URLs which are exempt from the block_hotlinked_media setting. Include the protocol (e.g. https://example.com)."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
     editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
@@ -1559,7 +1548,7 @@ en:
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
     apple_touch_icon: "Icon used for Apple touch devices. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
-    twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height). If left blank, regular card metadata is generated using the opengraph_image."
+    twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -1674,6 +1663,7 @@ en:
     enable_badges: "Enable the badge system"
     max_favorite_badges: "Maximum number of badges that user can select"
     enable_whispers: "Allow staff private communication within topics."
+    whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -1779,6 +1769,8 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
+    enable_experimental_sidebar_hamburger: "Allows experimental sidebar and user hamburger dropdown menu to be enabled."
+    enable_sidebar: "Enables experimental sidebar."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -2026,6 +2018,7 @@ en:
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
+    maximum_recipients_per_new_group_email: "Block incoming emails with too many recipients."
     auto_generated_allowlist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
@@ -2287,7 +2280,7 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
-    default_categories_regular: "List of categories that are not muted by default. Useful when `mute_all_categories_by_default` site setting is enabled."
+    default_categories_normal: "List of categories that are not muted by default. Useful when `mute_all_categories_by_default` site setting is enabled."
     mute_all_categories_by_default: "Set the default notification level of all the categories to muted. Require users opt-in to categories for them to appear in 'latest' and 'categories' pages. If you wish to amend the defaults for anonymous users set 'default_categories_' settings."
 
     default_tags_watching: "List of tags that are watched by default."
@@ -2361,6 +2354,10 @@ en:
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
+    splash_screen: "Displays a temporary loading screen while site assets load"
+    default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
+    default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
+
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
@@ -2414,7 +2411,8 @@ en:
       google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
-      discourse_connect_cannot_be_enabled_if_second_factor_enforced:  "You cannot enable DiscourseConnect if 2FA is enforced."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
+      delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -3339,6 +3337,16 @@ en:
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
+    email_reject_too_many_recipients:
+      title: "Email Reject Too Many Recipients"
+      subject_template: "[%{email_prefix}] Email issue -- Too Many Recipients"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You attempted to email more than %{max_recipients_count} people and our system automatically tagged your email as spam.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
+
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
@@ -4051,7 +4059,7 @@ en:
 
         If this was you, great! There’s nothing else you need to do.
 
-        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/account) and consider changing your password.
+        If this was not you, please [review your existing sessions](%{base_url}/my/preferences/security) and consider changing your password.
 
     post_approved:
       title: "Your post was approved"
@@ -4168,6 +4176,12 @@ en:
     dark_rose: "Dark Rose"
     wcag: "WCAG Light"
     wcag_theme_name: "WCAG Light"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solarized Light"
+    solarized_light_theme_name: "Solarized Light"
+    solarized_dark: "Solarized Dark"
+    solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
     default_theme_name: "Default"
@@ -4807,6 +4821,7 @@ en:
       invalid_token: "Invalid token."
     email_input: "Admin Email"
     submit_button: "Send Email"
+    safe_mode: "Safe Mode: disable all themes/plugins when logging in"
 
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
@@ -4848,7 +4863,7 @@ en:
     register:
       button: "Register"
       title: "Register Admin Account"
-      help: "register a new account to get started"
+      help: "Register a new account to get started."
       no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"
@@ -4859,114 +4874,52 @@ en:
 
   safe_mode:
     title: "Enter safe mode"
-    description: "Safe mode allows you to test your site without loading plugins or site customizations."
-    no_customizations: "Disable current theme"
-    only_official: "Disable unofficial plugins"
+    description: "Safe mode allows you to test your site without loading plugins or themes."
+    no_themes: "Disable themes and theme components"
+    no_unofficial_plugins: "Disable unofficial plugins"
     no_plugins: "Disable all plugins"
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
   wizard:
     title: "Discourse Setup"
     step:
-      locale:
-        title: "Welcome to your Discourse!"
-        fields:
-          default_locale:
-            description: "What’s the default language for your community?"
-
-      forum_title:
-        title: "Name"
-        description: "Your name is a sign visible in the distance, the <i>first</i> thing potential visitors will notice about your community. What does your name and title say about your community?"
+      introduction:
+        title: "Tell us about your community"
 
         fields:
           title:
-            label: "Your community’s name"
+            label: "Community name"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "Describe your community in one short sentence (used in search results and social media)"
+            label: "Describe your community in a sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
-          short_site_description:
-            label: "Describe your community in few words (used for the homepage title)"
-            placeholder: "Best community ever"
-
-      introduction:
-        title: "Introduction"
-        disabled:
-          "<p>We couldn’t find any topic with the title “%{topic_title}”.</p>
-          <ul>
-          <li>If you have changed the title, edit that topic to modify your site’s introductory text.</li>
-          <li>If you have deleted this topic, create another topic with “%{topic_title}” as the title. The content of the first post is your site’s introductory text.</li>
-          </ul>"
-
-        fields:
-          welcome:
-            label: "Welcome Topic"
-            description:
-              "<p>How would you describe your community to a stranger on an elevator in about 1 minute?</p>
-              <ul>
-              <li>Who are these discussions for?</li>
-              <li>What can I find here?</li>
-              <li>Why should I visit?</li>
-              </ul>
-              <p>Your welcome topic is the first thing new arrivals will read. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
-            one_paragraph: "Please restrict your welcome message to one paragraph."
-            extra_description: "If you are not sure, you can skip this step and edit your welcome topic later."
+          contact_email:
+            label: "Point of contact"
+            placeholder: "example@user.com"
+            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
+          default_locale:
+            label: "Language"
 
       privacy:
-        title: "Access"
-        description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>"
+        title: "Member Experience"
 
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Public"
-                description: "Anyone can access this community"
-              restricted:
-                label: "Private"
-                description: "Only logged in users can access this community"
-          privacy_options:
-            description: "How do new users sign up for an account?"
-            choices:
-              open:
-                label: "Users can sign up on their own."
-              invite_only:
-                label: "Users must be invited by trusted users or staff before they can sign up."
-              must_approve:
-                label: "Users can sign up on their own, but must be approved by staff."
+          login_required:
+            placeholder: "Private"
+            extra_description: "Only logged in users can access this community"
+          invite_only:
+            placeholder: "Invite Only"
+            extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
+          must_approve_users:
+            placeholder: "Require Approval"
+            extra_description: "Users must be approved by staff"
 
-      contact:
-        title: "Contact"
-        fields:
-          contact_email:
-            label: "Mail"
-            placeholder: "name@example.com"
-            description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent community contact."
-          contact_url:
-            label: "Web Page"
-            placeholder: "https://www.example.com/contact-us"
-            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
-          site_contact:
-            label: "Automated Messages"
-            description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
-
-      corporate:
-        title: "Organization"
-        description: "This information will be entered in your <a href='%{base_path}/tos' target='blank'>Terms of Service</a>, which is a topic you can edit in the Staff category. If you don’t have a company, feel free to skip this step for now."
-
-        fields:
-          company_name:
-            label: "Company Name"
-            placeholder: "Example Organization"
-          governing_law:
-            label: "Governing Law"
-            placeholder: "California law"
-          city_for_disputes:
-            label: "City for Disputes"
-            placeholder: "San Francisco, California"
+      ready:
+        title: "Your Discourse is Ready!"
+        description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
 
       styling:
-        title: "Styling"
+        title: "Look & Feel"
         fields:
           color_scheme:
             label: "Color scheme"
@@ -4987,6 +4940,8 @@ en:
                 label: "Categories with Featured Topics"
               categories_and_latest_topics:
                 label: "Categories and Latest Topics"
+              categories_and_latest_topics_created_date:
+                label: "Categories and Latest Topics (sort by topic created date)"
               categories_and_top_topics:
                 label: "Categories and Top Topics"
               categories_boxes:
@@ -4996,25 +4951,45 @@ en:
               subcategories_with_featured_topics:
                 label: "Subcategories with Featured Topics"
 
-      logos:
-        title: "Logos"
+      branding:
+        title: "Community Branding"
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
           logo_small:
             label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left of your site when scrolling down, in the browser, and when sharing on social platforms. Ideally larger than 512x512."
-
-      icons:
-        title: "Icons"
-        fields:
+            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
           favicon:
             label: "Browser Icon"
-            description: "Icon image used to represent your site in web browsers that looks good at small sizes. Recommended image extensions are PNG or JPG. We'll use the square logo by default."
+            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is recommended. Square logo is used by default."
           large_icon:
             label: "Large Icon"
-            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Ideally larger than 512 × 512. We'll use the square logo by default."
+            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
+
+      corporate:
+        title: "Contact & Org"
+
+        fields:
+          company_name:
+            label: "Company Name"
+            placeholder: "Example Organization"
+            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+          governing_law:
+            label: "Governing Law"
+            placeholder: "California law"
+            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+          contact_url:
+            label: "Web Page"
+            placeholder: "https://www.example.com/contact-us"
+            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
+          city_for_disputes:
+            label: "City for Disputes"
+            placeholder: "San Francisco, California"
+            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+          site_contact:
+            label: "Automated Messages"
+            description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
 
       invites:
         title: "Invite Staff"
@@ -5206,3 +5181,7 @@ en:
     small_action_post_raw: "Continue discussion at %{new_title}."
 
   fallback_username: "user"
+
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at should be greater than set_at"

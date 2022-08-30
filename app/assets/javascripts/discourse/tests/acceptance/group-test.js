@@ -3,7 +3,6 @@ import {
   count,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
@@ -40,7 +39,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
-    assert.ok(queryAll(".topic-list"), "it shows the topic list");
+    assert.ok(query(".topic-list"), "it shows the topic list");
     assert.strictEqual(count(".topic-list-item"), 2, "it lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
@@ -192,19 +191,19 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.strictEqual(
-      queryAll(".modal-header .title").text().trim(),
+      query(".modal-header .title").innerText.trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
     assert.strictEqual(
-      queryAll(".request-group-membership-form textarea").val(),
+      query(".request-group-membership-form textarea").value,
       "Please add me"
     );
 
     await click(".modal-footer .btn-primary");
 
     assert.strictEqual(
-      queryAll(".fancy-title").text().trim(),
+      query(".fancy-title").innerText.trim(),
       "Internationalization / localization"
     );
 
@@ -239,13 +238,13 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".nav-pills li a[title='Messages']");
 
     assert.strictEqual(
-      queryAll(".topic-list-item .link-top-line").text().trim(),
+      query(".topic-list-item .link-top-line").innerText.trim(),
       "This is a private message 1",
       "it should display the list of group topics"
     );
 
     await click("#search-button");
-    await fillIn("#search-term", "smth");
+    await fillIn("#search-term", "something");
 
     assert.ok(
       query(".search-menu .btn.search-context"),
@@ -268,7 +267,7 @@ acceptance("Group - Authenticated", function (needs) {
       "it displays show group message button"
     );
     assert.strictEqual(
-      queryAll(".group-info-name").text(),
+      query(".group-info-name").innerText,
       "Awesome Team",
       "it should display the group name"
     );
@@ -276,7 +275,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-details-button button.btn-danger");
 
     assert.strictEqual(
-      queryAll(".bootbox .modal-body").html(),
+      query(".bootbox .modal-body").innerHTML,
       I18n.t("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),

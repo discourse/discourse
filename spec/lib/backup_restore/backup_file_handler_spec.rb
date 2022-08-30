@@ -2,8 +2,8 @@
 
 require_relative 'shared_context_for_backup_restore'
 
-describe BackupRestore::BackupFileHandler do
-  include_context "shared stuff"
+RSpec.describe BackupRestore::BackupFileHandler do
+  include_context "with shared stuff"
 
   it "works with current backup file format" do
     expect_decompress_and_clean_up_to_work(

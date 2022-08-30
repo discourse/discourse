@@ -635,7 +635,6 @@ ja:
       public_group_membership: "グループへの参加/退出を頻繁に行い過ぎているようです。%{time_left}経ってから、もう一度お試しください。"
       topics_per_day: "1 日に作成できる新規トピックの上限に達しました。%{time_left}後に新しいトピックを作成できるようになります。"
       pms_per_day: "1 日に作成できるメッセージの上限に達しました。%{time_left}後に新しいメッセージを作成できるようになります。"
-      create_like: "わぉ！愛をたくさん分かち合っていますね！今日の「いいね！」の上限に達しました。信頼レベルが高くなると、1 日に「いいね！」できる上限が高くなります。%{time_left}経ったら、また投稿に「いいね！」できるようになります。"
       create_bookmark: "1 日のブックマークの上限に達しました。%{time_left}経ってから、ブックマークを設定してください。"
       edit_post: "1 日に編集できる回数の上限に達しました。%{time_left}経ってから、編集を送信してください。"
       live_post_counts: "ライブ投稿の件数を短時間で尋ねています。%{time_left}経ってから、もう一度お試しください。"
@@ -1338,7 +1337,6 @@ ja:
     contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> にも表示されます。"
     contact_url: "このサイトの連絡先 URL。緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> ページに表示されます。"
     crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
-    download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。画像の破損を防止できます。"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
     disabled_image_download_domains: "これらのドメインのリモート画像をダウンロードしない (パイプ区切りのリスト)。"
     editing_grace_period: "投稿から (n) 秒間は、編集しても投稿履歴に新しいバージョンを作成しない。"
@@ -1379,7 +1377,6 @@ ja:
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。自動的に 180x180 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
-    twitter_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があります)。空のままにすると、opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダーのパイプ区切りのリスト"
     email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a> をご覧ください"
@@ -1939,7 +1936,7 @@ ja:
     default_categories_tracking: "デフォルトで追跡されるカテゴリのリスト。"
     default_categories_muted: "デフォルトでミュートされるカテゴリのリスト。"
     default_categories_watching_first_post: "デフォルトで新規トピックの最初の投稿がウォッチされるカテゴリのリスト。"
-    default_categories_regular: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
+    default_categories_normal: "デフォルトでミュートされないカテゴリのリスト。`mute_all_categories_by_default` サイト設定が有効である場合に役立ちます。"
     mute_all_categories_by_default: "すべてのカテゴリのデフォルトの通知レベルをミュートに設定する。カテゴリが '最新' と 'カテゴリ' ページに表示されるように、ユーザーがカテゴリを選択する必要があります。匿名ユーザーのデフォルトを変更する場合は、'default_categories_' 設定を設定してください。"
     default_tags_watching: "デフォルトでウォッチされるタグのリスト。"
     default_tags_tracking: "デフォルトで追跡されるタグのリスト。"
@@ -3315,18 +3312,6 @@ ja:
     suspicious_login:
       title: "新しいログインのアラート"
       subject_template: "[%{site_name}] %{location} からの新しいログイン"
-      text_body_template: |
-        こんにちは。
-
-        普段使用されていないデバイスまたは場所からログインがあったようです。これはあなたですか？
-
-         - 場所: %{location} (%{client_ip})
-         - ブラウザ: %{browser}
-         - デバイス: %{device} – %{os}
-
-        これがあなたであったなら良いことです！ほかに何もする必要はありません。
-
-        これがあなたでなかったなら、[既存のセッションをレビュー](%{base_url}/my/preferences/account)し、パスワードを変更することを検討してください。
     post_approved:
       title: "あなたの投稿は承認されました"
       subject_template: "[%{site_name}] あなたの投稿は承認されました"
@@ -4087,88 +4072,30 @@ ja:
       message: "<p><b>%{email}</b> にアクティベーションメールを再送信しました"
   safe_mode:
     title: "セーフモードを開始"
-    description: "セーフモードでは、プラグインやサイトのカスタマイズを読み込まずにサイトをテストすることができます。"
-    no_customizations: "現在のテーマを無効にする"
-    only_official: "非公式のプラグインを無効にする"
+    no_unofficial_plugins: "非公式のプラグインを無効にする"
     no_plugins: "すべてのプラグインを無効にする"
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
   wizard:
     title: "Discourse のセットアップ"
     step:
-      locale:
-        title: "Discourse へようこそ！"
-        fields:
-          default_locale:
-            description: "コミュニティで使用するデフォルトの言語は何ですか？"
-      forum_title:
-        title: "名前"
-        description: "あなたの名前は遠くから見える標識であり、潜在的な訪問者がコミュニティについて<i>最初</i>に気づくものです。名前とタイトルはコミュニティをどのように説明していますか？"
+      introduction:
         fields:
           title:
-            label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
             placeholder: "純子と純子の仲間がワイワイする場所"
-          short_site_description:
-            placeholder: "史上最高のコミュニティ"
-      introduction:
-        title: "紹介"
-        disabled: "<p>タイトル “%{topic_title}” のトピックが見つかりませんでした。</p><ul><li>タイトルを変更した場合は、トピックを編集してサイトの紹介文を変更してください。</li><li>このトピックを削除してしまった場合は、タイトルが “%{topic_title}” の別のトピックを作成してください。最初の投稿のコンテンツはあなたのサイトの紹介文です。</li></ul>"
-        fields:
-          welcome:
-            label: "ようこそ - トピック"
-            description: "<p>エレベーターで約 1 分間、知らない人にどのようにコミュニティを説明しますか？</p><ul><li>誰を対象にしたディスカッションか</li><li>ここで何を見つけられるか</li><li>なぜアクセスする必要があるのか</li></ul><p>新たにたどり着いた人が最初に読むのがあなたのようこそトピックです。<b>1 段落</b>にまとめた 'エレベーターピッチ' または 'ミッションステートメント' として考えてください。 </p>"
-            one_paragraph: "ようこそメッセージを 1 段落に制限してください。"
-            extra_description: "よくわからない場合は、このステップを省略して、後でようこそトピックを編集することができます。"
+          default_locale:
+            label: "言語"
       privacy:
-        title: "アクセス"
-        description: "<p>あなたのコミュニティは誰にでもオープンされていますか、それともメンバーシップ、招待、または承認によって制限されていますか？必要に応じて、非公開でセットアップしてから、後で公開に切り替えることができます。</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "公開"
-                description: "このコミュニティには誰でもアクセスできる"
-              restricted:
-                label: "非公開"
-                description: "ログインユーザーのみがこのコミュニティにアクセスできる"
-          privacy_options:
-            description: "新しいユーザーはどのようにしてアカウントに登録しますか？"
-            choices:
-              open:
-                label: "ユーザーは自己登録できます。"
-              invite_only:
-                label: "ユーザーは信頼できるユーザーまたはスタッフから招待されてから登録する必要があります。"
-              must_approve:
-                label: "ユーザーは自己登録できますが、スタッフによる承認が必要です。"
-      contact:
-        title: "連絡先"
-        fields:
-          contact_email:
-            label: "メール"
-            placeholder: "name@example.com"
-            description: "このコミュニティの責任者またはグループのメールアドレス。未対応の通知、セキュリティ更新などの重要な通知に使用され、緊急時のコミュニティ連絡先として、<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>にも表示されます。"
-          contact_url:
-            label: "ウェブページ"
-            placeholder: "https://www.example.com/contact-us"
-            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
-          site_contact:
-            label: "自動メッセージ"
-            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
-      corporate:
-        title: "組織"
-        description: "この情報は、あなたの<a href='%{base_path}/tos' target='blank'>利用規約</a>に入力されます。これは、「スタッフ」カテゴリで編集できるトピックです。会社がない場合は、今のところはこのステップを省略できます。"
-        fields:
-          company_name:
-            label: "会社名"
-            placeholder: "組織の例"
-          governing_law:
-            label: "準拠法"
-            placeholder: "カリフォルニア州法"
-          city_for_disputes:
-            label: "紛争都市"
-            placeholder: "カリフォルニア州サンフランシスコ"
+          login_required:
+            placeholder: "非公開"
+            extra_description: "ログインユーザーのみがこのコミュニティにアクセスできる"
+          must_approve_users:
+            placeholder: "要承認"
+      ready:
+        title: "あなたの Discourse の準備が整いました！"
       styling:
         fields:
           body_font:
@@ -4189,24 +4116,34 @@ ja:
                 label: "カテゴリと最新トピック"
               categories_and_top_topics:
                 label: "カテゴリと人気トピック"
-      logos:
-        title: "ロゴ"
+      branding:
         fields:
           logo:
             label: "プライマリーロゴ"
-            description: "サイトの左上にあるロゴ画像です。高さ 120、縦横比 3：1を超える広幅の長方形の画像を使用してください。"
           logo_small:
             label: "正方形のロゴ"
-            description: "正方形バージョンのロゴ。ブラウザで下にスクロールしたときにサイトの左上に、またソーシャルプラットフォームで共有したときに表示されます。512x512 よりも大きいサイズが最適です。"
-      icons:
-        title: "アイコン"
-        fields:
           favicon:
             label: "ブラウザアイコン"
-            description: "ウェブブラウザでサイトを表現するために使用され、小さいサイズで見栄えが良いアイコン画像。推奨される画像の拡張子は PNG または JPG です。デフォルトでは正方形のロゴを使用します。"
           large_icon:
             label: "大きなアイコン"
-            description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
+      corporate:
+        fields:
+          company_name:
+            label: "会社名"
+            placeholder: "組織の例"
+          governing_law:
+            label: "準拠法"
+            placeholder: "カリフォルニア州法"
+          contact_url:
+            label: "ウェブページ"
+            placeholder: "https://www.example.com/contact-us"
+            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
+          city_for_disputes:
+            label: "紛争都市"
+            placeholder: "カリフォルニア州サンフランシスコ"
+          site_contact:
+            label: "自動メッセージ"
+            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

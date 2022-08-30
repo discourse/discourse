@@ -41,7 +41,8 @@ class Admin::WatchedWordsController < Admin::AdminController
             watched_word = WatchedWord.create_or_update_word(
               word: row[0],
               replacement: has_replacement ? row[1] : nil,
-              action_key: action_key
+              action_key: action_key,
+              case_sensitive: "true" == row[2]&.strip&.downcase
             )
             if watched_word.valid?
               StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
@@ -95,7 +96,6 @@ class Admin::WatchedWordsController < Admin::AdminController
   private
 
   def watched_words_params
-    params.permit(:id, :word, :replacement, :action_key)
+    params.permit(:id, :word, :replacement, :action_key, :case_sensitive)
   end
-
 end

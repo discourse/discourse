@@ -676,7 +676,6 @@ pt_BR:
       public_group_membership: "Você está entrando/saindo de grupos com frequência. Aguarde %{time_left} antes de tentar novamente."
       topics_per_day: "Você alcançou a quantidade máxima de novos tópicos permitidos por dia. Crie mais tópicos novos em %{time_left}."
       pms_per_day: "Você alcançou a quantidade máxima de mensagens novas permitidas por dia. Crie mais mensagens novas em %{time_left}."
-      create_like: "Uau! Você está distribuindo muito afeto! Você alcançou a quantidade máxima de curtidas por hoje, Mas, à medida que ganha mais níveis de confiança, você receberá mais curtidas por dia. Você poderá curtir postagens novamente em %{time_left}."
       create_bookmark: "Você alcançou a quantidade máxima de favoritos por dia. Crie mais favoritos em %{time_left}."
       edit_post: "Você alcançou a quantidade máxima de edições por dia. Envie mais edições em %{time_left}."
       live_post_counts: "Você está pedindo contagens de postagens em tempo real muito rápido. Espere %{time_left} antes de tentar novamente."
@@ -1413,7 +1412,6 @@ pt_BR:
     contact_email: "Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também em <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     contact_url: "URL de contato deste site. Exibida na página <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
-    download_remote_images_to_local: "Transferira para converter imagens remotas em imagens locais. Isso evita imagens quebradas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
     disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
     editing_grace_period: "Durante (n) segundos após a publicação, as edições não criarão uma nova versão no histórico da postagem."
@@ -1455,7 +1453,6 @@ pt_BR:
     favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
     apple_touch_icon: "Ícone usado para dispositivos Apple touch, que será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
-    twitter_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
     email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2030,7 +2027,7 @@ pt_BR:
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
     default_categories_watching_first_post: "Lista de categorias nas quais a primeira postagem em cada novo tópico será acompanhada por padrão."
-    default_categories_regular: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
+    default_categories_normal: "Lista de categorias que não foram silenciadas por padrão. É útil quando a configuração do site \"mute_all_categories_by_default\" estiver ativada."
     mute_all_categories_by_default: "Defina o nível de notificação padrão de todas as categorias para silenciado(a). É preciso que os(as) usuários(as) aceitem que suas categorias sejam exibidas nas páginas \"mais recentes\" e \"categorias\". Se quiser modificar os padrões para usuários(as) anônimos(as), defina as configurações \"default_categories_\"."
     default_tags_watching: "Lista de etiquetas que são acompanhadas por padrão."
     default_tags_tracking: "Lista de etiquetas que são monitoradas por padrão."
@@ -3547,17 +3544,6 @@ pt_BR:
     suspicious_login:
       title: "Alerta de nova entrada com conta"
       subject_template: "[%{site_name}] Nova entrada com conta em %{location}"
-      text_body_template: |
-        Olá,
-
-        Notamos que a sua conta foi usada para entrar em um dispositivo ou local que você não costuma usar. Foi você?
-
-         - Localização: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} -- %{os}
-
-        Se tiver sido você, ótimo! Não há mais nada que precise ser feito.
-        Caso contrário, [revise suas sessões existentes](%{base_url}/my/preferences/account) e considere alterar sua senha.
     post_approved:
       title: "Sua postagem foi aprovada"
       subject_template: "[%{site_name}] Sua postagem foi aprovada"
@@ -4334,92 +4320,31 @@ pt_BR:
       message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar no modo de segurança"
-    description: "O modo de segurança permite que você teste seu site sem carregar plug-ins ou personalizações."
-    no_customizations: "Desativar tema atual"
-    only_official: "Desativar plug-ins não oficiais"
+    no_unofficial_plugins: "Desativar plug-ins não oficiais"
     no_plugins: "Desativar todos os plug-ins"
     enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."
   wizard:
     title: "Configuração do Discourse"
     step:
-      locale:
-        title: "Boas-vindas ao seu Discourse!"
-        fields:
-          default_locale:
-            description: "Qual é o idioma padrão para sua comunidade?"
-      forum_title:
-        title: "Nome"
-        description: "Seu nome é o seu cartão de visita, a <i>primeira</i> coisa que os possíveis visitantes notarão na sua comunidade. O que seu nome e título dizem sobre ela?"
+      introduction:
         fields:
           title:
-            label: "Nome de sua comunidade"
             placeholder: "Hangout de Jane"
           site_description:
-            label: "Descreva sua comunidade em uma frase curta (usada nos resultados de busca e mídias sociais)"
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
-          short_site_description:
-            label: "Descreva sua comunidade em poucas palavras (usadas no título da página inicial)"
-            placeholder: "Melhor comunidade de todos os tempos"
-      introduction:
-        title: "Introdução"
-        disabled: "<p>Não encontramos nenhum tópico com o título de “%{topic_title}”.</p> <ul> <li>Se você tiver alterado o título, edite o tópico para modificar o texto introdutório do seu site.</li> <li>Se tiver excluído o tópico, crie outro com o título de “%{topic_title}”. O conteúdo da primeira postagem é o texto introdutório do seu site.</li> </ul>"
-        fields:
-          welcome:
-            label: "Tópico de boas-vindas"
-            description: "<p>Como você descreveria sua comunidade para um(a) estranho(a) em um elevador durante cerca de 1 minuto?</p> <ul> <li>Para quem são essas discussões?</li> <li>O que posso encontrar aqui?</li> <li>Por que eu deveria acessar?</li> </ul> <p>Seu tópico de boas-vindas é a primeira coisa que os(as) recém-chegados(as) vão ler. Pense nele como um \"argumento de elevador\" ou \"declaração de missão\" de <b>um parágrafo</b>.</p>"
-            one_paragraph: "Reduza sua mensagem de boas-vindas para um parágrafo."
-            extra_description: "Se não tiver certeza, pule este passo e edite seu tópico de boas-vindas mais tarde."
+          default_locale:
+            label: "Idioma"
       privacy:
-        title: "Acesso"
-        description: "<p>A sua comunidade é aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, você pode configurar as coisas de forma privada e depois torná-la pública mais tarde.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Público"
-                description: "Qualquer um(a) pode acessar esta comunidade"
-              restricted:
-                label: "Privado(a)"
-                description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
-          privacy_options:
-            description: "Como novos(as) usuários(as) criam uma conta?"
-            choices:
-              open:
-                label: "Os usuários(as) podem criar uma conta por conta própria."
-              invite_only:
-                label: "Usuários(as) precisam ser convidados(as) por usuários(as) confiáveis ou pela equipe antes de poderem criar a conta."
-              must_approve:
-                label: "Usuários(as) podem criar sua conta por conta própria, mas devem ser aprovados pela equipe."
-      contact:
-        title: "Contato"
-        fields:
-          contact_email:
-            label: "E-mail"
-            placeholder: "nome@exemplo.com"
-            description: "Endereço de e-mail da pessoa ou grupo responsável por essa comunidade. Usado para notificações críticas, como sinalizadores não tratados, atualizações de segurança e <a href='%{base_path}/about' target='_blank'>sua página Sobre, para entrar em contato com a comunidade imediatamente."
-          contact_url:
-            label: "Página da web"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Página de contato geral para você ou sua organização. Será exibida no <a href='%{base_path}/about' target='_blank'>sua página Sobre</a>."
-          site_contact:
-            label: "Mensagens automáticas"
-            description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
-      corporate:
-        title: "Organização"
-        description: "Estas informações serão inseridas nos seus <a href='%{base_path}/tos' target='blank'>Termos de Serviço</a>, que é um tópico que você pode editar na categoria da equipe. Se você não tem uma empresa, sinta-se à vontade para pular esta etapa por enquanto."
-        fields:
-          company_name:
-            label: "Nome da empresa"
-            placeholder: "Exemplo de organização"
-          governing_law:
-            label: "Lei aplicável"
-            placeholder: "Lei da Califórnia"
-          city_for_disputes:
-            label: "Cidade para disputas"
-            placeholder: "São Francisco, Califórnia"
+          login_required:
+            placeholder: "Privado(a)"
+            extra_description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
+          must_approve_users:
+            placeholder: "Requerer aprovação"
+      ready:
+        title: "Seu Discourse está pronto!"
       styling:
-        title: "Estilos"
         fields:
           color_scheme:
             label: "Esquema de cores"
@@ -4442,24 +4367,34 @@ pt_BR:
                 label: "Categorias e últimos tópicos"
               categories_and_top_topics:
                 label: "Categorias e melhores tópicos"
-      logos:
-        title: "Logotipos"
+      branding:
         fields:
           logo:
             label: "Logotipo primário"
-            description: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e uma proporção maior que 3:1"
           logo_small:
             label: "Logotipo quadrado"
-            description: "Uma versão quadrada do seu logotipo. Exibido no canto superior à esquerda do seu site ao rolar para baixo, no navegador, e ao compartilhar em plataformas de redes sociais. Idealmente maior que 512x512."
-      icons:
-        title: "Ícones"
-        fields:
           favicon:
             label: "Ícone do navegador"
-            description: "Imagem de ícone usada para representar seu site em navegadores com boa aparência em tamanhos pequenos. As extensões de imagem recomendadas são PNG ou JPG. Vamos usar o logotipo quadrado por padrão."
           large_icon:
             label: "Ícone grande"
-            description: "Imagem do ícone usada para representar seu site em dispositivos modernos com boa aparência em tamanhos maiores. Idealmente maior que 512×512. Usaremos o logotipo quadrado por padrão."
+      corporate:
+        fields:
+          company_name:
+            label: "Nome da empresa"
+            placeholder: "Exemplo de organização"
+          governing_law:
+            label: "Lei aplicável"
+            placeholder: "Lei da Califórnia"
+          contact_url:
+            label: "Página da web"
+            placeholder: "https://www.example.com/contact-us"
+            description: "Página de contato geral para você ou sua organização. Será exibida no <a href='%{base_path}/about' target='_blank'>sua página Sobre</a>."
+          city_for_disputes:
+            label: "Cidade para disputas"
+            placeholder: "São Francisco, Califórnia"
+          site_contact:
+            label: "Mensagens automáticas"
+            description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
       invites:
         title: "Convidar equipe"
         description: "Você está quase pronto(as)! Vamos convidar algumas pessoas para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\ndivulgar as suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."

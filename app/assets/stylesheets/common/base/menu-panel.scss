@@ -90,6 +90,165 @@
   }
 }
 
+.user-menu.revamped {
+  right: 0;
+  width: 320px;
+  padding: 0;
+
+  .panel-body-bottom {
+    flex: 0;
+  }
+
+  .menu-tabs-container {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--primary-low);
+    padding: 0.75em 0 0;
+  }
+
+  .tabs-list {
+    display: flex;
+    flex-direction: column;
+
+    .btn {
+      display: flex;
+      padding: 0.857em;
+      position: relative;
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+
+      .badge-notification {
+        background-color: var(--tertiary-med-or-tertiary);
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        font-size: var(--font-down-3);
+      }
+
+      &.active {
+        background-color: var(--tertiary-low);
+      }
+      &:hover {
+        background-color: var(--highlight-medium);
+      }
+    }
+  }
+
+  .bottom-tabs {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .panel-body-contents {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .quick-access-panel {
+    width: 320px;
+    padding: 0.75em;
+    justify-content: space-between;
+    box-sizing: border-box;
+    min-width: 0; // makes sure menu tabs don't go off screen
+
+    .double-user,
+    .multi-user {
+      white-space: unset;
+    }
+
+    .item-label {
+      color: var(--primary);
+    }
+
+    li {
+      background-color: var(--secondary);
+
+      &.unread,
+      &.pending {
+        background-color: var(--tertiary-low);
+      }
+
+      &:hover {
+        background-color: var(--highlight-medium);
+        outline: none;
+      }
+
+      &:focus-within {
+        background: var(--highlight-medium);
+        a {
+          // we don't need the link focus because we're styling the parent
+          outline: 0;
+        }
+      }
+    }
+  }
+
+  #quick-access-profile {
+    display: inline;
+    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
+
+    ul {
+      flex-wrap: nowrap;
+      height: 100%;
+      align-items: center;
+      overflow-y: auto; // really short viewports
+    }
+    li {
+      flex: 1 1 auto;
+      max-height: 3em; // prevent buttons from getting too tall
+      > * {
+        // button, a, and everything else
+        height: 100%;
+        align-items: center;
+        margin: 0;
+        padding: 0 0.5em;
+      }
+      .d-icon {
+        padding-top: 0;
+      }
+    }
+
+    .set-user-status {
+      .emoji {
+        padding-top: 0;
+      }
+    }
+
+    .profile-tab-btn {
+      .relative-date {
+        font-size: $font-down-3;
+        color: var(--primary-medium);
+      }
+
+      justify-content: unset;
+      line-height: $line-height-large;
+      width: 100%;
+
+      .d-icon {
+        padding: 0;
+      }
+    }
+
+    .do-not-disturb {
+      .d-icon-toggle-on {
+        color: var(--tertiary);
+      }
+    }
+  }
+}
+
+// remove when the widgets-based implementation of the user menu is removed
+.user-menu:not(.revamped) {
+  .quick-access-panel {
+    li {
+      span:first-child {
+        color: var(--primary);
+      }
+    }
+  }
+}
+
 .hamburger-panel {
   a.widget-link {
     width: 100%;
@@ -248,10 +407,6 @@
         display: none;
       }
 
-      span:first-child {
-        color: var(--primary);
-      }
-
       span.double-user,
       // e.g., "username, username2"
       span.multi-user
@@ -301,7 +456,8 @@
         }
       }
 
-      a {
+      a,
+      .profile-tab-btn {
         display: flex;
         margin: 0.25em;
         padding: 0em 0.25em;
@@ -335,6 +491,13 @@
       align-self: flex-start;
       width: 100%;
       .d-icon {
+        padding-top: 0.2em;
+        margin-right: 0.5em;
+      }
+
+      img.emoji {
+        height: 1em;
+        width: 1em;
         padding-top: 0.2em;
         margin-right: 0.5em;
       }

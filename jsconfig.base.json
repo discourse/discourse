@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "amd",
+    "experimentalDecorators": true,
+  },
+  "exclude": [
+    ".git",
+    "**/node_modules",
+    "**/dist",
+  ],
+}

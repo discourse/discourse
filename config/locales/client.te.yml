@@ -100,6 +100,7 @@ te:
     share:
       close: "మూసివేయి"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
+    bootstrap_invite_button_title: "ఆహ్వానాలు పంపు"
     themes:
       default_description: "అప్రమేయ"
     edit: "ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు"
@@ -408,6 +409,8 @@ te:
         regular: "రెగ్యులరు"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
       enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
+      experimental_sidebar:
+        options: "ఎంపికలు"
       change: "మార్చు"
       moderator: "%{user} ఒక నిర్వాహకుడు"
       admin: "%{user} ఒక అధికారి"
@@ -422,7 +425,6 @@ te:
       watched_categories: "ఒకకన్నేసారు"
       tracked_categories: "గమనించారు"
       muted_categories: "నిశ్శబ్దం"
-      regular_categories: "రెగ్యులరు"
       delete_account: "నా ఖాతా తొలగించు"
       delete_account_confirm: "నిజ్జంగా మీరు మీ ఖాతాను శాస్వతంగా తొలగించాలనుకుంటున్నారా? ఈ చర్య రద్దుచేయలేరు సుమా! "
       deleted_yourself: "మీ ఖాతా విజయవంతంగా తొలగించబడింది. "
@@ -609,6 +611,8 @@ te:
         posted_by: "టపా రాసినవారు"
         sent_by: "పంపినవారు"
         the_topic: "విషయం"
+    user_status:
+      save: "భద్రపరచు"
     loading: "లోడవుతోంది..."
     errors:
       prev_page: "ఎక్కించుట ప్రయత్నిస్తున్నప్పుడు"
@@ -731,7 +735,6 @@ te:
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
-      users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       view_new_post: "మీ కొత్త టపా చూడండి"
@@ -766,6 +769,7 @@ te:
           label: "కొత్త విషయం"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      watching_first_post_label: "కొత్త విషయం"
       dismiss_confirmation:
         cancel: "రద్దుచేయి"
       titles:
@@ -1244,6 +1248,7 @@ te:
       full: "సృష్టించి / జవాబివ్వు / చూడు"
       create_post: "జవాబివ్వు / చూడు"
       readonly: "చూడు"
+    preloader_text: "లోడవుతోంది"
     lightbox:
       download: "దిగుమతించు"
     keyboard_shortcuts_help:
@@ -1284,7 +1289,6 @@ te:
         edit: "%{shortcut} టపా సవరణ"
         delete: "%{shortcut} టపా తొలగించు"
         mark_muted: "%{shortcut} విషయాన్ని ఆపివేయండి"
-        mark_regular: "%{shortcut} నిత్య (అప్రమేయ) విషయం"
         mark_tracking: "%{shortcut} విషయం వెతుకు"
         mark_watching: "%{shortcut} చూసిన విషయం"
     badges:
@@ -1317,7 +1321,6 @@ te:
         tracking:
           title: "గమనిస్తున్నారు"
         regular:
-          title: "రెగ్యులరు"
           description: "ఎవరన్నా మీ @పేరు ప్రస్తావించినా లేదా జవాబిచ్చినా మీకు ప్రకటన వస్తుంది"
         muted:
           title: "నిశ్శబ్దం"
@@ -1347,17 +1350,35 @@ te:
         regular: "రెగ్యులర్"
         leader: "లీడర్"
     sidebar:
-      unread_count: "%{count} చదవనవి"
-      new_count: "%{count} కొత్త"
+      unread_count:
+        one: "%{count} చదవనవి"
+        other: "%{count} చదవనవి"
+      new_count:
+        one: "%{count} కొత్త"
+        other: "%{count} కొత్త"
       sections:
+        messages:
+          header_link_text: "సందేశాలు"
+          links:
+            inbox: "ఇన్ బాక్స్"
+            sent: "పంపిన"
+            new: "కొత్త"
+            unread: "చదవని"
+        tags:
+          header_link_text: "ట్యాగులు"
         categories:
-          header_link_title: "అన్ని వర్గాలు"
           header_link_text: "వర్గాలు"
-        topics:
-          header_link_text: "విషయాలు"
+        community:
+          header_link_text: "కమ్యునిటీ"
           links:
             tracked:
               content: "గమనించారు"
+            groups:
+              content: "గుంపులు"
+            users:
+              content: "సభ్యులు"
+            my_posts:
+              content: "నా టపాలు"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:
@@ -2014,7 +2035,6 @@ te:
           topics: "విషయాలు"
   wizard_js:
     wizard:
-      done: "పూర్తయింది"
       back: "వెనుకకు"
       next: "తదుపరి"
       upload: "ఎక్కించు"

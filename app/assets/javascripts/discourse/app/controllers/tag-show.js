@@ -181,14 +181,15 @@ export default DiscoverySortableController.extend(
       this.tagNotification
         .update({ notification_level: notificationLevel })
         .then((response) => {
-          this.currentUser.set(
-            "muted_tag_ids",
-            this.currentUser.calculateMutedIds(
-              notificationLevel,
-              response.responseJson.tag_id,
-              "muted_tag_ids"
-            )
-          );
+          const payload = response.responseJson;
+
+          this.currentUser.setProperties({
+            watched_tags: payload.watched_tags,
+            watching_first_post_tags: payload.watching_first_post_tags,
+            tracked_tags: payload.tracked_tags,
+            muted_tags: payload.muted_tags,
+            regular_tags: payload.regular_tags,
+          });
         });
     },
   }

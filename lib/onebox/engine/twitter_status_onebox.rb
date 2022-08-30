@@ -10,32 +10,22 @@ module Onebox
       matches_regexp(/^https?:\/\/(mobile\.|www\.)?twitter\.com\/.+?\/status(es)?\/\d+(\/(video|photo)\/\d?+)?+(\/?\?.*)?\/?$/)
       always_https
 
+      def self.===(other)
+        !Onebox.options.twitter_client.twitter_credentials_missing? && super
+      end
+
       def http_params
         { 'User-Agent' => 'DiscourseBot/1.0' }
       end
 
-      private
-
-      def get_twitter_data
-        response = Onebox::Helpers.fetch_response(url, headers: http_params) rescue nil
-        html = Nokogiri::HTML(response)
-        twitter_data = {}
-        html.css('meta').each do |m|
-          if m.attribute('property') && m.attribute('property').to_s.match(/^og:/i)
-            m_content = m.attribute('content').to_s.strip
-            m_property = m.attribute('property').to_s.gsub('og:', '').gsub(':', '_')
-            twitter_data[m_property.to_sym] = m_content
-          end
-        end
-        twitter_data
+      def to_html
+        raw.present? ? super : ''
       end
+
+      private
 
       def match
         @match ||= @url.match(%r{twitter\.com/.+?/status(es)?/(?<id>\d+)})
-      end
-
-      def twitter_data
-        @twitter_data ||= get_twitter_data
       end
 
       def client
@@ -48,9 +38,7 @@ module Onebox
 
       def raw
         if twitter_api_credentials_present?
-          @raw ||= OpenStruct.new(client.status(match[:id]).to_hash)
-        else
-          super
+          @raw ||= client.status(match[:id]).to_hash
         end
       end
 
@@ -62,102 +50,54 @@ module Onebox
       end
 
       def tweet
-        if twitter_api_credentials_present?
-          client.prettify_tweet(raw)&.strip
-        else
-          twitter_data[:description].gsub(/“(.+?)”/im) { $1 } if twitter_data[:description]
-        end
+        client.prettify_tweet(raw)&.strip
       end
 
       def timestamp
-        if twitter_api_credentials_present?
-          date = DateTime.strptime(access(:created_at), "%a %b %d %H:%M:%S %z %Y")
-          user_offset = access(:user, :utc_offset).to_i
-          offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
-          date.new_offset(offset).strftime("%-l:%M %p - %-d %b %Y")
-        else
-          attr_at_css(".tweet-timestamp", 'title')
-        end
+        date = DateTime.strptime(access(:created_at), "%a %b %d %H:%M:%S %z %Y")
+        user_offset = access(:user, :utc_offset).to_i
+        offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
+        date.new_offset(offset).strftime("%-l:%M %p - %-d %b %Y")
       end
 
       def title
-        if twitter_api_credentials_present?
-          access(:user, :name)
-        else
-          attr_at_css('.tweet.permalink-tweet', 'data-name')
-        end
+        access(:user, :name)
       end
 
       def screen_name
-        if twitter_api_credentials_present?
-          access(:user, :screen_name)
-        else
-          attr_at_css('.tweet.permalink-tweet', 'data-screen-name')
-        end
+        access(:user, :screen_name)
       end
 
       def avatar
-        if twitter_api_credentials_present?
-          access(:user, :profile_image_url_https).sub('normal', '400x400')
-        elsif twitter_data[:image]
-          twitter_data[:image] unless twitter_data[:image_user_generated]
-        end
+        access(:user, :profile_image_url_https).sub('normal', '400x400')
       end
 
       def likes
-        if twitter_api_credentials_present?
-          prettify_number(access(:favorite_count).to_i)
-        else
-          attr_at_css(".request-favorited-popup", 'data-compact-localized-count')
-        end
+        prettify_number(access(:favorite_count).to_i)
       end
 
       def retweets
-        if twitter_api_credentials_present?
-          prettify_number(access(:retweet_count).to_i)
-        else
-          attr_at_css(".request-retweeted-popup", 'data-compact-localized-count')
-        end
+        prettify_number(access(:retweet_count).to_i)
       end
 
       def quoted_full_name
-        if twitter_api_credentials_present?
-          access(:quoted_status, :user, :name)
-        else
-          raw.css('.QuoteTweet-fullname')[0]&.text
-        end
+        access(:quoted_status, :user, :name)
       end
 
       def quoted_screen_name
-        if twitter_api_credentials_present?
-          access(:quoted_status, :user, :screen_name)
-        else
-          attr_at_css(".QuoteTweet-innerContainer", "data-screen-name")
-        end
+        access(:quoted_status, :user, :screen_name)
       end
 
       def quoted_tweet
-        if twitter_api_credentials_present?
-          access(:quoted_status, :full_text)
-        else
-          raw.css('.QuoteTweet-text')[0]&.text
-        end
+        access(:quoted_status, :full_text)
       end
 
       def quoted_link
-        if twitter_api_credentials_present?
-          "https://twitter.com/#{quoted_screen_name}/status/#{access(:quoted_status, :id)}"
-        else
-          "https://twitter.com#{attr_at_css(".QuoteTweet-innerContainer", "href")}"
-        end
+        "https://twitter.com/#{quoted_screen_name}/status/#{access(:quoted_status, :id)}"
       end
 
       def prettify_number(count)
         count > 0 ? client.prettify_number(count) : nil
-      end
-
-      def attr_at_css(css_property, attribute_name)
-        raw.at_css(css_property)&.attr(attribute_name)
       end
 
       def data

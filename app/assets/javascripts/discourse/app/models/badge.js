@@ -81,9 +81,8 @@ Badge.reopenClass({
     if ("badge_groupings" in json) {
       json.badge_groupings.forEach(
         (badgeGroupingJson) =>
-          (badgeGroupings[badgeGroupingJson.id] = BadgeGrouping.create(
-            badgeGroupingJson
-          ))
+          (badgeGroupings[badgeGroupingJson.id] =
+            BadgeGrouping.create(badgeGroupingJson))
       );
     }
 

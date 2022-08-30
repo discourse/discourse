@@ -166,12 +166,12 @@ lv:
         disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
       forwarded: "pārsūtīja iepriekš minēto e -pastu"
     topic_admin_menu: "tēmas darbības"
-    wizard_required: "Laipni lūgti jūsu jaunajā Discourse! Sāksim ar <a href='%{url}' data-auto-route='true'>uzstādīšanas palīgu</a> ✨"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
       message: "Mēs esam atjauninājuši šo vietni, <span>lūdzu, atjaunojiet to</span>, pretējā gadījumā var rasties kļūdas."
       dismiss: "Nerādīt"
     bootstrap_mode_disabled: "Bootstrap režīms tiks atspējots 24 stundu laikā."
+    bootstrap_invite_button_title: "Nosūtīt ielūgumus"
     themes:
       default_description: "Noklusējums"
     s3:
@@ -519,6 +519,7 @@ lv:
       six_months: "Seši mēneši"
       relative: "Relatīvais laiks"
       none: "Neviens nav vajadzīgs"
+      never: "Nekad"
       last_custom: "Pēdējais pielāgotais datuma laiks"
       custom: "Pielāgots datums un laiks"
     user_action:
@@ -972,6 +973,8 @@ lv:
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
       enable_quoting: "Ieslēgt atbildi ar iezīmētā teksta citēšanu"
       enable_defer: "Iespējot atlikšanu, lai atzīmētu tēmas kā nelasītas"
+      experimental_sidebar:
+        options: "Iespējas"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -1013,7 +1016,7 @@ lv:
       muted_categories: "Klusināts"
       muted_categories_instructions: "Jūs netiksiet informēts par jaunām tēmām šajās kategorijās, un tās netiks rādītas kategorijās vai jaunākajās lapās."
       muted_categories_instructions_dont_hide: "Jūs netiksit informēts par jaunām tēmām šajās kategorijās."
-      regular_categories: "Regulārs"
+      regular_categories: "Normāls"
       regular_categories_instructions: "Šīs kategorijas redzēsit tēmu sarakstos “Jaunākie” un “Populārākie”."
       no_category_access: "Kā moderatoram jums ir ierobežota kategoriju piekļuve, saglabāšana ir atspējota."
       delete_account: "Izdzēst manu profilu"
@@ -1464,6 +1467,8 @@ lv:
         sent_by: "Nosūtīja"
         private_message: "ziņa"
         the_topic: "tēma"
+    user_status:
+      save: "Saglabāt"
     loading: "Ielādē..."
     errors:
       prev_page: "mēģinot ielādēt"
@@ -1515,7 +1520,6 @@ lv:
       other: atbildes
     signup_cta:
       sign_up: "Pierakstīties"
-      hide_session: "Atgādināt man rīt"
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
@@ -1727,7 +1731,6 @@ lv:
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
       create_pm: "Ziņa"
-      users_placeholder: "Pievienot lietotāju"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
@@ -1776,6 +1779,7 @@ lv:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
+      watching_first_post_label: "Jauna tēma"
       dismiss_confirmation:
         dismiss: "Nerādīt"
         cancel: "Atcelt"
@@ -2641,6 +2645,7 @@ lv:
       full: "Izveidot / Atbildēt / Skatīt"
       create_post: "Atbildēt / Skatīt"
       readonly: "Skatīt"
+    preloader_text: "Ielāde"
     lightbox:
       download: "lejuplādēt"
       counter: "%curr% no %total%"
@@ -2689,7 +2694,6 @@ lv:
         edit: "%{shortcut} Rediģēt ierakstu"
         delete: "%{shortcut} Dzēst ierakstu"
         mark_muted: "%{shortcut} Klusināt ierakstu"
-        mark_regular: "%{shortcut} Parasta tēma"
         mark_tracking: "%{shortcut} Sekot tēmai"
         mark_watching: "%{shortcut} Novērot tēmu"
         print: "%{shortcut} Drukāt tēmu"
@@ -2758,7 +2762,7 @@ lv:
         tracking:
           title: "Sekošana"
         regular:
-          title: "Regulārs"
+          title: "Normāls"
           description: "Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs uz jūsu ierakstu."
         muted:
           title: "Klusināts"
@@ -2800,18 +2804,42 @@ lv:
         member: "biedrs"
         regular: "regulārs"
     sidebar:
-      unread_count: "%{count} nelasīta"
-      new_count: "%{count} jauna"
+      unread_count:
+        zero: "%{count} nelasītas"
+        one: "%{count} nelasīta"
+        other: "%{count} nelasīta"
+      new_count:
+        zero: "%{count} jaunas"
+        one: "%{count} jauna"
+        other: "%{count} jauna"
+      more: "Vairāk..."
       sections:
+        messages:
+          header_link_text: "Ziņas"
+          links:
+            inbox: "Iesūtne"
+            sent: "Nosūtne"
+            new: "Jaunie"
+            new_with_count: "Jauns (%{count})"
+            unread: "Nelasīts"
+            unread_with_count: "Nelasīts (%{count})"
+            archive: "Arhīvs"
+        tags:
+          header_link_text: "Birkas"
         categories:
-          header_link_title: "visas sadaļas"
           header_link_text: "Sadaļas"
-        topics:
-          header_link_title: "mājas"
-          header_link_text: "Tēmas"
+        community:
+          header_link_text: "Kopiena"
           links:
             tracked:
               content: "Sekots"
+            groups:
+              content: "Grupas"
+              title: "Visas grupas"
+            users:
+              content: "Lietotāji"
+            my_posts:
+              content: "Mani ieraksti"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:
@@ -3680,14 +3708,13 @@ lv:
           topics: "Tēmas"
   wizard_js:
     wizard:
-      done: "Pabeigt"
       back: "Atpakaļ"
       next: "Nākamais"
+      step-text: "Solis"
       step: "%{current} no %{total}"
       upload: "Augšupielādēt"
       uploading: "Notiek ielāde..."
       upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-      quit: "Varbūt vēlāk"
       invites:
         add_user: "Pievienot"
         none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"

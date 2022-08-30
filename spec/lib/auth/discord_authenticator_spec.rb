@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::DiscordAuthenticator do
+RSpec.describe Auth::DiscordAuthenticator do
   let(:hash) {
     OmniAuth::AuthHash.new(
       provider: "facebook",
@@ -29,7 +29,7 @@ describe Auth::DiscordAuthenticator do
 
   let(:authenticator) { described_class.new }
 
-  context 'after_authenticate' do
+  describe 'after_authenticate' do
     it 'works normally' do
       result = authenticator.after_authenticate(hash)
       expect(result.user).to eq(nil)

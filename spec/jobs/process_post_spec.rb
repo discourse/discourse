@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ProcessPost do
+RSpec.describe Jobs::ProcessPost do
   it "returns when the post cannot be found" do
     expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end
@@ -89,7 +89,7 @@ describe Jobs::ProcessPost do
     end
   end
 
-  context "#enqueue_pull_hotlinked_images" do
+  describe "#enqueue_pull_hotlinked_images" do
     fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
     let(:job) { Jobs::ProcessPost.new }
 

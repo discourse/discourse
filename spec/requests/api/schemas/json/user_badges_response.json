@@ -3,7 +3,7 @@
   "properties": {
     "badges": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -75,11 +75,10 @@
             "badge_type_id"
           ]
         }
-      ]
     },
     "badge_types": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -100,11 +99,10 @@
             "sort_order"
           ]
         }
-      ]
     },
     "granted_bies": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -148,11 +146,10 @@
             "trust_level"
           ]
         }
-      ]
     },
     "user_badges": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -192,7 +189,6 @@
             "granted_by_id"
           ]
         }
-      ]
     }
   },
   "required": [

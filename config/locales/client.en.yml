@@ -198,7 +198,6 @@ en:
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
 
-    wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
@@ -210,6 +209,8 @@ en:
       one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
       other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
+    bootstrap_invite_button_title: "Send Invites"
+    bootstrap_wizard_link_title: "Finish setup wizard"
 
     themes:
       default_description: "Default"
@@ -250,6 +251,8 @@ en:
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
+    ok_value: "OK"
+    cancel_value: "Cancel"
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
@@ -644,6 +647,8 @@ en:
 
     time_shortcut:
       now: "Now"
+      in_one_hour: "In one hour"
+      in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
       next_business_day: "Next business day"
@@ -664,6 +669,7 @@ en:
       forever: "Forever"
       relative: "Relative time"
       none: "None needed"
+      never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
       select_timeframe: "Select a timeframe"
@@ -1118,6 +1124,8 @@ en:
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
+      dismiss_messages_tooltip: "Mark all unread personal messages notifications as read"
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
@@ -1161,7 +1169,13 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
-      enable_experimental_sidebar: "Enable experimental sidebar"
+      experimental_sidebar:
+        enable: "Enable experimental sidebar"
+        options: "Options"
+        categories_section: "Categories Section"
+        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
+        tags_section: "Tags Section"
+        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1204,7 +1218,7 @@ en:
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
-      regular_categories: "Regular"
+      regular_categories: "Normal"
       regular_categories_instructions: "You will see these categories in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
@@ -1306,6 +1320,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
+        sidebar: "Sidebar"
 
       change_password:
         success: "(email sent)"
@@ -1785,6 +1800,12 @@ en:
         private_message: "message"
         the_topic: "the topic"
 
+    user_status:
+      save: "Save"
+      set_custom_status: "Set custom status"
+      what_are_you_doing: "What are you doing?"
+      remove_status: "Remove status"
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
@@ -1861,11 +1882,11 @@ en:
 
     signup_cta:
       sign_up: "Sign Up"
-      hide_session: "Remind me tomorrow"
+      hide_session: "Maybe later"
       hide_forever: "no thanks"
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "When you create an account, we remember exactly what you’ve read, so you always come right back where you left off. You also get notifications, here and via email, whenever someone replies to you. And you can like posts to share the love. :heartpulse:"
+      value_prop: "Tired of scrolling through the same posts? when you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -2046,6 +2067,7 @@ en:
       categories_only: "Categories Only"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
+      categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
       categories_and_top_topics: "Categories and Top Topics"
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
@@ -2089,9 +2111,6 @@ en:
       min_content_not_reached:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
-      invalid_selection_length:
-        one: "Selection must be at least %{count} character."
-        other: "Selection must be at least %{count} characters."
       components:
         tag_drop:
           filter_for_more: Filter for more...
@@ -2195,7 +2214,7 @@ en:
       edit_shared_draft: "Edit Shared Draft"
       title: "Or press %{modifier}Enter"
 
-      users_placeholder: "Add a user"
+      users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
@@ -2241,6 +2260,7 @@ en:
       abandon: "close composer and discard draft"
       enter_fullscreen: "enter fullscreen composer"
       exit_fullscreen: "exit fullscreen composer"
+      exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
       show_toolbar: "show composer toolbar"
       hide_toolbar: "hide composer toolbar"
       modal_ok: "OK"
@@ -2268,9 +2288,6 @@ en:
         reply_as_new_group_message:
           label: Reply as new group message
           desc: Create new message starting with same recipients
-        reply_as_private_message:
-          label: New message
-          desc: Create a new personal message
         reply_to_topic:
           label: Reply to topic
           desc: Reply to the topic, not any specific post
@@ -2292,6 +2309,8 @@ en:
       image_alt_text:
         aria_label: Alt text for image
 
+      delete_image_button: Delete Image
+
     notifications:
       tooltip:
         regular:
@@ -2308,6 +2327,8 @@ en:
       empty: "No notifications found."
       post_approved: "Your post was approved"
       reviewable_items: "items requiring review"
+      watching_first_post_label: "New Topic"
+      user_moved_post: "%{username} moved"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2320,6 +2341,10 @@ en:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} and %{count} others"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -2328,6 +2353,7 @@ en:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> accepted your invitation"
+      invitee_accepted_your_invitation: "accepted your invitation"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Earned '%{description}'"
@@ -2342,8 +2368,15 @@ en:
       votes_released: "%{description} - completed"
       dismiss_confirmation:
         body:
-          one: "Are you sure? You have %{count} important notification."
-          other: "Are you sure? You have %{count} important notifications."
+          default:
+            one: "Are you sure? You have %{count} important notification."
+            other: "Are you sure? You have %{count} important notifications."
+          bookmarks:
+            one: "Are you sure? You have %{count} unread bookmark reminder."
+            other: "Are you sure? You have %{count} unread bookmark reminders."
+          messages:
+            one: "Are you sure? You have %{count} unread personal message."
+            other: "Are you sure? You have %{count} unread personal messages."
         dismiss: "Dismiss"
         cancel: "Cancel"
 
@@ -2532,6 +2565,20 @@ en:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     view_all: "view all %{tab}"
+    user_menu:
+      generic_no_items: "There are no items in this list."
+      sr_menu_tabs: "Menu tabs"
+      view_all_notifications: "view all notifications"
+      view_all_bookmarks: "view all bookmarks"
+      view_all_messages: "view all personal messages"
+      reviewable:
+        view_all: "view all review items"
+        queue: "Queue"
+        deleted_user: "(deleted user)"
+        post_number_with_topic_title: "post #%{post_number} - %{title}"
+        new_post_in_topic: "new post in %{title}"
+        suspicious_user: "suspicious user %{username}"
+        default_item: "reviewable item #%{reviewable_id}"
 
     topics:
       new_messages_marker: "last visit"
@@ -3682,12 +3729,14 @@ en:
         today: "Today"
         other_periods: "see top:"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, log in and reply.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
       full: "Create / Reply / See"
       create_post: "Reply / See"
       readonly: "See"
+
+    preloader_text: "Loading"
 
     lightbox:
       download: "download"
@@ -3708,6 +3757,7 @@ en:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Keyboard Shortcuts"
+      short_title: "Shortcuts"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
@@ -3775,7 +3825,7 @@ en:
         edit: "%{shortcut} Edit post"
         delete: "%{shortcut} Delete post"
         mark_muted: "%{shortcut} Mute topic"
-        mark_regular: "%{shortcut} Regular (default) topic"
+        mark_regular: "%{shortcut} Normal (default) topic"
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
@@ -3919,7 +3969,7 @@ en:
           title: "Tracking"
           description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
-          title: "Regular"
+          title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
@@ -4011,15 +4061,16 @@ en:
     user_activity:
       no_activity_title: "No activity yet"
       no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. As you participate, your activity will be listed here."
-      no_activity_others: "No activity."
       no_replies_title: "You have not replied to any topics yet"
-      no_replies_others: "No replies."
+      no_replies_title_others: "%{username} has not replied to any topics yet"
+      no_replies_body: "When you <a href='%{searchUrl}'>discover</a> an interesting conversation that you wish to contribute to, press the <kbd>Reply</kbd> button directly under any post to begin replying to that specific post. Or, if you’d prefer to reply to the general topic rather than any individual post or person, look for the <kbd>Reply</kbd> button at the very bottom of the topic, or under the topic timeline."
       no_drafts_title: "You haven’t started any drafts"
       no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
       no_likes_title: "You haven’t liked any topics yet"
+      no_likes_title_others: "%{username} has not liked any topics yet"
       no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
-      no_likes_others: "No liked posts."
       no_topics_title: "You have not started any topics yet"
+      no_topics_body: "It’s always best to <a href='%{searchUrl}'>search</a> for existing topics of conversation before starting a new one, but if you’re confident the topic you want isn’t out there already, go ahead and start a new topic of your very own. Look for the <kbd>+ New Topic</kbd> button at the top right of the topic list, category, or tag to begin creating a new topic in that area."
       no_topics_title_others: "%{username} has not started any topics yet"
       no_read_topics_title: "You haven’t read any topics yet"
       no_read_topics_body: "Once you start reading discussions, you’ll see a list here. To start reading, look for topics that interest you in <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> or search by keyword %{searchIcon}"
@@ -4036,26 +4087,73 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
-      unread_count: "%{count} unread"
-      new_count: "%{count} new"
+      unread_count:
+        one: "%{count} unread"
+        other: "%{count} unread"
+      new_count:
+        one: "%{count} new"
+        other: "%{count} new"
+      toggle_section: "toggle section"
+      more: "More..."
       sections:
+        messages:
+          header_link_text: "Messages"
+          header_action_title: "create a personal message"
+          links:
+            inbox: "Inbox"
+            sent: "Sent"
+            new: "New"
+            new_with_count: "New (%{count})"
+            unread: "Unread"
+            unread_with_count: "Unread (%{count})"
+            archive: "Archive"
+        tags:
+          none: "You have not added any tags."
+          click_to_get_started: "Click here to get started."
+          header_link_text: "Tags"
+          header_action_title: "edit your sidebar tags"
         categories:
-          header_link_title: "all categories"
+          none: "You have not added any categories."
+          click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
-        topics:
-          header_link_title: "home"
-          header_link_text: "Topics"
+          header_action_title: "edit your sidebar categories"
+        community:
+          header_link_text: "Community"
           header_action_title: "create a new topic"
           links:
+            about:
+              content: "About"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Badges"
             everything:
               content: "Everything"
               title: "All topics"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Tracked"
               title: "All tracked topics"
-            bookmarked:
-              content: "Bookmarked"
-              title: "All bookmarked topics"
+            groups:
+              content: "Groups"
+              title: "All groups"
+            users:
+              content: "Users"
+              title: "All users"
+            my_posts:
+              content: "My Posts"
+              title: "My posts"
+              draft_count:
+                one: "%{count} draft"
+                other: "%{count} drafts"
+
+    welcome_topic_banner:
+      title: "Create your Welcome Topic"
+      description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
+      button_title: "Start Editing"
+
+    until: "Until:"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4629,6 +4727,8 @@ en:
           import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
+          finish_install: "Finish Theme Installation"
+          last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
           public_key_note: "After entering a valid private repository URL above, an SSH key will be generated and displayed here."
@@ -4639,6 +4739,8 @@ en:
           install_git_repo: "From a git repository"
           install_create: "Create new"
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
+          force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
+          create_placeholder: "Create Placeholder"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -4825,6 +4927,7 @@ en:
         last_seen_user: "Last Seen User:"
         no_result: "No results found for summary."
         reply_key: "Reply Key"
+        post_link_with_smtp: "Post & SMTP Details"
         skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "From"
@@ -4854,6 +4957,7 @@ en:
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
+            smtp_transaction_response_placeholder: "SMTP ID"
 
       moderation_history:
         performed_by: "Performed By"
@@ -5039,6 +5143,7 @@ en:
         show_words:
           one: "show %{count} word"
           other: "show %{count} words"
+        case_sensitive: "(case-sensitive)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -5076,6 +5181,8 @@ en:
           exists: "Already exists"
           upload: "Add from file"
           upload_successful: "Upload successful. Words have been added."
+          case_sensitivity_label: "Is case-sensitive"
+          case_sensitivity_description: "Only words with matching character casing"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
@@ -5418,7 +5525,6 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         locale: "Language:"
-        fallback_locale_warning: "You are editing a language based on %{fallback}. Users who choose %{fallback} as their interface language won't see your changes."
         more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings
@@ -5648,15 +5754,16 @@ en:
 
   wizard_js:
     wizard:
-      done: "Done"
-      finish: "Finish"
+      jump_in: "Jump in!"
+      finish: "Exit setup"
       back: "Back"
       next: "Next"
+      configure_more: "Configure More..."
+      step-text: "Step"
       step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
-      quit: "Maybe Later"
 
       staff_count:
         one: "Your community has %{count} staff (you)."

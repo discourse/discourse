@@ -2,8 +2,7 @@
 
 require 'post_revisor'
 
-describe PostRevisor do
-
+RSpec.describe PostRevisor do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
@@ -12,7 +11,7 @@ describe PostRevisor do
   fab!(:moderator) { Fabricate(:moderator) }
   let(:post_args) { { user: newuser, topic: topic } }
 
-  context 'TopicChanges' do
+  describe 'TopicChanges' do
     let(:tc) {
       topic.reload
       PostRevisor::TopicChanges.new(topic, topic.user)
@@ -43,7 +42,7 @@ describe PostRevisor do
     end
   end
 
-  context 'editing category' do
+  describe 'editing category' do
     it "triggers the :post_edited event with topic_changed?" do
       category = Fabricate(:category)
       category.set_permissions(everyone: :full)
@@ -124,8 +123,35 @@ describe PostRevisor do
     end
   end
 
-  context 'revise wiki' do
+  describe 'editing tags' do
+    fab!(:post) { Fabricate(:post) }
 
+    subject { PostRevisor.new(post) }
+
+    before do
+      Jobs.run_immediately!
+
+      TopicUser.change(
+        newuser.id,
+        post.topic_id,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+    end
+
+    it 'creates notifications' do
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .to change { Notification.count }.by(1)
+    end
+
+    it 'skips notifications if disable_tags_edit_notifications' do
+      SiteSetting.disable_tags_edit_notifications = true
+
+      expect { subject.revise!(admin, tags: ['new-tag']) }
+        .not_to change { Notification.count }
+    end
+  end
+
+  describe 'revise wiki' do
     before do
       # There used to be a bug where wiki changes were considered posting "too similar"
       # so this is enabled and checked
@@ -142,7 +168,7 @@ describe PostRevisor do
     end
   end
 
-  context 'revise' do
+  describe 'revise' do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
@@ -333,7 +359,7 @@ describe PostRevisor do
 
       it "resets the edit_reason attribute in post model" do
         freeze_time
-        SiteSetting.editing_grace_period = 5
+        SiteSetting.editing_grace_period = 5.seconds
         post = Fabricate(:post, raw: 'hello world')
         revisor = PostRevisor.new(post)
         revisor.revise!(post.user, { raw: 'hello world123456789', edit_reason: 'this is my reason' }, revised_at: post.updated_at + 1.second)
@@ -445,7 +471,6 @@ describe PostRevisor do
     end
 
     describe 'category topic' do
-
       let!(:category) do
         category = Fabricate(:category)
         category.update_column(:topic_id, topic.id)
@@ -458,7 +483,7 @@ describe PostRevisor do
         expect(category.description).to be_blank
       end
 
-      context "one paragraph description" do
+      context "with one paragraph description" do
         before do
           subject.revise!(post.user, raw: new_description)
           category.reload
@@ -473,7 +498,7 @@ describe PostRevisor do
         end
       end
 
-      context "multiple paragraph description" do
+      context "with multiple paragraph description" do
         before do
           subject.revise!(post.user, raw: "#{new_description}\n\nOther content goes here.")
           category.reload
@@ -488,7 +513,7 @@ describe PostRevisor do
         end
       end
 
-      context "invalid description without paragraphs" do
+      context "with invalid description without paragraphs" do
         before do
           subject.revise!(post.user, raw: "# This is a title")
           category.reload
@@ -642,8 +667,7 @@ describe PostRevisor do
         end.to change { post.user.user_stat.post_edits_count.to_i }.by(1)
       end
 
-      context 'second poster posts again quickly' do
-
+      context 'when second poster posts again quickly' do
         it 'is a grace period edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
@@ -654,7 +678,7 @@ describe PostRevisor do
         end
       end
 
-      context 'passing skip_revision as true' do
+      context 'when passing skip_revision as true' do
         before do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.hours, skip_revision: true)
@@ -730,7 +754,7 @@ describe PostRevisor do
       expect(post.post_revisions.last.modifications).to eq('tags' => [[], ['new-tag-3']])
     end
 
-    context "#publish_changes" do
+    describe "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
       it "should publish topic changes to clients" do
@@ -745,7 +769,7 @@ describe PostRevisor do
       end
     end
 
-    context "logging staff edits" do
+    context "when logging staff edits" do
       it "doesn't log when a regular user revises a post" do
         subject.revise!(
           post.user,
@@ -801,7 +825,7 @@ describe PostRevisor do
       end
     end
 
-    context "logging group moderator edits" do
+    context "when logging group moderator edits" do
       fab!(:group_user) { Fabricate(:group_user) }
       fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic) }
 
@@ -823,9 +847,8 @@ describe PostRevisor do
       end
     end
 
-    context "staff_edit_locks_post" do
-
-      context "disabled" do
+    context "with staff_edit_locks_post" do
+      context "when disabled" do
         before do
           SiteSetting.staff_edit_locks_post = false
         end
@@ -842,8 +865,7 @@ describe PostRevisor do
         end
       end
 
-      context "enabled" do
-
+      context "when enabled" do
         before do
           SiteSetting.staff_edit_locks_post = true
         end
@@ -915,8 +937,7 @@ describe PostRevisor do
       end
     end
 
-    context "alerts" do
-
+    context "with alerts" do
       fab!(:mentioned_user) { Fabricate(:user) }
 
       before do
@@ -937,8 +958,8 @@ describe PostRevisor do
 
     end
 
-    context "tagging" do
-      context "tagging disabled" do
+    context "with tagging" do
+      context "with tagging disabled" do
         before do
           SiteSetting.tagging_enabled = false
         end
@@ -951,12 +972,12 @@ describe PostRevisor do
         end
       end
 
-      context "tagging enabled" do
+      context "with tagging enabled" do
         before do
           SiteSetting.tagging_enabled = true
         end
 
-        context "can create tags" do
+        context "when can create tags" do
           before do
             SiteSetting.min_trust_to_create_tag = 0
             SiteSetting.min_trust_level_to_tag_topics = 0
@@ -1057,7 +1078,7 @@ describe PostRevisor do
             end
           end
 
-          context "hidden tags" do
+          context "with hidden tags" do
             let(:bumped_at) { 1.day.ago }
 
             before do
@@ -1118,7 +1139,7 @@ describe PostRevisor do
             end
           end
 
-          context "required tag group" do
+          context "with required tag group" do
             fab!(:tag1) { Fabricate(:tag) }
             fab!(:tag2) { Fabricate(:tag) }
             fab!(:tag3) { Fabricate(:tag) }
@@ -1151,7 +1172,7 @@ describe PostRevisor do
           end
         end
 
-        context "cannot create tags" do
+        context "when cannot create tags" do
           before do
             SiteSetting.min_trust_to_create_tag = 4
             SiteSetting.min_trust_level_to_tag_topics = 0
@@ -1170,7 +1191,7 @@ describe PostRevisor do
       end
     end
 
-    context "uploads" do
+    context "with uploads" do
       let(:image1) { Fabricate(:upload) }
       let(:image2) { Fabricate(:upload) }
       let(:image3) { Fabricate(:upload) }
@@ -1189,7 +1210,7 @@ describe PostRevisor do
 
       it "updates linked post uploads" do
         post.link_post_uploads
-        expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
+        expect(post.upload_references.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
 
         subject.revise!(user, raw: <<~RAW)
             This is a post with multiple uploads
@@ -1198,10 +1219,10 @@ describe PostRevisor do
             ![image4](#{image4.short_url})
         RAW
 
-        expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
+        expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
 
-      context "secure media uploads" do
+      context "with secure media uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
         before do
           Jobs.run_immediately!
@@ -1250,8 +1271,8 @@ describe PostRevisor do
             { title: "updated title for my topic" },
             keep_existing_draft: true
           )
-        }.to change { Draft.where(user: user, draft_key: draft_key).first.sequence }.by(0)
-          .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(0)
+        }.to not_change { Draft.where(user: user, draft_key: draft_key).first.sequence }
+          .and not_change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }
 
         expect {
           PostRevisor.new(post).revise!(
@@ -1279,7 +1300,7 @@ describe PostRevisor do
     it 'does nothing when a staff member edits a post' do
       admin = Fabricate(:admin)
 
-      expect { revisor.revise!(admin, { raw: 'updated body' }) }.to change(ReviewablePost, :count).by(0)
+      expect { revisor.revise!(admin, { raw: 'updated body' }) }.not_to change(ReviewablePost, :count)
     end
 
     it 'skips grace period edits' do
@@ -1287,7 +1308,7 @@ describe PostRevisor do
 
       expect {
         revisor.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
-      }.to change(ReviewablePost, :count).by(0)
+      }.not_to change(ReviewablePost, :count)
     end
   end
 end

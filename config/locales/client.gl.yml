@@ -156,7 +156,6 @@ gl:
         disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
       forwarded: "reenviou a mensaxe de correo anterior"
     topic_admin_menu: "accións do tema"
-    wizard_required: "Este é o novo Discourse! Pode comezar co <a href='%{url}' data-auto-route='true'>asistente de configuración</a> ✨"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
@@ -164,6 +163,7 @@ gl:
       one: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán o nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se una %{count} usuario."
       other: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se unan %{count} usuarios."
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
+    bootstrap_invite_button_title: "Enviar convites"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -551,6 +551,7 @@ gl:
       forever: "Sempre"
       relative: "Tempo relativo"
       none: "Non se necesita"
+      never: "Nunca"
       custom: "Personalizar data e hora"
       select_timeframe: "Seleccione un marco temporal"
     user_action:
@@ -985,6 +986,8 @@ gl:
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
       enable_quoting: "Activar as comiñas de resposta para o texto realzado"
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
+      experimental_sidebar:
+        options: "Opcións"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -1503,6 +1506,8 @@ gl:
         sent_by: "Enviada por"
         private_message: "mensaxe"
         the_topic: "o tema"
+    user_status:
+      save: "Gardar"
     loading: "Cargando..."
     errors:
       prev_page: "ao tentar cargar"
@@ -1562,10 +1567,8 @@ gl:
       other: respostas
     signup_cta:
       sign_up: "Rexistrarse"
-      hide_session: "Lémbremo mañá"
       hide_forever: "non grazas"
       intro: "Ola! Todo indica que goza coa discusión pero aínda non solicitou inscrición dunha conta."
-      value_prop: "Cando crea unha conta, lembramos exactamente o que ten lido, polo que sempre volve onde o deixou. Tamén recibe notificacións, desde aquí e por correo electrónico cando alguén lle responde. E pode amosarlle aprecio ás publicacións para compartir o amor. :heartpulse:"
     summary:
       enabled_description: "Está vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade."
       description:
@@ -1747,9 +1750,6 @@ gl:
       min_content_not_reached:
         one: "Seleccione como mínimo %{count} elemento."
         other: "Seleccione como mínimo %{count} elementos."
-      invalid_selection_length:
-        one: "A selección debe ter cando menos %{count} carácter."
-        other: "A selección debe ter cando menos %{count} caracteres."
       components:
         categories_admin_dropdown:
           title: "Xestionar categorías"
@@ -1833,7 +1833,6 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
-      users_placeholder: "Engadir un usuario"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1898,9 +1897,6 @@ gl:
           confirm: Ten gardado un borrador do novo tema, que se sobrescribirá se crea un tema ligado a este.
         reply_as_new_group_message:
           label: Responder como nova mensaxe de grupo
-        reply_as_private_message:
-          label: Nova mensaxe
-          desc: Crear unha nova mensaxe privada
         reply_to_topic:
           label: Responder ao tema
           desc: Responder ao tema, non a ningunha publicación específica
@@ -1933,6 +1929,7 @@ gl:
       empty: "Non se atoparon notificacións."
       post_approved: "A súa publicación foi aprobada"
       reviewable_items: "elementos que requiren revisión"
+      watching_first_post_label: "Novo tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1945,6 +1942,10 @@ gl:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} máis"
+        other: "%{username}, %{username2} e %{count} máis"
       liked_consolidated_description:
         one: "gustoulles %{count} das súas publicacións"
         other: "gustáronlles %{count} das súas publicacións"
@@ -3082,11 +3083,11 @@ gl:
         this_week: "Semana"
         today: "Hoxe"
         other_periods: "ver arriba:"
-    browser_update: 'Desafortunadamente, <a href="https://www.discourse.org/faq/#browser"> o seu navegador é demasiado vello para traballar neste sitio</a>. Por favor, <a href="https://browsehappy.com">actualice o seu navegador</a> para ver contido enriquecido, iniciar sesión e responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "Cargando"
     lightbox:
       download: "descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
@@ -3168,7 +3169,6 @@ gl:
         edit: "%{shortcut} Editar a publicación"
         delete: "%{shortcut} Eliminar a publicación"
         mark_muted: "%{shortcut} Silenciar o tema"
-        mark_regular: "%{shortcut} Tema normal (predeterminado)"
         mark_tracking: "%{shortcut} Seguir o tema"
         mark_watching: "%{shortcut} Ver o tema"
         print: "%{shortcut} Imprimir o tema"
@@ -3346,23 +3346,41 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "Sen actividade."
-      no_replies_others: "Sen respostas."
-      no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
-      unread_count: "%{count} pendente de lectura"
-      new_count: "%{count} novo"
+      unread_count:
+        one: "%{count} pendente de lectura"
+        other: "%{count} pendentes de lectura"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
+      more: "Máis..."
       sections:
+        messages:
+          header_link_text: "Mensaxes"
+          links:
+            inbox: "Caixa de entrada"
+            sent: "Enviadas"
+            new: "Novo"
+            new_with_count: "(%{count}) novo"
+            unread: "Sen ler"
+            unread_with_count: "(%{count}) pendente de ler"
+            archive: "Arquivo"
+        tags:
+          header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorías"
           header_link_text: "Categorías"
-        topics:
-          header_link_title: "inicio"
-          header_link_text: "Temas"
+        community:
+          header_link_text: "Comunidade"
           links:
             tracked:
               content: "Seguido"
+            groups:
+              content: "Grupos"
+              title: "Todos os grupos"
+            users:
+              content: "Usuarios"
+            my_posts:
+              content: "As miñas publicacións"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -4812,15 +4830,13 @@ gl:
           replace: "Substituír"
   wizard_js:
     wizard:
-      done: "Feito"
-      finish: "Finalizar"
       back: "Volver"
       next: "Seguinte"
+      step-text: "Paso"
       step: "%{current} de %{total}"
       upload: "Cargar"
       uploading: "Cargando..."
       upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
-      quit: "Pode que logo"
       staff_count:
         one: "A súa comunidade ten %{count} en equipo (vostede)."
         other: "A súa comunidade ten %{count} en equipo, incluído vostede."

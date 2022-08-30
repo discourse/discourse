@@ -11,7 +11,7 @@ export default function handleDescriptor(target, key, desc, params = []) {
     desc.value = undefined;
     desc.get = callUserSuppliedGet(params, val);
 
-    return computed(target, key, desc);
+    return computed(...params)(target, key, desc);
   } else {
     return {
       enumerable: desc.enumerable,
@@ -50,11 +50,7 @@ function niceAttr(attr) {
   let i;
 
   for (i = 0; i < parts.length; i++) {
-    if (
-      parts[i] === "@each" ||
-      parts[i] === "[]" ||
-      parts[i].indexOf("{") !== -1
-    ) {
+    if (parts[i] === "@each" || parts[i] === "[]" || parts[i].includes("{")) {
       break;
     }
   }

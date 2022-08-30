@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::VideoOnebox do
+RSpec.describe Onebox::Engine::VideoOnebox do
   it "supports ogv" do
     expect(Onebox.preview('http://upload.wikimedia.org/wikipedia/commons/3/37/STS-134_launch_2.ogv').to_s).to match(/<video/)
   end

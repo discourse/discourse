@@ -2,7 +2,7 @@
 
 class TopicQuery
   module PrivateMessageLists
-    def list_private_messages(user)
+    def list_private_messages(user, &blk)
       list = private_messages_for(user, :user)
       list = not_archived(list, user)
 
@@ -14,7 +14,7 @@ class TopicQuery
         )
       SQL
 
-      create_list(:private_messages, {}, list)
+      create_list(:private_messages, {}, list, &blk)
     end
 
     def list_private_messages_archive(user)
@@ -165,7 +165,7 @@ class TopicQuery
     def filter_private_messages_unread(user, type)
       list = TopicQuery.unread_filter(
         private_messages_for(user, type),
-        staff: user.staff?
+        whisperer: user.whisperer?
       )
 
       first_unread_pm_at =

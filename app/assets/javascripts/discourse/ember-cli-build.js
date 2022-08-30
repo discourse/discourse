@@ -7,11 +7,38 @@ const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const discourseScss = require("./lib/discourse-scss");
+const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
+
+const SILENCED_WARN_PREFIXES = [
+  "Setting the `jquery-integration` optional feature flag",
+  "The Ember Classic edition has been deprecated",
+  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
+  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
+];
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+
+  // Silence the warnings listed in SILENCED_WARN_PREFIXES
+  const ui = defaults.project.ui;
+  const oldWriteWarning = ui.writeWarnLine.bind(ui);
+  ui.writeWarnLine = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldWriteWarning(message, ...args);
+    }
+  };
+
+  // Silence warnings which go straight to console.warn (e.g. template compiler deprecations)
+  /* eslint-disable no-console */
+  const oldConsoleWarn = console.warn.bind(console);
+  console.warn = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldConsoleWarn(message, ...args);
+    }
+  };
+  /* eslint-enable no-console */
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -29,6 +56,7 @@ module.exports = function (defaults) {
     },
     autoImport: {
       forbidEval: true,
+      insertScriptsAt: "ember-auto-import-scripts",
     },
     fingerprint: {
       // Handled by Rails asset pipeline
@@ -105,7 +133,7 @@ module.exports = function (defaults) {
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import(vendorJs + "bootstrap-modal.js");
+  app.import("node_modules/bootstrap/js/modal.js");
   app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
@@ -117,6 +145,19 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
+  let discoursePluginsTree;
+  if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
+    discoursePluginsTree = app.project
+      .findAddonByName("discourse-plugins")
+      .generatePluginsTree();
+  } else {
+    // Empty tree - no-op
+    discoursePluginsTree = mergeTrees([]);
+  }
+
+  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
+  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+
   return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
@@ -125,14 +166,25 @@ module.exports = function (defaults) {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    concat(mergeTrees([app.options.adminTree]), {
-      outputFile: `assets/admin.js`,
-    }),
-    prettyTextEngine(vendorJs, "discourse-markdown"),
+    applyTerser(
+      concat(mergeTrees([app.options.adminTree]), {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    applyTerser(
+      concat(mergeTrees([app.options.wizardTree]), {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/wizard.js`,
+      })
+    ),
+    applyTerser(prettyTextEngine(app)),
     concat("public/assets/scripts", {
       outputFile: `assets/start-discourse.js`,
       headerFiles: [`start-app.js`],
       inputFiles: [`discourse-boot.js`],
     }),
+    generateScriptsTree(app),
+    applyTerser(discoursePluginsTree),
   ]);
 };

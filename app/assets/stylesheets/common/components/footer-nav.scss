@@ -4,32 +4,36 @@
 
 $footer-nav-height: 49px;
 
+:root {
+  --footer-nav-height: #{$footer-nav-height};
+}
+
 body.footer-nav-visible {
   #main-outlet {
-    padding-bottom: $footer-nav-height + 15;
+    padding-bottom: calc(var(--footer-nav-height) + 15px);
   }
 
   #reply-control.draft {
-    bottom: $footer-nav-height;
+    bottom: var(--footer-nav-height);
     margin-bottom: env(safe-area-inset-bottom);
     padding-bottom: 0px;
   }
 
   #topic-progress-wrapper:not(.docked) {
-    margin-bottom: calc(#{$footer-nav-height} + env(safe-area-inset-bottom));
+    margin-bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
   }
   .posts-filtered-notice {
     transition: all linear 0.1s;
-    bottom: calc(#{$footer-nav-height} + env(safe-area-inset-bottom));
+    bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
   }
 }
 
 .footer-nav {
   background-color: rgba(var(--header_background-rgb), 0.9);
   box-shadow: shadow("footer-nav");
-  height: $footer-nav-height;
+  height: var(--footer-nav-height);
   position: fixed;
-  bottom: -$footer-nav-height;
+  bottom: calc(var(--footer-nav-height) * -1);
   left: 0;
   width: 100%;
   z-index: z("footer-nav");
@@ -73,7 +77,7 @@ body.footer-nav-visible {
 }
 
 body.footer-nav-ipad {
-  padding-top: $footer-nav-height;
+  padding-top: var(--footer-nav-height);
   .footer-nav {
     bottom: auto;
     top: 0px;
@@ -88,6 +92,6 @@ body.footer-nav-ipad {
   }
 
   &.docked .d-header-wrap {
-    top: $footer-nav-height;
+    top: var(--footer-nav-height);
   }
 }

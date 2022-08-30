@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SearchIndexer do
+RSpec.describe SearchIndexer do
   let(:post_id) { 99 }
 
   before do
@@ -290,22 +290,6 @@ describe SearchIndexer do
 
       words = post_search_data.search_data.scan(/'([^']*)'/).map { |match| match[0] }
       expect(words).to contain_exactly('best', 'beig', 'obj', 'http', 'titl', 'long', 'enou', 'unca')
-    end
-
-    context 'private messages' do
-      fab!(:user1) { Fabricate(:user, name: 'bloop', username: 'bloopdroop') }
-      fab!(:user2) { Fabricate(:user, name: 'two', username: 'twotone') }
-      let!(:pm_topic) { Fabricate(:private_message_topic,
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: user1),
-          Fabricate.build(:topic_allowed_user, user: user2)
-        ]) }
-      let(:pm_post) { Fabricate(:post, topic: pm_topic) }
-
-      it 'includes participating users in a private message' do
-        search_data = pm_post.post_search_data.search_data
-        expect(search_data).to include("bloop", "bloopdroop", "two", "twoton")
-      end
     end
   end
 

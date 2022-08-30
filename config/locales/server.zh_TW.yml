@@ -1105,7 +1105,6 @@ zh_TW:
     site_description: "用一句話描述這個網站，用於 meta description 標籤。"
     short_site_description: "簡短描述，用於網頁標題。"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
-    download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"
@@ -1136,7 +1135,6 @@ zh_TW:
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
     apple_touch_icon: "Icon 用於Apple觸控裝置的圖示，將自動調整為180x180。 如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
-    twitter_summary_large_image: "Twitter卡 摘要大尺寸圖片卡（寬度至少應為280，高度至少為150）。 如果留空，則使用opengraph_image以生成卡片（metadata）。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1547,6 +1545,7 @@ zh_TW:
     default_categories_tracking: "分類列表預設追蹤。"
     default_categories_muted: "分類列表預設不顯示。"
     default_categories_watching_first_post: "預設監看這些分類中每個新主題的第一貼"
+    default_categories_normal: "類別沒有預設靜音的清單，當`預設所有類別靜音`網站設定啟用時很有用。"
     default_text_size: "預設選定的文字大小"
     default_title_count_mode: "頁面標題計數器的預設模式"
     retain_web_hook_events_period_days: "保留Web hook事件記錄的天數。"
@@ -2569,7 +2568,6 @@ zh_TW:
     suspicious_login:
       title: "新登入提醒"
       subject_template: "[%{site_name}] 新登入來自%{location}"
-      text_body_template: "您好，\n\n我們注意到您從未知的第三方設備登入。\n\n這是你嗎？ \n- 位置：%{location}（%{client_ip}） \n- 瀏覽器：%{browser} \n- 設備：%{device} - %{os}\n\n如果這是你，太棒了！你不需要做任何其他事情。如果這不是您，請[查看帳號個人檔案](%{base_url}/my /preferences/account)，並考慮更改您的密碼。\n"
     post_approved:
       title: "你的貼文已通過"
   page_not_found:
@@ -3017,87 +3015,28 @@ zh_TW:
       message: "<p>我們已重發啟用信件至 <b>%{email}</b>"
   safe_mode:
     title: "進入安全模式"
-    description: "安全模式讓你的網站不載入套件或站點自定義設定。"
-    no_customizations: "停用當前佈景主題"
-    only_official: "停用非官方套件"
+    no_unofficial_plugins: "停用非官方套件"
     no_plugins: "停用所有套件"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
   wizard:
     title: "Discourse 安裝"
     step:
-      locale:
-        title: "歡迎來到 Discourse！"
-        fields:
-          default_locale:
-            description: "你的社群主要使用什麼語言？"
-      forum_title:
-        title: "名字"
-        description: "名字就像遠方可見的路標一樣，訪客“首先”將看到這個社群的名字。你起的名字和標題怎樣描述了你的社群？"
+      introduction:
         fields:
           title:
-            label: "你社群的名字"
             placeholder: "小明的論壇"
           site_description:
             placeholder: "小明和他的朋友討論酷東西的論壇"
-          short_site_description:
-            placeholder: "最佳社群"
-      introduction:
-        title: "介紹"
-        disabled: "<p>我們找不到標題為「%{topic_title}」的討論話題。 </p><ul><li>如果您更改了標題，請編輯該討論話題以修改您網站的描述內容。 </li><li>如果您已刪除此討論話題，請建立另一個討論話題為「%{topic_title}」作為標題。第一篇貼文的內容是您網站的描述文字。 </li></ul>"
-        fields:
-          welcome:
-            label: "歡迎主題"
-            description: "<p>你會如何在一分鐘內向陌生人描述你的社群？</p> <ul> <li>誰會對這些討論感興趣？</li> <li>我能獲得什麼？</li> <li>為什麼我應該參與？</li> </ul> <p>你的歡迎主題，是新訪客將首先看到的訊息。請將它視為<b>一段</b>「電梯宣傳」或者「任務說明」。</p>"
-            one_paragraph: "請限制你的歡迎消息至一段話。"
       privacy:
-        title: "訪問"
-        description: "<p>你的社群對是否對大眾公開，或僅限於會員使用、邀請制或須審核加入？如果你願意，你可以先在私密模式下準備，稍後再將其設為公開。</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "公開"
-                description: "任何人都可以訪問此社群"
-              restricted:
-                label: "私密"
-                description: "使用者必須登入後才能訪問此社群"
-          privacy_options:
-            description: "新使用者如何註冊帳號？"
-            choices:
-              open:
-                label: "使用者可以自行註冊"
-              invite_only:
-                label: "使用者必須先受信任的使用者或管理員的邀請才能註冊。"
-              must_approve:
-                label: "使用者可以自行註冊，但必須得到管理員的批准。"
-      contact:
-        title: "聯繫"
-        fields:
-          contact_email:
-            label: "郵件"
-            placeholder: "name@example.com"
-            description: "社群的負責人或小組的郵件地址。將用來接收關於未處理標記和安全更新的緊急通知，並顯示在<a href='%{base_path}/about' target='_blank'>關於頁面</a>上作為緊急聯繫的方式。"
-          contact_url:
-            label: "網頁"
-            placeholder: "https://www.example.com/contact-us"
-            description: "你或者你的組織平時用於聯絡的網頁。將被顯示在<a href='%{base_path}/about' target='_blank'>關於頁面</a>中。"
-          site_contact:
-            label: "自動消息"
-            description: "所有自動發送的消息將以該使用者的名義發送，比如投訴警告、備份完成通知。"
-      corporate:
-        title: "組織"
-        description: "這個資訊將顯示您的<a href='%{base_path}/tos' target='blank'>服務條款</a>，你可以在管理員分類中編輯這些討論話題。如果你沒有公司，你可以跳過這個步驟。"
-        fields:
-          company_name:
-            label: "公司名稱"
-            placeholder: "組織範例"
-          governing_law:
-            label: "適用於法律"
-            placeholder: "加州法律"
-          city_for_disputes:
-            label: "爭議"
-            placeholder: "舊金山，加洲（California）"
+          login_required:
+            placeholder: "私密"
+            extra_description: "使用者必須登入後才能訪問此社群"
+          must_approve_users:
+            placeholder: "需要審核"
+      ready:
+        title: "你的 Discourse 已經準備就緒！"
       styling:
         fields:
           styling_preview:
@@ -3114,24 +3053,34 @@ zh_TW:
                 label: "分類和最新話題"
               categories_and_top_topics:
                 label: "分類與熱門話題"
-      logos:
-        title: "標誌"
+      branding:
         fields:
           logo:
             label: "主要標誌"
-            description: "網站左上角的 Logo 圖片使用高120且寬高比大於3：1的寬矩形圖像"
           logo_small:
             label: "正方形 Logo"
-            description: "Logo 的正方形版本，當向下滾動時，在瀏覽器中以及在社交平台上共享時，Logo 會顯示在網站的左上角，理想情況下圖片需大於512x512。"
-      icons:
-        title: "表徵圖"
-        fields:
           favicon:
             label: "瀏覽器的 Icon"
-            description: "在瀏覽器中代表您的網站 Icon 圖像，建議上傳小尺寸，圖片副檔名最好是.PNG或.JPG，預設值為使用正方形 Logo。"
           large_icon:
             label: "大表徵圖"
-            description: "用於在現代設備上代表您的網站 Icon 圖像，建議上傳大尺寸，理想情況下大於512×512，預設值為使用正方形 Logo。"
+      corporate:
+        fields:
+          company_name:
+            label: "公司名稱"
+            placeholder: "組織範例"
+          governing_law:
+            label: "適用於法律"
+            placeholder: "加州法律"
+          contact_url:
+            label: "網頁"
+            placeholder: "https://www.example.com/contact-us"
+            description: "你或者你的組織平時用於聯絡的網頁。將被顯示在<a href='%{base_path}/about' target='_blank'>關於頁面</a>中。"
+          city_for_disputes:
+            label: "爭議"
+            placeholder: "舊金山，加洲（California）"
+          site_contact:
+            label: "自動消息"
+            description: "所有自動發送的消息將以該使用者的名義發送，比如投訴警告、備份完成通知。"
       invites:
         title: "邀請工作人員"
         description: "您就快完成啦！讓我們邀請一些人來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"

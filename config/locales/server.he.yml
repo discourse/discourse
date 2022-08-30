@@ -224,6 +224,7 @@ he:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלת שגויה של כמות פניות ממשתמשים אנושיים."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
+      twitter_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה לאתר הזה, כיוון שהשרת ‚%{hostname}’ לא נמצא. במקום תצוגה מקדימה יופיע קישור בלבד בפוסט שלך. :cry:"
@@ -586,16 +587,16 @@ he:
         user:
           attributes:
             password:
-              common: "אחת מתוך 10000 הססמאות הנפוצות ביותר. נא להשתמש בססמה בטוחה יותר."
-              same_as_username: "זהה לשם המשתמש שלך. נא להשתמש בססמה בטוחה יותר."
-              same_as_email: "זהה לכתובת הדוא״ל שלך. נא להשתמש בססמה בטוחה יותר."
-              same_as_current: "זהה לססמה הנוכחית שלך."
+              common: "אחת מתוך 10000 הסיסמאות הנפוצות ביותר. נא להשתמש בסיסמה בטוחה יותר."
+              same_as_username: "זהה לשם המשתמש שלך. נא להשתמש בסיסמה בטוחה יותר."
+              same_as_email: "זהה לכתובת הדוא״ל שלך. נא להשתמש בסיסמה בטוחה יותר."
+              same_as_current: "זהה לסיסמה הנוכחית שלך."
               same_as_name: "זהה לשם שלך."
-              unique_characters: "מכיל יותר מידי תווים שחוזרים על עצמם. נא להשתמש בססמה בטוחה יותר."
+              unique_characters: "מכיל יותר מידי תווים שחוזרים על עצמם. נא להשתמש בסיסמה בטוחה יותר."
             username:
-              same_as_password: "זהה לססמה שלך."
+              same_as_password: "זהה לסיסמה שלך."
             name:
-              same_as_password: "זהה לססמה שלך."
+              same_as_password: "זהה לסיסמה שלך."
             ip_address:
               signup_not_allowed: "אסור להירשם מהחשבון הזה."
         user_profile:
@@ -638,6 +639,11 @@ he:
               too_many: "יש יותר מדי מילים בפעולה הזו"
             base:
               invalid_url: "כתובת ההחלפה שגויה"
+              invalid_tag_list: "רשימת התגיות להחלפה שגויה"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "לא תקף"
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
   vip_category_name: "טרקלין"
@@ -700,6 +706,11 @@ he:
   post:
     image_placeholder:
       broken: "תמונה זו פגומה"
+      blocked_hotlinked_title: "התמונה מתארחת באתר אחר. לחיצה תפתח אותה בלשונית חדשה."
+      blocked_hotlinked: "תמונה חיצונית"
+    media_placeholder:
+      blocked_hotlinked_title: "המדיה מתארחת באתר אחר. לחיצה תפתח אותה בלשונית חדשה."
+      blocked_hotlinked: "מדיה חיצונית"
     hidden_bidi_character: "תווי דו־כיווניות יכולים לשנות את סדר עיבוד הטקסט. אפשר להשתמש בהם להסוואת קוד זדוני."
     has_likes:
       one: "לייק %{count}"
@@ -721,7 +732,7 @@ he:
       public_group_membership: "הצטרפת/עזבת קבוצות בתדירות מעט גבוהה מדי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
       topics_per_day: "הגעת לכמות המרבית המותרת של נושאים חדשים ביום. ניתן ליצור נושאים חדשים בעוד %{time_left}."
       pms_per_day: "הגעת לכמות המרבית המותרת של הודעות חדשות ביום. ניתן ליצור הודעות חדשות בעוד %{time_left}."
-      create_like: "וואו! כמה אהבה שיתפת! הגעת לכמות הלייקים היומית המותרת להיום, אך עם העלייה בדרגות האמון הסף הזה יעלה. תהיה לך אפשרות לשוב ולעשות לייק לפוסטים בעוד %{time_left}."
+      create_like: "וואו! כמה אהבה שיתפת! הגעת לכמות הלייקים המרבית לטווח של 24 שעות, אך עם העלייה בדרגות האמון הסף הזה יעלה. תהיה לך אפשרות לשוב ולעשות לייק לפוסטים בעוד %{time_left}."
       create_bookmark: "הגעת לכמות המרבית המותרת של סימניות ביום. ניתן ליצור סימניות חדשות בעוד %{time_left}."
       edit_post: "הגעת לכמות המרבית המותרת של עריכות ביום. ניתן להגיש עריכות נוספות בעוד %{time_left}."
       live_post_counts: "ביקשת ספירת פוסטים בזמן אמת מהר מדי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
@@ -855,16 +866,16 @@ he:
         many: "לפני %{count} שנים כמעט"
         other: "לפני %{count} שנים כמעט"
   password_reset:
-    no_token: "הקישור להחלפת הססמה ישן מדי, עמך הסליחה. נא לבחור בכפתור הכניסה ולהשתמש באפשרות ‚שכחתי את הססמה שלי’ כדי לקבל קישור חדש."
-    choose_new: "נא לבחור בססמה חדשה"
-    choose: "בחירת ססמה"
-    update: "עדכון ססמה"
-    save: "הגדרת ססמה"
-    title: "איפוס ססמה"
-    success: "החלפת את ססמתך בהצלחה וכעת נכנסת לאתר."
-    success_unapproved: "החלפת את ססמתך בהצלחה."
+    no_token: "הקישור להחלפת הסיסמה ישן מדי, עמך הסליחה. נא לבחור בכפתור הכניסה ולהשתמש באפשרות ‚שכחתי את הסיסמה שלי’ כדי לקבל קישור חדש.י"
+    choose_new: "נא לבחור בסיסמה חדשה"
+    choose: "בחירת סיסמה"
+    update: "עדכון סיסמה"
+    save: "הגדרת סיסמה"
+    title: "איפוס סיסמה"
+    success: "החלפת את הסיסמה בהצלחה וכעת נכנסת לאתר."
+    success_unapproved: "החלפת את הסיסמה בהצלחה."
   email_login:
-    invalid_token: "קישור הכניסה בדוא״ל ישן מדי, עמך הסליחה. יש לבחור בכפתור הכניסה ולהשתמש ב‚שכחתי את ססמתי’ כדי לקבל קישור חדש."
+    invalid_token: "קישור הכניסה בדוא״ל ישן מדי, עמך הסליחה. יש לבחור בכפתור הכניסה ולהשתמש ב‚שכחתי סיסמה’ כדי לקבל קישור חדש."
     title: "כניסה עם דוא״ל"
   user_auth_tokens:
     browser:
@@ -1513,9 +1524,11 @@ he:
     contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
-    download_remote_images_to_local: "המרת תמונות מרוחקות למקומיות על ידי הורדתן, פעולה זו מסייעת במניעת תמונות שבורות."
+    download_remote_images_to_local: "המרת תמונות מרוחקות (בקישור חם) למקומיות על ידי הורדתן. פעולה זו משמרת את התוכן אפילו אם התמונות נמחקות מהאתר המרוחק בעתיד."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
     disabled_image_download_domains: "תמונות מרחוק לעולם לא יורדו ממתחמים (domains) אלו. "
+    block_hotlinked_media: "למנוע ממשתמשים לקשר למדיה בפוסטים שלהם. מדיה מאתר חיצוני שלא נמשכה דרך ‚download_remote_images_to_local’ (הורדת תמונות חיצוניות לאחסון מקומי) תוחלף בקישור ממלא מקום."
+    block_hotlinked_media_exceptions: "רשימת כתובות בסיס שמוחרגות מהגדרת block_hotlinked_media (חסימת קישור חם למדיה). כולל הפרוטוקול (למשל: https://example.com)."
     editing_grace_period: "למשך (n) שניות לאחר הפרסום, עריכה לא תיצור גרסה חדשה בהיסטוריית הפוסט."
     editing_grace_period_max_diff: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 0 ו־1)"
     editing_grace_period_max_diff_high_trust: "מספר תווים מרבי שמותר לשנות בטווח עריכת חסד, אם נערכו למעלה מהכמות הזאת יש ליצור מהדורה חדשה לפוסט (דרגות אמון 2 ומעלה)"
@@ -1557,13 +1570,14 @@ he:
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
     apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
-    twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמור להיות ברוחב של 280 לפחות ובגובה של 150 לפחות). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ב־opengraph_image (תמונת opengraph)."
+    twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
-    email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
+    email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "מאלץ משתמשים להפעיל אימות דו־שלבי. יש לבחור ב‚הכול’ כדי לאלץ את כל המשתמשים. יש לבחור ב‚סגל’ כדי לאכוף על חברי סגל בלבד."
     force_https: "אילוץ האתר שלך להשתמש ב־HTTPS בלבד. אזהרה: אין להפעיל זאת עד שווידאת ש־HTTPS מוגדר ועובד לחלוטין בכל מקום! בדקת שה־CDN, הכניסה דרך רשתות חברתיות ולוגואים / תלויות חיצוניות גם כן תומכים ב־HTTPS?"
+    same_site_cookies: "להשתמש בעוגיות של אותו האתר, הן מבטלות משטחי הונאת בקשות בין אתרים (Cross Site Request Forgery - CSRF) בדפדפנים נתמכים (גמיש או נוקשה). אזהרה: נוקשה יעבוד רק על אתרים שמאלצים כניסה ומשתמשים בשיטת אימות חיצונית."
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "כמות פוסטים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
     summary_likes_required: "כמות לייקים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
@@ -1660,6 +1674,7 @@ he:
     enable_badges: "הפעלת מערכת העיטורים"
     max_favorite_badges: "מספר העיטורים המרבי שמשתמש יכול לבחור"
     enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
+    whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
     blocked_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שאסור להירשם דרכם. למשל: mailinator.com|trashmail.net"
     allowed_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שמולם חייבים המשתמשים להיות רשומים. אזהרה: משתמשים שכתובת הדוא״ל שלהם אינה רשומה תחת שמות התחום שברשימה לא יורשו!"
@@ -1746,6 +1761,8 @@ he:
     top_topics_formula_first_post_likes_multiplier: "מכפיל של לייקים על הפוסט הראשון (n) בנוסת הנושאים המובילים: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "מכפיל של כמות לייקים מינימלית לפוסט (n) בנוסחת הנושאים המובילים: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "לאפשר למשתמשים להיכנס למצב בטוח כדי לנפות שגיאות בתוספים."
+    enable_experimental_sidebar_hamburger: "מאפשר להפעיל סרגל צד ניסיוני ותפריט המבורגר נגלל למשתמש."
+    enable_sidebar: "מפעיל סרגל צד ניסיוני."
     rate_limit_create_topic: "לאחר יצירת נושא, על המשתמשים להמתין (n) שניות לפני יצירת נושא אחר."
     rate_limit_create_post: "לאחר הפרסום על המשתמשים להמתין (n) שניות לפני יצירת פוסט חדש."
     rate_limit_new_user_create_topic: "לאחר יצירת נושא, משתמשים חדשים יחוייבו לחכות (n) שניות לפני שיוכלו ליצור נושא אחר."
@@ -1941,6 +1958,7 @@ he:
     max_emails_per_day_per_user: "המספר המרבי של הודעות דוא״ל שניתן לשלוח למשתמש ביום. 0 להשבתת ההגבלה."
     enable_staged_users: "יצירת משתמשים מבוימים באופן אוטומטי בזמן עיבוד הודעות דוא״ל נכנסות."
     maximum_staged_users_per_email: "מספר מרבי של משתמשים מבוימים שנוצרים בזמן עיבוד הודעת דוא״ל נכנסת."
+    maximum_recipients_per_new_group_email: "חסימת הודעות דוא״ל נכנסות עם יותר מדי נמענים."
     auto_generated_allowlist: "רשימת כתובות דואר מהן לא ייבדק אם התוכן נוצר-אוטומטית. למשל: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "לחסום הודעות דוא״ל נכנסות שזוהו ככאלו שנוצרו אוטומטית."
     ignore_by_title: "להתעלם מהודעות דוא״ל נכנסות לפי הכותרת שלהן."
@@ -2139,7 +2157,7 @@ he:
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
-    default_categories_regular: "רשימת הקטגוריות שאינן מושתקות כבררת מחדל. שימושי כאשר הגדרת האתר `mute_all_categories_by_default` (השתקת כל הקטגוריות כבררת מחדל) מופעלת."
+    default_categories_normal: "רשימת הקטגוריות שאינן מושתקות כבררת מחדל. שימושי כאשר הגדרת האתר `mute_all_categories_by_default` (השתקת כל הקטגוריות כבררת מחדל) מופעלת."
     mute_all_categories_by_default: "הגדרת כל רמות ההתראות כבררת מחדל בכל הקטגוריות למושתק. לדרוש ממשתמשים לבחור באופן יזום קטגוריות שיופיעו תחת ‚אחרונים’ ו־‚קטגוריות’. אם ברצונך להוסיף את בררות המחדל למשתמשים אלמוניים עליך להגדיר את ‚default_categories_‎’."
     default_tags_watching: "רשימת תגיות שבצפייה כבררת מחדל."
     default_tags_tracking: "רשימת תגיות שבמעקב כבררת מחדל"
@@ -2195,6 +2213,9 @@ he:
     use_email_for_username_and_name_suggestions: "להשתמש בחלק הראשון של כתובת הדוא״ל כשם משתמש והצעה לשם. נא לשים לב שזה מקל על אנשים לנחש את כתובות הדוא״ל המלאות (כיוון שרוב האנשים חולקים שירותים נפוצים כגון `gmail.com`)."
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
+    splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
+    default_sidebar_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד כברירת מחדל."
+    default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2249,6 +2270,7 @@ he:
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
+      delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2405,14 +2427,14 @@ he:
     security_key_invalid: "אירעה שגיאה באימות מפתח האבטחה."
     not_approved: "חשבונך טרם אושר. תישלח אליך הודעה בדוא״ל כשיהיה מוכן לכניסה."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
-    incorrect_password: "ססמה שגויה"
+    incorrect_password: "סיסמה שגויה"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
     activate_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     not_activated: "אין לך אפשרות להיכנס עדיין. שלחנו אליך הודעת הפעלה בדוא״ל. נא לעקוב אחר ההוראות שבהודעה כדי להפעיל את החשבון שלך."
     not_allowed_from_ip_address: "אין לך אפשרות להיכנס בתור %{username} מכתובת IP זו."
     admin_not_allowed_from_ip_address: "אין לך אפשרות להיכנס כהנהלת המערכת מכתובת IP זו."
-    reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס ססמה מכתובת ה־IP הזאת."
+    reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס סיסמה מכתובת ה־IP הזאת."
     suspended: "אין לך אפשרות להיכנס עד %{date}."
     suspended_with_reason: "חשבון הושעה עד %{date}: %{reason}"
     suspended_with_reason_forever: "חשבון מושעה: %{reason}"
@@ -3136,6 +3158,15 @@ he:
         הגבת להודעת תקציר, שזה לא מקובל.
 
         אם לדעתך מדובר בשגיאה [נא ליצור קשר עם חבר סגל](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "דחיית דוא״ל יותר מדי נמענים"
+      subject_template: "[%{email_prefix}] תקלת דוא״ל -- יותר מדי נמענים"
+      text_body_template: |
+        מחילה אך הודעות הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עברה.
+
+        ניסית לשלוח הודעות ללמעלה מ־%{max_recipients_count} אנשים והמערכת שלנו תייגה את ההודעה שלך כספאם אוטומטית.
+
+        אם לדעתך מדובר בשגיאה [נא ליצור קשר עם חבר סגל](%{base_url}/about).
     email_error_notification:
       title: "התראת בעיית מייל"
       subject_template: "[%{email_prefix}] בעיית מייל -- בעיית אימות POP"
@@ -3633,7 +3664,7 @@ he:
         יש ללחוץ על הקישור הבא כדי לבחור סיסמה לחשבון החדש שלך:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "אישור מייל חדש"
+      title: "אישור דוא״ל חדש"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל החדשה שלך"
       text_body_template: |
         לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
@@ -3651,7 +3682,7 @@ he:
 
         החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם [הנהלת האתר](%{base_url}/about).
     confirm_old_email:
-      title: "אישור מייל ישן"
+      title: "אישור דוא״ל ישן"
       subject_template: "[%{email_prefix}] נא לאשר את כתובת הדוא״ל הנוכחית שלך"
       text_body_template: |
         לפני שנוכל להחליף את כתובת הדוא״ל שלך, עלינו לאשר שיש לך שליטה
@@ -3751,7 +3782,7 @@ he:
 
         אם זאת הייתה פעילות שלך, נהדר! לא צריך לעשות שום דבר.
 
-        אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/account) לצד שיקול בכובד ראש להחלפת הססמה שלך.
+        אם לא מדובר בפעולות מטעמך, אנא [לסקור את ההפעלות הנוכחיות שלך](%{base_url}/my/preferences/security) לצד שיקול בכובד ראש להחלפת הסיסמה שלך.
     post_approved:
       title: "הפוסט שלך אושר"
       subject_template: "[%{site_name}] הפוסט שלך אושר"
@@ -3856,6 +3887,12 @@ he:
     dark_rose: "ורד כהה"
     wcag: "נגיש בהיר"
     wcag_theme_name: "נגיש בהיר"
+    dracula: "דרקולה"
+    dracula_theme_name: "דרקולה"
+    solarized_light: "חשיפה בהירה לשמש"
+    solarized_light_theme_name: "חשיפה בהירה לשמש"
+    solarized_dark: "חשיפה כהה לשמש"
+    solarized_dark_theme_name: "חשיפה כהה לשמש"
     wcag_dark: "נגיש כהה"
     wcag_dark_theme_name: "נגיש כהה"
     default_theme_name: "בררת מחדל"
@@ -4503,6 +4540,7 @@ he:
       invalid_token: "אסימון שגוי."
     email_input: "דוא״ל של המנהל"
     submit_button: "שליחת דוא״ל"
+    safe_mode: "מצב בטוח: השבתת כל ערכות העיצוב/תוספים בעת כניסה"
   performance_report:
     initial_post_raw: נושא זה כולל דוחות פעילות יומיים עבור האתר שלך.
     initial_topic_title: דוחות פעילות לאתר
@@ -4563,92 +4601,47 @@ he:
       message: "<p>הודעת ההפעלה נשלחה מחדש בדוא״ל אל <b>%{email}</b>"
   safe_mode:
     title: "כנסו למצב בטוח"
-    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או התאמות אתר."
-    no_customizations: "ניטרול של תמה נוכחית"
-    only_official: "השבתת תוספים בלתי רשמיים"
+    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או ערכות עיצוב."
+    no_themes: "השבתת ערכות עיצוב ורכיבי ערכת עיצוב"
+    no_unofficial_plugins: "השבתת תוספים בלתי רשמיים"
     no_plugins: "השבתת כל התוספים"
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
   wizard:
     title: "הקמת Discourse"
     step:
-      locale:
-        title: "ברוכים הבאים ל Discourse!"
-        fields:
-          default_locale:
-            description: "מה השפה של הקהילה שלכם?"
-      forum_title:
-        title: "שם"
-        description: "השם שלכם נראה למרחוק, הדבר ה<i>ראשון</i> שמבקרים פוטנציאליים יבחינו בו בנוגע לקהילה שלכם. מה השם והכותרת שלכם אומרים על הקהילה?"
+      introduction:
+        title: "נשמח לשמוע על הקהילה שלך"
         fields:
           title:
-            label: "שם הקהילה שלכם"
+            label: "שם הקהילה"
             placeholder: "המקום של ג׳יין"
           site_description:
-            label: "נא לתאר את הקהילה שלך במשפט קצר אחד (ישמש תוצאות חיפוש ורשתות חברתיות)"
+            label: "תיאור הקהילה שלך במשפט קצר"
             placeholder: "מקום לג׳יין וחבריה לשוחח על דברים מגניבים"
-          short_site_description:
-            label: "נא לתאר את הקהילה שלך במספר מילים (משמש לכתובת דף הבית)"
-            placeholder: "הקהילה הכי טובה בעולם"
-      introduction:
-        title: "מבוא"
-        disabled: "<p>לא הצלחנו למצוא אף נושא עם הכותרת „%{topic_title}”.</p> <ul> <li>אם שינית את הכותרת, עליך לערוך את הנושא הזה כדי לשנות את טקסט ההקדמה של האתר שלך.</li> <li>אם מחקת את הנושא הזה, יש ליצור אחד נוסף עם הכותרת „%{topic_title}”. התוכן של הפוסט הראשון הוא טקסט ההקדמה של האתר שלך.</li> </ul>"
-        fields:
-          welcome:
-            label: "נושא ברוכים-הבאים"
-            description: "<p>איך לדעתך ראוי לתאר את הקהילה שלך לאנשים זרים שפגשת במעלית למשך בערך דקה?</p> <ul> <li>למי מיועדים הדיונים?</li> <li>מה אפשר למצוא כאן?</li> <li>מדוע כדאי לי לבקר?</li> </ul> <p>נושא קבלת הפנים שלך הוא הדבר הראשון שייקראו המתעניינים החדשים. כדאי להתייחס אליו בתור ‚נאום מעלית’ או ‚הצהרת כוונות’ <b>של פסקה אחת</b>.</p>"
-            one_paragraph: "אנא הגבילו את הודעת הברוכים-הבאים שלכם לפסקה אחת."
-            extra_description: "במקרה של ספק ניתן לדלג על השלב הזה ולערוך את קבלת הפנים ואת הנושא בהמשך."
-      privacy:
-        title: "גישה"
-        description: "<p>הקהילה שלך פתוחה לכולם או שהיא מוגבלת לחברים בהזמנה או באישור? לבחירתך, ניתן לערוך את כל ההגדרות באופן פרטי ורק לאחר מכן לעבור לתצורה ציבורית.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "פומבי"
-                description: "לכל אחד יש גישה לקהילה הזו"
-              restricted:
-                label: "פרטי"
-                description: "רק משתמשים שנכנסו למערכת יכולים לגשת לקהילה הזו"
-          privacy_options:
-            description: "איך משתמשים חדשים נרשמים?"
-            choices:
-              open:
-                label: "למשתמשים יש אפשרות להירשם עצמאית."
-              invite_only:
-                label: "משתמשים חייבים לקבל הזמנה ממשתמשים מהימנים או סגל בטרם ההרשמה."
-              must_approve:
-                label: "משתמשים יכולים להירשם עצמאית אך אישור ההרשמה נתון לאישור הסגל."
-      contact:
-        title: "איש/אשת קשר"
-        fields:
           contact_email:
-            label: "דוא״ל"
-            placeholder: "name@example.com"
-            description: "כתובת מייל לאדם או קבוצה שאחראים על קהילה זו. משמשת להתראות קריטיות כמו דגלים שלא טופלו, עידכוני אבטחה, וב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a> ליצירת קשר דחופה עם איש הקשר של הקהילה."
-          contact_url:
-            label: "דף ווב"
-            placeholder: "https://www.example.com/contact-us"
-            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a>."
-          site_contact:
-            label: "הודעות אוטומטיות"
-            description: "כל ההודעות האישיות האוטומטיות שנשלחות על ידי Discourse נשלחות מהמשתמש הזה, כגון אזהרות על סימוני דגלים והתראות על השלמת גיבוי."
-      corporate:
-        title: "ארגון"
-        description: "פרטים אלו יתווספו אל <a href='%{base_path}/tos' target='blank'>תנאי השירות</a> שלך, שהוא נושא שניתן לערוך בקטגוריית הסגל. אם אין אף חברה שמיוצגת על ידיך, אפשר לדלג על שלב זה כרגע."
+            label: "נקודת קשר"
+            placeholder: "example@user.com"
+            description: "יחיד או קבוצה שאחראים על הקהילה הזאת. משמש לעדכונים משמעותיים ומופיע תחת <a href='%{base_path}/about' target='_blank'>עמוד ‚על אודות’</a> שלך כקשר למקרי חירום."
+          default_locale:
+            label: "שפה"
+      privacy:
+        title: "חוויית החברים"
         fields:
-          company_name:
-            label: "שם החברה"
-            placeholder: "ארגון לדוגמה"
-          governing_law:
-            label: "החוק המחייב"
-            placeholder: "החוקים של קליפורניה"
-          city_for_disputes:
-            label: "עיר המחלוקת"
-            placeholder: "סן פרנסיסקו, קליפורניה"
+          login_required:
+            placeholder: "פרטי"
+            extra_description: "רק משתמשים שנכנסו למערכת יכולים לגשת לקהילה הזו"
+          invite_only:
+            placeholder: "הזמנה בלבד"
+            extra_description: "משתמשים חייבים לקבל הזמנה ממשתמשים מהימנים או מהסגל, אחרת משתמשים יוכלו להירשם בעצמם"
+          must_approve_users:
+            placeholder: "דרישת אישור"
+            extra_description: "המשתמשים חייבים לעבור את אישור הסגל"
+      ready:
+        title: "ה־Discourse שלך מוכן!"
+        description: "זהו זה! סיימת את ההגדרות הראשוניות של הקהילה שלך. עכשיו אפשר לצלול פנימה ולחקור קצת את המערכת, לכתוב נושא לקבלת פנים ולשלוח הזמנות!<br><br>שיהיה בכיף!"
       styling:
-        title: "עיצוב"
+        title: "מראה ותחושה"
         fields:
           color_scheme:
             label: "ערכת צבעים"
@@ -4669,6 +4662,8 @@ he:
                 label: "קטגוריות עם נושאים מומלצים"
               categories_and_latest_topics:
                 label: "קטגוריות ונושאים אחרונים"
+              categories_and_latest_topics_created_date:
+                label: "קטגוריות ונושאים עדכניים (מיון לפי תאריך יצירת הנושא)"
               categories_and_top_topics:
                 label: "קטגוריות ונושאים מובילים"
               categories_boxes:
@@ -4677,24 +4672,43 @@ he:
                 label: "תיבות קטגוריות עם נושאים"
               subcategories_with_featured_topics:
                 label: "תת־קטגוריות עם נושאים מובילים"
-      logos:
-        title: "לוגואים"
+      branding:
+        title: "מיתוג הקהילה"
         fields:
           logo:
             label: "לוגו ראשי"
-            description: "תמונת הלוגו בפינה הימנית העליונה של האתר שלך. יש להשתמש בתמונה מלבנית רחבה בגובה של 120 ויחס תצוגה שעולה על 3:1."
+            description: "הלוגו בפינה הימנית העליונה של האתר שלך. יש להשתמש בתמונה מלבנית רחבה בגובה של 120 ויחס תצוגה שעולה על 3:1."
           logo_small:
             label: "לוגו ריבועי"
-            description: "גרסה ריבועית של הלוגו שלך. מופיעה בפינה הימנית העליונה של האתר שלך בעת גלילה כלפי מטה בדפדפן ובעת שיתוף ברשתות חברתיות. מומלץ שיהיה גדול מ־512×512."
-      icons:
-        title: "אייקונים"
-        fields:
+            description: "גרסה ריבועית של הלוגו שלך. מופיע בפינה הימנית העליונה בעת גלילה כלפי מטה ובעת שיתוף ברשתות חברתיות. מומלץ שיהיה גדול מ־512×512."
           favicon:
             label: "סמל דפדפן"
-            description: "תמונת סמל שמשמשת לייצוג האתר שלך בצורה יפה גם כשהיא מוקטנת מול הדפדפנים. סיומות קובצי התמונות המומלצות הן PNG או JPG. אנו נשתמש בלוגו הריבועי כבררת מחדל."
+            description: "סמל שמשמש לייצוג האתר שלך בדפדפנים שנראה טוב בגדלים קטנים. מומלץ PNG או JPG. ברירת המחדל היא הלוגו הריבועי."
           large_icon:
             label: "אייקון גדול"
-            description: "תמונת סמל שמשמשת לייצוג האתר שלך במכשירים חדישים ונראית טוב בגדלים גדולים יותר. מומלץ שתהיינה מעל 512 × 512. אנחנו נשתמש בלוגו הריבועי כבררת מחדל."
+            description: "סמל שמשמש לייצוג האתר שלך במכשירים ניידים שנראה טוב בגדלים גדולים. מומלץ שיהיה גדול מ־512×512. ברירת המחדל היא הלוגו הריבועי."
+      corporate:
+        title: "יצירת קשר וארגון"
+        fields:
+          company_name:
+            label: "שם החברה"
+            placeholder: "ארגון לדוגמה"
+            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
+          governing_law:
+            label: "החוק המחייב"
+            placeholder: "החוקים של קליפורניה"
+            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
+          contact_url:
+            label: "דף ווב"
+            placeholder: "https://www.example.com/contact-us"
+            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a>."
+          city_for_disputes:
+            label: "עיר המחלוקת"
+            placeholder: "סן פרנסיסקו, קליפורניה"
+            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
+          site_contact:
+            label: "הודעות אוטומטיות"
+            description: "כל ההודעות האישיות האוטומטיות שנשלחות על ידי Discourse נשלחות מהמשתמש הזה, כגון אזהרות על סימוני דגלים והתראות על השלמת גיבוי."
       invites:
         title: "הזמנת סגל"
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."
@@ -4876,6 +4890,9 @@ he:
     post_raw: "המשך של הדיון %{parent_url}.\n\nדיונים קודמים:\n\n%{previous_topics}"
     small_action_post_raw: "ניתן להמשיך את הדיון תחת %{new_title}."
   fallback_username: "משתמש"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at אמור להיות גדול מאשר set_at"
   activemodel:
     errors:
       <<: *errors

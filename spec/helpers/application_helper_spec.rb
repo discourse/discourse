@@ -1,13 +1,12 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-describe ApplicationHelper do
-
+RSpec.describe ApplicationHelper do
   describe "preload_script" do
     def preload_link(url)
       <<~HTML
           <link rel="preload" href="#{url}" as="script">
-          <script src="#{url}"></script>
+          <script defer src="#{url}"></script>
       HTML
     end
 
@@ -31,9 +30,9 @@ describe ApplicationHelper do
       set_cdn_url "https://awesome.com"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
-      link = helper.preload_script('application')
+      link = helper.preload_script('discourse')
 
-      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/#{EmberCli.transform_name("application")}.js"))
+      expect(link).to eq(preload_link("https://awesome.com/brotli_asset/discourse.js"))
     end
 
     context "with s3 CDN" do
@@ -47,41 +46,41 @@ describe ApplicationHelper do
 
       it "deals correctly with subfolder" do
         set_subfolder "/community"
-        expect(helper.preload_script("application")).to include("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.js")
+        expect(helper.preload_script("discourse")).to include("https://s3cdn.com/assets/discourse.js")
       end
 
       it "replaces cdn URLs with s3 cdn subfolder paths" do
         global_setting :s3_cdn_url, 'https://s3cdn.com/s3_subpath'
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
-        expect(helper.preload_script("application")).to include("https://s3cdn.com/s3_subpath/assets/#{EmberCli.transform_name("application")}.js")
+        expect(helper.preload_script("discourse")).to include("https://s3cdn.com/s3_subpath/assets/discourse.js")
       end
 
       it "returns magic brotli mangling for brotli requests" do
 
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
-        link = helper.preload_script('application')
+        link = helper.preload_script('discourse')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.br.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse.br.js"))
       end
 
       it "gives s3 cdn if asset host is not set" do
-        link = helper.preload_script('application')
+        link = helper.preload_script('discourse')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse.js"))
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = 'gzip'
-        link = helper.preload_script('application')
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.gz.js"))
+        link = helper.preload_script('discourse')
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse.gz.js"))
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
-        link = helper.preload_script('application')
+        link = helper.preload_script('discourse')
 
-        expect(link).to eq(preload_link("https://s3cdn.com/assets/#{EmberCli.transform_name("application")}.js"))
+        expect(link).to eq(preload_link("https://s3cdn.com/assets/discourse.js"))
       end
 
       it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
@@ -111,37 +110,45 @@ describe ApplicationHelper do
         )
         helper.request.env[:resolved_theme_id] = dark_theme.id
       end
-      context "on desktop" do
+
+      context "when on desktop" do
         before do
           session[:mobile_view] = '0'
         end
+
         context "when logo_dark is not set" do
           it "will return site_logo_url instead" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_logo_url)
           end
         end
+
         context "when logo_dark is set" do
           before do
             SiteSetting.logo_dark = Fabricate(:upload, url: '/images/logo-dark.png')
           end
+
           it "will return site_logo_dark_url" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
           end
         end
       end
-      context "on mobile" do
+
+      context "when on mobile" do
         before do
           session[:mobile_view] = '1'
         end
+
         context "when mobile_logo_dark is not set" do
           it "will return site_mobile_logo_url instead" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_url)
           end
         end
+
         context "when mobile_logo_dark is set" do
           before do
             SiteSetting.mobile_logo_dark = Fabricate(:upload, url: '/images/mobile-logo-dark.png')
           end
+
           it "will return site_mobile_logo_dark_url" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_dark_url)
           end
@@ -161,7 +168,7 @@ describe ApplicationHelper do
 
     context "when dark theme is present" do
       before do
-        dark_theme = Theme.create(
+        _dark_theme = Theme.create(
           name: "Dark",
           user_id: -1,
           color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
@@ -203,8 +210,8 @@ describe ApplicationHelper do
     end
   end
 
-  describe "mobile_view?" do
-    context "enable_mobile_theme is true" do
+  describe "#mobile_view?" do
+    context "when enable_mobile_theme is true" do
       before do
         SiteSetting.enable_mobile_theme = true
       end
@@ -219,7 +226,7 @@ describe ApplicationHelper do
         expect(helper.mobile_view?).to eq(false)
       end
 
-      context "mobile_view session is cleared" do
+      context "when mobile_view session is cleared" do
         before do
           params[:mobile_view] = 'auto'
         end
@@ -237,7 +244,7 @@ describe ApplicationHelper do
         end
       end
 
-      context "mobile_view is not set" do
+      context "when mobile_view is not set" do
         it "is false if user agent is not mobile" do
           controller.request.stubs(:user_agent).returns('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36')
           expect(helper.mobile_view?).to be_falsey
@@ -275,7 +282,7 @@ describe ApplicationHelper do
       end
     end
 
-    context "enable_mobile_theme is false" do
+    context "when enable_mobile_theme is false" do
       before do
         SiteSetting.enable_mobile_theme = false
       end
@@ -290,7 +297,7 @@ describe ApplicationHelper do
         expect(helper.mobile_view?).to eq(false)
       end
 
-      context "mobile_view is not set" do
+      context "when mobile_view is not set" do
         it "is false if user agent is not mobile" do
           controller.request.stubs(:user_agent).returns('Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36')
           expect(helper.mobile_view?).to eq(false)
@@ -418,7 +425,15 @@ describe ApplicationHelper do
   end
 
   describe 'crawlable_meta_data' do
-    context "opengraph image" do
+    it 'Supports ASCII URLs with odd chars' do
+      result = helper.crawlable_meta_data(
+        url: (+"http://localhost/ión").force_encoding("ASCII-8BIT").freeze
+     )
+
+      expect(result).to include("ión")
+    end
+
+    context "with opengraph image" do
       it 'returns the correct image' do
         SiteSetting.opengraph_image = Fabricate(:upload,
           url: '/images/og-image.png'
@@ -467,6 +482,45 @@ describe ApplicationHelper do
 
         expect(helper.crawlable_meta_data).to include(Upload.find(SiteIconManager::SKETCH_LOGO_ID).url)
       end
+
+      it "does not allow SVG images for twitter:image, falls back to site logo or nothing if site logo is SVG too" do
+        SiteSetting.logo = Fabricate(:upload, url: '/images/d-logo-sketch.png')
+        SiteSetting.opengraph_image = Fabricate(:upload,
+          url: '/images/og-image.png'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_opengraph_image_url}\" />
+        HTML
+
+        SiteSetting.opengraph_image = Fabricate(:upload,
+          url: '/images/og-image.svg'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
+        HTML
+
+        SiteSetting.twitter_summary_large_image = Fabricate(:upload,
+          url: '/images/twitter.png'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_twitter_summary_large_image_url}\" />
+        HTML
+
+        SiteSetting.twitter_summary_large_image = Fabricate(:upload,
+          url: '/images/twitter.svg'
+        )
+
+        expect(helper.crawlable_meta_data).to include(<<~HTML)
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
+        HTML
+
+        SiteSetting.logo = Fabricate(:upload, url: '/images/d-logo-sketch.svg')
+
+        expect(helper.crawlable_meta_data).not_to include("twitter:image")
+      end
     end
   end
 
@@ -496,7 +550,7 @@ describe ApplicationHelper do
       expect(cs_stylesheets).not_to include("(prefers-color-scheme: dark)")
     end
 
-    context "custom light scheme" do
+    context "with custom light scheme" do
       before do
         @new_cs = Fabricate(:color_scheme, name: 'Flamboyant')
         user.user_option.color_scheme_id = @new_cs.id
@@ -528,7 +582,7 @@ describe ApplicationHelper do
       end
     end
 
-    context "dark scheme with user option and/or cookies" do
+    context "with dark scheme with user option and/or cookies" do
       before do
         user.user_option.dark_scheme_id = -1
         user.user_option.save!
@@ -567,7 +621,6 @@ describe ApplicationHelper do
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).not_to include("(prefers-color-scheme: dark)")
       end
-
     end
   end
 

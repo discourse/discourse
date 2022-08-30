@@ -176,10 +176,9 @@
   }
 }
 
-button.dismiss-read {
-  float: right;
-  margin-bottom: 5px;
-  margin-left: 10px;
+.dismiss-container-top {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .category-breadcrumb {
@@ -197,25 +196,10 @@ button.dismiss-read {
 
 /* Tablet (portrait) ----------- */
 
-@include breakpoint(medium) {
-  // slightly smaller font, tighten spacing on nav pills
-  .nav-pills {
-    > li > a {
-      font-size: $font-0;
-      padding: 7px 10px;
-    }
-  }
+// These styles kick in a little earlier when the sidebar appears
 
+@include breakpoint(medium, $sidebar: true) {
   .topic-list {
-    // tighter table header spacing
-    .topic-list-item .topic-list-data:first-of-type {
-      padding: 12px 5px;
-    }
-    // smaller table cell spacing
-    .topic-list-data {
-      padding: 10px;
-      font-size: $font-0;
-    }
     // suppress views column
     .views {
       display: none;
@@ -244,5 +228,46 @@ button.dismiss-read {
         }
       }
     }
+  }
+}
+
+@include breakpoint(medium) {
+  // slightly smaller font, tighten spacing on nav pills
+  .nav-pills {
+    > li > a {
+      font-size: $font-0;
+      padding: 7px 10px;
+    }
+  }
+
+  .topic-list {
+    // tighter table header spacing
+    .topic-list-item .topic-list-data:first-of-type {
+      padding: 12px 5px;
+    }
+    // smaller table cell spacing
+    .topic-list-data {
+      padding: 10px;
+      font-size: $font-0;
+    }
+  }
+}
+
+.welcome-topic-banner {
+  border: 1px solid var(--primary-low);
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+
+  .col-text {
+    width: 70%;
+  }
+  .col-button {
+    width: 30%;
+    display: flex;
+    align-self: center;
+    justify-content: flex-end;
+    padding-right: 30px;
   }
 }

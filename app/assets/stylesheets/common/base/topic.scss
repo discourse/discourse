@@ -32,6 +32,7 @@ $topic-progress-height: 42px;
     max-width: calc(
       100vw - 20px
     ); // 20px is the left + right padding on .wrap in common/base/discourse.scss
+    min-width: 0; // grid needs to be able to shrink
   }
 
   .timeline-container {
@@ -49,6 +50,9 @@ $topic-progress-height: 42px;
       align-self: start;
       @include sticky;
       top: calc(var(--header-offset, 60px) + 2em);
+      .footer-nav-ipad & {
+        top: calc(var(--header-offset, 60px) + var(--footer-nav-height) + 2em);
+      }
       margin-left: 1em;
       z-index: z("timeline");
 

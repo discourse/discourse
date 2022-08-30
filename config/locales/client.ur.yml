@@ -160,7 +160,6 @@ ur:
       forwarded: "مندرجہ بالا ای میل بھیجیں"
     topic_admin_menu: "موضوع کے ایکشنز"
     skip_to_main_content: "مرکزی مواد پر جائیں"
-    wizard_required: "اپنے نئے ڈِسکورس پر خوش آمدید! <a href='%{url}' data-auto-route='true'>سیٹ اَپ وزرڈ</a> سے آغاز کرتے ہیں۔✨"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_non_staff: "باہر جانے والی ای میل غیر عملہ صارفین کے لیے غیر فعال کر دی گئی ہیں"
     software_update_prompt:
@@ -170,6 +169,7 @@ ur:
       one: "اپنی نئی سائٹ کو شروع کرنے کوآسان بنانے کے لیے، آپ بوٹسٹریپ موڈ میں ہیں۔ تمام نئے صارفین کو اعتماد کی سطح 1 دی جائے گی اور روزانہ ای میل سمری ای میلز کو فعال کیا جائے گا۔ %{count} صارف کے شامل ہونے پر یہ خود بخود بند ہو جائے گا۔"
       other: "اپنی نئی سائٹ کو شروع کرنے کوآسان بنانے کے لیے، آپ بوٹسٹریپ موڈ میں ہیں۔ تمام نئے صارفین کو اعتماد کی سطح 1 دی جائے گی اور روزانہ ای میل سمری ای میلز کو فعال کیا جائے گا۔ %{count} صارفین کے شامل ہونے پر یہ خود بخود بند ہو جائے گا۔"
     bootstrap_mode_disabled: "بُوٹسٹرَیپ مَوڈ 24 گھنٹوں کے اندر غیر فعال کر دیا جائے گا۔"
+    bootstrap_invite_button_title: "دعوت بھیجیں"
     themes:
       default_description: "ڈِیفالٹ"
       broken_theme_alert: "ہو سکتا ہے آپ کی سائٹ کام نہ کرے کیونکہ تھیم/جزو میں خامیاں ہیں۔"
@@ -583,6 +583,7 @@ ur:
       forever: "ہمیشہ کیلئے"
       relative: "وابستہ وقت"
       none: "کسی کی ضرورت نہیں"
+      never: "کبھی نہیں"
       last_custom: "آخری نظامی تاریخ وقت"
       custom: "حسب ضرورت تاریخ اور وقت"
       select_timeframe: "ایک ٹائم فریم منتخب کریں"
@@ -1064,6 +1065,8 @@ ur:
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
       enable_quoting: "روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں"
       enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
+      experimental_sidebar:
+        options: "اختیارات"
       change: "بدلیں"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"
@@ -1105,7 +1108,7 @@ ur:
       muted_categories: "خاموش کِیا ہوا"
       muted_categories_instructions: "آپ کو اِن زمرہ جات میں موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ زمرہ جات یا تازہ ترین صفحات پر نظر نہیں آئیں گے۔"
       muted_categories_instructions_dont_hide: "آپ کو اِن زمرہ جات میں نئے ٹاپک کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا۔"
-      regular_categories: "معمولی"
+      regular_categories: "عمومی"
       regular_categories_instructions: "آپ ان اقسام کو “تازہ ترین” اور “سرفہرست” موضوع کی فہرست میں دیکھیں گے."
       no_category_access: "ایک ماڈریٹر کے طور پر آپ کو زمرہ پر محدود رسائی حاصل ہے، محفوظ کرنا غیر فعال ہے۔"
       delete_account: "میرا اکاؤنٹ مٹائیں"
@@ -1606,6 +1609,8 @@ ur:
         sent_by: "کی طرف سے بھیجا گیا"
         private_message: "پیغام"
         the_topic: "ٹاپک"
+    user_status:
+      save: "محفوظ کریں"
     loading: "لوڈ ہو رہا ہے..."
     errors:
       prev_page: "لوڈ کرتے ہوئے"
@@ -1654,11 +1659,9 @@ ur:
       other: جوابات
     signup_cta:
       sign_up: "سائن اپ"
-      hide_session: "مجھے کل یاد دلائیں"
       hide_forever: "نہیں شکریہ"
       hidden_for_session: "ٹھیک ہے ، ہم کل آپ سے پوچھیں گے۔ آپ ہمیشہ بھی ایک اکاؤنٹ بنانے کے لئے 'لاگ ان' کا استعمال کرسکتے ہیں۔"
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
-      value_prop: "جب آپ ایک اکاؤنٹ بناتے ہیں، ہم بالکل یاد رکھتے ہیں کہ آپ نے کیا پڑھا ہے، تاکہ جہاں سے آپ نے پڑھنا چھوڑا ہو بلکل وہاں ہی پر آپ کو ہمیشہ واپس پہنچایا جا سکے۔ جب بھی کوئی آپ کو جواب دیتا ہے، آپ کو یہاں اور اِی میل پر اطلاع بھی دے دی جاتی ہے۔ اور آپ محبت کو بانٹںے کیلئے پوسٹ لائیک کر سکتے ہیں۔ :heartpulse:"
     summary:
       enabled_description: "آپ اس ٹاپک کا خلاصہ ملاحظہ کررہے ہیں: سب سے دلچسپ پوسٹ کمیونٹی کی طرف سے متعین کی جاتی ہیں۔"
       description:
@@ -1851,9 +1854,6 @@ ur:
       min_content_not_reached:
         one: "کم از کم %{count} چیز منتخب کریں۔"
         other: "کم از کم %{count} اشیاء منتخب کریں۔"
-      invalid_selection_length:
-        one: "انتخاب کم از کم %{count} حرف ہونا چاہئے۔"
-        other: "انتخاب کم از کم %{count} حروف کا ہونا چاہئے۔"
       components:
         tag_drop:
           filter_for_more: مزید کے لئے فلٹر کریں ...
@@ -1948,7 +1948,6 @@ ur:
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
       edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
       title: "یا %{modifier} دبائیں۔"
-      users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
       title_or_link_placeholder: "عنوان ٹائپ کریں، یا ایک لنک یہاں پیسٹ کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
@@ -2018,9 +2017,6 @@ ur:
         reply_as_new_group_message:
           label: نئے گروپ پیغام کے بطور جواب دیں
           desc: ایک ہی وصول کنندگان سے شروع ہونے والا نیا پیغام بنائیں
-        reply_as_private_message:
-          label: نیا پیغام
-          desc: نیا ذاتی پیغام بنائیں
         reply_to_topic:
           label: ٹاپک پر جواب دیں
           desc: ٹاپک کا جواب دیں، نہ کہ کسی مخصوص پوسٹ کا
@@ -2055,6 +2051,7 @@ ur:
       empty: "کوئی اطلاعات نہیں ملیں۔"
       post_approved: "آپ کی پوسٹ منظور ہو گئی تھی"
       reviewable_items: "اشیاء جن کا جائزہ لینے کی ضرورت ہے"
+      watching_first_post_label: "نیا ٹاپک"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2067,6 +2064,10 @@ ur:
       liked_many:
         one: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
         other: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username2}، %{username} اور %{count} مزید"
+        other: "%{username2}، %{username} اور %{count} مزید"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
@@ -2089,8 +2090,9 @@ ur:
       votes_released: "%{description} - مکمل"
       dismiss_confirmation:
         body:
-          one: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاع ہے۔"
-          other: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاعات ہیں۔"
+          default:
+            one: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاع ہے۔"
+            other: "کیا تمہیں یقین ہے؟ آپ کیلیے %{count} اہم اطلاعات ہیں۔"
         dismiss: "بر خاست کریں"
         cancel: "منسوخ"
       group_message_summary:
@@ -3308,11 +3310,11 @@ ur:
         this_week: "ہفتہ"
         today: "آج"
         other_periods: "اوپر دیکھیں:"
-    browser_update: 'بدقسمتی سے، <a href="https://www.discourse.org/faq/#browser">آپ کا براؤزر اس سائٹ پر کام کرنے کے لیے بہت پرانا ہے</a>۔ براہ کرم <a href="https://browsehappy.com">اپنے براؤزر کو اپ گریڈ کریں</a> بھرپور مواد دیکھنے کے لیے، لاگ ان کریں اور جواب دیں۔'
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
       readonly: "ملاحظہ کریں"
+    preloader_text: "لوڈ ہو رہا ہے"
     lightbox:
       download: "ڈاؤن لوڈ"
       open: "اصل تصویر"
@@ -3397,7 +3399,6 @@ ur:
         edit: "%{shortcut} پوسٹ ترمیم کریں"
         delete: "%{shortcut} پوسٹ مٹائیں"
         mark_muted: "%{shortcut} ٹاپک خاموش کریں"
-        mark_regular: "%{shortcut} معمول کا (ڈیفالٹ) ٹاپک"
         mark_tracking: "%{shortcut} ٹاپک ٹریک کریں"
         mark_watching: "%{shortcut} ٹاپک پر نظر رکھیں"
         print: "%{shortcut} ٹاپک پرِنٹ کریں"
@@ -3534,7 +3535,7 @@ ur:
           title: "ٹریک کیا جا رہا"
           description: "آپ خود کار طریقے سے اِس ٹیگ کے ساتھ موجود تمام ٹاپکس کو ٹریک کریں گے۔ بغیر پڑھی اور نئی پوسٹس کی گنتی ٹاپک کے ساتھ دکھائی جائے گی۔"
         regular:
-          title: "معمولی"
+          title: "عمومی"
           description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا آپ کی پوسٹ پر جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
         muted:
           title: "خاموش کِیا ہوا"
@@ -3613,14 +3614,11 @@ ur:
       unsupported_file_picked: "آپ نے غیر معاونت شدہ فائل منتخب کی ہے۔ معاون فائل کی اقسام — %{types}."
     user_activity:
       no_activity_title: "ابھی تک کوئی سرگرمی نہیں"
-      no_activity_others: "کوئی سرگرمی نہیں۔"
       no_replies_title: "آپ نے ابھی تک کسی بھی عنوان کا جواب نہیں دیا ہے"
-      no_replies_others: "کوئی جوابات نہیں۔"
       no_drafts_title: "آپ نے کوئی ڈرافٹ شروع نہیں کیا ہے"
       no_drafts_body: "پوسٹ کرنے کے لیے بالکل تیار نہیں؟ جب بھی آپ کوئی موضوع، جواب، یا ذاتی پیغام لکھنا شروع کریں گے تو ہم خود بخود ایک نیا مسودہ محفوظ کریں گے اور اسے یہاں درج کریں گے۔ رد کرنے کے لیے کینسل بٹن کو منتخب کریں یا بعد میں جاری رکھنے کے لیے اپنے ڈرافٹ کو محفوظ کریں۔"
       no_likes_title: "آپ نے ابھی تک کوئی عنوان پسند نہیں کیا ہے"
       no_likes_body: "کودنے اور تعاون شروع کرنے کا ایک بہترین طریقہ یہ ہے کہ پہلے سے ہو چکی گفتگو کو پڑھنا شروع کریں، اور اپنی پسند کی پوسٹس پر %{heartIcon} کو منتخب کریں!"
-      no_likes_others: "کوئی لائیک کردہ پوسٹس نہیں۔"
       no_topics_title: "آپ نے ابھی تک کوئی عنوان شروع نہیں کیا ہے"
       no_topics_title_others: "%{username} نے ابھی تک کوئی عنوان شروع نہیں کیا ہے"
       no_read_topics_title: "آپ نے ابھی تک کوئی عنوان نہیں پڑھا ہے"
@@ -3634,18 +3632,40 @@ ur:
     second_factor_auth:
       redirect_after_success: "دو فیکٹر کی توثیق کامیاب ہے۔ پچھلے صفحہ…پر ری ڈائریکٹ کیا جا رہا ہے۔"
     sidebar:
-      unread_count: "%{count} بغیر پڑھا ہوا"
-      new_count: "%{count} نیا"
+      unread_count:
+        one: "%{count} بغیر پڑھا ہوا"
+        other: "%{count} بغیر پڑھے ہوئے"
+      new_count:
+        one: "%{count} نیا"
+        other: "%{count} نئے"
+      more: "مزید..."
       sections:
+        messages:
+          header_link_text: "پیغامات"
+          links:
+            inbox: "اِن باکس"
+            sent: "بھیجا جا چکا"
+            new: "نیا"
+            new_with_count: "نیا (%{count})"
+            unread: "بغیر پڑھے"
+            unread_with_count: "بغیر پڑھا (%{count})"
+            archive: "آر کائیو"
+        tags:
+          header_link_text: "ٹیگز"
         categories:
-          header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
-        topics:
-          header_link_title: "ہَوم"
-          header_link_text: "ٹاپک"
+        community:
+          header_link_text: "کمیونٹی"
           links:
             tracked:
               content: "ٹریک کیا ہوا"
+            groups:
+              content: "گروپس"
+              title: "تمام گروپس"
+            users:
+              content: "صارفین"
+            my_posts:
+              content: "میری پوسٹ"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -5184,15 +5204,13 @@ ur:
           replace: "بدلیں"
   wizard_js:
     wizard:
-      done: "مکمل"
-      finish: "ختم"
       back: "واپس"
       next: "اگلا"
+      step-text: "قدم"
       step: "%{total} میں سے %{current}"
       upload: "اَپ لوڈ"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
       upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
-      quit: "شاید بعد میں"
       staff_count:
         one: "آپ کی کمیونٹی میں %{count} اسٹاف کا رکن ہے (آپ)۔"
         other: "آپ کی کمیونٹی میں آپ سمیت، %{count} سٹاف کے ارکان ہیں۔"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe QunitController do
+RSpec.describe QunitController do
   describe "#theme" do
     let(:theme) { Fabricate(:theme, name: 'main-theme') }
     let(:component) { Fabricate(:theme, component: true, name: 'enabled-component') }
@@ -29,7 +29,7 @@ describe QunitController do
       end
     end
 
-    context "non-admin users on production" do
+    context "with non-admin users on production" do
       before do
         # We need to call sign_in before stubbing the method because SessionController#become
         # checks for the current env when the file is loaded.
@@ -51,7 +51,7 @@ describe QunitController do
       end
     end
 
-    context "admin users" do
+    context "with admin users" do
       before do
         sign_in(Fabricate(:admin))
       end
@@ -94,12 +94,12 @@ describe QunitController do
         expect(response.status).to eq(200)
         expect(response.body).to include("/stylesheets/color_definitions_base_")
         expect(response.body).to include("/stylesheets/desktop_")
-        expect(response.body).to include("/stylesheets/test_helper_")
+        expect(response.body).to include("* https://qunitjs.com/") # inlined QUnit CSS
         expect(response.body).to include("/assets/locales/en.js")
         expect(response.body).to include("/test-support")
         expect(response.body).to include("/test-helpers")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
-        expect(response.body).to include("/assets/#{EmberCli.transform_name("application")}.js")
+        expect(response.body).to include("/assets/discourse.js")
         expect(response.body).to include("/assets/admin.js")
         expect(response.body).to match(/\/theme-javascripts\/\h{40}\.js/)
         expect(response.body).to include("/theme-javascripts/tests/#{theme.id}-")

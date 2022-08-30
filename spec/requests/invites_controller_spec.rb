@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-describe InvitesController do
+RSpec.describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
-  context '#show' do
+  describe '#show' do
     fab!(:invite) { Fabricate(:invite) }
 
     it 'shows the accept invite page' do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
+      expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
       expect(response.body).not_to include(invite.email)
       expect(response.body).to_not include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
 
@@ -34,7 +34,7 @@ describe InvitesController do
       it 'shows unobfuscated email' do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag(:script, with: { src: "/assets/#{EmberCli.transform_name("application")}.js" })
+        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
         expect(response.body).to include(invite.email)
         expect(response.body).not_to include('i*****g@a***********e.ooo')
       end
@@ -71,67 +71,71 @@ describe InvitesController do
       end
     end
 
-    it 'adds logged in users to invite groups' do
-      group = Fabricate(:group)
-      group.add_owner(invite.invited_by)
-      InvitedGroup.create!(group: group, invite: invite)
+    describe 'logged in user viewing an invite' do
+      fab!(:group) { Fabricate(:group) }
 
-      sign_in(user)
+      before do
+        sign_in(user)
+      end
 
-      get "/invites/#{invite.invite_key}"
-      expect(response).to redirect_to("/")
-      expect(user.reload.groups).to include(group)
-    end
+      it "redeems the invite when user's email matches invite's email before redirecting to secured topic url" do
+        invite.update_columns(email: user.email)
+        group.add_owner(invite.invited_by)
 
-    it 'redirects logged in users to invite topic if they can see it' do
-      topic = Fabricate(:topic)
-      TopicInvite.create!(topic: topic, invite: invite)
+        secured_category = Fabricate(:category)
+        secured_category.permissions = { group.name => :full }
+        secured_category.save!
 
-      sign_in(user)
+        topic = Fabricate(:topic, category: secured_category)
+        TopicInvite.create!(invite: invite, topic: topic)
+        InvitedGroup.create!(invite: invite, group: group)
 
-      get "/invites/#{invite.invite_key}"
-      expect(response).to redirect_to(topic.url)
-      expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-    end
+        expect do
+          get "/invites/#{invite.invite_key}"
+        end.to change { InvitedUser.exists?(invite: invite, user: user) }.to(true)
 
-    it 'adds logged in user to group and redirects them to invite topic' do
-      group = Fabricate(:group)
-      group.add_owner(invite.invited_by)
-      secured_category = Fabricate(:category)
-      secured_category.permissions = { group.name => :full }
-      secured_category.save!
-      topic = Fabricate(:topic, category: secured_category)
-      TopicInvite.create!(invite: invite, topic: topic)
-      InvitedGroup.create!(invite: invite, group: group)
+        expect(response).to redirect_to(topic.url)
+        expect(user.reload.groups).to include(group)
 
-      sign_in(user)
+        expect(Notification.exists?(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic))
+          .to eq(true)
 
-      get "/invites/#{invite.invite_key}"
-      expect(user.reload.groups).to include(group)
-      expect(response).to redirect_to(topic.url)
-      expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-    end
+        expect(Notification.exists?(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]))
+          .to eq(true)
+      end
 
-    it 'creates a notification to inviter' do
-      topic = Fabricate(:topic)
-      TopicInvite.create!(topic: topic, invite: invite)
+      it "redeems the invite when user's email domain matches the domain an invite link is restricted to" do
+        invite.update!(email: nil, domain: 'discourse.org')
+        user.update!(email: "someguy@discourse.org")
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+        group.add_owner(invite.invited_by)
+        InvitedGroup.create!(invite: invite, group: group)
 
-      sign_in(user)
+        expect do
+          get "/invites/#{invite.invite_key}"
+        end.to change { InvitedUser.exists?(invite: invite, user: user) }.to(true)
 
-      get "/invites/#{invite.invite_key}"
-      expect(response).to redirect_to(topic.url)
-      expect(Notification.where(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-      expect(Notification.where(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]).count).to eq(1)
-    end
+        expect(response).to redirect_to(topic.url)
+        expect(user.reload.groups).to include(group)
+      end
 
-    it 'creates an invited user record' do
-      sign_in(invite.invited_by)
-      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
-      expect(response.status).to eq(302)
+      it "redirects to root if a logged in user tries to view an invite link restricted to a certain domain but user's email domain does not match" do
+        user.update!(email: "someguy@discourse.com")
+        invite.update!(email: nil, domain: 'discourse.org')
 
-      sign_in(user)
-      expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(1)
-      expect(response.status).to eq(302)
+        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "redirects to root if a tries to view an invite meant for a specific email that is not the user's" do
+        invite.update_columns(email: "notuseremail@discourse.org")
+
+        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
+
+        expect(response).to redirect_to("/")
+      end
     end
 
     it 'fails if invite does not exist' do
@@ -174,7 +178,7 @@ describe InvitesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it 'requires to be logged in' do
       post '/invites.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -193,7 +197,7 @@ describe InvitesController do
       end
     end
 
-    context 'invite to topic' do
+    context 'with invite to topic' do
       fab!(:topic) { Fabricate(:topic) }
 
       it 'works' do
@@ -211,7 +215,7 @@ describe InvitesController do
         expect(response.status).to eq(400)
       end
 
-      context 'topic is private' do
+      context 'when topic is private' do
         fab!(:group) { Fabricate(:group) }
 
         fab!(:secured_category) do |category|
@@ -241,7 +245,7 @@ describe InvitesController do
       end
     end
 
-    context 'invite to group' do
+    context 'with invite to group' do
       fab!(:group) { Fabricate(:group) }
 
       it 'works for admins' do
@@ -295,7 +299,7 @@ describe InvitesController do
       end
     end
 
-    context 'email invite' do
+    context 'with email invite' do
       subject(:create_invite) { post '/invites.json', params: params }
 
       let(:params) { { email: email } }
@@ -370,7 +374,7 @@ describe InvitesController do
       end
     end
 
-    context 'link invite' do
+    context 'with link invite' do
       it 'works' do
         sign_in(admin)
 
@@ -403,7 +407,7 @@ describe InvitesController do
     end
   end
 
-  context '#retrieve' do
+  describe '#retrieve' do
     it 'requires to be logged in' do
       get '/invites/retrieve.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -433,7 +437,7 @@ describe InvitesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     fab!(:invite) { Fabricate(:invite, invited_by: admin, email: 'test@example.com') }
 
     it 'requires to be logged in' do
@@ -515,7 +519,7 @@ describe InvitesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it 'requires to be logged in' do
       delete '/invites.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -551,7 +555,7 @@ describe InvitesController do
     end
   end
 
-  context '#perform_accept_invitation' do
+  describe '#perform_accept_invitation' do
     context 'with an invalid invite' do
       it 'redirects to the root' do
         put '/invites/show/doesntexist.json'
@@ -717,7 +721,7 @@ describe InvitesController do
         end
       end
 
-      context '.post_process_invite' do
+      describe '.post_process_invite' do
         it 'sends a welcome message if set' do
           SiteSetting.send_welcome_message = true
           user.send_welcome_message = true
@@ -748,7 +752,7 @@ describe InvitesController do
         end
 
         context 'with password' do
-          context 'user was invited via email' do
+          context 'when user was invited via email' do
             before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
 
             it 'does not send an activation email and activates the user' do
@@ -769,7 +773,7 @@ describe InvitesController do
             it 'does not activate user if email token is missing' do
               expect do
                 put "/invites/show/#{invite.invite_key}.json", params: { password: 'verystrongpassword' }
-              end.to change { UserAuthToken.count }.by(0)
+              end.not_to change { UserAuthToken.count }
 
               expect(response.status).to eq(200)
 
@@ -782,7 +786,7 @@ describe InvitesController do
             end
           end
 
-          context 'user was invited via link' do
+          context 'when user was invited via link' do
             before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
             it 'sends an activation email and does not activate the user' do
@@ -866,7 +870,7 @@ describe InvitesController do
       end
     end
 
-    context 'new registrations are disabled' do
+    context 'when new registrations are disabled' do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:invite) { Invite.generate(topic.user, email: 'test@example.com', topic: topic) }
 
@@ -881,7 +885,7 @@ describe InvitesController do
       end
     end
 
-    context 'user is already logged in' do
+    context 'when user is already logged in' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:user) { sign_in(Fabricate(:user)) }
 
@@ -895,7 +899,7 @@ describe InvitesController do
       end
     end
 
-    context 'topic invites' do
+    context 'with topic invites' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
 
       fab!(:secured_category) do
@@ -933,7 +937,7 @@ describe InvitesController do
       end
     end
 
-    context 'staged user' do
+    context 'with staged user' do
       fab!(:invite) { Fabricate(:invite) }
       fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
 
@@ -967,7 +971,7 @@ describe InvitesController do
     end
   end
 
-  context '#destroy_all_expired' do
+  describe '#destroy_all_expired' do
     it 'removes all expired invites sent by a user' do
       SiteSetting.invite_expiry_days = 1
 
@@ -987,7 +991,7 @@ describe InvitesController do
     end
   end
 
-  context '#resend_invite' do
+  describe '#resend_invite' do
     it 'requires to be logged in' do
       post '/invites/reinvite.json', params: { email: 'first_name@example.com' }
       expect(response.status).to eq(403)
@@ -1021,13 +1025,16 @@ describe InvitesController do
     end
   end
 
-  context '#resend_all_invites' do
-    it 'resends all non-redeemed invites by a user' do
-      SiteSetting.invite_expiry_days = 30
+  describe '#resend_all_invites' do
+    let(:admin) { Fabricate(:admin) }
 
+    before do
+      SiteSetting.invite_expiry_days = 30
+    end
+
+    it 'resends all non-redeemed invites by a user' do
       freeze_time
 
-      admin = Fabricate(:admin)
       new_invite = Fabricate(:invite, invited_by: admin)
       expired_invite = Fabricate(:invite, invited_by: admin)
       expired_invite.update!(expires_at: 2.days.ago)
@@ -1043,9 +1050,24 @@ describe InvitesController do
       expect(expired_invite.reload.expires_at).to eq_time(2.days.ago)
       expect(redeemed_invite.reload.expires_at).to eq_time(5.days.ago)
     end
+
+    it 'errors if admins try to exceed limit of one bulk invite per day' do
+      sign_in(admin)
+      RateLimiter.enable
+      RateLimiter.clear_all!
+      start = Time.now
+
+      freeze_time(start)
+      post '/invites/reinvite-all'
+      expect(response.parsed_body['errors']).to_not be_present
+
+      freeze_time(start + 10.minutes)
+      post '/invites/reinvite-all'
+      expect(response.parsed_body['errors'][0]).to eq(I18n.t("rate_limiter.slow_down"))
+    end
   end
 
-  context '#upload_csv' do
+  describe '#upload_csv' do
     it 'requires to be logged in' do
       post '/invites/upload_csv.json'
       expect(response.status).to eq(403)
@@ -1070,15 +1092,6 @@ describe InvitesController do
         sign_in(admin)
         post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
         expect(response.status).to eq(200)
-        expect(Jobs::BulkInvite.jobs.size).to eq(1)
-      end
-
-      it 'limits admins when bulk inviting' do
-        sign_in(admin)
-        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
-        expect(response.status).to eq(200)
-        post '/invites/upload_csv.json', params: { file: file, name: 'discourse.csv' }
-        expect(response.status).to eq(422)
         expect(Jobs::BulkInvite.jobs.size).to eq(1)
       end
 

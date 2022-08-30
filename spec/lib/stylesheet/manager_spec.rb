@@ -2,7 +2,7 @@
 
 require 'stylesheet/compiler'
 
-describe Stylesheet::Manager do
+RSpec.describe Stylesheet::Manager do
   def manager(theme_id = nil)
     Stylesheet::Manager.new(theme_id: theme_id)
   end
@@ -18,7 +18,7 @@ describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
-  context "themes with components" do
+  describe "themes with components" do
     let(:child_theme) { Fabricate(:theme, component: true, name: "a component").tap { |c|
       c.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
       c.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -148,7 +148,7 @@ describe Stylesheet::Manager do
       })
     end
 
-    context "stylesheet order" do
+    context "with stylesheet order" do
       let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|
           z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -607,7 +607,7 @@ describe Stylesheet::Manager do
       expect(details1[:new_href]).not_to eq(details2[:new_href])
     end
 
-    context "theme colors" do
+    context "with theme colors" do
       let(:theme) { Fabricate(:theme).tap { |t|
         t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
         t.save!
@@ -696,7 +696,7 @@ describe Stylesheet::Manager do
       end
     end
 
-    context 'encoded slugs' do
+    context 'with encoded slugs' do
       before { SiteSetting.slug_generation_method = 'encoded' }
       after { SiteSetting.slug_generation_method = 'ascii' }
 
@@ -783,12 +783,12 @@ describe Stylesheet::Manager do
       # Ensure we force compile each theme only once
       expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(16) # (3 themes * 2 targets) + 10 color schemes (2 themes * 5 color schemes (4 defaults + 1 theme scheme))
+      expect(results.size).to eq(22) # (3 themes * 2 targets) + 16 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme))
 
       # themes + core
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
+      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
 
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
@@ -801,7 +801,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       Stylesheet::Manager.precompile_theme_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(22) # 6 core targets + 6 theme + 10 color schemes
+      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include("color_definitions_#{scheme2.name}_#{scheme2.id}_#{default_theme.id}")

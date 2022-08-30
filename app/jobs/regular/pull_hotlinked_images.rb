@@ -23,7 +23,7 @@ module Jobs
       changed_hotlink_records = false
 
       extract_images_from(post.cooked).each do |node|
-        download_src = original_src = node['src'] || node['href']
+        download_src = original_src = node['src'] || node[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] || node['href']
         download_src = "#{SiteSetting.force_https ? "https" : "http"}:#{original_src}" if original_src.start_with?("//")
         normalized_src = normalize_src(download_src)
 
@@ -86,7 +86,8 @@ module Jobs
           max_file_size: @max_size,
           retain_on_max_file_size_exceeded: true,
           tmp_file_name: "discourse-hotlinked",
-          follow_redirect: true
+          follow_redirect: true,
+          read_timeout: 15
         )
       rescue => e
         if SiteSetting.verbose_upload_logging
@@ -130,7 +131,7 @@ module Jobs
     def extract_images_from(html)
       doc = Nokogiri::HTML5::fragment(html)
 
-      doc.css("img[src], a.lightbox[href]") -
+      doc.css("img[src], [#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}], a.lightbox[href]") -
         doc.css("img.avatar") -
         doc.css(".lightbox img[src]")
     end

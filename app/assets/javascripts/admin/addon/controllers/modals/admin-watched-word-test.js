@@ -2,6 +2,10 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
+import {
+  createWatchedWordRegExp,
+  toWatchedWord,
+} from "discourse-common/utils/watched-words";
 
 export default Controller.extend(ModalFunctionality, {
   isReplace: equal("model.nameKey", "replace"),
@@ -16,16 +20,17 @@ export default Controller.extend(ModalFunctionality, {
     "isTag",
     "isLink"
   )
-  matches(value, regexpString, words, isReplace, isTag, isLink) {
-    if (!value || !regexpString) {
+  matches(value, regexpList, words, isReplace, isTag, isLink) {
+    if (!value || regexpList.length === 0) {
       return [];
     }
 
     if (isReplace || isLink) {
       const matches = [];
       words.forEach((word) => {
-        const regexp = new RegExp(word.regexp, "gi");
+        const regexp = createWatchedWordRegExp(word);
         let match;
+
         while ((match = regexp.exec(value)) !== null) {
           matches.push({
             match: match[1],
@@ -37,8 +42,9 @@ export default Controller.extend(ModalFunctionality, {
     } else if (isTag) {
       const matches = {};
       words.forEach((word) => {
-        const regexp = new RegExp(word.regexp, "gi");
+        const regexp = createWatchedWordRegExp(word);
         let match;
+
         while ((match = regexp.exec(value)) !== null) {
           if (!matches[match[1]]) {
             matches[match[1]] = new Set();
@@ -56,7 +62,14 @@ export default Controller.extend(ModalFunctionality, {
         tags: Array.from(entry[1]),
       }));
     } else {
-      return value.match(new RegExp(regexpString, "ig")) || [];
+      let matches = [];
+      regexpList.forEach((regexp) => {
+        const wordRegexp = createWatchedWordRegExp(toWatchedWord(regexp));
+
+        matches.push(...(value.match(wordRegexp) || []));
+      });
+
+      return matches;
     }
   },
 });

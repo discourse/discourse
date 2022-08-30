@@ -1,3 +1,3 @@
-{{#link-to "styleguide.show" section.category section.id}}
-  {{section-title section.id}}
-{{/link-to}}
+<LinkTo @route="styleguide.show" @models={{array this.section.category this.section.id}}>
+  {{section-title this.section.id}}
+</LinkTo>

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::DefaultCurrentUserProvider do
+RSpec.describe Auth::DefaultCurrentUserProvider do
   # careful using fab! here is can lead to an erratic test
   # we want a distinct user object per test so last_seen_at is
   # handled correctly
@@ -50,7 +50,7 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider.current_user).to eq(nil)
   end
 
-  context "server header api" do
+  describe "server header api" do
     it "raises for a revoked key" do
       api_key = ApiKey.create!
       params = { "HTTP_API_USERNAME" => user.username.downcase, "HTTP_API_KEY" => api_key.key }
@@ -214,7 +214,7 @@ describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    context "rate limiting" do
+    context "with rate limiting" do
       before do
         RateLimiter.enable
       end
@@ -309,6 +309,26 @@ describe Auth::DefaultCurrentUserProvider do
         u.reload
         expect(u.last_seen_at).to eq(nil)
       end
+    end
+
+    it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
+      SiteSetting.login_required = true
+      user = Fabricate(:user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
+      url = "/latest.rss?api_key=#{api_key.key}&api_username=#{user.username_lower}"
+      env = { ActionDispatch::Http::Parameters::PARAMETERS_KEY => nil }
+
+      provider = provider(url, env)
+      env = provider.env
+
+      expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_nil
+      expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to be_nil
+
+      u = provider.current_user
+
+      expect(u).to eq(user)
+      expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_blank
+      expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to eq(u)
     end
   end
 
@@ -415,7 +435,7 @@ describe Auth::DefaultCurrentUserProvider do
 
   end
 
-  context "events" do
+  describe "events" do
     before do
       @refreshes = 0
 
@@ -452,8 +472,7 @@ describe Auth::DefaultCurrentUserProvider do
     end
   end
 
-  context "rate limiting" do
-
+  describe "rate limiting" do
     before do
       RateLimiter.enable
     end
@@ -602,7 +621,7 @@ describe Auth::DefaultCurrentUserProvider do
     expect(user.staged).to eq(false)
   end
 
-  context "user api" do
+  describe "user api" do
     fab! :user do
       Fabricate(:user)
     end
@@ -685,8 +704,7 @@ describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    context "rate limiting" do
-
+    context "with rate limiting" do
       before do
         RateLimiter.enable
       end
@@ -758,5 +776,22 @@ describe Auth::DefaultCurrentUserProvider do
     provider2 = provider('/', env)
     expect(provider2.current_user).to eq(user)
     expect(provider2.cookie_jar.encrypted["_t"].keys).to include("user_id", "token") # (strings)
+  end
+
+  describe "#log_off_user" do
+    it "should work when the current user was cached by a different provider instance" do
+      user_provider = provider('/')
+      user_provider.log_on_user(user, {}, user_provider.cookie_jar)
+      cookie = CGI.escape(user_provider.cookie_jar["_t"])
+      env = create_request_env(path: "/").merge({ method: "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+
+      user_provider = TestProvider.new(env)
+      expect(user_provider.current_user).to eq(user)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_present
+
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
   end
 end

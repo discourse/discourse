@@ -152,11 +152,11 @@ hy:
         disabled: "հեռացրել է այս բանները %{when}: Այն այլևս չի հայտնվի յուրաքանչյուր էջի վերևում:"
       forwarded: "վերահասցեագրել նշված նամակը"
     topic_admin_menu: "թեմայի ադմինի գործողություններ"
-    wizard_required: "Բարի գալուստ Ձեր նոր Discourse! Սկսենք <a href='%{url}' data-auto-route='true'>տեղակայման մասնագետ</a>-ի հետ ✨"
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     software_update_prompt:
       dismiss: "Չեղարկել"
     bootstrap_mode_disabled: "Սկզբնաբեռնման(Bootstrap) ռեժիմը կանջատվի 24 ժամվա ընթացքում:"
+    bootstrap_invite_button_title: "Ուղարկել Հրավերներ"
     themes:
       default_description: "Լռելյայն"
     s3:
@@ -484,6 +484,7 @@ hy:
       next_week: "Հաջորդ շաբաթ"
       next_month: "Հաջորդ ամիս"
       forever: "Ընդմիշտ"
+      never: "Երբեք"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
       select_timeframe: "Ընտրել ժամանակահատված"
     user_action:
@@ -833,6 +834,8 @@ hy:
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
+      experimental_sidebar:
+        options: "Տարբերակներ"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -1264,6 +1267,8 @@ hy:
         sent_by: "Ուղարկվել է՝"
         private_message: "հաղորդագրություն"
         the_topic: "թեման"
+    user_status:
+      save: "Պահպանել"
     loading: "Բեռնվում է..."
     errors:
       prev_page: "բեռնման ընթացքում"
@@ -1311,10 +1316,8 @@ hy:
       other: պատասխան
     signup_cta:
       sign_up: "Գրանցվել"
-      hide_session: "Հիշեցնել ինձ վաղը"
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
-      value_prop: "Երբ Դուք ստեղծում եք հաշիվ, մենք հստակ հիշում ենք, թե Դուք ինչ եք կադացել, այսպիսով՝ Դուք միշտ վերադառնում եք ճիշտ այնտեղ, որտեղ կանգնել էիք: Դուք նաև ստանում եք ծանուցումներ այստեղ և էլ. փոստով, երբ որևէ մեկը պատասխանում է Ձեզ: Եվ Դուք կարող եք հավանել գրառումներ՝ կիսվելով սիրով: :heartpulse:"
     summary:
       enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
       enable: "Ամփոփել Այս Թեման"
@@ -1533,7 +1536,6 @@ hy:
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
-      users_placeholder: "Ավելացնել օգտատեր"
       title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
@@ -1593,9 +1595,6 @@ hy:
           label: Պատասխանել որպես կապված թեմա
           desc: Ստեղծել այս թեմային հղված նոր թեմա
           confirm: 'Ձեզ մոտ պահպանված է նոր թեմայի սևագիրը, որը կվերագրվի, եթե դրա հետ կապված թեմա ստեղծեք: '
-        reply_as_private_message:
-          label: Նոր հաղորդագրություն
-          desc: Գրել նոր անձնական նամակ
         reply_to_topic:
           label: Պատասխանել թեմային
           desc: Պատասխանել թեմային, այլ ոչ թե որոշակի գրառման
@@ -1623,6 +1622,7 @@ hy:
       empty: "Ծանուցումներ չեն գտնվել:"
       post_approved: "Ձեր գրառումը հաստատված է"
       reviewable_items: "վերանայում պահանջող կետեր"
+      watching_first_post_label: "Նոր Թեմա"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1635,6 +1635,10 @@ hy:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} և ևս %{count}-ը"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"
@@ -2633,6 +2637,7 @@ hy:
       full: "Ստեղծել/Պատասխանել/Դիտել"
       create_post: "Պատասխանել/Դիտել"
       readonly: "Դիտել"
+    preloader_text: "Բեռնում"
     lightbox:
       download: "ներբեռնել"
       previous: "Նախորդ (սլաքի Ձախ ստեղնը)"
@@ -2712,7 +2717,6 @@ hy:
         edit: "%{shortcut} Խմբագրել գրառումը"
         delete: "%{shortcut} Ջնջել գրառումը"
         mark_muted: "%{shortcut} Խլացնել թեման"
-        mark_regular: "%{shortcut} Սովորական (լռելյայն) թեմա"
         mark_tracking: "%{shortcut} Հետևել թեմային"
         mark_watching: "%{shortcut} Դիտել թեման"
         print: "%{shortcut} Տպել թեման"
@@ -2865,23 +2869,41 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
-    user_activity:
-      no_activity_others: "Ակտիվություն չկա:"
-      no_replies_others: "Պատասխան չկա:"
-      no_likes_others: "Հավանած գրառումներ չկան:"
     sidebar:
-      unread_count: "%{count} չկարդացած"
-      new_count: "%{count} նոր"
+      unread_count:
+        one: "%{count} չկարդացած"
+        other: "%{count} չկարդացած"
+      new_count:
+        one: "%{count} նոր"
+        other: "%{count} նոր"
+      more: "Ավելին..."
       sections:
+        messages:
+          header_link_text: "Հաղորդագրություններ"
+          links:
+            inbox: "Մուտքի արկղ"
+            sent: "Ուղարկված"
+            new: "Նոր"
+            new_with_count: "Նոր (%{count})"
+            unread: "Չկարդացած"
+            unread_with_count: "Չկարդացած (%{count})"
+            archive: "Արխիվ"
+        tags:
+          header_link_text: "Թեգեր"
         categories:
-          header_link_title: "բոլոր կատեգորիաները"
           header_link_text: "Կատեգորիաներ"
-        topics:
-          header_link_title: "գլխավոր էջ"
-          header_link_text: "Թեմաներ"
+        community:
+          header_link_text: "Համայնք"
           links:
             tracked:
               content: "Հետևած"
+            groups:
+              content: "Խմբեր"
+              title: "Բոլոր խմբերը"
+            users:
+              content: "Օգտատերեր"
+            my_posts:
+              content: "Իմ Գրառումները"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -4207,15 +4229,13 @@ hy:
           replace: "Փոխարինել"
   wizard_js:
     wizard:
-      done: "Կատարված է"
-      finish: "Ավարտել"
       back: "Ետ"
       next: "Հաջորդը"
+      step-text: "Քայլը"
       step: "%{current} %{total}-ից"
       upload: "Վերբեռնել"
       uploading: "Վերբեռնում..."
       upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-      quit: "Միգուցե ավելի ուշ"
       staff_count:
         one: "Ձեր համայնքը ունի անձնակազմի %{count} անդամ՝ Դուք:"
         other: "Ձեր համայնքն ունի անձնակազմի %{count} անդամ՝ Դուք ներառյալ:"

@@ -5,7 +5,6 @@ import {
   exists,
   invisible,
   query,
-  queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -34,7 +33,7 @@ acceptance("Composer - Image Preview", function (needs) {
 
   const assertImageResized = (assert, uploads) => {
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       uploads.join("\n"),
       "it resizes uploaded image"
     );
@@ -84,9 +83,7 @@ acceptance("Composer - Image Preview", function (needs) {
     uploads[0] =
       "<a href='https://example.com'>![test|690x313, 50%](upload://test.png)</a>";
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']"
-      )[0]
+      ".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']"
     );
     assertImageResized(assert, uploads);
 
@@ -94,9 +91,7 @@ acceptance("Composer - Image Preview", function (needs) {
     uploads[6] =
       "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']"
-      )[0]
+      ".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']"
     );
     assertImageResized(assert, uploads);
 
@@ -104,45 +99,35 @@ acceptance("Composer - Image Preview", function (needs) {
     uploads[6] =
       "![onTheSameLine1|200x200, 50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250, 75%](upload://onTheSameLine2.jpeg)";
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']"
-      )[0]
+      ".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']"
     );
     assertImageResized(assert, uploads);
 
     // Make sure we target the correct image if there are duplicates
     uploads[7] = "![identicalImage|300x300, 50%](upload://identicalImage.png)";
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']"
-      )[0]
+      ".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']"
     );
     assertImageResized(assert, uploads);
 
     // Try the other dupe
     uploads[8] = "![identicalImage|300x300, 75%](upload://identicalImage.png)";
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']"
-      )[0]
+      ".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']"
     );
     assertImageResized(assert, uploads);
 
     // Don't mess with image titles
     uploads[10] = `![image|690x220, 75%](upload://test.png "image title")`;
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']"
-      )[0]
+      ".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']"
     );
     assertImageResized(assert, uploads);
 
     // Keep data attributes
     uploads[12] = `![test|foo=bar|690x313, 75%|bar=baz](upload://test.png)`;
     await click(
-      queryAll(
-        ".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']"
-      )[0]
+      ".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']"
     );
     assertImageResized(assert, uploads);
 
@@ -192,24 +177,20 @@ acceptance("Composer - Image Preview", function (needs) {
     assert.ok(visible(altTextEditOk), "alt text edit ok button is visible");
     assert.ok(visible(altTextEditCancel), "alt text edit cancel is hidden");
     assert.equal(
-      queryAll(altTextInput).val(),
+      query(altTextInput).value,
       "zorro",
       "correct alt text in input"
     );
 
-    await triggerKeyEvent(altTextInput, "keypress", "[".charCodeAt(0));
-    await triggerKeyEvent(altTextInput, "keypress", "]".charCodeAt(0));
-    assert.equal(
-      queryAll(altTextInput).val(),
-      "zorro",
-      "does not input [ ] keys"
-    );
+    await triggerKeyEvent(altTextInput, "keypress", "[");
+    await triggerKeyEvent(altTextInput, "keypress", "]");
+    assert.equal(query(altTextInput).value, "zorro", "does not input [ ] keys");
 
     await fillIn(altTextInput, "steak");
     await triggerKeyEvent(altTextInput, "keypress", 13);
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "![steak|200x200](upload://zorro.png)",
       "alt text updated"
     );
@@ -246,7 +227,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(altTextEditOk);
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "![steak|200x200](upload://zorro.png)",
       "alt text updated"
     );
@@ -285,7 +266,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(altTextEditCancel);
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "![zorro|200x200](upload://zorro.png)",
       "alt text not updated"
     );
@@ -317,10 +298,10 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `![tomtom|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`,
       "the correct image's alt text updated"
     );
@@ -339,10 +320,10 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "![|200x200](upload://zorro.png)",
       "alt text updated"
     );
@@ -351,12 +332,47 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "![tomtom|200x200](upload://zorro.png)",
       "alt text updated"
+    );
+  });
+
+  test("Image delete button", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    let uploads = [
+      "![image_example_0|666x500](upload://q4iRxcuSAzfnbUaCsbjMXcGrpaK.jpeg)",
+      "![image_example_1|481x480](upload://p1ijebM2iyQcUswBffKwMny3gxu.jpeg)",
+    ];
+
+    await fillIn(".d-editor-input", uploads.join("\n"));
+
+    uploads[0] = ""; // delete the first image.
+
+    //click on the remove button of the first image
+    await click(".button-wrapper[data-image-index='0'] .delete-image-button");
+
+    assert.strictEqual(
+      query(".d-editor-input").value,
+      uploads.join("\n"),
+      "Image should be removed from the editor"
+    );
+
+    assert.equal(
+      query(".d-editor-input").value.includes("image_example_0"),
+      false,
+      "It shouldn't have the first image"
+    );
+
+    assert.equal(
+      query(".d-editor-input").value.includes("image_example_1"),
+      true,
+      "It should have the second image"
     );
   });
 });

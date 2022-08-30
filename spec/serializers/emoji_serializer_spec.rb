@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmojiSerializer do
+RSpec.describe EmojiSerializer do
   fab!(:custom_emoji) do
     CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))
   end
@@ -21,7 +21,7 @@ describe EmojiSerializer do
     end
   end
 
-  context "missing uploads" do
+  describe "missing uploads" do
     before do
       custom_emoji.upload.destroy!
     end
@@ -45,7 +45,5 @@ describe EmojiSerializer do
 
       expect(result[:url]).to be_blank
     end
-
   end
-
 end

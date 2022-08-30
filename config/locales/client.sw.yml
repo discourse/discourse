@@ -138,11 +138,11 @@ sw:
       banner:
         enabled: "aligeuza hili kuwa bango %{when}. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
         disabled: "aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
-    wizard_required: "Karibu Discourse! Tuanze na <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
     bootstrap_mode_disabled: "Halitumizi ya Bootstrap itasitishwa baada ya masaa 24."
+    bootstrap_invite_button_title: "Tuma Mialiko"
     themes:
       default_description: "Halisi"
     s3:
@@ -338,6 +338,7 @@ sw:
       next_week: "Wiki Ijayo"
       next_month: "Mwezi ujao"
       forever: "Milele"
+      never: "Kamwe"
       select_timeframe: "Chagua fremu ya mda"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{mtumiaji}</a> amechapisha <a href='%{topicUrl}'>mada</a>"
@@ -638,6 +639,8 @@ sw:
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
+      experimental_sidebar:
+        options: "Chaguo"
       change: "badilisha"
       moderator: "%{mtumiaji} ni msimamizi"
       admin: "%{mtumiaji} ni kiongozi"
@@ -989,6 +992,8 @@ sw:
         sent_by: "Imetumwa na"
         private_message: "ujumbe"
         the_topic: "mada"
+    user_status:
+      save: "hifadhi"
     loading: "Inapakia..."
     errors:
       prev_page: "ikiwa inajaribu kupakia"
@@ -1034,7 +1039,6 @@ sw:
       other: Majibu
     signup_cta:
       sign_up: "Jiunge"
-      hide_session: "Nikumbushe kesho"
       hide_forever: "hapana asante"
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
@@ -1215,7 +1219,6 @@ sw:
       create_whisper: "Mluzi"
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
-      users_placeholder: "Ongeza mtumiaji"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "kwa nini unahariri?"
@@ -1268,9 +1271,6 @@ sw:
         reply_as_new_topic:
           label: Jibu kama mada iliyounganishwa
           desc: Tengeneza mada mpya itakayoungwa na hii mada
-        reply_as_private_message:
-          label: Ujumbe mpya
-          desc: Tengeneza ujumbe binafsi mpya
         reply_to_topic:
           label: Jibu mada
           desc: Jibu mada, sio chapisho lolote tu
@@ -1292,6 +1292,7 @@ sw:
       title: "taarifa za @jina lililotajwa, majibu ya machapisho na mada, ujumbe, na zingine"
       none: "Imeshindwa kupakia taarifa kwa mda huu."
       empty: "Hakuna taarifa zilizopatikana."
+      watching_first_post_label: "Mada Mpya"
       mentioned: "<span>%{jina la mtumiaji} </span>%{maelezo}"
       group_mentioned: "<span>%{jina la mtumiaji} </span>%{maelezo}"
       quoted: "<span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -1304,6 +1305,7 @@ sw:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} na %{count} mwingine </span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} na %{count} wengine</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       private_message: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       invited_to_private_message: "<p><span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -2090,6 +2092,7 @@ sw:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
       readonly: "Angalia"
+    preloader_text: "Inapakuliwa"
     lightbox:
       download: "pakua"
       counter: "%curr% chini ya %total%"
@@ -2143,7 +2146,6 @@ sw:
         edit: "%{shortcut} Hariri chapisho"
         delete: "%{shortcut} Futa chapisho"
         mark_muted: "%{shortcut} Nyamazisha mada"
-        mark_regular: "%{shortcut} Mada kawaida (chaguo-msingi) "
         mark_tracking: "%{shortcut} Fuatilia mada"
         mark_watching: "%{shortcut} Angalia mada"
         print: "%{shortcut} Chapisha mada:"
@@ -2247,23 +2249,40 @@ sw:
         member: "mwanachama"
         regular: "kawaida"
         leader: "kiongozi"
-    user_activity:
-      no_activity_others: "Hakuna shughuli."
-      no_replies_others: "Hakuna majibu."
-      no_likes_others: "Hakuna machapisho yaliyopendwa."
     sidebar:
-      unread_count: "%{count} haijasomwa"
-      new_count: "Mada mpya %{count}"
+      unread_count:
+        one: "%{count} haijasomwa"
+        other: "%{count} haijasomwa"
+      new_count:
+        one: "Mada mpya %{count}"
+        other: "Mada mpya %{count} "
+      more: "Zaidi"
       sections:
+        messages:
+          header_link_text: "Ujumbe"
+          links:
+            inbox: "kisanduku pokezi"
+            sent: "Imetumwa"
+            new: "Mpya"
+            unread: "Haijasomwa"
+            unread_with_count: "Haijasomwa (%{count})"
+            archive: "Hifadhi"
+        tags:
+          header_link_text: "Lebo"
         categories:
-          header_link_title: "kategoria zote"
           header_link_text: "Kategoria"
-        topics:
-          header_link_title: "nyumbani"
-          header_link_text: "Mada"
+        community:
+          header_link_text: "Jumuiya"
           links:
             tracked:
               content: "Imefuatiliwa"
+            groups:
+              content: "Vikundi"
+              title: "Vikundi vyote"
+            users:
+              content: "Watumiaji"
+            my_posts:
+              content: "Machapisho Yangu"
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:
@@ -3268,14 +3287,13 @@ sw:
           topics: "Mada"
   wizard_js:
     wizard:
-      done: "Imekwisha"
       back: "Iliyopita"
       next: "Ijayo"
+      step-text: "Hatua"
       step: "%{current} chini ya %{total}"
       upload: "Ongeza"
       uploading: "Inaongezwa"
       upload_error: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
-      quit: "Labda Baadae"
       invites:
         add_user: "ongeza"
         none_added: "Haujakaribisha Msaidizi yoyote. Unauhakika ungependa kuendelea?"

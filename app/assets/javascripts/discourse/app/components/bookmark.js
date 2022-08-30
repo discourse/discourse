@@ -12,11 +12,11 @@ import {
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -42,8 +42,9 @@ export default Component.extend({
   model: null,
   afterSave: null,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.setProperties({
       errorMessage: null,
       selectedReminderType: TIME_SHORTCUT_TYPES.NONE,
@@ -71,9 +72,10 @@ export default Component.extend({
     this._loadPostLocalDates();
   },
 
-  @on("didInsertElement")
-  _prepareUI() {
-    later(() => {
+  didInsertElement() {
+    this._super(...arguments);
+
+    discourseLater(() => {
       if (this.site.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
       }
@@ -83,6 +85,8 @@ export default Component.extend({
     // knows they have set these options previously.
     if (this.model.id) {
       this.set("showOptions", true);
+    } else {
+      document.getElementById("tap_tile_none").classList.add("active");
     }
   },
 

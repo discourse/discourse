@@ -21,6 +21,7 @@ import {
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import bootbox from "bootbox";
 import { run } from "@ember/runloop";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,
@@ -124,8 +125,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           user: this.currentUser,
           siteSettings: this.siteSettings,
           isPrivateMessage,
-          allowStaffToUploadAnyFileInPm: this.siteSettings
-            .allow_staff_to_upload_any_file_in_pm,
+          allowStaffToUploadAnyFileInPm:
+            this.siteSettings.allow_staff_to_upload_any_file_in_pm,
         };
 
         const isUploading = validateUploadedFile(currentFile, validationOpts);
@@ -452,6 +453,15 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         placeholderData.uploadPlaceholder,
         placeholderData.processingPlaceholder
       );
+
+      // Safari applies user-defined replacements to text inserted programatically.
+      // One of the most common replacements is ... -> …, so we take care of the case
+      // where that transformation has been applied to the original placeholder
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        placeholderData.uploadPlaceholder.replace("...", "…"),
+        placeholderData.processingPlaceholder
+      );
     });
 
     this._onPreProcessComplete(
@@ -489,7 +499,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     // when adding two separate files with the same filename search for matching
     // placeholder already existing in the editor ie [Uploading: test.png...]
     // and add order nr to the next one: [Uploading: test.png(1)...]
-    const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escapedFilename = escapeRegExp(filename);
     const regexString = `\\[${I18n.t("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;

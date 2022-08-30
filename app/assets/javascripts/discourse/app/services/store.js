@@ -141,7 +141,13 @@ export default Service.extend({
       hydrated.get("content").map((item) => {
         let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
-          staleItem.setProperties(item);
+          for (const [key, value] of Object.entries(
+            Object.getOwnPropertyDescriptors(staleItem)
+          )) {
+            if (value.writable && value.enumerable) {
+              staleItem.set(key, value.value);
+            }
+          }
         } else {
           staleItem = item;
         }
@@ -260,8 +266,10 @@ export default Service.extend({
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
 
     // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup("topic-tracking-state:main");
-    obj.keyValueStore = this.register.lookup("key-value-store:main");
+    obj.topicTrackingState = this.register.lookup(
+      "service:topic-tracking-state"
+    );
+    obj.keyValueStore = this.register.lookup("service:key-value-store");
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);

@@ -150,7 +150,8 @@ class Admin::UsersController < Admin::AdminController
         suspend_reason: params[:reason],
         full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
-        suspended_at: @user.suspended_at
+        suspended_at: @user.suspended_at,
+        suspended_by: BasicUserSerializer.new(current_user, root: false).as_json
       }
     )
   end
@@ -409,8 +410,10 @@ class Admin::UsersController < Admin::AdminController
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
 
-    options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
-    options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+    options = params.slice(:context, :delete_as_spammer)
+    [:delete_posts, :block_email, :block_urls, :block_ip].each do |param_name|
+      options[param_name] = ActiveModel::Type::Boolean.new.cast(params[param_name])
+    end
     options[:prepare_for_destroy] = true
 
     hijack do

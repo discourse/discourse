@@ -158,7 +158,6 @@ nl:
         disabled: "heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen."
       forwarded: "heeft de bovenstaande e-mail doorgestuurd"
     topic_admin_menu: "topicacties"
-    wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, <span>gelieve te vernieuwen</span>, anders kan er onverwacht gedrag optreden."
@@ -167,6 +166,7 @@ nl:
       one: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{count} gebruiker lid is geworden."
       other: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{count} gebruikers lid zijn geworden."
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
+    bootstrap_invite_button_title: "Uitnodigingen versturen"
     themes:
       default_description: "Standaard"
     s3:
@@ -565,6 +565,7 @@ nl:
       forever: "Voor altijd"
       relative: "Relatieve tijd"
       none: "Niet nodig"
+      never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
       select_timeframe: "Selecteer een tijdsbestek"
@@ -1027,6 +1028,8 @@ nl:
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
       enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst inschakelen"
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
+      experimental_sidebar:
+        options: "Opties"
       change: "wijzigen"
       featured_topic: "Aanbevolen topic"
       moderator: "%{user} is een moderator"
@@ -1552,6 +1555,8 @@ nl:
         sent_by: "Verzonden door"
         private_message: "bericht"
         the_topic: "het topic"
+    user_status:
+      save: "Opslaan"
     loading: "Laden..."
     errors:
       prev_page: "tijdens het laden van"
@@ -1611,11 +1616,9 @@ nl:
       other: antwoorden
     signup_cta:
       sign_up: "Registreren"
-      hide_session: "Mij morgen herinneren"
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, we vragen het u morgen. U kunt ook altijd 'Inloggen' gebruiken om een account aan te maken."
       intro: "Hallo! Zo te zien beleeft u plezier aan de discussie, maar hebt u zich nog niet voor een account geregistreerd."
-      value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u altijd kunt verdergaan waar u was gebleven. Ook ontvangt u meldingen bij nieuwe berichten zodra iemand antwoordt, hier en via e-mail, en kunt u berichten liken om uw passie te delen. :heartpulse:"
     summary:
       enabled_description: "U bekijkt een samenvatting van dit topic: de interessantste berichten volgens de gemeenschap."
       description:
@@ -1804,9 +1807,6 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens %{count} item."
         other: "Selecteer minstens %{count} items."
-      invalid_selection_length:
-        one: "Selectie moet minstens %{count} teken bevatten."
-        other: "Selectie moet minstens %{count} tekens bevatten."
       components:
         tag_drop:
           filter_for_more: Filteren voor meer...
@@ -1893,7 +1893,6 @@ nl:
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
       title: "Of druk op %{modifier}Enter"
-      users_placeholder: "Een gebruiker toevoegen"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel, of plak hier een koppeling"
       edit_reason_placeholder: "vanwaar deze bewerking?"
@@ -1962,9 +1961,6 @@ nl:
           confirm: U hebt een nieuw-topicconcept opgeslagen, dat wordt overschreven als u een gekoppeld topic maakt.
         reply_as_new_group_message:
           label: Antwoorden als nieuw groepsbericht
-        reply_as_private_message:
-          label: Nieuw bericht
-          desc: Een nieuw persoonlijk bericht maken
         reply_to_topic:
           label: Antwoorden op topic
           desc: Antwoorden op het topic, niet een bepaald bericht
@@ -1999,6 +1995,7 @@ nl:
       empty: "Geen meldingen gevonden."
       post_approved: "Uw bericht is goedgekeurd"
       reviewable_items: "items die beoordeling nodig hebben"
+      watching_first_post_label: "Nieuw topic"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2011,6 +2008,10 @@ nl:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} en %{count} ander</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} en %{count} anderen</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} en %{count} anderen"
+        other: "%{username}, %{username2} en %{count} anderen"
       liked_consolidated_description:
         one: "heeft %{count} van uw berichten geliket"
         other: "heeft %{count} van uw berichten geliket"
@@ -2033,8 +2034,9 @@ nl:
       votes_released: "%{description} - voltooid"
       dismiss_confirmation:
         body:
-          one: "Weet u het zeker? U hebt %{count} belangrijke melding."
-          other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
+          default:
+            one: "Weet u het zeker? U hebt %{count} belangrijke melding."
+            other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
         dismiss: "Negeren"
         cancel: "Annuleren"
       group_message_summary:
@@ -3195,11 +3197,11 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken:"
-    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
       readonly: "Bekijken"
+    preloader_text: "Laden"
     lightbox:
       download: "downloaden"
       previous: "Vorige (Linkerpijltoets)"
@@ -3283,7 +3285,6 @@ nl:
         edit: "%{shortcut} Bericht bewerken"
         delete: "%{shortcut} Bericht verwijderen"
         mark_muted: "%{shortcut} Topic negeren"
-        mark_regular: "%{shortcut} Normaal (standaard) topic"
         mark_tracking: "%{shortcut} Topic volgen"
         mark_watching: "%{shortcut} Topic in de gaten houden"
         print: "%{shortcut} Topic afdrukken"
@@ -3483,23 +3484,42 @@ nl:
         leader: "leider"
     user_activity:
       no_activity_title: "Nog geen activiteit"
-      no_activity_others: "Geen activiteit."
-      no_replies_others: "Geen antwoorden."
-      no_likes_others: "Geen gelikete berichten."
       no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
     sidebar:
-      unread_count: "%{count} ongelezen"
-      new_count: "%{count} nieuw"
+      unread_count:
+        one: "%{count} ongelezen"
+        other: "%{count} ongelezen"
+      new_count:
+        one: "%{count} nieuw"
+        other: "%{count} nieuw"
+      more: "Meer..."
       sections:
+        messages:
+          header_link_text: "Berichten"
+          links:
+            inbox: "Inbox"
+            sent: "Verzonden"
+            new: "Nieuw"
+            new_with_count: "Nieuw (%{count})"
+            unread: "Ongelezen"
+            unread_with_count: "Ongelezen (%{count})"
+            archive: "Archief"
+        tags:
+          header_link_text: "Tags"
         categories:
-          header_link_title: "alle categorieën"
           header_link_text: "Categorieën"
-        topics:
-          header_link_title: "hoofdpagina"
-          header_link_text: "Topics"
+        community:
+          header_link_text: "Gemeenschap"
           links:
             tracked:
               content: "Gevolgd"
+            groups:
+              content: "Groepen"
+              title: "Alle groepen"
+            users:
+              content: "Gebruikers"
+            my_posts:
+              content: "Mijn berichten"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:
@@ -4972,15 +4992,13 @@ nl:
           replace: "Vervangen"
   wizard_js:
     wizard:
-      done: "Gereed"
-      finish: "Voltooien"
       back: "Vorige"
       next: "Volgende"
+      step-text: "Stap"
       step: "%{current} van %{total}"
       upload: "Uploaden"
       uploading: "Uploaden..."
       upload_error: "Er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
-      quit: "Misschien later"
       staff_count:
         one: "Uw gemeenschap heeft %{count} staflid (u)."
         other: "Uw gemeenschap heeft %{count} stafleden, waaronder u."

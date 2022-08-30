@@ -1,4 +1,4 @@
-import EmberObject, { set } from "@ember/object";
+import { set } from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   alertChannel,
@@ -12,47 +12,61 @@ import {
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
+import Notification from "discourse/models/notification";
 
 export default {
   name: "subscribe-user-notifications",
   after: "message-bus",
 
   initialize(container) {
-    const user = container.lookup("current-user:main");
-    const bus = container.lookup("message-bus:main");
+    const user = container.lookup("service:current-user");
+    const bus = container.lookup("service:message-bus");
     const appEvents = container.lookup("service:app-events");
+    const siteSettings = container.lookup("service:site-settings");
 
     if (user) {
-      bus.subscribe("/reviewable_counts", (data) => {
-        user.set("reviewable_count", data.reviewable_count);
+      const channel = user.enable_redesigned_user_menu
+        ? `/reviewable_counts/${user.id}`
+        : "/reviewable_counts";
+      bus.subscribe(channel, (data) => {
+        if (data.reviewable_count >= 0) {
+          user.set("reviewable_count", data.reviewable_count);
+        }
+        if (user.redesigned_user_menu_enabled) {
+          user.set("unseen_reviewable_count", data.unseen_reviewable_count);
+        }
       });
 
       bus.subscribe(
         `/notification/${user.get("id")}`,
         (data) => {
           const store = container.lookup("service:store");
-          const oldUnread = user.get("unread_notifications");
-          const oldHighPriority = user.get(
-            "unread_high_priority_notifications"
-          );
+          const oldUnread = user.unread_notifications;
+          const oldHighPriority = user.unread_high_priority_notifications;
+          const oldAllUnread = user.all_unread_notifications_count;
 
           user.setProperties({
             unread_notifications: data.unread_notifications,
             unread_high_priority_notifications:
               data.unread_high_priority_notifications,
             read_first_notification: data.read_first_notification,
+            all_unread_notifications_count: data.all_unread_notifications_count,
+            grouped_unread_high_priority_notifications:
+              data.grouped_unread_high_priority_notifications,
           });
 
           if (
             oldUnread !== data.unread_notifications ||
-            oldHighPriority !== data.unread_high_priority_notifications
+            oldHighPriority !== data.unread_high_priority_notifications ||
+            oldAllUnread !== data.all_unread_notifications_count
           ) {
             appEvents.trigger("notifications:changed");
 
             if (
               site.mobileView &&
               (data.unread_notifications - oldUnread > 0 ||
-                data.unread_high_priority_notifications - oldHighPriority > 0)
+                data.unread_high_priority_notifications - oldHighPriority > 0 ||
+                data.all_unread_notifications_count - oldAllUnread > 0)
             ) {
               appEvents.trigger("header:update-topic", null, 5000);
             }
@@ -73,9 +87,9 @@ export default {
             );
 
             if (staleIndex === -1) {
-              // high priority and unread notifications are first
               let insertPosition = 0;
 
+              // high priority and unread notifications are first
               if (!lastNotification.high_priority || lastNotification.read) {
                 const nextPosition = oldNotifications.findIndex(
                   (n) => !n.high_priority || n.read
@@ -88,7 +102,7 @@ export default {
 
               oldNotifications.insertAt(
                 insertPosition,
-                EmberObject.create(lastNotification)
+                Notification.create(lastNotification)
               );
             }
 
@@ -108,12 +122,19 @@ export default {
         user.notification_channel_position
       );
 
+      bus.subscribe(`/user-drafts/${user.id}`, (data) => {
+        user.updateDraftProperties(data);
+      });
+
       bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
         user.updateDoNotDisturbStatus(data.ends_at);
       });
 
-      const site = container.lookup("site:main");
-      const siteSettings = container.lookup("site-settings:main");
+      bus.subscribe(`/user-status`, (data) => {
+        appEvents.trigger("user-status:changed", data);
+      });
+
+      const site = container.lookup("service:site");
       const router = container.lookup("router:main");
 
       bus.subscribe("/categories", (data) => {

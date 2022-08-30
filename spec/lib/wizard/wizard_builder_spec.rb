@@ -8,7 +8,7 @@ class GlobalPathInstance
   extend GlobalPath
 end
 
-describe Wizard::Builder do
+RSpec.describe Wizard::Builder do
   let(:moderator) { Fabricate.build(:moderator) }
   let(:wizard) { Wizard::Builder.new(moderator).build }
 
@@ -32,15 +32,30 @@ describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
-  it "returns wizard with disabled invites step when local_logins are off" do
-    SiteSetting.enable_local_logins = false
+  describe 'privacy step' do
+    let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
 
-    invites_step = wizard.steps.find { |s| s.id == "invites" }
-    expect(invites_step.fields).to be_blank
-    expect(invites_step.disabled).to be_truthy
+    it 'should set the right default value for the fields' do
+      SiteSetting.login_required = true
+      SiteSetting.invite_only = false
+      SiteSetting.must_approve_users = true
+
+      fields = privacy_step.fields
+      login_required_field = fields.first
+      invite_only_field = fields.second
+      must_approve_users_field = fields.last
+
+      expect(fields.length).to eq(3)
+      expect(login_required_field.id).to eq('login_required')
+      expect(login_required_field.value).to eq(true)
+      expect(invite_only_field.id).to eq('invite_only')
+      expect(invite_only_field.value).to eq(false)
+      expect(must_approve_users_field.id).to eq('must_approve_users')
+      expect(must_approve_users_field.value).to eq(true)
+    end
   end
 
-  context 'styling step' do
+  describe 'styling' do
     let(:styling_step) { wizard.steps.find { |s| s.id == 'styling' } }
     let(:font_field) { styling_step.fields[1] }
     fab!(:theme) { Fabricate(:theme) }
@@ -50,8 +65,8 @@ describe Wizard::Builder do
       expect(font_field.choices.size).to eq(DiscourseFonts.fonts.size)
     end
 
-    context "colors" do
-      describe "when the default theme has not been override" do
+    context "with colors" do
+      context "when the default theme has not been override" do
         before do
           SiteSetting.find_by(name: "default_theme_id").destroy!
         end
@@ -62,7 +77,7 @@ describe Wizard::Builder do
         end
       end
 
-      describe "when the default theme has been override and the color scheme doesn't have a base scheme" do
+      context "when the default theme has been override and the color scheme doesn't have a base scheme" do
         let(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: nil) }
 
         before do
@@ -76,7 +91,7 @@ describe Wizard::Builder do
         end
       end
 
-      describe "when the default theme has been overridden by a theme without a color scheme" do
+      context "when the default theme has been overridden by a theme without a color scheme" do
         before do
           theme.set_default!
         end
@@ -87,7 +102,7 @@ describe Wizard::Builder do
         end
       end
 
-      describe "when the default theme has been overridden by a theme with a color scheme" do
+      context "when the default theme has been overridden by a theme with a color scheme" do
         before do
           theme.update(color_scheme_id: ColorScheme.find_by_name("Dark").id)
           theme.set_default!
@@ -101,8 +116,8 @@ describe Wizard::Builder do
     end
   end
 
-  context 'logos step' do
-    let(:logos_step) { wizard.steps.find { |s| s.id == 'logos' } }
+  describe 'branding' do
+    let(:branding_step) { wizard.steps.find { |s| s.id == 'branding' } }
 
     it 'should set the right default value for the fields' do
       upload = Fabricate(:upload)
@@ -111,7 +126,7 @@ describe Wizard::Builder do
       SiteSetting.logo = upload
       SiteSetting.logo_small = upload2
 
-      fields = logos_step.fields
+      fields = branding_step.fields
       logo_field = fields.first
       logo_small_field = fields.last
 
@@ -121,89 +136,4 @@ describe Wizard::Builder do
       expect(logo_small_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end
-
-  context 'icons step' do
-    let(:icons_step) { wizard.steps.find { |s| s.id == 'icons' } }
-
-    it 'should set the right default value for the fields' do
-      upload = Fabricate(:upload)
-      upload2 = Fabricate(:upload)
-
-      SiteSetting.favicon = upload
-      SiteSetting.large_icon = upload2
-
-      fields = icons_step.fields
-      favicon_field = fields.first
-      large_icon_field = fields.last
-
-      expect(favicon_field.id).to eq('favicon')
-      expect(favicon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
-      expect(large_icon_field.id).to eq('large_icon')
-      expect(large_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
-    end
-  end
-
-  context 'introduction step' do
-    let(:wizard) { Wizard::Builder.new(moderator).build }
-    let(:introduction_step) { wizard.steps.find { |s| s.id == 'introduction' } }
-
-    context 'step has not been completed' do
-      it 'enables the step' do
-        expect(introduction_step.disabled).to be_nil
-      end
-    end
-
-    context 'step has been completed' do
-      before do
-        wizard = Wizard::Builder.new(moderator).build
-        introduction_step = wizard.steps.find { |s| s.id == 'introduction' }
-
-        # manually sets the step as completed
-        logger = StaffActionLogger.new(moderator)
-        logger.log_wizard_step(introduction_step)
-      end
-
-      it 'disables step if no welcome topic' do
-        expect(introduction_step.disabled).to eq(true)
-      end
-
-      it 'enables step if welcome topic is present' do
-        topic = Fabricate(:topic, title: 'Welcome to Discourse')
-        welcome_post = Fabricate(:post, topic: topic, raw: "this will be the welcome topic post\n\ncool!")
-
-        expect(introduction_step.disabled).to be_nil
-      end
-    end
-  end
-
-  context 'privacy step' do
-    let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
-
-    it 'should set the right default value for the fields' do
-      SiteSetting.login_required = true
-      SiteSetting.invite_only = true
-
-      fields = privacy_step.fields
-      login_required_field = fields.first
-      privacy_options_field = fields.last
-
-      expect(fields.length).to eq(2)
-      expect(login_required_field.id).to eq('privacy')
-      expect(login_required_field.value).to eq("restricted")
-      expect(privacy_options_field.id).to eq('privacy_options')
-      expect(privacy_options_field.value).to eq("invite_only")
-    end
-
-    it 'should not show privacy_options field on special case' do
-      SiteSetting.invite_only = true
-      SiteSetting.must_approve_users = true
-
-      fields = privacy_step.fields
-      login_required_field = fields.first
-
-      expect(fields.length).to eq(1)
-      expect(login_required_field.id).to eq('privacy')
-    end
-  end
-
 end

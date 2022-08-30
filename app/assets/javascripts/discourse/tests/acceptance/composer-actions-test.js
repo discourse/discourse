@@ -3,41 +3,34 @@ import {
   count,
   exists,
   query,
-  queryAll,
   selectText,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
-import { Promise } from "rsvp";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Composer Actions", function (needs) {
-  needs.user();
+  needs.user({
+    id: 5,
+    username: "kris",
+    whisperer: true,
+  });
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_post: false,
     enable_whispers: true,
   });
   needs.site({ can_tag_topics: true });
-
-  test("creating new topic and then reply_as_private_message keeps attributes", async function (assert) {
-    await visit("/");
-    await click("button#create-topic");
-    await fillIn("#reply-title", "this is the title");
-    await fillIn(".d-editor-input", "this is the reply");
-
-    const composerActions = selectKit(".composer-actions");
-    await composerActions.expand();
-    await composerActions.selectRowByValue("reply_as_private_message");
-
-    assert.ok(queryAll("#reply-title").val(), "this is the title");
-    assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
+  needs.pretender((server, helper) => {
+    const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
+    server.get("/u/shade/card.json", () => helper.response(cardResponse));
   });
 
   test("replying to post", async function (assert) {
@@ -51,34 +44,13 @@ acceptance("Composer Actions", function (needs) {
       composerActions.rowByIndex(0).value(),
       "reply_as_new_topic"
     );
+    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "toggle_whisper");
     assert.strictEqual(
-      composerActions.rowByIndex(1).value(),
-      "reply_as_private_message"
-    );
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rowByIndex(3).value(), "toggle_whisper");
-    assert.strictEqual(
-      composerActions.rowByIndex(4).value(),
+      composerActions.rowByIndex(3).value(),
       "toggle_topic_bump"
     );
-    assert.strictEqual(composerActions.rowByIndex(5).value(), null);
-  });
-
-  test("replying to post - reply_as_private_message", async function (assert) {
-    const composerActions = selectKit(".composer-actions");
-
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_3 button.reply");
-
-    await composerActions.expand();
-    await composerActions.selectRowByValue("reply_as_private_message");
-
-    const privateMessageUsers = selectKit("#private-message-users");
-    assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
-    assert.ok(
-      queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
-        0
-    );
+    assert.strictEqual(composerActions.rowByIndex(4).value(), null);
   });
 
   test("replying to post - reply_to_topic", async function (assert) {
@@ -95,20 +67,21 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.strictEqual(
-      queryAll(".action-title .topic-link").text().trim(),
+      query(".action-title .topic-link").innerText.trim(),
       "Internationalization / localization"
     );
     assert.strictEqual(
-      queryAll(".action-title .topic-link").attr("href"),
+      query(".action-title .topic-link").getAttribute("href"),
       "/t/internationalization-localization/280"
     );
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       "test replying to topic when initially replied to post"
     );
   });
 
-  test("replying to post - toggle_whisper", async function (assert) {
+  test("replying to post - toggle_whisper for whisperers", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -143,9 +116,8 @@ acceptance("Composer Actions", function (needs) {
   });
 
   test("replying to post - reply_as_new_topic", async function (assert) {
-    sinon
-      .stub(Draft, "get")
-      .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
+    sinon.stub(Draft, "get").resolves({ draft: "", draft_sequence: 0 });
+
     const composerActions = selectKit(".composer-actions");
     const categoryChooser = selectKit(".title-wrapper .category-chooser");
     const categoryChooserReplyArea = selectKit(".reply-area .category-chooser");
@@ -166,11 +138,10 @@ acceptance("Composer Actions", function (needs) {
 
     assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
     assert.strictEqual(
-      queryAll(".action-title").text().trim(),
+      query(".action-title").innerText.trim(),
       I18n.t("topic.create_long")
     );
-    assert.ok(queryAll(".d-editor-input").val().includes(quote));
-    sinon.restore();
+    assert.ok(query(".d-editor-input").value.includes(quote));
   });
 
   test("reply_as_new_topic without a new_topic draft", async function (assert) {
@@ -193,28 +164,6 @@ acceptance("Composer Actions", function (needs) {
     assert.deepEqual(privateMessageUsers.header().value(), "foo,foo_group");
   });
 
-  test("allow switching back to New Topic", async function (assert) {
-    await visit("/");
-    await click("button#create-topic");
-
-    const composerActions = selectKit(".composer-actions");
-    await composerActions.expand();
-    await composerActions.selectRowByValue("reply_as_private_message");
-
-    assert.strictEqual(
-      query(".action-title").innerText,
-      I18n.t("topic.private_message")
-    );
-
-    await composerActions.expand();
-    await composerActions.selectRowByValue("create_topic");
-
-    assert.strictEqual(
-      query(".action-title").innerText,
-      I18n.t("topic.create_long")
-    );
-  });
-
   test("interactions", async function (assert) {
     const composerActions = selectKit(".composer-actions");
     const quote = "Life is like riding a bicycle.";
@@ -226,10 +175,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.strictEqual(
-      queryAll(".action-title").text().trim(),
+      query(".action-title").innerText.trim(),
       "Short topic with two posts"
     );
-    assert.strictEqual(queryAll(".d-editor-input").val(), quote);
+    assert.strictEqual(query(".d-editor-input").value, quote);
 
     await composerActions.expand();
 
@@ -238,77 +187,62 @@ acceptance("Composer Actions", function (needs) {
       "reply_as_new_topic"
     );
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_post");
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "toggle_whisper");
     assert.strictEqual(
-      composerActions.rowByIndex(2).value(),
-      "reply_as_private_message"
-    );
-    assert.strictEqual(composerActions.rowByIndex(3).value(), "toggle_whisper");
-    assert.strictEqual(
-      composerActions.rowByIndex(4).value(),
+      composerActions.rowByIndex(3).value(),
       "toggle_topic_bump"
     );
-    assert.strictEqual(composerActions.rows().length, 5);
+    assert.strictEqual(composerActions.rows().length, 4);
 
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
     assert.ok(exists(".action-title img.avatar"));
     assert.strictEqual(
-      queryAll(".action-title .user-link").text().trim(),
+      query(".action-title .user-link").innerText.trim(),
       "tms"
     );
-    assert.strictEqual(queryAll(".d-editor-input").val(), quote);
+    assert.strictEqual(query(".d-editor-input").value, quote);
     assert.strictEqual(
       composerActions.rowByIndex(0).value(),
       "reply_as_new_topic"
     );
+    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "toggle_whisper");
     assert.strictEqual(
-      composerActions.rowByIndex(1).value(),
-      "reply_as_private_message"
-    );
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rowByIndex(3).value(), "toggle_whisper");
-    assert.strictEqual(
-      composerActions.rowByIndex(4).value(),
+      composerActions.rowByIndex(3).value(),
       "toggle_topic_bump"
     );
-    assert.strictEqual(composerActions.rows().length, 5);
+    assert.strictEqual(composerActions.rows().length, 4);
 
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
     assert.strictEqual(
-      queryAll(".action-title").text().trim(),
+      query(".action-title").innerText.trim(),
       I18n.t("topic.create_long")
     );
-    assert.ok(queryAll(".d-editor-input").val().includes(quote));
+    assert.ok(query(".d-editor-input").value.includes(quote));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
-    assert.strictEqual(
-      composerActions.rowByIndex(1).value(),
-      "reply_as_private_message"
-    );
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rowByIndex(3).value(), "shared_draft");
-    assert.strictEqual(composerActions.rows().length, 4);
+    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
+    assert.strictEqual(composerActions.rowByIndex(2).value(), "shared_draft");
+    assert.strictEqual(composerActions.rows().length, 3);
+  });
 
-    await composerActions.selectRowByValue("reply_as_private_message");
+  test("interactions - private message", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/internationalization-localization/280");
+    await click('#post_4 a[data-user-card="shade"]');
+    await click(".usercard-controls .compose-pm .btn-primary");
     await composerActions.expand();
 
     assert.strictEqual(
-      queryAll(".action-title").text().trim(),
+      query(".action-title").innerText.trim(),
       I18n.t("topic.private_message")
     );
-    assert.ok(
-      queryAll(".d-editor-input").val().indexOf("Continuing the discussion") ===
-        0
-    );
-    assert.strictEqual(
-      composerActions.rowByIndex(0).value(),
-      "reply_as_new_topic"
-    );
-    assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_post");
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rows().length, 3);
+    assert.strictEqual(composerActions.rowByIndex(0).value(), "create_topic");
+    assert.strictEqual(composerActions.rows().length, 1);
   });
 
   test("replying to post - toggle_topic_bump", async function (assert) {
@@ -403,9 +337,9 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.strictEqual(composerActions.rows().length, 5);
+    assert.strictEqual(composerActions.rows().length, 4);
     assert.strictEqual(
-      composerActions.rowByIndex(4).value(),
+      composerActions.rowByIndex(3).value(),
       "toggle_topic_bump"
     );
   });
@@ -413,12 +347,18 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post as TL3 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 3,
+      whisperer: false,
+      groups: [{ id: 13, name: "tl3_group" }],
+    });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.strictEqual(composerActions.rows().length, 3);
+    assert.strictEqual(composerActions.rows().length, 2);
     Array.from(composerActions.rows()).forEach((row) => {
       assert.notStrictEqual(
         row.value,
@@ -431,32 +371,21 @@ acceptance("Composer Actions", function (needs) {
   test("replying to post as TL4 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 4,
+      whisperer: false,
+      groups: [{ id: 13, name: "tl4_group" }],
+    });
     await visit("/t/internationalization-localization/280");
     await click("article#post_3 button.reply");
     await composerActions.expand();
 
-    assert.strictEqual(composerActions.rows().length, 4);
+    assert.strictEqual(composerActions.rows().length, 3);
     assert.strictEqual(
-      composerActions.rowByIndex(3).value(),
+      composerActions.rowByIndex(2).value(),
       "toggle_topic_bump"
-    );
-  });
-
-  test("replying to first post - reply_as_private_message", async function (assert) {
-    const composerActions = selectKit(".composer-actions");
-
-    await visit("/t/internationalization-localization/280");
-    await click("article#post_1 button.reply");
-
-    await composerActions.expand();
-    await composerActions.selectRowByValue("reply_as_private_message");
-
-    const privateMessageUsers = selectKit("#private-message-users");
-    assert.strictEqual(privateMessageUsers.header().value(), "uwe_keim");
-    assert.ok(
-      queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
-        0
     );
   });
 
@@ -474,13 +403,11 @@ acceptance("Composer Actions", function (needs) {
 });
 
 function stubDraftResponse() {
-  sinon.stub(Draft, "get").returns(
-    Promise.resolve({
-      draft:
-        '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-      draft_sequence: 0,
-    })
-  );
+  sinon.stub(Draft, "get").resolves({
+    draft:
+      '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+    draft_sequence: 0,
+  });
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {
@@ -491,69 +418,69 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   needs.site({
     can_tag_topics: true,
   });
-  needs.hooks.beforeEach(() => _clearSnapshots());
-  needs.hooks.afterEach(() => _clearSnapshots());
+
+  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("shared draft", async function (assert) {
+    updateCurrentUser({ has_topic_draft: true });
     stubDraftResponse();
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      const composerActions = selectKit(".composer-actions");
-      const tags = selectKit(".mini-tag-chooser");
+    await visit("/");
+    await click("button.open-draft");
 
-      await visit("/");
-      await click("#create-topic");
+    await fillIn(
+      "#reply-title",
+      "This is the new text for the title using 'quotes'"
+    );
+    await fillIn(".d-editor-input", "This is the new text for the post");
 
-      await fillIn(
-        "#reply-title",
-        "This is the new text for the title using 'quotes'"
-      );
+    const tags = selectKit(".mini-tag-chooser");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
 
-      await fillIn(".d-editor-input", "This is the new text for the post");
-      await tags.expand();
-      await tags.selectRowByValue("monkey");
-      await composerActions.expand();
-      await composerActions.selectRowByValue("shared_draft");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("shared_draft");
 
-      assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(
+      query("#reply-title").value,
+      "This is the new text for the title using 'quotes'"
+    );
 
-      assert.strictEqual(
-        queryAll("#reply-title").val(),
-        "This is the new text for the title using 'quotes'"
-      );
-
-      assert.strictEqual(
-        queryAll("#reply-control .btn-primary.create .d-button-label").text(),
-        I18n.t("composer.create_shared_draft")
-      );
-      assert.strictEqual(
-        count(".composer-actions svg.d-icon-far-clipboard"),
-        1,
-        "shared draft icon is visible"
-      );
-
-      assert.strictEqual(count("#reply-control.composing-shared-draft"), 1);
-      await click(".modal-footer .btn.btn-default");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
-    sinon.restore();
+    assert.strictEqual(
+      query("#reply-control .btn-primary.create .d-button-label").innerText,
+      I18n.t("composer.create_shared_draft")
+    );
+    assert.strictEqual(
+      count(".composer-actions svg.d-icon-far-clipboard"),
+      1,
+      "shared draft icon is visible"
+    );
   });
 
   test("reply_as_new_topic with new_topic draft", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".create.reply");
+
+    stubDraftResponse();
+
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    stubDraftResponse();
     await composerActions.selectRowByValue("reply_as_new_topic");
+
     assert.strictEqual(
-      queryAll(".bootbox .modal-body").text(),
+      query(".bootbox .modal-body").innerText,
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
-    await click(".modal-footer .btn.btn-default");
-    sinon.restore();
+    await click(".modal-footer .btn.btn-primary");
+
+    assert.ok(
+      query(".d-editor-input").value.startsWith(
+        "Continuing the discussion from"
+      )
+    );
   });
 });
 
@@ -569,7 +496,7 @@ acceptance("Prioritize Username", function (needs) {
     await click("article#post_2 button.reply");
 
     assert.strictEqual(
-      queryAll(".action-title .user-link").text().trim(),
+      query(".action-title .user-link").innerText.trim(),
       "james_john"
     );
   });
@@ -579,7 +506,7 @@ acceptance("Prioritize Username", function (needs) {
     await selectText("#post_2 p");
     await click(".insert-quote");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       '[quote="james_john, post:2, topic:54079, full:true"]\nThis is a short topic.\n[/quote]'
     );
   });
@@ -597,7 +524,7 @@ acceptance("Prioritize Full Name", function (needs) {
     await click("article#post_2 button.reply");
 
     assert.strictEqual(
-      queryAll(".action-title .user-link").text().trim(),
+      query(".action-title .user-link").innerText.trim(),
       "james, john, the third"
     );
   });
@@ -607,7 +534,7 @@ acceptance("Prioritize Full Name", function (needs) {
     await selectText("#post_2 p");
     await click(".insert-quote");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]'
     );
   });
@@ -617,7 +544,7 @@ acceptance("Prioritize Full Name", function (needs) {
     await selectText("#post_4 p");
     await click(".insert-quote");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
     );
   });
@@ -636,7 +563,7 @@ acceptance("Prioritizing Name fall back", function (needs) {
     await selectText("#post_1 p");
     await click(".insert-quote");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]'
     );
   });

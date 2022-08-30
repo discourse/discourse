@@ -154,6 +154,7 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
   postAtts.staged = post.staged;
+  postAtts.user = post.user;
 
   if (post.notice) {
     postAtts.notice = post.notice;
@@ -178,7 +179,7 @@ export default function transformPost(
   }
 
   const showTopicMap =
-    _additionalAttributes.indexOf("topicMap") !== -1 ||
+    _additionalAttributes.includes("topicMap") ||
     showPMMap ||
     (post.post_number === 1 &&
       topic.archetype === "regular" &&
@@ -257,10 +258,11 @@ export default function transformPost(
     postAtts.canToggleLike = likeAction.get("canToggle");
     postAtts.showLike = postAtts.liked || postAtts.canToggleLike;
     postAtts.likeCount = likeAction.count;
-  }
-
-  if (!currentUser) {
-    postAtts.showLike = !topic.archived;
+  } else if (
+    !currentUser ||
+    (topic.archived && topic.user_id !== currentUser.id)
+  ) {
+    postAtts.showLike = true;
   }
 
   if (postAtts.post_number === 1) {

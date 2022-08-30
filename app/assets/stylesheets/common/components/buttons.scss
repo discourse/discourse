@@ -287,7 +287,32 @@
       }
     }
   }
+  &.btn-text {
+    color: var(--tertiary);
+    &[disabled] {
+      &,
+      &:hover,
+      &.btn-hover,
+      &:focus {
+        color: var(--primary);
+      }
+    }
+    &:not([disabled]) {
+      &:hover,
+      &.btn-hover,
+      &:focus {
+        color: var(--tertiary-hover);
+      }
 
+      &:active,
+      &.btn-active {
+        @include linear-gradient(
+          var(--primary-low-mid) 0%,
+          var(--primary-very-low) 100%
+        );
+      }
+    }
+  }
   &:focus {
     outline: none;
     background: var(--primary-low);

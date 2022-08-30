@@ -160,7 +160,6 @@ pt:
       forwarded: "encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
-    wizard_required: "Bem-vindo ao seu novo Discourse! Vamos começar com <a href='%{url}' data-auto-route='true'>o assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     software_update_prompt:
       message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
@@ -169,6 +168,7 @@ pt:
       one: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizador se tiver juntado ao fórum."
       other: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizadores se tiverem juntado ao fórum."
     bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
+    bootstrap_invite_button_title: "Enviar Convites"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -570,6 +570,7 @@ pt:
       forever: "Para Sempre"
       relative: "Tempo relativo"
       none: "Não é necessário"
+      never: "Nunca"
       last_custom: "Data e hora do último personalizado"
       custom: "Data e hora personalizadas"
       select_timeframe: "Selecione um intervalo de tempo"
@@ -1042,6 +1043,8 @@ pt:
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       enable_defer: "Ativar adiamento para marcar tópicos não lidos"
+      experimental_sidebar:
+        options: "Opções"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -1572,6 +1575,8 @@ pt:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+    user_status:
+      save: "Guardar"
     loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
@@ -1620,11 +1625,9 @@ pt:
       other: respostas
     signup_cta:
       sign_up: "Inscrever-se"
-      hide_session: "Lembrar-me amanhã"
       hide_forever: "não, obrigado"
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
-      value_prop: "Quando cria uma conta, nós lembramo-nos exatamente o que já leu, por isso volta sempre ao sítio onde parou. Também recebe notificações, aqui e por email, cada vez que alguém lhe responde. E pode gostar das publicações para interagir com outros utilizadores. :heartpulse:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
       enable: "Resumir Este Tópico"
@@ -1806,9 +1809,6 @@ pt:
       min_content_not_reached:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
-      invalid_selection_length:
-        one: "A seleção deve ter pelo menos %{count} caracter."
-        other: "A seleção deve ter pelo menos %{count} caracteres."
       components:
         tag_drop:
           filter_for_more: Filtrar por mais...
@@ -1884,7 +1884,6 @@ pt:
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"
       title: "Ou pressione %{modifier}Enter"
-      users_placeholder: "Adicionar um utilizador"
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
@@ -1953,9 +1952,6 @@ pt:
           confirm: Você tem um novo rascunho de tópico guardado que será substituído se criar um tópico ligado.
         reply_as_new_group_message:
           label: Responder como uma nova mensagem de grupo
-        reply_as_private_message:
-          label: Nova mensagem
-          desc: Crie uma nova mensagem privada
         reply_to_topic:
           label: Responder ao tópico
           desc: Responder ao tópico, não a uma publicação especifica
@@ -1990,6 +1986,7 @@ pt:
       empty: "Não foram encontradas notificações."
       post_approved: "A sua publicação foi aprovada"
       reviewable_items: "itens que requerem revisão"
+      watching_first_post_label: "Novo Tópico"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2002,6 +1999,10 @@ pt:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} outro"
+        other: "%{username}, %{username2} e %{count} outros"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
@@ -3155,6 +3156,7 @@ pt:
       full: "Criar / Responder / Ver"
       create_post: "Responder / Ver"
       readonly: "Ver"
+    preloader_text: "A carregar"
     lightbox:
       download: "transferir"
       counter: "%curr% de %total%"
@@ -3233,7 +3235,6 @@ pt:
         edit: "%{shortcut} Editar publicação"
         delete: "%{shortcut} Eliminar publicação"
         mark_muted: "%{shortcut} Silenciar tópico"
-        mark_regular: "%{shortcut} Tópico Habitual (por defeito)"
         mark_tracking: "%{shortcut} Seguir tópico"
         mark_watching: "%{shortcut} Vigiar tópico"
         print: "%{shortcut} Imprimir tópico"
@@ -3345,7 +3346,7 @@ pt:
         tracking:
           title: "A Seguir"
         regular:
-          title: "Regular"
+          title: "Habitual"
           description: "Será notificado se alguém mencionar o seu @nome ou responder à sua publicação."
         muted:
           title: "Silenciado"
@@ -3417,21 +3418,41 @@ pt:
         regular: "habitual"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
-    user_activity:
-      no_likes_others: "Sem publicações gostadas."
     sidebar:
-      unread_count: "%{count} não lido"
-      new_count: "%{count} novo"
+      unread_count:
+        one: "%{count} não lido"
+        other: "%{count} não lidos"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
+      more: "Mais..."
       sections:
+        messages:
+          header_link_text: "Mensagens"
+          links:
+            inbox: "Caixa de Entrada"
+            sent: "Enviado"
+            new: "Novo"
+            new_with_count: "Novo (%{count})"
+            unread: "Não Lido"
+            unread_with_count: "Não Lido (%{count})"
+            archive: "Arquivo"
+        tags:
+          header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorias"
           header_link_text: "Categorias"
-        topics:
-          header_link_title: "início"
-          header_link_text: "Tópicos"
+        community:
+          header_link_text: "Comunidade"
           links:
             tracked:
               content: "Seguido"
+            groups:
+              content: "Grupos"
+              title: "Todos os grupos"
+            users:
+              content: "Utilizadores"
+            my_posts:
+              content: "As Minhas publicações"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -4598,14 +4619,13 @@ pt:
           topics: "Tópicos"
   wizard_js:
     wizard:
-      done: "Concluído"
       back: "Retroceder"
       next: "Próximo"
+      step-text: "Passo"
       step: "%{current} de %{total}"
       upload: "Carregar"
       uploading: "A carregar…"
       upload_error: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
-      quit: "Talvez Mais Tarde"
       invites:
         add_user: "adicionar"
         none_added: "Não convidou ninguém para a equipa de apio. Tem a certeza de que quer continuar?"

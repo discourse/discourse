@@ -15,7 +15,6 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
              :archived,
              :archetype,
              :highest_post_number,
-             :last_read_post_number,
              :bumped_at,
              :slug
 
@@ -48,11 +47,7 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
   end
 
   def highest_post_number
-    scope.is_staff? ? topic.highest_staff_post_number : topic.highest_post_number
-  end
-
-  def last_read_post_number
-    topic_user&.last_read_post_number
+    scope.is_whisperer? ? topic.highest_staff_post_number : topic.highest_post_number
   end
 
   def bumped_at
@@ -61,11 +56,5 @@ class UserPostTopicBookmarkBaseSerializer < UserBookmarkBaseSerializer
 
   def slug
     topic.slug
-  end
-
-  private
-
-  def topic_user
-    @topic_user ||= topic.topic_users.find { |tu| tu.user_id == scope.user.id }
   end
 end

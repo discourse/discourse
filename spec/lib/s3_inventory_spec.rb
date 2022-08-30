@@ -4,7 +4,7 @@ require "s3_helper"
 require "s3_inventory"
 require "file_store/s3_store"
 
-describe "S3Inventory" do
+RSpec.describe "S3Inventory" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
   let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
   let(:inventory) { S3Inventory.new(helper, :upload) }
@@ -174,7 +174,7 @@ describe "S3Inventory" do
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
   end
 
-  context "s3 inventory configuration" do
+  describe "s3 inventory configuration" do
     let(:bucket_name) { "s3-upload-bucket" }
     let(:subfolder_path) { "subfolder" }
     before do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CommonPasswords do
+RSpec.describe CommonPasswords do
   it "the passwords file should exist" do
     expect(File.exist?(described_class::PASSWORD_FILE)).to eq(true)
   end
@@ -61,7 +61,7 @@ describe CommonPasswords do
     end
   end
 
-  context "missing password file" do
+  describe "missing password file" do
     it "tolerates it" do
       File.stubs(:readlines).with(described_class::PASSWORD_FILE).raises(Errno::ENOENT)
       expect(described_class.common_password?("password")).to eq(false)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Notification do
+RSpec.describe Notification do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
@@ -15,7 +15,7 @@ describe Notification do
   it { is_expected.to belong_to :topic }
 
   describe '#types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @types = Notification.types
       end
@@ -106,10 +106,9 @@ describe Notification do
         post_args[:topic].notify_muted!(user)
         expect {
           Fabricate(:post, user: user2, topic: post.topic, raw: 'hello @' + user.username)
-        }.to change(user.notifications, :count).by(0)
+        }.not_to change(user.notifications, :count)
       end
     end
-
   end
 
   describe 'high priority creation' do
@@ -131,10 +130,9 @@ describe Notification do
   end
 
   describe 'unread counts' do
-
     fab!(:user) { Fabricate(:user) }
 
-    context 'a regular notification' do
+    context 'with a regular notification' do
       it 'increases unread_notifications' do
         expect { Fabricate(:notification, user: user); user.reload }.to change(user, :unread_notifications)
       end
@@ -148,7 +146,7 @@ describe Notification do
       end
     end
 
-    context 'a private message' do
+    context 'with a private message' do
       it "doesn't increase unread_notifications" do
         expect { Fabricate(:private_message_notification, user: user); user.reload }.not_to change(user, :unread_notifications)
       end
@@ -166,7 +164,7 @@ describe Notification do
       end
     end
 
-    context 'a bookmark reminder message' do
+    context 'with a bookmark reminder message' do
       it "doesn't increase unread_notifications" do
         expect { Fabricate(:bookmark_reminder_notification, user: user); user.reload }.not_to change(user, :unread_notifications)
       end
@@ -179,7 +177,6 @@ describe Notification do
         expect { Fabricate(:bookmark_reminder_notification, user: user); user.reload }.to change(user, :unread_high_priority_notifications)
       end
     end
-
   end
 
   describe 'message bus' do
@@ -209,7 +206,7 @@ describe Notification do
       partial_user.notifications.create!(notification_type: Notification.types[:mentioned], data: '{}')
     end
 
-    context 'destroy' do
+    context 'when destroying' do
       let!(:notification) { Fabricate(:notification) }
 
       it 'updates the notification count on destroy' do
@@ -368,7 +365,7 @@ describe Notification do
 end
 
 # pulling this out cause I don't want an observer
-describe Notification do
+RSpec.describe Notification do
   describe '#recent_report' do
     fab!(:user) { Fabricate(:user) }
     let(:post) { Fabricate(:post) }

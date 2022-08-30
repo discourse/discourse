@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe SessionController do
+RSpec.describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
@@ -54,14 +54,14 @@ describe SessionController do
       end
     end
 
-    context 'missing token' do
+    context 'with missing token' do
       it 'returns the right response' do
         get "/session/email-login"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'valid token' do
+    context 'with valid token' do
       it 'returns information' do
         get "/session/email-login/#{email_token.token}.json"
 
@@ -88,7 +88,7 @@ describe SessionController do
         expect(response.status).to eq(403)
       end
 
-      context 'user has 2-factor logins' do
+      context 'when user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -102,7 +102,7 @@ describe SessionController do
         end
       end
 
-      context 'user has security key enabled' do
+      context 'when user has security key enabled' do
         let!(:user_security_key) { Fabricate(:user_security_key, user: user) }
 
         it "includes that information in the response" do
@@ -144,14 +144,14 @@ describe SessionController do
       end
     end
 
-    context 'missing token' do
+    context 'with missing token' do
       it 'returns the right response' do
         post "/session/email-login"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'invalid token' do
+    context 'with invalid token' do
       it 'returns the right response' do
         post "/session/email-login/adasdad.json"
 
@@ -176,7 +176,7 @@ describe SessionController do
       end
     end
 
-    context 'valid token' do
+    context 'with valid token' do
       it 'returns success' do
         post "/session/email-login/#{email_token.token}.json"
 
@@ -284,7 +284,7 @@ describe SessionController do
         expect(session[:current_user_id]).to eq(nil)
       end
 
-      context 'user has 2-factor logins' do
+      context 'when user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -362,7 +362,7 @@ describe SessionController do
         end
       end
 
-      context "user has only security key enabled" do
+      context "when user has only security key enabled" do
         let!(:user_security_key) do
           Fabricate(
             :user_security_key,
@@ -437,7 +437,7 @@ describe SessionController do
         end
       end
 
-      context "user has security key and totp enabled" do
+      context "when user has security key and totp enabled" do
         let!(:user_security_key) do
           Fabricate(
             :user_security_key,
@@ -479,7 +479,7 @@ describe SessionController do
     end
   end
 
-  context 'logoff support' do
+  describe 'logoff support' do
     it 'can log off users cleanly' do
       user = Fabricate(:user)
       sign_in(user)
@@ -552,7 +552,7 @@ describe SessionController do
       sso
     end
 
-    context 'in staff writes only mode' do
+    context 'when in staff writes only mode' do
       use_redis_snapshotting
 
       before do
@@ -827,6 +827,116 @@ describe SessionController do
       expect(response).to redirect_to('/')
     end
 
+    it 'creates a user but ignores auto_approve_email_domains site setting when must_approve_users site setting is not enabled' do
+      SiteSetting.auto_approve_email_domains = "discourse.com"
+
+      sso = get_sso('/a/')
+      sso.external_id = '666'
+      sso.email = 'sam@discourse.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      events = DiscourseEvent.track_events do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        expect(response).to redirect_to('/a/')
+      end
+
+      expect(events.map { |event| event[:event_name] }).to include(
+       :user_logged_in, :user_first_logged_in
+      )
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+      # ensure nothing is transient
+      logged_on_user = User.find(logged_on_user.id)
+
+      expect(logged_on_user.admin).to eq(false)
+      expect(logged_on_user.email).to eq('sam@discourse.com')
+      expect(logged_on_user.name).to eq('Sam Saffron')
+      expect(logged_on_user.username).to eq('sam')
+      expect(logged_on_user.approved).to eq(false)
+      expect(logged_on_user.active).to eq(true)
+
+      expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+    end
+
+    context 'when must_approve_users site setting has been enabled' do
+      before do
+        SiteSetting.must_approve_users = true
+      end
+
+      it "creates a user but does not approve when user's email domain does not match a domain in auto_approve_email_domains site settings" do
+        SiteSetting.auto_approve_email_domains = "discourse.com"
+
+        sso = get_sso('/a/')
+        sso.external_id = '666'
+        sso.email = 'sam@discourse.org'
+        sso.name = 'Sam Saffron'
+        sso.username = 'sam'
+
+        expect do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
+        end.to change { User.count }.by(1)
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        expect(logged_on_user).to eq(nil)
+
+        user = User.last
+
+        expect(user.admin).to eq(false)
+        expect(user.email).to eq('sam@discourse.org')
+        expect(user.name).to eq('Sam Saffron')
+        expect(user.username).to eq('sam')
+        expect(user.approved).to eq(false)
+        expect(user.active).to eq(true)
+
+        expect(user.single_sign_on_record.external_id).to eq("666")
+        expect(user.single_sign_on_record.external_username).to eq('sam')
+      end
+
+      it "creates and approves a user when user's email domain matches a domain in auto_approve_email_domains site settings" do
+        SiteSetting.auto_approve_email_domains = "discourse.com"
+
+        sso = get_sso('/a/')
+        sso.external_id = '666'
+        sso.email = 'sam@discourse.com'
+        sso.name = 'Sam Saffron'
+        sso.username = 'sam'
+
+        events = DiscourseEvent.track_events do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+          expect(response).to redirect_to('/a/')
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(
+         :user_logged_in, :user_first_logged_in
+        )
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+
+        # ensure nothing is transient
+        logged_on_user = User.find(logged_on_user.id)
+
+        expect(logged_on_user.admin).to eq(false)
+        expect(logged_on_user.email).to eq('sam@discourse.com')
+        expect(logged_on_user.name).to eq('Sam Saffron')
+        expect(logged_on_user.username).to eq('sam')
+        expect(logged_on_user.approved).to eq(true)
+        expect(logged_on_user.active).to eq(true)
+
+        expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
+        expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+      end
+
+    end
+
     it 'allows you to create an account' do
       group = Fabricate(:group, name: :bob, automatic_membership_email_domains: 'bob.com')
 
@@ -931,17 +1041,18 @@ describe SessionController do
         expect(read_secure_session["invite-key"]).to eq(nil)
       end
 
-      it "allows you to create an account and redeems the invite successfully even if must_approve_users is enabled" do
+      it "creates the user account and redeems the invite but does not approve the user if must_approve_users is enabled" do
         SiteSetting.must_approve_users = true
 
         login_with_sso_and_invite
 
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to("/")
+        expect(response.status).to eq(403)
+        expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
         expect(invite.reload.redeemed?).to eq(true)
 
         user = User.find_by_email("bob@bob.com")
         expect(user.active).to eq(true)
+        expect(user.approved).to eq(false)
       end
 
       it "redirects to the topic associated to the invite" do
@@ -1155,7 +1266,7 @@ describe SessionController do
       end
     end
 
-    context "in readonly mode" do
+    context "when in readonly mode" do
       use_redis_snapshotting
 
       before do
@@ -1188,7 +1299,9 @@ describe SessionController do
         "*|secret,forAll",
         "*.rainbow|wrongSecretForOverRainbow",
         "www.random.site|secretForRandomSite",
+        "somewhere.over.rainbow|oldSecretForOverRainbow",
         "somewhere.over.rainbow|secretForOverRainbow",
+        "somewhere.over.rainbow|newSecretForOverRainbow",
       ].join("\n")
 
       @sso = DiscourseConnectProvider.new
@@ -1245,9 +1358,28 @@ describe SessionController do
         expect(sso2.no_2fa_methods).to eq(nil)
       end
 
+      it "correctly logs in for secondary domain secrets" do
+        sign_in @user
+
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
+        expect(response.status).to eq(302)
+        redirect_uri = URI.parse(response.location)
+        expect(redirect_uri.host).to eq("somewhere.over.rainbow")
+        redirect_query = CGI.parse(redirect_uri.query)
+        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "newSecretForOverRainbow")
+        expect(redirect_query["sig"][0]).to eq(expected_sig)
+
+        get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("oldSecretForOverRainbow"))
+        expect(response.status).to eq(302)
+        redirect_uri = URI.parse(response.location)
+        expect(redirect_uri.host).to eq("somewhere.over.rainbow")
+        redirect_query = CGI.parse(redirect_uri.query)
+        expected_sig = DiscourseConnectBase.sign(redirect_query["sso"][0], "oldSecretForOverRainbow")
+        expect(redirect_query["sig"][0]).to eq(expected_sig)
+      end
+
       it "it fails to log in if secret is wrong" do
         get "/session/sso_provider", params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
-
         expect(response.status).to eq(422)
       end
 
@@ -1263,7 +1395,6 @@ describe SessionController do
 
       it "returns a 422 if no return_sso_url" do
         SiteSetting.discourse_connect_provider_secrets = "abcdefghij"
-        sso = DiscourseConnectProvider.new
         get "/session/sso_provider?sso=asdf&sig=abcdefghij"
         expect(response.status).to eq(422)
       end
@@ -1532,7 +1663,7 @@ describe SessionController do
   end
 
   describe '#create' do
-    context 'read only mode' do
+    context 'when read only mode' do
       use_redis_snapshotting
 
       before do
@@ -1556,7 +1687,7 @@ describe SessionController do
       end
     end
 
-    context 'staff writes only mode' do
+    context 'when in staff writes only mode' do
       use_redis_snapshotting
 
       before do
@@ -1581,7 +1712,7 @@ describe SessionController do
       end
     end
 
-    context 'local login is disabled' do
+    context 'when local login is disabled' do
       before do
         SiteSetting.enable_local_logins = false
 
@@ -1592,7 +1723,7 @@ describe SessionController do
       it_behaves_like "failed to continue local login"
     end
 
-    context 'SSO is enabled' do
+    context 'when SSO is enabled' do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
         SiteSetting.enable_discourse_connect = true
@@ -1604,7 +1735,7 @@ describe SessionController do
       it_behaves_like "failed to continue local login"
     end
 
-    context 'local login via email is disabled' do
+    context 'when local login via email is disabled' do
       before do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
@@ -1981,7 +2112,7 @@ describe SessionController do
         end
       end
 
-      context 'login has leading and trailing space' do
+      context 'when login has leading and trailing space' do
         let(:username) { " #{user.username} " }
         let(:email) { " #{user.email} " }
 
@@ -2117,7 +2248,7 @@ describe SessionController do
         )
       end
 
-      context "and the 'must approve users' site setting is enabled" do
+      context "when the 'must approve users' site setting is enabled" do
         before { SiteSetting.must_approve_users = true }
 
         it "shows the 'not approved' error message" do
@@ -2130,7 +2261,7 @@ describe SessionController do
       end
     end
 
-    context 'rate limited' do
+    context 'when rate limited' do
       it 'rate limits login' do
         SiteSetting.max_logins_per_ip_per_hour = 2
         RateLimiter.enable
@@ -2271,17 +2402,33 @@ describe SessionController do
     ensure
       DiscourseEvent.off(:before_session_destroy, &callback)
     end
+
+    it 'includes ip and user agent in the before_session_destroy event params' do
+      callback_params = {}
+      callback = -> (data) { callback_params = data }
+
+      DiscourseEvent.on(:before_session_destroy, &callback)
+
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true, headers: { HTTP_USER_AGENT: 'AwesomeBrowser' }
+
+      expect(callback_params[:user_agent]).to eq('AwesomeBrowser')
+      expect(callback_params[:client_ip]).to eq('127.0.0.1')
+    ensure
+      DiscourseEvent.off(:before_session_destroy, &callback)
+    end
+
   end
 
   describe '#one_time_password' do
-    context 'missing token' do
+    context 'with missing token' do
       it 'returns the right response' do
         get "/session/otp"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'invalid token' do
+    context 'with invalid token' do
       it 'returns the right response' do
         get "/session/otp/asd1231dasd123"
 
@@ -2447,7 +2594,7 @@ describe SessionController do
     context 'for an existing username' do
       fab!(:user) { Fabricate(:user) }
 
-      context 'local login is disabled' do
+      context 'when local login is disabled' do
         before do
           SiteSetting.enable_local_logins = false
           post "/session/forgot_password.json", params: { login: user.username }
@@ -2455,7 +2602,7 @@ describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context 'SSO is enabled' do
+      context 'when SSO is enabled' do
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
           SiteSetting.enable_discourse_connect = true
@@ -2467,7 +2614,7 @@ describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context "local logins are disabled" do
+      context "when local logins are disabled" do
         before do
           SiteSetting.enable_local_logins = false
 
@@ -2478,7 +2625,7 @@ describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context "local logins via email are disabled" do
+      context "when local logins via email are disabled" do
         before do
           SiteSetting.enable_local_logins_via_email = false
         end
@@ -2501,7 +2648,7 @@ describe SessionController do
       end
     end
 
-    context 'do nothing to system username' do
+    context 'when doing nothing to system username' do
       let(:system) { Discourse.system_user }
 
       it 'generates no token for system username' do

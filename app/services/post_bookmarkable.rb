@@ -12,7 +12,7 @@ class PostBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [{ topic: [:topic_users, :tags] }, :user]
+    [{ topic: [:tags] }, :user]
   end
 
   def self.list_query(user, guardian)
@@ -39,16 +39,14 @@ class PostBookmarkable < BaseBookmarkable
   end
 
   def self.reminder_handler(bookmark)
-    bookmark.user.notifications.create!(
-      notification_type: Notification.types[:bookmark_reminder],
+    send_reminder_notification(
+      bookmark,
       topic_id: bookmark.bookmarkable.topic_id,
       post_number: bookmark.bookmarkable.post_number,
       data: {
         title: bookmark.bookmarkable.topic.title,
-        display_username: bookmark.user.username,
-        bookmark_name: bookmark.name,
         bookmarkable_url: bookmark.bookmarkable.url
-      }.to_json
+      }
     )
   end
 
@@ -79,5 +77,20 @@ class PostBookmarkable < BaseBookmarkable
 
   def self.after_destroy(guardian, bookmark, opts)
     sync_topic_user_bookmarked(guardian.user, bookmark.bookmarkable.topic, opts)
+  end
+
+  def self.cleanup_deleted
+    related_topics = DB.query(<<~SQL, grace_time: 3.days.ago)
+      DELETE FROM bookmarks b
+      USING topics t, posts p
+      WHERE t.id = p.topic_id AND b.bookmarkable_id = p.id AND b.bookmarkable_type = 'Post'
+      AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
+      RETURNING t.id AS topic_id
+    SQL
+
+    related_topics_ids = related_topics.map(&:topic_id).uniq
+    related_topics_ids.each do |topic_id|
+      Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic_id)
+    end
   end
 end

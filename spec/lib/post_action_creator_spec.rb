@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionCreator do
+RSpec.describe PostActionCreator do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
@@ -25,7 +25,6 @@ describe PostActionCreator do
   end
 
   describe "messaging" do
-
     it "doesn't generate title longer than 255 characters" do
       topic = Fabricate(:topic, title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.")
       post = Fabricate(:post, topic: topic)
@@ -67,10 +66,26 @@ describe PostActionCreator do
         PostActionCreator.new(user, post, like_type_id).perform
       end
 
-      message = messages.last.data
+      message = messages.find { |msg| msg.data[:type] === :liked }.data
+      expect(message).to be_present
       expect(message[:type]).to eq(:liked)
       expect(message[:likes_count]).to eq(1)
       expect(message[:user_id]).to eq(user.id)
+    end
+
+    it 'notifies updated topic stats to subscribers' do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic)
+
+      expect(post.reload.like_count).to eq(0)
+
+      messages = MessageBus.track_publish("/topic/#{topic.id}") do
+        PostActionCreator.new(user, post, like_type_id).perform
+      end
+
+      stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
+      expect(stats_message).to be_present
+      expect(stats_message.data[:like_count]).to eq(1)
     end
 
     it 'does not create an invalid post action' do
@@ -103,7 +118,7 @@ describe PostActionCreator do
     end
   end
 
-  context "flags" do
+  describe "flags" do
     it "will create a reviewable if one does not exist" do
       result = PostActionCreator.create(user, post, :inappropriate)
       expect(result.success?).to eq(true)
@@ -151,7 +166,7 @@ describe PostActionCreator do
       end
     end
 
-    context "existing reviewable" do
+    context "with existing reviewable" do
       let!(:reviewable) {
         PostActionCreator.create(Fabricate(:user), post, :inappropriate).reviewable
       }
@@ -221,7 +236,7 @@ describe PostActionCreator do
     end
   end
 
-  context "take_action" do
+  describe "take_action" do
     before do
       PostActionCreator.create(Fabricate(:user), post, :inappropriate)
     end
@@ -240,8 +255,7 @@ describe PostActionCreator do
     end
   end
 
-  context "queue_for_review" do
-
+  describe "queue_for_review" do
     it 'fails if the user is not a staff member' do
       creator = PostActionCreator.new(
         user, post,

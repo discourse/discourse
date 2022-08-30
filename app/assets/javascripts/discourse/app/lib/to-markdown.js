@@ -1,53 +1,85 @@
-const trimLeft = (text) => text.replace(/^\s+/, "");
-const trimRight = (text) => text.replace(/\s+$/, "");
-const countPipes = (text) =>
-  (text.replace(/\\\|/, "").match(/\|/g) || []).length;
-const msoListClasses = [
+const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
   "MsoListParagraphCxSpLast",
 ];
-const hasChild = (e, n) => {
-  return (e.children || []).some((c) => c.name === n);
-};
+
+let tagDecorateCallbacks = [];
+let blockDecorateCallbacks = [];
+let textDecorateCallbacks = [];
+
+/**
+ * Allows to add support for custom inline markdown/bbcode prefixes
+ * to convert nodes back to bbcode.
+ *
+ * ```
+ * addTagDecorateCallback(function (text) {
+ *   if (this.element.attributes.class === "loud") {
+ *     this.prefix = "^^";
+ *     this.suffix = "^^";
+ *     return text.toLowerCase();
+ *   }
+ * });
+ * ```
+ */
+export function addTagDecorateCallback(callback) {
+  tagDecorateCallbacks.push(callback);
+}
+
+export function clearTagDecorateCallbacks() {
+  tagDecorateCallbacks = [];
+}
+
+/**
+ * Allows to add support for custom block markdown/bbcode prefixes
+ * to convert nodes back to bbcode.
+ *
+ * ```
+ * addBlockDecorateCallback(function (text) {
+ *   if (this.element.attributes.class === "spoiled") {
+ *     this.prefix = "[spoiler]";
+ *     this.suffix = "[/spoiler]";
+ *   }
+ * });
+ * ```
+ */
+export function addBlockDecorateCallback(callback) {
+  blockDecorateCallbacks.push(callback);
+}
+
+export function clearBlockDecorateCallbacks() {
+  blockDecorateCallbacks = [];
+}
+
+/**
+ * Allows to add support for custom text node transformations
+ * based on the next/previous elements.
+ *
+ * ```
+ * addTextDecorateCallback(function (text, nextElement, previousElement) {
+ *   if (
+ *     startRangeOpts &&
+ *     nextElement?.attributes.class?.includes("discourse-local-date") &&
+ *     text === "→"
+ *   ) {
+ *     return "";
+ *   }
+ * });
+ * ```
+ */
+export function addTextDecorateCallback(callback) {
+  textDecorateCallbacks.push(callback);
+}
+
+export function clearTextDecorateCallbacks() {
+  textDecorateCallbacks = [];
+}
 
 export class Tag {
-  constructor(name, prefix = "", suffix = "", inline = false) {
-    this.name = name;
-    this.prefix = prefix;
-    this.suffix = suffix;
-    this.inline = inline;
-  }
-
-  decorate(text) {
-    if (this.prefix || this.suffix) {
-      text = [this.prefix, text, this.suffix].join("");
-    }
-
-    if (this.inline) {
-      const prev = this.element.prev;
-      const next = this.element.next;
-
-      if (prev && prev.name !== "#text") {
-        text = " " + text;
-      }
-
-      if (next && next.name !== "#text") {
-        text = text + " ";
-      }
-    }
-
-    return text;
-  }
-
-  toMarkdown() {
-    const text = this.element.innerMarkdown();
-
-    if (text && text.trim()) {
-      return this.decorate(text);
-    }
-
-    return text;
+  static named(name) {
+    const klass = class NamedTag extends Tag {};
+    klass.tagName = name;
+    return klass;
   }
 
   static blocks() {
@@ -128,16 +160,24 @@ export class Tag {
   }
 
   static block(name, prefix, suffix) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, prefix, suffix);
+        super(prefix, suffix);
         this.gap = "\n\n";
       }
 
       decorate(text) {
         const parent = this.element.parent;
 
-        if (this.name === "p" && parent && parent.name === "li") {
+        for (const callback of blockDecorateCallbacks) {
+          const result = callback.call(this, text);
+
+          if (typeof result !== "undefined") {
+            text = result;
+          }
+        }
+
+        if (name === "p" && parent?.name === "li") {
           // fix for google docs
           this.gap = "";
         }
@@ -167,7 +207,7 @@ export class Tag {
         }
 
         let text = Element.parse([blockquote], this.element) || "";
-        text = text.trim().replace(/^>/g, "");
+        text = text.trim().replaceAll(/^> /gm, "").trim();
         if (text.length === 0) {
           return "";
         }
@@ -181,7 +221,7 @@ export class Tag {
             ? `[quote="${username}, post:${post}, topic:${topic}"]`
             : "[quote]";
 
-        return `\n\n${prefix}\n${text}\n[/quote]\n\n`;
+        return `\n${prefix}\n${text}\n[/quote]\n`;
       }
     };
   }
@@ -192,21 +232,26 @@ export class Tag {
   }
 
   static emphasis(name, decorator) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, decorator, decorator, true);
+        super(decorator, decorator, true);
       }
 
       decorate(text) {
         if (text.includes("\n")) {
-          this.prefix = `<${this.name}>`;
-          this.suffix = `</${this.name}>`;
+          this.prefix = `<${name}>`;
+          this.suffix = `</${name}>`;
         }
 
-        let space = text.match(/^\s/) || [""];
-        this.prefix = space[0] + this.prefix;
-        space = text.match(/\s$/) || [""];
-        this.suffix = this.suffix + space[0];
+        let space = text.match(/^\s/);
+        if (space) {
+          this.prefix = space[0] + this.prefix;
+        }
+
+        space = text.match(/\s$/);
+        if (space) {
+          this.suffix = this.suffix + space[0];
+        }
 
         return super.decorate(text.trim());
       }
@@ -214,17 +259,17 @@ export class Tag {
   }
 
   static allowedTag(name) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, `<${name}>`, `</${name}>`);
+        super(`<${name}>`, `</${name}>`);
       }
     };
   }
 
   static replace(name, text) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, "", "");
+        super("", "");
         this.text = text;
       }
 
@@ -235,9 +280,9 @@ export class Tag {
   }
 
   static span() {
-    return class extends Tag {
+    return class extends Tag.named("span") {
       constructor() {
-        super("span");
+        super();
       }
 
       decorate(text) {
@@ -253,9 +298,9 @@ export class Tag {
   }
 
   static link() {
-    return class extends Tag {
+    return class extends Tag.named("a") {
       constructor() {
-        super("a", "", "", true);
+        super("", "", true);
       }
 
       decorate(text) {
@@ -264,14 +309,18 @@ export class Tag {
 
         if (/^mention/.test(attr.class) && "@" === text[0]) {
           return text;
-        } else if ("hashtag" === attr.class && "#" === text[0]) {
+        }
+
+        if ("hashtag" === attr.class && "#" === text[0]) {
           return text;
-        } else if (
+        }
+
+        let img;
+        if (
           ["lightbox", "d-lazyload"].includes(attr.class) &&
-          hasChild(e, "img")
+          (img = (e.children || []).find((c) => c.name === "img"))
         ) {
           let href = attr.href;
-          const img = (e.children || []).find((c) => c.name === "img");
           const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
 
@@ -279,18 +328,18 @@ export class Tag {
             href = `upload://${base62SHA1}`;
           }
 
-          return "![" + text + "](" + href + ")";
+          return `![${text}](${href})`;
         }
 
         if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
 
           let linkModifier = "";
-          if (attr.class && attr.class.includes("attachment")) {
+          if (attr.class?.includes("attachment")) {
             linkModifier = "|attachment";
           }
 
-          return "[" + text + linkModifier + "](" + attr.href + ")";
+          return `[${text}${linkModifier}](${attr.href})`;
         }
 
         return text;
@@ -299,23 +348,25 @@ export class Tag {
   }
 
   static image() {
-    return class extends Tag {
+    return class extends Tag.named("img") {
       constructor() {
-        super("img", "", "", true);
+        super("", "", true);
       }
 
       toMarkdown() {
         const e = this.element;
         const attr = e.attributes;
-        const pAttr = (e.parent && e.parent.attributes) || {};
+        const pAttr = e.parent?.attributes || {};
+        const cssClass = attr.class || pAttr.class;
+
         let src = attr.src || pAttr.src;
+
         const base62SHA1 = attr["data-base62-sha1"];
         if (base62SHA1) {
           src = `upload://${base62SHA1}`;
         }
-        const cssClass = attr.class || pAttr.class;
 
-        if (cssClass && cssClass.includes("emoji")) {
+        if (cssClass?.includes("emoji")) {
           return attr.title || pAttr.title;
         }
 
@@ -345,9 +396,9 @@ export class Tag {
   }
 
   static slice(name, suffix) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, "", suffix);
+        super("", suffix);
       }
 
       decorate(text) {
@@ -360,9 +411,9 @@ export class Tag {
   }
 
   static cell(name) {
-    return class extends Tag {
+    return class extends Tag.named(name) {
       constructor() {
-        super(name, "|");
+        super("|");
       }
 
       toMarkdown() {
@@ -387,14 +438,14 @@ export class Tag {
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
+        const attrs = this.element.attributes;
         let indent = this.element
           .filterParentNames(["ol", "ul"])
           .slice(1)
           .map(() => "\t")
           .join("");
-        const attrs = this.element.attributes;
 
-        if (msoListClasses.includes(attrs.class)) {
+        if (MSO_LIST_CLASSES.includes(attrs.class)) {
           try {
             const level = parseInt(
               attrs.style.match(/level./)[0].replace("level", ""),
@@ -410,15 +461,15 @@ export class Tag {
           }
         }
 
-        return super.decorate(`${indent}* ${trimLeft(text)}`);
+        return super.decorate(`${indent}* ${text.trimStart()}`);
       }
     };
   }
 
   static code() {
-    return class extends Tag {
+    return class extends Tag.named("code") {
       constructor() {
-        super("code", "`", "`");
+        super("`", "`");
       }
 
       decorate(text) {
@@ -429,16 +480,17 @@ export class Tag {
           this.inline = true;
         }
 
-        text = $("<textarea />").html(text).text();
-        return super.decorate(text);
+        const textarea = document.createElement("textarea");
+        textarea.innerHTML = text;
+        return super.decorate(textarea.innerText);
       }
     };
   }
 
   static blockquote() {
-    return class extends Tag {
+    return class extends Tag.named("blockquote") {
       constructor() {
-        super("blockquote", "\n> ", "\n");
+        super("\n> ", "\n");
       }
 
       decorate(text) {
@@ -471,15 +523,19 @@ export class Tag {
         }
       }
 
+      countPipes(text) {
+        return (text.replace(/\\\|/, "").match(/\|/g) || []).length;
+      }
+
       decorate(text) {
         text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
         const rows = text.trim().split("\n");
-        const pipeCount = countPipes(rows[0]);
+        const pipeCount = this.countPipes(rows[0]);
         this.isValid =
           this.isValid &&
           rows.length > 1 &&
           pipeCount > 2 &&
-          rows.reduce((a, c) => a && countPipes(c) <= pipeCount); // Unsupported table format for Markdown conversion
+          rows.reduce((a, c) => a && this.countPipes(c) <= pipeCount); // Unsupported table format for Markdown conversion
 
         if (this.isValid) {
           const splitterRow =
@@ -501,7 +557,7 @@ export class Tag {
         let smallGap = "";
         const parent = this.element.parent;
 
-        if (parent && parent.name === "ul") {
+        if (parent?.name === "ul") {
           this.gap = "";
           this.suffix = "\n";
         }
@@ -511,7 +567,7 @@ export class Tag {
           smallGap = "\n";
         }
 
-        return smallGap + super.decorate(trimRight(text));
+        return smallGap + super.decorate(text.trimEnd());
       }
     };
   }
@@ -521,13 +577,11 @@ export class Tag {
       decorate(text) {
         text = "\n" + text;
         const bullet = text.match(/\n\t*\*/)[0];
+        let i = parseInt(this.element.attributes.start || 1, 10);
 
-        for (
-          let i = parseInt(this.element.attributes.start || 1, 10);
-          text.includes(bullet);
-          i++
-        ) {
+        while (text.includes(bullet)) {
           text = text.replace(bullet, bullet.replace("*", `${i}.`));
+          i++;
         }
 
         return super.decorate(text.slice(1));
@@ -545,38 +599,123 @@ export class Tag {
       }
     };
   }
+
+  constructor(prefix = "", suffix = "", inline = false) {
+    this.prefix = prefix;
+    this.suffix = suffix;
+    this.inline = inline;
+  }
+
+  decorate(text) {
+    for (const callback of tagDecorateCallbacks) {
+      const result = callback.call(this, text);
+
+      if (typeof result !== "undefined") {
+        text = result;
+      }
+    }
+
+    if (this.prefix || this.suffix) {
+      text = [this.prefix, text, this.suffix].join("");
+    }
+
+    if (this.inline) {
+      const { prev, next } = this.element;
+
+      if (prev && prev.name !== "#text") {
+        text = " " + text;
+      }
+
+      if (next && next.name !== "#text") {
+        text = text + " ";
+      }
+    }
+
+    return text;
+  }
+
+  toMarkdown() {
+    const text = this.element.innerMarkdown();
+
+    if (text?.trim()) {
+      return this.decorate(text);
+    }
+
+    return text;
+  }
 }
 
-function tags() {
-  return [
-    ...Tag.blocks().map((b) => Tag.block(b)),
-    ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
-    ...Tag.slices().map((s) => Tag.slice(s, "\n")),
-    ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
-    ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
-    Tag.aside(),
-    Tag.cell("td"),
-    Tag.cell("th"),
-    Tag.replace("br", "\n"),
-    Tag.replace("hr", "\n---\n"),
-    Tag.replace("head", ""),
-    Tag.li(),
-    Tag.link(),
-    Tag.image(),
-    Tag.code(),
-    Tag.blockquote(),
-    Tag.table(),
-    Tag.tr(),
-    Tag.ol(),
-    Tag.list("ul"),
-    Tag.span(),
-  ];
+let tagsMap;
+
+function tagByName(name) {
+  if (!tagsMap) {
+    tagsMap = new Map();
+
+    const allTags = [
+      ...Tag.blocks().map((b) => Tag.block(b)),
+      ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
+      ...Tag.slices().map((s) => Tag.slice(s, "\n")),
+      ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
+      ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
+      Tag.aside(),
+      Tag.cell("td"),
+      Tag.cell("th"),
+      Tag.replace("br", "\n"),
+      Tag.replace("hr", "\n---\n"),
+      Tag.replace("head", ""),
+      Tag.li(),
+      Tag.link(),
+      Tag.image(),
+      Tag.code(),
+      Tag.blockquote(),
+      Tag.table(),
+      Tag.tr(),
+      Tag.ol(),
+      Tag.list("ul"),
+      Tag.span(),
+    ];
+
+    for (const tag of allTags) {
+      tagsMap.set(tag.tagName, tag);
+    }
+  }
+
+  return tagsMap.get(name);
 }
 
 class Element {
-  constructor(element, parent, previous, next) {
+  static toMarkdown(element, parent, prev, next, metadata) {
+    return new Element(element, parent, prev, next, metadata).toMarkdown();
+  }
+
+  static parseChildren(parent) {
+    return Element.parse(parent.children, parent);
+  }
+
+  static parse(elements, parent = null) {
+    if (elements) {
+      let result = [];
+      let metadata = {};
+
+      for (let i = 0; i < elements.length; i++) {
+        const prev = i === 0 ? null : elements[i - 1];
+        const next = i === elements.length ? null : elements[i + 1];
+
+        result.push(
+          Element.toMarkdown(elements[i], parent, prev, next, metadata)
+        );
+      }
+
+      return result.join("");
+    }
+
+    return "";
+  }
+
+  constructor(element, parent, previous, next, metadata) {
     this.name = element.name;
     this.data = element.data;
+    this.metadata = metadata;
     this.children = element.children;
     this.attributes = element.attributes;
 
@@ -590,18 +729,16 @@ class Element {
     this.previous = previous;
     this.next = next;
 
-    if (this.name === "p") {
-      if (msoListClasses.includes(this.attributes.class)) {
-        this.name = "li";
-        this.parentNames.push("ul");
-      }
+    if (this.name === "p" && MSO_LIST_CLASSES.includes(this.attributes.class)) {
+      this.name = "li";
+      this.parentNames.push("ul");
     }
   }
 
   tag() {
-    const tag = new (tags().filter((t) => new t().name === this.name)[0] ||
-      Tag)();
+    const tag = new (tagByName(this.name) || Tag)();
     tag.element = this;
+    tag.metadata = this.metadata;
     return tag;
   }
 
@@ -621,14 +758,27 @@ class Element {
     let text = this.data || "";
 
     if (this.leftTrimmable()) {
-      text = trimLeft(text);
+      text = text.trimStart();
     }
 
     if (this.rightTrimmable()) {
-      text = trimRight(text);
+      text = text.trimEnd();
     }
 
-    text = text.replace(/[ \t]+/g, " ");
+    text = text.replace(/[\s\t]+/g, " ");
+    textDecorateCallbacks.forEach((callback) => {
+      const result = callback.call(
+        this,
+        text,
+        this.next,
+        this.previous,
+        this.metadata
+      );
+
+      if (typeof result !== "undefined") {
+        text = result;
+      }
+    });
 
     return text;
   }
@@ -639,31 +789,6 @@ class Element {
 
   filterParentNames(names) {
     return this.parentNames.filter((p) => names.includes(p));
-  }
-
-  static toMarkdown(element, parent, prev, next) {
-    return new Element(element, parent, prev, next).toMarkdown();
-  }
-
-  static parseChildren(parent) {
-    return Element.parse(parent.children, parent);
-  }
-
-  static parse(elements, parent = null) {
-    if (elements) {
-      let result = [];
-
-      for (let i = 0; i < elements.length; i++) {
-        const prev = i === 0 ? null : elements[i - 1];
-        const next = i === elements.length ? null : elements[i + 1];
-
-        result.push(Element.toMarkdown(elements[i], parent, prev, next));
-      }
-
-      return result.join("");
-    }
-
-    return "";
   }
 }
 
@@ -691,8 +816,10 @@ function putPlaceholders(html) {
 
   while (match) {
     const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
-    let code = match[1];
-    code = $("<div />").html(code).text().replace(/^\n/, "").replace(/\n$/, "");
+    const element = document.createElement("div");
+    element.innerHTML = match[1];
+
+    const code = element.innerText.replace(/^\n/, "").replace(/\n$/, "");
     placeholders.push([placeholder, code]);
     html = html.replace(match[0], `<code>${placeholder}</code>`);
     match = codeRegEx.exec(origHtml);
@@ -733,7 +860,10 @@ function putPlaceholders(html) {
     return ret;
   };
 
-  const elements = transformNode($.parseHTML(trimUnwanted(html)));
+  const template = document.createElement("template");
+  template.innerHTML = trimUnwanted(html);
+  const elements = transformNode(template.content.childNodes);
+
   return { elements, placeholders };
 }
 

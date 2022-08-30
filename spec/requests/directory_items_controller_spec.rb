@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DirectoryItemsController do
+RSpec.describe DirectoryItemsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:walter_white) { Fabricate(:walter_white) }
@@ -18,8 +18,7 @@ describe DirectoryItemsController do
   end
 
   context "without data" do
-
-    context "and a logged in user" do
+    context "with a logged in user" do
       before { sign_in(user) }
 
       it "succeeds" do

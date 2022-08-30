@@ -61,8 +61,40 @@ class UrlHelper
   end
 
   def self.escape_uri(uri)
-    return uri if s3_presigned_url?(uri)
-    Addressable::URI.normalized_encode(uri)
+    Discourse.deprecate(
+      "UrlHelper.escape_uri is deprecated. For normalization of user input use `.normalized_encode`. For true encoding, use `.encode`",
+      output_in_test: true,
+      drop_from: '3.0'
+    )
+    normalized_encode(uri)
+  end
+
+  def self.normalized_encode(uri)
+    validated = nil
+    url = uri.to_s
+
+    # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,
+    # that implementation has some edge-case issues like https://github.com/sporkmonger/addressable/issues/472.
+    # To temporaily work around those issues for the majority of cases, we try parsing with `::URI`.
+    # If that fails (e.g. due to non-ascii characters) then we will fall back to addressable.
+    # Hopefully we can simplify this back to `Addressable::URI.normalized_encode` in the future.
+
+    # edge case where we expect mailto:test%40test.com to normalize to mailto:test@test.com
+    if url.match(/\Amailto:/)
+      return normalize_with_addressable(url)
+    end
+
+    # If it doesn't pass the regexp, it's definitely not gonna parse with URI.parse. Skip
+    # to addressable
+    if !url.match?(/\A#{URI::regexp}\z/)
+      return normalize_with_addressable(url)
+    end
+
+    begin
+      normalize_with_ruby_uri(url)
+    rescue URI::Error
+      normalize_with_addressable(url)
+    end
   end
 
   def self.rails_route_from_url(url)
@@ -70,10 +102,6 @@ class UrlHelper
     Rails.application.routes.recognize_path(path)
   rescue Addressable::URI::InvalidURIError, URI::InvalidComponentError
     nil
-  end
-
-  def self.s3_presigned_url?(url)
-    url[/x-amz-(algorithm|credential)/i].present?
   end
 
   def self.cook_url(url, secure: false, local: nil)
@@ -118,6 +146,32 @@ class UrlHelper
     else
       url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
     end
+  end
+
+  private
+
+  def self.normalize_with_addressable(url)
+    u = Addressable::URI.normalized_encode(url, Addressable::URI)
+
+    if u.host && !u.host.ascii_only?
+      u.host = ::Addressable::IDNA.to_ascii(u.host)
+    end
+
+    u.to_s
+  end
+
+  def self.normalize_with_ruby_uri(url)
+    u = URI.parse(url)
+
+    if u.scheme && u.scheme != u.scheme.downcase
+      u.scheme = u.scheme.downcase
+    end
+
+    if u.host && u.host != u.host.downcase
+      u.host = u.host.downcase
+    end
+
+    u.to_s
   end
 
 end

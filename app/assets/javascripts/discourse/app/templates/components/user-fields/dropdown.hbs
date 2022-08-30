@@ -6,16 +6,8 @@
 </label>
 
 <div class="controls">
-  {{combo-box
-    id=(concat "user-" this.elementId)
-    content=this.field.options
-    valueProperty=null
-    nameProperty=null
-    value=this.value
-    onChange=(action (mut this.value))
-    options=(hash
+  <ComboBox @id={{concat "user-" this.elementId}} @content={{this.field.options}} @valueProperty={{null}} @nameProperty={{null}} @value={{this.value}} @onChange={{action (mut this.value)}} @options={{hash
       none=this.noneLabel
-    )
-  }}
+    }} />
   <div class="instructions">{{html-safe this.field.description}}</div>
 </div>

@@ -142,6 +142,13 @@ ar:
           few: "%{count} أيام"
           many: "%{count} يومًا"
           other: "%{count} يوم"
+        about_x_years:
+          zero: "حوالي %{count} سنة"
+          one: "حوالي %{count} سنة واحدة"
+          two: "حوالي %{count} سنتين"
+          few: "حوالي %{count} سنوات"
+          many: "حوالي %{count} سنة"
+          other: "حوالي %{count} سنوات"
         date_year: "D ‏MMMM ‏YYYY"
       medium_with_ago:
         x_minutes:
@@ -247,7 +254,6 @@ ar:
       forwarded: "أعاد توجيه الرسالة الإلكترونية أعلاه"
     topic_admin_menu: "إجراءات الموضوع"
     skip_to_main_content: "تخطي إلى المحتوى الرئيسي"
-    wizard_required: "مرحبًا بك في Discourse! لنبدأ من <a href='%{url}' data-auto-route='true'>معالج الإعداد</a> ✨"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     software_update_prompt:
       message: "لقد حدَّثنا هذا الموقع، <span>يُرجى التحديث </span>، أو قد تواجه سلوكًا غير متوقَّع."
@@ -260,6 +266,7 @@ ar:
       many: "أنت في وضع تمهيد التشغيل لتسهيل إطلاق موقعك الجديد. سيتم منح جميع المستخدمين الجُدد مستوى الثقة 1 وتفعيل الرسائل الإلكترونية التلخيصية لهم. وسيتم إيقاف هذا الوضع تلقائيًا عند انضمام %{count} مستخدمًا."
       other: "أنت في وضع تمهيد التشغيل لتسهيل إطلاق موقعك الجديد. سيتم منح جميع المستخدمين الجُدد مستوى الثقة 1 وتفعيل الرسائل الإلكترونية التلخيصية لهم. وسيتم إيقاف هذا الوضع تلقائيًا عند انضمام %{count} مستخدم."
     bootstrap_mode_disabled: "سيتم إيقاف وضع تمهيد التشغيل خلال 24 ساعة."
+    bootstrap_invite_button_title: "إرسال الدعوات"
     themes:
       default_description: "افتراضي"
     s3:
@@ -746,6 +753,7 @@ ar:
       forever: "للأبد"
       relative: "وقت نسبي"
       none: "لا حاجة إليه"
+      never: "أبدًا"
       last_custom: "آخر تاريخ ووقت مخصَّصين"
       custom: "تاريخ ووقت مخصَّصان"
       select_timeframe: "تحديد إطار زمني"
@@ -1253,6 +1261,8 @@ ar:
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميز"
       enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
+      experimental_sidebar:
+        options: "الخيارات"
       change: "تغيير"
       featured_topic: "الموضوع المميز"
       moderator: "‏%{user} مشرف في الموقع"
@@ -1294,7 +1304,7 @@ ar:
       muted_categories: "المكتومة"
       muted_categories_instructions: "لن تتلقى أي إشعارات أبدًا بخصوص الموضوعات الجديدة في هذه الفئات، ولن تظهر في الفئات أو صفحات أحدث الموضوعات."
       muted_categories_instructions_dont_hide: "لن تتلقى أي إشعارات أبدًا بشأن الموضوعات الجديدة في هذه الفئات."
-      regular_categories: "منتظم"
+      regular_categories: "عادية"
       regular_categories_instructions: "سترى هذه الفئات في قوائم الموضوعات \"الحديثة\" و\"الأكثر نشاطًا\"."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للفئات، فالحفظ متوقف."
       delete_account: "حذف حسابي"
@@ -1850,6 +1860,10 @@ ar:
         sent_by: "تم الإرسال بواسطة"
         private_message: "رسالة"
         the_topic: "الموضوع"
+    user_status:
+      save: "حفظ"
+      set_custom_status: "تعيين حالة مخصصة"
+      what_are_you_doing: "ماذا تفعل؟"
     loading: "جارٍ التحميل..."
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -1913,11 +1927,9 @@ ar:
       other: ردود
     signup_cta:
       sign_up: "الاشتراك"
-      hide_session: "تذكيري غدًا"
       hide_forever: "لا، شكرًا"
       hidden_for_session: "حسنًا، سنسألك غدًا. يمكنك دائمًا استخدام \"تسجيل الدخول\" لإنشاء حساب أيضًا."
       intro: "مرحبًا! يبدو أنك تستمتع بالمناقشة، لكنك لم تشترك للحصول على حساب حتى الآن."
-      value_prop: "عند إنشاء حساب، فإننا نتذكَّر ما قرأته بالضبط؛ حتى تتمكن دائمًا من العودة والمتابعة من حيث توقفت. ستتلقى أيضًا الإشعارات هنا وعبر البريد الإلكتروني كلما ردَّ أحد عليك. ويمكنك تسجيل إعجابك بالمنشورات لمشاركة مشاعر الود. :heartpulse:"
     summary:
       enabled_description: "أنت تعرض ملخصًا لهذا الموضوع: المنشورات الأكثر إثارة للاهتمام وفقًا للمجتمع."
       description:
@@ -2041,12 +2053,19 @@ ar:
         name: "Twitter"
       instagram:
         name: "Instagram"
+        sr_title: "تسجيل الدخول باستخدام Instagram"
       facebook:
         name: "Facebook"
+        title: "تسجيل الدخول باستخدام فيسبوك"
+        sr_title: "تسجيل الدخول باستخدام فيسبوك"
       github:
         name: "GitHub"
+        title: "تسجيل الدخول باستخدام GitHub"
+        sr_title: "تسجيل الدخول باستخدام GitHub"
       discord:
         name: "Discord"
+        title: "تسجيل الدخول باستخدام ديسكورد"
+        sr_title: "تسجيل الدخول باستخدام ديسكورد"
       second_factor_toggle:
         totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
         backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
@@ -2136,13 +2155,6 @@ ar:
         few: "حدِّد %{count} عناصر على الأقل."
         many: "حدِّد %{count} عنصرًا على الأقل."
         other: "حدِّد %{count} عنصر على الأقل."
-      invalid_selection_length:
-        zero: "يجب ألا يقل التحديد عن %{count} حرف على الأقل."
-        one: "يجب ألا يقل التحديد عن حرف واحد (%{count}) على الأقل."
-        two: "يجب ألا يقل التحديد عن حرفين (%{count}) على الأقل."
-        few: "يجب ألا يقل التحديد عن %{count} أحرف على الأقل."
-        many: "يجب ألا يقل التحديد عن %{count} حرفًا على الأقل."
-        other: "يجب ألا يقل التحديد عن %{count} حرف على الأقل."
       components:
         tag_drop:
           filter_for_more: تحسين البحث للمزيد...
@@ -2205,6 +2217,11 @@ ar:
         few: "تشير الإشارة إلى %{group} أنك على وشك إرسال إشعار إلى <a href='%{group_link}'>%{count} أشخاص)</a>. هل أنت متأكد؟"
         many: "تشير الإشارة إلى %{group} أنك على وشك إرسال إشعار إلى <a href='%{group_link}'>%{count} شخصًا)</a>. هل أنت متأكد؟"
         other: "تشير الإشارة إلى %{group} أنك على وشك إرسال إشعار إلى <a href='%{group_link}'>%{count} شخص)</a>. هل أنت متأكد؟"
+      cannot_see_mention:
+        category: "لقد أشرت إلى @%{username}، لكنه لن يتلقى إشعارًا لأنه ليس لديه إذن بالوصول إلى هذا التصنيف. عليك إضافته إلى إحدى المجموعات التي لديها إذن بالوصول إلى هذا التصنيف."
+        private: "لقد أشرت إلى @%{username}، ولكن لن يتم إشعاره لأنه لا يمكنه رؤية هذه الرسالة الخاصة. عليك دعوته إلى هذه الرسالة الخاصة."
+        muted_topic: "لقد ذكرت @%{username} ولكن لن يتم إخطاره لأنه كتم هذا الموضوع."
+        not_allowed: "لقد ذكرت @%{username} ولكن لن يُعلم لأنه لم يدع إلى هذا الموضوع."
       here_mention:
         zero: "بالإشارة إلى <b>@%{here}</b>، أنت على وشك إشعار %{count} المستخدم - هل أنت متأكد من ذلك؟"
         one: "بالإشارة إلى <b>@%{here}</b>، أنت على وشك إشعار %{count} المستخدم - هل أنت متأكد من ذلك؟"
@@ -2260,7 +2277,6 @@ ar:
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
       title: "أو اضغط على %{modifier}Enter"
-      users_placeholder: "إضافة مستخدم"
       title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
@@ -2330,9 +2346,6 @@ ar:
         reply_as_new_group_message:
           label: الرد كرسالة جديدة للمجموعة
           desc: إنشاء رسالة جديدة بدءًا بالمستلمين الجُدد
-        reply_as_private_message:
-          label: رسالة جديدة
-          desc: إنشاء رسالة خاصة جديدة
         reply_to_topic:
           label: الرد على الموضوع
           desc: الرد على الموضوع، وليس أي منشور محدَّد
@@ -2379,6 +2392,7 @@ ar:
       empty: "لم يتم العثور على إشعارات."
       post_approved: "تمت الموافقة على منشورك"
       reviewable_items: "عناصر تتطلب المراجعة"
+      watching_first_post_label: "موضوع جديد"
       mentioned: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       group_mentioned: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       quoted: "‏<span>⁨%{username}⁩</span> ‏%{description}"
@@ -2395,6 +2409,14 @@ ar:
         few: "<span class='multi-user'>%{username} و%{username2} و%{count} مستخدمين آخرين</span> %{description}"
         many: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدمًا آخر</span> ‏%{description}"
         other: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدم آخر</span> ‏%{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        zero: "%{username} و%{username2} و%{count} مستخدمين آخرين"
+        one: "%{username} و%{username2} ومستخدم واحد (%{count}) آخر"
+        two: "%{username} و%{username2} ومستخدمان (%{count}) آخران"
+        few: "%{username} و%{username2} و%{count} مستخدمين آخرين"
+        many: "%{username} و%{username2} و%{count} مستخدمين آخرين"
+        other: "%{username} و%{username2} و%{count} مستخدمين آخرين"
       liked_consolidated_description:
         zero: "سجَّل إعجابه على %{count} من منشوراتك"
         one: "سجَّل إعجابه على واحد (%{count}) من منشوراتك"
@@ -2425,12 +2447,13 @@ ar:
       votes_released: "%{description} - اكتمل"
       dismiss_confirmation:
         body:
-          zero: "هل أنت متأكد؟ لديك %{count} إشعار مهم."
-          one: "هل أنت متأكد؟ لديك %{count} إشعار مهم."
-          two: "هل أنت متأكد؟ لديك %{count} إشعاران هامان."
-          few: "هل أنت متأكد؟ لديك %{count} إشعار مهم."
-          many: "هل أنت متأكد؟ لديك %{count} إشعارات مهمة."
-          other: "هل أنت متأكد؟ لديك %{count} من الإشعارات الهامة."
+          default:
+            zero: "هل أنت متأكد؟ لديك %{count} من الإشعارات الهامة."
+            one: "هل أنت متأكد؟ لديك %{count} إشعار مهم."
+            two: "هل أنت متأكد؟ لديك %{count} إشعاران هامان."
+            few: "هل أنت متأكد؟ لديك %{count} من الإشعارات الهامة."
+            many: "هل أنت متأكد؟ لديك %{count} إشعارات مهمة."
+            other: "هل أنت متأكد؟ لديك %{count} من الإشعارات الهامة."
         dismiss: "تجاهل"
         cancel: "إلغاء"
       group_message_summary:
@@ -3461,6 +3484,8 @@ ar:
           edit_bookmark:
             name: "تعديل الإشارة المرجعية"
             description: "تعديل اسم الإشارة المرجعية أو تغيير تاريخ التذكير ووقته"
+          clear_bookmark_reminder:
+            description: "امسح تاريخ ووقت التذكير"
           pin_bookmark:
             name: "تثبيت الإشارة المرجعية"
             description: "ثبِّت هذه الإشارة المرجعية. سيؤدي ذلك إلى ظهورها في أعلى قائمة الإشارات المرجعية لديك."
@@ -3473,6 +3498,9 @@ ar:
         viewing_summary: "يتم الآن عرض ملخص لهذا الموضوع"
         post_number: "%{username}، المنشور #%{post_number}"
         show_all: "إظهار الكل"
+      share:
+        title: "مشاركة المنشور #%{post_number}"
+        instructions: "شارِك رابطًا إلى هذا المنشور:"
     category:
       none: "(بلا فئة)"
       all: "كل الفئات"
@@ -3493,7 +3521,10 @@ ar:
       manage_tag_groups_link: "إدارة مجموعات الوسوم"
       allow_global_tags_label: "السماح بالوسوم الأخرى أيضًا"
       required_tag_group:
+        description: "تتطلب موضوعات جديدة بها وسوم من مجموعات العلامات:"
         delete: "حذف"
+        add: "أضف مجموعة العلامات المطلوبة"
+        placeholder: "حدد مجموعة العلامات ..."
       topic_featured_link_allowed: "السماح بالروابط المميزة في هذه الفئة."
       delete: "حذف الفئة"
       create: "فئة جديدة"
@@ -3553,6 +3584,7 @@ ar:
       default_list_filter: "تصفية القائمة الافتراضية:"
       allow_badges_label: "السماح بمنح الشارات في هذه الفئة"
       edit_permissions: "تعديل الأذونات"
+      reviewable_by_group: "بالإضافة إلى فريق العمل، يمكن أيضًا مراجعة المحتوى في هذا التصنيف بواسطة:"
       review_group_name: "اسم المجموعة"
       require_topic_approval: "طلب موافقة المشرف على جميع الموضوعات الجديدة"
       require_reply_approval: "طلب موافقة المشرف على جميع الردود الجديدة"
@@ -3871,11 +3903,11 @@ ar:
         this_week: "الأسبوع"
         today: "اليوم"
         other_periods: "رؤية الأكثر نشاطًا:"
-    browser_update: 'للأسف، <a href="https://www.discourse.org/faq/#browser">متصفحك قديم جدًا على أن يعمل عليه هذا الموقع</a>. يُرجى <a href="https://browsehappy.com">تحديث متصفحك</a> لعرض المحتوى الغني وتسجيل الدخول والرد.'
     permission_types:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
       readonly: "العرض"
+    preloader_text: "جارٍ التحميل"
     lightbox:
       download: "تنزيل"
       previous: "السابق (مفتاح السهم الأيسر)"
@@ -3959,7 +3991,6 @@ ar:
         edit: "%{shortcut} تعديل المنشور"
         delete: "%{shortcut} حذف المنشور"
         mark_muted: "%{shortcut} كتم الموضوع"
-        mark_regular: "%{shortcut} موضوع عادي (افتراضي)"
         mark_tracking: "%{shortcut} تتبُّع الموضوع"
         mark_watching: "%{shortcut} مراقبة الموضوع"
         print: "%{shortcut} طباعة الموضوع"
@@ -4144,7 +4175,7 @@ ar:
           title: "التتبُّع"
           description: "ستتتبَّع تلقائيًا جميع الموضوعات التي تحمل هذا الوسم. وسيظهر أيضًا عدد المنشورات غير المقروءة والجديدة بجانب الموضوع."
         regular:
-          title: "منتظمة"
+          title: "عادية"
           description: "سنُرسل إليك إشعارًا إذا أشار أحد إلى اسمك باستخدام الرمز @ أو ردَّ على منشورك."
         muted:
           title: "الكتم"
@@ -4223,33 +4254,70 @@ ar:
       unsupported_file_picked: "لقد اخترت ملفًا غير مدعوم. أنواع الملفات المدعومة - %{types}."
     user_activity:
       no_activity_title: "لا يوجد نشاط."
-      no_activity_others: "لا يوجد نشاط."
       no_replies_title: "لم ترد على أي مواضيع حتى الآن"
-      no_replies_others: "لا توجد ردود."
       no_drafts_title: "لم تبدأ أي مسودات"
       no_drafts_body: "لست مستعدًا للنشر؟ سنقوم تلقائيًا بحفظ مسودة جديدة وإدراجها هنا كلما بدأت في إنشاء موضوع أو رد أو رسالة شخصية. حدد زر الإلغاء لتجاهل المُسَوَّدَة أو حفظها للمتابعة لاحقًا."
       no_likes_title: "لم بالإعجاب بأي مواضيع حتى الآن"
       no_likes_body: "هناك طريقة رائعة للتقدّم والبدء في المساهمة هي البَدْء في قراءة المحادثات التي جرت بالفعل، واختيار %{heartIcon} على المشاركات التي تريدها."
-      no_likes_others: "لا توجد منشورات سجَّلت إعجابك بها."
       no_topics_title: "لم تنشئ أي مواضيع حتى الآن"
       no_read_topics_title: "لم تقرأ أي مواضيع حتى الآن"
       no_read_topics_body: "بمجرد البَدْء في قراءة المناقشات، سترى قائمة هنا. لبدء القراءة، ابحث عن الموضوعات التي تهمك في <a href='%{topUrl}'>أعلى</a> أو <a href='%{categoriesUrl}'>فئات</a> أو البحث عن طريق الكلمة الرئيسية %{searchIcon}"
     no_group_messages_title: "لم يتم العثور على أي رسالة من المجموعة"
+    topic_entrance:
+      sr_jump_top_button: "انتقل إلى المشاركة الأولى"
+      sr_jump_bottom_button: "انتقل إلى آخر مشاركة"
     fullscreen_table:
       expand_btn: "توسيع الجدول"
+    second_factor_auth:
+      redirect_after_success: "مصادقة العامل الثاني ناجحة. إعادة التوجيه إلى الصفحة السابقة…"
     sidebar:
-      unread_count: "%{count} غير مقروء"
-      new_count: "%{count} جديد"
+      unread_count:
+        zero: "%{count} غير مقروء"
+        one: "%{count} غير مقروء"
+        two: "%{count} غير مقروءين"
+        few: "%{count} غير مقروءة"
+        many: "%{count} غير مقروءة"
+        other: "%{count} غير مقروء"
+      new_count:
+        zero: "%{count} جديد"
+        one: "%{count} جديد"
+        two: "%{count} جديدان"
+        few: "%{count} جديد"
+        many: "%{count} جديدًا"
+        other: "%{count} جديدة"
+      more: "المزيد..."
       sections:
-        categories:
-          header_link_title: "كل الفئات"
-          header_link_text: "الفئات"
-        topics:
-          header_link_title: "الصفحة الرئيسية"
-          header_link_text: "الموضوعات"
+        messages:
+          header_link_text: "الرسائل"
           links:
+            inbox: "صندوق الوارد"
+            sent: "المُرسَلة"
+            new: "الجديدة"
+            new_with_count: "الجديدة (%{count})"
+            unread: "غير المقروءة"
+            unread_with_count: "غير المقروءة (%{count})"
+            archive: "الأرشيف"
+        tags:
+          header_link_text: "الوسوم"
+        categories:
+          header_link_text: "الفئات"
+        community:
+          header_link_text: "المجتمع"
+          header_action_title: "إنشاء موضوع جديد"
+          links:
+            everything:
+              content: "كل شىء"
+              title: "جميع الموضوعات"
             tracked:
               content: "المتتبَّعة"
+              title: "جميع المواضيع المُتَعَقبة"
+            groups:
+              content: "المجموعات"
+              title: "كل المجموعات"
+            users:
+              content: "المستخدمون"
+            my_posts:
+              content: "منشوراتي"
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:
@@ -4486,9 +4554,13 @@ ar:
             topics:
               read: قراءة موضوع أو منشور محدَّد فيه. يتم دعم RSS أيضًا.
               write: إنشاء موضوع جديد أو النشر في موضوع موجود
+              update: تحديث الموضوع. غَيّر العنوان والتصنيف والعلامات وما إلى ذلك.
               read_lists: قراءة قوائم الموضوعات مثل الأكثر نشاطًا، والجديدة، والحديثة، وما إلى ذلك. يتم دعم RSS أيضًا.
             posts:
               edit: تعديل أي منشور أو منشور معيَّن.
+            categories:
+              list: احصل على قائمة التصنيفات.
+              show: الحصول على تصنيف واحد عن طريق الهوية.
             uploads:
               create: ارفع ملف جديد أو ابدأ الرفع مباشرة لملفات فردية أو متعددة الأجزاء إلى وحدة تخزين خارجية.
             users:
@@ -4715,6 +4787,7 @@ ar:
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         color: "اللون"
         opacity: "الشفافية"
+        copy: "نسخة مكررة"
         copy_to_clipboard: "نسخ الى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"
@@ -4990,6 +5063,7 @@ ar:
         time: "الوقت"
         user: "المستخدم"
         email_type: "نوع البريد الكتروني"
+        details_title: "إظهار تفاصيل البريد الإلكتروني"
         to_address: "إلى العنوان"
         test_email_address: "عنوان البريد الإلكتروني للاختبار"
         send_test: "إرسال رسالة إلكترونية للاختبار"
@@ -5765,7 +5839,9 @@ ar:
           grant_existing_holders: منح شارات إضافة لحاملي الشارات الحاليين
       emoji:
         title: "الرمز التعبيري"
+        help: "سيكون إضافة رمز تعبيري جديد متاحًا للجميع. اسحب واسقط ملفات متعددة في وقت واحد دون إدخال اسم لإنشاء رموز تعبيرية باستخدام أسماء الملفات الخاصة بهم. ستُستخدم المجموعة المحددة لجميع الملفات التي أُضيفت في نفس الوقت. يمكنك أيضًا النقر فوق \"إضافة رمز تعبيري جديد\" لفتح منتقي الملفات."
         add: "إضافة رمز تعبيري جديد"
+        choose_files: "اختر الملفات"
         uploading: "جارٍ التحميل..."
         name: "الاسم"
         group: "المجموعة"
@@ -5826,15 +5902,13 @@ ar:
           replace: "استبدال"
   wizard_js:
     wizard:
-      done: "تم"
-      finish: "إنهاء"
       back: "الرجوع"
       next: "التالي"
+      step-text: "المسافة"
       step: "%{current} من %{total}"
       upload: "تحميل"
       uploading: "جارٍ التحميل..."
       upload_error: "عذرًا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
-      quit: "ربما لاحقًا"
       staff_count:
         zero: "يضم مجتمعك %{count} عضو في فريق العمل."
         one: "يضم مجتمعك عضوًا واحدًا (%{count}) في فريق العمل (أنت)."

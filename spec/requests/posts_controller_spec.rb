@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples 'finding and showing post' do
+RSpec.shared_examples 'finding and showing post' do
   let!(:post) { post_by_user }
 
   it "ensures the user can't see the post" do
@@ -22,7 +22,7 @@ shared_examples 'finding and showing post' do
     expect(response.status).to eq(404)
   end
 
-  context "deleted post" do
+  context "with deleted post" do
     before do
       post.trash!(user)
     end
@@ -50,7 +50,7 @@ shared_examples 'finding and showing post' do
       expect(response.status).to eq(200)
     end
 
-    context "category group moderator" do
+    context "with category group moderator" do
       fab!(:group_user) { Fabricate(:group_user) }
       let(:user_gm) { group_user.user }
       let(:group) { group_user.group }
@@ -74,14 +74,14 @@ shared_examples 'finding and showing post' do
   end
 end
 
-shared_examples 'action requires login' do |method, url, params = {}|
+RSpec.shared_examples 'action requires login' do |method, url, params = {}|
   it 'raises an exception when not logged in' do
     self.public_send(method, url, **params)
     expect(response.status).to eq(403)
   end
 end
 
-describe PostsController do
+RSpec.describe PostsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
@@ -251,7 +251,7 @@ describe PostsController do
         delete "/posts/#{post.id}.json"
       end
 
-      context "permanently destroy" do
+      context "with permanently destroy" do
         let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
 
         before do
@@ -364,7 +364,7 @@ describe PostsController do
         end
       end
 
-      context "deleting flagged posts" do
+      context "when deleting flagged posts" do
         before do
           sign_in(moderator)
           PostActionCreator.off_topic(moderator, post1)
@@ -809,7 +809,7 @@ describe PostsController do
       SiteSetting.enable_whispers = true
     end
 
-    context 'api' do
+    context 'with api' do
       it 'memoizes duplicate requests' do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
@@ -932,7 +932,7 @@ describe PostsController do
         sign_in(user)
       end
 
-      context "fast typing" do
+      context "when fast typing" do
         before do
           SiteSetting.min_first_post_typing_time = 3000
           SiteSetting.auto_silence_fast_typers_max_trust_level = 1
@@ -1358,7 +1358,7 @@ describe PostsController do
         end
       end
 
-      context "errors" do
+      context "with errors" do
         it "does not succeed" do
           post "/posts.json", params: { raw: 'test' }
           expect(response).not_to be_successful
@@ -1378,7 +1378,7 @@ describe PostsController do
           expect(response.parsed_body["errors"]).to include(I18n.t(:spamming_host))
         end
 
-        context "allow_uncategorized_topics is false" do
+        context "when allow_uncategorized_topics is false" do
           before do
             SiteSetting.allow_uncategorized_topics = false
           end
@@ -1523,7 +1523,7 @@ describe PostsController do
       end
     end
 
-    context "topic bump" do
+    context "with topic bump" do
       shared_examples "it works" do
         it "should be able to skip topic bumping" do
           original_bumped_at = 1.day.ago
@@ -1550,7 +1550,7 @@ describe PostsController do
         end
       end
 
-      context "admins" do
+      context "with admins" do
         before do
           sign_in(admin)
         end
@@ -1558,7 +1558,7 @@ describe PostsController do
         include_examples "it works"
       end
 
-      context "moderators" do
+      context "with moderators" do
         before do
           sign_in(moderator)
         end
@@ -1566,7 +1566,7 @@ describe PostsController do
         include_examples "it works"
       end
 
-      context "TL4 users" do
+      context "with TL4 users" do
         fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
         before do
@@ -1576,7 +1576,7 @@ describe PostsController do
         include_examples "it works"
       end
 
-      context "users" do
+      context "with users" do
         fab!(:topic) { Fabricate(:topic) }
 
         [:user].each do |user|
@@ -1593,7 +1593,7 @@ describe PostsController do
       end
     end
 
-    describe "featured links" do
+    context "with featured links" do
       it "allows to create topics with featured links" do
         sign_in(user_trust_level_1)
 
@@ -1724,7 +1724,7 @@ describe PostsController do
       end
     end
 
-    context "deleted post" do
+    context "with deleted post" do
       fab!(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
       fab!(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
@@ -1737,7 +1737,7 @@ describe PostsController do
       end
     end
 
-    context "deleted topic" do
+    context "with deleted topic" do
       fab!(:deleted_topic) { Fabricate(:topic, user: admin) }
       fab!(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
       fab!(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
@@ -1893,6 +1893,16 @@ describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "does not raise if topic has been permanently deleted" do
+        post = Fabricate(:post, user: admin)
+        PostDestroyer.new(admin, post).destroy
+        post.update!(topic_id: -1000)
+
+        sign_in(admin)
+        get "/posts/#{admin.username}/deleted.json"
+        expect(response.status).to eq(200)
+      end
+
       it "doesn't return secured categories for moderators if they don't have access" do
         Fabricate(:moderator)
 
@@ -1990,10 +2000,17 @@ describe PostsController do
       expect(response).to be_redirect
     end
 
-    it "returns a 403 when access is denied" do
+    it "returns a 403 when access is denied for JSON format" do
       post = Fabricate(:private_message_post)
       get "/p/#{post.id}.json"
       expect(response).to be_forbidden
+    end
+
+    it "returns a 403 when access is denied for HTML format" do
+      post = Fabricate(:private_message_post)
+      get "/p/#{post.id}"
+      expect(response).to be_forbidden
+      expect(response.body).to have_tag("body.no-ember")
     end
 
     it "renders a 404 page" do
@@ -2055,7 +2072,7 @@ describe PostsController do
   end
 
   describe '#latest' do
-    context 'private posts' do
+    context 'with private posts' do
       describe 'when not logged in' do
         it 'should return the right response' do
           Fabricate(:post)
@@ -2101,7 +2118,7 @@ describe PostsController do
       end
     end
 
-    context 'public posts' do
+    context 'with public posts' do
       it 'returns public posts with topic rss feed' do
         public_post
         private_post

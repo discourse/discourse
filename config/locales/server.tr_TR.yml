@@ -208,6 +208,7 @@ tr_TR:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemeleri zaten küresel olarak etkin olduğundan S3 yüklemelerini etkinleştiremezsiniz ve bu site düzeyini etkinleştirmek yüklemelerde kritik sorunlara neden olabilir"
       cors_origins_should_not_have_trailing_slash: "CORS kaynaklarına sondaki eğik çizgiyi (/) eklememelisiniz."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara aşağıdaki değerlerden herhangi birini ekleyemezsiniz: %{values}."
+      twitter_summary_large_image_no_svg: "twitter:image meta verisi için kullanılan Twitter özet resimleri .svg olamaz."
     conflicting_google_user_id: 'Bu hesap için Google Hesap Kimliği değişti; Güvenlik nedeniyle yetkili müdahalesi gerekmektedir. Lütfen yetkili ile iletişime geçin ve <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Üzgünüz, '%{hostname}' sunucusu bulunamadığı için bu web sayfası için bir önizleme oluşturamadık. Önizleme yerine, gönderinizde yalnızca bir bağlantı görünecektir. :cry:"
@@ -577,6 +578,7 @@ tr_TR:
               too_many: "Bu işlem için çok fazla sözcük var"
             base:
               invalid_url: "Yeni URL geçersiz"
+              invalid_tag_list: "Yedek etiket listesi geçersiz"
       <<: *errors
   uncategorized_category_name: "Kategorize"
   vip_category_name: "Lobi"
@@ -657,6 +659,11 @@ tr_TR:
   post:
     image_placeholder:
       broken: "Bu görüntü bozuldu"
+      blocked_hotlinked_title: "Resim başka bir sitede. Yeni bir sekmede açmak için tıklayın."
+      blocked_hotlinked: "Harici Görsel"
+    media_placeholder:
+      blocked_hotlinked_title: "Medya başka bir sitede. Yeni bir sekmede açmak için tıklayın."
+      blocked_hotlinked: "Harici Medya"
     hidden_bidi_character: "Çift yönlü karakterler, metnin oluşturulma sırasını değiştirebilir. Bu, kötü amaçlı kodu gizlemek için kullanılabilir."
     has_likes:
       one: "%{count} Beğeni"
@@ -676,7 +683,6 @@ tr_TR:
       public_group_membership: "Gruplara çok sık katılıyor ve ayrılıyorsunuz. Lütfen yeniden denemeden önce %{time_left} bekleyin."
       topics_per_day: "Günlük izin verilen maksimum yeni konu sayısına ulaştınız. %{time_left} sonra daha fazla yeni konu oluşturabilirsiniz."
       pms_per_day: "Günlük izin verilen maksimum gönderi sayısına ulaştınız. %{time_left} sonra daha fazla yeni gönderi oluşturabilirsiniz."
-      create_like: "Vaaay! Epey beğeni dağıttınız! Bugün için maksimum günlük beğeni sayısına ulaştınız, ancak güven düzeyleri kazandıkça daha fazla günlük beğeni kullanabileceksiniz. %{time_left} sonra tekrar beğeni verebileceksiniz."
       create_bookmark: "Maksimum günlük yer imi sayısına ulaştınız. %{time_left} sonra daha fazla yer imi oluşturabilirsiniz."
       edit_post: "Maksimum günlük düzenleme sayısına ulaştınız. %{time_left} sonra daha fazla düzenleme yapabilirsiniz."
       live_post_counts: "Çok hızlı bir şekilde canlı yayın sayımı istiyorsunuz. Lütfen yeniden denemeden önce %{time_left} bekleyin."
@@ -1416,7 +1422,6 @@ tr_TR:
     contact_email: "Bu site için yöneticini e-posta adresi. <a href='%{base_path}/about' target='_blank'> /about</a> iletişim formu içerisinde, sadece acil durumlar ve kritik bildirimler için kullanılacak."
     contact_url: "Bu site için iletişim URL'sidir. Acil konular için <a href='%{base_path}/about' target='_blank'>/ about</a> iletişim formunda kullanılır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
-    download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
     disabled_image_download_domains: "Bu alan adlarından hiç bir zaman uzaktan resim indirme. Sınırlandırılmış liste."
     editing_grace_period: "Gönderi oluşturulduktan (n) saniye içerisinde bir düzenleme yapıldığında, gönderi geçmişinde yeni bir sürüm oluşturma."
@@ -1459,7 +1464,7 @@ tr_TR:
     favicon: "Siteniz için bir simge, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>Https://en.wikipedia.org/wiki/Favicon</a> . Bir CDN üzerinde düzgün çalışmak için bir png olması gerekir. 32x32 olarak yeniden boyutlandırılacak. Boş bırakılırsa large_icon kullanılır."
     apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Otomatik olarak 180x180 boyutuna getirilecek. Boş bırakılırsa large_icon kullanılır."
     opengraph_image: "Sayfada başka uygun görüntü yoksa varsayılan açık grafik görüntüsü. Boş bırakılırsa large_icon kullanılır."
-    twitter_summary_large_image: "Twitter kartı 'özet büyük resim' (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır). Boş bırakılırsa opengraph_image kullanılarak normal kart meta verileri oluşturulur."
+    twitter_summary_large_image: "Twitter kartı 'özet büyük resim' (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa, .svg olmayan opengraph_image kullanılarak normal kart meta verileri oluşturulur."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu biçimi. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1562,6 +1567,7 @@ tr_TR:
     enable_badges: "Rozet sistemini etkinleştir"
     max_favorite_badges: "Kullanıcının seçebileceği maksimum rozet sayısı"
     enable_whispers: "Konular dahilinde yetkililerin özel iletişimine izin ver."
+    whispers_allowed_groups: "Belirli grupların üyeleri için konu içinde özel iletişime izin ver."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt dosyasını geçersiz kılabilirsiniz </a>."
     blocked_email_domains: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     allowed_email_domains: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
@@ -1648,6 +1654,8 @@ tr_TR:
     top_topics_formula_first_post_likes_multiplier: "en iyi konular formülündeki ilk gönderi beğenileri değerini çarpan (n) değeri: `` log (views_count) * 2 + op_likes_count * (n) + LEAST (likes_count / posts_count, 3) + 10 + log (posts_count) `"
     top_topics_formula_least_likes_per_post_multiplier: "en iyi konular formülündeki yayın çarpanı başına en az beğeni değeri (n): `log (views_count) * 2 + op_likes_count * 0.5 + LEAST (likes_count / posts_count, (n)) + 10 + log (posts_count)`"
     enable_safe_mode: "Eklentilerin hatalarını ayıklamak için kullanıcıların güvenli moda girmesine izin verin."
+    enable_experimental_sidebar_hamburger: "Deneysel kenar çubuğunun ve kullanıcı hamburgeri açılır menüsünün etkinleştirilmesine izin verir."
+    enable_sidebar: "Deneysel kenar çubuğunu etkinleştirir."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, başka bir konu oluşturmak için kullanıcılar (n) saniye beklemeli."
     rate_limit_create_post: "Bir gönderi oluşturduktan sonra, başka bir gönderi oluşturmak için kullanıcılar (n) saniye beklemeli."
     rate_limit_new_user_create_topic: "Bir konu oluşturduktan sonra, başka bir konu oluşturmak için yeni kullanıcılar (n) saniye beklemeli."
@@ -2024,7 +2032,7 @@ tr_TR:
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
     default_categories_watching_first_post: "Her yeni konudaki ilk gönderinin varsayılan olarak izleneceği kategori listesi."
-    default_categories_regular: "Varsayılan olarak sessize alınmayan kategorilerin listesi. `mute_all_categories_by_default` site ayarı etkinleştirildiğinde kullanışlıdır."
+    default_categories_normal: "Varsayılan olarak sessize alınmayan kategorilerin listesi. `mute_all_categories_by_default` site ayarı etkinleştirildiğinde kullanışlıdır."
     mute_all_categories_by_default: "Sessize alınacak tüm kategorilerin varsayılan bildirim düzeyini ayarlayın. Kullanıcıların 'en son' ve 'kategoriler' sayfalarında görünmeleri için kategorilere katılmalarını isteyin. Anonim kullanıcılar için varsayılanları değiştirmek isterseniz 'default_categories_' ayarlarını yapın."
     default_tags_watching: "Varsayılan olarak izlenen etiketlerin listesi."
     default_tags_tracking: "Varsayılan olarak takip edilen etiketlerin listesi."
@@ -2077,6 +2085,8 @@ tr_TR:
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluştur."
     use_email_for_username_and_name_suggestions: "Kullanıcı adları ve ad önerileri için e-posta adreslerinin ilk kısmını kullanın. Ama unutmayın bu yaklaşım, insanların e-posta adreslerinin tamamını tahmin etmelerini kolaylaştırır (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
     use_name_for_username_suggestions: "Kullanıcı adları önerirken kullanıcının tam adını kullanın."
+    default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğu'nun Kategoriler bölümünde görüntülenecektir."
+    default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğu'nun Etiketler bölümünde görüntülenecektir."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -3395,7 +3405,6 @@ tr_TR:
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
-      text_body_template: "Merhaba, \n\nGenellikle kullanmadığınız bir aygıttan veya konumdan bir giriş fark ettik. Bu siz miydiniz? \n\n- Konum: %{location} (%{client_ip}) \n- Tarayıcı: %{browser} \n- Cihaz: %{device} - %{os} \n\nEğer sizseniz harika! Yapmanız gereken başka bir şey yok.\n\nBu siz değilseniz lütfen [mevcut oturumlarınızı gözden geçirin] (%{base_url}/profilim/tercihlerim/hesap) ve parolanızı değiştirin.\n"
     post_approved:
       title: "Gönderiniz onaylandı"
       subject_template: "[%{site_name}] Gönderiniz onaylandı"
@@ -3498,6 +3507,12 @@ tr_TR:
     dark_rose: "Kara Gül"
     wcag: "WCAG Light"
     wcag_theme_name: "WCAG Light"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solarized Light"
+    solarized_light_theme_name: "Solarized Light"
+    solarized_dark: "Solarized Dark"
+    solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
     default_theme_name: "Varsayılan"
@@ -3821,92 +3836,42 @@ tr_TR:
       message: "<p> <b>%{email}</b> adresine etkinleştirme e-postasını yeniden gönderdik"
   safe_mode:
     title: "Güvenli moda gir"
-    description: "Güvenli mod sitenizi eklenti yüklemeden veya site özelleştirmesi yapmadan test etmenizi sağlar."
-    no_customizations: "Geçerli temayı devre dışı bırak"
-    only_official: "Resmi olmayan eklentileri devre dışı bırak"
+    no_unofficial_plugins: "Resmi olmayan eklentileri devre dışı bırak"
     no_plugins: "Tüm eklentileri devre dışı bırak"
     enter: "Güvenli Moda Gir"
     must_select: "Güvenli moda girmek için en az bir seçenek seçmelisiniz."
   wizard:
     title: "Discourse Kurulumu"
     step:
-      locale:
-        title: "Discourse topluluğunuza hoş geldiniz!"
-        fields:
-          default_locale:
-            description: "Topluluğunuz için öntanımlı dil nedir?"
-      forum_title:
-        title: "Ad"
-        description: "Yeni bir ziyaretçinin <i>ilk</i> farkedeceği şey adınız ve unvanınızdır."
+      introduction:
+        title: "Topluluğunuzdan bahsedin"
         fields:
           title:
-            label: "Topluluğunuzun adı"
+            label: "Topluluk adı"
             placeholder: "Ali'nin Yeri"
           site_description:
-            label: "Topluluğunuzu kısa bir cümleyle tanımlayın (arama sonuçlarında ve sosyal medyada kullanılır)"
+            label: "Topluluğunuzu bir cümleyle tanımlayın"
             placeholder: "Ali ve arkadaşlarının ilginç şeyleri tartışabilecekleri bir yer"
-          short_site_description:
-            label: "Topluluğunuzu birkaç kelimeyle tanımlayın (ana sayfa başlığı için kullanılır)"
-            placeholder: "Şimdiye kadarki en iyi topluluk"
-      introduction:
-        title: "Tanıtım"
-        disabled: "<p> “%{topic_title}” başlıklı konu bulamadık. </p><ul><li> Başlığı değiştirdiyseniz sitenizin tanıtım metnini değiştirmek için bu konuyu düzenleyin. </li><li> Bu konuyu sildiyseniz başlık olarak “%{topic_title}” ile başka bir konu oluşturun. İlk yayının içeriği sitenizin tanıtım metnidir. </li></ul>"
-        fields:
-          welcome:
-            label: "Hoş geldiniz Konusu"
-            description: "<p> Topluluğunuzu yaklaşık 1 dakika içinde bir asansördeki bir yabancıya nasıl tarif edersiniz? </p><ul><li> Bu tartışmalar kimler içindir? </li><li> Burada ne bulabilirim? </li><li> Neden ziyaret etmeliyim? </li></ul><p> Hoşgeldiniz konunuz, yeni gelenlerin okuyacağı ilk şeydir. Bunu <b>bir paragraf</b> “asansör konuşması” veya “görev beyanı” olarak düşünün. </p>"
-            one_paragraph: "Lütfen hoş geldiniz iletinizi bir paragraf kadar uzunlukta tutun."
-            extra_description: "Emin değilseniz bu adımı atlayabilir ve karşılama içeriğinizi daha sonra düzenleyebilirsiniz."
-      privacy:
-        title: "Erişim"
-        description: "<p>Topluluğunuz herkese açık mı yoksa üyelik, davet veya onay ile kısıtlanmış mı? İsterseniz işleri özel olarak ayarlayabilir ve daha sonra herkese açık hale getirebilirsiniz.</p>"
-        fields:
-          privacy:
-            choices:
-              open:
-                label: "Herkese Açık"
-                description: "Bu topluluğa herkes erişebilir"
-              restricted:
-                label: "Özel"
-                description: "Bu topluluğa yalnızca giriş yapmış kullanıcılar erişebilir"
-          privacy_options:
-            description: "Yeni kullanıcılar bir hesaba nasıl kayıt olur?"
-            choices:
-              open:
-                label: "Kullanıcılar kendi kendilerine kaydolabilirler."
-              invite_only:
-                label: "Kullanıcıların kaydolmadan önce güvenilir kullanıcılar veya görevliler tarafından davet edilmesi gerekir."
-              must_approve:
-                label: "Kullanıcılar kendi kendilerine kaydolabilir, ancak görevliler tarafından onaylanmalıdır."
-      contact:
-        title: "İletişim"
-        fields:
           contact_email:
-            label: "Posta"
-            placeholder: "ad@örnek.com"
-            description: "Bu topluluktan sorumlu kişi veya grubun e-posta adresi. İşlenmemiş raporlar, güvenlik güncellemeleri gibi kritik bildirimler ve acil topluluk iletişimi için <a href='%{base_path}/about' target='_blank'>sizin hakkımda sayfanızda</a> kullanılır."
-          contact_url:
-            label: "Ağ Sayfası"
-            placeholder: "https://www.örnek.com/iletişim"
-            description: "Siz veya kuruluşunuz için genel iletişim web sayfası. <a href='%{base_path}/about' target='_blank'>Sizin hakkımda sayfanızda gösterilecek</a> ."
-          site_contact:
-            label: "Otomatik İletiler"
-            description: "Raporlanma uyarısı ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel iletileri bu kullanıcıdan gönderilecektir."
-      corporate:
-        title: "Organizasyon"
-        description: "Bu bilgiler, Görevli kategorisinde düzenleyebileceğiniz bir konu olan <a href='%{base_path}/tos' target='blank'>Hizmet Şartlarınıza</a> girilecektir. Bir şirketiniz yoksa şimdilik bu adımı atlamaktan çekinmeyin."
+            label: "İletişim noktası"
+            placeholder: "ornek@kullanici.com"
+          default_locale:
+            label: "Dil"
+      privacy:
+        title: "Üye Deneyimi"
         fields:
-          company_name:
-            label: "Şirket Adı"
-            placeholder: "Örnek Organizasyon"
-          governing_law:
-            label: "Geçerli Kanun"
-            placeholder: "Kaliforniya kanunu"
-          city_for_disputes:
-            label: "Anlaşmazlıklar Şehri"
-            placeholder: "San Francisco, Kaliforniya"
+          login_required:
+            placeholder: "Özel"
+            extra_description: "Bu topluluğa yalnızca giriş yapmış kullanıcılar erişebilir"
+          invite_only:
+            placeholder: "Yalnızca Davet"
+          must_approve_users:
+            placeholder: "Onay gerektir"
+            extra_description: "Kullanıcılar personel tarafından onaylanmalıdır"
+      ready:
+        title: "Discourseunuz hazır!"
       styling:
-        title: "Stil"
+        title: "Görünüm & His"
         fields:
           color_scheme:
             label: "Renk şeması"
@@ -3927,6 +3892,8 @@ tr_TR:
                 label: "Öne çıkan konulardaki kategoriler"
               categories_and_latest_topics:
                 label: "Kategoriler ve Son Konular"
+              categories_and_latest_topics_created_date:
+                label: "Kategoriler ve Son Konular (konu oluşturulma tarihine göre sırala)"
               categories_and_top_topics:
                 label: "Kategoriler ve Popüler Konular"
               categories_boxes:
@@ -3935,24 +3902,36 @@ tr_TR:
                 label: "Konu Etiketi İçeren Kategori Kutuları"
               subcategories_with_featured_topics:
                 label: "Öne Çıkan Konular İçeren Alt Kategoriler"
-      logos:
-        title: "Görseller"
+      branding:
+        title: "Topluluk Tanıtımı"
         fields:
           logo:
             label: "Birincil Görsel"
-            description: "Sitenizin sol üst tarafındaki logo resmi. Yüksekliği 120 ve en boy oranı 3: 1'den büyük olan geniş dikdörtgen bir görüntü kullanın"
           logo_small:
             label: "Kare Logo"
-            description: "Logonuzun kare versiyonu. Aşağı kaydırırken, tarayıcıda ve sosyal platformlarda paylaşırken sitenizin sol üst köşesinde gösterilir. İdeal olarak 512x512'den daha büyük."
-      icons:
-        title: "Simgeler"
-        fields:
           favicon:
             label: "Tarayıcı Simgesi"
-            description: "Sitenizi küçük boyutlarda iyi görünen web tarayıcılarında göstermek için kullanılan simge resmi. Önerilen resim uzantıları PNG veya JPG'dir. Varsayılan olarak kare logosunu kullanacağız."
           large_icon:
             label: "Büyük Simge"
-            description: "Sitenizi daha büyük boyutlarda iyi görünen modern cihazlarda göstermek için kullanılan simge resmi. İdeal olarak 512 × 512'den daha büyük. Varsayılan olarak kare logosunu kullanacağız."
+      corporate:
+        title: "İletişim & Organizasyon"
+        fields:
+          company_name:
+            label: "Şirket Adı"
+            placeholder: "Örnek Organizasyon"
+          governing_law:
+            label: "Geçerli Kanun"
+            placeholder: "Kaliforniya kanunu"
+          contact_url:
+            label: "Ağ Sayfası"
+            placeholder: "https://www.örnek.com/iletişim"
+            description: "Siz veya kuruluşunuz için genel iletişim web sayfası. <a href='%{base_path}/about' target='_blank'>Sizin hakkımda sayfanızda gösterilecek</a> ."
+          city_for_disputes:
+            label: "Anlaşmazlıklar Şehri"
+            placeholder: "San Francisco, Kaliforniya"
+          site_contact:
+            label: "Otomatik İletiler"
+            description: "Raporlanma uyarısı ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel iletileri bu kullanıcıdan gönderilecektir."
       invites:
         title: "Görevli Davet Et"
         description: "Neredeyse bitti! Bazı insanları, topluluğunuzu başlatmak için ilginç konular ve yanıtlarla <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınıza</a> yardımcı olmaya davet edelim."
@@ -4129,6 +4108,9 @@ tr_TR:
     post_raw: "Tartışma %{parent_url} adresinde sürüyor.\n\nÖnceki tartışmalar:\n\n%{previous_topics}"
     small_action_post_raw: "Tartışmayı %{new_title} başlığı altında sürdürün."
   fallback_username: "kullanıcı"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "end_at, set_at değerinden büyük olmalıdır"
   activemodel:
     errors:
       <<: *errors

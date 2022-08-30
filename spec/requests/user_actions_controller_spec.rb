@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserActionsController do
+RSpec.describe UserActionsController do
   describe "GET index" do
     subject(:user_actions) { get "/user_actions.json", params: params }
 

@@ -6,15 +6,15 @@
     },
     "usernames": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "skipped_usernames": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     }
   },
   "required": [

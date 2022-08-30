@@ -38,7 +38,7 @@ export default EmberObject.extend({
   },
 
   basePath(store, type) {
-    if (ADMIN_MODELS.indexOf(type.replace("_", "-")) !== -1) {
+    if (ADMIN_MODELS.includes(type.replace("_", "-"))) {
       return "/admin/";
     }
     return "/";
@@ -47,20 +47,22 @@ export default EmberObject.extend({
   appendQueryParams(path, findArgs, extension) {
     if (findArgs) {
       if (typeof findArgs === "object") {
-        const queryString = Object.keys(findArgs)
-          .reject((k) => !findArgs[k])
-          .map((k) => k + "=" + encodeURIComponent(findArgs[k]));
+        const urlSearchParams = new URLSearchParams();
 
-        if (queryString.length) {
-          return `${path}${extension ? extension : ""}?${queryString.join(
-            "&"
-          )}`;
+        for (const [key, value] of Object.entries(findArgs)) {
+          if (value) {
+            urlSearchParams.set(key, value);
+          }
+        }
+
+        const queryString = urlSearchParams.toString();
+
+        if (queryString) {
+          return `${path}${extension || ""}?${queryString}`;
         }
       } else {
         // It's serializable as a string if not an object
-        return `${path}/${encodeURIComponent(findArgs)}${
-          extension ? extension : ""
-        }`;
+        return `${path}/${encodeURIComponent(findArgs)}${extension || ""}`;
       }
     }
     return path;

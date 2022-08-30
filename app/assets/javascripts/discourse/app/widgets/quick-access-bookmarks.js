@@ -62,7 +62,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
     ) {
       href = postUrl(bookmark.slug, bookmark.topic_id, postNumber);
     } else {
-      href = bookmark.bookmarkable_type;
+      href = bookmark.bookmarkable_url;
     }
 
     return this.attach("quick-access-item", {
@@ -70,7 +70,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       href,
       title: bookmark.name,
       content: bookmark.title,
-      username: bookmark.post_user_username,
+      username: bookmark.user.username,
     });
   },
 

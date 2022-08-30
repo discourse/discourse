@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicQuery::PrivateMessageLists do
+RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
@@ -99,7 +99,7 @@ describe TopicQuery::PrivateMessageLists do
       expect(topics).to eq([])
     end
 
-    context "Calculating minimum unread count for a topic" do
+    context "when calculating minimum unread count for a topic" do
       before do
         group.update!(publish_read_state: true)
         group.add(user)

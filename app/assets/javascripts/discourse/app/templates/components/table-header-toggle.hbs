@@ -1,4 +1,8 @@
-<span class="header-contents" id={{id}}>
-  {{directory-table-header-title field=field labelKey=labelKey icon=icon translated=translated}}
-  {{chevronIcon}}
+<span
+  class="header-contents"
+  id={{this.id}}
+  role="button"
+  tabindex="0">
+  {{directory-table-header-title field=this.field labelKey=this.labelKey icon=this.icon translated=this.translated}}
+  {{this.chevronIcon}}
 </span>

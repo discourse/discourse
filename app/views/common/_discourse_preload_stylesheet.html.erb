@@ -1,0 +1,23 @@
+<%= discourse_preload_color_scheme_stylesheets %>
+
+<%- if rtl? %>
+  <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+<%- else %>
+  <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile : :desktop) %>
+<%- end %>
+
+<%- if staff? %>
+  <%= discourse_stylesheet_preload_tag(:admin) %>
+<%- end %>
+
+<%- if admin? %>
+  <%= discourse_stylesheet_preload_tag(:wizard) %>
+<%- end %>
+
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request).each do |file| %>
+  <%= discourse_stylesheet_preload_tag(file) %>
+<%- end %>
+
+<%- if theme_id.present? %>
+  <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
+<%- end %>

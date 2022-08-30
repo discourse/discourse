@@ -1,24 +1,21 @@
-<div class="container show-badge {{model.slug}}">
+<div class="container show-badge {{this.model.slug}}">
   <h1>
-    {{#link-to "badges.index"}}{{i18n "badges.title"}}{{/link-to}}
+    <LinkTo @route="badges.index">{{i18n "badges.title"}}</LinkTo>
      /
-    {{model.name}}
+    {{this.model.name}}
   </h1>
 
   <div class="show-badge-details">
-    {{badge-card badge=model size="large" count=userBadges.grant_count}}
-    <div class="badge-grant-info {{if hiddenSetTitle "" "hidden"}}">
+    <BadgeCard @badge={{this.model}} @size="large" @count={{this.userBadges.grant_count}} />
+    <div class="badge-grant-info {{if this.hiddenSetTitle "" "hidden"}}">
       <div>
-        {{#if canSelectTitle}}
+        {{#if this.canSelectTitle}}
           <div class="grant-info-item">
             {{i18n "badges.allow_title"}}
-            {{d-button
-              class="btn-default pad-left"
-              action=(action "toggleSetUserTitle")
-              icon="pencil-alt"}}
+            <DButton @class="btn-default pad-left" @action={{action "toggleSetUserTitle"}} @icon="pencil-alt" />
           </div>
         {{/if}}
-        {{#if model.multiple_grant}}
+        {{#if this.model.multiple_grant}}
           <div class="grant-info-item">
             {{i18n "badges.multiple_grant"}}
           </div>
@@ -26,38 +23,38 @@
       </div>
     </div>
 
-    {{#if canSelectTitle}}
-      <div class="badge-set-title {{if hiddenSetTitle "hidden" ""}}">
-        {{badge-title selectableUserBadges=selectableUserBadges}}
-        {{d-button class="btn-default close-btn" action=(action "toggleSetUserTitle") label="close"}}
+    {{#if this.canSelectTitle}}
+      <div class="badge-set-title {{if this.hiddenSetTitle "hidden" ""}}">
+        <BadgeTitle @selectableUserBadges={{this.selectableUserBadges}} />
+        <DButton @class="btn-default close-btn" @action={{action "toggleSetUserTitle"}} @label="close" />
       </div>
     {{/if}}
   </div>
 
-  {{#if userBadges}}
-    <div class="user-badges {{model.slug}}">
-      {{#load-more selector=".badge-info" action=(action "loadMore")}}
+  {{#if this.userBadges}}
+    <div class="user-badges {{this.model.slug}}">
+      <LoadMore @selector=".badge-info" @action={{action "loadMore"}}>
         <div class="badges-granted">
-          {{#each userBadges as |ub|}}
-            {{#user-info user=ub.user size="medium" class="badge-info" date=ub.granted_at}}
+          {{#each this.userBadges as |ub|}}
+            <UserInfo @user={{ub.user}} @size="medium" @class="badge-info" @date={{ub.granted_at}}>
               <div class="granted-on">{{i18n "badges.granted_on" date=(inline-date ub.granted_at)}}</div>
               {{#if ub.post_number}}
                 <a class="post-link" href="{{ub.topic.url}}/{{ub.post_number}}">{{html-safe ub.topic.fancyTitle}}</a>
               {{/if}}
-            {{/user-info}}
+            </UserInfo>
           {{/each}}
         </div>
-      {{/load-more}}
+      </LoadMore>
 
-      {{#unless canLoadMore}}
-        {{#if canShowOthers}}
+      {{#unless this.canLoadMore}}
+        {{#if this.canShowOthers}}
           <div>
-            <a id="show-others-with-badge-link" href={{model.url}} class="btn btn-default">{{i18n "badges.others_count" count=othersCount}}</a>
+            <a id="show-others-with-badge-link" href={{this.model.url}} class="btn btn-default">{{i18n "badges.others_count" count=this.othersCount}}</a>
           </div>
         {{/if}}
       {{/unless}}
     </div>
 
-    {{conditional-loading-spinner condition=canLoadMore}}
+    <ConditionalLoadingSpinner @condition={{this.canLoadMore}} />
   {{/if}}
 </div>

@@ -1,7 +1,13 @@
 <td class="topic-list-data">
   {{~raw-plugin-outlet name="topic-list-before-columns"}}
   <div class='pull-left'>
-    <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
+    {{#if bulkSelectEnabled}}
+      <label for="bulk-select-{{topic.id}}">
+        <input type="checkbox" class="bulk-select" id="bulk-select-{{topic.id}}">
+      </label>
+    {{else}}
+      <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
+    {{/if}}
   </div>
   <div class='right'>
     {{!--

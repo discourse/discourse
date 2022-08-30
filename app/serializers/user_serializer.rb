@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserSerializer < UserCardSerializer
+  include UserTagNotificationsMixin
+  include UserSidebarTagsMixin
 
   attributes :bio_raw,
              :bio_cooked,
@@ -61,7 +63,8 @@ class UserSerializer < UserCardSerializer
                      :user_api_keys,
                      :user_auth_tokens,
                      :user_notification_schedule,
-                     :use_logo_small_as_avatar
+                     :use_logo_small_as_avatar,
+                     :sidebar_tags
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -211,22 +214,6 @@ class UserSerializer < UserCardSerializer
   ###
   ### PRIVATE ATTRIBUTES
   ###
-  def muted_tags
-    tags_with_notification_level(:muted)
-  end
-
-  def tracked_tags
-    tags_with_notification_level(:tracking)
-  end
-
-  def watching_first_post_tags
-    tags_with_notification_level(:watching_first_post)
-  end
-
-  def watched_tags
-    tags_with_notification_level(:watching)
-  end
-
   def muted_category_ids
     categories_with_notification_level(:muted)
   end

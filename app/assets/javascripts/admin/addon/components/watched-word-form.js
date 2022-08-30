@@ -1,7 +1,4 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
@@ -11,11 +8,13 @@ import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 
 export default Component.extend({
+  tagName: "form",
   classNames: ["watched-word-form"],
   formSubmitted: false,
   actionKey: null,
   showMessage: false,
   selectedTags: null,
+  isCaseSensitive: false,
 
   canReplace: equal("actionKey", "replace"),
   canTag: equal("actionKey", "tag"),
@@ -48,9 +47,12 @@ export default Component.extend({
     const filtered = words.filter(
       (content) => content.action === this.actionKey
     );
-    return filtered.every(
-      (content) => content.word.toLowerCase() !== word.toLowerCase()
-    );
+    return filtered.every((content) => {
+      if (content.case_sensitive === true) {
+        return content.word !== word;
+      }
+      return content.word.toLowerCase() !== word.toLowerCase();
+    });
   },
 
   actions: {
@@ -80,6 +82,7 @@ export default Component.extend({
               ? this.replacement
               : null,
           action: this.actionKey,
+          isCaseSensitive: this.isCaseSensitive,
         });
 
         watchedWord
@@ -92,36 +95,27 @@ export default Component.extend({
               selectedTags: [],
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success"),
+              isCaseSensitive: false,
             });
             this.action(WatchedWord.create(result));
             schedule("afterRender", () =>
-              this.element.querySelector(".watched-word-input").focus()
+              this.element.querySelector("input").focus()
             );
           })
           .catch((e) => {
             this.set("formSubmitted", false);
-            const msg =
-              e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors
-                ? I18n.t("generic_error_with_reason", {
-                    error: e.jqXHR.responseJSON.errors.join(". "),
-                  })
-                : I18n.t("generic_error");
+            const msg = e.jqXHR.responseJSON?.errors
+              ? I18n.t("generic_error_with_reason", {
+                  error: e.jqXHR.responseJSON.errors.join(". "),
+                })
+              : I18n.t("generic_error");
             bootbox.alert(msg, () =>
-              this.element.querySelector(".watched-word-input").focus()
+              schedule("afterRender", () =>
+                this.element.querySelector("input").focus()
+              )
             );
           });
       }
     },
-  },
-
-  @on("didInsertElement")
-  _init() {
-    schedule("afterRender", () => {
-      $(this.element.querySelector(".watched-word-input")).keydown((e) => {
-        if (e.key === "Enter") {
-          this.send("submit");
-        }
-      });
-    });
   },
 });

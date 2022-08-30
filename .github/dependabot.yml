@@ -1,42 +1,42 @@
 version: 2
 updates:
-- package-ecosystem: "github-actions"
-  directory: "/"
-  schedule:
-    interval: "weekly"
-- package-ecosystem: bundler
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "08:00"
-    timezone: Australia/Sydney
-  open-pull-requests-limit: 10
-  versioning-strategy: lockfile-only
-  allow:
-  - dependency-type: direct
-  - dependency-type: indirect
-  ignore:
-  - dependency-name: aws-partitions
-    versions:
-    - "> 1.329.0"
-    - "< 2"
-  - dependency-name: aws-sdk-core
-    versions:
-    - "> 3.99.1"
-    - "< 4"
-  - dependency-name: aws-sdk-kms
-    versions:
-    - "> 1.31.0"
-    - "< 2"
-  - dependency-name: aws-sdk-s3
-    versions:
-    - "> 1.66.0"
-    - "< 2"
-  - dependency-name: aws-sdk-sns
-    versions:
-    - "> 1.25.1"
-    - "< 2"
-  - dependency-name: aws-sigv4
-    versions:
-    - "> 1.2.0"
-    - "< 2"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "08:00"
+      timezone: Australia/Sydney
+    open-pull-requests-limit: 10
+    versioning-strategy: lockfile-only
+    allow:
+      - dependency-type: direct
+      - dependency-type: indirect
+    ignore:
+      - dependency-name: aws-partitions
+        versions:
+          - "> 1.329.0"
+          - "< 2"
+      - dependency-name: aws-sdk-core
+        versions:
+          - "> 3.99.1"
+          - "< 4"
+      - dependency-name: aws-sdk-kms
+        versions:
+          - "> 1.31.0"
+          - "< 2"
+      - dependency-name: aws-sdk-s3
+        versions:
+          - "> 1.66.0"
+          - "< 2"
+      - dependency-name: aws-sdk-sns
+        versions:
+          - "> 1.25.1"
+          - "< 2"
+      - dependency-name: aws-sigv4
+        versions:
+          - "> 1.2.0"
+          - "< 2"

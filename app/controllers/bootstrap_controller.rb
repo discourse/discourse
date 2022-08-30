@@ -27,6 +27,7 @@ class BootstrapController < ApplicationController
       add_style(mobile_view? ? :mobile : :desktop)
     end
     add_style(:admin) if staff?
+    add_style(:wizard) if admin?
 
     assets_fake_request = ActionDispatch::Request.new(request.env.dup)
     assets_for_url = params[:for_url]
@@ -51,8 +52,13 @@ class BootstrapController < ApplicationController
     if ExtraLocalesController.client_overrides_exist?
       extra_locales << ExtraLocalesController.url('overrides')
     end
+
     if staff?
       extra_locales << ExtraLocalesController.url('admin')
+    end
+
+    if admin?
+      extra_locales << ExtraLocalesController.url('wizard')
     end
 
     plugin_js = Discourse.find_plugin_js_assets(
@@ -60,6 +66,13 @@ class BootstrapController < ApplicationController
       include_unofficial: allow_third_party_plugins?,
       request: assets_fake_request
     ).map { |f| script_asset_path(f) }
+
+    plugin_test_js =
+      if Rails.env != "production"
+        script_asset_path("plugin-tests")
+      else
+        []
+      end
 
     bootstrap = {
       theme_id: theme_id,
@@ -69,7 +82,7 @@ class BootstrapController < ApplicationController
       locale_script: locale,
       stylesheets: @stylesheets,
       plugin_js: plugin_js,
-      plugin_test_js: [script_asset_path("plugin-tests")],
+      plugin_test_js: plugin_test_js,
       setup_data: client_side_setup_data,
       preloaded: @preloaded,
       html: create_html,

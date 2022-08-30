@@ -1,0 +1,25 @@
+{
+  "name": "discourse-plugins",
+  "version": "1.0.0",
+  "description": "An addon providing a broccoli tree for each Discourse plugin",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "repository": "",
+  "dependencies": {
+    "ember-auto-import": "^2.4.2",
+    "ember-cli-babel": "^7.26.10",
+    "ember-cli-htmlbars": "^6.1.0",
+    "discourse-widget-hbs": "1.0"
+  },
+  "engines": {
+    "node": "16.* || >= 18",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
+  },
+  "ember": {
+    "edition": "default"
+  }
+}

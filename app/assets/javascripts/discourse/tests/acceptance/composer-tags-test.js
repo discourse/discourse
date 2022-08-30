@@ -1,6 +1,7 @@
 import {
   acceptance,
-  queryAll,
+  exists,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -53,7 +54,7 @@ acceptance("Composer - Tags", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
     assert.strictEqual(
-      queryAll(".popup-tip.bad").text().trim(),
+      query(".popup-tip.bad").innerText.trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
     );
@@ -86,7 +87,7 @@ acceptance("Composer - Tags", function (needs) {
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
     assert.strictEqual(
-      queryAll(".popup-tip.bad").text().trim(),
+      query(".popup-tip.bad").innerText.trim(),
       I18n.t("composer.error.tags_missing", { count: 1 }),
       "it should display the right alert"
     );
@@ -97,5 +98,29 @@ acceptance("Composer - Tags", function (needs) {
 
     await click("#reply-control button.create");
     assert.notStrictEqual(currentURL(), "/");
+  });
+
+  test("users who cannot tag PMs do not see the selector", async function (assert) {
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+
+    assert.notOk(exists(".composer-fields .mini-tag-chooser"));
+  });
+});
+
+acceptance("Composer - Tags (PMs)", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/uploads/lookup-urls", () => {
+      return helper.response([]);
+    });
+  });
+  needs.site({ can_tag_topics: true, can_tag_pms: true });
+
+  test("users who can tag PMs see the selector", async function (assert) {
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+
+    assert.ok(exists(".composer-fields .mini-tag-chooser"));
   });
 });

@@ -1344,7 +1344,6 @@ gl:
     site_description: "Describa o sitio nunha única frase, utilizada na etiqueta metadescrición."
     short_site_description: "Descrición curta, utilizada como o título da etiqueta na páxina principal."
     crawl_images: "Recuperar imaxes desde URL remotos para inserilas coas dimensións correctas de largura e altura."
-    download_remote_images_to_local: "Converter imaxes remotas en locais ao descargalas; isto prevén que haxa imaxes rotas."
     download_remote_images_threshold: "Espazo mínimo que cómpre no disco para descargar imaxes remotas de forma local (en porcentaxe)"
     disabled_image_download_domains: "As imaxes remotas procedentes destes dominios non serán descargadas. Listaxe delimitada por barras verticais."
     editing_grace_period: "Durante (n) segundos despois de publicar, pódese editar sen chegar a crear unha nova versión no historial."
@@ -1385,7 +1384,6 @@ gl:
     favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     apple_touch_icon: "Icona utilizada para dispositivos Apple. Redimensionarase automaticamente a 180x180. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
-    twitter_summary_large_image: "A «imaxe grande de resumo» da tarxeta de Twitter (debe ter polo menos 280 de largura e 150 de altura). Se se deixa en branco, xeraranse metadatos de tarxetas normais utilizando opengraph_image."
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1919,7 +1917,7 @@ gl:
     default_categories_tracking: "Listase de categorías que se seguen por defecto."
     default_categories_muted: "Listaxe de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Listaxe de categorías en que se verá por defecto a primeira publicación de cada novo tema."
-    default_categories_regular: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
+    default_categories_normal: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
     mute_all_categories_by_default: "Estableza o nivel de notificación predeterminado de todas as categorías como silenciado. Requírelles aos usuarios que opten por categorías para que aparezan nas páxinas «últimas» e «categorías». Se desexa modificar os valores predeterminados para usuarios anónimos, configure os axustes «default_categories_»."
     default_tags_watching: "Listaxe de etiquetas que se vixían por defecto."
     default_tags_tracking: "Listaxe de etiquetas seguidas por defecto."
@@ -3336,18 +3334,6 @@ gl:
     suspicious_login:
       title: "Alerta de novo inicio de sesión"
       subject_template: "[%{site_name}] Novo inicio de sesión desde %{location}"
-      text_body_template: |
-        Ola,
-
-        Detectamos un inicio de sesión desde un dispositivo ou localización que non adoita utilizar. Foi vostede?
-
-         - Localización: %{location} (%{client_ip})
-         - Navegador: %{browser}
-         - Dispositivo: %{device} – %{os}
-
-        Se foi vostede, perfecto! Non ten que facer máis nada.
-
-        Se non o foi, [revise a súa sesión actual](%{base_url}/my/preferences/account) e valore cambiar o de contrasinal.
     post_approved:
       title: "A súa publicación foi aprobada"
   page_forbidden:
@@ -4005,88 +3991,30 @@ gl:
       message: "<p>Volvémoslle enviar o correo de activación a <b>%{email}</b>"
   safe_mode:
     title: "Entrar en modo seguro"
-    description: "O modo seguro permítelle probar o seu sitio sen cargar complementos nin outras personalizacións."
-    no_customizations: "Desactivar tema actual"
-    only_official: "Desactivar complementos non oficiais"
+    no_unofficial_plugins: "Desactivar complementos non oficiais"
     no_plugins: "Desactivar todos os complementos"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
   wizard:
     title: "Configuración de Discourse"
     step:
-      locale:
-        title: "Dámoslle a benvida ao seu Discourse!"
-        fields:
-          default_locale:
-            description: "Cal é o idioma predefinido da súa comunidade?"
-      forum_title:
-        title: "Nome"
-        description: "O nome é un sinal visible a distancia, o <i>primeiro</i> que os visitantes potenciais saberán sobre a súa comunidade. Que di o nome e o título da súa comunidade sobre ela?"
+      introduction:
         fields:
           title:
-            label: "O nome da súa comunidade"
             placeholder: "Reunión de Helena"
           site_description:
             placeholder: "Un lugar para que Helena e as súas amizades discutan sobre cousas interesantes"
-          short_site_description:
-            placeholder: "A mellor comunidade do mundo"
-      introduction:
-        title: "Introdución"
-        disabled: "<p>Non atopamos tema ningún co título “%{topic_title}”.</p> <ul> <li>Se cambiou o título, edite ese tema para cambiar tamén o texto introdutorio do seu foro. </li> <li>Se eliminou este tema, cree outro co título “%{topic_title}”. O contido da primeira publicación será o texto introdutorio do seu foro.</li> </ul>"
-        fields:
-          welcome:
-            label: "Tema de benvida"
-            description: "<p>Como lle describiría nun minuto a súa comunidade a alguén que non a coñece?</p> <ul> <li>A quen se dirixen os debates?</li> <li>Que podo atopar aquí?</li> <li>Por que debería visitala?</li> </ul> <p>O seu tema de benvida é o primeiro que os seus visitantes lerán. Pense nel como no seu argumento de vendas <b>nun minuto</b> ou a súa declaración de intencións. </p>"
-            one_paragraph: "Limite a súa mensaxe de benvida a un único parágrafo."
-            extra_description: "Se non está seguro, pode saltar este paso e editar o seu texto de benvida máis tarde."
+          default_locale:
+            label: "Idioma"
       privacy:
-        title: "Acceso"
-        description: "<p>A súa comunidade é aberta a todo o mundo ou está restrinxida só aos seus membros afiliados, con invitación ou aprobación? Se o prefire, pode facer que inicialmente sexa privada e despois convertela en aberta.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Pública"
-                description: "Calquera pode acceder á comunidade"
-              restricted:
-                label: "Privada"
-                description: "Só os usuarios rexistrados poden acceder á comunidade"
-          privacy_options:
-            description: "Como poden crear unha conta os novos usuarios?"
-            choices:
-              open:
-                label: "Os usuarios poden rexistrarse pola súa conta."
-              invite_only:
-                label: "Os usuarios deben ser convidados por usuarios de confianza ou do equipo para poder rexistrarse."
-              must_approve:
-                label: "Os usuarios poden rexistrarse pola súa conta, pero deben ser aprobados polo equipo."
-      contact:
-        title: "Contacto"
-        fields:
-          contact_email:
-            label: "Correo electrónico"
-            placeholder: "nome@exemplo.com"
-            description: "Enderezo electrónico da persoa ou grupo responsable desta comunidade. Utilízase para notificacións moi importantes como denuncias sen atender, actualizacións de seguridade e tamén aparecerá na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a> para comunicar cuestións urxentes."
-          contact_url:
-            label: "Páxina web"
-            placeholder: "https://www.exemplo.com/contactanos"
-            description: "Páxina de contacto xeral con vostede ou a súa organización. Amosarase na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a>."
-          site_contact:
-            label: "Mensaxes automáticas"
-            description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
-      corporate:
-        title: "Organización"
-        description: "Esta información inserirase nos seus <a href='%{base_path}/tos' target='blank'>Termos de servizo</a>, que poderá editar en calquera momento na sección Equipo. Se non ten unha empresa, pode omitir este paso por agora."
-        fields:
-          company_name:
-            label: "Nome da empresa"
-            placeholder: "Organización de exemplo"
-          governing_law:
-            label: "Lei que rexe"
-            placeholder: "Lei de California"
-          city_for_disputes:
-            label: "Cidade para disputas"
-            placeholder: "San Francisco, California"
+          login_required:
+            placeholder: "Privada"
+            extra_description: "Só os usuarios rexistrados poden acceder á comunidade"
+          must_approve_users:
+            placeholder: "Requirir aprobación"
+      ready:
+        title: "O seu Discourse está listo!"
       styling:
         fields:
           body_font:
@@ -4107,24 +4035,34 @@ gl:
                 label: "Categorías e últimos temas"
               categories_and_top_topics:
                 label: "Categorías e temas destacados"
-      logos:
-        title: "Logotipos"
+      branding:
         fields:
           logo:
             label: "Logotipo principal"
-            description: "A imaxe do logotipo na parte superior esquerda do sitio. Utilice unha imaxe larga e rectangular, cunha altura de 120 e unha proporción de aspecto maior de 3:1"
           logo_small:
             label: "Logotipo cadrado"
-            description: "Unha versión cadrada do seu logotipo. Móstrase na parte superior esquerda do seu sitio cando se despraza cara a abaixo no navegador e cando se comparte en plataformas sociais. Idealmente debe ser máis grande que 512x512."
-      icons:
-        title: "Iconas"
-        fields:
           favicon:
             label: "Icona do navegador"
-            description: "Imaxe de icona que se usa para representar o seu sitio en navegadores web que se ve ben a tamaños pequenos. As extensións recomendadas son PNG ou JPG. Utilizaremos o logotipo cadrado por defecto."
           large_icon:
             label: "Icona grande"
-            description: "Imaxe de icona utilizada para representar o seu sitio en dispositivos modernos que se ve ben en tamaños máis grandes. Idealmente debe ser maior que 512 × 512. Utilizaremos o logo cadrado por defecto."
+      corporate:
+        fields:
+          company_name:
+            label: "Nome da empresa"
+            placeholder: "Organización de exemplo"
+          governing_law:
+            label: "Lei que rexe"
+            placeholder: "Lei de California"
+          contact_url:
+            label: "Páxina web"
+            placeholder: "https://www.exemplo.com/contactanos"
+            description: "Páxina de contacto xeral con vostede ou a súa organización. Amosarase na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a>."
+          city_for_disputes:
+            label: "Cidade para disputas"
+            placeholder: "San Francisco, California"
+          site_contact:
+            label: "Mensaxes automáticas"
+            description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
       invites:
         title: "Convidar o equipo"
         description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."

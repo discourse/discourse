@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailAddressValidator do
+RSpec.describe EmailAddressValidator do
   it 'should match valid emails' do
     ['test@discourse.org', 'good_user@discourse.org', 'incoming+%{reply_key}@discourse.org'].each do |email|
       expect(EmailAddressValidator.valid_value?(email)).to eq(true)

@@ -12,14 +12,14 @@ class UsersController < ApplicationController
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
     :bookmarks, :invited, :check_sso_email, :check_sso_payload,
-    :recent_searches, :reset_recent_searches
+    :recent_searches, :reset_recent_searches, :user_menu_bookmarks, :user_menu_messages
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
     :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
-    :feature_topic, :clear_featured_topic, :bookmarks
+    :feature_topic, :clear_featured_topic, :bookmarks, :user_menu_bookmarks, :user_menu_messages
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -119,7 +119,8 @@ class UsersController < ApplicationController
                                               :card_background_upload,
                                               :primary_group,
                                               :flair_group,
-                                              :primary_email
+                                              :primary_email,
+                                              :user_status
                                             )
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
@@ -960,7 +961,11 @@ class UsersController < ApplicationController
 
       if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: email_token.token)
+        token_string = email_token.token
+        if params["use_safe_mode"]
+          token_string += "?safe_mode=no_plugins,no_themes"
+        end
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: token_string)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
@@ -1107,10 +1112,12 @@ class UsersController < ApplicationController
     RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
 
     if params[:username].present?
+      RateLimiter.new(nil, "activate-edit-email-hr-username-#{params[:username]}", 5, 1.hour).performed!
       @user = User.find_by_username_or_email(params[:username])
       raise Discourse::InvalidAccess.new unless @user.present?
       raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
     elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
+      RateLimiter.new(nil, "activate-edit-email-hr-user-key-#{user_key}", 5, 1.hour).performed!
       @user = User.where(id: user_key.to_i).first
     end
 
@@ -1190,11 +1197,7 @@ class UsersController < ApplicationController
     options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
-
-    user_fields = [:username, :upload_avatar_template]
-    user_fields << :name if SiteSetting.enable_names?
-
-    to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
+    to_render = serialize_found_users(results)
 
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
@@ -1737,6 +1740,112 @@ class UsersController < ApplicationController
     end
   end
 
+  USER_MENU_LIST_LIMIT = 20
+  def user_menu_bookmarks
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
+
+    reminder_notifications = Notification.unread_type(
+      current_user,
+      Notification.types[:bookmark_reminder],
+      USER_MENU_LIST_LIMIT
+    )
+
+    if reminder_notifications.size < USER_MENU_LIST_LIMIT
+      exclude_bookmark_ids = reminder_notifications
+        .filter_map { |notification| notification.data_hash[:bookmark_id] }
+
+      bookmark_list = UserBookmarkList.new(
+        user: current_user,
+        guardian: guardian,
+        params: {
+          per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size
+        }
+      )
+      bookmark_list.load do |query|
+        if exclude_bookmark_ids.present?
+          query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)
+        end
+      end
+    end
+
+    if reminder_notifications.present?
+      serialized_notifications = ActiveModel::ArraySerializer.new(
+        reminder_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    if bookmark_list
+      bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
+      serialized_bookmarks = serialize_data(
+        bookmark_list,
+        UserBookmarkListSerializer,
+        scope: guardian,
+        root: false
+      )[:bookmarks]
+    end
+
+    render json: {
+      notifications: serialized_notifications || [],
+      bookmarks: serialized_bookmarks || []
+    }
+  end
+
+  def user_menu_messages
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
+
+    if !current_user.staff? && !SiteSetting.enable_personal_messages
+      raise Discourse::InvalidAccess.new("personal messages are disabled.")
+    end
+
+    message_notifications = Notification.unread_type(
+      current_user,
+      Notification.types[:private_message],
+      USER_MENU_LIST_LIMIT
+    )
+
+    if message_notifications.size < USER_MENU_LIST_LIMIT
+      exclude_topic_ids = message_notifications.map(&:topic_id).uniq
+      messages_list = TopicQuery.new(
+        current_user,
+        per_page: USER_MENU_LIST_LIMIT - message_notifications.size
+      ).list_private_messages(current_user) do |query|
+        if exclude_topic_ids.present?
+          query.where("topics.id NOT IN (?)", exclude_topic_ids)
+        else
+          query
+        end
+      end
+    end
+
+    if message_notifications.present?
+      serialized_notifications = ActiveModel::ArraySerializer.new(
+        message_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    if messages_list
+      serialized_messages = serialize_data(
+        messages_list,
+        TopicListSerializer,
+        scope: guardian,
+        root: false
+      )[:topics]
+    end
+
+    render json: {
+      notifications: serialized_notifications || [],
+      topics: serialized_messages || []
+    }
+  end
+
   private
 
   def clean_custom_field_values(field)
@@ -1813,7 +1922,7 @@ class UsersController < ApplicationController
       :card_background_upload_url,
       :primary_group_id,
       :flair_group_id,
-      :featured_topic_id
+      :featured_topic_id,
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
@@ -1822,6 +1931,22 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
+
+    if SiteSetting.enable_experimental_sidebar_hamburger
+      if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
+        params[:sidebar_category_ids] = []
+      end
+
+      permitted << { sidebar_category_ids: [] }
+
+      if SiteSetting.tagging_enabled
+        if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
+          params[:sidebar_tag_names] = []
+        end
+
+        permitted << { sidebar_tag_names: [] }
+      end
+    end
 
     result = params
       .permit(permitted, theme_ids: [])
@@ -1893,5 +2018,22 @@ class UsersController < ApplicationController
       can_see_invite_details: false,
       error: message
     }
+  end
+
+  def serialize_found_users(users)
+    each_serializer = SiteSetting.enable_user_status? ?
+      FoundUserWithStatusSerializer :
+      FoundUserSerializer
+
+    { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
+  end
+
+  def find_unread_notifications_of_type(type, limit)
+    current_user
+      .notifications
+      .visible
+      .includes(:topic)
+      .where(read: false, notification_type: type)
+      .limit(limit)
   end
 end

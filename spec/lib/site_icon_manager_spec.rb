@@ -4,7 +4,7 @@ class GlobalPathInstance
   extend GlobalPath
 end
 
-describe SiteIconManager do
+RSpec.describe SiteIconManager do
   before do
     SiteIconManager.enable
   end

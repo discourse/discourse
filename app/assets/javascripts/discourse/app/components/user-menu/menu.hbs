@@ -1,0 +1,37 @@
+<div class="user-menu revamped menu-panel drop-down" data-max-width="320" {{did-insert this.triggerRenderedAppEvent}}>
+  <div class="panel-body">
+    <div class="panel-body-contents">
+      <div
+        id={{concat "quick-access-" this.currentTabId}}
+        class="quick-access-panel"
+        tabindex="-1"
+        aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
+        {{component this.currentPanelComponent}}
+      </div>
+      <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
+        <div class="top-tabs tabs-list">
+          {{#each this.topTabs as |tab|}}
+            <UserMenu::TabButton
+              @tab={{tab}}
+              @currentTabId={{this.currentTabId}}
+              @changeTabFunction={{fn this.changeTab tab}}
+            >
+              {{#if tab.count}}
+                <span class="badge-notification">{{tab.count}}</span>
+              {{/if}}
+            </UserMenu::TabButton>
+          {{/each}}
+        </div>
+        <div class="bottom-tabs tabs-list">
+          {{#each this.bottomTabs as |tab|}}
+            <UserMenu::TabButton
+              @tab={{tab}}
+              @currentTabId={{this.currentTabId}}
+              @changeTabFunction={{fn this.changeTab tab}}
+            />
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -160,12 +160,12 @@ nb_NO:
       forwarded: "videresendte e-posten voer"
     topic_admin_menu: "handlinger for tråd"
     skip_to_main_content: "Gå til hovedinnhold"
-    wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
       message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
+    bootstrap_invite_button_title: "Send invitasjoner"
     themes:
       default_description: "Forvalg"
     s3:
@@ -563,6 +563,7 @@ nb_NO:
       forever: "For alltid"
       relative: "Relativ tid"
       none: "Ingen behov"
+      never: "Aldri"
       last_custom: "Siste egendefinerte datotid"
       custom: "Egendefinert dato og tid"
       select_timeframe: "Velg et tidsrom"
@@ -1023,6 +1024,8 @@ nb_NO:
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       enable_defer: "Aktiver utsettelse for å merke emner ulest"
+      experimental_sidebar:
+        options: "Alternativer"
       change: "Endre"
       featured_topic: "Utvalgte emne"
       moderator: "%{user} er en moderator"
@@ -1064,7 +1067,7 @@ nb_NO:
       muted_categories: "Ignorert"
       muted_categories_instructions: "Brukerne vil ikke bli varslet om nye emner i disse kategoriene, og de vil ikke dukke opp på kategorier eller nyeste temasider."
       muted_categories_instructions_dont_hide: "Du vil ikke bli varslet om nye emner i disse kategoriene."
-      regular_categories: "Aktivt medlem"
+      regular_categories: "Normal"
       regular_categories_instructions: "Du vil se disse kategoriene i temaene “Latest” og “Top”."
       no_category_access: "Som moderator har du begrenset kategoritilgang, lagring er avskrudd."
       delete_account: "Slett kontoen min"
@@ -1548,6 +1551,8 @@ nb_NO:
         sent_by: "Sendt av"
         private_message: "melding"
         the_topic: "emnet"
+    user_status:
+      save: "Lagre"
     loading: "Laster…"
     errors:
       prev_page: "ved lasting"
@@ -1607,11 +1612,9 @@ nb_NO:
       other: svar
     signup_cta:
       sign_up: "Registrer deg"
-      hide_session: "Spør meg igjen i morgen"
       hide_forever: "nei takk"
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke \"Logg Inn\" for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
-      value_prop: "Når du oppretter en konto, husker vi nøyaktig det du har lest, så du kommer alltid tilbake der du slapp av. Du får også varslinger, her og via e-post, når noen svarer på deg. Du kan like innlegg for å dele kjærligheten. :heartpulse:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       description_time_MF: "Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>."
@@ -1792,9 +1795,6 @@ nb_NO:
       min_content_not_reached:
         one: "Velg minst %{count} element."
         other: "Velg minst %{count} elementer."
-      invalid_selection_length:
-        one: "Utvalg må være minst %{count} tegn."
-        other: "Valg må være minst %{count} tegn."
       components:
         tag_drop:
           filter_for_more: Filter for mer...
@@ -1865,7 +1865,6 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt kladd"
       edit_shared_draft: "Rediger delt utkast"
-      users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "hvorfor endrer du?"
@@ -1935,9 +1934,6 @@ nb_NO:
         reply_as_new_group_message:
           label: Svar som ny gruppemelding
           desc: Opprett ny melding som starter med samme mottakere
-        reply_as_private_message:
-          label: Ny melding
-          desc: Opprett en ny personlig melding
         reply_to_topic:
           label: Svar på emnet
           desc: Svar på emnet, ikke et spesifikt innlegg
@@ -1970,6 +1966,7 @@ nb_NO:
       empty: "Ingen varsler funnet."
       post_approved: "Ditt innlegg ble godkjent"
       reviewable_items: "elementer som krever gjennomgang"
+      watching_first_post_label: "Nytt emne"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1982,6 +1979,10 @@ nb_NO:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} og én annen</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} og én annen"
+        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "likte %{count} av dine innlegg"
         other: "likte %{count} av dine innlegg"
@@ -3129,11 +3130,11 @@ nb_NO:
         this_week: "Den siste uken"
         today: "I dag"
         other_periods: "se toppen:"
-    browser_update: 'Dessverre er <a href="https://www.discourse.org/faq/#browser">nettleseren din for gammel for å fungere på denne siden</a>. Vennligst <a href="https://browsehappy.com">oppgrader nettleseren din</a> for å se rik innhold, logge inn og svar.'
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
       readonly: "Se"
+    preloader_text: "Laster"
     lightbox:
       download: "last ned"
       previous: "Forrige (Venstre pil-nøkkel)"
@@ -3217,7 +3218,6 @@ nb_NO:
         edit: "%{shortcut} Rediger innlegg"
         delete: "%{shortcut} Slett innlegg"
         mark_muted: "%{shortcut} Ignorer emne"
-        mark_regular: "%{shortcut} Vanlig (forvalgt) emne"
         mark_tracking: "%{shortcut} Overvåk emne"
         mark_watching: "%{shortcut} Følg emne"
         print: "%{shortcut} Skriv ut emne"
@@ -3335,7 +3335,7 @@ nb_NO:
           title: "Overvåkning"
           description: "Du vil automatisk overvåke alle emner med dette stikkordet. Antallet uleste og nye innlegg vil vises ved siden av emnet."
         regular:
-          title: "Aktivt medlem"
+          title: "Normal"
           description: "Du vil bli varslet hvis noen nevner @navnet ditt eller svarer på innlegget ditt."
         muted:
           title: "Ignorert"
@@ -3411,25 +3411,43 @@ nb_NO:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har plukket en ustøttet fil. Filtyper som støttes – %{types}."
-    user_activity:
-      no_activity_others: "Ingen aktivitet."
-      no_replies_others: "Ingen svar."
-      no_likes_others: "Ingen likte innlegg. "
     fullscreen_table:
       expand_btn: "Utvid tabell"
     sidebar:
-      unread_count: "%{count} ulest"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulest"
+        other: "%{count} uleste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
+      more: "Mer…"
       sections:
+        messages:
+          header_link_text: "Meldinger"
+          links:
+            inbox: "Innboks"
+            sent: "Sendt"
+            new: "Nye"
+            new_with_count: "Nye (%{count})"
+            unread: "Uleste"
+            unread_with_count: "Ulest (%{count})"
+            archive: "Arkiver"
+        tags:
+          header_link_text: "Stikkord"
         categories:
-          header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
-        topics:
-          header_link_title: "hjem"
-          header_link_text: "Emner"
+        community:
+          header_link_text: "Gemenskap"
           links:
             tracked:
               content: "Overvåkes"
+            groups:
+              content: "Grupper"
+              title: "Alle grupper"
+            users:
+              content: "Brukere"
+            my_posts:
+              content: "Mine innlegg"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -4650,14 +4668,13 @@ nb_NO:
           topics: "Emner"
   wizard_js:
     wizard:
-      done: "Ferdig"
       back: "Forrige"
       next: "Neste"
+      step-text: "Steg"
       step: "%{current} av %{total}"
       upload: "Last opp"
       uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
-      quit: "Kanskje senere"
       staff_count:
         one: "Din gemenskap har ett stabsmedlem (deg)."
         other: " Ditt fellesskap har %{count} stab, inkludert deg selv."

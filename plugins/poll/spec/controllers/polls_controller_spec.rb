@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe ::DiscoursePoll::PollsController do
+RSpec.describe ::DiscoursePoll::PollsController do
   routes { ::DiscoursePoll::Engine.routes }
 
   let!(:user) { log_in }
