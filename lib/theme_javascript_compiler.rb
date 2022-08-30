@@ -2,75 +2,7 @@
 
 class ThemeJavascriptCompiler
 
-  module PrecompilerExtension
-    def initialize(theme_id)
-      super()
-      @theme_id = theme_id
-    end
-
-    def discourse_node_manipulator
-      <<~JS
-      function manipulateNode(node) {
-        // Magically add theme id as the first param for each of these helpers)
-        if (node.path.parts && ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])) {
-          if(node.params.length === 1){
-            node.params.unshift({
-              type: "NumberLiteral",
-              value: #{@theme_id},
-              original: #{@theme_id},
-              loc: { start: {}, end: {} }
-            })
-          }
-        }
-      }
-      JS
-    end
-
-    def source
-      [super, discourse_node_manipulator, discourse_extension].join("\n")
-    end
-  end
-
-  class RawTemplatePrecompiler < Barber::Precompiler
-    include PrecompilerExtension
-
-    def discourse_extension
-      <<~JS
-        let _superCompile = Handlebars.Compiler.prototype.compile;
-        Handlebars.Compiler.prototype.compile = function(program, options) {
-          [
-            "SubExpression",
-            "MustacheStatement"
-          ].forEach((pass) => {
-            let visitor = new Handlebars.Visitor();
-            visitor.mutating = true;
-            visitor[pass] = manipulateNode;
-            visitor.accept(program);
-          })
-
-          return _superCompile.apply(this, arguments);
-        };
-      JS
-    end
-  end
-
-  class EmberTemplatePrecompiler < Barber::Ember::Precompiler
-    include PrecompilerExtension
-
-    def discourse_extension
-      <<~JS
-        module.exports.registerPlugin('ast', function() {
-          return {
-            name: 'theme-template-manipulator',
-            visitor: {
-              SubExpression: manipulateNode,
-              MustacheStatement: manipulateNode
-            }
-          }
-        });
-      JS
-    end
-  end
+  COLOCATED_CONNECTOR_REGEX = /\A(?<prefix>.*)\/connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)\z/
 
   class CompileError < StandardError
   end
@@ -93,25 +25,30 @@ class ThemeJavascriptCompiler
     JS
   end
 
-  # TODO Error handling for handlebars templates
   def append_ember_template(name, hbs_template)
-    if !name.start_with?("javascripts/")
-      prefix = "javascripts"
-      prefix += "/" if !name.start_with?("/")
-      name = prefix + name
+    name = "/#{name}" if !name.start_with?("/")
+    module_name = "discourse/theme-#{@theme_id}#{name}"
+
+    # Some themes are colocating connector JS under `/connectors`. Move template to /templates to avoid module name clash
+    if (match = COLOCATED_CONNECTOR_REGEX.match(module_name)) && !match[:prefix].end_with?("/templates")
+      module_name = "#{match[:prefix]}/templates/connectors/#{match[:outlet]}/#{match[:name]}"
     end
-    name = name.inspect
-    compiled = EmberTemplatePrecompiler.new(@theme_id).compile(hbs_template)
-    # the `'Ember' in window` check is needed for no_ember pages
-    content << <<~JS
-      (function() {
-        if ('Ember' in window) {
-          Ember.TEMPLATES[#{name}] = Ember.HTMLBars.template(#{compiled});
-        }
-      })();
+
+    # Mimics the ember-cli implementation
+    # https://github.com/ember-cli/ember-cli-htmlbars/blob/d5aa14b3/lib/template-compiler-plugin.js#L18-L26
+    script = <<~JS
+      import { hbs } from 'ember-cli-htmlbars';
+      export default hbs(#{hbs_template.to_json}, { moduleName: #{module_name.to_json} });
     JS
-  rescue Barber::PrecompilerError => e
-    raise CompileError.new e.instance_variable_get(:@error) # e.message contains the entire template, which could be very long
+
+    template_module = DiscourseJsProcessor.transpile(script, "", module_name, theme_id: @theme_id)
+    content << <<~JS
+      if ('define' in window) {
+      #{template_module}
+      }
+    JS
+  rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
+    raise CompileError.new ex.message
   end
 
   def raw_template_name(name)
@@ -120,7 +57,7 @@ class ThemeJavascriptCompiler
   end
 
   def append_raw_template(name, hbs_template)
-    compiled = RawTemplatePrecompiler.new(@theme_id).compile(hbs_template)
+    compiled = DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
     @content << <<~JS
       (function() {
         const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
@@ -128,8 +65,8 @@ class ThemeJavascriptCompiler
         addRawTemplate(#{raw_template_name(name)}, template);
       })();
     JS
-  rescue Barber::PrecompilerError => e
-    raise CompileError.new e.instance_variable_get(:@error) # e.message contains the entire template, which could be very long
+  rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
+    raise CompileError.new ex.message
   end
 
   def append_raw_script(script)
@@ -138,6 +75,12 @@ class ThemeJavascriptCompiler
 
   def append_module(script, name, include_variables: true)
     name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
+
+    # Some themes are colocating connector JS under `/templates/connectors`. Move out of templates to avoid module name clash
+    if (match = COLOCATED_CONNECTOR_REGEX.match(name)) && match[:prefix].end_with?("/templates")
+      name = "#{match[:prefix].delete_suffix("/templates")}/connectors/#{match[:outlet]}/#{match[:name]}"
+    end
+
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
     @content << <<~JS
@@ -145,7 +88,7 @@ class ThemeJavascriptCompiler
       #{transpiler.perform(script, "", name).strip}
       }
     JS
-  rescue MiniRacer::RuntimeError => ex
+  rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
     raise CompileError.new ex.message
   end
 
