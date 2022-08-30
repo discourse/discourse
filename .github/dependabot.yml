@@ -40,3 +40,11 @@ updates:
         versions:
           - "> 1.2.0"
           - "< 2"
+  - package-ecosystem: "npm"
+    directory: "/app/assets/javascripts/"
+    schedule:
+      interval: daily
+      time: "08:00"
+      timezone: Australia/Sydney
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
