@@ -110,6 +110,8 @@ class PostAlerter
   def after_save_post(post, new_record = false)
     notified = [post.user, post.last_editor].uniq
 
+    DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
+
     # mentions (users/groups)
     mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
 
@@ -139,6 +141,8 @@ class PostAlerter
       end
     end
 
+    DiscourseEvent.trigger(:post_alerter_before_replies, post, new_record, notified)
+
     # replies
     reply_to_user = post.reply_notification_target
 
@@ -146,13 +150,19 @@ class PostAlerter
       notified += notify_non_pm_users(reply_to_user, :replied, post)
     end
 
+    DiscourseEvent.trigger(:post_alerter_before_quotes, post, new_record, notified)
+
     # quotes
     quoted_users = extract_quoted_users(post)
     notified += notify_non_pm_users(quoted_users - notified, :quoted, post)
 
+    DiscourseEvent.trigger(:post_alerter_before_linked, post, new_record, notified)
+
     # linked
     linked_users = extract_linked_users(post)
     notified += notify_non_pm_users(linked_users - notified, :linked, post)
+
+    DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
     if new_record
       if post.topic.private_message?
@@ -165,6 +175,8 @@ class PostAlerter
     end
 
     sync_group_mentions(post, mentioned_groups)
+
+    DiscourseEvent.trigger(:post_alerter_before_first_post, post, new_record, notified)
 
     if new_record && post.post_number == 1
       topic = post.topic
