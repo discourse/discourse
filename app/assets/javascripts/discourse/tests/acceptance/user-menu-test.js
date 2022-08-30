@@ -502,7 +502,7 @@ acceptance("User menu - Dismiss button", function (needs) {
   needs.user({
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 10,
-    grouped_unread_high_priority_notifications: {
+    grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
       [NOTIFICATION_TYPES.private_message]: 89,
     },
@@ -688,6 +688,47 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"
+    );
+  });
+});
+
+acceptance("User menu - Click notification", function (needs) {
+  needs.user({
+    redesigned_user_menu_enabled: true,
+    unread_high_priority_notifications: 10,
+    grouped_unread_notifications: {
+      [NOTIFICATION_TYPES.replied]: 2,
+    },
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/t/1234.json", () => {
+      const json = cloneJSON(TopicFixtures["/t/130.json"]);
+      return helper.response(json);
+    });
+  });
+
+  test("updates unread number", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    let repliesBadgeNotification = query(
+      "#user-menu-button-replies .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "2",
+      "badge shows the right count"
+    );
+    await click("#user-menu-button-replies");
+    await click("li.replied a");
+    await click(".d-header-icons .current-user");
+    repliesBadgeNotification = query(
+      "#user-menu-button-replies .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "1",
+      "badge shows count reduced by one"
     );
   });
 });
