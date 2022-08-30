@@ -93,6 +93,22 @@ RSpec.describe SeedData::Categories do
       end
     end
 
+    it "does not seed the general category for non-new sites" do
+      Fabricate(:user) # If the site has human users don't seed
+
+      expect { create_category("general_category_id") }
+        .to not_change { Category.count }
+        .and not_change { Topic.count }
+    end
+
+    it "seeds the general category for new sites" do
+      expect { create_category("general_category_id") }
+        .to change { Category.count }
+        .and change { Topic.count }
+
+      expect(Category.last.name).to eq("General")
+    end
+
     it "does not override permissions of existing category when not forced" do
       create_category("lounge_category_id")
 

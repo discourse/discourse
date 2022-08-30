@@ -128,6 +128,8 @@ module SeedData
     end
 
     def should_create_category?(category_id, force_existence)
+      return false if User.human_users.any?
+
       if category_id > 0
         force_existence ? !Category.exists?(category_id) : false
       else
