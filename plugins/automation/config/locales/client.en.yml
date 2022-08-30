@@ -178,6 +178,14 @@ en:
             answering_user:
               label: Answering user
               description: Defaults to System user
+        post:
+          fields:
+            creator:
+              label: Creator
+            topic:
+              label: Topic ID
+            post:
+              label: Post content
         user_global_notice:
           fields:
             level:
@@ -253,7 +261,7 @@ en:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: 'User Custom Field name'
+              label: "User Custom Field name"
 
       models:
         script:

@@ -49,6 +49,9 @@ en:
         title: After post cook
         description: When a post content is cooked the automation will be triggered
     scriptables:
+      post:
+        title: Create a post
+        description: Create a post on a specified topic
       flag_post_on_words:
         title: Flag post on words
         description: Flags a post if it contains specified words
