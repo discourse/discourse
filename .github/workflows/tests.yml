@@ -158,9 +158,9 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      - name: Core RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --verbose
+      # - name: Core RSpec
+      #   if: matrix.build_type == 'backend' && matrix.target == 'core'
+      #   run: bin/turbo_rspec --verbose
 
 #       - name: Plugin RSpec
 #         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
@@ -168,7 +168,7 @@ jobs:
 
       - name: Core RSpec System Specs
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: SELENIUM_PORT=4444 SELENIUM_HOST=http://selenium bin/turbo_rspec spec/system
+        run: SELENIUM_PORT=4444 SELENIUM_HOST=http://selenium bin/rspec spec/system
 
       - uses: actions/upload-artifact@v3
         if: failure()
