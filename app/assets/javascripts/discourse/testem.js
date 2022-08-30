@@ -68,7 +68,7 @@ module.exports = {
   reporter: Reporter,
 };
 
-const target = `http://localhost:${process.env.UNICORN_PORT || "3000"}`;
+const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
 
 if (process.argv.includes("-t")) {
   // Running testem without ember cli. Probably for theme-qunit
