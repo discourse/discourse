@@ -653,10 +653,11 @@ class PostRevisor
   end
 
   def hide_welcome_topic_banner
-    return false unless guardian.is_admin?
-    return false unless guardian.user.id == User.first_login_admin_id
-    return false unless @topic.id == SiteSetting.welcome_topic_id
+    return unless guardian.is_admin?
+    return unless @topic.id == SiteSetting.welcome_topic_id
+    return unless Discourse.cache.read(Site.welcome_topic_banner_cache_key(@editor.id))
 
+    Discourse.cache.write(Site.welcome_topic_banner_cache_key(@editor.id), false)
     MessageBus.publish("/site/welcome-topic-banner", false)
   end
 

@@ -718,6 +718,7 @@ RSpec.describe PostRevisor do
         revisor = PostRevisor.new(post)
         first_post = topic.first_post
         UserAuthToken.generate!(user_id: admin.id)
+        Discourse.cache.write(Site.welcome_topic_banner_cache_key(admin.id), true)
 
         messages = MessageBus.track_publish("/site/welcome-topic-banner") do
           revisor.revise!(admin, { raw: 'updated welcome topic body' })
