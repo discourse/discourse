@@ -18,7 +18,7 @@ module Compression
 
         entries_of(compressed_file).each do |entry|
           entry_path = build_entry_path(sanitized_dest_path, entry, sanitized_compressed_file_path)
-          if !is_safe_path_for_extraction?(entry_path, dest_path)
+          if !is_safe_path_for_extraction?(entry_path, sanitized_dest_path)
             next
           end
 
