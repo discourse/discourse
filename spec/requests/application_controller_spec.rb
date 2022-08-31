@@ -665,17 +665,17 @@ RSpec.describe ApplicationController do
       expect(response.body).to include(nonce)
     end
 
-    it 'when splash screen is enabled it adds the same nonce to the policy and the inline splash script' do
+    it 'when splash screen is enabled it adds the fingerprint to the policy' do
       SiteSetting.content_security_policy = true
       SiteSetting.splash_screen = true
 
       get '/latest'
-      nonce = ApplicationHelper.splash_screen_nonce
+      fingerprint = SplashScreenHelper.fingerprint
       expect(response.headers).to include('Content-Security-Policy')
 
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
-      expect(script_src.to_s).to include(nonce)
-      expect(response.body).to include(nonce)
+      expect(script_src.to_s).to include(fingerprint)
+      expect(response.body).to include(SplashScreenHelper.inline_splash_screen_script)
     end
 
     def parse(csp_string)

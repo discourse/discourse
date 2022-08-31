@@ -128,10 +128,6 @@ module ApplicationHelper
     path
   end
 
-  def self.splash_screen_nonce
-    @splash_screen_nonce ||= SecureRandom.hex
-  end
-
   def preload_script(script)
     scripts = [script]
 
