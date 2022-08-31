@@ -200,6 +200,19 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
+  # The selenium app host and port must be used with the SiteSetting.force_hostname
+  # option, so the test server runs at the target host IP address (or wherever
+  # SELENIUM_APP_HOST is if that's specified), so the remote docker container
+  # can access the test server running on the host.
+  SELENIUM_APP_HOST = ENV.fetch("SELENIUM_APP_HOST") do
+    Socket.ip_address_list
+      .find(&:ipv4_private?)
+      .ip_address
+  end
+  SELENIUM_PORT = ENV.fetch("SELENIUM_PORT", "4442")
+  SELENIUM_HOST = ENV.fetch("SELENIUM_HOST", "http://localhost")
+  SELENIUM_SERVER_URL = "#{SELENIUM_HOST}:#{SELENIUM_PORT}"
+
   config.before(:suite) do
     CachedCounting.disable
 
@@ -219,59 +232,6 @@ RSpec.configure do |config|
 
     SiteSetting.refresh!
 
-    # The selenium app host and port must be used with the SiteSetting.force_hostname
-    # option, so the test server runs at the target host IP address (or wherever
-    # SELENIUM_APP_HOST is if that's specified), so the remote docker container
-    # can access the test server running on the host.
-    selenium_app_host = ENV.fetch("SELENIUM_APP_HOST") do
-      Socket.ip_address_list
-        .find(&:ipv4_private?)
-        .ip_address
-    end
-    puts "SELENIUM APP HOST IS #{selenium_app_host}"
-    Capybara.configure do |capybara_config|
-      capybara_config.server_host = selenium_app_host
-      capybara_config.server_port = 31337
-    end
-
-    Capybara.register_driver :remote_selenium_headless do |app|
-      browser_options = Selenium::WebDriver::Chrome::Options.new(
-        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
-      ).tap do |options|
-        options.add_argument("--headless")
-        options.add_argument("--window-size=1400,1400")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-      end
-
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :chrome,
-        url: "#{ENV['SELENIUM_HOST']}:#{ENV['SELENIUM_PORT']}/wd/hub",
-        capabilities: browser_options,
-      )
-    end
-
-    Capybara.register_driver :remote_selenium do |app|
-      browser_options = Selenium::WebDriver::Chrome::Options.new(
-        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
-      ).tap do |options|
-        options.add_argument("--window-size=1400,1400")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-      end
-
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :chrome,
-        url: "#{ENV["SELENIUM_HOST"]}:#{ENV['SELENIUM_PORT']}/wd/hub",
-        capabilities: browser_options
-      )
-    end
-
-    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-    puts "CAPYBARA APP HOST IS #{Capybara.app_host}"
-
     # Rebase defaults
     #
     # We nuke the DB storage provider from site settings, so need to yank out the existing settings
@@ -284,17 +244,81 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    allowed_sites = [
+    webmock_allowed_sites = [
       "test.localhost",
       "test.localhost:31337",
-      "localhost:#{Capybara.server_port}",
-      "#{ENV['SELENIUM_HOST']}:#{ENV['SELENIUM_PORT']}",
-      "#{selenium_app_host}:#{Capybara.server_port}",
       "localhost",
-      %r{127\.0\.0\.1:(\d{0,4})},
-      /chromedriver/
+      %r{127\.0\.0\.1:(\d{0,4})}
     ]
-    WebMock.disable_net_connect!(allow: allowed_sites)
+
+    if !ENV['SYSTEM_SPEC_RUN']
+      WebMock.disable_net_connect!(allow: webmock_allowed_sites)
+    else
+      puts ""
+      puts "Running system specs..."
+
+      Capybara.configure do |capybara_config|
+        capybara_config.server_host = SELENIUM_APP_HOST
+        capybara_config.server_port = 31337
+      end
+
+      Capybara.register_driver :remote_selenium_headless do |app|
+        browser_options = Selenium::WebDriver::Chrome::Options.new(
+          logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+        ).tap do |options|
+          options.add_argument("--headless")
+          options.add_argument("--window-size=1400,1400")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+        end
+
+        Capybara::Selenium::Driver.new(
+          app,
+          browser: :chrome,
+          url: "#{SELENIUM_SERVER_URL}/wd/hub",
+          capabilities: browser_options,
+        )
+      end
+
+      Capybara.register_driver :remote_selenium do |app|
+        browser_options = Selenium::WebDriver::Chrome::Options.new(
+          logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+        ).tap do |options|
+          options.add_argument("--window-size=1400,1400")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+        end
+
+        Capybara::Selenium::Driver.new(
+          app,
+          browser: :chrome,
+          url: "#{SELENIUM_SERVER_URL}/wd/hub",
+          capabilities: browser_options
+        )
+      end
+
+      Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+
+      webmock_allowed_sites.concat([
+        "localhost:#{Capybara.server_port}",
+        SELENIUM_SERVER_URL,
+        "#{SELENIUM_APP_HOST}:#{Capybara.server_port}",
+        /chromedriver/
+      ])
+      WebMock.disable_net_connect!(allow: webmock_allowed_sites)
+
+      puts "-> CAPYBARA APP HOST IS #{Capybara.app_host}"
+      puts "-> SELENIUM APP HOST IS #{SELENIUM_APP_HOST}"
+
+      url = URI.parse(SELENIUM_SERVER_URL)
+      req = Net::HTTP.new(url.host, url.port)
+      begin
+        res = req.request_get("/")
+      rescue Errno::ECONNREFUSED
+        err = "Cannot connect to Selenium at #{SELENIUM_SERVER_URL}, aborting! Launch with bin/start_selenium_server locally."
+        fail err
+      end
+    end
 
     if ENV['ELEVATED_UPLOADS_ID']
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
@@ -312,14 +336,14 @@ RSpec.configure do |config|
     end
   end
 
-  config.after :each do |x|
-    if x.exception && ex = RspecErrorTracker.last_exception
+  config.after :each do |example|
+    if example.exception && ex = RspecErrorTracker.last_exception
       # magic in a cause if we have none
-      unless x.exception.cause
-        class << x.exception
+      unless example.exception.cause
+        class << example.exception
           attr_accessor :cause
         end
-        x.exception.cause = ex
+        example.exception.cause = ex
       end
     end
 
@@ -359,8 +383,8 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do |example|
     driver = \
       if example.metadata[:js]
-        locality = ENV["SELENIUM_HOST"].present? ? :remote : :local
-        headless = "_headless" if ENV["DISABLE_HEADLESS"].blank?
+        locality = ENV["SELENIUM_LOCAL"].present? ? :local : :remote
+        headless = "_headless" if ENV["SELENIUM_DISABLE_HEADLESS"].blank?
 
         "#{locality}_selenium#{headless}".to_sym
       else
@@ -369,7 +393,10 @@ RSpec.configure do |config|
 
     if last_driven_by != driver
       last_driven_by = driver
-      puts "SYSTEM TESTS DRIVEN BY #{driver}"
+
+      if ENV['SYSTEM_SPEC_RUN'] == "1"
+        puts "-> SYSTEM TESTS DRIVEN BY #{driver}"
+      end
     end
     driven_by driver
 
@@ -377,15 +404,36 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
-    # puts "~~~~~~ DRIVER LOGS: ~~~~~~~"
-    # page.driver.browser.logs.get(:driver).each do |log|
-    #   puts log.message
-    # end
-
-    if example.exception
-      puts "~~~~~~ JS ERRORS: ~~~~~~~"
-      page.driver.browser.logs.get(:browser).each do |log|
+    # This is disabled by default because it is super verbose,
+    # if you really need to dig into how selenium is communicating
+    # for system tests then enable it.
+    if ENV["SELENIUM_VERBOSE_DRIVER_LOGS"]
+      puts "~~~~~~ DRIVER LOGS: ~~~~~~~"
+      page.driver.browser.logs.get(:driver).each do |log|
         puts log.message
+      end
+    end
+
+    # Recommended that this is not disabled, since it makes debugging
+    # failed system tests a lot trickier.
+    if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
+      if example.exception
+        skip_js_errors = false
+        if example.exception.kind_of?(RSpec::Core::MultipleExceptionError)
+          puts "~~~~~~ SYSTEM TEST ERRORS: ~~~~~~~"
+          example.exception.all_exceptions.each do |ex|
+            puts ex.message
+          end
+
+          skip_js_errors = true
+        end
+
+        if !skip_js_errors
+          puts "~~~~~~ JS ERRORS: ~~~~~~~"
+          page.driver.browser.logs.get(:browser).each do |log|
+            puts log.message
+          end
+        end
       end
     end
   end
