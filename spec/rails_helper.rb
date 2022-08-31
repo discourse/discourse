@@ -73,6 +73,7 @@ end
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
 require_relative './helpers/redis_snapshot_helper'
 

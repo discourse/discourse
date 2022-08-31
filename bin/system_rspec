@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # This is used to test the connection to selenium, as well
 # as to determine whether to bother setting up capybara or selenium
