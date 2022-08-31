@@ -48,12 +48,14 @@ export default class UserMenuProfileTabContent extends Component {
       });
     } else {
       this.saving = false;
+      this.args.closeUserMenu();
       showModal("do-not-disturb");
     }
   }
 
   @action
   setUserStatusClick() {
+    this.args.closeUserMenu();
     showModal("user-status", {
       title: "user_status.set_custom_status",
       modalClass: "user-status",

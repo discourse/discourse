@@ -407,9 +407,16 @@ createWidget("revamped-user-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<UserMenu::Menu />`
+        hbs`<UserMenu::Menu @closeUserMenu={{@data.closeUserMenu}} />`,
+        {
+          closeUserMenu: this.closeUserMenu.bind(this),
+        }
       ),
     ];
+  },
+
+  closeUserMenu() {
+    this.sendWidgetAction("toggleUserMenu");
   },
 
   clickOutside() {
