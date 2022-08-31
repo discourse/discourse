@@ -55,6 +55,7 @@ class ContentSecurityPolicy
         "#{base_url}/logs/",
         "#{base_url}/sidekiq/",
         "#{base_url}/mini-profiler-resources/",
+        "https://telegram.org/js/telegram-widget.js?4",
         *script_assets
       ].tap do |sources|
         sources << :report_sample if SiteSetting.content_security_policy_collect_reports

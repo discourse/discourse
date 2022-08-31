@@ -458,6 +458,14 @@ login:
     default: ""
     type: list
     list_type: simple
+  enable_telegram_logins:
+    default: false
+  telegram_bot_name:
+    default: ""
+    regex: ".+_bot"
+  telegram_bot_token:
+    default: ""
+    regex: "^[0-9]{10}:[a-zA-Z0-9_-]{35}$"
   auth_skip_create_confirm:
     default: false
     client: true

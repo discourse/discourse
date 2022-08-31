@@ -29,6 +29,7 @@ const ORIGINAL_SETTINGS = {
   enable_twitter_logins: true,
   enable_facebook_logins: true,
   enable_github_logins: true,
+  enable_telegram_logins: true,
   enable_discourse_connect: false,
   min_username_length: 3,
   max_username_length: 20,

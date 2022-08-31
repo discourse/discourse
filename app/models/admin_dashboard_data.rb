@@ -305,6 +305,12 @@ class AdminDashboardData
     end
   end
 
+  def telegram_config_check
+    if SiteSetting.enable_telegram_logins && (SiteSetting.telegram_bot_name.blank? || SiteSetting.telegram_bot_token.blank?)
+      I18n.t('dashboard.telegram_config_warning', base_path: Discourse.base_path)
+    end
+  end
+
   def s3_config_check
     # if set via global setting it is validated during the `use_s3?` call
     if !GlobalSetting.use_s3?

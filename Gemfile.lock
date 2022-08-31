@@ -311,6 +311,8 @@ GEM
     omniauth-oauth2 (1.7.2)
       oauth2 (~> 1.4)
       omniauth (>= 1.9, < 3)
+    omniauth-telegram (0.2.1)
+      omniauth (>= 1.0)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
@@ -590,6 +592,7 @@ DEPENDENCIES
   omniauth-github
   omniauth-google-oauth2
   omniauth-oauth2
+  omniauth-telegram
   omniauth-twitter
   parallel_tests
   pg

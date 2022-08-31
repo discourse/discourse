@@ -2036,6 +2036,10 @@ en:
         name: "Discord"
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
+      telegram:
+        name: "Telegram"
+        title: "Log in with Telegram"
+        sr_title: "Log in with Telegram"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
