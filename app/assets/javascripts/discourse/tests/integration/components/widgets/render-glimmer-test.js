@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import Widget from "discourse/widgets/widget";
@@ -270,8 +270,6 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
     await click("div.demo-component button");
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");
-
-    await settled();
 
     assert.strictEqual(
       query(".action-state").innerText,
