@@ -34,6 +34,10 @@ html(){
 }
 ```
 
+You can also include function references in the `data` object, and use them as actions within the Ember component.
+You will need to `@bind` the function to ensure it maintains a reference to the widget, and you'll need to manually
+call `this.scheduleRerender()` after making any changes to widget state (the normal widget auto-rerendering does not apply).
+
 */
 
 export default class RenderGlimmer {
