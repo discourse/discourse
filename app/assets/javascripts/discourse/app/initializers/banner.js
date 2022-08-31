@@ -12,10 +12,6 @@ export default {
     site.set("banner", banner);
 
     const messageBus = container.lookup("service:message-bus");
-    if (!messageBus) {
-      return;
-    }
-
     messageBus.subscribe("/site/banner", function (ban) {
       site.set("banner", EmberObject.create(ban || {}));
     });
