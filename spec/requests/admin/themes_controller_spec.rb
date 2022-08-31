@@ -143,7 +143,7 @@ RSpec.describe Admin::ThemesController do
       sign_in(Fabricate(:moderator))
 
       post "/admin/themes/import.json", params: { theme: theme_json_file }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it 'imports a theme' do
