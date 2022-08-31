@@ -35,7 +35,7 @@ RSpec.describe Compression::Engine do
     context 'when working with zip files' do
       let(:extension) { '.zip' }
 
-      it 'decompress the folder and inspect files correctly' do
+      it 'decompresses the folder and inspects files correctly' do
         engine = described_class.engine_for(@compressed_path)
 
         extract_location = "#{temp_folder}/extract_location"
@@ -78,12 +78,29 @@ RSpec.describe Compression::Engine do
           )
         end
       end
+
+      it "decompresses into symlinked directory" do
+        real_location = "#{temp_folder}/extract_location"
+        extract_location = "#{temp_folder}/is/symlinked"
+
+        FileUtils.mkdir(real_location)
+        FileUtils.mkdir_p(extract_location)
+        extract_location = "#{extract_location}/extract_location"
+        FileUtils.symlink(real_location, extract_location)
+
+        engine = described_class.engine_for(@compressed_path)
+        engine.decompress(extract_location, "#{temp_folder}/#{folder_name}.zip", available_size)
+
+        expect(File.realpath(extract_location)).to eq(real_location)
+        expect(read_file("is/symlinked/extract_location/hello.txt")).to eq("hello world")
+        expect(read_file("is/symlinked/extract_location/a/inner")).to eq("hello world inner")
+      end
     end
 
     context 'when working with .tar.gz files' do
       let(:extension) { '.tar.gz' }
 
-      it 'decompress the folder and inspect files correctly' do
+      it 'decompresses the folder and inspects files correctly' do
         engine = described_class.engine_for(@compressed_path)
 
         engine.decompress(temp_folder, "#{temp_folder}/#{folder_name}.tar.gz", available_size)
@@ -130,6 +147,23 @@ RSpec.describe Compression::Engine do
             "extract_location/child-dir/grandchild-file",
           )
         end
+      end
+
+      it "decompresses into symlinked directory" do
+        real_location = "#{temp_folder}/extract_location"
+        extract_location = "#{temp_folder}/is/symlinked"
+
+        FileUtils.mkdir(real_location)
+        FileUtils.mkdir_p(extract_location)
+        extract_location = "#{extract_location}/extract_location"
+        FileUtils.symlink(real_location, extract_location)
+
+        engine = described_class.engine_for(@compressed_path)
+        engine.decompress(extract_location, "#{temp_folder}/#{folder_name}.tar.gz", available_size)
+
+        expect(File.realpath(extract_location)).to eq(real_location)
+        expect(read_file("is/symlinked/extract_location/test/hello.txt")).to eq("hello world")
+        expect(read_file("is/symlinked/extract_location/test/a/inner")).to eq("hello world inner")
       end
     end
 
