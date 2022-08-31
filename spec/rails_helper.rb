@@ -263,38 +263,41 @@ RSpec.configure do |config|
         capybara_config.server_port = 31337
       end
 
+      chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
+        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+      ).tap do |options|
+        options.add_argument("--window-size=1400,1400")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+      end
+
       Capybara.register_driver :remote_selenium_headless do |app|
-        browser_options = Selenium::WebDriver::Chrome::Options.new(
-          logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
-        ).tap do |options|
-          options.add_argument("--headless")
-          options.add_argument("--window-size=1400,1400")
-          options.add_argument("--no-sandbox")
-          options.add_argument("--disable-dev-shm-usage")
-        end
+        chrome_browser_options.add_argument("--headless")
 
         Capybara::Selenium::Driver.new(
           app,
           browser: :chrome,
           url: "#{SELENIUM_SERVER_URL}/wd/hub",
-          capabilities: browser_options,
+          capabilities: chrome_browser_options,
         )
       end
 
       Capybara.register_driver :remote_selenium do |app|
-        browser_options = Selenium::WebDriver::Chrome::Options.new(
-          logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
-        ).tap do |options|
-          options.add_argument("--window-size=1400,1400")
-          options.add_argument("--no-sandbox")
-          options.add_argument("--disable-dev-shm-usage")
-        end
-
         Capybara::Selenium::Driver.new(
           app,
           browser: :chrome,
           url: "#{SELENIUM_SERVER_URL}/wd/hub",
-          capabilities: browser_options
+          capabilities: chrome_browser_optionss
+        )
+      end
+
+      Capybara.register_driver :selenium_headless do |app|
+        chrome_browser_options.add_argument("--headless")
+
+        Capybara::Selenium::Driver.new(
+          app,
+          browser: :chrome,
+          capabilities: chrome_browser_options,
         )
       end
 
@@ -384,10 +387,10 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do |example|
     driver = \
       if example.metadata[:js]
-        locality = ENV["SELENIUM_LOCAL"].present? ? :local : :remote
+        locality = ENV["SELENIUM_LOCAL"].present? ? "selenium" : "remote_selenium"
         headless = "_headless" if ENV["SELENIUM_DISABLE_HEADLESS"].blank?
 
-        "#{locality}_selenium#{headless}".to_sym
+        "#{locality}#{headless}".to_sym
       else
         :rack_test
       end
