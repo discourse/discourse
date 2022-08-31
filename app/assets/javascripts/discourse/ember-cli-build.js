@@ -179,11 +179,6 @@ module.exports = function (defaults) {
       })
     ),
     applyTerser(prettyTextEngine(app)),
-    concat("public/assets/scripts", {
-      outputFile: `assets/start-discourse.js`,
-      headerFiles: [`start-app.js`],
-      inputFiles: [`discourse-boot.js`],
-    }),
     generateScriptsTree(app),
     applyTerser(discoursePluginsTree),
   ]);
