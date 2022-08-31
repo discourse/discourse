@@ -1639,24 +1639,8 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  REDESIGN_USER_MENU_REDIS_KEY_PREFIX = "redesigned_user_menu_for_user_"
-
-  def self.redesigned_user_menu_enabled_user_ids
-    Discourse.redis.scan_each(match: "#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}*").map do |key|
-      key.sub(REDESIGN_USER_MENU_REDIS_KEY_PREFIX, "").to_i
-    end
-  end
-
   def redesigned_user_menu_enabled?
-    Discourse.redis.get("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}") == "1"
-  end
-
-  def enable_redesigned_user_menu
-    Discourse.redis.setex("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}", 6.months, "1")
-  end
-
-  def disable_redesigned_user_menu
-    Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
+    SiteSetting.enable_experimental_sidebar_hamburger
   end
 
   def sidebar_categories_ids

@@ -324,10 +324,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def redesigned_user_menu_enabled
-    if defined?(@redesigned_user_menu_enabled)
-      return @redesigned_user_menu_enabled
-    end
-    @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
+    object.redesigned_user_menu_enabled?
   end
 
   def likes_notifications_disabled

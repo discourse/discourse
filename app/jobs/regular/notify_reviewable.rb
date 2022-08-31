@@ -31,35 +31,37 @@ class Jobs::NotifyReviewable < ::Jobs::Base
       counts[r.reviewable_by_group_id] += 1 if r.reviewable_by_group_id
     end
 
-    redesigned_menu_enabled_user_ids = User.redesigned_user_menu_enabled_user_ids
-
-    new_menu_admins = User.real.admins.where(id: redesigned_menu_enabled_user_ids)
-    notify_users(new_menu_admins, all_updates[:admins])
-
-    legacy_menu_admins = User.real.admins.where("id NOT IN (?)", @contacted).pluck(:id)
-    notify_legacy(
-      legacy_menu_admins,
-      count: counts[:admins],
-      updates: all_updates[:admins],
-    )
+    if SiteSetting.enable_experimental_sidebar_hamburger
+      notify_users(
+        User.real.admins,
+        all_updates[:admins]
+      )
+    else
+      notify_legacy(
+        User.real.admins.pluck(:id),
+        count: counts[:admins],
+        updates: all_updates[:admins],
+      )
+    end
 
     if reviewable.reviewable_by_moderator?
-      new_menu_mods = User
-        .real
-        .moderators
-        .where("id IN (?)", redesigned_menu_enabled_user_ids - @contacted.to_a)
-      notify_users(new_menu_mods, all_updates[:moderators])
-
-      legacy_menu_mods = User.real.moderators.where("id NOT IN (?)", @contacted).pluck(:id)
-      notify_legacy(
-        legacy_menu_mods,
-        count: counts[:moderators],
-        updates: all_updates[:moderators],
-      )
+      if SiteSetting.enable_experimental_sidebar_hamburger
+        notify_users(
+          User.real.moderators.where("id NOT IN (?)", @contacted),
+          all_updates[:moderators]
+        )
+      else
+        notify_legacy(
+          User.real.moderators.where("id NOT IN (?)", @contacted).pluck(:id),
+          count: counts[:moderators],
+          updates: all_updates[:moderators],
+        )
+      end
     end
 
     if SiteSetting.enable_category_group_moderation? && (group = reviewable.reviewable_by_group)
       users = group.users.includes(:group_users).where("users.id NOT IN (?)", @contacted)
+
       users.find_each do |user|
         count = 0
         updates = {}
@@ -67,12 +69,14 @@ class Jobs::NotifyReviewable < ::Jobs::Base
           updates.merge!(all_updates[gu.group_id])
           count += counts[gu.group_id]
         end
-        if redesigned_menu_enabled_user_ids.include?(user.id)
+
+        if SiteSetting.enable_experimental_sidebar_hamburger
           notify_user(user, updates)
         else
           notify_legacy([user.id], count: count, updates: updates)
         end
       end
+
       @contacted += users.pluck(:id)
     end
   end
