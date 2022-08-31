@@ -35,5 +35,21 @@ module.exports = function scriptsTree(app) {
     trees.push(transpiledWithDecodedSourcemap);
   }
 
+  // start-discourse.js is a combination of start-app and discourse-boot
+  let startDiscourseTree = funnel(`public/assets/scripts`, {
+    files: ["start-app.js", "discourse-boot.js"],
+    destDir: "scripts",
+  });
+  startDiscourseTree = babelAddon.transpileTree(
+    startDiscourseTree,
+    babelConfig
+  );
+  startDiscourseTree = concat(startDiscourseTree, {
+    outputFile: `assets/start-discourse.js`,
+    headerFiles: [`scripts/start-app.js`],
+    inputFiles: [`scripts/discourse-boot.js`],
+  });
+  trees.push(startDiscourseTree);
+
   return mergeTrees(trees);
 };
