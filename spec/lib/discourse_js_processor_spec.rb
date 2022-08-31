@@ -177,7 +177,7 @@ RSpec.describe DiscourseJsProcessor do
         standard_compile "{{theme-setting #{theme_id} 'setting_key'}}"
       )
 
-      # # Works when used inside other statements
+      # Works when used inside other statements
       expect(
         theme_compile "{{dummy-helper (theme-prefix 'translation_key')}}"
       ).to eq(
