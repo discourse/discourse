@@ -538,9 +538,9 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
-  MAX_UNREAD_HIGH_PRI_BACKLOG = 200
+  MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
-    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_HIGH_PRI_BACKLOG)
+    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_BACKLOG)
       SELECT X.notification_type AS type, COUNT(*) FROM (
         SELECT n.notification_type
         FROM notifications n
