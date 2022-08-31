@@ -161,6 +161,8 @@ sq:
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
     yes_value: "Po"
+    ok_value: "OK"
+    cancel_value: "Anulo"
     generic_error: "Na vjen keq, por sapo ndodhi një gabim."
     generic_error_with_reason: "Pati një gabim: %{error}"
     sign_up: "Regjistrohu"
@@ -1956,6 +1958,14 @@ sq:
         community:
           header_link_text: "Komuniteti"
           links:
+            about:
+              content: "Rreth"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Stemat"
+            faq:
+              content: "Pyetje të shpeshta"
             tracked:
               content: "Gjurmuar"
             groups:

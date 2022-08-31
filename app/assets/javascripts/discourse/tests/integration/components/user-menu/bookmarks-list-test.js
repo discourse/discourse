@@ -42,7 +42,7 @@ module(
     });
 
     test("dismiss button", async function (assert) {
-      this.currentUser.set("grouped_unread_high_priority_notifications", {
+      this.currentUser.set("grouped_unread_notifications", {
         [NOTIFICATION_TYPES.bookmark_reminder]: 72,
       });
       await render(template);
@@ -57,7 +57,7 @@ module(
         "dismiss button has a title"
       );
 
-      this.currentUser.set("grouped_unread_high_priority_notifications", {});
+      this.currentUser.set("grouped_unread_notifications", {});
       await settled();
 
       assert.notOk(

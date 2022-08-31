@@ -210,6 +210,8 @@ pt_BR:
     not_implemented: "Este recurso ainda não foi implementado, desculpe!"
     no_value: "Não"
     yes_value: "Sim"
+    ok_value: "Ok"
+    cancel_value: "Cancelar"
     submit: "Enviar"
     generic_error: "Desculpe, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
@@ -3643,6 +3645,14 @@ pt_BR:
         community:
           header_link_text: "Comunidade"
           links:
+            about:
+              content: "Sobre"
+            admin:
+              content: "Administrador(a)"
+            badges:
+              content: "Emblemas"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Monitorados(as)"
             groups:
@@ -4961,7 +4971,6 @@ pt_BR:
         recommended: "Recomendamos personalizar o texto a seguir para atender às suas necessidades:"
         show_overriden: "Exibir apenas substituídos"
         locale: "Idioma:"
-        fallback_locale_warning: "Você está editando um idioma com base em %{fallback}. Os(as) usuários(as) que escolherem %{fallback} como idioma de interface não visualizarão suas alterações."
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
       settings:
         show_overriden: "Exibir apenas substituídos"

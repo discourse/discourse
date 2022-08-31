@@ -563,8 +563,7 @@ da:
               invalid_url: "Erstatnings URL er ugyldig"
       <<: *errors
   uncategorized_category_name: "Ukategoriseret"
-  vip_category_name: "Lounge"
-  vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
+  general_category_name: "Overordnet"
   meta_category_name: "Site Feedback"
   meta_category_description: "Diskussion om dette websted, hvordan det er organiseret, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Personale"
@@ -584,29 +583,6 @@ da:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
-  lounge_welcome:
-    title: "Velkommen i loungen"
-    body: |2
-
-      Tillykke! :confetti_ball:
-
-      Hvis du kan se dette emne, blev du for nylig forfremmet til **almindelig** (tillidsniveau 3).
-
-      Du kan nu &hellip;
-
-      * Rediger titlen på ethvert emne
-      * Skift kategorien for ethvert emne
-      * Få alle dine links fulgt ([automatisk nofollow](https://en.wikipedia.org/wiki/Nofollow) fjernes )
-      * Adgang til en privat Lounge-kategori, der kun er synlig for brugere på tillidsniveau 3 og højere
-      * Skjul spam med en enkelt anmeldelse
-
-      Her er den [aktuelle liste over andre almindelige brugere](%{base_path}/badges/3/regular). Sørg for at sige hej.
-
-      Tak for at være en vigtig del af dette fællesskab!
-
-      (For mere information om tillidsniveauer, [se dette emne][trust]. Bemærk, at kun medlemmer, der fortsat overholder kravene over tid, vil fastholde deres status.)
-
-      [trust]: https://translate.google.dk/translate?hl=da&sl=en&u=https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/&prev=search&pto=aue
   admin_quick_start_title: "LÆS ME FØRST: Admin Quick Start Guide"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
@@ -3539,7 +3515,6 @@ da:
     register:
       button: "Registrer"
       title: "Registrer Admin Konto"
-      help: "registrere en ny konto for at komme i gang"
     confirm_email:
       title: "Bekræft din e-mail"
       message: "<p>Vi sendte en aktiveringsmail til <b>%{email}</b>. Følg venligst instruktionerne i e-mailen for at aktivere din konto.</p><p>Hvis den ikke ankommer, bør du tjekke din spam-mappe, og <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>sikre, at du har opsat din e-mail korrekt</a>.</p>"

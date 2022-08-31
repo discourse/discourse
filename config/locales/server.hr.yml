@@ -374,16 +374,13 @@ hr:
               in_the_past: "mora biti u budućnosti."
       <<: *errors
   uncategorized_category_name: "Nekategorizirano"
-  vip_category_name: "Foaje"
-  vip_category_description: "Kategorija ekskluzivna članovima koji imaju razinu povjerenja 3 ili više."
+  general_category_name: "Općenito"
   meta_category_name: "Povratne informacije o stranici"
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
   discourse_welcome_topic:
     title: "Dobrodošli na Discourse"
-  lounge_welcome:
-    title: "Dobrodošli u Foaje"
   admin_quick_start_title: "PROČITATI PRVO: brzi vodič za administratore"
   category:
     topic_prefix: "O %{category} kategoriji"

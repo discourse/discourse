@@ -595,8 +595,7 @@ it:
               invalid: "non è valido"
       <<: *errors
   uncategorized_category_name: "Senza categoria"
-  vip_category_name: "Salotto"
-  vip_category_description: "Una categoria esclusiva per i membri con livello di attendibilità 3 o superiore."
+  general_category_name: "Generale"
   meta_category_name: "Feedback Sito"
   meta_category_description: "Discussioni su questo sito, la sua organizzazione, su come funziona e come possiamo migliorarlo."
   staff_category_name: "Staff"
@@ -617,29 +616,6 @@ it:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Potresti chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino sull'annuncio.
-  lounge_welcome:
-    title: "Benvenuto nel Salotto"
-    body: |2
-
-      Congratulazioni! :confetti_ball:
-
-      Se vedi questo messaggio, significa che sei stato promosso ad **assiduo** (livello di esperienza 3).
-
-      Da ora sarai in grado di: &hellip;
-
-      * Cambiare il titolo a qualsiasi argomento
-      * Cambiare la categoria di qualsiasi argomento
-      * I tuoi link potranno essere seguiti ([il nofollow automatico](https://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
-      * Accedere alla categoria privata Salotto visibile ai soli utenti che hanno raggiunto il livello di attendibilità 3 o superiore
-      * Nascondere messaggi spam con una sola segnalazione
-
-      Ecco la [lista degli attuali utenti con Livello di attendibilità 3](%{base_path}/badges/3/regular). Lascia loro un saluto.
-
-      Grazie per essere un importante membro della nostra comunità!
-
-      (Per ulteriori informazioni sui Livelli di attendibilità dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti nel tempo resteranno assidui.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "DA LEGGERE SUBITO: Guida Rapida per Amministratore"
   category:
     topic_prefix: "Definizione della categoria %{category}"
@@ -3958,7 +3934,7 @@ it:
     register:
       button: "Registra"
       title: "Registrare Account Amministratore"
-      help: "registrare un nuovo account per cominciare"
+      help: "Registra un nuovo account per iniziare."
       no_emails: "Sfortunatamente, nessuna email amministratore è stata definita durante l'installazione, quindi potrebbe essere difficile completare la configurazione . Aggiungi una email sviluppatore nel file di configurazione o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea un account amministratore dalla console</a> ."
     confirm_email:
       title: "Conferma la tua Email"

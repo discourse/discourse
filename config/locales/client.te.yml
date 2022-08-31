@@ -107,6 +107,8 @@ te:
     not_implemented: "ఈ ఫీచరు ఇంకా ఇంప్లిమెటు చేయలేదు. క్షమాపణలు!"
     no_value: "లేదు"
     yes_value: "అవును"
+    ok_value: "సరే"
+    cancel_value: "రద్దుచేయి"
     generic_error: "క్షమించాలి, ఒక దోషం తలెత్తింది"
     generic_error_with_reason: "ఒక దోషం జరిగింది: %{error}"
     sign_up: "సైన్ అప్"
@@ -1371,6 +1373,14 @@ te:
         community:
           header_link_text: "కమ్యునిటీ"
           links:
+            about:
+              content: "గురించి"
+            admin:
+              content: "అధికారి"
+            badges:
+              content: "బ్యాడ్జీలు"
+            faq:
+              content: "తవసం"
             tracked:
               content: "గమనించారు"
             groups:

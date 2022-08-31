@@ -209,6 +209,8 @@ tr_TR:
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
     yes_value: "Evet"
+    ok_value: "Tamam"
+    cancel_value: "İptal et"
     submit: "Gönder"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
@@ -1620,7 +1622,6 @@ tr_TR:
       set_custom_status: "Özel bir durum ayarla"
       what_are_you_doing: "Ne yapıyorsun?"
       remove_status: "Durumu kaldır"
-      until: "Şuna kadar:"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"
@@ -3720,9 +3721,17 @@ tr_TR:
           header_link_text: "Topluluk"
           header_action_title: "yeni konu oluştur"
           links:
+            about:
+              content: "Hakkında"
+            admin:
+              content: "Yönetici"
+            badges:
+              content: "Rozetler"
             everything:
               content: "Her şey"
               title: "Tüm konular"
+            faq:
+              content: "SSS"
             tracked:
               content: "Takipte"
               title: "Tüm izlenen konular"
@@ -3742,6 +3751,7 @@ tr_TR:
       title: "Hoş Geldiniz konulu gönderinizi oluşturun"
       description: 'Hoş geldiniz konulu gönderiniz, yeni katılanların okuyacağı ilk şeydir. Bunu bir paragraf “kısa bir sunum” veya “misyon anlatımınız” olarak düşünün'
       button_title: "Düzenlemeye Başla"
+    until: "Şuna kadar:"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -5057,7 +5067,6 @@ tr_TR:
         recommended: "Sıradaki metni isteğine göre uyarlamanı öneririz:"
         show_overriden: "Yalnızca iptal edilenleri göster"
         locale: "Dil:"
-        fallback_locale_warning: "%{fallback} diline dayalı bir dili düzenliyorsunuz. Arayüz dili olarak %{fallback} seçen kullanıcılar değişikliklerinizi görmez."
         more_than_50_results: "50 den fazla sonuç var. Lütfen aramanızı daraltın."
       settings:
         show_overriden: "Yalnızca geçersiz kılınanları göster"

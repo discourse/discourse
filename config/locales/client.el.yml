@@ -190,6 +190,8 @@ el:
     not_implemented: "Αυτή η λειτουργία δεν έχει υλοποιηθεί ακόμα, συγγνώμη!"
     no_value: "Όχι"
     yes_value: "Ναι"
+    ok_value: "OK"
+    cancel_value: "Ακύρωση"
     submit: "Υποβολή"
     generic_error: "Λυπάμαι, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
@@ -3084,6 +3086,14 @@ el:
         community:
           header_link_text: "Κοινότητα"
           links:
+            about:
+              content: "Σχετικά"
+            admin:
+              content: "Διαχείριση"
+            badges:
+              content: "Παράσημα"
+            faq:
+              content: "Συχνές ερωτήσεις"
             tracked:
               content: "Παρακολουθείται"
             groups:

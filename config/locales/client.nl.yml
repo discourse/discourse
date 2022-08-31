@@ -199,6 +199,8 @@ nl:
     not_implemented: "Deze functie is helaas nog niet beschikbaar, sorry!"
     no_value: "Nee"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Annuleren"
     submit: "Versturen"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
@@ -3511,6 +3513,14 @@ nl:
         community:
           header_link_text: "Gemeenschap"
           links:
+            about:
+              content: "Over"
+            admin:
+              content: "Beheer"
+            badges:
+              content: "Badges"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Gevolgd"
             groups:
@@ -4777,7 +4787,6 @@ nl:
         recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste tonen"
         locale: "Taal:"
-        fallback_locale_warning: "U bent een taal gebaseerd op %{fallback} aan het bewerken. Gebruikers die %{fallback} als taal van hun interface kiezen zien uw wijzigingen niet."
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn uw zoekopdracht."
       settings:
         show_overriden: "Alleen aangepaste tonen"

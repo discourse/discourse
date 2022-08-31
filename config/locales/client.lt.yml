@@ -244,6 +244,8 @@ lt:
     not_implemented: "Ši funkcija dar neveikia, atsiprašome!"
     no_value: "Ne."
     yes_value: "Taip"
+    ok_value: "OK"
+    cancel_value: "Atšaukti"
     submit: "Pateikti"
     generic_error: "Atsiprašome, įvyko klaida."
     generic_error_with_reason: "Įvyko klaida: %{error}"
@@ -3521,9 +3523,17 @@ lt:
           header_link_text: "Bendruomenė"
           header_action_title: "sukurti naują temą"
           links:
+            about:
+              content: "Apie"
+            admin:
+              content: "Adminas"
+            badges:
+              content: "Trofėjai"
             everything:
               content: "Viskas"
               title: "Visos temos"
+            faq:
+              content: "DUK"
             tracked:
               content: "Sekami"
               title: "Visos stebimos temos"
@@ -4707,7 +4717,6 @@ lt:
         recommended: "Mes rekomenduojame pakeisti sekančius tekstus, kad jie atitiktų tavo poreikius:"
         show_overriden: "Rodyti tik pakeistus"
         locale: "Kalba:"
-        fallback_locale_warning: "Jūs redaguojate kalbą pagal %{fallback}. Vartotojai, pasirinkę %{fallback} , nematys jūsų pakeitimų."
         more_than_50_results: "Yra daugiau nei 50 rezultatų. Prašome patikslinti paiešką."
       settings:
         show_overriden: "Rodyti tik pakeistus"

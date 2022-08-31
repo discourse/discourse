@@ -224,6 +224,8 @@ ro:
     not_implemented: "Această funcționalitate nu a fost implementată încă."
     no_value: "Nu"
     yes_value: "Da"
+    ok_value: "Ok"
+    cancel_value: "Anulare"
     submit: "Trimite"
     generic_error: "A apărut o eroare."
     generic_error_with_reason: "A apărut o eroare: %{error}"
@@ -337,6 +339,7 @@ ro:
       fullscreen: "afișați codul în ecran complet"
     drafts:
       label: "Ciorne"
+      label_with_count: "Schițe (%{count})"
       resume: "Reluați"
       remove: "Eliminați"
       remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"
@@ -605,6 +608,7 @@ ro:
       six_months: "Șase luni"
       one_year: "Un an"
       forever: "Pentru totdeanua"
+      none: "Nici unul necesar"
       never: "Niciodată"
       last_custom: "Ultima dată personalizată"
       custom: "Data și ora personalizată"
@@ -877,6 +881,7 @@ ro:
       topic_stat_unit:
         week: "săptămană"
         month: "lună"
+      n_more: "Categorii (%{count} mai multe)..."
     ip_lookup:
       title: Căutare adresă IP
       hostname: Nume gazdă
@@ -1363,6 +1368,7 @@ ro:
         same_as_email: "Parolă identică cu adresa de email"
         ok: "Parola dumneavoastră este OK."
         instructions: "minimum %{count} caractere"
+        required: "Vă rugăm să introduceți o parolă"
       summary:
         title: "Sumar"
         stats: "Statistici"
@@ -1488,8 +1494,10 @@ ro:
       other: de răspunsuri
     signup_cta:
       sign_up: "Înregistrare"
+      hide_session: "Poate mai târziu"
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
+      value_prop: "Te-ai săturat să tot răsfoiești aceleași mesaje? Când îți creezi un cont, te vei întoarce mereu de unde ai rămas. De asemenea, cu un cont puteți fi notificat cu privire la răspunsurile noi, puteți face semne de carte și puteți folosi aprecierile pentru a le mulțumi altora. Putem lucra cu toții împreună pentru a face această comunitate grozavă. :heart:"
     summary:
       enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
       enable: "Fă rezumatul acestui subiect"
@@ -1688,6 +1696,7 @@ ro:
       create_pm: "Mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
+      users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
@@ -1710,6 +1719,7 @@ ro:
       link_description: "adaugă aici descrierea link-ului"
       link_dialog_title: "Introdu link"
       link_optional_text: "titlu opțional"
+      link_url_placeholder: "Lipește un URL sau tastează pentru a căuta subiecte"
       blockquote_title: "Bloc citat"
       blockquote_text: "Bloc citat"
       code_title: "Text preformatat"
@@ -1944,6 +1954,7 @@ ro:
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
         educate:
+          new: '<p>Subiectele noi vor apărea aici.Implicit, subiectele vor fi considerate noi și vor afișa un indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> dacă au fost create în ultimele 2 zile.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
           unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge unread-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
@@ -1962,6 +1973,7 @@ ro:
         other: "%{count} de postări în subiect"
       create: "Subiect nou"
       create_long: "Creează un subiect nou"
+      open_draft: "Deschide schiță"
       private_message: "Scrie un mesaj."
       archive_message:
         help: "Mută mesajul în arhivă"
@@ -2078,9 +2090,10 @@ ro:
           "3_2": "Vei primi notificări deoarece urmărești activ acest subiect."
           "3_1": "Vei primi notificări deoarece ai creat acest subiect."
           "3": "Vei primi notificări deoarece urmărești activ acest subiect."
+          "2_8": "Vei vedea numărul răspunsurilor noi deoarece urmărești această categorie."
           "2_4": "Vei vedea numărul răspunsurilor noi deoarece ai adăugat un comentariu în acest subiect."
           "2_2": "Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Vei vedea numărul răspunsurilor noi deoarece <a href="%{basePath}/u/%{username}/preferences/notifications">citești acest subiect</a>.'
           "1_2": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "1": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "0_7": "Ignori toate notificările din această categorie."
@@ -2911,7 +2924,7 @@ ro:
       no_activity_title: "Nicio activitate încă"
       no_activity_body: "Bun venit în comunitatea noastră! Ești nou-nouț aici și nu ai contribuit încă la discuții. Ca prim pas, vizitează <a href='%{topUrl}'>Top</a> sau <a href='%{categoriesUrl}'>Categorii</a> și începe să citești! Selectează %{heartIcon} pentru postările care iți plac sau despre care dorești să afli mai multe. Pe măsură ce partici, activitatea ta va fi listată aici."
       no_replies_title: "Nu ai citit nici un subiect până acum"
-      no_drafts_title: "Nu ai început nicio ciornă"
+      no_drafts_title: "Nu ai început nicio schiță"
       no_drafts_body: "Nu ești gata să postezi? Vom salva automat o schiță nouă și o vom afișa aici ori de câte ori începi să compui un subiect, un răspuns sau un mesaj personal. Selectați butonul de anulare pentru a renunța sau a salva ciorna pentru a continua mai târziu."
       no_likes_title: "Încă nu ți-a plăcut niciun subiect"
       no_likes_body: "O modalitate excelentă de a intra și de a începe să contribui este să începi să citești conversațiile care au avut deja loc și să selectezi %{heartIcon} din postările care îți plac!"
@@ -2944,6 +2957,14 @@ ro:
         community:
           header_link_text: "Comunitate"
           links:
+            about:
+              content: "Despre"
+            admin:
+              content: "Administrator"
+            badges:
+              content: "Ecusoane"
+            faq:
+              content: "Întrebări frecvente"
             tracked:
               content: "Urmărite"
             groups:

@@ -2067,10 +2067,10 @@ RSpec.describe User do
     end
 
     context "with redesigned_user_menu_enabled on" do
-      it "adds all_unread_notifications and grouped_unread_high_priority_notifications to the payload" do
+      it "adds all_unread_notifications and grouped_unread_notifications to the payload" do
         user.update!(admin: true)
         user.enable_redesigned_user_menu
-        Fabricate(:notification, user: user)
+        Fabricate(:notification, user: user, notification_type: 1)
         Fabricate(:notification, notification_type: 15, high_priority: true, read: false, user: user)
         messages = MessageBus.track_publish("/notification/#{user.id}") do
           user.publish_notifications_state
@@ -2079,7 +2079,7 @@ RSpec.describe User do
 
         message = messages.first
         expect(message.data[:all_unread_notifications_count]).to eq(2)
-        expect(message.data[:grouped_unread_high_priority_notifications]).to eq({ 15 => 1 })
+        expect(message.data[:grouped_unread_notifications]).to eq({ 1 => 1, 15 => 1 })
       ensure
         user.disable_redesigned_user_menu
       end
@@ -2808,8 +2808,8 @@ RSpec.describe User do
     end
   end
 
-  describe "#grouped_unread_high_priority_notifications" do
-    it "returns a map of high priority types to their unread count" do
+  describe "#grouped_unread_notifications" do
+    it "returns a map of types to their unread count" do
       Fabricate(:notification, user: user, notification_type: 1, high_priority: true, read: true)
       Fabricate(:notification, user: user, notification_type: 1, high_priority: true, read: false)
       Fabricate(:notification, user: user, notification_type: 1, high_priority: false, read: true)
@@ -2826,7 +2826,7 @@ RSpec.describe User do
       # notification for another user. it shouldn't be included
       Fabricate(:notification, notification_type: 4, high_priority: true, read: false)
 
-      expect(user.grouped_unread_high_priority_notifications).to eq({ 1 => 1, 2 => 1 })
+      expect(user.grouped_unread_notifications).to eq({ 1 => 2, 2 => 1 })
     end
   end
 

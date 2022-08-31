@@ -226,6 +226,8 @@ sv:
     not_implemented: "Denna funktion har tyvärr inte implementerats än!"
     no_value: "Nej"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Skicka"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
@@ -1652,7 +1654,6 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
-      until: "T.o.m.:"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -3796,9 +3797,17 @@ sv:
           header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Utmärkelser"
             everything:
               content: "Allting"
               title: "Alla ämnen"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Följda"
               title: "Alla följda ämnen"
@@ -3818,6 +3827,7 @@ sv:
       title: "Skapa ditt välkomstämne"
       description: 'Ditt välkomstämne är det första som nykomlingar läser. Tänk på det som din "snabbpresentation" eller "målbeskrivning" i ett enda stycke.'
       button_title: "Börja redigera"
+    until: "T.o.m.:"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -5150,7 +5160,6 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         locale: "Språk:"
-        fallback_locale_warning: "Du redigerar ett språk baserat på %{fallback}. Användare som väljer %{fallback} som sitt gränssnittsspråk kommer inte att se dina ändringar."
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"

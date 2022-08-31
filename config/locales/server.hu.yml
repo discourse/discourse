@@ -360,8 +360,7 @@ hu:
             name:
               taken: már egy másik emodzsi is használja
       <<: *errors
-  vip_category_name: "Társalgó"
-  vip_category_description: "A kategória csak 3-as, vagy magasabb bizalmi szinttel rendelkező tagok számára érhető el."
+  general_category_name: "Általános"
   meta_category_name: "Visszajelzés"
   meta_category_description: "Beszélgetés erről az oldalról, a szervezéséről, a működéséről és arról, hogyan tudnánk jobbá tenni."
   staff_category_name: "Stáb"
@@ -382,29 +381,6 @@ hu:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Érdemes bezárnod ezt a témát az admin :wrench: en keresztül (a jobb felső és az alsó részen), hogy a válaszok ne halmozódjanak fel egy bejelentésre.
-  lounge_welcome:
-    title: "Üdvözöljük a társalgóban"
-    body: |2
-
-      Gratulálunk! :confetti_ball:
-
-      Ha látod ezt a témát, a közelmúltban ** rendes tag** (3. bizalmi szint) rangra emelkedtél.
-
-      Mostantól &hellip;
-
-      * Bármely téma címét szerkesztheted
-      * Bármely téma kategóriáját megváltoztathatod
-      * Minden link követése (az [automatikus nofollow] (https://en.wikipedia.org/wiki/Nofollow) eltávolításra került )
-      * Hozzáférhetsz egy privát társalgó kategóriához, amelyet csak a 3. vagy annál magasabb szintű bizalmas felhasználók láthatnak.
-      * El tudod rejteni a problémás bejegyzéseket egyetlen kattintással a zászlóra.
-
-      Itt található a [törzsvendégek aktuális listája] (%{base_path}/ badges / 3 / regular). Mindenképpen köszönj be hozzánk!
-
-      Köszönjük, hogy fontos része vagytok ennek a közösségnek!
-
-      (További információért a bizalmi szintekről [nyisd meg ezt a témát].[trust]Felhívjuk figyelmedet, hogy csak azok a tagok maradnak törzsvendégek, akik idővel továbbra is megfelelnek a követelményeknek.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
     topic_prefix: "A(z) %{category} kategóriáról"
     replace_paragraph: "(Cseréld le ezt az első bekezdést az új kategória rövid leírására. Ez az útmutató a kategória kiválasztási területén jelenik meg, ezért próbálj 200 karakter alatt maradni.)"
@@ -2005,7 +1981,6 @@ hu:
     register:
       button: "Regisztráció"
       title: "Adminisztrátori fiók regisztrációja"
-      help: "a kezdéshez regisztráljon egy új fiókot"
     confirm_email:
       title: "Erősítse meg az e-mail címét"
       message: "<p>Aktiváló levelet küldtünk az <b>%{email}</b>címre, pár percen belül a postaládádban kell lennie. A fiók aktiválásához kövesd az e-mailben található utasításokat.</p><p>Ha nem érkezik meg, ellenőrizd a spam (és Gmail esetén a Promóciók) mappát is, és <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ellenőrizd, hogy jó e-mail címet adtál-e meg!</a>.</p>"

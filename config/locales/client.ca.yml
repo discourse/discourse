@@ -200,6 +200,8 @@ ca:
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
     no_value: "No"
     yes_value: "Sí"
+    ok_value: "D'acord"
+    cancel_value: "Cancel·la"
     submit: "Envia"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut un error: %{error}"
@@ -2912,6 +2914,14 @@ ca:
         community:
           header_link_text: "Comunitat"
           links:
+            about:
+              content: "Quant a"
+            admin:
+              content: "Administració"
+            badges:
+              content: "Insígnies"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguit"
             groups:

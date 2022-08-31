@@ -166,6 +166,8 @@ sw:
     not_implemented: "Samahani, kipengele hicho hakijatekelezwa bado."
     no_value: "Hapana"
     yes_value: "Ndiyo"
+    ok_value: "Vema"
+    cancel_value: "Ghairi"
     submit: "Wasilisha"
     generic_error: "Samahani, hitilafu imetokea."
     generic_error_with_reason: "Hitilafu imetokea: %{error}"
@@ -2274,6 +2276,14 @@ sw:
         community:
           header_link_text: "Jumuiya"
           links:
+            about:
+              content: "Kuhusu"
+            admin:
+              content: "Msimamizi"
+            badges:
+              content: "Beji"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Imefuatiliwa"
             groups:

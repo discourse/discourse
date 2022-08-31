@@ -551,8 +551,7 @@ ko:
               invalid_url: "대체 URL이 유효하지 않습니다."
       <<: *errors
   uncategorized_category_name: "미분류"
-  vip_category_name: "라운지"
-  vip_category_description: "신뢰 레벨 3 이상의 회원 전용 카테고리입니다."
+  general_category_name: "일반"
   meta_category_name: "사이트 피드백"
   meta_category_description: "사이트, 조직, 운영 방식, 개선 방안에 대해 토론하는 곳입니다."
   staff_category_name: "운영진"
@@ -574,29 +573,6 @@ ko:
       - 자세한 내용은 어디에 있나요(링크, 리소스 등)?
 
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-  lounge_welcome:
-    title: "라운지에 오신 것을 환영합니다"
-    body: |2
-
-      축하합니다! :confetti_ball:
-
-      이 주제가 보이면 최근 **정회원** (신뢰 레벨 3)으로 승급된 것입니다.
-
-      이제 다음을 할 수 있습니다 &hellip;
-
-      * 모든 주제의 제목 편집
-      * 주제의 카테고리 변경
-      * 내 모든 링크 팔로우 가능([자동 팔로우 안 함](https://en.wikipedia.org/wiki/Nofollow) 제거됨)
-      * 신뢰 레벨 3 이상의 사용자만 볼 수 있는 비공개 라운지 카테고리에 액세스
-      * 한 번의 신고로 스팸 숨기기
-
-      다음은 [현재 다른 정회원 목록](%{base_path}/badges/3/regular)입니다. 인사를 나눠보세요.
-
-      이 커뮤니티의 중요한 일원이 되어 주셔서 감사합니다!
-
-      (신뢰 레벨에 대한 자세한 내용은 [이 주제를 참조][trust]하세요. 지속적으로 요구 사항을 충족해야 정회원이 유지됩니다.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "먼저 읽어보기: 관리 퀵스타트 가이드"
   category:
     topic_prefix: "%{category} 카테고리 정보"
@@ -4021,7 +3997,7 @@ ko:
     register:
       button: "등록"
       title: "관리자 계정 등록"
-      help: "시작하려면 새 계정을 등록하세요"
+      help: "시작하려면 새 계정을 등록하세요."
       no_emails: "설정하는 동안 관리자 이메일이 정의되지 않았으므로 환경설정을 완료하기 어려울 수 있습니다. 환경설정 파일에 개발자 이메일을 추가하거나 <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>콘솔에서 관리자 계정을 만드세요</a>."
     confirm_email:
       title: "이메일을 확인하세요"

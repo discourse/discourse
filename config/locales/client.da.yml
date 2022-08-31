@@ -202,6 +202,8 @@ da:
     not_implemented: "Beklager! Denne funktion er ikke blevet implementeret endnu."
     no_value: "Nej"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Annuller"
     submit: "Udfør"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
@@ -3576,6 +3578,14 @@ da:
         community:
           header_link_text: "Fællesskab"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Emblemer"
+            faq:
+              content: "OSS"
             tracked:
               content: "Sporet"
             groups:
@@ -4875,7 +4885,6 @@ da:
         recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
-        fallback_locale_warning: "Du redigerer et sprog baseret på %{fallback}. Brugere, der vælger %{fallback}, som deres grænsefladesprog vil ikke kunne se dine ændringer."
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."
       settings:
         show_overriden: "Vis kun tilsidesatte"

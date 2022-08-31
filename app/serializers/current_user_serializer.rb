@@ -77,7 +77,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :status,
              :sidebar_category_ids,
              :likes_notifications_disabled,
-             :grouped_unread_high_priority_notifications,
+             :grouped_unread_notifications,
              :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
@@ -338,7 +338,7 @@ class CurrentUserSerializer < BasicUserSerializer
     redesigned_user_menu_enabled
   end
 
-  def include_grouped_unread_high_priority_notifications?
+  def include_grouped_unread_notifications?
     redesigned_user_menu_enabled
   end
 
