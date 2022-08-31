@@ -420,7 +420,7 @@ createWidget("revamped-user-menu-wrapper", {
   },
 
   clickOutside() {
-    this.sendWidgetAction("toggleUserMenu");
+    this.closeUserMenu();
   },
 });
 
