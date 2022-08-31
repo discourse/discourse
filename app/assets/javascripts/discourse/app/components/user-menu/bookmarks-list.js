@@ -37,7 +37,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   }
 
   get #unreadBookmarkRemindersCount() {
-    const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.bookmark_reminder}`;
+    const key = `grouped_unread_notifications.${this.site.notification_types.bookmark_reminder}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native

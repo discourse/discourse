@@ -37,7 +37,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get #unreadMessaagesNotifications() {
-    const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.private_message}`;
+    const key = `grouped_unread_notifications.${this.site.notification_types.private_message}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native

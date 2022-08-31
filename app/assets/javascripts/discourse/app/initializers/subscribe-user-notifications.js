@@ -51,8 +51,7 @@ export default {
               data.unread_high_priority_notifications,
             read_first_notification: data.read_first_notification,
             all_unread_notifications_count: data.all_unread_notifications_count,
-            grouped_unread_high_priority_notifications:
-              data.grouped_unread_high_priority_notifications,
+            grouped_unread_notifications: data.grouped_unread_notifications,
           });
 
           if (
