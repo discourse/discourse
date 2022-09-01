@@ -181,7 +181,9 @@ module("Integration | Component | user-menu", function (hooks) {
             },
           },
         ];
-      } else if (queryParams.filter_by_types === "liked,liked_consolidated") {
+      } else if (
+        queryParams.filter_by_types === "liked,liked_consolidated,reaction"
+      ) {
         data = [
           {
             id: 60,
@@ -278,8 +280,8 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-likes.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "liked,liked_consolidated",
-      "request params has filter_by_types set to `liked` and `liked_consolidated"
+      "liked,liked_consolidated,reaction",
+      "request params has filter_by_types set to `liked`, `liked_consolidated` and `reaction`"
     );
     assert.strictEqual(queryParams.silent, "true");
     activeTabs = queryAll(".top-tabs .btn.active");

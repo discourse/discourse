@@ -31,7 +31,6 @@ Rails.application.config.assets.precompile += %w{
   browser-detect.js
   browser-update.js
   break_string.js
-  pretty-text-bundle.js
   markdown-it-bundle.js
   service-worker.js
   google-tag-manager.js

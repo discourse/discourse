@@ -213,6 +213,8 @@ sk:
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
     no_value: "Nie"
     yes_value: "Áno"
+    ok_value: "OK"
+    cancel_value: "Zrušiť"
     submit: "Odoslať"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
@@ -2297,6 +2299,14 @@ sk:
         community:
           header_link_text: "Komunita"
           links:
+            about:
+              content: "O stránke"
+            admin:
+              content: "Administrátor"
+            badges:
+              content: "Odznaky"
+            faq:
+              content: "Časté otázky"
             tracked:
               content: "Pozorované"
             groups:

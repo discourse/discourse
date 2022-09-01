@@ -110,27 +110,79 @@ class DiscourseJsProcessor
       @mutex
     end
 
+    def self.load_file_in_context(ctx, path, wrap_in_module: nil)
+      contents = File.read("#{Rails.root}/app/assets/javascripts/#{path}")
+      if wrap_in_module
+        contents = <<~JS
+          define(#{wrap_in_module.to_json}, ["exports", "require"], function(exports, require){
+            #{contents}
+          });
+        JS
+      end
+      ctx.eval(contents, filename: path)
+    end
+
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
       ctx = MiniRacer::Context.new(timeout: 15000, ensure_gc_after_idle: 2000)
-      ctx.eval("#{File.read("#{Rails.root}/app/assets/javascripts/node_modules/@babel/standalone/babel.js")}")
-      ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
-      ctx.eval("module = {}; exports = {};")
-      ctx.eval("const DISCOURSE_COMMON_BABEL_PLUGINS = #{DISCOURSE_COMMON_BABEL_PLUGINS.to_json};")
-      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
-      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
-      ctx.eval <<JS
-      console = {
-        prefix: "",
-        log: function(msg){ rails.logger.info(console.prefix + msg); },
-        error: function(msg){ rails.logger.error(console.prefix + msg); }
-      }
 
-JS
-      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
-      js_source = ::JSON.generate(source, quirks_mode: true)
-      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining'] }).code")
-      ctx.eval(js)
+      # General shims
+      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
+      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+      ctx.eval(<<~JS, filename: "environment-setup.js")
+        window = {};
+        console = {
+          prefix: "[DiscourseJsProcessor] ",
+          log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
+          warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
+          error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
+        };
+        const DISCOURSE_COMMON_BABEL_PLUGINS = #{DISCOURSE_COMMON_BABEL_PLUGINS.to_json};
+      JS
+
+      # define/require support
+      load_file_in_context(ctx, "mini-loader.js")
+
+      # Babel
+      load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
+
+      # Template Compiler
+      load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
+      load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/plugin.js", wrap_in_module: "babel-plugin-ember-template-compilation/index")
+      load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js", wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser")
+      load_file_in_context(ctx, "node_modules/babel-import-util/src/index.js", wrap_in_module: "babel-import-util")
+
+      # Widget HBS compiler
+      widget_hbs_compiler_source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
+      widget_hbs_compiler_source = <<~JS
+        define("widget-hbs-compiler", ["exports"], function(exports){
+          #{widget_hbs_compiler_source}
+        });
+      JS
+      widget_hbs_compiler_transpiled = ctx.eval <<~JS
+        Babel.transform(
+          #{widget_hbs_compiler_source.to_json},
+          {
+            ast: false,
+            moduleId: 'widget-hbs-compiler',
+            plugins: [
+              ...DISCOURSE_COMMON_BABEL_PLUGINS
+            ]
+          }
+        ).code
+      JS
+      ctx.eval(widget_hbs_compiler_transpiled, filename: "widget-hbs-compiler.js")
+
+      # Prepare template compiler plugins
+      ctx.eval <<~JS
+        const makeEmberTemplateCompilerPlugin = require("babel-plugin-ember-template-compilation").default;
+        const precompile = require("ember-template-compiler").precompile;
+        const DISCOURSE_TEMPLATE_COMPILER_PLUGINS = [
+          require("widget-hbs-compiler").WidgetHbsCompiler,
+          [makeEmberTemplateCompilerPlugin(() => precompile), { enableLegacyModules: ["ember-cli-htmlbars"] }],
+        ]
+      JS
 
       ctx
     end
@@ -184,7 +236,7 @@ JS
               filename: '#{filename}',
               ast: false,
               plugins: [
-                exports.WidgetHbsCompiler,
+                ...DISCOURSE_TEMPLATE_COMPILER_PLUGINS,
                 ['transform-modules-amd', {noInterop: true}],
                 ...DISCOURSE_COMMON_BABEL_PLUGINS
               ]
@@ -198,7 +250,7 @@ JS
             {
               ast: false,
               plugins: [
-                exports.WidgetHbsCompiler,
+                ...DISCOURSE_TEMPLATE_COMPILER_PLUGINS,
                 ...DISCOURSE_COMMON_BABEL_PLUGINS
               ]
             }

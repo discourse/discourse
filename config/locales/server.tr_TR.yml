@@ -581,8 +581,7 @@ tr_TR:
               invalid_tag_list: "Yedek etiket listesi geçersiz"
       <<: *errors
   uncategorized_category_name: "Kategorize"
-  vip_category_name: "Lobi"
-  vip_category_description: "Güven düzeyi 3 ve üzerinde olan üyelere özel kategori."
+  general_category_name: "Genel"
   meta_category_name: "Site geri bildirimi"
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
@@ -603,29 +602,6 @@ tr_TR:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Bu konuyu admin :wrench: (sağ üst ve altta) aracılığıyla kapatmak isteyebilirsiniz, böylece yanıtlar bir duyuruda birikmez.
-  lounge_welcome:
-    title: "Lobiye hoş geldiniz"
-    body: |2
-
-      Tebrikler! :confetti_ball:
-
-      Bu konuyu görebiliyorsanız yakın bir zaman önce **müdavim** (3. güven düzeyi) düzeyine terfi etmişsiniz demektir.
-
-      Bu andan sonra &hellip;
-
-      * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
-      * Herhangi bir konunun kategorisini değiştirebilirsiniz
-      * Eklediğiniz bağlantılar takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
-      * Sadece 3. güven düzeyi ve üzerindekilere gözüken özel lobi kategorisine erişebilirsiniz
-      * Tek bildirmeyle istenmeyen içerikli iletileri gizleyebilirsiniz
-
-      [Şu anda müdavim düzeyinde bulunan kişilere](%{base_path}/badges/3/regular) bir merhaba demeyi unutmayın.
-
-      Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
-
-      (Güven düzeyleriyle ilgili daha fazla bilgi için [bu konuya bakın][trust]. Lütfen, yalnızca sürekli olarak kriterlere uyan üyelerin standart düzeyde kalacağını unutmayın.)
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   admin_quick_start_title: "İLK ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
@@ -3826,7 +3802,7 @@ tr_TR:
     register:
       button: "Kayıt Ol"
       title: "Yönetici Hesabı Oluştur"
-      help: "başlamak için yeni bir hesap oluşturun"
+      help: "Başlamak için yeni bir hesap oluşturun."
       no_emails: "Ne yazık ki, kurulum sırasında yönetici e-postaları tanımlanmadığından, yapılandırmanın sonlandırılması zor olabilir. Lütfen yapılandırma dosyasına bir geliştirici e-postası ekleyin veya <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>konsoldan bir yönetici hesabı oluşturun</a> ."
     confirm_email:
       title: "E-posta adresinizi doğrulayın"

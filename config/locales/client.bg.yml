@@ -197,6 +197,8 @@ bg:
     not_implemented: "Тази функционалност все още не е добавена."
     no_value: "Не"
     yes_value: "Да"
+    ok_value: "Ок"
+    cancel_value: "Прекрати"
     submit: "Изпрати"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
@@ -3008,6 +3010,14 @@ bg:
         community:
           header_link_text: "Общност "
           links:
+            about:
+              content: "Относно"
+            admin:
+              content: "Администратор"
+            badges:
+              content: "Значки"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Следени"
             groups:

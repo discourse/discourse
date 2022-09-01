@@ -2,7 +2,10 @@ import UserMenuNotificationsList from "discourse/components/user-menu/notificati
 
 export default class UserMenuLikesNotificationsList extends UserMenuNotificationsList {
   get filterByTypes() {
-    return ["liked", "liked_consolidated"];
+    // TODO(osama): reaction is a type used by the reactions plugin, but it's
+    // added here temporarily unitl we add a plugin API for extending
+    // filterByTypes in lists
+    return ["liked", "liked_consolidated", "reaction"];
   }
 
   get dismissTypes() {

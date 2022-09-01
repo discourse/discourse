@@ -6,6 +6,7 @@
 
 ro:
   discourse_narrative_bot:
+    bio: "Bună, nu sunt o persoană reală. Sunt un bot care te poate învăța despre acest site. Pentru a interacționa cu mine, trimiteți-mi un mesaj sau menționați-mă pe nume."
     quote:
       trigger: "citează"
     magic_8_ball:

@@ -204,14 +204,17 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
-    if (creatingPrivateMessage && (this.site.mobileView || !this.isStaffUser)) {
+    if (creatingPrivateMessage && this.site.mobileView) {
       return false;
     }
 
+    const isPrivateMessage =
+      creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
+
     return (
-      this.site.can_tag_topics &&
       canEditTitle &&
-      (!this.get("model.topic.isPrivateMessage") || this.site.can_tag_pms)
+      this.site.can_tag_topics &&
+      (!isPrivateMessage || this.site.can_tag_pms)
     );
   },
 

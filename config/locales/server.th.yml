@@ -114,6 +114,7 @@ th:
         category_id: "หมวดหมู่"
     errors:
       <<: *errors
+  general_category_name: "ทั่วไป"
   staff_category_name: "ทีมงาน"
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"

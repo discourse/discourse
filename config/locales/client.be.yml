@@ -92,6 +92,8 @@ be:
     not_implemented: "Гэты функцыянал яшчэ не рэалізаваны, прабачце!"
     no_value: "Не"
     yes_value: "Так"
+    ok_value: "Добра"
+    cancel_value: "адмяніць"
     submit: "Адправіць"
     generic_error: "Выбачайце, здарылася памылка."
     generic_error_with_reason: "Паўстала памылка: %{error}"
@@ -1354,6 +1356,14 @@ be:
         community:
           header_link_text: "супольнасць"
           links:
+            about:
+              content: "Аб тэме"
+            admin:
+              content: "адміністратар"
+            badges:
+              content: "значкі"
+            faq:
+              content: "Пытанні і адказы"
             groups:
               content: "Групы"
               title: "Усе групы"

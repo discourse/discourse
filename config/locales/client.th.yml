@@ -158,10 +158,12 @@ th:
     bootstrap_invite_button_title: "ส่งคำเชิญ"
     themes:
       default_description: "ค่าเริ่มต้น"
+      only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
     s3:
       regions:
         ap_northeast_1: "เอเชียแปซิฟิก (โตเกียว)"
         ap_northeast_2: "เอเชียแปซิฟิก (โซล)"
+        ap_east_1: "เอเชียแปซิฟิก (ฮ่องกง)"
         ap_south_1: "เอเชียแปซิฟิก (มุมไบ)"
         ap_southeast_1: "เอเชียแปซิฟิก (สิงคโปร์)"
         ap_southeast_2: "เอเชียแปซิฟิก (ซิดนีย์)"
@@ -170,6 +172,7 @@ th:
         cn_northwest_1: "จีน (หนิงเซี่ย)"
         eu_central_1: "อียู (แฟรงก์เฟิร์ต)"
         eu_north_1: "อียู (สต็อกโฮล์ม)"
+        eu_south_1: "สหภาพยุโรป (มิลาน)"
         eu_west_1: "อียู (ไอร์แลนด์)"
         eu_west_2: "อียู (ลอนดอน)"
         eu_west_3: "อียู (ปารีส)"
@@ -185,6 +188,8 @@ th:
     not_implemented: "ขออภัย! คุณสมบัตินั้นยังไม่เสร็จสมบูรณ์"
     no_value: "ไม่ใช่"
     yes_value: "ใช่"
+    ok_value: "ตกลง"
+    cancel_value: "ยกเลิก"
     submit: "ตกลง"
     generic_error: "ขออภัย เกิดข้อผิดพลาดขึ้น"
     generic_error_with_reason: "เกิดข้อผิดพลาดขึ้น: %{error}"
@@ -223,6 +228,8 @@ th:
     max_of_count: "สูงสุดของ %{count}"
     character_count:
       other: "%{count} ตัวอักษร"
+    period_chooser:
+      aria_label: "กรองตามช่วงเวลา"
     related_messages:
       title: "ข้อความที่เกี่ยวข้อง"
       see_all: 'ดู<a href="%{path}">ข้อความทั้งหมด</a>จาก @%{username}'
@@ -238,6 +245,9 @@ th:
       moderators: "ผู้ดูแล"
       stat:
         all_time: "ตลอดเวลา"
+        last_day: "24 ชั่วโมงที่ผ่านมา"
+        last_7_days: "7 วันที่ผ่านมา"
+        last_30_days: "30 วันที่ผ่านมา"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
@@ -247,21 +257,26 @@ th:
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
     bookmarked:
       title: "บุ๊กมาร์ก"
+      edit_bookmark: "แก้ไขบุ๊กมาร์ก"
       clear_bookmarks: "ล้างบุ๊กมาร์ก"
       help:
         bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
+      created: "คุณได้บุ๊กมาร์กโพสต์นี้ %{name}"
+      created_generic: "คุณได้บุ๊กมาร์กสิ่งนี้ %{name}"
       create: "สร้างบุ๊กมาร์ก"
       edit: "แก้ไขบุ๊กมาร์ก"
       not_bookmarked: "บุ๊กมาร์กโพสต์นี้"
       remove: "ลบบุ๊กมาร์ก"
       delete: "ลบบุ๊กมาร์ก"
+      confirm_delete: "คุณแน่ใจหรือไม่ว่าต้องการลบบุ๊กมาร์กนี้ การเตือนความจำจะถูกลบออกด้วย"
       confirm_clear: "คุณแน่ใจหรือว่าต้องการล้างบุ๊กมาร์กทั้งหมดจากกระทู้นี้"
       save: "บันทึก"
       invalid_custom_datetime: "วันและเวลาที่คุณกรอกไม่ถูกต้อง กรุณาลองอีกครั้ง"
       list_permission_denied: "คุณไม่ได้รับอนุญาตให้ดูบุ๊กมาร์กของผู้ใช้งานนี้"
       auto_delete_preference:
+        label: "หลังจากที่คุณได้รับแจ้ง"
         when_reminder_sent: "ลบบุ๊กมาร์ก"
       search: "ค้นหา"
       reminders:
@@ -2448,6 +2463,14 @@ th:
         community:
           header_link_text: "ชุมชน"
           links:
+            about:
+              content: "เกี่ยวกับ"
+            admin:
+              content: "แอดมิน"
+            badges:
+              content: "เหรียญ"
+            faq:
+              content: "คำถามที่พบบ่อย"
             tracked:
               content: "ติดตาม"
             groups:

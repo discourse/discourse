@@ -63,7 +63,9 @@ class TopicConverter
   private
 
   def posters
-    @posters ||= @topic.posts.distinct.pluck(:user_id)
+    @posters ||= @topic.posts
+      .where.not(post_type: [Post.types[:small_action], Post.types[:whisper]])
+      .distinct.pluck(:user_id)
   end
 
   def increment_users_post_count

@@ -410,8 +410,7 @@ zh_TW:
               too_many: "超出描述該動作的字數"
       <<: *errors
   uncategorized_category_name: "尚未分類"
-  vip_category_name: "貴賓室"
-  vip_category_description: "信任等級高於 3 的使用者討論的分類"
+  general_category_name: "一般"
   meta_category_name: "站點反饋"
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
@@ -432,29 +431,6 @@ zh_TW:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
-  lounge_welcome:
-    title: "歡迎來到貴賓室"
-    body: |2
-
-      恭喜！ :confetti_ball:
-
-      如果你看到了這個主題，說明你已經被提升至**常規**（信任等級3）了。
-
-      你現在可以&hellip;
-
-      * 編輯任何話題的標題
-      * 改變任何話題的分類
-      * 讓你的連結設置為 follow 屬性（[自動 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已經移除）
-      * 訪問一個只有信任等級3及更高才能見到的貴賓室分類
-      * 一次標記即可隱藏垃圾信息
-
-      這裡是[目前達到常規的使用者列表](/badges/3/regular)。一定要來問個好！
-
-      感謝成為社群的重要一員！
-
-      （想瞭解關於信任等級的更多信息，[參見這個主題][trust]。請注意成員需要在將來也維持一定的選擇條件的成員才能保持在常規。）
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   admin_quick_start_title: "請先閱讀這個：管理員快速啟用導覽"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
@@ -3005,7 +2981,6 @@ zh_TW:
     register:
       button: "註冊"
       title: "註冊管理員賬戶"
-      help: "註冊新賬戶以開始"
       no_emails: "遺憾的是，在嚮導過程中你沒有設定管理員的電子郵件，所以完善設定可能有點困難。請在設定檔案中加入開發人員的電子郵件，或<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>從控制台（console）建立一個管理員帳號</a> 。"
     confirm_email:
       title: "配置你的郵件"

@@ -108,7 +108,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       ajax("/notifications/mark-read", opts).then(() => {
         if (dismissTypes) {
           const unreadNotificationCountsHash = {
-            ...this.currentUser.grouped_unread_high_priority_notifications,
+            ...this.currentUser.grouped_unread_notifications,
           };
           dismissTypes.forEach((type) => {
             const typeId = this.site.notification_types[type];
@@ -117,16 +117,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
             }
           });
           this.currentUser.set(
-            "grouped_unread_high_priority_notifications",
+            "grouped_unread_notifications",
             unreadNotificationCountsHash
           );
         } else {
           this.currentUser.set("all_unread_notifications_count", 0);
           this.currentUser.set("unread_high_priority_notifications", 0);
-          this.currentUser.set(
-            "grouped_unread_high_priority_notifications",
-            {}
-          );
+          this.currentUser.set("grouped_unread_notifications", {});
         }
         this.refreshList();
         postRNWebviewMessage("markRead", "1");

@@ -37,6 +37,10 @@ const CORE_TOP_TABS = [
     get panelComponent() {
       return "user-menu/replies-notifications-list";
     }
+
+    get count() {
+      return this.getUnreadCountForType("replied");
+    }
   },
 
   class extends UserMenuTab {
@@ -50,6 +54,10 @@ const CORE_TOP_TABS = [
 
     get panelComponent() {
       return "user-menu/mentions-notifications-list";
+    }
+
+    get count() {
+      return this.getUnreadCountForType("mentioned");
     }
   },
 
@@ -68,6 +76,10 @@ const CORE_TOP_TABS = [
 
     get shouldDisplay() {
       return !this.currentUser.likes_notifications_disabled;
+    }
+
+    get count() {
+      return this.getUnreadCountForType("liked");
     }
   },
 

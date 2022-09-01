@@ -40,7 +40,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
   });
 
   test("dismiss button", async function (assert) {
-    this.currentUser.set("grouped_unread_high_priority_notifications", {
+    this.currentUser.set("grouped_unread_notifications", {
       [NOTIFICATION_TYPES.private_message]: 72,
     });
     await render(template);
@@ -55,7 +55,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       "dismiss button has a title"
     );
 
-    this.currentUser.set("grouped_unread_high_priority_notifications", {});
+    this.currentUser.set("grouped_unread_notifications", {});
     await settled();
 
     assert.notOk(

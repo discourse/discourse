@@ -247,6 +247,8 @@ cs:
     not_implemented: "Tato funkce ještě nebyla naprogramována, omlouváme se."
     no_value: "Ne"
     yes_value: "Ano"
+    ok_value: "OK"
+    cancel_value: "Zrušit"
     submit: "Odeslat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
@@ -2902,6 +2904,14 @@ cs:
         community:
           header_link_text: "Komunita"
           links:
+            about:
+              content: "O fóru"
+            admin:
+              content: "Administrace"
+            badges:
+              content: "Odznaky"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Sledované"
             groups:

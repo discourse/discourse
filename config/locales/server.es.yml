@@ -596,8 +596,7 @@ es:
               invalid: "no es válido"
       <<: *errors
   uncategorized_category_name: "Sin categoría"
-  vip_category_name: "Sala VIP"
-  vip_category_description: "Una categoría exclusiva para miembros con un nivel de confianza de 3 o más."
+  general_category_name: "General"
   meta_category_name: "Sugerencias sobre el sitio"
   meta_category_description: "Debate sobre este sitio, su organización, cómo funciona y cómo podemos mejorarlo."
   staff_category_name: "Personal"
@@ -618,29 +617,6 @@ es:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Quizás quieras cerrar este tema a través del administrador :wrench: (en la parte superior derecha o en la parte de abajo), para que las respuestas nuevas no se acumulen en un anuncio.
-  lounge_welcome:
-    title: "Te damos la bienvenida a la Sala VIP"
-    body: |2
-
-      ¡Enhorabuena! :confetti_ball:
-
-      Si puedes ver este tema, es que has sido promovido a usuario **habitual** (nivel de confianza 3).
-
-      Ahora puedes &hellip;
-
-      * Editar el título de cualquier tema
-      * Cambiar la categoría de cualquier tema
-      * Todos tus enlaces serán seguidos (se elimina automáticamente el [nofollow](http://es.wikipedia.org/wiki/Nofollow))
-      * Acceder a la categoría privada Sala VIP, solo visible para usuarios de nivel 3 o más
-      * Ocultar spam tras un solo reporte
-
-      Consulta aquí la [lista actualizada de usuarios habituales](%{base_path}/badges/3/regular). ¡Recuerda enviar un saludo!
-
-      ¡Gracias por ser parte importante de esta comunidad!
-
-      (Para saber más sobre niveles de confianza, [mira este tema][trust]. Ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán considerándose habituales.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEER PRIMERO: Guía rápida de inicio para administradores"
   category:
     topic_prefix: "Acerca de la categoría %{category}"
@@ -4433,7 +4409,6 @@ es:
     register:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
-      help: "registra una cuenta para empezar"
       no_emails: "Por desgracia, no se definió ningún correo electrónico de administrador durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Añade un correo electrónico de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
     confirm_email:
       title: "Confirmar tu correo electrónico"

@@ -195,6 +195,8 @@ gl:
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda!"
     no_value: "Non"
     yes_value: "Si"
+    ok_value: "De acordo"
+    cancel_value: "Cancelar"
     submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
@@ -3372,6 +3374,14 @@ gl:
         community:
           header_link_text: "Comunidade"
           links:
+            about:
+              content: "Verbo de"
+            admin:
+              content: "Administración"
+            badges:
+              content: "Insignias"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguido"
             groups:
@@ -4620,7 +4630,6 @@ gl:
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
-        fallback_locale_warning: "Está a editar un idioma baseado en %{fallback}. Os usuarios que escollan %{fallback} como idioma de interface non verán os cambios."
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."
       settings:
         show_overriden: "Amosar só os cambios"

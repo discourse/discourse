@@ -327,16 +327,13 @@ sw:
             word:
               too_many: "Maneno mengi sana kwa ajili ya shughuli hiyo"
       <<: *errors
-  vip_category_name: "Majilisi"
-  vip_category_description: "Kategoria ya wanachama wa kiwango cha 3 cha uaminifu au zaidi."
+  general_category_name: "Jumla"
   meta_category_name: "Majibu ya Mtandao"
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
   staff_category_name: "Wasaidizi"
   staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
   discourse_welcome_topic:
     title: "Karibu kwenye Discourse"
-  lounge_welcome:
-    title: "Karibu kwenye Majilisi"
   category:
     topic_prefix: "Kuhusu kategoria %{category}"
     errors:
@@ -2004,7 +2001,6 @@ sw:
     register:
       button: "Jisajili"
       title: "Sajili Akaunti ya Kiongozi"
-      help: "sajili akaunti mpya kuanza"
     confirm_email:
       title: "Thibitisha Barua pepe yako"
     resend_email:

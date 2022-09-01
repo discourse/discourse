@@ -23,6 +23,9 @@ acceptance("User menu", function (needs) {
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 73,
     trust_level: 3,
+    grouped_unread_notifications: {
+      [NOTIFICATION_TYPES.replied]: 2,
+    },
   });
 
   needs.settings({
@@ -51,12 +54,32 @@ acceptance("User menu", function (needs) {
   test("clicking on an unread notification", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
+
+    let repliesBadgeNotification = query(
+      "#user-menu-button-replies .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "2",
+      "badge shows the right count"
+    );
+
     await click(".user-menu ul li.replied a");
 
     assert.strictEqual(
       requestHeaders["Discourse-Clear-Notifications"],
       123, // id is from the fixtures in fixtures/notification-fixtures.js
       "the Discourse-Clear-Notifications request header is set to the notification id in the next ajax request"
+    );
+
+    await click(".d-header-icons .current-user");
+    repliesBadgeNotification = query(
+      "#user-menu-button-replies .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "1",
+      "badge shows count reduced by one"
     );
   });
 
@@ -502,7 +525,7 @@ acceptance("User menu - Dismiss button", function (needs) {
   needs.user({
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 10,
-    grouped_unread_high_priority_notifications: {
+    grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
       [NOTIFICATION_TYPES.private_message]: 89,
     },

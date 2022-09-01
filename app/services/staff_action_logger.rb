@@ -100,7 +100,8 @@ class StaffActionLogger
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:change_trust_level],
       target_user_id: user.id,
-      details: "old trust level: #{old_trust_level}\nnew trust level: #{new_trust_level}"
+      previous_value: old_trust_level,
+      new_value: new_trust_level,
     ))
   end
 

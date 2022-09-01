@@ -1,21 +1,28 @@
-const babel = require("broccoli-babel-transpiler");
 const mergeTrees = require("broccoli-merge-trees");
 const funnel = require("broccoli-funnel");
-const path = require("path");
 const concat = require("broccoli-concat");
+const WatchedDir = require("broccoli-source").WatchedDir;
+const Funnel = require("broccoli-funnel");
 
-module.exports = function prettyTextEngine(vendorJs, engine) {
-  let engineTree = babel(`../pretty-text/engines/${engine}`, {
-    plugins: ["@babel/plugin-transform-modules-amd"],
-    moduleIds: true,
+module.exports = function prettyTextEngine(app) {
+  let babelAddon = app.project.findAddonByName("ember-cli-babel");
 
-    getModuleId(name) {
-      return `pretty-text/engines/${engine}/${path.basename(name)}`;
+  const sourceTree = new WatchedDir(
+    "../pretty-text/engines/discourse-markdown"
+  );
+  const namespacedTree = new Funnel(sourceTree, {
+    getDestinationPath: function (relativePath) {
+      return `pretty-text/engines/discourse-markdown/${relativePath}`;
     },
   });
 
-  let markdownIt = funnel(vendorJs, { files: ["markdown-it.js"] });
+  const engineTree = babelAddon.transpileTree(namespacedTree);
+
+  let markdownIt = funnel("../node_modules/markdown-it/dist", {
+    files: ["markdown-it.js"],
+  });
   return concat(mergeTrees([engineTree, markdownIt]), {
-    outputFile: `assets/${engine}.js`,
+    inputFiles: ["**/*.js"],
+    outputFile: `assets/markdown-it-bundle.js`,
   });
 };

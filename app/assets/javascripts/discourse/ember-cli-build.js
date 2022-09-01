@@ -178,12 +178,7 @@ module.exports = function (defaults) {
         outputFile: `assets/wizard.js`,
       })
     ),
-    prettyTextEngine(vendorJs, "discourse-markdown"),
-    concat("public/assets/scripts", {
-      outputFile: `assets/start-discourse.js`,
-      headerFiles: [`start-app.js`],
-      inputFiles: [`discourse-boot.js`],
-    }),
+    applyTerser(prettyTextEngine(app)),
     generateScriptsTree(app),
     applyTerser(discoursePluginsTree),
   ]);

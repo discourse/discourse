@@ -284,6 +284,8 @@ uk:
     not_implemented: "Цей функціонал ще не реалізовано, даруйте!"
     no_value: "Ні"
     yes_value: "Так"
+    ok_value: "OK"
+    cancel_value: "Скасувати"
     submit: "Надіслати"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
@@ -1794,7 +1796,6 @@ uk:
       set_custom_status: "Встановити власний статус"
       what_are_you_doing: "Що ви робите?"
       remove_status: "Видалити статус"
-      until: "До:"
     loading: "Завантаження..."
     errors:
       prev_page: "при спробі завантаження"
@@ -4137,9 +4138,17 @@ uk:
           header_link_text: "Спільнота"
           header_action_title: "створити нову тему"
           links:
+            about:
+              content: "Про"
+            admin:
+              content: "Адмін"
+            badges:
+              content: "Нагороди"
             everything:
               content: "Усе"
               title: "Всі теми"
+            faq:
+              content: "Часті запитання"
             tracked:
               content: "Відстежувані"
               title: "Усі відстежувані теми"
@@ -4160,6 +4169,7 @@ uk:
     welcome_topic_banner:
       description: 'Ваша привітальна тема – це перше, що прочитають новачки. Думайте про це як про «початкову презентацію» або «заяву про місію» з одного абзацу.'
       button_title: "Почати редагування"
+    until: "До:"
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати..."
     admin:
@@ -5509,7 +5519,6 @@ uk:
         recommended: "Ми рекомендуємо змінити наступний текст під ваші потреби:"
         show_overriden: "Показувати тільки перевизначені"
         locale: "Мова:"
-        fallback_locale_warning: "Ви редагуєте мову на основі %{fallback}. Користувачі, які обрали %{fallback} як мову інтерфейсу, не бачитимуть ваших змін."
         more_than_50_results: "Знайдено понад 50 результатів. Будь ласка виправте параметри пошуку."
       settings:
         show_overriden: "Показувати тільки перевизначені"

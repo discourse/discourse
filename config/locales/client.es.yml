@@ -225,6 +225,8 @@ es:
     not_implemented: "¡Lo sentimos! Esa característica no se ha implementado todavía."
     no_value: "No"
     yes_value: "Sí"
+    ok_value: "Aceptar"
+    cancel_value: "Cancelar"
     submit: "Enviar"
     generic_error: "Lo sentimos, ha ocurrido un error."
     generic_error_with_reason: "Ha ocurrido un error: %{error}"
@@ -1649,7 +1651,6 @@ es:
       set_custom_status: "Escribir estado personalizado"
       what_are_you_doing: "¿Qué estás haciendo?"
       remove_status: "Quitar estado"
-      until: "Hasta:"
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -3769,9 +3770,17 @@ es:
           header_link_text: "Comunidad"
           header_action_title: "crear un nuevo tema"
           links:
+            about:
+              content: "Acerca de"
+            admin:
+              content: "Administrador"
+            badges:
+              content: "Insignias"
             everything:
               content: "Todo"
               title: "Todos los temas"
+            faq:
+              content: "Preguntas frecuentes"
             tracked:
               content: "Siguiendo"
               title: "Todos los temas seguidos"
@@ -3787,6 +3796,7 @@ es:
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"
+    until: "Hasta:"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -5109,7 +5119,6 @@ es:
         recommended: "Te recomendamos que ajustes los siguientes textos a tu comunidad:"
         show_overriden: "Mostrar solo los sobrescritos"
         locale: "Idioma:"
-        fallback_locale_warning: "Estás editando un idioma basado en %{fallback}. Los usuarios que seleccionen %{fallback} como su idioma de interfaz no verán tus cambios."
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
       settings:
         show_overriden: "Mostrar solo los sobrescritos"

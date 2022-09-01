@@ -77,14 +77,14 @@ module SeedData
           force_permissions: true
         },
         {
-          site_setting_name: 'lounge_category_id',
-          name: I18n.t('vip_category_name'),
-          description: I18n.t('vip_category_description'),
+          site_setting_name: 'general_category_id',
+          name: I18n.t('general_category_name'),
+          description: I18n.t('general_category_description'),
           position: 3,
-          color: 'A461EF',
-          text_color: '652D90',
-          permissions: { trust_level_3: :full },
-          force_permissions: false
+          color: '25AAE2',
+          text_color: 'FFFFFF',
+          permissions: { everyone: :full },
+          force_permissions: true
         }
       ]
 
@@ -128,6 +128,8 @@ module SeedData
     end
 
     def should_create_category?(category_id, force_existence)
+      return false if User.human_users.any?
+
       if category_id > 0
         force_existence ? !Category.exists?(category_id) : false
       else

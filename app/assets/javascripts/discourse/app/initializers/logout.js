@@ -11,11 +11,6 @@ export default {
 
   initialize(container) {
     const messageBus = container.lookup("service:message-bus");
-
-    if (!messageBus) {
-      return;
-    }
-
     messageBus.subscribe("/logout", function () {
       if (!_showingLogout) {
         _showingLogout = true;
