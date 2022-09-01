@@ -1,0 +1,31 @@
+{{#if this.renderAsLink}}
+  <a
+    class={{this.classNames}}
+    id={{this.id}}
+    tabindex={{this.tabIndex}}
+    aria-selected={{concat "" this.isActive}} {{! convert bool to string}}
+    aria-controls={{this.ariaControls}}
+    data-tab-number={{@tab.position}}
+    href={{@tab.linkWhenActive}}
+    {{did-insert this.focusLink}}
+  >
+    {{d-icon @tab.icon}}
+    {{yield}}
+  </a>
+{{else}}
+  <button
+    type="button"
+    role="tab"
+    class={{this.classNames}}
+    id={{this.id}}
+    tabindex={{this.tabIndex}}
+    aria-selected={{concat "" this.isActive}} {{! convert bool to string}}
+    aria-controls={{this.ariaControls}}
+    data-tab-number={{@tab.position}}
+    {{on "click" @changeTabFunction}}
+    {{!-- template-lint-disable require-context-role --}}
+  >
+    {{d-icon @tab.icon}}
+    {{yield}}
+  </button>
+{{/if}}

@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -519,6 +519,105 @@ acceptance("User menu", function (needs) {
       logoutButton.querySelector(".d-icon-sign-out-alt"),
       "logout button has the right icon"
     );
+  });
+
+  test("the active tab in the menu becomes a link", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-1";
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+
+          get linkWhenActive() {
+            return "/abc/def";
+          }
+        };
+      });
+
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-2";
+          }
+
+          get icon() {
+            return "plus";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+    });
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    let activeTab = query(".user-menu .user-menu-tab.active");
+    assert.strictEqual(activeTab.tagName, "A", "active tab is an anchor");
+    assert.strictEqual(
+      activeTab.id,
+      "user-menu-button-all-notifications",
+      "active tab is the all-notifications tab"
+    );
+    assert.ok(
+      activeTab.href.endsWith("/eviltrout/notifications"),
+      "all-notifications tab links to the notifications page"
+    );
+    await click("#user-menu-button-all-notifications");
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/notifications",
+      "clicking on active tab navigates to the page it links to"
+    );
+    assert.notOk(exists(".user-menu"), "user menu is closed after navigating");
+
+    await click(".d-header-icons .current-user");
+    const tabs = [
+      ["#user-menu-button-replies", "/u/eviltrout/notifications"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications"],
+      ["#user-menu-button-likes", "/u/eviltrout/notifications"],
+      ["#user-menu-button-messages", "/u/eviltrout/messages"],
+      ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
+      ["#user-menu-button-custom-tab-1", "/abc/def"],
+      ["#user-menu-button-custom-tab-2", null],
+      ["#user-menu-button-review-queue", "/review"],
+      ["#user-menu-button-profile", "/u/eviltrout/summary"],
+    ];
+    for (const [id, expectedLink] of tabs) {
+      assert.strictEqual(
+        query(id).tagName,
+        "BUTTON",
+        `the ${id} tab is a button when it's not active`
+      );
+      await click(id);
+      const tab = query(id);
+      if (expectedLink) {
+        assert.strictEqual(
+          tab.tagName,
+          "A",
+          `the ${id} tab becomes a link when it's active`
+        );
+        assert.ok(
+          tab.href.endsWith(expectedLink),
+          `the ${id} tab links to ${expectedLink} when it's active`
+        );
+      } else {
+        assert.strictEqual(
+          tab.tagName,
+          "BUTTON",
+          `the ${id} tab remains a button because it has no link`
+        );
+      }
+    }
   });
 });
 

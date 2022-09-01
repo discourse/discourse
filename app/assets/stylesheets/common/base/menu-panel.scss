@@ -127,6 +127,10 @@
         font-size: var(--font-down-3);
       }
 
+      &.no-transition {
+        transition: unset;
+      }
+
       &.active {
         background-color: var(--tertiary-low);
       }
