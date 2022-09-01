@@ -208,7 +208,7 @@ class Site
   end
 
   def self.show_welcome_topic_banner?(guardian)
-    return false unless guardian.is_admin?
+    return false if !guardian.is_admin?
     user_id = guardian.user.id
 
     show_welcome_topic_banner = Discourse.cache.read(welcome_topic_banner_cache_key(user_id))
