@@ -62,6 +62,22 @@ function namespaceModules(tree, pluginDirectoryName) {
   });
 }
 
+function parsePluginName(pluginRbPath) {
+  const pluginRb = fs.readFileSync(pluginRbPath, "utf8");
+  // Match parsing logic in `lib/plugin/metadata.rb`
+  for (const line of pluginRb.split("\n")) {
+    if (line.startsWith("#")) {
+      const [attribute, value] = line.slice(1).split(":", 2);
+      if (attribute.trim() === "name") {
+        return value.trim();
+      }
+    }
+  }
+  throw new Error(
+    `Unable to parse plugin name from metadata in ${pluginRbPath}`
+  );
+}
+
 module.exports = {
   name: require("./package").name,
 
@@ -76,19 +92,31 @@ module.exports = {
       );
 
     return pluginDirectories.map((directory) => {
-      const name = directory.name;
-      const jsDirectory = path.resolve(root, name, "assets/javascripts");
+      const directoryName = directory.name;
+      const pluginName = parsePluginName(
+        path.resolve(root, directoryName, "plugin.rb")
+      );
+      const jsDirectory = path.resolve(
+        root,
+        directoryName,
+        "assets/javascripts"
+      );
       const adminJsDirectory = path.resolve(
         root,
-        name,
+        directoryName,
         "admin/assets/javascripts"
       );
-      const testDirectory = path.resolve(root, name, "test/javascripts");
+      const testDirectory = path.resolve(
+        root,
+        directoryName,
+        "test/javascripts"
+      );
       const hasJs = fs.existsSync(jsDirectory);
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
       return {
-        name,
+        pluginName,
+        directoryName,
         jsDirectory,
         adminJsDirectory,
         testDirectory,
@@ -109,11 +137,11 @@ module.exports = {
   _generatePluginAppTree() {
     const trees = this.pluginInfos()
       .filter((p) => p.hasJs)
-      .map(({ name, jsDirectory }) =>
+      .map(({ pluginName, directoryName, jsDirectory }) =>
         this._buildAppTree({
           directory: jsDirectory,
-          pluginName: name,
-          outputFile: `assets/plugins/${name}.js`,
+          pluginName,
+          outputFile: `assets/plugins/${directoryName}.js`,
         })
       );
     return mergeTrees(trees);
@@ -122,11 +150,11 @@ module.exports = {
   _generatePluginAdminTree() {
     const trees = this.pluginInfos()
       .filter((p) => p.hasAdminJs)
-      .map(({ name, adminJsDirectory }) =>
+      .map(({ pluginName, directoryName, adminJsDirectory }) =>
         this._buildAppTree({
           directory: adminJsDirectory,
-          pluginName: name,
-          outputFile: `assets/plugins/${name}_admin.js`,
+          pluginName,
+          outputFile: `assets/plugins/${directoryName}_admin.js`,
         })
       );
     return mergeTrees(trees);
@@ -154,16 +182,16 @@ module.exports = {
   _generatePluginTestTree() {
     const trees = this.pluginInfos()
       .filter((p) => p.hasTests)
-      .map(({ name, testDirectory }) => {
+      .map(({ pluginName, directoryName, testDirectory }) => {
         let tree = new WatchedDir(testDirectory);
 
         tree = fixLegacyExtensions(tree);
-        tree = namespaceModules(tree, name);
+        tree = namespaceModules(tree, pluginName);
         tree = this.processedAddonJsFiles(tree);
 
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
-          outputFile: `assets/plugins/test/${name}_tests.js`,
+          outputFile: `assets/plugins/test/${directoryName}_tests.js`,
           allowNone: true,
         });
       });
