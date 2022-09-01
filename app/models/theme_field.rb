@@ -164,7 +164,7 @@ class ThemeField < ActiveRecord::Base
       when "js.es6", "js"
         js_compiler.append_module(content, filename, include_variables: true)
       when "hbs"
-        js_compiler.append_ember_template(filename.sub("discourse/templates/", ""), content)
+        js_compiler.append_ember_template(filename, content)
       when "hbr", "raw.hbs"
         js_compiler.append_raw_template(filename.sub("discourse/templates/", ""), content)
       else

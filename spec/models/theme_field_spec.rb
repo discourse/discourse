@@ -186,14 +186,14 @@ HTML
     expect(js_field.value_baked).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(js_field.value_baked).to include("console.log('hello from .js.es6');")
 
-    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["javascripts/discovery"]')
+    expect(hbs_field.reload.value_baked).to include("define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]")
     expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
     expect(hbr_field.reload.value_baked).to include('addRawTemplate("other_discovery"')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 
     # All together
-    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["javascripts/discovery"]')
+    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]")
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
