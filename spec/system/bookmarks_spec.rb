@@ -26,7 +26,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.fill_name("something important")
     bookmark_modal.save
 
-    expect(topic_page.post_bookmarked?(post)).to eq(true)
+    expect(topic_page).to have_post_bookmarked(post)
     bookmark = Bookmark.find_by(bookmarkable: post, user: user)
     expect(bookmark.name).to eq("something important")
 
@@ -35,7 +35,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
 
     bookmark_modal = PageObjects::Modals::Bookmark.new
     bookmark_modal.select_preset_reminder(:tomorrow)
-    expect(topic_page.post_bookmarked?(post2)).to eq(true)
+    expect(topic_page).to have_post_bookmarked(post2)
     bookmark = Bookmark.find_by(bookmarkable: post2, user: user)
     expect(bookmark.reminder_at).not_to eq(nil)
     expect(bookmark.reminder_set_at).not_to eq(nil)
@@ -52,7 +52,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.fill_name("something important")
     bookmark_modal.cancel
 
-    expect(topic_page.post_bookmarked?(post)).to eq(false)
+    expect(topic_page).not_to have_post_bookmarked(post)
     expect(Bookmark.exists?(bookmarkable: post, user: user)).to eq(false)
   end
 
@@ -66,8 +66,10 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.fill_name("something important")
     bookmark_modal.save
 
-    topic_page.topic_bookmarked?
-    bookmark = Bookmark.find_by(bookmarkable: post.topic, user: user)
+    expect(topic_page).to have_topic_bookmarked
+    bookmark = wait_for_record do
+      Bookmark.find_by(bookmarkable: topic, user: user)
+    end
     expect(bookmark).not_to eq(nil)
   end
 end

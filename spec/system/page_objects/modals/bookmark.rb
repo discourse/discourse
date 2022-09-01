@@ -3,8 +3,6 @@
 module PageObjects
   module Modals
     class Bookmark < PageObjects::Modals::Base
-      include Capybara::DSL
-
       def fill_name(name)
         fill_in "bookmark-name", with: name
       end

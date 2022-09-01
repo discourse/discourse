@@ -3,6 +3,9 @@
 module PageObjects
   module Modals
     class Base
+      include Capybara::DSL
+      include RSpec::Matchers
+
       def close
         find(".modal-close").click
       end
