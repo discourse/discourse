@@ -6,6 +6,10 @@ import {
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
+import PreloadStore from "discourse/lib/preload-store";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
+
 acceptance("Categories - 'categories_only'", function (needs) {
   needs.settings({
     desktop_category_page_style: "categories_only",
@@ -99,3 +103,41 @@ acceptance(
     });
   }
 );
+
+acceptance("Categories - preloadStore handling", function () {
+  const styles = [
+    "categories_only",
+    "categories_with_featured_topics",
+    "categories_and_latest_topics_created_date",
+    "categories_and_latest_topics",
+    "categories_and_top_topics",
+    "categories_boxes",
+    "categories_boxes_with_topics",
+    "subcategories_with_featured_topics",
+  ];
+
+  for (const style of styles) {
+    test(`${style} deletes data from PreloadStore to ensure it isn't left for another route`, async function (assert) {
+      this.siteSettings.desktop_category_page_style = style;
+      PreloadStore.store(
+        "topic_list",
+        cloneJSON(discoveryFixtures["/latest.json"])
+      );
+      PreloadStore.store(
+        "categories_list",
+        cloneJSON(discoveryFixtures["/categories.json"])
+      );
+
+      await visit(`/categories`);
+
+      assert.true(
+        PreloadStore.get("topic_list") === undefined,
+        `topic_list is removed from preloadStore for ${style}`
+      );
+      assert.true(
+        PreloadStore.get("categories_list") === undefined,
+        `topic_list is removed from preloadStore for ${style}`
+      );
+    });
+  }
+});
