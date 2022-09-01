@@ -243,10 +243,109 @@ export default Component.extend({
     section && section.scrollIntoView();
   },
 
+  numEmojiPerRow(emojis) {
+    // See: https://stackoverflow.com/a/49888033
+    const container = document.querySelector(
+      ".emojis-container .section-group"
+    );
+    const rowLength = Math.floor(container.clientWidth / emojis[0].clientWidth);
+    const totalEmojis = emojis.length;
+    const numElementsLastRow = totalEmojis % rowLength;
+    return rowLength - numElementsLastRow;
+  },
+
   @action
   keydown(event) {
+    const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    let focusedOnPicker = document.activeElement.closest(
+      ".emoji-picker-emoji-area"
+    )
+      ? document.activeElement
+      : null;
+    let focusedOnEmoji = document.activeElement?.classList.contains("emoji");
+    let focusedOnSearch = document.activeElement.closest(
+      ".emoji-picker-search-container input"
+    )
+      ? document.activeElement
+      : null;
+    let emojis = document.querySelectorAll(
+      ".emoji-picker-emoji-area .results .emoji"
+    );
+    // if no search results get all emojis
+    if (emojis.length === 0) {
+      emojis = document.querySelectorAll(".emojis-container .emoji");
+    }
+
+    if (event.code === "ArrowDown" && focusedOnSearch) {
+      emojis[0].focus();
+    }
+
     if (event.code === "Escape") {
       this.onClose(event);
+      return false;
+    }
+
+    if (arrowKeys.includes(event.code)) {
+      if (!focusedOnPicker) {
+        return;
+      }
+
+      // console.log(emojis.length);
+      let currentEmoji;
+      emojis.forEach((emoji, index) => {
+        if (emoji.isEqualNode(document.activeElement)) {
+          emoji.focus();
+          return (currentEmoji = index); // todo improve
+        }
+      });
+
+      const numEmojisInRow = this.numEmojiPerRow(emojis);
+      // console.log("numEmojisInRow", numEmojisInRow);
+      // console.log("currentEmoji", currentEmoji);
+
+      // todo fix recent jumping when down arrow
+
+      // console.log(emojis, document.activeElement);
+      emojis[currentEmoji].focus();
+
+      if (event.code === "ArrowRight") {
+        const nextEmoji = currentEmoji + 1;
+        emojis[nextEmoji].focus();
+      }
+
+      if (event.code === "ArrowLeft") {
+        const previousEmoji = currentEmoji - 1;
+        emojis[previousEmoji].focus();
+      }
+
+      // TODO: Doesn't work properly after searching or in recents and uneven number of emojis in results.
+      if (event.code === "ArrowDown") {
+        const emojiNextRow = currentEmoji + numEmojisInRow;
+        // console.log("emojiNextRow", emojiNextRow);
+        if (emojiNextRow < emojis.length) {
+          emojis[emojiNextRow].focus();
+        }
+      }
+
+      if (event.code === "ArrowUp") {
+        const emojiPreviousRow = currentEmoji - numEmojisInRow;
+        // console.log("emojiPreviousRow", emojiPreviousRow);
+        if (emojiPreviousRow >= 0) {
+          emojis[emojiPreviousRow].focus();
+        }
+      }
+
+      event.preventDefault();
+      return false;
+    }
+
+    if (event.code === "Enter") {
+      if (!focusedOnEmoji) {
+        return;
+      }
+      this.onEmojiSelection(event);
+      this.onClose(event);
+      event.preventDefault();
       return false;
     }
   },
