@@ -73,20 +73,17 @@ module Email
       # If it is blank then we should assume Discourse was the originator
       # of the post, and generate a Message-ID to be used from now on using
       # our discourse/post/POST_ID@HOST format.
-      def generate_or_use_existing(post)
-        if post.outbound_message_id.blank?
-          post.update(outbound_message_id: "discourse/post/#{post.id}@#{host}")
-        end
-        "<#{post.outbound_message_id}>"
-      end
-
-      def generate_or_use_existing_bulk(post_ids)
+      def generate_or_use_existing(post_ids)
+        post_ids = Array.wrap(post_ids)
         return [] if post_ids.empty?
 
-        DB.query_single(<<~SQL, host: host)
+        DB.exec(<<~SQL, host: host)
           UPDATE posts
           SET outbound_message_id = 'discourse/post/' || posts.id || '@' || :host
           WHERE outbound_message_id IS NULL AND posts.id IN (#{post_ids.join(",")});
+        SQL
+
+        DB.query_single(<<~SQL)
           SELECT '<' || posts.outbound_message_id || '>'
           FROM posts
           WHERE posts.id IN (#{post_ids.join(",")})
@@ -108,8 +105,7 @@ module Email
 
         post_ids << message_ids.map { |message_id| message_id[message_id_discourse_regexp, 1] }.compact.map(&:to_i)
 
-        post_ids << Post.where(outbound_message_id: message_ids).pluck(:id)
-        post_ids << Post.where(topic_id: topic_ids, post_number: 1).pluck(:id)
+        post_ids << Post.where(outbound_message_id: message_ids).or(Post.where(topic_id: topic_ids, post_number: 1)).pluck(:id)
         post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
         post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
 

@@ -374,7 +374,7 @@ RSpec.describe Email::Receiver do
     end
 
     it "stores the message_id of the incoming email against the post as outbound_message_id" do
-      process(:text_reply, source: :handle_mail)
+      expect { process(:text_reply, source: :handle_mail) }.to change(Post, :count)
       message_id = IncomingEmail.last.message_id
       expect(Post.last.outbound_message_id).to eq(message_id)
     end

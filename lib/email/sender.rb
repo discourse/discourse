@@ -504,19 +504,20 @@ module Email
     #
     # https://meta.discourse.org/t/discourse-email-messages-are-incorrectly-threaded/233499
     def add_identification_field_headers(topic, post)
-      @message.header["Message-ID"] = Email::MessageIdService.generate_or_use_existing(post)
+      @message.header["Message-ID"] = Email::MessageIdService.generate_or_use_existing(post.id).first
 
       if post.post_number > 1
-        op_message_id = Email::MessageIdService.generate_or_use_existing(topic.first_post)
+        op_message_id = Email::MessageIdService.generate_or_use_existing(topic.first_post.id).first
 
         ##
         # Whenever we reply to a post directly _or_ quote a post, a PostReply
         # record is made, with the reply_post_id referencing the newly created
         # post, and the post_id referencing the post that was quoted or replied to.
-        referenced_posts = Post.includes(:incoming_email)
+        referenced_posts = Post
           .joins("INNER JOIN post_replies ON post_replies.post_id = posts.id ")
           .where("post_replies.reply_post_id = ?", post.id)
           .order(id: :desc)
+          .to_a
 
         ##
         # No referenced posts means that we are just creating a new post not
@@ -532,11 +533,9 @@ module Email
           # every directly replied to post can go into In-Reply-To.
           #
           # We want to make sure all of the outbound_message_ids are already filled here.
-          in_reply_to_message_ids = MessageIdService.generate_or_use_existing_bulk(referenced_posts.map(&:id))
+          in_reply_to_message_ids = MessageIdService.generate_or_use_existing(referenced_posts.map(&:id))
           @message.header["In-Reply-To"] = in_reply_to_message_ids
-
-          most_recent_post = referenced_posts.first
-          most_recent_post_message_id = MessageIdService.generate_or_use_existing(most_recent_post.reload)
+          most_recent_post_message_id = in_reply_to_message_ids.last
 
           ##
           # The RFC specifically states that the content of the parent's References
@@ -546,8 +545,8 @@ module Email
           #
           # This creates a thread from the OP all the way down to the most recent post we
           # are replying to.
-          reply_tree = referenced_post_reply_tree(most_recent_post)
-          parent_message_ids = MessageIdService.generate_or_use_existing_bulk(reply_tree.values.flatten)
+          reply_tree = referenced_post_reply_tree(referenced_posts.first)
+          parent_message_ids = MessageIdService.generate_or_use_existing(reply_tree.values.flatten)
 
           @message.header["References"] = [
             op_message_id, parent_message_ids, most_recent_post_message_id

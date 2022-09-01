@@ -52,6 +52,35 @@ RSpec.describe Email::MessageIdService do
     end
   end
 
+  describe "#generate_or_use_existing" do
+    it "does not override a post's existing outbound_message_id" do
+      post.update!(outbound_message_id: "blah@host.test")
+      result = subject.generate_or_use_existing(post.id)
+      expect(result).to eq(["<blah@host.test>"])
+    end
+
+    it "generates an outbound_message_id in the correct format if it's blank for the post" do
+      post.update!(outbound_message_id: nil)
+      result = subject.generate_or_use_existing(post.id)
+      expect(result).to eq(["<discourse/post/#{post.id}@#{Email::MessageIdService.host}>"])
+    end
+
+    it "handles bulk posts with a mixture of existing and new outbound_message_ids, returning in created_at order" do
+      topic = Fabricate(:topic)
+      post_bulk1 = Fabricate(:post, topic: topic, created_at: 10.days.ago, outbound_message_id: "blah@test.host")
+      post_bulk2 = Fabricate(:post, topic: topic, created_at: 12.days.ago, outbound_message_id: nil)
+      post_bulk3 = Fabricate(:post, topic: topic, created_at: 11.days.ago, outbound_message_id: "sf92c349438509=3453@test.host")
+      post_bulk4 = Fabricate(:post, topic: topic, created_at: 3.days.ago, outbound_message_id: nil)
+      result = subject.generate_or_use_existing([post_bulk1.id, post_bulk2.id, post_bulk3.id, post_bulk4.id])
+      expect(result).to eq([
+        "<discourse/post/#{post_bulk2.id}@#{Email::MessageIdService.host}>",
+        "<sf92c349438509=3453@test.host>",
+        "<blah@test.host>",
+        "<discourse/post/#{post_bulk4.id}@#{Email::MessageIdService.host}>"
+      ])
+    end
+  end
+
   describe "find_post_from_message_ids" do
     let(:post_format_message_id) { "<topic/#{topic.id}/#{post.id}.test123@test.localhost>" }
     let(:topic_format_message_id) { "<topic/#{topic.id}.test123@test.localhost>" }
