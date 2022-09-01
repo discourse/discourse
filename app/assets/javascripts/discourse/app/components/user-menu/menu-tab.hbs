@@ -3,7 +3,7 @@
     class={{this.classNames}}
     id={{this.id}}
     tabindex={{this.tabIndex}}
-    aria-selected={{concat "" this.isActive}} {{! convert bool to string}}
+    aria-selected={{if this.isActive "true" "false"}}
     aria-controls={{this.ariaControls}}
     data-tab-number={{@tab.position}}
     href={{@tab.linkWhenActive}}
@@ -19,7 +19,7 @@
     class={{this.classNames}}
     id={{this.id}}
     tabindex={{this.tabIndex}}
-    aria-selected={{concat "" this.isActive}} {{! convert bool to string}}
+    aria-selected={{if this.isActive "true" "false"}}
     aria-controls={{this.ariaControls}}
     data-tab-number={{@tab.position}}
     {{on "click" @changeTabFunction}}
