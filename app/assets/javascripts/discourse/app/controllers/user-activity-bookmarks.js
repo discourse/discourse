@@ -96,6 +96,7 @@ export default Controller.extend({
 
   _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
+      this.model.loadMoreUrl = null;
       return;
     }
 
