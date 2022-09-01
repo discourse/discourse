@@ -16,11 +16,16 @@ module SystemHelpers
     record_found = false
     record = nil
     sleep_backoff = 0.01
+    start_time = Time.zone.now
     while !record_found
       record = block.call
       record_found = record.present?
       sleep sleep_backoff
       sleep_backoff += 0.01
+      if Time.zone.now >= start_time + 3.seconds
+        puts "Could not find record in time. Aborting!"
+        break
+      end
     end
     record
   end
