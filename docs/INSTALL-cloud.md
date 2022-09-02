@@ -107,6 +107,8 @@ Let's Encrypt account setup is to give you a free HTTPS certificate for your sit
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will re-use your previous values from the file) or edit `/containers/app.yml` manually with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
+Bootstrapping will take a long time. Especially if you setup discourse on a server with slow Internet connection, slow processor or slow hard drive/SD card, it can take an hour or more. There is not always a visible change. Do not panic! The script will exit when the setup is done.
+
 ### 7. Start Discourse
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier.
