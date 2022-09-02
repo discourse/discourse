@@ -25,8 +25,6 @@ acceptance("User menu", function (needs) {
     trust_level: 3,
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.replied]: 2,
-      [NOTIFICATION_TYPES.votes_released]: 1,
-      [NOTIFICATION_TYPES.code_review_commit_approved]: 3,
     },
   });
 
@@ -82,20 +80,6 @@ acceptance("User menu", function (needs) {
       repliesBadgeNotification.textContent.trim(),
       "1",
       "badge shows count reduced by one"
-    );
-  });
-
-  test("other notification tab", async function (assert) {
-    await visit("/");
-    await click(".d-header-icons .current-user");
-
-    let repliesBadgeNotification = query(
-      "#user-menu-button-other .badge-notification"
-    );
-    assert.strictEqual(
-      repliesBadgeNotification.textContent.trim(),
-      "4",
-      "badge shows the right count (some of all other notifications)"
     );
   });
 
@@ -545,6 +529,8 @@ acceptance("User menu - Dismiss button", function (needs) {
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
       [NOTIFICATION_TYPES.private_message]: 89,
+      [NOTIFICATION_TYPES.votes_released]: 1,
+      [NOTIFICATION_TYPES.code_review_commit_approved]: 3,
     },
   });
 
@@ -725,6 +711,29 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click("#user-menu-button-likes");
     await click(".user-menu .notifications-dismiss");
+    assert.ok(
+      markRead,
+      "mark-read request is sent without a confirmation modal"
+    );
+  });
+
+  test("doesn't show confirmation modal for the other notifications list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await click("#user-menu-button-other");
+    let repliesBadgeNotification = query(
+      "#user-menu-button-other .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "4",
+      "badge shows the right count"
+    );
+
+    await click(".user-menu .notifications-dismiss");
+
+    assert.ok(!exists("#user-menu-button-other .badge-notification"));
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"
