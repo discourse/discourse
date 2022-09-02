@@ -386,17 +386,31 @@ module.exports = {
           .findAddonByName("discourse-plugins")
           .pluginInfos();
 
-        for (const { name, hasJs, hasAdminJs } of pluginInfos) {
+        for (const {
+          pluginName,
+          directoryName,
+          hasJs,
+          hasAdminJs,
+        } of pluginInfos) {
           if (hasJs) {
-            scripts.push({ src: `plugins/${name}.js`, name });
+            scripts.push({
+              src: `plugins/${directoryName}.js`,
+              name: pluginName,
+            });
           }
 
-          if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
-            scripts.push({ src: `plugins/${name}_extras.js`, name });
+          if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+            scripts.push({
+              src: `plugins/${directoryName}_extras.js`,
+              name: pluginName,
+            });
           }
 
           if (hasAdminJs) {
-            scripts.push({ src: `plugins/${name}_admin.js`, name });
+            scripts.push({
+              src: `plugins/${directoryName}_admin.js`,
+              name: pluginName,
+            });
           }
         }
       } else {
@@ -420,8 +434,8 @@ module.exports = {
           .pluginInfos()
           .filter(({ hasTests }) => hasTests)
           .map(
-            ({ name }) =>
-              `<script src="${config.rootURL}assets/plugins/test/${name}_tests.js" data-discourse-plugin="${name}"></script>`
+            ({ directoryName, pluginName }) =>
+              `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
           )
           .join("\n");
       } else {

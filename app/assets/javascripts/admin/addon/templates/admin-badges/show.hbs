@@ -97,21 +97,21 @@
 
         <div class="control-group">
           <label>
-            <Input @type="checkbox" @checked={{this.buffered.auto_revoke}} disabled={{this.readOnly}} />
+            <Input name="auto_revoke" @type="checkbox" @checked={{this.buffered.auto_revoke}} disabled={{this.readOnly}} />
             {{i18n "admin.badges.auto_revoke"}}
           </label>
         </div>
 
         <div class="control-group">
           <label>
-            <Input @type="checkbox" @checked={{this.buffered.target_posts}} disabled={{this.readOnly}} />
+            <Input name="target_posts" @type="checkbox" @checked={{this.buffered.target_posts}} disabled={{this.readOnly}} />
             {{i18n "admin.badges.target_posts"}}
           </label>
         </div>
 
         <div class="control-group">
           <label for="trigger">{{i18n "admin.badges.trigger"}}</label>
-          <ComboBox @name="trigger" @value={{this.buffered.trigger}} @content={{this.badgeTriggers}} @onChange={{action (mut this.buffered.trigger)}} @options={{hash
+          <ComboBox name="trigger" @value={{this.buffered.trigger}} @content={{this.badgeTriggers}} @onChange={{action (mut this.buffered.trigger)}} @options={{hash
               disabled=this.readOnly
             }} />
         </div>

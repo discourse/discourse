@@ -2021,4 +2021,53 @@ RSpec.describe PostAlerter do
     expect(notification.topic).to eq(post.topic)
     expect(notification.post_number).to eq(1)
   end
+
+  it "does not create multiple notifications for same post" do
+    category = Fabricate(:category)
+    CategoryUser.set_notification_level_for_category(
+      user,
+      NotificationLevels.all[:tracking],
+      category.id,
+    )
+    watching_first_post_tag = Fabricate(:tag)
+    TagUser.change(user.id, watching_first_post_tag.id, TagUser.notification_levels[:watching_first_post])
+    watching_tag = Fabricate(:tag)
+    TagUser.change(user.id, watching_tag.id, TagUser.notification_levels[:watching])
+
+    post = create_post(category: category, tags: [watching_first_post_tag.name, watching_tag.name])
+    expect { PostAlerter.new.after_save_post(post, true) }.to change { Notification.count }.by(1)
+
+    notification = Notification.last
+    expect(notification.user).to eq(user)
+    expect(notification.notification_type).to eq(Notification.types[:posted])
+    expect(notification.topic).to eq(post.topic)
+    expect(notification.post_number).to eq(1)
+  end
+
+  it 'triggers all discourse events' do
+    expected_events = [
+      :post_alerter_before_mentions,
+      :post_alerter_before_replies,
+      :post_alerter_before_quotes,
+      :post_alerter_before_linked,
+      :post_alerter_before_post,
+      :post_alerter_before_first_post,
+      :post_alerter_after_save_post,
+    ]
+
+    events = DiscourseEvent.track_events do
+      PostAlerter.new.after_save_post(post, true)
+    end
+
+    # Expect all the notification events are called
+    # There are some other events triggered from outside after_save_post
+    expect(events.map { |e| e[:event_name] }).to include(*expected_events)
+
+    # Expect each notification event is called with the right parameters
+    events.each do |event|
+      if expected_events.include?(event[:event_name])
+        expect(event[:params]).to eq([post, true, [post.user]])
+      end
+    end
+  end
 end
