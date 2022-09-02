@@ -184,9 +184,6 @@ const CORE_BOTTOM_TABS = [
 ];
 
 const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
-  @tracked groupedUnreadNotifications =
-    this.currentUser.grouped_unread_notifications;
-
   get id() {
     return "other";
   }
@@ -203,7 +200,10 @@ const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
     return this.site.unassignedNotificationTypes.reduce(
       (sum, notificationType) => {
         const key = this.site.notification_types?.[notificationType];
-        return sum + (this.groupedUnreadNotifications?.[key] || 0);
+        return (
+          sum +
+          (this.currentUser.get(`grouped_unread_notifications.${key}`) || 0)
+        );
       },
       0
     );
