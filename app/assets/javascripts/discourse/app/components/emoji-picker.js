@@ -259,6 +259,11 @@ export default Component.extend({
   _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
+
+    if (!results) {
+      return;
+    }
+
     results.innerHTML = "";
 
     if (filter) {
