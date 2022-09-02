@@ -301,18 +301,14 @@ export default class UserMenu extends Component {
     ];
   }
 
-  get _usedNotificationTypes() {
-    return this._topTabs
+  get _notificationTypesForTheOtherTab() {
+    const usedNotificationTypes = this._topTabs
       .concat(this._bottomTabs)
       .filter((tab) => tab.notificationTypes)
       .map((tab) => tab.notificationTypes)
       .flat();
-  }
-
-  get _notificationTypesForTheOtherTab() {
     return Object.keys(this.site.notification_types).filter(
-      (notificationType) =>
-        !this._usedNotificationTypes.includes(notificationType)
+      (notificationType) => !usedNotificationTypes.includes(notificationType)
     );
   }
 
