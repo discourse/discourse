@@ -342,6 +342,14 @@ HTML
         fr1.update(value: "fr: 'valuewithoutclosequote")
         expect { fr1.raw_translation_data }.to raise_error(ThemeTranslationParser::InvalidYaml)
       end
+
+      it "works when locale file doesn't contain translations" do
+        fr1.update(value: "fr:")
+        expect(fr1.translation_data).to eq(
+          fr: {},
+          en: { somestring1: "helloworld", group: { key1: "enval1" } }
+        )
+      end
     end
 
     describe "#translation_data" do
