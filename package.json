@@ -18,7 +18,7 @@
     "eslint-config-discourse": "^3.3.0",
     "magnific-popup": "1.1.0",
     "moment": "2.29.2",
-    "moment-timezone": "0.5.31",
+    "moment-timezone": "0.5.35",
     "pikaday": "1.8.0",
     "squoosh": "discourse/squoosh#dc9649d",
     "workbox-cacheable-response": "^4.3.1",
