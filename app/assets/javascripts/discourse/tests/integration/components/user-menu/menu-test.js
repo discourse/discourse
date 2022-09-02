@@ -48,7 +48,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 7);
     [
       "all-notifications",
       "replies",
@@ -72,7 +72,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
-    assert.strictEqual(profileTab.dataset.tabNumber, "6");
+    assert.strictEqual(profileTab.dataset.tabNumber, "7");
     assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
   });
 
@@ -82,11 +82,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 7);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -98,11 +98,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tab.dataset.tabNumber, "6");
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 8);
+    assert.strictEqual(tabs.length, 9);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7"],
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
   });
@@ -117,11 +117,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-messages"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 7);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6"],
       "data-tab-number of the tabs has no gaps when the messages tab is hidden"
     );
   });

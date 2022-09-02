@@ -6,7 +6,7 @@
         class="quick-access-panel"
         tabindex="-1"
         aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
-        {{component this.currentPanelComponent closeUserMenu=@closeUserMenu}}
+        {{component this.currentPanelComponent closeUserMenu=@closeUserMenu filterByTypes=this.currentNotificationTypes}}
       </div>
       <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
         <div class="top-tabs tabs-list">

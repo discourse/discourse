@@ -135,6 +135,7 @@ acceptance("User menu", function (needs) {
       "user-menu-button-custom-tab-1": "6",
       "user-menu-button-custom-tab-2": "7",
       "user-menu-button-review-queue": "8",
+      "user-menu-button-other": "9",
     };
 
     await visit("/");
@@ -161,7 +162,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "9",
+      "10",
       "bottom tab has the correct data-tab-number"
     );
 
@@ -528,6 +529,8 @@ acceptance("User menu - Dismiss button", function (needs) {
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
       [NOTIFICATION_TYPES.private_message]: 89,
+      [NOTIFICATION_TYPES.votes_released]: 1,
+      [NOTIFICATION_TYPES.code_review_commit_approved]: 3,
     },
   });
 
@@ -708,6 +711,29 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click("#user-menu-button-likes");
     await click(".user-menu .notifications-dismiss");
+    assert.ok(
+      markRead,
+      "mark-read request is sent without a confirmation modal"
+    );
+  });
+
+  test("doesn't show confirmation modal for the other notifications list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await click("#user-menu-button-other");
+    let repliesBadgeNotification = query(
+      "#user-menu-button-other .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "4",
+      "badge shows the right count"
+    );
+
+    await click(".user-menu .notifications-dismiss");
+
+    assert.ok(!exists("#user-menu-button-other .badge-notification"));
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"
