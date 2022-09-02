@@ -40,7 +40,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   get itemsCacheKey() {
     let key = "recent-notifications";
-    const types = this.filterByTypes;
+    const types = this.args.filterByTypes;
     if (types?.length > 0) {
       key += `-type-${types.join(",")}`;
     }
@@ -63,7 +63,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       silent: this.currentUser.enforcedSecondFactor,
     };
 
-    const types = this.filterByTypes;
+    const types = this.args.filterByTypes;
     if (types?.length > 0) {
       params.filter_by_types = types.join(",");
       params.silent = true;

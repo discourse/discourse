@@ -6,10 +6,6 @@ export default class UserMenuOtherNotificationsList extends UserMenuNotification
   @service siteSettings;
   @service site;
 
-  get filterByTypes() {
-    return this.site.unassignedNotificationTypes;
-  }
-
   get dismissTypes() {
     return this.filterByTypes;
   }

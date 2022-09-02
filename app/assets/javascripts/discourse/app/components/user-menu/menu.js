@@ -90,8 +90,11 @@ const CORE_TOP_TABS = [
       return this.getUnreadCountForType("liked");
     }
 
+    // TODO(osama): reaction is a type used by the reactions plugin, but it's
+    // added here temporarily unitl we add a plugin API for extending
+    // filterByTypes in lists
     get notificationTypes() {
-      return ["liked"];
+      return ["liked", "liked_consolidated", "reaction"];
     }
   },
 
@@ -184,6 +187,11 @@ const CORE_BOTTOM_TABS = [
 ];
 
 const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
+  constructor(currentUser, siteSettings, site, otherNotificationTypes) {
+    super(...arguments);
+    this.otherNotificationTypes = otherNotificationTypes;
+  }
+
   get id() {
     return "other";
   }
@@ -197,16 +205,13 @@ const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
   }
 
   get count() {
-    return this.site.unassignedNotificationTypes.reduce(
-      (sum, notificationType) => {
-        const key = this.site.notification_types?.[notificationType];
-        return (
-          sum +
-          (this.currentUser.get(`grouped_unread_notifications.${key}`) || 0)
-        );
-      },
-      0
-    );
+    return this.otherNotificationTypes.reduce((sum, notificationType) => {
+      return sum + this.getUnreadCountForType(notificationType);
+    }, 0);
+  }
+
+  get notificationTypes() {
+    return this.otherNotificationTypes;
   }
 };
 
@@ -218,14 +223,21 @@ export default class UserMenu extends Component {
 
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
+  @tracked currentNotificationTypes;
 
   constructor() {
     super(...arguments);
-    this.site.set(
-      "unassignedNotificationTypes",
-      this._unassignedNotificationTypes
-    );
     this.topTabs = this._topTabs;
+
+    const otherTab = new CORE_OTHER_NOTIFICATIONS_TAB(
+      this.currentUser,
+      this.siteSettings,
+      this.site,
+      this._notificationTypesForTheOtherTab
+    );
+    otherTab.position = this.topTabs[this.topTabs.length - 1].position + 1;
+    this.topTabs.push(otherTab);
+
     this.bottomTabs = this._bottomTabs;
   }
 
@@ -256,16 +268,6 @@ export default class UserMenu extends Component {
       }
     });
 
-    if (this.site.unassignedNotificationTypes) {
-      tabs.push(
-        new CORE_OTHER_NOTIFICATIONS_TAB(
-          this.currentUser,
-          this.siteSettings,
-          this.site
-        )
-      );
-    }
-
     return tabs.map((tab, index) => {
       tab.position = index;
       return tab;
@@ -282,7 +284,7 @@ export default class UserMenu extends Component {
       }
     });
 
-    const topTabsLength = this._topTabs.length;
+    const topTabsLength = this.topTabs.length;
     return tabs.map((tab, index) => {
       tab.position = index + topTabsLength;
       return tab;
@@ -299,7 +301,7 @@ export default class UserMenu extends Component {
     ];
   }
 
-  get _assignedNotificationTypes() {
+  get _usedNotificationTypes() {
     return this._topTabs
       .concat(this._bottomTabs)
       .filter((tab) => tab.notificationTypes)
@@ -307,10 +309,10 @@ export default class UserMenu extends Component {
       .flat();
   }
 
-  get _unassignedNotificationTypes() {
+  get _notificationTypesForTheOtherTab() {
     return Object.keys(this.site.notification_types).filter(
       (notificationType) =>
-        !this._assignedNotificationTypes.includes(notificationType)
+        !this._usedNotificationTypes.includes(notificationType)
     );
   }
 
@@ -319,6 +321,7 @@ export default class UserMenu extends Component {
     if (this.currentTabId !== tab.id) {
       this.currentTabId = tab.id;
       this.currentPanelComponent = tab.panelComponent;
+      this.currentNotificationTypes = tab.notificationTypes;
     }
   }
 
