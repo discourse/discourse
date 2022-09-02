@@ -41,6 +41,10 @@ const CORE_TOP_TABS = [
     get count() {
       return this.getUnreadCountForType("replied");
     }
+
+    get notificationTypes() {
+      return ["replied"];
+    }
   },
 
   class extends UserMenuTab {
@@ -58,6 +62,10 @@ const CORE_TOP_TABS = [
 
     get count() {
       return this.getUnreadCountForType("mentioned");
+    }
+
+    get notificationTypes() {
+      return ["mentioned"];
     }
   },
 
@@ -80,6 +88,10 @@ const CORE_TOP_TABS = [
 
     get count() {
       return this.getUnreadCountForType("liked");
+    }
+
+    get notificationTypes() {
+      return ["liked"];
     }
   },
 
@@ -105,6 +117,9 @@ const CORE_TOP_TABS = [
         this.siteSettings.enable_personal_messages || this.currentUser.staff
       );
     }
+    get notificationTypes() {
+      return ["private_message"];
+    }
   },
 
   class extends UserMenuTab {
@@ -122,6 +137,10 @@ const CORE_TOP_TABS = [
 
     get count() {
       return this.getUnreadCountForType("bookmark_reminder");
+    }
+
+    get notificationTypes() {
+      return ["bookmark_reminder"];
     }
   },
 
@@ -164,6 +183,33 @@ const CORE_BOTTOM_TABS = [
   },
 ];
 
+const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
+  @tracked groupedUnreadNotifications =
+    this.currentUser.grouped_unread_notifications;
+
+  get id() {
+    return "other";
+  }
+
+  get icon() {
+    return "discourse-other-tab";
+  }
+
+  get panelComponent() {
+    return "user-menu/other-notifications-list";
+  }
+
+  get count() {
+    return this.site.unassignedNotificationTypes.reduce(
+      (sum, notificationType) => {
+        const key = this.site.notification_types[notificationType];
+        return sum + (this.groupedUnreadNotifications[key] || 0);
+      },
+      0
+    );
+  }
+};
+
 export default class UserMenu extends Component {
   @service currentUser;
   @service siteSettings;
@@ -175,6 +221,10 @@ export default class UserMenu extends Component {
 
   constructor() {
     super(...arguments);
+    this.site.set(
+      "unassignedNotificationTypes",
+      this._unassignedNotificationTypes
+    );
     this.topTabs = this._topTabs;
     this.bottomTabs = this._bottomTabs;
   }
@@ -206,6 +256,16 @@ export default class UserMenu extends Component {
       }
     });
 
+    if (this.site.unassignedNotificationTypes) {
+      tabs.push(
+        new CORE_OTHER_NOTIFICATIONS_TAB(
+          this.currentUser,
+          this.siteSettings,
+          this.site
+        )
+      );
+    }
+
     return tabs.map((tab, index) => {
       tab.position = index;
       return tab;
@@ -222,7 +282,7 @@ export default class UserMenu extends Component {
       }
     });
 
-    const topTabsLength = this.topTabs.length;
+    const topTabsLength = this._topTabs.length;
     return tabs.map((tab, index) => {
       tab.position = index + topTabsLength;
       return tab;
@@ -237,6 +297,21 @@ export default class UserMenu extends Component {
         href: `${this.currentUser.path}/preferences`,
       },
     ];
+  }
+
+  get _assignedNotificationTypes() {
+    return this._topTabs
+      .concat(this._bottomTabs)
+      .filter((tab) => tab.notificationTypes)
+      .map((tab) => tab.notificationTypes)
+      .flat();
+  }
+
+  get _unassignedNotificationTypes() {
+    return Object.keys(this.site.notification_types).filter(
+      (notificationType) =>
+        !this._assignedNotificationTypes.includes(notificationType)
+    );
   }
 
   @action

@@ -25,6 +25,8 @@ acceptance("User menu", function (needs) {
     trust_level: 3,
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.replied]: 2,
+      [NOTIFICATION_TYPES.votes_released]: 1,
+      [NOTIFICATION_TYPES.code_review_commit_approved]: 3,
     },
   });
 
@@ -80,6 +82,20 @@ acceptance("User menu", function (needs) {
       repliesBadgeNotification.textContent.trim(),
       "1",
       "badge shows count reduced by one"
+    );
+  });
+
+  test("other notification tab", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    let repliesBadgeNotification = query(
+      "#user-menu-button-other .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "4",
+      "badge shows the right count (some of all other notifications)"
     );
   });
 
