@@ -202,8 +202,8 @@ const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
   get count() {
     return this.site.unassignedNotificationTypes.reduce(
       (sum, notificationType) => {
-        const key = this.site.notification_types[notificationType];
-        return sum + (this.groupedUnreadNotifications[key] || 0);
+        const key = this.site.notification_types?.[notificationType];
+        return sum + (this.groupedUnreadNotifications?.[key] || 0);
       },
       0
     );
