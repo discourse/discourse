@@ -234,6 +234,11 @@ $quote-share-maxwidth: 150px;
     flex: 0 0 auto;
     align-items: center;
   }
+
+  img.emoji {
+    width: 1em;
+    height: 1em;
+  }
 }
 
 nav.post-controls {
