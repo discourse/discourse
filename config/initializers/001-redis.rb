@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Opt into the default redis 5 behavior
+Redis.sadd_returns_boolean = false
+
 if Rails.env.development? && ENV['DISCOURSE_FLUSH_REDIS']
   puts "Flushing redis (development mode)"
   Discourse.redis.flushdb
