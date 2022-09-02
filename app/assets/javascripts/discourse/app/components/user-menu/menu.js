@@ -228,16 +228,6 @@ export default class UserMenu extends Component {
   constructor() {
     super(...arguments);
     this.topTabs = this._topTabs;
-
-    const otherTab = new CORE_OTHER_NOTIFICATIONS_TAB(
-      this.currentUser,
-      this.siteSettings,
-      this.site,
-      this._notificationTypesForTheOtherTab
-    );
-    otherTab.position = this.topTabs[this.topTabs.length - 1].position + 1;
-    this.topTabs.push(otherTab);
-
     this.bottomTabs = this._bottomTabs;
   }
 
@@ -258,7 +248,6 @@ export default class UserMenu extends Component {
     CUSTOM_TABS_CLASSES.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
-        // ensure the review queue tab is always last
         if (reviewQueueTabIndex === -1) {
           tabs.push(tab);
         } else {
@@ -267,6 +256,15 @@ export default class UserMenu extends Component {
         }
       }
     });
+
+    tabs.push(
+      new CORE_OTHER_NOTIFICATIONS_TAB(
+        this.currentUser,
+        this.siteSettings,
+        this.site,
+        this.#notificationTypesForTheOtherTab(tabs)
+      )
+    );
 
     return tabs.map((tab, index) => {
       tab.position = index;
@@ -291,19 +289,8 @@ export default class UserMenu extends Component {
     });
   }
 
-  get _coreBottomTabs() {
-    return [
-      {
-        id: "preferences",
-        icon: "user-cog",
-        href: `${this.currentUser.path}/preferences`,
-      },
-    ];
-  }
-
-  get _notificationTypesForTheOtherTab() {
-    const usedNotificationTypes = this._topTabs
-      .concat(this._bottomTabs)
+  #notificationTypesForTheOtherTab(tabs) {
+    const usedNotificationTypes = tabs
       .filter((tab) => tab.notificationTypes)
       .map((tab) => tab.notificationTypes)
       .flat();
