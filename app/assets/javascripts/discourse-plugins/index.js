@@ -88,7 +88,8 @@ module.exports = {
       .filter(
         (dirent) =>
           (dirent.isDirectory() || dirent.isSymbolicLink()) &&
-          !dirent.name.startsWith(".")
+          !dirent.name.startsWith(".") &&
+          fs.existsSync(path.resolve(root, dirent.name, "plugin.rb"))
       );
 
     return pluginDirectories.map((directory) => {
