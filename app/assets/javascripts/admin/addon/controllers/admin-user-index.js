@@ -385,7 +385,7 @@ export default Controller.extend(CanCheckEmails, {
             label: I18n.t("admin.user.delete_dont_block"),
             class: "btn-primary",
             action: () => {
-              return performDestroy(true);
+              return performDestroy(false);
             },
           },
           {
@@ -393,7 +393,7 @@ export default Controller.extend(CanCheckEmails, {
             label: I18n.t("admin.user.delete_and_block"),
             class: "btn-danger",
             action: () => {
-              return performDestroy(false);
+              return performDestroy(true);
             },
           },
           {
