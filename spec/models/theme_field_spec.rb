@@ -134,6 +134,7 @@ HTML
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
+    expect(javascript_cache.content).to include("define(\"discourse/theme-#{theme_field.theme_id}/discourse/templates/my-template\"")
   end
 
   it "correctly generates errors for transpiled css" do
