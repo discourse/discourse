@@ -378,6 +378,7 @@ export default Controller.extend(CanCheckEmails, {
       };
 
       this.dialog.alert({
+        title: I18n.t("admin.user.delete_confirm_title"),
         message: I18n.t("admin.user.delete_confirm"),
         class: "delete-user-modal",
         buttons: [

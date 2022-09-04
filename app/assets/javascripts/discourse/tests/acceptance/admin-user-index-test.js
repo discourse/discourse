@@ -247,6 +247,13 @@ acceptance("Admin - User Index", function (needs) {
   test("delete user - delete without blocking works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
+
+    assert.equal(
+      query("#dialog-title").textContent,
+      I18n.t("admin.user.delete_confirm_title"),
+      "dialog has a title"
+    );
+
     await click(".dialog-footer .btn-primary");
 
     assert.notOk(deleteAndBlock, "user does not get blocked");
