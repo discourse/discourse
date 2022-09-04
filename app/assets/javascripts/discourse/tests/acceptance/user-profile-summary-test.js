@@ -3,11 +3,13 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+
+let deleteAndBlock = null;
 
 acceptance("User Profile - Summary", function (needs) {
   needs.user();
@@ -111,5 +113,60 @@ acceptance("User Profile - Summary - Stats", function (needs) {
       query(".stats-recent-read span").title,
       I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
     );
+  });
+});
+
+acceptance("User Profile - Summary - Admin", function (needs) {
+  needs.user({
+    username: "eviltrout",
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/users/5.json", () => {
+      return helper.response({
+        id: 5,
+        username: "charlie",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+      });
+    });
+    server.delete("/admin/users/5.json", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+
+      if (data.block_email || data.block_ip || data.block_urls) {
+        deleteAndBlock = true;
+      } else {
+        deleteAndBlock = false;
+      }
+
+      return helper.response({});
+    });
+  });
+
+  needs.hooks.beforeEach(() => {
+    deleteAndBlock = null;
+  });
+
+  test("Delete only action", async function (assert) {
+    await visit("/u/charlie/summary");
+    await click(".btn-delete-user");
+    await click(".dialog-footer .btn-primary");
+
+    assert.notOk(deleteAndBlock, "first button does not block user");
+  });
+
+  test("Delete and block", async function (assert) {
+    await visit("/u/charlie/summary");
+    await click(".btn-delete-user");
+
+    assert.equal(
+      query("#dialog-title").textContent,
+      I18n.t("admin.user.delete_confirm_title"),
+      "dialog has a title"
+    );
+
+    await click(".dialog-footer .btn-danger");
+    assert.ok(deleteAndBlock, "second button also block user");
   });
 });
