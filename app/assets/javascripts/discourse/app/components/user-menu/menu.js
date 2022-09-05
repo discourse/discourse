@@ -5,6 +5,7 @@ import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { inject as service } from "@ember/service";
 import getUrl from "discourse-common/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -334,17 +335,13 @@ export default class UserMenu extends Component {
   }
 
   @action
-  changeTab(tab, event) {
-    // workaround to stop the clickOutside hook on the
-    // `revamped-user-menu-wrapper` widget from incorrectly closing the menu
-    // when a tab is clicked
-    // TODO: check if stopPropagation is still needed when the header is
-    // converted to Glimmer
-    event.stopPropagation();
+  handleTabClick(tab) {
     if (this.currentTabId !== tab.id) {
       this.currentTabId = tab.id;
       this.currentPanelComponent = tab.panelComponent;
       this.currentNotificationTypes = tab.notificationTypes;
+    } else if (tab.linkWhenActive) {
+      DiscourseURL.routeTo(tab.linkWhenActive);
     }
   }
 

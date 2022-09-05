@@ -14,7 +14,7 @@
             <UserMenu::MenuTab
               @tab={{tab}}
               @currentTabId={{this.currentTabId}}
-              @changeTabFunction={{fn this.changeTab tab}}
+              @onTabClick={{fn this.handleTabClick tab}}
             >
               {{#if tab.count}}
                 <span class="badge-notification">{{tab.count}}</span>
@@ -27,7 +27,7 @@
             <UserMenu::MenuTab
               @tab={{tab}}
               @currentTabId={{this.currentTabId}}
-              @changeTabFunction={{fn this.changeTab tab}}
+              @onTabClick={{fn this.handleTabClick tab}}
             />
           {{/each}}
         </div>
