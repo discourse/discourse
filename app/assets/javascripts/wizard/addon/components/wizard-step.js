@@ -41,22 +41,22 @@ export default Component.extend({
 
   @discourseComputed("step.id")
   showJumpInButton(step) {
-    return step === "ready";
+    return ["ready", "styling", "branding"].includes(step);
+  },
+
+  @discourseComputed("step.id")
+  jumpInButtonLabel(step) {
+    return `wizard.${step === "ready" ? "jump_in" : "finish"}`;
+  },
+
+  @discourseComputed("step.id")
+  jumpInButtonClass(step) {
+    return step === "ready" ? "jump-in" : "finish";
   },
 
   @discourseComputed("step.id")
   showFinishButton(step) {
-    return ["styling", "branding", "corporate"].includes(step);
-  },
-
-  @discourseComputed("step.id")
-  finishButtonLabel(step) {
-    return `wizard.${step === "corporate" ? "jump_in" : "finish"}`;
-  },
-
-  @discourseComputed("step.id")
-  finishButtonClass(step) {
-    return step === "corporate" ? "jump-in" : "finish";
+    return step === "corporate";
   },
 
   @discourseComputed("step.id")
