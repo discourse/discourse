@@ -16,7 +16,6 @@ import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
@@ -47,6 +46,7 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Controller.extend(bufferedProperty("model"), {
   composer: controller(),
   application: controller(),
+  dialog: service(),
   documentTitle: service(),
   screenTrack: service(),
 
@@ -633,21 +633,24 @@ export default Controller.extend(bufferedProperty("model"), {
 
           const buttons = [];
 
-          buttons.push({
-            label: I18n.t("cancel"),
-            class: "btn-danger right",
-          });
+          const directReplyIds = replies
+            .filter((r) => r.level === 1)
+            .map((r) => r.id);
 
           buttons.push({
-            label: I18n.t("post.controls.delete_replies.just_the_post"),
-            callback() {
-              post
-                .destroy(user, opts)
+            label: I18n.t("post.controls.delete_replies.direct_replies", {
+              count: directReplyIds.length,
+            }),
+            class: "btn-primary",
+            action: () => {
+              loadedPosts.forEach(
+                (p) =>
+                  (p === post || directReplyIds.includes(p.id)) &&
+                  p.setDeletedState(user)
+              );
+              Post.deleteMany([post.id, ...directReplyIds])
                 .then(refresh)
-                .catch((error) => {
-                  popupAjaxError(error);
-                  post.undoDeleteState();
-                });
+                .catch(popupAjaxError);
             },
           });
 
@@ -656,7 +659,7 @@ export default Controller.extend(bufferedProperty("model"), {
               label: I18n.t("post.controls.delete_replies.all_replies", {
                 count: replies.length,
               }),
-              callback() {
+              action: () => {
                 loadedPosts.forEach(
                   (p) =>
                     (p === post || replies.some((r) => r.id === p.id)) &&
@@ -669,31 +672,28 @@ export default Controller.extend(bufferedProperty("model"), {
             });
           }
 
-          const directReplyIds = replies
-            .filter((r) => r.level === 1)
-            .map((r) => r.id);
-
           buttons.push({
-            label: I18n.t("post.controls.delete_replies.direct_replies", {
-              count: directReplyIds.length,
-            }),
-            class: "btn-primary",
-            callback() {
-              loadedPosts.forEach(
-                (p) =>
-                  (p === post || directReplyIds.includes(p.id)) &&
-                  p.setDeletedState(user)
-              );
-              Post.deleteMany([post.id, ...directReplyIds])
+            label: I18n.t("post.controls.delete_replies.just_the_post"),
+            action: () => {
+              post
+                .destroy(user, opts)
                 .then(refresh)
-                .catch(popupAjaxError);
+                .catch((error) => {
+                  popupAjaxError(error);
+                  post.undoDeleteState();
+                });
             },
           });
 
-          bootbox.dialog(
-            I18n.t("post.controls.delete_replies.confirm"),
-            buttons
-          );
+          buttons.push({
+            label: I18n.t("cancel"),
+            class: "btn-flat",
+          });
+
+          this.dialog.alert({
+            title: I18n.t("post.controls.delete_replies.confirm"),
+            buttons,
+          });
         });
       } else {
         return post
@@ -707,34 +707,24 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deletePostWithConfirmation(post, opts) {
-      bootbox.confirm(
-        I18n.t("post.confirm_delete"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            this.send("deletePost", post, opts);
-          }
-        }
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("post.confirm_delete"),
+        didConfirm: () => this.send("deletePost", post, opts),
+      });
     },
 
     permanentlyDeletePost(post) {
-      return bootbox.confirm(
-        I18n.t("post.controls.permanently_delete_confirmation"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            this.send("deletePost", post, { force_destroy: true });
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("post.controls.permanently_delete_confirmation"),
+        didConfirm: () => {
+          this.send("deletePost", post, { force_destroy: true });
+        },
+      });
     },
 
     editPost(post) {
       if (!this.currentUser) {
-        return bootbox.alert(I18n.t("post.controls.edit_anonymous"));
+        return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
       } else if (!post.can_edit) {
         return false;
       }
@@ -773,7 +763,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
     toggleBookmark(post) {
       if (!this.currentUser) {
-        return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
+        return this.dialog.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
         const bookmarkForPost = this.model.bookmarks.find(
           (bookmark) =>
@@ -912,38 +902,35 @@ export default Controller.extend(bufferedProperty("model"), {
 
     deleteSelected() {
       const user = this.currentUser;
-
-      bootbox.confirm(
-        I18n.t("post.delete.confirm", {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("post.delete.confirm", {
           count: this.selectedPostsCount,
         }),
-        (result) => {
-          if (result) {
-            // If all posts are selected, it's the same thing as deleting the topic
-            if (this.selectedAllPosts) {
-              return this.deleteTopic();
-            }
-
-            Post.deleteMany(this.selectedPostIds);
-            this.get("model.postStream.posts").forEach(
-              (p) => this.postSelected(p) && p.setDeletedState(user)
-            );
-            this.send("toggleMultiSelect");
+        didConfirm: () => {
+          // If all posts are selected, it's the same thing as deleting the topic
+          if (this.selectedAllPosts) {
+            return this.deleteTopic();
           }
-        }
-      );
+
+          Post.deleteMany(this.selectedPostIds);
+          this.get("model.postStream.posts").forEach(
+            (p) => this.postSelected(p) && p.setDeletedState(user)
+          );
+          this.send("toggleMultiSelect");
+        },
+      });
     },
 
     mergePosts() {
-      bootbox.confirm(
-        I18n.t("post.merge.confirm", { count: this.selectedPostsCount }),
-        (result) => {
-          if (result) {
-            Post.mergePosts(this.selectedPostIds);
-            this.send("toggleMultiSelect");
-          }
-        }
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("post.merge.confirm", {
+          count: this.selectedPostsCount,
+        }),
+        didConfirm: () => {
+          Post.mergePosts(this.selectedPostIds);
+          this.send("toggleMultiSelect");
+        },
+      });
     },
 
     changePostOwner(post) {
@@ -1348,25 +1335,22 @@ export default Controller.extend(bufferedProperty("model"), {
 
   _maybeClearAllBookmarks() {
     return new Promise((resolve) => {
-      bootbox.confirm(
-        I18n.t("bookmarks.confirm_clear"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            return this.model
-              .deleteBookmarks()
-              .then(() => resolve(this.model.clearBookmarks()))
-              .catch(popupAjaxError)
-              .finally(() => {
-                this.model.set("bookmarking", false);
-              });
-          } else {
-            this.model.set("bookmarking", false);
-            resolve();
-          }
-        }
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("bookmarks.confirm_clear"),
+        didConfirm: () => {
+          return this.model
+            .deleteBookmarks()
+            .then(() => resolve(this.model.clearBookmarks()))
+            .catch(popupAjaxError)
+            .finally(() => {
+              this.model.set("bookmarking", false);
+            });
+        },
+        didCancel: () => {
+          this.model.set("bookmarking", false);
+          resolve();
+        },
+      });
     });
   },
 
