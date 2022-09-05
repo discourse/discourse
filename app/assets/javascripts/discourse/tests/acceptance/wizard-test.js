@@ -62,6 +62,15 @@ acceptance("Wizard", function (needs) {
       "shows finish on an intermediate step"
     );
 
+    await click(".wizard-container__button.finish");
+    assert.strictEqual(
+      currentURL(),
+      "/latest",
+      "it should transition to the homepage"
+    );
+
+    await visit("/wizard/steps/styling");
+
     await click(".wizard-container__button.next");
     assert.ok(
       exists(".wizard-container__text-input#company_name"),
