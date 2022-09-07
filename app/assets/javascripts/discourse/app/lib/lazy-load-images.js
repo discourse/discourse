@@ -25,7 +25,7 @@ export function nativeLazyLoading(api) {
 
             img.style.setProperty(
               "background-image",
-              `url(${img.dataset.smallUpload});`
+              `url(${img.dataset.smallUpload})`
             );
             img.style.setProperty("background-size", "cover");
           }
