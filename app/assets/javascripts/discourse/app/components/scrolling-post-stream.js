@@ -323,7 +323,7 @@ export default MountWidget.extend({
     this.appEvents.on("post-stream:posted", this, "_posted");
 
     this.element.addEventListener(
-      "mouseenter",
+      "mouseover",
       this._handleWidgetButtonHoverState,
       true
     );
