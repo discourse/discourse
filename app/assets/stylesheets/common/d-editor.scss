@@ -306,7 +306,7 @@
 // d-editor bar button sizing
 .d-editor-button-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(2rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
   align-items: center;
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
