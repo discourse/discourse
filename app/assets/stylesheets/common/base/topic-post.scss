@@ -1446,7 +1446,7 @@ a.mention-group {
     #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
       (0.8em * 2)
   );
-  border-radius: 20px;
+  border-radius: 18px;
 
   &.old {
     background-color: unset;
