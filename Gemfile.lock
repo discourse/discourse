@@ -314,7 +314,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    openssl (3.0.0)
+    openssl (3.0.1)
     openssl-signature_algorithm (1.2.1)
       openssl (> 2.0, < 3.1)
     optimist (3.0.1)
