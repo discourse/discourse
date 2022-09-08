@@ -26,7 +26,7 @@
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.2",
     "@glimmer/tracking": "^1.1.2",
-    "@popperjs/core": "^2.11.5",
+    "@popperjs/core": "^2.11.6",
     "@uppy/aws-s3": "^2.2.1",
     "@uppy/aws-s3-multipart": "^2.4.1",
     "@uppy/core": "^2.3.1",
