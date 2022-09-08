@@ -22,14 +22,14 @@
         @prefixColor={{sectionLink.prefixColor}} >
       </Sidebar::SectionLink>
     {{/each}}
-    <Sidebar::SectionLink
-      @linkName="more-categories"
-      @content={{i18n "sidebar.more"}}
-      @route="discovery.categories"
-    />
   {{else}}
     <Sidebar::SectionMessage>
       {{html-safe this.noCategoriesText}}
     </Sidebar::SectionMessage>
   {{/if}}
+  <Sidebar::SectionLink
+    @linkName="more-categories"
+    @content={{i18n "category.all"}}
+    @route="discovery.categories"
+  />
 </Sidebar::Section>
