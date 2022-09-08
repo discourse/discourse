@@ -17,6 +17,11 @@
         @models={{sectionLink.models}} >
       </Sidebar::SectionLink>
     {{/each}}
+    <Sidebar::SectionLink
+      @linkName="more-tags"
+      @content={{i18n "sidebar.more"}}
+      @route="tags"
+    />
   {{else}}
     <Sidebar::SectionMessage>
       {{html-safe this.noTagsText}}
