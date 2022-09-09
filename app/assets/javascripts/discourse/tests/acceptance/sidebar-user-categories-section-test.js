@@ -42,7 +42,9 @@ acceptance(
       await visit("/");
 
       assert.strictEqual(
-        count(".sidebar-section-categories .sidebar-section-link"),
+        count(
+          ".sidebar-section-categories .sidebar-section-link:not(.sidebar-more-link)"
+        ),
         1,
         "there should only be one section link under the section"
       );
@@ -159,7 +161,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link"
+      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-more-link)"
     );
 
     const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
@@ -179,7 +181,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     await visit("/");
 
     assert.strictEqual(
-      count(".sidebar-section-categories .sidebar-section-link"),
+      count(
+        ".sidebar-section-categories .sidebar-section-link:not(.sidebar-more-link)"
+      ),
       3,
       "there should only be 3 section link under the section"
     );
