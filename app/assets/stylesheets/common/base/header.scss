@@ -19,7 +19,12 @@
     height: 100%;
 
     .contents {
-      display: flex;
+      display: grid;
+      grid-template-areas: "logo-wrapper extra-info panel";
+      grid-template-columns: auto 1fr auto;
+      .has-sidebar-page & {
+        grid-template-columns: minmax(var(--d-sidebar-width), auto) 1fr auto;
+      }
       align-items: center;
       height: 100%;
 
@@ -42,7 +47,14 @@
     }
   }
 
+  .header-logo-wrapper {
+    grid-area: logo-wrapper;
+    display: flex;
+    align-items: center;
+  }
+
   .title {
+    grid-area: logo;
     display: flex;
     align-items: center;
     height: 100%;
@@ -61,6 +73,7 @@
   }
 
   .panel {
+    grid-area: panel;
     position: relative;
     display: flex;
     flex: 0 0 auto;
@@ -212,6 +225,7 @@
 }
 
 .header-sidebar-toggle {
+  grid-area: hamburger;
   button {
     margin-right: 1em;
     box-sizing: content-box; // matches other header icons
