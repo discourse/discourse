@@ -61,4 +61,4 @@ The easiest way to create a new user is by using the 'signup' functionality of t
 
 ## Reference
 
-https://meta.discourse.org/t/beginners-guide-to-install-discourse-for-development-using-docker/102009?page=2#developing-using-docker-1
+https://meta.discourse.org/t/beginners-guide-to-install-discourse-for-development-using-docker/
