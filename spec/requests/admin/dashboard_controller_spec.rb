@@ -6,8 +6,8 @@ RSpec.describe Admin::DashboardController do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
 
-  it "is a subclass of AdminController" do
-    expect(Admin::DashboardController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::DashboardController < Admin::StaffController).to eq(true)
   end
 
   context 'while logged in as an admin' do

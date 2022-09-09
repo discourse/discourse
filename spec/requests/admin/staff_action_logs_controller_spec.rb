@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::StaffActionLogsController do
-  it "is a subclass of AdminController" do
-    expect(Admin::StaffActionLogsController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::StaffActionLogsController < Admin::StaffController).to eq(true)
   end
 
   fab!(:admin) { Fabricate(:admin) }

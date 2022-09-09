@@ -14,6 +14,10 @@ RSpec.describe Admin::EmailStylesController do
     SiteSetting.remove_override!(:email_custom_css)
   end
 
+  it "is a subclass of AdminController" do
+    expect(Admin::EmailStylesController < Admin::AdminController).to eq(true)
+  end
+
   describe 'show' do
     it 'returns default values' do
       get '/admin/customize/email_style.json'

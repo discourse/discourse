@@ -4,7 +4,7 @@ RSpec.describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
 
   it "is a subclass of AdminController" do
-    expect(Admin::UsersController < Admin::AdminController).to eq(true)
+    expect(Admin::ThemesController < Admin::AdminController).to eq(true)
   end
 
   before do

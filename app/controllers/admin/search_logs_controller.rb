@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::SearchLogsController < Admin::AdminController
+class Admin::SearchLogsController < Admin::StaffController
 
   def index
     period = params[:period] || "all"
