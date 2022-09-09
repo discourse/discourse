@@ -25,7 +25,7 @@
 required:
   title:
     client: true
-    default: "Discourse"
+    default: "Karota Webapp"
   site_description:
     default: ""
   short_site_description:
