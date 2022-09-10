@@ -14,8 +14,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
  
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
-<a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
-<a href="https://forums.gearboxsoftware.com/"><img src="https://user-images.githubusercontent.com/1681963/89088042-68ffb400-d364-11ea-93be-161ea04d8b29.png" width="720px"></a>
+<a href="https://twittercommunity.com"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
+<a href="https://www.pg-forum.de"><img src="https://user-images.githubusercontent.com/49990629/189478079-ecb115e0-0890-4085-9545-7dd7dc102ced.png" width="720px"></a>
 
 
 <img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
