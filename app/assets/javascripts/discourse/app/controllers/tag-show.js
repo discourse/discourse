@@ -10,12 +10,14 @@ import { readOnly } from "@ember/object/computed";
 import bootbox from "bootbox";
 import { endWith } from "discourse/lib/computed";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default DiscoverySortableController.extend(
   BulkTopicSelection,
   FilterModeMixin,
   {
     application: controller(),
+    dialog: service(),
 
     tag: null,
     additionalTags: null,
@@ -172,7 +174,7 @@ export default DiscoverySortableController.extend(
         this.tag
           .destroyRecord()
           .then(() => this.transitionToRoute("tags.index"))
-          .catch(() => bootbox.alert(I18n.t("generic_error")));
+          .catch(() => this.dialog.alert(I18n.t("generic_error")));
       });
     },
 

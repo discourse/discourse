@@ -1,12 +1,13 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
 export default class AdminBadgesAwardController extends Controller {
+  @service dialog;
   @tracked saving = false;
   @tracked replaceBadgeOwners = false;
   @tracked grantExistingHolders = false;
@@ -84,7 +85,7 @@ export default class AdminBadgesAwardController extends Controller {
         })
         .finally(() => (this.saving = false));
     } else {
-      bootbox.alert(I18n.t("admin.badges.mass_award.aborted"));
+      this.dialog.alert(I18n.t("admin.badges.mass_award.aborted"));
     }
   }
 }

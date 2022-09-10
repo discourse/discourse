@@ -3,6 +3,7 @@ import {
   allowsAttachments,
   allowsImages,
   authorizedExtensions,
+  dialog,
   displayErrorForUpload,
   getUploadMarkdown,
   isImage,
@@ -10,7 +11,6 @@ import {
 } from "discourse/lib/uploads";
 import I18n from "I18n";
 import User from "discourse/models/user";
-import bootbox from "bootbox";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
 import { test } from "qunit";
@@ -32,17 +32,17 @@ discourseModule("Unit | Utility | uploads", function () {
   });
 
   test("uploading one file", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     assert.notOk(
       validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
     );
-    assert.ok(bootbox.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
+    assert.ok(dialog.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
   });
 
   test("new user cannot upload images", function (assert) {
     this.siteSettings.newuser_max_embedded_media = 0;
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     assert.notOk(
       validateUploadedFiles([{ name: "image.png" }], {
@@ -52,7 +52,7 @@ discourseModule("Unit | Utility | uploads", function () {
       "the upload is not valid"
     );
     assert.ok(
-      bootbox.alert.calledWith(
+      dialog.alert.calledWith(
         I18n.t("post.errors.image_upload_not_allowed_for_new_user")
       ),
       "the alert is called"
@@ -62,7 +62,7 @@ discourseModule("Unit | Utility | uploads", function () {
   test("new user can upload images if allowed", function (assert) {
     this.siteSettings.newuser_max_embedded_media = 1;
     this.siteSettings.default_trust_level = 0;
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     assert.ok(
       validateUploadedFiles([{ name: "image.png" }], {
@@ -74,7 +74,7 @@ discourseModule("Unit | Utility | uploads", function () {
 
   test("TL1 can upload images", function (assert) {
     this.siteSettings.newuser_max_embedded_media = 0;
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     assert.ok(
       validateUploadedFiles([{ name: "image.png" }], {
@@ -86,7 +86,7 @@ discourseModule("Unit | Utility | uploads", function () {
 
   test("new user cannot upload attachments", function (assert) {
     this.siteSettings.newuser_max_attachments = 0;
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     assert.notOk(
       validateUploadedFiles([{ name: "roman.txt" }], {
@@ -95,21 +95,21 @@ discourseModule("Unit | Utility | uploads", function () {
       })
     );
     assert.ok(
-      bootbox.alert.calledWith(
+      dialog.alert.calledWith(
         I18n.t("post.errors.attachment_upload_not_allowed_for_new_user")
       )
     );
   });
 
   test("ensures an authorized upload", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
     assert.notOk(
       validateUploadedFiles([{ name: "unauthorized.html" }], {
         siteSettings: this.siteSettings,
       })
     );
     assert.ok(
-      bootbox.alert.calledWith(
+      dialog.alert.calledWith(
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
@@ -122,7 +122,7 @@ discourseModule("Unit | Utility | uploads", function () {
 
   test("skipping validation works", function (assert) {
     const files = [{ name: "backup.tar.gz" }];
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     assert.notOk(
       validateUploadedFiles(files, {
@@ -141,7 +141,7 @@ discourseModule("Unit | Utility | uploads", function () {
   test("staff can upload anything in PM", function (assert) {
     const files = [{ name: "some.docx" }];
     this.siteSettings.authorized_extensions = "jpeg";
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     let user = User.create({ moderator: true });
     assert.notOk(
@@ -175,7 +175,7 @@ discourseModule("Unit | Utility | uploads", function () {
   };
 
   test("allows valid uploads to go through", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
 
     let user = User.create({ trust_level: 1 });
 
@@ -193,7 +193,7 @@ discourseModule("Unit | Utility | uploads", function () {
       })
     );
 
-    assert.notOk(bootbox.alert.calledOnce);
+    assert.notOk(dialog.alert.calledOnce);
   });
 
   test("isImage", function (assert) {
@@ -315,7 +315,7 @@ discourseModule("Unit | Utility | uploads", function () {
   });
 
   test("displayErrorForUpload - jquery file upload - jqXHR present", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
     displayErrorForUpload(
       {
         jqXHR: { status: 422, responseJSON: { message: "upload failed" } },
@@ -323,11 +323,11 @@ discourseModule("Unit | Utility | uploads", function () {
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 },
       "test.png"
     );
-    assert.ok(bootbox.alert.calledWith("upload failed"), "the alert is called");
+    assert.ok(dialog.alert.calledWith("upload failed"), "the alert is called");
   });
 
   test("displayErrorForUpload - jquery file upload - jqXHR missing, errors present", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
     displayErrorForUpload(
       {
         errors: ["upload failed"],
@@ -335,11 +335,11 @@ discourseModule("Unit | Utility | uploads", function () {
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 },
       "test.png"
     );
-    assert.ok(bootbox.alert.calledWith("upload failed"), "the alert is called");
+    assert.ok(dialog.alert.calledWith("upload failed"), "the alert is called");
   });
 
   test("displayErrorForUpload - jquery file upload - no errors", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
     displayErrorForUpload(
       {},
       {
@@ -349,13 +349,13 @@ discourseModule("Unit | Utility | uploads", function () {
       "test.png"
     );
     assert.ok(
-      bootbox.alert.calledWith(I18n.t("post.errors.upload")),
+      dialog.alert.calledWith(I18n.t("post.errors.upload")),
       "the alert is called"
     );
   });
 
   test("displayErrorForUpload - uppy - with response status and body", function (assert) {
-    sinon.stub(bootbox, "alert");
+    sinon.stub(dialog, "alert");
     displayErrorForUpload(
       {
         status: 422,
@@ -364,6 +364,6 @@ discourseModule("Unit | Utility | uploads", function () {
       "test.png",
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }
     );
-    assert.ok(bootbox.alert.calledWith("upload failed"), "the alert is called");
+    assert.ok(dialog.alert.calledWith("upload failed"), "the alert is called");
   });
 });

@@ -202,11 +202,11 @@ acceptance(
 
       await click("#enable_imap");
       assert.strictEqual(
-        query(".modal-body").innerText,
+        query(".dialog-body").innerText.trim(),
         I18n.t("groups.manage.email.imap_disable_confirm"),
         "shows a confirm dialogue warning IMAP settings will be wiped"
       );
-      await click(".modal-footer .btn.btn-primary");
+      await click(".dialog-footer .btn-primary");
     });
   }
 );
@@ -362,11 +362,11 @@ acceptance(
       await click(".test-smtp-settings");
 
       assert.strictEqual(
-        query(".modal-body").innerText,
+        query(".dialog-body").innerText.trim(),
         "There was an issue with the SMTP credentials provided, check the username and password and try again.",
         "shows a dialogue with the error message from the server"
       );
-      await click(".modal-footer .btn.btn-primary");
+      await click(".dialog-footer .btn-primary");
     });
   }
 );

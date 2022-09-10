@@ -21,11 +21,12 @@ import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
 import { bind, on } from "discourse-common/utils/decorators";
 import { warn } from "@ember/debug";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
 export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
+  dialog: service(),
   uploading: false,
   uploadProgress: 0,
   _uppyInstance: null,
@@ -130,7 +131,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
         }
 
         if (tooMany) {
-          bootbox.alert(
+          this.dialog.alert(
             I18n.t("post.errors.too_many_dragged_and_dropped_files", {
               count: this.allowMultipleFiles ? maxFiles : 1,
             })

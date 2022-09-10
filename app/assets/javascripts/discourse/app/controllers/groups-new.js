@@ -2,9 +2,9 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {
@@ -25,7 +25,7 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
     const count = result.user_count;
 
     if (count > 0) {
-      bootbox.alert(
+      this.dialog.alert(
         I18n.t(
           "admin.groups.manage.membership.automatic_membership_user_count",
           { count }
@@ -36,6 +36,7 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 }
 
 export default Controller.extend({
+  dialog: service(),
   saving: null,
 
   @discourseComputed("model.ownerUsernames")

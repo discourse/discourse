@@ -1,7 +1,7 @@
 import AdminUser from "admin/models/admin-user";
 import I18n from "I18n";
 import { Promise } from "rsvp";
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -12,6 +12,8 @@ import showModal from "discourse/lib/show-modal";
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!
 export default Service.extend({
+  dialog: service(),
+
   showActionLogs(target, filters) {
     const controller = getOwner(target).lookup(
       "controller:adminLogs.staffActionLogs"
@@ -120,7 +122,7 @@ export default Service.extend({
                   }
                 })
                 .catch(() => {
-                  bootbox.alert(I18n.t("admin.user.delete_failed"));
+                  this.dialog.alert(I18n.t("admin.user.delete_failed"));
                   reject();
                 });
             },
