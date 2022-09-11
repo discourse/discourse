@@ -418,7 +418,7 @@ GEM
       activesupport (>= 3.1, < 7.1)
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.1)
-    rubocop (1.35.1)
+    rubocop (1.36.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
