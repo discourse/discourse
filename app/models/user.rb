@@ -642,8 +642,24 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
+    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
+      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
+    TEXT
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
+      true
+    else
+      false
+    end
+  end
+
+  def bump_last_seen_notification!
+    query = self.notifications.visible
+    if seen_notification_id
+      query = query.where("notifications.id > ?", seen_notification_id)
+    end
+    if max_notification_id = query.maximum(:id)
+      update!(seen_notification_id: max_notification_id)
       true
     else
       false
