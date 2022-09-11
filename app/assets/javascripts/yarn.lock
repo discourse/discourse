@@ -1877,12 +1877,12 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-a11y-dialog@7.5.0:
-  version "7.5.0"
-  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-7.5.0.tgz#1540627b18e3b1e266e0dcbdb5d1e7ac52079fe1"
-  integrity sha512-UF7cy4lfZQtvjRV5N4xdWFba+Pb1qW6FPp0p58dLjMTJ4PwIGGekTbmqUt3etBBRo9HbTqhlNsXQhzIuXeJpng==
+a11y-dialog@7.5.2:
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-7.5.2.tgz#8174d3f71a05d8d5a02ebae515384c747910391c"
+  integrity sha512-zfWtVvrbGbP3AFnEJ1aJFtu7GvedgjOEKbkyEUSeaNWDzmFJk9O5nuolDQrRDyRDE5fqSJRiBJtD5bUYKveoUg==
   dependencies:
-    focusable-selectors "^0.3.1"
+    focusable-selectors "^0.4.0"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -5819,10 +5819,10 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-focusable-selectors@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/focusable-selectors/-/focusable-selectors-0.3.1.tgz#7eacbca8dc6cc8d7f7563e5f5cc3699b91e20aaa"
-  integrity sha512-5JLtr0e1YJIfmnVlpLiG+av07dd0Xkf/KfswsXcei5KmLfdwOysTQsjF058ynXniujb1fvev7nql1x+CkC5ikw==
+focusable-selectors@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/focusable-selectors/-/focusable-selectors-0.4.0.tgz#c93092bfe65c7cf7ef52aed82fb6f8df31072459"
+  integrity sha512-tc/236hUU3xemsRLu1RKhRQ5UWHjRM9iJTli1zdac43h7b1biRSgG0mILM0qrcsKaGCHcOPJ6NKbk12ouKHLpw==
 
 follow-redirects@^1.0.0:
   version "1.13.3"
