@@ -46,7 +46,10 @@ export default Component.extend({
     searchBar: ".emoji-picker-search-container input",
     emojiResults: ".emoji-picker-emoji-area .results .emoji",
     allEmojis: ".emojis-container .emoji",
+    emojiNoRecents: ".emojis-container .emoji:not(.recent-emoji)",
+    recentEmojis: ".emojis-container .recent .emoji",
     picker: ".emoji-picker-emoji-area",
+    firstEmojiSection: `.emojis-container [data-section="smileys_&_emotion"] .emoji`,
   },
 
   init() {
@@ -105,7 +108,7 @@ export default Component.extend({
         return;
       }
       const popperAnchor = this._getPopperAnchor();
-      this._getNumEmojiPerRow(".emojis-container .emoji");
+      this._getNumEmojiPerRow(this.elements.emojiNoRecents);
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
@@ -253,8 +256,19 @@ export default Component.extend({
   @action
   keydown(event) {
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    const recentEmojis = document.querySelectorAll(this.elements.recentEmojis);
     const searchBar = document.querySelector(this.elements.searchBar);
     let emojis = document.querySelectorAll(this.elements.emojiResults);
+    const firstSection = document.querySelectorAll(
+      this.elements.firstEmojiSection
+    );
+
+    let currentEmoji;
+
+    this.set(
+      "hoveredEmoji",
+      this._codeWithDiversity(event.target.title, this.selectedDiversity)
+    );
 
     // if no search results get all emojis
     if (emojis.length === 0) {
@@ -278,25 +292,20 @@ export default Component.extend({
         return;
       }
 
-      let currentEmoji;
-      // identify the currently active emoji:
-      emojis.forEach((e, index) => {
-        if (e.isEqualNode(document.activeElement)) {
-          e.focus();
-          currentEmoji = index;
-          return currentEmoji;
-        }
+      Array.from(emojis).find((e, index) => {
+        currentEmoji = index;
+        return e.isEqualNode(event.target);
       });
 
       const numEmojisInRow = this.get("emojiPerRow");
 
-      // ! TODO fix recent jumping when down arrow
-
-      emojis[currentEmoji].focus();
-
       if (event.code === "ArrowRight") {
-        const nextEmoji = currentEmoji + 1;
+        let nextEmoji = currentEmoji + 1;
+
         if (nextEmoji < emojis.length) {
+          emojis[nextEmoji].focus();
+        } else if (nextEmoji >= emojis.length) {
+          nextEmoji = 0;
           emojis[nextEmoji].focus();
         }
       }
@@ -310,8 +319,16 @@ export default Component.extend({
 
       if (event.code === "ArrowDown") {
         const emojiNextRow = currentEmoji + numEmojisInRow;
-        if (emojiNextRow < emojis.length) {
-          emojis[emojiNextRow].focus();
+
+        if (
+          event.target.classList.contains("recent-emoji") &&
+          recentEmojis.length < 11
+        ) {
+          firstSection[0].focus();
+        } else {
+          if (emojiNextRow < emojis.length) {
+            emojis[emojiNextRow].focus();
+          }
         }
       }
 
@@ -351,7 +368,7 @@ export default Component.extend({
       this,
       () => {
         if (event.target.value === "") {
-          this._getNumEmojiPerRow(this.elements.allEmojis, false);
+          this._getNumEmojiPerRow(this.elements.emojiNoRecents, false);
         } else {
           this._getNumEmojiPerRow(this.elements.emojiResults, true);
         }
@@ -361,7 +378,6 @@ export default Component.extend({
   },
 
   _getNumEmojiPerRow(emojiSelector, isSearching = false) {
-    // ! TODO: this.recentEmojis array length?
     // See: https://stackoverflow.com/a/49888033
     const emojis = document.querySelectorAll(emojiSelector);
     if (!emojis || emojis.length === 0) {
