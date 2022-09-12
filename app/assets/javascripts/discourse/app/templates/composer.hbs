@@ -220,7 +220,7 @@
         </ComposerEditor>
         {{#if (eq this.model.action "createTopic")}}
         {{!-- Text area for Summary --}}
-          <ComposerEditor 
+        <ComposerEditor 
           @topic={{this.topic}} 
           @composer={{this.model}} 
           @lastValidatedAt={{this.lastValidatedAt}} 
@@ -337,7 +337,7 @@
             {{/unless}}
             {{#if (eq this.model.action "createTopic")}}
               <div style="margin-top: 10px;">
-                <h5>Summary</h5>
+                <h5>Summary <span style="font-weight: lighter;">(Optional)</span></h5>
               </div>
             {{/if}}
           </div>
@@ -460,7 +460,7 @@
             {{/unless}}
             {{#if (eq this.model.action "createTopic")}}
               <div style="margin-top: 10px;">
-                <h5>Sponsor(s)</h5>
+                <h5>Sponsor(s) <span style="font-weight: lighter;">(Optional)</span></h5>
               </div>
             {{/if}}
           </div>
@@ -583,7 +583,7 @@
             {{/unless}}
             {{#if (eq this.model.action "createTopic")}}
               <div style="margin-top: 10px;">
-                <h5>Opinion</h5>
+                <h5>Opinion <span style="font-weight: lighter;">(Optional)</span></h5>
               </div>
             {{/if}}
           </div>
