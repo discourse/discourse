@@ -26,6 +26,7 @@ export default class DiscourseTooltip extends Component {
       const parent = viewBounds.parentElement;
       this._tippyInstance = tippy(parent, {
         content: element,
+        trigger: this.capabilities.touch ? "click" : "mouseenter",
         theme: "d-tooltip",
         arrow: false,
         placement: "bottom-start",
