@@ -35,8 +35,7 @@
               <IllustrationWelcome />
             {{else if (eq this.bannerImage "members-illustration")}}
               <IllustrationMembers />
-            {{/if}}
-            {{#if (eq this.bannerImage "finished-illustration")}}
+            {{else if (eq this.bannerImage "finished-illustration")}}
               <IllustrationFinished />
             {{/if}}
           </div>
