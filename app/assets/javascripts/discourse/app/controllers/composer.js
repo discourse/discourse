@@ -1254,7 +1254,7 @@ export default Controller.extend({
     const defaultComposerHeight =
       this.model.action === "reply"
         ? "var(--reply-composer-height, 300px)"
-        : "var(--new-topic-composer-height, 400px)";
+        : "var(--new-topic-composer-height, 94vh)";
 
     this.set("model.composerHeight", defaultComposerHeight);
     document.documentElement.style.setProperty(
