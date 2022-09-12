@@ -704,6 +704,7 @@ export default Controller.extend({
 
     /**
      * Create a topic or reply to a topic. 
+     * Charnel: don't remove this comment for easier finding of this function.
      */
     save(ignore, event) {
       if (this.get("model.replyingToTopic")) {
