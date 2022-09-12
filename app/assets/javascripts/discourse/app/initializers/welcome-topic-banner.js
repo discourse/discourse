@@ -7,7 +7,7 @@ export default {
 
     if (site.show_welcome_topic_banner) {
       const messageBus = container.lookup("service:message-bus");
-      messageBus.subscribe("/site/welcome-topic-banner", function (disabled) {
+      messageBus.subscribe("/site/welcome-topic-banner", (disabled) => {
         site.set("show_welcome_topic_banner", disabled);
       });
     }
