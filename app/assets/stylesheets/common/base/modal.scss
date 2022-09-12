@@ -279,8 +279,11 @@
 }
 
 .bootbox.modal.reply-where-modal {
-  max-width: 400px;
-  margin-left: -200px;
+  .desktop-view & {
+    // mobile view uses different positioning
+    max-width: 400px;
+    margin-left: -200px;
+  }
 
   h1 {
     margin: 0;
