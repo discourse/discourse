@@ -11,22 +11,24 @@ export default {
 
   initialize(container) {
     const messageBus = container.lookup("service:message-bus");
-    messageBus.subscribe("/logout", function () {
-      if (!_showingLogout) {
-        _showingLogout = true;
-
-        bootbox.dialog(
-          I18n.t("logout"),
-          {
-            label: I18n.t("home"),
-            callback: logout,
-          },
-          {
-            onEscape: logout,
-            backdrop: "static",
-          }
-        );
+    messageBus.subscribe("/logout", () => {
+      if (_showingLogout) {
+        return;
       }
+
+      _showingLogout = true;
+
+      bootbox.dialog(
+        I18n.t("logout"),
+        {
+          label: I18n.t("home"),
+          callback: logout,
+        },
+        {
+          onEscape: logout,
+          backdrop: "static",
+        }
+      );
     });
   },
 };
