@@ -58,7 +58,7 @@
     "ember-cli-progress-ci": "1.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
-    "ember-exam": "^7.0.1",
+    "ember-exam": "^8.0.0",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^3.2.7",
@@ -106,6 +106,6 @@
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-cli-deprecation-workflow": "^2.1.0",
-    "ember-exam": "^7.0.1"
+    "ember-exam": "^8.0.0"
   }
 }
