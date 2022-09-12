@@ -72,28 +72,6 @@ export default Component.extend({
     return diversity;
   },
 
-  numEmojiPerRow(emojiSelector, isSearching = false) {
-    // ! TODO: this.recentEmojis array length?
-    // See: https://stackoverflow.com/a/49888033
-    const emojis = document.querySelectorAll(emojiSelector);
-    if (!emojis || emojis.length === 0) {
-      return;
-    }
-
-    const container = document.querySelector(
-      ".emojis-container .section-group"
-    );
-    const rowLength = Math.floor(container.clientWidth / emojis[0].clientWidth);
-    const totalEmojis = emojis.length;
-    const numElementsLastRow = totalEmojis % rowLength;
-
-    if (isSearching) {
-      return this.set("emojiPerRow", rowLength);
-    } else {
-      return this.set("emojiPerRow", rowLength - numElementsLastRow);
-    }
-  },
-
   // didReceiveAttrs would be a better choice here, but this is sadly causing
   // too many unexpected reloads as it's triggered for other reasons than a mutation
   // of isActive
@@ -127,7 +105,7 @@ export default Component.extend({
         return;
       }
       const popperAnchor = this._getPopperAnchor();
-      this.numEmojiPerRow(".emojis-container .emoji");
+      this._getNumEmojiPerRow(".emojis-container .emoji");
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
@@ -272,11 +250,6 @@ export default Component.extend({
     section && section.scrollIntoView();
   },
 
-  focusedOn(item) {
-    // returns the item currently being focused on
-    return document.activeElement.closest(item) ? document.activeElement : null;
-  },
-
   @action
   keydown(event) {
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
@@ -288,7 +261,10 @@ export default Component.extend({
       emojis = document.querySelectorAll(this.elements.allEmojis);
     }
 
-    if (event.code === "ArrowDown" && this.focusedOn(this.elements.searchBar)) {
+    if (
+      event.code === "ArrowDown" &&
+      this._focusedOn(this.elements.searchBar)
+    ) {
       return emojis[0].focus();
     }
 
@@ -298,7 +274,7 @@ export default Component.extend({
     }
 
     if (arrowKeys.includes(event.code)) {
-      if (!this.focusedOn(this.elements.picker)) {
+      if (!this._focusedOn(this.elements.picker)) {
         return;
       }
 
@@ -357,7 +333,7 @@ export default Component.extend({
     }
 
     if (event.code === "Enter") {
-      if (!this.focusedOn(".emoji")) {
+      if (!this._focusedOn(".emoji")) {
         return;
       }
       this.onEmojiSelection(event);
@@ -375,13 +351,40 @@ export default Component.extend({
       this,
       () => {
         if (event.target.value === "") {
-          this.numEmojiPerRow(this.elements.allEmojis, false);
+          this._getNumEmojiPerRow(this.elements.allEmojis, false);
         } else {
-          this.numEmojiPerRow(this.elements.emojiResults, true);
+          this._getNumEmojiPerRow(this.elements.emojiResults, true);
         }
       },
       500
     );
+  },
+
+  _getNumEmojiPerRow(emojiSelector, isSearching = false) {
+    // ! TODO: this.recentEmojis array length?
+    // See: https://stackoverflow.com/a/49888033
+    const emojis = document.querySelectorAll(emojiSelector);
+    if (!emojis || emojis.length === 0) {
+      return;
+    }
+
+    const container = document.querySelector(
+      ".emojis-container .section-group"
+    );
+    const rowLength = Math.floor(container.clientWidth / emojis[0].clientWidth);
+    const totalEmojis = emojis.length;
+    const numElementsLastRow = totalEmojis % rowLength;
+
+    if (isSearching) {
+      return this.set("emojiPerRow", rowLength);
+    } else {
+      return this.set("emojiPerRow", rowLength - numElementsLastRow);
+    }
+  },
+
+  _focusedOn(item) {
+    // returns the item currently being focused on
+    return document.activeElement.closest(item) ? document.activeElement : null;
   },
 
   _applyFilter(filter) {
