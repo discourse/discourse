@@ -1,3 +1,5 @@
+import DiscourseURL from "discourse/lib/url";
+
 export default class UserMenuBaseItem {
   get className() {}
 
@@ -26,4 +28,13 @@ export default class UserMenuBaseItem {
   get descriptionClass() {}
 
   get topicId() {}
+
+  onClick({ event, closeUserMenu }) {
+    const href = this.linkHref;
+    if (href) {
+      DiscourseURL.routeTo(href);
+    }
+    closeUserMenu();
+    event.preventDefault();
+  }
 }
