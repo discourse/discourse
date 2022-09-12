@@ -33,8 +33,7 @@
           <div class="wizard-container__step-banner-image">
             {{#if (eq this.bannerImage "welcome-illustration")}}
               <IllustrationWelcome />
-            {{/if}}
-            {{#if (eq this.bannerImage "members-illustration")}}
+            {{else if (eq this.bannerImage "members-illustration")}}
               <IllustrationMembers />
             {{/if}}
             {{#if (eq this.bannerImage "finished-illustration")}}
