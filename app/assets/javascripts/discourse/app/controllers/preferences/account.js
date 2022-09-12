@@ -4,14 +4,16 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
+import DiscourseURL from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
+import { next } from "@ember/runloop";
 
 export default Controller.extend(CanCheckEmails, {
+  dialog: service(),
   init() {
     this._super(...arguments);
 
@@ -168,39 +170,38 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     delete() {
-      this.set("deleting", true);
-      const message = I18n.t("user.delete_account_confirm"),
-        model = this.model,
-        buttons = [
+      this.dialog.alert({
+        message: I18n.t("user.delete_account_confirm"),
+        buttons: [
           {
-            label: I18n.t("cancel"),
-            class: "d-modal-cancel",
-            link: true,
-            callback: () => {
-              this.set("deleting", false);
-            },
-          },
-          {
-            label:
-              iconHTML("exclamation-triangle") + I18n.t("user.delete_account"),
-            class: "btn btn-danger",
-            callback() {
-              model.delete().then(
+            icon: "exclamation-triangle",
+            label: I18n.t("user.delete_account"),
+            class: "btn-danger",
+            action: () => {
+              return this.model.delete().then(
                 () => {
-                  bootbox.alert(
-                    I18n.t("user.deleted_yourself"),
-                    () => (window.location = getURL("/"))
-                  );
+                  next(() => {
+                    this.dialog.alert({
+                      message: I18n.t("user.deleted_yourself"),
+                      didConfirm: () =>
+                        DiscourseURL.redirectAbsolute(getURL("/")),
+                      didCancel: () =>
+                        DiscourseURL.redirectAbsolute(getURL("/")),
+                    });
+                  });
                 },
                 () => {
-                  bootbox.alert(I18n.t("user.delete_yourself_not_allowed"));
+                  this.dialog.alert(I18n.t("user.delete_yourself_not_allowed"));
                   this.set("deleting", false);
                 }
               );
             },
           },
-        ];
-      bootbox.dialog(message, buttons, { classes: "delete-account" });
+          {
+            label: I18n.t("composer.cancel"),
+          },
+        ],
+      });
     },
 
     revokeAccount(account) {
@@ -212,7 +213,7 @@ export default Controller.extend(CanCheckEmails, {
           if (result.success) {
             this.model.associated_accounts.removeObject(account);
           } else {
-            bootbox.alert(result.message);
+            this.dialog.alert(result.message);
           }
         })
         .catch(popupAjaxError)
