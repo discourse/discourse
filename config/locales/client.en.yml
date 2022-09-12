@@ -3886,7 +3886,7 @@ en:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
-      all_tags: "All Tags"
+      all_tags: "All tags"
       other_tags: "Other Tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
