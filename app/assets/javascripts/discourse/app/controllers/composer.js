@@ -702,7 +702,19 @@ export default Controller.extend({
       await this.cancelComposer();
     },
 
+    /**
+     * Create a topic or reply to a topic. 
+     */
     save(ignore, event) {
+      if (this.get("model.replyingToTopic")) {
+        const topicTitle = this.get("model.topic.title")
+        console.log(`Replying to topic: '${topicTitle}'`)
+        console.log(this.get("model"))
+      }
+      if (this.get("model.creatingTopic")) {
+        const topicTitle = this.get("model.title")
+        console.log(`Creating new topic. Title: '${topicTitle}'`)
+      }
       this.save(false, {
         jump:
           !(event?.shiftKey && this.get("model.replyingToTopic")) &&
