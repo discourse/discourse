@@ -12,6 +12,7 @@ import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
+import discourseDebounce from "discourse-common/lib/debounce";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
 import { htmlSafe } from "@ember/template";
@@ -65,6 +66,33 @@ export default Component.extend({
     return diversity;
   },
 
+  numEmojiPerRow() {
+    // this.recentEmojis array length?
+    // See: https://stackoverflow.com/a/49888033
+    let searching = true;
+    let emojis = document.querySelectorAll(
+      ".emoji-picker-emoji-area .results .emoji"
+    ); // ! TODO: Remove and query again after search
+    // if no search results get all emojis
+    if (emojis.length === 0) {
+      emojis = document.querySelectorAll(".emojis-container .emoji");
+      searching = false;
+    }
+
+    const container = document.querySelector(
+      ".emojis-container .section-group"
+    );
+    const rowLength = Math.floor(container.clientWidth / emojis[0].clientWidth);
+    const totalEmojis = emojis.length;
+    const numElementsLastRow = totalEmojis % rowLength;
+
+    if (searching) {
+      return this.set("emojiPerRow", rowLength);
+    } else {
+      return this.set("emojiPerRow", rowLength - numElementsLastRow);
+    }
+  },
+
   // didReceiveAttrs would be a better choice here, but this is sadly causing
   // too many unexpected reloads as it's triggered for other reasons than a mutation
   // of isActive
@@ -97,8 +125,8 @@ export default Component.extend({
       if (!emojiPicker) {
         return;
       }
-
       const popperAnchor = this._getPopperAnchor();
+      this.numEmojiPerRow();
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
@@ -243,27 +271,16 @@ export default Component.extend({
     section && section.scrollIntoView();
   },
 
-  numEmojiPerRow(emojis) {
-    // See: https://stackoverflow.com/a/49888033
-    const container = document.querySelector(
-      ".emojis-container .section-group"
-    );
-    const rowLength = Math.floor(container.clientWidth / emojis[0].clientWidth);
-    const totalEmojis = emojis.length;
-    const numElementsLastRow = totalEmojis % rowLength;
-    return rowLength - numElementsLastRow;
-  },
-
   @action
   keydown(event) {
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
-    let focusedOnPicker = document.activeElement.closest(
+    const focusedOnPicker = document.activeElement.closest(
       ".emoji-picker-emoji-area"
     )
       ? document.activeElement
       : null;
-    let focusedOnEmoji = document.activeElement?.classList.contains("emoji");
-    let focusedOnSearch = document.activeElement.closest(
+    const focusedOnEmoji = document.activeElement?.classList.contains("emoji");
+    const focusedOnSearch = document.activeElement.closest(
       ".emoji-picker-search-container input"
     )
       ? document.activeElement
@@ -290,7 +307,6 @@ export default Component.extend({
         return;
       }
 
-      // console.log(emojis.length);
       let currentEmoji;
       emojis.forEach((emoji, index) => {
         if (emoji.isEqualNode(document.activeElement)) {
@@ -299,8 +315,8 @@ export default Component.extend({
         }
       });
 
-      const numEmojisInRow = this.numEmojiPerRow(emojis);
-      // console.log("numEmojisInRow", numEmojisInRow);
+      const numEmojisInRow = this.get("emojiPerRow");
+
       // console.log("currentEmoji", currentEmoji);
 
       // todo fix recent jumping when down arrow
@@ -316,6 +332,7 @@ export default Component.extend({
       if (event.code === "ArrowLeft") {
         const previousEmoji = currentEmoji - 1;
         emojis[previousEmoji].focus();
+        // ! TODO: add conditional for left at start
       }
 
       // TODO: Doesn't work properly after searching or in recents and uneven number of emojis in results.
@@ -353,6 +370,15 @@ export default Component.extend({
   @action
   onFilterChange(event) {
     this._applyFilter(event.target.value);
+
+    discourseDebounce(
+      this,
+      () => {
+        this.numEmojiPerRow();
+        // console.log("filteredNumEmojiPerRow:", this.get("emojiPerRow"));
+      },
+      1000
+    );
   },
 
   _applyFilter(filter) {
