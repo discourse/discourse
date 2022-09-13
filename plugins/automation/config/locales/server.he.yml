@@ -39,6 +39,9 @@ he:
         title: אחרי בישול פוסט
         description: כאשר תוכן פוסט מבושל האוטומציה תופעל
     scriptables:
+      post:
+        title: יצירת פוסט
+        description: יצירת פוסט בנושא מסוים
       flag_post_on_words:
         title: סימון פוסט בדגל על המילים
         description: מסמן פוסט בדגל אם מופיעות בו מילים מסוימות

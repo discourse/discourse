@@ -173,8 +173,12 @@ he:
               description: ברירת המחדל היא משתמש המערכת
         post:
           fields:
+            creator:
+              label: יוצר
             topic:
               label: מזהה נושא
+            post:
+              label: תוכן הפוסט
         user_global_notice:
           fields:
             level:
