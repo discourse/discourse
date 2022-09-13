@@ -30,11 +30,11 @@ export default class UserMenuBaseItem {
   get topicId() {}
 
   onClick({ event, closeUserMenu }) {
+    closeUserMenu();
     const href = this.linkHref;
     if (href) {
       DiscourseURL.routeTo(href);
     }
-    closeUserMenu();
     event.preventDefault();
   }
 }
