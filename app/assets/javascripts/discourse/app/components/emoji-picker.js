@@ -43,7 +43,7 @@ export default Component.extend({
   placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
   initialFilter: "",
   elements: {
-    searchBar: ".emoji-picker-search-container input",
+    searchInput: ".emoji-picker-search-container input",
     emojiResults: ".emoji-picker-emoji-area .results .emoji",
     allEmojis: ".emojis-container .emoji",
     emojiNoRecents: ".emojis-container .emoji:not(.recent-emoji)",
@@ -257,7 +257,7 @@ export default Component.extend({
   keydown(event) {
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     const recentEmojis = document.querySelectorAll(this.elements.recentEmojis);
-    const searchBar = document.querySelector(this.elements.searchBar);
+    const searchInput = document.querySelector(this.elements.searchInput);
     let emojis = document.querySelectorAll(this.elements.emojiResults);
     const firstSection = document.querySelectorAll(
       this.elements.firstEmojiSection
@@ -277,7 +277,7 @@ export default Component.extend({
 
     if (
       event.code === "ArrowDown" &&
-      this._focusedOn(this.elements.searchBar)
+      this._focusedOn(this.elements.searchInput)
     ) {
       return emojis[0].focus();
     }
@@ -341,7 +341,7 @@ export default Component.extend({
         }
 
         if (currentEmoji < emojiInFirstRow) {
-          searchBar.focus();
+          searchInput.focus();
         }
       }
 
