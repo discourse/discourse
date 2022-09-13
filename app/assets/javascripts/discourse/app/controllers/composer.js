@@ -332,7 +332,17 @@ export default Controller.extend({
         })
       );
 
-      if (this.site.mobileView) {
+      if (this.capabilities.touch) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyFormatCode",
+              icon: "code",
+              label: "composer.code_title",
+            };
+          })
+        );
+
         options.push(
           this._setupPopupMenuOption(() => {
             return {
@@ -795,6 +805,10 @@ export default Controller.extend({
           count,
         }),
       });
+    },
+
+    applyFormatCode() {
+      this.toolbarEvent.formatCode();
     },
 
     applyUnorderedList() {

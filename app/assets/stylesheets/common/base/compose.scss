@@ -546,14 +546,6 @@ body:not(.ios-safari-composer-hacks) {
   }
 }
 
-.show-preview {
-  @media screen and (max-width: 850px) {
-    .d-editor-button-bar {
-      font-size: $font-down-1;
-    }
-  }
-}
-
 .toggle-preview {
   margin-left: 8px;
   transition: all 0.33s ease-out;
