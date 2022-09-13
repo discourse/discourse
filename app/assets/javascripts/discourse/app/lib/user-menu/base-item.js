@@ -1,4 +1,5 @@
 import DiscourseURL from "discourse/lib/url";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default class UserMenuBaseItem {
   get className() {}
@@ -30,6 +31,9 @@ export default class UserMenuBaseItem {
   get topicId() {}
 
   onClick({ event, closeUserMenu }) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
     closeUserMenu();
     const href = this.linkHref;
     if (href) {
