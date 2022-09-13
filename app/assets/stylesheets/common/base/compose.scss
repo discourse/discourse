@@ -570,3 +570,18 @@ body:not(.ios-safari-composer-hacks) {
 .draft-error {
   color: var(--danger);
 }
+
+.composer-editor-header {
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 49.5%;
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+}
+
+.composer-divider {
+  width: 49.5%;
+}

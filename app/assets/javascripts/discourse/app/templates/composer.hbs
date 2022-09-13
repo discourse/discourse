@@ -227,137 +227,14 @@
             {{/unless}}
             {{#if (eq this.model.action "createTopic")}}
               <div style="margin-top: 5px;">
-                <h5>Content</h5>
+                <h5>Summary</h5>
               </div>
             {{/if}}
           </div>
         </ComposerEditor>
         {{#if (eq this.model.action "createTopic")}}
-        {{!-- Text area for Summary --}}
-        <ComposerEditor 
-          @topic={{this.topic}} 
-          @composer={{this.model}} 
-          @lastValidatedAt={{this.lastValidatedAt}} 
-          @canWhisper={{this.canWhisper}} 
-          @storeToolbarState={{action "storeToolbarState"}} 
-          @onPopupMenuAction={{action "onPopupMenuAction"}} 
-          @showUploadModal={{route-action "showUploadSelector"}} 
-          @popupMenuOptions={{this.popupMenuOptions}} 
-          @draftStatus={{this.model.draftStatus}} 
-          @isUploading={{this.isUploading}} 
-          @isProcessingUpload={{this.isProcessingUpload}} 
-          @allowUpload={{this.allowUpload}} 
-          @uploadIcon={{this.uploadIcon}} 
-          @isCancellable={{this.isCancellable}} 
-          @uploadProgress={{this.uploadProgress}} 
-          @groupsMentioned={{action "groupsMentioned"}} 
-          @cannotSeeMention={{action "cannotSeeMention"}} 
-          @hereMention={{action "hereMention"}} 
-          @importQuote={{action "importQuote"}} 
-          @togglePreview={{action "togglePreview"}} 
-          @processPreview={{this.showPreview}} 
-          @showToolbar={{this.showToolbar}} 
-          @afterRefresh={{action "afterRefresh"}} 
-          @focusTarget={{this.focusTarget}} 
-          @disableTextarea={{this.disableTextarea}}
-        >
-          <div class="composer-fields">
-            <PluginOutlet 
-              @name="before-composer-fields" 
-              @args={{hash model=this.model}} 
-            />
-            {{#unless this.model.viewFullscreen}}
-              {{#if this.model.canEditTitle}}
-                {{#if this.model.creatingPrivateMessage}}
-                  <div class="user-selector">
-                    <ComposerUserSelector 
-                      @topicId={{this.topicModel.id}} 
-                      @recipients={{this.model.targetRecipients}} 
-                      @hasGroups={{this.model.hasTargetGroups}} 
-                      @focusTarget={{this.focusTarget}} 
-                      @class={{concat "users-input" (if this.showWarning " can-warn")}} 
-                    />
-                    {{#if this.showWarning}}
-                      <label class="add-warning">
-                        <Input @type="checkbox" @checked={{this.model.isWarning}} />
-                        <span>
-                          {{i18n "composer.add_warning"}}
-                        </span>
-                      </label>
-                    {{/if}}
-                  </div>
-                {{/if}}
-
-                <div class="title-and-category {{if this.showPreview "with-preview"}}">
-                  {{!-- <ComposerTitle 
-                    @composer={{this.model}} 
-                    @lastValidatedAt={{this.lastValidatedAt}} 
-                    @focusTarget={{this.focusTarget}} 
-                  /> --}}
-
-                  {{!-- {{#if this.model.showCategoryChooser}}
-                    <div class="category-input">
-                      <CategoryChooser 
-                        @value={{this.model.categoryId}} 
-                        @onChange={{action (mut this.model.categoryId)}} 
-                        @options={{
-                          hash
-                          disabled=this.disableCategoryChooser
-                          scopedCategoryId=this.scopedCategoryId
-                          prioritizedCategoryId=this.prioritizedCategoryId
-                        }} 
-                      />
-                      <PopupInputTip @validation={{this.categoryValidation}} />
-                    </div>
-                  {{/if}} --}}
-
-                  {{!-- {{#if this.canEditTags}}
-                    <MiniTagChooser 
-                      @value={{this.model.tags}} 
-                      @onChange={{action (mut this.model.tags)}} 
-                      @options={{
-                        hash
-                        disabled=this.disableTagsChooser
-                        categoryId=this.model.categoryId
-                        minimum=this.model.minimumRequiredTags
-                      }} 
-                    />
-                    <PopupInputTip @validation={{this.tagValidation}} />
-                  {{/if}} --}}
-
-                  <PluginOutlet 
-                    @name="after-title-and-category" 
-                    @args={{
-                      hash 
-                      model=this.model 
-                      tagValidation=this.tagValidation 
-                      canEditTags=this.canEditTags 
-                      disabled=this.disableTagsChooser
-                    }} 
-                  />
-                </div>
-              {{/if}}
-
-              <PluginOutlet 
-                @name="composer-fields" 
-                @tagName="span" 
-                @connectorTagName="div" 
-                @args={{
-                  hash 
-                  model=this.model 
-                  showPreview=this.showPreview
-                }} 
-              />
-            {{/unless}}
-            {{#if (eq this.model.action "createTopic")}}
-              <div style="margin-top: 10px;">
-                <h5>Summary <span style="font-weight: lighter;">(Optional)</span></h5>
-              </div>
-            {{/if}}
-          </div>
-        </ComposerEditor>
         {{!-- Text area for sponsor(s) --}}
-        <ComposerEditor 
+        <ComposerEditorSponsor 
           @topic={{this.topic}} 
           @composer={{this.model}} 
           @lastValidatedAt={{this.lastValidatedAt}} 
@@ -472,15 +349,10 @@
                 }} 
               />
             {{/unless}}
-            {{#if (eq this.model.action "createTopic")}}
-              <div style="margin-top: 10px;">
-                <h5>Sponsor(s) <span style="font-weight: lighter;">(Optional)</span></h5>
-              </div>
-            {{/if}}
           </div>
-        </ComposerEditor>
+        </ComposerEditorSponsor>
         {{!-- Text area for opinion --}}
-        <ComposerEditor 
+        <ComposerEditorOpinion
           @topic={{this.topic}} 
           @composer={{this.model}} 
           @lastValidatedAt={{this.lastValidatedAt}} 
@@ -595,13 +467,8 @@
                 }} 
               />
             {{/unless}}
-            {{#if (eq this.model.action "createTopic")}}
-              <div style="margin-top: 10px;">
-                <h5>Opinion <span style="font-weight: lighter;">(Optional)</span></h5>
-              </div>
-            {{/if}}
           </div>
-        </ComposerEditor>
+        </ComposerEditorOpinion>
         {{/if}}
 
         <PluginOutlet 

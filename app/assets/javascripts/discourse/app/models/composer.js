@@ -769,8 +769,14 @@ const Composer = RestModel.extend({
       deprecated("`usernames` is deprecated, use `recipients` instead.");
     }
 
+    // Use to set properties to the 'post' object
     this.setProperties({
       draftKey: opts.draftKey,
+      summaries: [],
+      sponsors: [],
+      opinions: [],
+      sponsorTextBoxVisible: true,
+      opinionTextBoxVisible: true,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
       action: opts.action,
@@ -892,6 +898,16 @@ const Composer = RestModel.extend({
     Object.keys(_add_draft_fields).forEach((f) => {
       this.set(_add_draft_fields[f], opts[f]);
     });
+    const summaryEntry = {
+      content: this.reply,
+      userId: this.user.id,
+      userName: this.user.username
+    }
+    this.summaries.push(summaryEntry)
+    // console.log("user", this.user)
+    // console.log("summaries", this.summaries)
+    // console.log("title", this.title)
+    // console.log("reply", this.reply)
 
     return promise.finally(() => {
       this.set("loading", false);
@@ -1056,6 +1072,7 @@ const Composer = RestModel.extend({
     this.serialize(_create_serializer, createdPost);
 
     if (post) {
+      // console.log("post", post)
       createdPost.setProperties({
         reply_to_post_number: post.post_number,
         reply_to_user: post.getProperties("username", "avatar_template"),
@@ -1066,6 +1083,7 @@ const Composer = RestModel.extend({
 
     // If we're in a topic, we can append the post instantly.
     if (postStream) {
+      // console.log("postStream", postStream)
       // If it's in reply to another post, increase the reply count
       if (post) {
         post.setProperties({
@@ -1091,6 +1109,7 @@ const Composer = RestModel.extend({
       composeState: SAVING,
       stagedPost: state === "staged" && createdPost,
     });
+    // console.log("createdPost", createdPost)
 
     return createdPost
       .save()
@@ -1134,6 +1153,7 @@ const Composer = RestModel.extend({
 
         composer.clearState();
         composer.set("createdPost", createdPost);
+        // console.log("createdPost", createdPost)
         if (composer.replyingToTopic) {
           this.appEvents.trigger("post:created", createdPost);
         } else {

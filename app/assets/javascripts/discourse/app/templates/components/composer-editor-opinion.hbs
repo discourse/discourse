@@ -1,0 +1,48 @@
+<section class="composer-editor-header">
+	<div class="header">
+		<div>
+			<h5>Opinion</h5>
+		</div>
+		<div>
+			<button 
+				{{action "showTextBox"}}
+				class="btn btn-flat"
+			>
+				{{d-icon  (if isTextBoxVisible 'chevron-up' 'chevron-down')}}
+			</button>
+		</div>
+	</div>
+</section>
+{{#if isTextBoxVisible}}
+	<DEditor
+		@value={{this.composer.replyOpinion}} 
+		@placeholder={{this.replyPlaceholder}} 
+		@previewUpdated={{action "previewUpdated"}} 
+		@markdownOptions={{this.markdownOptions}} 
+		@extraButtons={{action "extraButtons"}} 
+		@importQuote={{action "importQuote"}} 
+		@showUploadModal={{this.showUploadModal}} 
+		@togglePreview={{action "togglePreview"}} 
+		@processPreview={{this.processPreview}} 
+		@validation={{this.validation}} 
+		@loading={{this.composer.loading}} 
+		@forcePreview={{this.forcePreview}} 
+		@showLink={{this.showLink}} 
+		@composerEvents={{true}} 
+		@onExpandPopupMenuOptions={{action "onExpandPopupMenuOptions"}} 
+		@onPopupMenuAction={{this.onPopupMenuAction}} 
+		@popupMenuOptions={{this.popupMenuOptions}} 
+		@disabled={{this.disableTextarea}} 
+		@outletArgs={{
+			hash 
+			composer=this.composer 
+			editorType="composer"
+		}}
+	>
+		{{yield}}
+	</DEditor>
+{{#if this.allowUpload}}
+	<PickFilesButton @fileInputId="file-uploader" @allowMultiple={{true}} />
+{{/if}}
+{{/if}}
+<hr class="composer-divider">
