@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import I18n from "I18n";
+import { until } from "discourse/lib/formatter";
 
 export default class UserStatusMessage extends Component {
   tagName = "";
@@ -12,16 +12,10 @@ export default class UserStatusMessage extends Component {
       return null;
     }
 
-    const timezone = this.currentUser.timezone;
-    const endsAt = moment.tz(this.status.ends_at, timezone);
-    const now = moment.tz(timezone);
-    const until = I18n.t("user_status.until");
-
-    if (now.isSame(endsAt, "day")) {
-      const localeData = moment.localeData(this.currentUser.locale);
-      return `${until} ${endsAt.format(localeData.longDateFormat("LT"))}`;
-    } else {
-      return `${until} ${endsAt.format("MMM D")}`;
-    }
+    return until(
+      this.status.ends_at,
+      this.currentUser.timezone,
+      this.currentUser.locale
+    );
   }
 }

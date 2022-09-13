@@ -201,6 +201,8 @@ fa_IR:
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "خیر"
     yes_value: "بله"
+    ok_value: "تایید"
+    cancel_value: "انصراف"
     submit: "ارسال"
     generic_error: "متأسفیم، خطایی روی داده."
     generic_error_with_reason: "خطایی روی داد: %{error}"
@@ -2033,6 +2035,7 @@ fa_IR:
         topic_reminder: "اگاهسازی مبحث"
         liked_consolidated: "پسندیده‌های جدید"
         post_approved: "نوشته تایید شده"
+        reaction: "واکنش جدید"
     upload_selector:
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
@@ -3252,10 +3255,10 @@ fa_IR:
         leader: "راهبر"
     user_activity:
       no_replies_title: "شما هنوز به هیچ موضوعی پاسخ نداده اید"
-      no_replies_others: "بدون پاسخ"
+      no_replies_title_others: "%{username} هنوز در هیچ موضوعی، پاسخی نداده است"
       no_drafts_title: "شما هنوز هیچ پیش‌نویسی شروع نکرده‌اید"
       no_drafts_body: "برای ارسال کاملا آماده نیستید؟ هر زمان که شروع به نوشتن موضوع، پاسخ یا پیام شخصی کنید، پیش‌نویس جدیدی را به‌طور خودکار ذخیره می‌کنیم و آن را در اینجا فهرست می‌کنیم. برای صرف‌نظر کردن، دکمه لغو را انتخاب کنید یا پیش‌نویس خود را ذخیره کنید تا بعدا ادامه دهید."
-      no_likes_others: "فرسته‌ی موردپسندیدی نیست."
+      no_likes_title_others: "%{username} هنوز هیچ موضوعی را نپسندیده."
     sidebar:
       unread_count:
         one: "%{count} خوانده نشده"
@@ -3267,7 +3270,6 @@ fa_IR:
       more: "بیشتر..."
       sections:
         messages:
-          header_link_title: "پیام‌های شخصی"
           header_link_text: "پیام‌ها"
           header_action_title: "ایجاد پیام شخصی"
           links:
@@ -3281,23 +3283,28 @@ fa_IR:
         tags:
           none: "شما هنوز هیچ برچسبی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
-          header_link_title: "تمام برچسب‌ها"
           header_link_text: "برچسب"
           header_action_title: "برچسب‌های نوار کناری خود را ویرایش کنید"
         categories:
           none: "شما هنوز هیچ دسته‌بندی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
-          header_link_title: "همه‌ی دسته‌بندی‌ها"
           header_link_text: "دسته‌بندی‌ها"
           header_action_title: "دسته‌بندی‌های نوار کناری خود را ویرایش کنید"
         community:
-          header_link_title: "خانه"
           header_link_text: "انجمن"
           header_action_title: "ایجاد موضوع جدید"
           links:
+            about:
+              content: "درباره"
+            admin:
+              content: "مدیر کل"
+            badges:
+              content: "نشان‌ها"
             everything:
               content: "همه چیز"
               title: "همه موضوعات"
+            faq:
+              content: "پرسش‌های متداول"
             tracked:
               content: "پی‌گیری شده"
               title: "همه موضوعات پیگیری شده"
@@ -3313,6 +3320,7 @@ fa_IR:
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"
+    until: "تا وقتی که:"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -4134,6 +4142,7 @@ fa_IR:
         cant_delete_all_too_many_posts:
           one: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
           other: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
+        delete_confirm_title: "آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟ این دائمی است!"
         delete_and_block: "آدرس IP و ایمیل را حذف و <b>مسدود</b>کن."
         delete_dont_block: "فقط حذف"
         deleting_user: "درحال حذف کاربر..."

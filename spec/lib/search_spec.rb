@@ -1903,7 +1903,7 @@ RSpec.describe Search do
       results = Search.new('#9998').execute
       expect(results.posts.length).to eq(1)
 
-      results = Search.new('#777').execute
+      results = Search.new('#nonexistent').execute
       expect(results.posts.length).to eq(0)
 
       results = Search.new('xxx #:').execute

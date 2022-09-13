@@ -645,8 +645,7 @@ pl_PL:
               invalid: "nie jest prawidłowy"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
-  vip_category_name: "Salon"
-  vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
+  general_category_name: "Ogólne"
   meta_category_name: "Dyskusje o serwisie"
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
@@ -667,29 +666,6 @@ pl_PL:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
-  lounge_welcome:
-    title: "Witaj w Salonie"
-    body: |2
-
-      Gratulacje! :confetti_ball:
-
-      Jeśli widzisz ten temat, niedawno awansowałeś/łaś na **regularny** (poziom zaufania 3).
-
-      Możesz teraz &hellip;
-
-      * Edytować tytuł dowolnego tematu
-      * Zmienić kategorię dowolnego tematu
-      * Umożliwić wyszukiwarce podążać za Twoimi linkami ([automatyczne nofollow] (https://en.wikipedia.org/wiki/Nofollow) zostało usunięte )
-      * Przeglądać prywatną kategorię widoczną tylko dla użytkowników o poziomie zaufania 3 i wyższym
-      * Ukrywać spam za pomocą jednej flagi
-
-      Oto [aktualna lista innych stałych bywalców] (%{base_path}/badges/3/regular). Nie zapomnij się przywitać.
-
-      Dziękujemy za bycie ważną częścią tej społeczności!
-
-      (Aby uzyskać więcej informacji na temat poziomów zaufania, [zobacz ten temat][trust]. Należy pamiętać, że stałymi członkami pozostaną tylko członkowie, którzy z czasem będą nadal spełniać wymagania).
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "README: Skrócony poradnik administratora"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -1568,6 +1544,7 @@ pl_PL:
     show_pinned_excerpt_mobile: "Pokaż fragment przypiętych tematów w widoku mobilnym"
     show_pinned_excerpt_desktop: "Pokaż fragment przypiętych tematów w widoku \"wersja komputerowa\""
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
+    block_onebox_on_redirect: "Blokuj onebox dla adresów URL, które przekierowują."
     allowed_inline_onebox_domains: "Lista domen, które zostaną zamienione na osadzony onebox w zmniejszonej formie, jeśli będą umieszczone w poście bez tytułu"
     enable_inline_onebox_on_all_domains: "Ignoruj ustawienie witryny `inline_onebox_domain_whitelist` i zezwalaj na osadzanie ramek we wszystkich domenach."
     force_custom_user_agent_hosts: "Hosty, dla których ma być używany niestandardowy klient użytkownika Onebox przy wszystkich żądaniach. (Szczególnie przydatne dla hostów, które ograniczają dostęp do agenta użytkownika)."
@@ -3167,6 +3144,13 @@ pl_PL:
         Odpowiedziałeś/łaś na wiadomość e-mail z podsumowaniem, która nie została zaakceptowana.
 
         Jeśli uważasz, że to błąd, [skontaktuj się z nami](%{base_url}/about).
+    email_reject_too_many_recipients:
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (tytuł %{former_title}) nie została wysłana.
+
+        Próbowałeś wysłać wiadomość e-mail do więcej niż %{max_recipients_count} osób, a nasz system automatycznie otagował Twój e-mail jako spam.
+
+        Jeśli uważasz, że jest to błąd, [skontaktuj się z członkiem personelu](%{base_url}/about).
     email_error_notification:
       title: "Błąd emaila powiadomienie"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd autoryzacji POP"
@@ -4518,6 +4502,7 @@ pl_PL:
       invalid_token: "Nieprawidłowy token."
     email_input: "Email administratora. "
     submit_button: "Wyślij Email"
+    safe_mode: "Tryb awaryjny: wyłącz wszystkie motywy/wtyczki podczas logowania"
   performance_report:
     initial_post_raw: Ten temat zawiera codzienne raporty wydajności dla twojej strony.
     initial_topic_title: Raporty wydajności strony
@@ -4568,7 +4553,6 @@ pl_PL:
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
-      help: "zarejestruj nowe konto aby rozpocząć"
       no_emails: "Niestety, podczas instalacji nie zdefiniowano żadnych e-maili administratora, więc finalizacja konfiguracji może być trudna. Dodaj adres e-mail programisty w pliku konfiguracyjnym lub <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>utwórz konto administratora z konsoli</a>."
     confirm_email:
       title: "Potwierdzenie przez email"
@@ -4578,6 +4562,8 @@ pl_PL:
       message: "<p>Powtórnie przesłaliśmy e-maila aktywacyjnego do <b>%{email}</b>"
   safe_mode:
     title: "Wejście w tryb bezpieczny"
+    description: "Tryb awaryjny umożliwia testowanie witryny bez ładowania wtyczek lub motywów."
+    no_themes: "Wyłącz motywy i komponenty motywu"
     no_unofficial_plugins: "Wyłącz nieoficjalne wtyczki"
     no_plugins: "Wyłącz wszystkie wtyczki"
     enter: "Włącz Tryb Bezpieczny"

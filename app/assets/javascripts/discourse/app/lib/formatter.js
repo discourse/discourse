@@ -114,6 +114,21 @@ export function autoUpdatingRelativeAge(date, options) {
   );
 }
 
+export function until(untilDate, timezone, locale) {
+  const untilMoment = moment.tz(untilDate, timezone);
+  const now = moment.tz(timezone);
+
+  let untilFormatted;
+  if (now.isSame(untilMoment, "day")) {
+    const localeData = moment.localeData(locale);
+    untilFormatted = untilMoment.format(localeData.longDateFormat("LT"));
+  } else {
+    untilFormatted = untilMoment.format(I18n.t("dates.long_no_year_no_time"));
+  }
+
+  return `${I18n.t("until")} ${untilFormatted}`;
+}
+
 function wrapAgo(dateStr) {
   return I18n.t("dates.wrap_ago", { date: dateStr });
 }

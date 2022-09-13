@@ -278,15 +278,7 @@
   }
 }
 
-.bootbox.modal.reply-where-modal {
-  max-width: 400px;
-  margin-left: -200px;
-
-  h1 {
-    margin: 0;
-    font-size: var(--font-up-2);
-  }
-
+.reply-where-modal {
   .btn {
     display: block;
     text-align: left;

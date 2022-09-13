@@ -134,7 +134,19 @@ TemplateCompiler.prototype.initializeFeatures =
   function initializeFeatures() {};
 
 TemplateCompiler.prototype.processString = function (string, relativePath) {
-  let filename = relativePath.replace(/^templates\//, "").replace(/\.hbr$/, "");
+  let filename;
+
+  const pluginName = relativePath.match(/^discourse\/plugins\/([^\/]+)\//)?.[1];
+
+  if (pluginName) {
+    filename = relativePath
+      .replace(`discourse/plugins/${pluginName}/`, "")
+      .replace(/^(discourse\/)?templates\//, "javascripts/");
+  } else {
+    filename = relativePath.replace(/^templates\//, "");
+  }
+
+  filename = filename.replace(/\.hbr$/, "");
 
   return (
     'import { template as compiler } from "discourse-common/lib/raw-handlebars";\n' +

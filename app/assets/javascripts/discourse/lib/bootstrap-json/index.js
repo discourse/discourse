@@ -5,7 +5,8 @@ const fetch = require("node-fetch");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const { promises: fs } = require("fs");
+const fs = require("fs");
+const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 const { Buffer } = require("node:buffer");
@@ -231,7 +232,7 @@ async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
 
 async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
   try {
-    const template = await fs.readFile(
+    const template = await fsPromises.readFile(
       path.join(cwd(), "dist", "index.html"),
       "utf8"
     );
@@ -378,12 +379,68 @@ module.exports = {
 
   contentFor(type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
-      return `
-        <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
-        <script src="${config.rootURL}assets/admin-plugins.js"></script>
-      `;
+      const scripts = [];
+
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
+        const pluginInfos = this.app.project
+          .findAddonByName("discourse-plugins")
+          .pluginInfos();
+
+        for (const {
+          pluginName,
+          directoryName,
+          hasJs,
+          hasAdminJs,
+        } of pluginInfos) {
+          if (hasJs) {
+            scripts.push({
+              src: `plugins/${directoryName}.js`,
+              name: pluginName,
+            });
+          }
+
+          if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+            scripts.push({
+              src: `plugins/${directoryName}_extras.js`,
+              name: pluginName,
+            });
+          }
+
+          if (hasAdminJs) {
+            scripts.push({
+              src: `plugins/${directoryName}_admin.js`,
+              name: pluginName,
+            });
+          }
+        }
+      } else {
+        scripts.push({
+          src: "discourse/tests/active-plugins.js",
+          name: "_all",
+        });
+        scripts.push({ src: "admin-plugins.js", name: "_admin" });
+      }
+
+      return scripts
+        .map(
+          ({ src, name }) =>
+            `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+        )
+        .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
+        return this.app.project
+          .findAddonByName("discourse-plugins")
+          .pluginInfos()
+          .filter(({ hasTests }) => hasTests)
+          .map(
+            ({ directoryName, pluginName }) =>
+              `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+          )
+          .join("\n");
+      } else {
+        return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
+      }
     }
   },
 
@@ -404,6 +461,11 @@ to serve API requests. For example:
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
+
+    app.use(
+      "/favicon.ico",
+      express.static(path.join(__dirname, "../../../../images/favicon.ico"))
+    );
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {

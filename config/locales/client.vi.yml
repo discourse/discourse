@@ -196,6 +196,8 @@ vi:
     not_implemented: "Tính năng này chưa được hoàn thiện, xin lỗi!"
     no_value: "Không"
     yes_value: "Có"
+    ok_value: "OK"
+    cancel_value: "Huỷ"
     submit: "Gửi đi"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
     generic_error_with_reason: "Đã xảy ra lỗi: %{error}"
@@ -1574,7 +1576,6 @@ vi:
       set_custom_status: "Đặt trạng thái tùy chỉnh"
       what_are_you_doing: "Bạn đang làm gì đấy?"
       remove_status: "Xóa trạng thái"
-      until: "Cho đến khi:"
     loading: "Đang tải..."
     errors:
       prev_page: "trong khi cố gắng để tải"
@@ -3385,7 +3386,6 @@ vi:
       google: "Google Lịch"
       ics: "ICS"
     tagging:
-      all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
@@ -3538,9 +3538,7 @@ vi:
     user_activity:
       no_activity_title: "Chưa có hoạt động nào"
       no_activity_body: "Chào mừng đến với cộng đồng của chúng tôi! Bạn là thương hiệu mới ở đây và chưa đóng góp vào các cuộc thảo luận. Bước đầu tiên, hãy truy cập <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Chuyên mục</a> và chỉ cần bắt đầu đọc! Chọn %{heartIcon} trên các bài đăng mà bạn thích hoặc muốn tìm hiểu thêm. Khi bạn tham gia, hoạt động của bạn sẽ được liệt kê ở đây."
-      no_activity_others: "Chưa có hoạt động nào."
       no_replies_title: "Bạn chưa trả lời bất kỳ chủ đề nào"
-      no_replies_others: "Không có câu trả lời."
       no_drafts_title: "Bạn chưa bắt đầu bất kỳ bản nháp nào"
       no_drafts_body: "Bạn chưa hoàn toàn sẵn sàng để đăng bài? Chúng tôi sẽ tự động lưu một bản nháp mới và liệt kê nó ở đây bất cứ khi nào bạn bắt đầu soạn một chủ đề, trả lời hoặc tin nhắn cá nhân. Chọn nút hủy để hủy hoặc lưu bản nháp của bạn để tiếp tục sau."
       no_likes_title: "Bạn chưa thích bất kỳ chủ đề nào"
@@ -3567,7 +3565,6 @@ vi:
       more: "Thêm..."
       sections:
         messages:
-          header_link_title: "tin nhắn cá nhân"
           header_link_text: "Tin nhắn"
           header_action_title: "tạo một tin nhắn cá nhân"
           links:
@@ -3581,23 +3578,28 @@ vi:
         tags:
           none: "Bạn chưa thêm bất kỳ thẻ nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
-          header_link_title: "tất cả thẻ"
           header_link_text: "Thẻ"
           header_action_title: "chỉnh sửa thẻ thanh bên của bạn"
         categories:
           none: "Bạn chưa thêm bất kỳ danh mục nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
-          header_link_title: "tất cả chuyên mục"
           header_link_text: "Thư mục"
           header_action_title: "chỉnh sửa danh mục thanh bên của bạn"
         community:
-          header_link_title: "trang chủ"
           header_link_text: "Cộng đồng"
           header_action_title: "tạo một chủ đề mới"
           links:
+            about:
+              content: "Giới thiệu"
+            admin:
+              content: "Quản trị"
+            badges:
+              content: "Huy hiệu"
             everything:
               content: "Mọi thứ"
               title: "Tất cả các chủ đề"
+            faq:
+              content: "Câu hỏi thường gặp"
             tracked:
               content: "Theo dõi"
               title: "Tất cả các chủ đề được theo dõi"
@@ -3612,6 +3614,7 @@ vi:
               title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
+    until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -4753,7 +4756,6 @@ vi:
           other: "Không thể xóa tất cả các bài viết, một số bài viết cũ hơn %{count} ngày. (Thiết lập delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           other: "Không thể xóa tất cả các bài viết do tài khoản có hơn %{count} bài viết. (delete_all_posts_max)"
-        delete_confirm: "Nói chung, bạn nên ẩn danh người dùng hơn là xóa họ, để tránh xóa nội dung khỏi các cuộc thảo luận hiện có.<br><br>Bạn có CHẮC CHẮN muốn xóa người dùng này không? Điều này là vĩnh viễn!"
         delete_and_block: "Xóa và <b>khóa</b> email này và địa chỉ IP"
         delete_dont_block: "Chỉ xóa"
         deleting_user: "Đang xóa người dùng..."
@@ -4876,7 +4878,6 @@ vi:
         recommended: "Bạn nên tùy biến các nội dung sau đây cho phù hợp với nhu cầu:"
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         locale: "Ngôn ngữ:"
-        fallback_locale_warning: "Bạn đang chỉnh sửa một ngôn ngữ dựa trên %{fallback}. Người dùng chọn %{fallback} làm ngôn ngữ giao diện của họ sẽ không thấy các thay đổi của bạn."
         more_than_50_results: "Có hơn 50 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn."
       settings:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"

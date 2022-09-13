@@ -31,7 +31,6 @@ Rails.application.config.assets.precompile += %w{
   browser-detect.js
   browser-update.js
   break_string.js
-  pretty-text-bundle.js
   markdown-it-bundle.js
   service-worker.js
   google-tag-manager.js
@@ -53,7 +52,7 @@ Rails.application.config.assets.precompile += %w{
   scripts/discourse-boot
 }
 
-Rails.application.config.assets.precompile += EmberCli::ASSETS.map { |name| name.sub('.js', '.map') }
+Rails.application.config.assets.precompile += EmberCli.assets.map { |name| name.sub('.js', '.map') }
 
 # Precompile all available locales
 unless GlobalSetting.try(:omit_base_locales)

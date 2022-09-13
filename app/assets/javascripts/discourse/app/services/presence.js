@@ -213,9 +213,9 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
       await this._resubscribe();
       return;
-    } else {
-      this.lastSeenId = message_id;
     }
+
+    this.lastSeenId = message_id;
 
     if (this.countOnly && data.count_delta !== undefined) {
       this.set("count", this.count + data.count_delta);
@@ -228,11 +228,13 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
         const users = data.entering_users.map((u) => User.create(u));
         this.users.addObjects(users);
       }
+
       if (data.leaving_user_ids) {
         const leavingIds = new Set(data.leaving_user_ids);
         const toRemove = this.users.filter((u) => leavingIds.has(u.id));
         this.users.removeObjects(toRemove);
       }
+
       this.set("count", this.users.length);
       this.trigger("change");
     } else {

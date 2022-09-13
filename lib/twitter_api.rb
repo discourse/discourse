@@ -2,9 +2,10 @@
 
 # lightweight Twitter api calls
 class TwitterApi
-
   class << self
     include ActionView::Helpers::NumberHelper
+
+    BASE_URL = 'https://api.twitter.com'
 
     def prettify_tweet(tweet)
       text = tweet["full_text"].dup
@@ -74,19 +75,10 @@ class TwitterApi
       number_to_human(count, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
     end
 
-    def user_timeline(screen_name)
-      JSON.parse(twitter_get(user_timeline_uri_for screen_name))
-    end
-
     def tweet_for(id)
-      JSON.parse(twitter_get(tweet_uri_for id))
+      JSON.parse(twitter_get(tweet_uri_for(id)))
     end
-
     alias_method :status, :tweet_for
-
-    def raw_tweet_for(id)
-      twitter_get(tweet_uri_for id)
-    end
 
     def twitter_credentials_missing?
       consumer_key.blank? || consumer_secret.blank?
@@ -110,16 +102,8 @@ class TwitterApi
       end.strip
     end
 
-    def user_timeline_uri_for(screen_name)
-      URI.parse "#{BASE_URL}/1.1/statuses/user_timeline.json?screen_name=#{screen_name}&count=50&include_rts=false&exclude_replies=true"
-    end
-
     def tweet_uri_for(id)
       URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}&tweet_mode=extended"
-    end
-
-    unless defined? BASE_URL
-      BASE_URL = 'https://api.twitter.com'
     end
 
     def twitter_get(uri)
@@ -172,6 +156,5 @@ class TwitterApi
     def consumer_secret
       SiteSetting.twitter_consumer_secret
     end
-
   end
 end

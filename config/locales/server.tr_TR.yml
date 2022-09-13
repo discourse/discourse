@@ -73,6 +73,7 @@ tr_TR:
       file_too_big: "Sıkıştırılmamış dosya çok büyük."
       unknown_file_type: "Yüklediğiniz dosya geçerli bir Discourse teması gibi görünmüyor."
       not_allowed_theme: "\"%{repo}\", izin verilen temalar listesinde değil (\"allow_theme_repos\" genel ayarını kontrol edin)."
+      ssh_key_gone: "Temayı yüklemek için çok uzun süre beklediniz ve SSH anahtarının süresi doldu. Lütfen tekrar deneyin."
     errors:
       component_no_user_selectable: "Tema bileşenleri kullanıcı tarafından seçilemez"
       component_no_default: "Tema bileşenleri varsayılan tema olamaz"
@@ -581,8 +582,7 @@ tr_TR:
               invalid_tag_list: "Yedek etiket listesi geçersiz"
       <<: *errors
   uncategorized_category_name: "Kategorize"
-  vip_category_name: "Lobi"
-  vip_category_description: "Güven düzeyi 3 ve üzerinde olan üyelere özel kategori."
+  general_category_name: "Genel"
   meta_category_name: "Site geri bildirimi"
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
@@ -603,29 +603,6 @@ tr_TR:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Bu konuyu admin :wrench: (sağ üst ve altta) aracılığıyla kapatmak isteyebilirsiniz, böylece yanıtlar bir duyuruda birikmez.
-  lounge_welcome:
-    title: "Lobiye hoş geldiniz"
-    body: |2
-
-      Tebrikler! :confetti_ball:
-
-      Bu konuyu görebiliyorsanız yakın bir zaman önce **müdavim** (3. güven düzeyi) düzeyine terfi etmişsiniz demektir.
-
-      Bu andan sonra &hellip;
-
-      * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
-      * Herhangi bir konunun kategorisini değiştirebilirsiniz
-      * Eklediğiniz bağlantılar takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
-      * Sadece 3. güven düzeyi ve üzerindekilere gözüken özel lobi kategorisine erişebilirsiniz
-      * Tek bildirmeyle istenmeyen içerikli iletileri gizleyebilirsiniz
-
-      [Şu anda müdavim düzeyinde bulunan kişilere](%{base_path}/badges/3/regular) bir merhaba demeyi unutmayın.
-
-      Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
-
-      (Güven düzeyleriyle ilgili daha fazla bilgi için [bu konuya bakın][trust]. Lütfen, yalnızca sürekli olarak kriterlere uyan üyelerin standart düzeyde kalacağını unutmayın.)
-
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   admin_quick_start_title: "İLK ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
@@ -2085,6 +2062,8 @@ tr_TR:
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluştur."
     use_email_for_username_and_name_suggestions: "Kullanıcı adları ve ad önerileri için e-posta adreslerinin ilk kısmını kullanın. Ama unutmayın bu yaklaşım, insanların e-posta adreslerinin tamamını tahmin etmelerini kolaylaştırır (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
     use_name_for_username_suggestions: "Kullanıcı adları önerirken kullanıcının tam adını kullanın."
+    default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğu'nun Kategoriler bölümünde görüntülenecektir."
+    default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğu'nun Etiketler bölümünde görüntülenecektir."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değer girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -2967,11 +2946,11 @@ tr_TR:
       title: "Ayın Yeni Kullanıcısısın!"
       subject_template: "Ayın Yeni Kullanıcısısın!"
       text_body_template: |
-        Tebrikler, ödül kazandınız. **%{month_year} için Ayın Yeni Kullanıcısı ödülü**. :trophy:
+        Tebrikler, **%{month_year} ayında Ayın Yeni Kullanıcısı ödülü** sizin oldu. :trophy:
 
-        Bu ödül her ay sadece iki kullanıcıya verilir ve bu ödül [rozetler sayfası](%{url}) gözükür.
+        Bu ödül her ay sadece iki kullanıcıya verilir ve bu ödül [rozetler sayfasında](%{url}) görünür.
 
-        Hızla topluluğumuzun değerli bir üyesi oldunuz. Katıldığınız için teşekkür eder ve harika çalışmalarınızı sürdürmenizi dileriz.
+        Hızla topluluğumuzun değerli bir üyesi oldunuz. Katıldığınız için teşekkür eder, harika çalışmalarınızı sürdürmenizi dileriz.
     queued_posts_reminder:
       title: "Kuyruğa Alınan Gönderi Hatırlatıcısı"
       subject_template:
@@ -3824,7 +3803,7 @@ tr_TR:
     register:
       button: "Kayıt Ol"
       title: "Yönetici Hesabı Oluştur"
-      help: "başlamak için yeni bir hesap oluşturun"
+      help: "Başlamak için yeni bir hesap oluşturun."
       no_emails: "Ne yazık ki, kurulum sırasında yönetici e-postaları tanımlanmadığından, yapılandırmanın sonlandırılması zor olabilir. Lütfen yapılandırma dosyasına bir geliştirici e-postası ekleyin veya <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>konsoldan bir yönetici hesabı oluşturun</a> ."
     confirm_email:
       title: "E-posta adresinizi doğrulayın"

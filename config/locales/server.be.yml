@@ -338,16 +338,13 @@ be:
               too_many: "Занадта шмат слоў для гэтага дзеяння"
       <<: *errors
   uncategorized_category_name: "без"
-  vip_category_name: "гасцёўня"
-  vip_category_description: "Катэгорыя выключна для членаў з даверным узроўнем 3 і вышэй."
+  general_category_name: "Агульныя"
   meta_category_name: "зваротная сувязь"
   meta_category_description: "Абмеркаванне гэтага сайта, яго арганізацыя, як яна працуе, і як мы можам палепшыць яго."
   staff_category_name: "персанал"
   staff_category_description: "Асобная катэгорыя для абмеркавання персаналу. Тэмы бачныя толькі адміністратарам і мадэратарам."
   discourse_welcome_topic:
     title: "Сардэчна запрашаем у дыскурсе"
-  lounge_welcome:
-    title: "Сардэчна запрашаем у Lounge"
   admin_quick_start_title: "READ ME FIRST: Адміністратар Quick Start Guide"
   category:
     topic_prefix: "Аб %{category} катэгорыі"
@@ -2352,7 +2349,6 @@ be:
     register:
       button: "рэгістрацыя"
       title: "Рэгістрацыя ўліковага запісу адміністратара"
-      help: "зарэгістраваць новы ўліковы запіс, каб пачаць"
       no_emails: "На жаль, няма электроннай пошты адміністратара не былі вызначаны падчас ўстаноўкі, так завяршае канфігурацыю можа быць абцяжарана. Калі ласка, дадайце ліст распрацоўніка ў файле канфігурацыі або <HTTPS A HREF = ':"
     confirm_email:
       title: "Пацвердзіце свой e-mail"

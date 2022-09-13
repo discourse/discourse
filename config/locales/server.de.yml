@@ -73,6 +73,7 @@ de:
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
+      ssh_key_gone: "Du hast zu lange mit der Installation des Themas gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
     errors:
       component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
       component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"
@@ -596,8 +597,8 @@ de:
               invalid: "ist nicht gültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
-  vip_category_name: "Lounge"
-  vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
+  general_category_name: "Allgemein"
+  general_category_description: "Erstelle hier Themen, die in keine andere bestehende Kategorie passen."
   meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Team"
@@ -618,29 +619,6 @@ de:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Du solltest dieses Thema eventuell mittels Themen-Administration :wrench: (oben rechts oder unten) schließen, damit sich bei dieser Ankündigung nicht die Antworten anhäufen.
-  lounge_welcome:
-    title: "Willkommen in der Lounge"
-    body: |2
-
-      Gratuliere! :confetti_ball:
-
-      Wenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.
-
-      Du kannst nun &hellip;
-
-      * den Titel eines jeden Themas ändern
-      * Themen in andere Kategorien verschieben
-      * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](https://de.wikipedia.org/wiki/Nofollow) wird entfernt)
-      * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
-      * Spam durch eine einzige Meldung ausblenden
-
-      Hier ist die [aktuelle Liste aller Stammgäste](%{base_path}/badges/3/regular). Vergiss nicht, Hallo zu sagen!
-
-      Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
-
-      (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -1874,6 +1852,7 @@ de:
     max_emails_per_day_per_user: "Maximale Anzahl von E-Mails, die den Benutzern pro Tag gesendet werden. 0 zum Deaktivieren des Limits"
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
     maximum_staged_users_per_email: "Maximale Anzahl vorbereiteter Benutzer, wenn eine eingehende E-Mail bearbeitet wird."
+    maximum_recipients_per_new_group_email: "Blockiere eingehende E-Mails mit zu vielen Empfängern."
     auto_generated_allowlist: "Liste von E-Mail-Adressen, die nicht auf automatisch generierte Inhalte überprüft werden. Beispiel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
@@ -2129,6 +2108,8 @@ de:
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt Kategorien der Seitenleiste angezeigt."
+    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt Tags der Seitenleiste angezeigt."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -3031,6 +3012,15 @@ de:
         Du hast auf eine E-Mail-Zusammenfassung geantwortet, was nicht zulässig ist.
 
         Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "E-Mail lehnt zu viele Empfänger ab"
+      subject_template: "[%{email_prefix}] E-Mail-Problem - Zu viele Empfänger"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Du hast versucht, an mehr als %{max_recipients_count} Personen zu schreiben und unser System hat deine E-Mail automatisch als Spam markiert.
+
+        Wenn du glaubst, dass dies ein Fehler ist, [kontaktiere einen Mitarbeiter](%{base_url}/about).
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -4430,7 +4420,7 @@ de:
     register:
       button: "Registrieren"
       title: "Administrator-Konto registrieren"
-      help: "registriere ein neues Konto, um loszulegen"
+      help: "Registriere ein neues Konto, um loszulegen."
       no_emails: "Leider wurde bei der Einrichtung keine Administrator-E-Mail-Adresse festgelegt, sodass es schwer sein könnte, die Konfiguration abzuschließen. Bitte füge eine Entwickler-E-Mail-Adresse in der Konfigurationsdatei hinzu oder <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>erstelle ein Administrator-Konto über die Konsole</a>."
     confirm_email:
       title: "Bestätige deine E-Mail-Adresse"

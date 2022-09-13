@@ -17,7 +17,8 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    this.showSidebar = !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+    this.showSidebar =
+      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed
@@ -27,6 +28,11 @@ export default Controller.extend({
       this.siteSettings.allow_new_registrations &&
       !this.siteSettings.enable_discourse_connect
     );
+  },
+
+  @discourseComputed
+  canDisplaySidebar() {
+    return this.currentUser || !this.siteSettings.login_required;
   },
 
   @discourseComputed
@@ -58,9 +64,18 @@ export default Controller.extend({
   @discourseComputed(
     "enable_sidebar",
     "siteSettings.enable_sidebar",
-    "router.currentRouteName"
+    "router.currentRouteName",
+    "canDisplaySidebar"
   )
-  sidebarEnabled(sidebarQueryParamOverride, enableSidebar, currentRouteName) {
+  sidebarEnabled(
+    sidebarQueryParamOverride,
+    enableSidebar,
+    currentRouteName,
+    canDisplaySidebar
+  ) {
+    if (!canDisplaySidebar) {
+      return false;
+    }
     if (sidebarQueryParamOverride === "1") {
       return true;
     }
@@ -79,6 +94,11 @@ export default Controller.extend({
     }
 
     return enableSidebar;
+  },
+
+  @discourseComputed("router.currentRouteName")
+  showSiteHeader(currentRouteName) {
+    return !currentRouteName.startsWith("wizard");
   },
 
   @action

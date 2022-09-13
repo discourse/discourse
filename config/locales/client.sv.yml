@@ -226,6 +226,8 @@ sv:
     not_implemented: "Denna funktion har tyvärr inte implementerats än!"
     no_value: "Nej"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Skicka"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
@@ -1652,7 +1654,6 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
-      until: "T.o.m.:"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -3578,7 +3579,6 @@ sv:
       google: "Google -kalender"
       ics: "ICS"
     tagging:
-      all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
@@ -3740,14 +3740,14 @@ sv:
     user_activity:
       no_activity_title: "Ingen aktivitet än"
       no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit i diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. I takt med att du deltar kommer din aktivitet att visas här."
-      no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har inte svarat på några ämnen än"
-      no_replies_others: "Inga svar."
+      no_replies_title_others: "%{username} har inte svarat på några ämnen ännu"
+      no_replies_body: "När du <a href='%{searchUrl}'>upptäcker</a> en intressant konversation som du vill bidra till trycker du på knappen <kbd>Svara</kbd> direkt under ett inlägg för att börja svara på det specifika inlägget. Om du föredrar att svara på det allmänna ämnet snarare än på ett enskilt inlägg eller en enskild person, kan du leta efter knappen <kbd>Svara</kbd> längst ner i ämnet eller under ämnets tidslinje."
       no_drafts_title: "Du har inte startat några utkast"
       no_drafts_body: "Inte riktigt redo att göra ett inlägg? Vi sparar automatiskt ett nytt utkast och visar det i listan här när du börjar skriva ett ämne, svar eller personligt meddelande. Välj avbryt-knappen för att ta bort eller spara ditt utkast för att fortsätta senare."
       no_likes_title: "Du har inte gillat några ämnen än"
+      no_likes_title_others: "%{username} har inte gillat några ämnen ännu"
       no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
-      no_likes_others: "Inga gillade inlägg."
       no_topics_title: "Du har inte startat några ämnen än"
       no_topics_body: "Det är alltid bäst att <a href='%{searchUrl}'>söka</a> efter befintliga samtalsämnen innan du startar ett nytt, men om du är säker på att ämnet du vill ha inte redan finns där, var så god och starta ett nytt eget ämne. Leta efter knappen <kbd>+ Nytt ämne</kbd> längst upp till höger i ämneslistan, kategorin eller taggen för att börja skapa ett nytt ämne inom det området."
       no_topics_title_others: "%{username} har inte startat några ämnen än"
@@ -3772,7 +3772,6 @@ sv:
       more: "Mer..."
       sections:
         messages:
-          header_link_title: "personliga meddelanden"
           header_link_text: "Meddelanden"
           header_action_title: "skapa ett personligt meddelande"
           links:
@@ -3786,23 +3785,28 @@ sv:
         tags:
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
-          header_link_title: "alla taggar"
           header_link_text: "Taggar"
           header_action_title: "redigera sidofältets taggar"
         categories:
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
-          header_link_title: "alla kategorier"
           header_link_text: "Kategorier"
           header_action_title: "redigera sidofältets kategorier"
         community:
-          header_link_title: "start"
           header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Utmärkelser"
             everything:
               content: "Allting"
               title: "Alla ämnen"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Följda"
               title: "Alla följda ämnen"
@@ -3822,6 +3826,7 @@ sv:
       title: "Skapa ditt välkomstämne"
       description: 'Ditt välkomstämne är det första som nykomlingar läser. Tänk på det som din "snabbpresentation" eller "målbeskrivning" i ett enda stycke.'
       button_title: "Börja redigera"
+    until: "T.o.m.:"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -5023,7 +5028,8 @@ sv:
         cant_delete_all_too_many_posts:
           one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
-        delete_confirm: "Det är generellt att föredra att anonymisera användare snarare än att ta bort dem för att undvika att ta bort innehåll från befintliga diskussioner. <br><br> Är du säker på att du vill ta bort den här användaren? Detta görs permanent!"
+        delete_confirm_title: "Är du SÄKER på att du vill radera den här användaren? Detta är permanent!"
+        delete_confirm: "I allmänhet är det att föredra att anonymisera användare istället för att radera dem, för att undvika att innehåll från befintliga diskussioner tas bort."
         delete_and_block: "Radera och <b>blockera</b> denna e-postadress och IP-adress"
         delete_dont_block: "Radera enbart"
         deleting_user: "Raderar användaren..."
@@ -5154,7 +5160,6 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         locale: "Språk:"
-        fallback_locale_warning: "Du redigerar ett språk baserat på %{fallback}. Användare som väljer %{fallback} som sitt gränssnittsspråk kommer inte att se dina ändringar."
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"

@@ -154,6 +154,7 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
   postAtts.staged = post.staged;
+  postAtts.user = post.user;
 
   if (post.notice) {
     postAtts.notice = post.notice;
@@ -257,10 +258,11 @@ export default function transformPost(
     postAtts.canToggleLike = likeAction.get("canToggle");
     postAtts.showLike = postAtts.liked || postAtts.canToggleLike;
     postAtts.likeCount = likeAction.count;
-  }
-
-  if (!currentUser) {
-    postAtts.showLike = !topic.archived;
+  } else if (
+    !currentUser ||
+    (topic.archived && topic.user_id !== currentUser.id)
+  ) {
+    postAtts.showLike = true;
   }
 
   if (postAtts.post_number === 1) {
@@ -287,10 +289,6 @@ export default function transformPost(
       (currentUser.staff || !post.user_deleted);
     postAtts.canPermanentlyDelete =
       postAtts.isDeleted && post.can_permanently_delete;
-  }
-
-  if (post.user_status) {
-    postAtts.userStatus = post.user_status;
   }
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));

@@ -199,6 +199,8 @@ nl:
     not_implemented: "Deze functie is helaas nog niet beschikbaar, sorry!"
     no_value: "Nee"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Annuleren"
     submit: "Versturen"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
@@ -3330,7 +3332,6 @@ nl:
     download_calendar:
       download: "Downloaden"
     tagging:
-      all_tags: "Alle tags"
       other_tags: "Andere tags"
       selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
@@ -3484,9 +3485,6 @@ nl:
         leader: "leider"
     user_activity:
       no_activity_title: "Nog geen activiteit"
-      no_activity_others: "Geen activiteit."
-      no_replies_others: "Geen antwoorden."
-      no_likes_others: "Geen gelikete berichten."
       no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
     sidebar:
       unread_count:
@@ -3508,15 +3506,20 @@ nl:
             unread_with_count: "Ongelezen (%{count})"
             archive: "Archief"
         tags:
-          header_link_title: "alle tags"
           header_link_text: "Tags"
         categories:
-          header_link_title: "alle categorieën"
           header_link_text: "Categorieën"
         community:
-          header_link_title: "hoofdpagina"
           header_link_text: "Gemeenschap"
           links:
+            about:
+              content: "Over"
+            admin:
+              content: "Beheer"
+            badges:
+              content: "Badges"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Gevolgd"
             groups:
@@ -4654,7 +4657,6 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} bericht heeft geplaatst. (delete_all_posts_max)"
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
-        delete_confirm: "Om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd, is het doorgaans beter om gebruikers te anonimiseren dan ze te verwijderen.<br><br>Weet u ZEKER dat u deze gebruiker wilt verwijderen? Dit is blijvend!"
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
         deleting_user: "Gebruiker verwijderen..."
@@ -4783,7 +4785,6 @@ nl:
         recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste tonen"
         locale: "Taal:"
-        fallback_locale_warning: "U bent een taal gebaseerd op %{fallback} aan het bewerken. Gebruikers die %{fallback} als taal van hun interface kiezen zien uw wijzigingen niet."
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn uw zoekopdracht."
       settings:
         show_overriden: "Alleen aangepaste tonen"

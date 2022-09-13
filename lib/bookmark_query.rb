@@ -26,7 +26,7 @@ class BookmarkQuery
     end
   end
 
-  attr_reader :guardian
+  attr_reader :guardian, :count
 
   def initialize(user:, guardian: nil, params: {})
     @user = user
@@ -34,6 +34,7 @@ class BookmarkQuery
     @guardian = guardian || Guardian.new(@user)
     @page = @params[:page].to_i
     @limit = @params[:limit].present? ? @params[:limit].to_i : @params[:per_page]
+    @count = 0
   end
 
   def list_all(&blk)
@@ -72,6 +73,8 @@ class BookmarkQuery
         bookmarks.reminder_at ASC,
         bookmarks.updated_at DESC"
     )
+
+    @count = results.count
 
     if @page.positive?
       results = results.offset(@page * @params[:per_page])

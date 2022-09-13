@@ -515,8 +515,7 @@ nl:
               too_many: "Te veel woorden voor die actie"
       <<: *errors
   uncategorized_category_name: "Ongecategoriseerd"
-  vip_category_name: "Lounge"
-  vip_category_description: "Een exclusieve categorie voor leden met vertrouwensniveau 3 en hoger."
+  general_category_name: "Algemeen"
   meta_category_name: "Feedback op website"
   meta_category_description: "Discussies over deze website, de organisatie, hoe deze werkt en hoe we deze kunnen verbeteren."
   staff_category_name: "Staf"
@@ -537,29 +536,6 @@ nl:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
-  lounge_welcome:
-    title: "Welkom in de Lounge"
-    body: |2
-
-      Gefeliciteerd! :confetti_ball:
-
-      Als u dit topic kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
-
-      U kunt nu &hellip;
-
-      * De titel van elk topic bewerken
-      * De categorie van elk topic wijzigen
-      * Al uw koppelingen laten volgen ([automatic nofollow](https://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
-      * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
-      * Spam verbergen met één markering
-
-      Hier is de [huidige lijst van vaste gebruikers](%{base_path}/badges/3/regular). Zeg zeker even hallo.
-
-      Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
-
-      ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEES MIJ EERST: Snelstartgids voor beheerders"
   category:
     topic_prefix: "Over de categorie %{category}"
@@ -2859,7 +2835,6 @@ nl:
     register:
       button: "Registreren"
       title: "Beheerdersaccount registreren"
-      help: "registreer een nieuwe account om te beginnen"
     confirm_email:
       title: "Bevestig uw e-mailadres"
     resend_email:

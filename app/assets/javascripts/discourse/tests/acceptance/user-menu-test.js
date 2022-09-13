@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -14,6 +14,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import TopicFixtures from "discourse/tests/fixtures/topic";
+import { Promise } from "rsvp";
+import { later } from "@ember/runloop";
 import I18n from "I18n";
 
 acceptance("User menu", function (needs) {
@@ -21,6 +23,9 @@ acceptance("User menu", function (needs) {
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 73,
     trust_level: 3,
+    grouped_unread_notifications: {
+      [NOTIFICATION_TYPES.replied]: 2,
+    },
   });
 
   needs.settings({
@@ -49,12 +54,63 @@ acceptance("User menu", function (needs) {
   test("clicking on an unread notification", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
+
+    let repliesBadgeNotification = query(
+      "#user-menu-button-replies .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "2",
+      "badge shows the right count"
+    );
+
     await click(".user-menu ul li.replied a");
 
     assert.strictEqual(
       requestHeaders["Discourse-Clear-Notifications"],
       123, // id is from the fixtures in fixtures/notification-fixtures.js
       "the Discourse-Clear-Notifications request header is set to the notification id in the next ajax request"
+    );
+
+    await click(".d-header-icons .current-user");
+    repliesBadgeNotification = query(
+      "#user-menu-button-replies .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "1",
+      "badge shows count reduced by one"
+    );
+  });
+
+  test("clicking on user menu items", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on an item results in navigation to the item's page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on an item closes the menu after navigating"
+    );
+
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on the same item again keeps on the same page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on the same item again closes the menu"
     );
   });
 
@@ -105,11 +161,13 @@ acceptance("User menu", function (needs) {
       "user-menu-button-replies": "1",
       "user-menu-button-mentions": "2",
       "user-menu-button-likes": "3",
-      "user-menu-button-messages": "4",
-      "user-menu-button-bookmarks": "5",
-      "user-menu-button-custom-tab-1": "6",
-      "user-menu-button-custom-tab-2": "7",
-      "user-menu-button-review-queue": "8",
+      "user-menu-button-watching": "4",
+      "user-menu-button-messages": "5",
+      "user-menu-button-bookmarks": "6",
+      "user-menu-button-custom-tab-1": "7",
+      "user-menu-button-custom-tab-2": "8",
+      "user-menu-button-review-queue": "9",
+      "user-menu-button-other": "10",
     };
 
     await visit("/");
@@ -136,7 +194,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "9",
+      "11",
       "bottom tab has the correct data-tab-number"
     );
 
@@ -184,6 +242,82 @@ acceptance("User menu", function (needs) {
     assert.ok(
       exists("#quick-access-custom-tab-1 button.btn"),
       "the tab's content is now displayed in the panel"
+    );
+  });
+
+  test("notifications tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("notification", (notifications) => {
+        notifications.forEach((notification, index) => {
+          if (notification.fancy_title) {
+            notification.fancy_title = `pluginNotificationTransformer ${index} ${notification.fancy_title}`;
+          }
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    const notifications = queryAll(
+      "#quick-access-all-notifications ul li.notification"
+    );
+    assert.strictEqual(
+      notifications[0].textContent.replace(/\s+/g, " ").trim(),
+      "velesin pluginNotificationTransformer 0 edited topic 443"
+    );
+    assert.strictEqual(
+      notifications[1].textContent.replace(/\s+/g, " ").trim(),
+      "velesin pluginNotificationTransformer 1 some title"
+    );
+  });
+
+  test("bookmarks tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("bookmark", (bookmarks) => {
+        bookmarks.forEach((bookmark) => {
+          if (bookmark.title) {
+            bookmark.title = `pluginBookmarkTransformer ${bookmark.title}`;
+          }
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-bookmarks");
+
+    const bookmarks = queryAll("#quick-access-bookmarks ul li.bookmark");
+    assert.strictEqual(
+      bookmarks[0].textContent.replace(/\s+/g, " ").trim(),
+      "osama pluginBookmarkTransformer Test poll topic hello world"
+    );
+  });
+
+  test("messages tab applies model transformations registered by plugins", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("topic", (topics) => {
+        topics.forEach((topic) => {
+          topic.fancy_title = `pluginTransformer#1 ${topic.fancy_title}`;
+        });
+      });
+      api.registerModelTransformer("topic", async (topics) => {
+        // sleep 1 ms
+        await new Promise((resolve) => later(resolve, 1));
+        topics.forEach((topic) => {
+          topic.fancy_title = `pluginTransformer#2 ${topic.fancy_title}`;
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-messages");
+
+    const messages = queryAll("#quick-access-messages ul li.message");
+    assert.strictEqual(
+      messages[0].textContent.replace(/\s+/g, " ").trim(),
+      "mixtape pluginTransformer#2 pluginTransformer#1 BUG: Can not render emoji properly"
     );
   });
 
@@ -418,15 +552,100 @@ acceptance("User menu", function (needs) {
       "logout button has the right icon"
     );
   });
+
+  test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-1";
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+
+          get linkWhenActive() {
+            return "/u/eviltrout/preferences";
+          }
+        };
+      });
+
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-2";
+          }
+
+          get icon() {
+            return "plus";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+    });
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-all-notifications");
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/notifications",
+      "clicking on active tab navigates to the page it links to"
+    );
+    assert.notOk(exists(".user-menu"), "user menu is closed after navigating");
+
+    const tabs = [
+      ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
+      ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
+      ["#user-menu-button-messages", "/u/eviltrout/messages"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
+      ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
+      ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
+      ["#user-menu-button-custom-tab-2", null],
+      ["#user-menu-button-review-queue", "/review"],
+      ["#user-menu-button-profile", "/u/eviltrout/summary"],
+    ];
+    for (const [id, expectedLink] of tabs) {
+      await click(".d-header-icons .current-user");
+      await click(id);
+      await click(id);
+      if (expectedLink) {
+        assert.strictEqual(
+          currentURL(),
+          expectedLink,
+          `clicking on the ${id} tab navigates to ${expectedLink}`
+        );
+        assert.notOk(
+          exists(".user-menu"),
+          "user menu is closed after navigating"
+        );
+      } else {
+        assert.ok(
+          exists(".user-menu"),
+          "user menu remains open if tab doesn't link to anywhere"
+        );
+      }
+      await click("#site-logo");
+    }
+  });
 });
 
 acceptance("User menu - Dismiss button", function (needs) {
   needs.user({
     redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 10,
-    grouped_unread_high_priority_notifications: {
+    grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
       [NOTIFICATION_TYPES.private_message]: 89,
+      [NOTIFICATION_TYPES.votes_released]: 1,
+      [NOTIFICATION_TYPES.code_review_commit_approved]: 3,
     },
   });
 
@@ -607,6 +826,29 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click("#user-menu-button-likes");
     await click(".user-menu .notifications-dismiss");
+    assert.ok(
+      markRead,
+      "mark-read request is sent without a confirmation modal"
+    );
+  });
+
+  test("doesn't show confirmation modal for the other notifications list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await click("#user-menu-button-other");
+    let repliesBadgeNotification = query(
+      "#user-menu-button-other .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "4",
+      "badge shows the right count"
+    );
+
+    await click(".user-menu .notifications-dismiss");
+
+    assert.ok(!exists("#user-menu-button-other .badge-notification"));
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"

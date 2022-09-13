@@ -81,8 +81,8 @@ export default class AdminBadgesShowController extends Controller.extend(
   }
 
   get hasQuery() {
-    let modelQuery = this.model.query;
-    let bufferedQuery = this.bufferedQuery;
+    let modelQuery = this.model.get("query");
+    let bufferedQuery = this.buffered.get("query");
 
     if (bufferedQuery) {
       return bufferedQuery.trim().length > 0;

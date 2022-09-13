@@ -203,10 +203,24 @@ class Site
     MessageBus.publish(SITE_JSON_CHANNEL, '')
   end
 
-  def self.show_welcome_topic_banner?(guardian)
-    return false unless guardian.is_admin?
-    return false unless guardian.user.id == User.first_login_admin_id
+  def self.welcome_topic_banner_cache_key(user_id)
+    "show_welcome_topic_banner:#{user_id}"
+  end
 
-    Post.find_by("topic_id = :topic_id AND post_number = 1 AND version = 1 AND created_at > :created_at", topic_id: SiteSetting.welcome_topic_id, created_at: 1.month.ago).present?
+  def self.show_welcome_topic_banner?(guardian)
+    return false if !guardian.is_admin?
+    user_id = guardian.user.id
+
+    show_welcome_topic_banner = Discourse.cache.read(welcome_topic_banner_cache_key(user_id))
+    return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
+
+    show_welcome_topic_banner = if (user_id == User.first_login_admin_id)
+      Post.find_by("topic_id = :topic_id AND post_number = 1 AND version = 1 AND created_at > :created_at", topic_id: SiteSetting.welcome_topic_id, created_at: 1.month.ago).present?
+    else
+      false
+    end
+
+    Discourse.cache.write(welcome_topic_banner_cache_key(user_id), show_welcome_topic_banner)
+    show_welcome_topic_banner
   end
 end

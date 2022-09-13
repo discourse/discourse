@@ -284,6 +284,8 @@ he:
     not_implemented: "יכולת זו עדיין לא מומשה, עמך הסליחה!"
     no_value: "לא"
     yes_value: "כן"
+    ok_value: "או קיי"
+    cancel_value: "ביטול"
     submit: "הגשה"
     generic_error: "ארעה שגיאה, עמך הסליחה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
@@ -1794,7 +1796,6 @@ he:
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
       remove_status: "הסרת מצב"
-      until: "עד:"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -3899,7 +3900,6 @@ he:
       google: "לוח שנה של Google"
       ics: "ICS"
     tagging:
-      all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
       selector_all_tags: "כל התגיות"
       selector_no_tags: "ללא תגיות"
@@ -4079,14 +4079,14 @@ he:
     user_activity:
       no_activity_title: "אין פעילות עדיין"
       no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. הפעילות שלך תופיע כאן."
-      no_activity_others: "אין פעילות."
       no_replies_title: "עדיין לא הגבת לאף נושא"
-      no_replies_others: "אין תגובות."
+      no_replies_title_others: "אין עדיין אף תגובה של %{username} על נושא כלשהו"
+      no_replies_body: "כאשר <a href='%{searchUrl}'>נחשפת</a> לדיון מעניין שבא לך להשתתף בו, יש ללחוץ על הכפתור <kbd>תגובה</kbd> ישירות מתחת לכל פוסט שהוא כדי להתחיל להגיב לאותו פוסט מסוים. או, אם העדפתך היא להגיב לנושא הכללי במקום לפוסט או מישהו מסוים, כדאי לחפש את כפתור ה<kbd>תגובה</kbd> בתחתית הנושא או מתחת לציר הזמן של הנושא."
       no_drafts_title: "לא התחלת טיוטות"
       no_drafts_body: "לא סיימת לכתוב את הפוסט? אנו נשמור טיוטה חדשה אוטומטית ונציג אותה כאן עם כל כתיבה של נושא, תגובה או הודעה פרטית חדשים. יש לבחור בכפתור הביטול כדי להתעלם או לשמור את הטיוטה שלך ולהמשיך אחר כך."
       no_likes_title: "עדיין לא סימנת אף נושא בלייק"
+      no_likes_title_others: "אין עדיין אף לייק של %{username} על נושא כלשהו"
       no_likes_body: "דרך נפלאה לקפוץ ישירות פנימה ולהתחיל לתרום היא להתחיל לקרוא דיונים שכבר נערכו ולבחור בסמל %{heartIcon} על פוסטים שאהבת!"
-      no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
       no_topics_body: "תמיד עדיף <a href='%{searchUrl}'>לחפש</a> דיונים קיימים בטרם פתיחת חדשים, אבל אם בוודאות לא נתקלת בנושא המבוקש, אפשר פשוט לפתוח נושא חדש משלך. הכפתור <kbd>+ נושא חדש</kbd> אמור להופיע בפינה השמאלית העליונה של רשימת נושאים, קטגוריה או תגית כדי להתחיל ליצור נושא חדש באזור הזה."
       no_topics_title_others: "לא נפתח עוד אף נושא על ידי %{username}"
@@ -4115,7 +4115,6 @@ he:
       more: "עוד…"
       sections:
         messages:
-          header_link_title: "הודעות פרטיות"
           header_link_text: "הודעות"
           header_action_title: "יצירת הודעה פרטית"
           links:
@@ -4129,23 +4128,28 @@ he:
         tags:
           none: "עדיין לא הוספת תגיות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
-          header_link_title: "כל התגיות"
           header_link_text: "תגיות"
           header_action_title: "לערוך את תגיות סרגל הצד שלך"
         categories:
           none: "עדיין לא הוספת קטגוריות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
-          header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
         community:
-          header_link_title: "בית"
           header_link_text: "קהילה"
           header_action_title: "יצירת נושא חדש"
           links:
+            about:
+              content: "על אודות"
+            admin:
+              content: "הנהלה"
+            badges:
+              content: "עיטורים"
             everything:
               content: "הכול"
               title: "כל הנושאים"
+            faq:
+              content: "שאלות נפוצות"
             tracked:
               content: "במעקב"
               title: "כל הנושאים במעקב"
@@ -4167,6 +4171,7 @@ he:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שמצטרפים חדשים יקראו. אפשר לחשוב על זה כעל „נאום מעלית” או „הצהרת כוונות” במשפט אחד'
       button_title: "להתחיל לערוך"
+    until: "עד:"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -5388,7 +5393,8 @@ he:
           two: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
           many: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
           other: "לא ניתן להסיר את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
-        delete_confirm: "בדרך כלל מומלץ להפוך משתמשים לאלמונים מאשר למחוק אותם כדי למנוע הסרת תוכן מדיונים קיימים.<br><br>האם בוודאות ברצונך למחוק את המשתמש הזה? מדובר בפעולה בלתי הפיכה!"
+        delete_confirm_title: "למחוק את המשתמש הזה? המחיקה היא לצמיתות!"
+        delete_confirm: "עדיף להפוך משתמשים לאלמוניים במקום למחוק אותם כדי להימנע מהסרת תוכן מדיונים קיימים."
         delete_and_block: "מחיקה ו<b>חסימה</b> של כתובות הדוא״ל וה־IP האלו"
         delete_dont_block: "מחיקה בלבד"
         deleting_user: "משתמש נמחק…"
@@ -5521,7 +5527,6 @@ he:
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         locale: "שפה:"
-        fallback_locale_warning: "בחרת לערוך שפה שמבוססת על %{fallback}. משתמשים שבוחרים ב%{fallback} כשפת מנשק המשתמש שלהם לא יראו את השינויים שלך."
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"

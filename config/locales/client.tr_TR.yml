@@ -209,6 +209,8 @@ tr_TR:
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
     yes_value: "Evet"
+    ok_value: "Tamam"
+    cancel_value: "İptal et"
     submit: "Gönder"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
@@ -1620,7 +1622,6 @@ tr_TR:
       set_custom_status: "Özel bir durum ayarla"
       what_are_you_doing: "Ne yapıyorsun?"
       remove_status: "Durumu kaldır"
-      until: "Şuna kadar:"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"
@@ -3522,7 +3523,7 @@ tr_TR:
       google: "Google Takvim"
       ics: "ICS"
     tagging:
-      all_tags: "Tüm Etiketler"
+      all_tags: "Tüm etiketler"
       other_tags: "Diğer Etiketler"
       selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
@@ -3677,12 +3678,11 @@ tr_TR:
     user_activity:
       no_activity_title: "Henüz etkinlik yok"
       no_activity_body: "Topluluğumuza hoş geldiniz! Burada çok yenisiniz ve tartışmalara henüz katkıda bulunmadınız. İlk adım olarak <a href='%{topUrl}'>en çok okunanları</a> veya <a href='%{categoriesUrl}'>kategorileri</a> ziyaret edebilir ve okumaya başlayabilirsiniz! Beğendiğiniz veya hakkında daha fazla bilgi edinmek istediğiniz gönderilerde lütfen %{heartIcon} kullanarak beğeninizi belirtin. Paylaşımlara katıldıkça, etkinliğiniz burada listelenecek."
-      no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
-      no_replies_others: "Yanıt yok."
+      no_replies_title_others: "%{username} henüz hiçbir konuya cevap vermedi"
       no_drafts_title: "Hiç taslak başlatmadınız"
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
-      no_likes_others: "Beğenilen gönderi yok."
+      no_likes_title_others: "%{username} henüz hiçbir konuyu beğenmedi"
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
       no_topics_title_others: "%{username} kullanıcısı henüz herhangi bir konu başlatmadı"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
@@ -3703,7 +3703,6 @@ tr_TR:
       more: "Daha..."
       sections:
         messages:
-          header_link_title: "kişisel mesajlar"
           header_link_text: "İletiler"
           header_action_title: "kişisel bir mesaj oluştur"
           links:
@@ -3715,19 +3714,24 @@ tr_TR:
             unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
-          header_link_title: "tüm etiketler"
           header_link_text: "Etiketler"
         categories:
-          header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
         community:
-          header_link_title: "anasayfa"
           header_link_text: "Topluluk"
           header_action_title: "yeni konu oluştur"
           links:
+            about:
+              content: "Hakkında"
+            admin:
+              content: "Yönetici"
+            badges:
+              content: "Rozetler"
             everything:
               content: "Her şey"
               title: "Tüm konular"
+            faq:
+              content: "SSS"
             tracked:
               content: "Takipte"
               title: "Tüm izlenen konular"
@@ -3747,6 +3751,7 @@ tr_TR:
       title: "Hoş Geldiniz konulu gönderinizi oluşturun"
       description: 'Hoş geldiniz konulu gönderiniz, yeni katılanların okuyacağı ilk şeydir. Bunu bir paragraf “kısa bir sunum” veya “misyon anlatımınız” olarak düşünün'
       button_title: "Düzenlemeye Başla"
+    until: "Şuna kadar:"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -4931,7 +4936,8 @@ tr_TR:
         cant_delete_all_too_many_posts:
           one: "Tüm gönderileri silemezsiniz çünkü kullanıcının %{count} 'ten daha fazla gönderisi var. (delete_all_posts_max)"
           other: "Tüm gönderileri silemezsin çünkü kullanıcının %{count} 'ten fazla gönderisi var. (delete_all_posts_max)"
-        delete_confirm: "İçeriği mevcut tartışmalardan kaldırmaktan kaçınmak veya kullanıcıları silmek yerine genellikle anonimleştirmek tercih edilir. <br><br>Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu geri alınamaz!"
+        delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu kalıcıdır!"
+        delete_confirm: "Mevcut tartışmalardan içerik kaldırmamak için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
         delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Yalnızca sil"
         deleting_user: "Kullanıcı siliniyor..."
@@ -5062,7 +5068,6 @@ tr_TR:
         recommended: "Sıradaki metni isteğine göre uyarlamanı öneririz:"
         show_overriden: "Yalnızca iptal edilenleri göster"
         locale: "Dil:"
-        fallback_locale_warning: "%{fallback} diline dayalı bir dili düzenliyorsunuz. Arayüz dili olarak %{fallback} seçen kullanıcılar değişikliklerinizi görmez."
         more_than_50_results: "50 den fazla sonuç var. Lütfen aramanızı daraltın."
       settings:
         show_overriden: "Yalnızca geçersiz kılınanları göster"

@@ -1,24 +1,8 @@
-#main-outlet-wrapper {
-  .sidebar-section-header-wrapper {
-    margin-bottom: 0.25em;
+.sidebar-footer-wrapper {
+  position: static;
+  margin-top: 1em;
+  .sidebar-footer-container {
+    background: transparent;
+    padding: 0.5em 0.1em;
   }
-
-  .sidebar-section-header-link {
-    font-size: var(--font-0);
-  }
-  .sidebar-section-link {
-    padding: 0.5em;
-    font-size: var(--font-0);
-  }
-}
-
-.sidebar-wrapper .sidebar-footer-wrapper .sidebar-footer-container {
-  margin-top: 0.5em;
-  margin-right: 0;
-  padding-left: 0.25em;
-}
-
-.sidebar-more-section-links-details
-  .sidebar-more-section-links-details-summary {
-  font-size: var(--font-0);
 }

@@ -76,9 +76,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :sidebar_category_ids,
-             :sidebar_tags,
              :likes_notifications_disabled,
-             :grouped_unread_high_priority_notifications,
+             :grouped_unread_notifications,
              :redesigned_user_menu_enabled
 
   delegate :user_stat, to: :object, private: true
@@ -309,7 +308,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id)
+    object.sidebar_categories_ids
   end
 
   def include_sidebar_category_ids?
@@ -325,10 +324,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def redesigned_user_menu_enabled
-    if defined?(@redesigned_user_menu_enabled)
-      return @redesigned_user_menu_enabled
-    end
-    @redesigned_user_menu_enabled = object.redesigned_user_menu_enabled?
+    object.redesigned_user_menu_enabled?
   end
 
   def likes_notifications_disabled
@@ -339,7 +335,7 @@ class CurrentUserSerializer < BasicUserSerializer
     redesigned_user_menu_enabled
   end
 
-  def include_grouped_unread_high_priority_notifications?
+  def include_grouped_unread_notifications?
     redesigned_user_menu_enabled
   end
 

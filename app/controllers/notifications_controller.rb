@@ -30,18 +30,17 @@ class NotificationsController < ApplicationController
       limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
-      notifications = Notification.recent_report(current_user, limit, notification_types)
-      changed = false
-
-      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
-        # ordering can be off due to PMs
-        max_id = notifications.map(&:id).max
-        changed = current_user.saw_notification_id(max_id)
+      if SiteSetting.enable_experimental_sidebar_hamburger
+        notifications = Notification.prioritized_list(current_user, count: limit, types: notification_types)
+      else
+        notifications = Notification.recent_report(current_user, limit, notification_types)
       end
 
-      if changed
-        current_user.reload
-        current_user.publish_notifications_state
+      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
+        if changed = current_user.bump_last_seen_notification!
+          current_user.reload
+          current_user.publish_notifications_state
+        end
       end
 
       if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode
@@ -103,7 +102,7 @@ class NotificationsController < ApplicationController
       end
 
       Notification.read_types(current_user, types)
-      current_user.saw_notification_id(Notification.recent_report(current_user, 1).max.try(:id))
+      current_user.bump_last_seen_notification!
     end
 
     current_user.reload

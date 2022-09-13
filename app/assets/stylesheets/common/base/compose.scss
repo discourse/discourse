@@ -421,6 +421,11 @@ html.composer-open {
           background-color: var(--highlight-low);
           text-decoration: none;
         }
+
+        .relative-date {
+          font-size: var(--font-down-3);
+          padding-top: 10em;
+        }
       }
     }
   }
@@ -538,14 +543,6 @@ body:not(.ios-safari-composer-hacks) {
       min-height: calc(var(--min-height) - 4em);
     }
     padding-bottom: var(--composer-ipad-padding);
-  }
-}
-
-.show-preview {
-  @media screen and (max-width: 850px) {
-    .d-editor-button-bar {
-      font-size: $font-down-1;
-    }
   }
 }
 

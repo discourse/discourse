@@ -201,14 +201,11 @@ sq:
             hex:
               invalid: "nuk është një ngjyrë e vlefshme"
       <<: *errors
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  general_category_name: "Karakteristika të përgjithshme"
   meta_category_name: "Reagimet e Faqes"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Stafi"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
-  lounge_welcome:
-    title: "Mirë se vini në Lounge"
   category:
     topic_prefix: "Rreth kategorisë %{category}"
     errors:

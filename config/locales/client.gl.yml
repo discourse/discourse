@@ -195,6 +195,8 @@ gl:
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda!"
     no_value: "Non"
     yes_value: "Si"
+    ok_value: "De acordo"
+    cancel_value: "Cancelar"
     submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
@@ -3213,7 +3215,6 @@ gl:
     download_calendar:
       download: "Descargar"
     tagging:
-      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
@@ -3346,10 +3347,6 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "Sen actividade."
-      no_replies_others: "Sen respostas."
-      no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
       unread_count:
         one: "%{count} pendente de lectura"
@@ -3370,15 +3367,20 @@ gl:
             unread_with_count: "(%{count}) pendente de ler"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorías"
           header_link_text: "Categorías"
         community:
-          header_link_title: "inicio"
           header_link_text: "Comunidade"
           links:
+            about:
+              content: "Verbo de"
+            admin:
+              content: "Administración"
+            badges:
+              content: "Insignias"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguido"
             groups:
@@ -4502,7 +4504,6 @@ gl:
         cant_delete_all_too_many_posts:
           one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
           other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
-        delete_confirm: "Xeralmente é preferíbel anonimizar os usuarios mellor ca eliminalos, para evitar retirar contido das discusións existentes.<br><br>Está SEGURO de que quere eliminar este usuario? Isto é permanente!"
         delete_and_block: "Eliminar e <b>bloquear</b> este enderezo de correo e de IP"
         delete_dont_block: "Só eliminar"
         deleting_user: "Eliminando usuario..."
@@ -4627,7 +4628,6 @@ gl:
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
-        fallback_locale_warning: "Está a editar un idioma baseado en %{fallback}. Os usuarios que escollan %{fallback} como idioma de interface non verán os cambios."
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."
       settings:
         show_overriden: "Amosar só os cambios"

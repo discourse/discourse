@@ -216,7 +216,7 @@
               {{/if}}
 
               {{#if this.canDeleteUser}}
-                <div class='pull-right'><DButton @action={{action "adminDelete"}} @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger" /></div>
+                <div class='pull-right'><DButton @action={{action "adminDelete"}} @icon="exclamation-triangle" @label="user.admin_delete" @class="btn-danger btn-delete-user" /></div>
               {{/if}}
             </dl>
             <PluginOutlet @name="user-profile-secondary" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

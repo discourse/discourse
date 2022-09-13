@@ -254,6 +254,8 @@ hr:
     not_implemented: "Nažalost, ova mogućnost nije još implementirana."
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "U redu"
+    cancel_value: "Odustani"
     submit: "Pošalji"
     generic_error: "Dogodila se greška, ispričavamo se."
     generic_error_with_reason: "Dogodila se greška: %{error}"
@@ -3695,7 +3697,6 @@ hr:
       google: "Google kalendar"
       ics: "ICS"
     tagging:
-      all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
@@ -3866,14 +3867,11 @@ hr:
     user_activity:
       no_activity_title: "Još nema aktivnosti"
       no_activity_body: "Dobrodošli u našu zajednicu! Ovdje ste potpuno novi i još niste sudjelovali u raspravama. Kao prvi korak, posjetite <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> i samo počnite čitati! Odaberite %{heartIcon} na objavama koje vam se sviđaju ili o kojima želite saznati više. Dok budete sudjelovali, vaša će aktivnost biti navedena ovdje."
-      no_activity_others: "Nema aktivnosti."
       no_replies_title: "Još niste odgovorili ni na jednu temu"
-      no_replies_others: "Nema odgovora."
       no_drafts_title: "Niste pokrenuli nikakve skice"
       no_drafts_body: "Niste baš spremni za objavu? Automatski ćemo spremiti novu skicu i navesti je ovdje kad god počnete sastavljati temu, odgovor ili osobnu poruku. Odaberite gumb za odustajanje da biste odbacili ili spremili skicu za nastavak kasnije."
       no_likes_title: "Još vam se nije svidjela nijedna tema"
       no_likes_body: "Sjajan način da uskočite i počnete pridonositi je da počnete čitati razgovore koji su se već vodili i odaberete %{heartIcon} na objavama koje vam se sviđaju!"
-      no_likes_others: "Nema likeanih objava."
       no_topics_title: "Još niste pokrenuli nijednu temu"
       no_topics_title_others: "%{username} još nije pokrenuo nijednu temu"
       no_read_topics_title: "Još niste pročitali nijednu temu"
@@ -3908,19 +3906,24 @@ hr:
             unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
-          header_link_title: "sve oznake"
           header_link_text: "Oznake"
         categories:
-          header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "naslovnica"
           header_link_text: "Zajednica"
           header_action_title: "otvori novu temu"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Administrator"
+            badges:
+              content: "Značke"
             everything:
               content: "Sve"
               title: "Sve teme"
+            faq:
+              content: "ČPP"
             tracked:
               content: "Praćeno"
               title: "Sve praćene teme"
@@ -5133,7 +5136,6 @@ hr:
           one: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
-        delete_confirm: "Općenito je poželjno anonimizirati korisnike umjesto brisanja, kako bi se izbjeglo uklanjanje sadržaja iz postojećih rasprava.<br><br>Jeste li sigurni da želite izbrisati ovog korisnika? Ovo je trajno!"
         delete_and_block: "Obriši i <b>block</b> ovaj email i IP adresu"
         delete_dont_block: "Samo obriši"
         deleting_user: "Brisanje korisnika..."
@@ -5265,7 +5267,6 @@ hr:
         recommended: "Preporučujemo da prilagodite sljedeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Pokazuj samo promijenjeno"
         locale: "Jezik:"
-        fallback_locale_warning: "Uređujete jezik temeljen na %{fallback}. Korisnici koji odaberu %{fallback} kao jezik sučelja neće vidjeti vaše promjene."
         more_than_50_results: "Postoji više od 50 rezultata. Molimo suzite kriterije vaše pretrage."
       settings:
         show_overriden: "Pokazuj samo promijenjeno"

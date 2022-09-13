@@ -73,6 +73,7 @@ it:
       file_too_big: "Il file non compresso è troppo grande."
       unknown_file_type: "Il file che hai caricato non sembra essere un tema valido di Discourse."
       not_allowed_theme: "`%{repo}` non è nella lista dei temi consentiti (controlla l'impostazione globale `allowed_theme_repos`)."
+      ssh_key_gone: "Hai aspettato troppo tempo per installare il tema e la chiave SSH è scaduta. Riprova."
     errors:
       component_no_user_selectable: "I componenti del tema non sono selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
@@ -595,8 +596,7 @@ it:
               invalid: "non è valido"
       <<: *errors
   uncategorized_category_name: "Senza categoria"
-  vip_category_name: "Salotto"
-  vip_category_description: "Una categoria esclusiva per i membri con livello di attendibilità 3 o superiore."
+  general_category_name: "Generale"
   meta_category_name: "Feedback Sito"
   meta_category_description: "Discussioni su questo sito, la sua organizzazione, su come funziona e come possiamo migliorarlo."
   staff_category_name: "Staff"
@@ -617,29 +617,6 @@ it:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Potresti chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino sull'annuncio.
-  lounge_welcome:
-    title: "Benvenuto nel Salotto"
-    body: |2
-
-      Congratulazioni! :confetti_ball:
-
-      Se vedi questo messaggio, significa che sei stato promosso ad **assiduo** (livello di esperienza 3).
-
-      Da ora sarai in grado di: &hellip;
-
-      * Cambiare il titolo a qualsiasi argomento
-      * Cambiare la categoria di qualsiasi argomento
-      * I tuoi link potranno essere seguiti ([il nofollow automatico](https://en.wikipedia.org/wiki/Nofollow) è stato rimosso)
-      * Accedere alla categoria privata Salotto visibile ai soli utenti che hanno raggiunto il livello di attendibilità 3 o superiore
-      * Nascondere messaggi spam con una sola segnalazione
-
-      Ecco la [lista degli attuali utenti con Livello di attendibilità 3](%{base_path}/badges/3/regular). Lascia loro un saluto.
-
-      Grazie per essere un importante membro della nostra comunità!
-
-      (Per ulteriori informazioni sui Livelli di attendibilità dai [uno sguardo a questo Argomento][trust]. Tieni presente che solo gli utenti che continuano a rispettare i requisiti nel tempo resteranno assidui.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "DA LEGGERE SUBITO: Guida Rapida per Amministratore"
   category:
     topic_prefix: "Definizione della categoria %{category}"
@@ -1862,6 +1839,7 @@ it:
     max_emails_per_day_per_user: "Numero massimo di email da inviare agli utenti per giorno. 0 per disabilitare il limite"
     enable_staged_users: "Crea automaticamente utenti temporanei quando si elaborano le email in arrivo."
     maximum_staged_users_per_email: "Numero massimo di utenti temporanei creati quando si elaborano le email in arrivo."
+    maximum_recipients_per_new_group_email: "Blocca le email in arrivo con troppi destinatari."
     auto_generated_allowlist: "Lista degli indirizzi email che non verranno verificati per i contenuti generati automaticamente. Esempio: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloccare le email in arrivo identificate come generate automaticamente."
     ignore_by_title: "Ignora le email in arrivo in base al loro titolo."
@@ -2114,6 +2092,8 @@ it:
     use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
     splash_screen: "Visualizza una schermata di caricamento temporanea durante il caricamento delle risorse del sito"
+    default_sidebar_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie della barra laterale."
+    default_sidebar_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette della barra laterale."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -2877,6 +2857,10 @@ it:
       title: "Email di risposta a un messaggio di riepilogo rifiutata"
       subject_template: "[%{email_prefix}] Problema e-mail - Risposta a un messaggio di riepilogo"
       text_body_template: "Siamo spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai risposto a un'e-mail di riepilogo, e questo non è consentito.\n\nSe ritieni che si tratti di un errore, [contatta un membro dello staff](%{base_url}/about).\n"
+    email_reject_too_many_recipients:
+      title: "Rifiuto di e-mail con troppi destinatari"
+      subject_template: "[%{email_prefix}] Problema email -- Troppi destinatari"
+      text_body_template: "Siamo spiacenti, ma l'invio del tuo messaggio email a %{destination} (intitolato %{former_title}) non ha funzionato. \n\nHai provato a scrivere a più di %{max_recipients_count} persone e il nostro sistema ha identificato automaticamente la tua email come spam.\n\nSe credi si tratti di un errore, [contatta lo staff](%{base_url}/about).\n"
     email_error_notification:
       title: "Notifica Errore Email"
       subject_template: "[%{email_prefix}] Problema email -- errore di autenticazione POP"
@@ -3951,7 +3935,7 @@ it:
     register:
       button: "Registra"
       title: "Registrare Account Amministratore"
-      help: "registrare un nuovo account per cominciare"
+      help: "Registra un nuovo account per iniziare."
       no_emails: "Sfortunatamente, nessuna email amministratore è stata definita durante l'installazione, quindi potrebbe essere difficile completare la configurazione . Aggiungi una email sviluppatore nel file di configurazione o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea un account amministratore dalla console</a> ."
     confirm_email:
       title: "Conferma la tua Email"

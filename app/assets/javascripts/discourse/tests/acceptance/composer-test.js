@@ -22,6 +22,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -64,7 +65,7 @@ acceptance("Composer", function (needs) {
 
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height to 400px when creating topic"
     );
 
@@ -82,8 +83,16 @@ acceptance("Composer", function (needs) {
     await click(".toggle-fullscreen");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height back to 400px when composer is opened from draft mode"
+    );
+
+    await fillIn(".d-editor-input", "");
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "",
+      "removes --composer-height property when composer is closed"
     );
   });
 
@@ -173,9 +182,9 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".bootbox.modal"), "it pops up an error message");
-    await click(".bootbox.modal a.btn-primary");
-    assert.ok(!exists(".bootbox.modal"), "it dismisses the error");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
@@ -214,13 +223,14 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "This title doesn't matter");
     await fillIn(".d-editor-input", "custom message");
     await click("#reply-control button.create");
+
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query("#dialog-holder .dialog-body").innerText,
       "This is a custom response"
     );
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
 
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/faq",
@@ -308,7 +318,10 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of the first reply");
 
     await visit("/t/this-is-a-test-topic/9");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.ok(
+      currentURL().startsWith("/t/this-is-a-test-topic/9"),
+      "moves to second topic"
+    );
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
@@ -400,34 +413,27 @@ acceptance("Composer", function (needs) {
 
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post button.show-more-actions");
+    await click(".topic-post button.edit");
 
     await fillIn(".d-editor-input", "will return empty json");
     await fillIn("#reply-title", "This is the new text for the title");
 
-    // when this promise resolves, the request had already started because
-    // this promise will be resolved by the pretender
-    const promise = new Promise((resolve) => {
-      window.resolveLastPromise = resolve;
+    pretender.put("/posts/:post_id", async () => {
+      // at this point, request is in flight, so post is staged
+      assert.strictEqual(count(".topic-post.staged"), 1);
+      assert.ok(query(".topic-post").classList.contains("staged"));
+      assert.strictEqual(
+        query(".topic-post.staged .cooked").innerText.trim(),
+        "will return empty json"
+      );
+
+      return response(200, {});
     });
 
-    // click to trigger the save, but wait until the request starts
-    click("#reply-control button.create");
-    await promise;
+    await click("#reply-control button.create");
 
-    // at this point, request is in flight, so post is staged
-    assert.strictEqual(count(".topic-post.staged"), 1);
-    assert.ok(query(".topic-post:nth-of-type(1)").className.includes("staged"));
-    assert.strictEqual(
-      query(".topic-post.staged .cooked").innerText.trim(),
-      "will return empty json"
-    );
-
-    // finally, finish request and wait for last render
-    window.resolveLastPromise();
     await visit("/t/internationalization-localization/280");
-
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 
@@ -759,11 +765,11 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".dialog-body").innerText,
       I18n.t("drafts.abandon.confirm")
     );
 
-    await click(".modal-footer .btn.btn-default");
+    await click(".dialog-footer .btn-resume-editing");
   });
 
   test("Can switch states without abandon popup", async function (assert) {
@@ -821,7 +827,7 @@ acceptance("Composer", function (needs) {
 
     await visit("/u/charlie");
     await click("button.compose-pm");
-    await click(".modal .btn-default");
+    await click(".dialog-footer .btn-resume-editing");
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");

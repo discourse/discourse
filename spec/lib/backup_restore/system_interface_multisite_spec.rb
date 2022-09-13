@@ -36,4 +36,21 @@ RSpec.describe BackupRestore::SystemInterface, type: :multisite do
       end
     end
   end
+
+  describe "#listen_for_shutdown_signal" do
+    it "uses the correct Redis namespace" do
+      test_multisite_connection("second") do
+        BackupRestore.mark_as_running!
+
+        expect do
+          thread = subject.listen_for_shutdown_signal
+          BackupRestore.set_shutdown_signal!
+          thread.join
+        end.to raise_error(SystemExit)
+
+        BackupRestore.clear_shutdown_signal!
+        BackupRestore.mark_as_not_running!
+      end
+    end
+  end
 end

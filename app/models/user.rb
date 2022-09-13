@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
 
   has_many :sidebar_section_links, dependent: :delete_all
   has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
-  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+  has_many :custom_sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -538,15 +538,14 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
-  MAX_UNREAD_HIGH_PRI_BACKLOG = 200
-  def grouped_unread_high_priority_notifications
-    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_HIGH_PRI_BACKLOG)
+  MAX_UNREAD_BACKLOG = 400
+  def grouped_unread_notifications
+    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_BACKLOG)
       SELECT X.notification_type AS type, COUNT(*) FROM (
         SELECT n.notification_type
         FROM notifications n
         LEFT JOIN topics t ON t.id = n.topic_id
         WHERE t.deleted_at IS NULL
-          AND n.high_priority
           AND n.user_id = :user_id
           AND NOT n.read
         LIMIT :limit
@@ -643,8 +642,24 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
+    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
+      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
+    TEXT
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
+      true
+    else
+      false
+    end
+  end
+
+  def bump_last_seen_notification!
+    query = self.notifications.visible
+    if seen_notification_id
+      query = query.where("notifications.id > ?", seen_notification_id)
+    end
+    if max_notification_id = query.maximum(:id)
+      update!(seen_notification_id: max_notification_id)
       true
     else
       false
@@ -730,7 +745,7 @@ class User < ActiveRecord::Base
 
     if self.redesigned_user_menu_enabled?
       payload[:all_unread_notifications_count] = all_unread_notifications_count
-      payload[:grouped_unread_high_priority_notifications] = grouped_unread_high_priority_notifications
+      payload[:grouped_unread_notifications] = grouped_unread_notifications
     end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
@@ -1640,24 +1655,27 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  REDESIGN_USER_MENU_REDIS_KEY_PREFIX = "redesigned_user_menu_for_user_"
-
-  def self.redesigned_user_menu_enabled_user_ids
-    Discourse.redis.scan_each(match: "#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}*").map do |key|
-      key.sub(REDESIGN_USER_MENU_REDIS_KEY_PREFIX, "").to_i
-    end
-  end
-
   def redesigned_user_menu_enabled?
-    Discourse.redis.get("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}") == "1"
+    SiteSetting.enable_experimental_sidebar_hamburger
   end
 
-  def enable_redesigned_user_menu
-    Discourse.redis.setex("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}", 6.months, "1")
+  def sidebar_categories_ids
+    categories_ids = category_sidebar_section_links.pluck(:linkable_id)
+
+    if categories_ids.blank? && SiteSetting.default_sidebar_categories.present?
+      return SiteSetting.default_sidebar_categories.split("|").map(&:to_i) & guardian.allowed_category_ids
+    end
+
+    categories_ids
   end
 
-  def disable_redesigned_user_menu
-    Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
+  def sidebar_tags
+    return custom_sidebar_tags if custom_sidebar_tags.present?
+    if SiteSetting.default_sidebar_tags.present?
+      tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
+      return Tag.where(name: tag_names)
+    end
+    Tag.none
   end
 
   protected

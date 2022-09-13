@@ -86,7 +86,8 @@ module Jobs
           max_file_size: @max_size,
           retain_on_max_file_size_exceeded: true,
           tmp_file_name: "discourse-hotlinked",
-          follow_redirect: true
+          follow_redirect: true,
+          read_timeout: 15
         )
       rescue => e
         if SiteSetting.verbose_upload_logging

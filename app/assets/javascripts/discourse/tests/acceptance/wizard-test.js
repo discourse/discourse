@@ -14,6 +14,10 @@ acceptance("Wizard", function (needs) {
   test("Wizard starts", async function (assert) {
     await visit("/wizard");
     assert.ok(exists(".wizard-container"));
+    assert.notOk(
+      exists(".d-header-wrap"),
+      "header is not rendered on wizard pages"
+    );
     assert.strictEqual(currentRouteName(), "wizard.step");
   });
 
@@ -57,6 +61,15 @@ acceptance("Wizard", function (needs) {
       exists(".wizard-container__button.finish"),
       "shows finish on an intermediate step"
     );
+
+    await click(".wizard-container__button.finish");
+    assert.strictEqual(
+      currentURL(),
+      "/latest",
+      "it should transition to the homepage"
+    );
+
+    await visit("/wizard/steps/styling");
 
     await click(".wizard-container__button.next");
     assert.ok(

@@ -19,33 +19,32 @@
     height: 100%;
 
     .contents {
-      display: flex;
+      display: grid;
+      grid-template-areas: "logo-wrapper extra-info panel";
+      grid-template-columns: auto 1fr auto;
       align-items: center;
       height: 100%;
 
-      .header-row {
-        width: 100%;
-
-        .logo-wrapper {
-          float: left;
-        }
-        .auth-buttons {
-          float: right;
-          margin-top: 0.4em;
-
-          .login-button,
-          .signup-button {
-            padding: 8px 14px;
-          }
-        }
+      .has-sidebar-page & {
+        // 10px is a .wrap padding
+        grid-template-columns:
+          minmax(calc(var(--d-sidebar-width) - 10px), auto)
+          1fr auto;
       }
     }
+  }
+
+  .header-logo-wrapper {
+    grid-area: logo-wrapper;
+    display: flex;
+    align-items: center;
   }
 
   .title {
     display: flex;
     align-items: center;
     height: 100%;
+
     a,
     a:visited {
       color: var(--header_primary);
@@ -61,10 +60,10 @@
   }
 
   .panel {
+    grid-area: panel;
     position: relative;
     display: flex;
     flex: 0 0 auto;
-    margin-left: auto;
     align-items: center;
   }
 
@@ -212,6 +211,8 @@
 }
 
 .header-sidebar-toggle {
+  grid-area: hamburger;
+
   button {
     margin-right: 1em;
     box-sizing: content-box; // matches other header icons
@@ -242,6 +243,7 @@
 
 // topic info in the header
 .extra-info-wrapper {
+  grid-area: extra-info;
   display: flex;
   align-items: center;
   height: 100%;
@@ -249,6 +251,7 @@
   padding: 0 1.5em 0 0.5em;
   // we need to hide overflow in both to truncate the title in a flexbox
   overflow: hidden;
+
   .extra-info {
     overflow: hidden;
     width: 100%;

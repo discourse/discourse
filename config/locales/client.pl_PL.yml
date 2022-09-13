@@ -284,6 +284,8 @@ pl_PL:
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
     yes_value: "Tak"
+    ok_value: "OK"
+    cancel_value: "Anuluj"
     submit: "Prześlij"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
@@ -1789,7 +1791,6 @@ pl_PL:
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
       remove_status: "Usuń status"
-      until: "Aż do:"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -3885,7 +3886,6 @@ pl_PL:
       google: "Kalendarz Google"
       ics: "ICS"
     tagging:
-      all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
@@ -4065,14 +4065,11 @@ pl_PL:
     user_activity:
       no_activity_title: "Brak aktywności"
       no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy(-a) i nie uczestniczyłeś(-aś) jeszcze w żadnych dyskusjach. Jako pierwszy krok, odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i po prostu zacznij czytać! Kliknij w %{heartIcon} przy postach, które lubisz lub chcesz dowiedzieć się więcej. Gdy bierzesz udział w dyskusji, Twoja aktywność zostanie wymieniona tutaj."
-      no_activity_others: "Brak aktywności"
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
-      no_replies_others: "Brak odpowiedzi."
       no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
       no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
       no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
       no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
-      no_likes_others: "Brak polubionych wpisów."
       no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
       no_topics_body: "Zawsze najlepiej jest <a href='%{searchUrl}'>przeszukać</a> stronę w poszukiwaniu istniejących tematów konwersacji przed rozpoczęciem nowej, ale jeśli masz pewność, że temat, którego szukasz nie istnieje, śmiało rozpocznij nowy temat. Poszukaj przycisku <kbd>+ Nowy temat</kbd> w prawym górnym rogu listy tematów, kategorii lub tagu, aby rozpocząć tworzenie nowego tematu w tym obszarze."
       no_topics_title_others: "%{username} nie utworzył jeszcze żadnego tematu"
@@ -4101,7 +4098,6 @@ pl_PL:
       more: "Więcej…"
       sections:
         messages:
-          header_link_title: "osobiste wiadomości"
           header_link_text: "Wiadomości"
           header_action_title: "utwórz osobistą wiadomość"
           links:
@@ -4115,23 +4111,28 @@ pl_PL:
         tags:
           none: "Nie dodałeś żadnych tagów."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
-          header_link_title: "wszystkie tagi"
           header_link_text: "Etykiety"
           header_action_title: "edytuj tagi paska bocznego"
         categories:
           none: "Nie dodałeś żadnych kategorii."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
-          header_link_title: "wszystkie kategorie"
           header_link_text: "Kategorie"
           header_action_title: "edytuj kategorie paska bocznego"
         community:
-          header_link_title: "strona główna"
           header_link_text: "Społeczność"
           header_action_title: "utwórz nowy temat"
           links:
+            about:
+              content: "O stronie"
+            admin:
+              content: "Administratorzy"
+            badges:
+              content: "Odznaki"
             everything:
               content: "Wszystko"
               title: "Wszystkie tematy"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Śledzone"
               title: "Wszystkie śledzone tematy"
@@ -4153,6 +4154,7 @@ pl_PL:
       title: "Stwórz swój temat powitalny"
       description: 'Twój temat powitalny jest pierwszą rzeczą, którą przeczytają nowicjusze. Postaraj się w jednym akapicie wyrazić najważniejsze informacje, jakie chcesz przekazać nowym użytkownikom forum.'
       button_title: "Rozpocznij edycję"
+    until: "Aż do:"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4732,6 +4734,7 @@ pl_PL:
           install_create: "Stwórz nowy"
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
+          create_placeholder: "Utwórz symbol zastępczy"
           about_theme: "O stronie"
           license: "Licencja"
           version: "Wersja:"
@@ -5368,7 +5371,6 @@ pl_PL:
           few: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           many: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
-        delete_confirm: "Generalnie lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji.<br><br>Czy NA PEWNO chcesz usunąć tego użytkownika? Nie można tego cofnąć!"
         delete_and_block: "Usuń i <b>zablokuj</b> ten email oraz adres IP"
         delete_dont_block: "Tylko usuń"
         deleting_user: "Usuwanie użytkownika…"
@@ -5501,7 +5503,6 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
         locale: "Język:"
-        fallback_locale_warning: "Edytujesz język oparty na %{fallback}. Użytkownicy, którzy wybiorą %{fallback} jako język interfejsu, nie zobaczą Twoich zmian."
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
       settings:
         show_overriden: "Pokaż tylko nadpisane"

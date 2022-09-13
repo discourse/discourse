@@ -206,6 +206,8 @@ ur:
     not_implemented: "یہ خصوصیت ابھی تک لاگو نہیں کی گئی، معضرت!"
     no_value: "نہیں"
     yes_value: "جی ہاں"
+    ok_value: "ٹھیک ہے"
+    cancel_value: "منسوخ"
     submit: "شائع"
     generic_error: "معذرت، ایک تکنیکی خرابی کا سامنا کرنا پڑا ہے۔"
     generic_error_with_reason: "ایک تکنیکی خرابی پیش آئی: %{error}"
@@ -3457,7 +3459,6 @@ ur:
       google: "گوگل کیلنڈر"
       ics: "ICS"
     tagging:
-      all_tags: "تمام ٹیگز"
       other_tags: "دیگر ٹیگز"
       selector_all_tags: "تمام ٹیگز"
       selector_no_tags: "کوئی ٹیگ نہیں"
@@ -3614,14 +3615,11 @@ ur:
       unsupported_file_picked: "آپ نے غیر معاونت شدہ فائل منتخب کی ہے۔ معاون فائل کی اقسام — %{types}."
     user_activity:
       no_activity_title: "ابھی تک کوئی سرگرمی نہیں"
-      no_activity_others: "کوئی سرگرمی نہیں۔"
       no_replies_title: "آپ نے ابھی تک کسی بھی عنوان کا جواب نہیں دیا ہے"
-      no_replies_others: "کوئی جوابات نہیں۔"
       no_drafts_title: "آپ نے کوئی ڈرافٹ شروع نہیں کیا ہے"
       no_drafts_body: "پوسٹ کرنے کے لیے بالکل تیار نہیں؟ جب بھی آپ کوئی موضوع، جواب، یا ذاتی پیغام لکھنا شروع کریں گے تو ہم خود بخود ایک نیا مسودہ محفوظ کریں گے اور اسے یہاں درج کریں گے۔ رد کرنے کے لیے کینسل بٹن کو منتخب کریں یا بعد میں جاری رکھنے کے لیے اپنے ڈرافٹ کو محفوظ کریں۔"
       no_likes_title: "آپ نے ابھی تک کوئی عنوان پسند نہیں کیا ہے"
       no_likes_body: "کودنے اور تعاون شروع کرنے کا ایک بہترین طریقہ یہ ہے کہ پہلے سے ہو چکی گفتگو کو پڑھنا شروع کریں، اور اپنی پسند کی پوسٹس پر %{heartIcon} کو منتخب کریں!"
-      no_likes_others: "کوئی لائیک کردہ پوسٹس نہیں۔"
       no_topics_title: "آپ نے ابھی تک کوئی عنوان شروع نہیں کیا ہے"
       no_topics_title_others: "%{username} نے ابھی تک کوئی عنوان شروع نہیں کیا ہے"
       no_read_topics_title: "آپ نے ابھی تک کوئی عنوان نہیں پڑھا ہے"
@@ -3654,15 +3652,20 @@ ur:
             unread_with_count: "بغیر پڑھا (%{count})"
             archive: "آر کائیو"
         tags:
-          header_link_title: "تمام ٹیگز"
           header_link_text: "ٹیگز"
         categories:
-          header_link_title: "تمام زُمرَہ جات"
           header_link_text: "زُمرَہ جات"
         community:
-          header_link_title: "ہَوم"
           header_link_text: "کمیونٹی"
           links:
+            about:
+              content: "بارے میں"
+            admin:
+              content: "ایڈمن"
+            badges:
+              content: "بَیج"
+            faq:
+              content: "عمومی سوالات"
             tracked:
               content: "ٹریک کیا ہوا"
             groups:
@@ -4858,7 +4861,6 @@ ur:
         cant_delete_all_too_many_posts:
           one: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
           other: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
-        delete_confirm: "صارفین کو حذف کرنے کے بجائے اُن کو نام نہاد کر دینے کو ترجیح دی جاتی ہے، تاکہ موجودہ بات چیتوں سے مواد ہٹانے سے بچا جا سکے۔<br><br>کیا آپ واقعی اِس صارف کو حذف کرنا چاہتے ہیں؟ یہ مُستقِل عمل ہے!"
         delete_and_block: "اِس اِیمیل اور IP ایڈریس کو حذف اور <b>بلاک</b> کریں"
         delete_dont_block: "صرف مٹائیں"
         deleting_user: "صارف حذف کیا جا رہا ہے..."
@@ -4989,7 +4991,6 @@ ur:
         recommended: "اَپنی ضروریات کے مطابق کرنے کے لئے ہم مندرجہ ذیل ٹَیکسٹ کو اپنی مرضی کے حساب سے تبدیل کرنے کی تجویز دیں گے:"
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         locale: "زبان:"
-        fallback_locale_warning: "آپ %{fallback}کی بنیاد پر ایک زبان میں ترمیم کر رہے ہیں۔ وہ صارفین جو %{fallback} کو اپنی انٹرفیس زبان کے طور پر منتخب کرتے ہیں وہ آپ کی تبدیلیاں نہیں دیکھ پائیں گے۔"
         more_than_50_results: "50 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں۔"
       settings:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"

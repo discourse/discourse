@@ -599,6 +599,7 @@ export default RestModel.extend({
   },
 
   prependPost(post) {
+    this._initUserModel(post);
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
@@ -609,6 +610,7 @@ export default RestModel.extend({
   },
 
   appendPost(post) {
+    this._initUserModel(post);
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
@@ -1242,6 +1244,17 @@ export default RestModel.extend({
     } else {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
+    }
+  },
+
+  _initUserModel(post) {
+    post.user = User.create({
+      id: post.user_id,
+      username: post.username,
+    });
+
+    if (post.user_status) {
+      post.user.status = post.user_status;
     }
   },
 

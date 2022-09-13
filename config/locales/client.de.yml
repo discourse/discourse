@@ -29,7 +29,7 @@ de:
       time_with_zone: "HH:mm (z)"
       time_short_day: "dd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM, HH:mm"
+      long_no_year: "D. MMM, HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY [um] HH:mm"
@@ -226,6 +226,8 @@ de:
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Abbrechen"
     submit: "Absenden"
     generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
@@ -1652,7 +1654,6 @@ de:
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du da?"
       remove_status: "Status entfernen"
-      until: "Bis:"
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -3578,7 +3579,6 @@ de:
       google: "Google Kalender"
       ics: "ICS"
     tagging:
-      all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
@@ -3740,14 +3740,14 @@ de:
     user_activity:
       no_activity_title: "Noch keine Aktivität"
       no_activity_body: "Willkommen in unserer Community! Du bist ganz neu hier und hast noch nicht an Diskussionen teilgenommen. Besuche als ersten Schritt <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> und fang einfach an zu lesen! Wähle %{heartIcon} bei Beiträgen aus, die Dir gefallen oder über die Du mehr erfahren möchtest. Wenn Du teilnimmst, wird Deine Aktivität hier aufgelistet."
-      no_activity_others: "Keine Aktivität."
       no_replies_title: "Du hast noch keine Themen beantwortet"
-      no_replies_others: "Keine Antworten."
+      no_replies_title_others: "%{username} hat noch auf keine Themen geantwortet"
+      no_replies_body: "Wenn du <a href='%{searchUrl}'>eine interessante Unterhaltung entdeckst</a>, zu der du etwas beitragen möchtest, klicke auf die Schaltfläche <kbd>Antworten</kbd> direkt unter einem Beitrag, um auf diesen Beitrag zu antworten. Wenn du lieber auf das allgemeine Thema als auf einen einzelnen Beitrag oder eine Person antworten möchtest, findest du die Schaltfläche <kbd>Antworten</kbd> ganz unten im Thema oder unter der Zeitleiste des Themas."
       no_drafts_title: "Du hast noch keine Entwürfe begonnen"
       no_drafts_body: "Noch nicht ganz bereit? Wir speichern automatisch einen neuen Entwurf und listen ihn hier auf, wenn Du ein Thema, eine Antwort oder eine persönliche Nachricht verfasst. Wähle die Abbrechen-Schaltfläche, um Deinen Entwurf zu verwerfen oder zu speichern, um später fortzufahren."
       no_likes_title: "Du hast noch keine Themen mit \"gefällt mir\" markiert."
+      no_likes_title_others: "%{username} hat noch keine Themen geliked"
       no_likes_body: "Eine großartige Möglichkeit einzusteigen und Beiträge zu leisten, besteht darin, bereits stattgefundene Konversationen zu lesen und die %{heartIcon} bei Beiträgen auszuwählen, die Dir gefallen!"
-      no_likes_others: "Keine Beiträge mit „Gefällt mir“."
       no_topics_title: "Du hast noch keine Themen begonnen"
       no_topics_body: "Es ist immer am besten, <a href='%{searchUrl}'></a> nach bestehenden Themen zu suchen, bevor du ein neues Thema eröffnest. Wenn du dir aber sicher bist, dass es das gewünschte Thema noch nicht gibt, kannst du auch einfach ein neues Thema erstellen. Suche nach der Schaltfläche <kbd>+ Neues Thema</kbd> oben rechts in der Themenliste, der Kategorie oder dem Tag, um ein neues Thema in diesem Bereich zu erstellen."
       no_topics_title_others: "%{username} hat noch keine Themen begonnen"
@@ -3772,7 +3772,6 @@ de:
       more: "Mehr …"
       sections:
         messages:
-          header_link_title: "Persönliche Nachrichten"
           header_link_text: "Nachrichten"
           header_action_title: "eine persönliche Nachricht erstellen"
           links:
@@ -3786,23 +3785,28 @@ de:
         tags:
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu starten."
-          header_link_title: "alle Schlagwörter"
           header_link_text: "Schlagwörter"
           header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
         categories:
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu starten."
-          header_link_title: "alle Kategorien"
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
         community:
-          header_link_title: "Startseite"
           header_link_text: "Community"
           header_action_title: "ein neues Thema erstellen"
           links:
+            about:
+              content: "Über uns"
+            admin:
+              content: "Administration"
+            badges:
+              content: "Abzeichen"
             everything:
               content: "Alles"
               title: "Alle Themen"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Verfolgt"
               title: "Alle verfolgten Themen"
@@ -3822,6 +3826,7 @@ de:
       title: "Erstelle dein Willkommensthema"
       description: 'Dein Willkommensthema ist das erste, was Neuankömmlinge lesen werden. Sieh es als deinen einseitigen "Elevator Pitch" oder "Mission Statement" an.'
       button_title: "Bearbeitung beginnen"
+    until: "Bis:"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -5023,7 +5028,8 @@ de:
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat. (Siehe die Einstellung „delete_all_posts_max“.)"
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
-        delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren, statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird.<br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
+        delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen willst? Das ist dauerhaft!"
+        delete_confirm: "Im Allgemeinen ist es besser, Nutzer/innen zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
         deleting_user: "Benutzer wird gelöscht …"
@@ -5154,7 +5160,6 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         locale: "Sprache:"
-        fallback_locale_warning: "Du bearbeitest eine Sprache basierend auf %{fallback}. Benutzer, die %{fallback} als Sprache ihrer Oberfläche wählen, werden deine Änderungen nicht sehen."
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
         show_overriden: "Nur geänderte Texte anzeigen"
