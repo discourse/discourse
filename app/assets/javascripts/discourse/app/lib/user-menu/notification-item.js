@@ -82,5 +82,6 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
       setTransientHeader("Discourse-Clear-Notifications", this.notification.id);
       cookie("cn", this.notification.id, { path: getURL("/") });
     }
+    super.onClick(...arguments);
   }
 }

@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -80,6 +80,37 @@ acceptance("User menu", function (needs) {
       repliesBadgeNotification.textContent.trim(),
       "1",
       "badge shows count reduced by one"
+    );
+  });
+
+  test("clicking on user menu items", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on an item results in navigation to the item's page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on an item closes the menu after navigating"
+    );
+
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on the same item again keeps on the same page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on the same item again closes the menu"
     );
   });
 
