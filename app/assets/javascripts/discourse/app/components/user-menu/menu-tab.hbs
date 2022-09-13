@@ -1,0 +1,15 @@
+<button
+  type="button"
+  role="tab"
+  class={{this.classNames}}
+  id={{this.id}}
+  tabindex={{this.tabIndex}}
+  aria-selected={{if this.isActive "true" "false"}}
+  aria-controls={{this.ariaControls}}
+  data-tab-number={{@tab.position}}
+  {{on "click" @onTabClick}}
+  {{!-- template-lint-disable require-context-role --}}
+>
+  {{d-icon @tab.icon}}
+  {{yield}}
+</button>

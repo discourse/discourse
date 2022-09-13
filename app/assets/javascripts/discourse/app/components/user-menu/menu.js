@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { inject as service } from "@ember/service";
+import getUrl from "discourse-common/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -22,6 +24,10 @@ const CORE_TOP_TABS = [
 
     get panelComponent() {
       return DEFAULT_PANEL_COMPONENT;
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications`;
     }
   },
 
@@ -45,6 +51,10 @@ const CORE_TOP_TABS = [
     get notificationTypes() {
       return ["replied"];
     }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/responses`;
+    }
   },
 
   class extends UserMenuTab {
@@ -66,6 +76,10 @@ const CORE_TOP_TABS = [
 
     get notificationTypes() {
       return ["mentioned"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 
@@ -96,6 +110,10 @@ const CORE_TOP_TABS = [
     get notificationTypes() {
       return ["liked", "liked_consolidated", "reaction"];
     }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/likes-received`;
+    }
   },
 
   class extends UserMenuTab {
@@ -120,8 +138,13 @@ const CORE_TOP_TABS = [
         this.siteSettings.enable_personal_messages || this.currentUser.staff
       );
     }
+
     get notificationTypes() {
       return ["private_message"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/messages`;
     }
   },
 
@@ -145,6 +168,10 @@ const CORE_TOP_TABS = [
     get notificationTypes() {
       return ["bookmark_reminder"];
     }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/activity/bookmarks`;
+    }
   },
 
   class extends UserMenuTab {
@@ -167,6 +194,10 @@ const CORE_TOP_TABS = [
     get count() {
       return this.currentUser.get("reviewable_count");
     }
+
+    get linkWhenActive() {
+      return getUrl("/review");
+    }
   },
 ];
 
@@ -182,6 +213,10 @@ const CORE_BOTTOM_TABS = [
 
     get panelComponent() {
       return "user-menu/profile-tab-content";
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/summary`;
     }
   },
 ];
@@ -300,11 +335,13 @@ export default class UserMenu extends Component {
   }
 
   @action
-  changeTab(tab) {
+  handleTabClick(tab) {
     if (this.currentTabId !== tab.id) {
       this.currentTabId = tab.id;
       this.currentPanelComponent = tab.panelComponent;
       this.currentNotificationTypes = tab.notificationTypes;
+    } else if (tab.linkWhenActive) {
+      DiscourseURL.routeTo(tab.linkWhenActive);
     }
   }
 

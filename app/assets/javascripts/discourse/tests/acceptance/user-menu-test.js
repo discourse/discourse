@@ -551,6 +551,89 @@ acceptance("User menu", function (needs) {
       "logout button has the right icon"
     );
   });
+
+  test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-1";
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+
+          get linkWhenActive() {
+            return "/u/eviltrout/preferences";
+          }
+        };
+      });
+
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-2";
+          }
+
+          get icon() {
+            return "plus";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+    });
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-all-notifications");
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/notifications",
+      "clicking on active tab navigates to the page it links to"
+    );
+    assert.notOk(exists(".user-menu"), "user menu is closed after navigating");
+
+    const tabs = [
+      ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
+      ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
+      ["#user-menu-button-messages", "/u/eviltrout/messages"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
+      ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
+      ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
+      ["#user-menu-button-custom-tab-2", null],
+      ["#user-menu-button-review-queue", "/review"],
+      ["#user-menu-button-profile", "/u/eviltrout/summary"],
+    ];
+    for (const [id, expectedLink] of tabs) {
+      await click(".d-header-icons .current-user");
+      await click(id);
+      await click(id);
+      if (expectedLink) {
+        assert.strictEqual(
+          currentURL(),
+          expectedLink,
+          `clicking on the ${id} tab navigates to ${expectedLink}`
+        );
+        assert.notOk(
+          exists(".user-menu"),
+          "user menu is closed after navigating"
+        );
+      } else {
+        assert.ok(
+          exists(".user-menu"),
+          "user menu remains open if tab doesn't link to anywhere"
+        );
+      }
+      await click("#site-logo");
+    }
+  });
 });
 
 acceptance("User menu - Dismiss button", function (needs) {
