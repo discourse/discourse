@@ -18,7 +18,7 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 import { isEmpty } from "@ember/utils";
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -119,6 +119,7 @@ export const SAVE_ICONS = {
 };
 
 const Composer = RestModel.extend({
+  dialog: service(),
   _categoryId: null,
   unlistTopic: false,
   noBump: false,
@@ -453,7 +454,9 @@ const Composer = RestModel.extend({
       const category = this.category;
       if (category && category.topic_template) {
         if (this.reply.trim() === category.topic_template.trim()) {
-          bootbox.alert(I18n.t("composer.error.topic_template_not_modified"));
+          this.dialog.alert(
+            I18n.t("composer.error.topic_template_not_modified")
+          );
           return true;
         }
       }
@@ -1277,28 +1280,23 @@ const Composer = RestModel.extend({
         ) {
           const json = e.jqXHR.responseJSON;
           draftStatus = json.errors[0];
-          if (json.extras && json.extras.description) {
-            const buttons = [];
 
-            // ignore and force save draft
-            buttons.push({
-              label: I18n.t("composer.ignore"),
-              class: "btn",
-              callback: () => {
-                this.set("draftForceSave", true);
-              },
+          if (json.extras?.description) {
+            this.dialog.alert({
+              message: json.extras.description,
+              buttons: [
+                {
+                  label: I18n.t("composer.reload"),
+                  class: "btn-primary",
+                  action: () => window.location.reload(),
+                },
+                {
+                  label: I18n.t("composer.ignore"),
+                  class: "btn",
+                  action: () => this.set("draftForceSave", true),
+                },
+              ],
             });
-
-            // reload
-            buttons.push({
-              label: I18n.t("composer.reload"),
-              class: "btn btn-primary",
-              callback: () => {
-                window.location.reload();
-              },
-            });
-
-            bootbox.dialog(json.extras.description, buttons);
           }
         }
         this.setProperties({

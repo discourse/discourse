@@ -1,5 +1,4 @@
 import I18n from "I18n";
-import bootbox from "bootbox";
 import logout from "discourse/lib/logout";
 
 let _showingLogout = false;
@@ -10,25 +9,27 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const messageBus = container.lookup("service:message-bus");
-    messageBus.subscribe("/logout", () => {
-      if (_showingLogout) {
-        return;
+    const messageBus = container.lookup("service:message-bus"),
+      dialog = container.lookup("service:dialog");
+
+    if (!messageBus) {
+      return;
+    }
+
+    messageBus.subscribe("/logout", function () {
+      if (!_showingLogout) {
+        _showingLogout = true;
+
+        dialog.alert({
+          message: I18n.t("logout"),
+          confirmButtonLabel: "home",
+          didConfirm: logout,
+          didCancel: logout,
+          shouldDisplayCancel: false,
+        });
       }
 
       _showingLogout = true;
-
-      bootbox.dialog(
-        I18n.t("logout"),
-        {
-          label: I18n.t("home"),
-          callback: logout,
-        },
-        {
-          onEscape: logout,
-          backdrop: "static",
-        }
-      );
     });
   },
 };
