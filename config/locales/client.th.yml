@@ -2368,7 +2368,6 @@ th:
     download_calendar:
       download: "ดาวน์โหลด"
     tagging:
-      all_tags: "แท็กทั้งหมด"
       other_tags: "แท็กอื่น"
       selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"

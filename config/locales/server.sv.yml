@@ -73,6 +73,7 @@ sv:
       file_too_big: "Den okomprimerade filen är för stor."
       unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
       not_allowed_theme: "`%{repo}` finns inte i listan över tillåtna teman (bocka för den globala inställningen `allowed_theme_repos`)."
+      ssh_key_gone: "Du väntade för länge med att installera temat så SSH-nyckeln har löpt ut. Vi ber dig försöka igen."
     errors:
       component_no_user_selectable: "Temakomponenter kan inte väljas av användaren"
       component_no_default: "Temakomponenter kan inte vara standardtema"
@@ -597,6 +598,7 @@ sv:
       <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
   general_category_name: "Allmänt"
+  general_category_description: "Skapa ämnen här som inte passar in i någon annan befintlig kategori."
   meta_category_name: "Feedback om webbplatsen"
   meta_category_description: "Diskussion om den här webbplatsen, dess organisation, hur den fungerar och hur vi kan förbättra den."
   staff_category_name: "Personal"

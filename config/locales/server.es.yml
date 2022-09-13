@@ -3011,6 +3011,7 @@ es:
         Si crees que se trata de un error, [ponte en contacto con un miembro del equipo](%{base_url}/acerca de).
     email_reject_too_many_recipients:
       title: "El correo electrónico rechaza demasiados destinatarios"
+      subject_template: "[%{email_prefix}] Problema del correo – Demasiados destinatarios"
     email_error_notification:
       title: "Error de notificación de correo electrónico"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Error de autenticación POP"
@@ -4371,6 +4372,7 @@ es:
       invalid_token: "Token no válido."
     email_input: "Correo electrónico de administrador"
     submit_button: "Enviar correo electrónico"
+    safe_mode: "Modo seguro: desactivar todos los temas y plugins al iniciar sesión"
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio
@@ -4409,6 +4411,7 @@ es:
     register:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"
+      help: "Regístrate para empezar."
       no_emails: "Por desgracia, no se definió ningún correo electrónico de administrador durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Añade un correo electrónico de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
     confirm_email:
       title: "Confirmar tu correo electrónico"
@@ -4418,6 +4421,7 @@ es:
       message: "<p>Hemos reenviado el correo electrónico de activación a <b>%{email}</b>"
   safe_mode:
     title: "Activar modo seguro"
+    no_themes: "Desactivar temas y componentes de tema"
     no_unofficial_plugins: "Desactivar plugins no oficiales"
     no_plugins: "Desactivar todos los plugins"
     enter: "Activar modo seguro"

@@ -73,6 +73,7 @@ tr_TR:
       file_too_big: "Sıkıştırılmamış dosya çok büyük."
       unknown_file_type: "Yüklediğiniz dosya geçerli bir Discourse teması gibi görünmüyor."
       not_allowed_theme: "\"%{repo}\", izin verilen temalar listesinde değil (\"allow_theme_repos\" genel ayarını kontrol edin)."
+      ssh_key_gone: "Temayı yüklemek için çok uzun süre beklediniz ve SSH anahtarının süresi doldu. Lütfen tekrar deneyin."
     errors:
       component_no_user_selectable: "Tema bileşenleri kullanıcı tarafından seçilemez"
       component_no_default: "Tema bileşenleri varsayılan tema olamaz"
@@ -2945,11 +2946,11 @@ tr_TR:
       title: "Ayın Yeni Kullanıcısısın!"
       subject_template: "Ayın Yeni Kullanıcısısın!"
       text_body_template: |
-        Tebrikler, ödül kazandınız. **%{month_year} için Ayın Yeni Kullanıcısı ödülü**. :trophy:
+        Tebrikler, **%{month_year} ayında Ayın Yeni Kullanıcısı ödülü** sizin oldu. :trophy:
 
-        Bu ödül her ay sadece iki kullanıcıya verilir ve bu ödül [rozetler sayfası](%{url}) gözükür.
+        Bu ödül her ay sadece iki kullanıcıya verilir ve bu ödül [rozetler sayfasında](%{url}) görünür.
 
-        Hızla topluluğumuzun değerli bir üyesi oldunuz. Katıldığınız için teşekkür eder ve harika çalışmalarınızı sürdürmenizi dileriz.
+        Hızla topluluğumuzun değerli bir üyesi oldunuz. Katıldığınız için teşekkür eder, harika çalışmalarınızı sürdürmenizi dileriz.
     queued_posts_reminder:
       title: "Kuyruğa Alınan Gönderi Hatırlatıcısı"
       subject_template:

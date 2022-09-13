@@ -42,6 +42,7 @@ bs_BA:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} prije"
+      wrap_on: "na %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -2940,7 +2941,6 @@ bs_BA:
     download_calendar:
       download: "Skinuti"
     tagging:
-      all_tags: "Sve oznake"
       other_tags: "Druge oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"

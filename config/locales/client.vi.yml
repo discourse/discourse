@@ -3386,7 +3386,6 @@ vi:
       google: "Google Lịch"
       ics: "ICS"
     tagging:
-      all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
@@ -4757,7 +4756,6 @@ vi:
           other: "Không thể xóa tất cả các bài viết, một số bài viết cũ hơn %{count} ngày. (Thiết lập delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           other: "Không thể xóa tất cả các bài viết do tài khoản có hơn %{count} bài viết. (delete_all_posts_max)"
-        delete_confirm: "Nói chung, bạn nên ẩn danh người dùng hơn là xóa họ, để tránh xóa nội dung khỏi các cuộc thảo luận hiện có.<br><br>Bạn có CHẮC CHẮN muốn xóa người dùng này không? Điều này là vĩnh viễn!"
         delete_and_block: "Xóa và <b>khóa</b> email này và địa chỉ IP"
         delete_dont_block: "Chỉ xóa"
         deleting_user: "Đang xóa người dùng..."

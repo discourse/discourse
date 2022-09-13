@@ -189,6 +189,7 @@ fr:
       other: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
     bootstrap_invite_button_title: "Envoyer des invitations"
+    bootstrap_wizard_link_title: "Fin de l'assistant d'installation"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner car un thème ou un composant de thème a déclenché une ou plusieurs erreurs."
@@ -1201,6 +1202,7 @@ fr:
         read_more_in_group: "Envie d'en lire encore&nbsp;? Consultez d'autres messages dans %{groupLink}."
         read_more: "Envie d'en lire encore&nbsp;? Consultez d'autres messages dans vos <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
         read_more_group_pm_MF: "Il reste { UNREAD, plural, =0 {} one {1 sujet <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>non lu</a>} other {# sujets <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>non lus</a>} } { NEW, plural, =0 {} one { { BOTH, select, true { et } false {} other {} }1 <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>nouveau</a> sujet} other { { BOTH, select, true { et } false {} other {} } # <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>nouveaux</a> sujets}}, ou vous pouvez aussi consulter les autres sujets dans {groupLink}"
+        read_more_personal_pm_MF: "Il reste { UNREAD, plural, =0 {} one {un message <a href='{basePath}/u/{username}/messages/unread'>non lu</a>} other {# messages <a href='{basePath}/u/{username}/messages//unread'>non lus</a>} } { NEW, plural, =0 {} one { { BOTH, select, true { et } false {} other {} }un <a href='{basePath}/u/{username}/messages/new'>nouveau</a> message} other { { BOTH, select, true { et } false {} other {} } # <a href='{basePath}/u/{username}/messages/new'>nouveaux</a> messages}}, ou vous pouvez aussi consulter les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>"
       preferences_nav:
         account: "Compte"
         security: "Sécurité"
@@ -1715,6 +1717,7 @@ fr:
       hide_forever: "non merci"
       hidden_for_session: "Très bien, nous vous le demanderons demain. Vous pouvez aussi utiliser le bouton « Se connecter » pour vous créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
+      value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres. Nous pouvons travailler ensemble pour rendre cette communauté formidable. :heart:"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description:
@@ -1880,6 +1883,7 @@ fr:
       categories_only: "Catégories seules"
       categories_with_featured_topics: "Catégories avec sujets à la une"
       categories_and_latest_topics: "Catégories et sujets récents"
+      categories_and_latest_topics_created_date: "Catégories et Sujets récents (trier par date de création du sujet)"
       categories_and_top_topics: "Catégories et meilleurs sujets"
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
@@ -2058,6 +2062,7 @@ fr:
       abandon: "fermer le panneau d'édition et supprimer le brouillon"
       enter_fullscreen: "utiliser l'éditeur plein écran"
       exit_fullscreen: "sortir de l'éditeur plein écran"
+      exit_fullscreen_prompt: "Appuyer sur <kbd>ESC</kbd> pour sortir du plein écran"
       show_toolbar: "afficher la barre d'outils de l'éditeur"
       hide_toolbar: "masquer la barre d'outils de l'éditeur"
       modal_ok: "OK"
@@ -2101,6 +2106,7 @@ fr:
       ignore: "Ignorer"
       image_alt_text:
         aria_label: Texte alternatif pour l'image
+      delete_image_button: Supprimer l'image
     notifications:
       tooltip:
         regular:
@@ -2342,6 +2348,8 @@ fr:
       generic_no_items: "Cette liste ne contient aucun élément."
       sr_menu_tabs: "Onglets du menu"
       view_all_notifications: "Afficher toutes les notifications"
+      view_all_bookmarks: "voir tous les signets"
+      view_all_messages: "voir tous les messages personnels"
       reviewable:
         queue: "File d'attente"
     topics:
@@ -4983,7 +4991,6 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
-        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes. <br><br>Voulez-vous vraiment supprimer cet utilisateur ? Cette opération est irréversible !"
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse courriel et adresse IP."
         delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur…"

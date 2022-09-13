@@ -95,6 +95,9 @@ pt_BR:
         about_x_years:
           one: "cerca de %{count} ano"
           other: "cerca de %{count} anos"
+        over_x_years:
+          one: "mais de %{count} ano"
+          other: "mais de %{count} anos"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -353,6 +356,7 @@ pt_BR:
     saved: "Salvo!"
     upload: "Enviar"
     uploading: "Enviando..."
+    processing: "Processando..."
     uploading_filename: "Enviando: %{filename}..."
     processing_filename: "Processando: %{filename}..."
     clipboard: "área de transferência"
@@ -1795,8 +1799,11 @@ pt_BR:
         name: "Facebook"
       github:
         name: "GitHub"
+        title: "Entrar com o GitHub"
+        sr_title: "Entrar com o GitHub"
       discord:
         name: "Discord"
+        title: "Entrar com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo autenticador"
         backup_code: "Use um código de backup"
@@ -3312,6 +3319,7 @@ pt_BR:
     preloader_text: "Carregando"
     lightbox:
       download: "download"
+      open: "imagem original"
       previous: "Anterior (seta para a esquerda)"
       next: "Próximo (seta para a direita)"
       counter: "%curr% de %total%"
@@ -3326,6 +3334,7 @@ pt_BR:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atalhos do teclado"
+      short_title: "Atalhos"
       jump_to:
         title: "Pular para"
         home: "%{shortcut} Início"
@@ -3451,7 +3460,6 @@ pt_BR:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
-      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
@@ -3651,17 +3659,27 @@ pt_BR:
               content: "Administrador(a)"
             badges:
               content: "Emblemas"
+            everything:
+              content: "Tudo"
+              title: "Todos os Tópicos"
             faq:
               content: "FAQ"
             tracked:
               content: "Monitorados(as)"
+              title: "Todos os Tópicos Rastreados"
             groups:
               content: "Grupos"
               title: "Todos os grupos"
             users:
               content: "Usuários(as)"
+              title: "Todos(as) os(as) usuários(as)"
             my_posts:
               content: "Minhas postagens"
+              title: "Minhas publicações"
+    welcome_topic_banner:
+      title: "Crie seu tópico de Boas-Vindas"
+      button_title: "Começar a Editar"
+    until: "Até:"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -4378,6 +4396,7 @@ pt_BR:
         time: "Hora"
         user: "Usuário(a)"
         email_type: "Tipo de e-mail"
+        details_title: "Exibir detalhes do e-mail"
         to_address: "Para o endereço"
         test_email_address: "endereço de e-mail para testar"
         send_test: "Enviar e-mail de teste"
@@ -4424,6 +4443,7 @@ pt_BR:
             address_placeholder: "nome@exemplo.com"
             type_placeholder: "compilação, cadastro..."
             reply_key_placeholder: "tecla de resposta"
+            smtp_transaction_response_placeholder: "ID do SMTP"
       moderation_history:
         performed_by: "Executado por"
         no_results: "Não há histórico de moderação disponível."
@@ -4840,7 +4860,8 @@ pt_BR:
         cant_delete_all_too_many_posts:
           one: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagem (delete_all_posts_max)"
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
-        delete_confirm: "Geralmente é preferível tornar anônimos(as) os(as) usuários(as) em vez de excluí-los(as), para evitar remover conteúdo de discussões existentes.<br><br>Você tem CERTEZA de que deseja excluir este(a) usuário(a)? Essa ação é permanente!"
+        delete_confirm_title: "Você TEM CERTEZA que deseja excluir este usuário? Essa é uma ação permanente!"
+        delete_confirm: "Geralmente, é preferível anonimizar os usuários em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
         delete_and_block: "Excluir e <b>bloquear</b> este e-mail e endereço IP"
         delete_dont_block: "Excluir apenas"
         deleting_user: "Excluindo usuário(a)..."
@@ -5191,8 +5212,10 @@ pt_BR:
           replace: "Substituir"
   wizard_js:
     wizard:
+      finish: "Sair da configuração"
       back: "Voltar"
       next: "Próximo"
+      configure_more: "Configurar Mais..."
       step-text: "Intervalo"
       step: "%{current} de %{total}"
       upload: "Enviar"

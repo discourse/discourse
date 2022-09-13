@@ -3579,7 +3579,6 @@ sv:
       google: "Google -kalender"
       ics: "ICS"
     tagging:
-      all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
@@ -5029,7 +5028,8 @@ sv:
         cant_delete_all_too_many_posts:
           one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
-        delete_confirm: "Det är generellt att föredra att anonymisera användare snarare än att ta bort dem för att undvika att ta bort innehåll från befintliga diskussioner. <br><br> Är du säker på att du vill ta bort den här användaren? Detta görs permanent!"
+        delete_confirm_title: "Är du SÄKER på att du vill radera den här användaren? Detta är permanent!"
+        delete_confirm: "I allmänhet är det att föredra att anonymisera användare istället för att radera dem, för att undvika att innehåll från befintliga diskussioner tas bort."
         delete_and_block: "Radera och <b>blockera</b> denna e-postadress och IP-adress"
         delete_dont_block: "Radera enbart"
         deleting_user: "Raderar användaren..."

@@ -2704,7 +2704,6 @@ zh_TW:
     download_calendar:
       download: "下載"
     tagging:
-      all_tags: "所有標籤"
       other_tags: "其他標籤"
       selector_all_tags: "所有標籤"
       selector_no_tags: "無標籤"
@@ -3752,7 +3751,6 @@ zh_TW:
           other: "無法刪除所有的貼文。有些貼文時間早於 %{count} 天前。 ( 請見 delete_user_max_post_age 設定 )"
         cant_delete_all_too_many_posts:
           other: "無法刪除所有貼文，因為此使用者擁有超過 %{count} 篇貼文。( delete_all_posts_max )"
-        delete_confirm: "通常相較於直接將使用者刪除，比較建議將使用者除名，避免從現存的討論中移除內容。<br><br>您是否確定要刪除這位使用者？此動作不可復原！"
         delete_and_block: "刪除並且<b>封鎖</b>此電子郵件地址與 IP 位址"
         delete_dont_block: "只刪除"
         deleting_user: "正在刪除使用者..."

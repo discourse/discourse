@@ -73,6 +73,7 @@ de:
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
+      ssh_key_gone: "Du hast zu lange mit der Installation des Themas gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
     errors:
       component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
       component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"

@@ -3276,7 +3276,6 @@ hu:
     download_calendar:
       download: "Letöltés"
     tagging:
-      all_tags: "Összes címke"
       other_tags: "Egyéb címkék"
       selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"

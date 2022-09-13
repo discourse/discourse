@@ -3312,7 +3312,6 @@ fi:
     download_calendar:
       download: "Lataa"
     tagging:
-      all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"
       selector_all_tags: "kaikki tunnisteet"
       selector_no_tags: "ei tunnisteita"
@@ -4640,7 +4639,6 @@ fi:
         cant_delete_all_too_many_posts:
           one: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viesti. (delete_all_posts_max)"
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
-        delete_confirm: "On yleisesti kannattavampaa anonymisoida käyttäjä kuin poistaa hänet, jottei olemassa olevista keskusteluista poistu sisältöä.<br><br>Oletko VARMA, että haluat poistaa tämän käyttäjän? Peruuttaminen ei ole mahdollista!"
         delete_and_block: "Poista ja <b>estä</b> tämä sähköposti ja IP-osoite"
         delete_dont_block: "Ainoastaan poista"
         deleting_user: "Poistetaan käyttäjää..."

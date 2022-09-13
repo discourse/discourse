@@ -2177,7 +2177,6 @@ sw:
     download_calendar:
       download: "Pakua"
     tagging:
-      all_tags: "Lebo Zote"
       other_tags: "Lebo Zingine"
       selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
