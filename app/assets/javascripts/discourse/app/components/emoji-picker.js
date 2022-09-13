@@ -108,7 +108,7 @@ export default Component.extend({
         return;
       }
       const popperAnchor = this._getPopperAnchor();
-      this._getNumEmojiPerRow(this.elements.emojiNoRecents);
+      this._setNumEmojiPerRow(this.elements.emojiNoRecents);
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
@@ -368,16 +368,16 @@ export default Component.extend({
       this,
       () => {
         if (event.target.value === "") {
-          this._getNumEmojiPerRow(this.elements.emojiNoRecents, false);
+          this._setNumEmojiPerRow(this.elements.emojiNoRecents, false);
         } else {
-          this._getNumEmojiPerRow(this.elements.emojiResults, true);
+          this._setNumEmojiPerRow(this.elements.emojiResults, true);
         }
       },
       500
     );
   },
 
-  _getNumEmojiPerRow(emojiSelector, isSearching = false) {
+  _setNumEmojiPerRow(emojiSelector, isSearching = false) {
     // See: https://stackoverflow.com/a/49888033
     const emojis = document.querySelectorAll(emojiSelector);
     if (!emojis || emojis.length === 0) {
