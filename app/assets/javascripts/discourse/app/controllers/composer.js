@@ -808,7 +808,7 @@ export default Controller.extend({
       });
     },
 
-    applyformatCode() {
+    applyFormatCode() {
       this.toolbarEvent.formatCode();
     },
 
