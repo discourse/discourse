@@ -53,7 +53,7 @@ const CORE_TOP_TABS = [
     }
 
     get linkWhenActive() {
-      return `${this.currentUser.path}/notifications`;
+      return `${this.currentUser.path}/notifications/responses`;
     }
   },
 
@@ -79,7 +79,7 @@ const CORE_TOP_TABS = [
     }
 
     get linkWhenActive() {
-      return `${this.currentUser.path}/notifications`;
+      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 
@@ -112,7 +112,7 @@ const CORE_TOP_TABS = [
     }
 
     get linkWhenActive() {
-      return `${this.currentUser.path}/notifications`;
+      return `${this.currentUser.path}/notifications/likes-received`;
     }
   },
 

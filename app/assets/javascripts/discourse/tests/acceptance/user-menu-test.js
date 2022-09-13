@@ -571,11 +571,11 @@ acceptance("User menu", function (needs) {
 
     const tabs = [
       ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
-      ["#user-menu-button-replies", "/u/eviltrout/notifications"],
+      ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
       ["#user-menu-button-messages", "/u/eviltrout/messages"],
-      ["#user-menu-button-mentions", "/u/eviltrout/notifications"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
       ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
-      ["#user-menu-button-likes", "/u/eviltrout/notifications"],
+      ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
       ["#user-menu-button-custom-tab-2", null],
       ["#user-menu-button-review-queue", "/review"],
       ["#user-menu-button-profile", "/u/eviltrout/summary"],
