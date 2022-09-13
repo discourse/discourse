@@ -118,6 +118,35 @@ const CORE_TOP_TABS = [
 
   class extends UserMenuTab {
     get id() {
+      return "watching";
+    }
+
+    get icon() {
+      return "discourse-bell-exclamation";
+    }
+
+    get panelComponent() {
+      return "user-menu/watching-notifications-list";
+    }
+
+    get count() {
+      return (
+        this.getUnreadCountForType("posted") +
+        this.getUnreadCountForType("watching_first_post")
+      );
+    }
+
+    get notificationTypes() {
+      return ["posted", "watching_first_post"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications`;
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
       return "messages";
     }
 

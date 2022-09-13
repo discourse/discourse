@@ -161,12 +161,13 @@ acceptance("User menu", function (needs) {
       "user-menu-button-replies": "1",
       "user-menu-button-mentions": "2",
       "user-menu-button-likes": "3",
-      "user-menu-button-messages": "4",
-      "user-menu-button-bookmarks": "5",
-      "user-menu-button-custom-tab-1": "6",
-      "user-menu-button-custom-tab-2": "7",
-      "user-menu-button-review-queue": "8",
-      "user-menu-button-other": "9",
+      "user-menu-button-watching": "4",
+      "user-menu-button-messages": "5",
+      "user-menu-button-bookmarks": "6",
+      "user-menu-button-custom-tab-1": "7",
+      "user-menu-button-custom-tab-2": "8",
+      "user-menu-button-review-queue": "9",
+      "user-menu-button-other": "10",
     };
 
     await visit("/");
@@ -193,7 +194,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "10",
+      "11",
       "bottom tab has the correct data-tab-number"
     );
 
