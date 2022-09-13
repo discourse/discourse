@@ -1,436 +1,270 @@
-// Topic list navigation & controls
+// --------------------------------------------------
+// Topic lists
+// --------------------------------------------------
 
-.list-controls {
-  a.badge-category {
-    padding: 3px 12px;
-    font-size: $font-up-1;
+// Base list
+// --------------------------------------------------
+
+.topic-list-icons {
+  .d-icon-thumbtack {
+    color: var(--primary-med-or-secondary-med);
   }
-
-  .combo-box .combo-box-header {
-    background: var(--secondary);
-    color: var(--primary);
-    border: 1px solid var(--primary-medium);
-    font-size: $font-0;
-    transition: none;
-    height: 100%;
-    &:focus {
-      border-color: var(--tertiary);
-    }
+  .d-icon-thumbtack.unpinned {
+    color: var(--primary-med-or-secondary-med);
   }
-  .select-kit {
-    .select-kit-collection {
-      max-height: 40vh;
-    }
-  }
-}
-
-.navigation-container {
-  width: 100%;
-  --nav-space: 0.75em;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.category-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--nav-space) 0;
-  > li {
-    // only target the top-level li, not dropdowns
-    display: flex;
-    margin-right: 0.5em;
-    margin-bottom: 0;
-  }
-}
-
-#navigation-bar {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  margin-bottom: var(--nav-space);
-  margin-right: auto;
-}
-
-.navigation-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  margin-bottom: var(--nav-space);
-  gap: var(--nav-space) 0; // used if the buttons wrap
-  > * {
-    white-space: nowrap;
-    &:not(:last-child) {
-      margin-right: 0.5em;
-    }
-  }
-  .select-kit-header {
-    height: 100%;
-  }
-  @include breakpoint(mobile-large) {
-    .edit-category {
-      .d-button-label {
-        display: none;
-      }
-      .d-icon {
-        margin: 0;
-      }
-    }
-  }
-}
-
-.show-more {
-  width: 100%;
-  z-index: z("base");
-  &.has-topics {
-    position: absolute;
-    top: 7px;
-  }
-}
-
-.category-heading {
-  max-width: 100%;
-  p {
-    margin-top: 0;
-    line-height: $line-height-large;
-    font-size: $font-up-3;
-  }
-}
-
-.category-logo.aspect-image {
-  width: auto;
-  max-height: 150px;
-}
-
-@supports (--custom: property) {
-  .category-logo.aspect-image {
-    --max-height: 150px;
-    max-height: var(--max-height);
-    width: calc(var(--max-height) * var(--aspect-ratio));
-    max-width: 100%;
-    height: auto;
-
-    img {
-      width: 100%;
-      height: inherit;
-      max-width: initial;
-      max-height: initial;
-    }
-  }
-}
-
-.topic-list.shared-drafts {
-  margin-bottom: 1.5em;
-}
-
-// Topic list body
-
-.topic-list-item.visited .topic-list-data,
-.latest-topic-list-item.visited,
-.category-topic-link.visited {
-  a.title:not(.badge-notification) {
-    color: var(--primary-medium);
-  }
-  span.badge-category {
-    color: var(--primary-medium);
-  }
-  a.discourse-tag {
-    color: var(--primary-medium);
-  }
-}
-
-.topic-list-item {
-  .post-excerpt {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    font-size: $font-down-2;
-    word-break: break-word;
-  }
-}
-
-.topic-list-main-link {
-  font-size: $font-up-1;
   a.title {
-    padding: 15px 0;
-    word-break: break-word;
     color: var(--primary);
   }
-
-  .anon & {
-    a.title:visited:not(.badge-notification) {
-      color: var(--primary-medium);
-    }
+  .d-icon-bookmark {
+    color: var(--primary-med-or-secondary-med);
   }
-
-  a.title.visited:not(.badge-notification) {
-    color: var(--primary-medium);
-  }
-}
-
-.sticky-header .topic-list-header {
-  @include sticky;
-  top: var(--header-offset, 60px);
-  background: var(--secondary);
-  z-index: 2;
 }
 
 .topic-list {
-  width: 100%;
-  border-collapse: collapse;
+  @extend .topic-list-icons;
 
-  > .topic-list-body > .topic-list-item {
-    &.has-excerpt .star {
-      vertical-align: top;
-      margin-top: 2px;
-    }
-
-    &.last-visit {
-      border-bottom: none;
-    }
-
-    .topic-list-separator {
-      text-align: center;
-    }
-  }
-
-  .topic-list-item-separator {
-    border: none;
-
-    .topic-list-data {
-      border-top: 1px solid var(--danger-medium);
-      line-height: 0em;
-      padding: 0;
-      text-align: center;
-    }
-
-    .topic-list-data span {
-      position: relative; // Chrome needs this, otherwise the line is above the text
-      background-color: var(--secondary);
-      color: var(--danger-medium);
-      padding: 0 8px;
-      font-size: $font-down-1;
-    }
-  }
-
+  margin: 0 0 10px;
   .topic-list-data {
+    padding: 12px 5px;
+    &:first-of-type {
+      padding-left: 10px;
+    }
+    &:last-of-type {
+      padding-right: 10px;
+    }
+  }
+
+  button.bulk-select {
+    padding: 0;
     line-height: $line-height-large;
+  }
+
+  .topic-list-data.bulk-select {
+    padding: 0;
+    width: 30px;
+    label {
+      margin: 0px;
+      padding: 12px 10px 16px 10px;
+      cursor: pointer;
+    }
+    + .main-link {
+      padding-left: 0;
+    }
+  }
+
+  .badge-notification {
+    position: relative;
+    top: -2px;
+
+    &.new-topic {
+      top: -1px;
+      padding-left: 2px;
+    }
+  }
+
+  $td-posters-height: 29px; // min-height of td with avatar glow
+  $td-posters-more-lh: $td-posters-height - 4;
+
+  .posters {
+    // we know there are up to 5 avatars of fixed size
+    // will be overridden by media width queries on narrow displays to 1 avatar's width
+    width: 146px;
+    > a {
+      float: left;
+      margin-right: 4px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      &.posters-more-count {
+        cursor: default;
+        color: var(--primary-med-or-secondary-med);
+        line-height: $td-posters-more-lh;
+        font-size: $font-down-1;
+      }
+    }
+  }
+  .topic-list-data.posters {
+    height: $td-posters-height;
+  }
+  .posters a:first-child .avatar.latest:not(.single) {
+    box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
+    border: 2px solid rgba(var(--tertiary-rgb), 0.5);
+    position: relative;
+    top: -2px;
+    left: -2px;
+  }
+
+  .likes {
+    width: 65px;
+  }
+  .views {
+    width: 65px;
+  }
+  .posts {
+    width: 65px;
+  }
+
+  .post-actions {
+    clear: both;
+    width: auto;
+    color: var(--primary-med-or-secondary-med);
     text-align: left;
-    vertical-align: middle;
-  }
-  .btn-flat .d-icon {
-    color: currentColor;
-  }
-
-  td {
-    color: var(--primary-medium);
-    font-size: $font-0;
-  }
-
-  .main-link {
-    @extend .topic-list-main-link;
-
-    .raw-topic-link > * {
-      pointer-events: none;
-    }
-
-    &.focused {
-      box-shadow: inset 3px 0 0 var(--tertiary);
-    }
-    /* we have a custom focus indicator so we can remove the native one */
-    .title:focus {
-      outline: none;
-    }
-    .title:focus-visible {
-      outline: none;
-    }
-  }
-
-  .unread-indicator {
-    &.read {
-      display: none;
-    }
-    .d-icon {
-      vertical-align: middle;
-      font-size: $font-down-5;
-    }
-  }
-
-  .link-bottom-line {
     font-size: $font-down-1;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    .discourse-tags {
-      flex-wrap: wrap;
+    margin-top: 5px;
+    .fa {
+      margin-right: 2px;
     }
-    a.badge-wrapper.box,
-    a.discourse-tag.box {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-    .discourse-tag.simple:after,
-    .discourse-tag.box {
-      margin-right: 0.25em;
-    }
-  }
-
-  .topic-featured-link {
-    padding-left: 5px;
-  }
-
-  .topic-excerpt {
-    display: block;
-    font-size: $font-down-1;
-    margin-top: 0.33em;
-    color: var(--primary-high);
-    word-wrap: break-word;
-    line-height: $line-height-large;
-    padding-right: 20px;
-  }
-
-  .num {
-    text-align: center;
-
     a {
-      color: inherit;
-    }
-
-    .badge-posts {
-      font-weight: 700;
-      color: inherit;
-      padding: 15px 5px;
+      color: var(--primary-med-or-secondary-med);
+      margin-right: 3px;
+      line-height: $line-height-large;
     }
   }
-
-  .num.posts {
-    a {
-      padding: 15px 5px;
+  .activity {
+    width: 60px;
+    &:lang(zh_CN) {
+      width: 80px;
     }
   }
-
-  .num.activity {
-    a {
-      padding: 15px 5px;
-    }
+  .age {
+    width: 60px;
+  }
+  .with-year {
+    white-space: nowrap;
   }
 }
 
-.heatmap-high,
-.heatmap-high a,
-.heatmap-high .d-icon,
-.heatmap-high .d-button-label {
-  color: #fe7a15 !important;
+.topic-list-bottom {
+  margin: 20px 0;
 }
 
-.heatmap-med,
-.heatmap-med a,
-.heatmap-med .d-icon,
-.heatmap-med .d-button-label {
-  color: #cf7721 !important;
-}
+// Misc. stuff
+// --------------------------------------------------
 
-.heatmap-low,
-.heatmap-low a,
-.heatmap-low .d-icon,
-.heatmap-low .d-button-label {
-  color: #9b764f !important;
-}
+#list-area .top-lists {
+  h2 {
+    cursor: pointer;
+    margin: 5px 0 10px;
+  }
 
-.topic-list .heatmap-high {
-  font-weight: bold;
-}
-
-.loading .topic-list {
-  border: 0;
-  box-shadow: none;
-  .topic-list-item {
-    background-color: transparent;
+  .period-chooser .select-kit-body {
+    width: 275px;
   }
 }
 
 #list-area {
-  margin-bottom: 100px;
-  .empty-topic-list {
-    padding: 10px;
+  h2 {
+    margin: 20px 0 10px;
   }
-  .unseen {
-    background-color: transparent;
-    padding: 0;
-    border: 0;
-    color: var(--danger-medium);
-    font-size: $font-0;
-    cursor: default;
+  .show-more.has-topics {
+    top: 0;
+    .alert {
+      padding: 16px 35px 16px 14px;
+    }
   }
 }
 
-.topic-list {
-  .alert {
-    margin-bottom: 0;
-    font-size: $font-0;
-  }
-  .spinner {
-    margin-top: 40px;
-  }
-}
-
-.d-icon-thumbtack.unpinned {
-  @include fa-rotate(180deg, 1);
-}
-
-.top-title-buttons {
-  display: flex;
-  margin: 0.5em 0;
-  flex-wrap: wrap;
-  font-size: var(--font-0-rem);
-
-  button {
+.bulk-select-topics {
+  display: inline-flex;
+  margin-left: -5px;
+  .btn {
     margin-right: 0.5em;
   }
 }
 
-div.education {
-  color: var(--primary);
-  padding: 1em 2.5em 1em 1em;
-  margin-bottom: 2em;
-  border-top: 3px solid var(--primary-low);
-  border-bottom: 1px solid var(--primary-low);
+.dismiss-container-top {
+  display: flex;
+  justify-content: flex-end;
+}
 
-  .badge-notification.unread-posts {
-    vertical-align: text-bottom;
+.category-breadcrumb {
+  // only target the top-level li, not dropdowns
+  .select-kit {
+    align-self: stretch;
+    height: 100%;
   }
 }
 
-.list-cell {
-  padding: 12px 5px;
-  color: var(--primary-med-or-secondary-high);
+.category-logo.aspect-image {
+  float: left;
+  margin: 0.33em 2em 2em 0;
 }
 
-.table-heading {
-  @extend .list-cell;
-  border-bottom: 3px solid var(--primary-low);
+/* Tablet (portrait) ----------- */
+
+// These styles kick in a little earlier when the sidebar appears
+
+@include breakpoint(medium, $sidebar: true) {
+  .topic-list {
+    // suppress views column
+    .views {
+      display: none;
+    }
+    // reduce width for more title space
+    .posts {
+      width: 50px;
+    }
+    .posters {
+      width: 30px;
+      text-align: center;
+    }
+    // show only the first poster
+    .topic-list-data.posters {
+      a:first-child .avatar.latest:not(.single) {
+        top: 0px;
+        left: 0px;
+      }
+      a:not(.latest) {
+        display: none;
+      }
+      a.latest {
+        width: 100%;
+        img {
+          margin: 0 auto;
+        }
+      }
+    }
+  }
 }
 
-// This is not what we want:
-//
-//     This is an overly-long topic title that would break just right
-//     *
-//
-// Instead, we want the line to break like this:
-//
-//     This is an overly-long topic title that would break just
-//     right *
-.topic-post-badges {
-  white-space: nowrap;
-  align-self: center;
-  line-height: $line-height-medium;
+@include breakpoint(medium) {
+  // slightly smaller font, tighten spacing on nav pills
+  .nav-pills {
+    > li > a {
+      font-size: $font-0;
+      padding: 7px 10px;
+    }
+  }
+
+  .topic-list {
+    // tighter table header spacing
+    .topic-list-item .topic-list-data:first-of-type {
+      padding: 12px 5px;
+    }
+    // smaller table cell spacing
+    .topic-list-data {
+      padding: 10px;
+      font-size: $font-0;
+    }
+  }
 }
 
-.topic-list .topic-list-data:last-of-type {
-  cursor: text;
-}
+.welcome-topic-banner {
+  border: 1px solid var(--primary-low);
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
 
-.topic-list .num.activity a {
-  cursor: default;
+  .col-text {
+    width: 70%;
+  }
+  .col-button {
+    width: 30%;
+    display: flex;
+    align-self: center;
+    justify-content: flex-end;
+    padding-right: 30px;
+  }
 }
