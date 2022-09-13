@@ -416,7 +416,7 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
-    rspec-support (3.11.0)
+    rspec-support (3.11.1)
     rss (0.2.9)
       rexml
     rswag-specs (2.5.1)
