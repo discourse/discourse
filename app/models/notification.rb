@@ -18,6 +18,12 @@ class Notification < ActiveRecord::Base
   scope :unread_type, ->(user, type, limit = 20) do
     where(user_id: user.id, read: false, notification_type: type).visible.includes(:topic).limit(limit)
   end
+  scope :prioritized, ->(limit = nil) do
+    order("notifications.high_priority AND NOT notifications.read DESC")
+      .order("NOT notifications.read DESC")
+      .order("notifications.created_at DESC")
+      .limit(limit || 30)
+  end
 
   attr_accessor :skip_send_email
 
@@ -214,6 +220,30 @@ class Notification < ActiveRecord::Base
     Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
+  def self.prioritized_list(user, count: 30, types: [])
+    return [] if !user&.user_option
+
+    notifications = user.notifications
+      .includes(:topic)
+      .visible
+      .prioritized(count)
+
+    if types.present?
+      notifications = notifications.where(notification_type: types)
+    elsif user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+      [
+        Notification.types[:liked],
+        Notification.types[:liked_consolidated]
+      ].each do |notification_type|
+        notifications = notifications.where(
+          'notification_type <> ?', notification_type
+        )
+      end
+    end
+    notifications.to_a
+  end
+
+  # TODO(osama): deprecate this method when redesigned_user_menu_enabled is removed
   def self.recent_report(user, count = nil, types = [])
     return unless user && user.user_option
 

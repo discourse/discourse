@@ -3,6 +3,7 @@ require 'execjs'
 require 'mini_racer'
 
 class DiscourseJsProcessor
+  class TranspileError < StandardError; end
 
   DISCOURSE_COMMON_BABEL_PLUGINS = [
     'proposal-optional-chaining',
@@ -55,9 +56,9 @@ class DiscourseJsProcessor
     { data: data }
   end
 
-  def self.transpile(data, root_path, logical_path)
+  def self.transpile(data, root_path, logical_path, theme_id: nil)
     transpiler = Transpiler.new(skip_module: skip_module?(data))
-    transpiler.perform(data, root_path, logical_path)
+    transpiler.perform(data, root_path, logical_path, theme_id: theme_id)
   end
 
   def self.should_transpile?(filename)
@@ -114,7 +115,7 @@ class DiscourseJsProcessor
       contents = File.read("#{Rails.root}/app/assets/javascripts/#{path}")
       if wrap_in_module
         contents = <<~JS
-          define(#{wrap_in_module.to_json}, ["exports", "require"], function(exports, require){
+          define(#{wrap_in_module.to_json}, ["exports", "require", "module"], function(exports, require, module){
             #{contents}
           });
         JS
@@ -138,7 +139,6 @@ class DiscourseJsProcessor
           warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
           error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
         };
-        const DISCOURSE_COMMON_BABEL_PLUGINS = #{DISCOURSE_COMMON_BABEL_PLUGINS.to_json};
       JS
 
       # define/require support
@@ -146,6 +146,11 @@ class DiscourseJsProcessor
 
       # Babel
       load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
+      ctx.eval <<~JS
+        globalThis.rawBabelTransform = function(){
+          return Babel.transform(...arguments).code;
+        }
+      JS
 
       # Template Compiler
       load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
@@ -160,28 +165,37 @@ class DiscourseJsProcessor
           #{widget_hbs_compiler_source}
         });
       JS
-      widget_hbs_compiler_transpiled = ctx.eval <<~JS
-        Babel.transform(
-          #{widget_hbs_compiler_source.to_json},
-          {
-            ast: false,
-            moduleId: 'widget-hbs-compiler',
-            plugins: [
-              ...DISCOURSE_COMMON_BABEL_PLUGINS
-            ]
-          }
-        ).code
-      JS
+      widget_hbs_compiler_transpiled = ctx.call("rawBabelTransform", widget_hbs_compiler_source, {
+        ast: false,
+        moduleId: 'widget-hbs-compiler',
+        plugins: DISCOURSE_COMMON_BABEL_PLUGINS
+      })
       ctx.eval(widget_hbs_compiler_transpiled, filename: "widget-hbs-compiler.js")
 
-      # Prepare template compiler plugins
+      # Raw HBS compiler
+      load_file_in_context(ctx, "node_modules/handlebars/dist/handlebars.js", wrap_in_module: "handlebars")
+
+      raw_hbs_transpiled = ctx.call(
+        "rawBabelTransform",
+        File.read("#{Rails.root}/app/assets/javascripts/discourse-common/addon/lib/raw-handlebars.js"),
+        {
+          ast: false,
+          moduleId: "raw-handlebars",
+          plugins: [
+            ['transform-modules-amd', { noInterop: true }],
+            *DISCOURSE_COMMON_BABEL_PLUGINS
+          ]
+        }
+      )
+      ctx.eval(raw_hbs_transpiled, filename: "raw-handlebars.js")
+
+      # Theme template AST transformation plugins
+      load_file_in_context(ctx, "discourse-js-processor.js", wrap_in_module: "discourse-js-processor")
+
+      # Make interfaces available via `v8.call`
       ctx.eval <<~JS
-        const makeEmberTemplateCompilerPlugin = require("babel-plugin-ember-template-compilation").default;
-        const precompile = require("ember-template-compiler").precompile;
-        const DISCOURSE_TEMPLATE_COMPILER_PLUGINS = [
-          require("widget-hbs-compiler").WidgetHbsCompiler,
-          [makeEmberTemplateCompilerPlugin(() => precompile), { enableLegacyModules: ["ember-cli-htmlbars"] }],
-        ]
+        globalThis.compileRawTemplate = require('discourse-js-processor').compileRawTemplate;
+        globalThis.transpile = require('discourse-js-processor').transpile;
       JS
 
       ctx
@@ -204,59 +218,41 @@ class DiscourseJsProcessor
       @ctx
     end
 
+    def self.v8_call(*args, **kwargs)
+      mutex.synchronize do
+        v8.call(*args, **kwargs)
+      end
+    rescue MiniRacer::RuntimeError => e
+      message = e.message
+      begin
+        # Workaround for https://github.com/rubyjs/mini_racer/issues/262
+        possible_encoded_message = message.delete_prefix("Error: ")
+        decoded = JSON.parse("{\"value\": #{possible_encoded_message}}")["value"]
+        message = "Error: #{decoded}"
+      rescue JSON::ParserError
+        message = e.message
+      end
+      transpile_error = TranspileError.new(message)
+      transpile_error.set_backtrace(e.backtrace)
+      raise transpile_error
+    end
+
     def initialize(skip_module: false)
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil)
-      klass = self.class
-      klass.mutex.synchronize do
-        klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
-        transpiled = babel_source(
-          source,
-          module_name: module_name(root_path, logical_path),
-          filename: logical_path
-        )
-        @output = klass.v8.eval(transpiled)
-      end
-    end
-
-    def babel_source(source, opts = nil)
-      opts ||= {}
-
-      js_source = ::JSON.generate(source, quirks_mode: true)
-
-      if opts[:module_name] && !@skip_module
-        filename = opts[:filename] || 'unknown'
-        <<~JS
-          Babel.transform(
-            #{js_source},
-            {
-              moduleId: '#{opts[:module_name]}',
-              filename: '#{filename}',
-              ast: false,
-              plugins: [
-                ...DISCOURSE_TEMPLATE_COMPILER_PLUGINS,
-                ['transform-modules-amd', {noInterop: true}],
-                ...DISCOURSE_COMMON_BABEL_PLUGINS
-              ]
-            }
-          ).code
-        JS
-      else
-        <<~JS
-          Babel.transform(
-            #{js_source},
-            {
-              ast: false,
-              plugins: [
-                ...DISCOURSE_TEMPLATE_COMPILER_PLUGINS,
-                ...DISCOURSE_COMMON_BABEL_PLUGINS
-              ]
-            }
-          ).code
-        JS
-      end
+    def perform(source, root_path = nil, logical_path = nil, theme_id: nil)
+      self.class.v8_call(
+        "transpile",
+        source,
+        {
+          skip_module: @skip_module,
+          moduleId: module_name(root_path, logical_path),
+          filename: logical_path || 'unknown',
+          themeId: theme_id,
+          commonPlugins: DISCOURSE_COMMON_BABEL_PLUGINS
+        }
+      )
     end
 
     def module_name(root_path, logical_path)
@@ -273,6 +269,10 @@ class DiscourseJsProcessor
 
       # We need to strip the app subdirectory to replicate how ember-cli works.
       path || logical_path&.gsub('app/', '')&.gsub('addon/', '')&.gsub('admin/addon', 'admin')
+    end
+
+    def compile_raw_template(source, theme_id: nil)
+      self.class.v8_call("compileRawTemplate", source, theme_id)
     end
 
   end

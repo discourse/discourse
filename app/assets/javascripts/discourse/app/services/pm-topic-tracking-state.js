@@ -51,15 +51,12 @@ const PrivateMessageTopicTrackingState = Service.extend({
   },
 
   _establishChannels() {
-    this.messageBus.subscribe(
-      this.userChannel(),
-      this._processMessage.bind(this)
-    );
+    this.messageBus.subscribe(this.userChannel(), this._processMessage);
 
     this.currentUser.groupsWithMessages?.forEach((group) => {
       this.messageBus.subscribe(
         this.groupChannel(group.id),
-        this._processMessage.bind(this)
+        this._processMessage
       );
     });
   },

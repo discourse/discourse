@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -83,6 +83,37 @@ acceptance("User menu", function (needs) {
     );
   });
 
+  test("clicking on user menu items", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on an item results in navigation to the item's page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on an item closes the menu after navigating"
+    );
+
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on the same item again keeps on the same page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on the same item again closes the menu"
+    );
+  });
+
   test("tabs added via the plugin API", async function (assert) {
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
@@ -135,6 +166,7 @@ acceptance("User menu", function (needs) {
       "user-menu-button-custom-tab-1": "6",
       "user-menu-button-custom-tab-2": "7",
       "user-menu-button-review-queue": "8",
+      "user-menu-button-other": "9",
     };
 
     await visit("/");
@@ -161,7 +193,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "9",
+      "10",
       "bottom tab has the correct data-tab-number"
     );
 
@@ -519,6 +551,89 @@ acceptance("User menu", function (needs) {
       "logout button has the right icon"
     );
   });
+
+  test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-1";
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+
+          get linkWhenActive() {
+            return "/u/eviltrout/preferences";
+          }
+        };
+      });
+
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-2";
+          }
+
+          get icon() {
+            return "plus";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+    });
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-all-notifications");
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/notifications",
+      "clicking on active tab navigates to the page it links to"
+    );
+    assert.notOk(exists(".user-menu"), "user menu is closed after navigating");
+
+    const tabs = [
+      ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
+      ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
+      ["#user-menu-button-messages", "/u/eviltrout/messages"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
+      ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
+      ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
+      ["#user-menu-button-custom-tab-2", null],
+      ["#user-menu-button-review-queue", "/review"],
+      ["#user-menu-button-profile", "/u/eviltrout/summary"],
+    ];
+    for (const [id, expectedLink] of tabs) {
+      await click(".d-header-icons .current-user");
+      await click(id);
+      await click(id);
+      if (expectedLink) {
+        assert.strictEqual(
+          currentURL(),
+          expectedLink,
+          `clicking on the ${id} tab navigates to ${expectedLink}`
+        );
+        assert.notOk(
+          exists(".user-menu"),
+          "user menu is closed after navigating"
+        );
+      } else {
+        assert.ok(
+          exists(".user-menu"),
+          "user menu remains open if tab doesn't link to anywhere"
+        );
+      }
+      await click("#site-logo");
+    }
+  });
 });
 
 acceptance("User menu - Dismiss button", function (needs) {
@@ -528,6 +643,8 @@ acceptance("User menu - Dismiss button", function (needs) {
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
       [NOTIFICATION_TYPES.private_message]: 89,
+      [NOTIFICATION_TYPES.votes_released]: 1,
+      [NOTIFICATION_TYPES.code_review_commit_approved]: 3,
     },
   });
 
@@ -708,6 +825,29 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click("#user-menu-button-likes");
     await click(".user-menu .notifications-dismiss");
+    assert.ok(
+      markRead,
+      "mark-read request is sent without a confirmation modal"
+    );
+  });
+
+  test("doesn't show confirmation modal for the other notifications list", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await click("#user-menu-button-other");
+    let repliesBadgeNotification = query(
+      "#user-menu-button-other .badge-notification"
+    );
+    assert.strictEqual(
+      repliesBadgeNotification.textContent.trim(),
+      "4",
+      "badge shows the right count"
+    );
+
+    await click(".user-menu .notifications-dismiss");
+
+    assert.ok(!exists("#user-menu-button-other .badge-notification"));
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"

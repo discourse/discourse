@@ -3250,7 +3250,6 @@ ja:
       google: "Google カレンダー"
       ics: "ICS"
     tagging:
-      all_tags: "すべてのタグ"
       other_tags: "他のタグ"
       selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
@@ -4569,7 +4568,6 @@ ja:
           other: "すべての投稿を削除できません。%{count} 日以上経過した投稿があります。(delete_user_max_post_age の設定)"
         cant_delete_all_too_many_posts:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
-        delete_confirm: "既存のディスカッションからコンテンツを削除しないようにするには、通常、ユーザーを削除するよりも匿名化することが推奨されます。<br><br>このユーザーを削除してもよろしいですか？この決定は永久的です！"
         delete_and_block: "このメールと IP アドレスを削除して<b>ブロック</b>する"
         delete_dont_block: "削除のみ"
         deleting_user: "ユーザーを削除中…"

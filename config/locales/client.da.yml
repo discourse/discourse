@@ -3383,7 +3383,6 @@ da:
       google: "Google Kalender"
       ics: "ICS"
     tagging:
-      all_tags: "Alle Mærker"
       other_tags: "Andre Mærker"
       selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
@@ -4754,7 +4753,6 @@ da:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
           other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
-        delete_confirm: "Det foretrækkes generelt at anonymisere brugere i stedet for at slette dem for at undgå at fjerne indhold fra eksisterende diskussioner. <br><br> Er du SIKKER på, at du vil slette denne bruger? Dette er permanent!"
         delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
         delete_dont_block: "Slet kun"
         deleting_user: "Sletter bruger ..."

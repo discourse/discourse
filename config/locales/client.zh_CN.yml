@@ -4845,7 +4845,8 @@ zh_CN:
           other: "无法删除所有帖子。某些帖子的存在时间超过 %{count} 天。（delete_user_max_post_age 设置。）"
         cant_delete_all_too_many_posts:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
-        delete_confirm: "一般而言，最好对用户进行匿名化而不是删除它们，以避免移除现有讨论中的内容。<br><br>确定要删除此用户吗？此操作无法撤消！"
+        delete_confirm_title: "你确定要删除这个用户吗？这是永久性的!"
+        delete_confirm: "一般来说，最好是对用户进行匿名处理，而不是删除他们，以避免删除现有讨论的内容。"
         delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
         delete_dont_block: "仅删除"
         deleting_user: "正在删除用户…"

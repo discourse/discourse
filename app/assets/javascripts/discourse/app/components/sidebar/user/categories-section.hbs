@@ -27,4 +27,10 @@
       {{html-safe this.noCategoriesText}}
     </Sidebar::SectionMessage>
   {{/if}}
+  <Sidebar::SectionLink
+    @linkName="more-categories"
+    @content={{i18n "category.all"}}
+    @route="discovery.categories"
+    @class="sidebar-more-link"
+  />
 </Sidebar::Section>

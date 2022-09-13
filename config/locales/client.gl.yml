@@ -3215,7 +3215,6 @@ gl:
     download_calendar:
       download: "Descargar"
     tagging:
-      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
@@ -4505,7 +4504,6 @@ gl:
         cant_delete_all_too_many_posts:
           one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
           other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
-        delete_confirm: "Xeralmente é preferíbel anonimizar os usuarios mellor ca eliminalos, para evitar retirar contido das discusións existentes.<br><br>Está SEGURO de que quere eliminar este usuario? Isto é permanente!"
         delete_and_block: "Eliminar e <b>bloquear</b> este enderezo de correo e de IP"
         delete_dont_block: "Só eliminar"
         deleting_user: "Eliminando usuario..."

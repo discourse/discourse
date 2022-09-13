@@ -3569,7 +3569,6 @@ it:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
-      all_tags: "Tutte le Etichette"
       other_tags: "Altre Etichette"
       selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
@@ -5016,7 +5015,8 @@ it:
         cant_delete_all_too_many_posts:
           one: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggio. (delete_all_posts_max)"
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
-        delete_confirm: "E' preferibile rendere anonimo un utente anziché eliminarlo, per evitare di rimuovere contenuti dalle discussioni esistenti.<br><br> Sei SICURO di voler eliminare questo utente? Questa azione è permanente!"
+        delete_confirm_title: "Vuoi DAVVERO eliminare questo utente? Questa operazione è irreversibile!"
+        delete_confirm: "In genere è preferibile rendere anonimi gli utenti piuttosto che eliminarli, per evitare di rimuoverne i contenuti dalle discussioni esistenti."
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
         delete_dont_block: "Elimina soltanto"
         deleting_user: "Cancellazione utente..."

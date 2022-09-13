@@ -1864,7 +1864,6 @@ sq:
     download_calendar:
       download: "Shkarko"
     tagging:
-      all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"

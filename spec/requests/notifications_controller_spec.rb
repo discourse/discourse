@@ -165,6 +165,71 @@ RSpec.describe NotificationsController do
           expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
         end
 
+        context "with the enable_experimental_sidebar_hamburger setting" do
+          fab!(:unread_high_priority) do
+            Fabricate(
+              :notification,
+              user: user,
+              high_priority: true,
+              read: false,
+              created_at: 10.minutes.ago
+            )
+          end
+          fab!(:read_high_priority) do
+            Fabricate(
+              :notification,
+              user: user,
+              high_priority: true,
+              read: true,
+              created_at: 8.minutes.ago
+            )
+          end
+          fab!(:unread_regular) do
+            Fabricate(
+              :notification,
+              user: user,
+              high_priority: false,
+              read: false,
+              created_at: 6.minutes.ago
+            )
+          end
+          fab!(:read_regular) do
+            Fabricate(
+              :notification,
+              user: user,
+              high_priority: false,
+              read: true,
+              created_at: 4.minutes.ago
+            )
+          end
+
+          it "gets notifications list with unread ones at the top when the setting is enabled" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([
+              unread_high_priority.id,
+              notification.id,
+              unread_regular.id,
+              read_regular.id,
+              read_high_priority.id
+            ])
+          end
+
+          it "gets notifications list with unread high priority notifications at the top when the setting is disabled" do
+            SiteSetting.enable_experimental_sidebar_hamburger = false
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([
+              unread_high_priority.id,
+              notification.id,
+              read_regular.id,
+              unread_regular.id,
+              read_high_priority.id
+            ])
+          end
+        end
+
         context "when filter_by_types param is present" do
           fab!(:liked1) do
             Fabricate(

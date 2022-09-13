@@ -43,6 +43,11 @@ export default class UserMenuTab {
     throw new Error("not implemented");
   }
 
+  /**
+   * @returns {Array} Notification types displayed in tab. Those notifications will be removed from "other" tab.
+   */
+  get notificationTypes() {}
+
   getUnreadCountForType(type) {
     const key = `grouped_unread_notifications.${this.site.notification_types[type]}`;
     // we're retrieving the value with get() so that Ember tracks the property

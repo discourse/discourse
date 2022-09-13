@@ -2786,7 +2786,6 @@ cs:
     download_calendar:
       download: "Stáhnout"
     tagging:
-      all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
       selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"

@@ -2955,4 +2955,22 @@ RSpec.describe User do
       )
     end
   end
+
+  describe "#bump_last_seen_notification!" do
+    it "doesn't error if there are no notifications" do
+      Notification.destroy_all
+      expect(user.bump_last_seen_notification!).to eq(false)
+      expect(user.reload.seen_notification_id).to eq(0)
+    end
+
+    it "updates seen_notification_id to the last notification that the user can see" do
+      last_notification = Fabricate(:notification, user: user)
+      deleted_notification = Fabricate(:notification, user: user)
+      deleted_notification.topic.trash!
+      someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
+
+      expect(user.bump_last_seen_notification!).to eq(true)
+      expect(user.reload.seen_notification_id).to eq(last_notification.id)
+    end
+  end
 end

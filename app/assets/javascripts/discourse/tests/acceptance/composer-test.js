@@ -182,9 +182,9 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".bootbox.modal"), "it pops up an error message");
-    await click(".bootbox.modal a.btn-primary");
-    assert.ok(!exists(".bootbox.modal"), "it dismisses the error");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
@@ -223,13 +223,14 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "This title doesn't matter");
     await fillIn(".d-editor-input", "custom message");
     await click("#reply-control button.create");
+
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query("#dialog-holder .dialog-body").innerText,
       "This is a custom response"
     );
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
 
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/faq",
@@ -764,11 +765,11 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".dialog-body").innerText,
       I18n.t("drafts.abandon.confirm")
     );
 
-    await click(".modal-footer .btn.btn-default");
+    await click(".dialog-footer .btn-resume-editing");
   });
 
   test("Can switch states without abandon popup", async function (assert) {
@@ -826,7 +827,7 @@ acceptance("Composer", function (needs) {
 
     await visit("/u/charlie");
     await click("button.compose-pm");
-    await click(".modal .btn-default");
+    await click(".dialog-footer .btn-resume-editing");
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");

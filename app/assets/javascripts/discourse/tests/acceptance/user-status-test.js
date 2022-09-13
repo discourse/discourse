@@ -423,4 +423,15 @@ acceptance("User Status - new user menu", function (needs) {
       "shows user status emoji on the user avatar in the header"
     );
   });
+
+  test("user menu gets closed when the user status modal is opened", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click("#user-menu-button-profile");
+    await click(".set-user-status button");
+
+    assert.notOk(exists(".user-menu"));
+  });
 });

@@ -73,6 +73,7 @@ he:
       file_too_big: "הקובץ גדול מדי ללא דחיסה."
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
       not_allowed_theme: "‚%{repo}’ אינו ברשימת הנושאים המורשים (יש לבדוק את ההגדרה הגלובלית `allowed_theme_repos` - מאגרי ערכות עיצוב מורשים)."
+      ssh_key_gone: "המתנת זמן רב מדי להתקנת ערכת העיצוב ותוקף מפתח ה־SSH פג. נא לנסות שוב."
     errors:
       component_no_user_selectable: "רכיבי ערכת העיצוב לא יכולים להיות לבחירת המשתמש"
       component_no_default: "רכיבי ערכת העיצוב לא יכולים להיות בררת המחדל של ערכת העיצוב"
@@ -647,6 +648,7 @@ he:
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
   general_category_name: "כללי"
+  general_category_description: "כאן מותר ליצור נושאים שלא מתאימים לכך קטגוריה קיימת אחרת."
   meta_category_name: "משוב על האתר"
   meta_category_description: "דיון על האתר הזה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "סגל"
@@ -4587,6 +4589,7 @@ he:
     register:
       button: "הרשמה"
       title: "הרשמת חשבון ניהול"
+      help: "כדי להתחיל יש להירשם."
       no_emails: "לרוע המזל, לא הוגדרו כתובות דוא״ל של מנהלים במהלך ההקמה, לכן סיום התצורה עשוי להיות מורכב. נא להוסיף כתובת דוא״ל של מפתח בקובץ התצורה או <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>ליצור חשבון מנהל מהמסוף</a>."
     confirm_email:
       title: "אישור הדוא״ל שלך"

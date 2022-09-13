@@ -15,7 +15,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service store;
 
   get filterByTypes() {
-    return null;
+    return this.args.filterByTypes;
   }
 
   get dismissTypes() {

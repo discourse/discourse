@@ -29,9 +29,16 @@
         {{#if this.step.description}}
           <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
         {{/if}}
-
         {{#if this.bannerImage}}
-          <img src={{this.bannerImage}} class="wizard-container__step-banner-image">
+          <div class="wizard-container__step-banner-image">
+            {{#if (eq this.bannerImage "welcome-illustration")}}
+              <IllustrationWelcome />
+            {{else if (eq this.bannerImage "members-illustration")}}
+              <IllustrationMembers />
+            {{else if (eq this.bannerImage "finished-illustration")}}
+              <IllustrationFinished />
+            {{/if}}
+          </div>
         {{/if}}
       </div>
     {{/if}}
@@ -39,14 +46,7 @@
 </div>
 
 <div class="wizard-container__step-footer">
-
   <div class="wizard-container__buttons">
-
-    {{#if this.showJumpInButton}}
-      <button {{action "quit"}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
-        {{i18n "wizard.jump_in"}}
-      </button>
-    {{/if}}
 
     {{#if this.showNextButton}}
       <button {{action "nextStep"}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
@@ -55,11 +55,16 @@
     {{/if}}
 
     {{#if this.showFinishButton}}
-      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.finishButtonClass}}">
-        {{i18n this.finishButtonLabel}}
+      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+        {{i18n "wizard.jump_in"}}
       </button>
     {{/if}}
 
+    {{#if this.showJumpInButton}}
+      <button {{action "quit"}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
+        {{i18n this.jumpInButtonLabel}}
+      </button>
+    {{/if}}
   </div>
 
   <div class="wizard-container__step-progress">

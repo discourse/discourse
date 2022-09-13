@@ -3233,7 +3233,6 @@ sl:
     download_calendar:
       download: "Naloži"
     tagging:
-      all_tags: "Vse oznake"
       other_tags: "Druge oznake"
       selector_all_tags: "vse oznake"
       selector_no_tags: "brez oznak"
@@ -4069,7 +4068,6 @@ sl:
           two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
           few: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
           other: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
-        delete_confirm: "Navadno je bolj primerno da se uporabnike anonimizira in ne izbriše, ker se z brisanjem odstrani tudi vsebina iz obstoječih razprav. <br><br>Ali ste PREPRIČANI da hočete odstraniti tega uporabnika? To dejanje je trajno!"
         delete_and_block: "Izbriši in <b>blokiraj</b> ta e-naslov in IP naslov"
         delete_dont_block: "Samo izbriši"
         deleted: "Ta uporabnik je bil izbrisan"

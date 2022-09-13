@@ -2737,7 +2737,6 @@ lv:
     download_calendar:
       download: "Lejuplādēt"
     tagging:
-      all_tags: "Visi tagi"
       selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
       changed: "mainītie tagi:"
