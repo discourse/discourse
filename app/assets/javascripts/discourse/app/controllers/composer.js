@@ -337,7 +337,7 @@ export default Controller.extend({
         options.push(
           this._setupPopupMenuOption(() => {
             return {
-              action: "applyformatCode",
+              action: "applyFormatCode",
               icon: "code",
               label: "composer.code_title",
             };
