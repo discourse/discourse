@@ -3332,7 +3332,6 @@ nl:
     download_calendar:
       download: "Downloaden"
     tagging:
-      all_tags: "Alle tags"
       other_tags: "Andere tags"
       selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
@@ -4658,7 +4657,6 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} bericht heeft geplaatst. (delete_all_posts_max)"
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
-        delete_confirm: "Om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd, is het doorgaans beter om gebruikers te anonimiseren dan ze te verwijderen.<br><br>Weet u ZEKER dat u deze gebruiker wilt verwijderen? Dit is blijvend!"
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
         deleting_user: "Gebruiker verwijderen..."

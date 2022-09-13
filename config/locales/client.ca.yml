@@ -2791,7 +2791,6 @@ ca:
     download_calendar:
       download: "Descarrega"
     tagging:
-      all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
@@ -3899,7 +3898,6 @@ ca:
         cant_delete_all_too_many_posts:
           one: "No es poden suprimir totes les publicacions perquè l'usuari té més d'%{count} publicació. (delete_all_posts_max)"
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
-        delete_confirm: "En general, és preferible fer anònims els usuaris en lloc de suprimir-los, per a evitar que s'esborrin els continguts de les discussions existents. <br><br> Esteu SEGUR que voleu suprimir aquest usuari? Això és permanent!"
         delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
         delete_dont_block: "Només suprimeix"
         deleting_user: "Suprimint l'usuari..."

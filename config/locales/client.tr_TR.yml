@@ -3523,7 +3523,7 @@ tr_TR:
       google: "Google Takvim"
       ics: "ICS"
     tagging:
-      all_tags: "Tüm Etiketler"
+      all_tags: "Tüm etiketler"
       other_tags: "Diğer Etiketler"
       selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
@@ -4936,7 +4936,8 @@ tr_TR:
         cant_delete_all_too_many_posts:
           one: "Tüm gönderileri silemezsiniz çünkü kullanıcının %{count} 'ten daha fazla gönderisi var. (delete_all_posts_max)"
           other: "Tüm gönderileri silemezsin çünkü kullanıcının %{count} 'ten fazla gönderisi var. (delete_all_posts_max)"
-        delete_confirm: "İçeriği mevcut tartışmalardan kaldırmaktan kaçınmak veya kullanıcıları silmek yerine genellikle anonimleştirmek tercih edilir. <br><br>Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu geri alınamaz!"
+        delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu kalıcıdır!"
+        delete_confirm: "Mevcut tartışmalardan içerik kaldırmamak için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
         delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Yalnızca sil"
         deleting_user: "Kullanıcı siliniyor..."

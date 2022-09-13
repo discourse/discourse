@@ -3267,7 +3267,6 @@ nb_NO:
     download_calendar:
       download: "Last ned"
     tagging:
-      all_tags: "Alle stikkord"
       other_tags: "Andre stikkord"
       selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"

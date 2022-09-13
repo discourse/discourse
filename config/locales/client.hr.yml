@@ -3697,7 +3697,6 @@ hr:
       google: "Google kalendar"
       ics: "ICS"
     tagging:
-      all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
@@ -5137,7 +5136,6 @@ hr:
           one: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
-        delete_confirm: "Općenito je poželjno anonimizirati korisnike umjesto brisanja, kako bi se izbjeglo uklanjanje sadržaja iz postojećih rasprava.<br><br>Jeste li sigurni da želite izbrisati ovog korisnika? Ovo je trajno!"
         delete_and_block: "Obriši i <b>block</b> ovaj email i IP adresu"
         delete_dont_block: "Samo obriši"
         deleting_user: "Brisanje korisnika..."

@@ -63,6 +63,7 @@ pt_BR:
       unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro ao importar esse tema
+      upload: "Erro ao enviar um arquivo: %{name}. %{errors}"
       about_json: "Erro ao importar: about.json não existe ou é inválido. Tem certeza de que é um tema do Discourse?"
       about_json_values: "about.json contém valores inválidos: %{errors}"
       modifier_values: "about.json contém valores inválidos: %{errors}"
@@ -72,6 +73,7 @@ pt_BR:
       file_too_big: "O arquivo não compactado é muito grande."
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
       not_allowed_theme: "\"%{repo}\" não está na lista de temas permitidos (confira a configuração global \"allowed_theme_repos\")."
+      ssh_key_gone: "Você esperou muito tempo para instalar o tema e a chave SSH expirou. Por favor, tente novamente."
     errors:
       component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo(a) usuário(a)"
       component_no_default: "Componentes do tema não podem ser o tema padrão"
@@ -230,6 +232,7 @@ pt_BR:
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
     not_found_template_link: |
       <p>Este convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
+    user_exists: "Não há necessidade de convidar <b>%{email}</b>, visto que já têm uma conta!"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
     rate_limit:
@@ -240,6 +243,7 @@ pt_BR:
     disabled_errors:
       discourse_connect_enabled: "Convites estão desativados porque o DiscourseConnect está ativado."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
+    requires_groups: "O convite não foi salvo porque o tópico especificado está inacessível. Adicione um dos seguintes grupos: %{groups}."
     domain_not_allowed: "Seu e-mail não pode ser usado para resgatar este convite."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
@@ -336,6 +340,8 @@ pt_BR:
   too_many_links:
     one: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} link em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem inserir apenas %{count} links em uma postagem."
+  contains_blocked_word: "Desculpe, você não pode publicar a palavra '%{word}'; não é permitido."
+  contains_blocked_words: "Desculpe, você não pode publicar isso. Não permitido: %{words}."
   spamming_host: "Desculpe, você não pode postar um link para esse host."
   user_is_suspended: "Usuários(as) suspensos(as) não têm permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico tenha sido fechado ou removido enquanto você estava visualizando."
@@ -390,10 +396,14 @@ pt_BR:
   bookmarks:
     errors:
       already_bookmarked_post: "Você não pode adicionar a mesma postagem aos favoritos duas vezes."
+      already_bookmarked: "Você não pode favoritar o(a) mesmo(a) %{type} duas vezes."
       too_many: "Desculpe, não é possível adicionar mais de %{limit} favoritos, acesse <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favorito em uma data passada."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favorito mais de dez anos posteriormente."
+      time_must_be_provided: "Uma hora deve ser informada para todos os lembretes."
       for_topic_must_use_first_post: "Você só pode usar a primeira postagem para adicionar o tópico aos favoritos."
+      bookmarkable_id_type_required: "O nome e o tipo do registro para favoritar são obrigatórios."
+      invalid_bookmarkable: "Um %{type} não pode ser favoritado."
     reminders:
       at_desktop: "Da próxima vez que estiver em meu desktop"
       later_today: "Hoje mais tarde"
@@ -578,9 +588,14 @@ pt_BR:
               too_many: "Muitas palavras para esta ação"
             base:
               invalid_url: "A URL de substituição não é válida"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "não é válido"
       <<: *errors
   uncategorized_category_name: "Sem categoria"
   general_category_name: "Geral"
+  general_category_description: "Crie aqui tópicos que não se encaixam em nenhuma outra categoria existente."
   meta_category_name: "Feedback do site"
   meta_category_description: "Discussão sobre este site, sua organização, funcionamento e maneiras de melhorá-lo."
   staff_category_name: "Equipe"
@@ -618,6 +633,7 @@ pt_BR:
       permission_conflict: "Qualquer grupo que tenha permissão para acessar uma subcategoria também deve ter permissão para acessar a categoria pai. Os grupos a seguir têm acesso a uma das subcategorias, mas não têm acesso à categoria pai: %{group_names}."
       disallowed_topic_tags: "Este tópico tem etiquetas não permitidas por esta categoria: \"%{tags}\""
       disallowed_tags_generic: "Este tópico tem etiquetas não permitidas."
+      slug_contains_non_ascii_chars: "contém caracteres não-ascii"
     cannot_delete:
       uncategorized: "Esta categoria é especial. É concebida como uma área de espera para tópicos sem categoria e não pode ser excluída."
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -633,6 +649,11 @@ pt_BR:
   post:
     image_placeholder:
       broken: "Esta imagem está danificada"
+      blocked_hotlinked_title: "Imagem hospedada em outro site. Clique para abrir em uma nova guia."
+      blocked_hotlinked: "Imagem Externa"
+    media_placeholder:
+      blocked_hotlinked_title: "Mídia hospedada em outro site. Clique para abrir em uma nova guia."
+      blocked_hotlinked: "Mídia Externa"
     hidden_bidi_character: "Caracteres bidirecionais podem alterar a ordem de renderização do texto. Isso pode ser usado para ocultar códigos maliciosos."
     has_likes:
       one: "%{count} curtida"
@@ -1349,6 +1370,7 @@ pt_BR:
     unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
     watched_word_regexp_error: "A expressão regular para \"%{action}\" palavras acompanhadas é inválida. Verifique as <a href='%{base_path}/admin/customize/watched_words'>configurações de palavras acompanhadas</a> ou desative as \"configurações do site para expressões regulares\"."
   site_settings:
+    allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
     disabled: "desativado"
     display_local_time_in_user_card: "Exiba a hora local baseada no fuso horário(a) do usuário(a) quando seu cartão de usuário(a) estiver disponível."
     censored_words: "Palavras que serão substituídas automaticamente por &#9632;&#9632;&#9632;&#9632;"
@@ -1369,6 +1391,8 @@ pt_BR:
     min_personal_message_title_length: "Tamanho mínimo permitido para o título de uma mensagem em caracteres"
     max_emojis_in_title: "Emojis permitidos máximos no título do tópico"
     min_search_term_length: "Tamanho mínimo válido para termo de pesquisa em caracteres"
+    search_tokenize_chinese: "Forçar pesquisa para tokenizar chinês mesmo em sites não chineses"
+    search_tokenize_japanese: "Forçar a pesquisa para tokenizar japonês mesmo em sites não japoneses"
     search_prefer_recent_posts: "Se as pesquisas no seu fórum estiverem lentas, essa opção tenta indexar as postagens mais recentes primeiro"
     search_recent_posts_size: "Quantidade de postagens recentes para serem mantidas no índice"
     log_search_queries: "Registrar consultas de pesquisa realizadas pelos(as) usuários(as)"
@@ -1388,8 +1412,11 @@ pt_BR:
     contact_email: "Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também em <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     contact_url: "URL de contato deste site. Exibida na página <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
+    download_remote_images_to_local: "Converta imagens remotas (hotlinked) em locais baixando-as. Isso preserva o conteúdo mesmo que estas sejam removidas do site remoto no futuro."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
     disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
+    block_hotlinked_media: "Impedir que os usuários introduzam mídia remota (hotlinked) em suas publicações. A mídia remota que não for baixada via 'download_remote_images_to_local' será substituída por um link de espaço reservado."
+    block_hotlinked_media_exceptions: "Uma lista de URLs base, isentos da configuração block_hotlinked_media. Inclua o protocolo (por exemplo, https://example.com)."
     editing_grace_period: "Durante (n) segundos após a publicação, as edições não criarão uma nova versão no histórico da postagem."
     editing_grace_period_max_diff: "Quantidade máxima de alterações de caracteres permitidas no período de carência de edição. Se houver mais alterações, armazene outra revisão de postagem (nível de confiança 0 e 1)"
     editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência de edição. Se houver mais alterações, armazene outra revisão de postagem (nível de confiança 2 e maior)"
@@ -1411,6 +1438,7 @@ pt_BR:
     show_pinned_excerpt_mobile: "Mostre trecho de tópicos fixados na visualização para dispositivos móveis."
     show_pinned_excerpt_desktop: "Mostrar trecho de tópicos fixados na visualização para desktop."
     post_onebox_maxlength: "Tamanho máximo para uma postagem do Discourse no Onebox."
+    blocked_onebox_domains: "Uma lista de domínios que nunca serão \"oneboxed\", por exemplo, wikipedia.org\n(símbolos coringas como \"*\" e \"?\" não são suportados)"
     allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração do site inline_onebox_domain_whitelist e permita inclusões de Onebox em todos os domínios."
     force_custom_user_agent_hosts: "Hosts para os quais usar um agente do(a) usuário(a) do Onebox em todos os pedidos. (Especialmente útil para hosts que limitam acesso do agente do(a) usuário(a).)"
@@ -2053,6 +2081,7 @@ pt_BR:
     share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
+    suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"
@@ -4254,6 +4283,7 @@ pt_BR:
       invalid_token: "token inválido."
     email_input: "E-mail do(a) administrador(a)"
     submit_button: "Enviar e-mail"
+    safe_mode: "Modo de segurança: desativa todos os temas/plugins ao fazer login"
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de desempenho diários do seu site.
     initial_topic_title: Relatórios de desempenho do site
@@ -4305,9 +4335,13 @@ pt_BR:
       introduction:
         fields:
           title:
+            label: "Nome da comunidade"
             placeholder: "Hangout de Jane"
           site_description:
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
+          contact_email:
+            label: "Ponto de contato"
+            placeholder: "exemplo@user.com"
           default_locale:
             label: "Idioma"
       privacy:
@@ -4315,8 +4349,11 @@ pt_BR:
           login_required:
             placeholder: "Privado(a)"
             extra_description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
+          invite_only:
+            placeholder: "Apenas Convidados"
           must_approve_users:
             placeholder: "Requerer aprovação"
+            extra_description: "Os usuários devem ser aprovados pela equipe"
       ready:
         title: "Seu Discourse está pronto!"
       styling:
@@ -4342,24 +4379,34 @@ pt_BR:
                 label: "Categorias e últimos tópicos"
               categories_and_top_topics:
                 label: "Categorias e melhores tópicos"
+              subcategories_with_featured_topics:
+                label: "Sub-Categorias com tópicos em destaque"
       branding:
+        title: "Marca da comunidade"
         fields:
           logo:
             label: "Logotipo primário"
+            description: "O logotipo no canto superior esquerdo do seu site. Utilize uma imagem retangular larga com pelo menos 120 de altura e uma proporção maior que 3:1"
           logo_small:
             label: "Logotipo quadrado"
+            description: "Uma versão quadrada da sua logo. Exibida no canto superior esquerdo da página quando rolado para baixo em um navegador e exibido ao compartilhar em redes sociais. Idealmente deve ter ao menos 512x512."
           favicon:
             label: "Ícone do navegador"
+            description: "Ícone usado para representar seu site em Navegadores Web e fique bem em tamanhos pequenos. PNG ou JPG é recomendado. O logo quadrado é usado por padrão."
           large_icon:
             label: "Ícone grande"
+            description: "Ícone usado para representar seu site em dispositivos móveis e fique bem em tamanhos maiores. Idealmente maior que 512x512. O logo quadrado é usado por padrão."
       corporate:
+        title: "Contato & Organização"
         fields:
           company_name:
             label: "Nome da empresa"
             placeholder: "Exemplo de organização"
+            description: "Utilizado na sua página de Termos de Serviço. Sinta-se livre para avançar caso não exista nenhuma companhia."
           governing_law:
             label: "Lei aplicável"
             placeholder: "Lei da Califórnia"
+            description: "Utilizado na sua página de Termos de Serviço. Sinta-se livre para avançar caso não exista nenhuma companhia."
           contact_url:
             label: "Página da web"
             placeholder: "https://www.example.com/contact-us"
@@ -4367,6 +4414,7 @@ pt_BR:
           city_for_disputes:
             label: "Cidade para disputas"
             placeholder: "São Francisco, Califórnia"
+            description: "Utilizado na sua página de Termos de Serviço. Sinta-se livre para avançar caso não exista nenhuma companhia."
           site_contact:
             label: "Mensagens automáticas"
             description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
@@ -4526,6 +4574,8 @@ pt_BR:
   notification_level:
     ignore_error: "Desculpe, não é possível ignorar esse(a) usuário(a)."
     mute_error: "Desculpe, não é possível silenciar esse(a) usuário(a)."
+    error: "Desculpe, você não pode alterar o nível de notificação para esse usuário."
+    invalid_value: '"%{value}" não é um nível de notificação válido.'
   discord:
     not_in_allowed_guild: "Falha na autenticação. Você não é um membro de uma organização permitida do Discord."
   old_keys_reminder:
@@ -4545,6 +4595,9 @@ pt_BR:
     post_raw: "Continuando a discussContinuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
     small_action_post_raw: "Continue a discussão em %{new_title}."
   fallback_username: "usuário(a)"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at deve ser maior que set_at"
   activemodel:
     errors:
       <<: *errors

@@ -1654,10 +1654,10 @@ ro:
       text_body_template: |
         Bine ai venit la %{site_name}!
 
-        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        Apasă pe următorul link pentru a confirma și a activa noul cont:
         %{base_url}/u/activate-account/%{email_token}
 
-        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
+        Dacă nu poți apăsa pe link-ul de mai sus, încearcă să îl copiezi și să îl inserezi în bara de adrese a browser-ului tău.
     activation_reminder:
       text_body_template: |
         Bine ai venit la %{site_name}!

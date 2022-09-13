@@ -189,6 +189,7 @@ es:
       other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
     bootstrap_invite_button_title: "Enviar invitaciones"
+    bootstrap_wizard_link_title: "Finalizar asistente de configuración"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
@@ -2057,6 +2058,7 @@ es:
       abandon: "cerrar el editor y descartar borrador"
       enter_fullscreen: "entrar en el editor en pantalla completa"
       exit_fullscreen: "salir del editor en pantalla completa"
+      exit_fullscreen_prompt: "Pulsa <kbd>ESC</kbd> para salir del modo pantalla completa"
       show_toolbar: "mostrar la barra de herramientas del editor"
       hide_toolbar: "ocultar la barra de herramientas del editor"
       modal_ok: "Aceptar"
@@ -2100,6 +2102,7 @@ es:
       ignore: "Ignorar"
       image_alt_text:
         aria_label: Texto alternativo para imagen
+      delete_image_button: Eliminar imagen
     notifications:
       tooltip:
         regular:
@@ -2342,6 +2345,15 @@ es:
       generic_no_items: "No hay elementos en esta lista."
       sr_menu_tabs: "Pestañas del menú"
       view_all_notifications: "ver todas las notificaciones"
+      view_all_bookmarks: "ver todos los marcadores"
+      view_all_messages: "ver todos los mensajes personales"
+      reviewable:
+        queue: "Cola"
+        deleted_user: "(usuario eliminado)"
+        post_number_with_topic_title: "publicación n.º %{post_number} – %{title}"
+        new_post_in_topic: "nueva publicación en %{title}"
+        suspicious_user: "usuario sospechoso %{username}"
+        default_item: "elemento revisable n.º %{reviewable_id}"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3556,7 +3568,6 @@ es:
       google: "Calendario de Google"
       ics: "ICS"
     tagging:
-      all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
       selector_all_tags: "todas las etiquetas"
       selector_no_tags: "sin etiquetas"
@@ -3719,6 +3730,7 @@ es:
       no_activity_title: "Todavía no hay actividad"
       no_activity_body: "¡Te damos la bienvenida a la comunidad! Acabas de llegar, por lo que todavía no has participado. Como primer paso, visita los <a href='%{topUrl}'>Destacados</a> o las <a href='%{categoriesUrl}'>Categorías</a> y empieza a leer. Dale al botón %{heartIcon} en las publicaciones que te gusten o sobre las que quieras saber más. Aquí verás tu actividad una vez empieces a participar."
       no_replies_title: "Todavía no has respondido a ningún tema"
+      no_replies_title_others: "%{username} todavía no ha respondido a ningún tema"
       no_drafts_title: "Todavía no has empezado ningún borrador"
       no_drafts_body: "¿Todavía no quieres publicarlo? Vamos a guardar un borrador automáticamente y lo pondremos aquí cuando vayas a empezar a escribir un tema, respuesta o mensaje personal. Dale al botón de cancelar para descartarlo o guardar el borrador y seguir luego."
       no_likes_title: "Todavía no le has dado a me gusta en ningún tema"
@@ -3796,6 +3808,10 @@ es:
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"
+    welcome_topic_banner:
+      title: "Crea tu tema de bienvenida"
+      description: 'Tu tema de bienvenid es lo primero que la gente nueva leerá al llegar. Piensa en este párrafo como si fuera un "discurso breve" o una "declaración de motivos"'
+      button_title: "Empezar a editar"
     until: "Hasta:"
   admin_js:
     type_to_filter: "filtrar opciones..."
@@ -4353,6 +4369,7 @@ es:
           import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
           is_private: "El tema está en un repositorio privado de git"
+          finish_install: "Terminar la instalación del tema"
           remote_branch: "Nombre de la rama (opcional)"
           public_key: "Conceda la siguiente clave pública de acceso al repositorio:"
           public_key_note: "Después de poner una URL de repositorio privado válida, se generará una clave SSH y se mostrará aquí."
@@ -4363,6 +4380,7 @@ es:
           install_git_repo: "Desde un repositorio git"
           install_create: "Crear nuevo"
           duplicate_remote_theme: "El componente de tema «%{name}» ya está instalado, ¿seguro que quieres instalar otra copia?"
+          force_install: "No se ha podido instalar el tema porque su repositorio Git no es accesible. ¿Seguro que quieres continuar con la instalación?"
           about_theme: "Acerca de"
           license: "Licencia"
           version: "Versión:"
@@ -4572,6 +4590,7 @@ es:
             address_placeholder: "nombre@ejemplo.com"
             type_placeholder: "resumen, registro..."
             reply_key_placeholder: "clave de respuesta"
+            smtp_transaction_response_placeholder: "ID de SMTP"
       moderation_history:
         performed_by: "Realizado por"
         no_results: "No hay historial de moderación disponible."
@@ -4754,6 +4773,7 @@ es:
         show_words:
           one: "ver %{count} palabra"
           other: "ver %{count} palabras"
+        case_sensitive: "(distingue entre mayúsculas y minúsculas)"
         download: Descargar
         clear_all: Limpiar todo
         clear_all_confirm: "¿Quitar todas las palabras vigiladas para la acción %{action}?"
@@ -4791,6 +4811,7 @@ es:
           exists: "Ya existe"
           upload: "Añadir desde archivo"
           upload_successful: "Subida completada. Las palabras se han añadido."
+          case_sensitivity_label: "Distingue entre mayúsculas y minúsculas"
         test:
           button_label: "Prueba"
           modal_title: "%{action}: Prueba de palabras vigiladas"
@@ -4988,7 +5009,6 @@ es:
         cant_delete_all_too_many_posts:
           one: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
-        delete_confirm: "Por lo general es preferible anonimizar usuarios en vez de eliminarlos para evitar quitar contenido de debates existentes.<br><br>¿SEGURO que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_and_block: "Eliminar y <b>bloquear</b> este correo electrónico y esta dirección IP"
         delete_dont_block: "Solo eliminar"
         deleting_user: "Eliminando usuario..."

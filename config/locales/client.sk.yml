@@ -2205,7 +2205,6 @@ sk:
     download_calendar:
       download: "Stiahnuť"
     tagging:
-      all_tags: "Všetky štítky"
       selector_all_tags: "všetky štítky"
       selector_no_tags: "žiadne štítky"
       changed: "zmenené štítky:"
