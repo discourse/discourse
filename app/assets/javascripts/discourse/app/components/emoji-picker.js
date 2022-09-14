@@ -284,12 +284,12 @@ export default Component.extend({
       return false;
     }
 
-    if (event.code === "Escape") {
+    if (event.key === "Escape") {
       this.onClose(event);
       return false;
     }
 
-    if (arrowKeys.includes(event.code)) {
+    if (arrowKeys.includes(event.key)) {
       if (!this._focusedOn(this.elements.picker)) {
         return;
       }
@@ -301,7 +301,7 @@ export default Component.extend({
 
       const numEmojisInRow = this.get("emojiPerRow");
 
-      if (event.code === "ArrowRight") {
+      if (event.key === "ArrowRight") {
         let nextEmoji = currentEmoji + 1;
 
         if (nextEmoji < emojis.length) {
@@ -312,14 +312,14 @@ export default Component.extend({
         }
       }
 
-      if (event.code === "ArrowLeft") {
+      if (event.key === "ArrowLeft") {
         const previousEmoji = currentEmoji - 1;
         if (currentEmoji > 0) {
           emojis[previousEmoji].focus();
         }
       }
 
-      if (event.code === "ArrowDown") {
+      if (event.key === "ArrowDown") {
         const emojiNextRow = currentEmoji + numEmojisInRow;
 
         if (emojiNextRow >= emojis.length) {
@@ -338,7 +338,7 @@ export default Component.extend({
         }
       }
 
-      if (event.code === "ArrowUp") {
+      if (event.key === "ArrowUp") {
         const emojiPreviousRow = currentEmoji - numEmojisInRow;
         const emojiInFirstRow = 0 + numEmojisInRow;
 
@@ -355,7 +355,7 @@ export default Component.extend({
       return false;
     }
 
-    if (event.code === "Enter") {
+    if (event.key === "Enter") {
       if (!this._focusedOn(".emoji")) {
         return;
       }

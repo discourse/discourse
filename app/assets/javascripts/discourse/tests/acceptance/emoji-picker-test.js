@@ -186,6 +186,8 @@ acceptance("EmojiPicker", function (needs) {
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
 
+    const emojis = document.querySelectorAll(".emojis-container img.emoji");
+
     assert.strictEqual(
       document.activeElement,
       document.querySelector(searchInput),
@@ -193,12 +195,53 @@ acceptance("EmojiPicker", function (needs) {
     );
 
     await triggerKeyEvent(searchInput, "keydown", "ArrowDown");
-    await triggerKeyEvent(".emoji-picker", "keydown", "Enter");
-
     assert.strictEqual(
       document.activeElement,
-      document.querySelectorAll(".emojis-container img.emoji")[0],
+      emojis[0],
       "ArrowDown from search focuses on the first emoji result"
     );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[1],
+      "ArrowRight from first emoji focuses on the second emoji"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[0],
+      "ArrowLeft from second emoji focuses on the first emoji"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[11],
+      "ArrowDown from first emoji focuses on the first emoji in the second row"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[0],
+      "ArrowUp from the second row emoji focuses on the first emoji"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    assert.strictEqual(
+      document.querySelector(".d-editor-input").value,
+      ":grinning:",
+      "Pressing enter on the wink emoji inserts the markup in the composer input"
+    );
+  });
+
+  test("emoji picker can be dismissed with escape key", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    assert.notOk(exists(".emoji-picker"));
   });
 });
