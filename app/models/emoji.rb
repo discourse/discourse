@@ -129,16 +129,15 @@ class Emoji
 
   def self.groups
     @groups ||= begin
-      base = {}
+      groups = {}
 
-      File.open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }.each do |data|
-        data["icons"].inject(base) do |acc, icon|
-          acc[icon["name"]] = data["name"]
-          acc
+      File.open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }.each do |group|
+        group["icons"].each do |icon| 
+          groups[icon["name"]] = group["name"]
         end
       end
 
-      base
+      groups
     end
   end
 
