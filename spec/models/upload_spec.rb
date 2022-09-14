@@ -618,4 +618,38 @@ RSpec.describe Upload do
       expect(Upload.secure_media_url?(url)).to eq(false)
     end
   end
+
+  describe "dominant_color" do
+    let(:white_image) { Fabricate(:image_upload, color: "white") }
+    let(:red_image) { Fabricate(:image_upload, color: "red") }
+    let(:not_an_image) { Fabricate(:upload) }
+
+    it "works" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+      expect(white_image.dominant_color).to eq("FFFFFF")
+
+      expect(red_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color(calculate_if_missing: true)).to eq("FF0000")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
+    it "can be backfilled" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color).to eq(nil)
+
+      Upload.backfill_dominant_colors!(5)
+
+      white_image.reload
+      red_image.reload
+
+      expect(white_image.dominant_color).to eq("FFFFFF")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
+    it "stores an empty string for non-image uploads" do
+      expect(not_an_image.dominant_color).to eq(nil)
+      expect(not_an_image.dominant_color(calculate_if_missing: true)).to eq("")
+    end
+  end
 end

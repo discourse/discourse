@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
   MAX_IDENTIFY_SECONDS = 5
+  MAX_DOMINANT_COLOR_SECONDS = 5
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -316,6 +317,64 @@ class Upload < ActiveRecord::Base
     get_dimension(:thumbnail_height)
   end
 
+  def dominant_color(calculate_if_missing: false)
+    val = read_attribute(:dominant_color)
+    if val.nil? && calculate_if_missing
+      calculate_dominant_color!
+      read_attribute(:dominant_color)
+    else
+      val
+    end
+  end
+
+  def calculate_dominant_color!(local_path = nil)
+    color = nil
+
+    if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
+      color = ""
+    end
+
+    if color.nil?
+      local_path ||=
+        if local?
+          Discourse.store.path_for(self)
+        else
+          Discourse.store.download(self).path
+        end
+
+      color = begin
+        data = Discourse::Utils.execute_command(
+          "nice",
+          "-n",
+          "10",
+          "convert",
+          local_path,
+          "-colors",
+          "1",
+          "-define",
+          "histogram:unique-colors=true",
+          "-format",
+          "%c",
+          "histogram:info:",
+          timeout: MAX_DOMINANT_COLOR_SECONDS
+        )
+
+        color = data[/#([0-9A-F]{6})/, 1]
+        raise "Unable to parse dominant color output:\n#{data}" if color.nil?
+        color
+      rescue => e
+        Discourse.warn_exception(e, message: "Error calculating dominant color for Upload id=#{id}")
+        ""
+      end
+    end
+
+    if persisted?
+      self.update_column(:dominant_color, color)
+    else
+      self.dominant_color = color
+    end
+  end
+
   def target_image_quality(local_path, test_quality)
     @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path, timeout: MAX_IDENTIFY_SECONDS).to_i rescue 0
 
@@ -522,6 +581,12 @@ class Upload < ActiveRecord::Base
     Upload.where(sha1: sha1s.uniq).pluck(:id)
   end
 
+  def self.backfill_dominant_colors!(count)
+    Upload.where(dominant_color: nil).order("id desc").first(count).each do |upload|
+      upload.calculate_dominant_color!
+    end
+  end
+
   private
 
   def short_url_basename
@@ -553,15 +618,17 @@ end
 #  secure                       :boolean          default(FALSE), not null
 #  access_control_post_id       :bigint
 #  original_sha1                :string
-#  verification_status          :integer          default(1), not null
 #  animated                     :boolean
+#  verification_status          :integer          default(1), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
+#  dominant_color               :text
 #
 # Indexes
 #
 #  idx_uploads_on_verification_status       (verification_status)
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
+#  index_uploads_on_dominant_color          (dominant_color) WHERE (dominant_color IS NULL)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))
 #  index_uploads_on_id_and_url              (id,url)
