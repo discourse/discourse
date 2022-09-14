@@ -5,7 +5,13 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("EmojiPicker", function (needs) {
@@ -177,6 +183,21 @@ acceptance("EmojiPicker", function (needs) {
     assert.ok(
       exists(".emoji-picker button.diversity-scale.medium-dark .d-icon"),
       "it stores diversity scale"
+    );
+  });
+
+  test("emoji can be selected with keyboard", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await settled();
+
+    assert.strictEqual(
+      document.activeElement.classList.contains("emoji"),
+      true,
+      "ArrowDown from search focuses on an emoji"
     );
   });
 });
