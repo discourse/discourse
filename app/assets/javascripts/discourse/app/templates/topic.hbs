@@ -14,6 +14,7 @@
   <PluginOutlet @name="topic-above-post-stream" @tagName="span" @connectorTagName="div" @args={{hash model=this.model editFirstPost=(action "editFirstPost")}} />
 
   {{#if this.model.postStream.loaded}}
+  {{!-- URL: /t/<slug title>/id --}}
     {{#if this.model.postStream.firstPostPresent}}
       <TopicTitle @cancelled={{action "cancelEditingTopic"}} @save={{action "finishedEditingTopic"}} @model={{this.model}}>
         {{#if this.editingTopic}}
@@ -117,15 +118,197 @@
       </TopicNavigation>
 
       <div class="row">
+        {{!-- Topic main content --}}
         <section class="topic-area" id="topic" data-topic-id={{this.model.id}}>
 
           <div class="posts-wrapper">
             <ConditionalLoadingSpinner @condition={{this.model.postStream.loadingAbove}} />
 
             <PluginOutlet @name="topic-above-posts" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-
             {{#unless this.model.postStream.loadingFilter}}
-              <ScrollingPostStream @posts={{this.postsToRender}} @canCreatePost={{this.model.details.can_create_post}} @multiSelect={{this.multiSelect}} @selectedPostsCount={{this.selectedPostsCount}} @filteredPostsCount={{this.model.postStream.filteredPostsCount}} @selectedQuery={{this.selectedQuery}} @gaps={{this.model.postStream.gaps}} @showReadIndicator={{this.model.show_read_indicator}} @streamFilters={{this.model.postStream.streamFilters}} @lastReadPostNumber={{this.userLastReadPostNumber}} @highestPostNumber={{this.highestPostNumber}} @showFlags={{action "showPostFlags"}} @editPost={{action "editPost"}} @showHistory={{route-action "showHistory"}} @showLogin={{route-action "showLogin"}} @showRawEmail={{route-action "showRawEmail"}} @deletePost={{action "deletePost"}} @permanentlyDeletePost={{action "permanentlyDeletePost"}} @recoverPost={{action "recoverPost"}} @expandHidden={{action "expandHidden"}} @toggleBookmark={{action "toggleBookmark"}} @togglePostType={{action "togglePostType"}} @rebakePost={{action "rebakePost"}} @changePostOwner={{action "changePostOwner"}} @grantBadge={{action "grantBadge"}} @changeNotice={{action "changeNotice"}} @lockPost={{action "lockPost"}} @unlockPost={{action "unlockPost"}} @unhidePost={{action "unhidePost"}} @replyToPost={{action "replyToPost"}} @toggleWiki={{action "toggleWiki"}} @showSummary={{action "showSummary"}} @cancelFilter={{action "cancelFilter"}} @removeAllowedUser={{action "removeAllowedUser"}} @removeAllowedGroup={{action "removeAllowedGroup"}} @topVisibleChanged={{action "topVisibleChanged"}} @currentPostChanged={{action "currentPostChanged"}} @currentPostScrolled={{action "currentPostScrolled"}} @bottomVisibleChanged={{action "bottomVisibleChanged"}} @togglePostSelection={{action "togglePostSelection"}} @selectReplies={{action "selectReplies"}} @selectBelow={{action "selectBelow"}} @fillGapBefore={{action "fillGapBefore"}} @fillGapAfter={{action "fillGapAfter"}} @showInvite={{route-action "showInvite"}} @showPagePublish={{route-action "showPagePublish"}} />
+              <div 
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin: 0 120px 15px 0;
+                "
+              >
+                <div>
+                  <h2>Summaries</h2>
+                </div>
+                <button class="btn-primary">Add Summary</button>
+              </div>
+              <ScrollingPostStream 
+                @posts={{this.postsToRender}} 
+                @canCreatePost={{this.model.details.can_create_post}} 
+                @multiSelect={{this.multiSelect}} 
+                @selectedPostsCount={{this.selectedPostsCount}} 
+                @filteredPostsCount={{this.model.postStream.filteredPostsCount}} 
+                @selectedQuery={{this.selectedQuery}} 
+                @gaps={{this.model.postStream.gaps}} 
+                @showReadIndicator={{this.model.show_read_indicator}} 
+                @streamFilters={{this.model.postStream.streamFilters}} 
+                @lastReadPostNumber={{this.userLastReadPostNumber}} 
+                @highestPostNumber={{this.highestPostNumber}} 
+                @showFlags={{action "showPostFlags"}} 
+                @editPost={{action "editPost"}} 
+                @showHistory={{route-action "showHistory"}} 
+                @showLogin={{route-action "showLogin"}} 
+                @showRawEmail={{route-action "showRawEmail"}} 
+                @deletePost={{action "deletePost"}} 
+                @permanentlyDeletePost={{action "permanentlyDeletePost"}} 
+                @recoverPost={{action "recoverPost"}} 
+                @expandHidden={{action "expandHidden"}} 
+                @toggleBookmark={{action "toggleBookmark"}} 
+                @togglePostType={{action "togglePostType"}} 
+                @rebakePost={{action "rebakePost"}} 
+                @changePostOwner={{action "changePostOwner"}} 
+                @grantBadge={{action "grantBadge"}} 
+                @changeNotice={{action "changeNotice"}} 
+                @lockPost={{action "lockPost"}} 
+                @unlockPost={{action "unlockPost"}} 
+                @unhidePost={{action "unhidePost"}} 
+                @replyToPost={{action "replyToPost"}} 
+                @toggleWiki={{action "toggleWiki"}} 
+                @showSummary={{action "showSummary"}} 
+                @cancelFilter={{action "cancelFilter"}} 
+                @removeAllowedUser={{action "removeAllowedUser"}} 
+                @removeAllowedGroup={{action "removeAllowedGroup"}} 
+                @topVisibleChanged={{action "topVisibleChanged"}} 
+                @currentPostChanged={{action "currentPostChanged"}} 
+                @currentPostScrolled={{action "currentPostScrolled"}} 
+                @bottomVisibleChanged={{action "bottomVisibleChanged"}} 
+                @togglePostSelection={{action "togglePostSelection"}} 
+                @selectReplies={{action "selectReplies"}} 
+                @selectBelow={{action "selectBelow"}} 
+                @fillGapBefore={{action "fillGapBefore"}} 
+                @fillGapAfter={{action "fillGapAfter"}} 
+                @showInvite={{route-action "showInvite"}} 
+                @showPagePublish={{route-action "showPagePublish"}} 
+              />
+              <div 
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin: 25px 120px 15px 0;
+                "
+              >
+                <div>
+                  <h2>Sponsors</h2>
+                </div>
+                <button class="btn-primary">Add Sponsor</button>
+              </div>
+              <ScrollingPostStreamSponsor 
+                @posts={{this.postsToRender}} 
+                @canCreatePost={{this.model.details.can_create_post}} 
+                @multiSelect={{this.multiSelect}} 
+                @selectedPostsCount={{this.selectedPostsCount}} 
+                @filteredPostsCount={{this.model.postStream.filteredPostsCount}} 
+                @selectedQuery={{this.selectedQuery}} 
+                @gaps={{this.model.postStream.gaps}} 
+                @showReadIndicator={{this.model.show_read_indicator}} 
+                @streamFilters={{this.model.postStream.streamFilters}} 
+                @lastReadPostNumber={{this.userLastReadPostNumber}} 
+                @highestPostNumber={{this.highestPostNumber}} 
+                @showFlags={{action "showPostFlags"}} 
+                @editPost={{action "editPost"}} 
+                @showHistory={{route-action "showHistory"}} 
+                @showLogin={{route-action "showLogin"}} 
+                @showRawEmail={{route-action "showRawEmail"}} 
+                @deletePost={{action "deletePost"}} 
+                @permanentlyDeletePost={{action "permanentlyDeletePost"}} 
+                @recoverPost={{action "recoverPost"}} 
+                @expandHidden={{action "expandHidden"}} 
+                @toggleBookmark={{action "toggleBookmark"}} 
+                @togglePostType={{action "togglePostType"}} 
+                @rebakePost={{action "rebakePost"}} 
+                @changePostOwner={{action "changePostOwner"}} 
+                @grantBadge={{action "grantBadge"}} 
+                @changeNotice={{action "changeNotice"}} 
+                @lockPost={{action "lockPost"}} 
+                @unlockPost={{action "unlockPost"}} 
+                @unhidePost={{action "unhidePost"}} 
+                @replyToPost={{action "replyToPost"}} 
+                @toggleWiki={{action "toggleWiki"}} 
+                @showSummary={{action "showSummary"}} 
+                @cancelFilter={{action "cancelFilter"}} 
+                @removeAllowedUser={{action "removeAllowedUser"}} 
+                @removeAllowedGroup={{action "removeAllowedGroup"}} 
+                @topVisibleChanged={{action "topVisibleChanged"}} 
+                @currentPostChanged={{action "currentPostChanged"}} 
+                @currentPostScrolled={{action "currentPostScrolled"}} 
+                @bottomVisibleChanged={{action "bottomVisibleChanged"}} 
+                @togglePostSelection={{action "togglePostSelection"}} 
+                @selectReplies={{action "selectReplies"}} 
+                @selectBelow={{action "selectBelow"}} 
+                @fillGapBefore={{action "fillGapBefore"}} 
+                @fillGapAfter={{action "fillGapAfter"}} 
+                @showInvite={{route-action "showInvite"}} 
+                @showPagePublish={{route-action "showPagePublish"}} 
+              />
+              <div 
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin: 25px 120px 15px 0;
+                "
+              >
+                <div>
+                  <h2>Opinions</h2>
+                </div>
+                <button class="btn-primary">Add Opinion</button>
+              </div>
+              <ScrollingPostStreamOpinion 
+                @posts={{this.postsToRender}} 
+                @canCreatePost={{this.model.details.can_create_post}} 
+                @multiSelect={{this.multiSelect}} 
+                @selectedPostsCount={{this.selectedPostsCount}} 
+                @filteredPostsCount={{this.model.postStream.filteredPostsCount}} 
+                @selectedQuery={{this.selectedQuery}} 
+                @gaps={{this.model.postStream.gaps}} 
+                @showReadIndicator={{this.model.show_read_indicator}} 
+                @streamFilters={{this.model.postStream.streamFilters}} 
+                @lastReadPostNumber={{this.userLastReadPostNumber}} 
+                @highestPostNumber={{this.highestPostNumber}} 
+                @showFlags={{action "showPostFlags"}} 
+                @editPost={{action "editPost"}} 
+                @showHistory={{route-action "showHistory"}} 
+                @showLogin={{route-action "showLogin"}} 
+                @showRawEmail={{route-action "showRawEmail"}} 
+                @deletePost={{action "deletePost"}} 
+                @permanentlyDeletePost={{action "permanentlyDeletePost"}} 
+                @recoverPost={{action "recoverPost"}} 
+                @expandHidden={{action "expandHidden"}} 
+                @toggleBookmark={{action "toggleBookmark"}} 
+                @togglePostType={{action "togglePostType"}} 
+                @rebakePost={{action "rebakePost"}} 
+                @changePostOwner={{action "changePostOwner"}} 
+                @grantBadge={{action "grantBadge"}} 
+                @changeNotice={{action "changeNotice"}} 
+                @lockPost={{action "lockPost"}} 
+                @unlockPost={{action "unlockPost"}} 
+                @unhidePost={{action "unhidePost"}} 
+                @replyToPost={{action "replyToPost"}} 
+                @toggleWiki={{action "toggleWiki"}} 
+                @showSummary={{action "showSummary"}} 
+                @cancelFilter={{action "cancelFilter"}} 
+                @removeAllowedUser={{action "removeAllowedUser"}} 
+                @removeAllowedGroup={{action "removeAllowedGroup"}} 
+                @topVisibleChanged={{action "topVisibleChanged"}} 
+                @currentPostChanged={{action "currentPostChanged"}} 
+                @currentPostScrolled={{action "currentPostScrolled"}} 
+                @bottomVisibleChanged={{action "bottomVisibleChanged"}} 
+                @togglePostSelection={{action "togglePostSelection"}} 
+                @selectReplies={{action "selectReplies"}} 
+                @selectBelow={{action "selectBelow"}} 
+                @fillGapBefore={{action "fillGapBefore"}} 
+                @fillGapAfter={{action "fillGapAfter"}} 
+                @showInvite={{route-action "showInvite"}} 
+                @showPagePublish={{route-action "showPagePublish"}} 
+              />
             {{/unless}}
 
             <ConditionalLoadingSpinner @condition={{this.model.postStream.loadingBelow}} />

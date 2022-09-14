@@ -4,6 +4,7 @@ import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { avatarFor } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
+import RawHtml from "./raw-html";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -185,13 +186,12 @@ createWidget("filter-show-all", {
   },
 });
 
-export default createWidget("post-stream", {
+export default createWidget("post-stream-opinion", {
   tagName: "div.post-stream",
 
   html(attrs) {
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
-    console.log("postArray", postArray)
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;
@@ -269,12 +269,12 @@ export default createWidget("post-stream", {
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
         // This is the post body
-        console.log("index", i)
-        console.log("firstPost", post.firstPost)
+        // console.log("index", i)
+        // console.log("firstPost", post.firstPost)
         // console.log("transformed", transformed)
         // console.log("-------------------------")
-        if (post.firstPost) {
-          result.push(this.attach("post", transformed, { model: post }));
+        if (!post.firstPost) {
+          result.push(this.attach("post-opinion", transformed, { model: post }));
         }
       }
 
@@ -318,7 +318,15 @@ export default createWidget("post-stream", {
         })
       );
     }
-    console.log("result of summaries", result.length)
+    
+    if (!result.length) {
+      return [
+        new RawHtml({
+          html: "<div><p>No opinions have been provided yet. Be the first to share your opinion.</p></div>"
+        })
+      ]
+    }
+
     return result;
   },
 });
