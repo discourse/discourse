@@ -238,7 +238,7 @@ const DiscourseURL = EmberObject.extend({
     const m = /^#(.+)$/.exec(path);
     if (m) {
       jumpToElement(m[1]);
-      return this.replaceState(path);
+      return this.replaceState(`${this.router.currentURL}${path}`);
     }
 
     const oldPath = this.router.currentURL;
