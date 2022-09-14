@@ -276,10 +276,12 @@ export default Component.extend({
     }
 
     if (
-      event.code === "ArrowDown" &&
+      event.key === "ArrowDown" &&
       this._focusedOn(this.elements.searchInput)
     ) {
-      return emojis[0].focus();
+      emojis[0].focus();
+      event.preventDefault();
+      return false;
     }
 
     if (event.code === "Escape") {

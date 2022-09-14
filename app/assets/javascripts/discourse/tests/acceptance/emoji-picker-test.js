@@ -5,13 +5,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("EmojiPicker", function (needs) {
@@ -187,17 +181,24 @@ acceptance("EmojiPicker", function (needs) {
   });
 
   test("emoji can be selected with keyboard", async function (assert) {
+    const searchInput = ".emoji-picker-search-container input";
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
 
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    await settled();
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(searchInput),
+      "search input is focused by default"
+    );
+
+    await triggerKeyEvent(searchInput, "keydown", "ArrowDown");
+    await triggerKeyEvent(".emoji-picker", "keydown", "Enter");
 
     assert.strictEqual(
-      document.activeElement.classList.contains("emoji"),
-      true,
-      "ArrowDown from search focuses on an emoji"
+      document.activeElement,
+      document.querySelectorAll(".emojis-container img.emoji")[0],
+      "ArrowDown from search focuses on the first emoji result"
     );
   });
 });
