@@ -320,15 +320,19 @@ export default Component.extend({
       if (event.code === "ArrowDown") {
         const emojiNextRow = currentEmoji + numEmojisInRow;
 
+        if (emojiNextRow >= emojis.length) {
+          return;
+        }
+
+        // If recent emoji section doesn't wrap, ArrowDown focuses on first emoji section
+        // TODO: Improve logic here
         if (
           event.target.classList.contains("recent-emoji") &&
           recentEmojis.length < 11
         ) {
           firstSection[0].focus();
         } else {
-          if (emojiNextRow < emojis.length) {
-            emojis[emojiNextRow].focus();
-          }
+          emojis[emojiNextRow].focus();
         }
       }
 
