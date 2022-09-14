@@ -132,7 +132,7 @@ class Emoji
       groups = {}
 
       File.open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }.each do |group|
-        group["icons"].each do |icon| 
+        group["icons"].each do |icon|
           groups[icon["name"]] = group["name"]
         end
       end
