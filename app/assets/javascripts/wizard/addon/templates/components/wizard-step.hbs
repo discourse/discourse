@@ -29,9 +29,16 @@
         {{#if this.step.description}}
           <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
         {{/if}}
-
         {{#if this.bannerImage}}
-          <img src={{this.bannerImage}} class="wizard-container__step-banner-image">
+          <div class="wizard-container__step-banner-image">
+            {{#if (eq this.bannerImage "welcome-illustration")}}
+              <IllustrationWelcome />
+            {{else if (eq this.bannerImage "members-illustration")}}
+              <IllustrationMembers />
+            {{else if (eq this.bannerImage "finished-illustration")}}
+              <IllustrationFinished />
+            {{/if}}
+          </div>
         {{/if}}
       </div>
     {{/if}}

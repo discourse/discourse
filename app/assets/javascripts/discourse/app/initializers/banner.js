@@ -6,14 +6,14 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const banner = EmberObject.create(PreloadStore.get("banner") || {}),
-      site = container.lookup("service:site");
+    const site = container.lookup("service:site");
+    const banner = EmberObject.create(PreloadStore.get("banner") || {});
+    const messageBus = container.lookup("service:message-bus");
 
     site.set("banner", banner);
 
-    const messageBus = container.lookup("service:message-bus");
-    messageBus.subscribe("/site/banner", function (ban) {
-      site.set("banner", EmberObject.create(ban || {}));
+    messageBus.subscribe("/site/banner", (data) => {
+      site.set("banner", EmberObject.create(data || {}));
     });
   },
 };

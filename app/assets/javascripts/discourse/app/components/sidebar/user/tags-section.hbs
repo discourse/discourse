@@ -22,4 +22,10 @@
       {{html-safe this.noTagsText}}
     </Sidebar::SectionMessage>
   {{/if}}
+  <Sidebar::SectionLink
+    @linkName="more-tags"
+    @content={{i18n "tagging.all_tags"}}
+    @route="tags"
+    @class="sidebar-more-link"
+  />
 </Sidebar::Section>

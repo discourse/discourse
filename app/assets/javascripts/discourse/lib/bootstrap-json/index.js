@@ -462,6 +462,11 @@ to serve API requests. For example:
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
 
+    app.use(
+      "/favicon.ico",
+      express.static(path.join(__dirname, "../../../../images/favicon.ico"))
+    );
+
     app.use(rawMiddleware, async (req, res, next) => {
       try {
         if (this.shouldForwardRequest(req)) {

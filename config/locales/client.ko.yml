@@ -3297,7 +3297,6 @@ ko:
       google: "구글 캘린더"
       ics: "ICS"
     tagging:
-      all_tags: "모든 태그"
       other_tags: "기타 태그"
       selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
@@ -4673,7 +4672,6 @@ ko:
           other: "모든 게시물을 삭제할 수 없습니다. 일부 게시물은 %{count}일 이전에 작성되었습니다. (delete_user_max_post_age 설정)"
         cant_delete_all_too_many_posts:
           other: "이 사용자는 %{count}개 이상의 게시물을 보유하고 있기 때문에 모든 게시물을 삭제할 수 없습니다. (delete_all_posts_max)"
-        delete_confirm: "기존 토론에서 콘텐츠를 제거하지 않으려면 일반적으로 사용자를 삭제하는 대신 익명화하는 것이 선호됩니다. <br><br>이 사용자를 삭제할까요? 이 작업은 영구적입니다!"
         delete_and_block: "이 이메일과 IP 주소를 삭제하고 <b>차단</b>"
         delete_dont_block: "삭제만 하기"
         deleting_user: "사용자 삭제 중..."

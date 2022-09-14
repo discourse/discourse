@@ -73,6 +73,7 @@ zh_CN:
       file_too_big: "未压缩的文件过大。"
       unknown_file_type: "您上传的文件似乎不是一个有效的 Discourse 主题。"
       not_allowed_theme: "`%{repo}` 不在允许的主题列表中（请检查 `allowed_theme_repos` 全局设置）。"
+      ssh_key_gone: "你等待安装主题的时间太长，SSH 密钥过期。请再试一次。"
     errors:
       component_no_user_selectable: "主题组件无法由用户选择"
       component_no_default: "主题组件不能是默认主题"

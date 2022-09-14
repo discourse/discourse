@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -83,6 +83,56 @@ acceptance("User menu", function (needs) {
     );
   });
 
+  test("clicking on user menu items", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on an item results in navigation to the item's page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on an item closes the menu after navigating"
+    );
+
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    await click("#quick-access-review-queue li.reviewable.pending a");
+
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "clicking on the same item again keeps on the same page"
+    );
+    assert.notOk(
+      exists(".user-menu"),
+      "clicking on the same item again closes the menu"
+    );
+
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    // this may not be ideal because it actually attempts to open a new tab
+    // which gets blocked by the browser, but otherwise it seems harmless and
+    // doesn't cause the test to fail. if it causes problems for you, feel free
+    // to remove the ctrl+click tests.
+    await click("#quick-access-review-queue li.reviewable.reviewed a", {
+      ctrlKey: true,
+    });
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "ctrl-clicking on an item doesn't navigate to a new page"
+    );
+    assert.ok(
+      exists(".user-menu"),
+      "ctrl-clicking on an item doesn't close the menu"
+    );
+  });
+
   test("tabs added via the plugin API", async function (assert) {
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
@@ -130,12 +180,13 @@ acceptance("User menu", function (needs) {
       "user-menu-button-replies": "1",
       "user-menu-button-mentions": "2",
       "user-menu-button-likes": "3",
-      "user-menu-button-messages": "4",
-      "user-menu-button-bookmarks": "5",
-      "user-menu-button-custom-tab-1": "6",
-      "user-menu-button-custom-tab-2": "7",
-      "user-menu-button-review-queue": "8",
-      "user-menu-button-other": "9",
+      "user-menu-button-watching": "4",
+      "user-menu-button-messages": "5",
+      "user-menu-button-bookmarks": "6",
+      "user-menu-button-custom-tab-1": "7",
+      "user-menu-button-custom-tab-2": "8",
+      "user-menu-button-review-queue": "9",
+      "user-menu-button-other": "10",
     };
 
     await visit("/");
@@ -162,7 +213,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "10",
+      "11",
       "bottom tab has the correct data-tab-number"
     );
 
@@ -519,6 +570,89 @@ acceptance("User menu", function (needs) {
       logoutButton.querySelector(".d-icon-sign-out-alt"),
       "logout button has the right icon"
     );
+  });
+
+  test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-1";
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+
+          get linkWhenActive() {
+            return "/u/eviltrout/preferences";
+          }
+        };
+      });
+
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "custom-tab-2";
+          }
+
+          get icon() {
+            return "plus";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+        };
+      });
+    });
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-all-notifications");
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/notifications",
+      "clicking on active tab navigates to the page it links to"
+    );
+    assert.notOk(exists(".user-menu"), "user menu is closed after navigating");
+
+    const tabs = [
+      ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
+      ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
+      ["#user-menu-button-messages", "/u/eviltrout/messages"],
+      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
+      ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
+      ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
+      ["#user-menu-button-custom-tab-2", null],
+      ["#user-menu-button-review-queue", "/review"],
+      ["#user-menu-button-profile", "/u/eviltrout/summary"],
+    ];
+    for (const [id, expectedLink] of tabs) {
+      await click(".d-header-icons .current-user");
+      await click(id);
+      await click(id);
+      if (expectedLink) {
+        assert.strictEqual(
+          currentURL(),
+          expectedLink,
+          `clicking on the ${id} tab navigates to ${expectedLink}`
+        );
+        assert.notOk(
+          exists(".user-menu"),
+          "user menu is closed after navigating"
+        );
+      } else {
+        assert.ok(
+          exists(".user-menu"),
+          "user menu remains open if tab doesn't link to anywhere"
+        );
+      }
+      await click("#site-logo");
+    }
   });
 });
 

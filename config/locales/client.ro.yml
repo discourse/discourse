@@ -1527,6 +1527,7 @@ ro:
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
       title: "Creează-ți contul"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
+      associate: "Ai deja un cont? <a href='%{associate_link}'>Loghează-te</a> pentru a conecta contul tău %{provider}."
     forgot_password:
       title: "Resetare parolă"
       action: "Mi-am uitat parola"
@@ -2831,7 +2832,6 @@ ro:
     download_calendar:
       download: "Descărcare"
     tagging:
-      all_tags: "Toate etichetele"
       other_tags: "Alte etichete"
       selector_all_tags: "toate etichetele"
       selector_no_tags: "fără etichete"

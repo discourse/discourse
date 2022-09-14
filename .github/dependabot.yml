@@ -44,7 +44,7 @@ updates:
     directory: "/app/assets/javascripts/"
     schedule:
       interval: daily
-      time: "12:00"
-      timezone: Europe/Warsaw
-    open-pull-requests-limit: 10
+      time: "08:00"
+      timezone: Australia/Sydney
+    open-pull-requests-limit: 20
     versioning-strategy: increase

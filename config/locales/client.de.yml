@@ -3579,7 +3579,6 @@ de:
       google: "Google Kalender"
       ics: "ICS"
     tagging:
-      all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
@@ -5029,7 +5028,8 @@ de:
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat. (Siehe die Einstellung „delete_all_posts_max“.)"
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
-        delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren, statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird.<br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
+        delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen willst? Das ist dauerhaft!"
+        delete_confirm: "Im Allgemeinen ist es besser, Nutzer/innen zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
         deleting_user: "Benutzer wird gelöscht …"

@@ -3284,7 +3284,6 @@ pt:
       download: "Transferir"
       add_to_calendar: "Adicionar ao calendário"
     tagging:
-      all_tags: "Todas as Etiquetas"
       other_tags: "Outras Tags"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
