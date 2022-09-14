@@ -2,15 +2,16 @@ import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "li",
   expandDetails: null,
   expandDetailsRequestKey: "request",
   expandDetailsResponseKey: "response",
+  dialog: service(),
 
   @discourseComputed("model.status")
   statusColorClasses(status) {
@@ -52,25 +53,21 @@ export default Component.extend({
 
   actions: {
     redeliver() {
-      return bootbox.confirm(
-        I18n.t("admin.web_hooks.events.redeliver_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            ajax(
-              `/admin/api/web_hooks/${this.get(
-                "model.web_hook_id"
-              )}/events/${this.get("model.id")}/redeliver`,
-              { type: "POST" }
-            )
-              .then((json) => {
-                this.set("model", json.web_hook_event);
-              })
-              .catch(popupAjaxError);
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.web_hooks.events.redeliver_confirm"),
+        didConfirm: () => {
+          return ajax(
+            `/admin/api/web_hooks/${this.get(
+              "model.web_hook_id"
+            )}/events/${this.get("model.id")}/redeliver`,
+            { type: "POST" }
+          )
+            .then((json) => {
+              this.set("model", json.web_hook_event);
+            })
+            .catch(popupAjaxError);
+        },
+      });
     },
 
     toggleRequest() {

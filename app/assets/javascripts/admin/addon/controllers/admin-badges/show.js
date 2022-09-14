@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import bootbox from "bootbox";
+
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { next } from "@ember/runloop";
@@ -18,6 +18,7 @@ export default class AdminBadgesShowController extends Controller.extend(
   bufferedProperty("model")
 ) {
   @service router;
+  @service dialog;
   @controller adminBadges;
 
   @tracked saving = false;
@@ -216,23 +217,19 @@ export default class AdminBadgesShowController extends Controller.extend(
       return;
     }
 
-    return bootbox.confirm(
-      I18n.t("admin.badges.delete_confirm"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (result) => {
-        if (result) {
-          model
-            .destroy()
-            .then(() => {
-              adminBadges.removeObject(model);
-              this.transitionToRoute("adminBadges.index");
-            })
-            .catch(() => {
-              bootbox.alert(I18n.t("generic_error"));
-            });
-        }
-      }
-    );
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.badges.delete_confirm"),
+      didConfirm: () => {
+        model
+          .destroy()
+          .then(() => {
+            adminBadges.removeObject(model);
+            this.transitionToRoute("adminBadges.index");
+          })
+          .catch(() => {
+            this.dialog.alert(I18n.t("generic_error"));
+          });
+      },
+    });
   }
 }

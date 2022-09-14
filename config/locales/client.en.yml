@@ -3289,12 +3289,12 @@ en:
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete those %{count} posts?"
+          other: "Are you sure you want to delete these %{count} posts?"
 
       merge:
         confirm:
-          one: "Are you sure you want to merge those posts?"
-          other: "Are you sure you want to merge those %{count} posts?"
+          one: "Are you sure you want to merge these posts?"
+          other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
         controls:

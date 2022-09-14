@@ -164,14 +164,13 @@ acceptance("Category Edit", function (needs) {
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
 
-    assert.ok(visible(".bootbox"));
     assert.strictEqual(
-      query(".bootbox .modal-body").innerHTML,
+      query(".dialog-body").textContent.trim(),
       "duplicate email"
     );
 
-    await click(".bootbox .btn-primary");
-    assert.ok(!visible(".bootbox"));
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!visible(".dialog-body"));
   });
 
   test("Subcategory list settings", async function (assert) {
