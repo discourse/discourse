@@ -1,5 +1,6 @@
 .hamburger-panel .menu-panel.slide-in {
   left: 0;
+
   .panel-body {
     display: block;
   }
@@ -61,7 +62,7 @@
 
 .panel-body-contents {
   // 2em padding very useful for iOS Safari's overlayed bottom nav
-  padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
+  // padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
 
   .user-menu.revamped & {
     height: 100%;
@@ -69,11 +70,23 @@
 }
 
 .hamburger-panel .revamped {
-  --d-sidebar-row-horizontal-padding: 0.5rem;
+  --d-sidebar-row-horizontal-padding: 1rem;
   --d-sidebar-highlight-color: var(--primary-low);
+  box-sizing: border-box;
+  padding: 0;
+
+  .panel-body-contents {
+    height: 100%;
+
+    .sidebar-hamburger-dropdown {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+  }
 
   .sidebar-row {
-    padding: 0.5rem var(--d-sidebar-row-horizontal-padding);
+    padding: 1.2rem var(--d-sidebar-row-horizontal-padding);
     height: 27px;
     align-items: center;
     font-size: var(--font-0);
@@ -81,5 +94,17 @@
 
   .sidebar-section-wrapper {
     margin-bottom: 0.5em;
+  }
+
+  .sidebar-footer-wrapper {
+    margin-top: 0;
+  }
+
+  .sidebar-sections {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
   }
 }
