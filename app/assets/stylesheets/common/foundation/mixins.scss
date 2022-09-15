@@ -81,6 +81,7 @@ $breakpoints: (
   text-overflow: ellipsis;
   word-wrap: break-word;
   -webkit-line-clamp: $lines;
+  -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
 }
 
@@ -113,8 +114,6 @@ $hpad: 0.65em;
 
 @mixin user-select($mode) {
   -webkit-user-select: $mode;
-  -moz-user-select: $mode;
-  -ms-user-select: $mode;
   user-select: $mode;
 }
 
@@ -131,7 +130,6 @@ $hpad: 0.65em;
 
 // We still need -webkit for latest iPhone and Safari
 @mixin transform($transforms) {
-  -webkit-transform: $transforms;
   transform: $transforms;
 }
 
@@ -149,8 +147,6 @@ $hpad: 0.65em;
 }
 
 @mixin fa-rotate($degrees, $rotation) {
-  -webkit-transform: rotate($degrees);
-  -ms-transform: rotate($degrees);
   transform: rotate($degrees);
 }
 
