@@ -9,7 +9,6 @@
   .title {
     max-width: 75%;
     @include ellipsis;
-    -webkit-animation: fadein 0.5s;
     animation: fadein 0.5s;
     // This acts as a placeholder if for some reason the small logo takes a while
     // to load - prevents topic title from shifting after the small logo loads.
@@ -68,7 +67,7 @@
   // A rendering bug in safari causes header SVGs to jitter after animations.
   // translateZ() forces gpu rendering which fixes the issue.
   .d-header-icons {
-    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
 
