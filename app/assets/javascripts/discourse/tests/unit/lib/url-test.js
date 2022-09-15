@@ -88,13 +88,6 @@ module("Unit | Utility | url", function () {
       DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),
       "it should navigate to the messages page"
     );
-
-    sinon.stub(DiscourseURL, "replaceState");
-    DiscourseURL.routeTo("#heading1");
-    assert.ok(
-      DiscourseURL.replaceState.calledWith(`/forum#heading1`),
-      "it should keep subfolder when routing to in-page anchors"
-    );
   });
 
   test("prefixProtocol", async function (assert) {
@@ -158,6 +151,15 @@ module("Unit | Utility | url", function () {
       DiscourseURL.redirectTo.calledWith(
         "/secure-media-uploads/original/1X/test.pdf"
       )
+    );
+  });
+
+  test("anchor handling", async function (assert) {
+    sinon.stub(DiscourseURL, "jumpToElement");
+    DiscourseURL.routeTo("#heading1");
+    assert.ok(
+      DiscourseURL.jumpToElement.calledWith("heading1"),
+      "in-page anchors call jumpToElement"
     );
   });
 });
