@@ -1750,6 +1750,23 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
     end
+
+    context "with a tagged topic" do
+      let(:tag) { Fabricate(:tag) }
+      it "works" do
+        SiteSetting.tagging_enabled = true
+
+        post_revision.post.topic.update(tags: [tag])
+
+        get "/posts/#{post_revision.post_id}/revisions/latest.json"
+        expect(response.status).to eq(200)
+
+        SiteSetting.tagging_enabled = false
+
+        get "/posts/#{post_revision.post_id}/revisions/latest.json"
+        expect(response.status).to eq(200)
+      end
+    end
   end
 
   describe '#revert' do

@@ -208,6 +208,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
     # Retrieve any `tracked_topic_fields`
     PostRevisor.tracked_topic_fields.each_key do |field|
+      next if field == :tags # Special handling below
       if topic.respond_to?(field)
         latest_modifications[field.to_s] = [topic.public_send(field)]
       end
