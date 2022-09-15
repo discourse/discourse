@@ -120,6 +120,7 @@ $hpad: 0.65em;
 
 @mixin unselectable {
   @include user-select(none);
+  cursor: default;
 }
 
 // Stuff we repeat
