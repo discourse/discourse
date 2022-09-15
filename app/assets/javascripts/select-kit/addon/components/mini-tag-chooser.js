@@ -49,7 +49,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
   },
 
-  allowAnyTag: or("allowCreate", "site.can_create_tag"),
+  // allowAnyTag: or("allowCreate", "site.can_create_tag"),
+  allowAnyTag: true, // This will allow all users to create user-generated tag
 
   caretIcon: computed("value.[]", "content.[]", function () {
     const maximum = this.selectKit.options.maximum;

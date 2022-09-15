@@ -3895,7 +3895,7 @@ en:
       selector_no_tags: "no tags"
       changed: "tags changed:"
       tags: "Tags"
-      choose_for_topic: "optional tags"
+      choose_for_topic: "Optional tags"
       choose_for_topic_required:
         one: "select at least %{count} tag..."
         other: "select at least %{count} tags..."
