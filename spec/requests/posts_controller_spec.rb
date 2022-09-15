@@ -2175,11 +2175,18 @@ RSpec.describe PostsController do
     describe "when logged in" do
       let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: Fabricate(:user), raw_email: 'email_content') }
 
-      it "raises an error if the user doesn't have permission to view raw email" do
+      it 'returns 403 when trying to view raw as user that created the post' do
+        sign_in(post.user)
+
+        get "/posts/#{post.id}/raw-email.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 when trying to view raw email as a normal user" do
         sign_in(user)
 
         get "/posts/#{post.id}/raw-email.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(403)
       end
 
       it "can view raw email" do
