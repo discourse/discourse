@@ -370,18 +370,18 @@ createWidget("timeline-footer-controls", {
       );
     }
 
-    if (currentUser && !fullScreen) {
-      if (topic.get("details.can_create_post")) {
-        controls.push(
-          this.attach("button", {
-            className: "btn-default create reply-to-post",
-            icon: "reply",
-            title: "topic.reply.help",
-            action: "replyToPost",
-          })
-        );
-      }
-    }
+    // if (currentUser && !fullScreen) {
+    //   if (topic.get("details.can_create_post")) {
+    //     controls.push(
+    //       this.attach("button", {
+    //         className: "btn-default create reply-to-post",
+    //         icon: "reply",
+    //         title: "topic.reply.help",
+    //         action: "replyToPost",
+    //       })
+    //     );
+    //   }
+    // }
 
     if (fullScreen) {
       controls.push(
