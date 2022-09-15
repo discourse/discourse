@@ -909,7 +909,6 @@ export default Component.extend(ComposerUploadUppy, {
     },
 		showTextBox() {
 			let currentHeight = document.documentElement.style.getPropertyValue("--composer-height")
-			console.log(`Current height is: ${currentHeight}`)
 			if (currentHeight == 'var(--new-topic-composer-height, 500px)' 
 					|| currentHeight == '500px') {
 				document.documentElement.style.setProperty(
@@ -918,7 +917,6 @@ export default Component.extend(ComposerUploadUppy, {
 				);
 			}
 			if (currentHeight == '600px' && this.isTextBoxVisible) {
-				console.log("It should work!")
 				document.documentElement.style.setProperty(
 					"--composer-height",
 					'500px'

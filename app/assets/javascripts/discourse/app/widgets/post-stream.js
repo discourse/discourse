@@ -191,7 +191,6 @@ export default createWidget("post-stream", {
   html(attrs) {
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
-    console.log("postArray", postArray)
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;
@@ -268,11 +267,6 @@ export default createWidget("post-stream", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        // This is the post body
-        console.log("index", i)
-        console.log("firstPost", post.firstPost)
-        // console.log("transformed", transformed)
-        // console.log("-------------------------")
         if (post.firstPost) {
           result.push(this.attach("post", transformed, { model: post }));
         }
@@ -318,7 +312,7 @@ export default createWidget("post-stream", {
         })
       );
     }
-    console.log("result of summaries", result.length)
+
     return result;
   },
 });

@@ -268,11 +268,6 @@ export default createWidget("post-stream-opinion", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        // This is the post body
-        // console.log("index", i)
-        // console.log("firstPost", post.firstPost)
-        // console.log("transformed", transformed)
-        // console.log("-------------------------")
         if (!post.firstPost) {
           result.push(this.attach("post-opinion", transformed, { model: post }));
         }

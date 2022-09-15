@@ -586,6 +586,107 @@ export default Controller.extend(bufferedProperty("model"), {
           action: Composer.REPLY,
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
+          metaTagId: 'summary'
+        };
+
+        if (quotedText) {
+          opts.quote = quotedText;
+        }
+
+        if (post && post.get("post_number") !== 1) {
+          opts.post = post;
+        } else {
+          opts.topic = topic;
+        }
+        composerController.open(opts);
+      }
+      return false;
+    },
+
+    addSponsor(post) {
+      const composerController = this.composer;
+      const topic = post ? post.get("topic") : this.model;
+      const quoteState = this.quoteState;
+      const postStream = this.get("model.postStream");
+
+      this.appEvents.trigger("page:compose-reply", topic);
+
+      if (!postStream || !topic || !topic.get("details.can_create_post")) {
+        return;
+      }
+
+      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedText = buildQuote(
+        quotedPost,
+        quoteState.buffer,
+        quoteState.opts
+      );
+
+      quoteState.clear();
+
+      if (
+        composerController.get("model.topic.id") === topic.get("id") &&
+        composerController.get("model.action") === Composer.REPLY
+      ) {
+        composerController.set("model.post", post);
+        composerController.set("model.composeState", Composer.OPEN);
+        this.appEvents.trigger("composer:insert-block", quotedText.trim());
+      } else {
+        const opts = {
+          action: Composer.REPLY,
+          draftKey: topic.get("draft_key"),
+          draftSequence: topic.get("draft_sequence"),
+          metaTagId: 'sponsor'
+        };
+
+        if (quotedText) {
+          opts.quote = quotedText;
+        }
+
+        if (post && post.get("post_number") !== 1) {
+          opts.post = post;
+        } else {
+          opts.topic = topic;
+        }
+        composerController.open(opts);
+      }
+      return false;
+    },
+
+    addOpinion(post) {
+      const composerController = this.composer;
+      const topic = post ? post.get("topic") : this.model;
+      const quoteState = this.quoteState;
+      const postStream = this.get("model.postStream");
+
+      this.appEvents.trigger("page:compose-reply", topic);
+
+      if (!postStream || !topic || !topic.get("details.can_create_post")) {
+        return;
+      }
+
+      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedText = buildQuote(
+        quotedPost,
+        quoteState.buffer,
+        quoteState.opts
+      );
+
+      quoteState.clear();
+
+      if (
+        composerController.get("model.topic.id") === topic.get("id") &&
+        composerController.get("model.action") === Composer.REPLY
+      ) {
+        composerController.set("model.post", post);
+        composerController.set("model.composeState", Composer.OPEN);
+        this.appEvents.trigger("composer:insert-block", quotedText.trim());
+      } else {
+        const opts = {
+          action: Composer.REPLY,
+          draftKey: topic.get("draft_key"),
+          draftSequence: topic.get("draft_sequence"),
+          metaTagId: 'opinion'
         };
 
         if (quotedText) {

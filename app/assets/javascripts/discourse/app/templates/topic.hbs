@@ -137,7 +137,12 @@
                 <div>
                   <h2>Summaries</h2>
                 </div>
-                <button class="btn-primary">Add Summary</button>
+                <button 
+                  class="btn-primary"
+                  {{action "replyToPost"}}  
+                >
+                  Add Summary
+                </button>
               </div>
               <ScrollingPostStream 
                 @posts={{this.postsToRender}} 
@@ -198,7 +203,12 @@
                 <div>
                   <h2>Sponsors</h2>
                 </div>
-                <button class="btn-primary">Add Sponsor</button>
+                <button 
+                  class="btn-primary" 
+                  {{action "addSponsor"}}
+                >
+                  Add Sponsor
+                </button>
               </div>
               <ScrollingPostStreamSponsor 
                 @posts={{this.postsToRender}} 
@@ -259,7 +269,12 @@
                 <div>
                   <h2>Opinions</h2>
                 </div>
-                <button class="btn-primary">Add Opinion</button>
+                <button 
+                  class="btn-primary"
+                  {{action "addOpinion"}}  
+                >
+                  Add Opinion
+                </button>
               </div>
               <ScrollingPostStreamOpinion 
                 @posts={{this.postsToRender}} 

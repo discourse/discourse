@@ -268,12 +268,9 @@ export default createWidget("post-stream-sponsor", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        // This is the post body
-        // console.log("index", i)
-        // console.log("firstPost", post.firstPost)
-        // console.log("transformed", transformed)
-        // console.log("-------------------------")
         if (!post.firstPost) {
+          console.log("app/assets/javascripts/discourse/app/widgets/post-stream-sponsor.js")
+          console.log(post)
           result.push(this.attach("post-sponsor", transformed, { model: post }));
         }
       }

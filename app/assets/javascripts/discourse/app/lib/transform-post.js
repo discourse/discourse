@@ -10,10 +10,14 @@ export function includeAttributes(...attributes) {
 }
 
 export function transformBasicPost(post) {
+  console.log("app/assets/javascripts/discourse/app/lib/transform-post.js")
+  console.log("post id:", post.id)
+  console.log("meta tag id:", post.metaTagId)
   // Note: it can be dangerous to not use `get` in Ember code, but this is significantly
   // faster and has tests to confirm it works. We only call `get` when the property is a CP
   const postAtts = {
     id: post.id,
+    metaTagId: post.metaTagId,
     hidden: post.hidden,
     deleted: post.get("deleted"),
     deleted_at: post.deleted_at,

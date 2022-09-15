@@ -112,7 +112,6 @@ export default Component.extend(LoadMore, {
             if (!draft) {
               return;
             }
-
             composer.open({
               draft,
               draftKey: item.draft_key,

@@ -347,7 +347,6 @@ export default RestModel.extend({
     this.set("loadingNearPost", opts.nearPost);
 
     opts = deepMerge(opts, this.streamFilters);
-
     // Request a topicView
     return loadTopicView(topic, opts)
       .then((json) => {
@@ -1035,8 +1034,10 @@ export default RestModel.extend({
     if (postStreamData) {
       // Load posts if present
       const store = this.store;
-      postStreamData.posts.forEach((p) =>
+      postStreamData.posts.forEach((p) => {
         this.appendPost(store.createRecord("post", p))
+      }
+        
       );
       delete postStreamData.posts;
 
@@ -1055,6 +1056,8 @@ export default RestModel.extend({
     if (!post) {
       return;
     }
+
+    // NOTE: The meta tag is existent at this point
 
     const postId = get(post, "id");
     if (postId) {
