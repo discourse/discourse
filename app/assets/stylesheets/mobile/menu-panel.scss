@@ -76,12 +76,9 @@
   padding: 0;
 
   .panel-body-contents {
-    height: 100%;
-
     .sidebar-hamburger-dropdown {
       display: flex;
       flex-direction: column;
-      height: 100%;
     }
   }
 
@@ -103,8 +100,6 @@
   .sidebar-sections {
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
-    overflow-y: auto;
     box-sizing: border-box;
   }
 }
