@@ -375,7 +375,7 @@
 
     </div>
     {{#if this.loadedAllPosts}}
-      {{#if this.session.showSignupCta}}
+      {{!-- {{#if this.session.showSignupCta}}
         {{! replace "Log In to Reply" with the infobox }}
         <SignupCta />
       {{else}}
@@ -388,7 +388,7 @@
             <DButton @icon="reply" @class="btn-primary pull-right" @action={{route-action "showLogin"}} @label="topic.reply.title" />
           </div>
         {{/if}}
-      {{/if}}
+      {{/if}} --}}
 
       <PluginOutlet @name="topic-above-suggested" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
       <div class="{{if this.model.relatedMessages.length "related-messages-wrapper"}} {{if this.model.suggestedTopics.length "suggested-topics-wrapper"}}">
