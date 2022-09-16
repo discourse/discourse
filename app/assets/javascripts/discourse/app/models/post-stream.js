@@ -244,6 +244,7 @@ export default RestModel.extend({
   },
 
   refreshAndJumpToSecondVisible() {
+    console.log("refresh() is called at refreshAndJumpToSecondVisible()")
     return this.refresh({}).then(() => {
       if (this.posts && this.posts.length > 1) {
         DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
@@ -265,6 +266,7 @@ export default RestModel.extend({
   },
 
   filterReplies(postNumber, postId) {
+    console.log("refresh() is called at filterReplies()")
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
 
@@ -295,6 +297,7 @@ export default RestModel.extend({
   },
 
   filterUpwards(postID) {
+    console.log("refresh() is called at filterUpwards()")
     this.cancelFilter();
     this.set("filterUpwardsPostID", postID);
     this.appEvents.trigger("post-stream:filter-upwards", {
@@ -531,6 +534,10 @@ export default RestModel.extend({
     `undoPost` when it fails.
   **/
   stagePost(post, user) {
+    console.log("@@@@@@@@@@@@ stagePost() has ben called")
+    console.log("param post", post)
+    // Meta tag id is still existent at this point
+
     // We can't stage two posts simultaneously
     if (this.stagingPost) {
       return "alreadyStaging";
@@ -565,6 +572,7 @@ export default RestModel.extend({
 
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
+    // Note: Not called when creating new post reply
     if (this.get("topic.id") === post.get("topic_id")) {
       if (this.loadedAllPosts) {
         this.appendPost(post);
@@ -609,7 +617,9 @@ export default RestModel.extend({
   },
 
   appendPost(post) {
+    // NOTE: meta tag is still existent here
     this._initUserModel(post);
+    console.log("@@@@@@@@ appendPost", post)
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;

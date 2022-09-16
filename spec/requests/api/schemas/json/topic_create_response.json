@@ -4,6 +4,9 @@
     "id": {
       "type": "integer"
     },
+    "meta_tag_id": {
+      "type": "string"
+    },
     "name": {
       "type": [
         "string",
@@ -204,6 +207,7 @@
   },
   "required": [
     "id",
+    "meta_tag_id",
     "name",
     "username",
     "avatar_template",

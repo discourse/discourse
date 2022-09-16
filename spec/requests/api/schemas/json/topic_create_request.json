@@ -41,6 +41,10 @@
     "external_id": {
       "type": "string",
       "description": "Provide an external_id from a remote system to associate a forum topic with that id."
+    },
+    "meta_tag_id": {
+      "type": "string",
+      "description": "Provde a meta tag "
     }
   },
   "required": [

@@ -29,6 +29,7 @@ RSpec.describe 'posts' do
               type: :object,
               properties: {
                 id: { type: :integer },
+                meta_tag_id: { type: :string }
                 name: { type: :string },
                 username: { type: :string },
                 avatar_template: { type: :string },
@@ -133,6 +134,7 @@ RSpec.describe 'posts' do
       response '200', 'latest posts' do
         schema type: :object, properties: {
           id: { type: :integer },
+          meta_tag_id: { type: :string }
           name: { type: [:string, :null] },
           username: { type: :string },
           avatar_template: { type: :string },
@@ -223,6 +225,7 @@ RSpec.describe 'posts' do
             type: :object,
             properties: {
               id: { type: :integer },
+              meta_tag_id: { type: :string },
               name: { type: [:string, :null] },
               username: { type: :string },
               avatar_template: { type: :string },
