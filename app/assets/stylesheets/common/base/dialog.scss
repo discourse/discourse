@@ -25,6 +25,7 @@
     opacity: 0;
   }
 }
+
 .dialog-overlay {
   background: rgba(var(--always-black-rgb), 0.65);
   animation: fade-in 250ms both;
@@ -43,6 +44,7 @@
 .dialog-body {
   overflow-y: auto;
   max-height: 400px;
+  max-width: 800px;
   padding: 1em;
 }
 
@@ -60,6 +62,7 @@
   .dialog-close {
     margin-left: auto;
     flex-basis: content;
+    padding-left: 15px;
     .d-icon {
       color: var(--primary-high);
     }

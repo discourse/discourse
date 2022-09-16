@@ -6,14 +6,15 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import showModal from "discourse/lib/show-modal";
-
+import { inject as service } from "@ember/service";
 const LOG_CHANNEL = "/admin/backups/logs";
 
 export default DiscourseRoute.extend({
+  dialog: service(),
+
   activate() {
     this.messageBus.subscribe(LOG_CHANNEL, (log) => {
       if (log.message === "[STARTED]") {
@@ -28,7 +29,7 @@ export default DiscourseRoute.extend({
           "model.isOperationRunning",
           false
         );
-        bootbox.alert(
+        this.dialog.alert(
           I18n.t("admin.backups.operations.failed", {
             operation: log.operation,
           })
@@ -77,88 +78,72 @@ export default DiscourseRoute.extend({
       this.transitionTo("admin.backups.logs");
       Backup.start(withUploads).then((result) => {
         if (!result.success) {
-          bootbox.alert(result.message);
+          this.dialog.alert(result.message);
         }
       });
     },
 
     destroyBackup(backup) {
-      bootbox.confirm(
-        I18n.t("admin.backups.operations.destroy.confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            backup
-              .destroy()
-              .then(() =>
-                this.controllerFor("adminBackupsIndex")
-                  .get("model")
-                  .removeObject(backup)
-              );
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.backups.operations.destroy.confirm"),
+        didConfirm: () => {
+          backup
+            .destroy()
+            .then(() =>
+              this.controllerFor("adminBackupsIndex")
+                .get("model")
+                .removeObject(backup)
+            );
+        },
+      });
     },
 
     startRestore(backup) {
-      bootbox.confirm(
-        I18n.t("admin.backups.operations.restore.confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            this.transitionTo("admin.backups.logs");
-            backup.restore();
-          }
-        }
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("admin.backups.operations.restore.confirm"),
+        didConfirm: () => {
+          this.transitionTo("admin.backups.logs");
+          backup.restore();
+        },
+      });
     },
 
     cancelOperation() {
-      bootbox.confirm(
-        I18n.t("admin.backups.operations.cancel.confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            Backup.cancel().then(() => {
-              this.controllerFor("adminBackups").set(
-                "model.isOperationRunning",
-                false
-              );
-            });
-          }
-        }
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("admin.backups.operations.cancel.confirm"),
+        didConfirm: () => {
+          Backup.cancel().then(() => {
+            this.controllerFor("adminBackups").set(
+              "model.isOperationRunning",
+              false
+            );
+          });
+        },
+      });
     },
 
     rollback() {
-      bootbox.confirm(
-        I18n.t("admin.backups.operations.rollback.confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            Backup.rollback().then((result) => {
-              if (!result.success) {
-                bootbox.alert(result.message);
-              } else {
-                // redirect to homepage (session might be lost)
-                window.location = getURL("/");
-              }
-            });
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.backups.operations.rollback.confirm"),
+        didConfirm: () => {
+          Backup.rollback().then((result) => {
+            if (!result.success) {
+              this.dialog.alert(result.message);
+            } else {
+              // redirect to homepage (session might be lost)
+              window.location = getURL("/");
+            }
+          });
+        },
+      });
     },
 
     uploadSuccess(filename) {
-      bootbox.alert(I18n.t("admin.backups.upload.success", { filename }));
+      this.dialog.alert(I18n.t("admin.backups.upload.success", { filename }));
     },
 
     uploadError(filename, message) {
-      bootbox.alert(
+      this.dialog.alert(
         I18n.t("admin.backups.upload.error", { filename, message })
       );
     },
@@ -173,7 +158,7 @@ export default DiscourseRoute.extend({
           );
         })
         .catch((error) => {
-          bootbox.alert(
+          this.dialog.alert(
             I18n.t("admin.backups.backup_storage_error", {
               error_message: extractError(error),
             })

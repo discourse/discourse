@@ -16,19 +16,9 @@
 
   &:not(.is-loading) {
     animation: fadein 0.5s;
-    -webkit-animation: fadein 0.5s;
   }
 
   @keyframes fadein {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @-webkit-keyframes fadein {
     from {
       opacity: 0;
     }
