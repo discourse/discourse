@@ -88,7 +88,8 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :user_suspended,
-             :user_status
+             :user_status,
+             :meta_tag_id
 
   def initialize(object, opts)
     super(object, opts)
@@ -558,6 +559,10 @@ class PostSerializer < BasicPostSerializer
 
   def user_status
     UserStatusSerializer.new(object.user&.user_status, root: false)
+  end
+
+  def meta_tag_id
+    return object
   end
 
 private
