@@ -471,6 +471,11 @@ class Post < ActiveRecord::Base
     "#{topic_id}/#{post_number}"
   end
 
+  def meta_tag_id
+    # Not sure if this is really needed or used
+    'summary' 
+  end
+
   def reply_to_post
     return if reply_to_post_number.blank?
     @reply_to_post ||= Post.find_by("topic_id = :topic_id AND post_number = :post_number", topic_id: topic_id, post_number: reply_to_post_number)
@@ -1160,6 +1165,7 @@ end
 # Table name: posts
 #
 #  id                      :integer          not null, primary key
+#  meta_tag_id             :text             not null
 #  user_id                 :integer
 #  topic_id                :integer          not null
 #  post_number             :integer          not null

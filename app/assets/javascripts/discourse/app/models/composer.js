@@ -71,7 +71,7 @@ const CLOSED = "closed",
     shared_draft: "sharedDraft",
     no_bump: "noBump",
     draft_key: "draftKey",
-    meta_tag_id: "metaTagId",
+    meta_tag_id: "meta_tag_id",
   },
   _update_serializer = {
     raw: "reply",
@@ -97,7 +97,7 @@ const CLOSED = "closed",
     typingTime: "typingTime",
     postId: "post.id",
     recipients: "targetRecipients",
-    meta_tag_id: "metaTagId",
+    meta_tag_id: "meta_tag_id",
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -793,7 +793,7 @@ const Composer = RestModel.extend({
       whisper: opts.whisper,
       tags: opts.tags,
       noBump: opts.noBump,
-      metaTagId: opts.metaTagId
+      meta_tag_id: opts.meta_tag_id
     });
 
     if (opts.post) {
@@ -1107,7 +1107,7 @@ const Composer = RestModel.extend({
 
     // The meta tag will be incorporated
     createdPost.setProperties({
-      metaTagId: composer.metaTagId
+      meta_tag_id: composer.meta_tag_id
     })
 
     return createdPost

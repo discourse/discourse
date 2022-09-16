@@ -534,8 +534,6 @@ export default RestModel.extend({
     `undoPost` when it fails.
   **/
   stagePost(post, user) {
-    console.log("@@@@@@@@@@@@ stagePost() has ben called")
-    console.log("param post", post)
     // Meta tag id is still existent at this point
 
     // We can't stage two posts simultaneously
@@ -619,7 +617,6 @@ export default RestModel.extend({
   appendPost(post) {
     // NOTE: meta tag is still existent here
     this._initUserModel(post);
-    console.log("@@@@@@@@ appendPost", post)
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
