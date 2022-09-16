@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.19.1",
-    "@babel/standalone": "^7.19.1",
+    "@babel/standalone": "^7.19.2",
     "@discourse/itsatrap": "^2.0.10",
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^2.0.0",
