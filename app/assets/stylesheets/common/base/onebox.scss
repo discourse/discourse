@@ -10,7 +10,6 @@ a.loading-onebox {
     border: 2px solid var(--primary-low-mid);
     border-right-color: transparent;
     border-radius: 50%;
-    -webkit-animation: rotate-forever 1s infinite linear;
     animation: rotate-forever 1s infinite linear;
   }
 }

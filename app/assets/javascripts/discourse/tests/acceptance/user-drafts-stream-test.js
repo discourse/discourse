@@ -18,9 +18,9 @@ acceptance("User Drafts", function (needs) {
     assert.strictEqual(count(".user-stream-item"), 3, "has drafts");
 
     await click(".user-stream-item:first-child .remove-draft");
-    assert.ok(visible(".bootbox"));
+    assert.ok(visible(".dialog-body"));
 
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
     assert.strictEqual(
       count(".user-stream-item"),
       2,

@@ -1,4 +1,4 @@
-import DiscourseURL, { jumpToElement } from "discourse/lib/url";
+import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import StaticPage from "discourse/models/static-page";
@@ -25,7 +25,7 @@ export default function (page) {
 
     activate() {
       this._super(...arguments);
-      jumpToElement(document.location.hash.slice(1));
+      DiscourseURL.jumpToElement(document.location.hash.slice(1));
     },
 
     model() {

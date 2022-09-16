@@ -10,6 +10,7 @@ const alreadyWarned = {};
 
 export default Component.extend({
   router: service(),
+  dialog: service(),
   classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
@@ -178,16 +179,10 @@ export default Component.extend({
       if (unwarned.length) {
         unwarned.forEach((w) => (alreadyWarned[w] = true));
 
-        return window.bootbox.confirm(
-          unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          (confirmed) => {
-            if (confirmed) {
-              this.advance();
-            }
-          }
-        );
+        return this.dialog.confirm({
+          message: unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
+          didConfirm: () => this.advance(),
+        });
       }
     }
 

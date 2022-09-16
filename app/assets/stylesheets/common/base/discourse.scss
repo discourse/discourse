@@ -558,22 +558,16 @@ table {
 .ring {
   $gradient-start: transparent;
   $gradient-end: #090;
-  background: -webkit-radial-gradient($gradient-start, $gradient-end);
-  background: -o-radial-gradient($gradient-start, $gradient-end);
-  background: -moz-radial-gradient($gradient-start, $gradient-end);
   background: radial-gradient($gradient-start, $gradient-end);
   top: -11px !important;
   right: 23.5px !important;
   border-radius: 100%;
   width: 20px;
   height: 20px;
-  -moz-animation-iteration-count: infinite;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-transform-origin: center;
-  -moz-animation-duration: 3s;
-  -webkit-animation-duration: 3s;
-  -moz-animation-name: ping;
-  -webkit-animation-name: ping;
+  transform-origin: center;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+  animation-name: ping;
 }
 
 .fade {

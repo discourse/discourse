@@ -3,11 +3,13 @@ import { alias, equal } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
+
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   adminBackups: controller(),
+  dialog: service(),
   status: alias("adminBackups.model"),
   uploadLabel: i18n("admin.backups.upload.label"),
   backupLocation: setting("backup_location"),
@@ -27,17 +29,13 @@ export default Controller.extend({
   actions: {
     toggleReadOnlyMode() {
       if (!this.site.get("isReadOnly")) {
-        bootbox.confirm(
-          I18n.t("admin.backups.read_only.enable.confirm"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          (confirmed) => {
-            if (confirmed) {
-              this.set("currentUser.hideReadOnlyAlert", true);
-              this._toggleReadOnlyMode(true);
-            }
-          }
-        );
+        this.dialog.yesNoConfirm({
+          message: I18n.t("admin.backups.read_only.enable.confirm"),
+          didConfirm: () => {
+            this.set("currentUser.hideReadOnlyAlert", true);
+            this._toggleReadOnlyMode(true);
+          },
+        });
       } else {
         this._toggleReadOnlyMode(false);
       }
@@ -46,7 +44,7 @@ export default Controller.extend({
     download(backup) {
       const link = backup.get("filename");
       ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
-        bootbox.alert(I18n.t("admin.backups.operations.download.alert"))
+        this.dialog.alert(I18n.t("admin.backups.operations.download.alert"))
       );
     },
   },

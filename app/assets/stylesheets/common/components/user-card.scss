@@ -38,7 +38,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   background: var(--secondary) center center;
   background-size: cover;
   transition: opacity 0.2s, transform 0.2s;
-  -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
   opacity: 0;
   @include transform(scale(0.9));
   &.show {

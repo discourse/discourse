@@ -16,10 +16,12 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
+import { inject as service } from "@ember/service";
 
 const THEME_UPLOAD_VAR = 2;
 
 export default Controller.extend({
+  dialog: service(),
   downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
   addButtonDisabled: empty("selectedChildThemeId"),
@@ -345,16 +347,10 @@ export default Controller.extend({
     },
 
     removeUpload(upload) {
-      return bootbox.confirm(
-        I18n.t("admin.customize.theme.delete_upload_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            this.model.removeField(upload);
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.customize.theme.delete_upload_confirm"),
+        didConfirm: () => this.model.removeField(upload),
+      });
     },
 
     removeChildTheme(theme) {
@@ -364,23 +360,19 @@ export default Controller.extend({
     },
 
     destroy() {
-      return bootbox.confirm(
-        I18n.t("admin.customize.delete_confirm", {
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.customize.delete_confirm", {
           theme_name: this.get("model.name"),
         }),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            const model = this.model;
-            model.setProperties({ recentlyInstalled: false });
-            model.destroyRecord().then(() => {
-              this.allThemes.removeObject(model);
-              this.transitionToRoute("adminCustomizeThemes");
-            });
-          }
-        }
-      );
+        didConfirm: () => {
+          const model = this.model;
+          model.setProperties({ recentlyInstalled: false });
+          model.destroyRecord().then(() => {
+            this.allThemes.removeObject(model);
+            this.transitionToRoute("adminCustomizeThemes");
+          });
+        },
+      });
     },
 
     switchType() {
@@ -398,16 +390,10 @@ export default Controller.extend({
         });
       }
 
-      bootbox.confirm(
+      return this.dialog.yesNoConfirm({
         message,
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            this.commitSwitchType();
-          }
-        }
-      );
+        didConfirm: () => this.commitSwitchType(),
+      });
     },
 
     enableComponent() {
