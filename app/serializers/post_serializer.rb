@@ -89,7 +89,7 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_pending_count,
              :user_suspended,
              :user_status,
-             :meta_tag_id
+             :meta_tag
 
   def initialize(object, opts)
     super(object, opts)
@@ -465,6 +465,10 @@ class PostSerializer < BasicPostSerializer
     post_custom_fields[Post::NOTICE]
   end
 
+  def meta_tag
+    post_custom_fields[Post::META_TAG]
+  end
+
   def include_notice?
     return false if notice.blank?
 
@@ -559,10 +563,6 @@ class PostSerializer < BasicPostSerializer
 
   def user_status
     UserStatusSerializer.new(object.user&.user_status, root: false)
-  end
-
-  def meta_tag_id
-    return object
   end
 
 private

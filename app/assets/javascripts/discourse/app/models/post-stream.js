@@ -534,8 +534,6 @@ export default RestModel.extend({
     `undoPost` when it fails.
   **/
   stagePost(post, user) {
-    // Meta tag id is still existent at this point
-
     // We can't stage two posts simultaneously
     if (this.stagingPost) {
       return "alreadyStaging";
@@ -1042,6 +1040,7 @@ export default RestModel.extend({
       // Load posts if present
       const store = this.store;
       postStreamData.posts.forEach((p) => {
+        console.log("############### this is the p: ", p)
         this.appendPost(store.createRecord("post", p))
       }
         

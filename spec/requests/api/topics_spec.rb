@@ -34,7 +34,6 @@ RSpec.describe 'topics' do
                   type: :object,
                   properties: {
                     id: { type: :integer },
-                    meta_tag_id: { type: :string }
                     name: { type: [:string, :null] },
                     username: { type: :string },
                     avatar_template: { type: :string },

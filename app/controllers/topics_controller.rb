@@ -214,7 +214,7 @@ class TopicsController < ApplicationController
       filter: params[:filter],
       skip_limit: true,
       asc: true,
-      skip_custom_fields: true
+      skip_custom_fields: false
     }
 
     fetch_topic_view(options)

@@ -15,9 +15,6 @@
                 "id": {
                   "type": "integer"
                 },
-                "meta_tag_id": {
-                  "type": "string"
-                },
                 "name": {
                   "type": "string"
                 },
@@ -238,7 +235,6 @@
               },
               "required": [
                 "id",
-                "meta_tag_id",
                 "name",
                 "username",
                 "avatar_template",
@@ -516,9 +512,6 @@
     },
     "id": {
       "type": "integer"
-    },
-    "meta_tag_id": {
-      "type": "string"
     },
     "title": {
       "type": "string"
@@ -941,7 +934,6 @@
     "tags",
     "tags_descriptions",
     "id",
-    "meta_tag_id",
     "title",
     "fancy_title",
     "posts_count",
