@@ -745,7 +745,7 @@ class PostsController < ApplicationController
       :composer_open_duration_msecs,
       :visible,
       :draft_key,
-      :meta_tag_id
+      :meta_tag
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|

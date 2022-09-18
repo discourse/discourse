@@ -14,7 +14,7 @@ export function transformBasicPost(post) {
   // faster and has tests to confirm it works. We only call `get` when the property is a CP
   const postAtts = {
     id: post.id,
-    meta_tag_id: post.meta_tag_id,
+    meta_tag: post.meta_tag,
     hidden: post.hidden,
     deleted: post.get("deleted"),
     deleted_at: post.deleted_at,

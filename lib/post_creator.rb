@@ -402,8 +402,8 @@ class PostCreator
   def create_meta_tag_custom_field
     Rails.logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     Rails.logger.info(@post)
-    Rails.logger.info(@opts[:meta_tag_id])
-    PostCustomField.create!(post_id: @post.id, name: 'meta_tag', value: @opts[:meta_tag_id])
+    Rails.logger.info(@opts[:meta_tag])
+    PostCustomField.create!(post_id: @post.id, name: 'meta_tag', value: @opts[:meta_tag])
   end
 
   def update_uploads_secure_status

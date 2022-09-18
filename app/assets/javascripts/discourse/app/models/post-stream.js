@@ -244,7 +244,6 @@ export default RestModel.extend({
   },
 
   refreshAndJumpToSecondVisible() {
-    console.log("refresh() is called at refreshAndJumpToSecondVisible()")
     return this.refresh({}).then(() => {
       if (this.posts && this.posts.length > 1) {
         DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
@@ -1040,7 +1039,6 @@ export default RestModel.extend({
       // Load posts if present
       const store = this.store;
       postStreamData.posts.forEach((p) => {
-        console.log("############### this is the p: ", p)
         this.appendPost(store.createRecord("post", p))
       }
         

@@ -268,8 +268,7 @@ export default createWidget("post-stream-sponsor", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        if (!post.firstPost) {
-          console.log("post", post)
+        if (transformed.meta_tag == 'sponsor') {
           result.push(this.attach("post-sponsor", transformed, { model: post }));
         }
       }

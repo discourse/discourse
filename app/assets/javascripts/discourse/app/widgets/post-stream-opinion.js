@@ -268,7 +268,7 @@ export default createWidget("post-stream-opinion", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        if (!post.firstPost) {
+        if (transformed.meta_tag == 'opinion') {
           result.push(this.attach("post-opinion", transformed, { model: post }));
         }
       }
