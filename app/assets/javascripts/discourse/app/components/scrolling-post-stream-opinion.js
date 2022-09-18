@@ -312,7 +312,7 @@ export default MountWidget.extend({
     this._super(...arguments);
     this._previouslyNearby = {};
 
-    this.appEvents.on("post-stream-opinion", this, "_debouncedScroll");
+    this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     const opts = {
       passive: true,
     };
@@ -320,7 +320,7 @@ export default MountWidget.extend({
     window.addEventListener("scroll", this._debouncedScroll, opts);
     this._scrollTriggered();
 
-    this.appEvents.on("post-stream-opinion", this, "_posted");
+    this.appEvents.on("post-stream:posted", this, "_posted");
 
     this.element.addEventListener(
       "mouseenter",
@@ -334,7 +334,7 @@ export default MountWidget.extend({
       true
     );
 
-    this.appEvents.on("post-stream-opinion", this, "_refresh");
+    this.appEvents.on("post-stream:refresh", this, "_refresh");
 
     // restore scroll position on browsers with aggressive BFCaches (like Safari)
     window.onpageshow = function (event) {
@@ -349,7 +349,7 @@ export default MountWidget.extend({
 
     document.removeEventListener("touchmove", this._debouncedScroll);
     window.removeEventListener("scroll", this._debouncedScroll);
-    this.appEvents.off("post-stream-opinion", this, "_debouncedScroll");
+    this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.element.removeEventListener(
       "mouseenter",
       this._handleWidgetButtonHoverState
@@ -358,8 +358,8 @@ export default MountWidget.extend({
       "mouseleave",
       this._removeWidgetButtonHoverState
     );
-    this.appEvents.off("post-stream-opinion", this, "_refresh");
-    this.appEvents.off("post-stream-opinion", this, "_posted");
+    this.appEvents.off("post-stream:refresh", this, "_refresh");
+    this.appEvents.off("post-stream:posted", this, "_posted");
   },
 
   _handleWidgetButtonHoverState(event) {

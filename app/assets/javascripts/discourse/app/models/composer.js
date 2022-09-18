@@ -1153,8 +1153,6 @@ const Composer = RestModel.extend({
         composer.clearState();
         composer.set("createdPost", createdPost);
         if (composer.replyingToTopic) {
-          console.log("Replying to a topic -----------")
-          console.log("createdPost param:", createdPost)
           this.appEvents.trigger("post:created", createdPost);
         } else {
           this.appEvents.trigger("topic:created", createdPost, composer);
