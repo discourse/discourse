@@ -3,6 +3,7 @@ import I18n from "I18n";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { avatarFor } from "discourse/widgets/post";
+import RawHtml from "./raw-html";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { h } from "virtual-dom";
@@ -267,7 +268,7 @@ export default createWidget("post-stream", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
-        if (post.firstPost) {
+        if (transformed.meta_tag == 'summary') {
           result.push(this.attach("post", transformed, { model: post }));
         }
       }
@@ -311,6 +312,14 @@ export default createWidget("post-stream", {
           filteredPostsCount: attrs.filteredPostsCount,
         })
       );
+    }
+
+    if (!result.length) {
+      return [
+        new RawHtml({
+          html: "<div><p>No summary have been provided yet. Be the first to add summary.</p></div>"
+        })
+      ]
     }
 
     return result;

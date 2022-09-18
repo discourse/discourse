@@ -746,6 +746,10 @@ const Composer = RestModel.extend({
     console.log("app/assets/javascripts/discourse/app/models/composer.js")
     console.log("opts", opts)
     console.log("composer has opened")
+    if (opts.action == 'createTopic') {
+      opts.meta_tag = 'summary'
+    }
+
     let promise = Promise.resolve();
 
     if (!opts) {
@@ -1066,6 +1070,8 @@ const Composer = RestModel.extend({
       composerTime: this.composerTime,
     });
 
+    console.log("createdPost", createdPost)
+
     this.serialize(_create_serializer, createdPost);
 
     if (post) {
@@ -1104,15 +1110,17 @@ const Composer = RestModel.extend({
       composeState: SAVING,
       stagedPost: state === "staged" && createdPost,
     });
-
+    console.log("composer: ", composer)
     // The meta tag will be incorporated
     createdPost.setProperties({
       meta_tag: composer.meta_tag
     })
+    console.log("this is the createdPost", createdPost)
 
     return createdPost
       .save()
       .then((result) => {
+        console.log()
         let saving = true;
 
         if (result.responseJson.action === "enqueued") {
