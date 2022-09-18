@@ -320,8 +320,6 @@ export default RestModel.extend({
     is already loaded, it will simply scroll there and load nothing.
   **/
   refresh(opts) {
-    console.log("This is the refresh function")
-    console.log("opts: ", opts)
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
@@ -331,7 +329,6 @@ export default RestModel.extend({
     }
 
     const topic = this.topic;
-    console.log("topic: ", topic)
 
     // Do we already have the post in our list of posts? Jump there.
     if (opts.forceLoad) {
