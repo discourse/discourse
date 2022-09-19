@@ -2577,7 +2577,7 @@ en:
         deleted_user: "(deleted user)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
-        suspicious_user: "suspicious user %{username}"
+        user_requires_approval: "%{username} requires approval"
         default_item: "reviewable item #%{reviewable_id}"
 
     topics:
