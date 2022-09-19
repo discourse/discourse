@@ -123,7 +123,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     await visit("/");
 
     const tagSectionLinks = queryAll(
-      ".sidebar-section-tags .sidebar-section-link:not(.sidebar-more-link)"
+      ".sidebar-section-tags .sidebar-section-link:not(.sidebar-section-link-all-tags)"
     );
 
     const tagNames = [...tagSectionLinks].map((tagSectionLink) =>
@@ -142,7 +142,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       count(
-        ".sidebar-section-tags .sidebar-section-link:not(.sidebar-more-link)"
+        ".sidebar-section-tags .sidebar-section-link:not(.sidebar-section-link-all-tags)"
       ),
       4,
       "4 section links under the section"
