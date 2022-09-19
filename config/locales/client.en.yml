@@ -4097,6 +4097,8 @@ en:
         other: "%{count} new"
       toggle_section: "toggle section"
       more: "More..."
+      all_categories: "All categories"
+      all_tags: "All tags"
       sections:
         messages:
           header_link_text: "Messages"

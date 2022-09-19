@@ -10,9 +10,6 @@
       @models={{sectionLink.models}} >
     </Sidebar::SectionLink>
   {{/each}}
-  <Sidebar::SectionLink
-    @linkName="more-tags"
-    @content={{i18n "sidebar.more"}}
-    @route="tags"
-  />
+
+  <Sidebar::Common::AllTagsSectionLink />
 </Sidebar::Section>
