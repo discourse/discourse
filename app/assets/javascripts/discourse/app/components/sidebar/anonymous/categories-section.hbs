@@ -14,9 +14,6 @@
       @prefixColor={{sectionLink.prefixColor}} >
     </Sidebar::SectionLink>
   {{/each}}
-  <Sidebar::SectionLink
-    @linkName="more-categories"
-    @content={{i18n "sidebar.more"}}
-    @route="discovery.categories"
-  />
+
+  <Sidebar::Common::AllCategoriesSectionLink />
 </Sidebar::Section>

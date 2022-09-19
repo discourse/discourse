@@ -27,8 +27,8 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
     assert.strictEqual(categories[4].textContent.trim(), "ux");
 
     assert.ok(
-      exists("a.sidebar-section-link-more-categories"),
-      "more link is visible"
+      exists("a.sidebar-section-link-all-categories"),
+      "all categories link is visible"
     );
   });
 
@@ -46,8 +46,8 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
     assert.strictEqual(categories[2].textContent.trim(), "blog");
 
     assert.ok(
-      exists("a.sidebar-section-link-more-categories"),
-      "more link is visible"
+      exists("a.sidebar-section-link-all-categories"),
+      "all categories link is visible"
     );
   });
 });
