@@ -619,12 +619,12 @@ RSpec.describe Upload do
     end
   end
 
-  describe "dominant_color" do
+  describe "#dominant_color" do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
     let(:not_an_image) { Fabricate(:upload) }
 
-    it "works" do
+    it "correctly identifies and stores an image's dominant color" do
       expect(white_image.dominant_color).to eq(nil)
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
       expect(white_image.dominant_color).to eq("FFFFFF")
@@ -650,6 +650,7 @@ RSpec.describe Upload do
     it "stores an empty string for non-image uploads" do
       expect(not_an_image.dominant_color).to eq(nil)
       expect(not_an_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(not_an_image.dominant_color).to eq("")
     end
   end
 end
