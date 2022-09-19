@@ -744,10 +744,6 @@ const Composer = RestModel.extend({
       @param {String} [opts.title]
   **/
   open(opts) {
-    // NOTE: The meta tag id shoud be incorporated here
-    console.log("app/assets/javascripts/discourse/app/models/composer.js")
-    console.log("opts", opts)
-    console.log("composer has opened")
     if (opts.action == 'createTopic') {
       opts.meta_tag = 'summary'
     }
@@ -1072,8 +1068,6 @@ const Composer = RestModel.extend({
       typingTime: this.typingTime,
       composerTime: this.composerTime,
     });
-
-    console.log("createdPost", createdPost)
 
     this.serialize(_create_serializer, createdPost);
 
