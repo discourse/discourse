@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { computed, set } from "@ember/object";
-import { and, equal, gt, not, or } from "@ember/object/computed";
+import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import I18n from "I18n";
@@ -163,6 +163,8 @@ export default Controller.extend(CanCheckEmails, {
       return `group-${group}`;
     }
   },
+
+  currentParentRoute: readOnly("router.currentRoute.parent.name"),
 
   userNotificationLevel: computed(
     "currentUser.ignored_ids",
