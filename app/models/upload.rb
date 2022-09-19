@@ -10,7 +10,7 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
   MAX_IDENTIFY_SECONDS = 5
-  MAX_DOMINANT_COLOR_SECONDS = 5
+  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -356,7 +356,7 @@ class Upload < ActiveRecord::Base
           "-format",
           "%c",
           "histogram:info:",
-          timeout: MAX_DOMINANT_COLOR_SECONDS
+          timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS
         )
 
         color = data[/#([0-9A-F]{6})/, 1]
