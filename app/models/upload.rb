@@ -628,9 +628,9 @@ end
 #
 #  idx_uploads_on_verification_status       (verification_status)
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
-#  index_uploads_on_dominant_color          (dominant_color) WHERE (dominant_color IS NULL)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))
+#  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
