@@ -2,18 +2,16 @@ import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("header-contents", {
-  tagName: "div.contents",
+  tagName: "div.contents.clearfix",
   template: hbs`
-    <div class="header-logo-wrapper">
-      {{#if this.site.desktopView}}
-        {{#if this.siteSettings.enable_experimental_sidebar_hamburger}}
-          {{#if attrs.sidebarEnabled}}
-            {{sidebar-toggle attrs=attrs}}
-          {{/if}}
+    {{#if this.site.desktopView}}
+      {{#if this.siteSettings.enable_experimental_sidebar_hamburger}}
+        {{#if attrs.sidebarEnabled}}
+          {{sidebar-toggle attrs=attrs}}
         {{/if}}
       {{/if}}
-      {{home-logo attrs=attrs}}
-    </div>
+    {{/if}}
+    {{home-logo attrs=attrs}}
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}
     {{/if}}
