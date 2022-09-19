@@ -59,7 +59,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= [Post::NOTICE, Post::META_TAG, "action_code_who", "action_code_path"]
+    @default_post_custom_fields ||= [Post::NOTICE, Post::META_TAG, Post::USER_GENERATED_TAGS, "action_code_who", "action_code_path"]
   end
 
   def self.post_custom_fields_allowlisters
@@ -141,8 +141,6 @@ class TopicView
       end
 
       if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        Rails.logger.info("Allowed fields? ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-        Rails.logger.info(allowed_fields)
         @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end

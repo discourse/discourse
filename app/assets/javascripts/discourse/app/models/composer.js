@@ -72,6 +72,7 @@ const CLOSED = "closed",
     no_bump: "noBump",
     draft_key: "draftKey",
     meta_tag: "meta_tag",
+    user_generated_tags: "user_generated_tags"
   },
   _update_serializer = {
     raw: "reply",
@@ -98,6 +99,7 @@ const CLOSED = "closed",
     postId: "post.id",
     recipients: "targetRecipients",
     meta_tag: "meta_tag",
+    user_generated_tags: "user_generated_tags"
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -797,7 +799,8 @@ const Composer = RestModel.extend({
       whisper: opts.whisper,
       tags: opts.tags,
       noBump: opts.noBump,
-      meta_tag: opts.meta_tag
+      meta_tag: opts.meta_tag,
+      user_generated_tags: null
     });
 
     if (opts.post) {
@@ -1110,17 +1113,19 @@ const Composer = RestModel.extend({
       composeState: SAVING,
       stagedPost: state === "staged" && createdPost,
     });
-    console.log("composer: ", composer)
-    // The meta tag will be incorporated
+
     createdPost.setProperties({
+      // Incorporate the meta tag
       meta_tag: composer.meta_tag
     })
-    console.log("this is the createdPost", createdPost)
+    createdPost.setProperties({
+      // Incorporate the user-generated tags
+      user_generated_tags: this.parseUserGeneratedTags(composer.tags)
+    })
 
     return createdPost
       .save()
       .then((result) => {
-        console.log()
         let saving = true;
 
         if (result.responseJson.action === "enqueued") {
@@ -1201,6 +1206,16 @@ const Composer = RestModel.extend({
     }
 
     return "";
+  },
+
+  /**
+   * Parse `composer.tags` to a comma separated value.
+   * @param {Array}
+   * @return {string}
+   */
+  parseUserGeneratedTags(tags) {
+    if (tags === undefined) return null
+    return tags.join(',')
   },
 
   @discourseComputed(

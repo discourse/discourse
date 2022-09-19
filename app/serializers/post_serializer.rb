@@ -89,7 +89,8 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_pending_count,
              :user_suspended,
              :user_status,
-             :meta_tag
+             :meta_tag,
+             :user_generated_tags
 
   def initialize(object, opts)
     super(object, opts)
@@ -467,6 +468,10 @@ class PostSerializer < BasicPostSerializer
 
   def meta_tag
     post_custom_fields[Post::META_TAG]
+  end
+
+  def user_generated_tags
+    post_custom_fields[Post::USER_GENERATED_TAGS]
   end
 
   def include_notice?

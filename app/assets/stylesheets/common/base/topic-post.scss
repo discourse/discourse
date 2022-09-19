@@ -1692,3 +1692,19 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     opacity: 100%;
   }
 }
+
+.user-generated-tags {
+
+  ul {
+    display: inline;
+  }
+  li {
+    display: inline;
+  }
+  li::after {
+    content: ", ";
+  }
+  li:last-child::after {
+    content: "";
+  }
+}

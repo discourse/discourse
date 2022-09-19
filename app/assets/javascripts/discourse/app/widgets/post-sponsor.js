@@ -468,6 +468,10 @@ createWidget("post-sponsors", {
 
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
+    if (attrs.user_generated_tags !== undefined) {
+      result.push(this.attach("post-user-generated-tags", attrs))
+    }
+
     if (attrs.cooked_hidden) {
       result.push(this.attach("expand-hidden", attrs));
     }

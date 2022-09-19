@@ -179,7 +179,8 @@ class PostCreator
         create_topic
         create_post_notice
         save_post
-        create_meta_tag_custom_field
+        save_meta_tag_custom_field
+        save_user_generated_tags
         UserActionManager.post_created(@post)
         extract_links
         track_topic
@@ -257,6 +258,8 @@ class PostCreator
   end
 
   def self.create(user, opts)
+    Rails.logger.info("**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************")
+    Rails.logger.info(opts)
     PostCreator.new(user, opts).create
   end
 
@@ -398,12 +401,17 @@ class PostCreator
     rollback_from_errors!(embed) unless embed.save
   end
 
-  # This will create an entry 
-  def create_meta_tag_custom_field
-    Rails.logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    Rails.logger.info(@post)
-    Rails.logger.info(@opts[:meta_tag])
+  def save_meta_tag_custom_field
+    # Create a record in `post_custom_fields` table
+    # for the meta tag of the post
     PostCustomField.create!(post_id: @post.id, name: 'meta_tag', value: @opts[:meta_tag])
+  end
+
+  def save_user_generated_tags
+    # Create a record in `post_custom_fields` table
+    # for the user-generated tags of the post, if there are any.
+    return if @opts[:user_generated_tags].empty?
+    PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: @opts[:user_generated_tags])
   end
 
   def update_uploads_secure_status

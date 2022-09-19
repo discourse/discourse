@@ -1071,10 +1071,6 @@ export default Controller.extend({
       @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
   async open(opts = {}) {
-    console.log("app/assets/javascripts/discourse/app/controllers/composer.js")
-    console.log("async open()")
-    console.log("opts", opts)
-    console.log("-------")
     if (!opts.draftKey) {
       throw new Error("composer opened without a proper draft key");
     }
@@ -1088,7 +1084,6 @@ export default Controller.extend({
     ) {
       return;
     }
-
     this.setProperties({
       showEditReason: false,
       editReason: null,

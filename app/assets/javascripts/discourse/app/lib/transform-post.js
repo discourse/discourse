@@ -9,12 +9,18 @@ export function includeAttributes(...attributes) {
   attributes.forEach((a) => _additionalAttributes.push(a));
 }
 
+export function parseUserGeneratedTags(tags) {
+  if (!tags) return
+  return tags.split(',')
+}
+
 export function transformBasicPost(post) {
   // Note: it can be dangerous to not use `get` in Ember code, but this is significantly
   // faster and has tests to confirm it works. We only call `get` when the property is a CP
   const postAtts = {
     id: post.id,
     meta_tag: post.meta_tag,
+    user_generated_tags: parseUserGeneratedTags(post.user_generated_tags),
     hidden: post.hidden,
     deleted: post.get("deleted"),
     deleted_at: post.deleted_at,
