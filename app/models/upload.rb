@@ -349,8 +349,8 @@ class Upload < ActiveRecord::Base
           "10",
           "convert",
           local_path,
-          "-colors",
-          "1",
+          "-resize",
+          "1x1",
           "-define",
           "histogram:unique-colors=true",
           "-format",
@@ -359,11 +359,18 @@ class Upload < ActiveRecord::Base
           timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS
         )
 
+        # Output format:
+        # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
+
         color = data[/#([0-9A-F]{6})/, 1]
-        raise "Unable to parse dominant color output:\n#{data}" if color.nil?
+
+        raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
+
         color
-      rescue => e
-        Discourse.warn_exception(e, message: "Error calculating dominant color for Upload id=#{id}")
+      rescue Discourse::Utils::CommandError => e
+        # Timeout or unable to parse image
+        # This can happen due to bad user input - ignore and save
+        # an empty string to prevent re-evaluation
         ""
       end
     end
