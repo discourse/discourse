@@ -11,6 +11,7 @@ export function includeAttributes(...attributes) {
 
 export function parseUserGeneratedTags(tags) {
   if (!tags) return
+  if (tags.length == 1) return tags[0]
   return tags.split(',')
 }
 

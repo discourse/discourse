@@ -37,6 +37,24 @@ export default createWidget("embedded-post", {
 
   html(attrs, state) {
     attrs.embeddedPost = true;
+    if (attrs.user_generated_tags !== undefined) {
+      return [
+        h("div.row", [
+          this.attach("post-avatar", attrs),
+          h("div.topic-body", [
+            h("div.topic-meta-data.embedded-reply", [
+              this.attach("poster-name", attrs),
+              this.attach("post-link-arrow", {
+                above: state.above,
+                shareUrl: attrs.customShare,
+              }),
+            ]),
+            new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),
+            this.attach("post-user-generated-tags", attrs)
+          ]),
+        ]),
+      ];
+    }
     return [
       h("div.row", [
         this.attach("post-avatar", attrs),
