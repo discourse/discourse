@@ -1,4 +1,5 @@
 import loadScript from "discourse/lib/load-script";
+import mergeHTMLPlugin from "discourse/lib/highlight-syntax-merge-html-plugin";
 
 /*global hljs:true */
 let _moreLanguages = [];
@@ -26,6 +27,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
 
   return loadScript(path).then(() => {
     customHighlightJSLanguages();
+    hljs.addPlugin(mergeHTMLPlugin);
 
     codeblocks.forEach((e) => {
       // Large code blocks can cause crashes or slowdowns
