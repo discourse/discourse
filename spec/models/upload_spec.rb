@@ -618,4 +618,76 @@ RSpec.describe Upload do
       expect(Upload.secure_media_url?(url)).to eq(false)
     end
   end
+
+  describe "#dominant_color" do
+    let(:white_image) { Fabricate(:image_upload, color: "white") }
+    let(:red_image) { Fabricate(:image_upload, color: "red") }
+    let(:not_an_image) {
+      upload = Fabricate(:upload)
+
+      file = Tempfile.new(['invalid', '.txt'])
+      file << "Not really an image"
+      file.rewind
+
+      upload.update(url: Discourse.store.store_upload(file, upload), extension: "txt")
+      upload
+    }
+    let(:invalid_image) {
+      upload = Fabricate(:upload)
+
+      file = Tempfile.new(['invalid', '.png'])
+      file << "Not really an image"
+      file.rewind
+
+      upload.update(url: Discourse.store.store_upload(file, upload))
+      upload
+    }
+
+    it "correctly identifies and stores an image's dominant color" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+      expect(white_image.dominant_color).to eq("FFFFFF")
+
+      expect(red_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color(calculate_if_missing: true)).to eq("FF0000")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
+    it "can be backfilled" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color).to eq(nil)
+
+      Upload.backfill_dominant_colors!(5)
+
+      white_image.reload
+      red_image.reload
+
+      expect(white_image.dominant_color).to eq("FFFFFF")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
+    it "stores an empty string for non-image uploads" do
+      expect(not_an_image.dominant_color).to eq(nil)
+      expect(not_an_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(not_an_image.dominant_color).to eq("")
+    end
+
+    it "correctly handles invalid image files" do
+      expect(invalid_image.dominant_color).to eq(nil)
+      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(invalid_image.dominant_color).to eq("")
+    end
+
+    it "correctly handles unparsable ImageMagick output" do
+      Discourse::Utils.stubs(:execute_command).returns('someinvalidoutput')
+
+      expect(invalid_image.dominant_color).to eq(nil)
+
+      expect {
+        invalid_image.dominant_color(calculate_if_missing: true)
+      }.to raise_error(/Calculated dominant color but unable to parse output/)
+
+      expect(invalid_image.dominant_color).to eq(nil)
+    end
+  end
 end

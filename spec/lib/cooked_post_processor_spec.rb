@@ -14,7 +14,7 @@ RSpec.describe CookedPostProcessor do
       RAW
     end
 
-    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+    let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
@@ -258,7 +258,7 @@ RSpec.describe CookedPostProcessor do
         before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
 
         it "includes responsive images on demand" do
-          upload.update!(width: 2000, height: 1500, filesize: 10000)
+          upload.update!(width: 2000, height: 1500, filesize: 10000, dominant_color: "FFFFFF")
           post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
 
           # fake some optimized images
@@ -284,17 +284,6 @@ RSpec.describe CookedPostProcessor do
             filesize: 800
           )
 
-          # Fake a loading image
-          _optimized_image = OptimizedImage.create!(
-            url: "/#{upload_path}/10x10.png",
-            width: CookedPostProcessor::LOADING_SIZE,
-            height: CookedPostProcessor::LOADING_SIZE,
-            upload_id: upload.id,
-            sha1: SecureRandom.hex,
-            extension: '.png',
-            filesize: 123
-          )
-
           cpp = CookedPostProcessor.new(post)
 
           cpp.add_to_size_cache(upload.url, 2000, 1500)
@@ -302,7 +291,7 @@ RSpec.describe CookedPostProcessor do
 
           html = cpp.html
 
-          expect(html).to include(%Q|data-small-upload="//test.localhost/#{upload_path}/10x10.png"|)
+          expect(html).to include(%Q|data-dominant-color="FFFFFF"|)
           # 1.5x is skipped cause we have a missing thumb
           expect(html).to include("srcset=\"//test.localhost/#{upload_path}/666x500.jpg, //test.localhost/#{upload_path}/1998x1500.jpg 3x\"")
           expect(html).to include("src=\"//test.localhost/#{upload_path}/666x500.jpg\"")
@@ -316,7 +305,7 @@ RSpec.describe CookedPostProcessor do
 
           html = cpp.html
 
-          expect(html).to include(%Q|data-small-upload="//cdn.localhost/#{upload_path}/10x10.png"|)
+          expect(html).to include(%Q|data-dominant-color="FFFFFF"|)
           expect(html).to include("srcset=\"//cdn.localhost/#{upload_path}/666x500.jpg, //cdn.localhost/#{upload_path}/1998x1500.jpg 3x\"")
           expect(html).to include("src=\"//cdn.localhost/#{upload_path}/666x500.jpg\"")
         end
@@ -416,7 +405,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -556,7 +545,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.create_thumbnails = true
@@ -580,7 +569,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.create_thumbnails = true
@@ -604,7 +593,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.create_thumbnails = true
@@ -631,7 +620,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           set_subfolder "/subfolder"
@@ -671,7 +660,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -699,7 +688,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -727,7 +716,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -817,7 +806,7 @@ RSpec.describe CookedPostProcessor do
           ![alttext|1750x2000|thumbnail](#{upload2.url})
         MD
 
-        CookedPostProcessor.new(post, disable_loading_image: true).post_process
+        CookedPostProcessor.new(post, disable_dominant_color: true).post_process
 
         expect(post.reload.image_upload_id).to eq(upload2.id)
       end
@@ -959,7 +948,7 @@ RSpec.describe CookedPostProcessor do
     it "adds lightbox and optimizes images" do
       post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -974,7 +963,7 @@ RSpec.describe CookedPostProcessor do
       upload.update!(animated: true)
       post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -992,7 +981,7 @@ RSpec.describe CookedPostProcessor do
 
       it "marks giphy images as animated" do
         post = Fabricate(:post, raw: "![tennis-gif|311x280](https://media2.giphy.com/media/7Oifk90VrCdNe/giphy.webp)")
-        cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+        cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
         cpp.post_process
 
         doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1001,7 +990,7 @@ RSpec.describe CookedPostProcessor do
 
       it "marks giphy images as animated" do
         post = Fabricate(:post, raw: "![cat](https://media1.tenor.com/images/20c7ddd5e84c7427954f430439c5209d/tenor.gif)")
-        cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+        cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
         cpp.post_process
 
         doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1016,7 +1005,7 @@ RSpec.describe CookedPostProcessor do
         [/quote]
       MD
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1031,7 +1020,7 @@ RSpec.describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: "https://discourse.org")
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1591,7 +1580,7 @@ RSpec.describe CookedPostProcessor do
       RAW
     end
 
-    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+    let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
     it "does remove user ids" do
       cpp.remove_user_ids

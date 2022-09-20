@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
   MAX_IDENTIFY_SECONDS = 5
+  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -316,6 +317,71 @@ class Upload < ActiveRecord::Base
     get_dimension(:thumbnail_height)
   end
 
+  def dominant_color(calculate_if_missing: false)
+    val = read_attribute(:dominant_color)
+    if val.nil? && calculate_if_missing
+      calculate_dominant_color!
+      read_attribute(:dominant_color)
+    else
+      val
+    end
+  end
+
+  def calculate_dominant_color!(local_path = nil)
+    color = nil
+
+    if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
+      color = ""
+    end
+
+    if color.nil?
+      local_path ||=
+        if local?
+          Discourse.store.path_for(self)
+        else
+          Discourse.store.download(self).path
+        end
+
+      color = begin
+        data = Discourse::Utils.execute_command(
+          "nice",
+          "-n",
+          "10",
+          "convert",
+          local_path,
+          "-resize",
+          "1x1",
+          "-define",
+          "histogram:unique-colors=true",
+          "-format",
+          "%c",
+          "histogram:info:",
+          timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS
+        )
+
+        # Output format:
+        # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
+
+        color = data[/#([0-9A-F]{6})/, 1]
+
+        raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
+
+        color
+      rescue Discourse::Utils::CommandError => e
+        # Timeout or unable to parse image
+        # This can happen due to bad user input - ignore and save
+        # an empty string to prevent re-evaluation
+        ""
+      end
+    end
+
+    if persisted?
+      self.update_column(:dominant_color, color)
+    else
+      self.dominant_color = color
+    end
+  end
+
   def target_image_quality(local_path, test_quality)
     @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path, timeout: MAX_IDENTIFY_SECONDS).to_i rescue 0
 
@@ -522,6 +588,12 @@ class Upload < ActiveRecord::Base
     Upload.where(sha1: sha1s.uniq).pluck(:id)
   end
 
+  def self.backfill_dominant_colors!(count)
+    Upload.where(dominant_color: nil).order("id desc").first(count).each do |upload|
+      upload.calculate_dominant_color!
+    end
+  end
+
   private
 
   def short_url_basename
@@ -553,10 +625,11 @@ end
 #  secure                       :boolean          default(FALSE), not null
 #  access_control_post_id       :bigint
 #  original_sha1                :string
-#  verification_status          :integer          default(1), not null
 #  animated                     :boolean
+#  verification_status          :integer          default(1), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
+#  dominant_color               :text
 #
 # Indexes
 #
@@ -564,6 +637,7 @@ end
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))
+#  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
