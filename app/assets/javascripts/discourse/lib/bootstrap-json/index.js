@@ -464,7 +464,12 @@ to serve API requests. For example:
 
     app.use(
       "/favicon.ico",
-      express.static(path.join(__dirname, "../../../../images/favicon.ico"))
+      express.static(
+        path.join(
+          __dirname,
+          "../../../../../../public/images/discourse-logo-sketch-small.png"
+        )
+      )
     );
 
     app.use(rawMiddleware, async (req, res, next) => {
