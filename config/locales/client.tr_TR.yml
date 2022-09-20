@@ -2316,7 +2316,6 @@ tr_TR:
         deleted_user: "(silinmiş kullanıcı)"
         post_number_with_topic_title: "gönderi #%{post_number} - %{title}"
         new_post_in_topic: "%{title} başlığıyla yeni gönderi"
-        suspicious_user: "şüpheli kullanıcı %{username}"
         default_item: "gözden geçirme öğesi #%{reviewable_id}"
     topics:
       new_messages_marker: "son ziyaret"
@@ -2959,8 +2958,8 @@ tr_TR:
           other: "%{count} tane gönderiyi silmek istediğinize emin misiniz?"
       merge:
         confirm:
-          one: "Bu yayınları birleştirmek istediğinize emin misiniz?"
-          other: "%{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
+          one: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
+          other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -3701,6 +3700,8 @@ tr_TR:
         other: "%{count} yeni"
       toggle_section: "bölümü değiştir"
       more: "Daha..."
+      all_categories: "Tüm kategoriler"
+      all_tags: "Tüm etiketler"
       sections:
         messages:
           header_link_text: "İletiler"

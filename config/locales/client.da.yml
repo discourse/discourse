@@ -2838,10 +2838,6 @@ da:
         confirm:
           one: "Er du sikker på, at du vil slette dette indlæg?"
           other: "Er du sikker på, at du vil slette disse %{count}indlæg?"
-      merge:
-        confirm:
-          one: "Er du sikker på, at du vil flette disse indlæg?"
-          other: "Er du sikker på, at du vil flette disse %{count}indlæg?"
       revisions:
         controls:
           first: "Første udgave"
@@ -3559,6 +3555,7 @@ da:
         one: "%{count} ny"
         other: "%{count} nye"
       more: "Mere..."
+      all_categories: "Alle kategorier"
       sections:
         messages:
           header_link_text: "Beskeder"

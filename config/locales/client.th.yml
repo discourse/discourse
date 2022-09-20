@@ -2444,6 +2444,7 @@ th:
       new_count:
         other: "%{count} ใหม่"
       more: "อื่นๆ..."
+      all_categories: "หมวดหมู่ทั้งหมด"
       sections:
         messages:
           header_link_text: "ข้อความ"

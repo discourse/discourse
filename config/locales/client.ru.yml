@@ -2559,7 +2559,6 @@ ru:
         deleted_user: "(удалённый пользователь)"
         post_number_with_topic_title: "Cообщение #%{post_number} - %{title}"
         new_post_in_topic: "Новое сообщение в теме %{title}"
-        suspicious_user: "Подозрительный пользователь: %{username}"
         default_item: "Премодерируемый элемент #%{reviewable_id}"
     topics:
       new_messages_marker: "последний визит"
@@ -3295,7 +3294,7 @@ ru:
           other: "Вы действительно хотите удалить %{count} сообщений?"
       merge:
         confirm:
-          one: "Вы действительно хотите объединить эти сообщения?"
+          one: "Вы действительно хотите объединить это %{count} сообщение?"
           few: "Вы действительно хотите объединить эти %{count} сообщения?"
           many: "Вы действительно хотите объединить эти %{count} сообщений?"
           other: "Вы действительно хотите объединить эти %{count} сообщений?"
@@ -4117,6 +4116,8 @@ ru:
         other: "%{count} непрочитанных"
       toggle_section: "Переключить секцию"
       more: "Ещё..."
+      all_categories: "Все разделы"
+      all_tags: "Все теги"
       sections:
         messages:
           header_link_text: "Личные сообщения"

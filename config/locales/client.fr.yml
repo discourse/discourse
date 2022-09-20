@@ -2995,10 +2995,6 @@ fr:
         confirm:
           one: "Voulez-vous vraiment supprimer ce message ?"
           other: "Voulez-vous vraiment supprimer ces %{count} messages ?"
-      merge:
-        confirm:
-          one: "Voulez-vous vraiment fusionner ces messages ?"
-          other: "Voulez-vous vraiment fusionner ces %{count} messages ?"
       revisions:
         controls:
           first: "Première révision"
@@ -3750,6 +3746,8 @@ fr:
         one: "%{count} nouveau"
         other: "%{count} nouveaux"
       more: "Plus…"
+      all_categories: "Toutes les catégories"
+      all_tags: "Toutes les étiquettes"
       sections:
         messages:
           header_link_text: "Messages"

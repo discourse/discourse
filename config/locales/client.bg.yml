@@ -2991,6 +2991,7 @@ bg:
         one: "%{count} нов"
         other: "%{count} нови"
       more: "Още..."
+      all_categories: "Всички категории"
       sections:
         messages:
           header_link_text: "Съобщения"

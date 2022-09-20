@@ -77,6 +77,9 @@ pt_BR:
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "menos de %{count} min"
+          other: "menos de %{count} mins"
         x_minutes:
           one: "%{count} minuto"
           other: "%{count} minutos"
@@ -98,6 +101,9 @@ pt_BR:
         over_x_years:
           one: "mais de %{count} ano"
           other: "mais de %{count} anos"
+        almost_x_years:
+          one: "há quase %{count} ano"
+          other: "há quase %{count} anos"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -132,6 +138,7 @@ pt_BR:
       to_placeholder: "até agora"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
+      post: "publicação #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Compartilhar no Twitter"
       facebook: "Compartilhar no Facebook"
@@ -173,6 +180,7 @@ pt_BR:
     topic_admin_menu: "ações de tópico"
     skip_to_main_content: "Ir para o conteúdo principal"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
+    emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários que não são da equipe."
     software_update_prompt:
       message: "Nós atualizamos este site, <span>atualize a página</span>, ou você poderá enfrentar uma situação inesperada."
       dismiss: "Descartar"
@@ -181,8 +189,12 @@ pt_BR:
       other: "Para facilitar o lançamento do seu novo site, você está no modo de inicialização. Todos os usuários novos receberão o nível de confiança 1 e terão os e-mails diários do resumo de e-mails ativados. Isso será desativado automaticamente quando %{count} usuários se registrarem."
     bootstrap_mode_disabled: "O modo de inicialização será desativado em 24 horas."
     bootstrap_invite_button_title: "Enviar convites"
+    bootstrap_wizard_link_title: "Concluir o assistente de configuração"
     themes:
       default_description: "Padrão"
+      broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
+      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
+      only_admins: "(esta mensagem é mostrada somente aos administradores do site)"
     s3:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
@@ -320,6 +332,8 @@ pt_BR:
         existing_reminder: "Você tem um lembrete definido para este favorito que será enviado em %{at_date_time}"
     copy_codeblock:
       copied: "copiado!"
+      copy: "copiar código para a área de transferência"
+      fullscreen: "exibir código em tela cheia"
     drafts:
       label: "Rascunhos"
       label_with_count: "Rascunhos (%{count})"
@@ -568,7 +582,10 @@ pt_BR:
       relative: "Relativo"
     time_shortcut:
       now: "Agora"
+      in_one_hour: "Em uma hora"
+      in_two_hours: "Em duas horas"
       later_today: "Hoje mais tarde"
+      two_days: "Dois dias"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       post_local_date: "Data na postagem"
@@ -710,6 +727,7 @@ pt_BR:
             title: "Configurações"
             allow_unknown_sender_topic_replies: "Permita que remetentes desconhecidos respondam a tópicos."
             allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos(as) respondam a tópicos de grupo. Se não estiver ativado, será criado um novo tópico para respostas de endereços de e-mail de usuários(as) não convidados para o tópico."
+            from_alias: "De Alias"
           mailboxes:
             synchronized: "Caixa de mensagens sincronizada"
             none_found: "Nenhuma caixa de mensagens foi encontrada nesta conta de e-mail."
@@ -1069,6 +1087,7 @@ pt_BR:
       enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
       experimental_sidebar:
         options: "Opções"
+        categories_section: "Seção de Categorias"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -1181,6 +1200,7 @@ pt_BR:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicativos"
+        sidebar: "Barra Lateral"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -1285,6 +1305,7 @@ pt_BR:
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: cortamos a sua imagem. A largura e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
+        use_custom: "Ou envie um avatar customizado:"
       change_profile_background:
         title: "Cabeçalho do perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão largura padrão de 1110px."
@@ -1791,12 +1812,20 @@ pt_BR:
       not_approved: "Sua conta ainda não foi aprovada. Você será notificado(a) por e-mail quando tudo estiver pronto para entrar."
       google_oauth2:
         name: "Google"
+        title: "Conectar com o Google"
+        sr_title: "Conectar com o Google"
       twitter:
         name: "Twitter"
+        title: "Conectar com o Twitter"
+        sr_title: "Conectar com o Twitter"
       instagram:
         name: "Instagram"
+        title: "Entrar com o Instagram"
+        sr_title: "Entrar com o Instagram"
       facebook:
         name: "Facebook"
+        title: "Entrar com o Facebook"
+        sr_title: "Entrar com o Facebook"
       github:
         name: "GitHub"
         title: "Entrar com o GitHub"
@@ -1804,9 +1833,11 @@ pt_BR:
       discord:
         name: "Discord"
         title: "Entrar com o Discord"
+        sr_title: "Entrar com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo autenticador"
         backup_code: "Use um código de backup"
+        security_key: "Em vez disso, utilizar uma chave de segurança"
     invites:
       accept_title: "Convite"
       emoji: "emoji de envelope"
@@ -1963,6 +1994,7 @@ pt_BR:
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
       title: "Ou aperte %{modifier}Enter"
+      users_placeholder: "Adicionar usuários ou grupos"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "por que você está editando?"
@@ -2907,10 +2939,6 @@ pt_BR:
         confirm:
           one: "Tem certeza de que deseja excluir esta postagem?"
           other: "Tem certeza de que deseja excluir estas %{count} postagens?"
-      merge:
-        confirm:
-          one: "Tem certeza de que deseja mesclar estas postagens?"
-          other: "Tem certeza de que deseja mesclar estas %{count} postagens?"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -3635,6 +3663,7 @@ pt_BR:
         one: "%{count} nova"
         other: "%{count} novas"
       more: "Mais..."
+      all_categories: "Todas as categorias"
       sections:
         messages:
           header_link_text: "Mensagens"
@@ -4125,6 +4154,7 @@ pt_BR:
         delete_confirm: 'Você tem certeza de que deseja excluir "%{theme_name}"?'
         color: "Cor"
         opacity: "Opacidade"
+        copy: "Duplicado"
         copy_to_clipboard: "Copiar para área de transferência"
         copied_to_clipboard: "Copiou para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
@@ -4224,6 +4254,7 @@ pt_BR:
           import_web_advanced: "Avançado…"
           import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json com o tema"
           is_private: "O tema está em um repositório git privado"
+          finish_install: "Concluir a instalação do tema"
           remote_branch: "Nome da unidade (opcional)"
           public_key: "Conceder o seguinte acesso da chave pública ao repo:"
           public_key_note: "Após digitar uma URL do repositório privada válida, uma chave SSH será gerada e exibida aqui."
@@ -4626,6 +4657,7 @@ pt_BR:
         show_words:
           one: "exibir %{count} palavra"
           other: "exibir %{count} palavras"
+        case_sensitive: "(diferencia maiúsculas)"
         download: Download
         clear_all: Limpar tudo
         clear_all_confirm: "Tem certeza de que deseja remover todas as palavras acompanhadas para a ação %{action}?"
@@ -4663,6 +4695,7 @@ pt_BR:
           exists: "Já existe"
           upload: "Adicionar do arquivo"
           upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
+          case_sensitivity_label: "É sensível a maiúsculas"
         test:
           button_label: "Testar"
           modal_title: "%{action}: testar palavras acompanhadas"
@@ -5212,6 +5245,7 @@ pt_BR:
           replace: "Substituir"
   wizard_js:
     wizard:
+      jump_in: "Pular dentro!"
       finish: "Sair da configuração"
       back: "Voltar"
       next: "Próximo"

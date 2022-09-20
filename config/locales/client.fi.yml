@@ -2781,10 +2781,6 @@ fi:
         confirm:
           one: "Oletko varma, että haluat poistaa viestin?"
           other: "Oletko varma, että haluat poistaa %{count} viestiä?"
-      merge:
-        confirm:
-          one: "Oletko varma, että haluat yhdistää nämä viestit?"
-          other: "Oletko varma, että haluat yhdistää nämä %{count} viestiä?"
       revisions:
         controls:
           first: "Ensimmäinen revisio"
@@ -3464,6 +3460,7 @@ fi:
         one: "%{count} uusi"
         other: "%{count} uutta"
       more: "Lisää..."
+      all_categories: "Kaikki alueet"
       sections:
         messages:
           header_link_text: "Viestit"

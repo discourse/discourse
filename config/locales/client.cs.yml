@@ -2328,12 +2328,6 @@ cs:
           few: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
           many: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
           other: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
-      merge:
-        confirm:
-          one: "Opravdu chceš sloučit tyto příspěvky?"
-          few: "Opravdu chceš sloučit %{count} příspěvky?"
-          many: "Opravdu chceš sloučit %{count} příspěvků?"
-          other: "Opravdu chceš sloučit %{count} příspěvků?"
       revisions:
         controls:
           first: "První revize"
@@ -2886,6 +2880,7 @@ cs:
         many: "%{count} nových"
         other: "%{count} nové"
       more: "Více..."
+      all_categories: "Všechny kategorie"
       sections:
         messages:
           header_link_text: "Zprávy"

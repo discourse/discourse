@@ -2352,7 +2352,6 @@ es:
         deleted_user: "(usuario eliminado)"
         post_number_with_topic_title: "publicación n.º %{post_number} – %{title}"
         new_post_in_topic: "nueva publicación en %{title}"
-        suspicious_user: "usuario sospechoso %{username}"
         default_item: "elemento revisable n.º %{reviewable_id}"
     topics:
       new_messages_marker: "última visita"
@@ -2998,10 +2997,6 @@ es:
         confirm:
           one: "¿Seguro que quieres eliminar esa publicación?"
           other: "¿Seguro de que quieres eliminar esas %{count} publicaciones?"
-      merge:
-        confirm:
-          one: "Seguro que quieres fusionar esas publicaciones?"
-          other: "¿Seguro que quieres fusionar esas %{count} publicaciones?"
       revisions:
         controls:
           first: "Primera edición"
@@ -3756,6 +3751,7 @@ es:
         other: "%{count} nuevos"
       toggle_section: "mostrar/ocultar sección"
       more: "Más..."
+      all_categories: "Todas las categorías"
       sections:
         messages:
           header_link_text: "Mensajes"
