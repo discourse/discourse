@@ -2610,6 +2610,7 @@ en:
         view_all: "view all review items"
         queue: "Queue"
         deleted_user: "(deleted user)"
+        deleted_post: "(deleted post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
         user_requires_approval: "%{username} requires approval"
