@@ -38,6 +38,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
+  dialog: service(),
 
   actions: {
     toggleAnonymous() {
