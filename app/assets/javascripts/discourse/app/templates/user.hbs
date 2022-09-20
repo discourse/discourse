@@ -228,8 +228,19 @@
       <section class="user-primary-navigation">
         <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
           {{#unless this.model.profile_hidden}}
-            <li class="summary"><LinkTo @route="user.summary">{{i18n 'user.summary.title'}}</LinkTo></li>
-            <li class="activity"><LinkTo @route="userActivity">{{i18n 'user.activity_stream'}}</LinkTo></li>
+            <li class="summary">
+              <LinkTo @route="user.summary">
+                {{d-icon "user"}}
+                {{i18n 'user.summary.title'}}
+              </LinkTo>
+            </li>
+
+            <li class="activity">
+              <LinkTo @route="userActivity">
+                {{d-icon "stream"}}
+                {{i18n 'user.activity_stream'}}
+              </LinkTo>
+            </li>
           {{/unless}}
           {{#if this.showNotificationsTab}}
             <li class="user-notifications">
