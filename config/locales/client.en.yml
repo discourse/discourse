@@ -2599,8 +2599,8 @@ en:
           other: "Bookmarks - %{count} unread bookmarks"
         review_queue: "Review queue"
         review_queue_with_unread:
-          one: "Review queue - %{count} needs review"
-          other: "Review queue - %{count} need review"
+          one: "Review queue - %{count} item needs review"
+          other: "Review queue - %{count} items need review"
         other_notifications: "Other notifications"
         other_notifications_with_unread:
           one: "Other notifications - %{count} unread notification"
