@@ -64,7 +64,7 @@ class Plugin::Metadata
     "discourse-prometheus",
     "discourse-prometheus-alert-receiver",
     "discourse-push-notifications",
-    "discourse-question-answer",
+    "discourse-upvotes",
     "discourse-reactions",
     "discourse-restricted-replies",
     "discourse-rss-polling",
