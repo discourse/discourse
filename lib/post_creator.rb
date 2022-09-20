@@ -421,7 +421,9 @@ class PostCreator
     return if @opts[:user_generated_tags].empty?
     PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: @opts[:user_generated_tags])
     unless @opts[:user_generated_tags].include?(',')
-      Tag.create(name: @opts[:user_generated_tags])
+      unless Tag.where_name(@opts[:user_generated_tags]).exists?
+        Tag.create(name: @opts[:user_generated_tags])
+      end
     else
       @opts[:user_generated_tags].split(',').each do |tag|
         unless Tag.where_name(tag).exists?
