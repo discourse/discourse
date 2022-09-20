@@ -48,8 +48,7 @@ document.addEventListener("discourse-booted", () => {
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam
     // handle randomization.
-    // QUnit.config.seed = Math.random().toString(36).slice(2);
-    QUnit.config.seed = "9atcpy4t344";
+    QUnit.config.seed = Math.random().toString(36).slice(2);
   } else {
     // Don't reorder when specifying a seed
     QUnit.config.reorder = false;
