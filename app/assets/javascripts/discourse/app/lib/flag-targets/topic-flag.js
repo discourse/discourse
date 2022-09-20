@@ -7,7 +7,7 @@ export default class TopicFlag extends Flag {
     return "flagging_topic.title";
   }
 
-  flaggingTopic() {
+  targetsTopic() {
     return true;
   }
 
@@ -26,23 +26,21 @@ export default class TopicFlag extends Flag {
   flagsAvailable(flagController, site, model) {
     let lookup = EmberObject.create();
 
-    model.get("actions_summary").forEach((a) => {
+    model.actions_summary.forEach((a) => {
       a.flagTopic = model;
       a.actionType = site.topicFlagTypeById(a.id);
-      lookup.set(a.actionType.get("name_key"), ActionSummary.create(a));
+      lookup.set(a.actionType.name_key, ActionSummary.create(a));
     });
     flagController.set("topicActionByName", lookup);
 
-    return site.get("topic_flag_types").filter((item) => {
-      return model.get("actions_summary").some((a) => {
-        return a.id === item.get("id") && a.can_act;
+    return site.topic_flag_types.filter((item) => {
+      return model.actions_summary.some((a) => {
+        return a.id === item.id && a.can_act;
       });
     });
   }
 
   postActionFor(controller) {
-    return controller.get(
-      "topicActionByName." + controller.get("selected.name_key")
-    );
+    return controller.get(`topicActionByName.${controller.selected.name_key}`);
   }
 }

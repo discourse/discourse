@@ -75,7 +75,7 @@ export default Controller.extend(ModalFunctionality, {
       return User.findByUsername(this.model.username).then((createdBy) => {
         const opts = { before: performAction };
 
-        if (this.flagTarget.isEditable()) {
+        if (this.flagTarget.editable()) {
           opts.postId = this.model.id;
           opts.postEdit = this.model.cooked;
         }
@@ -169,7 +169,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("flagTarget", "selected.is_custom_flag")
   canTakeAction(flagTarget, isCustomFlag) {
     return (
-      !flagTarget.flaggingTopic() &&
+      !flagTarget.targetsTopic() &&
       !isCustomFlag &&
       this.currentUser.get("staff")
     );
@@ -222,7 +222,13 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     createFlag(opts) {
-      this.flagTarget.createFlag(this, opts);
+      const params = opts || {};
+
+      if (this.get("selected.is_custom_flag")) {
+        params.message = this.message;
+      }
+
+      this.flagTarget.create(this, params);
     },
 
     createFlagAsWarning() {
@@ -247,7 +253,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("flagTarget", "selected.name_key")
   canSendWarning(flagTarget, nameKey) {
     return (
-      !flagTarget.flaggingTopic() &&
+      !flagTarget.targetsTopic() &&
       this.currentUser.get("staff") &&
       nameKey === "notify_user"
     );

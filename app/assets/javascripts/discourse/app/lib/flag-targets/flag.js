@@ -1,46 +1,38 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class Flag {
-  flaggingTopic() {
+  targetsTopic() {
     return false;
   }
 
-  isEditable() {
+  editable() {
     return true;
   }
 
-  createFlag(controller, opts) {
+  create(controller, opts) {
     // an instance of ActionSummary
     let postAction = this.postActionFor(controller);
-
-    let params = controller.get("selected.is_custom_flag")
-      ? { message: this.message }
-      : {};
-
-    if (opts) {
-      params = Object.assign(params, opts);
-    }
 
     controller.appEvents.trigger(
       this.flagCreatedEvent,
       controller.model,
       postAction,
-      params
+      opts
     );
 
     controller.send("hideModal");
 
     postAction
-      .act(controller.model, params)
+      .act(controller.model, opts)
       .then(() => {
         if (controller.isDestroying || controller.isDestroyed) {
           return;
         }
 
-        if (!params.skipClose) {
+        if (!opts.skipClose) {
           controller.send("closeModal");
         }
-        if (params.message) {
+        if (opts.message) {
           controller.set("message", "");
         }
         controller.appEvents.trigger("post-stream:refresh", {

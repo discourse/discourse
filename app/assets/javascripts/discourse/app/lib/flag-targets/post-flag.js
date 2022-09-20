@@ -18,7 +18,7 @@ export default class PostFlag extends Flag {
   }
 
   flagsAvailable(_flagController, _site, model) {
-    let flagsAvailable = model.get("flagsAvailable");
+    let flagsAvailable = model.flagsAvailable;
 
     // "message user" option should be at the top
     const notifyUserIndex = flagsAvailable.indexOf(
