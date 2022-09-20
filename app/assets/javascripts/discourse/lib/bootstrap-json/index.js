@@ -381,44 +381,36 @@ module.exports = {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       const scripts = [];
 
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
-        const pluginInfos = this.app.project
-          .findAddonByName("discourse-plugins")
-          .pluginInfos();
+      const pluginInfos = this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos();
 
-        for (const {
-          pluginName,
-          directoryName,
-          hasJs,
-          hasAdminJs,
-        } of pluginInfos) {
-          if (hasJs) {
-            scripts.push({
-              src: `plugins/${directoryName}.js`,
-              name: pluginName,
-            });
-          }
-
-          if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
-            scripts.push({
-              src: `plugins/${directoryName}_extras.js`,
-              name: pluginName,
-            });
-          }
-
-          if (hasAdminJs) {
-            scripts.push({
-              src: `plugins/${directoryName}_admin.js`,
-              name: pluginName,
-            });
-          }
+      for (const {
+        pluginName,
+        directoryName,
+        hasJs,
+        hasAdminJs,
+      } of pluginInfos) {
+        if (hasJs) {
+          scripts.push({
+            src: `plugins/${directoryName}.js`,
+            name: pluginName,
+          });
         }
-      } else {
-        scripts.push({
-          src: "discourse/tests/active-plugins.js",
-          name: "_all",
-        });
-        scripts.push({ src: "admin-plugins.js", name: "_admin" });
+
+        if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+          scripts.push({
+            src: `plugins/${directoryName}_extras.js`,
+            name: pluginName,
+          });
+        }
+
+        if (hasAdminJs) {
+          scripts.push({
+            src: `plugins/${directoryName}_admin.js`,
+            name: pluginName,
+          });
+        }
       }
 
       return scripts
@@ -428,19 +420,15 @@ module.exports = {
         )
         .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
-        return this.app.project
-          .findAddonByName("discourse-plugins")
-          .pluginInfos()
-          .filter(({ hasTests }) => hasTests)
-          .map(
-            ({ directoryName, pluginName }) =>
-              `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
-          )
-          .join("\n");
-      } else {
-        return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
-      }
+      return this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos()
+        .filter(({ hasTests }) => hasTests)
+        .map(
+          ({ directoryName, pluginName }) =>
+            `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+        )
+        .join("\n");
     }
   },
 

@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ ((matrix.ember_cli_plugin_assets == '1') && '(ember-cli-compiled plugin js)') || ''}}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
     timeout-minutes: 60
@@ -29,7 +29,6 @@ jobs:
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
-      EMBER_CLI_PLUGIN_ASSETS: ${{ matrix.ember_cli_plugin_assets }}
 
     strategy:
       fail-fast: false
@@ -37,17 +36,11 @@ jobs:
       matrix:
         build_type: [backend, frontend, annotations]
         target: [core, plugins]
-        ember_cli_plugin_assets: ['1', '0']
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - target: core
-            ember_cli_plugin_assets: '1'
-          - target: plugins
-            build_type: backend
-            ember_cli_plugin_assets: '1'
 
     steps:
       - uses: actions/checkout@v3
