@@ -28,7 +28,7 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
       EMBER_CLI_PLUGIN_ASSETS: ${{ matrix.ember_cli_plugin_assets }}
 
     strategy:
@@ -158,7 +158,7 @@ jobs:
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:spec
+        run: bin/rake plugin:turbo_spec
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
