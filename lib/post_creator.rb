@@ -408,10 +408,27 @@ class PostCreator
   end
 
   def save_user_generated_tags
-    # Create a record in `post_custom_fields` table
+    # Create a record in `post_custom_fields` and `tags` table
     # for the user-generated tags of the post, if there are any.
+    # Algorithm:
+    #   - Check if there's an actual user_generated tags
+    #   - Create new record in `post_custom_fields` table
+    #   - If single tag only, create record in `tags` table directly
+    #     else, iterate through array of tags then create record in `tags` table
+    # Sample data of @opts[:user_generated_tags]:
+    #   Single tag: 'soju'
+    #   Multiple tags: 'soju,korea,liquor'
     return if @opts[:user_generated_tags].empty?
     PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: @opts[:user_generated_tags])
+    unless @opts[:user_generated_tags].include?(',')
+      Tag.create(name: @opts[:user_generated_tags])
+    else
+      @opts[:user_generated_tags].split(',').each do |tag|
+        unless Tag.where_name(tag).exists?
+          Tag.create(name: tag)
+        end
+      end
+    end
   end
 
   def update_uploads_secure_status
