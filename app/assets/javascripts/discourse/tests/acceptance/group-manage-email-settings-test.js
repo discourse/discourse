@@ -126,12 +126,12 @@ acceptance(
 
       await click("#enable_smtp");
       assert.strictEqual(
-        query(".modal-body").innerText,
+        query(".dialog-body").innerText.trim(),
         I18n.t("groups.manage.email.smtp_disable_confirm"),
         "shows a confirm dialogue warning SMTP settings will be wiped"
       );
 
-      await click(".modal-footer .btn.btn-primary");
+      await click(".dialog-footer .btn-primary");
     });
 
     test("enabling IMAP, testing, and saving", async function (assert) {
