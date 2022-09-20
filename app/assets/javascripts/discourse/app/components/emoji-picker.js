@@ -257,7 +257,8 @@ export default Component.extend({
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     const recentEmojis = document.querySelectorAll(this.elements.recentEmojis);
     const searchInput = document.querySelector(this.elements.searchInput);
-    const emojis = document.querySelectorAll(this.elements.allEmojis);
+    const searchResults = document.querySelectorAll(this.elements.emojiResults);
+    let emojis = document.querySelectorAll(this.elements.allEmojis);
     const firstSection = document.querySelectorAll(
       this.elements.firstEmojiSection
     );
@@ -268,6 +269,10 @@ export default Component.extend({
       "hoveredEmoji",
       this._codeWithDiversity(event.target.title, this.selectedDiversity)
     );
+
+    if (searchResults.length > 0) {
+      emojis = searchResults;
+    }
 
     if (
       event.key === "ArrowDown" &&
