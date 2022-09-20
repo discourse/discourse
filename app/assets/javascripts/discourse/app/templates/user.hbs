@@ -258,7 +258,7 @@
           {{#if this.showBadges}}
             <li class="badges"><LinkTo @route="user.badges">{{d-icon "certificate"}}{{i18n 'badges.title'}}</LinkTo></li>
           {{/if}}
-          <PluginOutlet @name="user-main-nav" @tagName="span" @connectorTagName="div" @tagName="" @connectorTagName="li" @args={{hash model=this.model}} />
+          <PluginOutlet @name="user-main-nav" @connectorTagName="li" @args={{hash model=this.model}} />
           {{#if this.model.can_edit}}
             <li class="preferences"><LinkTo @route="preferences">{{d-icon "cog"}}{{i18n 'user.preferences'}}</LinkTo></li>
           {{/if}}
