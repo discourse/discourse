@@ -952,7 +952,7 @@ posting:
     client: true
     default: false
   highlighted_languages:
-    default: "apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars"
+    default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
     type: list
     client: true
