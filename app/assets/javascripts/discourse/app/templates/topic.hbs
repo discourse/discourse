@@ -125,7 +125,7 @@
             <ConditionalLoadingSpinner @condition={{this.model.postStream.loadingAbove}} />
 
             <PluginOutlet @name="topic-above-posts" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-            {{#unless this.model.postStream.loadingFilter}}
+            {{#unless this.model.postStream.loadingFilter}}       
               <div 
                 style="
                   display: flex;
@@ -137,12 +137,14 @@
                 <div>
                   <h2>Summaries</h2>
                 </div>
+                {{#if this.currentUser}}
                 <button 
                   class="btn-primary"
                   {{action "replyToPost"}}  
                 >
                   Add Summary
                 </button>
+                {{/if}}
               </div>
               <ScrollingPostStream 
                 @posts={{this.postsToRender}} 
@@ -203,12 +205,14 @@
                 <div>
                   <h2>Sponsors</h2>
                 </div>
+                {{#if this.currentUser}}
                 <button 
                   class="btn-primary" 
                   {{action "addSponsor"}}
                 >
                   Add Sponsor
                 </button>
+                {{/if}}
               </div>
               <ScrollingPostStreamSponsor 
                 @posts={{this.postsToRender}} 
@@ -269,12 +273,14 @@
                 <div>
                   <h2>Opinions</h2>
                 </div>
+                {{#if this.currentUser}}
                 <button 
                   class="btn-primary"
                   {{action "addOpinion"}}  
                 >
                   Add Opinion
                 </button>
+                {{/if}}
               </div>
               <ScrollingPostStreamOpinion 
                 @posts={{this.postsToRender}} 

@@ -654,6 +654,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     addOpinion(post) {
+      console.log("this.siteSettings", this.siteSettings)
       const composerController = this.composer;
       const topic = post ? post.get("topic") : this.model;
       const quoteState = this.quoteState;
