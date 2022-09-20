@@ -51,6 +51,41 @@ acceptance("User menu", function (needs) {
     requestHeaders = {};
   });
 
+  test("notifications panel has a11y attributes", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    const panel = query("#quick-access-all-notifications");
+    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
+    assert.strictEqual(
+      panel.querySelector("ul").getAttribute("aria-labelledby"),
+      "user-menu-button-all-notifications"
+    );
+  });
+
+  test("mentions notifications panel has a11y attributes", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-mentions");
+    const panel = query("#quick-access-mentions");
+    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
+    assert.strictEqual(
+      panel.querySelector("ul").getAttribute("aria-labelledby"),
+      "user-menu-button-mentions"
+    );
+  });
+
+  test("profile panel has a11y attributes", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+    const panel = query("#quick-access-profile");
+    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
+    assert.strictEqual(
+      panel.querySelector("ul").getAttribute("aria-labelledby"),
+      "user-menu-button-profile"
+    );
+  });
+
   test("clicking on an unread notification", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
@@ -133,6 +168,72 @@ acceptance("User menu", function (needs) {
     );
   });
 
+  test("tabs have title attributes", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerUserMenuTab((UserMenuTab) => {
+        return class extends UserMenuTab {
+          get id() {
+            return "tiny-tab-1";
+          }
+
+          get count() {
+            return this.currentUser.get("unread_high_priority_notifications");
+          }
+
+          get icon() {
+            return "wrench";
+          }
+
+          get panelComponent() {
+            return "d-button";
+          }
+
+          get title() {
+            return `Custom title: ${this.count}`;
+          }
+        };
+      });
+    });
+
+    const expectedTitles = {
+      "user-menu-button-all-notifications": I18n.t(
+        "user_menu.tabs.all_notifications"
+      ),
+      "user-menu-button-replies": I18n.t("user_menu.tabs.replies_with_unread", {
+        count: 2,
+      }),
+      "user-menu-button-mentions": I18n.t("user_menu.tabs.mentions"),
+      "user-menu-button-likes": I18n.t("user_menu.tabs.likes"),
+      "user-menu-button-watching": I18n.t("user_menu.tabs.watching"),
+      "user-menu-button-messages": I18n.t("user_menu.tabs.messages"),
+      "user-menu-button-bookmarks": I18n.t("user_menu.tabs.bookmarks"),
+      "user-menu-button-tiny-tab-1": "Custom title: 73",
+      "user-menu-button-review-queue": I18n.t("user_menu.tabs.review_queue"),
+      "user-menu-button-other-notifications": I18n.t(
+        "user_menu.tabs.other_notifications"
+      ),
+      "user-menu-button-profile": I18n.t("user_menu.tabs.profile"),
+    };
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    for (const [key, title] of Object.entries(expectedTitles)) {
+      assert.strictEqual(
+        query(`#${key}`).title,
+        title,
+        `${key} tab has the right title`
+      );
+    }
+
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      unread_high_priority_notifications: 22,
+    });
+    assert.strictEqual(
+      query("#user-menu-button-tiny-tab-1").title,
+      "Custom title: 22",
+      "tabs titles can update dynamically"
+    );
+  });
+
   test("tabs added via the plugin API", async function (assert) {
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
@@ -186,7 +287,7 @@ acceptance("User menu", function (needs) {
       "user-menu-button-custom-tab-1": "7",
       "user-menu-button-custom-tab-2": "8",
       "user-menu-button-review-queue": "9",
-      "user-menu-button-other": "10",
+      "user-menu-button-other-notifications": "10",
     };
 
     await visit("/");
@@ -855,19 +956,21 @@ acceptance("User menu - Dismiss button", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user");
 
-    await click("#user-menu-button-other");
-    let repliesBadgeNotification = query(
-      "#user-menu-button-other .badge-notification"
+    await click("#user-menu-button-other-notifications");
+    let othersBadgeNotification = query(
+      "#user-menu-button-other-notifications .badge-notification"
     );
     assert.strictEqual(
-      repliesBadgeNotification.textContent.trim(),
+      othersBadgeNotification.textContent.trim(),
       "4",
       "badge shows the right count"
     );
 
     await click(".user-menu .notifications-dismiss");
 
-    assert.ok(!exists("#user-menu-button-other .badge-notification"));
+    assert.ok(
+      !exists("#user-menu-button-other-notifications .badge-notification")
+    );
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"

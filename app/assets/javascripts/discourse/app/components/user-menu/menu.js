@@ -257,7 +257,7 @@ const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
   }
 
   get id() {
-    return "other";
+    return "other-notifications";
   }
 
   get icon() {
@@ -377,5 +377,10 @@ export default class UserMenu extends Component {
   @action
   triggerRenderedAppEvent() {
     this.appEvents.trigger("user-menu:rendered");
+  }
+
+  @action
+  focusFirstTab(topTabsContainerElement) {
+    topTabsContainerElement.querySelector(".btn.active")?.focus();
   }
 }

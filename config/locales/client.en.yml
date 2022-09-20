@@ -2567,10 +2567,45 @@ en:
     view_all: "view all %{tab}"
     user_menu:
       generic_no_items: "There are no items in this list."
-      sr_menu_tabs: "Menu tabs"
+      sr_menu_tabs: "User menu tabs"
       view_all_notifications: "view all notifications"
       view_all_bookmarks: "view all bookmarks"
       view_all_messages: "view all personal messages"
+      tabs:
+        all_notifications: "All notifications"
+        replies: "Replies"
+        replies_with_unread:
+          one: "Replies - %{count} unread reply"
+          other: "Replies - %{count} unread replies"
+        mentions: "Mentions"
+        mentions_with_unread:
+          one: "Mentions - %{count} unread mention"
+          other: "Mentions - %{count} unread mentions"
+        likes: "Likes"
+        likes_with_unread:
+          one: "Likes - %{count} unread like"
+          other: "Likes - %{count} unread likes"
+        watching: "Watched topics"
+        watching_with_unread:
+          one: "Watched topics - %{count} unread watched topic"
+          other: "Watched topics - %{count} unread watched topics"
+        messages: "Personal messages"
+        messages_with_unread:
+          one: "Personal messages - %{count} unread message"
+          other: "Personal messages - %{count} unread messages"
+        bookmarks: "Bookmarks"
+        bookmarks_with_unread:
+          one: "Bookmarks - %{count} unread bookmark"
+          other: "Bookmarks - %{count} unread bookmarks"
+        review_queue: "Review queue"
+        review_queue_with_unread:
+          one: "Review queue - %{count} item needs review"
+          other: "Review queue - %{count} items need review"
+        other_notifications: "Other notifications"
+        other_notifications_with_unread:
+          one: "Other notifications - %{count} unread notification"
+          other: "Other notifications - %{count} unread notifications"
+        profile: "Profile"
       reviewable:
         view_all: "view all review items"
         queue: "Queue"
