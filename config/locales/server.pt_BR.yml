@@ -3106,6 +3106,7 @@ pt_BR:
   subject_re: "Re:"
   subject_pm: "[PM]"
   email_from: "%{user_name} via %{site_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -3124,6 +3125,9 @@ pt_BR:
     reply_above_line: "## Responda acima desta linha. ##"
     posted_by: "Postado por %{username} em %{post_date}"
     pm_participants: "Participantes: %{participants}"
+    more_pm_participants:
+      one: "%{participants} e %{count} outro"
+      other: "%{participants} e %{count} outros"
     invited_group_to_private_message_body: |
       %{username} convidou @%{group_name} para uma mensagem
 
@@ -3652,6 +3656,12 @@ pt_BR:
     dark_rose: "Rosa-escuro"
     wcag: "WCAG claro"
     wcag_theme_name: "WCAG claro"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
+    solarized_light: "Solarized Light"
+    solarized_light_theme_name: "Solarized Light"
+    solarized_dark: "Solarized Dark"
+    solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG escuro"
     wcag_dark_theme_name: "WCAG escuro"
     default_theme_name: "Padrão"
@@ -4305,6 +4315,12 @@ pt_BR:
         other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
       synonym: 'Sinônimos não são permitidos. Use "%{tag_name}".'
       has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'A etiqueta "%{tags}" não pode ser usada na categoria "%{category}". Por favor, remova-a.'
+        other: 'As seguintes etiquetas não podem ser usadas na categoria "%{category}": %{tags}. Por favor, remova-as.'
+      category_does_not_allow_tags:
+        one: 'A categoria "%{category}" não permite o uso da etiqueta "%{tags}". Por favor, remova-a.'
+        other: 'A categoria "%{category}" não permite o uso das etiquetas "%{tags}". Por favor, remova-as.'
     required_tags_from_group:
       one: "Você deve incluir pelo menos %{count} etiqueta %{tag_group_name}. As etiquetas deste grupo são: %{tags}."
       other: "Você deve incluir pelo menos %{count} etiquetas %{tag_group_name}. As etiquetas deste grupo são: %{tags}."
@@ -4316,6 +4332,7 @@ pt_BR:
     register:
       button: "Cadastrar"
       title: "Cadastrar conta de administrador(a)"
+      help: "Registre uma nova conta para começar."
       no_emails: "Infelizmente, nenhum e-mail de administrador(a) foi definido durante a configuração, portanto a finalização da configuração pode ser difícil. Adicione o e-mail ao arquivo de configuração ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crie uma conta de administrador(a) a partir do console</a>."
     confirm_email:
       title: "Confirme seu e-mail"
@@ -4325,6 +4342,8 @@ pt_BR:
       message: "<p>Reenviamos o e-mail de confirmação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar no modo de segurança"
+    description: "O modo de segurança permite que você teste seu site sem carregar plugins ou temas."
+    no_themes: "Desabilitar temas e componentes"
     no_unofficial_plugins: "Desativar plug-ins não oficiais"
     no_plugins: "Desativar todos os plug-ins"
     enter: "Entrar no modo de segurança"
@@ -4333,30 +4352,37 @@ pt_BR:
     title: "Configuração do Discourse"
     step:
       introduction:
+        title: "Conte-nos sobre sua comunidade"
         fields:
           title:
             label: "Nome da comunidade"
             placeholder: "Hangout de Jane"
           site_description:
+            label: "Descreva sua comunidade em uma frase curta."
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
           contact_email:
             label: "Ponto de contato"
             placeholder: "exemplo@user.com"
+            description: "Pessoa ou grupo responsável por esta comunidade. Usado para atualizações críticas e listado na <a href='%{base_path}/about' target='_blank'>sua página sobre</a> para contatos de emergências."
           default_locale:
             label: "Idioma"
       privacy:
+        title: "Experiência do Membro"
         fields:
           login_required:
             placeholder: "Privado(a)"
             extra_description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
           invite_only:
             placeholder: "Apenas Convidados"
+            extra_description: "Usuários(as) devem ser convidados(as) por usuários(as) confiáveis ou pela equipe, caso contrário, poderão se cadastrar por conta própria"
           must_approve_users:
             placeholder: "Requerer aprovação"
             extra_description: "Os usuários devem ser aprovados pela equipe"
       ready:
         title: "Seu Discourse está pronto!"
+        description: "É isso! Você fez o básico para configurar sua comunidade. Agora você pode entrar, dar uma olhada, escrever um tópico de boas-vindas e enviar convites!<br><br>Divirta-se!"
       styling:
+        title: "Aparência & Comportamento"
         fields:
           color_scheme:
             label: "Esquema de cores"
@@ -4377,8 +4403,14 @@ pt_BR:
                 label: "Categorias com tópicos em destaque"
               categories_and_latest_topics:
                 label: "Categorias e últimos tópicos"
+              categories_and_latest_topics_created_date:
+                label: "Categorias e Tópicos Mais Recentes (ordenar por data de criação do tópico)"
               categories_and_top_topics:
                 label: "Categorias e melhores tópicos"
+              categories_boxes:
+                label: "Caixas de Categorias"
+              categories_boxes_with_topics:
+                label: "Caixas de Categorias com Tópicos"
               subcategories_with_featured_topics:
                 label: "Sub-Categorias com tópicos em destaque"
       branding:

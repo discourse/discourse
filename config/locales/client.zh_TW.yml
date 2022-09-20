@@ -2280,9 +2280,6 @@ zh_TW:
       delete:
         confirm:
           other: "您是否確定要刪除%{count}篇貼文？"
-      merge:
-        confirm:
-          other: "您是否確定要合併%{count}篇貼文？"
       revisions:
         controls:
           first: "第一版"
@@ -2807,6 +2804,7 @@ zh_TW:
       new_count:
         other: "%{count} 近期"
       more: "更多..."
+      all_categories: "所有分類"
       sections:
         messages:
           header_link_text: "訊息"

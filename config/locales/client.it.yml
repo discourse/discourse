@@ -2356,7 +2356,6 @@ it:
         deleted_user: "(utente cancellato)"
         post_number_with_topic_title: "messaggio #%{post_number} - %{title}"
         new_post_in_topic: "nuovo messaggio in %{title}"
-        suspicious_user: "utente sospetto %{username}"
         default_item: "elemento da rivedere #%{reviewable_id}"
     topics:
       new_messages_marker: "ultima visita"
@@ -2999,10 +2998,6 @@ it:
         confirm:
           one: "Vuoi davvero eliminare il messaggio?"
           other: "Vuoi davvero eliminare questi %{count} messaggi?"
-      merge:
-        confirm:
-          one: "Sicuro di voler unire questi messaggi?"
-          other: "Sicuro di voler unire questi %{count} messaggi?"
       revisions:
         controls:
           first: "Prima revisione"
@@ -3759,6 +3754,7 @@ it:
         other: "%{count} nuovi"
       toggle_section: "inverti sezione"
       more: "Altro..."
+      all_categories: "Tutte le categorie"
       sections:
         messages:
           header_link_text: "Messaggi"

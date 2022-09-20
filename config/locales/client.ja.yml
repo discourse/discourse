@@ -2729,9 +2729,6 @@ ja:
       delete:
         confirm:
           other: "%{count} 件の投稿を削除してもよろしいですか？"
-      merge:
-        confirm:
-          other: "これらの %{count} 件の投稿をマージしてよろしいですか？"
       revisions:
         controls:
           first: "最初のリビジョン"
@@ -3398,6 +3395,7 @@ ja:
       new_count:
         other: "新規 %{count}"
       more: "もっと..."
+      all_categories: "すべてのカテゴリ"
       sections:
         messages:
           header_link_text: "メッセージ"

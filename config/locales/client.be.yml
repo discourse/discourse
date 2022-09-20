@@ -1340,6 +1340,7 @@ be:
         leader: "лідэр"
     sidebar:
       more: "Яшчэ ..."
+      all_categories: "Усе катэгорыі"
       sections:
         messages:
           header_link_text: "Паведамленні"

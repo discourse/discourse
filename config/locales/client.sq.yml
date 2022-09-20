@@ -1939,6 +1939,7 @@ sq:
         one: "%{count} e re"
         other: "%{count} të reja"
       more: "Më shuMë..."
+      all_categories: "Të gjitha kategoritë"
       sections:
         messages:
           header_link_text: "Mesazhet"

@@ -2711,12 +2711,6 @@ sl:
           two: "Ali ste prepričani da hočete izbrisati ta %{count} prispevka?"
           few: "Ali ste prepričani da hočete izbrisati te %{count} prispevke?"
           other: "Ali ste prepričani da hočete izbrisati teh %{count} prispevkov?"
-      merge:
-        confirm:
-          one: "Ali ste prepričani da hočete združiti ta %{count} prispevek?"
-          two: "Ali ste prepričani da hočete združiti ta %{count} prispevka?"
-          few: "Ali ste prepričani da hočete združiti te %{count} prispevke?"
-          other: "Ali ste prepričani da hočete združiti teh %{count} prispevkov?"
       revisions:
         controls:
           first: "Prva verzija"
@@ -3389,6 +3383,7 @@ sl:
         few: "%{count} nove"
         other: "%{count} novih"
       more: "Več..."
+      all_categories: "Vse kategorije"
       sections:
         messages:
           header_link_text: "Sporočila"

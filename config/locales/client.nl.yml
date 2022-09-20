@@ -2798,10 +2798,6 @@ nl:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
           other: "Weet u zeker dat u die %{count} berichten wilt verwijderen?"
-      merge:
-        confirm:
-          one: "Weet u zeker dat u die berichten wilt samenvoegen?"
-          other: "Weet u zeker dat u die %{count} berichten wilt samenvoegen?"
       revisions:
         controls:
           first: "Eerste revisie"
@@ -3494,6 +3490,7 @@ nl:
         one: "%{count} nieuw"
         other: "%{count} nieuw"
       more: "Meer..."
+      all_categories: "Alle categorieën"
       sections:
         messages:
           header_link_text: "Berichten"

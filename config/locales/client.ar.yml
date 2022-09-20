@@ -3427,14 +3427,6 @@ ar:
           few: "هل تريد بالتأكيد حذف %{count} منشورات؟"
           many: "هل تريد بالتأكيد حذف %{count} منشورًا؟"
           other: "هل تريد بالتأكيد حذف %{count} منشور؟"
-      merge:
-        confirm:
-          zero: "هل تريد بالتأكيد دمج %{count} منشور؟"
-          one: "هل تريد بالتأكيد دمج هذا المنشور؟"
-          two: "هل تريد بالتأكيد دمج هذين المنشورين (%{count})؟"
-          few: "هل تريد بالتأكيد دمج %{count} منشورات؟"
-          many: "هل تريد بالتأكيد دمج %{count} منشورًا؟"
-          other: "هل تريد بالتأكيد دمج %{count} منشور؟"
       revisions:
         controls:
           first: "أول مراجعة"
@@ -4287,6 +4279,7 @@ ar:
         many: "%{count} جديدًا"
         other: "%{count} جديدة"
       more: "المزيد..."
+      all_categories: "كل الفئات"
       sections:
         messages:
           header_link_text: "الرسائل"

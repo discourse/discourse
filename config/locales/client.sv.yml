@@ -2363,7 +2363,6 @@ sv:
         deleted_user: "(raderad användare)"
         post_number_with_topic_title: "inlägg nr %{post_number} - %{title}"
         new_post_in_topic: "nytt inlägg i %{title}"
-        suspicious_user: "misstänkt användare %{username}"
         default_item: "granskningsbart objekt nr %{reviewable_id}"
     topics:
       new_messages_marker: "senaste besök"
@@ -3012,7 +3011,7 @@ sv:
       merge:
         confirm:
           one: "Är du säker på att du vill slå ihop dessa inlägg?"
-          other: "Är du säker på att du vill sammanfoga de %{count} inläggen?"
+          other: "Är du säker på att du vill slå ihop dessa %{count} inlägg?"
       revisions:
         controls:
           first: "Första version"
@@ -3579,6 +3578,7 @@ sv:
       google: "Google -kalender"
       ics: "ICS"
     tagging:
+      all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
@@ -3770,6 +3770,8 @@ sv:
         other: "%{count} nya"
       toggle_section: "växla avsnitt"
       more: "Mer..."
+      all_categories: "Alla kategorier"
+      all_tags: "Alla taggar"
       sections:
         messages:
           header_link_text: "Meddelanden"

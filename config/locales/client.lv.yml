@@ -2331,11 +2331,6 @@ lv:
           inappropriate: "Jūs ziņojāt par šo kā nepiedienīgu"
           notify_moderators: "Jūs ziņojāt par šo moderācijai"
           notify_user: "Jūs nosūtījāt ziņu šim lietotājam"
-      merge:
-        confirm:
-          zero: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
-          one: "Vai jūs esat drošs, ka vēlaties apvienot šos ierakstus?"
-          other: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
       revisions:
         controls:
           first: "Pirmā versija"
@@ -2814,6 +2809,7 @@ lv:
         one: "%{count} jauna"
         other: "%{count} jauna"
       more: "Vairāk..."
+      all_categories: "Visas sadaļas"
       sections:
         messages:
           header_link_text: "Ziņas"
