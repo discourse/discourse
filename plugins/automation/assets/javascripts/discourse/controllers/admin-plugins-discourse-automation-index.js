@@ -3,6 +3,7 @@ import I18n from "I18n";
 import bootbox from "bootbox";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
+import escape from "discourse-common/lib/escape";
 
 export default class AutomationIndex extends Controller {
   @action
@@ -22,7 +23,7 @@ export default class AutomationIndex extends Controller {
   destroyAutomation(automation) {
     bootbox.confirm(
       I18n.t("discourse_automation.destroy_automation.confirm", {
-        name: automation.name,
+        name: escape(automation.name),
       }),
       (result) => {
         if (result) {
