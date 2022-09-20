@@ -218,7 +218,7 @@ acceptance("EmojiPicker", function (needs) {
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert.strictEqual(
       document.activeElement,
-      emojis[11],
+      emojis[12],
       "ArrowDown from first emoji focuses on the first emoji in the second row"
     );
 

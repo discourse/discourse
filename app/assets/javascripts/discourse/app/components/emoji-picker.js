@@ -12,7 +12,6 @@ import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
-import discourseDebounce from "discourse-common/lib/debounce";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
 import { htmlSafe } from "@ember/template";
@@ -108,7 +107,7 @@ export default Component.extend({
         return;
       }
       const popperAnchor = this._getPopperAnchor();
-      this._setNumEmojiPerRow(this.elements.emojiNoRecents);
+      this._setNumEmojiPerRow();
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
@@ -258,7 +257,7 @@ export default Component.extend({
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     const recentEmojis = document.querySelectorAll(this.elements.recentEmojis);
     const searchInput = document.querySelector(this.elements.searchInput);
-    let emojis = document.querySelectorAll(this.elements.emojiResults);
+    const emojis = document.querySelectorAll(this.elements.allEmojis);
     const firstSection = document.querySelectorAll(
       this.elements.firstEmojiSection
     );
@@ -269,11 +268,6 @@ export default Component.extend({
       "hoveredEmoji",
       this._codeWithDiversity(event.target.title, this.selectedDiversity)
     );
-
-    // if no search results get all emojis
-    if (emojis.length === 0) {
-      emojis = document.querySelectorAll(this.elements.allEmojis);
-    }
 
     if (
       event.key === "ArrowDown" &&
@@ -299,7 +293,7 @@ export default Component.extend({
         return e.isEqualNode(event.target);
       });
 
-      const numEmojisInRow = this.get("emojiPerRow");
+      const emojiPerRow = this.get("emojiPerRow");
 
       if (event.key === "ArrowRight") {
         let nextEmoji = currentEmoji + 1;
@@ -307,8 +301,7 @@ export default Component.extend({
         if (nextEmoji < emojis.length) {
           emojis[nextEmoji].focus();
         } else if (nextEmoji >= emojis.length) {
-          nextEmoji = 0;
-          emojis[nextEmoji].focus();
+          emojis[0].focus();
         }
       }
 
@@ -320,33 +313,36 @@ export default Component.extend({
       }
 
       if (event.key === "ArrowDown") {
-        const emojiNextRow = currentEmoji + numEmojisInRow;
+        const emojiNextRow = currentEmoji + emojiPerRow;
 
         if (emojiNextRow >= emojis.length) {
           return;
         }
 
         // If recent emoji section doesn't wrap, ArrowDown focuses on first emoji section
-        // TODO: Improve logic here
         if (
           event.target.classList.contains("recent-emoji") &&
-          recentEmojis.length < 11
+          recentEmojis.length <= emojiPerRow
         ) {
-          firstSection[0].focus();
+          firstSection[currentEmoji].focus();
         } else {
           emojis[emojiNextRow].focus();
         }
       }
 
       if (event.key === "ArrowUp") {
-        const emojiPreviousRow = currentEmoji - numEmojisInRow;
-        const emojiInFirstRow = 0 + numEmojisInRow;
+        const emojiPreviousRow = currentEmoji - emojiPerRow;
+        const recentEmojiCount = recentEmojis.length;
 
-        if (emojiPreviousRow >= 0) {
+        if (
+          recentEmojiCount &&
+          currentEmoji > recentEmojis.length &&
+          currentEmoji < recentEmojis.length * 2
+        ) {
+          emojis[currentEmoji - recentEmojis.length].focus();
+        } else if (emojiPreviousRow > recentEmojiCount) {
           emojis[emojiPreviousRow].focus();
-        }
-
-        if (currentEmoji < emojiInFirstRow) {
+        } else {
           searchInput.focus();
         }
       }
@@ -369,39 +365,17 @@ export default Component.extend({
   @action
   onFilterChange(event) {
     this._applyFilter(event.target.value);
-
-    discourseDebounce(
-      this,
-      () => {
-        if (event.target.value === "") {
-          this._setNumEmojiPerRow(this.elements.emojiNoRecents, false);
-        } else {
-          this._setNumEmojiPerRow(this.elements.emojiResults, true);
-        }
-      },
-      500
-    );
   },
 
-  _setNumEmojiPerRow(emojiSelector, isSearching = false) {
+  _setNumEmojiPerRow() {
     // See: https://stackoverflow.com/a/49888033
-    const emojis = document.querySelectorAll(emojiSelector);
-    if (!emojis || emojis.length === 0) {
-      return;
-    }
-
     const container = document.querySelector(
       ".emojis-container .section-group"
     );
-    const rowLength = Math.floor(container.clientWidth / emojis[0].clientWidth);
-    const totalEmojis = emojis.length;
-    const numElementsLastRow = totalEmojis % rowLength;
+    const singleEmojiWidth = container.querySelector("img.emoji")?.offsetWidth;
+    const rowLength = Math.floor(container.offsetWidth / singleEmojiWidth);
 
-    if (isSearching) {
-      return this.set("emojiPerRow", rowLength);
-    } else {
-      return this.set("emojiPerRow", rowLength - numElementsLastRow);
-    }
+    this.set("emojiPerRow", rowLength);
   },
 
   _focusedOn(item) {
@@ -440,7 +414,7 @@ export default Component.extend({
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
       lazy: true,
     });
-    return htmlSafe(`<span>${escaped}</span>`);
+    return htmlSafe(escaped);
   },
 
   _codeWithDiversity(code, selectedDiversity) {

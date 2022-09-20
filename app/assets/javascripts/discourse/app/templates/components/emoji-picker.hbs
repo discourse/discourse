@@ -55,7 +55,9 @@
               {{#if emojis.length}}
                 <div class="section-group">
                   {{#each emojis as |emoji|}}
-                    <img title={{emoji.code}} width="20" height="20" loading="lazy" class="emoji" src={{emoji.src}}>
+                    <span>
+                      <img title={{emoji.code}} width="20" height="20" loading="lazy" class="emoji" src={{emoji.src}}>
+                    </span>
                   {{/each}}
                 </div>
               {{/if}}
