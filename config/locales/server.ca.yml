@@ -446,8 +446,7 @@ ca:
               too_many: "Massa paraules per a aquesta acció"
       <<: *errors
   uncategorized_category_name: "Sense categoria"
-  vip_category_name: "Sala"
-  vip_category_description: "Una categoria exclusiva per a membres amb un nivell 3 o superior de confiança."
+  general_category_name: "General"
   meta_category_name: "Comentaris sobre el lloc web"
   meta_category_description: "Discussió sobre aquest lloc web, la seva organització, com funciona i com podem millorar-lo."
   staff_category_name: "Equip responsable"
@@ -468,29 +467,6 @@ ca:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Potser voleu tancar el tema amb l'eina d'administració :wrench: (dalt a la dreta i a baix), perquè les respostes no s'amunteguin sobre una comunicació.
-  lounge_welcome:
-    title: "Benvingut a la sala"
-    body: |2
-
-      Enhorabona! :confetti_ball:
-
-      Si podeu veure aquest tema, heu estat promogut recentment a **habitual** (nivell 3 de confiança).
-
-      Ara podeu&hellip;
-
-      * editar el títol de qualsevol tema
-      * canviar la categoria de qualsevol tema
-      * tenir tots els vostres enllaços seguits (s'esborra el [nofollow automàtic](https://ca.wikipedia.org/wiki/Nofollow))
-      * accedir a la categoria de sala privada visible solament per a usuaris de nivell de confiança 3 i superior
-      * amagar correu brossa amb una única bandera
-
-      Vet aquí la [llista actual de companys habituals](%{base_path}/badges/3/regular). Assegureu-vos d'enviar-hi una salutació.
-
-      Gràcies per formar part d'una part important d'aquesta comunitat!
-
-      (Per a més informació sobre nivells de confiança [vegeu aquest tema][trust]. Tingueu en compte que sols els membres que continuïn complint els requisits continuaran sent habituals).
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LLEGIU-ME PRIMER DE TOT: Guia ràpida d'inici per a administradors"
   category:
     topic_prefix: "Quant a la categoria %{category} "
@@ -2957,7 +2933,6 @@ ca:
     register:
       button: "Registre"
       title: "Registra un compte d'administració"
-      help: "registreu un compte nou per a començar"
       no_emails: "Malauradament, no s'han definit correus electrònics d'administrador durant la configuració, de manera que pot ser difícil completar la configuració. Afegiu un correu electrònic de desenvolupador en el fitxer de configuració o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>creeu un compte d'administrador des de la consola</a>."
     confirm_email:
       title: "Confirmeu el vostre correu"

@@ -153,4 +153,13 @@ module("Unit | Utility | url", function () {
       )
     );
   });
+
+  test("anchor handling", async function (assert) {
+    sinon.stub(DiscourseURL, "jumpToElement");
+    DiscourseURL.routeTo("#heading1");
+    assert.ok(
+      DiscourseURL.jumpToElement.calledWith("heading1"),
+      "in-page anchors call jumpToElement"
+    );
+  });
 });

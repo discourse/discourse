@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
-import { longDate, relativeAge } from "discourse/lib/formatter";
 
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
@@ -20,14 +19,6 @@ export default class UserMenuProfileTabContent extends Component {
 
   get isInDoNotDisturb() {
     return !!this.#doNotDisturbUntilDate;
-  }
-
-  get doNotDisturbDateTitle() {
-    return longDate(this.#doNotDisturbUntilDate);
-  }
-
-  get doNotDisturbDateContent() {
-    return relativeAge(this.#doNotDisturbUntilDate);
   }
 
   get doNotDisturbDateTime() {
@@ -57,12 +48,14 @@ export default class UserMenuProfileTabContent extends Component {
       });
     } else {
       this.saving = false;
+      this.args.closeUserMenu();
       showModal("do-not-disturb");
     }
   }
 
   @action
   setUserStatusClick() {
+    this.args.closeUserMenu();
     showModal("user-status", {
       title: "user_status.set_custom_status",
       modalClass: "user-status",

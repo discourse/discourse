@@ -233,7 +233,7 @@ acceptance("User Preferences", function (needs) {
     await click(".new-security-key");
     assert.ok(exists("#security-key-name"), "shows security key name input");
 
-    fillIn("#security-key-name", "");
+    await fillIn("#security-key-name", "");
 
     // The following tests can only run when Webauthn is enabled. This is not
     // always the case, for example on a browser running on a non-standard port

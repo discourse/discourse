@@ -42,6 +42,7 @@ bs_BA:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} prije"
+      wrap_on: "na %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -211,6 +212,8 @@ bs_BA:
     not_implemented: "Nažalost ta funkcionalnost nije još implementirana!"
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "OK"
+    cancel_value: "Odustani"
     submit: "Potvrdi"
     generic_error: "Uff, došlo je do greške."
     generic_error_with_reason: "Došlo je do greške: %{error}"
@@ -2938,7 +2941,6 @@ bs_BA:
     download_calendar:
       download: "Skinuti"
     tagging:
-      all_tags: "Sve oznake"
       other_tags: "Druge oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
@@ -3094,6 +3096,14 @@ bs_BA:
         community:
           header_link_text: "Zajednica"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Bedž"
+            faq:
+              content: "Česta pitanja"
             tracked:
               content: "Praćeno"
             groups:

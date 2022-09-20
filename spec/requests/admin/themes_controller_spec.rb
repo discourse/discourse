@@ -16,8 +16,9 @@ RSpec.describe Admin::ThemesController do
       post "/admin/themes/generate_key_pair.json"
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["private_key"]).to include("RSA PRIVATE KEY")
+      expect(json["private_key"]).to eq(nil)
       expect(json["public_key"]).to include("ssh-rsa ")
+      expect(Discourse.redis.get("ssh_key_#{json["public_key"]}")).not_to eq(nil)
     end
   end
 
@@ -135,6 +136,26 @@ RSpec.describe Admin::ThemesController do
       post "/admin/themes/import.json", params: {
         remote: '    https://github.com/discourse/discourse-brand-header.git       '
       }
+
+      expect(response.status).to eq(201)
+    end
+
+    it 'can lookup a private key by public key' do
+      Discourse.redis.setex('ssh_key_abcdef', 1.hour, 'rsa private key')
+
+      ThemeStore::GitImporter.any_instance.stubs(:import!)
+      RemoteTheme.stubs(:extract_theme_info).returns(
+        'name' => 'discourse-brand-header',
+        'component' => true
+      )
+      RemoteTheme.any_instance.stubs(:update_from_remote)
+
+      post '/admin/themes/import.json', params: {
+        remote: '    https://github.com/discourse/discourse-brand-header.git       ',
+        public_key: 'abcdef',
+      }
+
+      expect(RemoteTheme.last.private_key).to eq('rsa private key')
 
       expect(response.status).to eq(201)
     end

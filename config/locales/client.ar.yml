@@ -299,6 +299,8 @@ ar:
     not_implemented: "عذرًا، لم يتم تنفيذ هذه الميزة بعد."
     no_value: "لا"
     yes_value: "نعم"
+    ok_value: "حسنًا"
+    cancel_value: "إلغاء"
     submit: "إرسال"
     generic_error: "عذرًا، حدث خطأ."
     generic_error_with_reason: "حدث خطأ: %{error}"
@@ -4065,7 +4067,6 @@ ar:
       google: "تقويم جوجل"
       ics: "ICS"
     tagging:
-      all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"
       selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
@@ -4305,9 +4306,17 @@ ar:
           header_link_text: "المجتمع"
           header_action_title: "إنشاء موضوع جديد"
           links:
+            about:
+              content: "نبذة"
+            admin:
+              content: "مسؤول"
+            badges:
+              content: "الشارات"
             everything:
               content: "كل شىء"
               title: "جميع الموضوعات"
+            faq:
+              content: "الأسئلة الشائعة"
             tracked:
               content: "المتتبَّعة"
               title: "جميع المواضيع المُتَعَقبة"
@@ -5542,7 +5551,6 @@ ar:
           few: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشورات. (delete_all_posts_max)"
           many: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشورًا. (delete_all_posts_max)"
           other: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشور. (delete_all_posts_max)"
-        delete_confirm: "يُفضَّل عامةً إخفاء هوية المستخدمين بدلًا من حذفهم لتجنُّب إزالة المحتوى من المناقشات الحالية.<br><br>هل تريد بالتأكيد حذف هذا المستخدم؟ هذا الإجراء دائم!"
         delete_and_block: "حذف هذا البريد الإلكتروني وعنوان IP و<b>حظرهما</b>"
         delete_dont_block: "الحذف فقط"
         deleting_user: "جارٍ حذف المستخدم..."
@@ -5677,7 +5685,6 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         locale: "اللغة:"
-        fallback_locale_warning: "أنت تجري تعديلًا على لغة بناءً على %{fallback}. لن يتمكن المستخدمون الذين اختاروا%{fallback} كلغة لواجهتهم من رؤية تغييراتك."
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
       settings:
         show_overriden: "إظهار النصوص المخصَّصة فقط"

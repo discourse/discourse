@@ -50,11 +50,7 @@ export default Component.extend({
             `.indicator-topic-${data.topic_id}`
           ).classList;
 
-          if (data.show_indicator) {
-            nodeClassList.remove("read");
-          } else {
-            nodeClassList.add("read");
-          }
+          nodeClassList.toggle("read", !data.show_indicator);
         });
       }
     });

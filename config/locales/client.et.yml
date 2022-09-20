@@ -179,6 +179,8 @@ et:
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
     yes_value: "Jah"
+    ok_value: "OK"
+    cancel_value: "Tühista"
     submit: "Saada"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
@@ -2451,7 +2453,6 @@ et:
     download_calendar:
       download: "Lae alla"
     tagging:
-      all_tags: "Kõik sildid"
       other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
@@ -2554,6 +2555,14 @@ et:
         community:
           header_link_text: "Kogukond"
           links:
+            about:
+              content: "Teave"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Märgised"
+            faq:
+              content: "KKK"
             tracked:
               content: "Jälgitud"
             groups:

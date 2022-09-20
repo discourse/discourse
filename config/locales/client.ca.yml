@@ -200,6 +200,8 @@ ca:
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
     no_value: "No"
     yes_value: "Sí"
+    ok_value: "D'acord"
+    cancel_value: "Cancel·la"
     submit: "Envia"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut un error: %{error}"
@@ -2789,7 +2791,6 @@ ca:
     download_calendar:
       download: "Descarrega"
     tagging:
-      all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
@@ -2912,6 +2913,14 @@ ca:
         community:
           header_link_text: "Comunitat"
           links:
+            about:
+              content: "Quant a"
+            admin:
+              content: "Administració"
+            badges:
+              content: "Insígnies"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguit"
             groups:
@@ -3889,7 +3898,6 @@ ca:
         cant_delete_all_too_many_posts:
           one: "No es poden suprimir totes les publicacions perquè l'usuari té més d'%{count} publicació. (delete_all_posts_max)"
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
-        delete_confirm: "En general, és preferible fer anònims els usuaris en lloc de suprimir-los, per a evitar que s'esborrin els continguts de les discussions existents. <br><br> Esteu SEGUR que voleu suprimir aquest usuari? Això és permanent!"
         delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
         delete_dont_block: "Només suprimeix"
         deleting_user: "Suprimint l'usuari..."

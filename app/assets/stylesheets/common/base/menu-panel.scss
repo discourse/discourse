@@ -150,6 +150,7 @@
     padding: 0.75em;
     justify-content: space-between;
     box-sizing: border-box;
+    min-width: 0; // makes sure menu tabs don't go off screen
 
     .double-user,
     .multi-user {

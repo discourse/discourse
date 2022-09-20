@@ -12,7 +12,7 @@ module EmberCli
         admin.js
         wizard.js
         ember_jquery.js
-        pretty-text-bundle.js
+        markdown-it-bundle.js
         start-discourse.js
         vendor.js
       )
@@ -48,5 +48,12 @@ module EmberCli
 
   def self.is_ember_cli_asset?(name)
     assets.include?(name) || name.start_with?("chunk.")
+  end
+
+  def self.ember_version
+    @version ||= begin
+      ember_source_package_raw = File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
+      JSON.parse(ember_source_package_raw)["version"]
+    end
   end
 end

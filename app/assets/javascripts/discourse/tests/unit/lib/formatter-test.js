@@ -5,6 +5,7 @@ import {
   longDate,
   number,
   relativeAge,
+  until,
   updateRelativeAge,
 } from "discourse/lib/formatter";
 import {
@@ -470,5 +471,38 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
       "over 2 years",
       "822 days shows as over 2 years"
     );
+  });
+});
+
+discourseModule("Unit | Utility | formatter | until", function (hooks) {
+  hooks.afterEach(function () {
+    if (this.clock) {
+      this.clock.restore();
+    }
+  });
+
+  test("shows time if until moment is today", function (assert) {
+    const timezone = "UTC";
+    this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
+    const result = until("2100-01-01 13:00:00.000Z", timezone, "en");
+    assert.equal(result, "Until: 1:00 PM");
+  });
+
+  test("shows date if until moment is tomorrow", function (assert) {
+    const timezone = "UTC";
+    this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
+    const result = until("2100-01-02 12:00:00.000Z", timezone, "en");
+    assert.equal(result, "Until: Jan 2");
+  });
+
+  test("shows until moment in user's timezone", function (assert) {
+    const timezone = "Asia/Tbilisi";
+    const untilUTC = "13:00";
+    const untilTbilisi = "5:00 PM";
+
+    this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
+    const result = until(`2100-01-01 ${untilUTC}:00.000Z`, timezone, "en");
+
+    assert.equal(result, `Until: ${untilTbilisi}`);
   });
 });

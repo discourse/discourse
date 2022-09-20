@@ -442,8 +442,7 @@ vi:
               in_the_past: "phải ở trong tương lai."
       <<: *errors
   uncategorized_category_name: "Chưa phân loại"
-  vip_category_name: "Phòng khách"
-  vip_category_description: "Một chuyên mục chỉ dành cho thành viên có mức tin tưởng 3 hoặc cao hơn"
+  general_category_name: "Chung"
   meta_category_name: "Phản hồi"
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
@@ -464,29 +463,6 @@ vi:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Bạn có thể muốn đóng chủ đề này thông qua quản trị viên :wrench: (ở phía trên bên phải và phía dưới), để các câu trả lời không bị dồn vào một thông báo.
-  lounge_welcome:
-    title: "Chào mừng bạn đến với Phòng khách"
-    body: |2
-
-      Xin chúc mừng! :confetti_ball:
-
-      Nếu bạn có thể thấy chủ đề này, gần đây bạn đã được thăng cấp lên ** thông thường ** (mức độ tin cậy 3).
-
-      Bây giờ bạn có thể &hellip;
-
-      * Chỉnh sửa tiêu đề của bất kỳ chủ đề nào
-      * Thay đổi danh mục của bất kỳ chủ đề nào
-      * Đã xóa tất cả các liên kết của bạn ([tự động nofollow] (https://en.wikipedia.org/wiki/Nofollow)) )
-      * Truy cập danh mục Phòng chờ riêng tư chỉ hiển thị cho người dùng ở cấp độ tin cậy 3 trở lên
-      * Ẩn thư rác bằng một lá cờ duy nhất
-
-      Đây là [danh sách hiện tại của các cơ quan chính quy] (%{base_path}/ huy hiệu / 3 / thông thường). Hãy chắc chắn để nói lời chào.
-
-      Cảm ơn bạn đã trở thành một phần quan trọng của cộng đồng này!
-
-      (Để biết thêm thông tin về mức độ tin cậy, [xem chủ đề này][trust]Xin lưu ý rằng chỉ những thành viên tiếp tục đáp ứng các yêu cầu theo thời gian mới được giữ nguyên.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "ĐỌC TÔI ĐẦU TIÊN: Hướng dẫn Bắt đầu Nhanh dành cho Quản trị viên"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"

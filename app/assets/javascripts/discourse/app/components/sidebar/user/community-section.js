@@ -21,22 +21,6 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
   constructor() {
     super(...arguments);
 
-    this.defaultMoreSectionLinks = [
-      GroupsSectionLink,
-      UsersSectionLink,
-      BadgesSectionLink,
-    ];
-
-    this.defaultMoreSecondarySectionLinks = [AboutSectionLink, FAQSectionLink];
-
-    this.defaultMainSectionLinks = [
-      EverythingSectionLink,
-      TrackedSectionLink,
-      MyPostsSectionLink,
-    ];
-
-    this.defaultAdminMainSectionLinks = [AdminSectionLink];
-
     this.headerActionsIcon = "plus";
 
     this.headerActions = [
@@ -45,6 +29,22 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
         title: I18n.t("sidebar.sections.community.header_action_title"),
       },
     ];
+  }
+
+  get defaultMainSectionLinks() {
+    return [EverythingSectionLink, TrackedSectionLink, MyPostsSectionLink];
+  }
+
+  get defaultAdminMainSectionLinks() {
+    return [AdminSectionLink];
+  }
+
+  get defaultMoreSectionLinks() {
+    return [GroupsSectionLink, UsersSectionLink, BadgesSectionLink];
+  }
+
+  get defaultMoreSecondarySectionLinks() {
+    return [AboutSectionLink, FAQSectionLink];
   }
 
   @action

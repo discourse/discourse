@@ -107,6 +107,10 @@ if dev_mode
       restart = true
     end
 
+    Signal.trap("TERM") do
+      Process.kill('TERM', pid)
+    end
+
     while !done
       sleep 1
       done = Process.waitpid(pid, Process::WNOHANG)

@@ -40,4 +40,17 @@ Additional SVG icons
     <path class="svg-arrow" d="M0 6s1.796-.013 4.67-3.615C5.851.9 6.93.006 8 0c1.07-.006 2.148.887 3.343 2.385C14.233 6.005 16 6 16 6H0z"/>
     <path class="svg-content" d="m0 7s2 0 5-4c1-1 2-2 3-2 1 0 2 1 3 2 3 4 5 4 5 4h-16z"/>
   </symbol>
+  <symbol id='discourse-other-tab' viewBox="0 0 114 113">
+    <g clip-path="url(#clip0_2925_742)">
+      <rect x="8" y="8" width="44" height="44" rx="5"/>
+      <rect x="8" y="61" width="44" height="44" rx="5"/>
+      <rect x="62" y="61" width="44" height="44" rx="5"/>
+      <rect width="44" height="43.9967" rx="5" transform="matrix(0.705436 -0.708774 0.705436 0.708774 53 30)"/>
+    </g>
+    <defs>
+      <clipPath id="clip0_2925_742">
+        <rect width="114" height="113"/>
+      </clipPath>
+    </defs>
+  </symbol>
 </svg>

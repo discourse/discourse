@@ -335,6 +335,9 @@ body.wizard {
         display: none;
       }
     }
+    .wizard-container__buttons {
+      flex-direction: row-reverse;
+    }
   }
 
   &__step.branding .wizard-container__description {

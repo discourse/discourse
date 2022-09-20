@@ -196,6 +196,8 @@ vi:
     not_implemented: "Tính năng này chưa được hoàn thiện, xin lỗi!"
     no_value: "Không"
     yes_value: "Có"
+    ok_value: "OK"
+    cancel_value: "Huỷ"
     submit: "Gửi đi"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
     generic_error_with_reason: "Đã xảy ra lỗi: %{error}"
@@ -1574,7 +1576,6 @@ vi:
       set_custom_status: "Đặt trạng thái tùy chỉnh"
       what_are_you_doing: "Bạn đang làm gì đấy?"
       remove_status: "Xóa trạng thái"
-      until: "Cho đến khi:"
     loading: "Đang tải..."
     errors:
       prev_page: "trong khi cố gắng để tải"
@@ -3385,7 +3386,6 @@ vi:
       google: "Google Lịch"
       ics: "ICS"
     tagging:
-      all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
@@ -3589,9 +3589,17 @@ vi:
           header_link_text: "Cộng đồng"
           header_action_title: "tạo một chủ đề mới"
           links:
+            about:
+              content: "Giới thiệu"
+            admin:
+              content: "Quản trị"
+            badges:
+              content: "Huy hiệu"
             everything:
               content: "Mọi thứ"
               title: "Tất cả các chủ đề"
+            faq:
+              content: "Câu hỏi thường gặp"
             tracked:
               content: "Theo dõi"
               title: "Tất cả các chủ đề được theo dõi"
@@ -3606,6 +3614,7 @@ vi:
               title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
+    until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -4747,7 +4756,6 @@ vi:
           other: "Không thể xóa tất cả các bài viết, một số bài viết cũ hơn %{count} ngày. (Thiết lập delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           other: "Không thể xóa tất cả các bài viết do tài khoản có hơn %{count} bài viết. (delete_all_posts_max)"
-        delete_confirm: "Nói chung, bạn nên ẩn danh người dùng hơn là xóa họ, để tránh xóa nội dung khỏi các cuộc thảo luận hiện có.<br><br>Bạn có CHẮC CHẮN muốn xóa người dùng này không? Điều này là vĩnh viễn!"
         delete_and_block: "Xóa và <b>khóa</b> email này và địa chỉ IP"
         delete_dont_block: "Chỉ xóa"
         deleting_user: "Đang xóa người dùng..."
@@ -4870,7 +4878,6 @@ vi:
         recommended: "Bạn nên tùy biến các nội dung sau đây cho phù hợp với nhu cầu:"
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         locale: "Ngôn ngữ:"
-        fallback_locale_warning: "Bạn đang chỉnh sửa một ngôn ngữ dựa trên %{fallback}. Người dùng chọn %{fallback} làm ngôn ngữ giao diện của họ sẽ không thấy các thay đổi của bạn."
         more_than_50_results: "Có hơn 50 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn."
       settings:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"

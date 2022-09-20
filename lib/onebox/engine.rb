@@ -9,7 +9,7 @@ module Onebox
     def self.engines
       constants.select do |constant|
         constant.to_s =~ /Onebox$/
-      end.map(&method(:const_get))
+      end.sort.map(&method(:const_get))
     end
 
     def self.all_iframe_origins

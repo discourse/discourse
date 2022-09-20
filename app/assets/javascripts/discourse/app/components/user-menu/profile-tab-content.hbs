@@ -77,14 +77,7 @@
       <span class="item-label">
         {{#if this.isInDoNotDisturb}}
           <span>{{i18n "do_not_disturb.label"}}</span>
-          <span
-            title={{this.doNotDisturbDateTitle}}
-            data-time={{this.doNotDisturbDateTime}}
-            data-format="tiny"
-            class="relative-date"
-          >
-            {{this.doNotDisturbDateContent}}
-          </span>
+          {{format-age this.doNotDisturbDateTime}}
         {{else}}
           {{i18n "do_not_disturb.label"}}
         {{/if}}

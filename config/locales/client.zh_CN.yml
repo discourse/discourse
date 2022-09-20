@@ -197,6 +197,8 @@ zh_CN:
     not_implemented: "抱歉，该功能尚未实现！"
     no_value: "否"
     yes_value: "是"
+    ok_value: "确定"
+    cancel_value: "取消"
     submit: "提交"
     generic_error: "抱歉，出错了。"
     generic_error_with_reason: "出错了：%{error}"
@@ -1581,7 +1583,6 @@ zh_CN:
       set_custom_status: "设置自定义状态"
       what_are_you_doing: "你在做什么？"
       remove_status: "移除状态"
-      until: "直到："
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -3623,9 +3624,17 @@ zh_CN:
           header_link_text: "社区"
           header_action_title: "创建新话题"
           links:
+            about:
+              content: "关于"
+            admin:
+              content: "管理员"
+            badges:
+              content: "徽章"
             everything:
               content: "一切"
               title: "所有话题"
+            faq:
+              content: "常见问题解答"
             tracked:
               content: "已跟踪"
               title: "所有跟踪的话题"
@@ -3644,6 +3653,7 @@ zh_CN:
       title: "创建你的欢迎话题"
       description: '你的欢迎话题是新来的人首先会读到的东西。可以把它看作是你的一段 "电梯推销 "或 "使命宣言"。'
       button_title: "开始编辑"
+    until: "直到："
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4835,7 +4845,8 @@ zh_CN:
           other: "无法删除所有帖子。某些帖子的存在时间超过 %{count} 天。（delete_user_max_post_age 设置。）"
         cant_delete_all_too_many_posts:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
-        delete_confirm: "一般而言，最好对用户进行匿名化而不是删除它们，以避免移除现有讨论中的内容。<br><br>确定要删除此用户吗？此操作无法撤消！"
+        delete_confirm_title: "你确定要删除这个用户吗？这是永久性的!"
+        delete_confirm: "一般来说，最好是对用户进行匿名处理，而不是删除他们，以避免删除现有讨论的内容。"
         delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
         delete_dont_block: "仅删除"
         deleting_user: "正在删除用户…"
@@ -4965,7 +4976,6 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合您的需求："
         show_overriden: "只显示被替换"
         locale: "语言："
-        fallback_locale_warning: "您正在编辑基于%{fallback}的语言。选择%{fallback}作为界面语言的用户不会看到您的变更。"
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
       settings:
         show_overriden: "只显示被替换"

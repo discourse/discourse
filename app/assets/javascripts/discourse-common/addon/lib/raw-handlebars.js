@@ -73,9 +73,10 @@ if (Handlebars.Compiler) {
     RawHandlebars.JavaScriptCompiler;
   RawHandlebars.JavaScriptCompiler.prototype.namespace = "RawHandlebars";
 
-  RawHandlebars.precompile = function (value, asObject) {
+  RawHandlebars.precompile = function (value, asObject, { plugins = [] } = {}) {
     let ast = Handlebars.parse(value);
     replaceGet(ast);
+    plugins.forEach((plugin) => plugin(ast));
 
     let options = {
       knownHelpers: {
@@ -96,9 +97,10 @@ if (Handlebars.Compiler) {
     );
   };
 
-  RawHandlebars.compile = function (string) {
+  RawHandlebars.compile = function (string, { plugins = [] } = {}) {
     let ast = Handlebars.parse(string);
     replaceGet(ast);
+    plugins.forEach((plugin) => plugin(ast));
 
     // this forces us to rewrite helpers
     let options = { data: true, stringParams: true };

@@ -545,8 +545,7 @@ ja:
               invalid_url: "置換 URL は無効です"
       <<: *errors
   uncategorized_category_name: "未分類"
-  vip_category_name: "ラウンジ"
-  vip_category_description: "信頼レベル 3 以上のメンバーのみが参加できるカテゴリです。"
+  general_category_name: "一般"
   meta_category_name: "サイトに関する意見"
   meta_category_description: "このサイト、組織、仕組み、および改善に関するディスカッションです。"
   staff_category_name: "スタッフ"
@@ -567,29 +566,6 @@ ja:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       お知らせに返信が溜まらないように、管理からこのトピックをクローズすることができます :wrench: (右上と下)。
-  lounge_welcome:
-    title: "ラウンジへようこそ"
-    body: |2
-
-      おめでとうございます！ :confetti_ball:
-
-      このトピックを閲覧できるのであれば、最近**レギュラー** (信頼レベル 3) に昇格したということです。
-
-      次のことができるようになりました &hellip;
-
-      * トピックのタイトルの編集
-      * トピックのカテゴリの変更
-      * すべてのリンクのフォロー ([自動 nofollow](https://en.wikipedia.org/wiki/Nofollow) が削除されました)
-      * 信頼レベル 3 以上のユーザーのみが閲覧できる非公開のラウンジカテゴリへのアクセス
-      * 1 回の通報による迷惑の非表示
-
-      [現在のレギュラーユーザーのリスト](%{base_path}/badges/3/regular)をご覧ください。ご挨拶しましょう。
-
-      このコミュニティの大切な一員としての活動に感謝いたします！
-
-      (信頼レベルについて詳しくは、[こちらのトピック][trust] をご覧ください。要件を継続して満たすメンバーのみがレギュラーレベルを維持することができます。)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "最初にお読みください: 管理者クイックスタートガイド"
   category:
     topic_prefix: "%{category} カテゴリについて"
@@ -4062,7 +4038,6 @@ ja:
     register:
       button: "登録"
       title: "管理者アカウントの登録"
-      help: "まず、新しいアカウントを登録してください"
       no_emails: "残念ながら、セットアップ中に管理者メールが定義されなかったため、構成を完了するのが困難です。構成ファイルに開発者のメールアドレスを追加するか、<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>コンソールから管理者アカウントを作成</a>してください。"
     confirm_email:
       title: "メールの確認"

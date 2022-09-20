@@ -88,5 +88,7 @@ pt:
         empty_state:
           title: "Estado vazio"
         rich_tooltip:
+          title: "Dica de ferramenta avançada"
           description: "Descrição"
           header: "Cabeçalho"
+          hover_to_see: "Passe o rato por cima para ver uma dica de ferramenta"

@@ -203,6 +203,8 @@ pt:
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
     yes_value: "Sim"
+    ok_value: "CONFIRMAR"
+    cancel_value: "Cancelar"
     submit: "Submeter"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
@@ -3282,7 +3284,6 @@ pt:
       download: "Transferir"
       add_to_calendar: "Adicionar ao calendário"
     tagging:
-      all_tags: "Todas as Etiquetas"
       other_tags: "Outras Tags"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
@@ -3444,6 +3445,14 @@ pt:
         community:
           header_link_text: "Comunidade"
           links:
+            about:
+              content: "Sobre"
+            admin:
+              content: "Administrador"
+            badges:
+              content: "Crachás"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Seguido"
             groups:

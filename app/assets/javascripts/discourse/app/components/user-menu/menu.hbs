@@ -6,28 +6,28 @@
         class="quick-access-panel"
         tabindex="-1"
         aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
-        {{component this.currentPanelComponent}}
+        {{component this.currentPanelComponent closeUserMenu=@closeUserMenu filterByTypes=this.currentNotificationTypes}}
       </div>
       <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
         <div class="top-tabs tabs-list">
           {{#each this.topTabs as |tab|}}
-            <UserMenu::TabButton
+            <UserMenu::MenuTab
               @tab={{tab}}
               @currentTabId={{this.currentTabId}}
-              @changeTabFunction={{fn this.changeTab tab}}
+              @onTabClick={{fn this.handleTabClick tab}}
             >
               {{#if tab.count}}
                 <span class="badge-notification">{{tab.count}}</span>
               {{/if}}
-            </UserMenu::TabButton>
+            </UserMenu::MenuTab>
           {{/each}}
         </div>
         <div class="bottom-tabs tabs-list">
           {{#each this.bottomTabs as |tab|}}
-            <UserMenu::TabButton
+            <UserMenu::MenuTab
               @tab={{tab}}
               @currentTabId={{this.currentTabId}}
-              @changeTabFunction={{fn this.changeTab tab}}
+              @onTabClick={{fn this.handleTabClick tab}}
             />
           {{/each}}
         </div>

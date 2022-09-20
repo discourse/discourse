@@ -54,7 +54,10 @@ export default class UserMenuItem extends Component {
   }
 
   @action
-  onClick() {
-    return this.#item.onClick();
+  onClick(event) {
+    return this.#item.onClick({
+      event,
+      closeUserMenu: this.args.closeUserMenu,
+    });
   }
 }
