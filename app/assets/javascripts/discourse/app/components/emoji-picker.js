@@ -340,7 +340,7 @@ export default Component.extend({
           currentEmoji < recentEmojis.length * 2
         ) {
           emojis[currentEmoji - recentEmojis.length].focus();
-        } else if (emojiPreviousRow > recentEmojiCount) {
+        } else if (emojiPreviousRow >= recentEmojiCount) {
           emojis[emojiPreviousRow].focus();
         } else {
           searchInput.focus();
