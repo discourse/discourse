@@ -43,12 +43,7 @@ export default Component.extend({
   initialFilter: "",
   elements: {
     searchInput: ".emoji-picker-search-container input",
-    emojiResults: ".emoji-picker-emoji-area .results .emoji",
-    allEmojis: ".emojis-container .emoji",
-    emojiNoRecents: ".emojis-container .emoji:not(.recent-emoji)",
-    recentEmojis: ".emojis-container .recent .emoji",
     picker: ".emoji-picker-emoji-area",
-    firstEmojiSection: `.emojis-container [data-section="smileys_&_emotion"] .emoji`,
   },
 
   init() {
@@ -107,7 +102,6 @@ export default Component.extend({
         return;
       }
       const popperAnchor = this._getPopperAnchor();
-      this._setNumEmojiPerRow();
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
@@ -255,13 +249,7 @@ export default Component.extend({
   @action
   keydown(event) {
     const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
-    const recentEmojis = document.querySelectorAll(this.elements.recentEmojis);
-    const searchInput = document.querySelector(this.elements.searchInput);
-    const searchResults = document.querySelectorAll(this.elements.emojiResults);
-    let emojis = document.querySelectorAll(this.elements.allEmojis);
-    const firstSection = document.querySelectorAll(
-      this.elements.firstEmojiSection
-    );
+    const emojis = document.querySelectorAll(".emoji-picker-emoji-area .emoji");
 
     let currentEmoji;
 
@@ -269,10 +257,6 @@ export default Component.extend({
       "hoveredEmoji",
       this._codeWithDiversity(event.target.title, this.selectedDiversity)
     );
-
-    if (searchResults.length > 0) {
-      emojis = searchResults;
-    }
 
     if (
       event.key === "ArrowDown" &&
@@ -298,8 +282,6 @@ export default Component.extend({
         return e.isEqualNode(event.target);
       });
 
-      const emojiPerRow = this.get("emojiPerRow");
-
       if (event.key === "ArrowRight") {
         let nextEmoji = currentEmoji + 1;
 
@@ -317,38 +299,33 @@ export default Component.extend({
         }
       }
 
+      const active = emojis[currentEmoji];
+
       if (event.key === "ArrowDown") {
-        const emojiNextRow = currentEmoji + emojiPerRow;
+        // source: https://stackoverflow.com/a/49090383/349424
+        // look for same element type with
+        // - higher offsetTop
+        // - same offsetLeft
+        const emojiBelow = [...emojis]
+          .filter((c) => c.offsetTop > active.offsetTop)
+          .find((c) => c.offsetLeft === active.offsetLeft);
 
-        if (emojiNextRow >= emojis.length) {
-          return;
-        }
-
-        // If recent emoji section doesn't wrap, ArrowDown focuses on first emoji section
-        if (
-          event.target.classList.contains("recent-emoji") &&
-          recentEmojis.length <= emojiPerRow
-        ) {
-          firstSection[currentEmoji].focus();
-        } else {
-          emojis[emojiNextRow].focus();
-        }
+        emojiBelow?.focus();
       }
 
       if (event.key === "ArrowUp") {
-        const emojiPreviousRow = currentEmoji - emojiPerRow;
-        const recentEmojiCount = recentEmojis.length;
+        // look for same element type with
+        // - lower offsetTop
+        // - same offsetLeft
+        const emojiAbove = [...emojis]
+          .reverse()
+          .filter((c) => c.offsetTop < active.offsetTop)
+          .find((c) => c.offsetLeft === active.offsetLeft);
 
-        if (
-          recentEmojiCount &&
-          currentEmoji > recentEmojis.length &&
-          currentEmoji < recentEmojis.length * 2
-        ) {
-          emojis[currentEmoji - recentEmojis.length].focus();
-        } else if (emojiPreviousRow >= recentEmojiCount) {
-          emojis[emojiPreviousRow].focus();
+        if (emojiAbove) {
+          emojiAbove.focus();
         } else {
-          searchInput.focus();
+          document.querySelector(this.elements.searchInput).focus();
         }
       }
 
@@ -370,17 +347,6 @@ export default Component.extend({
   @action
   onFilterChange(event) {
     this._applyFilter(event.target.value);
-  },
-
-  _setNumEmojiPerRow() {
-    // See: https://stackoverflow.com/a/49888033
-    const container = document.querySelector(
-      ".emojis-container .section-group"
-    );
-    const singleEmojiWidth = container.querySelector("img.emoji")?.offsetWidth;
-    const rowLength = Math.floor(container.offsetWidth / singleEmojiWidth);
-
-    this.set("emojiPerRow", rowLength);
   },
 
   _focusedOn(item) {

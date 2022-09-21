@@ -218,7 +218,7 @@ acceptance("EmojiPicker", function (needs) {
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert.strictEqual(
       document.activeElement,
-      emojis[12],
+      document.querySelector("img[title='blush']"),
       "ArrowDown from first emoji focuses on the first emoji in the second row"
     );
 
@@ -233,7 +233,7 @@ acceptance("EmojiPicker", function (needs) {
     assert.strictEqual(
       document.querySelector(".d-editor-input").value,
       ":grinning:",
-      "Pressing enter on the wink emoji inserts the markup in the composer input"
+      "Pressing enter inserts the emoji markup in the composer"
     );
   });
 
