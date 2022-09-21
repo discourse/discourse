@@ -30,8 +30,8 @@ export default class UserNavDropdownList extends Component {
   }
 
   @bind
-  collapseList(e) {
-    const isClickOnButton = e.composedPath().some((element) => {
+  collapseList(event) {
+    const isClickOnButton = event.composedPath().some((element) => {
       if (element?.classList?.contains(this.defaultButtonClass)) {
         return true;
       }

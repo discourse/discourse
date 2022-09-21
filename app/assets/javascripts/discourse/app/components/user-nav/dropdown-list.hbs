@@ -1,4 +1,4 @@
-<li class={{concat @class " user-nav-dropdown-list-item"}}>
+<li class={{concat-class @class "user-nav-dropdown-list-item"}}>
   <button type="button" class={{this.buttonClass}} {{on "click" this.toggleList}}>
     {{d-icon @icon}}
     <span>{{@text}}</span>
@@ -10,7 +10,7 @@
         {{did-insert this.registerClickListener}}
         {{will-destroy this.deregisterClickListener}} >
 
-      <ul class={{concat @submenuClass " user-nav-dropdown-submenu"}}>
+      <ul class={{concat-class @submenuClass "user-nav-dropdown-submenu"}}>
         {{yield to="submenu"}}
       </ul>
     </div>
