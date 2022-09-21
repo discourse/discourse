@@ -20,7 +20,7 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
-    timeout-minutes: 60
+    timeout-minutes: 20
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
