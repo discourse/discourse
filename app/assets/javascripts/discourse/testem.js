@@ -98,15 +98,6 @@ if (process.argv.includes("-t")) {
     "/assets/plugins/*_extra.js": {
       target,
     },
-    "/assets/discourse/tests/active-plugins.js": {
-      target,
-    },
-    "/assets/admin-plugins.js": {
-      target,
-    },
-    "/assets/discourse/tests/plugin-tests.js": {
-      target,
-    },
     "/plugins/": {
       target,
     },

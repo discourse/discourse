@@ -46,8 +46,6 @@ Rails.application.config.assets.precompile += %w{
   confirm-new-email/bootstrap.js
   onpopstate-handler.js
   embed-application.js
-  discourse/tests/active-plugins.js
-  admin-plugins.js
   scripts/discourse-test-listen-boot
   scripts/discourse-boot
 }

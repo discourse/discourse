@@ -85,7 +85,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
     # wait for server to accept connections
     require 'net/http'
-    warmup_path = "/assets/discourse/tests/active-plugins.js"
+    warmup_path = "/srv/status"
     uri = URI("http://localhost:#{unicorn_port}/#{warmup_path}")
     puts "Warming up Rails server"
 
