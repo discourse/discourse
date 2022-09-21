@@ -1,100 +1,111 @@
-<section class="user-primary-navigation">
-  <ul class="main-nav nav nav-pills user-nav">
-    {{#unless @user.profile_hidden}}
-      <li class="summary">
-        <LinkTo @route="user.summary">
-          {{d-icon "user"}}
-          {{i18n "user.summary.title"}}
-        </LinkTo>
-      </li>
+{{#if @shouldDisplay}}
+  <section class="user-primary-navigation" {{did-insert this.registerClickListener}} {{will-destroy this.unregisterClickListener}}>
+    <ul class="main-nav nav nav-pills user-nav">
+      {{#unless @user.profile_hidden}}
+        <li class="summary">
+          <LinkTo @route="user.summary">
+            {{d-icon "user"}}
+            {{i18n "user.summary.title"}}
+          </LinkTo>
+        </li>
 
-      <UserNav::DropdownList
-        @icon="stream"
-        @text={{i18n "user.activity_stream"}}
-        @isActive={{eq @currentParentRoute "userActivity"}}
-        @class="user-activity" >
+        <UserNav::DropdownList
+          @icon="stream"
+          @text={{i18n "user.activity_stream"}}
+          @isActive={{eq @currentParentRoute "userActivity"}}
+          @class="user-activity" >
 
-        <:submenu>
-          <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
-          <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
-          <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
+          <:submenu>
+            <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
+            <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
+            <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
 
-          {{#if @showRead}}
-            <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
-              {{i18n "user.read"}}
-            </DNavigationItem>
-          {{/if}}
+            {{#if @showRead}}
+              <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
+                {{i18n "user.read"}}
+              </DNavigationItem>
+            {{/if}}
 
-          {{#if @showDrafts}}
-            <DNavigationItem @route="userActivity.drafts">
-              {{this.draftLabel}}
-            </DNavigationItem>
-          {{/if}}
+            {{#if @showDrafts}}
+              <DNavigationItem @route="userActivity.drafts">
+                {{this.draftLabel}}
+              </DNavigationItem>
+            {{/if}}
 
-          {{#if (gt @user.pending_posts_count 0)}}
-            <DNavigationItem @route="userActivity.pending">
-              {{this.pendingLabel}}
-            </DNavigationItem>
-          {{/if}}
+            {{#if (gt @user.pending_posts_count 0)}}
+              <DNavigationItem @route="userActivity.pending">
+                {{this.pendingLabel}}
+              </DNavigationItem>
+            {{/if}}
 
-          <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
+            <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
 
-          {{#if @showBookmarks}}
-            <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
-          {{/if}}
+            {{#if @showBookmarks}}
+              <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
+            {{/if}}
 
-          <PluginOutlet @name="user-activity-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=@user}} />
-        </:submenu>
-      </UserNav::DropdownList>
-    {{/unless}}
+            <PluginOutlet @name="user-activity-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=@user}} />
+          </:submenu>
+        </UserNav::DropdownList>
+      {{/unless}}
 
-    {{#if @showNotificationsTab}}
-      <li class="user-notifications">
-        <LinkTo @route="userNotifications">
-          {{d-icon "comment" class="glyph"}}{{i18n "user.notifications"}}
-        </LinkTo>
-      </li>
-    {{/if}}
+      {{#if @showNotificationsTab}}
+        <li class="user-notifications">
+          <LinkTo @route="userNotifications">
+            {{d-icon "comment" class="glyph"}}{{i18n "user.notifications"}}
+          </LinkTo>
+        </li>
+      {{/if}}
 
-    {{#if @showPrivateMessages}}
-      <li class="private-messages">
-        <LinkTo @route="userPrivateMessages">
-          {{d-icon "far-envelope"}}
-          {{i18n "user.private_messages"}}
-        </LinkTo>
-      </li>
-    {{/if}}
+      {{#if @showPrivateMessages}}
+        <li class="private-messages">
+          <LinkTo @route="userPrivateMessages">
+            {{d-icon "far-envelope"}}
+            {{i18n "user.private_messages"}}
+          </LinkTo>
+        </li>
+      {{/if}}
 
-    {{#if @canInviteToForum}}
-      <li class="invited">
-        <LinkTo @route="userInvited">
-          {{d-icon "user-plus"}}
-          {{i18n "user.invited.title"}}
-        </LinkTo>
-      </li>
-    {{/if}}
+      {{#if @canInviteToForum}}
+        <li class="invited">
+          <LinkTo @route="userInvited">
+            {{d-icon "user-plus"}}
+            {{i18n "user.invited.title"}}
+          </LinkTo>
+        </li>
+      {{/if}}
 
-    {{#if @showBadges}}
-      <li class="badges">
-        <LinkTo @route="user.badges">
-          {{d-icon "certificate"}}
-          {{i18n "badges.title"}}
-        </LinkTo>
-      </li>
-    {{/if}}
+      {{#if @showBadges}}
+        <li class="badges">
+          <LinkTo @route="user.badges">
+            {{d-icon "certificate"}}
+            {{i18n "badges.title"}}
+          </LinkTo>
+        </li>
+      {{/if}}
 
-    <PluginOutlet
-      @name="user-main-nav"
-      @connectorTagName="li"
-      @args={{hash model=@user}} />
+      <PluginOutlet
+        @name="user-main-nav"
+        @connectorTagName="li"
+        @args={{hash model=@user}} />
 
-    {{#if @user.can_edit}}
-      <li class="preferences">
-        <LinkTo @route="preferences">
-          {{d-icon "cog"}}
-          {{i18n "user.preferences"}}
-        </LinkTo>
-      </li>
-    {{/if}}
-  </ul>
-</section>
+      {{#if @user.can_edit}}
+        <li class="preferences">
+          <LinkTo @route="preferences">
+            {{d-icon "cog"}}
+            {{i18n "user.preferences"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+
+      {{#if (and this.site.mobileView this.currentUser.staff)}}
+        <li class="admin">
+          <a href={{@user.adminPath}} >
+            {{d-icon "wrench"}}
+            {{i18n "admin.user.manage_user"}}
+          </a>
+        </li>
+      {{/if}}
+    </ul>
+  </section>
+{{/if}}
