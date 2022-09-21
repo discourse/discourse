@@ -26,7 +26,7 @@
           {{#if this.user.profile_hidden}}
             <span class="card-huge-avatar">{{bound-avatar this.user "huge"}}</span>
           {{else}}
-            <a href={{this.user.path}} {{action "showUser" this.user}} class="card-huge-avatar">{{bound-avatar this.user "huge"}}</a>
+            <a href={{this.user.path}} {{on "click" (action "showUser" this.user)}} class="card-huge-avatar">{{bound-avatar this.user "huge"}}</a>
           {{/if}}
 
           <UserAvatarFlair @user={{this.user}} />
@@ -40,7 +40,7 @@
                 {{if this.nameFirst this.user.name (format-username this.user.username)}}
               </span>
             {{else}}
-              <a href={{this.user.path}} {{action "showUser" this.user}} class="user-profile-link">
+              <a href={{this.user.path}} {{on "click" (action "showUser" this.user)}} class="user-profile-link">
                 <span id="discourse-user-card-title" class="name-username-wrapper">
                   {{if this.nameFirst this.user.name (format-username this.user.username)}}
                 </span>
