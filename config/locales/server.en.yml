@@ -2358,6 +2358,7 @@ en:
     splash_screen: "Displays a temporary loading screen while site assets load"
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
+    enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
