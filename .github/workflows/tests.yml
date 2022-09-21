@@ -18,9 +18,9 @@ permissions:
 jobs:
   build:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
-    timeout-minutes: 60
+    timeout-minutes: 20
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
@@ -155,7 +155,7 @@ jobs:
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Check Annotations
@@ -177,8 +177,11 @@ jobs:
 
   core_frontend_tests:
     name: core frontend (${{ matrix.browser }})
-    runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim-browsers
+    runs-on: ubuntu-20.04-8core
+    container:
+      image: discourse/discourse_test:slim-browsers
+      options: --user discourse
+
     timeout-minutes: 35
 
     strategy:
@@ -220,23 +223,16 @@ jobs:
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
         run: |
-          sudo -E -u discourse mkdir /tmp/emberbuild
-          sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
+          mkdir /tmp/emberbuild
+          yarn ember build --environment=test  -o /tmp/emberbuild
 
-      - name: Core QUnit 1
-        if: ${{ !cancelled() }}
+      - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ env.TESTEM_BROWSER }}" --random
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
-      - name: Core QUnit 2
-        if: ${{ !cancelled() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ env.TESTEM_BROWSER }}" --random
-        timeout-minutes: 15
-
-      - name: Core QUnit 3
-        if: ${{ !cancelled() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ env.TESTEM_BROWSER }}" --random
-        timeout-minutes: 15
+      - uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: ember-exam-execution-${{matrix.browser}}
+          path: ./app/assets/javascripts/discourse/test-execution-*.json
