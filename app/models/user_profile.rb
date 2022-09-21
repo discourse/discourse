@@ -8,7 +8,8 @@ class UserProfile < ActiveRecord::Base
   belongs_to :featured_topic, class_name: 'Topic'
 
   validates :bio_raw, length: { maximum: 3000 }
-  validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
+  validates :website, url: true, length: { maximum: 3000 }, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
+  validates :location, length: { maximum: 3000 }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
@@ -168,8 +169,8 @@ end
 # Table name: user_profiles
 #
 #  user_id                      :integer          not null, primary key
-#  location                     :string
-#  website                      :string
+#  location                     :string(3000)
+#  website                      :string(3000)
 #  bio_raw                      :text
 #  bio_cooked                   :text
 #  dismissed_banner_key         :integer
