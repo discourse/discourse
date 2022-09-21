@@ -184,7 +184,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chrome", "Firefox", "Headless Firefox"]
+        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+
+    env:
+      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -222,17 +226,17 @@ jobs:
       - name: Core QUnit 1
         if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ env.TESTEM_BROWSER }}" --random
         timeout-minutes: 15
 
       - name: Core QUnit 2
         if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ env.TESTEM_BROWSER }}" --random
         timeout-minutes: 15
 
       - name: Core QUnit 3
         if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
+        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ env.TESTEM_BROWSER }}" --random
         timeout-minutes: 15

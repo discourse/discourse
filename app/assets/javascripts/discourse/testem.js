@@ -60,13 +60,14 @@ module.exports = {
       "--js-flags=--max_old_space_size=4096",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
-    "Headless Firefox": ["--width=1440", "--height=900"],
-  },
-  browser_paths: {
-    "Headless Firefox": "/opt/firefox-evergreen/firefox",
   },
   reporter: Reporter,
 };
+
+if (process.env.TESTEM_FIREFOX_PATH) {
+  module.exports.browser_paths ||= {};
+  module.exports.browser_paths["Firefox"] = process.env.TESTEM_FIREFOX_PATH;
+}
 
 const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
 
