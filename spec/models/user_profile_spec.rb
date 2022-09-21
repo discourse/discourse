@@ -46,7 +46,7 @@ RSpec.describe UserProfile do
         before { profile.location = "a" * 3500 }
 
         it "is not valid" do
-          profile.valid?
+          expect(profile.valid?).to eq(false)
           expect(profile.errors.full_messages).to include(/Location is too long \(maximum is 3000 characters\)/)
         end
       end
@@ -76,7 +76,7 @@ RSpec.describe UserProfile do
         before { profile.bio_raw = "a" * 3500 }
 
         it "is not valid" do
-          profile.valid?
+          expect(profile.valid?).to eq(false)
           expect(profile.errors.full_messages).to include(/About Me is too long \(maximum is 3000 characters\)/)
         end
       end
