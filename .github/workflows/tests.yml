@@ -151,6 +151,7 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         with:
           path: tmp/turbo_rspec_runtime.log
+          key: rspec-runtime-backend-core
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
