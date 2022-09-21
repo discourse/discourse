@@ -689,5 +689,22 @@ RSpec.describe Upload do
 
       expect(invalid_image.dominant_color).to eq(nil)
     end
+
+    it "is validated for length" do
+      u = Fabricate(:upload)
+
+      # Acceptable values
+      u.update!(dominant_color: nil)
+      u.update!(dominant_color: "")
+      u.update!(dominant_color: "abcdef")
+
+      expect {
+        u.update!(dominant_color: "toomanycharacters")
+      }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect {
+        u.update!(dominant_color: "abcd")
+      }.to raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 end

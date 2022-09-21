@@ -37,6 +37,7 @@ class Upload < ActiveRecord::Base
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
+  validates :dominant_color, length: { is: 6 }, allow_blank: true, allow_nil: true
 
   validates_with UploadValidator
 
