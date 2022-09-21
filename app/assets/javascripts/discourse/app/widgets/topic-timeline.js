@@ -579,6 +579,9 @@ export default createWidget("topic-timeline", {
             className: "start-date",
             rawLabel: timelineDate(createdAt),
             action: "jumpTop",
+            attributes: {
+              "data-tooltip": I18n.t("topic_entrance.sr_jump_top_button"),
+            },
           })
         ),
         this.attach("timeline-scrollarea", attrs),
@@ -588,6 +591,9 @@ export default createWidget("topic-timeline", {
             className: "now-date",
             rawLabel: bottomAge,
             action: "jumpBottom",
+            attributes: {
+              "data-tooltip": I18n.t("topic_entrance.sr_jump_bottom_button"),
+            },
           })
         ),
       ];
