@@ -186,7 +186,9 @@ acceptance("EmojiPicker", function (needs) {
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
 
-    const emojis = document.querySelectorAll(".emojis-container img.emoji");
+    const emojis = document.querySelectorAll(
+      ".emoji-picker-emoji-area img.emoji"
+    );
 
     assert.strictEqual(
       document.activeElement,
@@ -216,6 +218,8 @@ acceptance("EmojiPicker", function (needs) {
     );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    // eslint-disable-next-line no-console
+    console.log(document.activeElement);
     assert.strictEqual(
       document.activeElement,
       document.querySelector("img[title='blush']"),
