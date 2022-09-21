@@ -2009,7 +2009,6 @@ developer:
     default: ""
     allow_any: false
     refresh: true
-    hidden: true
 
 embedding:
   embed_by_username:
