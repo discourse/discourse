@@ -28,6 +28,9 @@ export default function highlightSyntax(elem, siteSettings, session) {
   return loadScript(path).then(() => {
     customHighlightJSLanguages();
     hljs.addPlugin(mergeHTMLPlugin);
+    hljs.configure({
+      ignoreUnescapedHTML: true,
+    });
 
     codeblocks.forEach((e) => {
       // Large code blocks can cause crashes or slowdowns
