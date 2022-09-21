@@ -4136,6 +4136,8 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       sections:
+        about:
+          header_link_text: "About"
         messages:
           header_link_text: "Messages"
           header_action_title: "create a personal message"
