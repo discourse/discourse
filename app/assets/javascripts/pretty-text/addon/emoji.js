@@ -98,7 +98,7 @@ export function performEmojiUnescape(string, opts) {
           opts.skipTitle ? "" : `title='${title}'`
         } ${
           opts.lazy ? "loading='lazy' " : ""
-        }alt='${title}' class='${classes}'>`
+        }alt='${title}' class='${classes}' tabindex='0'>`
       : m;
   };
 
