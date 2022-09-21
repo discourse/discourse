@@ -184,9 +184,9 @@ acceptance("EmojiPicker", function (needs) {
     const searchInput = ".emoji-picker-search-container input";
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
-    await click("button.emoji.btn");
+    await click(".emoji.btn");
 
-    const emojis = document.querySelectorAll(
+    let emojis = document.querySelectorAll(
       ".emoji-picker-emoji-area img.emoji"
     );
 
@@ -217,27 +217,48 @@ acceptance("EmojiPicker", function (needs) {
       "ArrowLeft from second emoji focuses on the first emoji"
     );
 
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    // eslint-disable-next-line no-console
-    console.log(document.activeElement);
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector("img[title='blush']"),
-      "ArrowDown from first emoji focuses on the first emoji in the second row"
-    );
-
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
-    assert.strictEqual(
-      document.activeElement,
-      emojis[0],
-      "ArrowUp from the second row emoji focuses on the first emoji"
-    );
-
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     assert.strictEqual(
       document.querySelector(".d-editor-input").value,
-      ":grinning:",
+      ":smiley:",
       "Pressing enter inserts the emoji markup in the composer"
+    );
+
+    await click("#topic-footer-buttons .btn.create");
+    await click(".emoji.btn");
+    await triggerKeyEvent(searchInput, "keydown", "ArrowDown");
+    emojis = document.querySelectorAll(".emoji-picker-emoji-area img.emoji");
+
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(".emoji-picker-emoji-area .emoji.recent-emoji"),
+      "ArrowDown focuses on the first emoji result (recent emoji)"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(".emojis-container .emoji[title='grinning']"),
+      "ArrowDown again focuses on the first emoji result in a section"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+
+    assert.strictEqual(
+      document.activeElement,
+      emojis[4],
+      "ArrowRight moves focus to next right element"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(searchInput),
+      "ArrowUp from first row items moves focus to input"
     );
   });
 
