@@ -78,13 +78,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :likes_notifications_disabled,
              :grouped_unread_notifications,
-             :redesigned_user_menu_enabled
+             :redesigned_user_menu_enabled,
+             :redesigned_user_page_nav_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
+
     object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
       group = { id: id, name: name, has_messages: has_messages }
       group[:owner] = true if owned_group_ids.include?(id)
@@ -341,5 +343,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_unseen_reviewable_count?
     redesigned_user_menu_enabled
+  end
+
+  def redesigned_user_page_nav_enabled
+    if SiteSetting.enable_new_user_profile_nav_groups.present?
+      GroupUser.exists?(user_id: object.id, group_id: SiteSetting.enable_new_user_profile_nav_groups.split("|"))
+    else
+      false
+    end
   end
 end

@@ -22,17 +22,6 @@ class HighlightJsController < ApplicationController
       # code simpler
       languages = SiteSetting.highlighted_languages.split('|')
 
-      # TODO: some languages require to be loaded before others
-      # this limitation should be fixed in highlight js 11, remove it when available
-      prepended_languages = ['csharp', 'c', 'c-like']
-      prepended_languages.each do |lang|
-        if languages.include?(lang)
-          languages.insert(0, languages.delete(lang))
-        else
-          languages.insert(0, lang)
-        end
-      end
-
       highlight_js = HighlightJs.bundle(languages)
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate

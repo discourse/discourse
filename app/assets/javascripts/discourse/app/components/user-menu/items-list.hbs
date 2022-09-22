@@ -3,7 +3,7 @@
     <div class="spinner"></div>
   </div>
 {{else if this.items.length}}
-  <ul>
+  <ul aria-labelledby={{@ariaLabelledby}}>
     {{#each this.items as |item|}}
       <UserMenu::MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}}/>
     {{/each}}

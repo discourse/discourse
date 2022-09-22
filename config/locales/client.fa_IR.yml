@@ -2153,7 +2153,7 @@ fa_IR:
         deleted_user: "«کاربر حذف شده»"
         post_number_with_topic_title: "نوشته #%{post_number} - %{title}"
         new_post_in_topic: "نوشته‌ی جدید در %{title}"
-        suspicious_user: "کاربر مشکوک %{username}"
+        user_requires_approval: "%{username} نیاز به تایید دارد"
         default_item: "مورد قابل بازبینی #%{reviewable_id}"
     topics:
       new_messages_marker: "آخرین بازدید"
@@ -2671,8 +2671,8 @@ fa_IR:
           other: "آیا مطمئن هستید که می‌خواهید آن %{count} فرسته را حذف کنید؟"
       merge:
         confirm:
-          one: "آیا مطمئن هستید که می خواهید آن پست ها را ادغام کنید؟"
-          other: "آیا مطمئن هستید که می‌خواهید آن %{count} فرسته را ادغام کنید؟"
+          one: "آیا مطمئن هستید که می‌خواهید این نوشته‌ها را ادغام کنید؟"
+          other: "آیا مطمئن هستید که می‌خواهید این %{count} نوشته را ادغام کنید؟"
       revisions:
         controls:
           first: "بازبینی نخست"
@@ -3268,6 +3268,8 @@ fa_IR:
         other: "%{count} تازه"
       toggle_section: "تغییر بخش"
       more: "بیشتر..."
+      all_categories: "همه‌ی دسته‌بندی‌ها"
+      all_tags: "تمام برچسب‌ها"
       sections:
         messages:
           header_link_text: "پیام‌ها"

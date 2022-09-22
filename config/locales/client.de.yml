@@ -2363,7 +2363,6 @@ de:
         deleted_user: "(gelöschter Benutzer)"
         post_number_with_topic_title: "Beitrag #%{post_number} - %{title}"
         new_post_in_topic: "neuer Beitrag in %{title}"
-        suspicious_user: "Verdächtiger Benutzer %{username}"
         default_item: "Überprüfbarer Artikel #%{reviewable_id}"
     topics:
       new_messages_marker: "letzter Besuch"
@@ -3009,10 +3008,6 @@ de:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
           other: "Möchtest du wirklich diese %{count} Beiträge löschen?"
-      merge:
-        confirm:
-          one: "Möchtest du diese Beiträge wirklich zusammenführen?"
-          other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -3579,6 +3574,7 @@ de:
       google: "Google Kalender"
       ics: "ICS"
     tagging:
+      all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
@@ -3770,6 +3766,8 @@ de:
         other: "%{count} neue"
       toggle_section: "Abschnitt umschalten"
       more: "Mehr …"
+      all_categories: "Alle Kategorien"
+      all_tags: "Alle Schlagwörter"
       sections:
         messages:
           header_link_text: "Nachrichten"

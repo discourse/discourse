@@ -2247,7 +2247,6 @@ vi:
         deleted_user: "(người dùng đã bị xóa)"
         post_number_with_topic_title: "bài #%{post_number} - %{title}"
         new_post_in_topic: "bài mới trong %{title}"
-        suspicious_user: "người dùng đáng ngờ %{username}"
         default_item: "mục có thể xem lại #%{reviewable_id}"
     topics:
       new_messages_marker: "lần thăm cuối"
@@ -2839,9 +2838,6 @@ vi:
       delete:
         confirm:
           other: "Bạn có chắc chắn muốn xóa %{count} bài viết đó không?"
-      merge:
-        confirm:
-          other: "Bạn có chắc chắn muốn hợp nhất %{count} bài viết đó không?"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -3563,6 +3559,7 @@ vi:
         other: "%{count} mới"
       toggle_section: "phần chuyển đổi"
       more: "Thêm..."
+      all_categories: "Tất cả danh mục"
       sections:
         messages:
           header_link_text: "Tin nhắn"

@@ -2280,6 +2280,7 @@ sk:
         many: "%{count} nových"
         other: "%{count} nových"
       more: "Viac ..."
+      all_categories: "Všetky kategórie"
       sections:
         messages:
           header_link_text: "Správy"

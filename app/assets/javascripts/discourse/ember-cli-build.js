@@ -145,15 +145,9 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
-  let discoursePluginsTree;
-  if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
-    discoursePluginsTree = app.project
-      .findAddonByName("discourse-plugins")
-      .generatePluginsTree();
-  } else {
-    // Empty tree - no-op
-    discoursePluginsTree = mergeTrees([]);
-  }
+  const discoursePluginsTree = app.project
+    .findAddonByName("discourse-plugins")
+    .generatePluginsTree();
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);

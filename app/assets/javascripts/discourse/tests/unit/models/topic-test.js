@@ -143,7 +143,7 @@ discourseModule("Unit | Model | topic", function () {
 
     assert.strictEqual(
       topic.get("fancyTitle"),
-      `<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img width=\"20\" height=\"20\" src='/images/emoji/google_classic/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,
+      `<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji' tabindex='0'> with all <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji' tabindex='0'> the emojis <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/pear.png?v=${v}' title='pear' alt='pear' class='emoji' tabindex='0'><img width=\"20\" height=\"20\" src='/images/emoji/google_classic/peach.png?v=${v}' title='peach' alt='peach' class='emoji' tabindex='0'>`,
       "supports emojis"
     );
   });
@@ -173,7 +173,7 @@ discourseModule("Unit | Model | topic", function () {
 
     assert.strictEqual(
       topic.get("escapedExcerpt"),
-      `This is a test topic <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+      `This is a test topic <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji' tabindex='0'>`,
       "supports emojis"
     );
   });

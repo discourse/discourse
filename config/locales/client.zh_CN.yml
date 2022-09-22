@@ -2265,7 +2265,6 @@ zh_CN:
         deleted_user: "(删除用户)"
         post_number_with_topic_title: "帖子 #%{post_number} - %{title}"
         new_post_in_topic: "%{title} 中的新帖子"
-        suspicious_user: "可疑用户 %{username}"
         default_item: "可审查项目 #%{reviewable_id}"
     topics:
       new_messages_marker: "上次访问"
@@ -2869,7 +2868,7 @@ zh_CN:
           other: "确定要删除这 %{count} 个帖子吗？"
       merge:
         confirm:
-          other: "确定要合并这 %{count} 个帖子吗？"
+          other: "你确定要合并这 %{count} 个帖子吗？"
       revisions:
         controls:
           first: "第一个修订"
@@ -3598,6 +3597,8 @@ zh_CN:
         other: "%{count} 新"
       toggle_section: "切换部分"
       more: "更多…"
+      all_categories: "所有类别"
+      all_tags: "所有标签"
       sections:
         messages:
           header_link_text: "消息"

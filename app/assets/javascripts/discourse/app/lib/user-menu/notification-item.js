@@ -65,8 +65,9 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     if (!this.notification.read) {
       this.notification.set("read", true);
 
-      const groupedUnreadNotifications =
-        this.currentUser.grouped_unread_notifications;
+      const groupedUnreadNotifications = {
+        ...this.currentUser.grouped_unread_notifications,
+      };
       const unreadCount =
         groupedUnreadNotifications &&
         groupedUnreadNotifications[this.notification.notification_type];

@@ -283,8 +283,9 @@ export default class PostCooked {
         const $title = $(".title", $aside);
 
         // If post/topic is not found then display username, skip controls
-        if (e.classList.contains("quote-post-not-found")) {
-          return (e.querySelector(".title").innerHTML = e.dataset.username);
+        if (e.classList.contains("quote-post-not-found") && $title.length) {
+          e.querySelector(".title").innerHTML = e.dataset.username;
+          return;
         }
 
         // Unless it's a full quote, allow click to expand

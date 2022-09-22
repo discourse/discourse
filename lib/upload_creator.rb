@@ -168,6 +168,7 @@ class UploadCreator
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
         @upload.width, @upload.height = w, h
         @upload.animated = animated?
+        @upload.calculate_dominant_color!(@file.path)
       end
 
       add_metadata!

@@ -2445,11 +2445,6 @@ bs_BA:
           one: "Jeste li sigurni da želite izbrisati taj post?"
           few: "Jeste li sigurni da želite izbrisati one postove %{count}?"
           other: "Jeste li sigurni da želite izbrisati one postove %{count}?"
-      merge:
-        confirm:
-          one: "Jeste li sigurni da želite spojiti te postove?"
-          few: "Jeste li sigurni da želite spojiti te postove %{count}?"
-          other: "Jeste li sigurni da želite spojiti te postove %{count}?"
       revisions:
         controls:
           first: "First revision"
@@ -3078,6 +3073,7 @@ bs_BA:
         few: "%{count} nova"
         other: "%{count} novih"
       more: "Više..."
+      all_categories: "Sve kategorije"
       sections:
         messages:
           header_link_text: "Poruke"

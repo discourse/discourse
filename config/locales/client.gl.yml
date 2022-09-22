@@ -2691,10 +2691,6 @@ gl:
         confirm:
           one: "Confirma a eliminación desta publicación?"
           other: "Confirma a eliminación destas %{count} publicacións?"
-      merge:
-        confirm:
-          one: "Confirma a combinación desas publicacións?"
-          other: "Confirma a combinación destas %{count} publicacións?"
       revisions:
         controls:
           first: "Primeira revisión"
@@ -3355,6 +3351,7 @@ gl:
         one: "%{count} novo"
         other: "%{count} novos"
       more: "Máis..."
+      all_categories: "Todas as categorías"
       sections:
         messages:
           header_link_text: "Mensaxes"

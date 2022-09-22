@@ -5,6 +5,12 @@
   @headerActions={{this.headerActions}}
   @collapsable={{@collapsable}} >
 
+  {{#if this.displayShortSiteDescription}}
+    <Sidebar::SectionMessage>
+      {{this.siteSettings.short_site_description}}
+    </Sidebar::SectionMessage>
+  {{/if}}
+
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink
       @linkName={{sectionLink.name}}

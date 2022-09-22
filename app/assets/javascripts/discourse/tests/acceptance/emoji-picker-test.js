@@ -5,7 +5,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("EmojiPicker", function (needs) {
@@ -178,5 +178,95 @@ acceptance("EmojiPicker", function (needs) {
       exists(".emoji-picker button.diversity-scale.medium-dark .d-icon"),
       "it stores diversity scale"
     );
+  });
+
+  test("emoji can be selected with keyboard", async function (assert) {
+    const searchInput = ".emoji-picker-search-container input";
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click(".emoji.btn");
+
+    let emojis = document.querySelectorAll(
+      ".emoji-picker-emoji-area img.emoji"
+    );
+
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(searchInput),
+      "search input is focused by default"
+    );
+
+    await triggerKeyEvent(searchInput, "keydown", "ArrowDown");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[0],
+      "ArrowDown from search focuses on the first emoji result"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[1],
+      "ArrowRight from first emoji focuses on the second emoji"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
+    assert.strictEqual(
+      document.activeElement,
+      emojis[0],
+      "ArrowLeft from second emoji focuses on the first emoji"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    assert.strictEqual(
+      document.querySelector(".d-editor-input").value,
+      ":smiley:",
+      "Pressing enter inserts the emoji markup in the composer"
+    );
+
+    await click("#topic-footer-buttons .btn.create");
+    await click(".emoji.btn");
+    await triggerKeyEvent(searchInput, "keydown", "ArrowDown");
+    emojis = document.querySelectorAll(".emoji-picker-emoji-area img.emoji");
+
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(".emoji-picker-emoji-area .emoji.recent-emoji"),
+      "ArrowDown focuses on the first emoji result (recent emoji)"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(".emojis-container .emoji[title='grinning']"),
+      "ArrowDown again focuses on the first emoji result in a section"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+
+    assert.strictEqual(
+      document.activeElement,
+      emojis[4],
+      "ArrowRight moves focus to next right element"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(searchInput),
+      "ArrowUp from first row items moves focus to input"
+    );
+  });
+
+  test("emoji picker can be dismissed with escape key", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    assert.notOk(exists(".emoji-picker"));
   });
 });

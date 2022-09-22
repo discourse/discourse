@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 desc "Runs the qunit test suite"
-task "qunit:test", [:timeout, :qunit_path] do |_, args|
+task "qunit:test", [:timeout, :qunit_path, :filter] do |_, args|
   require "socket"
   require "chrome_installed_checker"
 
@@ -65,6 +65,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     success = true
     test_path = "#{Rails.root}/test"
     qunit_path = args[:qunit_path]
+    filter = args[:filter]
 
     options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed), hidepassed: 1 }
 
@@ -85,7 +86,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
 
     # wait for server to accept connections
     require 'net/http'
-    warmup_path = "/assets/discourse/tests/active-plugins.js"
+    warmup_path = "/srv/status"
     uri = URI("http://localhost:#{unicorn_port}/#{warmup_path}")
     puts "Warming up Rails server"
 
@@ -107,8 +108,13 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
       system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
       test_page = "#{qunit_path}?#{query}&testem=1"
       cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
+    elsif filter
+      cmd += ["yarn", "ember", "test", "--query", query, "--filter", filter]
     else
-      cmd += ["yarn", "ember", "test", "--query", query]
+      cmd += ["yarn", "ember", "exam", "--query", query]
+      if parallel = ENV["QUNIT_PARALLEL"]
+        cmd += ["--load-balance", "--parallel", parallel]
+      end
     end
 
     system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")

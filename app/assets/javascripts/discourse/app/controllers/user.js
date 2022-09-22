@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { computed, set } from "@ember/object";
-import { and, equal, gt, not, or } from "@ember/object/computed";
+import EmberObject, { action, computed, set } from "@ember/object";
+import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import I18n from "I18n";
@@ -17,6 +17,13 @@ export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   userNotifications: controller("user-notifications"),
   adminTools: optionalService(),
+  displayUserNav: false,
+
+  init() {
+    this._super(...arguments);
+
+    this.displayUserNav = this.site.desktopView;
+  },
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -164,6 +171,8 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  currentParentRoute: readOnly("router.currentRoute.parent.name"),
+
   userNotificationLevel: computed(
     "currentUser.ignored_ids",
     "model.ignored",
@@ -183,6 +192,11 @@ export default Controller.extend(CanCheckEmails, {
       },
     }
   ),
+
+  @action
+  toggleUserNav() {
+    this.toggleProperty("displayUserNav");
+  },
 
   actions: {
     collapseProfile() {

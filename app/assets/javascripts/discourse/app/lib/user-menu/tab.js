@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 /**
  * abstract class representing a tab in the user menu
  */
@@ -20,6 +22,26 @@ export default class UserMenuTab {
    */
   get count() {
     return 0;
+  }
+
+  /**
+   * @returns {string} title attribute for the tab element in the DOM
+   */
+  get title() {
+    const id = this.id.replaceAll(/-/g, "_");
+    const count = this.count;
+    let key;
+    if (this.count) {
+      key = `user_menu.tabs.${id}_with_unread`;
+    } else {
+      key = `user_menu.tabs.${id}`;
+    }
+    // the lookup method returns undefined if the key doesn't exist.
+    // this ensures that don't use the "missing translation" string as the
+    // title for tabs that don't define title in the yml files.
+    if (I18n.lookup(key)) {
+      return I18n.t(key, { count });
+    }
   }
 
   /**
