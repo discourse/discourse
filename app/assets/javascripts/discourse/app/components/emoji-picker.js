@@ -44,7 +44,6 @@ export default Component.extend({
   elements: {
     searchInput: ".emoji-picker-search-container input",
     picker: ".emoji-picker-emoji-area",
-    allEmojis: ".emoji-picker-emoji-area .emoji",
   },
 
   init() {
