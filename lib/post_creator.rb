@@ -426,14 +426,30 @@ class PostCreator
       # If single tag only
       PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: @opts[:user_generated_tags])
       unless Tag.where_name(@opts[:user_generated_tags]).exists?
-        Tag.create(name: @opts[:user_generated_tags])
+        @created_tag = Tag.create(name: @opts[:user_generated_tags])
+        unless TopicTag.where(topic_id: @post.topic_id, tag_id: @created_tag[:id]).exists?
+          TopicTag.create!(topic_id: @post.topic_id, tag_id: @created_tag[:id])
+        end
+      else
+        @existingTag = Tag.where_name(@opts[:user_generated_tags]).first
+        unless TopicTag.where(topic_id: @post.topic_id, tag_id: @existingTag[:id]).exists?
+          TopicTag.create!(topic_id: @post.topic_id.to_i, tag_id: @existingTag[:id].to_i)
+        end
       end
     else
       # If multiple tags, iterate through tags then store to db
       @opts[:user_generated_tags].split(',').each do |tag|
         PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: tag)
         unless Tag.where_name(tag).exists?
-          Tag.create(name: tag)
+          @created_tag = Tag.create(name: tag)
+          unless TopicTag.where(topic_id: @post.topic_id, tag_id: @created_tag[:id]).exists?
+            TopicTag.create!(topic_id: @post.topic_id, tag_id: @created_tag[:id])
+          end
+        else
+          @existingTag = Tag.where_name(tag).first
+          unless TopicTag.where(topic_id: @post.topic_id, tag_id: @existingTag[:id]).exists?
+            TopicTag.create!(topic_id: @post.topic_id.to_i, tag_id: @existingTag[:id].to_i)
+          end
         end
       end
     end
