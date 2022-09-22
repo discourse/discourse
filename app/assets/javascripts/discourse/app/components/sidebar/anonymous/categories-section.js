@@ -2,6 +2,7 @@ import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
 
 export default class SidebarAnonymousCategoriesSection extends Component {
   @service topicTrackingState;
@@ -22,7 +23,11 @@ export default class SidebarAnonymousCategoriesSection extends Component {
       );
     } else {
       categories = categories
-        .filter((category) => !category.parent_category_id)
+        .filter(
+          (category) =>
+            canDisplayCategory(category, this.siteSettings) &&
+            !category.parent_category_id
+        )
         .slice(0, 5);
     }
 
