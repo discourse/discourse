@@ -32,7 +32,7 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
     );
   });
 
-  test("catgegory section links in sidebar when default_sidebar_categories site setting has been configured", async function (assert) {
+  test("category section links in sidebar when default_sidebar_categories site setting has been configured", async function (assert) {
     this.siteSettings.default_sidebar_categories = "3|13|1";
     await visit("/");
 
