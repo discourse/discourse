@@ -271,12 +271,13 @@ export default Component.extend({
 
     if (event.key === "Escape") {
       this.onClose(event);
+      const path = event.path || (event.composedPath && event.composedPath());
 
-      const fromChatComposer = event.path.find((e) =>
+      const fromChatComposer = path.find((e) =>
         e?.classList?.contains("chat-composer-container")
       );
 
-      const fromTopicComposer = event.path.find((e) =>
+      const fromTopicComposer = path.find((e) =>
         e?.classList?.contains("d-editor")
       );
 
