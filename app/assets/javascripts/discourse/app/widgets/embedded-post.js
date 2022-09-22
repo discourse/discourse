@@ -37,7 +37,7 @@ export default createWidget("embedded-post", {
 
   html(attrs, state) {
     attrs.embeddedPost = true;
-    if (attrs.user_generated_tags !== undefined) {
+    if (attrs.user_generated_tags !== undefined && attrs.user_generated_tags !== null) {
       return [
         h("div.row", [
           this.attach("post-avatar", attrs),

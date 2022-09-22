@@ -468,7 +468,7 @@ createWidget("post-opinions", {
 
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
-    if (attrs.user_generated_tags !== undefined) {
+    if (attrs.user_generated_tags !== undefined && attrs.user_generated_tags !== null) {
       result.push(this.attach("post-user-generated-tags", attrs))
     }
 

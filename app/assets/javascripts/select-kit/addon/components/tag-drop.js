@@ -135,6 +135,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   search(filter) {
     if (filter) {
+      console.log("filter", filter)
       const data = {
         q: filter,
         limit: this.maxTagSearchResults,

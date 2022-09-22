@@ -419,13 +419,19 @@ class PostCreator
     #   Single tag: 'soju'
     #   Multiple tags: 'soju,korea,liquor'
     return if @opts[:user_generated_tags].empty?
-    PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: @opts[:user_generated_tags])
+
+    
+
     unless @opts[:user_generated_tags].include?(',')
+      # If single tag only
+      PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: @opts[:user_generated_tags])
       unless Tag.where_name(@opts[:user_generated_tags]).exists?
         Tag.create(name: @opts[:user_generated_tags])
       end
     else
+      # If multiple tags, iterate through tags then store to db
       @opts[:user_generated_tags].split(',').each do |tag|
+        PostCustomField.create!(post_id: @post.id, name: 'user_generated_tags', value: tag)
         unless Tag.where_name(tag).exists?
           Tag.create(name: tag)
         end

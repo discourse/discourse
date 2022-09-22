@@ -269,7 +269,6 @@ export default createWidget("post-stream", {
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
         if (transformed.meta_tag == 'summary') {
-          console.log("transformed: ", transformed)
           result.push(this.attach("post", transformed, { model: post }));
         }
       }
