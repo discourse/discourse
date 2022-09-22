@@ -93,7 +93,7 @@ export function performEmojiUnescape(string, opts) {
       isReplacableInlineEmoji(string, index, opts.inlineEmoji);
 
     const title = opts.title ?? emojiVal;
-    const tabIndex = opts.tabIndex ? ` tabindex=${opts.tabIndex}` : "";
+    const tabIndex = opts.tabIndex ? ` tabindex='${opts.tabIndex}'` : "";
     return url && isReplacable
       ? `<img width="20" height="20" src='${url}' ${
           opts.skipTitle ? "" : `title='${title}'`
