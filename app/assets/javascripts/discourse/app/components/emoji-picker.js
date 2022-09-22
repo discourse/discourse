@@ -397,6 +397,7 @@ export default Component.extend({
   _replaceEmoji(code) {
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
       lazy: true,
+      tabIndex: 0,
     });
     return htmlSafe(escaped);
   },
