@@ -273,6 +273,8 @@ export default Component.extend({
 
     if (event.key === "Escape") {
       this.onClose(event);
+      const nearestInput = document.querySelector("textarea");
+      nearestInput.focus();
       return false;
     }
 
