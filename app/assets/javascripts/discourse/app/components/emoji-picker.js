@@ -273,8 +273,23 @@ export default Component.extend({
 
     if (event.key === "Escape") {
       this.onClose(event);
-      const nearestInput = document.querySelector("textarea");
-      nearestInput.focus();
+
+      const fromChatComposer = event.path.find((e) =>
+        e?.classList?.contains("chat-composer-container")
+      );
+
+      const fromTopicComposer = event.path.find((e) =>
+        e?.classList?.contains("d-editor")
+      );
+
+      if (fromTopicComposer) {
+        document.querySelector(".d-editor-input")?.focus();
+      } else if (fromChatComposer) {
+        document.querySelector(".chat-composer-input")?.focus();
+      } else {
+        document.querySelector("textarea")?.focus();
+      }
+
       return false;
     }
 
