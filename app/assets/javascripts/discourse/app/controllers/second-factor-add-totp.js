@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
@@ -40,11 +41,13 @@ export default Controller.extend(ModalFunctionality, {
       .finally(() => this.set("loading", false));
   },
 
-  actions: {
-    showSecondFactorKey() {
-      this.set("showSecondFactorKey", true);
-    },
+  @action
+  enableShowSecondFactorKey(event) {
+    event?.preventDefault();
+    this.set("showSecondFactorKey", true);
+  },
 
+  actions: {
     enableSecondFactor() {
       if (!this.secondFactorToken || !this.secondFactorName) {
         this.set(

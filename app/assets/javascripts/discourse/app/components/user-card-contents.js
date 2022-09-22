@@ -1,4 +1,4 @@
-import EmberObject, { set } from "@ember/object";
+import EmberObject, { action, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
@@ -220,6 +220,15 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     this._close();
   },
 
+  @action
+  showUserAndClose(user, event) {
+    event?.preventDefault();
+    // Invokes `showUser` argument. Convert to `this.args.showUser` when
+    // refactoring this to a glimmer component.
+    this.showUser(user);
+    this._close();
+  },
+
   actions: {
     close() {
       this._close();
@@ -244,11 +253,6 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
     deleteUser() {
       this.user.delete();
-      this._close();
-    },
-
-    showUser(username) {
-      this.showUser(username);
       this._close();
     },
 

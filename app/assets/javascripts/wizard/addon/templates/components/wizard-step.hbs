@@ -68,12 +68,12 @@
   </div>
 
   <div class="wizard-container__step-progress">
-    <a href {{on "click" (action "backStep")}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
+    <a href {{on "click" this.backStep}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
 
     <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
     <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
 
-    <a href {{on "click" (action "nextStep")}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
+    <a href {{on "click" this.nextStep}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
 
   </div>
 

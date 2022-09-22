@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
@@ -70,11 +71,22 @@ export default Component.extend(CardContentsBase, CleansUp, {
     this._close();
   },
 
-  actions: {
-    close() {
-      this._close();
-    },
+  @action
+  close(event) {
+    event?.preventDefault();
+    this._close();
+  },
 
+  @action
+  showGroupAndClose(group, event) {
+    event?.preventDefault();
+    // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
+    // refactoring this to a glimmer component.
+    this.showGroup(group);
+    this._close();
+  },
+
+  actions: {
     cancelFilter() {
       const postStream = this.postStream;
       postStream.cancelFilter();
@@ -87,11 +99,6 @@ export default Component.extend(CardContentsBase, CleansUp, {
         recipients: this.get("group.name"),
         hasGroups: true,
       });
-    },
-
-    showGroup(group) {
-      this.showGroup(group);
-      this._close();
     },
   },
 });

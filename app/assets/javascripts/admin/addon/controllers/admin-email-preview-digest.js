@@ -1,7 +1,7 @@
 import { empty, notEmpty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
-import { get } from "@ember/object";
+import { action, get } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
@@ -13,6 +13,12 @@ export default Controller.extend({
   sendEmailDisabled: or("emailEmpty", "sendingEmail"),
   showSendEmailForm: notEmpty("model.html_content"),
   htmlEmpty: empty("model.html_content"),
+
+  @action
+  toggleShowHtml(event) {
+    event?.preventDefault();
+    this.toggleProperty("showHtml");
+  },
 
   actions: {
     updateUsername(selected) {
@@ -37,10 +43,6 @@ export default Controller.extend({
         );
         this.set("loading", false);
       });
-    },
-
-    toggleShowHtml() {
-      this.toggleProperty("showHtml");
     },
 
     sendEmail() {
