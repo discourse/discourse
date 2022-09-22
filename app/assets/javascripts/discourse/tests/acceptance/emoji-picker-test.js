@@ -268,5 +268,10 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
     assert.notOk(exists(".emoji-picker"));
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector("textarea"),
+      "escaping from emoji picker focuses back on input"
+    );
   });
 });
