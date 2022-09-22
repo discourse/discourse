@@ -18,4 +18,11 @@ export default class UsersSectionLink extends BaseSectionLink {
   get text() {
     return I18n.t("sidebar.sections.community.links.users.content");
   }
+
+  get shouldDisplay() {
+    return (
+      this.siteSettings.enable_user_directory &&
+      (this.currentUser || !this.siteSettings.hide_user_profiles_from_public)
+    );
+  }
 }

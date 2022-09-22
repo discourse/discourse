@@ -4,6 +4,7 @@ import { test } from "qunit";
 
 import {
   acceptance,
+  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -72,7 +73,18 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     );
   });
 
-  test("groups  and badges section links are shown in more...", async function (assert) {
+  test("users section link is not shown when hide_user_profiles_from_public site setting is enabled", async function (assert) {
+    this.siteSettings.hide_user_profiles_from_public = true;
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-users"),
+      "users section link is not shown in sidebar"
+    );
+  });
+
+  test("groups and badges section links are shown in more...", async function (assert) {
     await visit("/");
 
     await click(

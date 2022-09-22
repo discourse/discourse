@@ -18,4 +18,8 @@ export default class AdminSectionLink extends BaseSectionLink {
   get text() {
     return I18n.t("sidebar.sections.community.links.admin.content");
   }
+
+  get shouldDisplay() {
+    return this.currentUser?.staff;
+  }
 }

@@ -18,4 +18,8 @@ export default class GroupsSectionLink extends BaseSectionLink {
   get text() {
     return I18n.t("sidebar.sections.community.links.groups.content");
   }
+
+  get shouldDisplay() {
+    return this.siteSettings.enable_group_directory;
+  }
 }
