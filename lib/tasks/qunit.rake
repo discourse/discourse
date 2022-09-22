@@ -108,13 +108,12 @@ task "qunit:test", [:timeout, :qunit_path, :filter] do |_, args|
       system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
       test_page = "#{qunit_path}?#{query}&testem=1"
       cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
-    elsif filter
-      cmd += ["yarn", "ember", "test", "--query", query, "--filter", filter]
     else
       cmd += ["yarn", "ember", "exam", "--query", query]
       if parallel = ENV["QUNIT_PARALLEL"]
         cmd += ["--load-balance", "--parallel", parallel]
       end
+      cmd += ["--filter", filter] if filter
     end
 
     system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
