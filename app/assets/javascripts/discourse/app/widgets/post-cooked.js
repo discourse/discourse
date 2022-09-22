@@ -124,7 +124,7 @@ export default class PostCooked {
       }
 
       html.querySelectorAll("a[href]").forEach((link) => {
-        const href = link.href;
+        const href = link.getAttribute("href");
         let valid = href === lc.url;
 
         // this might be an attachment
