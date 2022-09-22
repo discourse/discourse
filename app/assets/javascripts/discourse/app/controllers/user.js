@@ -199,10 +199,10 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   get displayTopLevelAdminButton() {
-    if (!this.currentUser.staff) {
+    if (!this.currentUser?.staff) {
       return false;
     }
-    if (this.currentUser.redesigned_user_page_nav_enabled) {
+    if (this.currentUser?.redesigned_user_page_nav_enabled) {
       return this.site.desktopView;
     } else {
       return true;
