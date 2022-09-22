@@ -1,17 +1,21 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+
 import { bind } from "discourse-common/utils/decorators";
 
+export const DROPDOWN_BUTTON_CSS_CLASS = "user-nav-dropdown-button";
 export default class UserNavDropdownList extends Component {
-  @tracked displayList = false;
+  @service site;
+  @tracked displayList = this.site.mobileView && this.args.isActive;
 
   get chevron() {
     return this.displayList ? "chevron-up" : "chevron-down";
   }
 
   get defaultButtonClass() {
-    return "user-nav-dropdown-button";
+    return DROPDOWN_BUTTON_CSS_CLASS;
   }
 
   get buttonClass() {
