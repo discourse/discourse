@@ -7,6 +7,7 @@ import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { escape } from "pretty-text/sanitizer";
+import domFromString from "discourse-common/lib/dom-from-string";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -61,7 +62,6 @@ export default class PostCooked {
     this._insertQuoteControls(cookedDiv);
     this._showLinkCounts(cookedDiv);
     this._applySearchHighlight(cookedDiv);
-
     this._decorateAndAdopt(cookedDiv);
 
     return cookedDiv;
@@ -147,10 +147,14 @@ export default class PostCooked {
             bestElements.get(onebox) === link
           ) {
             const title = I18n.t("topic_map.clicks", { count: lc.clicks });
-            link.append(
-              ` <span class='badge badge-notification clicks' title='${title}'>${number(
-                lc.clicks
-              )}</span>`
+
+            link.appendChild(document.createTextNode(" "));
+            link.appendChild(
+              domFromString(
+                `<span class='badge badge-notification clicks' title='${title}'>${number(
+                  lc.clicks
+                )}</span>`
+              )[0]
             );
           }
         }
@@ -229,8 +233,6 @@ export default class PostCooked {
     }
 
     this.expanding = false;
-
-    return false;
   }
 
   _urlForPostNumber(postNumber) {
