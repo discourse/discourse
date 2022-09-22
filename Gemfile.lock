@@ -419,7 +419,7 @@ GEM
     rspec-support (3.11.1)
     rss (0.2.9)
       rexml
-    rswag-specs (2.5.1)
+    rswag-specs (2.6.0)
       activesupport (>= 3.1, < 7.1)
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.1)
