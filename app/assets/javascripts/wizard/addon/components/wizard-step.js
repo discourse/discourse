@@ -156,7 +156,9 @@ export default Component.extend({
   },
 
   @action
-  backStep() {
+  backStep(event) {
+    event?.preventDefault();
+
     if (this.saving) {
       return;
     }
@@ -165,7 +167,9 @@ export default Component.extend({
   },
 
   @action
-  nextStep() {
+  nextStep(event) {
+    event?.preventDefault();
+
     if (this.saving) {
       return;
     }

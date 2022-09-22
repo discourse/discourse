@@ -1,4 +1,5 @@
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import { action } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
@@ -45,6 +46,13 @@ export default Controller.extend(PasswordValidation, {
   },
 
   lockImageUrl: getURL("/images/lock.svg"),
+
+  @action
+  done(event) {
+    event?.preventDefault();
+    this.set("redirected", true);
+    DiscourseURL.redirectTo(this.redirectTo || "/");
+  },
 
   actions: {
     submit() {
@@ -125,11 +133,6 @@ export default Controller.extend(PasswordValidation, {
           });
         }
       );
-    },
-
-    done() {
-      this.set("redirected", true);
-      DiscourseURL.redirectTo(this.redirectTo || "/");
     },
   },
 });
