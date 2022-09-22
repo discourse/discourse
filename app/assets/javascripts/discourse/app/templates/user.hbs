@@ -66,7 +66,7 @@
                 </li>
               {{/if}}
 
-              {{#if (and this.site.desktopView this.currentUser.staff)}}
+              {{#if this.displayTopLevelAdminButton}}
                 <li><a href={{this.model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
               {{/if}}
 
@@ -78,7 +78,7 @@
                 </li>
               {{/if}}
 
-              {{#if this.site.mobileView}}
+              {{#if (and this.site.mobileView this.currentUser.redesigned_user_page_nav_enabled)}}
                 <li>
                   <DButton @class="btn-default toggle-mobile-user-menu" @action={{this.toggleUserNav}} @icon="bars" @label="hamburger_menu" />
                 </li>
