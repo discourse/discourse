@@ -37,7 +37,7 @@
               </div>
               <div class="section-group">
                 {{#each this.recentEmojis as |emoji|}}
-                  {{replace-emoji (concat ":" emoji ":") (hash lazy=true class="recent-emoji")}}
+                  {{replace-emoji (concat ":" emoji ":") (hash lazy=true tabIndex="0" class="recent-emoji")}}
                 {{/each}}
               </div>
             </div>
