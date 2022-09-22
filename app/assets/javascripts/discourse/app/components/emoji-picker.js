@@ -44,6 +44,7 @@ export default Component.extend({
   elements: {
     searchInput: ".emoji-picker-search-container input",
     picker: ".emoji-picker-emoji-area",
+    allEmojis: ".emoji-picker-emoji-area .emoji",
   },
 
   init() {
@@ -101,6 +102,9 @@ export default Component.extend({
       if (!emojiPicker) {
         return;
       }
+
+      this._applyAccessibility();
+
       const popperAnchor = this._getPopperAnchor();
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
@@ -352,6 +356,13 @@ export default Component.extend({
   _focusedOn(item) {
     // returns the item currently being focused on
     return document.activeElement.closest(item) ? document.activeElement : null;
+  },
+
+  _applyAccessibility() {
+    const allEmojis = document.querySelectorAll(this.elements.allEmojis);
+    allEmojis.forEach((emoji) => {
+      emoji.tabIndex = 0;
+    });
   },
 
   _applyFilter(filter) {
