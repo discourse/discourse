@@ -5,12 +5,12 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous Categories Section", function (needs) {
   needs.settings({
     enable_experimental_sidebar_hamburger: true,
     enable_sidebar: true,
-    suppress_uncategorized_badge: false,
   });
 
   test("category section links", async function (assert) {
@@ -32,7 +32,7 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
     );
   });
 
-  test("default sidebar categories", async function (assert) {
+  test("category section links in sidebar when default_sidebar_categories site setting has been configured", async function (assert) {
     this.siteSettings.default_sidebar_categories = "3|13|1";
     await visit("/");
 
@@ -48,6 +48,27 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
     assert.ok(
       exists("a.sidebar-section-link-all-categories"),
       "all categories link is visible"
+    );
+  });
+
+  test("default uncategorized category section links is not shown when allow_uncategorized_topics is disabled", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = false;
+    this.siteSettings.fixed_category_positions = true;
+    const site = Site.current();
+
+    const firstCategory = Site.current().categories.find((category) => {
+      return !category.parent_category_id;
+    });
+
+    site.set("uncategorized_category_id", firstCategory.id);
+
+    await visit("/");
+
+    assert.notOk(
+      exists(
+        `.sidebar-section-categories .sidebar-section-link-${firstCategory.slug}`
+      ),
+      "category section link is not shown in sidebar after being marked as uncategorized"
     );
   });
 });

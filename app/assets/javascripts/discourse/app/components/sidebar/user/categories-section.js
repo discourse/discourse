@@ -6,11 +6,13 @@ import { action } from "@ember/object";
 
 import Component from "@glimmer/component";
 import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
 
 export default class SidebarUserCategoriesSection extends Component {
   @service router;
   @service topicTrackingState;
   @service currentUser;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -30,7 +32,11 @@ export default class SidebarUserCategoriesSection extends Component {
   get sectionLinks() {
     const links = [];
 
-    for (const category of this.currentUser.sidebarCategories) {
+    const categories = this.currentUser.sidebarCategories.filter((category) => {
+      return canDisplayCategory(category, this.siteSettings);
+    });
+
+    for (const category of categories) {
       links.push(
         new CategorySectionLink({
           category,
