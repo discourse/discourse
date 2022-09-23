@@ -214,7 +214,6 @@
     .start-date {
       @include unselectable;
       color: var(--primary-med-or-secondary-med);
-      cursor: pointer;
     }
 
     .timeline-scrollarea {
@@ -301,7 +300,6 @@
       display: inline-block;
       color: var(--primary-med-or-secondary-med);
       margin-top: 0.5em;
-      cursor: pointer;
     }
   }
 }
