@@ -340,10 +340,15 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          Discourse.store.download(self).path
+          Discourse.store.download(self)&.path
         end
 
-      color = begin
+      if local_path.nil?
+        # Download failed. Could be too large to download, or file could be missing in s3
+        color = ""
+      end
+
+      color ||= begin
         data = Discourse::Utils.execute_command(
           "nice",
           "-n",
