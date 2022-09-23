@@ -413,7 +413,11 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & groups.map(&:id)).any?
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+  end
+
+  def belonging_to_group_ids
+    @belonging_to_group_ids ||= group_users.pluck(&:group_id)
   end
 
   def group_granted_trust_level
@@ -1466,6 +1470,8 @@ class User < ActiveRecord::Base
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
       end
     end
+
+    @belonging_to_group_ids = nil
   end
 
   def email

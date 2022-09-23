@@ -52,7 +52,7 @@ module PostGuardian
 
       # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
       if action_key == :notify_user &&
-          (!@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups)) ||
+          (!@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
            !SiteSetting.enable_personal_messages)
         return false
       end

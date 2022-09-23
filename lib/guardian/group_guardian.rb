@@ -37,7 +37,7 @@ module GroupGuardian
 
     # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
     (SiteSetting.enable_personal_messages ||
-      user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))) &&
+      user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)) &&
       group.users.include?(user)
   end
 

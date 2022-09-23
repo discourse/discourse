@@ -143,12 +143,6 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  def self.group_setting_map(setting)
-    if SiteSetting.respond_to?(setting) && SiteSetting.type_supervisor.get_type(setting) == :group_list
-      SiteSetting.public_send(setting).to_s.split("|").map(&:to_i)
-    end
-  end
-
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url
@@ -199,6 +193,7 @@ class SiteSetting < ActiveRecord::Base
 
   def self.whispers_allowed_group_ids
     if SiteSetting.enable_whispers && SiteSetting.whispers_allowed_groups.present?
+      # TODO (martin) Change to whispers_allowed_groups_map
       SiteSetting.whispers_allowed_groups.split("|").map(&:to_i)
     else
       []
@@ -283,6 +278,21 @@ class SiteSetting < ActiveRecord::Base
       send("#{new_method}=", args)
     end
   end
+
+  # Any group_list setting, e.g. personal_message_enabled_groups, will have
+  # a getter defined with _map on the end, e.g. personal_message_enabled_groups_map,
+  # to avoid having to manually split and convert to integer for these settings.
+  def self.define_group_list_map_shortcut_methods
+    SiteSetting.all_settings.select do |setting|
+      setting[:type] == "group_list"
+    end.each do |setting|
+      self.define_singleton_method("#{setting[:setting]}_map") do
+        send(setting[:setting]).split("|").map(&:to_i)
+      end
+    end
+  end
+
+  define_group_list_map_shortcut_methods
 
   protected
 

@@ -174,7 +174,7 @@ class TopicQuery
     return if @user.blank?
 
     # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
-    if !SiteSetting.enable_personal_messages || !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups))
+    if !SiteSetting.enable_personal_messages || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
       return
     end
 
@@ -205,7 +205,7 @@ class TopicQuery
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? && (
-        @user.blank? || !@user.in_any_groups?(SiteSetting.group_setting_map(:personal_message_enabled_groups) || !SiteSetting.enable_personal_messages))
+        @user.blank? || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map || !SiteSetting.enable_personal_messages))
       return
     end
 
