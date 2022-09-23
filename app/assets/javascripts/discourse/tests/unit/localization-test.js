@@ -112,12 +112,17 @@ test("translation overrides", function (assert) {
 test("translation overrides (admin_js)", function (assert) {
   I18n._overrides = {
     fr: {
-      "admin_js.api.both_languages1": "admin.api.both_languages1 (FR override)",
-      "admin_js.api.only_english2": "admin.api.only_english2 (FR override)",
+      "admin_js.admin.api.both_languages1":
+        "admin.api.both_languages1 (FR override)",
+      "admin_js.admin.api.only_english2":
+        "admin.api.only_english2 (FR override)",
+      "admin_js.type_to_filter": "type_to_filter (FR override)",
     },
     en: {
-      "admin_js.api.both_languages2": "admin.api.both_languages2 (EN override)",
-      "admin_js.api.only_english1": "admin.api.only_english1 (EN override)",
+      "admin_js.admin.api.both_languages2":
+        "admin.api.both_languages2 (EN override)",
+      "admin_js.admin.api.only_english1":
+        "admin.api.only_english1 (EN override)",
     },
   };
   LocalizationInitializer.initialize(getApplication());
@@ -144,6 +149,12 @@ test("translation overrides (admin_js)", function (assert) {
     I18n.t("admin.api.both_languages2"),
     "admin.api.both_languages2 (FR)",
     "prefers translation in current locale over override in fallback locale"
+  );
+
+  assert.strictEqual(
+    I18n.t("type_to_filter"),
+    "type_to_filter (FR override)",
+    "correctly changes the translation key by removing `admin_js`"
   );
 });
 

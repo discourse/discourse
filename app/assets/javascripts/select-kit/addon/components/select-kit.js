@@ -940,7 +940,7 @@ export default Component.extend(
               },
             },
             {
-              name: "sameWidth",
+              name: "minWidth",
               enabled: window.innerWidth > 450,
               phase: "beforeWrite",
               requires: ["computeStyles"],
@@ -949,24 +949,12 @@ export default Component.extend(
                   state.rects.reference.width,
                   220
                 )}px`;
-
-                if (state.rects.reference.width >= 300) {
-                  state.styles.popper.maxWidth = `${state.rects.reference.width}px`;
-                } else {
-                  state.styles.popper.maxWidth = "300px";
-                }
               },
               effect: ({ state }) => {
                 state.elements.popper.style.minWidth = `${Math.max(
                   state.elements.reference.offsetWidth,
                   220
                 )}px`;
-
-                if (state.elements.reference.offsetWidth >= 300) {
-                  state.elements.popper.style.maxWidth = `${state.elements.reference.offsetWidth}px`;
-                } else {
-                  state.elements.popper.style.maxWidth = "300px";
-                }
               },
             },
             {

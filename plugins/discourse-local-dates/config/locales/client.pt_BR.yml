@@ -31,6 +31,7 @@ pt_BR:
           format_title: Formato de data
           timezone: Fuso horário
           until: Até…
+          current_timezone: "Fuso horário atual:"
           recurring:
             every_day: "Todos os dias"
             every_week: "Todas as semanas"

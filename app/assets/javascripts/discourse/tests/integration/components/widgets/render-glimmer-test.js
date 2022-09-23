@@ -7,12 +7,23 @@ import widgetHbs from "discourse/widgets/hbs-compiler";
 import Widget from "discourse/widgets/widget";
 import ClassicComponent from "@ember/component";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { bind } from "discourse-common/utils/decorators";
 
 class DemoWidget extends Widget {
   static actionTriggered = false;
   tagName = "div.my-widget";
 
-  html(attrs) {
+  buildKey() {
+    return "abc";
+  }
+
+  defaultState() {
+    return {
+      actionTriggered: false,
+    };
+  }
+
+  html(attrs, state) {
     return [
       this.attach("button", {
         label: "rerender",
@@ -25,24 +36,29 @@ class DemoWidget extends Widget {
         hbs`<div class='glimmer-content'>
               arg1={{@data.arg1}} dynamicArg={{@data.dynamicArg}}
             </div>
-            <DemoComponent @arg1={{@data.arg1}} @dynamicArg={{@data.dynamicArg}} @action={{@data.actionForComponentToTrigger}}/>`,
+            <DemoComponent @arg1={{@data.arg1}} @dynamicArg={{@data.dynamicArg}} @action={{@data.actionForComponentToTrigger}} @widgetActionTriggered={{@data.widgetActionTriggered}}/>`,
         {
           ...attrs,
           actionForComponentToTrigger: this.actionForComponentToTrigger,
+          widgetActionTriggered: state.actionTriggered,
         }
       ),
     ];
   }
   dummyAction() {}
+
+  @bind
   actionForComponentToTrigger() {
+    this.state.actionTriggered = true;
     DemoWidget.actionTriggered = true;
+    this.scheduleRerender();
   }
 }
 
 class DemoComponent extends ClassicComponent {
   static eventLog = [];
   classNames = ["demo-component"];
-  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} />`;
+  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} /><p class='action-state'>{{@widgetActionTriggered}}</p>`;
 
   init() {
     DemoComponent.eventLog.push("init");
@@ -229,6 +245,37 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
     await click("div.demo-component button");
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");
+  });
+
+  test("modify widget state with component action", async function (assert) {
+    await render(
+      hbs`<MountWidget @widget="demo-widget" @args={{hash arg1="val1"}} />`
+    );
+
+    assert.false(
+      DemoWidget.actionTriggered,
+      "widget event has not been triggered yet"
+    );
+
+    assert.strictEqual(
+      query(".action-state").innerText,
+      "false",
+      "eventTriggered is false in nested component"
+    );
+
+    assert.true(
+      exists("div.demo-component button"),
+      "component button is rendered"
+    );
+
+    await click("div.demo-component button");
+    assert.true(DemoWidget.actionTriggered, "widget event is triggered");
+
+    assert.strictEqual(
+      query(".action-state").innerText,
+      "true",
+      "eventTriggered is true in nested component"
+    );
   });
 
   test("developer ergonomics", function (assert) {

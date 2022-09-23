@@ -45,7 +45,11 @@
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}
+
+  {{~raw-plugin-outlet name="topic-list-main-link-bottom"}}
 </td>
+
+{{~raw-plugin-outlet name="topic-list-after-main-link"}}
 
 {{#if showPosters}}
   {{raw "list/posters-column" posters=topic.featuredUsers}}

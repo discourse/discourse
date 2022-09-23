@@ -392,6 +392,15 @@ createWidget("revamped-hamburger-menu-wrapper", {
     ];
   },
 
+  click(event) {
+    if (
+      event.target.closest(".sidebar-section-header-button") ||
+      event.target.closest(".sidebar-section-link")
+    ) {
+      this.sendWidgetAction("toggleHamburger");
+    }
+  },
+
   clickOutside() {
     this.sendWidgetAction("toggleHamburger");
   },
@@ -407,13 +416,20 @@ createWidget("revamped-user-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<UserMenu::Menu />`
+        hbs`<UserMenu::Menu @closeUserMenu={{@data.closeUserMenu}} />`,
+        {
+          closeUserMenu: this.closeUserMenu.bind(this),
+        }
       ),
     ];
   },
 
-  clickOutside() {
+  closeUserMenu() {
     this.sendWidgetAction("toggleUserMenu");
+  },
+
+  clickOutside() {
+    this.closeUserMenu();
   },
 });
 

@@ -18,4 +18,8 @@ export default class BadgesSectionLink extends BaseSectionLink {
   get text() {
     return I18n.t("sidebar.sections.community.links.badges.content");
   }
+
+  get shouldDisplay() {
+    return this.siteSettings.enable_badges;
+  }
 }

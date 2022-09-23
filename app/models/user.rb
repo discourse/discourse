@@ -642,8 +642,24 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
+    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
+      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
+    TEXT
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
+      true
+    else
+      false
+    end
+  end
+
+  def bump_last_seen_notification!
+    query = self.notifications.visible
+    if seen_notification_id
+      query = query.where("notifications.id > ?", seen_notification_id)
+    end
+    if max_notification_id = query.maximum(:id)
+      update!(seen_notification_id: max_notification_id)
       true
     else
       false
@@ -1380,7 +1396,7 @@ class User < ActiveRecord::Base
 
   def number_of_rejected_posts
     ReviewableQueuedPost
-      .where(status: Reviewable.statuses[:rejected])
+      .rejected
       .where(created_by_id: self.id)
       .count
   end
@@ -1639,24 +1655,8 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  REDESIGN_USER_MENU_REDIS_KEY_PREFIX = "redesigned_user_menu_for_user_"
-
-  def self.redesigned_user_menu_enabled_user_ids
-    Discourse.redis.scan_each(match: "#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}*").map do |key|
-      key.sub(REDESIGN_USER_MENU_REDIS_KEY_PREFIX, "").to_i
-    end
-  end
-
   def redesigned_user_menu_enabled?
-    Discourse.redis.get("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}") == "1"
-  end
-
-  def enable_redesigned_user_menu
-    Discourse.redis.setex("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}", 6.months, "1")
-  end
-
-  def disable_redesigned_user_menu
-    Discourse.redis.del("#{REDESIGN_USER_MENU_REDIS_KEY_PREFIX}#{self.id}")
+    SiteSetting.enable_experimental_sidebar_hamburger
   end
 
   def sidebar_categories_ids

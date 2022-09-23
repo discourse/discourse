@@ -5,7 +5,8 @@
 .timeline-container {
   box-sizing: border-box;
   z-index: z("timeline");
-  -webkit-transform: translate3d(0, 0, 0);
+  transform: translateZ(0);
+
   &.timeline-docked-bottom {
     margin-bottom: -4em;
     @media screen and (prefers-reduced-motion: no-preference) {
@@ -80,7 +81,7 @@
         display: block;
         @include line-clamp(8);
         @media screen and (max-height: 425px) {
-          -webkit-line-clamp: 5;
+          @include line-clamp(5);
         }
       }
       .username {
@@ -213,6 +214,7 @@
     .start-date {
       @include unselectable;
       color: var(--primary-med-or-secondary-med);
+      cursor: pointer;
     }
 
     .timeline-scrollarea {
@@ -220,7 +222,7 @@
       margin-left: 0.5em;
       border-left: 1px solid var(--tertiary-low-or-tertiary-high);
       position: relative;
-      -webkit-transform: translate3d(0, 0, 0);
+      transform: translateZ(0);
     }
 
     .timeline-padding {
@@ -299,6 +301,7 @@
       display: inline-block;
       color: var(--primary-med-or-secondary-med);
       margin-top: 0.5em;
+      cursor: pointer;
     }
   }
 }

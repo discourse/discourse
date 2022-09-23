@@ -65,8 +65,9 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     if (!this.notification.read) {
       this.notification.set("read", true);
 
-      const groupedUnreadNotifications =
-        this.currentUser.grouped_unread_notifications;
+      const groupedUnreadNotifications = {
+        ...this.currentUser.grouped_unread_notifications,
+      };
       const unreadCount =
         groupedUnreadNotifications &&
         groupedUnreadNotifications[this.notification.notification_type];
@@ -82,5 +83,6 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
       setTransientHeader("Discourse-Clear-Notifications", this.notification.id);
       cookie("cn", this.notification.id, { path: getURL("/") });
     }
+    super.onClick(...arguments);
   }
 }

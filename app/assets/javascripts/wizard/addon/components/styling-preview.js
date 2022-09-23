@@ -13,7 +13,7 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-export default createPreviewComponent(642, 322, {
+export default createPreviewComponent(628, 322, {
   logo: null,
   avatar: null,
   previewTopic: true,

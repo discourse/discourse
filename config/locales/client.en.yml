@@ -2567,17 +2567,53 @@ en:
     view_all: "view all %{tab}"
     user_menu:
       generic_no_items: "There are no items in this list."
-      sr_menu_tabs: "Menu tabs"
+      sr_menu_tabs: "User menu tabs"
       view_all_notifications: "view all notifications"
       view_all_bookmarks: "view all bookmarks"
       view_all_messages: "view all personal messages"
+      tabs:
+        all_notifications: "All notifications"
+        replies: "Replies"
+        replies_with_unread:
+          one: "Replies - %{count} unread reply"
+          other: "Replies - %{count} unread replies"
+        mentions: "Mentions"
+        mentions_with_unread:
+          one: "Mentions - %{count} unread mention"
+          other: "Mentions - %{count} unread mentions"
+        likes: "Likes"
+        likes_with_unread:
+          one: "Likes - %{count} unread like"
+          other: "Likes - %{count} unread likes"
+        watching: "Watched topics"
+        watching_with_unread:
+          one: "Watched topics - %{count} unread watched topic"
+          other: "Watched topics - %{count} unread watched topics"
+        messages: "Personal messages"
+        messages_with_unread:
+          one: "Personal messages - %{count} unread message"
+          other: "Personal messages - %{count} unread messages"
+        bookmarks: "Bookmarks"
+        bookmarks_with_unread:
+          one: "Bookmarks - %{count} unread bookmark"
+          other: "Bookmarks - %{count} unread bookmarks"
+        review_queue: "Review queue"
+        review_queue_with_unread:
+          one: "Review queue - %{count} item needs review"
+          other: "Review queue - %{count} items need review"
+        other_notifications: "Other notifications"
+        other_notifications_with_unread:
+          one: "Other notifications - %{count} unread notification"
+          other: "Other notifications - %{count} unread notifications"
+        profile: "Profile"
       reviewable:
         view_all: "view all review items"
         queue: "Queue"
         deleted_user: "(deleted user)"
+        deleted_post: "(deleted post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
-        suspicious_user: "suspicious user %{username}"
+        user_requires_approval: "%{username} requires approval"
         default_item: "reviewable item #%{reviewable_id}"
 
     topics:
@@ -3289,12 +3325,12 @@ en:
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete those %{count} posts?"
+          other: "Are you sure you want to delete these %{count} posts?"
 
       merge:
         confirm:
-          one: "Are you sure you want to merge those posts?"
-          other: "Are you sure you want to merge those %{count} posts?"
+          one: "Are you sure you want to merge these posts?"
+          other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
         controls:
@@ -3731,6 +3767,8 @@ en:
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
+    safari_13_warning: This site will soon remove support for iOS and Safari versions 13 and below. A simplified read-only version will remain available. (<a href="https://meta.discourse.org/t/224747">more information</a>)
+
     permission_types:
       full: "Create / Reply / See"
       create_post: "Reply / See"
@@ -3886,7 +3924,7 @@ en:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
-      all_tags: "All Tags"
+      all_tags: "All tags"
       other_tags: "Other Tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
@@ -4095,7 +4133,11 @@ en:
         other: "%{count} new"
       toggle_section: "toggle section"
       more: "More..."
+      all_categories: "All categories"
+      all_tags: "All tags"
       sections:
+        about:
+          header_link_text: "About"
         messages:
           header_link_text: "Messages"
           header_action_title: "create a personal message"
@@ -5289,6 +5331,7 @@ en:
         suspended: "Suspended?"
         staged: "Staged?"
         show_admin_profile: "Admin"
+        manage_user: "Manage user"
         show_public_profile: "Show Public Profile"
         impersonate: "Impersonate"
         action_logs: "Action Logs"
@@ -5390,7 +5433,8 @@ en:
         cant_delete_all_too_many_posts:
           one: "Can't delete all posts because the user has more than %{count} post. (delete_all_posts_max)"
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
-        delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions.<br><br>Are you SURE you want to delete this user? This is permanent!"
+        delete_confirm_title: "Are you SURE you want to delete this user? This is permanent!"
+        delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
         deleting_user: "Deleting user..."

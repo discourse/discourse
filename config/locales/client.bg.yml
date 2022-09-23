@@ -2919,7 +2919,6 @@ bg:
     download_calendar:
       download: "Изтегли"
     tagging:
-      all_tags: "Всички тагове"
       other_tags: "Други тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
@@ -2992,6 +2991,7 @@ bg:
         one: "%{count} нов"
         other: "%{count} нови"
       more: "Още..."
+      all_categories: "Всички категории"
       sections:
         messages:
           header_link_text: "Съобщения"

@@ -93,10 +93,7 @@ export default Controller.extend(ModalFunctionality, {
       this._keyLoading = true;
       ajax(this.keyGenUrl, { type: "POST" })
         .then((pair) => {
-          this.setProperties({
-            privateKey: pair.private_key,
-            publicKey: pair.public_key,
-          });
+          this.set("publicKey", pair.public_key);
         })
         .catch(popupAjaxError)
         .finally(() => {
@@ -139,7 +136,6 @@ export default Controller.extend(ModalFunctionality, {
     this.setProperties({
       duplicateRemoteThemeWarning: null,
       privateChecked: false,
-      privateKey: null,
       localFile: null,
       uploadUrl: null,
       publicKey: null,
@@ -216,7 +212,7 @@ export default Controller.extend(ModalFunctionality, {
         };
 
         if (this.privateChecked) {
-          options.data.private_key = this.privateKey;
+          options.data.public_key = this.publicKey;
         }
       }
 
@@ -239,10 +235,10 @@ export default Controller.extend(ModalFunctionality, {
           this.send("closeModal");
         })
         .then(() => {
-          this.setProperties({ privateKey: null, publicKey: null });
+          this.set("publicKey", null);
         })
         .catch((error) => {
-          if (!this.privateKey || this.themeCannotBeInstalled) {
+          if (!this.publicKey || this.themeCannotBeInstalled) {
             return popupAjaxError(error);
           }
 

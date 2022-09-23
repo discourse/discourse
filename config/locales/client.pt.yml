@@ -3284,7 +3284,6 @@ pt:
       download: "Transferir"
       add_to_calendar: "Adicionar ao calendário"
     tagging:
-      all_tags: "Todas as Etiquetas"
       other_tags: "Outras Tags"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
@@ -3428,6 +3427,7 @@ pt:
         one: "%{count} novo"
         other: "%{count} novos"
       more: "Mais..."
+      all_categories: "Todas as categorias"
       sections:
         messages:
           header_link_text: "Mensagens"

@@ -21,16 +21,6 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(notifications[2].classList.contains("liked-consolidated"));
   });
 
-  test("notifications panel has a11y attributes", async function (assert) {
-    await render(template);
-    const panel = query("#quick-access-all-notifications");
-    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
-    assert.strictEqual(
-      panel.getAttribute("aria-labelledby"),
-      "user-menu-button-all-notifications"
-    );
-  });
-
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
     await render(template);
     const activeTab = query(".top-tabs.tabs-list .btn.active");
@@ -48,12 +38,13 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 8);
     [
       "all-notifications",
       "replies",
       "mentions",
       "likes",
+      "watching",
       "messages",
       "bookmarks",
     ].forEach((tab, index) => {
@@ -72,7 +63,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
-    assert.strictEqual(profileTab.dataset.tabNumber, "6");
+    assert.strictEqual(profileTab.dataset.tabNumber, "8");
     assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
   });
 
@@ -82,11 +73,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 8);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6", "7"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -95,14 +86,14 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
-    assert.strictEqual(tab.dataset.tabNumber, "6");
+    assert.strictEqual(tab.dataset.tabNumber, "7");
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 8);
+    assert.strictEqual(tabs.length, 10);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7"],
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
   });
@@ -117,11 +108,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-messages"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 8);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6", "7"],
       "data-tab-number of the tabs has no gaps when the messages tab is hidden"
     );
   });

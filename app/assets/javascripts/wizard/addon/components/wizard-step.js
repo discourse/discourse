@@ -1,7 +1,6 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
-import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
@@ -11,6 +10,7 @@ const alreadyWarned = {};
 
 export default Component.extend({
   router: service(),
+  dialog: service(),
   classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
@@ -41,22 +41,22 @@ export default Component.extend({
 
   @discourseComputed("step.id")
   showJumpInButton(step) {
-    return step === "ready";
+    return ["ready", "styling", "branding"].includes(step);
+  },
+
+  @discourseComputed("step.id")
+  jumpInButtonLabel(step) {
+    return `wizard.${step === "ready" ? "jump_in" : "finish"}`;
+  },
+
+  @discourseComputed("step.id")
+  jumpInButtonClass(step) {
+    return step === "ready" ? "jump-in" : "finish";
   },
 
   @discourseComputed("step.id")
   showFinishButton(step) {
-    return ["styling", "branding", "corporate"].includes(step);
-  },
-
-  @discourseComputed("step.id")
-  finishButtonLabel(step) {
-    return `wizard.${step === "corporate" ? "jump_in" : "finish"}`;
-  },
-
-  @discourseComputed("step.id")
-  finishButtonClass(step) {
-    return step === "corporate" ? "jump-in" : "finish";
+    return step === "corporate";
   },
 
   @discourseComputed("step.id")
@@ -65,11 +65,11 @@ export default Component.extend({
   },
 
   @discourseComputed("step.banner")
-  bannerImage(src) {
-    if (!src) {
+  bannerImage(bannerName) {
+    if (!bannerName) {
       return;
     }
-    return getUrl(`/images/wizard/${src}`);
+    return bannerName;
   },
 
   @discourseComputed()
@@ -179,16 +179,10 @@ export default Component.extend({
       if (unwarned.length) {
         unwarned.forEach((w) => (alreadyWarned[w] = true));
 
-        return window.bootbox.confirm(
-          unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          (confirmed) => {
-            if (confirmed) {
-              this.advance();
-            }
-          }
-        );
+        return this.dialog.confirm({
+          message: unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
+          didConfirm: () => this.advance(),
+        });
       }
     }
 

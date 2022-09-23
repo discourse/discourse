@@ -442,6 +442,19 @@ eviltrout</p>
     );
   });
 
+  test("Incomplete quotes", function (assert) {
+    assert.cookedOptions(
+      '[quote=", post: 1"]\na quote\n[/quote]',
+      { topicId: 2 },
+      `<aside class=\"quote no-group\" data-post=\"1\">
+<blockquote>
+<p>a quote</p>
+</blockquote>
+</aside>`,
+      "works with missing username"
+    );
+  });
+
   test("Mentions", function (assert) {
     assert.cooked(
       "Hello @sam",

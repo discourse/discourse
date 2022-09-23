@@ -87,10 +87,11 @@
 
   .sidebar-section-message-wrapper {
     display: flex;
+    padding-top: 0;
   }
 
   .sidebar-section-message {
-    color: var(--primary-high);
+    color: var(--primary);
   }
 
   .sidebar-section-content {

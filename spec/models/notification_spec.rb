@@ -289,7 +289,7 @@ RSpec.describe Notification do
                                    data: '{}',
                                    notification_type: Notification.types[:mentioned])
 
-      user.saw_notification_id(other.id)
+      user.bump_last_seen_notification!
       user.reload
 
       expect(user.unread_notifications).to eq(0)
@@ -366,8 +366,123 @@ end
 
 # pulling this out cause I don't want an observer
 RSpec.describe Notification do
+  fab!(:user) { Fabricate(:user) }
+
+  describe '.prioritized_list' do
+    def create(**opts)
+      opts[:user] = user if !opts[:user]
+      Fabricate(:notification, user: user, **opts)
+    end
+
+    fab!(:unread_high_priority_1) { create(high_priority: true, read: false, created_at: 8.minutes.ago) }
+    fab!(:read_high_priority_1) { create(high_priority: true, read: true, created_at: 7.minutes.ago) }
+    fab!(:unread_regular_1) { create(high_priority: false, read: false, created_at: 6.minutes.ago) }
+    fab!(:read_regular_1) { create(high_priority: false, read: true, created_at: 5.minutes.ago) }
+
+    fab!(:unread_high_priority_2) { create(high_priority: true, read: false, created_at: 1.minutes.ago) }
+    fab!(:read_high_priority_2) { create(high_priority: true, read: true, created_at: 2.minutes.ago) }
+    fab!(:unread_regular_2) { create(high_priority: false, read: false, created_at: 3.minutes.ago) }
+    fab!(:read_regular_2) { create(high_priority: false, read: true, created_at: 4.minutes.ago) }
+
+    it "puts unread high_priority on top followed by unread normal notifications and then everything else in reverse chronological order" do
+      expect(Notification.prioritized_list(user).map(&:id)).to eq([
+        unread_high_priority_2,
+        unread_high_priority_1,
+        unread_regular_2,
+        unread_regular_1,
+        read_high_priority_2,
+        read_regular_2,
+        read_regular_1,
+        read_high_priority_1,
+      ].map(&:id))
+    end
+
+    it "doesn't include notifications from other users" do
+      another_user_notification = create(high_priority: true, read: false, user: Fabricate(:user))
+      expect(Notification.prioritized_list(user).map(&:id)).to contain_exactly(*[
+        unread_high_priority_2,
+        unread_high_priority_1,
+        unread_regular_2,
+        unread_regular_1,
+        read_high_priority_2,
+        read_regular_2,
+        read_regular_1,
+        read_high_priority_1,
+      ].map(&:id))
+      expect(
+        Notification.prioritized_list(another_user_notification.user).map(&:id)
+      ).to contain_exactly(another_user_notification.id)
+    end
+
+    it "doesn't include notifications from deleted topics" do
+      unread_high_priority_1.topic.trash!
+      unread_regular_2.topic.trash!
+      read_regular_1.topic.trash!
+      expect(Notification.prioritized_list(user).map(&:id)).to contain_exactly(*[
+        unread_high_priority_2,
+        unread_regular_1,
+        read_high_priority_2,
+        read_regular_2,
+        read_high_priority_1,
+      ].map(&:id))
+    end
+
+    it "doesn't include like notifications if the user doesn't want like notifications" do
+      user.user_option.update!(
+        like_notification_frequency:
+        UserOption.like_notification_frequency_type[:never]
+      )
+      unread_regular_1.update!(notification_type: Notification.types[:liked])
+      read_regular_2.update!(notification_type: Notification.types[:liked_consolidated])
+      expect(Notification.prioritized_list(user).map(&:id)).to eq([
+        unread_high_priority_2,
+        unread_high_priority_1,
+        unread_regular_2,
+        read_high_priority_2,
+        read_regular_1,
+        read_high_priority_1,
+      ].map(&:id))
+    end
+
+    it "respects the count param" do
+      expect(Notification.prioritized_list(user, count: 1).map(&:id)).to eq([
+        unread_high_priority_2,
+      ].map(&:id))
+      expect(Notification.prioritized_list(user, count: 3).map(&:id)).to eq([
+        unread_high_priority_2,
+        unread_high_priority_1,
+        unread_regular_2,
+      ].map(&:id))
+    end
+
+    it "can filter the list by specific types" do
+      unread_regular_1.update!(notification_type: Notification.types[:liked])
+      read_regular_2.update!(notification_type: Notification.types[:liked_consolidated])
+      expect(Notification.prioritized_list(
+        user,
+        types: [Notification.types[:liked], Notification.types[:liked_consolidated]]
+      ).map(&:id)).to eq([unread_regular_1, read_regular_2].map(&:id))
+    end
+
+    it "includes like notifications when filtering by like types even if the user doesn't want like notifications" do
+      user.user_option.update!(
+        like_notification_frequency:
+        UserOption.like_notification_frequency_type[:never]
+      )
+      unread_regular_1.update!(notification_type: Notification.types[:liked])
+      read_regular_2.update!(notification_type: Notification.types[:liked_consolidated])
+      expect(Notification.prioritized_list(
+        user,
+        types: [Notification.types[:liked], Notification.types[:liked_consolidated]]
+      ).map(&:id)).to eq([unread_regular_1, read_regular_2].map(&:id))
+      expect(Notification.prioritized_list(
+        user,
+        types: [Notification.types[:liked]]
+      ).map(&:id)).to contain_exactly(unread_regular_1.id)
+    end
+  end
+
   describe '#recent_report' do
-    fab!(:user) { Fabricate(:user) }
     let(:post) { Fabricate(:post) }
 
     def fab(type, read)

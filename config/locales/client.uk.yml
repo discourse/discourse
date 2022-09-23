@@ -2558,7 +2558,6 @@ uk:
         deleted_user: "(видалений користувач)"
         post_number_with_topic_title: "допис #%{post_number} - %{title}"
         new_post_in_topic: "новий допис в темі %{title}"
-        suspicious_user: "підозрілий користувач %{username}"
         default_item: "премодерований елемент #%{reviewable_id}"
     topics:
       new_messages_marker: "останнє відвідування"
@@ -3292,12 +3291,6 @@ uk:
           few: "Ви впевнені, що хочете видалити %{count} повідомлення?"
           many: "Ви впевнені, що хочете видалити %{count} повідомлень?"
           other: "Ви впевнені, що хочете видалити %{count} повідомлень?"
-      merge:
-        confirm:
-          one: "Ви впевнені, що хочете об’єднати ці повідомлення?"
-          few: "Are you sure you want to merge those %{count} posts?"
-          many: "Are you sure you want to merge those %{count} posts?"
-          other: "Are you sure you want to merge those %{count} posts?"
       revisions:
         controls:
           first: "Перша версія"
@@ -3902,7 +3895,6 @@ uk:
       google: "Календар Google"
       ics: "ICS"
     tagging:
-      all_tags: "Усі мітки"
       other_tags: "Інші мітки"
       selector_all_tags: "усі мітки"
       selector_no_tags: "без міток"
@@ -4112,6 +4104,7 @@ uk:
         other: "%{count} нова"
       toggle_section: "Переключити розділ"
       more: "Ще..."
+      all_categories: "Всі категорії"
       sections:
         messages:
           header_link_text: "Повідомлення"
@@ -5386,7 +5379,6 @@ uk:
           few: "Не вдалось визначити видалити всі повідомлення, тому що у користувача більш %{count} повідомлень. (Налаштування delete_all_posts_max.)"
           many: "Не вдалось визначити видалити всі повідомлення, тому що у користувача більш %{count} повідомлень. (Налаштування delete_all_posts_max.)"
           other: "Не вдалось визначити видалити всі повідомлення, тому що у користувача більш %{count} повідомлень. (Налаштування delete_all_posts_max.)"
-        delete_confirm: "Зазвичай краще анонімізувати користувачів, ніж видаляти їх, щоб уникнути видалення контенту з існуючих обговорень. <br><br>Ви впевнені, що хочете видалити цього користувача? Це назавжди!"
         delete_and_block: "Видалити та <b>заблокувати</b> цей e-mail та IP адресу"
         delete_dont_block: "Лише видалення"
         deleting_user: "Видалити користувача..."

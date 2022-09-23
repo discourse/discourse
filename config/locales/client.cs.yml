@@ -2328,12 +2328,6 @@ cs:
           few: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
           many: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
           other: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
-      merge:
-        confirm:
-          one: "Opravdu chceš sloučit tyto příspěvky?"
-          few: "Opravdu chceš sloučit %{count} příspěvky?"
-          many: "Opravdu chceš sloučit %{count} příspěvků?"
-          other: "Opravdu chceš sloučit %{count} příspěvků?"
       revisions:
         controls:
           first: "První revize"
@@ -2786,7 +2780,6 @@ cs:
     download_calendar:
       download: "Stáhnout"
     tagging:
-      all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
       selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
@@ -2887,6 +2880,7 @@ cs:
         many: "%{count} nových"
         other: "%{count} nové"
       more: "Více..."
+      all_categories: "Všechny kategorie"
       sections:
         messages:
           header_link_text: "Zprávy"

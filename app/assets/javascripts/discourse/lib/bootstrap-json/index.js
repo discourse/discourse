@@ -381,30 +381,36 @@ module.exports = {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       const scripts = [];
 
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
-        const pluginInfos = this.app.project
-          .findAddonByName("discourse-plugins")
-          .pluginInfos();
+      const pluginInfos = this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos();
 
-        for (const { name, hasJs, hasAdminJs } of pluginInfos) {
-          if (hasJs) {
-            scripts.push({ src: `plugins/${name}.js`, name });
-          }
-
-          if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
-            scripts.push({ src: `plugins/${name}_extras.js`, name });
-          }
-
-          if (hasAdminJs) {
-            scripts.push({ src: `plugins/${name}_admin.js`, name });
-          }
+      for (const {
+        pluginName,
+        directoryName,
+        hasJs,
+        hasAdminJs,
+      } of pluginInfos) {
+        if (hasJs) {
+          scripts.push({
+            src: `plugins/${directoryName}.js`,
+            name: pluginName,
+          });
         }
-      } else {
-        scripts.push({
-          src: "discourse/tests/active-plugins.js",
-          name: "_all",
-        });
-        scripts.push({ src: "admin-plugins.js", name: "_admin" });
+
+        if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+          scripts.push({
+            src: `plugins/${directoryName}_extras.js`,
+            name: pluginName,
+          });
+        }
+
+        if (hasAdminJs) {
+          scripts.push({
+            src: `plugins/${directoryName}_admin.js`,
+            name: pluginName,
+          });
+        }
       }
 
       return scripts
@@ -414,19 +420,15 @@ module.exports = {
         )
         .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS !== "0") {
-        return this.app.project
-          .findAddonByName("discourse-plugins")
-          .pluginInfos()
-          .filter(({ hasTests }) => hasTests)
-          .map(
-            ({ name }) =>
-              `<script src="${config.rootURL}assets/plugins/test/${name}_tests.js" data-discourse-plugin="${name}"></script>`
-          )
-          .join("\n");
-      } else {
-        return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js" data-discourse-plugin="_all"></script>`;
-      }
+      return this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos()
+        .filter(({ hasTests }) => hasTests)
+        .map(
+          ({ directoryName, pluginName }) =>
+            `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+        )
+        .join("\n");
     }
   },
 
@@ -447,6 +449,16 @@ to serve API requests. For example:
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
+
+    app.use(
+      "/favicon.ico",
+      express.static(
+        path.join(
+          __dirname,
+          "../../../../../../public/images/discourse-logo-sketch-small.png"
+        )
+      )
+    );
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {

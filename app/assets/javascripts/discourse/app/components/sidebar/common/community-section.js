@@ -23,27 +23,19 @@ export default class SidebarCommunitySection extends Component {
   constructor() {
     super(...arguments);
 
-    this.moreSectionLinks = [
+    this.moreSectionLinks = this.#initializeSectionLinks([
       ...this.defaultMoreSectionLinks,
       ...customSectionLinks,
-    ].map((sectionLinkClass) => {
-      return this.#initializeSectionLink(sectionLinkClass);
-    });
+    ]);
 
-    this.moreSecondarySectionLinks = [
+    this.moreSecondarySectionLinks = this.#initializeSectionLinks([
       ...this.defaultMoreSecondarySectionLinks,
       ...secondaryCustomSectionLinks,
-    ].map((sectionLinkClass) => {
-      return this.#initializeSectionLink(sectionLinkClass);
-    });
+    ]);
 
-    const mainSectionLinks = this.currentUser?.staff
-      ? [...this.defaultMainSectionLinks, ...this.defaultAdminMainSectionLinks]
-      : [...this.defaultMainSectionLinks];
-
-    this.sectionLinks = mainSectionLinks.map((sectionLinkClass) => {
-      return this.#initializeSectionLink(sectionLinkClass);
-    });
+    this.sectionLinks = this.#initializeSectionLinks(
+      this.defaultMainSectionLinks
+    );
 
     this.callbackId = this.topicTrackingState.onStateChange(() => {
       this.sectionLinks.forEach((sectionLink) => {
@@ -63,11 +55,6 @@ export default class SidebarCommunitySection extends Component {
   }
 
   // Override in child
-  get defaultAdminMainSectionLinks() {
-    return [];
-  }
-
-  // Override in child
   get defaultMoreSectionLinks() {
     return [];
   }
@@ -75,6 +62,18 @@ export default class SidebarCommunitySection extends Component {
   // Override in child
   get defaultMoreSecondarySectionLinks() {
     return [];
+  }
+
+  #initializeSectionLinks(sectionLinkClasses) {
+    return sectionLinkClasses.reduce((links, sectionLinkClass) => {
+      const sectionLink = this.#initializeSectionLink(sectionLinkClass);
+
+      if (sectionLink.shouldDisplay) {
+        links.push(sectionLink);
+      }
+
+      return links;
+    }, []);
   }
 
   #initializeSectionLink(sectionLinkClass) {

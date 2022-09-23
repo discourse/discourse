@@ -10,6 +10,8 @@ import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
+let deleteAndBlock = null;
+
 acceptance("Admin - User Index", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
@@ -97,6 +99,34 @@ acceptance("Admin - User Index", function (needs) {
         allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY],
       });
     });
+
+    server.get("/admin/users/5.json", () => {
+      return helper.response({
+        id: 5,
+        username: "user5",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+        can_be_deleted: true,
+        post_count: 0,
+      });
+    });
+
+    server.delete("/admin/users/5.json", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+
+      if (data.block_email || data.block_ip || data.block_urls) {
+        deleteAndBlock = true;
+      } else {
+        deleteAndBlock = false;
+      }
+
+      return helper.response({});
+    });
+  });
+
+  needs.hooks.beforeEach(() => {
+    deleteAndBlock = null;
   });
 
   test("can edit username", async function (assert) {
@@ -212,5 +242,28 @@ acceptance("Admin - User Index", function (needs) {
       "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
     );
+  });
+
+  test("delete user - delete without blocking works as expected", async function (assert) {
+    await visit("/admin/users/5/user5");
+    await click(".btn-user-delete");
+
+    assert.equal(
+      query("#dialog-title").textContent,
+      I18n.t("admin.user.delete_confirm_title"),
+      "dialog has a title"
+    );
+
+    await click(".dialog-footer .btn-primary");
+
+    assert.notOk(deleteAndBlock, "user does not get blocked");
+  });
+
+  test("delete user - delete and block works as expected", async function (assert) {
+    await visit("/admin/users/5/user5");
+    await click(".btn-user-delete");
+    await click(".dialog-footer .btn-danger");
+
+    assert.ok(deleteAndBlock, "user does not get blocked");
   });
 });

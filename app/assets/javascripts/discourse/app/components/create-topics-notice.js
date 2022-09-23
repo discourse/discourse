@@ -4,11 +4,13 @@ import I18n from "I18n";
 import LivePostCounts from "discourse/models/live-post-counts";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   classNameBindings: ["hidden:hidden", ":create-topics-notice"],
 
   enabled: false,
+  router: service(),
 
   publicTopicCount: null,
   publicPostCount: null,
@@ -37,14 +39,16 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed()
-  shouldSee() {
-    const user = this.currentUser;
+  @discourseComputed(
+    "siteSettings.show_create_topics_notice",
+    "router.currentRouteName"
+  )
+  shouldSee(showCreateTopicsNotice, currentRouteName) {
     return (
-      user &&
-      user.get("admin") &&
-      this.siteSettings.show_create_topics_notice &&
-      !this.site.get("wizard_required")
+      this.currentUser?.get("admin") &&
+      showCreateTopicsNotice &&
+      !this.site.get("wizard_required") &&
+      !currentRouteName.startsWith("wizard")
     );
   },
 

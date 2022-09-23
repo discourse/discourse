@@ -3348,7 +3348,6 @@ lt:
       google: "„Google“ kalendorius"
       ics: "ICS"
     tagging:
-      all_tags: "Visos žymos"
       other_tags: "Kitos žymos"
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
@@ -3504,6 +3503,7 @@ lt:
         many: "%{count} nauja"
         other: "%{count} nauja"
       more: "Daugiau..."
+      all_categories: "Visos kategorijos"
       sections:
         messages:
           header_link_text: "Žinutės"

@@ -24,7 +24,7 @@
       pointer-events: none;
       background: linear-gradient(
         to bottom,
-        transparent,
+        rgba(var(--primary-very-low-rgb), 0),
         rgba(var(--primary-very-low-rgb), 1)
       );
     }

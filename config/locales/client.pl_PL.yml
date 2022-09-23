@@ -2542,7 +2542,6 @@ pl_PL:
         deleted_user: "(usunięty użytkownik)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "nowy post w %{title}"
-        suspicious_user: "podejrzany użytkownik %{username}"
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
@@ -3276,12 +3275,6 @@ pl_PL:
           few: "Czy na pewno chcesz usunąć te %{count} posty?"
           many: "Czy na pewno chcesz usunąć te %{count} postów?"
           other: "Czy na pewno chcesz usunąć te %{count} postów?"
-      merge:
-        confirm:
-          one: "Czy na pewno chcesz połączyć te posty?"
-          few: "Czy na pewno chcesz połączyć te %{count} posty?"
-          many: "Czy na pewno chcesz połączyć te %{count} postów?"
-          other: "Czy na pewno chcesz połączyć te %{count} postów?"
       revisions:
         controls:
           first: "Pierwsza wersja"
@@ -3886,7 +3879,6 @@ pl_PL:
       google: "Kalendarz Google"
       ics: "ICS"
     tagging:
-      all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
@@ -4097,6 +4089,7 @@ pl_PL:
         other: "%{count} nowy"
       toggle_section: "przełącz sekcję"
       more: "Więcej…"
+      all_categories: "Wszystkie kategorie"
       sections:
         messages:
           header_link_text: "Wiadomości"
@@ -5372,7 +5365,6 @@ pl_PL:
           few: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           many: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
-        delete_confirm: "Generalnie lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji.<br><br>Czy NA PEWNO chcesz usunąć tego użytkownika? Nie można tego cofnąć!"
         delete_and_block: "Usuń i <b>zablokuj</b> ten email oraz adres IP"
         delete_dont_block: "Tylko usuń"
         deleting_user: "Usuwanie użytkownika…"

@@ -2177,7 +2177,6 @@ sw:
     download_calendar:
       download: "Pakua"
     tagging:
-      all_tags: "Lebo Zote"
       other_tags: "Lebo Zingine"
       selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
@@ -2259,6 +2258,7 @@ sw:
         one: "Mada mpya %{count}"
         other: "Mada mpya %{count} "
       more: "Zaidi"
+      all_categories: "Kategoria Zote"
       sections:
         messages:
           header_link_text: "Ujumbe"

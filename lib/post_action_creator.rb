@@ -152,7 +152,7 @@ private
 
   def cannot_flag_again?(reviewable)
     return false if @post_action_type_id == PostActionType.types[:notify_moderators]
-    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id && rs.status != ReviewableScore.statuses[:pending] }
+    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id && !rs.pending? }
     not_edited_since_last_review = @post.last_version_at.blank? || reviewable.updated_at > @post.last_version_at
     handled_recently = reviewable.updated_at > SiteSetting.cooldown_hours_until_reflag.to_i.hours.ago
 

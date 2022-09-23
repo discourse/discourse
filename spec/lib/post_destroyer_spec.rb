@@ -1012,28 +1012,36 @@ RSpec.describe PostDestroyer do
     end
   end
 
-  describe '#delete_with_replies' do
-    let(:reporter) { Discourse.system_user }
+  describe '.delete_with_replies' do
+    subject(:delete_with_replies) { PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: defer_reply_flags) }
+
     fab!(:post) { Fabricate(:post) }
+    let(:reporter) { Discourse.system_user }
+    let(:reply) { Fabricate(:post, topic: post.topic) }
+    let(:reviewable_reply) { PostActionCreator.off_topic(reporter, reply).reviewable }
 
     before do
-      reply = Fabricate(:post, topic: post.topic)
       post.update(replies: [reply])
       PostActionCreator.off_topic(reporter, post)
-
-      @reviewable_reply = PostActionCreator.off_topic(reporter, reply).reviewable
+      reviewable_reply
     end
 
-    it 'ignores flagged replies' do
-      PostDestroyer.delete_with_replies(reporter, post)
+    context 'when deferring reply flags' do
+      let(:defer_reply_flags) { true }
 
-      expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:ignored]
+      it 'ignores flagged replies' do
+        delete_with_replies
+        expect(reviewable_reply.reload).to be_ignored
+      end
     end
 
-    it 'approves flagged replies' do
-      PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: false)
+    context 'when not deferring reply flags' do
+      let(:defer_reply_flags) { false }
 
-      expect(@reviewable_reply.reload.status).to eq Reviewable.statuses[:approved]
+      it 'approves flagged replies' do
+        delete_with_replies
+        expect(reviewable_reply.reload).to be_approved
+      end
     end
   end
 
