@@ -109,6 +109,16 @@ module Discourse
       nil
     end
 
+    class CommandError < RuntimeError
+      attr_reader :status, :stdout, :stderr
+      def initialize(message, status: nil, stdout: nil, stderr: nil)
+        super(message)
+        @status = status
+        @stdout = stdout
+        @stderr = stderr
+      end
+    end
+
     private
 
     class CommandRunner
@@ -145,7 +155,12 @@ module Discourse
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           failure_message = "#{failure_message}\n" if !failure_message.blank?
-          raise "#{caller[0]}: #{failure_message}#{stderr}"
+          raise CommandError.new(
+            "#{caller[0]}: #{failure_message}#{stderr}",
+            stdout: stdout,
+            stderr: stderr,
+            status: status
+          )
         end
 
         stdout

@@ -2029,10 +2029,6 @@ et:
         confirm:
           one: "Oled sa kindel, et soovid seda postitust kustutada?"
           other: "Oled sa kindel, et soovid neid %{count} postitust kustutada?"
-      merge:
-        confirm:
-          one: "Oled kindel, et soovid need postitused ühendada?"
-          other: "Oled kindel, et soovid need %{count} postitust ühendada?"
       revisions:
         controls:
           first: "Esimene redaktsioon"
@@ -2537,6 +2533,7 @@ et:
         one: "%{count} uus"
         other: "%{count} uut"
       more: "Veel..."
+      all_categories: "Kõik foorumid"
       sections:
         messages:
           header_link_text: "Sõnumid"

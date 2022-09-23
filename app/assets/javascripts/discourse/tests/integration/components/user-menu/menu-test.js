@@ -21,16 +21,6 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(notifications[2].classList.contains("liked-consolidated"));
   });
 
-  test("notifications panel has a11y attributes", async function (assert) {
-    await render(template);
-    const panel = query("#quick-access-all-notifications");
-    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
-    assert.strictEqual(
-      panel.getAttribute("aria-labelledby"),
-      "user-menu-button-all-notifications"
-    );
-  });
-
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
     await render(template);
     const activeTab = query(".top-tabs.tabs-list .btn.active");

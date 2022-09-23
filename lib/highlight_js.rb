@@ -2,6 +2,7 @@
 
 module HighlightJs
   HIGHLIGHTJS_DIR ||= "#{Rails.root}/vendor/assets/javascripts/highlightjs/"
+  BUNDLED_LANGS = %w(bash c cpp csharp css diff go graphql ini java javascript json kotlin less lua makefile xml markdown objectivec perl php php-template plaintext python python-repl r ruby rust scss shell sql swift typescript vbnet wasm yaml)
 
   def self.languages
     langs = Dir.glob(HIGHLIGHTJS_DIR + "languages/*.js").map do |path|
@@ -13,7 +14,7 @@ module HighlightJs
 
   def self.bundle(langs)
     result = File.read(HIGHLIGHTJS_DIR + "highlight.min.js")
-    langs.each do |lang|
+    (langs - BUNDLED_LANGS).each do |lang|
       begin
         result << "\n" << File.read(HIGHLIGHTJS_DIR + "languages/#{lang}.min.js")
       rescue Errno::ENOENT

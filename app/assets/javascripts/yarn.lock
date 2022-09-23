@@ -8002,9 +8002,9 @@ morgan@^1.10.0:
     on-headers "~1.0.2"
 
 mout@^1.0.0:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/mout/-/mout-1.2.3.tgz#bd1477d8c7f2db5fcf43c91de30b6cc746b78e10"
-  integrity sha512-vtE+eZcSj/sBkIp6gxB87MznryWP+gHIp0XX9SKrzA5TAkvz6y7VTuNruBjYdJozd8NY5i9XVIsn8cn3SwNjzg==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/mout/-/mout-1.2.4.tgz#9ffd261c4d6509e7ebcbf6b641a89b36ecdf8155"
+  integrity sha512-mZb9uOruMWgn/fw28DG4/yE3Kehfk1zKCLhuDU2O3vlKdnBBr4XaOCqVTflJ5aODavGUPqFHZgrFX3NJVuxGhQ==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -9412,10 +9412,10 @@ sane@^4.0.0, sane@^4.1.0:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.54.9:
-  version "1.54.9"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.9.tgz#b05f14ed572869218d1a76961de60cd647221762"
-  integrity sha512-xb1hjASzEH+0L0WI9oFjqhRi51t/gagWnxLiwUNMltA0Ab6jIDkAacgKiGYKM9Jhy109osM7woEEai6SXeJo5Q==
+sass@^1.55.0:
+  version "1.55.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.55.0.tgz#0c4d3c293cfe8f8a2e8d3b666e1cf1bff8065d1c"
+  integrity sha512-Pk+PMy7OGLs9WaxZGJMn7S96dvlyVBwwtToX895WmCpAOr5YiJYEUJfiJidMuKb613z2xNWcXCHEuOvjZbqC6A==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"

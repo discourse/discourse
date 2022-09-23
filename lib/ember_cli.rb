@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module EmberCli
-  def self.plugin_assets?
-    ENV["EMBER_CLI_PLUGIN_ASSETS"] != "0"
-  end
-
   def self.assets
     @assets ||= begin
       assets = %w(
@@ -18,11 +14,9 @@ module EmberCli
       )
       assets += Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
 
-      if plugin_assets?
-        Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
-          next if file.ends_with?("_extra") # these are still handled by sprockets
-          assets << "#{file}.js"
-        end
+      Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
+        next if file.ends_with?("_extra") # these are still handled by sprockets
+        assets << "#{file}.js"
       end
 
       assets

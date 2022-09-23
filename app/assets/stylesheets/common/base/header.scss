@@ -56,6 +56,11 @@
     width: auto;
   }
 
+  #site-text-logo {
+    margin: 0;
+    @include ellipsis;
+  }
+
   .d-icon-home {
     font-size: $font-up-6;
   }

@@ -42,6 +42,10 @@ $quote-share-maxwidth: 150px;
   margin-bottom: 0.6em;
 }
 
+.post-stream .placeholder .row {
+  display: flex;
+}
+
 .names {
   flex: 1 1 auto;
   overflow: hidden;

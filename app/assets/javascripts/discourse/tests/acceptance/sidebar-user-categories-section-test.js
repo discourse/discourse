@@ -17,10 +17,10 @@ import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance(
-  "Sidebar - Logged on user - Categories Section - suppress_uncategorized_badge enabled",
+  "Sidebar - Logged on user - Categories Section - allow_uncategorized_topics disabled",
   function (needs) {
     needs.settings({
-      suppress_uncategorized_badge: true,
+      allow_uncategorized_topics: false,
       enable_experimental_sidebar_hamburger: true,
       enable_sidebar: true,
     });

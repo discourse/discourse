@@ -8,12 +8,26 @@ import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/ba
 
 export default class SidebarAnonymousCommunitySection extends SidebarCommonCommunitySection {
   get defaultMainSectionLinks() {
-    return [
+    const defaultLinks = [
       EverythingSectionLink,
       UsersSectionLink,
-      AboutSectionLink,
       FAQSectionLink,
     ];
+
+    defaultLinks.splice(
+      this.displayShortSiteDescription ? 0 : 2,
+      0,
+      AboutSectionLink
+    );
+
+    return defaultLinks;
+  }
+
+  get displayShortSiteDescription() {
+    return (
+      !this.currentUser &&
+      (this.siteSettings.short_site_description || "").length > 0
+    );
   }
 
   get defaultMoreSectionLinks() {

@@ -2352,7 +2352,6 @@ hu:
         deleted_user: "(törölt felhasználó)"
         post_number_with_topic_title: "%{post_number}. bejegyzés – %{title}"
         new_post_in_topic: "új bejegyzés itt: %{title}"
-        suspicious_user: "gyanús felhasználó: %{username}"
         default_item: "felülvizsgálandó elem: #%{reviewable_id}"
     topics:
       new_messages_marker: "utolsó látogatás"
@@ -2864,10 +2863,6 @@ hu:
         confirm:
           one: "Biztosan törlöd ezt a bejegyzést?"
           other: "Biztosan törlöd ezt a %{count} bejegyzést?"
-      merge:
-        confirm:
-          one: "Biztos, hogy egyesíteni szeretnéd ezeket a bejegyzéseket?"
-          other: "Biztos, hogy egyesíteni kívánod ezt a %{count} bejegyzést?"
       revisions:
         controls:
           hide: "Átdolgozás elrejtése"
@@ -3371,6 +3366,7 @@ hu:
         one: "%{count} új"
         other: "%{count} új"
       more: "Továbbiak..."
+      all_categories: "Minden kategória"
       sections:
         messages:
           header_link_text: "Üzenetek"

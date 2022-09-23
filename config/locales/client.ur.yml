@@ -2895,10 +2895,6 @@ ur:
         confirm:
           one: "کیا آپ واقعی اُس پوسٹ کو مٹانا چاہتے ہیں؟"
           other: "کیا آپ واقعی ان %{count} پوسٹس کو مٹانا چاہتے ہیں؟"
-      merge:
-        confirm:
-          one: "کیا آپ واقعی ان پوسٹس کو ضم کرنا چاہتے ہیں؟"
-          other: "کیا آپ واقعی ان %{count} پوسٹس کو ضم کرنا چاہتے ہیں؟"
       revisions:
         controls:
           first: "پہلی رَوِیژن"
@@ -3640,6 +3636,7 @@ ur:
         one: "%{count} نیا"
         other: "%{count} نئے"
       more: "مزید..."
+      all_categories: "تمام زُمرَہ جات"
       sections:
         messages:
           header_link_text: "پیغامات"

@@ -3503,6 +3503,7 @@ lt:
         many: "%{count} nauja"
         other: "%{count} nauja"
       more: "Daugiau..."
+      all_categories: "Visos kategorijos"
       sections:
         messages:
           header_link_text: "Žinutės"

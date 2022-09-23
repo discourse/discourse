@@ -2558,7 +2558,6 @@ uk:
         deleted_user: "(видалений користувач)"
         post_number_with_topic_title: "допис #%{post_number} - %{title}"
         new_post_in_topic: "новий допис в темі %{title}"
-        suspicious_user: "підозрілий користувач %{username}"
         default_item: "премодерований елемент #%{reviewable_id}"
     topics:
       new_messages_marker: "останнє відвідування"
@@ -3292,12 +3291,6 @@ uk:
           few: "Ви впевнені, що хочете видалити %{count} повідомлення?"
           many: "Ви впевнені, що хочете видалити %{count} повідомлень?"
           other: "Ви впевнені, що хочете видалити %{count} повідомлень?"
-      merge:
-        confirm:
-          one: "Ви впевнені, що хочете об’єднати ці повідомлення?"
-          few: "Are you sure you want to merge those %{count} posts?"
-          many: "Are you sure you want to merge those %{count} posts?"
-          other: "Are you sure you want to merge those %{count} posts?"
       revisions:
         controls:
           first: "Перша версія"
@@ -4111,6 +4104,7 @@ uk:
         other: "%{count} нова"
       toggle_section: "Переключити розділ"
       more: "Ще..."
+      all_categories: "Всі категорії"
       sections:
         messages:
           header_link_text: "Повідомлення"

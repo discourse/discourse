@@ -2384,11 +2384,6 @@ ro:
           one: "Ești sigur că vrei să ștergi aca postare?"
           few: "Ești sigur că vrei să ștergi acele %{count} postări?"
           other: "Ești sigur că vrei să ștergi acele %{count} postări?"
-      merge:
-        confirm:
-          one: "Ești sigur că vrei să comasezi acele postări?"
-          few: "Ești sigur că vrei să comasezi acele %{count} postări?"
-          other: "Ești sigur că vrei să comasezi acele %{count} postări?"
       revisions:
         controls:
           first: "Prima revizie"
@@ -2939,6 +2934,7 @@ ro:
         few: "%{count} noi"
         other: "%{count} nou"
       more: "Mai multe..."
+      all_categories: "Toate categoriile"
       sections:
         messages:
           header_link_text: "Mesaje"

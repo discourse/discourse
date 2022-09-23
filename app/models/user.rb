@@ -1400,7 +1400,7 @@ class User < ActiveRecord::Base
 
   def number_of_rejected_posts
     ReviewableQueuedPost
-      .where(status: Reviewable.statuses[:rejected])
+      .rejected
       .where(created_by_id: self.id)
       .count
   end

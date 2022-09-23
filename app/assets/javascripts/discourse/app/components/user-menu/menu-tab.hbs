@@ -4,6 +4,7 @@
   class={{this.classNames}}
   id={{this.id}}
   tabindex={{this.tabIndex}}
+  title={{@tab.title}}
   aria-selected={{if this.isActive "true" "false"}}
   aria-controls={{this.ariaControls}}
   data-tab-number={{@tab.position}}
@@ -11,5 +12,8 @@
   {{!-- template-lint-disable require-context-role --}}
 >
   {{d-icon @tab.icon}}
+  {{#if @tab.count}}
+    <span aria-hidden="true" class="badge-notification">{{@tab.count}}</span>
+  {{/if}}
   {{yield}}
 </button>

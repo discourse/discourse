@@ -34,6 +34,13 @@ export default class BaseCommunitySectionLink {
   }
 
   /**
+   * @returns {boolean} Whether the section link should be displayed. Defaults to true.
+   */
+  get shouldDisplay() {
+    return true;
+  }
+
+  /**
    * @returns {string} Ember route
    */
   get route() {

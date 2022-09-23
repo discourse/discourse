@@ -2184,7 +2184,6 @@ ko:
         deleted_user: "(삭제된 사용자)"
         post_number_with_topic_title: "게시물 #%{post_number} - %{title}"
         new_post_in_topic: "%{title}의 새 게시물"
-        suspicious_user: "의심스러운 사용자 %{username}"
         default_item: "검토 가능한 항목 #%{reviewable_id}"
     topics:
       new_messages_marker: "마지막 방문"
@@ -2768,9 +2767,6 @@ ko:
       delete:
         confirm:
           other: "%{count}개의 게시물을 삭제할까요?"
-      merge:
-        confirm:
-          other: "%{count}개의 게시물을 병합할까요?"
       revisions:
         controls:
           first: "첫 수정 버전"
@@ -3297,6 +3293,7 @@ ko:
       google: "구글 캘린더"
       ics: "ICS"
     tagging:
+      all_tags: "모든 태그"
       other_tags: "기타 태그"
       selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
@@ -3461,6 +3458,8 @@ ko:
       new_count:
         other: "%{count} new"
       more: "더 보기..."
+      all_categories: "모든 카테고리"
+      all_tags: "모든 태그"
       sections:
         messages:
           header_link_text: "메시지"
@@ -4672,6 +4671,7 @@ ko:
           other: "모든 게시물을 삭제할 수 없습니다. 일부 게시물은 %{count}일 이전에 작성되었습니다. (delete_user_max_post_age 설정)"
         cant_delete_all_too_many_posts:
           other: "이 사용자는 %{count}개 이상의 게시물을 보유하고 있기 때문에 모든 게시물을 삭제할 수 없습니다. (delete_all_posts_max)"
+        delete_confirm_title: "정말로 이 사용자를 삭제하시겠습니까? 이는 영구적입니다!"
         delete_and_block: "이 이메일과 IP 주소를 삭제하고 <b>차단</b>"
         delete_dont_block: "삭제만 하기"
         deleting_user: "사용자 삭제 중..."

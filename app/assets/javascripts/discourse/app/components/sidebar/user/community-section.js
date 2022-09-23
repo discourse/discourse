@@ -32,11 +32,12 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
   }
 
   get defaultMainSectionLinks() {
-    return [EverythingSectionLink, TrackedSectionLink, MyPostsSectionLink];
-  }
-
-  get defaultAdminMainSectionLinks() {
-    return [AdminSectionLink];
+    return [
+      EverythingSectionLink,
+      TrackedSectionLink,
+      MyPostsSectionLink,
+      AdminSectionLink,
+    ];
   }
 
   get defaultMoreSectionLinks() {

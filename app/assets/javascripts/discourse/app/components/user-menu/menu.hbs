@@ -1,25 +1,14 @@
 <div class="user-menu revamped menu-panel drop-down" data-max-width="320" {{did-insert this.triggerRenderedAppEvent}}>
   <div class="panel-body">
     <div class="panel-body-contents">
-      <div
-        id={{concat "quick-access-" this.currentTabId}}
-        class="quick-access-panel"
-        tabindex="-1"
-        aria-labelledby={{concat "user-menu-button-" this.currentTabId}}>
-        {{component this.currentPanelComponent closeUserMenu=@closeUserMenu filterByTypes=this.currentNotificationTypes}}
-      </div>
       <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{i18n "user_menu.sr_menu_tabs"}}>
-        <div class="top-tabs tabs-list">
+        <div class="top-tabs tabs-list" {{did-insert this.focusFirstTab}}>
           {{#each this.topTabs as |tab|}}
             <UserMenu::MenuTab
               @tab={{tab}}
               @currentTabId={{this.currentTabId}}
               @onTabClick={{fn this.handleTabClick tab}}
-            >
-              {{#if tab.count}}
-                <span class="badge-notification">{{tab.count}}</span>
-              {{/if}}
-            </UserMenu::MenuTab>
+            />
           {{/each}}
         </div>
         <div class="bottom-tabs tabs-list">
@@ -31,6 +20,17 @@
             />
           {{/each}}
         </div>
+      </div>
+      <div
+        id={{concat "quick-access-" this.currentTabId}}
+        class="quick-access-panel"
+        tabindex="-1">
+        {{component
+          this.currentPanelComponent
+          closeUserMenu=@closeUserMenu
+          filterByTypes=this.currentNotificationTypes
+          ariaLabelledby=(concat "user-menu-button-" this.currentTabId)
+        }}
       </div>
     </div>
   </div>

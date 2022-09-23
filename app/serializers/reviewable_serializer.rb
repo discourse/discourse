@@ -6,7 +6,6 @@ class ReviewableSerializer < ApplicationSerializer
 
   attributes(
     :id,
-    :status,
     :type,
     :topic_id,
     :topic_url,
@@ -19,6 +18,8 @@ class ReviewableSerializer < ApplicationSerializer
     :version,
     :target_created_by_trust_level
   )
+
+  attribute :status_for_database, key: :status
 
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: 'users'
   has_one :target_created_by, serializer: UserWithCustomFieldsSerializer, root: 'users'

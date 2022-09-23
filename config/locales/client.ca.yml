@@ -2340,10 +2340,6 @@ ca:
         confirm:
           one: "Esteu segur que voleu suprimir aquesta publicació?"
           other: "Esteu segur que voleu suprimir aquestes %{count} publicacions?"
-      merge:
-        confirm:
-          one: "Esteu segur que voleu combinar aquesta publicació?"
-          other: "Esteu segur que voleu combinar aquests %{count}missatges?"
       revisions:
         controls:
           first: "Primera revisió"
@@ -2895,6 +2891,7 @@ ca:
         one: "%{count} nou"
         other: "%{count} nous"
       more: "Més..."
+      all_categories: "Totes les categories"
       sections:
         messages:
           header_link_text: "Missatges"

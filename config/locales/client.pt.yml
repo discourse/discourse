@@ -3427,6 +3427,7 @@ pt:
         one: "%{count} novo"
         other: "%{count} novos"
       more: "Mais..."
+      all_categories: "Todas as categorias"
       sections:
         messages:
           header_link_text: "Mensagens"

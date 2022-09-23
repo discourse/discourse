@@ -245,6 +245,10 @@ html.composer-open {
         text-overflow: ellipsis;
       }
 
+      .select-kit-body {
+        max-width: 450px;
+      }
+
       // below needed for text-overflow: ellipsis;
       .selected-name {
         max-width: 100%;

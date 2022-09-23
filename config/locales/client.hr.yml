@@ -3110,11 +3110,6 @@ hr:
           one: "Jeste li sigurni da želite izbrisati taj post?"
           few: "Jeste li sigurni da želite izbrisati %{count}\" postova?"
           other: "Jeste li sigurni da želite izbrisati te %{count} postove?"
-      merge:
-        confirm:
-          one: "Jeste li sigurni da želite spojiti taj post?"
-          few: "Jeste li sigurni da želite spojiti %{count} postova?"
-          other: "Jeste li sigurni da želite spojiti ovih %{count} objava?"
       revisions:
         controls:
           first: "Prva revizija"
@@ -3894,6 +3889,7 @@ hr:
         few: "%{count} novih"
         other: "%{count} novi"
       more: "Više..."
+      all_categories: "Sve kategorije"
       sections:
         messages:
           header_link_text: "Poruke"

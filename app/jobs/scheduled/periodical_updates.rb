@@ -48,6 +48,8 @@ module Jobs
 
       Category.auto_bump_topic!
 
+      Upload.backfill_dominant_colors!(25)
+
       nil
     end
 
