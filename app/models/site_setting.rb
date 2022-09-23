@@ -281,11 +281,11 @@ class SiteSetting < ActiveRecord::Base
 
   # TODO (martin) (2022-11-01) Remove these after next beta bump.
   self.define_singleton_method("min_trust_to_send_messages=") do |args|
-    Discourse.deprecate("min_trust_to_send_messages is deprecated, use personal_message_enabled_groups instead.", drop_from: "2.9", raise_error: true)
+    Discourse.deprecate("min_trust_to_send_messages is deprecated, use personal_message_enabled_groups instead.", drop_from: "2.9")
   end
 
   self.define_singleton_method("enable_personal_messages=") do |args|
-    Discourse.deprecate("enable_personal_messages is deprecated, use personal_message_enabled_groups instead.", drop_from: "2.9", raise_error: true)
+    Discourse.deprecate("enable_personal_messages is deprecated, use personal_message_enabled_groups instead.", drop_from: "2.9")
   end
 
   # Any group_list setting, e.g. personal_message_enabled_groups, will have
