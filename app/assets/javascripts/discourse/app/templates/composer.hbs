@@ -199,7 +199,7 @@
                   />
                 </div>
               {{/if}}
-              {{#if this.model.replyingToTopic}}
+              {{#unless this.model.creatingTopic}}
                 <MiniTagChooser 
                   @value={{this.model.tags}} 
                   @onChange={{action (mut this.model.tags)}} 
@@ -212,7 +212,7 @@
                   style="margin-left: 0 !important;"
                 />
                 <PopupInputTip @validation={{this.tagValidation}} />
-              {{/if}}
+              {{/unless}}
 
               <PluginOutlet 
                 @name="composer-fields" 
