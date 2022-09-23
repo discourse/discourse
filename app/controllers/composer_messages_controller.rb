@@ -17,4 +17,23 @@ class ComposerMessagesController < ApplicationController
 
     render_json_dump(json, rest_serializer: true)
   end
+
+  def user_not_seen
+    usernames = params.require(:usernames)
+    users = ComposerMessagesFinder.user_not_seen(usernames)
+    user_count = users.count
+    warning_message = nil
+
+    if user_count > 0
+      message_locale = if user_count == 1
+        "education.user_not_seen.single"
+      else
+        "education.user_not_seen.multiple"
+      end
+      warning_message = I18n.t(message_locale, username: users.join(", "), time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose'))
+    end
+
+    json = { user_count: user_count, warning_message: warning_message }
+    render_json_dump(json)
+  end
 end

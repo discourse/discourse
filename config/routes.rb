@@ -387,6 +387,7 @@ Discourse::Application.routes.draw do
     end
     get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
+    get "composer_messages/user_not_seen" => "composer_messages#user_not_seen"
 
     resources :static
     post "login" => "static#enter"

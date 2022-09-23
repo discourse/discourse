@@ -5,8 +5,10 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { not } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
 
 let _messagesCache = {};
+let _recipient_names = [];
 
 export default Component.extend({
   classNameBindings: [":composer-popup-container", "hidden"],
@@ -18,6 +20,7 @@ export default Component.extend({
   _similarTopicsMessage: null,
   _yourselfConfirm: null,
   similarTopics: null,
+  userNotSeenMessage: null,
 
   hidden: not("composer.viewOpenOrFullscreen"),
 
@@ -119,6 +122,39 @@ export default Component.extend({
     const composer = this.composer;
     if (composer.get("privateMessage")) {
       const recipients = composer.targetRecipientsArray;
+      const recipient_names = recipients
+        .filter((r) => r.type === "user")
+        .map(({ name }) => name);
+
+      if (
+        recipient_names.length > 0 &&
+        recipient_names.length !== _recipient_names.length &&
+        !recipient_names.every((v, i) => v === _recipient_names[i])
+      ) {
+        _recipient_names = recipient_names;
+
+        ajax(`/composer_messages/user_not_seen`, {
+          type: "GET",
+          data: {
+            usernames: recipient_names,
+          },
+        }).then((response) => {
+          if (
+            response.user_count > 0 &&
+            this.get("userNotSeenMessage") !== response.warning_message
+          ) {
+            this.set("userNotSeenMessage", response.warning_message);
+            this.messagesByTemplate["custom-body"] = undefined;
+            const message = composer.store.createRecord("composer-message", {
+              id: "user-not-seen",
+              templateName: "custom-body",
+              title: I18n.t("composer.user_not_seen_title"),
+              body: response.warning_message,
+            });
+            this.send("popup", message);
+          }
+        });
+      }
 
       if (
         recipients.length > 0 &&
