@@ -296,7 +296,7 @@ class SiteSetting < ActiveRecord::Base
       setting[:type] == "group_list"
     end.each do |setting|
       self.define_singleton_method("#{setting[:setting]}_map") do
-        send(setting[:setting]).split("|").map(&:to_i)
+        send(setting[:setting]).to_s.split("|").map(&:to_i)
       end
     end
   end
