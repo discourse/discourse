@@ -210,19 +210,6 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
-  # The selenium app host and port must be used with the SiteSetting.force_hostname
-  # option, so the test server runs at the target host IP address (or wherever
-  # SELENIUM_APP_HOST is if that's specified), so the remote docker container
-  # can access the test server running on the host.
-  SELENIUM_APP_HOST = ENV.fetch("SELENIUM_APP_HOST") do
-    Socket.ip_address_list
-      .find(&:ipv4_private?)
-      .ip_address
-  end
-  SELENIUM_PORT = ENV.fetch("SELENIUM_PORT", "4442")
-  SELENIUM_HOST = ENV.fetch("SELENIUM_HOST", "http://localhost")
-  SELENIUM_SERVER_URL = "#{SELENIUM_HOST}:#{SELENIUM_PORT}"
-
   config.before(:suite) do
     CachedCounting.disable
 
@@ -254,21 +241,17 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    webmock_allowed_sites = [
-      "test.localhost",
-      "test.localhost:31337",
-      "localhost",
-      %r{127\.0\.0\.1:(\d{0,4})}
-    ]
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [Webdrivers::Chromedriver.base_url]
+    )
 
-    if !ENV['SYSTEM_SPEC_RUN']
-      WebMock.disable_net_connect!(allow: webmock_allowed_sites)
-    else
+    if ENV['SYSTEM_SPEC_RUN']
       puts ""
       puts "Running system specs..."
 
       Capybara.configure do |capybara_config|
-        capybara_config.server_host = SELENIUM_APP_HOST
+        capybara_config.server_host = "localhost"
         capybara_config.server_port = 31337
       end
 
@@ -297,19 +280,6 @@ RSpec.configure do |config|
           capabilities: chrome_browser_options,
         )
       end
-
-      Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-
-      webmock_allowed_sites.concat([
-        "localhost:#{Capybara.server_port}",
-        SELENIUM_SERVER_URL,
-        "#{SELENIUM_APP_HOST}:#{Capybara.server_port}",
-        /chromedriver/
-      ])
-      WebMock.disable_net_connect!(allow: webmock_allowed_sites)
-
-      puts "-> CAPYBARA APP HOST IS #{Capybara.app_host}"
-      puts "-> SELENIUM APP HOST IS #{SELENIUM_APP_HOST}"
     end
 
     if ENV['ELEVATED_UPLOADS_ID']
