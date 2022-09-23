@@ -690,6 +690,15 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq(nil)
     end
 
+    it "correctly handles download failures" do
+      white_image.stubs(:local?).returns(true)
+      Discourse.store.stubs(:download).returns(nil)
+
+      expect(invalid_image.dominant_color).to eq(nil)
+      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(invalid_image.dominant_color).to eq("")
+    end
+
     it "is validated for length" do
       u = Fabricate(:upload)
 
