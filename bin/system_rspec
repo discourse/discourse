@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# This is used to test the connection to selenium, as well
-# as to determine whether to bother setting up capybara or selenium
-# in general, since we don't need those things in normal spec runs.
-export SYSTEM_SPEC_RUN="1"
-
 if [[ -z "$@" ]]; then
   bin/rspec spec/system
 elif [[ -n "$@" ]]; then

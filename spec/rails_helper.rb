@@ -246,40 +246,35 @@ RSpec.configure do |config|
       allow: [Webdrivers::Chromedriver.base_url]
     )
 
-    if ENV['SYSTEM_SPEC_RUN']
-      puts ""
-      puts "Running system specs..."
+    Capybara.configure do |capybara_config|
+      capybara_config.server_host = "localhost"
+      capybara_config.server_port = 31337
+    end
 
-      Capybara.configure do |capybara_config|
-        capybara_config.server_host = "localhost"
-        capybara_config.server_port = 31337
-      end
+    chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
+      logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+    ).tap do |options|
+      options.add_argument("--window-size=1400,1400")
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-dev-shm-usage")
+    end
 
-      chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
-        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
-      ).tap do |options|
-        options.add_argument("--window-size=1400,1400")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-      end
+    Capybara.register_driver :selenium_chrome do |app|
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: chrome_browser_options,
+      )
+    end
 
-      Capybara.register_driver :selenium_chrome do |app|
-        Capybara::Selenium::Driver.new(
-          app,
-          browser: :chrome,
-          capabilities: chrome_browser_options,
-        )
-      end
+    Capybara.register_driver :selenium_chrome_headless do |app|
+      chrome_browser_options.add_argument("--headless")
 
-      Capybara.register_driver :selenium_chrome_headless do |app|
-        chrome_browser_options.add_argument("--headless")
-
-        Capybara::Selenium::Driver.new(
-          app,
-          browser: :chrome,
-          capabilities: chrome_browser_options,
-        )
-      end
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: chrome_browser_options,
+      )
     end
 
     if ENV['ELEVATED_UPLOADS_ID']
