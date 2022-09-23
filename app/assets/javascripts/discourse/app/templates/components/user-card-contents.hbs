@@ -36,12 +36,12 @@
         <div class="names">
           <h1 class="{{this.staff}} {{this.newUser}} {{if this.nameFirst "full-name" "username"}}">
             {{#if this.user.profile_hidden}}
-              <span class="name-username-wrapper">
+              <span id="discourse-user-card-title" class="name-username-wrapper">
                 {{if this.nameFirst this.user.name (format-username this.user.username)}}
               </span>
             {{else}}
               <a href={{this.user.path}} {{action "showUser" this.user}} class="user-profile-link">
-                <span class="name-username-wrapper">
+                <span id="discourse-user-card-title" class="name-username-wrapper">
                   {{if this.nameFirst this.user.name (format-username this.user.username)}}
                 </span>
                 {{user-status this.user currentUser=this.currentUser}}
