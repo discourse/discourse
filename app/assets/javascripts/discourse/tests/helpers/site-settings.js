@@ -99,6 +99,7 @@ const ORIGINAL_SETTINGS = {
   secure_media: false,
   external_emoji_url: "",
   remove_muted_tags_from_latest: "always",
+  enable_group_directory: true,
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);
