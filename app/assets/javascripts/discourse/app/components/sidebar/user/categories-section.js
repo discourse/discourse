@@ -1,18 +1,14 @@
 import I18n from "I18n";
 
-import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
-import Component from "@glimmer/component";
-import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
+import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
 
-export default class SidebarUserCategoriesSection extends Component {
+export default class SidebarUserCategoriesSection extends SidebarCommonCategoriesSection {
   @service router;
-  @service topicTrackingState;
   @service currentUser;
-  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -28,24 +24,10 @@ export default class SidebarUserCategoriesSection extends Component {
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
-  @cached
-  get sectionLinks() {
-    const links = [];
-
-    const categories = this.currentUser.sidebarCategories.filter((category) => {
+  get categories() {
+    return this.currentUser.sidebarCategories.filter((category) => {
       return canDisplayCategory(category, this.siteSettings);
     });
-
-    for (const category of categories) {
-      links.push(
-        new CategorySectionLink({
-          category,
-          topicTrackingState: this.topicTrackingState,
-        })
-      );
-    }
-
-    return links;
   }
 
   get noCategoriesText() {

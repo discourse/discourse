@@ -20,10 +20,10 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
       ".sidebar-section-categories .sidebar-section-link-wrapper"
     );
     assert.strictEqual(categories.length, 6);
-    assert.strictEqual(categories[0].textContent.trim(), "support");
-    assert.strictEqual(categories[1].textContent.trim(), "bug");
+    assert.strictEqual(categories[0].textContent.trim(), "bug");
+    assert.strictEqual(categories[1].textContent.trim(), "dev");
     assert.strictEqual(categories[2].textContent.trim(), "feature");
-    assert.strictEqual(categories[3].textContent.trim(), "dev");
+    assert.strictEqual(categories[3].textContent.trim(), "support");
     assert.strictEqual(categories[4].textContent.trim(), "ux");
 
     assert.ok(
@@ -41,9 +41,9 @@ acceptance("Sidebar - Anonymous Categories Section", function (needs) {
     );
 
     assert.strictEqual(categories.length, 4);
-    assert.strictEqual(categories[0].textContent.trim(), "bug");
-    assert.strictEqual(categories[1].textContent.trim(), "meta");
-    assert.strictEqual(categories[2].textContent.trim(), "blog");
+    assert.strictEqual(categories[0].textContent.trim(), "blog");
+    assert.strictEqual(categories[1].textContent.trim(), "bug");
+    assert.strictEqual(categories[2].textContent.trim(), "meta");
 
     assert.ok(
       exists("a.sidebar-section-link-all-categories"),
