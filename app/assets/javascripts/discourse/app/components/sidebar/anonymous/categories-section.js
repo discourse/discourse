@@ -1,16 +1,11 @@
-import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import Component from "@glimmer/component";
-import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
+import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
 
-export default class SidebarAnonymousCategoriesSection extends Component {
-  @service topicTrackingState;
+export default class SidebarAnonymousCategoriesSection extends SidebarCommonCategoriesSection {
   @service site;
-  @service siteSettings;
 
-  @cached
-  get sectionLinks() {
+  get categories() {
     let categories = this.site.categoriesList;
 
     if (this.siteSettings.default_sidebar_categories) {
@@ -31,11 +26,6 @@ export default class SidebarAnonymousCategoriesSection extends Component {
         .slice(0, 5);
     }
 
-    return categories.map((category) => {
-      return new CategorySectionLink({
-        category,
-        topicTrackingState: this.topicTrackingState,
-      });
-    });
+    return categories;
   }
 }
