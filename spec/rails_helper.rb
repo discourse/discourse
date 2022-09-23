@@ -57,6 +57,7 @@ require 'shoulda-matchers'
 require 'sidekiq/testing'
 require 'test_prof/recipes/rspec/let_it_be'
 require 'test_prof/before_all/adapters/active_record'
+require 'webdrivers'
 require 'selenium-webdriver'
 require 'capybara/rails'
 
@@ -279,27 +280,15 @@ RSpec.configure do |config|
         options.add_argument("--disable-dev-shm-usage")
       end
 
-      Capybara.register_driver :remote_selenium_headless do |app|
-        chrome_browser_options.add_argument("--headless")
-
+      Capybara.register_driver :selenium_chrome do |app|
         Capybara::Selenium::Driver.new(
           app,
           browser: :chrome,
-          url: "#{SELENIUM_SERVER_URL}/wd/hub",
           capabilities: chrome_browser_options,
         )
       end
 
-      Capybara.register_driver :remote_selenium do |app|
-        Capybara::Selenium::Driver.new(
-          app,
-          browser: :chrome,
-          url: "#{SELENIUM_SERVER_URL}/wd/hub",
-          capabilities: chrome_browser_optionss
-        )
-      end
-
-      Capybara.register_driver :selenium_headless do |app|
+      Capybara.register_driver :selenium_chrome_headless do |app|
         chrome_browser_options.add_argument("--headless")
 
         Capybara::Selenium::Driver.new(
@@ -321,15 +310,6 @@ RSpec.configure do |config|
 
       puts "-> CAPYBARA APP HOST IS #{Capybara.app_host}"
       puts "-> SELENIUM APP HOST IS #{SELENIUM_APP_HOST}"
-
-      url = URI.parse(SELENIUM_SERVER_URL)
-      req = Net::HTTP.new(url.host, url.port)
-      begin
-        res = req.request_get("/")
-      rescue Errno::ECONNREFUSED
-        err = "Cannot connect to Selenium at #{SELENIUM_SERVER_URL}, aborting! Launch with bin/start_selenium_server locally."
-        fail err
-      end
     end
 
     if ENV['ELEVATED_UPLOADS_ID']
@@ -393,25 +373,11 @@ RSpec.configure do |config|
 
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
-    driver = \
-      if example.metadata[:js]
-        locality = ENV["SELENIUM_LOCAL"].present? ? "selenium" : "remote_selenium"
-        headless = "_headless" if ENV["SELENIUM_DISABLE_HEADLESS"].blank?
-
-        "#{locality}#{headless}".to_sym
-      else
-        :rack_test
-      end
-
-    if last_driven_by != driver
-      last_driven_by = driver
-
-      if ENV['SYSTEM_SPEC_RUN'] == "1"
-        puts "-> SYSTEM TESTS DRIVEN BY #{driver}"
-      end
+    if example.metadata[:js]
+      driver = "selenium_chrome"
+      driver += "_headless" unless ENV["SELENIUM_HEADLESS"] == "0"
+      driven_by driver.to_sym
     end
-    driven_by driver
-
     setup_system_test
   end
 
