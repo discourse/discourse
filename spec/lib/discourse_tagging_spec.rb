@@ -530,22 +530,38 @@ RSpec.describe DiscourseTagging do
         expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
       end
 
-      it "recursively adds all ancestors" do
-        tag_group1 = Fabricate(:tag_group)
-        foo = Fabricate(:tag, name: 'foo')
-        tag_group1.tags = [foo]
+      context "when tag group has grandparents" do
+        let(:tag_group1) { Fabricate(:tag_group) }
+        let(:foo) { Fabricate(:tag, name: 'foo') }
+        let(:tag_group2) { Fabricate(:tag_group, parent_tag_id: foo.id) }
+        let(:bar) { Fabricate(:tag, name: 'bar') }
+        let(:tag_group3) { Fabricate(:tag_group, parent_tag_id: bar.id) }
+        let(:baz) { Fabricate(:tag, name: 'baz') }
 
-        tag_group2 = Fabricate(:tag_group, parent_tag_id: foo.id)
-        bar = Fabricate(:tag, name: 'bar')
-        tag_group2.tags = [bar]
+        before do
+          tag_group1.tags = [foo]
+          tag_group2.tags = [bar]
+          tag_group3.tags = [baz]
+        end
 
-        tag_group3 = Fabricate(:tag_group, parent_tag_id: bar.id)
-        baz = Fabricate(:tag, name: 'baz')
-        tag_group3.tags = [baz]
+        it "recursively adds all ancestors" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
+          expect(valid).to eq(true)
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        end
 
-        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
-        expect(valid).to eq(true)
-        expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        it "adds only one parent when multiple parents exist" do
+          alt_parent_group = Fabricate(:tag_group)
+          alt = Fabricate(:tag, name: 'alt')
+          alt_parent_group.tags = [alt]
+
+          alt_baz_group = Fabricate(:tag_group, parent_tag_id: alt.id)
+          alt_baz_group.tags = [baz]
+
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
+          expect(valid).to eq(true)
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        end
       end
     end
 

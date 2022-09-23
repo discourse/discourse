@@ -33,7 +33,7 @@ module DiscourseTagging
         INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
         INNER JOIN ancestors ON tgm.tag_id = ancestors.parent_tag_id
     )
-    SELECT DISTINCT tag_id FROM ancestors WHERE ancestors.tag_id NOT IN (:tag_ids)
+    SELECT * FROM ancestors
   SQL
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
@@ -116,7 +116,15 @@ module DiscourseTagging
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
 
-        missing_parent_tag_ids = DB.query_single(ANCESTOR_TAG_IDS_SQL, tag_ids: tag_ids)
+        parent_tags_map = DB.query(ANCESTOR_TAG_IDS_SQL, tag_ids: tag_ids).inject({}) do |h, v|
+          h[v.tag_id] ||= []
+          h[v.tag_id] << v.parent_tag_id
+          h
+        end
+
+        missing_parent_tag_ids = parent_tags_map.map do |_, parent_tag_ids|
+          (tag_ids & parent_tag_ids).size == 0 ? parent_tag_ids.first : nil
+        end.compact.uniq
 
         unless missing_parent_tag_ids.empty?
           tags = tags + Tag.where(id: missing_parent_tag_ids).all
