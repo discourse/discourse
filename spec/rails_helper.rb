@@ -57,6 +57,7 @@ require 'shoulda-matchers'
 require 'sidekiq/testing'
 require 'test_prof/recipes/rspec/let_it_be'
 require 'test_prof/before_all/adapters/active_record'
+require 'webdrivers'
 require 'selenium-webdriver'
 require 'capybara/rails'
 
@@ -209,19 +210,6 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
-  # The selenium app host and port must be used with the SiteSetting.force_hostname
-  # option, so the test server runs at the target host IP address (or wherever
-  # SELENIUM_APP_HOST is if that's specified), so the remote docker container
-  # can access the test server running on the host.
-  SELENIUM_APP_HOST = ENV.fetch("SELENIUM_APP_HOST") do
-    Socket.ip_address_list
-      .find(&:ipv4_private?)
-      .ip_address
-  end
-  SELENIUM_PORT = ENV.fetch("SELENIUM_PORT", "4442")
-  SELENIUM_HOST = ENV.fetch("SELENIUM_HOST", "http://localhost")
-  SELENIUM_SERVER_URL = "#{SELENIUM_HOST}:#{SELENIUM_PORT}"
-
   config.before(:suite) do
     CachedCounting.disable
 
@@ -253,83 +241,40 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    webmock_allowed_sites = [
-      "test.localhost",
-      "test.localhost:31337",
-      "localhost",
-      %r{127\.0\.0\.1:(\d{0,4})}
-    ]
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [Webdrivers::Chromedriver.base_url]
+    )
 
-    if !ENV['SYSTEM_SPEC_RUN']
-      WebMock.disable_net_connect!(allow: webmock_allowed_sites)
-    else
-      puts ""
-      puts "Running system specs..."
+    Capybara.configure do |capybara_config|
+      capybara_config.server_host = "localhost"
+      capybara_config.server_port = 31337
+    end
 
-      Capybara.configure do |capybara_config|
-        capybara_config.server_host = SELENIUM_APP_HOST
-        capybara_config.server_port = 31337
-      end
+    chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
+      logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+    ).tap do |options|
+      options.add_argument("--window-size=1400,1400")
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-dev-shm-usage")
+    end
 
-      chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
-        logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
-      ).tap do |options|
-        options.add_argument("--window-size=1400,1400")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-      end
+    Capybara.register_driver :selenium_chrome do |app|
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: chrome_browser_options,
+      )
+    end
 
-      Capybara.register_driver :remote_selenium_headless do |app|
-        chrome_browser_options.add_argument("--headless")
+    Capybara.register_driver :selenium_chrome_headless do |app|
+      chrome_browser_options.add_argument("--headless")
 
-        Capybara::Selenium::Driver.new(
-          app,
-          browser: :chrome,
-          url: "#{SELENIUM_SERVER_URL}/wd/hub",
-          capabilities: chrome_browser_options,
-        )
-      end
-
-      Capybara.register_driver :remote_selenium do |app|
-        Capybara::Selenium::Driver.new(
-          app,
-          browser: :chrome,
-          url: "#{SELENIUM_SERVER_URL}/wd/hub",
-          capabilities: chrome_browser_optionss
-        )
-      end
-
-      Capybara.register_driver :selenium_headless do |app|
-        chrome_browser_options.add_argument("--headless")
-
-        Capybara::Selenium::Driver.new(
-          app,
-          browser: :chrome,
-          capabilities: chrome_browser_options,
-        )
-      end
-
-      Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-
-      webmock_allowed_sites.concat([
-        "localhost:#{Capybara.server_port}",
-        SELENIUM_SERVER_URL,
-        "#{SELENIUM_APP_HOST}:#{Capybara.server_port}",
-        /chromedriver/
-      ])
-      WebMock.disable_net_connect!(allow: webmock_allowed_sites)
-
-      puts "-> CAPYBARA APP HOST IS #{Capybara.app_host}"
-      puts "-> SELENIUM APP HOST IS #{SELENIUM_APP_HOST}"
-
-      url = URI.parse(SELENIUM_SERVER_URL)
-      req = Net::HTTP.new(url.host, url.port)
-      begin
-        res = req.request_get("/")
-      rescue Errno::ECONNREFUSED
-        err = "Cannot connect to Selenium at #{SELENIUM_SERVER_URL}, aborting! Launch with bin/start_selenium_server locally."
-        fail err
-      end
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: chrome_browser_options,
+      )
     end
 
     if ENV['ELEVATED_UPLOADS_ID']
@@ -393,25 +338,11 @@ RSpec.configure do |config|
 
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
-    driver = \
-      if example.metadata[:js]
-        locality = ENV["SELENIUM_LOCAL"].present? ? "selenium" : "remote_selenium"
-        headless = "_headless" if ENV["SELENIUM_DISABLE_HEADLESS"].blank?
-
-        "#{locality}#{headless}".to_sym
-      else
-        :rack_test
-      end
-
-    if last_driven_by != driver
-      last_driven_by = driver
-
-      if ENV['SYSTEM_SPEC_RUN'] == "1"
-        puts "-> SYSTEM TESTS DRIVEN BY #{driver}"
-      end
+    if example.metadata[:js]
+      driver = "selenium_chrome"
+      driver += "_headless" unless ENV["SELENIUM_HEADLESS"] == "0"
+      driven_by driver.to_sym
     end
-    driven_by driver
-
     setup_system_test
   end
 

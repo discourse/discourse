@@ -1,4 +1,0 @@
-#!/bin/bash
-
-docker rm selenium
-docker run --add-host host.docker.internal:host-gateway --name=selenium -p '4442:4444/tcp' -p '5900:5900/tcp' 'selenium/standalone-chrome-debug'
