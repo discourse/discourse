@@ -8,9 +8,6 @@ import { test } from "qunit";
 
 acceptance("Redirect to Top", function (needs) {
   needs.pretender((server, helper) => {
-    server.get("/top.json?period=weekly", () => {
-      return helper.response(DiscoveryFixtures["/latest.json"]);
-    });
     server.get("/top/monthly.json", () => {
       return helper.response(DiscoveryFixtures["/latest.json"]);
     });

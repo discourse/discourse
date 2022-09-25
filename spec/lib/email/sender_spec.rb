@@ -240,23 +240,6 @@ RSpec.describe Email::Sender do
       end
     end
 
-    describe "removes custom Discourse headers from topic notification mails" do
-      fab!(:topic) { Fabricate(:topic) }
-      fab!(:post) { Fabricate(:post, topic: topic) }
-
-      before do
-        message.header['X-Discourse-Post-Id']  = post.id
-        message.header['X-Discourse-Topic-Id'] = topic.id
-      end
-
-      it 'should remove the right headers' do
-        email_sender.send
-        expect(message.header['X-Discourse-Topic-Id']).not_to be_present
-        expect(message.header['X-Discourse-Post-Id']).not_to be_present
-        expect(message.header['X-Discourse-Reply-Key']).not_to be_present
-      end
-    end
-
     describe "removes custom Discourse headers from digest/registration/other mails" do
       it 'should remove the right headers' do
         email_sender.send
@@ -266,35 +249,40 @@ RSpec.describe Email::Sender do
       end
     end
 
-    context "with email threading" do
-      let(:random_message_id_suffix) { "5f1330cfd941f323d7f99b9e" }
+    describe "email threading" do
       fab!(:topic) { Fabricate(:topic) }
 
       fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
       fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
       fab!(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
       fab!(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
+      fab!(:post_5) { Fabricate(:post, topic: topic, post_number: 5) }
+      fab!(:post_6) { Fabricate(:post, topic: topic, post_number: 6) }
 
       let!(:post_reply_1_4) { PostReply.create(post: post_1, reply: post_4) }
       let!(:post_reply_2_4) { PostReply.create(post: post_2, reply: post_4) }
       let!(:post_reply_3_4) { PostReply.create(post: post_3, reply: post_4) }
+      let!(:post_reply_4_5) { PostReply.create(post: post_4, reply: post_5) }
+      let!(:post_reply_4_6) { PostReply.create(post: post_4, reply: post_6) }
+      let!(:post_reply_5_6) { PostReply.create(post: post_5, reply: post_6) }
 
       before do
         message.header['X-Discourse-Topic-Id'] = topic.id
-        Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
       end
 
-      it "doesn't set the 'In-Reply-To' header but does set the 'References' header on the first post" do
+      it "doesn't set References or In-Reply-To headers on the first post, only generates a Message-ID and saves it against the post" do
         message.header['X-Discourse-Post-Id'] = post_1.id
 
         email_sender.send
+        post_1.reload
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['Message-Id'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost>")
+        expect(post_1.outbound_message_id).to eq("discourse/post/#{post_1.id}@test.localhost")
         expect(message.header['In-Reply-To'].to_s).to be_blank
-        expect(message.header['References'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
+        expect(message.header['References'].to_s).to be_blank
       end
 
-      it "sets the 'References' header with the incoming email Message-ID if it exists on the first post" do
+      it "uses the existing Message-ID header from the incoming email when sending the first post email" do
         incoming = Fabricate(
           :incoming_email,
           topic: topic,
@@ -302,69 +290,78 @@ RSpec.describe Email::Sender do
           message_id: "blah1234@someemailprovider.com",
           created_via: IncomingEmail.created_via_types[:handle_mail]
         )
+        post_1.update!(outbound_message_id: incoming.message_id)
         message.header['X-Discourse-Post-Id'] = post_1.id
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['Message-Id'].to_s).to eq("<blah1234@someemailprovider.com>")
         expect(message.header['In-Reply-To'].to_s).to be_blank
-        expect(message.header['References'].to_s).to eq("<blah1234@someemailprovider.com>")
+        expect(message.header['References'].to_s).to be_blank
       end
 
-      it "sets the 'In-Reply-To' header to the topic canonical reference by default" do
+      it "if no post is directly replied to then the Message-ID of post 1 via outbound_message_id should be used" do
         message.header['X-Discourse-Post-Id'] = post_2.id
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_2.id}.#{random_message_id_suffix}@test.localhost>")
-        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
+        expect(message.header['Message-Id'].to_s).to eq("<discourse/post/#{post_2.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost>")
+        expect(message.header['References'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost>")
       end
 
-      it "sets the 'In-Reply-To' header to the newest replied post" do
+      it "sets the References header to the most recently created replied post, as well as the OP, if there are no other replies in the chain" do
         message.header['X-Discourse-Post-Id'] = post_4.id
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_4.id}.#{random_message_id_suffix}@test.localhost>")
-        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_4.id}@test.localhost>")
+        expect(message.header['References'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost> <discourse/post/#{post_3.id}@test.localhost>")
       end
 
-      it "sets the 'References' header to the topic canonical reference and all replied posts" do
-        message.header['X-Discourse-Post-Id'] = post_4.id
+      it "sets the In-Reply-To header to all the posts that the post is connected to via PostReply" do
+        message.header['X-Discourse-Post-Id'] = post_6.id
 
         email_sender.send
+
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_6.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_4.id}@test.localhost> <discourse/post/#{post_5.id}@test.localhost>")
+      end
+
+      it "sets the In-Reply-To and References header to the most recently created replied post and includes the parents of that post in References, as well as the OP" do
+        message.header['X-Discourse-Post-Id'] = post_4.id
+        PostReply.create(post: post_2, reply: post_3)
+
+        email_sender.send
+
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_4.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost> <discourse/post/#{post_2.id}@test.localhost> <discourse/post/#{post_3.id}@test.localhost>")
 
         references = [
-          "<topic/#{topic.id}@test.localhost>",
-          "<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>",
-          "<topic/#{topic.id}/#{post_2.id}.#{random_message_id_suffix}@test.localhost>",
+          "<discourse/post/#{post_1.id}@test.localhost>",
+          "<discourse/post/#{post_2.id}@test.localhost>",
+          "<discourse/post/#{post_3.id}@test.localhost>"
         ]
-
         expect(message.header['References'].to_s).to eq(references.join(" "))
       end
 
-      it "uses the incoming_email message_id when available, but always uses a random message-id" do
-        topic_incoming_email  = IncomingEmail.create(
-          topic: topic, post: post_1, message_id: "foo@bar", created_via: IncomingEmail.created_via_types[:handle_mail]
-        )
-        post_2_incoming_email = IncomingEmail.create(topic: topic, post: post_2, message_id: "bar@foo")
-        post_4_incoming_email = IncomingEmail.create(topic: topic, post: post_4, message_id: "wat@wat")
-
-        message.header['X-Discourse-Post-Id'] = post_4.id
+      it "handles a complex reply tree to the OP for References, only using one Message-ID if there are multiple parents for a post" do
+        message.header['X-Discourse-Post-Id'] = post_6.id
+        PostReply.create(post: post_2, reply: post_6)
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_4.id}.5f1330cfd941f323d7f99b9e@test.localhost>")
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_6.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_2.id}@test.localhost> <discourse/post/#{post_4.id}@test.localhost> <discourse/post/#{post_5.id}@test.localhost>")
 
         references = [
-          "<#{topic_incoming_email.message_id}>",
-          "<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>",
-          "<#{post_2_incoming_email.message_id}>",
+          "<discourse/post/#{post_1.id}@test.localhost>",
+          "<discourse/post/#{post_3.id}@test.localhost>",
+          "<discourse/post/#{post_4.id}@test.localhost>",
+          "<discourse/post/#{post_5.id}@test.localhost>"
         ]
-
         expect(message.header['References'].to_s).to eq(references.join(" "))
       end
-
     end
 
     describe "merges custom mandrill header" do

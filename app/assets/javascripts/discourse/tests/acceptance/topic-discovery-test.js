@@ -201,15 +201,11 @@ acceptance("Topic Discovery | Footer", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/c/dev/7/l/latest.json", () => {
+    server.get("/c/dev/7/l/latest.json", (request) => {
       const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
-      json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
-      return helper.response(json);
-    });
-
-    server.get("/c/dev/7/l/latest.json?page=2", () => {
-      const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
-      json.topic_list.more_topics_url = null;
+      if (!request.queryParams.page) {
+        json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
+      }
       return helper.response(json);
     });
   });
