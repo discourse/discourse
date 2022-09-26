@@ -6,6 +6,13 @@ class ReviewableScore < ActiveRecord::Base
   belongs_to :reviewed_by, class_name: 'User'
   belongs_to :meta_topic, class_name: 'Topic'
 
+  enum status: {
+    pending: 0,
+    agreed: 1,
+    disagreed: 2,
+    ignored: 3
+  }
+
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
@@ -29,27 +36,12 @@ class ReviewableScore < ActiveRecord::Base
     end
   end
 
-  def self.statuses
-    @statuses ||= Enum.new(
-      pending: 0,
-      agreed: 1,
-      disagreed: 2,
-      ignored: 3
-    )
-  end
-
   def self.score_transitions
     {
       approved: statuses[:agreed],
       rejected: statuses[:disagreed],
       ignored: statuses[:ignored]
     }
-  end
-
-  # Generate `pending?`, `rejected?`, etc helper methods
-  statuses.each do |name, id|
-    define_method("#{name}?") { status == id }
-    singleton_class.define_method(name) { where(status: id) }
   end
 
   def score_type

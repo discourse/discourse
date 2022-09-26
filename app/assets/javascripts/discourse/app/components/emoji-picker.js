@@ -101,6 +101,7 @@ export default Component.extend({
       if (!emojiPicker) {
         return;
       }
+
       const popperAnchor = this._getPopperAnchor();
 
       if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
@@ -269,6 +270,24 @@ export default Component.extend({
 
     if (event.key === "Escape") {
       this.onClose(event);
+      const path = event.path || (event.composedPath && event.composedPath());
+
+      const fromChatComposer = path.find((e) =>
+        e?.classList?.contains("chat-composer-container")
+      );
+
+      const fromTopicComposer = path.find((e) =>
+        e?.classList?.contains("d-editor")
+      );
+
+      if (fromTopicComposer) {
+        document.querySelector(".d-editor-input")?.focus();
+      } else if (fromChatComposer) {
+        document.querySelector(".chat-composer-input")?.focus();
+      } else {
+        document.querySelector("textarea")?.focus();
+      }
+
       return false;
     }
 
@@ -384,6 +403,7 @@ export default Component.extend({
   _replaceEmoji(code) {
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
       lazy: true,
+      tabIndex: "0",
     });
     return htmlSafe(escaped);
   },

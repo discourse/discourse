@@ -198,6 +198,17 @@ export default Controller.extend(CanCheckEmails, {
     this.toggleProperty("displayUserNav");
   },
 
+  get displayTopLevelAdminButton() {
+    if (!this.currentUser?.staff) {
+      return false;
+    }
+    if (this.currentUser?.redesigned_user_page_nav_enabled) {
+      return this.site.desktopView;
+    } else {
+      return true;
+    }
+  },
+
   actions: {
     collapseProfile() {
       this.set("forceExpand", false);

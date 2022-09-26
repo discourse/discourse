@@ -333,18 +333,9 @@ const User = RestModel.extend({
       return [];
     }
 
-    return Site.current()
-      .categoriesList.filter((category) => {
-        if (
-          this.siteSettings.suppress_uncategorized_badge &&
-          category.isUncategorizedCategory
-        ) {
-          return false;
-        }
-
-        return sidebarCategoryIds.includes(category.id);
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
+    return Site.current().categoriesList.filter((category) =>
+      sidebarCategoryIds.includes(category.id)
+    );
   },
 
   changeUsername(new_username) {

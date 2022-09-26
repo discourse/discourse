@@ -222,6 +222,9 @@ basic:
       - twitter
       - facebook
       - email
+  allow_username_in_share_links:
+    client: true
+    default: true
   share_quote_visibility:
     client: true
     type: enum

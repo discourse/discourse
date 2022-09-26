@@ -1214,6 +1214,7 @@ end
 #  action_code             :string
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
+#  outbound_message_id     :string
 #
 # Indexes
 #

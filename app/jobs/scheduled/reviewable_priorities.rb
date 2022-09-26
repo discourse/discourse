@@ -15,11 +15,7 @@ class Jobs::ReviewablePriorities < ::Jobs::Scheduled
 
   def execute(args)
     min_priority_threshold = SiteSetting.reviewable_low_priority_threshold
-    reviewable_count = Reviewable.where(
-      "score > ? AND status = ?",
-      min_priority_threshold,
-      Reviewable.statuses[:approved]
-    ).count
+    reviewable_count = Reviewable.approved.where("score > ?", min_priority_threshold).count
     return if reviewable_count < self.class.min_reviewables
 
     res = DB.query_single(<<~SQL, target_count: self.class.target_count, min_priority: min_priority_threshold)

@@ -2,7 +2,6 @@
 
 # Deprecated, should be removed once users have sufficient opportunity to do so
 class QueuedPostSerializer < ApplicationSerializer
-
   attributes(
     :id,
     :queue,
@@ -33,11 +32,11 @@ class QueuedPostSerializer < ApplicationSerializer
   end
 
   def approved_by_id
-    who_did(:approved)
+    post_history.approved.last&.created_by_id
   end
 
   def rejected_by_id
-    who_did(:rejected)
+    post_history.rejected.last&.created_by_id
   end
 
   def raw
@@ -56,17 +55,12 @@ class QueuedPostSerializer < ApplicationSerializer
     created_by && created_by.trust_level == TrustLevel[0]
   end
 
-protected
+  private
 
-  def who_did(status)
+  def post_history
     object.
       reviewable_histories.
-      where(
-        reviewable_history_type: ReviewableHistory.types[:transitioned],
-        status: Reviewable.statuses[status]
-      ).
+      transitioned.
       order(:created_at)
-      .last&.created_by_id
   end
-
 end

@@ -19,7 +19,7 @@ end
 def html_for_section(group)
   icons = group["icons"].map do |icon|
     class_attr = icon["diversity"] ? " class=\"diversity\"" : ""
-    "    {{replace-emoji \":#{icon['name']}:\" (hash lazy=true#{class_attr})}}"
+    "    {{replace-emoji \":#{icon['name']}:\" (hash lazy=true#{class_attr} tabIndex=\"0\")}}"
   end
 
   <<~HTML
@@ -210,7 +210,7 @@ task 'javascript:update_constants' => :environment do
 
   emoji_buttons = groups_json.map do |group|
     <<~HTML
-			<button type="button" data-section="#{group["name"]}" {{action onCategorySelection "#{group["name"]}"}} class="btn btn-default category-button emoji">
+			<button type="button" data-section="#{group["name"]}" {{action this.onCategorySelection "#{group["name"]}"}} class="btn btn-default category-button emoji">
 				 {{replace-emoji ":#{group["tabicon"]}:"}}
 			</button>
     HTML
