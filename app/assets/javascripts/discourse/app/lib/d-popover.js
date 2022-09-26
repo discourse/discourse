@@ -24,18 +24,23 @@ export const hideOnEscapePlugin = {
   },
 };
 
+export function isPopoverShown(event) {
+  const instance = event.target._tippy;
+  return instance?.state.isShown;
+}
+
 // legacy, shouldn't be needed with setup
 export function hidePopover(event) {
-  if (event?.target?._tippy) {
-    showPopover(event);
+  const instance = event.target._tippy;
+
+  if (instance?.state.isShown) {
+    instance.hide();
   }
 }
 
 // legacy, setup() should be used
 export function showPopover(event, options = {}) {
-  const instance = event.target._tippy
-    ? event.target._tippy
-    : setup(event.target, options);
+  const instance = event.target._tippy ?? setup(event.target, options);
 
   if (instance.state.isShown) {
     instance.hide();
