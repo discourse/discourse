@@ -421,7 +421,7 @@ RSpec.describe TopicCreator do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
-        it "personal_message_enabled_groups setting should not be checked when sending private message to staff via flag" do
+        it "personal_message_enabled_groups setting should not be checked when sending private messages to staff via flag" do
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs.merge(subtype: TopicSubtype.notify_moderators))).to be_valid
         end
