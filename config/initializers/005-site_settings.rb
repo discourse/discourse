@@ -26,6 +26,4 @@ Rails.application.config.to_prepare do
       # This will happen when migrating a new database
     end
   end
-
-  SiteSetting.define_group_list_map_shortcut_methods!
 end

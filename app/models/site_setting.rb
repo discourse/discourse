@@ -279,19 +279,6 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  # Any group_list setting, e.g. personal_message_enabled_groups, will have
-  # a getter defined with _map on the end, e.g. personal_message_enabled_groups_map,
-  # to avoid having to manually split and convert to integer for these settings.
-  def self.define_group_list_map_shortcut_methods!
-    SiteSetting.defaults.all.select do |setting, _value|
-      SiteSetting.type_supervisor.type_hash(setting)[:type] == "group_list"
-    end.each do |setting, _value|
-      self.define_singleton_method("#{setting}_map") do
-        send(setting).to_s.split("|").map(&:to_i)
-      end
-    end
-  end
-
   protected
 
   def self.clear_cache!
