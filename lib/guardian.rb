@@ -71,6 +71,9 @@ class Guardian
     def whisperer?
       false
     end
+    def in_any_groups?(group_ids)
+      false
+    end
   end
 
   attr_reader :request
@@ -398,7 +401,12 @@ class Guardian
     if object.is_a?(Topic)
       if object.private_message?
         return true if is_admin?
-        return false unless SiteSetting.enable_personal_messages?
+
+        # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
+        if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
+            !SiteSetting.enable_personal_messages
+          return false
+        end
         return false if object.reached_recipients_limit? && !is_staff?
       end
 
@@ -447,12 +455,11 @@ class Guardian
     (is_group || is_user) &&
     # User is authenticated
     authenticated? &&
-    # Have to be a basic level at least
-    (is_group || @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
-    # PMs are enabled
-    (is_staff? || SiteSetting.enable_personal_messages || notify_moderators) &&
+    # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
+    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
+    (is_staff? || (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) || SiteSetting.enable_personal_messages) || notify_moderators) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
@@ -467,7 +474,9 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    SiteSetting.enable_personal_messages && @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
+    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
+    (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) || SiteSetting.enable_personal_messages) &&
+      @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 
   def can_export_entity?(entity)

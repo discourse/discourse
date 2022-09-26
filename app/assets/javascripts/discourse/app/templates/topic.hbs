@@ -52,7 +52,7 @@
         {{else}}
           <h1 data-topic-id={{this.model.id}}>
             {{#unless this.model.is_warning}}
-              {{#if this.siteSettings.enable_personal_messages}}
+              {{#if this.canSendPms}}
                 <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} @href={{this.pmPath}} @title="topic_statuses.personal_message.title" @ariaLabel="user.messages.inbox" @tagName="" />
               {{else}}
                 <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} @tagName="" />

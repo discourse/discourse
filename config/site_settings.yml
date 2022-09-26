@@ -818,6 +818,13 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
+  personal_message_enabled_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "PersonalMessageEnabledGroupsValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400

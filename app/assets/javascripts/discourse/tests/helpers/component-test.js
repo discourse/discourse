@@ -25,6 +25,23 @@ export function setupRenderingTest(hooks) {
     const currentUser = User.create({
       username: "eviltrout",
       timezone: "Australia/Brisbane",
+      name: "Robin Ward",
+      admin: false,
+      moderator: false,
+      groups: [
+        {
+          id: 10,
+          automatic: true,
+          name: "trust_level_0",
+          display_name: "trust_level_0",
+        },
+        {
+          id: 11,
+          automatic: true,
+          name: "trust_level_1",
+          display_name: "trust_level_1",
+        },
+      ],
     });
     this.currentUser = currentUser;
     this.owner.unregister("service:current-user");

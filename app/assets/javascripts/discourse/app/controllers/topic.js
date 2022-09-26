@@ -212,6 +212,11 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
+  @discourseComputed("currentUser.allowPersonalMessages")
+  canSendPms() {
+    return this.currentUser?.allowPersonalMessages;
+  },
+
   @discourseComputed("buffered.category_id")
   minimumRequiredTags(categoryId) {
     return Category.findById(categoryId)?.minimumRequiredTags || 0;

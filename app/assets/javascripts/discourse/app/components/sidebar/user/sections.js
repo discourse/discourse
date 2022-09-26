@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 export default class SidebarUserSections extends Component {
   @service siteSettings;
   @service currentUser;
+  @service site;
 
   customSections;
 
@@ -20,5 +21,9 @@ export default class SidebarUserSections extends Component {
       setOwner(section, getOwner(this));
       return section;
     });
+  }
+
+  get enableMessagesSection() {
+    return this.currentUser?.allowPersonalMessages;
   }
 }

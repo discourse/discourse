@@ -13,6 +13,10 @@ RSpec.describe UsersController do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:inactive_user) { Fabricate(:inactive_user) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user) }
@@ -5858,17 +5862,11 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it "responds with 403 if private messages are disabled and the user isn't staff" do
-        SiteSetting.enable_personal_messages = false
+      it "responds with 403 if personal_message_enabled_groups does not include the user and the user isn't staff" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        user.update(trust_level: 1)
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(403)
-      end
-
-      it "doesn't respond with 403 if private messages are disabled and the user is staff" do
-        SiteSetting.enable_personal_messages = false
-        user.update!(moderator: true)
-        get "/u/#{user.username}/user-menu-private-messages"
-        expect(response.status).to eq(200)
       end
 
       it "sends an array of unread private_message notifications" do

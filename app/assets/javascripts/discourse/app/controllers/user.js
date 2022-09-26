@@ -116,11 +116,13 @@ export default Controller.extend(CanCheckEmails, {
     return viewingSelf;
   },
 
-  @discourseComputed("viewingSelf", "currentUser.admin")
+  @discourseComputed(
+    "viewingSelf",
+    "currentUser.admin",
+    "currentUser.allowPersonalMessages"
+  )
   showPrivateMessages(viewingSelf, isAdmin) {
-    return (
-      this.siteSettings.enable_personal_messages && (viewingSelf || isAdmin)
-    );
+    return this.currentUser?.allowPersonalMessages && (viewingSelf || isAdmin);
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")
