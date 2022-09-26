@@ -12,21 +12,16 @@ module SystemHelpers
     SiteSetting.external_system_avatars_enabled = false
   end
 
-  def wait_for_record(&block)
-    record_found = false
-    record = nil
-    sleep_backoff = 0.01
-    start_time = Time.zone.now
-    while !record_found
-      record = block.call
-      record_found = record.present?
-      sleep sleep_backoff
-      sleep_backoff += 0.01
-      if Time.zone.now >= start_time + 3.seconds
-        puts "Could not find record in time. Aborting!"
-        break
-      end
+  def try_until_success(timeout: 2, frequency: 0.01)
+    start ||= Time.zone.now
+    backoff ||= frequency
+    yield
+  rescue RSpec::Expectations::ExpectationNotMetError
+    if Time.zone.now >= start + timeout.seconds
+      raise
     end
-    record
+    sleep backoff
+    backoff += frequency
+    retry
   end
 end

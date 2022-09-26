@@ -6,14 +6,6 @@ describe "Bookmarking posts and topics", type: :system, js: true do
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
   fab!(:post2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 
-  it "does not allow anon to create bookmarks" do
-    visit "/t/#{topic.id}"
-
-    topic_page = PageObjects::Pages::Topic.new
-    expect(topic_page).to have_post_content(post)
-    expect(topic_page).not_to have_post_more_actions(post)
-  end
-
   it "allows logged in user to create bookmarks with and without reminders" do
     sign_in user
     visit "/t/#{topic.id}"
@@ -67,8 +59,8 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     bookmark_modal.save
 
     expect(topic_page).to have_topic_bookmarked
-    bookmark = wait_for_record do
-      Bookmark.find_by(bookmarkable: topic, user: user)
+    bookmark = try_until_success do
+      expect(Bookmark.exists?(bookmarkable: topic, user: user)).to eq(true)
     end
     expect(bookmark).not_to eq(nil)
   end
