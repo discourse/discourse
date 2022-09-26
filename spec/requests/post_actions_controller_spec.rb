@@ -4,6 +4,10 @@ RSpec.describe PostActionsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   describe '#destroy' do
     fab!(:post) { Fabricate(:post, user: coding_horror) }
 

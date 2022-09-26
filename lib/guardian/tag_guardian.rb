@@ -15,6 +15,7 @@ module TagGuardian
     return false if @user.blank?
     return true if @user == Discourse.system_user
 
+    # TODO (martin) Change to pm_tags_allowed_for_groups_map
     group_ids = SiteSetting.pm_tags_allowed_for_groups.to_s.split("|").map(&:to_i)
     group_ids.include?(Group::AUTO_GROUPS[:everyone]) || @user.group_users.exists?(group_id: group_ids)
   end

@@ -36,6 +36,24 @@ RSpec.describe TopicsController do
 
   fab!(:tag) { Fabricate(:tag) }
 
+  before do
+    [
+      user,
+      user_2,
+      post_author1,
+      post_author2,
+      post_author3,
+      post_author4,
+      post_author5,
+      post_author6,
+      trust_level_0,
+      trust_level_1,
+      trust_level_4
+    ].each do |u|
+      Group.user_trust_level_change!(u.id, u.trust_level)
+    end
+  end
+
   describe '#wordpress' do
     before do
       sign_in(moderator)
@@ -4115,6 +4133,7 @@ RSpec.describe TopicsController do
 
         before do
           SiteSetting.max_allowed_message_recipients = 2
+          Group.refresh_automatic_groups!
         end
 
         it "doesn't allow normal users to invite" do

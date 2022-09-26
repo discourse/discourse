@@ -3,14 +3,36 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { showPopover } from "discourse/lib/d-popover";
+import {
+  hidePopover,
+  isPopoverShown,
+  showPopover,
+} from "discourse/lib/d-popover";
 
 module("Integration | Component | d-popover", function (hooks) {
   setupRenderingTest(hooks);
 
   test("show/hide popover from lib", async function (assert) {
+    let showCallCount = 0;
+    let hideCallCount = 0;
+
     this.set("onButtonClick", (_, event) => {
-      showPopover(event, { content: "test", trigger: "click", duration: 0 });
+      if (isPopoverShown(event)) {
+        hidePopover(event);
+        hideCallCount++;
+      } else {
+        // Note: we need to override the default `trigger` and `hideOnClick`
+        // settings in order to completely control showing / hiding the tip
+        // via showPopover / hidePopover. Otherwise tippy's event listeners
+        // will compete with those created in this test (on DButton).
+        showPopover(event, {
+          content: "test",
+          duration: 0,
+          trigger: "manual",
+          hideOnClick: false,
+        });
+        showCallCount++;
+      }
     });
 
     await render(hbs`
@@ -30,7 +52,11 @@ module("Integration | Component | d-popover", function (hooks) {
     );
 
     await click(".btn");
+
     assert.notOk(document.querySelector("div[data-tippy-root]"));
+
+    assert.strictEqual(showCallCount, 1, "showPopover was invoked once");
+    assert.strictEqual(hideCallCount, 1, "hidePopover was invoked once");
   });
 
   test("show/hide popover from component", async function (assert) {

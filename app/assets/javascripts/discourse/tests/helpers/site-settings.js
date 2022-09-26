@@ -95,6 +95,7 @@ const ORIGINAL_SETTINGS = {
   desktop_category_page_style: "categories_and_latest_topics",
   enable_mentions: true,
   enable_personal_messages: true,
+  personal_message_enabled_groups: "11", // TL1 group
   unicode_usernames: false,
   secure_media: false,
   external_emoji_url: "",

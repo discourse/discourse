@@ -172,7 +172,11 @@ class TopicQuery
   def list_related_for(topic, pm_params: nil)
     return if !topic.private_message?
     return if @user.blank?
-    return if !SiteSetting.enable_personal_messages?
+
+    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
+    if !SiteSetting.enable_personal_messages || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+      return
+    end
 
     builder = SuggestedTopicsBuilder.new(topic)
     pm_params = pm_params || get_pm_params(topic)
@@ -197,10 +201,13 @@ class TopicQuery
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic, pm_params: nil)
 
+    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
-    return if topic.private_message? &&
-      (@user.blank? || !SiteSetting.enable_personal_messages?)
+    if topic.private_message? && (
+        @user.blank? || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map || !SiteSetting.enable_personal_messages))
+      return
+    end
 
     builder = SuggestedTopicsBuilder.new(topic)
 

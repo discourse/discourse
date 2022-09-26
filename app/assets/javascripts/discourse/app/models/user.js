@@ -626,6 +626,18 @@ const User = RestModel.extend({
     return filteredGroups.length > numGroupsToDisplay;
   },
 
+  isInAnyGroups(groupIds) {
+    if (!this.groups) {
+      return;
+    }
+
+    // auto group ID 0 is "everyone"
+    return (
+      groupIds.includes(0) ||
+      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
+    );
+  },
+
   // The user's stat count, excluding PMs.
   @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
@@ -1061,6 +1073,18 @@ const User = RestModel.extend({
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
+
+  @discourseComputed("staff", "groups.[]")
+  allowPersonalMessages() {
+    return (
+      this.staff ||
+      this.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
   },
 });
 

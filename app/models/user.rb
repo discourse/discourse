@@ -412,6 +412,14 @@ class User < ActiveRecord::Base
     find_by(username_lower: normalize_username(username))
   end
 
+  def in_any_groups?(group_ids)
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+  end
+
+  def belonging_to_group_ids
+    @belonging_to_group_ids ||= group_users.pluck(:group_id)
+  end
+
   def group_granted_trust_level
     GroupUser
       .where(user_id: id)
@@ -495,6 +503,7 @@ class User < ActiveRecord::Base
     @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
+    @belonging_to_group_ids = nil
     super
   end
 
@@ -1462,6 +1471,8 @@ class User < ActiveRecord::Base
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
       end
     end
+
+    @belonging_to_group_ids = nil
   end
 
   def email

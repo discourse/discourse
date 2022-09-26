@@ -347,7 +347,7 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def redesigned_user_page_nav_enabled
     if SiteSetting.enable_new_user_profile_nav_groups.present?
-      GroupUser.exists?(user_id: object.id, group_id: SiteSetting.enable_new_user_profile_nav_groups.split("|"))
+      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
     else
       false
     end
