@@ -417,7 +417,7 @@ class User < ActiveRecord::Base
   end
 
   def belonging_to_group_ids
-    @belonging_to_group_ids ||= group_users.pluck(&:group_id)
+    @belonging_to_group_ids ||= group_users.pluck(:group_id)
   end
 
   def group_granted_trust_level
@@ -503,6 +503,7 @@ class User < ActiveRecord::Base
     @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
+    @belonging_to_group_ids = nil
     super
   end
 
