@@ -62,5 +62,12 @@ acceptance("User Drafts", function (needs) {
       ),
       "shows the excerpt"
     );
+
+    assert.ok(
+      query(".user-stream-item:nth-child(2) a.avatar-link").href.endsWith(
+        "/u/eviltrout"
+      ),
+      "has correct avatar link"
+    );
   });
 });
