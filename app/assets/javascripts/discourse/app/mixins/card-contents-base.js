@@ -1,12 +1,12 @@
 import { alias, match } from "@ember/object/computed";
-import { throttle } from "@ember/runloop";
+import { schedule, throttle } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import afterTransition from "discourse/lib/after-transition";
 import { escapeExpression } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { afterRender, bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
 
 const DEFAULT_SELECTOR = "#main-outlet";
@@ -192,7 +192,6 @@ export default Mixin.create({
     return this._show($target.text().replace(/^@/, ""), $target);
   },
 
-  @afterRender
   _positionCard(target) {
     const rtl = $("html").css("direction") === "rtl";
     if (!target) {
@@ -205,86 +204,88 @@ export default Mixin.create({
 
     let verticalAdjustments = 0;
 
-    if (target) {
-      if (!this.site.mobileView) {
-        let position = target.offset();
-        if (target.parents(".d-header").length > 0) {
-          position.top = target.position().top;
+    schedule("afterRender", () => {
+      if (target) {
+        if (!this.site.mobileView) {
+          let position = target.offset();
+          if (target.parents(".d-header").length > 0) {
+            position.top = target.position().top;
+          }
+
+          if (position) {
+            position.bottom = "unset";
+
+            if (rtl) {
+              // The site direction is rtl
+              position.right = $(window).width() - position.left + 10;
+              position.left = "auto";
+              let overage = $(window).width() - 50 - (position.right + width);
+              if (overage < 0) {
+                position.right += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
+              }
+            } else {
+              // The site direction is ltr
+              position.left += target.width() + 10;
+
+              let overage = $(window).width() - 50 - (position.left + width);
+              if (overage < 0) {
+                position.left += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
+              }
+            }
+
+            // It looks better to have the card aligned slightly higher
+            position.top -= 24;
+
+            if (isFixed) {
+              position.top -= $("html").scrollTop();
+              //if content is fixed and will be cut off on the bottom, display it above...
+              if (
+                position.top + height + verticalAdjustments >
+                $(window).height() - 50
+              ) {
+                position.bottom =
+                  $(window).height() -
+                  (target.offset().top - $("html").scrollTop());
+                if (verticalAdjustments > 0) {
+                  position.bottom += 48;
+                }
+                position.top = "unset";
+              }
+            }
+
+            const avatarOverflowSize = 44;
+            if (isDocked && position.top < avatarOverflowSize) {
+              position.top = avatarOverflowSize;
+            }
+
+            $(this.element).css(position);
+          }
         }
 
-        if (position) {
-          position.bottom = "unset";
-
-          if (rtl) {
-            // The site direction is rtl
-            position.right = $(window).width() - position.left + 10;
-            position.left = "auto";
-            let overage = $(window).width() - 50 - (position.right + width);
-            if (overage < 0) {
-              position.right += overage;
-              position.top += target.height() + 48;
-              verticalAdjustments += target.height() + 48;
-            }
-          } else {
-            // The site direction is ltr
-            position.left += target.width() + 10;
-
-            let overage = $(window).width() - 50 - (position.left + width);
-            if (overage < 0) {
-              position.left += overage;
-              position.top += target.height() + 48;
-              verticalAdjustments += target.height() + 48;
-            }
-          }
-
-          // It looks better to have the card aligned slightly higher
-          position.top -= 24;
-
-          if (isFixed) {
-            position.top -= $("html").scrollTop();
-            //if content is fixed and will be cut off on the bottom, display it above...
-            if (
-              position.top + height + verticalAdjustments >
-              $(window).height() - 50
-            ) {
-              position.bottom =
-                $(window).height() -
-                (target.offset().top - $("html").scrollTop());
-              if (verticalAdjustments > 0) {
-                position.bottom += 48;
-              }
-              position.top = "unset";
-            }
-          }
-
-          const avatarOverflowSize = 44;
-          if (isDocked && position.top < avatarOverflowSize) {
-            position.top = avatarOverflowSize;
-          }
-
+        if (this.site.mobileView) {
+          $(".card-cloak").removeClass("hidden");
+          let position = target.offset();
+          position.top = "10%"; // match modal behaviour
+          position.left = 0;
           $(this.element).css(position);
         }
-      }
+        $(this.element).toggleClass("docked-card", isDocked);
 
-      if (this.site.mobileView) {
-        $(".card-cloak").removeClass("hidden");
-        let position = target.offset();
-        position.top = "10%"; // match modal behaviour
-        position.left = 0;
-        $(this.element).css(position);
+        // After the card is shown, focus on the first link
+        //
+        // note: we DO NOT use afterRender here cause _positionCard may
+        // run afterwards, if we allowed this to happen the usercard
+        // may be offscreen and we may scroll all the way to it on focus
+        discourseLater(() => {
+          const firstLink = this.element.querySelector("a");
+          firstLink && firstLink.focus();
+        }, 150);
       }
-      $(this.element).toggleClass("docked-card", isDocked);
-
-      // After the card is shown, focus on the first link
-      //
-      // note: we DO NOT use afterRender here cause _positionCard may
-      // run afterwards, if we allowed this to happen the usercard
-      // may be offscreen and we may scroll all the way to it on focus
-      discourseLater(() => {
-        const firstLink = this.element.querySelector("a");
-        firstLink && firstLink.focus();
-      }, 150);
-    }
+    });
   },
 
   @bind
