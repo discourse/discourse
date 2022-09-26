@@ -49,6 +49,12 @@ You can access the webapp on the browser on `localhost:4200`.
 	$ d/ember-cli
 	```
 
+1. Missing gem error when you ran `d/rails s`. This happens after syncing our repo to the main Discourse repo and there's a new or updated bundle, making our repo out of date. To resolve this, just run this command to install the missing bundles:
+
+	```
+	$ d/bundle install
+	```
+
 ## Creating users
 
 The easiest way to create a new user is by using the 'signup' functionality of the webapp. The webapp is supposed to send an activation email but it's not working, I think because the webapp is running on localhost. So the alternative to activate a newly created account is by using the admin functionality of the webapp. Follow the steps below to activate a newly registered account:
