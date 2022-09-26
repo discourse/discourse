@@ -279,6 +279,10 @@
 }
 
 .reply-where-modal {
+  .dialog-footer {
+    display: block;
+  }
+
   .btn {
     display: block;
     text-align: left;
