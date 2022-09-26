@@ -372,7 +372,6 @@ basic:
   sitemap_page_size:
     default: 10000
   enable_user_status:
-    hidden: true
     client: true
     default: false
 

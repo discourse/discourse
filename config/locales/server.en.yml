@@ -2337,6 +2337,8 @@ en:
     enable_sitemap: "Generate a sitemap for your site and include it in the robots.txt file."
     sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
 
+    enable_user_status: "(experimental) Allow users to set custom status message (emoji + description)."
+
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
