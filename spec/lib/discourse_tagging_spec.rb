@@ -562,6 +562,15 @@ RSpec.describe DiscourseTagging do
           expect(valid).to eq(true)
           expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
         end
+
+        it "adds missing tags even with cycles" do
+          tag_group4 = Fabricate(:tag_group, parent_tag_id: baz.id)
+          tag_group4.tags = [foo]
+
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
+          expect(valid).to eq(true)
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        end
       end
     end
 
