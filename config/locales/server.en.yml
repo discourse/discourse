@@ -555,8 +555,8 @@ en:
       Are you sure you want to continue this old conversation?
 
     user_not_seen:
-      single: "The person you are messaging, %{username}, hasn’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting %{username}."
-      multiple: "The following people you are messaging: %{username}, haven’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting them."
+      single: "The person you are messaging, <b>%{username}</b>, hasn’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting %{username}."
+      multiple: "The following people you are messaging: <b>%{username}</b>, haven’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting them."
 
   activerecord:
     attributes:

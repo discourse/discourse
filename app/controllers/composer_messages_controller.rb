@@ -30,6 +30,7 @@ class ComposerMessagesController < ApplicationController
       else
         "education.user_not_seen.multiple"
       end
+      users.map! { |username| "@#{username}" }
       warning_message = I18n.t(message_locale, username: users.join(", "), time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose'))
     end
 
