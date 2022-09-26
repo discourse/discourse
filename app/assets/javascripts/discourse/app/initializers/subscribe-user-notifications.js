@@ -28,10 +28,12 @@ export default {
       const channel = user.enable_redesigned_user_menu
         ? `/reviewable_counts/${user.id}`
         : "/reviewable_counts";
+
       bus.subscribe(channel, (data) => {
         if (data.reviewable_count >= 0) {
-          user.set("reviewable_count", data.reviewable_count);
+          user.updateReviewableCount(data.reviewable_count);
         }
+
         if (user.redesigned_user_menu_enabled) {
           user.set("unseen_reviewable_count", data.unseen_reviewable_count);
         }
