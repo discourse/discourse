@@ -17,7 +17,10 @@ module("Integration | Component | d-popover", function (hooks) {
     let hideCallCount = 0;
 
     this.set("onButtonClick", (_, event) => {
-      if (!isPopoverShown(event)) {
+      if (isPopoverShown(event)) {
+        hidePopover(event);
+        hideCallCount++;
+      } else {
         // Note: we need to override the default `trigger` and `hideOnClick`
         // settings in order to completely control showing / hiding the tip
         // via showPopover / hidePopover. Otherwise tippy's event listeners
@@ -29,9 +32,6 @@ module("Integration | Component | d-popover", function (hooks) {
           hideOnClick: false,
         });
         showCallCount++;
-      } else {
-        hidePopover(event);
-        hideCallCount++;
       }
     });
 
