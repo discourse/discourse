@@ -3,7 +3,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import User from "discourse/models/user";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
@@ -101,5 +101,38 @@ acceptance("User Card - User Status", function (needs) {
     await click('a[data-user-card="charlie"]');
 
     assert.notOk(exists(".user-card h3.user-status"));
+  });
+});
+
+acceptance("User card - Accessibility", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
+    server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
+  });
+
+  test("user card focuses correctly", async function (assert) {
+    await visit("/");
+    const userAvatar = document.querySelector('a[data-user-card="eviltrout"]');
+    userAvatar.focus();
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    assert.ok(exists(".user-card-eviltrout"), "evil trout's user card exists");
+    assert.strictEqual(
+      document.activeElement,
+      document.querySelector(".card-huge-avatar"),
+      "first element inside user card is in focus"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    assert.ok(
+      !exists(document.querySelector("user-card.show"), "user card is hidden")
+    );
+    assert.strictEqual(
+      document.activeElement,
+      userAvatar,
+      "user avatar returns to focus"
+    );
   });
 });
