@@ -26,7 +26,7 @@ export const hideOnEscapePlugin = {
 
 export function isPopoverShown(event) {
   const instance = event.target._tippy;
-  return instance?.state.isVisible;
+  return instance?.state.isShown;
 }
 
 // legacy, shouldn't be needed with setup
