@@ -670,6 +670,12 @@ export function applyDefaultHandlers(pretender) {
       },
     ];
 
+    if (request.queryParams.filter) {
+      store = store.filter((user) =>
+        user.username.includes(request.queryParams.filter)
+      );
+    }
+
     const showEmails = request.queryParams.show_emails;
 
     if (showEmails === "false") {
