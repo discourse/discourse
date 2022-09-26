@@ -2,6 +2,8 @@ import Component from "@ember/component";
 import { actionDescription } from "discourse/widgets/post-small-action";
 import { computed } from "@ember/object";
 import { propertyEqual } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "li",
@@ -28,4 +30,9 @@ export default Component.extend({
     "item.created_at",
     "item.action_code_who"
   ),
+
+  @discourseComputed("item.draft_username", "item.username")
+  userUrl(draftUsername, username) {
+    return userPath((draftUsername || username).toLowerCase());
+  },
 });
