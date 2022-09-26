@@ -175,7 +175,7 @@
 
                   {{#if this.canEditTags}}
                     <MiniTagChooser 
-                      @value={{this.model.tags}} 
+                      @value={{if this.model.creatingTopic this.model.tags this.model.user_generated_tags}} 
                       @onChange={{action (mut this.model.tags)}} 
                       @options={{
                         hash
@@ -200,18 +200,20 @@
                 </div>
               {{/if}}
               {{#unless this.model.creatingTopic}}
-                <MiniTagChooser 
-                  @value={{this.model.tags}} 
-                  @onChange={{action (mut this.model.tags)}} 
-                  @options={{
-                    hash
-                    disabled=this.disableTagsChooser
-                    categoryId=this.model.categoryId
-                    minimum=this.model.minimumRequiredTags
-                  }} 
-                  style="margin-left: 0 !important;"
-                />
-                <PopupInputTip @validation={{this.tagValidation}} />
+                {{#unless this.model.first_post}}
+                  <MiniTagChooser 
+                    @value={{this.model.user_generated_tags}} 
+                    @onChange={{action (mut this.model.user_generated_tags)}} 
+                    @options={{
+                      hash
+                      disabled=this.disableTagsChooser
+                      categoryId=this.model.categoryId
+                      minimum=this.model.minimumRequiredTags
+                    }} 
+                    style="margin-left: 0 !important;"
+                  />
+                  <PopupInputTip @validation={{this.tagValidation}} />
+                {{/unless}}
               {{/unless}}
 
               <PluginOutlet 

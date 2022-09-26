@@ -213,7 +213,6 @@ export default Component.extend(ComposerUploadUppy, {
 
   @on("didInsertElement")
   _composerEditorInit() {
-    console.log(this.get("composer"))
     const $input = $(this.element.querySelector(".d-editor-input"));
 
     if (this.siteSettings.enable_mentions) {

@@ -148,8 +148,61 @@ class PostRevisor
     @editor = editor
     @fields = fields.with_indifferent_access
     @opts = opts
-
     @topic_changes = TopicChanges.new(@topic, editor)
+
+    if @fields[:user_generated_tags]
+      # Update tags in `post_custom_fields` and `topic_tags`
+      @fields[:user_generated_tags].each do |tag|
+        unless PostCustomField.where(
+            post_id: @post[:id], 
+            name: 'user_generated_tags', 
+            value: tag
+            ).exists?
+          
+            PostCustomField.create!(
+            post_id: @post[:id],
+            name: 'user_generated_tags',
+            value: tag
+          )
+          unless Tag.where_name(tag).exists?
+            @created_tag = Tag.create(name: tag)
+            unless TopicTag.where(
+                topic_id: @post[:topic_id], 
+                tag_id: @created_tag[:id]
+                ).exists?
+              TopicTag.create!(
+                topic_id: @post[:topic_id].to_i,
+                tag_id: @created_tag[:id].to_i
+              )
+            end
+          else
+            @existing_tag = Tag.where_name(tag).first
+            unless TopicTag.where(
+                topic_id: @post[:topic_id], 
+                tag_id: @existing_tag[:id]
+                ).exists?
+                TopicTag.create!(
+                  topic_id: @post[:topic_id].to_i,
+                  tag_id: @existing_tag[:id].to_i
+                )
+            end
+          end
+        end
+      end
+    else
+      # Delete tags in `post_custom_fields` and `topic_tags`
+      if PostCustomField.where(post_id: @post[:id], name: 'user_generated_tags').exists?
+        @existing_tag = PostCustomField.where(post_id: @post[:id], name: 'user_generated_tags').first
+        @tag = Tag.where_name(@existing_tag[:value]).first
+        if TopicTag.where(topic_id: @post[:topic_id], tag_id: @tag[:id]).exists?
+          TopicTag.where(topic_id: @post[:topic_id], tag_id: @tag[:id]).delete_all
+        end
+        PostCustomField.where(post_id: @post[:id], name: 'user_generated_tags').delete_all
+      end
+      
+      
+
+    end
 
     # some normalization
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
@@ -436,6 +489,9 @@ class PostRevisor
 
     @post.extract_quoted_post_numbers
 
+
+    p "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    p @post
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.link_post_uploads
     @post.save_reply_relationships

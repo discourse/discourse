@@ -843,12 +843,19 @@ export default Controller.extend(bufferedProperty("model"), {
         editingSharedDraft = post.get("firstPost");
       }
 
-      const opts = {
+      let opts = {
         post,
         action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
         draftKey: post.get("topic.draft_key"),
         draftSequence: post.get("topic.draft_sequence"),
+        meta_tag: post.meta_tag
       };
+
+      if (post.user_generated_tags) {
+        let tag = post.user_generated_tags
+        tag = (typeof tag == 'string') ? [tag] : tag
+        opts.user_generated_tags = tag
+      }
 
       if (editingSharedDraft) {
         opts.destinationCategoryId = topic.get("destination_category_id");
