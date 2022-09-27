@@ -5,14 +5,16 @@ class TopicQuery
     def list_private_messages(user, &blk)
       list = private_messages_for(user, :user)
       list = not_archived(list, user)
+      list = have_posts_from_others(list, user)
 
-      list = list.where(<<~SQL)
-        NOT (
-          topics.participant_count = 1
-          AND topics.user_id = #{user.id.to_i}
-          AND topics.moderator_posts_count = 0
-        )
-      SQL
+      create_list(:private_messages, {}, list, &blk)
+    end
+
+    def list_private_messages_direct_and_groups(user, &blk)
+      list = private_messages_for(user, :all)
+      list = not_archived(list, user)
+      list = not_archived_in_groups(list)
+      list = have_posts_from_others(list, user)
 
       create_list(:private_messages, {}, list, &blk)
     end
@@ -250,6 +252,20 @@ class TopicQuery
       list.joins("LEFT JOIN user_archived_messages um
                          ON um.user_id = #{user.id.to_i} AND um.topic_id = topics.id")
         .where('um.user_id IS NULL')
+    end
+
+    def not_archived_in_groups(list)
+      list.left_joins(:group_archived_messages).where(group_archived_messages: { id: nil })
+    end
+
+    def have_posts_from_others(list, user)
+      list.where(<<~SQL)
+        NOT (
+          topics.participant_count = 1
+          AND topics.user_id = #{user.id.to_i}
+          AND topics.moderator_posts_count = 0
+        )
+      SQL
     end
 
     def group

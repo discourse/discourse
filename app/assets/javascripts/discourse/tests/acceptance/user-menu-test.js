@@ -798,7 +798,7 @@ acceptance("User menu - Dismiss button", function (needs) {
         const copy = cloneJSON(
           UserMenuFixtures["/u/:username/user-menu-private-messages"]
         );
-        copy.notifications = [];
+        copy.unread_notifications = [];
         return helper.response(copy);
       } else {
         return helper.response(
