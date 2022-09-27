@@ -1470,7 +1470,6 @@ pt_BR:
     summary_percent_filter: "Quando um(a) usuário(a) clicar em \"Resuma este tópico\", exiba as % melhores postagens"
     summary_max_results: "Quantidade máxima de postagens retornadas por \"Resumir este tópico\""
     summary_timeline_button: "Exibir um botão \"Resumir\" na linha do tempo"
-    enable_personal_messages: "Permita que usuários(as) do nível de confiança 1 (configurável por meio do nível mínimo para enviar mensagens) criem e respondam a mensagens. Nove que a equipe sempre pode enviar mensagens."
     enable_system_message_replies: "Permite que os(as) usuários(as) respondam às mensagens do sistema, mesmo se as mensagens pessoais estiverem desativadas"
     enable_chunked_encoding: "Ative respostas de codificação em bloco no servidor. Esse recurso funciona na maioria das configurações, mas alguns proxies podem ser armazenados em buffer, atrasando as respostas"
     long_polling_base_url: "URL de base utilizada para \"sondagem longa\" (auando um CDN for configurado, verifique se essa configuração é a padrão). Por exemplo: http://origin.site.com"
@@ -1730,7 +1729,6 @@ pt_BR:
     min_trust_to_edit_wiki_post: "O nível de confiança mínimo necessário para editar uma postagem marcada como wiki."
     min_trust_to_edit_post: "O nível mínimo de confiança necessário para editar postagens."
     min_trust_to_allow_self_wiki: "O nível de confiança mínimo necessário para criar o próprio wiki do(a) usuário(a)."
-    min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar novas mensagens pessoais."
     min_trust_to_send_email_messages: "O nível mínimo de confiança necessário para enviar mensagens pessoais via e-mail."
     min_trust_to_flag_posts: "O nível de confiança mínimo necessário para sinalizar postagens"
     min_trust_to_post_links: "O nível de confiança mínimo necessário para incluir links em postagens"
@@ -2082,6 +2080,7 @@ pt_BR:
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
+    default_sidebar_tags: "As etiquetas selecionadas serão exibidas na seção de Etiquetas da barra lateral por padrão."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"

@@ -1455,7 +1455,6 @@ tr_TR:
     summary_percent_filter: "Kullanıcı 'Bu Konuyu Özetle'ye tıkladığında, gönderinin ilk % kısmını göster"
     summary_max_results: "'Bu Konuyu Özetle' den dönen en fazla gönderi sayısı"
     summary_timeline_button: "Zaman çizelgesinde 'Özetle' düğmesi göster"
-    enable_personal_messages: "Güven düzeyi 1 (ileti göndermek için minimum güven düzeyi ile yapılandırılabilir) kullanıcıların ileti oluşturmasına ve iletileri yanıtlamasına izin verin. Personelin ne olursa olsun her zaman ileti gönderebileceğini unutmayın."
     enable_system_message_replies: "Kişisel iletiler devre dışı bırakılsa bile kullanıcıların sistem iletilerini yanıtlamasına izin verir"
     enable_chunked_encoding: "Sunucu tarafından yığınlanmış kodlama yanıtlarını etkinleştirin. Bu özellik çoğu kurulumda çalışır, ancak bazı proxy'ler arabelleğe alabilir ve yanıtların gecikmesine neden olabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa bunu origin olarak ayarladığınıza emin olun) örn: http://origin.site.com."
@@ -1722,7 +1721,6 @@ tr_TR:
     min_trust_to_edit_wiki_post: "Viki olarak işaretlenmiş bir gönderiyi düzenleyebilmek için gereken en az güven düzeyi."
     min_trust_to_edit_post: "Gönderilerin düzenlenebilmesi için gereken en düşük güven düzeyi."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi viki gönderisini oluşturabilmesi için gereken güven düzeyi."
-    min_trust_to_send_messages: "Yeni kişisel iletiler oluşturmak için gereken minimum güven düzeyi."
     min_trust_to_send_email_messages: "E-postayla kişisel ileti göndermek için gereken minimum güven düzeyi."
     min_trust_to_flag_posts: "Gönderileri raporlamak için gereken minimum güven düzeyi"
     min_trust_to_post_links: "Gönderilere bağlantı eklemek için gereken minimum güven düzeyi"
@@ -2050,6 +2048,7 @@ tr_TR:
     heading_font: "Sitedeki çoğu başlık için kullanılacak temel yazı tipi. Temalar, `--heading-font-family` CSS özel özelliği aracılığıyla bunu geçersiz kılabilir."
     enable_sitemap: "Siteniz için bir site haritası oluşturun ve bunu robots.txt dosyasına ekleyin."
     sitemap_page_size: "Her site haritası sayfasına dahil edilecek URL sayısı. Maksimum 50.000"
+    enable_user_status: "(deneysel) Kullanıcıların özel durum mesajı (emoji + açıklama) ayarlamasına izin verin."
     short_title: "Kısa başlık kullanıcının ana ekranında, başlatıcısında veya alanın sınırlı olabileceği diğer yerlerde kullanılır. En fazla 12 karakter olmalıdır."
     dashboard_hidden_reports: "Gösterge tablosundan belirtilen raporların gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
@@ -2091,6 +2090,7 @@ tr_TR:
       reply_by_email_address_is_empty: "E-postayla yanıtı etkinleştirmeden önce bir 'e-posta adresine göre yanıt' ayarlamanız gerekir."
       email_polling_disabled: "E-postayla yanıtı etkinleştirmeden önce manuel veya POP3 sorgulamasını etkinleştirmelisiniz."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce 'kullanıcı yerel ayarlarına izin ver' seçeneğini etkinleştirmeniz gerekir."
+      personal_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin PM göndermesini istemiyorsanız personel grubunu seçin."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."
       invalid_regex_with_message: "'%{regex}' regex teriminde bir hata var: %{message}"
       email_editable_enabled: "Bu ayarı etkinleştirmeden önce 'düzenlenebilir e-posta' yı devre dışı bırakmanız gerekir."
@@ -2160,8 +2160,8 @@ tr_TR:
       max_post_length: "Birleştirilmiş gönderi uzunluğu izin verilenden fazla olduğu için gönderiler birleştirilemez."
   move_posts:
     new_topic_moderator_post:
-      one: "Bir yayın yeni bir konuya bölündü: %{topic_link}"
-      other: "%{count}gönderiler yeni bir konuya bölündü: %{topic_link}"
+      one: "Bir gönderi yeni açılan şu konuya taşındı: %{topic_link}"
+      other: "%{count} gönderi yeni açılan şu konuya taşındı: %{topic_link}"
     new_message_moderator_post:
       one: "Bir yayın yeni bir iletiye bölündü: %{topic_link}"
       other: "%{count} gönderiler yeni bir iletiye bölündü: %{topic_link}"

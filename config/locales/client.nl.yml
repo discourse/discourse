@@ -2198,6 +2198,13 @@ nl:
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
     current_user: "naar uw gebruikerspagina"
     view_all: "Alle %{tab} bekijken"
+    user_menu:
+      tabs:
+        replies: "Antwoorden"
+        mentions: "Vermeldingen"
+        likes: "Gegeven likes"
+        bookmarks: "Bladwijzers"
+        profile: "Profiel"
     topics:
       new_messages_marker: "laatste bezoek"
       bulk:
@@ -3492,6 +3499,8 @@ nl:
       more: "Meer..."
       all_categories: "Alle categorieën"
       sections:
+        about:
+          header_link_text: "Over"
         messages:
           header_link_text: "Berichten"
           links:

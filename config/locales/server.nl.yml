@@ -1525,7 +1525,6 @@ nl:
     min_trust_to_edit_wiki_post: "Het minimale vertrouwensniveau dat nodig is om een bericht te bewerken dat als wiki is gemarkeerd."
     min_trust_to_edit_post: "Het minimale vertrouwensniveau dat nodig is om berichten te bewerken."
     min_trust_to_allow_self_wiki: "Het minimale vertrouwensniveau dat nodig is om een gebruiker een eigen bericht naar een wiki te laten omzetten."
-    min_trust_to_send_messages: "Het minimale vertrouwensniveau dat nodig is om nieuwe persoonlijke berichten te maken."
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om koppelingen in berichten op te nemen"
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"

@@ -1088,6 +1088,9 @@ pt_BR:
       experimental_sidebar:
         options: "Opções"
         categories_section: "Seção de Categorias"
+        categories_section_instruction: "As categorias selecionadas serão exibidas na seção de categorias do painel lateral."
+        tags_section: "Seção de Etiquetas"
+        tags_section_instruction: "As etiquetas selecionadas serão exibidas na seção de etiquetas da barra lateral."
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -2316,6 +2319,13 @@ pt_BR:
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
     current_user: "ir para a sua página do(a) usuário(a)"
     view_all: "exibir tudo %{tab}"
+    user_menu:
+      tabs:
+        replies: "Respostas"
+        mentions: "Menções"
+        likes: "Curtidas"
+        bookmarks: "Favoritos"
+        profile: "Perfil"
     topics:
       new_messages_marker: "último acesso"
       bulk:
@@ -3488,6 +3498,7 @@ pt_BR:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
+      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
@@ -3664,7 +3675,10 @@ pt_BR:
         other: "%{count} novas"
       more: "Mais..."
       all_categories: "Todas as categorias"
+      all_tags: "Todas as etiquetas"
       sections:
+        about:
+          header_link_text: "Sobre"
         messages:
           header_link_text: "Mensagens"
           links:
@@ -3676,8 +3690,13 @@ pt_BR:
             unread_with_count: "Não lido (%{count})"
             archive: "Arquivo"
         tags:
+          none: "Você não adicionou nenhuma etiqueta."
+          click_to_get_started: "Clique aqui para começar."
           header_link_text: "Etiquetas"
+          header_action_title: "editar as suas etiquetas da barra lateral"
         categories:
+          none: "Você não adicionou nenhuma categoria."
+          click_to_get_started: "Clique aqui para começar."
           header_link_text: "Categorias"
         community:
           header_link_text: "Comunidade"

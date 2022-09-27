@@ -88,5 +88,7 @@ uk:
         empty_state:
           title: "Порожній стан"
         rich_tooltip:
+          title: "Підказка, що виринає"
           description: "Опис"
           header: "Header"
+          hover_to_see: "Наведіть курсор, щоб побачити підказку"

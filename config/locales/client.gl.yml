@@ -2110,6 +2110,13 @@ gl:
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
     current_user: "ir á súa páxina do usuario"
     view_all: "ver todas %{tab}"
+    user_menu:
+      tabs:
+        replies: "Réplicas"
+        mentions: "Mencións"
+        likes: "Gústame"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3353,6 +3360,8 @@ gl:
       more: "Máis..."
       all_categories: "Todas as categorías"
       sections:
+        about:
+          header_link_text: "Verbo de"
         messages:
           header_link_text: "Mensaxes"
           links:

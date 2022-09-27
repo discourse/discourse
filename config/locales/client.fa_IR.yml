@@ -1566,6 +1566,8 @@ fa_IR:
       enabled: "سایت در حال فقط خواندنی است. می‌توانید موضوعات را مشاهده کنید ولی امکان ارسال پاسخ، پسندیدن و سایر عملیات در حال حاضر غیر‌فعال است."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
       logout_disabled: "سایت در حال فقط خواندنی است و امکان خروج در این حالت وجود ندارد."
+    staff_writes_only_mode:
+      enabled: "این سایت در حالت فقط کارکنان است. می‌توانید موضوعات را مشاهده کنید، ولی امکان پاسخ دادن، پسندیدن و سایر اقدامات فقط برای اعضای کارکنان محدود شده است."
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است."
@@ -2143,14 +2145,38 @@ fa_IR:
     view_all: "نمایش همه %{tab}"
     user_menu:
       generic_no_items: "هیچ موردی در این فهرست وجود ندارد."
-      sr_menu_tabs: "زبان‌های منو"
+      sr_menu_tabs: "زبانه‌های منو کاربر"
       view_all_notifications: "مشاهده همه آگاه‌سازی‌ها"
       view_all_bookmarks: "مشاهده همه نشانک‌ها"
       view_all_messages: "مشاهده تمام پیام‌های شخصی"
+      tabs:
+        all_notifications: "همه آگاه‌سازی‌ها"
+        replies: "پاسخ‌ها"
+        replies_with_unread:
+          one: "پاسخ‌ها - %{count} پاسخ خوانده نشده"
+          other: "پاسخ‌ها - %{count} پاسخ خوانده نشده"
+        mentions: "اشاره‌ها"
+        mentions_with_unread:
+          one: "اشاره‌ها - %{count} اشاره خوانده نشده"
+          other: "اشاره‌ها - %{count} اشاره خوانده نشده"
+        likes: "پسندیده‌ها"
+        likes_with_unread:
+          one: "پسندیده‌ها - %{count} پسندیده خوانده نشده"
+          other: "پسندیده‌ها - %{count} پسندیده خوانده نشده"
+        messages: "پیام‌های شخصی"
+        messages_with_unread:
+          one: "پیام‌های شخصی - %{count} پیام خوانده نشده"
+          other: "پیام‌های شخصی - %{count} پیام خوانده نشده"
+        bookmarks: "نشانک‌ها"
+        bookmarks_with_unread:
+          one: "نشانک‌ها - %{count} نشانک خوانده نشده"
+          other: "نشانک‌ها - %{count} نشانک خوانده نشده"
+        profile: "نمایه"
       reviewable:
         view_all: "مشاهده تمام موارد بازبینی"
         queue: "صف"
         deleted_user: "«کاربر حذف شده»"
+        deleted_post: "«نوشته حذف شده»"
         post_number_with_topic_title: "نوشته #%{post_number} - %{title}"
         new_post_in_topic: "نوشته‌ی جدید در %{title}"
         user_requires_approval: "%{username} نیاز به تایید دارد"
@@ -3017,6 +3043,7 @@ fa_IR:
         this_month: "ماه"
         this_week: "هفته"
         today: "امروز"
+    safari_13_warning: این سایت به زودی از iOS و Safari، نسخه ۱۳ به بالا پشتیبانی نخواهد کرد. یک نسخه فقط خواندنی ساده در دسترس باقی خواهد ماند. (<a href="https://meta.discourse.org/t/224747">اطلاعات بیشتر</a>)
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -3269,8 +3296,10 @@ fa_IR:
       toggle_section: "تغییر بخش"
       more: "بیشتر..."
       all_categories: "همه‌ی دسته‌بندی‌ها"
-      all_tags: "تمام برچسب‌ها"
+      all_tags: "همه برچسب‌ها"
       sections:
+        about:
+          header_link_text: "درباره"
         messages:
           header_link_text: "پیام‌ها"
           header_action_title: "ایجاد پیام شخصی"
@@ -4086,6 +4115,7 @@ fa_IR:
         suspended: "تعلیق شد؟"
         staged: "کاربر خودکار؟"
         show_admin_profile: "مدیر ارشد"
+        manage_user: "مدیریت کاربر"
         show_public_profile: "نمایش نمایه عمومی"
         impersonate: "جعل هویت کردن"
         action_logs: "گزارش گار"

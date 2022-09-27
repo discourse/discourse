@@ -2271,6 +2271,13 @@ ur:
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
     current_user: "اپنے صفحہِ صارف پر جائیں"
     view_all: "تمام %{tab}دیکھیں"
+    user_menu:
+      tabs:
+        replies: "جوابات"
+        mentions: "تذکرے"
+        likes: "لائیکس دیے گئے"
+        bookmarks: "بُک مارکس"
+        profile: "پروفائل"
     topics:
       new_messages_marker: "آخری وزٹ"
       bulk:
@@ -3638,6 +3645,8 @@ ur:
       more: "مزید..."
       all_categories: "تمام زُمرَہ جات"
       sections:
+        about:
+          header_link_text: "بارے میں"
         messages:
           header_link_text: "پیغامات"
           links:

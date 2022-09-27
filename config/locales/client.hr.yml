@@ -2422,6 +2422,13 @@ hr:
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
     current_user: "idi na korisničku stranicu"
     view_all: "pogledaj sve %{tab}"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Spomeni"
+        likes: "Like-ova"
+        bookmarks: "Zabilješke"
+        profile: "Profil"
     topics:
       new_messages_marker: "posljednji posjet"
       bulk:
@@ -3891,6 +3898,8 @@ hr:
       more: "Više..."
       all_categories: "Sve kategorije"
       sections:
+        about:
+          header_link_text: "O nama"
         messages:
           header_link_text: "Poruke"
           links:
