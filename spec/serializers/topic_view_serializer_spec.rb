@@ -132,6 +132,11 @@ RSpec.describe TopicViewSerializer do
     end
 
     describe 'with private messages' do
+      before do
+        SiteSetting.enable_personal_messages = true
+        Group.refresh_automatic_groups!
+      end
+
       fab!(:topic) do
         Fabricate(:private_message_topic,
           highest_post_number: 1,

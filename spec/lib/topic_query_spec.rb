@@ -1157,7 +1157,7 @@ RSpec.describe TopicQuery do
 
     context 'when logged in' do
       def suggested_for(topic)
-        topic_query.list_suggested_for(topic).topics.map { |t| t.id }
+        topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
       end
 
       let(:topic) { Fabricate(:topic) }
@@ -1259,6 +1259,16 @@ RSpec.describe TopicQuery do
 
           it 'should return the group topics' do
             expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
+          end
+
+          context "when enable_personal_messages is false" do
+            before do
+              SiteSetting.enable_personal_messages = false
+            end
+
+            it 'should not return topics by the group user' do
+              expect(suggested_topics).to eq(nil)
+            end
           end
         end
 
