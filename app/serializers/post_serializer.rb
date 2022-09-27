@@ -90,7 +90,8 @@ class PostSerializer < BasicPostSerializer
              :user_suspended,
              :user_status,
              :meta_tag,
-             :user_generated_tags
+             :user_generated_tags,
+             :subtitle
 
   def initialize(object, opts)
     super(object, opts)
@@ -124,6 +125,10 @@ class PostSerializer < BasicPostSerializer
 
   def topic_title
     topic&.title
+  end
+
+  def subtitle
+    "subtitle"
   end
 
   def topic_html_title

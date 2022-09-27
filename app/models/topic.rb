@@ -29,6 +29,10 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
+  # Custom fields declaration
+  SUBTITLE ||= "subtitle"
+  register_custom_field_type(SUBTITLE, :string)
+
   def self.max_fancy_title_length
     400
   end

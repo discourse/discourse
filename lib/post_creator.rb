@@ -258,8 +258,6 @@ class PostCreator
   end
 
   def self.create(user, opts)
-    Rails.logger.info("**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************")
-    Rails.logger.info(opts)
     PostCreator.new(user, opts).create
   end
 
@@ -542,6 +540,13 @@ class PostCreator
       opts = @opts[:topic_opts] ? @opts.merge(@opts[:topic_opts]) : @opts
       topic_creator = TopicCreator.new(@user, guardian, opts)
       @topic = topic_creator.create
+      unless
+        TopicCustomField.create!(
+          topic_id: @topic[:id].to_i,
+          name: Topic::SUBTITLE,
+          value: @opts[:subtitle]
+        )
+      end
     rescue ActiveRecord::Rollback
       rollback_from_errors!(topic_creator)
     end
