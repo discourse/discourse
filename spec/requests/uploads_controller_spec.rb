@@ -399,9 +399,9 @@ RSpec.describe UploadsController do
         expect(response).to redirect_to(upload.url)
       end
 
-      context "when upload is secure and secure media enabled" do
+      context "when upload is secure and secure uploads enabled" do
         before do
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
           upload.update(secure: true)
         end
 
@@ -448,8 +448,8 @@ RSpec.describe UploadsController do
     describe "local store" do
       fab!(:image_upload) { upload_file("smallest.png") }
 
-      it "does not return secure media when using local store" do
-        secure_url = image_upload.url.sub("/uploads", "/secure-media-uploads")
+      it "does not return secure uploads when using local store" do
+        secure_url = image_upload.url.sub("/uploads", "/secure-uploads")
         get secure_url
 
         expect(response.status).to eq(404)
@@ -458,12 +458,12 @@ RSpec.describe UploadsController do
 
     describe "s3 store" do
       let(:upload) { Fabricate(:upload_s3) }
-      let(:secure_url) { upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads") }
+      let(:secure_url) { upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads") }
 
       before do
         setup_s3
         SiteSetting.authorized_extensions = "*"
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
       end
 
       it "should return 404 for anonymous requests requests" do
@@ -479,7 +479,7 @@ RSpec.describe UploadsController do
         expect(response.redirect_url).to match("Amz-Expires")
       end
 
-      it "should return secure media URL when looking up urls" do
+      it "should return secure uploads URL when looking up urls" do
         upload.update_column(:secure, true)
         sign_in(user)
 
@@ -487,7 +487,7 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
 
         result = response.parsed_body
-        expect(result[0]["url"]).to match("secure-media-uploads")
+        expect(result[0]["url"]).to match("secure-uploads")
       end
 
       context "when the upload cannot be found from the URL" do
@@ -571,9 +571,9 @@ RSpec.describe UploadsController do
         end
       end
 
-      context "when secure media is disabled" do
+      context "when secure uploads is disabled" do
         before do
-          SiteSetting.secure_media = false
+          SiteSetting.secure_uploads = false
         end
 
         context "if the upload is secure false, meaning the ACL is probably public" do
@@ -582,7 +582,7 @@ RSpec.describe UploadsController do
           end
 
           it "should redirect to the regular show route" do
-            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
             sign_in(user)
             get secure_url
 
@@ -597,7 +597,7 @@ RSpec.describe UploadsController do
           end
 
           it "should redirect to the presigned URL still otherwise we will get a 403" do
-            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-media-uploads")
+            secure_url = upload.url.sub(SiteSetting.Upload.absolute_base_url, "/secure-uploads")
             sign_in(user)
             get secure_url
 
@@ -622,23 +622,23 @@ RSpec.describe UploadsController do
       expect(result[0]["short_path"]).to eq(upload.short_path)
     end
 
-    describe 'secure media' do
+    describe 'secure uploads' do
       let(:upload) { Fabricate(:upload_s3, secure: true) }
 
       before do
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png"
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
       end
 
-      it 'returns secure url for a secure media upload' do
+      it 'returns secure url for a secure uploads upload' do
         sign_in(user)
 
         post "/uploads/lookup-urls.json", params: { short_urls: [upload.short_url] }
         expect(response.status).to eq(200)
 
         result = response.parsed_body
-        expect(result[0]["url"]).to match("/secure-media-uploads")
+        expect(result[0]["url"]).to match("/secure-uploads")
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
 
@@ -650,7 +650,7 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
 
         result = response.parsed_body
-        expect(result[0]["url"]).to match("/secure-media-uploads")
+        expect(result[0]["url"]).to match("/secure-uploads")
         expect(result[0]["short_path"]).to eq(upload.short_path)
       end
     end

@@ -488,14 +488,14 @@ module PrettyText
     end
   end
 
-  def self.strip_secure_media(doc)
+  def self.strip_secure_uploads(doc)
     # images inside a lightbox or other link
     doc.css('a[href]').each do |a|
-      next if !Upload.secure_media_url?(a['href'])
+      next if !Upload.secure_uploads_url?(a['href'])
 
       non_image_media = %w(video audio).include?(a&.parent&.name)
       target = non_image_media ? a.parent : a
-      next if target.to_s.include?('stripped-secure-view-media')
+      next if target.to_s.include?('stripped-secure-view-media') || target.to_s.include?('stripped-secure-view-upload')
 
       next if a.css('img[src]').empty? && !non_image_media
 
@@ -509,12 +509,12 @@ module PrettyText
         else
           url = img['src']
         end
-        a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
+        a.add_next_sibling secure_uploads_placeholder(doc, url, width: img['width'], height: img['height'])
         a.remove
       else
         width = non_image_media ? nil : a.at_css('img').attr('width')
         height = non_image_media ? nil : a.at_css('img').attr('height')
-        target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
+        target.add_next_sibling secure_uploads_placeholder(doc, a['href'], width: width, height: height)
         target.remove
       end
     end
@@ -551,20 +551,20 @@ module PrettyText
         height = 16
       end
 
-      if Upload.secure_media_url?(url)
-        img.add_next_sibling secure_media_placeholder(doc, url, onebox_type: onebox_type, width: width, height: height)
+      if Upload.secure_uploads_url?(url)
+        img.add_next_sibling secure_uploads_placeholder(doc, url, onebox_type: onebox_type, width: width, height: height)
         img.remove
       end
     end
   end
 
-  def self.secure_media_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
+  def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
     data_width = width ? "data-width=#{width}" : ''
     data_height = height ? "data-height=#{height}" : ''
     data_onebox_type = onebox_type ? "data-onebox-type='#{onebox_type}'" : ''
     <<~HTML
-    <div class="secure-media-notice" data-stripped-secure-media="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
-      #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
+    <div class="secure-upload-notice" data-stripped-secure-upload="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
+      #{I18n.t('emails.secure_uploads_placeholder')} <a class='stripped-secure-view-upload' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
     </div>
     HTML
   end
@@ -572,7 +572,7 @@ module PrettyText
   def self.format_for_email(html, post = nil)
     doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
-    strip_secure_media(doc) if post&.with_secure_media?
+    strip_secure_uploads(doc) if post&.with_secure_uploads?
     strip_image_wrapping(doc)
     convert_vimeo_iframes(doc)
     make_all_links_absolute(doc)

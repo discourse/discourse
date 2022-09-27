@@ -94,15 +94,15 @@ class UploadCreator
       if !external_upload_too_big
         sha1 = Upload.generate_digest(@file)
       end
-      if SiteSetting.secure_media || external_upload_too_big
+      if SiteSetting.secure_uploads || external_upload_too_big
         unique_hash = generate_fake_sha1_hash
       end
 
-      # we do not check for duplicate uploads if secure media is
+      # we do not check for duplicate uploads if secure uploads is
       # enabled because we use a unique access hash to differentiate
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
-      if !SiteSetting.secure_media && !external_upload_too_big
+      if !SiteSetting.secure_uploads && !external_upload_too_big
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -140,8 +140,8 @@ class UploadCreator
       @upload.user_id           = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize          = filesize
-      @upload.sha1              = (SiteSetting.secure_media? || external_upload_too_big) ? unique_hash : sha1
-      @upload.original_sha1     = SiteSetting.secure_media? ? sha1 : nil
+      @upload.sha1              = (SiteSetting.secure_uploads? || external_upload_too_big) ? unique_hash : sha1
+      @upload.original_sha1     = SiteSetting.secure_uploads? ? sha1 : nil
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
       @upload.extension         = image_type || File.extname(@filename)[1..10]
@@ -173,7 +173,7 @@ class UploadCreator
 
       add_metadata!
 
-      if SiteSetting.secure_media
+      if SiteSetting.secure_uploads
         secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
         attrs = @upload.secure_params(secure, reason, "upload creator")
         @upload.assign_attributes(attrs)

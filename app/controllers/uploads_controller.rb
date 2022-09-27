@@ -111,7 +111,7 @@ class UploadsController < ApplicationController
     sha1 = Upload.sha1_from_base62_encoded(params[:base62])
 
     if upload = Upload.find_by(sha1: sha1)
-      if upload.secure? && SiteSetting.secure_media?
+      if upload.secure? && SiteSetting.secure_uploads?
         return handle_secure_upload_request(upload)
       end
 
@@ -139,9 +139,9 @@ class UploadsController < ApplicationController
     return render_404 if upload.blank?
 
     return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
-    return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_media?
+    return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_uploads?
 
-    # we don't want to 404 here if secure media gets disabled
+    # we don't want to 404 here if secure uploads gets disabled
     # because all posts with secure uploads will show broken media
     # until rebaked, which could take some time
     #

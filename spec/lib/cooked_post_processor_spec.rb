@@ -485,7 +485,7 @@ RSpec.describe CookedPostProcessor do
             stub_upload(upload)
 
             SiteSetting.login_required = true
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
           end
 
           let(:optimized_size) { "600x500" }
@@ -496,7 +496,7 @@ RSpec.describe CookedPostProcessor do
 
           let(:cooked_html) do
             <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
             <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
@@ -1074,13 +1074,13 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.unstub(:onebox)
       end
 
-      context "when the post is with_secure_media and the upload is secure and secure media is enabled" do
+      context "when the post is with_secure_uploads and the upload is secure and secure uploads is enabled" do
         before do
           setup_s3
           upload.update(secure: true)
 
           SiteSetting.login_required = true
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
         end
 
         it "does not use the direct URL, uses the cooked URL instead (because of the private ACL preventing w/h fetch)" do
@@ -1091,7 +1091,7 @@ RSpec.describe CookedPostProcessor do
 
           PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
-          cooked_url = "https://localhost/secure-media-uploads/test.png"
+          cooked_url = "https://localhost/secure-uploads/test.png"
           UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
 
           cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
@@ -1417,8 +1417,8 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        it "doesn't use CDN for secure media" do
-          SiteSetting.secure_media = true
+        it "doesn't use CDN for secure uploads" do
+          SiteSetting.secure_uploads = true
 
           stored_path = Discourse.store.get_path_for_upload(upload)
           upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
@@ -1431,11 +1431,11 @@ RSpec.describe CookedPostProcessor do
 
           expect(cpp.html).to match_html <<~HTML
             <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"> and an external upload</p>
-            <p><img src="/secure-media-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+            <p><img src="/secure-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
         end
 
-        it "doesn't use the secure media URL for custom emoji" do
+        it "doesn't use the secure uploads URL for custom emoji" do
           CustomEmoji.create!(name: 'trout', upload: upload)
           Emoji.clear_cache
           Emoji.load_custom
@@ -1484,9 +1484,9 @@ RSpec.describe CookedPostProcessor do
             HTML
           end
 
-          it "oneboxes video using secure url when secure_media is enabled" do
+          it "oneboxes video using secure url when secure_uploads is enabled" do
             SiteSetting.login_required = true
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
             video_upload.update_column(:secure, true)
 
             the_post = Fabricate(:post, raw: "This post has an S3 video onebox:\n#{video_upload.url}")
@@ -1494,7 +1494,7 @@ RSpec.describe CookedPostProcessor do
             cpp = CookedPostProcessor.new(the_post)
             cpp.post_process_oneboxes
 
-            secure_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+            secure_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
               <p>This post has an S3 video onebox:</p><div class="onebox video-onebox">
@@ -1506,9 +1506,9 @@ RSpec.describe CookedPostProcessor do
             HTML
           end
 
-          it "oneboxes only audio/video and not images when secure_media is enabled" do
+          it "oneboxes only audio/video and not images when secure_uploads is enabled" do
             SiteSetting.login_required = true
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
 
             video_upload.update_column(:secure, true)
 
@@ -1541,8 +1541,8 @@ RSpec.describe CookedPostProcessor do
             cpp = CookedPostProcessor.new(the_post)
             cpp.post_process_oneboxes
 
-            secure_video_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
-            secure_audio_url = audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+            secure_video_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
+            secure_audio_url = audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
               <p>This post has a video upload.</p>

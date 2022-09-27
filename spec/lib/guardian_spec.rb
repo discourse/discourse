@@ -3864,10 +3864,10 @@ RSpec.describe Guardian do
         expect(Guardian.new(admin).can_publish_page?(post.topic)).to eq(false)
       end
 
-      context "when secure_media is also enabled" do
+      context "when secure_uploads is also enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
         end
 
         it "is false for everyone" do

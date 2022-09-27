@@ -176,8 +176,7 @@ function audioHTML(token) {
   </audio>`;
 }
 
-const IMG_SIZE_REGEX =
-  /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
+const IMG_SIZE_REGEX = /^([1-9]+[0-9]*)x([1-9]+[0-9]*)(\s*,\s*(x?)([1-9][0-9]{0,2}?)([%x]?))?$/;
 function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   const token = tokens[idx];
   const alt = slf.renderInlineAsText(token.children, options, env);
@@ -525,7 +524,7 @@ export function setup(opts, siteSettings, state) {
   getOptions.f = () => opts.discourse;
 
   opts.discourse.limitedSiteSettings = {
-    secureMedia: siteSettings.secure_media,
+    secureUploads: siteSettings.secure_uploads,
     enableDiffhtmlPreview: siteSettings.enable_diffhtml_preview,
     traditionalMarkdownLinebreaks: siteSettings.traditional_markdown_linebreaks,
     enableMarkdownLinkify: siteSettings.enable_markdown_linkify,
