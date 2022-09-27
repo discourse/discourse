@@ -1856,7 +1856,6 @@ pl_PL:
       hide_forever: "nie, dziękuję"
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
-      value_prop: "Masz dość przewijania tych samych postów? Zakładając konto, zawsze będziesz mógł wrócić do miejsca, w którym skończyłeś. Mając konto, możesz również otrzymywać powiadomienia o nowych odpowiedziach, zapisywać zakładki i używać polubień, aby podziękować innym. Wszyscy razem możemy uczynić tę społeczność wspaniałą. :heart:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
@@ -2533,10 +2532,15 @@ pl_PL:
     view_all: "zobacz wszystkie %{tab}"
     user_menu:
       generic_no_items: "Na tej liście nie ma żadnych pozycji."
-      sr_menu_tabs: "Zakładki menu"
       view_all_notifications: "zobacz wszystkie powiadomienia"
       view_all_bookmarks: "zobacz wszystkie zakładki"
       view_all_messages: "wyświetl wszystkie wiadomości osobiste"
+      tabs:
+        replies: "Odpowiedzi"
+        mentions: "Wzmianki"
+        likes: "Otrzymane polubienia"
+        bookmarks: "Zakładki"
+        profile: "Profil"
       reviewable:
         queue: "Kolejka"
         deleted_user: "(usunięty użytkownik)"
@@ -4091,6 +4095,8 @@ pl_PL:
       more: "Więcej…"
       all_categories: "Wszystkie kategorie"
       sections:
+        about:
+          header_link_text: "O stronie"
         messages:
           header_link_text: "Wiadomości"
           header_action_title: "utwórz osobistą wiadomość"

@@ -867,7 +867,6 @@ sw:
     min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
     min_trust_to_edit_post: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuhariri machapisho."
     min_trust_to_allow_self_wiki: "Kiwango cha chini cha uaminifu kinachohitajika na mtumiaji kuweza kufanya chapisho lake liwe wiki."
-    min_trust_to_send_messages: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kuandika ujumbe mpya binafsi."
     min_trust_to_flag_posts: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka bendera kwenye machapisho."
     min_trust_to_post_links: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka viungo kwenye machapisho."
     newuser_max_links: "Viungo vingapi mtumiaji mpya anaweza kuongeza kwenye chapisho."

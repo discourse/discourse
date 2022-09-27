@@ -2640,6 +2640,13 @@ ar:
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
     current_user: "الانتقال إلى صفحة المستخدم"
     view_all: "عرض الكل %{tab}"
+    user_menu:
+      tabs:
+        replies: "الردود"
+        mentions: "الإشارات"
+        likes: "الاعجابات"
+        bookmarks: "الإشارات المرجعية"
+        profile: "الملف الشخصي"
     topics:
       new_messages_marker: "آخر زيارة"
       bulk:
@@ -4281,6 +4288,8 @@ ar:
       more: "المزيد..."
       all_categories: "كل الفئات"
       sections:
+        about:
+          header_link_text: "نبذة"
         messages:
           header_link_text: "الرسائل"
           links:

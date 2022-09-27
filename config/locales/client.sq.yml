@@ -1143,6 +1143,13 @@ sq:
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
     current_user: "shko tek profili yt"
+    user_menu:
+      tabs:
+        replies: "Përgjigjet"
+        mentions: "Përmendje"
+        likes: "Pëlqimet"
+        bookmarks: "Të preferuarat"
+        profile: "Profili"
     topics:
       new_messages_marker: "vizita e fundit"
       bulk:
@@ -1941,6 +1948,8 @@ sq:
       more: "Më shuMë..."
       all_categories: "Të gjitha kategoritë"
       sections:
+        about:
+          header_link_text: "Rreth"
         messages:
           header_link_text: "Mesazhet"
           links:

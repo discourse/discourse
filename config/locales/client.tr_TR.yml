@@ -141,10 +141,10 @@ tr_TR:
       removed_group: "%{who} %{when} kaldırıldı"
       autobumped: "%{when} tarihinde otomatik olarak yükseltti"
       autoclosed:
-        enabled: "%{when} tarihinde kapatıldı"
+        enabled: "%{when} kapatıldı"
         disabled: "%{when} tarihinde açıldı"
       closed:
-        enabled: "%{when} tarihinde kapatıldı"
+        enabled: "%{when} kapatıldı"
         disabled: "%{when} tarihinde açıldı"
       archived:
         enabled: "%{when} tarihinde arşivlendi"
@@ -165,6 +165,7 @@ tr_TR:
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
+    emails_are_disabled_non_staff: "Giden e-posta, personel olmayan kullanıcılar için devre dışı bırakıldı."
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik durumlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
@@ -1685,7 +1686,6 @@ tr_TR:
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, sana yarın yeniden soracağız. \"Giriş Yap\" bağlantısını kullanarak da hesap oluşturabilirsin."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap için kaydolmadınız."
-      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Bir hesap oluşturursanız, kaldığınız yere geri dönebilirsiniz. Ayrıca bir hesabınız olursa yeni yanıtlardan haberdar olabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz. :heart:"
     summary:
       enabled_description: "Bu konunun özetini görüntülüyorsun: Okuyucularımızın en çok ilgisini çeken gönderiler"
       description:
@@ -2307,15 +2307,21 @@ tr_TR:
     view_all: "tümünü görüntüle %{tab}"
     user_menu:
       generic_no_items: "Bu listede hiç öğe yok."
-      sr_menu_tabs: "Menü sekmeleri"
       view_all_notifications: "tüm bildirimleri görüntüle"
       view_all_bookmarks: "tüm yer imlerini görüntüle"
+      tabs:
+        replies: "Yanıtlar"
+        mentions: "Bahsedilenler"
+        likes: "Beğeni"
+        bookmarks: "İmlenenler"
+        profile: "Profil"
       reviewable:
         view_all: "tüm gözden geçirme öğeleri"
         queue: "Kuyruk"
         deleted_user: "(silinmiş kullanıcı)"
         post_number_with_topic_title: "gönderi #%{post_number} - %{title}"
         new_post_in_topic: "%{title} başlığıyla yeni gönderi"
+        user_requires_approval: "%{username} onay bekliyor"
         default_item: "gözden geçirme öğesi #%{reviewable_id}"
     topics:
       new_messages_marker: "son ziyaret"
@@ -3373,6 +3379,7 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
         other_periods: "en çok ilgi görenlere bak:"
+    safari_13_warning: Bu site yakında iOS ve Safari sürüm 13 ve altını desteklemeyecek. Basitleştirilmiş ve salt okunur bir sürüm var olmaya devam edecek. (<a href="https://meta.discourse.org/t/224747">detaylı bilgi</a>)
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -3703,6 +3710,8 @@ tr_TR:
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
       sections:
+        about:
+          header_link_text: "Hakkında"
         messages:
           header_link_text: "İletiler"
           header_action_title: "kişisel bir mesaj oluştur"

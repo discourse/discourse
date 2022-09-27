@@ -160,6 +160,7 @@ vi:
       other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     bootstrap_invite_button_title: "Gửi Lời Mời"
+    bootstrap_wizard_link_title: "Hoàn tất trình hướng dẫn thiết lập"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -1638,7 +1639,7 @@ vi:
       hide_forever: "không, cảm ơn"
       hidden_for_session: "OK, chúng tôi sẽ hỏi bạn vào ngày mai. Bạn cũng có thể sử dụng 'Đăng nhập' để tạo tài khoản."
       intro: "Xin chào! Có vẻ như bạn đang quan tâm chủ đề này, nhưng bạn chưa đăng ký tài khoản."
-      value_prop: "Bạn mệt mỏi khi phải cuộn qua các bài viết giống nhau? khi bạn tạo một tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các câu trả lời mới, lưu dấu trang và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể làm việc cùng nhau để làm cho cộng đồng này trở nên tuyệt vời. :heart:"
+      value_prop: "Bạn mệt mỏi khi phải cuộn qua các bài viết giống nhau? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các câu trả lời mới, lưu dấu trang và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể làm việc cùng nhau để làm cho cộng đồng này trở nên tuyệt vời. :heart:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
       description:
@@ -2241,12 +2242,43 @@ vi:
     user_menu:
       generic_no_items: "Không có mục nào trong danh sách này."
       view_all_notifications: "xem tất cả các thông báo"
+      view_all_bookmarks: "xem tất cả các dấu trang"
+      view_all_messages: "xem tất cả các tin nhắn cá nhân"
+      tabs:
+        all_notifications: "Tất cả các thông báo"
+        replies: "Trả lời"
+        replies_with_unread:
+          other: "Trả lời - %{count} trả lời chưa đọc"
+        mentions: "Được nhắc đến"
+        mentions_with_unread:
+          other: "Đề cập - %{count} đề cập chưa đọc"
+        likes: "Lượt Thích"
+        likes_with_unread:
+          other: "Lượt thích - %{count} lượt thích chưa đọc"
+        watching: "Chủ đề đã xem"
+        watching_with_unread:
+          other: "Chủ đề đã xem - %{count} chủ đề đã xem chưa đọc"
+        messages: "Tin nhắn cá nhân"
+        messages_with_unread:
+          other: "Tin nhắn cá nhân - %{count} tin nhắn chưa đọc"
+        bookmarks: "Các đánh dấu"
+        bookmarks_with_unread:
+          other: "Dấu trang - %{count} dấu trang chưa đọc"
+        review_queue: "Hàng đợi xem lại"
+        review_queue_with_unread:
+          other: "Hàng đợi xem lại - %{count} mục cần xem xét"
+        other_notifications: "Các thông báo khác"
+        other_notifications_with_unread:
+          other: "Các thông báo khác - %{count} thông báo chưa đọc"
+        profile: "Tiểu sử"
       reviewable:
         view_all: "xem tất cả các mục đánh giá"
         queue: "Hàng đợi"
         deleted_user: "(người dùng đã bị xóa)"
+        deleted_post: "(bài đã xóa)"
         post_number_with_topic_title: "bài #%{post_number} - %{title}"
         new_post_in_topic: "bài mới trong %{title}"
+        user_requires_approval: "%{username} yêu cầu phê duyệt"
         default_item: "mục có thể xem lại #%{reviewable_id}"
     topics:
       new_messages_marker: "lần thăm cuối"
@@ -2309,6 +2341,7 @@ vi:
         read: "Không còn thêm chủ đề chưa đọc nào nữa."
         new: "Không còn thêm chủ đề mới nào nữa."
         unread: "Không còn thêm chủ đề chưa đọc nào nữa."
+        unseen: "Không còn chủ đề nào chưa từng thấy."
         category: "Không còn thêm chủ đề nào trong %{category} ."
         tag: "Không có thêm %{tag} chủ đề."
         top: "Không còn của đề top nào nữa."
@@ -2350,11 +2383,15 @@ vi:
       not_found:
         title: "Không tìm thấy chủ đề"
         description: "Xin lỗi, chúng tôi không thể tìm thấy chủ đề đó. Có lẽ nó đã bị loại bởi mod?"
+      unread_posts:
+        other: "bạn có %{count} bài viết chưa đọc trong chủ đề này"
       likes:
         other: "có %{count} thích trong chủ để này"
       back_to_list: "Quay lại danh sách chủ đề"
       options: "Các lựa chọn chủ đề"
       show_links: "Hiển thị liên kết trong chủ đề này"
+      collapse_details: "thu gọn chi tiết chủ đề"
+      expand_details: "mở rộng chi tiết chủ đề"
       read_more_in_category: "Muốn đọc nữa? Xem qua các chủ đề khác trong %{catLink} hoặc %{latestLink}"
       read_more: "Muốn đọc nữa? %{catLink} hoặc %{latestLink}"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
@@ -3382,6 +3419,7 @@ vi:
       google: "Google Lịch"
       ics: "ICS"
     tagging:
+      all_tags: "Tất cả các thẻ"
       other_tags: "Các thẻ khác"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
@@ -3535,6 +3573,7 @@ vi:
       no_activity_title: "Chưa có hoạt động nào"
       no_activity_body: "Chào mừng đến với cộng đồng của chúng tôi! Bạn là thương hiệu mới ở đây và chưa đóng góp vào các cuộc thảo luận. Bước đầu tiên, hãy truy cập <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Chuyên mục</a> và chỉ cần bắt đầu đọc! Chọn %{heartIcon} trên các bài đăng mà bạn thích hoặc muốn tìm hiểu thêm. Khi bạn tham gia, hoạt động của bạn sẽ được liệt kê ở đây."
       no_replies_title: "Bạn chưa trả lời bất kỳ chủ đề nào"
+      no_replies_title_others: "%{username} chưa trả lời bất kỳ chủ đề nào"
       no_drafts_title: "Bạn chưa bắt đầu bất kỳ bản nháp nào"
       no_drafts_body: "Bạn chưa hoàn toàn sẵn sàng để đăng bài? Chúng tôi sẽ tự động lưu một bản nháp mới và liệt kê nó ở đây bất cứ khi nào bạn bắt đầu soạn một chủ đề, trả lời hoặc tin nhắn cá nhân. Chọn nút hủy để hủy hoặc lưu bản nháp của bạn để tiếp tục sau."
       no_likes_title: "Bạn chưa thích bất kỳ chủ đề nào"
@@ -3561,6 +3600,8 @@ vi:
       more: "Thêm..."
       all_categories: "Tất cả danh mục"
       sections:
+        about:
+          header_link_text: "Giới thiệu"
         messages:
           header_link_text: "Tin nhắn"
           header_action_title: "tạo một tin nhắn cá nhân"

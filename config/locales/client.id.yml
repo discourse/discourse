@@ -1520,6 +1520,13 @@ id:
           count:
             label: Pos
     new_item: "baru"
+    user_menu:
+      tabs:
+        replies: "balasan"
+        mentions: "Balasan-balasan"
+        likes: "Likes Diberikan"
+        bookmarks: "Markah"
+        profile: "Profil"
     topics:
       bulk:
         select_all: "Pilih Semua"
@@ -1793,6 +1800,8 @@ id:
       new_count:
         other: "%{count} baru"
       sections:
+        about:
+          header_link_text: "Tentang"
         messages:
           header_link_text: "Pesan-pesan"
           links:

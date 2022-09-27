@@ -1717,7 +1717,6 @@ sv:
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
-      value_prop: "Trött på att bläddra igenom samma inlägg? när du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli notifierad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
@@ -2353,16 +2352,53 @@ sv:
     view_all: "visa alla %{tab}"
     user_menu:
       generic_no_items: "Det finns inga objekt i den här listan."
-      sr_menu_tabs: "Menyflikar"
+      sr_menu_tabs: "Flikar i användarmenyn"
       view_all_notifications: "visa alla aviseringar"
       view_all_bookmarks: "visa alla bokmärken"
       view_all_messages: "visa alla personliga meddelanden"
+      tabs:
+        all_notifications: "Alla aviseringar"
+        replies: "Svar"
+        replies_with_unread:
+          one: "Svar - %{count} oläst svar"
+          other: "Svar - %{count} olästa svar"
+        mentions: "Omnämnanden"
+        mentions_with_unread:
+          one: "Omnämnanden - %{count} oläst omnämnande"
+          other: "Omnämnanden - %{count} olästa omnämnanden"
+        likes: "Gillar"
+        likes_with_unread:
+          one: "Gillningar - %{count} oläst gillning"
+          other: "Gillningar - %{count} olästa gillningar"
+        watching: "Bevakade ämnen"
+        watching_with_unread:
+          one: "Bevakade ämnen - %{count} oläst bevakat ämne"
+          other: "Bevakade ämnen - %{count} olästa bevakade ämnen"
+        messages: "Personliga meddelanden"
+        messages_with_unread:
+          one: "Personliga meddelanden - %{count} oläst meddelande"
+          other: "Personliga meddelanden - %{count} olästa meddelanden"
+        bookmarks: "Bokmärken"
+        bookmarks_with_unread:
+          one: "Bokmärken - %{count} oläst bokmärke"
+          other: "Bokmärken - %{count} olästa bokmärken"
+        review_queue: "Granskningskö"
+        review_queue_with_unread:
+          one: "Granskningskö - %{count} objekt behöver granskas"
+          other: "Granskningskö - %{count} objekt behöver granskas"
+        other_notifications: "Andra aviseringar"
+        other_notifications_with_unread:
+          one: "Andra aviseringar - %{count} oläst avisering"
+          other: "Andra aviseringar - %{count} olästa aviseringar"
+        profile: "Profil"
       reviewable:
         view_all: "visa alla granskningsobjekt"
         queue: "Kö"
         deleted_user: "(raderad användare)"
+        deleted_post: "(raderat inlägg)"
         post_number_with_topic_title: "inlägg nr %{post_number} - %{title}"
         new_post_in_topic: "nytt inlägg i %{title}"
+        user_requires_approval: "%{username} kräver godkännande"
         default_item: "granskningsbart objekt nr %{reviewable_id}"
     topics:
       new_messages_marker: "senaste besök"
@@ -3429,6 +3465,7 @@ sv:
         today: "Idag"
         other_periods: "se toppen för:"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
+    safari_13_warning: Den här webbplatsens stöd för iOS och Safari i version 13 och äldre avlägsnas inom kort. En förenklad skrivskyddad version kommer att förbli tillgänglig. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3773,6 +3810,8 @@ sv:
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
           header_link_text: "Meddelanden"
           header_action_title: "skapa ett personligt meddelande"
@@ -4933,6 +4972,7 @@ sv:
         suspended: "Avstängd?"
         staged: "Arrangerad?"
         show_admin_profile: "Administratör"
+        manage_user: "Hantera användare"
         show_public_profile: "Visa offentlig profil"
         impersonate: "Imitera"
         action_logs: "Åtgärdslogg"
