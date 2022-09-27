@@ -13,8 +13,9 @@
     box-sizing: border-box;
 
     .d-icon {
+      color: var(--primary-medium);
       font-size: var(--font-down-1);
-      margin-right: 0.5em;
+      margin-right: 0.55em;
     }
 
     &::before {

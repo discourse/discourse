@@ -8,8 +8,8 @@
   display: flex;
   --d-sidebar-highlight-color: var(--primary-low);
   // 1.25rem gets text left-aligned with the hamburger icon
-  --d-sidebar-row-horizontal-padding: 1rem;
-  background-color: var(--primary-very-low);
+  --d-sidebar-row-horizontal-padding: 1.25rem;
+  background-color: var(--primary-50);
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
@@ -44,7 +44,7 @@
     flex-direction: column;
     box-sizing: border-box;
     flex: 1;
-    padding: 1em 0;
+    padding: 1.5em 0 1em;
     overflow-x: hidden;
     overflow-y: overlay;
 

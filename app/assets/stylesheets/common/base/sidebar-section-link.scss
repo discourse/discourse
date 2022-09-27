@@ -19,7 +19,6 @@
 
     &.active {
       color: var(--primary);
-      font-weight: bold;
       background: var(--d-sidebar-highlight-color);
 
       .sidebar-section-link-prefix {
@@ -110,7 +109,7 @@
 
     &.icon {
       position: relative;
-      margin-right: 0.5em;
+      margin-right: 0.55em;
       color: var(--primary-medium);
 
       svg {

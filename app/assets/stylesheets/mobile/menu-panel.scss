@@ -87,6 +87,15 @@
     height: 27px;
     align-items: center;
     font-size: var(--font-0);
+
+    &.sidebar-section-message-wrapper {
+      padding-top: 0;
+      padding-bottom: 0.25em;
+    }
+
+    .sidebar-section-message {
+      padding: 0;
+    }
   }
 
   .sidebar-section-wrapper {
@@ -111,5 +120,9 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+  }
+
+  .sidebar-section-content {
+    padding-bottom: 0;
   }
 }

@@ -54,7 +54,7 @@ export default class SidebarSection extends Component {
   }
 
   get headerCaretIcon() {
-    return this.displaySection ? "caret-down" : "caret-right";
+    return this.displaySection ? "angle-down" : "angle-right";
   }
 
   get isSingleHeaderAction() {

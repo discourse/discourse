@@ -1,9 +1,20 @@
 .sidebar-section-wrapper {
-  padding-bottom: 0.66rem;
+  .discourse-no-touch & {
+    &:hover {
+      .sidebar-section-header-wrapper {
+        .btn.dropdown-select-box-header,
+        .sidebar-section-header-button {
+          opacity: 1;
+        }
+      }
+    }
+  }
 
   .sidebar-section-header-wrapper {
     display: flex;
     box-sizing: border-box;
+    padding-top: 0;
+    padding-bottom: 0;
 
     .discourse-no-touch & {
       &:hover {
@@ -17,9 +28,15 @@
 
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
+      .discourse-no-touch & {
+        transition: all 0.25s;
+        opacity: 0;
+      }
       background: transparent;
       border: none;
-      padding: calc(var(--d-sidebar-row-horizontal-padding) / 5) calc(var(--d-sidebar-row-horizontal-padding) / 3);
+      margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
+      padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
+        calc(var(--d-sidebar-row-horizontal-padding) / 3);
 
       .d-icon {
         font-size: var(--font-down-1);
@@ -48,13 +65,10 @@
 
   .sidebar-section-header {
     flex: 1 1 auto;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: var(--font-1);
     color: var(--primary);
     align-items: center;
     min-width: 0;
-    padding: 0;
+    padding: 0.33rem 0;
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
@@ -62,9 +76,9 @@
   }
 
   .sidebar-section-header-text {
-    font-weight: bold;
     line-height: normal;
     margin-right: 0.25em;
+    font-size: var(--font-up-1);
     @include ellipsis;
   }
 
@@ -97,9 +111,12 @@
 
   .sidebar-section-message {
     color: var(--primary);
+    padding-left: 1.4em;
   }
 
   .sidebar-section-content {
+    padding-bottom: 1em;
+
     hr {
       margin: 0em 1.5em;
     }
