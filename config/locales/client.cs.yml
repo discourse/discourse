@@ -1842,6 +1842,13 @@ cs:
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
     current_user: "jít na vaši uživatelskou stránku"
+    user_menu:
+      tabs:
+        replies: "Odpovědi"
+        mentions: "Zmínění"
+        likes: "Nová 'líbí se'"
+        bookmarks: "Záložky"
+        profile: "Profil"
     topics:
       new_messages_marker: "poslední návštěva"
       bulk:
@@ -2882,6 +2889,8 @@ cs:
       more: "Více..."
       all_categories: "Všechny kategorie"
       sections:
+        about:
+          header_link_text: "O fóru"
         messages:
           header_link_text: "Zprávy"
           links:

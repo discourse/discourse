@@ -1415,7 +1415,6 @@ ca:
     min_trust_to_edit_wiki_post: "Nivell de confiança mínim necessari per a editar una publicació marcada com a wiki."
     min_trust_to_edit_post: "Nivell de confiança mínim necessari per a editar publicacions."
     min_trust_to_allow_self_wiki: "Nivell de confiança mínim necessari per a convertir en wiki les publicacions pròpies. "
-    min_trust_to_send_messages: "Nivell de confiança mínim necessari per a crear nous missatges personals."
     min_trust_to_flag_posts: "Nivell de confiança mínim necessari per a marcar amb bandera les publicacions"
     min_trust_to_post_links: "Nivell de confiança mínim necessari per a incloure enllaços en els missatges"
     allowed_link_domains: "Dominis als quals els usuaris poden enllaçar fins i tot si no tenen el nivell de confiança adequat per a publicar enllaços"

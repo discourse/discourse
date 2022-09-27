@@ -2163,6 +2163,13 @@ ja:
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
     current_user: "ユーザーページに移動"
     view_all: "すべての%{tab}を表示"
+    user_menu:
+      tabs:
+        replies: "返信"
+        mentions: "メンション"
+        likes: "「いいね！」された数"
+        bookmarks: "ブックマーク"
+        profile: "プロフィール"
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
@@ -3397,6 +3404,8 @@ ja:
       more: "もっと..."
       all_categories: "すべてのカテゴリ"
       sections:
+        about:
+          header_link_text: "サイト情報"
         messages:
           header_link_text: "メッセージ"
           links:

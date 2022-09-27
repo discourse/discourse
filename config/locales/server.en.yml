@@ -2149,6 +2149,8 @@ en:
 
     disable_avatar_education_message: "Disable education message for changing avatar."
 
+    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recepient has not been seen more than n months ago."
+
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
     header_dropdown_category_count: "How many categories can be displayed in the header dropdown menu."

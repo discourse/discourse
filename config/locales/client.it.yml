@@ -1714,7 +1714,6 @@ it:
       hide_forever: "no grazie"
       hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
-      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa comunità un posto fantastico. :heart:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description:
@@ -1968,6 +1967,8 @@ it:
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
       edit_conflict: "modifica conflitto"
+      esc: "esc"
+      esc_label: "Clicca o premi Esc per chiudere"
       group_mentioned_limit:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
         other: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzioni di utenti configurato dall'amministratore. Non ci saranno notifiche."
@@ -2347,10 +2348,15 @@ it:
     view_all: "visualizza tutto in %{tab}"
     user_menu:
       generic_no_items: "Non ci sono elementi in questo elenco."
-      sr_menu_tabs: "Schede del menu"
       view_all_notifications: "visualizza tutte le notifiche"
       view_all_bookmarks: "visualizza tutti i segnalibri"
       view_all_messages: "visualizza tutti i messaggi personali"
+      tabs:
+        replies: "Risposte"
+        mentions: "Menzioni"
+        likes: "Mi piace - Assegnati"
+        bookmarks: "Segnalibri"
+        profile: "Profilo"
       reviewable:
         queue: "Coda"
         deleted_user: "(utente cancellato)"
@@ -3756,6 +3762,8 @@ it:
       more: "Altro..."
       all_categories: "Tutte le categorie"
       sections:
+        about:
+          header_link_text: "Informazioni su"
         messages:
           header_link_text: "Messaggi"
           header_action_title: "crea un messaggio personale"

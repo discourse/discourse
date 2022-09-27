@@ -1924,6 +1924,13 @@ el:
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
     current_user: "πήγαινε στη σελίδα του λογαριασμού σου"
+    user_menu:
+      tabs:
+        replies: "Απαντήσεις"
+        mentions: "Αναφορές"
+        likes: "Μου αρέσει"
+        bookmarks: "Σελιδοδείκτες"
+        profile: "Προφίλ"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -3065,6 +3072,8 @@ el:
       more: "Περισσότερα..."
       all_categories: "Όλες οι κατηγορίες"
       sections:
+        about:
+          header_link_text: "Σχετικά"
         messages:
           header_link_text: "Μηνύματα"
           links:

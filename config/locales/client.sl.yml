@@ -2113,6 +2113,13 @@ sl:
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"
     current_user: "pojdi na svojo uporabniško stran"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Omembe"
+        likes: "Dani všečki"
+        bookmarks: "Zaznamki"
+        profile: "Profil"
     topics:
       new_messages_marker: "zadnji obisk"
       bulk:
@@ -3385,6 +3392,8 @@ sl:
       more: "Več..."
       all_categories: "Vse kategorije"
       sections:
+        about:
+          header_link_text: "O nas"
         messages:
           header_link_text: "Sporočila"
           links:

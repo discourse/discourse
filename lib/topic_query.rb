@@ -205,7 +205,10 @@ class TopicQuery
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? && (
-        @user.blank? || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map || !SiteSetting.enable_personal_messages))
+        @user.blank? ||
+          !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
+          !SiteSetting.enable_personal_messages
+    )
       return
     end
 

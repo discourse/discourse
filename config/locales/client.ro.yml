@@ -1497,7 +1497,6 @@ ro:
       hide_session: "Poate mai târziu"
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
-      value_prop: "Te-ai săturat să tot răsfoiești aceleași mesaje? Când îți creezi un cont, te vei întoarce mereu de unde ai rămas. De asemenea, cu un cont puteți fi notificat cu privire la răspunsurile noi, puteți face semne de carte și puteți folosi aprecierile pentru a le mulțumi altora. Putem lucra cu toții împreună pentru a face această comunitate grozavă. :heart:"
     summary:
       enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
       enable: "Fă rezumatul acestui subiect"
@@ -1917,6 +1916,13 @@ ro:
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"
     current_user: "mergi la pagina ta de utilizator"
+    user_menu:
+      tabs:
+        replies: "Răspunsuri"
+        mentions: "Mențiuni"
+        likes: "Aprecieri date"
+        bookmarks: "Semne de carte"
+        profile: "Profil"
     topics:
       new_messages_marker: "ultima vizită"
       bulk:
@@ -2936,6 +2942,8 @@ ro:
       more: "Mai multe..."
       all_categories: "Toate categoriile"
       sections:
+        about:
+          header_link_text: "Despre"
         messages:
           header_link_text: "Mesaje"
           links:

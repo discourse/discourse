@@ -2196,6 +2196,13 @@ lt:
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
     current_user: "eitį i savo vartotojo puslapį"
     view_all: "peržiūrėti visus %{tab}"
+    user_menu:
+      tabs:
+        replies: "Atsakymai"
+        mentions: "Paminėjimai"
+        likes: "Patikimai"
+        bookmarks: "Žymės"
+        profile: "Profilis"
     topics:
       new_messages_marker: "paskutinis apsilankymas"
       bulk:
@@ -3505,6 +3512,8 @@ lt:
       more: "Daugiau..."
       all_categories: "Visos kategorijos"
       sections:
+        about:
+          header_link_text: "Apie"
         messages:
           header_link_text: "Žinutės"
           links:

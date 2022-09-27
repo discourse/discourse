@@ -1706,7 +1706,6 @@ hu:
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
       intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
-      value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük. :heart:"
     summary:
       enabled_description: "A téma összefoglalását látja: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description:
@@ -1960,6 +1959,8 @@ hu:
       similar_topics: "A témája erre hasonlít…"
       drafts_offline: "vázlatok offline"
       edit_conflict: "szerkesztési ütközés"
+      esc: "Esc"
+      esc_label: "Kattintson vagy nyomja meg az Esc billentyűt az eltüntetéshez"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -2342,16 +2343,53 @@ hu:
     view_all: "összes %{tab} megtekintése"
     user_menu:
       generic_no_items: "Nincsenek elemek ebben a listában."
-      sr_menu_tabs: "Menülapok"
+      sr_menu_tabs: "Felhasználói menü lapjai"
       view_all_notifications: "összes értesítés megtekintése"
       view_all_bookmarks: "összes könyvjelző megtekintése"
       view_all_messages: "összes személyes üzenet megtekintése"
+      tabs:
+        all_notifications: "Az összes értesítés"
+        replies: "Válaszok"
+        replies_with_unread:
+          one: "Válaszok – %{count} olvasatlan válasz"
+          other: "Válaszok – %{count} olvasatlan válasz"
+        mentions: "Említések"
+        mentions_with_unread:
+          one: "Említések – %{count} olvasatlan említés"
+          other: "Említések – %{count} olvasatlan említés"
+        likes: "Kapott kedvelések"
+        likes_with_unread:
+          one: "Kedvelések – %{count} olvasatlan kedvelés"
+          other: "Kedvelések – %{count} olvasatlan kedvelés"
+        watching: "Megfigyelt témák"
+        watching_with_unread:
+          one: "Megfigyelt témák – %{count} olvasatlan megfigyelt téma"
+          other: "Megfigyelt témák – %{count} olvasatlan megfigyelt téma"
+        messages: "Személyes üzenetek"
+        messages_with_unread:
+          one: "Személyes üzenetek – %{count} olvasatlan üzenet"
+          other: "Személyes üzenetek – %{count} olvasatlan üzenet"
+        bookmarks: "Könyvjelzők"
+        bookmarks_with_unread:
+          one: "Könyvjelzők – %{count} olvasatlan könyvjelző"
+          other: "Könyvjelzők – %{count} olvasatlan könyvjelző"
+        review_queue: "Felülvizsgálati sor"
+        review_queue_with_unread:
+          one: "Felülvizsgálati sor – %{count} elem szorul felülvizsgálatra"
+          other: "Felülvizsgálati sor – %{count} elem szorul felülvizsgálatra"
+        other_notifications: "Egyéb értesítések"
+        other_notifications_with_unread:
+          one: "Egyéb értesítések – %{count} olvasatlan értesítés"
+          other: "Egyéb értesítések – %{count} olvasatlan értesítés"
+        profile: "Profil"
       reviewable:
         view_all: "összes felülvizsgálati elem megtekintése"
         queue: "Sor"
         deleted_user: "(törölt felhasználó)"
+        deleted_post: "(törölt bejegyzés)"
         post_number_with_topic_title: "%{post_number}. bejegyzés – %{title}"
         new_post_in_topic: "új bejegyzés itt: %{title}"
+        user_requires_approval: "%{username} jóváhagyása szükséges"
         default_item: "felülvizsgálandó elem: #%{reviewable_id}"
     topics:
       new_messages_marker: "utolsó látogatás"
@@ -3368,6 +3406,8 @@ hu:
       more: "Továbbiak..."
       all_categories: "Minden kategória"
       sections:
+        about:
+          header_link_text: "Névjegy"
         messages:
           header_link_text: "Üzenetek"
           links:

@@ -1,2 +1,9 @@
-<a href {{action this.closeMessage this.message}} class="close">{{d-icon "times"}}</a>
+<a href {{action this.closeMessage this.message}} class="close" aria-label={{i18n "composer.esc_label"}}>
+  {{i18n "composer.esc"}} {{d-icon "times"}}
+</a>
+
+{{#if this.message.title}}
+  <h3>{{this.message.title}}</h3>
+{{/if}}
+
 {{html-safe this.message.body}}

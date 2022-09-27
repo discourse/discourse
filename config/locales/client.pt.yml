@@ -2189,6 +2189,13 @@ pt:
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
     current_user: "ir para a sua página de utilizador"
     view_all: "ver todos %{tab}"
+    user_menu:
+      tabs:
+        replies: "Respostas"
+        mentions: "Menções"
+        likes: "Gostos Dados"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3429,6 +3436,8 @@ pt:
       more: "Mais..."
       all_categories: "Todas as categorias"
       sections:
+        about:
+          header_link_text: "Sobre"
         messages:
           header_link_text: "Mensagens"
           links:

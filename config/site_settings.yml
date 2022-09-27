@@ -123,6 +123,11 @@ basic:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+  set_locale_from_cookie:
+    default: false
+    hidden: true
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
     client: true
     default: false
@@ -2030,6 +2035,9 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
 
 embedding:
   embed_by_username:
@@ -2276,6 +2284,7 @@ uncategorized:
   get_a_room_threshold: 3
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
+  pm_warn_user_last_seen_months_ago: 24
 
   global_notice:
     default: ""

@@ -387,6 +387,7 @@ Discourse::Application.routes.draw do
     end
     get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
+    get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
     resources :static
     post "login" => "static#enter"

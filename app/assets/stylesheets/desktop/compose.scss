@@ -126,16 +126,14 @@
     top: 10px;
     color: var(--primary);
     opacity: 0.5;
-    font-size: $font-up-1;
-    &:before {
-      content: "esc";
-      font-size: $font-down-1;
-      margin-right: 0.5em;
+    font-size: var(--font-0);
+    .d-icon {
+      font-size: var(--font-up-1);
+      margin-left: 0.25em;
     }
-  }
-
-  a.close:hover {
-    opacity: 1;
+    &:hover {
+      opacity: 1;
+    }
   }
 
   ul {

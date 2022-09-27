@@ -806,6 +806,13 @@ te:
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
     current_user: "మీ సభ్యపుటకు వెళ్లు"
+    user_menu:
+      tabs:
+        replies: "జవాబులు"
+        mentions: "ప్రస్తావనలు"
+        likes: "ఇచ్చిన ఇష్టాలు "
+        bookmarks: "పేజీకలు"
+        profile: "ప్రవర"
     topics:
       bulk:
         defer: "వాయిదావేయి"
@@ -1359,6 +1366,8 @@ te:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
       sections:
+        about:
+          header_link_text: "గురించి"
         messages:
           header_link_text: "సందేశాలు"
           links:

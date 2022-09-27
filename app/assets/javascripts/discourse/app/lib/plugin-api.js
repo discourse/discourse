@@ -79,7 +79,10 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { on } from "@ember/object/evented";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
-import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
+import {
+  registerHighlightJSLanguage,
+  registerHighlightJSPlugin,
+} from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -106,7 +109,7 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.3.0";
+const PLUGIN_API_VERSION = "1.4.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1370,6 +1373,26 @@ class PluginApi {
    **/
   registerHighlightJSLanguage(name, fn) {
     registerHighlightJSLanguage(name, fn);
+  }
+
+  /**
+   * Registers custom HighlightJS plugins.
+   *
+   * See https://highlightjs.readthedocs.io/en/latest/plugin-api.html
+   * for instructions on how to define a new plugin for HighlightJS.
+   * This API exposes the Function Based Plugins interface
+   *
+   * Example:
+   *
+   * let aPlugin = {
+       'after:highlightElement': ({ el, result, text }) => {
+         console.log(el);
+       }
+     }
+   * api.registerHighlightJSPlugin(aPlugin);
+   **/
+  registerHighlightJSPlugin(plugin) {
+    registerHighlightJSPlugin(plugin);
   }
 
   /**

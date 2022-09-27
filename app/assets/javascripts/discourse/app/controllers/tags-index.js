@@ -7,10 +7,12 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
+import { inject as service } from "@ember/service";
+
 export default Controller.extend({
+  dialog: service(),
   sortedByCount: true,
   sortedByName: false,
-
   canAdminTags: alias("currentUser.staff"),
   groupedByCategory: notEmpty("model.extras.categories"),
   groupedByTagGroup: notEmpty("model.extras.tag_groups"),
@@ -67,7 +69,7 @@ export default Controller.extend({
           const tags = result["tags"];
 
           if (tags.length === 0) {
-            bootbox.alert(I18n.t("tagging.delete_no_unused_tags"));
+            this.dialog.alert(I18n.t("tagging.delete_no_unused_tags"));
             return;
           }
 

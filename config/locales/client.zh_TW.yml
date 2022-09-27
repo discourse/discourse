@@ -1828,6 +1828,13 @@ zh_TW:
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
     current_user: "到你的使用者頁面"
+    user_menu:
+      tabs:
+        replies: "回覆"
+        mentions: "提及"
+        likes: "新的讚"
+        bookmarks: "書籤"
+        profile: "基本資料"
     topics:
       new_messages_marker: "上次到訪"
       bulk:
@@ -2806,6 +2813,8 @@ zh_TW:
       more: "更多..."
       all_categories: "所有分類"
       sections:
+        about:
+          header_link_text: "關於"
         messages:
           header_link_text: "訊息"
           links:
