@@ -128,7 +128,7 @@ export default Component.extend({
           this._yourselfConfirm ||
           composer.store.createRecord("composer-message", {
             id: "yourself_confirm",
-            templateName: "custom-body",
+            templateName: "education",
             title: I18n.t("composer.yourself_confirm.title"),
             body: I18n.t("composer.yourself_confirm.body"),
           });

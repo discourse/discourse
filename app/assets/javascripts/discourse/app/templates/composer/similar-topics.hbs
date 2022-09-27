@@ -1,4 +1,7 @@
-<a href {{action this.closeMessage this.message}} class="close">{{d-icon "times"}}</a>
+<a href {{action this.closeMessage this.message}} class="close" aria-label={{i18n "composer.esc_label"}}>
+  {{i18n "composer.esc"}} {{d-icon "times"}}
+</a>
+
 <h3>{{i18n "composer.similar_topics"}}</h3>
 
 <ul class="topics">
