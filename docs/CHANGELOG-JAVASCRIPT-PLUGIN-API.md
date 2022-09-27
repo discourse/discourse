@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Adds `registerHighlightJSPlugin`, which allows users to register a custom
+- Adds `registerHighlightJSPlugin`, which allows users to register custom
   HighlightJS plugins. See https://highlightjs.readthedocs.io/en/latest/plugin-api.html
   for documentation.
 
