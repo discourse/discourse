@@ -3,6 +3,8 @@ import mergeHTMLPlugin from "discourse/lib/highlight-syntax-merge-html-plugin";
 
 /*global hljs:true */
 let _moreLanguages = [];
+let _plugins = [];
+let _initialized = false;
 
 export default function highlightSyntax(elem, siteSettings, session) {
   if (!elem) {
@@ -26,11 +28,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
   }
 
   return loadScript(path).then(() => {
-    customHighlightJSLanguages();
-    hljs.addPlugin(mergeHTMLPlugin);
-    hljs.configure({
-      ignoreUnescapedHTML: true,
-    });
+    initializer();
 
     codeblocks.forEach((e) => {
       // Large code blocks can cause crashes or slowdowns
@@ -48,10 +46,33 @@ export function registerHighlightJSLanguage(name, fn) {
   _moreLanguages.push({ name, fn });
 }
 
+export function registerHighlightJSPlugin(plugin) {
+  _plugins.push(plugin);
+}
+
 function customHighlightJSLanguages() {
   _moreLanguages.forEach((l) => {
     if (hljs.getLanguage(l.name) === undefined) {
       hljs.registerLanguage(l.name, l.fn);
     }
   });
+}
+
+function customHighlightJSPlugins() {
+  _plugins.forEach((p) => {
+    hljs.addPlugin(p);
+  });
+}
+
+function initializer() {
+  if (!_initialized) {
+    customHighlightJSLanguages();
+    customHighlightJSPlugins();
+    hljs.addPlugin(mergeHTMLPlugin);
+    hljs.configure({
+      ignoreUnescapedHTML: true,
+    });
+
+    _initialized = true;
+  }
 }
