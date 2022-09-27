@@ -28,7 +28,7 @@ export default function highlightSyntax(elem, siteSettings, session) {
   }
 
   return loadScript(path).then(() => {
-    initilizer();
+    initializer();
 
     codeblocks.forEach((e) => {
       // Large code blocks can cause crashes or slowdowns
