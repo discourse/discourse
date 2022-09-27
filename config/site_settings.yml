@@ -2018,6 +2018,9 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
 
 embedding:
   embed_by_username:

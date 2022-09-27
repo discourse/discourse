@@ -58,6 +58,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_create_group,
              :link_posting_access,
              :external_id,
+             :associated_account_ids,
              :top_category_ids,
              :hide_profile_and_presence,
              :groups,
@@ -291,6 +292,20 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_external_id?
     SiteSetting.enable_discourse_connect
+  end
+
+  def associated_account_ids
+    values = {}
+
+    object.user_associated_accounts.map do |user_associated_account|
+      values[user_associated_account.provider_name] = user_associated_account.provider_uid
+    end
+
+    values
+  end
+
+  def include_associated_account_ids?
+    SiteSetting.include_associated_account_ids
   end
 
   def second_factor_enabled
