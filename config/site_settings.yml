@@ -757,7 +757,7 @@ posting:
     default: 5000
   min_topic_title_length:
     client: true
-    default: 15
+    default: 5
     min: 1
     locale_default:
       ja: 6
