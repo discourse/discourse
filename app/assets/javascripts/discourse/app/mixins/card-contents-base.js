@@ -283,7 +283,7 @@ export default Mixin.create({
         discourseLater(() => {
           const firstLink = this.element.querySelector("a");
           firstLink && firstLink.focus();
-        }, 150);
+        }, 350);
       }
     });
   },
