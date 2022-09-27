@@ -2275,6 +2275,9 @@ en:
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
         error: "This topic is in slow mode. You already posted recently; you can post again in %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "The person you are messaging, <b>%{usernames}</b>, hasn’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting %{usernames}."
+        multiple: "The following people you are messaging: <b>%{usernames}</b>, haven’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting them."
 
       admin_options_title: "Optional staff settings for this topic"
 

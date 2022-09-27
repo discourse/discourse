@@ -212,6 +212,10 @@ class ComposerMessagesFinder
     }
   end
 
+  def self.user_not_seen_in_a_while(usernames)
+    User.where(username_lower: usernames).where("last_seen_at < ?", SiteSetting.pm_warn_user_last_seen_months_ago.months.ago).pluck(:username).sort
+  end
+
   private
 
   def educate_reply?(type)

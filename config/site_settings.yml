@@ -2272,6 +2272,7 @@ uncategorized:
   get_a_room_threshold: 3
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
+  pm_warn_user_last_seen_months_ago: 24
 
   global_notice:
     default: ""
