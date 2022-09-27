@@ -416,6 +416,7 @@ class PostCreator
     #   - If single tag only, create record in `tags` table directly
     #     else, iterate through array of tags then create record in `tags` table
     return if @opts[:user_generated_tags].empty?
+    return if @post[:post_number] == 1
 
     unless @opts[:user_generated_tags].include?(',')
       # If single tag only
