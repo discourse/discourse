@@ -2166,6 +2166,8 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
+      esc: "esc"
+      esc_label: "Click or press Esc to dismiss"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
