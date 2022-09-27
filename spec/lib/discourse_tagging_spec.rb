@@ -497,9 +497,19 @@ RSpec.describe DiscourseTagging do
       end
 
       it "adds all parent tags that are missing" do
+        parent_tag_group = Fabricate(:tag_group)
         parent_tag = Fabricate(:tag, name: 'parent')
+        parent_tag_group.tags = [parent_tag]
+
         tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
         tag_group2.tags = [tag2]
+
+        tag_group1 = Fabricate(:tag_group)
+        tag_group1.tags = [tag1]
+
+        tag_group3 = Fabricate(:tag_group, parent_tag_id: tag1.id)
+        tag_group3.tags = [tag3]
+
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name, tag2.name])
         expect(valid).to eq(true)
         expect(topic.reload.tags.map(&:name)).to contain_exactly(
@@ -518,6 +528,49 @@ RSpec.describe DiscourseTagging do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [parent_tag.name, common.name])
         expect(valid).to eq(true)
         expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
+      end
+
+      context "when tag group has grandparents" do
+        let(:tag_group1) { Fabricate(:tag_group) }
+        let(:foo) { Fabricate(:tag, name: 'foo') }
+        let(:tag_group2) { Fabricate(:tag_group, parent_tag_id: foo.id) }
+        let(:bar) { Fabricate(:tag, name: 'bar') }
+        let(:tag_group3) { Fabricate(:tag_group, parent_tag_id: bar.id) }
+        let(:baz) { Fabricate(:tag, name: 'baz') }
+
+        before do
+          tag_group1.tags = [foo]
+          tag_group2.tags = [bar]
+          tag_group3.tags = [baz]
+        end
+
+        it "recursively adds all ancestors" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
+          expect(valid).to eq(true)
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        end
+
+        it "adds only one parent when multiple parents exist" do
+          alt_parent_group = Fabricate(:tag_group)
+          alt = Fabricate(:tag, name: 'alt')
+          alt_parent_group.tags = [alt]
+
+          alt_baz_group = Fabricate(:tag_group, parent_tag_id: alt.id)
+          alt_baz_group.tags = [baz]
+
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
+          expect(valid).to eq(true)
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        end
+
+        it "adds missing tags even with cycles" do
+          tag_group4 = Fabricate(:tag_group, parent_tag_id: baz.id)
+          tag_group4.tags = [foo]
+
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [baz.name])
+          expect(valid).to eq(true)
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(*[foo, bar, baz].map(&:name))
+        end
       end
     end
 
