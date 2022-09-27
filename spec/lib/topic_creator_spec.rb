@@ -421,9 +421,8 @@ RSpec.describe TopicCreator do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
-        it "enable_personal_messages setting should not be checked when sending private message to staff via flag" do
-          SiteSetting.enable_personal_messages = false
-          SiteSetting.min_trust_to_send_messages = TrustLevel[4]
+        it "personal_message_enabled_groups setting should not be checked when sending private messages to staff via flag" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs.merge(subtype: TopicSubtype.notify_moderators))).to be_valid
         end
       end
@@ -442,8 +441,9 @@ RSpec.describe TopicCreator do
           end.to raise_error(ActiveRecord::Rollback)
         end
 
-        it "min_trust_to_send_messages setting should be checked when sending private message" do
-          SiteSetting.min_trust_to_send_messages = TrustLevel[4]
+        it "personal_message_enabled_groups setting should be checked when sending private message" do
+          SiteSetting.enable_personal_messages = false
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
 
           expect do
             TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)

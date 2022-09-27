@@ -191,12 +191,14 @@ RSpec.describe ListController do
   describe '#private_messages_group' do
     fab!(:user) { Fabricate(:user) }
 
-    describe 'with personal_messages disabled' do
+    describe 'when user not in personal_message_enabled_groups group' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         group.add(user)
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
         SiteSetting.enable_personal_messages = false
+        Group.refresh_automatic_groups!
       end
 
       it 'should display group private messages for an admin' do

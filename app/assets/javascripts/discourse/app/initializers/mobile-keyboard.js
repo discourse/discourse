@@ -6,9 +6,9 @@ export default {
 
   initialize(container) {
     const site = container.lookup("service:site");
-    const capabilities = container.lookup("capabilities:main");
+    this.capabilities = container.lookup("capabilities:main");
 
-    if (!capabilities.isIpadOS && !site.mobileView) {
+    if (!this.capabilities.isIpadOS && !site.mobileView) {
       return;
     }
 
@@ -21,27 +21,67 @@ export default {
 
     this.onViewportResize();
     window.visualViewport.addEventListener("resize", this.onViewportResize);
+    if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.overlaysContent = true;
+      navigator.virtualKeyboard.addEventListener(
+        "geometrychange",
+        this.onViewportResize
+      );
+    }
   },
 
   teardown() {
     window.visualViewport.removeEventListener("resize", this.onViewportResize);
+    if ("virtualKeyboard" in navigator) {
+      navigator.virtualKeyboard.overlaysContent = false;
+      navigator.virtualKeyboard.removeEventListener(
+        "geometrychange",
+        this.onViewportResize
+      );
+    }
   },
 
   @bind
   onViewportResize() {
-    const composerVH = window.visualViewport.height * 0.01;
-    const doc = document.documentElement;
+    const composerVH = window.visualViewport.height * 0.01,
+      doc = document.documentElement,
+      KEYBOARD_DETECT_THRESHOLD = 150;
 
     doc.style.setProperty("--composer-vh", `${composerVH}px`);
-    const heightDiff = this.windowInnerHeight - window.visualViewport.height;
 
-    doc.classList.toggle("keyboard-visible", heightDiff > 0);
+    let keyboardVisible = false;
+    if ("virtualKeyboard" in navigator) {
+      if (navigator.virtualKeyboard.boundingRect.height > 0) {
+        keyboardVisible = true;
+      }
+    } else if (this.capabilities.isFirefox && this.capabilities.isAndroid) {
+      if (
+        Math.abs(
+          this.windowInnerHeight -
+            Math.min(window.innerHeight, window.visualViewport.height)
+        ) > KEYBOARD_DETECT_THRESHOLD
+      ) {
+        keyboardVisible = true;
+      }
+    } else {
+      let viewportWindowDiff =
+        this.windowInnerHeight - window.visualViewport.height;
+      if (viewportWindowDiff > 0) {
+        keyboardVisible = true;
+      }
 
-    // Add bottom padding when using a hardware keyboard and the accessory bar
-    // is visible accessory bar height is 55px, using 75 allows a small buffer
-    doc.style.setProperty(
-      "--composer-ipad-padding",
-      `${heightDiff < 75 ? heightDiff : 0}px`
-    );
+      // adds bottom padding when using a hardware keyboard and the accessory bar is visible
+      // accessory bar height is 55px, using 75 allows a small buffer
+      if (this.capabilities.isIpadOS) {
+        doc.style.setProperty(
+          "--composer-ipad-padding",
+          `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
+        );
+      }
+    }
+
+    keyboardVisible
+      ? doc.classList.add("keyboard-visible")
+      : doc.classList.remove("keyboard-visible");
   },
 };

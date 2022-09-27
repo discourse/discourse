@@ -6,6 +6,10 @@ RSpec.describe PostActionCreator do
   fab!(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   describe "rate limits" do
     before do
       RateLimiter.clear_all!

@@ -97,6 +97,11 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe '#suggested_topics' do
+    before do
+      SiteSetting.enable_personal_messages = false
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:topic2) { Fabricate(:topic) }
 
     before do
@@ -127,6 +132,11 @@ RSpec.describe TopicViewSerializer do
     end
 
     describe 'with private messages' do
+      before do
+        SiteSetting.enable_personal_messages = true
+        Group.refresh_automatic_groups!
+      end
+
       fab!(:topic) do
         Fabricate(:private_message_topic,
           highest_post_number: 1,
@@ -164,6 +174,10 @@ RSpec.describe TopicViewSerializer do
   describe '#suggested_group_name' do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group) { Fabricate(:group) }
+
+    before do
+      Group.refresh_automatic_groups!
+    end
 
     it 'is nil for a regular topic' do
       json = serialize_topic(topic, user)

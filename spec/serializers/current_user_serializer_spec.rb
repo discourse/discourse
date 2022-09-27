@@ -372,4 +372,19 @@ RSpec.describe CurrentUserSerializer do
       expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(true)
     end
   end
+
+  describe '#associated_account_ids' do
+    before do
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
+    end
+
+    it 'should not include associated account ids by default' do
+      expect(serializer.as_json[:associated_account_ids]).to be_nil
+    end
+
+    it 'should include associated account ids when site setting enabled' do
+      SiteSetting.include_associated_account_ids = true
+      expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
+    end
+  end
 end

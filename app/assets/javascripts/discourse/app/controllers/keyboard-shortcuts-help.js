@@ -326,7 +326,7 @@ export default Controller.extend(ModalFunctionality, {
       bookmarks: buildShortcut("jump_to.bookmarks", { keys1: ["g", "b"] }),
       profile: buildShortcut("jump_to.profile", { keys1: ["g", "p"] }),
     };
-    if (this.siteSettings.enable_personal_messages) {
+    if (this.currentUser?.allowPersonalMessages) {
       shortcuts.messages = buildShortcut("jump_to.messages", {
         keys1: ["g", "m"],
       });

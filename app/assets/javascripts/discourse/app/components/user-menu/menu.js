@@ -163,9 +163,7 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return (
-        this.siteSettings.enable_personal_messages || this.currentUser.staff
-      );
+      return this.currentUser?.allowPersonalMessages;
     }
 
     get notificationTypes() {

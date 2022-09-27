@@ -1799,7 +1799,7 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    if !current_user.staff? && !SiteSetting.enable_personal_messages
+    if !current_user.staff? && !current_user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
       raise Discourse::InvalidAccess.new("personal messages are disabled.")
     end
 

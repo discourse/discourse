@@ -372,7 +372,6 @@ basic:
   sitemap_page_size:
     default: 10000
   enable_user_status:
-    hidden: true
     client: true
     default: false
 
@@ -818,6 +817,13 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
+  personal_message_enabled_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "PersonalMessageEnabledGroupsValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -2012,6 +2018,9 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
 
 embedding:
   embed_by_username:

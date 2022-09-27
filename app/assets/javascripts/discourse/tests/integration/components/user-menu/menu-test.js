@@ -98,10 +98,11 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  test("messages tab isn't shown if current user isn't staff and enable_personal_messages setting is disabled", async function (assert) {
+  test("messages tab isn't shown if current user isn't staff and user does not belong to personal_message_enabled_groups", async function (assert) {
     this.currentUser.set("moderator", false);
     this.currentUser.set("admin", false);
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.set("groups", []);
+    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
 
     await render(template);
 
@@ -117,10 +118,11 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  test("messages tab is shown if current user is staff even if enable_personal_messages setting is disabled", async function (assert) {
+  test("messages tab is shown if current user is staff even if they do not belong to personal_message_enabled_groups", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.set("groups", []);
+    this.siteSettings.personal_message_enabled_groups = "999";
 
     await render(template);
 
