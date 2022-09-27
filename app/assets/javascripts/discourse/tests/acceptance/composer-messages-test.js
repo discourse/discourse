@@ -5,6 +5,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Composer - Messages", function (needs) {
   needs.user();
@@ -30,8 +31,8 @@ acceptance("Composer - Messages", function (needs) {
     assert.ok(
       query(".composer-popup").innerHTML.includes(
         I18n.t("composer.user_not_seen_in_a_while.single", {
-          usernames: ["charlie"],
-          time_ago: "1 day ago",
+          usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
+          time_ago: "1 year ago",
         })
       ),
       "warning message has correct body"

@@ -148,7 +148,9 @@ export default Component.extend({
 
             let usernames = [];
             response.usernames.forEach((username, index) => {
-              usernames[index] = `<a class='mention' href='/u/${username}'>@${username}</a>`;
+              usernames[
+                index
+              ] = `<a class='mention' href='/u/${username}'>@${username}</a>`;
             });
 
             let body_key = "composer.user_not_seen_in_a_while.single";
@@ -158,7 +160,10 @@ export default Component.extend({
             const message = composer.store.createRecord("composer-message", {
               id: "user-not-seen",
               templateName: "education",
-              body: I18n.t(body_key, { usernames: usernames.join(", "), time_ago: response.time_ago }),
+              body: I18n.t(body_key, {
+                usernames: usernames.join(", "),
+                time_ago: response.time_ago,
+              }),
             });
             this.send("popup", message);
           }
