@@ -9,7 +9,7 @@ import { test } from "qunit";
 acceptance("Composer - Messages", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    server.get("/composer_messages/user_not_seen", () => {
+    server.get("/composer_messages/user_not_seen_in_a_while", () => {
       return helper.response({
         user_count: 1,
         warning_message:

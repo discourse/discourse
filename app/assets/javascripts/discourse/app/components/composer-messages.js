@@ -133,7 +133,7 @@ export default Component.extend({
       ) {
         _recipient_names = recipient_names;
 
-        ajax(`/composer_messages/user_not_seen`, {
+        ajax(`/composer_messages/user_not_seen_in_a_while`, {
           type: "GET",
           data: {
             usernames: recipient_names,
@@ -148,7 +148,7 @@ export default Component.extend({
             const message = composer.store.createRecord("composer-message", {
               id: "user-not-seen",
               templateName: "custom-body",
-              title: I18n.t("composer.user_not_seen_title"),
+              title: I18n.t("composer.user_not_seen_in_a_while_title"),
               body: response.warning_message,
             });
             this.send("popup", message);

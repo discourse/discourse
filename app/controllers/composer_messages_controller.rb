@@ -18,17 +18,17 @@ class ComposerMessagesController < ApplicationController
     render_json_dump(json, rest_serializer: true)
   end
 
-  def user_not_seen
+  def user_not_seen_in_a_while
     usernames = params.require(:usernames)
-    users = ComposerMessagesFinder.user_not_seen(usernames)
+    users = ComposerMessagesFinder.user_not_seen_in_a_while(usernames)
     user_count = users.count
     warning_message = nil
 
     if user_count > 0
       message_locale = if user_count == 1
-        "education.user_not_seen.single"
+        "education.user_not_seen_in_a_while.single"
       else
-        "education.user_not_seen.multiple"
+        "education.user_not_seen_in_a_while.multiple"
       end
       users.map! { |username| "@#{username}" }
       warning_message = I18n.t(message_locale, username: users.join(", "), time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose'))
