@@ -1077,6 +1077,14 @@ export default Controller.extend({
 
     let composerModel = this.model;
 
+    //const category = this.site.categories.findBy("slug", "general");
+    const general_category_id = this.siteSettings.general_category_id;
+
+    if (general_category_id) {
+      opts.categoryId = general_category_id;
+      //console.log(this.siteSettings.general_category_id)
+    }
+
     if (
       opts.ignoreIfChanged &&
       composerModel &&
@@ -1112,6 +1120,17 @@ export default Controller.extend({
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
     }
+
+    // Default Category
+    //if (!opts.categoryId && !opts.prioritizedCategoryId) {
+    //  console.log(this.site.categories);
+    //  const category = this.site.categories.findBy("slug", "general");
+    //  if (category) {
+    //    console.log(category.id);
+    //    //this.set("scopedCategoryId", category.id);
+    //    opts.categoryId = category.id;
+    //  }
+    //}
 
     // If we want a different draft than the current composer, close it and clear our model.
     if (

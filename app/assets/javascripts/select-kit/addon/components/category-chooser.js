@@ -44,7 +44,7 @@ export default ComboBoxComponent.extend({
     ) {
       return Category.findUncategorized();
     } else {
-      return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
+      //return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
     }
   },
 
