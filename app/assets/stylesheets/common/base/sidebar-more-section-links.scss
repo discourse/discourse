@@ -13,8 +13,8 @@
     box-sizing: border-box;
 
     .d-icon {
-      margin-left: auto;
-      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      margin-right: 0.5em;
     }
 
     &::before {
@@ -35,7 +35,7 @@
     margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
     .sidebar-row {
-      padding: calc(var(--d-sidebar-row-horizontal-padding) / 3);
+      padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
     }
   }
 

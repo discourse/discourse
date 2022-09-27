@@ -2,6 +2,10 @@
   {{#if @href}}
     <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
       <span class="sidebar-section-link-content-text">
+        {{#if (eq @prefixType "icon")}}
+          {{d-icon @prefixValue class="sidebar-section-link-prefix-icon"}}
+        {{/if}}
+
         {{@content}}
       </span>
     </a>
@@ -17,19 +21,21 @@
       {{#if @prefixValue}}
         <span class="sidebar-section-link-prefix {{@prefixType}} {{@prefixCSSClass}}" style={{this.prefixCSS}}>
           {{#if (eq @prefixType "image")}}
-            <img src={{@prefixValue}} class="prefix-image">
+            <img src={{@prefixValue}} class="sidebar-section-link-prefix-image">
           {{/if}}
 
           {{#if (eq @prefixType "text")}}
-            {{@prefixValue}}
+            <span class="sidebar-section-link-prefix-text">
+              {{@prefixValue}}
+            </span>
           {{/if}}
 
           {{#if (eq @prefixType "icon")}}
-            {{d-icon @prefixValue class="prefix-icon"}}
+            {{d-icon @prefixValue class="sidebar-section-link-prefix-icon"}}
           {{/if}}
 
           {{#if @prefixBadge}}
-            {{d-icon @prefixBadge class="prefix-badge"}}
+            {{d-icon @prefixBadge class="sidebar-section-link-prefix-badge"}}
           {{/if}}
         </span>
       {{/if}}

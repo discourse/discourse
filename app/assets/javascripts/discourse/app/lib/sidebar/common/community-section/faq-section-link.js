@@ -22,4 +22,8 @@ export default class FAQSectionLink extends BaseSectionLink {
   get text() {
     return I18n.t("sidebar.sections.community.links.faq.content");
   }
+
+  get prefixValue() {
+    return "question-circle";
+  }
 }

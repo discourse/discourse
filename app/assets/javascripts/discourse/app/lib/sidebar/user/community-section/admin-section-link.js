@@ -22,4 +22,8 @@ export default class AdminSectionLink extends BaseSectionLink {
   get shouldDisplay() {
     return this.currentUser?.staff;
   }
+
+  get prefixValue() {
+    return "wrench";
+  }
 }

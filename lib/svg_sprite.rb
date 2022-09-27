@@ -139,6 +139,7 @@ module SvgSprite
     "hourglass-start",
     "id-card",
     "image",
+    "inbox",
     "info-circle",
     "italic",
     "key",

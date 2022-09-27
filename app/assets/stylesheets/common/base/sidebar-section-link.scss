@@ -21,6 +21,12 @@
       color: var(--primary);
       font-weight: bold;
       background: var(--d-sidebar-highlight-color);
+
+      .sidebar-section-link-prefix {
+        &.icon {
+          color: var(--primary-high);
+        }
+      }
     }
 
     .sidebar-section-link-content-badge {
@@ -67,7 +73,7 @@
   .sidebar-section-link-group-messages-unread,
   .sidebar-section-link-group-messages-archive {
     .sidebar-section-link-content-text {
-      margin-left: 0.5em;
+      margin-left: 1.5em;
     }
   }
 
@@ -105,12 +111,13 @@
     &.icon {
       position: relative;
       margin-right: 0.5em;
+      color: var(--primary-medium);
 
       svg {
         font-size: var(--font-down-1);
       }
 
-      svg.prefix-badge {
+      .sidebar-section-link-prefix-badge {
         position: absolute;
         background-color: transparent;
         border-radius: 50%;

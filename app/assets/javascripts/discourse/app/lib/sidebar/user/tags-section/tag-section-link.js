@@ -3,6 +3,7 @@ import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
+import tag from "discourse/adapters/tag";
 
 export default class TagSectionLink {
   @tracked totalUnread = 0;
@@ -63,5 +64,13 @@ export default class TagSectionLink {
         count: this.totalNew,
       });
     }
+  }
+
+  get prefixType() {
+    return "icon";
+  }
+
+  get prefixValue() {
+    return "tag";
   }
 }
