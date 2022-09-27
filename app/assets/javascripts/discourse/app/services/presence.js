@@ -13,6 +13,7 @@ import userPresent, {
 import { bind } from "discourse-common/utils/decorators";
 import Evented from "@ember/object/evented";
 import { isTesting } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -472,7 +473,7 @@ export default class PresenceService extends Service {
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
     data.append("authenticity_token", Session.currentProp("csrfToken"));
-    navigator.sendBeacon("/presence/update", data);
+    navigator.sendBeacon(getURL("/presence/update"), data);
   }
 
   _dedupQueue() {
