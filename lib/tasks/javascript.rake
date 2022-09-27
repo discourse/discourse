@@ -230,6 +230,9 @@ task 'javascript:update' => 'clean_up' do
   yarn = system("yarn install")
   abort('Unable to run "yarn install"') unless yarn
 
+  yarn = system("yarn install --cwd app/assets/javascripts")
+  abort('Unable to run "yarn install --cwd app/assets/javascripts"') unless yarn
+
   versions = {}
   start = Time.now
 

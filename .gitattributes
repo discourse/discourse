@@ -27,3 +27,9 @@
 *.PDF  diff=astextplain
 *.rtf  diff=astextplain
 *.RTF  diff=astextplain
+
+# Yarn
+.yarn/releases/** binary
+.yarn/plugins/** binary
+app/assets/javascripts/.yarn/releases/** binary
+app/assets/javascripts/.yarn/plugins/** binary

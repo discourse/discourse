@@ -73,7 +73,9 @@ jobs:
           licensed status
 
       - name: Yarn install
-        run: yarn install
+        run: |
+          yarn install
+          yarn install --cwd app/assets/javascripts
 
       - name: Check Yarn Licenses
         if: ${{ !cancelled() }}

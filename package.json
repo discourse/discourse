@@ -35,12 +35,10 @@
     "chrome-remote-interface": "^0.31.2",
     "puppeteer-core": "^13.7.0"
   },
-  "scripts": {
-    "postinstall": "yarn --cwd app/assets/javascripts/discourse $(node -e 'if(JSON.parse(process.env.npm_config_argv).original.includes(`--frozen-lockfile`)){console.log(`--frozen-lockfile`)}')"
-  },
   "engines": {
     "node": "16.* || >= 18",
     "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
-  }
+    "yarn": ">= 3.2.3"
+  },
+  "packageManager": "yarn@3.2.3"
 }

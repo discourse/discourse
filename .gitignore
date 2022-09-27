@@ -62,3 +62,20 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+# Yarn - https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+app/assets/javascripts/.pnp.*
+app/assets/javascripts/.yarn/*
+!app/assets/javascripts/.yarn/patches
+!app/assets/javascripts/.yarn/plugins
+!app/assets/javascripts/.yarn/releases
+!app/assets/javascripts/.yarn/sdks
+!app/assets/javascripts/.yarn/versions

@@ -18,6 +18,7 @@ task "qunit:test", [:timeout, :qunit_path, :filter] do |_, args|
   report_requests = ENV['REPORT_REQUESTS'] == "1"
 
   system("yarn install")
+  system("yarn install --cwd app/assets/javascripts")
 
   # ensure we have this port available
   def port_available?(port)

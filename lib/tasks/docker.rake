@@ -60,6 +60,7 @@ task 'docker:test' do
   begin
     @good = true
     @good &&= run_or_fail("yarn install")
+    @good &&= run_or_fail("yarn install --cwd app/assets/javascripts")
 
     unless ENV['SKIP_LINT']
       puts "Running linters/prettyfiers"

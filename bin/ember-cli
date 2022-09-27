@@ -44,17 +44,18 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   puts "#{"--test".cyan} To run the test suite"
   puts "#{"--unicorn, -u".cyan} To run a unicorn server as well"
   puts "The rest of the arguments are passed to ember server per:", ""
-  exec "yarn -s --cwd #{YARN_DIR} run ember #{command} --help"
+  exec "yarn --cwd #{YARN_DIR} run ember #{command} --help"
 end
 
-args = ["-s", "--cwd", YARN_DIR, "run", "ember", command] + (ARGV - CUSTOM_ARGS)
+args = ["--cwd", YARN_DIR, "run", "ember", command] + (ARGV - CUSTOM_ARGS)
 
 if !args.include?("test") && !args.include?("--proxy")
   args << "--proxy"
   args << PROXY
 end
 
-exit 1 if !system "yarn -s install --cwd #{YARN_DIR}"
+puts "> yarn install"
+exit 1 if !system "yarn install --cwd #{YARN_DIR}"
 
 yarn_env = {}
 if ARGV.include?("--forward-host")

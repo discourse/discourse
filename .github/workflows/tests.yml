@@ -93,7 +93,9 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: |
+          yarn install
+          yarn install --cwd app/assets/javascripts
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
