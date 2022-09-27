@@ -2275,7 +2275,9 @@ en:
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
         error: "This topic is in slow mode. You already posted recently; you can post again in %{timeLeft}."
-      user_not_seen_in_a_while_title: "User hasn't been seen in a long time"
+      user_not_seen_in_a_while_title:
+        single: "User hasn't been seen in a long time"
+        multiple: "Users haven't been seen in a long time"
 
       admin_options_title: "Optional staff settings for this topic"
 

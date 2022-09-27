@@ -145,10 +145,14 @@ export default Component.extend({
           ) {
             this.set("userNotSeenMessage", response.warning_message);
             this.messagesByTemplate["custom-body"] = undefined;
+            let title_key = "composer.user_not_seen_in_a_while_title.single";
+            if (response.user_count > 1) {
+              title_key = "composer.user_not_seen_in_a_while_title.multiple";
+            }
             const message = composer.store.createRecord("composer-message", {
               id: "user-not-seen",
               templateName: "custom-body",
-              title: I18n.t("composer.user_not_seen_in_a_while_title"),
+              title: I18n.t(title_key),
               body: response.warning_message,
             });
             this.send("popup", message);
