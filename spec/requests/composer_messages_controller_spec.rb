@@ -58,7 +58,7 @@ RSpec.describe ComposerMessagesController do
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["user_count"]).to eq(2)
-        expect(json["warning_message"]).to eq(I18n.t("education.user_not_seen_in_a_while.multiple", username: [user_1.username, user_2.username].join(", "), time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose')))
+        expect(json["warning_message"]).to eq(I18n.t("education.user_not_seen_in_a_while.multiple", usernames: ["<a class='mention' href='/u/#{user_1.username}'>@#{user_1.username}</a>", "<a class='mention' href='/u/#{user_2.username}'>@#{user_2.username}</a>"].join(", "), time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose')))
       end
 
       it 'accounts for pm_warn_user_last_seen_months_ago site setting' do
@@ -67,7 +67,7 @@ RSpec.describe ComposerMessagesController do
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["user_count"]).to eq(1)
-        expect(json["warning_message"]).to eq(I18n.t("education.user_not_seen_in_a_while.single", username: user_1.username, time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose')))
+        expect(json["warning_message"]).to eq(I18n.t("education.user_not_seen_in_a_while.single", usernames: "<a class='mention' href='/u/#{user_1.username}'>@#{user_1.username}</a>", time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose')))
       end
     end
   end
