@@ -328,6 +328,13 @@ const Composer = RestModel.extend({
       : "composer.title_placeholder";
   },
 
+  @discourseComputed("canEditTopicFeaturedLink")
+  subtitlePlaceholder(canEditTopicFeaturedLink) {
+    return canEditTopicFeaturedLink
+      ? "composer.subtitle_or_link_placeholder"
+      : "composer.subtitle_placeholder";
+  },
+
   @discourseComputed("action", "post", "topic", "topic.title")
   replyOptions(action, post, topic, topicTitle) {
     const options = {
