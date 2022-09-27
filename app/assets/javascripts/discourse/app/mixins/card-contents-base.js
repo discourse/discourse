@@ -364,10 +364,9 @@ export default Mixin.create({
 
   @bind
   _escListener(event) {
-    const target = this.cardTarget;
     if (this.visible && event.key === "Escape") {
+      this.cardTarget?.focus();
       this._close();
-      target?.focus();
       return;
     }
   },
