@@ -1,14 +1,14 @@
 import { empty, notEmpty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
-import bootbox from "bootbox";
 import { get } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
   username: null,
   lastSeen: null,
-
   emailEmpty: empty("email"),
   sendEmailDisabled: or("emailEmpty", "sendingEmail"),
   showSendEmailForm: notEmpty("model.html_content"),
@@ -50,7 +50,7 @@ export default Controller.extend({
       EmailPreview.sendDigest(this.username, this.lastSeen, this.email)
         .then((result) => {
           if (result.errors) {
-            bootbox.alert(result.errors);
+            this.dialog.alert(result.errors);
           } else {
             this.set("sentEmail", true);
           }

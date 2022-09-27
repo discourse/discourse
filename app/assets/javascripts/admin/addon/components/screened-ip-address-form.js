@@ -2,8 +2,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
-import bootbox from "bootbox";
 import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
 /**
   A form to create an IP address that will be blocked or allowed.
@@ -18,6 +18,7 @@ import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   tagName: "form",
+  dialog: service(),
   classNames: ["screened-ip-address-form", "inline-form"],
   formSubmitted: false,
   actionName: "block",
@@ -47,6 +48,12 @@ export default Component.extend({
     }
   },
 
+  focusInput() {
+    schedule("afterRender", () => {
+      this.element.querySelector("input").focus();
+    });
+  },
+
   actions: {
     submit() {
       if (!this.formSubmitted) {
@@ -60,22 +67,20 @@ export default Component.extend({
           .then((result) => {
             this.setProperties({ ip_address: "", formSubmitted: false });
             this.action(ScreenedIpAddress.create(result.screened_ip_address));
-            schedule("afterRender", () =>
-              this.element.querySelector("input").focus()
-            );
+            this.focusInput();
           })
           .catch((e) => {
             this.set("formSubmitted", false);
-            const msg = e.jqXHR.responseJSON?.errors
+            const message = e.jqXHR.responseJSON?.errors
               ? I18n.t("generic_error_with_reason", {
                   error: e.jqXHR.responseJSON.errors.join(". "),
                 })
               : I18n.t("generic_error");
-            bootbox.alert(msg, () =>
-              schedule("afterRender", () =>
-                this.element.querySelector("input").focus()
-              )
-            );
+            this.dialog.alert({
+              message,
+              didConfirm: () => this.focusInput(),
+              didCancel: () => this.focusInput(),
+            });
           });
       }
     },

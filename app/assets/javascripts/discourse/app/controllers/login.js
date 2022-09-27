@@ -8,7 +8,6 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escape } from "pretty-text/sanitizer";
 import { extractError } from "discourse/lib/ajax-error";
@@ -19,6 +18,7 @@ import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import { inject as service } from "@ember/service";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -33,6 +33,7 @@ export default Controller.extend(ModalFunctionality, {
   createAccount: controller(),
   forgotPassword: controller(),
   application: controller(),
+  dialog: service(),
 
   loggingIn: false,
   loggedIn: false,
@@ -199,7 +200,7 @@ export default Controller.extend(ModalFunctionality, {
               });
             } else if (result.reason === "suspended") {
               this.send("closeModal");
-              bootbox.alert(result.error);
+              this.dialog.alert(result.error);
             } else {
               this.flash(result.error, "error");
             }
