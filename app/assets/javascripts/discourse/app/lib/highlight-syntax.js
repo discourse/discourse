@@ -64,7 +64,7 @@ function customHighlightJSPlugins() {
   });
 }
 
-function initilizer() {
+function initializer() {
   if (!_initialized) {
     customHighlightJSLanguages();
     customHighlightJSPlugins();
