@@ -30,11 +30,9 @@ class ComposerMessagesController < ApplicationController
       else
         "education.user_not_seen_in_a_while.multiple"
       end
-      users.map! { |username| "<a class='mention' href='/u/#{username}'>@#{username}</a>" }
-      warning_message = I18n.t(message_locale, usernames: users.join(", "), time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose'))
     end
 
-    json = { user_count: user_count, warning_message: warning_message }
+    json = { user_count: user_count, usernames: users, time_ago: FreedomPatches::Rails4.time_ago_in_words(SiteSetting.pm_warn_user_last_seen_months_ago.month.ago, true, scope: :'datetime.distance_in_words_verbose') }
     render_json_dump(json)
   end
 end

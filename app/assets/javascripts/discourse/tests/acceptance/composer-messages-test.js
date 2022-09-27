@@ -12,8 +12,8 @@ acceptance("Composer - Messages", function (needs) {
     server.get("/composer_messages/user_not_seen_in_a_while", () => {
       return helper.response({
         user_count: 1,
-        warning_message:
-          "The person you are messaging, charlie, hasn’t been seen here in a very long time – about 1 year ago. They may not receive your message. You may wish to seek out alternate methods of contacting charlie.",
+        usernames: ["charlie"],
+        time_ago: "1 year ago",
       });
     });
   });
@@ -27,14 +27,13 @@ acceptance("Composer - Messages", function (needs) {
     );
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
     assert.ok(exists(".composer-popup"), "shows composer warning message");
-    assert.strictEqual(
-      query(".composer-popup h3").innerHTML.trim(),
-      "User hasn't been seen in a long time",
-      "warning message has correct title"
-    );
-    assert.strictEqual(
-      query(".composer-popup p").innerHTML.trim(),
-      "The person you are messaging, charlie, hasn’t been seen here in a very long time – about 1 year ago. They may not receive your message. You may wish to seek out alternate methods of contacting charlie.",
+    assert.ok(
+      query(".composer-popup").innerHTML.includes(
+        I18n.t("composer.user_not_seen_in_a_while.single", {
+          usernames: ["charlie"],
+          time_ago: "1 day ago",
+        })
+      ),
       "warning message has correct body"
     );
   });

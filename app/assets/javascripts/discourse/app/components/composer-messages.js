@@ -20,7 +20,7 @@ export default Component.extend({
   _similarTopicsMessage: null,
   _yourselfConfirm: null,
   similarTopics: null,
-  userNotSeenMessage: null,
+  usersNotSeen: null,
 
   hidden: not("composer.viewOpenOrFullscreen"),
 
@@ -141,19 +141,24 @@ export default Component.extend({
         }).then((response) => {
           if (
             response.user_count > 0 &&
-            this.get("userNotSeenMessage") !== response.warning_message
+            this.get("usersNotSeen") !== response.usernames.join("-")
           ) {
-            this.set("userNotSeenMessage", response.warning_message);
-            this.messagesByTemplate["custom-body"] = undefined;
-            let title_key = "composer.user_not_seen_in_a_while_title.single";
+            this.set("usersNotSeen", response.usernames.join("-"));
+            this.messagesByTemplate["education"] = undefined;
+
+            let usernames = [];
+            response.usernames.forEach((username, index) => {
+              usernames[index] = `<a class='mention' href='/u/${username}'>@${username}</a>`;
+            });
+
+            let body_key = "composer.user_not_seen_in_a_while.single";
             if (response.user_count > 1) {
-              title_key = "composer.user_not_seen_in_a_while_title.multiple";
+              body_key = "composer.user_not_seen_in_a_while.multiple";
             }
             const message = composer.store.createRecord("composer-message", {
               id: "user-not-seen",
-              templateName: "custom-body",
-              title: I18n.t(title_key),
-              body: response.warning_message,
+              templateName: "education",
+              body: I18n.t(body_key, { usernames: usernames.join(", "), time_ago: response.time_ago }),
             });
             this.send("popup", message);
           }
