@@ -25,7 +25,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (user) {
-      const channel = user.enable_redesigned_user_menu
+      const channel = user.redesigned_user_menu_enabled
         ? `/reviewable_counts/${user.id}`
         : "/reviewable_counts";
 

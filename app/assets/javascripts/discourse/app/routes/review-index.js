@@ -65,7 +65,7 @@ export default DiscourseRoute.extend({
       }
     });
 
-    const channel = this.currentUser.enable_redesigned_user_menu
+    const channel = this.currentUser.redesigned_user_menu_enabled
       ? `/reviewable_counts/${this.currentUser.id}`
       : "/reviewable_counts";
 
