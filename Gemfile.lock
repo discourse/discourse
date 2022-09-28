@@ -89,8 +89,18 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
+    capybara (3.37.1)
+      addressable
+      matrix
+      mini_mime (>= 0.1.3)
+      nokogiri (~> 1.8)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     cbor (0.5.9.6)
     certified (1.0.0)
+    childprocess (4.1.0)
     chunky_png (1.4.0)
     coderay (1.1.3)
     colored2 (3.1.2)
@@ -208,6 +218,7 @@ GEM
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
     lz4-ruby (0.3.3)
+    matrix (0.4.2)
     maxminddb (0.1.22)
     memory_profiler (1.0.0)
     message_bus (4.2.0)
@@ -434,6 +445,11 @@ GEM
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
+    selenium-webdriver (4.4.0)
+      childprocess (>= 0.5, < 5.0)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     shoulda-matchers (5.2.0)
       activesupport (>= 5.2.0)
     sidekiq (6.5.7)
@@ -478,6 +494,10 @@ GEM
     uri (0.11.0)
     uri_template (0.7.0)
     version_gem (1.1.0)
+    webdrivers (5.1.0)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (~> 4.0)
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -485,7 +505,10 @@ GEM
     webpush (1.1.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    websocket (1.2.9)
     xorcist (1.1.3)
+    xpath (3.2.0)
+      nokogiri (~> 1.8)
     yaml-lint (0.0.10)
     zeitwerk (2.6.0)
 
@@ -517,6 +540,7 @@ DEPENDENCIES
   bootsnap
   bullet
   byebug
+  capybara
   cbor
   certified
   colored2
@@ -609,6 +633,7 @@ DEPENDENCIES
   sassc (= 2.0.1)
   sassc-rails
   seed-fu
+  selenium-webdriver
   shoulda-matchers
   sidekiq
   simplecov
@@ -621,6 +646,7 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+  webdrivers
   webmock
   webpush
   xorcist

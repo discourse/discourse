@@ -7,7 +7,7 @@ RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 HOSTNAME = ENV["DISCOURSE_HOSTNAME"] ||= "127.0.0.1"
 YARN_DIR = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
-CUSTOM_ARGS = ["--try", "--test", "--unicorn", "-u", "--forward-host"]
+CUSTOM_ARGS = ["--try", "--test", "--build", "--unicorn", "-u", "--forward-host"]
 PROXY =
   if ARGV.include?("--try")
     "https://try.discourse.org"
@@ -24,6 +24,8 @@ end
 command =
   if ARGV.include?("--test")
     "test"
+  elsif ARGV.include?("--build")
+    "build"
   else
     "server"
   end
@@ -49,7 +51,7 @@ end
 
 args = ["-s", "--cwd", YARN_DIR, "run", "ember", command] + (ARGV - CUSTOM_ARGS)
 
-if !args.include?("test") && !args.include?("--proxy")
+if !args.include?("test") && !args.include?("build") && !args.include?("--proxy")
   args << "--proxy"
   args << PROXY
 end
