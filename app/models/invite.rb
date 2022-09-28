@@ -33,6 +33,7 @@ class Invite < ActiveRecord::Base
   validate :ensure_max_redemptions_allowed
   validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
+  validate :email_xor_domain
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -63,6 +64,12 @@ class Invite < ActiveRecord::Base
     if user && user.id != self.invited_users&.first&.user_id
       self.email_already_exists = true
       errors.add(:base, user_exists_error_msg(email))
+    end
+  end
+
+  def email_xor_domain
+    if email.present? && domain.present?
+      errors.add(:base, :email_xor_domain)
     end
   end
 

@@ -41,11 +41,25 @@ RSpec.describe Invite do
     end
 
     it 'allows only valid domains' do
-      invite = Fabricate.build(:invite, domain: 'example', invited_by: user)
+      invite = Fabricate.build(:invite, email: nil, domain: 'example', invited_by: user)
       expect(invite).not_to be_valid
 
-      invite = Fabricate.build(:invite, domain: 'example.com', invited_by: user)
+      invite = Fabricate.build(:invite, email: nil, domain: 'example.com', invited_by: user)
       expect(invite).to be_valid
+    end
+
+    it 'allows only email or only domain to be present' do
+      invite = Fabricate.build(:invite, invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: nil, domain: 'example.com', invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: 'test@example.com', invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: 'test@example.com', domain: 'example.com', invited_by: user)
+      expect(invite).not_to be_valid
     end
   end
 
