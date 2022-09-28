@@ -31,6 +31,7 @@ class Invite < ActiveRecord::Base
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
+  validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
   validate :email_xor_domain
@@ -265,6 +266,12 @@ class Invite < ActiveRecord::Base
       elsif !self.max_redemptions_allowed.between?(1, limit)
         errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
       end
+    end
+  end
+
+  def valid_redemption_count
+    if self.redemption_count > self.max_redemptions_allowed
+      errors.add(:redemption_count, I18n.t("invite.redemption_count_less_than_max", max_redemptions_allowed: self.max_redemptions_allowed))
     end
   end
 
