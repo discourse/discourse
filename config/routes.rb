@@ -583,7 +583,12 @@ Discourse::Application.routes.draw do
     end
     # used to download attachments (old route)
     get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
-    get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
+
+    # NOTE: secure-media-uploads is the old form, all new URLs generated for
+    # secure uploads will be secure-uploads, this is left in for backwards
+    # compat without needing to rebake all posts for each site.
+    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated", constraints: { extension: /[a-z0-9\._]+/i }
+    get "secure-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
 
     get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
     get "private-posts" => "posts#latest", id: "private_posts", constraints: { format: /(json|rss)/ }

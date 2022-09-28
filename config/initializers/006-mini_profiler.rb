@@ -45,6 +45,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     /^\/site_customizations/,
     /^\/uploads/,
     /^\/secure-media-uploads/,
+    /^\/secure-uploads/,
     /^\/javascripts\//,
     /^\/images\//,
     /^\/stylesheets\//,

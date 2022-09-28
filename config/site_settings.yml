@@ -1365,9 +1365,21 @@ files:
   secure_media:
     default: false
     client: true
+    hidden: true
   secure_media_allow_embed_images_in_emails:
     default: true
+    hidden: true
   secure_media_max_email_embed_image_size_kb:
+    default: 1024
+    min: 1
+    max: 10240
+    hidden: true
+  secure_uploads:
+    default: false
+    client: true
+  secure_uploads_allow_embed_images_in_emails:
+    default: true
+  secure_uploads_max_email_embed_image_size_kb:
     default: 1024
     min: 1
     max: 10240

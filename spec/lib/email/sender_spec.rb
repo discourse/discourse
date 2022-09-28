@@ -4,7 +4,7 @@ require 'email/sender'
 
 RSpec.describe Email::Sender do
   before do
-    SiteSetting.secure_media_allow_embed_images_in_emails = false
+    SiteSetting.secure_uploads_allow_embed_images_in_emails = false
   end
   fab!(:post) { Fabricate(:post) }
   let(:mock_smtp_transaction_response) { "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example" }
@@ -535,15 +535,15 @@ RSpec.describe Email::Sender do
         .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
     end
 
-    context "when secure media enabled" do
+    context "when secure uploads enabled" do
       before do
         setup_s3
         store = stub_s3_store
 
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         SiteSetting.login_required = true
         SiteSetting.email_total_attachment_size_limit_kb = 14_000
-        SiteSetting.secure_media_max_email_embed_image_size_kb = 5_000
+        SiteSetting.secure_uploads_max_email_embed_image_size_kb = 5_000
 
         Jobs.run_immediately!
         Jobs::PullHotlinkedImages.any_instance.expects(:execute)
@@ -566,7 +566,7 @@ RSpec.describe Email::Sender do
 
       context "when embedding secure images in email is allowed" do
         before do
-          SiteSetting.secure_media_allow_embed_images_in_emails = true
+          SiteSetting.secure_uploads_allow_embed_images_in_emails = true
         end
 
         it "can inline images with duplicate names" do
@@ -590,7 +590,7 @@ RSpec.describe Email::Sender do
         end
 
         it "does not embed images that are too big" do
-          SiteSetting.secure_media_max_email_embed_image_size_kb = 1
+          SiteSetting.secure_uploads_max_email_embed_image_size_kb = 1
           Email::Sender.new(message, :valid_type).send
           expect(message.attachments.length).to eq(3)
         end

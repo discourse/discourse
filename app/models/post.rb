@@ -309,7 +309,7 @@ class Post < ActiveRecord::Base
     options[:user_id] = post_user.id if post_user
     options[:omit_nofollow] = true if omit_nofollow?
 
-    if self.with_secure_media?
+    if self.with_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -517,8 +517,8 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
-  def with_secure_media?
-    return false if !SiteSetting.secure_media?
+  def with_secure_uploads?
+    return false if !SiteSetting.secure_uploads?
     SiteSetting.login_required? || \
       (topic.present? && (topic.private_message? || topic.category&.read_restricted))
   end
@@ -971,7 +971,7 @@ class Post < ActiveRecord::Base
       UploadReference.where(target: self).delete_all
       UploadReference.insert_all(upload_references) if upload_references.size > 0
 
-      if SiteSetting.secure_media?
+      if SiteSetting.secure_uploads?
         Upload.where(
           id: upload_ids, access_control_post_id: nil
         ).where(
@@ -1033,7 +1033,7 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      next unless Discourse.store.has_been_uploaded?(src) || Upload.secure_media_url?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
+      next unless Discourse.store.has_been_uploaded?(src) || Upload.secure_uploads_url?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
         URI(UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path

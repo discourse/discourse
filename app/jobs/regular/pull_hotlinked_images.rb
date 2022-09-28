@@ -108,9 +108,9 @@ module Jobs
     class UploadCreateError < StandardError; end
 
     def attempt_download(src, user_id)
-      # secure-media-uploads endpoint prevents anonymous downloads, so we
+      # secure-uploads endpoint prevents anonymous downloads, so we
       # need the presigned S3 URL here
-      src = Upload.signed_url_from_secure_media_url(src) if Upload.secure_media_url?(src)
+      src = Upload.signed_url_from_secure_uploads_url(src) if Upload.secure_uploads_url?(src)
 
       hotlinked = download(src)
       raise ImageBrokenError if !hotlinked
@@ -147,7 +147,7 @@ module Jobs
       ].compact.map { |s| normalize_src(s) }
 
       if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) || src =~ /\A\/[^\/]/i
-        return false if !(src =~ /\/uploads\// || Upload.secure_media_url?(src))
+        return false if !(src =~ /\/uploads\// || Upload.secure_uploads_url?(src))
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database

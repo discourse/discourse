@@ -100,10 +100,10 @@ RSpec.describe PublishedPagesController do
           published_page.topic.tags = [Fabricate(:tag, name: "recipes")]
         end
 
-        context "when secure media is enabled" do
+        context "when secure uploads is enabled" do
           before do
             setup_s3
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
           end
 
           it "returns 404" do
