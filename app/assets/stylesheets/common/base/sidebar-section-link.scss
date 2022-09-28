@@ -76,7 +76,10 @@
   .sidebar-section-link-group-messages-unread,
   .sidebar-section-link-group-messages-archive {
     .sidebar-section-link-content-text {
-      margin-left: calc(var(--d-sidebar-section-link-prefix-margin-right) + var(--d-sidebar-section-link-prefix-width));
+      margin-left: calc(
+        var(--d-sidebar-section-link-prefix-margin-right) +
+          var(--d-sidebar-section-link-prefix-width)
+      );
     }
   }
 

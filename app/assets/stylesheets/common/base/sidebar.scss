@@ -12,7 +12,8 @@
 .sidebar-row {
   box-sizing: border-box;
   height: var(--d-sidebar-row-height);
-  padding: var(--d-sidebar-row-vertical-padding) var(--d-sidebar-row-horizontal-padding);
+  padding: var(--d-sidebar-row-vertical-padding)
+    var(--d-sidebar-row-horizontal-padding);
   align-items: center;
   font-size: var(--d-sidebar-row-font-size);
 }
