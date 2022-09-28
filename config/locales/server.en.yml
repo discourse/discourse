@@ -264,6 +264,7 @@ en:
       invalid_access: "You are not permitted to view the requested resource."
     requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
+    max_redemptions_allowed_one: "for email invites should be 1."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."

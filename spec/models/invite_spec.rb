@@ -369,7 +369,7 @@ RSpec.describe Invite do
     fab!(:inviter) { Fabricate(:user) }
 
     fab!(:pending_invite) { Fabricate(:invite, invited_by: inviter, email: 'pending@example.com') }
-    fab!(:pending_link_invite) { Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 5) }
+    fab!(:pending_link_invite) { Fabricate(:invite, invited_by: inviter, email: nil, max_redemptions_allowed: 5) }
     fab!(:pending_invite_from_another_user) { Fabricate(:invite) }
 
     fab!(:expired_invite) { Fabricate(:invite, invited_by: inviter, email: 'expired@example.com', expires_at: 1.day.ago) }
