@@ -461,15 +461,15 @@ export function postRNWebviewMessage(prop, value) {
 
 const CODE_BLOCKS_REGEX =
   /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
-//                        |      ^     |   ^   |      ^      |           ^           |
-//                               |         |          |                  |
-//                               |         |          |       code blocks between [code]
-//                               |         |          |
-//                               |         |          +--- code blocks between three backticks
-//                               |         |
-//                               |         +----- inline code between backticks
-//                               |
-//                               +------- paragraphs starting with 4 spaces or tab
+//|      ^     |   ^   |      ^      |           ^           |
+//       |         |          |                  |
+//       |         |          |       code blocks between [code]
+//       |         |          |
+//       |         |          +--- code blocks between three backticks
+//       |         |
+//       |         +----- inline code between backticks
+//       |
+//       +------- paragraphs starting with 4 spaces or tab
 
 const OPEN_CODE_BLOCKS_REGEX = /`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
