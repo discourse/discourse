@@ -17,6 +17,7 @@ module UploadsHelpers
   # updated to use secure_uploads instead.
   def enable_secure_media
     enable_secure_uploads
+    DiscourseEvent.trigger(:site_setting_changed, :secure_media, false, true)
   end
 
   def enable_secure_uploads
