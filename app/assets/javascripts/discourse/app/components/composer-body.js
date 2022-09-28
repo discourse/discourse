@@ -31,6 +31,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.loading",
     "prefixedComposerAction",
     "composer.canEditTitle:edit-title",
+    "composer.canEditTitle:edit-subtitle",
     "composer.createdPost:created-post",
     "composer.creatingTopic:topic",
     "composer.whisper:composing-whisper",

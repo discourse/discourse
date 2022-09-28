@@ -383,6 +383,21 @@ class TopicsController < ApplicationController
       changes[f] = params[f] if params.has_key?(f)
     end
 
+    # The updating of topic subtitle will happen here
+    if topic_subtitle = params[:subtitle]
+      topic_custom_field = TopicCustomField.where(topic_id: topic[:id].to_i, name: Topic::SUBTITLE).first
+      if topic_custom_field
+        # Update the subtitle because it already exists
+        topic_custom_field.update!(value: topic_subtitle)
+      else
+        # Create a new subtitle
+        TopicCustomField.create!(
+          topic_id: topic[:id].to_i,
+          name: Topic::SUBTITLE,
+          value: topic_subtitle
+        )
+      end
+    end
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 

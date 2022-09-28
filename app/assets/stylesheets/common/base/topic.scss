@@ -292,9 +292,19 @@ a.badge-category {
     flex-wrap: wrap;
     box-sizing: border-box;
     max-width: 758px;
-    #edit-title {
-      flex: 1 1 auto;
+    .title-container {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      #edit-title {
+        width: 50.5rem;
+      }
+      #edit-subtitle {
+        width: 50.5rem;
+      }
     }
+    
     .category-chooser,
     .mini-tag-chooser {
       flex: 1 1 49%;

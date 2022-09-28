@@ -489,9 +489,6 @@ class PostRevisor
 
     @post.extract_quoted_post_numbers
 
-
-    p "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-    p @post
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.link_post_uploads
     @post.save_reply_relationships

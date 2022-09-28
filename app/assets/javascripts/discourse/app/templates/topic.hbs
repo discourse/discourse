@@ -21,7 +21,21 @@
           <div class="edit-topic-title">
             <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} @tagName="" />
 
-            <TextField @id="edit-title" @value={{this.buffered.title}} @maxlength={{this.siteSettings.max_topic_title_length}} @autofocus="true" />
+            <div class="title-container">
+              <TextField 
+                @id="edit-title" 
+                @value={{this.buffered.title}} 
+                @placeholder="(Required) Type the topic title here."
+                @maxlength={{this.siteSettings.max_topic_title_length}} 
+                @autofocus="true" 
+              />
+              <TextField 
+                @id="edit-subtitle" 
+                @value={{this.buffered.subtitle}} 
+                @placeholder="(Optional) Type the topic subtitle here."
+                @maxlength={{this.siteSettings.max_topic_title_length}}
+              />
+            </div>
 
             {{#if this.showCategoryChooser}}
               <CategoryChooser @class="small" @value={{this.buffered.category_id}} @onChange={{action "topicCategoryChanged"}} />
