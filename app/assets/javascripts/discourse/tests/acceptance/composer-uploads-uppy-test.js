@@ -93,7 +93,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -282,7 +283,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -312,7 +314,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
@@ -345,7 +348,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
@@ -370,7 +374,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -396,7 +401,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
