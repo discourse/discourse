@@ -5,13 +5,13 @@ require "mini_mime"
 class UploadsController < ApplicationController
   include ExternalUploadHelpers
 
-  requires_login except: [:show, :show_short, :show_secure]
+  requires_login except: [:show, :show_short, :_show_secure_deprecated, :show_secure]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :_show_secure_deprecated, :show_secure]
   protect_from_forgery except: :show
 
-  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
-  before_action :external_store_check, only: [:show_secure]
+  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :_show_secure_deprecated, :show_secure]
+  before_action :external_store_check, only: [:_show_secure_deprecated, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
@@ -123,6 +123,13 @@ class UploadsController < ApplicationController
     else
       render_404
     end
+  end
+
+  # Kept to avoid rebaking old posts with /show-secure-uploads/ in their
+  # contents, this will ensure the uploads in these posts continue to
+  # work in future.
+  def _show_secure_deprecated
+    show_secure
   end
 
   def show_secure

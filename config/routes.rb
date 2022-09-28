@@ -587,7 +587,7 @@ Discourse::Application.routes.draw do
     # NOTE: secure-media-uploads is the old form, all new URLs generated for
     # secure uploads will be secure-uploads, this is left in for backwards
     # compat without needing to rebake all posts for each site.
-    get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
+    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated", constraints: { extension: /[a-z0-9\._]+/i }
     get "secure-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
 
     get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
