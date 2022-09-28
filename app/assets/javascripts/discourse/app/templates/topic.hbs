@@ -72,6 +72,11 @@
             {{/if}}
 
             <PluginOutlet @name="topic-title-suffix" @tagName="" @args={{hash model=this.model}} />
+            {{#if this.model.subtitle}}
+              <h6 style="color:#696969;">
+                {{this.model.subtitle}}
+              </h6>
+            {{/if}}
           </h1>
 
           <TopicCategory @topic={{this.model}} @class="topic-category" />

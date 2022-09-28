@@ -43,6 +43,7 @@ class TopicView
     :draft_key,
     :draft_sequence,
     :user_custom_fields,
+    :topic_custom_fields,
     :post_custom_fields,
     :post_number
   )
@@ -73,6 +74,15 @@ class TopicView
   def self.allowed_post_custom_fields(user, topic)
     wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user, topic) }
     wpcf.flatten.uniq
+  end
+
+  def self.default_topic_custom_fields
+    @default_topic_custom_fields ||= [Topic::SUBTITLE]
+  end
+
+  def self.allowed_topic_custom_fields
+    wtcf = default_topic_custom_fields
+    wtcf.flatten.uniq
   end
 
   def self.add_custom_filter(key, &blk)
@@ -135,13 +145,18 @@ class TopicView
     @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
+    # Get the custom fields
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
-      if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
+      if (allowed_post_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_post_fields)
+      end
+
+      if (allowed_topic_fields = TopicView.allowed_topic_custom_fields).present?
+        @topic_custom_fields = Topic.custom_fields_for_ids(@topic[:id].to_i, allowed_topic_fields)
       end
     end
 
