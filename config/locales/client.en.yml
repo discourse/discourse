@@ -4196,6 +4196,10 @@ en:
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
+            review:
+              content: "Review"
+              title: "review"
+              pending_count: "%{count} pending"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"

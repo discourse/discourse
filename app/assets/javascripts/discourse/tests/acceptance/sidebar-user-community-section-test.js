@@ -710,6 +710,86 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("review link is not shown when user cannot review", async function (assert) {
+    updateCurrentUser({ can_review: false });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-review"),
+      "review link is not shown"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-review"),
+      "review link is not shown"
+    );
+  });
+
+  test("review link when user can review", async function (assert) {
+    updateCurrentUser({
+      can_review: true,
+      reviewable_count: 0,
+    });
+
+    await visit("/reivew");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-review.active"),
+      "review link is shown as active when visiting the review route even if there are no pending reviewables"
+    );
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-community .sidebar-section-link-review"),
+      "review link is not shown as part of the main section links"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-more-section-links-details-content .sidebar-section-link-review"
+      ),
+      "review link is displayed in the more drawer"
+    );
+
+    await publishToMessageBus("/reviewable_counts", {
+      reviewable_count: 34,
+    });
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-review"),
+      "review link is shown as part of the main section links"
+    );
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section-community .sidebar-section-link-review .sidebar-section-link-content-badge"
+      ).textContent.trim(),
+      "34 pending",
+      "displays the pending reviewable count"
+    );
+
+    await click(
+      ".sidebar-section-community .sidebar-more-section-links-details-summary"
+    );
+
+    assert.notOk(
+      exists(
+        ".sidebar-section-community .sidebar-more-section-links-details-content .sidebar-section-link-review"
+      ),
+      "review link is not displayed in the more drawer"
+    );
+  });
+
   test("new and unread count for tracked link", async function (assert) {
     const categories = Site.current().categories;
 

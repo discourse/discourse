@@ -65,9 +65,10 @@ export default DiscourseRoute.extend({
       }
     });
 
-    const channel = this.currentUser.enable_redesigned_user_menu
+    const channel = this.currentUser.redesigned_user_menu_enabled
       ? `/reviewable_counts/${this.currentUser.id}`
       : "/reviewable_counts";
+
     this.messageBus.subscribe(channel, (data) => {
       if (data.updates) {
         this.controller.reviewables.forEach((reviewable) => {
@@ -82,10 +83,6 @@ export default DiscourseRoute.extend({
 
   deactivate() {
     this.messageBus.unsubscribe("/reviewable_claimed");
-    const channel = this.currentUser.enable_redesigned_user_menu
-      ? `/reviewable_counts/${this.currentUser.id}`
-      : "/reviewable_counts";
-    this.messageBus.unsubscribe(channel);
   },
 
   @action

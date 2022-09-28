@@ -627,7 +627,7 @@ export default Controller.extend({
             });
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
-              templateName: "custom-body",
+              templateName: "education",
               body,
             });
             return false;
@@ -776,7 +776,7 @@ export default Controller.extend({
           if (body) {
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
-              templateName: "custom-body",
+              templateName: "education",
               body,
             });
           }
@@ -788,7 +788,7 @@ export default Controller.extend({
       mentions.forEach((mention) => {
         this.appEvents.trigger("composer-messages:create", {
           extraClass: "custom-body",
-          templateName: "custom-body",
+          templateName: "education",
           body: I18n.t(`composer.cannot_see_mention.${mention.reason}`, {
             username: mention.name,
           }),
@@ -799,7 +799,7 @@ export default Controller.extend({
     hereMention(count) {
       this.appEvents.trigger("composer-messages:create", {
         extraClass: "custom-body",
-        templateName: "custom-body",
+        templateName: "education",
         body: I18n.t("composer.here_mention", {
           here: this.siteSettings.here_mention,
           count,

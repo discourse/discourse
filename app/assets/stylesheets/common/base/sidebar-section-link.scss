@@ -71,6 +71,12 @@
     }
   }
 
+  .sidebar-section-link-review {
+    .sidebar-section-link-content-badge {
+      color: var(--danger);
+    }
+  }
+
   .sidebar-section-link-prefix {
     flex-shrink: 0;
 
