@@ -12,11 +12,20 @@
     list-style: none;
     box-sizing: border-box;
 
-    .d-icon {
-      color: var(--primary-medium);
-      font-size: var(--font-down-1);
-      margin-right: 0.55em;
+    .sidebar-more-section-links-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--d-sidebar-section-link-prefix-width);
+      height: var(--d-sidebar-section-link-prefix-width);
+      margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+
+      .d-icon {
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+      }
     }
+
 
     &::before {
       display: none;

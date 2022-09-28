@@ -2,9 +2,11 @@
   {{#if @href}}
     <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
       <span class="sidebar-section-link-content-text">
-        {{#if (eq @prefixType "icon")}}
-          {{d-icon @prefixValue class="sidebar-section-link-prefix-icon"}}
-        {{/if}}
+        <span class="sidebar-section-link-prefix">
+          {{#if (eq @prefixType "icon")}}
+            {{d-icon @prefixValue class="sidebar-section-link-prefix-icon"}}
+          {{/if}}
+        </span>
 
         {{@content}}
       </span>
@@ -19,7 +21,7 @@
       @title={{@title}}
     >
       {{#if @prefixValue}}
-        <span class="sidebar-section-link-prefix {{@prefixType}} {{@prefixCSSClass}}" style={{this.prefixCSS}}>
+        <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{this.prefixCSS}}>
           {{#if (eq @prefixType "image")}}
             <img src={{@prefixValue}} class="sidebar-section-link-prefix-image">
           {{/if}}
@@ -51,7 +53,7 @@
       {{/if}}
 
       {{#if @suffixValue}}
-        <span class="sidebar-section-link-suffix {{@suffixType}} {{@suffixCSSClass}}">
+        <span class={{concat-class "sidebar-section-link-suffix" @suffixType @suffixCSSClass}}>
           {{#if (eq @suffixType "icon")}}
             {{d-icon @suffixValue}}
           {{/if}}

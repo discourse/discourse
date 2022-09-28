@@ -1,3 +1,7 @@
+:root {
+  --d-sidebar-section-header-text-font-size: var(--font-up-1)
+}
+
 .sidebar-section-wrapper {
   .discourse-no-touch & {
     &:hover {
@@ -12,9 +16,6 @@
 
   .sidebar-section-header-wrapper {
     display: flex;
-    box-sizing: border-box;
-    padding-top: 0;
-    padding-bottom: 0;
 
     .discourse-no-touch & {
       &:hover {
@@ -32,6 +33,7 @@
         transition: all 0.25s;
         opacity: 0;
       }
+
       background: transparent;
       border: none;
       margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
@@ -68,7 +70,7 @@
     color: var(--primary);
     align-items: center;
     min-width: 0;
-    padding: 0.33rem 0;
+    padding: 0;
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
@@ -78,14 +80,18 @@
   .sidebar-section-header-text {
     line-height: normal;
     margin-right: 0.25em;
-    font-size: var(--font-up-1);
+    font-size: var(--d-sidebar-section-header-text-font-size);
     @include ellipsis;
   }
 
   .sidebar-section-header-caret {
-    display: block;
-    margin-right: 0.5em;
+    display: flex;
     flex: 0 0 auto;
+    width: var(--d-sidebar-section-link-prefix-width);
+    height: var(--d-sidebar-section-link-prefix-width);
+    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+    align-items: center;
+    justify-content: center;
 
     svg {
       font-size: var(--font-down-1);
