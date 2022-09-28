@@ -3,7 +3,6 @@ import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
-import tag from "discourse/adapters/tag";
 
 export default class TagSectionLink {
   @tracked totalUnread = 0;
