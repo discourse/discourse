@@ -1,21 +1,21 @@
 {{#if @prefixValue}}
   <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{@prefixCSS}}>
     {{#if (eq @prefixType "image")}}
-      <img src={{@prefixValue}} class="sidebar-section-link-prefix-image">
+      <img src={{@prefixValue}} class="prefix-image">
     {{/if}}
 
     {{#if (eq @prefixType "text")}}
-      <span class="sidebar-section-link-prefix-text">
+      <span class="prefix-text">
         {{@prefixValue}}
       </span>
     {{/if}}
 
     {{#if (eq @prefixType "icon")}}
-      {{d-icon @prefixValue class="sidebar-section-link-prefix-icon"}}
+      {{d-icon @prefixValue class="prefix-icon"}}
     {{/if}}
 
     {{#if @prefixBadge}}
-      {{d-icon @prefixBadge class="sidebar-section-link-prefix-badge"}}
+      {{d-icon @prefixBadge class="prefix-badge"}}
     {{/if}}
   </span>
 {{/if}}

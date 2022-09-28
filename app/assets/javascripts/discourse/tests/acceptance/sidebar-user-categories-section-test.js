@@ -190,7 +190,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix-icon.d-icon-square-full`
+        `.sidebar-section-link-${category1.slug} .prefix-icon.d-icon-square-full`
       ),
       "category1 section link is rendered with right prefix icon"
     );
@@ -248,7 +248,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category3.slug} .sidebar-section-link-prefix .sidebar-section-link-prefix-badge.d-icon-lock`
+        `.sidebar-section-link-${category3.slug} .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
       ),
       "category3 section link is rendered with lock prefix badge icon as it is read restricted"
     );
