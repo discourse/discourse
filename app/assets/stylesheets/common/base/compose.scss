@@ -540,6 +540,7 @@ body:not(.ios-safari-composer-hacks) {
     }
     padding-bottom: var(--composer-ipad-padding);
     padding-bottom: calc(10px + env(keyboard-inset-height));
+    box-sizing: border-box;
   }
 }
 
