@@ -1059,6 +1059,11 @@ const User = RestModel.extend({
     this.appEvents.trigger("user-drafts:changed");
   },
 
+  updateReviewableCount(count) {
+    this.set("reviewable_count", count);
+    this.appEvents.trigger("user-reviewable-count:changed", count);
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
