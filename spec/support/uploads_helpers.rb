@@ -13,6 +13,12 @@ module UploadsHelpers
     stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/")
   end
 
+  # TODO (martin) Remove this alias once discourse-chat plugin has been
+  # updated to use secure_uploads instead.
+  def enable_secure_media
+    enable_secure_uploads
+  end
+
   def enable_secure_uploads
     setup_s3
     SiteSetting.secure_uploads = true
