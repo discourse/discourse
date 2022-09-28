@@ -12,8 +12,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
-import MessageBus from "message-bus-client";
-import sinon from "sinon";
 
 acceptance("Review", function (needs) {
   needs.user();
@@ -238,21 +236,7 @@ acceptance("Review", function (needs) {
     assert.strictEqual(count(".stale-help"), 1);
     assert.ok(query(".stale-help").innerText.includes("foo"));
 
-    const unsubbedChannels = [];
-    const stub = sinon.stub(MessageBus, "unsubscribe").callsFake((...args) => {
-      unsubbedChannels.push(args[0]);
-      return stub.wrappedMethod(...args);
-    });
     await visit("/");
-    assert.strictEqual(unsubbedChannels.length, 2);
-    assert.ok(
-      unsubbedChannels.includes("/reviewable_claimed"),
-      "/reviewable_claimed channel is unsubscribed from on route exit"
-    );
-    assert.ok(
-      unsubbedChannels.includes("/reviewable_counts"),
-      "/reviewable_counts channel is unsubscribed from on route exit"
-    );
     await visit("/review"); // reload review
 
     assert.strictEqual(count(".stale-help"), 0);
@@ -282,21 +266,7 @@ acceptance("Review", function (needs) {
     assert.strictEqual(count(".stale-help"), 1);
     assert.ok(query(".stale-help").innerText.includes("foo"));
 
-    const unsubbedChannels = [];
-    const stub = sinon.stub(MessageBus, "unsubscribe").callsFake((...args) => {
-      unsubbedChannels.push(args[0]);
-      return stub.wrappedMethod(...args);
-    });
     await visit("/");
-    assert.strictEqual(unsubbedChannels.length, 2);
-    assert.ok(
-      unsubbedChannels.includes("/reviewable_claimed"),
-      "/reviewable_claimed channel is unsubscribed from on route exit"
-    );
-    assert.ok(
-      unsubbedChannels.includes(`/reviewable_counts/${loggedInUser().id}`),
-      "/reviewable_counts/:user_id channel is unsubscribed from on route exit"
-    );
     await visit("/review"); // reload review
 
     assert.strictEqual(count(".stale-help"), 0);

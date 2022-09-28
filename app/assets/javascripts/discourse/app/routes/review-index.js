@@ -51,7 +51,7 @@ export default DiscourseRoute.extend({
   },
 
   activate() {
-    this.messageBus.subscribe("/reviewable_claimed", (data) => {
+    this._updateClaimedBy = (data) => {
       const reviewables = this.controller.reviewables;
       if (reviewables) {
         const user = data.user
@@ -63,9 +63,9 @@ export default DiscourseRoute.extend({
           }
         });
       }
-    });
+    };
 
-    this.messageBus.subscribe(this._reviewableCountsChannel(), (data) => {
+    this._updateReviewables = (data) => {
       if (data.updates) {
         this.controller.reviewables.forEach((reviewable) => {
           const updates = data.updates[reviewable.id];
@@ -74,12 +74,21 @@ export default DiscourseRoute.extend({
           }
         });
       }
-    });
+    };
+
+    this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.subscribe(
+      this._reviewableCountsChannel(),
+      this._updateReviewables
+    );
   },
 
   deactivate() {
-    this.messageBus.unsubscribe("/reviewable_claimed");
-    this.messageBus.unsubscribe(this._reviewableCountsChannel());
+    this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.unsubscribe(
+      this._reviewableCountsChannel(),
+      this._updateReviewables
+    );
   },
 
   @action
