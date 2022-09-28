@@ -119,6 +119,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("clicking on user menu items", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     await visit("/");
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-review-queue");
@@ -169,6 +170,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("tabs have title attributes", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -208,7 +210,10 @@ acceptance("User menu", function (needs) {
       "user-menu-button-messages": I18n.t("user_menu.tabs.messages"),
       "user-menu-button-bookmarks": I18n.t("user_menu.tabs.bookmarks"),
       "user-menu-button-tiny-tab-1": "Custom title: 73",
-      "user-menu-button-review-queue": I18n.t("user_menu.tabs.review_queue"),
+      "user-menu-button-review-queue": I18n.t(
+        "user_menu.tabs.review_queue_with_unread",
+        { count: 1 }
+      ),
       "user-menu-button-other-notifications": I18n.t(
         "user_menu.tabs.other_notifications"
       ),
@@ -235,6 +240,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("tabs added via the plugin API", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -674,6 +680,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
