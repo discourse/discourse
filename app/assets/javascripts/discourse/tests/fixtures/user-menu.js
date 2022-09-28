@@ -138,25 +138,6 @@ export default {
         ],
       }
     ],
-    read_notifications: [
-      {
-        id: 9492,
-        user_id: 1,
-        notification_type: 16,
-        read: true,
-        high_priority: false,
-        created_at: "2022-08-05T17:27:24.873Z",
-        post_number: null,
-        topic_id: null,
-        fancy_title: null,
-        slug: null,
-        data: {
-          group_id: 1,
-          group_name: "jokers",
-          inbox_count: 4,
-          username: "joker.leader"
-        },
-      }
-    ],
+    read_notifications: [],
   }
 }

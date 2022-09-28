@@ -95,6 +95,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
   const template = hbs`<UserMenu::MessagesList/>`;
 
   test("renders unread PM notifications first followed by messages and read group_message_summary notifications", async function (assert) {
+    pretender.get("/u/eviltrout/user-menu-private-messages", () => {
+      const copy = cloneJSON(
+        UserMenuFixtures["/u/:username/user-menu-private-messages"]
+      );
+      copy.read_notifications = [getGroupMessageSummaryNotification()];
+      return response(copy);
+    });
     await render(template);
     const items = queryAll("ul li");
 
@@ -138,6 +145,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
         UserMenuFixtures["/u/:username/user-menu-private-messages"]
       );
       copy.topics = [];
+      copy.read_notifications = [getGroupMessageSummaryNotification()];
       return response(copy);
     });
 
