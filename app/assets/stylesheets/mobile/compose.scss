@@ -33,6 +33,14 @@
     }
   }
 
+  // Firefox for Android hack
+  @supports not (env(keyboard-inset-height)) {
+    .keyboard-visible body:not(.ios-safari-composer-hacks) #reply-control.open {
+      position: sticky;
+      height: calc(100vh - var(--header-offset, 4em));
+    }
+  }
+
   .reply-to {
     justify-content: space-between;
     margin-bottom: 6px;
