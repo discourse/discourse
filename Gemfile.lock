@@ -241,10 +241,8 @@ GEM
     mustache (1.1.1)
     net-http (0.2.2)
       uri
-    net-imap (0.2.3)
-      digest
+    net-imap (0.3.0)
       net-protocol
-      strscan
     net-pop (0.1.1)
       digest
       net-protocol
@@ -474,7 +472,6 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.21)
-    strscan (3.0.4)
     test-prof (1.0.10)
     thor (1.2.1)
     tilt (2.0.11)
