@@ -37,7 +37,10 @@ module("Integration | Component | bookmark-alert", function (hooks) {
       />
     `);
 
-    assert.ok(exists(".existing-reminder-at-alert"), "alert found for future reminder");
+    assert.ok(
+      exists(".existing-reminder-at-alert"),
+      "alert found for future reminder"
+    );
   });
 
   test("alert does not exist for reminder in the past", async function (assert) {
@@ -59,6 +62,9 @@ module("Integration | Component | bookmark-alert", function (hooks) {
       />
     `);
 
-    assert.ok(!exists(".existing-reminder-at-alert"), "alert not found for past reminder");
+    assert.ok(
+      !exists(".existing-reminder-at-alert"),
+      "alert not found for past reminder"
+    );
   });
 });
