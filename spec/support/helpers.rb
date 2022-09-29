@@ -47,7 +47,9 @@ module Helpers
   def create_post(args = {})
     # Pretty much all the tests with `create_post` will fail without this
     # since allow_uncategorized_topics is now false by default
-    SiteSetting.allow_uncategorized_topics = true
+    unless args[:allow_uncategorized_topics] == false
+      SiteSetting.allow_uncategorized_topics = true
+    end
 
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
