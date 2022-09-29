@@ -30,4 +30,8 @@ export default class ReviewSectionLink extends BaseSectionLink {
       });
     }
   }
+
+  get prefixValue() {
+    return "flag";
+  }
 }
