@@ -35,7 +35,7 @@
 
   // Firefox for Android hack
   @supports (-moz-appearance: none) {
-    .keyboard-visible body:not(.ios-safari-composer-hacks) #reply-control.open {
+    .keyboard-visible #reply-control.open {
       position: sticky;
       height: calc(100vh - var(--header-offset, 4em));
     }
