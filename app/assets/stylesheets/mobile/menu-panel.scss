@@ -72,6 +72,9 @@
 .hamburger-panel .revamped {
   --d-sidebar-row-horizontal-padding: 1rem;
   --d-sidebar-highlight-color: var(--primary-low);
+  --d-sidebar-row-font-size: var(--font-0);
+  --d-sidebar-row-height: 32px;
+  --d-sidebar-section-header-text-font-size: var(--font-0);
   box-sizing: border-box;
   padding: 0;
 
@@ -79,18 +82,23 @@
     .sidebar-hamburger-dropdown {
       display: flex;
       flex-direction: column;
+      padding-top: 0.5em;
     }
   }
 
   .sidebar-row {
-    padding: 1.2rem var(--d-sidebar-row-horizontal-padding);
-    height: 27px;
-    align-items: center;
-    font-size: var(--font-0);
+    &.sidebar-section-message-wrapper {
+      padding-top: 0;
+      padding-bottom: 0.25em;
+    }
+
+    .sidebar-section-message {
+      padding: 0;
+    }
   }
 
   .sidebar-section-wrapper {
-    margin-bottom: 0.5em;
+    margin-bottom: 1.2em;
   }
 
   .sidebar-footer-wrapper {
@@ -111,5 +119,9 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+  }
+
+  .sidebar-section-content {
+    padding-bottom: 0;
   }
 }

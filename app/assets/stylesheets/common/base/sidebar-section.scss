@@ -1,29 +1,51 @@
+:root {
+  --d-sidebar-section-header-text-font-size: var(--font-up-1);
+}
+
 .sidebar-section-wrapper {
+  .discourse-no-touch & {
+    &:hover {
+      .sidebar-section-header-wrapper {
+        .btn.dropdown-select-box-header,
+        .sidebar-section-header-button {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
   .sidebar-section-header-wrapper {
     display: flex;
-    box-sizing: border-box;
-    padding: 0;
+
     .discourse-no-touch & {
       &:hover {
         background: var(--d-sidebar-highlight-color);
       }
     }
+
     &:focus-within {
       background: var(--d-sidebar-highlight-color);
     }
 
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
+      .discourse-no-touch & {
+        transition: all 0.25s;
+        opacity: 0;
+      }
+
       background: transparent;
       border: none;
+      margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
       padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
         calc(var(--d-sidebar-row-horizontal-padding) / 3);
-      margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 1.5);
+
       .d-icon {
         font-size: var(--font-down-1);
         color: var(--primary-medium);
         margin: 0;
       }
+
       &:focus {
         outline: none;
         background: var(--primary-medium);
@@ -31,6 +53,7 @@
           color: var(--primary-very-low);
         }
       }
+
       .discourse-no-touch & {
         &:hover {
           background: var(--primary-medium);
@@ -44,16 +67,10 @@
 
   .sidebar-section-header {
     flex: 1 1 auto;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: var(--font-1);
     color: var(--primary);
     align-items: center;
-    padding: calc(var(--d-sidebar-row-horizontal-padding) / 2)
-      calc(var(--d-sidebar-row-horizontal-padding) / 2)
-      calc(var(--d-sidebar-row-horizontal-padding) / 2)
-      var(--d-sidebar-row-horizontal-padding);
     min-width: 0;
+    padding: 0;
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
@@ -61,18 +78,25 @@
   }
 
   .sidebar-section-header-text {
-    font-weight: bold;
     line-height: normal;
     margin-right: 0.25em;
+    font-size: var(--d-sidebar-section-header-text-font-size);
     @include ellipsis;
   }
 
   .sidebar-section-header-caret {
-    display: block;
-    width: 1.5em;
-    margin-left: -1.5em;
-    font-size: var(--font-down-2);
+    display: flex;
     flex: 0 0 auto;
+    width: var(--d-sidebar-section-link-prefix-width);
+    height: var(--d-sidebar-section-link-prefix-width);
+    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
   }
 
   .select-kit-collection {
@@ -93,9 +117,12 @@
 
   .sidebar-section-message {
     color: var(--primary);
+    padding-left: 1.4em;
   }
 
   .sidebar-section-content {
+    padding-bottom: 1em;
+
     hr {
       margin: 0em 1.5em;
     }

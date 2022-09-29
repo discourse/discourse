@@ -72,4 +72,8 @@ export default class TrackedSectionLink extends BaseSectionLink {
       return "discovery.latest";
     }
   }
+
+  get prefixValue() {
+    return "bell";
+  }
 }

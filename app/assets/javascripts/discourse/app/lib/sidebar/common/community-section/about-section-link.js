@@ -18,4 +18,7 @@ export default class AboutSectionLink extends BaseSectionLink {
   get text() {
     return I18n.t("sidebar.sections.community.links.about.content");
   }
+  get prefixValue() {
+    return "info-circle";
+  }
 }

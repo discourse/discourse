@@ -62,4 +62,8 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   get _hasDraft() {
     return this.draftCount > 0;
   }
+
+  get prefixValue() {
+    return "user";
+  }
 }

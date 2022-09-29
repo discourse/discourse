@@ -71,4 +71,8 @@ export default class EverythingSectionLink extends BaseSectionLink {
       return "discovery.latest";
     }
   }
+
+  get prefixValue() {
+    return "layer-group";
+  }
 }

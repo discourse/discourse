@@ -93,6 +93,20 @@ export default class BaseCommunitySectionLink {
    */
   get badgeText() {}
 
+  /**
+   * @private
+   */
+  get prefixType() {
+    return "icon";
+  }
+
+  /**
+   * @returns {string} The name of the fontawesome icon to be displayed before the link. Defaults to "link".
+   */
+  get prefixValue() {
+    return "link";
+  }
+
   _notImplemented() {
     throw "not implemented";
   }

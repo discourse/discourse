@@ -25,4 +25,8 @@ export default class UsersSectionLink extends BaseSectionLink {
       (this.currentUser || !this.siteSettings.hide_user_profiles_from_public)
     );
   }
+
+  get prefixValue() {
+    return "users";
+  }
 }

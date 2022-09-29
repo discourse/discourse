@@ -2,14 +2,26 @@
   --d-sidebar-width: #{$d-sidebar-width};
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
+  --d-sidebar-row-height: 30px;
+  // 1.25rem gets text left-aligned with the hamburger icon
+  --d-sidebar-row-horizontal-padding: 1.25rem;
+  --d-sidebar-row-vertical-padding: 0.33rem;
+  --d-sidebar-row-font-size: var(--font-down-1);
+}
+
+.sidebar-row {
+  box-sizing: border-box;
+  height: var(--d-sidebar-row-height);
+  padding: var(--d-sidebar-row-vertical-padding)
+    var(--d-sidebar-row-horizontal-padding);
+  align-items: center;
+  font-size: var(--d-sidebar-row-font-size);
 }
 
 .sidebar-wrapper {
   display: flex;
   --d-sidebar-highlight-color: var(--primary-low);
-  // 1.25rem gets text left-aligned with the hamburger icon
-  --d-sidebar-row-horizontal-padding: 1.25rem;
-  background-color: var(--primary-very-low);
+  background-color: var(--primary-50);
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
@@ -20,12 +32,6 @@
   height: calc(100vh - var(--header-offset, 0));
   align-self: start;
   overflow-y: auto;
-
-  .sidebar-row {
-    padding: 0.33rem var(--d-sidebar-row-horizontal-padding);
-    align-items: center;
-    font-size: var(--font-down-1);
-  }
 
   .sidebar-container {
     display: flex;
@@ -44,7 +50,7 @@
     flex-direction: column;
     box-sizing: border-box;
     flex: 1;
-    padding: 1em 0;
+    padding: 1.5em 0 1em;
     overflow-x: hidden;
     overflow-y: overlay;
 
@@ -83,17 +89,6 @@
 }
 
 .sidebar-hamburger-dropdown {
-  // note that these apply to mobile and desktop dropdowns
-  .sidebar-section-wrapper {
-    .sidebar-section-header-wrapper.sidebar-row {
-      padding-right: 0;
-    }
-
-    .sidebar-section-header {
-      padding: 0;
-    }
-  }
-
   .discourse-no-touch & {
     .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
     .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {

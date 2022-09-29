@@ -1,10 +1,14 @@
+:root {
+  --d-sidebar-section-link-prefix-margin-right: 0.4rem;
+  --d-sidebar-section-link-prefix-width: 20px;
+}
+
 .sidebar-section-link-wrapper {
   display: flex;
   align-items: center;
   position: relative;
 
   .sidebar-section-link {
-    box-sizing: border-box;
     display: inline-flex;
     width: 100%;
     align-items: center;
@@ -19,8 +23,13 @@
 
     &.active {
       color: var(--primary);
-      font-weight: bold;
       background: var(--d-sidebar-highlight-color);
+
+      .sidebar-section-link-prefix {
+        &.icon {
+          color: var(--primary-high);
+        }
+      }
     }
 
     .sidebar-section-link-content-badge {
@@ -67,7 +76,10 @@
   .sidebar-section-link-group-messages-unread,
   .sidebar-section-link-group-messages-archive {
     .sidebar-section-link-content-text {
-      margin-left: 0.5em;
+      margin-left: calc(
+        var(--d-sidebar-section-link-prefix-margin-right) +
+          var(--d-sidebar-section-link-prefix-width)
+      );
     }
   }
 
@@ -78,45 +90,46 @@
   }
 
   .sidebar-section-link-prefix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    width: var(--d-sidebar-section-link-prefix-width);
+    height: var(--d-sidebar-section-link-prefix-width);
+    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
 
     &.image {
-      position: absolute;
       img {
-        border-radius: 50%;
-        width: 20px;
+        border-radius: 100%;
         aspect-ratio: auto 20 / 20;
-        height: 20px;
-        margin-right: 0.5em;
-      }
-
-      + .sidebar-section-link-content-text {
-        margin-left: calc(20px + 0.5em);
+        width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
       }
     }
 
     &.text {
-      border-radius: 100%;
-      background: rgba(var(--primary-rgb), 0.1);
       text-align: center;
-      font-size: var(--font-down-1);
-      padding: 0.27em 0.47em;
-      margin-right: 0.25em;
-      position: absolute;
-      + .sidebar-section-link-content-text {
-        margin-left: calc(20px + 0.5em);
+
+      .prefix-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        background: rgba(var(--primary-rgb), 0.1);
+        width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
       }
     }
 
     &.icon {
       position: relative;
-      margin-right: 0.5em;
+      color: var(--primary-medium);
 
       svg {
         font-size: var(--font-down-1);
       }
 
-      svg.prefix-badge {
+      .prefix-badge {
         position: absolute;
         background-color: transparent;
         border-radius: 50%;
@@ -126,7 +139,7 @@
         width: 0.5rem;
         top: -0.2em;
         right: 0;
-        margin-right: -0.6em;
+        margin-right: -0.2em;
       }
     }
   }
