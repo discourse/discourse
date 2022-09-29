@@ -25,7 +25,7 @@ class SetSecureUploadsSettingsBasedOnSecureMediaEquivalent < ActiveRecord::Migra
     if secure_media_max_email_embed_image_size_kb.present?
       execute <<~SQL
       INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
-      VALUES ('secure_uploads_max_email_embed_image_size_kb', 3, '#{secure_uploads_max_email_embed_image_size_kb[0]}', now(), now())
+      VALUES ('secure_uploads_max_email_embed_image_size_kb', 3, '#{secure_media_max_email_embed_image_size_kb[0]}', now(), now())
       SQL
     end
   end
