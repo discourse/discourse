@@ -43,6 +43,21 @@ RSpec.describe EmailUpdater do
         end
       end
 
+      it "sends an email to confirm old email first if require_change_email_confirmation is enabled" do
+        SiteSetting.require_change_email_confirmation = true
+
+        expect_enqueued_with(job: :critical_user_email, args: { type: :confirm_old_email, to_address: old_email }) do
+          updater.change_to(new_email)
+        end
+
+        expect(updater.change_req).to be_present
+        expect(updater.change_req.old_email).to eq(old_email)
+        expect(updater.change_req.new_email).to eq(new_email)
+        expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_old])
+        expect(updater.change_req.old_email_token.email).to eq(old_email)
+        expect(updater.change_req.new_email_token).to be_blank
+      end
+
       it "logs the admin user as the requester" do
         updater.change_to(new_email)
         expect(updater.change_req.requested_by).to eq(admin)
