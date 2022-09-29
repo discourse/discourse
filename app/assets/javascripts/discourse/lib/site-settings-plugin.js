@@ -32,7 +32,13 @@ class SiteSettingsPlugin extends Plugin {
         inputFile = "site_settings.yml";
       }
       let file = path + "/" + inputFile;
-      let yaml = fs.readFileSync(file, { encoding: "UTF-8" });
+      let yaml;
+      try {
+        yaml = fs.readFileSync(file, { encoding: "UTF-8" });
+      } catch (err) {
+        // the plugin does not have a config file, go to the next file
+        return;
+      }
       let loaded = Yaml.load(yaml, { json: true });
       parsed = deepmerge(parsed, loaded);
     });
