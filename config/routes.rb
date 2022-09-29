@@ -206,13 +206,17 @@ Discourse::Application.routes.draw do
       get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
       put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
 
-      resources :themes, constraints: AdminConstraint.new
-
-      post "themes/import" => "themes#import"
-      post "themes/upload_asset" => "themes#upload_asset"
-      post "themes/generate_key_pair" => "themes#generate_key_pair"
-      get "themes/:id/preview" => "themes#preview"
-      put "themes/:id/setting" => "themes#update_single_setting"
+      resources :themes, constraints: AdminConstraint.new do
+        member do
+          get "preview" => "themes#preview"
+          put "setting" => "themes#update_single_setting"
+        end
+        collection do
+          post "import" => "themes#import"
+          post "upload_asset" => "themes#upload_asset"
+          post "generate_key_pair" => "themes#generate_key_pair"
+        end
+      end
 
       scope "/customize", constraints: AdminConstraint.new do
         resources :user_fields, constraints: AdminConstraint.new

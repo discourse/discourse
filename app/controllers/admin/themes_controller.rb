@@ -5,6 +5,7 @@ require 'base64'
 class Admin::ThemesController < Admin::AdminController
 
   skip_before_action :check_xhr, only: [:show, :preview, :export]
+  before_action :ensure_admin
 
   def preview
     theme = Theme.find_by(id: params[:id])
