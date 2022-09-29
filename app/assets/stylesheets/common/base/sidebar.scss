@@ -21,7 +21,7 @@
 .sidebar-wrapper {
   display: flex;
   --d-sidebar-highlight-color: var(--primary-low);
-  background-color: var(--primary-50);
+  background-color: var(--primary-very-low);
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
