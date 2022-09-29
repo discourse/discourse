@@ -1607,7 +1607,6 @@ gl:
     min_trust_to_edit_wiki_post: "O nivel de confianza mínimo requirido para editar unha publicación marcada como wiki."
     min_trust_to_edit_post: "O nivel de confianza mínimo requirido para editar publicacións."
     min_trust_to_allow_self_wiki: "O nivel de confianza mínimo requirido para facer que un usuario converta as súas publicacións a wiki."
-    min_trust_to_send_messages: "O nivel de confianza mínimo requirido para crear novas mensaxes persoais."
     min_trust_to_flag_posts: "O nivel de confianza mínimo requirido para denunciar publicacións"
     min_trust_to_post_links: "O nivel de confianza mínimo requirido para incluír ligazóns nas publicacións"
     min_trust_to_post_embedded_media: "O nivel de confianza mínimo requirido para incorporar elementos multimedia a unha publicación"

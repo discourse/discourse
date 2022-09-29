@@ -8,7 +8,7 @@
 }
 
 .dialog-container {
-  z-index: z("modal", "overlay");
+  z-index: z("modal", "dialog");
   display: flex;
 }
 

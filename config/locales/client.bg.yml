@@ -2055,6 +2055,13 @@ bg:
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
     current_user: "Отиди към потребителската страница "
+    user_menu:
+      tabs:
+        replies: "Отговори"
+        mentions: "Споменавания"
+        likes: "Дадени харесвания"
+        bookmarks: "Отметки"
+        profile: "Профил"
     topics:
       new_messages_marker: "последно посещение"
       bulk:
@@ -2993,6 +3000,8 @@ bg:
       more: "Още..."
       all_categories: "Всички категории"
       sections:
+        about:
+          header_link_text: "Относно"
         messages:
           header_link_text: "Съобщения"
           links:

@@ -22,7 +22,7 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
-    @with_secure_media = @post.with_secure_media?
+    @with_secure_uploads = @post.with_secure_uploads?
     @category_id = @post&.topic&.category_id
 
     cooked = post.cook(post.raw, @cooking_options)
@@ -225,14 +225,14 @@ class CookedPostProcessor
         resized_h = (h * ratio).to_i
 
         if !cropped && upload.width && resized_w > upload.width
-          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
+          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_uploads?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         elsif t = upload.thumbnail(resized_w, resized_h)
-          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_media?)
+          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_uploads?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         end
 
-        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)}#{srcset}" if srcset.present?
+        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)}#{srcset}" if srcset.present?
       end
     else
       img["src"] = upload.url
@@ -250,7 +250,7 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)
+    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
@@ -323,7 +323,7 @@ class CookedPostProcessor
       @doc.css("img[#{selector}]").each do |img|
         custom_emoji = img["class"]&.include?("emoji-custom") && Emoji.custom?(img["title"])
         img[selector] = UrlHelper.cook_url(
-          img[selector].to_s, secure: @post.with_secure_media? && !custom_emoji
+          img[selector].to_s, secure: @post.with_secure_uploads? && !custom_emoji
         )
       end
     end
@@ -384,7 +384,7 @@ class CookedPostProcessor
 
       still_an_image = false
     elsif info&.downloaded? && upload = info&.upload
-      img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_media)
+      img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_uploads)
       img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
     end
 

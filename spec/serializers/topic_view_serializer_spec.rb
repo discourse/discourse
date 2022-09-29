@@ -487,10 +487,10 @@ RSpec.describe TopicViewSerializer do
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
 
-        context "when secure media is enabled" do
+        context "when secure uploads is enabled" do
           before do
             setup_s3
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
           end
 
           it "doesn't return the published page" do

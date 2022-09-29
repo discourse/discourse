@@ -283,6 +283,13 @@ acceptance("Group - Authenticated", function (needs) {
     );
 
     await click(".dialog-footer .btn-default");
+
+    await visit("/g/discourse/activity/posts");
+
+    assert.ok(
+      ".user-stream-item a.avatar-link[href='/u/awesomerobot']",
+      "avatar link contains href (is tabbable)"
+    );
   });
 
   test("Moderator Viewing Group", async function (assert) {

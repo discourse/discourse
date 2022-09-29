@@ -1298,7 +1298,6 @@ zh_TW:
     min_trust_to_edit_wiki_post: "編輯被標示為維基的貼文所需之最低信任等級。"
     min_trust_to_edit_post: "能編輯貼文的最小信任等級。"
     min_trust_to_allow_self_wiki: "使用者將自己的貼文設置為維基模式的最低信任等級。"
-    min_trust_to_send_messages: "建立新個人訊息所需的最低信任等級"
     min_trust_to_flag_posts: "投訴話題所需的最低信任等級"
     min_trust_to_post_links: "在貼文中加入連結的最低信任等級需求"
     allowed_link_domains: "使用者可能會連結到的網域（Domains），即使他們沒有適當的信任等級來發布貼文連結"

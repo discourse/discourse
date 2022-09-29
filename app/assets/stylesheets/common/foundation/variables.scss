@@ -79,6 +79,7 @@ $line-height-large: var(--line-height-large) !default;
 $z-layers: (
   "max": 9999,
   "modal": (
+    "dialog": 1700,
     "tooltip": 1600,
     "popover": 1500,
     "dropdown": 1400,

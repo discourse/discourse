@@ -1686,6 +1686,8 @@ de:
       enabled: "Diese Website befindet sich im Nur-Lesen-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nicht möglich."
       login_disabled: "Die Anmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
+    staff_writes_only_mode:
+      enabled: "Diese Website befindet sich im Nur-Mitarbeiter-Modus. Du kannst weiterhin Inhalte lesen, aber das Erstellen von Beiträgen, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Mitarbeiter möglich."
     too_few_topics_and_posts_notice_MF: >-
       Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentTopics, plural, one {ist <strong>#</strong> Thema} other {sind <strong>#</strong> Themen}} und {currentPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredTopics, plural, one {<strong>#</strong> Thema} other {<strong>#</strong> Themen}} und {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
     too_few_topics_notice_MF: >-
@@ -1971,6 +1973,8 @@ de:
       similar_topics: "Dein Thema hat Ähnlichkeit mit …"
       drafts_offline: "Entwürfe offline"
       edit_conflict: "Konflikt bearbeiten"
+      esc: "esc"
+      esc_label: "Klicken oder Esc drücken, um zu schließen"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
@@ -2353,16 +2357,53 @@ de:
     view_all: "Alle %{tab} anzeigen"
     user_menu:
       generic_no_items: "Es gibt keine Einträge in dieser Liste."
-      sr_menu_tabs: "Menü-Registerkarten"
+      sr_menu_tabs: "Registerkarten des Benutzermenüs"
       view_all_notifications: "Alle Benachrichtigungen anzeigen"
       view_all_bookmarks: "Alle Lesezeichen anzeigen"
       view_all_messages: "Alle persönlichen Nachrichten anzeigen"
+      tabs:
+        all_notifications: "Alle Benachrichtigungen"
+        replies: "Antworten"
+        replies_with_unread:
+          one: "Antworten - %{count} ungelesene Antwort"
+          other: "Antworten - %{count} ungelesene Antworten"
+        mentions: "Erwähnungen"
+        mentions_with_unread:
+          one: "Erwähnungen - %{count} ungelesene Erwähnung"
+          other: "Erwähnungen - %{count} ungelesene Erwähnungen"
+        likes: "Erhaltene „Gefällt mir“"
+        likes_with_unread:
+          one: "Likes - %{count} ungelesene Likes"
+          other: "Likes - %{count} ungelesene Likes"
+        watching: "Beobachtete Themen"
+        watching_with_unread:
+          one: "Beobachtete Themen - %{count} ungelesenes beobachtetes Thema"
+          other: "Beobachtete Themen — %{count} ungelesene beobachtete Themen"
+        messages: "Persönliche Nachrichten"
+        messages_with_unread:
+          one: "Persönliche Nachrichten - %{count} ungelesene Nachricht"
+          other: "Persönliche Nachrichten - %{count} ungelesene Nachrichten"
+        bookmarks: "Lesezeichen"
+        bookmarks_with_unread:
+          one: "Bookmarks - %{count} ungelesenes Lesezeichen"
+          other: "Lesezeichen - %{count} ungelesene Lesezeichen"
+        review_queue: "Warteschlange überprüfen"
+        review_queue_with_unread:
+          one: "Überprüfungswarteschlange — %{count} Artikel benötigt Überprüfung"
+          other: "Warteschlange für Überprüfungen — %{count} Artikel müssen überprüft werden"
+        other_notifications: "Andere Benachrichtigungen"
+        other_notifications_with_unread:
+          one: "Andere Benachrichtigungen - %{count} ungelesene Benachrichtigung"
+          other: "Andere Benachrichtigungen - %{count} Ungelesene Benachrichtigungen"
+        profile: "Profil"
       reviewable:
         view_all: "alle Bewertungselemente ansehen"
         queue: "Warteschlange"
         deleted_user: "(gelöschter Benutzer)"
+        deleted_post: "(gelöschter Beitrag)"
         post_number_with_topic_title: "Beitrag #%{post_number} - %{title}"
         new_post_in_topic: "neuer Beitrag in %{title}"
+        user_requires_approval: "%{username} erfordert eine Genehmigung"
         default_item: "Überprüfbarer Artikel #%{reviewable_id}"
     topics:
       new_messages_marker: "letzter Besuch"
@@ -3008,6 +3049,10 @@ de:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
           other: "Möchtest du wirklich diese %{count} Beiträge löschen?"
+      merge:
+        confirm:
+          one: "Möchtest du diese Beiträge wirklich zusammenführen?"
+          other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -3425,6 +3470,7 @@ de:
         today: "Heute"
         other_periods: "angesagte Themen ansehen:"
     browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a> , um die Inhalte zu sehen, dich anzumelden und zu antworten.'
+    safari_13_warning: Diese Seite wird bald die Unterstützung für iOS und Safari Version 13 und darunter entfernen. Eine vereinfachte Nur-Lese-Version wird weiterhin verfügbar sein. (<a href="https://meta.discourse.org/t/224747">mehr Informationen</a>)
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
       create_post: "Antworten/Ansehen"
@@ -3769,6 +3815,8 @@ de:
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
       sections:
+        about:
+          header_link_text: "Über uns"
         messages:
           header_link_text: "Nachrichten"
           header_action_title: "eine persönliche Nachricht erstellen"
@@ -4929,6 +4977,7 @@ de:
         suspended: "Gesperrt?"
         staged: "Vorbereitet?"
         show_admin_profile: "Administration"
+        manage_user: "Benutzer verwalten"
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: "Nutzersicht"
         action_logs: "Aktionsprotokolle"

@@ -1913,6 +1913,13 @@ lv:
     not_logged_in_user: "lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi"
     current_user: "doties uz jūsu lietotāja lapu"
     view_all: "apskatīt visus %{tab}"
+    user_menu:
+      tabs:
+        replies: "Atbildes"
+        mentions: "Pieminēšanas"
+        likes: "Patīk"
+        bookmarks: "Grāmatzīmes"
+        profile: "Profils"
     topics:
       new_messages_marker: "pēdējais apmeklējums"
       bulk:
@@ -2811,6 +2818,8 @@ lv:
       more: "Vairāk..."
       all_categories: "Visas sadaļas"
       sections:
+        about:
+          header_link_text: "Par"
         messages:
           header_link_text: "Ziņas"
           links:

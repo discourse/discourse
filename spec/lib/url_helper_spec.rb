@@ -197,7 +197,7 @@ RSpec.describe UrlHelper do
 
       FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
 
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
     end
 
     def cooked
@@ -209,12 +209,12 @@ RSpec.describe UrlHelper do
 
       it "returns the secure_proxy_without_cdn url, with no asset host URL change" do
         expect(cooked).to eq(
-          "//test.localhost/secure-media-uploads/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+          "//test.localhost/secure-uploads/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
         )
       end
 
-      context "when secure_media setting is disabled" do
-        before { SiteSetting.secure_media = false }
+      context "when secure_uploads setting is disabled" do
+        before { SiteSetting.secure_uploads = false }
 
         it "returns the local_cdn_url" do
           expect(cooked).to eq(

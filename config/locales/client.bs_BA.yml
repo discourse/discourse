@@ -1944,6 +1944,13 @@ bs_BA:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Spomenuto"
+        likes: "Lajkovi"
+        bookmarks: "Zabilješke"
+        profile: "Profil"
     topics:
       new_messages_marker: "zadnja posjeta"
       bulk:
@@ -3075,6 +3082,8 @@ bs_BA:
       more: "Više..."
       all_categories: "Sve kategorije"
       sections:
+        about:
+          header_link_text: "O nama"
         messages:
           header_link_text: "Poruke"
           links:

@@ -6,8 +6,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import bootbox from "bootbox";
-import { authorizedExtensions } from "discourse/lib/uploads";
+import { authorizedExtensions, dialog } from "discourse/lib/uploads";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
@@ -125,15 +124,16 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image2 = createFile("avatar2.png");
     const done = assert.async();
     appEvents.on("composer:uploads-aborted", async () => {
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         I18n.t("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
         }),
         "it should warn about too many files added"
       );
 
-      await click(".modal-footer .btn-primary");
+      await click(".dialog-footer .btn-primary");
 
       done();
     });
@@ -149,8 +149,9 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
@@ -160,7 +161,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         "it should warn about unauthorized extensions"
       );
 
-      await click(".modal-footer .btn-primary");
+      await click(".dialog-footer .btn-primary");
 
       done();
     });
@@ -438,14 +439,14 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
     appEvents.on("composer:upload-error", async () => {
       sinon.assert.calledOnce(stub);
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         "There was an error uploading the file, the gif was way too cool.",
         "it should show the error message from the server"
       );
 
-      await click(".modal-footer .btn-primary");
-
+      await click(".dialog-footer .btn-primary");
       done();
     });
 
@@ -465,7 +466,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
       api.addComposerUploadHandler(["png"], (files) => {
         const file = files[0];
         const isNativeFile = file instanceof File ? "WAS" : "WAS NOT";
-        bootbox.alert(
+        dialog.alert(
           `This is an upload handler test for ${file.name}. The file ${isNativeFile} a native file object.`
         );
       });
@@ -480,12 +481,13 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         "This is an upload handler test for handler-test.png. The file WAS a native file object.",
-        "it should show the bootbox triggered by the upload handler"
+        "it should show the dialog triggered by the upload handler"
       );
-      await click(".modal-footer .btn");
+      await click(".dialog-footer .btn-primary");
       done();
     });
 

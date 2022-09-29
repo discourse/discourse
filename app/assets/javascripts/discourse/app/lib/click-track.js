@@ -3,13 +3,13 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import deprecated from "discourse-common/lib/deprecated";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export function isValidLink(link) {
   // eslint-disable-next-line no-undef
@@ -121,7 +121,8 @@ export default {
         siteSettings?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
-        bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
+        const dialog = getOwner(this).lookup("service:dialog");
+        dialog.alert(I18n.t("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
         const newWindow = window.open(href, "_blank");
         newWindow.opener = null;

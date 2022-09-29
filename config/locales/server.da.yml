@@ -1522,7 +1522,6 @@ da:
     min_trust_to_edit_wiki_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg markeret som wiki."
     min_trust_to_edit_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg."
     min_trust_to_allow_self_wiki: "Det mindste tillidsniveau, der kræves for at gøre brugerens egen post til wiki."
-    min_trust_to_send_messages: "Det mindste tillidsniveau, der kræves for at oprette nye personlige beskeder."
     min_trust_to_send_email_messages: "Det mindste tillidsniveau, der kræves for at sende personlige beskeder via e-mail."
     min_trust_to_flag_posts: "Det mindste tillidsniveau, der kræves for at anmelde indlæg"
     min_trust_to_post_links: "Det mindste tillidsniveau, der kræves for at medtage links i indlæg"

@@ -1,9 +1,11 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
+
   @discourseComputed("model.isSaving")
   saveButtonText(isSaving) {
     return isSaving ? I18n.t("saving") : I18n.t("admin.customize.save");
@@ -27,7 +29,7 @@ export default Controller.extend({
                     error: e.jqXHR.responseJSON.errors.join(". "),
                   })
                 : I18n.t("generic_error");
-            bootbox.alert(msg);
+            this.dialog.alert(msg);
           })
           .finally(() => this.set("model.changed", false));
       }

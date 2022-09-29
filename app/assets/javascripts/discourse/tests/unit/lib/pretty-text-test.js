@@ -997,12 +997,12 @@ eviltrout</p>
     );
   });
 
-  test("attachment - mapped url - secure media disabled", function (assert) {
+  test("attachment - mapped url - secure uploads disabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
-        url: "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+        url: "/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1010,20 +1010,20 @@ eviltrout</p>
     assert.cookedOptions(
       "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
       {
-        siteSettings: { secure_media: false },
+        siteSettings: { secure_uploads: false },
         lookupUploadUrls,
       },
       `<p><a class="attachment" href="/uploads/short-url/blah">test.pdf</a></p>`,
-      "It returns the correct attachment link HTML when the URL is mapped without secure media"
+      "It returns the correct attachment link HTML when the URL is mapped without secure uploads"
     );
   });
 
-  test("attachment - mapped url - secure media enabled", function (assert) {
+  test("attachment - mapped url - secure uploads enabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
-        url: "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+        url: "/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1031,11 +1031,11 @@ eviltrout</p>
     assert.cookedOptions(
       "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
       {
-        siteSettings: { secure_media: true },
+        siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><a class="attachment" href="/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
-      "It returns the correct attachment link HTML when the URL is mapped with secure media"
+      `<p><a class="attachment" href="/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+      "It returns the correct attachment link HTML when the URL is mapped with secure uploads"
     );
   });
 
@@ -1052,12 +1052,12 @@ eviltrout</p>
     );
   });
 
-  test("video - mapped url - secure media enabled", function (assert) {
+  test("video - mapped url - secure uploads enabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4"] = {
         short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4",
-        url: "/secure-media-uploads/original/3X/c/b/test.mp4",
+        url: "/secure-uploads/original/3X/c/b/test.mp4",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1065,16 +1065,16 @@ eviltrout</p>
     assert.cookedOptions(
       "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
       {
-        siteSettings: { secure_media: true },
+        siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
       `<p><div class="video-container">
     <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
-      <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
+      <source src="/secure-uploads/original/3X/c/b/test.mp4">
+      <a href="/secure-uploads/original/3X/c/b/test.mp4">/secure-uploads/original/3X/c/b/test.mp4</a>
     </video>
   </div></p>`,
-      "It returns the correct video HTML when the URL is mapped with secure media, removing data-orig-src"
+      "It returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
   });
 
@@ -1089,12 +1089,12 @@ eviltrout</p>
     );
   });
 
-  test("audio - mapped url - secure media enabled", function (assert) {
+  test("audio - mapped url - secure uploads enabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3"] = {
         short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3",
-        url: "/secure-media-uploads/original/3X/c/b/test.mp3",
+        url: "/secure-uploads/original/3X/c/b/test.mp3",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1102,14 +1102,14 @@ eviltrout</p>
     assert.cookedOptions(
       "![baby shark|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
       {
-        siteSettings: { secure_media: true },
+        siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
       `<p><audio preload="metadata" controls>
-    <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
-    <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
+    <source src="/secure-uploads/original/3X/c/b/test.mp3">
+    <a href="/secure-uploads/original/3X/c/b/test.mp3">/secure-uploads/original/3X/c/b/test.mp3</a>
   </audio></p>`,
-      "It returns the correct audio HTML when the URL is mapped with secure media, removing data-orig-src"
+      "It returns the correct audio HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
   });
 

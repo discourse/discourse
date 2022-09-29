@@ -1618,7 +1618,6 @@ ja:
     min_trust_to_edit_wiki_post: "ウィキとしてマークされた投稿を編集するために必要な最低信頼レベル。"
     min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
     min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
-    min_trust_to_send_messages: "新しい個人メッセージを作成するために必要な最低信頼レベル。"
     min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
     min_trust_to_flag_posts: "投稿を通報するために必要な最低信頼レベル"
     min_trust_to_post_links: "投稿にリンクを含めるために必要な最低信頼レベル"

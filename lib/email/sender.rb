@@ -242,7 +242,7 @@ module Email
 
       # Embeds any of the secure images that have been attached inline,
       # removing the redaction notice.
-      if SiteSetting.secure_media_allow_embed_images_in_emails
+      if SiteSetting.secure_uploads_allow_embed_images_in_emails
         style.inline_secure_images(@message.attachments, @message_attachments_index)
       end
 
@@ -357,8 +357,8 @@ module Email
     end
 
     def should_attach_image?(upload, optimized_1X = nil)
-      return if !SiteSetting.secure_media_allow_embed_images_in_emails || !upload.secure?
-      return if (optimized_1X&.filesize || upload.filesize) > SiteSetting.secure_media_max_email_embed_image_size_kb.kilobytes
+      return if !SiteSetting.secure_uploads_allow_embed_images_in_emails || !upload.secure?
+      return if (optimized_1X&.filesize || upload.filesize) > SiteSetting.secure_uploads_max_email_embed_image_size_kb.kilobytes
       true
     end
 

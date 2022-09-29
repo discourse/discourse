@@ -1839,7 +1839,7 @@ RSpec.describe PostCreator do
     end
   end
 
-  describe "secure media uploads" do
+  describe "secure uploads uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:public_topic) { Fabricate(:topic) }
@@ -1847,7 +1847,7 @@ RSpec.describe PostCreator do
     before do
       setup_s3
       SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
       stub_upload(image_upload)
     end
 

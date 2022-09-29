@@ -186,7 +186,7 @@ class Upload < ActiveRecord::Base
     "upload://#{short_url_basename}"
   end
 
-  def uploaded_before_secure_media_enabled?
+  def uploaded_before_secure_uploads_enabled?
     original_sha1.blank?
   end
 
@@ -204,14 +204,14 @@ class Upload < ActiveRecord::Base
   end
 
   def self.consider_for_reuse(upload, post)
-    return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
-    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
+    return upload if !SiteSetting.secure_uploads? || upload.blank? || post.blank?
+    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_uploads_enabled?
     upload
   end
 
-  def self.secure_media_url?(url)
+  def self.secure_uploads_url?(url)
     # we do not want to exclude topic links that for whatever reason
-    # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
+    # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
     return false if route.blank?
     route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
@@ -219,14 +219,14 @@ class Upload < ActiveRecord::Base
     false
   end
 
-  def self.signed_url_from_secure_media_url(url)
+  def self.signed_url_from_secure_uploads_url(url)
     route = UrlHelper.rails_route_from_url(url)
     url = Rails.application.routes.url_for(route.merge(only_path: true))
     secure_upload_s3_path = url[url.index(route[:path])..-1]
     Discourse.store.signed_url_for_path(secure_upload_s3_path)
   end
 
-  def self.secure_media_url_from_upload_url(url)
+  def self.secure_uploads_url_from_upload_url(url)
     return url if !url.include?(SiteSetting.Upload.absolute_base_url)
     uri = URI.parse(url)
     Rails.application.routes.url_for(

@@ -19,6 +19,7 @@ const SERVER_SIDE_ONLY = [
   /^\/assets\//,
   /^\/uploads\//,
   /^\/secure-media-uploads\//,
+  /^\/secure-uploads\//,
   /^\/stylesheets\//,
   /^\/site_customizations\//,
   /^\/raw\//,

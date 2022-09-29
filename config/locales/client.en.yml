@@ -2166,6 +2166,8 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
+      esc: "esc"
+      esc_label: "Click or press Esc to dismiss"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -2278,6 +2280,9 @@ en:
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
         error: "This topic is in slow mode. You already posted recently; you can post again in %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "The person you are messaging, <b>%{usernames}</b>, hasn’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting %{usernames}."
+        multiple: "The following people you are messaging: <b>%{usernames}</b>, haven’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting them."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -4196,6 +4201,10 @@ en:
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
+            review:
+              content: "Review"
+              title: "review"
+              pending_count: "%{count} pending"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"

@@ -19,7 +19,7 @@ jobs:
   build:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
     env:
@@ -34,13 +34,15 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, annotations]
+        build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
+          - build_type: system
+            target: plugins # Enable once at least 1 plugin has system tests
 
     steps:
       - uses: actions/checkout@v3
@@ -165,6 +167,25 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
+
+      - name: Ember Build for System Tests
+        if: matrix.build_type == 'system'
+        run: bin/ember-cli --build
+
+      - name: Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: bin/system_rspec
+
+      - name: Plugin System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        run: bin/system_rspec plugins/*/spec/system
+
+      - name: Upload failed system test screenshots
+        uses: actions/upload-artifact@v3
+        if: matrix.build_type == 'system' && failure()
+        with:
+          name: failed-system-test-screenshots
+          path: tmp/screenshots/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'

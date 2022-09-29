@@ -1183,6 +1183,13 @@ sr:
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
     current_user: "idi na korisničku stranicu"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Spominjanja"
+        likes: "Lajkova"
+        bookmarks: "Markiraj"
+        profile: "Profil"
     topics:
       new_messages_marker: "poslednja poseta"
       bulk:
@@ -1812,6 +1819,8 @@ sr:
         other: "%{count} nova"
       more: "Više..."
       sections:
+        about:
+          header_link_text: "O nama"
         messages:
           header_link_text: "Poruke"
           links:

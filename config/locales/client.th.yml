@@ -1602,6 +1602,13 @@ th:
     go_back: "ย้อนกลับ"
     not_logged_in_user: "หน้าผู้ใช้พร้อมสรุปกิจกรรมล่าสุดและการตั้งค่า"
     current_user: "ไปยังหน้าผู้ใช้ของคุณ"
+    user_menu:
+      tabs:
+        replies: "ตอบ"
+        mentions: "กล่าวถึง"
+        likes: "ถูกใจ"
+        bookmarks: "บุ๊คมาร์ค"
+        profile: "โปรไฟล์"
     topics:
       new_messages_marker: "เยี่ยมชมครั้งล่าสุด"
       bulk:
@@ -2446,6 +2453,8 @@ th:
       more: "อื่นๆ..."
       all_categories: "หมวดหมู่ทั้งหมด"
       sections:
+        about:
+          header_link_text: "เกี่ยวกับ"
         messages:
           header_link_text: "ข้อความ"
           links:

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ##
-# There are certain conditions with secure media when the security of
+# There are certain conditions with secure uploads when the security of
 # uploads will need to change depending on the context they reside in.
 #
 # For example on these conditions:
@@ -38,16 +38,16 @@ class TopicUploadSecurityManager
       end
     end
 
-    return if !SiteSetting.secure_media
+    return if !SiteSetting.secure_uploads
 
-    # we only want to do this if secure media is enabled. if
+    # we only want to do this if secure uploads is enabled. if
     # the setting is turned on after a site has been running
     # already, we want to make sure that any post moves after
     # this are handled and upload secure statuses and ACLs
     # are updated appropriately, as well as setting the access control
     # post for secure uploads missing it.
     #
-    # examples (all after secure media is enabled):
+    # examples (all after secure uploads is enabled):
     #
     #  -> a public topic is moved to a private category after
     #  -> a PM is converted to a public topic
