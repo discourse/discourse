@@ -474,7 +474,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       query(".dialog-body").innerText.trim(),
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
-    await click(".modal-footer .btn.btn-primary");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       query(".d-editor-input").value.startsWith(
