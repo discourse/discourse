@@ -113,11 +113,12 @@
   .sidebar-section-message-wrapper {
     display: flex;
     padding-top: 0;
+    height: initial;
   }
 
   .sidebar-section-message {
     color: var(--primary);
-    padding-left: 1.4em;
+    padding-left: calc(var(--d-sidebar-section-link-prefix-width) + var(--d-sidebar-section-link-prefix-margin-right));
   }
 
   .sidebar-section-content {
