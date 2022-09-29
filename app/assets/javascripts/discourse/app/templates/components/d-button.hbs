@@ -8,7 +8,8 @@
 
 {{~#if this.computedLabel~}}
   <span class="d-button-label">{{html-safe this.computedLabel}}{{#if this.ellipsis}}&hellip;{{/if}}</span>
-{{~else~}}
+  {{! template-lint-disable simple-unless }}
+{{~else unless (has-block)~}}
   &#8203;
   {{! Zero-width space character, so icon-only button height = regular button height }}
 {{~/if~}}
